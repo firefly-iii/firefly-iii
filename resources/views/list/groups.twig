@@ -59,7 +59,7 @@
                                title="{{ group.title }}">{{ group.title }}</a>
                         </strong></small>
                 </td>
-                <td colspan="1" style="text-align:right;border-top:1px #aaa solid;">
+                <td colspan="1" class="text-right" style="border-top:1px #aaa solid;">
                     {% for sum in group.sums %}
                         {% if group.transaction_type == 'Deposit' %}
                             {{ formatAmountBySymbol(sum.amount*-1, sum.currency_symbol, sum.currency_decimal_places) }}
@@ -162,7 +162,7 @@
                     </a>
                     {% endif %}
                 </td>
-                <td style="{{ style|raw }};text-align:right">
+                <td style="{{ style|raw }};" class="text-right">
 
                     {#  deposit #}
                     {% if transaction.transaction_type_type == 'Deposit' %}

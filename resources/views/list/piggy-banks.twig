@@ -3,11 +3,11 @@
     <tr>
         <th colspan="2">&nbsp;</th>
         <th>{{ 'piggy_bank'|_ }}</th>
-        <th style="text-align: right;">{{ 'saved_so_far'|_ }}</th>
+        <th class="text-right">{{ 'saved_so_far'|_ }}</th>
         <th colspan="3" class="hidden-sm hidden-xs">&nbsp;</th>
-        <th style="text-align: right;" class="hidden-sm hidden-xs">{{ 'target_amount'|_ }}</th>
-        <th style="text-align: right;" class="hidden-sm hidden-xs">{{ 'left_to_save'|_ }}</th>
-        <th style="text-align: right;" class="hidden-sm hidden-xs">{{ 'suggested_savings_per_month'|_ }}</th>
+        <th class="text-right hidden-sm hidden-xs">{{ 'target_amount'|_ }}</th>
+        <th class="text-right hidden-sm hidden-xs">{{ 'left_to_save'|_ }}</th>
+        <th class="text-right hidden-sm hidden-xs">{{ 'suggested_savings_per_month'|_ }}</th>
     </tr>
     </thead>
 
@@ -45,15 +45,15 @@
                             <span class="fa fa-fw fa-paperclip"></span>
                         {% endif %}
                     </td>
-                    <td style="text-align: right;" class="piggySaved">
-                    <span title="Saved so far" style="text-align:right;">
+                    <td class="text-right piggySaved">
+                    <span title="Saved so far" class="text-right">
                         {{ formatAmountBySymbol(piggy.current_amount,piggy.currency_symbol,piggy.currency_decimal_places) }}
                         {% if convertToPrimary and piggy.currency_id != primaryCurrency.id and null != piggy.pc_current_amount %}
                             ({{ formatAmountBySymbol(piggy.pc_current_amount,primaryCurrency.symbol,primaryCurrency.decimal_places) }})
                         {% endif %}
                     </span>
                     </td>
-                    <td class="hidden-sm hidden-xs" style="text-align:right;width:40px;">
+                    <td class="hidden-sm hidden-xs text-right" style="width:40px;">
                         {% if piggy.current_amount > 0 %}
                             <a href="{{ route('piggy-banks.remove-money', piggy.id) }}" class="btn btn-default btn-xs removeMoney" data-id="{{ piggy.id }}">
                                 <span data-id="{{ piggy.id }}" class="fa fa-minus"></span></a>
@@ -87,7 +87,7 @@
                                 <span data-id="{{ piggy.id }}" class="fa fa-plus"></span></a>
                         {% endif %}
                     </td>
-                    <td class="hidden-sm hidden-xs" style="text-align:right;">
+                    <td class="hidden-sm hidden-xs text-right">
                         {% if null != piggy.target_amount and 0 != piggy.target_amount %}
                             <span title="{{ 'target_amount'|_ }}">{{ formatAmountBySymbol(piggy.target_amount,piggy.currency_symbol,piggy.currency_decimal_places) }}</span>
                             {% if convertToPrimary and piggy.currency_id != primaryCurrency.id and null != piggy.pc_target_amount %}
@@ -95,7 +95,7 @@
                             {% endif %}
                         {% endif %}
                     </td>
-                    <td class="hidden-sm hidden-xs" style="text-align:right;">
+                    <td class="hidden-sm hidden-xs text-right">
                         {% if piggy.left_to_save > 0 %}
                             <span title="{{ 'left_to_save'|_ }}">{{ formatAmountBySymbol(piggy.left_to_save,piggy.currency_symbol,piggy.currency_decimal_places) }}</span>
                             {% if convertToPrimary and piggy.currency_id != primaryCurrency.id and null != piggy.pc_left_to_save %}
@@ -103,7 +103,7 @@
                             {% endif %}
                         {% endif %}
                     </td>
-                    <td class="hidden-sm hidden-xs" style="text-align:right;">
+                    <td class="hidden-sm hidden-xs text-right">
                         {% if piggy.target_date and piggy.save_per_month %}
                             {{ formatAmountBySymbol(piggy.save_per_month, piggy.currency_symbol, piggy.currency_decimal_places) }}
                             {% if convertToPrimary and piggy.currency_id != primaryCurrency.id and null != piggy.pc_save_per_month %}
@@ -119,7 +119,7 @@
                 <td class="hidden-sm hidden-xs">&nbsp;</td> {# handle #}
                 <td class="hidden-sm hidden-xs">&nbsp;</td> {# buttons #}
                 <td>&nbsp;</td>
-                <td style="text-align: right;">
+                <td class="text-right">
                     {% for sum in objectGroup.sums %}
                         {{ formatAmountBySymbol(sum.saved, sum.currency_symbol, sum.currency_decimal_places) }}<br />
                     {% endfor %}
@@ -127,17 +127,17 @@
                 <td class="hidden-sm hidden-xs">&nbsp;</td> {# remove money #}
                 <td class="hidden-sm hidden-xs">&nbsp;</td> {# progress#}
                 <td class="hidden-sm hidden-xs">&nbsp;</td> {# add money #}
-                <td class="hidden-sm hidden-xs" style="text-align: right;">
+                <td class="text-right hidden-sm hidden-xs">
                     {% for sum in objectGroup.sums %}
                         {{ formatAmountBySymbol(sum.target, sum.currency_symbol, sum.currency_decimal_places) }}<br />
                     {% endfor %}
                 </td>
-                <td class="hidden-sm hidden-xs" style="text-align: right;">
+                <td class="text-right hidden-sm hidden-xs">
                     {% for sum in objectGroup.sums %}
                         {{ formatAmountBySymbol(sum.left_to_save, sum.currency_symbol, sum.currency_decimal_places) }}<br />
                     {% endfor %}
                 </td>
-                <td class="hidden-sm hidden-xs" style="text-align: right;">
+                <td class="text-right hidden-sm hidden-xs">
                     {% for sum in objectGroup.sums %}
                         {{ formatAmountBySymbol(sum.save_per_month, sum.currency_symbol, sum.currency_decimal_places) }}<br />
                     {% endfor %}

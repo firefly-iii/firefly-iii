@@ -60,8 +60,8 @@
                     <h3 class="box-title">{{ 'expenses_by_category'|_ }}</h3>
                 </div>
                 <div class="box-body">
-                    <div style="width:100%;margin:0 auto;">
-                        <canvas id="budget-cat-out" style="width:100%;height:250px;" height="250"></canvas>
+                    <div class="center-chart">
+                        <canvas id="budget-cat-out" class="medium-chart" height="250"></canvas>
                     </div>
                 </div>
                 {% if budgetLimit %}
@@ -79,8 +79,8 @@
                     <h3 class="box-title">{{ 'expenses_by_asset_account'|_ }}</h3>
                 </div>
                 <div class="box-body">
-                    <div style="width:100%;margin:0 auto;">
-                        <canvas id="budget-asset-out" style="width:100%;height:250px;" height="250"></canvas>
+                    <div class="center-chart">
+                        <canvas id="budget-asset-out" class="medium-chart" height="250"></canvas>
                     </div>
                 </div>
                 {% if budgetLimit %}
@@ -98,8 +98,8 @@
                     <h3 class="box-title">{{ 'expenses_by_expense_account'|_ }}</h3>
                 </div>
                 <div class="box-body">
-                    <div style="width:100%;margin:0 auto;">
-                        <canvas id="budget-expense-out" style="width:100%;height:250px;" height="250"></canvas>
+                    <div class="center-chart">
+                        <canvas id="budget-expense-out" class="medium-chart" height="250"></canvas>
                     </div>
                 </div>
                 {% if budgetLimit %}

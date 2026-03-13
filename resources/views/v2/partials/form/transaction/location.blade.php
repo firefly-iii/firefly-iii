@@ -14,7 +14,7 @@
                     data-latitude="{{ $latitude }}"
                     data-longitude="{{ $longitude }}"
                     data-zoom-level="{{ $zoomLevel }}"
-                    id="location_map" style="height:300px;" :data-index="index"></div>
+                    id="location_map" class="map-size" :data-index="index"></div>
                 <span class="muted small">
             <template x-if="!transaction.hasLocation">
                 <span>{{ __('firefly.click_tap_location') }}</span>

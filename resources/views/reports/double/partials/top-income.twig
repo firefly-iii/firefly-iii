@@ -5,7 +5,7 @@
         <th data-defaultsign="month">{{ 'date'|_ }}</th>
         <th data-defaultsign="az">{{ 'source_account'|_ }}</th>
         <th data-defaultsign="az">{{ 'destination_account'|_ }}</th>
-        <th data-defaultsign="_19" style="text-align: right;">{{ 'amount'|_ }}</th>
+        <th data-defaultsign="_19" class="text-right">{{ 'amount'|_ }}</th>
     </tr>
     </thead>
     <tbody>
@@ -36,7 +36,7 @@
         </td>
 
 
-        <td data-value="{{ row.amount }}" style="text-align: right;">
+        <td data-value="{{ row.amount }}" class="text-right">
             {{ formatAmountBySymbol(row.amount, row.currency_symbol, row.currency_decimal_places) }}
         </td>
 

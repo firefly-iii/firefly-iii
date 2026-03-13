@@ -1,4 +1,4 @@
-<div style="padding-left:8px;">
+<div class="ml-1">
     {{ accounts.links('pagination.bootstrap-4')|raw }}
 </div>
 <table class="table table-responsive table-hover" id="sortable-table">
@@ -16,10 +16,10 @@
         {% endif %}
         <th class="hidden-sm hidden-xs">{{ trans('form.account_number') }}</th>
         {% if objectType != 'liabilities' %}
-            <th style="text-align: right;">{{ trans('list.currentBalance') }}</th>
+            <th class="text-right">{{ trans('list.currentBalance') }}</th>
         {% endif %}
         {% if objectType == 'liabilities' %}
-            <th style="text-align: right;">
+            <th class="text-right">
                 {{ trans('firefly.left_in_debt') }}
             </th>
         {% endif %}
@@ -64,7 +64,7 @@
             {% endif %}
             <td class="hidden-sm hidden-xs">{{ account.iban }}{% if account.iban == '' %}{{ accountGetMetaField(account, 'account_number') }}{% endif %}</td>
             {% if objectType != 'liabilities' %}
-            <td style="text-align: right;">
+            <td class="text-right">
                 <span style="margin-right:5px;">
                     {% for key, balance in account.endBalances %}
                         <span title="{{ key }}">
@@ -85,7 +85,7 @@
             </td>
             {% endif %}
             {% if objectType == 'liabilities' %}
-            <td style="text-align: right;">
+            <td class="text-right">
                 {% if '-' != account.current_debt %}
                     <span class="text-info money-transfer">
                         {{ formatAmountBySymbol(account.current_debt, account.currency.symbol, account.currency.decimal_places, false) }}
@@ -113,7 +113,7 @@
                     </td>
                 {% endif %}
             {% endif %}
-            <td class="hidden-sm hidden-xs hidden-md" style="text-align: right;">
+            <td class="text-right hidden-sm hidden-xs hidden-md">
                 <span style="margin-right:5px;">
                     {% for key, balance in account.differences %}
                         <span title="{{ key }}">

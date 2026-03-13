@@ -71,7 +71,7 @@
                                 </small>
                             </div>
                             {# info about the amount spent #}
-                            <div class="col-lg-9 col-md-9 col-sm-9 col-xs-9" style="text-align:right;margin-bottom:3px;">
+                            <div class="col-lg-9 col-md-9 col-sm-9 col-xs-9 text-right" style="margin-bottom:3px;">
                                 <small class="available_bar"
                                        data-id="0">{{ trans('firefly.available_between', {start: start.isoFormat(monthAndDayFormat), end: end.isoFormat(monthAndDayFormat) }) }}
                                     :
@@ -123,7 +123,7 @@
                                     </small>
                                 </div>
                                 {# info about the amount spent #}
-                                <div class="col-lg-9 col-md-9 col-sm-9 col-xs-9" style="text-align:right;margin-bottom:3px;">
+                                <div class="col-lg-9 col-md-9 col-sm-9 col-xs-9 text-right" style="margin-bottom:3px;">
                                     <small class="available_bar"
                                            data-id="{{ budget.id }}">{{ trans('firefly.available_between', {start: budget.start_date.isoFormat(monthAndDayFormat), end: budget.end_date.isoFormat(monthAndDayFormat) }) }}
                                         :
@@ -323,11 +323,11 @@
                                             </a>
                                         {% endif %}
                                     </td>
-                                    <td class="hidden-sm hidden-xs spent" data-id="{{ budget.id }}" style="text-align:right;">
+                                    <td class="hidden-sm hidden-xs spent text-right" data-id="{{ budget.id }}">
                                         {% include('budgets.partials.amount-spent') %}
                                     </td>
                                     {# this cell displays the amount left in the budget, per budget limit. #}
-                                    <td class="left" data-id="{{ budget.id }}" style="text-align: right;">
+                                    <td class="left" data-id="{{ budget.id }}" class="text-right">
                                         {% include('budgets.partials.amount-left') %}
                                     </td>
                                 </tr>
