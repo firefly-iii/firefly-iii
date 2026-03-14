@@ -3,33 +3,36 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
-## x.x.x - 20xx-xx-xx
+## 6.5.5 - 2026-03-15
 
-<!-- summary: If you can read this I forgot to update the summary! -->
+<!-- summary: This release takes note of some security issues, and fixes interesting bugs. -->
 
 ### Added
 
-- Initial release.
+- Add the ability for Fosstodon posts to read a summary of the changelog.
 
 ### Changed
 
-- Initial release.
-
-### Deprecated
-
-- Initial release.
-
-### Removed
-
-- Initial release.
+- Lots of code cleanup and small quality issues fixed.
 
 ### Fixed
 
-- Initial release.
+- #11879
+- #11916
+- #11936
+- #11944
 
 ### Security
 
-- Enum thing in rule engine, reported by basically all users with preview access to the new Claude code security scanner
+> [!NOTE] 
+> A lot of people have access to the new Claude model that has enhanced code scanning capabilities. Many new issues are being reported through (semi-)automated means. I will update the security policy to reflect this. Please stop reporting the following issues:
+
+- Yes, it is possible to point webhooks to private or internal IPs.
+- Yes, you can see all transaction link types. If you are an owner, you can also delete them.
+- Yes, `unsafe-inline` is allowed for CSS, which means you can overrule the layout if you manage to get CSS on the page.
+- Yes, you can make the rule engine print internal enums.
+
+These issues are security issues, but Claude is usually incapable of assessing their impact. 
 
 ### API
 
