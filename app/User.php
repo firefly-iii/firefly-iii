@@ -61,6 +61,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\HasManyThrough;
+use Illuminate\Database\Eloquent\Relations\MorphTo;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Notifications\Notification;
@@ -106,9 +107,6 @@ class User extends Authenticatable
         throw new NotFoundHttpException();
     }
 
-    /**
-     * Link to accounts.
-     */
     public function accounts(): HasMany
     {
         return $this->hasMany(Account::class);
