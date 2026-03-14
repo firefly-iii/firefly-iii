@@ -29,11 +29,11 @@
                             <a href="{{ route('piggy-banks.add-money-mobile', piggy.id) }}" class="btn btn-default btn-xs"><span class="fa fa-plus"></span></a>
                         </div>
                     </td>
-                    <td style="width:60px;" class="hidden-sm hidden-xs">
+                    <td  class="hidden-sm hidden-xs sixty-px">
                         <span class="fa fa-fw fa-bars piggy-handle"></span>
                         <span class="loadSpin"></span>
                     </td>
-                    <td style="width:100px;" class="hidden-sm hidden-xs">
+                    <td class="hidden-sm hidden-xs hundred-px">
                         <div class="btn-group btn-group-xs">
                             <a href="{{ route('piggy-banks.edit', piggy.id) }}" class="btn btn-default btn-xs"><span class="fa fa-pencil fa-fw"></span></a>
                             <a href="{{ route('piggy-banks.delete', piggy.id) }}" class="btn btn-danger btn-xs"><span class="fa fa-trash fa-fw"></span></a>
@@ -53,7 +53,7 @@
                         {% endif %}
                     </span>
                     </td>
-                    <td class="hidden-sm hidden-xs text-right" style="width:40px;">
+                    <td class="hidden-sm hidden-xs text-right forty-px">
                         {% if piggy.current_amount > 0 %}
                             <a href="{{ route('piggy-banks.remove-money', piggy.id) }}" class="btn btn-default btn-xs removeMoney" data-id="{{ piggy.id }}">
                                 <span data-id="{{ piggy.id }}" class="fa fa-minus"></span></a>
@@ -62,17 +62,16 @@
 
                     <td class="hidden-sm hidden-xs piggyBar">
                         {% if null != piggy.percentage %}
-                        <div class="progress progress" style="margin-bottom:0;">
+                        <div class="progress progress mb-0">
                             <div
                                     {% if piggy.percentage == 100 %}
-                                        class="progress-bar progress-bar-success"
+                                        class="progress-bar progress-bar-success width-{{ max(30, piggy.percentage)|round }}"
                                     {% elseif piggy.percentage == 0 %}
-                                        class="progress-bar progress-bar-warning"
+                                        class="progress-bar progress-bar-warning width-{{ max(30, piggy.percentage)|round }}"
                                     {% else %}
-                                        class="progress-bar progress-bar-info"
+                                        class="progress-bar progress-bar-info width-{{ max(30, piggy.percentage)|round }}"
                                     {% endif %}
-                                    role="progressbar" aria-valuenow="{{ piggy.percentage }}" aria-valuemin="0" aria-valuemax="100"
-                                    style="min-width: 30px;width: {{ piggy.percentage }}%;">
+                                    role="progressbar" aria-valuenow="{{ piggy.percentage }}" aria-valuemin="0" aria-valuemax="100">
                                 {{ piggy.percentage }}%
                             </div>
                         </div>
@@ -80,7 +79,7 @@
                     </td>
 
 
-                    <td class="hidden-sm hidden-xs" style="width:40px;">
+                    <td class="hidden-sm hidden-xs forty-px">
 
                         {% if piggy.left_to_save > 0 or null == piggy.left_to_save %}
                             <a href="{{ route('piggy-banks.add-money', piggy.id) }}" class="btn btn-default btn-xs addMoney" data-id="{{ piggy.id }}">

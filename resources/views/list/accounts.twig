@@ -28,7 +28,7 @@
         {% if objectType != 'liabilities' %}
             <th class="hidden-sm hidden-xs hidden-md">{{ trans('list.lastActivity') }}</th>
         {% endif %}
-        <th style="width:15%;"
+        <th class="fifteen"
             class="hidden-sm hidden-xs hidden-md">{{ trans('list.balanceDiff') }}</th>
         <th class="hidden-sm hidden-xs">&nbsp;</th>
     </tr>
@@ -65,7 +65,7 @@
             <td class="hidden-sm hidden-xs">{{ account.iban }}{% if account.iban == '' %}{{ accountGetMetaField(account, 'account_number') }}{% endif %}</td>
             {% if objectType != 'liabilities' %}
             <td class="text-right">
-                <span style="margin-right:5px;">
+                <span class="mr-2">
                     {% for key, balance in account.endBalances %}
                         <span title="{{ key }}">
                         {% if 'balance' == key %}
@@ -114,7 +114,7 @@
                 {% endif %}
             {% endif %}
             <td class="text-right hidden-sm hidden-xs hidden-md">
-                <span style="margin-right:5px;">
+                <span class="mr-1">
                     {% for key, balance in account.differences %}
                         <span title="{{ key }}">
                         {% if 'balance' == key or 'pc_balance' == key %}
@@ -145,6 +145,6 @@
     {% endfor %}
     </tbody>
 </table>
-<div style="padding-left:8px;">
+<div class="pl-3">
     {{ accounts.links('pagination.bootstrap-4')|raw }}
 </div>

@@ -46,9 +46,11 @@
 .calendar-display {max-width: 400px;margin: 0 auto;}
 .empty-high-block {height:400px;}
 .fw-normal {font-weight: normal;}
+.position-relative {position: relative;}
 
 /** tables **/
 th.ten {width:10%;}
+th.fifteen td.fifteen {width:15%;}
 td.twenty th.twenty {width:25%;}
 td.onetwenty {width:120px;}
 td.quarter th.quarter {width:25%;}
@@ -56,6 +58,11 @@ td.thirty th.thirty {width:30%;}
 td.third th.third {width:33%;}
 td.forty th.forty {width:40%;}
 td.half th.half {width:50%;}
+td.sixty-six th.sixty-six {width:66%;}
+td.twenty-px {width:20px;}
+td.forty-px {width:40px;}
+td.sixty-px {width:60px;}
+td.hundred-px {width:100px;}
 
 /** width for progress bar **/
 .width-0 {width:0;}
