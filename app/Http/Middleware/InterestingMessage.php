@@ -205,7 +205,12 @@ class InterestingMessage
 
         // send message about newly created transaction group.
         /** @var null|TransactionGroup $group */
-        $group              = auth()->user()->transactionGroups()->with(['transactionJournals', 'transactionJournals.transactionType'])->find((int) $transactionGroupId);
+        $group              = auth()
+            ->user()
+            ->transactionGroups()
+            ->with(['transactionJournals', 'transactionJournals.transactionType'])
+            ->find((int) $transactionGroupId)
+        ;
 
         if (null === $group) {
             return;

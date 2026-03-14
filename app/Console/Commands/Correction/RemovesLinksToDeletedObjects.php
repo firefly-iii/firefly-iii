@@ -98,9 +98,10 @@ class RemovesLinksToDeletedObjects extends Command
         // count and clean up available budgets in currencies with no budget limits.
         // this is not entirely the place for it but OK.
         /** @var AvailableBudgetRepositoryInterface $repository */
-        $repository = app(AvailableBudgetRepositoryInterface::class);
+        $repository        = app(AvailableBudgetRepositoryInterface::class);
+
         /** @var User $user */
-        foreach(User::get() as $user) {
+        foreach (User::get() as $user) {
             $repository->setUser($user);
             $repository->cleanup();
         }

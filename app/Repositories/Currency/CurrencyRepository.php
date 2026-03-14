@@ -86,7 +86,10 @@ class CurrencyRepository implements CurrencyRepositoryInterface, UserGroupInterf
         }
 
         // is being used in accounts:
-        $meta             = AccountMeta::where('name', 'currency_id')->where('data', json_encode((string) $currency->id))->count();
+        $meta             = AccountMeta::where('name', 'currency_id')
+            ->where('data', json_encode((string) $currency->id))
+            ->count()
+        ;
         if ($meta > 0) {
             Log::info(sprintf('Used in %d accounts as currency_id, return true. ', $meta));
 
@@ -94,7 +97,10 @@ class CurrencyRepository implements CurrencyRepositoryInterface, UserGroupInterf
         }
 
         // second search using integer check.
-        $meta             = AccountMeta::where('name', 'currency_id')->where('data', json_encode((int) $currency->id))->count();
+        $meta             = AccountMeta::where('name', 'currency_id')
+            ->where('data', json_encode((int) $currency->id))
+            ->count()
+        ;
         if ($meta > 0) {
             Log::info(sprintf('Used in %d accounts as currency_id, return true. ', $meta));
 

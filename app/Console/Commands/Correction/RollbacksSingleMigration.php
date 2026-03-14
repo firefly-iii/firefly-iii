@@ -75,7 +75,10 @@ class RollbacksSingleMigration extends Command
         }
 
         if ($res) {
-            DB::table('migrations')->where('id', (int) $entry->id)->delete();
+            DB::table('migrations')
+                ->where('id', (int) $entry->id)
+                ->delete()
+            ;
             $this->friendlyInfo(sprintf('Database migration #%d ("%s") is deleted.', $entry->id, $entry->migration));
             $this->friendlyLine('');
             $this->friendlyLine('Try running "php artisan migrate" now.');
