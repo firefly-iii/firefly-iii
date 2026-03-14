@@ -43,7 +43,7 @@
                         </div>
                     </div>
                     <div class="box-footer">
-                        <button type="submit" onclick="return confirm('{{ 'are_you_sure'|_ }}');" class="btn btn-danger pull-right">
+                        <button type="submit" class="btn btn-danger pull-right delete-profile">
                             {{ 'delete_account_button'|_ }}
                         </button>
                     </div>
@@ -52,4 +52,16 @@
         </div>
     </form>
 
+{% endblock %}
+{% block scripts %}
+    <!-- just a bit of inline code -->
+    <script type="text/javascript" nonce="{{ JS_NONCE }}">
+        var confirmText= '{{ 'are_you_sure'|_|escape('js') }}';
+        $(function () {
+            "use strict";
+            $('.delete-profile').click(function () {
+                return confirm(confirmText);
+            });
+        });
+    </script>
 {% endblock %}

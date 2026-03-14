@@ -1,5 +1,5 @@
 <tr data-count="{{ count }}" class="rule-action-holder">
-    <td style="width:40px;">
+    <td class="forty-px">
         <a href="#" class="btn btn-danger btn-sm remove-action"><span class="fa fa-trash"></span></a>
     </td>
     <td class="thirty">
@@ -10,7 +10,7 @@
             {% endfor %}
         </select>
     </td>
-    <td style="position: relative;">
+    <td class="position-relative">
 
         <input autocomplete="off" type="text" value="{{ oldValue }}" name="actions[{{ count }}][value]"
                class="form-control">
@@ -20,7 +20,7 @@
             </p>
         {% endif %}
     </td>
-    <td style="width:20%;">
+    <td class="twenty">
         <div class="checkbox">
             <label>
                 <input type="checkbox" name="actions[{{ count }}][stop_processing]" value="1"

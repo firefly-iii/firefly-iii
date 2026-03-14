@@ -47,8 +47,12 @@
 .empty-high-block {height:400px;}
 .fw-normal {font-weight: normal;}
 .position-relative {position: relative;}
+.pointer {cursor:pointer;}
+.big-line {line-height:1.7em;}
+.bold-label {font-weight: normal;font-size:0.9em;}
 
 /** tables **/
+th.five {width:5%;}
 th.ten {width:10%;}
 th.fifteen td.fifteen {width:15%;}
 td.twenty th.twenty {width:25%;}

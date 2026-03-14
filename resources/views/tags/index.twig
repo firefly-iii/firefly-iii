@@ -30,11 +30,9 @@
                                 <div class="box-body">
                                     <div class="row">
                                         {% for tagInfo in entries %}
-                                            <div class="col-xs-6 col-sm-4 col-md-3 col-lg-2"
-                                                 style="line-height: 1.7em;"
-                                            ><input type="checkbox" name="tags[]" value="{{ tagInfo.id }}"> <a
-                                                    class="label label-success"
-                                                    style="font-weight: normal;font-size:0.9em;"
+                                            <div class="col-xs-6 col-sm-4 col-md-3 col-lg-2 big-line">
+                                                <input type="checkbox" name="tags[]" value="{{ tagInfo.id }}"> <a
+                                                    class="label label-success bold-label"
 
                                                     title="{{ tagInfo.created_at.isoFormat(monthAndDayFormat) }}"
                                                     href="{{ route('tags.show',tagInfo.id) }}">{% if tagInfo.location %}<span class="fa fa-fw fa-map-marker"></span>{% endif %}<span class="fa fa-fw fa-tag"></span>{{ tagInfo.tag }}{% if tagInfo.attachments.count() > 0 %}<span class="fa fa-fw fa-paperclip"></span>{% endif %}</a></div>
@@ -61,7 +59,7 @@
                 <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
                     <p>
                         <a class="btn btn-success" href="{{ route('tags.create') }}"><span class="fa fa-plus fa-fw"></span> {{ ('no_tags_create_default')|_ }}</a>
-                        <button type="submit" class="btn pull-right btn-danger" onclick="return confirm('{{ 'are_you_sure'|_|escape('js') }}');">
+                        <button type="submit" class="btn pull-right btn-danger confirm-tag-delete">
                             <span class="fa fa-fw fa-trash"></span> {{ 'delete_all_selected_tags'|_ }}
                         </button>
                     </p>
@@ -72,5 +70,8 @@
 
 {% endblock %}
 {% block scripts %}
+    <script nonce="{{ JS_NONCE }}">
+        var confirmText = '{{ 'are_you_sure'|_|escape('js') }}';
+    </script>
     <script src="v1/js/ff/tags/index.js?v={{ FF_BUILD_TIME }}" nonce="{{ JS_NONCE }}"></script>
 {% endblock %}

@@ -22,4 +22,7 @@
 
 $(function () {
     "use strict";
+    $('.confirm-tag-delete').on('click', function() {
+        return confirm(confirmText);
+    });
 });
