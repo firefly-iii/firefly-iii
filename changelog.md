@@ -25,14 +25,12 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 ### Security
 
 > [!NOTE] 
-> A lot of people have access to the new Claude model that has enhanced code scanning capabilities. Many new issues are being reported through (semi-)automated means. I will update the security policy to reflect this. Please stop reporting the following issues:
+> A lot of people have access to the new Claude model that has enhanced code scanning capabilities. Many new issues are being reported through (semi-)automated means. I will update the security policy to reflect this. The following security related issues no longer need reporting:
 
-- Yes, it is possible to point webhooks to private or internal IPs.
-- Yes, you can see all transaction link types. If you are an owner, you can also delete them.
-- Yes, `unsafe-inline` is allowed for CSS, which means you can overrule the layout if you manage to get CSS on the page.
-- Yes, you can make the rule engine print internal enums.
-
-These issues are security issues, but Claude is usually incapable of assessing their impact. 
+- It is possible to point webhooks to private or internal IPs.
+- You can see all transaction link types. If you are an owner, you can also delete them.
+- `unsafe-inline` is allowed for CSS, which means you can overrule the layout if you manage to get CSS on the page.
+- You can make the rule engine print internal enums.
 
 ### API
 
