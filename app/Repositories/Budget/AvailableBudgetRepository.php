@@ -58,17 +58,19 @@ class AvailableBudgetRepository implements AvailableBudgetRepositoryInterface, U
             $end          = $availableBudget->end_date->format('Y-m-d');
             $key          = sprintf('%s-%s-%s', $availableBudget->transaction_currency_id, $start, $end);
             if (array_key_exists($key, $exists)) {
-                Log::debug(sprintf(
-                    'Found duplicate AB: %s %s, %s-%s. Has been deleted',
-                    $availableBudget->transaction_currency_id,
-                    $availableBudget->amount,
-                    $start,
-                    $end
-                ));
+                Log::debug(sprintf('Found duplicate AB: %s %s, %s-%s. Has been deleted', $availableBudget->transaction_currency_id, $availableBudget->amount, $start, $end));
                 $availableBudget->delete();
             }
             $exists[$key] = true;
         }
+
+        // grab budget limit currencies.
+        $currencies = BudgetLimit
+            ::leftJoin('budgets','budgets.id','=','budget_limits.budget_id')
+            ->where('budgets.user_id', $this->user->id)
+            ->distinct()->get(['budget_limits.transaction_currency_id'])->pluck('transaction_currency_id')->toArray();
+        // delete available budgets without these currencies.
+        $this->user->availableBudgets()->whereNotIn('transaction_currency_id', $currencies)->delete();
     }
 
     /**

@@ -81,6 +81,7 @@ final class BasicController extends Controller
             $this->accountRepository->setUser($user);
             $this->abRepository->setUser($user);
             $this->opsRepository->setUser($user);
+            $this->abRepository->cleanup();
 
             return $next($request);
         });

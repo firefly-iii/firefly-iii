@@ -111,6 +111,7 @@ class AvailableBudgetCalculator
         $viewRange          = Preferences::getForUser($this->user, 'viewRange', '1M')->data;
         $viewRange          = !is_string($viewRange) ? '1M' : $viewRange;
         $this->viewRange    = $this->correctViewRange($viewRange);
+        $this->abRepository->cleanup();
     }
 
     private function correctViewRange(string $viewRange): string

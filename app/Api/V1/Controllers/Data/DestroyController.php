@@ -185,6 +185,8 @@ final class DestroyController extends Controller
         /** @var BudgetRepositoryInterface $budgetRepository */
         $budgetRepository = app(BudgetRepositoryInterface::class);
         $budgetRepository->destroyAll();
+
+        $abRepository->cleanup();
     }
 
     private function destroyCategories(): void
