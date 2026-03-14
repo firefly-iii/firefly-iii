@@ -1,4 +1,4 @@
-<div style="padding-left:8px;">
+<div class="pl-2">
     {{ paginator.links('pagination.bootstrap-4')|raw }}
 </div>
 <table class="table table-responsive table-hover" id="bill-sortable">
@@ -63,9 +63,7 @@
                         {% endif %}
                     </td>
                     <td class="text-right">
-                <span style="margin-right:5px;"
-                      title="{{ formatAmountBySymbol(entry.amount_min, entry.currency_symbol, entry.currency_decimal_places, false)|escape }} -- {{ formatAmountBySymbol(entry.amount_max, entry.currency_symbol, entry.currency_decimal_places, false)|escape }}"
-                >
+                <span class="mr-2" title="{{ formatAmountBySymbol(entry.amount_min, entry.currency_symbol, entry.currency_decimal_places, false)|escape }} -- {{ formatAmountBySymbol(entry.amount_max, entry.currency_symbol, entry.currency_decimal_places, false)|escape }}">
                     ~ {{ formatAmountBySymbol((entry.amount_max + entry.amount_min)/2, entry.currency_symbol, entry.currency_decimal_places) }}
 
                     {% if '0' != entry.pc_amount_max and null != entry.pc_amount_max %}
@@ -227,7 +225,7 @@
     {% if totals|length > 0 %}
         <tfoot>
         <tr>
-            <td colspan="8" style="border-top:1px #777 solid;"></td>
+            <td colspan="8" class="top-dark-border"></td>
         </tr>
         {% for sum in totals %}
             {% if '0' != sum.avg %}
@@ -266,6 +264,6 @@
     {% endif %}
 
 </table>
-<div style="padding-left:8px;">
+<div class="pl-2">
     {{ paginator.links('pagination.bootstrap-4')|raw }}
 </div>

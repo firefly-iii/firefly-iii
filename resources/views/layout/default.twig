@@ -290,7 +290,7 @@
     </script>
     <noscript><p><img
                 src="//{{ config('firefly.tracker_url') }}/matomo.php?idsite={{ config('firefly.tracker_site_id') }}&amp;rec=1"
-                style="border:0;" alt=""/></p></noscript>
+                class="no-border" alt=""/></p></noscript>
 {% endif %}
 
 <form id="logout-form" action="{{ route('logout') }}" method="POST" class="hidden">

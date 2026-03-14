@@ -7,7 +7,7 @@
     <tbody>
     {% for logEntry in logEntries %}
         <tr>
-            <th style="width:20%;" scope="row">
+            <th class="twenty" scope="row">
                 {# link to object: #}
                 {% if 'FireflyIII\\Models\\Rule' == logEntry.changer_type %}
                     <a href="{{ route('rules.edit', [logEntry.changer_id] ) }}">
@@ -18,7 +18,7 @@
                         {{ logEntry.changer_type|replace({"FireflyIII\\Models\\": ""})|replace({"FireflyIII\\": ""}) }} #{{ logEntry.changer_id }}
                     </a>
             </th>
-            <td style="width:30%;" title="{{ logEntry.created_at.isoFormat(dateTimeFormat) }}">
+            <td class="thirty" title="{{ logEntry.created_at.isoFormat(dateTimeFormat) }}">
                 {{ trans('firefly.ale_action_'~logEntry.action) }}
             </td>
             <td>

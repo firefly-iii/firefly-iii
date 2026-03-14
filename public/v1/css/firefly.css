@@ -35,9 +35,22 @@
 
 /* install box border */
 .install-box-border {border:1px #ddd solid;}
+.install-box-title {font-family: monospace;font-size:16pt;}
+
+/* some borders and lines */
+.top-light-border {border-top:1px #aaa solid;}
+.top-dark-border {border-top:1px #777 solid;}
+.bottom-light-border {border-bottom:1px #aaa solid;}
+
+/* misc */
+.calendar-display {max-width: 400px;margin: 0 auto;}
+.empty-high-block {height:400px;}
+.fw-normal {font-weight: normal;}
 
 /** tables **/
 th.ten {width:10%;}
+td.twenty th.twenty {width:25%;}
+td.onetwenty {width:120px;}
 td.quarter th.quarter {width:25%;}
 td.thirty th.thirty {width:30%;}
 td.third th.third {width:33%;}
