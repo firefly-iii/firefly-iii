@@ -77,7 +77,7 @@
                                             <td>
                                                 {% for tag in journal.tags %}
                                                     {% if 0 != tag.id %}
-                                                        <span style="display: inline;"><a class="label label-success" href="{{ route('tags.show', [tag.id]) }}">
+                                                        <span class="inline"><a class="label label-success" href="{{ route('tags.show', [tag.id]) }}">
                                                         <span class="fa fa-fw fa-tag"></span>
                                                         {{ tag.name }}</a>
                                                 </span>

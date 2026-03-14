@@ -6,7 +6,7 @@
             <h4 class="modal-title">{{ trans('firefly.add_money_to_piggy_title', {name: piggyBank.name}) }}</h4>
         </div>
         {% if total > 0 %}
-            <form style="display: inline;" id="add" action="{{ route('piggy-banks.add', piggyBank.id) }}" method="POST">
+            <form class="inline" id="add" action="{{ route('piggy-banks.add', piggyBank.id) }}" method="POST">
                 <div class="modal-body">
                     <input type="hidden" name="_token" value="{{ csrf_token() }}"/>
                     {% for account in accounts %}

@@ -152,7 +152,7 @@
             </div>
         {% endif %}
     </div>
-    <form id="reset-form" action="{{ route('piggy-banks.reset', [piggyBank.id]) }}" method="POST" style="display: none;">
+    <form id="reset-form" action="{{ route('piggy-banks.reset', [piggyBank.id]) }}" method="POST" class="hidden">
         <input type="hidden" name="_token" value="{{ csrf_token() }}"/>
     </form>
 {% endblock %}

@@ -101,7 +101,7 @@
             </td>
 
             <td class="text-right">
-                <span style="margin-right:5px;">
+                <span class="mr-1">
                     {{ formatAmountBySymbol(journal.amount, journal.currency_symbol, journal.currency_decimal_places) }}
                 {% if null != journal.foreign_amount %}
                     ({{ formatAmountBySymbol(journal.foreign_amount, journal.foreign_currency_symbol, journal.foreign_currency_decimal_places) }})

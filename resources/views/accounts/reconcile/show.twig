@@ -81,7 +81,7 @@
                                 <td>
                                     {% for tag in journal.tags %}
 
-                                        <h4 style="display: inline;"><a class="label label-success" href="{{ route('tags.show',tag) }}">
+                                        <h4 class="inline"><a class="label label-success" href="{{ route('tags.show',tag) }}">
                                                 {% if tag.tag_mode == 'nothing' %}
                                                     <span class="fa fa-fw fa-tag"></span>
                                                 {% endif %}

@@ -1,6 +1,6 @@
 <div class="modal-dialog">
     <div class="modal-content">
-        <form style="display: inline;" id="remove" action="{{ route('piggy-banks.remove', piggyBank.id) }}" method="POST">
+        <form class="inline" id="remove" action="{{ route('piggy-banks.remove', piggyBank.id) }}" method="POST">
             <input type="hidden" name="_token" value="{{ csrf_token() }}"/>
 
             <div class="modal-header">

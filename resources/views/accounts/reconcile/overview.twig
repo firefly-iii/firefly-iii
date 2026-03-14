@@ -8,7 +8,7 @@
             </h4>
         </div>
 
-        <form style="display: inline;" class="form-horizontal" id="income" action="{{ route }}" method="POST">
+        <form class="form-horizontal inline" id="income" action="{{ route }}" method="POST">
             <div class="modal-body">
                 <input type="hidden" name="_token" value="{{ csrf_token() }}"/>
                 <input type="hidden" name="start" value="{{ start.format('Y-m-d') }}"/>
