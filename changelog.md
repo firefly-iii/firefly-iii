@@ -16,7 +16,8 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 - Lots of code cleanup and small quality issues fixed.
 
 ### Fixed
-
+- #11803
+- #11641
 - [Discussion 11879](https://github.com/orgs/firefly-iii/discussions/11879) (Searching for accounts should include inactive accounts?) started by @b-ryan
 - [Issue 11916](https://github.com/firefly-iii/firefly-iii/issues/11916) (Balance is not recalculated when multiple transactions are selected and then deleted) reported by @elp3dr0
 - [Discussion 11936](https://github.com/orgs/firefly-iii/discussions/11936) (Links in emails don't link to correct domain) started by @SamLMB

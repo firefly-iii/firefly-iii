@@ -964,7 +964,7 @@ export default {
                                     // console.log('Upload complete!');
                                     return true;
                                 }).catch(error => {
-                                console.error('Could not upload file.');
+                                console.error('[c] Could not upload file.');
                                 console.error(error);
                                 uploads++;
                                 this.error_message = 'Could not upload attachment: ' + error;
