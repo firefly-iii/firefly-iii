@@ -83,7 +83,7 @@
                 <p>The upgrade and installation is ongoing. Please track its progress through the box below.</p>
                 <div class="row">
                     <div class="col-lg-12">
-                        <div id="status-box p-3 install-box-border">
+                        <div id="status-box" class="p-3 install-box-border">
                             <span class="fa fa-spin fa-spinner"></span> Waiting to start...
                         </div>
                     </div>
