@@ -59,7 +59,7 @@ class SecureHeaders
             "object-src 'none'",
             sprintf("script-src 'unsafe-eval' 'strict-dynamic' 'nonce-%1s'", $nonce),
             // sprintf("style-src 'self' 'nonce-%1s'", $nonce), // safe variant
-            "style-src 'self' 'unsafe-eval'", // unsafe variant
+            "style-src 'self' 'unsafe-inline'", // unsafe variant
             "base-uri 'self'",
             "form-action 'self'",
             "font-src 'self' data:",
