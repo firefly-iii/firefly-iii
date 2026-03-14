@@ -355,7 +355,11 @@ trait RecurrenceValidation
             }
             if (array_key_exists('id', $transaction)) { // don't matter if $idsMandatory
                 Log::debug('Array has ID.');
-                $idCount = $recurrence->recurrenceTransactions()->where('recurrences_transactions.id', (int) $transaction['id'])->count();
+                $idCount = $recurrence
+                    ->recurrenceTransactions()
+                    ->where('recurrences_transactions.id', (int) $transaction['id'])
+                    ->count()
+                ;
                 if (0 === $idCount) {
                     Log::debug('ID does not exist or no match. Count another unmatched ID.');
                     ++$unmatchedIds;

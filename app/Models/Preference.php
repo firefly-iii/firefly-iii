@@ -73,7 +73,11 @@ class Preference extends Model
 
             // try again with ID, but this time don't care about the preferred user_group_id
             if (null === $preference) {
-                $preference = $user->preferences()->where('id', (int) $value)->first();
+                $preference = $user
+                    ->preferences()
+                    ->where('id', (int) $value)
+                    ->first()
+                ;
             }
             if (null !== $preference) {
                 /** @var Preference $preference */
