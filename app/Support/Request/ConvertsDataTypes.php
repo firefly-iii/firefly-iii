@@ -38,6 +38,7 @@ use function Safe\preg_replace;
 
 /**
  * Trait ConvertsDataTypes
+ *
  * @method UserGroup validateUserGroup(Request $request)
  */
 trait ConvertsDataTypes
