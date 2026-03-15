@@ -474,7 +474,7 @@ return [
     'search_modifier_not_tag_contains'                    => 'Tag does not contain ":value"',
     'search_modifier_tag_ends'                            => 'Tag ends with ":value"',
     'search_modifier_tag_starts'                          => 'Tag starts with ":value"',
-    'search_modifier_not_tag_starts' => 'No tag starts with ":value"',
+    'search_modifier_not_tag_starts'                      => 'No tag starts with ":value"',
     'search_modifier_not_tag_is'                          => 'No tag is ":value"',
     'search_modifier_date_on_year'                        => 'Transaction is in year ":value"',
     'search_modifier_not_date_on_year'                    => 'Transaction is not in year ":value"',
