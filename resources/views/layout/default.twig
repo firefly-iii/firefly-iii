@@ -131,13 +131,13 @@
                     </li>
 
                     <li>
-                        <span style="color:#fff;padding: 15px;display: block;line-height: 20px;">
+                        <span class="date-range-holder">
                             <span id="daterange"></span>
                         </span>
                     </li>
 
                     <li class="dropdown user user-menu">
-                    <span style="cursor:default;color:#fff;padding: 15px;display: block;line-height: 20px;">
+                    <span class="dropdown-holder">
                         <span class="hidden-xs">{{ Auth.user.email }}</span>
                     </span>
                     </li>
@@ -290,10 +290,10 @@
     </script>
     <noscript><p><img
                 src="//{{ config('firefly.tracker_url') }}/matomo.php?idsite={{ config('firefly.tracker_site_id') }}&amp;rec=1"
-                style="border:0;" alt=""/></p></noscript>
+                class="no-border" alt=""/></p></noscript>
 {% endif %}
 
-<form id="logout-form" action="{{ route('logout') }}" method="POST" style="display: none;">
+<form id="logout-form" action="{{ route('logout') }}" method="POST" class="hidden">
     <input type="hidden" name="_token" value="{{ csrf_token() }}"/>
 </form>
 

@@ -73,6 +73,10 @@ use NotificationChannels\Pushover\PushoverReceiver;
 use SensitiveParameter;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
+/**
+ * @property null|UserGroup $userGroup
+ * @property bool           $blocked
+ */
 class User extends Authenticatable
 {
     use HasApiTokens;
@@ -102,9 +106,6 @@ class User extends Authenticatable
         throw new NotFoundHttpException();
     }
 
-    /**
-     * Link to accounts.
-     */
     public function accounts(): HasMany
     {
         return $this->hasMany(Account::class);
@@ -476,7 +477,7 @@ class User extends Authenticatable
 
     protected function casts(): array
     {
-        return ['created_at' => 'datetime', 'updated_at' => 'datetime', 'blocked'    => 'boolean'];
+        return ['created_at' => 'datetime', 'updated_at' => 'datetime', 'blocked' => 'boolean'];
     }
 
     /**

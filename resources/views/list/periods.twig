@@ -8,15 +8,15 @@
             <table class="table table-hover">
                 {% if period.total_transactions > 0 %}
                     <tr>
-                        <td style="width:33%;">{{ 'transactions'|_ }}</td>
-                        <td style="text-align: right;">{{ period.total_transactions }}</td>
+                        <td class="third">{{ 'transactions'|_ }}</td>
+                        <td class="text-right">{{ period.total_transactions }}</td>
                     </tr>
                 {% endif %}
                 {% for entry in period.spent %}
                     {% if entry.amount != 0 %}
                         <tr>
-                            <td style="width:33%;">{{ 'spent'|_ }}</td>
-                            <td style="text-align: right;">
+                            <td class="third">{{ 'spent'|_ }}</td>
+                            <td class="text-right">
                                 <span title="{{ entry.count }}">
                                     {{ formatAmountBySymbol(entry.amount, entry.currency_symbol, entry.currency_decimal_places) }}
                                 </span>
@@ -28,8 +28,8 @@
                 {% for entry in period.earned %}
                     {% if entry.amount != 0 %}
                         <tr>
-                            <td style="width:33%;">{{ 'earned'|_ }}</td>
-                            <td style="text-align: right;">
+                            <td class="third">{{ 'earned'|_ }}</td>
+                            <td class="text-right">
                                 <span title="{{ entry.count }}">
                                     {% if entry.amount < 0 %}
                                         {{ formatAmountBySymbol(entry.amount*-1, entry.currency_symbol, entry.currency_decimal_places) }}
@@ -45,8 +45,8 @@
                 {% for entry in period.transferred %}
                     {% if entry.amount != 0 %}
                         <tr>
-                            <td style="width:33%;">{{ 'transferred'|_ }}</td>
-                            <td style="text-align: right;">
+                            <td class="third">{{ 'transferred'|_ }}</td>
+                            <td class="text-right">
                                 <span title="{{ entry.count }}">
                                     {{ formatAmountBySymbol(entry.amount*-1, entry.currency_symbol, entry.currency_decimal_places) }}
                                 </span>
@@ -58,8 +58,8 @@
                 {% for entry in period.transferred_away %}
                     {% if entry.amount != 0 %}
                         <tr>
-                            <td style="width:33%;">{{ 'transferred_away'|_ }}</td>
-                            <td style="text-align: right;">
+                            <td class="third">{{ 'transferred_away'|_ }}</td>
+                            <td class="text-right">
                                 <span title="{{ entry.count }}">
                                     {% if entry.amount < 0 %}
                                         {{ formatAmountBySymbol(entry.amount, entry.currency_symbol, entry.currency_decimal_places) }}
@@ -75,8 +75,8 @@
                 {% for entry in period.transferred_in %}
                     {% if entry.amount != 0 %}
                         <tr>
-                            <td style="width:33%;">{{ 'transferred_in'|_ }}</td>
-                            <td style="text-align: right;">
+                            <td class="third">{{ 'transferred_in'|_ }}</td>
+                            <td class="text-right">
                                 <span title="{{ entry.count }}">
                                     {% if entry.amount < 0 %}
                                         {{ formatAmountBySymbol(entry.amount*-1, entry.currency_symbol, entry.currency_decimal_places) }}

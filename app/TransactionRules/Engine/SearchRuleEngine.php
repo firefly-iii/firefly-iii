@@ -255,7 +255,7 @@ class SearchRuleEngine implements RuleEngineInterface
             $searchEngine = app(SearchInterface::class);
             $searchEngine->setUser($this->user);
             $searchEngine->setPage(1);
-            $searchEngine->setLimit(31337);
+            $searchEngine->setLimit(31_337);
 
             foreach ($searchArray as $type => $value) {
                 $searchEngine->parseQuery(sprintf('%s:%s', $type, $value));
@@ -345,7 +345,7 @@ class SearchRuleEngine implements RuleEngineInterface
         $searchEngine = app(SearchInterface::class);
         $searchEngine->setUser($this->user);
         $searchEngine->setPage(1);
-        $searchEngine->setLimit(31337);
+        $searchEngine->setLimit(31_337);
         $searchEngine->setDate($date);
         Log::debug('Search array', $searchArray);
 

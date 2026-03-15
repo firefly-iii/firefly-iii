@@ -61,9 +61,9 @@ abstract class TestCase extends BaseTestCase
     {
         $group = UserGroup::create(['title' => 'test@email.com']);
         $role  = UserRole::where('title', 'owner')->first();
-        $user  = User::create(['email'         => 'test@email.com', 'password'      => 'password', 'user_group_id' => $group->id]);
+        $user  = User::create(['email' => 'test@email.com', 'password' => 'password', 'user_group_id' => $group->id]);
 
-        GroupMembership::create(['user_id'       => $user->id, 'user_group_id' => $group->id, 'user_role_id'  => $role->id]);
+        GroupMembership::create(['user_id' => $user->id, 'user_group_id' => $group->id, 'user_role_id' => $role->id]);
 
         return $user;
     }

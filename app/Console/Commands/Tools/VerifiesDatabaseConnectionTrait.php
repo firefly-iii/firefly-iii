@@ -35,7 +35,7 @@ trait VerifiesDatabaseConnectionTrait
     {
         $loops     = 30;
         $loop      = 0;
-        $queries   = ['pgsql'  => 'SELECT * FROM pg_catalog.pg_tables;', 'sqlite' => 'SELECT name FROM sqlite_schema;', 'mysql'  => 'SHOW TABLES;'];
+        $queries   = ['pgsql' => 'SELECT * FROM pg_catalog.pg_tables;', 'sqlite' => 'SELECT name FROM sqlite_schema;', 'mysql' => 'SHOW TABLES;'];
         $default   = config('database.default');
         if (!array_key_exists($default, $queries)) {
             $this->friendlyWarning(sprintf('Cannot validate database connection for "%s"', $default));

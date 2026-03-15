@@ -32,9 +32,11 @@ use RuntimeException;
 abstract class AggregateFormRequest extends ApiRequest
 {
     /**
-     * @var ApiRequest[]
+     * @var Request[]
      */
-    protected array $requests = [];
+    protected array $requests      = [];
+
+    protected array $acceptedRoles = [];
 
     #[Override]
     public function initialize(

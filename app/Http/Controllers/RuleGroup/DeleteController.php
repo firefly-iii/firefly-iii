@@ -31,7 +31,6 @@ use FireflyIII\Support\Facades\Preferences;
 use Illuminate\Contracts\View\Factory;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
-use Illuminate\Routing\Redirector;
 use Illuminate\View\View;
 
 /**
@@ -71,13 +70,13 @@ final class DeleteController extends Controller
         // put previous url in session
         $this->rememberPreviousUrl('rule-groups.delete.url');
 
-        return view('rules.rule-group.delete', ['ruleGroup' => $ruleGroup, 'subTitle'  => $subTitle]);
+        return view('rules.rule-group.delete', ['ruleGroup' => $ruleGroup, 'subTitle' => $subTitle]);
     }
 
     /**
      * Actually destroy the rule group.
      */
-    public function destroy(Request $request, RuleGroup $ruleGroup): Redirector|RedirectResponse
+    public function destroy(Request $request, RuleGroup $ruleGroup): RedirectResponse
     {
         $title  = $ruleGroup->title;
 

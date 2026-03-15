@@ -95,7 +95,7 @@ final class DeleteController extends Controller
     /**
      * Actually destroys the journal.
      */
-    public function destroy(TransactionGroup $group): Redirector|RedirectResponse
+    public function destroy(TransactionGroup $group): RedirectResponse
     {
         Log::debug(sprintf('Now in %s(#%d).', __METHOD__, $group->id));
         if (!$this->isEditableGroup($group)) {

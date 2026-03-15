@@ -34,6 +34,8 @@ class UpdateRequest extends FormRequest
     use ChecksLogin;
     use ConvertsDataTypes;
 
+    protected array $acceptedRoles = [];
+
     public function getDate(): ?Carbon
     {
         return $this->getCarbonDate('date');

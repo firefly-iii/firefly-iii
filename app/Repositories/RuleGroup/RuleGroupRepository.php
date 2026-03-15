@@ -382,7 +382,7 @@ class RuleGroupRepository implements RuleGroupRepositoryInterface, UserGroupInte
             'user_group_id' => $this->user->user_group_id,
             'title'         => $data['title'],
             'description'   => $data['description'],
-            'order'         => 31337,
+            'order'         => 31_337,
             'active'        => array_key_exists('active', $data) ? $data['active'] : true,
         ]);
         $newRuleGroup->save();

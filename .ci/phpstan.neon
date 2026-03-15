@@ -14,10 +14,6 @@ parameters:
       enabled: false
     noNullableReturnTypeDeclaration:
       enabled: false
-    privateInFinalClass:
-      enabled: false
-    noIsset:
-      enabled: false
     finalInAbstractClass:
       enabled: false
     noConstructorParameterWithDefaultValue:
@@ -37,70 +33,26 @@ parameters:
     - Illuminate\Database\Eloquent\Model
   reportUnmatchedIgnoredErrors: true
   ignoreErrors:
-    # these are actually interesting but not right now:
-    - identifier: staticMethod.dynamicCall
-    - identifier: argument.templateType
-    - identifier: method.childReturnType
-    - identifier: instanceof.alwaysFalse
-    - identifier: deadCode.unreachable
-    - identifier: method.dynamicName
-    - identifier: larastan.noEnvCallsOutsideOfConfig
-    - identifier: property.notFound
-    - identifier: arguments.count
-    - identifier: staticMethod.dynamicName
-    - identifier: catch.neverThrown
-    - identifier: notIdentical.alwaysTrue
-    - identifier: method.notFound
-    - identifier: nullsafe.neverNull
-    - identifier: identical.alwaysFalse
-    - identifier: if.condNotBoolean
-    # - identifier: booleanNot.exprNotBoolean
-    - identifier: method.nonObject
-    - identifier: function.impossibleType
-    - identifier: booleanNot.exprNotBoolean
-    - identifier: ternary.condNotBoolean
-    - identifier: booleanNot.alwaysFalse
-    - identifier: booleanAnd.alwaysFalse
-    - identifier: greater.alwaysTrue
-    - identifier: function.alreadyNarrowedType
-    - identifier: booleanNot.alwaysTrue
-    - identifier: property.phpDocType
-    - identifier: nullCoalesce.offset
-    - identifier: nullCoalesce.variable
-    - identifier: larastan.noUnnecessaryCollectionCall
-    - identifier: varTag.differentVariable
-    - identifier: identical.alwaysTrue
-    - identifier: clone.nonObject
-    - identifier: assign.propertyReadOnly
-    - identifier: property.nonObject
-    - identifier: varTag.nativeType
-    - identifier: booleanAnd.leftAlwaysFalse
-    - identifier: property.onlyWritten
-    - identifier: parameter.phpDocType
-    - identifier: property.dynamicName
-    - identifier: property.unusedType
-    - identifier: staticMethod.deprecated
-    - identifier: greater.invalid
-    - identifier: instanceof.alwaysTrue
     # ignore everything but things that BREAK
     - identifier: property.deprecated
     - identifier: method.deprecated
     - identifier: cast.useless
-    - identifier: parameter.deprecatedClass
-    - identifier: method.deprecatedClass
     - identifier: argument.type
-    - identifier: return.type
-    - identifier: assign.propertyType
-    - identifier: return.unusedType
-    - identifier: return.phpDocType
-    # all errors below I will never fix.
+    # all errors below I will (probably) never fix.
+    - identifier: property.unusedType # one false positive
+    - identifier: varTag.nativeType # dont even know what im supposed to fix.
+    - identifier: method.notFound # way too many false positives
+    - identifier: catch.neverThrown # plenty of errors that are thrown undocumented
+    - identifier: staticMethod.dynamicName # dont care
+    - identifier: arguments.count # one false positive
+    - identifier: property.notFound # false positives
+    - identifier: method.dynamicName # i dont care
+    - identifier: staticMethod.dynamicCall # many false positives.
+    - identifier: argument.templateType # no clue how to fix single occurrence.
     # - '#expects view-string\|null, string given#'
     # - '#expects view-string, string given#'
     # - "#Parameter \\#[1-2] \\$num[1-2] of function bc[a-z]+ expects numeric-string, [a-z\\-|&]+ given#"
     - identifier: missingType.generics # not interesting enough to fix.
-    -
-        identifier: larastan.noEnvCallsOutsideOfConfig
-        path: ../app/Console/Commands/System/CreatesDatabase.php
     - identifier: missingType.iterableValue # not interesting enough to fix.
     - identifier: varTag.type # needs a custom extension for every repository, not gonna happen.
     # - '#Dynamic call to static method Illuminate#'

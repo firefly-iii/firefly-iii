@@ -31,14 +31,11 @@ use FireflyIII\Repositories\User\UserRepositoryInterface;
 use FireflyIII\Support\Facades\FireflyConfig;
 use FireflyIII\Support\Http\Controllers\CreateStuff;
 use FireflyIII\User;
-use Illuminate\Contracts\Foundation\Application;
 use Illuminate\Contracts\View\Factory;
 use Illuminate\Foundation\Auth\RegistersUsers;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
-use Illuminate\Routing\Redirector;
 use Illuminate\Support\Facades\Log;
-use Illuminate\Validation\ValidationException;
 use Illuminate\View\View;
 use Psr\Container\ContainerExceptionInterface;
 use Psr\Container\NotFoundExceptionInterface;
@@ -75,15 +72,7 @@ final class RegisterController extends Controller
         }
     }
 
-    /**
-     * Handle a registration request for the application.
-     *
-     * @return Application|Redirector|RedirectResponse
-     *
-     * @throws FireflyException
-     * @throws ValidationException
-     */
-    public function register(Request $request): Redirector|RedirectResponse
+    public function register(Request $request): RedirectResponse
     {
         $allowRegistration = $this->allowedToRegister();
         $inviteCode        = (string) $request->get('invite_code');
@@ -144,7 +133,7 @@ final class RegisterController extends Controller
 
         $email             = $request->old('email');
 
-        return view('auth.register', ['isDemoSite' => $isDemoSite, 'email'      => $email, 'pageTitle'  => $pageTitle, 'inviteCode' => $inviteCode]);
+        return view('auth.register', ['isDemoSite' => $isDemoSite, 'email' => $email, 'pageTitle' => $pageTitle, 'inviteCode' => $inviteCode]);
     }
 
     /**
@@ -170,13 +159,13 @@ final class RegisterController extends Controller
 
         $email             = $request?->old('email');
 
-        return view('auth.register', ['isDemoSite' => $isDemoSite, 'email'      => $email, 'pageTitle'  => $pageTitle]);
+        return view('auth.register', ['isDemoSite' => $isDemoSite, 'email' => $email, 'pageTitle' => $pageTitle]);
     }
 
     /**
      * @throws FireflyException
      */
-    protected function allowedToRegister(): bool
+    private function allowedToRegister(): bool
     {
         // is allowed to register?
         $allowRegistration = true;

@@ -105,7 +105,7 @@ class HandlesNewUserRegistration implements ShouldQueue
         if (null === $role) {
             throw new FireflyException('The user role is unexpectedly empty. Did you run all migrations?');
         }
-        GroupMembership::create(['user_id'       => $user->id, 'user_group_id' => $group->id, 'user_role_id'  => $role->id]);
+        GroupMembership::create(['user_id' => $user->id, 'user_group_id' => $group->id, 'user_role_id' => $role->id]);
         $user->user_group_id = $group->id;
         $user->save();
     }

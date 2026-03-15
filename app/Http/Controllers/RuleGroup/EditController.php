@@ -33,7 +33,6 @@ use Illuminate\Contracts\View\Factory;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
-use Illuminate\Routing\Redirector;
 use Illuminate\View\View;
 
 /**
@@ -78,7 +77,7 @@ final class EditController extends Controller
         session()->forget('rule-groups.edit.fromUpdate');
         session()->flash('preFilled', $preFilled);
 
-        return view('rules.rule-group.edit', ['ruleGroup' => $ruleGroup, 'subTitle'  => $subTitle]);
+        return view('rules.rule-group.edit', ['ruleGroup' => $ruleGroup, 'subTitle' => $subTitle]);
     }
 
     /**
@@ -113,7 +112,7 @@ final class EditController extends Controller
     /**
      * Update the rule group.
      *
-     * @return $this|Redirector|RedirectResponse
+     * @return RedirectResponse
      */
     public function update(RuleGroupFormRequest $request, RuleGroup $ruleGroup)
     {

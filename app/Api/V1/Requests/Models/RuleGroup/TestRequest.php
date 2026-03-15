@@ -37,9 +37,11 @@ class TestRequest extends FormRequest
     use ChecksLogin;
     use ConvertsDataTypes;
 
+    protected array $acceptedRoles = [];
+
     public function getTestParameters(): array
     {
-        return ['start'    => $this->getDate('start'), 'end'      => $this->getDate('end'), 'accounts' => $this->getAccounts()];
+        return ['start' => $this->getDate('start'), 'end' => $this->getDate('end'), 'accounts' => $this->getAccounts()];
     }
 
     public function rules(): array

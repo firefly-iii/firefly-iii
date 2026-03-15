@@ -66,7 +66,7 @@ class StoresNewIpAddress implements ShouldQueue
         }
         // add to array if not the case:
         if (false === $inArray) {
-            $preference[] = ['ip'       => $ip, 'time'     => now(config('app.timezone'))->format('Y-m-d H:i:s'), 'notified' => false];
+            $preference[] = ['ip' => $ip, 'time' => now(config('app.timezone'))->format('Y-m-d H:i:s'), 'notified' => false];
         }
         $preference = array_values($preference);
 

@@ -93,6 +93,6 @@ final class IndexController extends Controller
             $isOwner = false;
         }
 
-        return view('currencies.index', ['currencies' => $currencies, 'isOwner'    => $isOwner]);
+        return view('currencies.index', ['currencies' => $currencies, 'isOwner' => $isOwner]);
     }
 }

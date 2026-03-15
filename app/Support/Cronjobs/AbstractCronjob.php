@@ -35,7 +35,7 @@ abstract class AbstractCronjob
     public bool    $jobFired        = false;
     public bool    $jobSucceeded    = false;
     public ?string $message         = null;
-    public int     $timeBetweenRuns = 43200;
+    public int     $timeBetweenRuns = 43_200;
     protected Carbon $date;
     protected bool $force           = false;
 

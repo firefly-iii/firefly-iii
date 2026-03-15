@@ -34,6 +34,9 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
+/**
+ * @property array|string $message
+ */
 #[ObservedBy([DeletedWebhookMessageObserver::class])]
 class WebhookMessage extends Model
 {
@@ -77,7 +80,7 @@ class WebhookMessage extends Model
 
     protected function casts(): array
     {
-        return ['sent'    => 'boolean', 'errored' => 'boolean', 'uuid'    => 'string', 'message' => 'json', 'logs'    => 'json'];
+        return ['sent' => 'boolean', 'errored' => 'boolean', 'uuid' => 'string', 'message' => 'json', 'logs' => 'json'];
     }
 
     /**

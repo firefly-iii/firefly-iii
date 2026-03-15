@@ -7,5 +7,7 @@
 - {{ trans('email.ip_address') }}: {{ $ip }}
 - {{ trans('email.host_name') }}: {{ $host }}
 - {{ trans('email.user_agent') }}: {{ $userAgent }}
+- {{ trans('email.firefly_iii_url') }}: {{ $link }}
+
 
 @endcomponent

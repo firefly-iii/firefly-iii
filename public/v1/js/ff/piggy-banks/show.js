@@ -25,6 +25,10 @@ $(function () {
         lineChart('chart/piggy-bank/' + piggyBankID, 'piggy-bank-history');
     }
 
+    $('.confirm-history-delete').click(function() {
+            return confirm(confirmText);
+    });
+
     // on submit of logout button:
     $('.reset-link').click(function(e) {
         console.log('here we are');

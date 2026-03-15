@@ -12,7 +12,7 @@
                     <h3 class="box-title">{{ 'events'|_ }}</h3>
                 </div>
                 <div class="box-body">
-                    <canvas id="piggy-bank-history" style="width:100%;height:400px;" height="400" width="100%"></canvas>
+                    <canvas id="piggy-bank-history" class="wide-chart" height="400" width="100%"></canvas>
                 </div>
             </div>
         </div>
@@ -33,7 +33,7 @@
                 <div class="box-body no-padding">
                     <table class="table table-responsive table-hover" id="piggyDetails">
                         <tr>
-                            <td style="width:40%;">{{ 'saveOnAccounts'|_ }}</td>
+                            <td class="forty">{{ 'saveOnAccounts'|_ }}</td>
                             <td>
                                 {% for account in piggy.accounts %}
                                     <a href="{{ route('accounts.show', [account.account_id]) }}">{{ account.name }}</a><br>
@@ -42,7 +42,7 @@
                         </tr>
                         {% if piggy.object_group_title %}
                             <tr>
-                                <td style="width:40%;">{{ 'object_group'|_ }}</td>
+                                <td class="forty">{{ 'object_group'|_ }}</td>
                                 <td>{{ piggy.object_group_title }}</a></td>
                             </tr>
                         {% endif %}
@@ -114,7 +114,7 @@
             </div>
             <div class="box">
                 <div class="box-header with-border">
-                    <h3 class="box-title">{{ 'event_history'|_ }} (<a onclick="return confirm('{{ 'reset_history_confirm'|_|escape('js') }}');" class="reset-link" href="#">{{ 'reset_history'|_ }}</a>)</h3>
+                    <h3 class="box-title">{{ 'event_history'|_ }} (<a class="confirm-history-delete reset-link" href="#">{{ 'reset_history'|_ }}</a>)</h3>
                 </div>
                 <div class="box-body no-padding" id="piggyEvents">
                     {% include 'list/piggy-bank-events' %}
@@ -152,7 +152,7 @@
             </div>
         {% endif %}
     </div>
-    <form id="reset-form" action="{{ route('piggy-banks.reset', [piggyBank.id]) }}" method="POST" style="display: none;">
+    <form id="reset-form" action="{{ route('piggy-banks.reset', [piggyBank.id]) }}" method="POST" class="hidden">
         <input type="hidden" name="_token" value="{{ csrf_token() }}"/>
     </form>
 {% endblock %}
@@ -160,6 +160,7 @@
 {% block scripts %}
     <script type="text/javascript" nonce="{{ JS_NONCE }}">
         var piggyBankID = {{ piggyBank.id }};
+        var confirmText= '{{ 'reset_history_confirm'|_|escape('js') }}';
     </script>
 
     <script type="text/javascript" src="v1/js/lib/Chart.bundle.min.js?v={{ FF_BUILD_TIME }}" nonce="{{ JS_NONCE }}"></script>

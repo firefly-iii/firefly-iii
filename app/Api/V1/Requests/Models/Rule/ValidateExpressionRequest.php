@@ -35,6 +35,8 @@ class ValidateExpressionRequest extends FormRequest
 {
     use ChecksLogin;
 
+    protected array $acceptedRoles = [];
+
     public function rules(): array
     {
         return ['expression' => ['required', new IsValidActionExpression()]];

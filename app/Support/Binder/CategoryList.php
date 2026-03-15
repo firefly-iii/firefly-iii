@@ -26,6 +26,7 @@ namespace FireflyIII\Support\Binder;
 use FireflyIII\Models\Category;
 use Illuminate\Routing\Route;
 use Illuminate\Support\Collection;
+use Illuminate\Support\Facades\Log;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 /**
@@ -42,11 +43,12 @@ class CategoryList implements BinderInterface
             if ('allCategories' === $value) {
                 return auth()->user()->categories()->orderBy('name', 'ASC')->get();
             }
+            if ('' === $value) {
+                Log::warning('Category list count is zero, return 404.');
 
-            $list       = array_unique(array_map(\intval(...), explode(',', $value)));
-            if (0 === count($list)) {
                 throw new NotFoundHttpException();
             }
+            $list       = array_unique(array_map(\intval(...), explode(',', $value)));
 
             /** @var Collection $collection */
             $collection = auth()->user()->categories()->whereIn('id', $list)->get();

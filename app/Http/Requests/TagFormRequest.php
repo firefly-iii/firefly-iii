@@ -41,6 +41,8 @@ class TagFormRequest extends FormRequest
     use ChecksLogin;
     use ConvertsDataTypes;
 
+    protected array $acceptedRoles = [];
+
     /**
      * Get all data for controller.
      */

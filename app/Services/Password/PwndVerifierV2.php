@@ -44,7 +44,7 @@ class PwndVerifierV2 implements Verifier
         $prefix = substr($hash, 0, 5);
         $rest   = substr($hash, 5);
         $url    = sprintf('https://api.pwnedpasswords.com/range/%s', $prefix);
-        $opt    = ['headers' => ['User-Agent'  => sprintf('Firefly III v%s', config('firefly.version')), 'Add-Padding' => 'true'], 'timeout' => 3.1415];
+        $opt    = ['headers' => ['User-Agent' => sprintf('Firefly III v%s', config('firefly.version')), 'Add-Padding' => 'true'], 'timeout' => 3.1415];
 
         Log::debug(sprintf('hash prefix is %s', $prefix));
         Log::debug(sprintf('rest is %s', $rest));

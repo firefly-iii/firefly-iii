@@ -86,6 +86,8 @@ class AccountDestroyService
         foreach ($collection as $row) {
             if ((int) $row->the_count > 1) {
                 $journalId = $row->transaction_journal_id;
+
+                /** @var null|TransactionJournal $journal */
                 $journal   = $user->transactionJournals()->find($journalId);
                 if (null !== $journal) {
                     Log::debug(sprintf('Deleted journal #%d because it has the same source as destination.', $journal->id));

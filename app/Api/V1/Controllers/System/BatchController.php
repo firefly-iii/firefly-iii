@@ -1,7 +1,5 @@
 <?php
 
-declare(strict_types=1);
-
 /*
  * BatchController.php
  * Copyright (c) 2026 james@firefly-iii.org
@@ -21,6 +19,8 @@ declare(strict_types=1);
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
+
+declare(strict_types=1);
 
 namespace FireflyIII\Api\V1\Controllers\System;
 
@@ -62,7 +62,7 @@ final class BatchController extends Controller
         }
         Log::debug(sprintf('Counted %d journals.', count($journals)));
 
-        /** @var TransactionJournal $first */
+        /** @var null|TransactionJournal $first */
         $first             = $journals->first();
         $group             = $first?->transactionGroup;
         if (null === $group) {

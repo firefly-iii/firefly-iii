@@ -94,7 +94,7 @@ class UpgradesRecurrenceMetaData extends Command
             $value = json_encode($array, JSON_THROW_ON_ERROR);
         }
 
-        RecurrenceTransactionMeta::create(['rt_id' => $firstTransaction->id, 'name'  => $meta->name, 'value' => $value]);
+        RecurrenceTransactionMeta::create(['rt_id' => $firstTransaction->id, 'name' => $meta->name, 'value' => $value]);
         $meta->forceDelete();
 
         return 1;

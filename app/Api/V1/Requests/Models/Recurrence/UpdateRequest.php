@@ -50,6 +50,8 @@ class UpdateRequest extends FormRequest
     use RecurrenceValidation;
     use TransactionValidation;
 
+    protected array $acceptedRoles = [];
+
     /**
      * Get all data from the request.
      */

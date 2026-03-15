@@ -63,7 +63,7 @@ final class DeleteController extends Controller
     /**
      * Delete account screen.
      *
-     * @return Factory|Redirector|RedirectResponse|View
+     * @return Factory|RedirectResponse|View
      */
     public function delete(Account $account): Factory|\Illuminate\Contracts\View\View|Redirector|RedirectResponse
     {
@@ -80,13 +80,13 @@ final class DeleteController extends Controller
         // put previous url in session
         $this->rememberPreviousUrl('accounts.delete.url');
 
-        return view('accounts.delete', ['account'     => $account, 'subTitle'    => $subTitle, 'accountList' => $accountList, 'objectType'  => $objectType]);
+        return view('accounts.delete', ['account' => $account, 'subTitle' => $subTitle, 'accountList' => $accountList, 'objectType' => $objectType]);
     }
 
     /**
      * Delete the account.
      */
-    public function destroy(Request $request, Account $account): Redirector|RedirectResponse
+    public function destroy(Request $request, Account $account): RedirectResponse
     {
         if (!$this->isEditableAccount($account)) {
             return $this->redirectAccountToAccount($account);

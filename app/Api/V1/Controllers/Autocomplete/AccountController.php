@@ -80,16 +80,16 @@ final class AccountController extends Controller
     public function accounts(AutocompleteApiRequest $request): JsonResponse
     {
         // Log::debug('Before All.');
-        ['types' => $types, 'query' => $query, 'date'  => $date, 'limit' => $limit] = $request->attributes->all();
+        ['types' => $types, 'query' => $query, 'date' => $date, 'limit' => $limit] = $request->attributes->all();
 
         $date ??= today(config('app.timezone'));
 
         // set date to end-of-day for account balance. so it is at $date 23:59:59
         $date->endOfDay();
 
-        $return                                                                     = [];
-        $result                                                                     = $this->repository->searchAccount((string) $query, $types, $limit);
-        $allBalances                                                                = Steam::accountsBalancesOptimized($result, $date, $this->primaryCurrency, $this->convertToPrimary);
+        $return                                                                    = [];
+        $result                                                                    = $this->repository->searchAccount((string) $query, $types, $limit);
+        $allBalances                                                               = Steam::accountsBalancesOptimized($result, $date, $this->primaryCurrency, $this->convertToPrimary);
 
         /** @var Account $account */
         foreach ($result as $account) {

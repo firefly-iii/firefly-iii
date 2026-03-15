@@ -40,7 +40,6 @@ use Illuminate\Contracts\View\Factory;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
-use Illuminate\Routing\Redirector;
 use Illuminate\View\View;
 
 /**
@@ -95,13 +94,13 @@ final class CreateController extends Controller
             if (count($words) > 0) {
                 session()->flash('warning', trans('firefly.rule_from_search_words', ['string' => implode('', $words)]));
                 foreach ($words as $word) {
-                    $operators[] = ['type'  => 'description_contains', 'value' => $word];
+                    $operators[] = ['type' => 'description_contains', 'value' => $word];
                 }
             }
             if (count($excludedWords) > 0) {
                 session()->flash('warning', trans('firefly.rule_from_search_words', ['string' => implode('', $excludedWords)]));
                 foreach ($excludedWords as $excludedWord) {
-                    $operators[] = ['type'  => '-description_contains', 'value' => $excludedWord];
+                    $operators[] = ['type' => '-description_contains', 'value' => $excludedWord];
                 }
             }
             $oldTriggers   = $this->parseFromOperators($operators);
@@ -268,7 +267,7 @@ final class CreateController extends Controller
     /**
      * Store the new rule.
      *
-     * @return Redirector|RedirectResponse
+     * @return RedirectResponse
      */
     public function store(RuleFormRequest $request)
     {

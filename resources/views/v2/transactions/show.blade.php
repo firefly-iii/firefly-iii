@@ -16,7 +16,7 @@
                             <table class="table table-x table-hover">
                                 <tbody>
                                 <tr>
-                                    <th style="width:10%;">
+                                    <th class="ten">
                                         <template x-if="'withdrawal' === groupProperties.transactionType">
                                             <em class="fa fa-solid fa-arrow-left"
                                                 :title="groupProperties.transactionTypeTranslated"></em>
@@ -78,7 +78,7 @@
                             <table class="table table-x table-hover">
                                 <tbody>
                                 <tr>
-                                    <th style="width:10%;">
+                                    <th class="ten">
                                         <em class="fa-solid fa-money-bill-wave" title="{{ __('firefly.amount') }}"></em>
                                     </th>
                                     <td>
@@ -213,7 +213,7 @@
                                     </tr>
                                     <template x-if="null !== entry.category_name">
                                         <tr>
-                                            <th style="width:10%;">
+                                            <th class="ten">
                                                 <em title="{{ __('firefly.category') }}"
                                                     class="fa-solid fa-bookmark"></em>
                                             </th>

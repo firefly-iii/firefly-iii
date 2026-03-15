@@ -40,6 +40,8 @@ class BudgetFormStoreRequest extends FormRequest
     use ConvertsDataTypes;
     use ValidatesAutoBudgetRequest;
 
+    protected array $acceptedRoles = [];
+
     /**
      * Returns the data required by the controller.
      */

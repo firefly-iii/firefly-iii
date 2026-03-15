@@ -144,15 +144,17 @@ class RemoteUserGuard implements Guard
         return $this->user?->id;
     }
 
-    public function setUser(Authenticatable|User|null $user): void
+    public function setUser(Authenticatable|User|null $user): Guard
     {
         // Log::debug(sprintf('Now at %s', __METHOD__));
         if ($user instanceof User) {
             $this->user = $user;
 
-            return;
+            return $this;
         }
         Log::error(sprintf('Did not set user at %s', __METHOD__));
+
+        return $this;
     }
 
     public function user(): ?User

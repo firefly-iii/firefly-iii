@@ -62,7 +62,7 @@ final class TransactionTypeController extends Controller
         /** @var TransactionType $type */
         foreach ($types as $type) {
             // different key for consistency.
-            $array[] = ['id'   => (string) $type->id, 'name' => $type->type, 'type' => $type->type];
+            $array[] = ['id' => (string) $type->id, 'name' => $type->type, 'type' => $type->type];
         }
 
         return response()->api($array);

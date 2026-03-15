@@ -2,7 +2,7 @@
     <thead>
     <tr>
         <th data-defaultsign="az">{{ 'name'|_ }}</th>
-        <th data-defaultsign="_19" style="text-align: right;">{{ 'spent'|_ }}</th>
+        <th data-defaultsign="_19" class="text-right">{{ 'spent'|_ }}</th>
     </tr>
     </thead>
     <tbody>
@@ -12,7 +12,7 @@
                 <td data-value="{{ account.name }} ({{ currency.currency_name }})">
                     <a href="{{ route('accounts.show', account.id) }}" title="{{ account.iban }}">{{ account.name }} ({{ currency.currency_name }})</a>
                 </td>
-                <td data-value="{{ currency.sum }}" style="text-align: right;">
+                <td data-value="{{ currency.sum }}" class="text-right">
                     {{ formatAmountBySymbol(currency.sum, currency.currency_symbol, currency.currency_decimal_places) }}
                 </td>
             </tr>
@@ -23,7 +23,7 @@
     {% for sum in sums %}
         <tr>
             <td>{{ 'sum'|_ }} ({{ sum.currency_name }})</td>
-            <td style="text-align: right;">
+            <td class="text-right">
                 {{ formatAmountBySymbol(sum.sum, sum.currency_symbol, sum.currency_decimal_places) }}
             </td>
         </tr>

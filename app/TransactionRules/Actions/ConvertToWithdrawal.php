@@ -238,13 +238,19 @@ class ConvertToWithdrawal implements ActionInterface
      */
     private function getDestinationAccount(TransactionJournal $journal): Account
     {
-        /** @var null|Transaction $destAccount */
-        $destAccount = $journal->transactions()->where('amount', '>', 0)->first();
-        if (null === $destAccount) {
+        /** @var null|Transaction $destTransaction */
+        $destTransaction = $journal->transactions()->where('amount', '>', 0)->first();
+        if (null === $destTransaction) {
             throw new FireflyException(sprintf('Cannot find destination transaction for journal #%d', $journal->id));
         }
 
-        return $destAccount->account;
+        /** @var null|Account $res */
+        $res             = $destTransaction->account;
+        if (null === $res) {
+            throw new FireflyException('Account is unexpectedly NULL.');
+        }
+
+        return $res;
     }
 
     /**
@@ -258,6 +264,12 @@ class ConvertToWithdrawal implements ActionInterface
             throw new FireflyException(sprintf('Cannot find source transaction for journal #%d', $journal->id));
         }
 
-        return $sourceTransaction->account;
+        /** @var null|Account $res */
+        $res               = $sourceTransaction->account;
+        if (null === $res) {
+            throw new FireflyException('Account is unexpectedly NULL.');
+        }
+
+        return $res;
     }
 }

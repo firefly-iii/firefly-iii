@@ -25,7 +25,7 @@ declare(strict_types=1);
 namespace FireflyIII\Api\V1\Requests\Models\TransactionCurrency;
 
 use FireflyIII\Api\V1\Requests\ApiRequest;
-use Illuminate\Contracts\Validation\Validator;
+use FireflyIII\Validation\FireflyValidator;
 
 class CurrencyCodeRequest extends ApiRequest
 {
@@ -34,10 +34,10 @@ class CurrencyCodeRequest extends ApiRequest
         return ['code' => sprintf('exists:transaction_currencies,code|%s', $this->required)];
     }
 
-    public function withValidator(Validator $validator): void
+    public function withValidator(FireflyValidator $validator): void
     {
-        $validator->after(function (Validator $validator): void {
-            if (!$validator->valid()) {
+        $validator->after(function (FireflyValidator $validator): void {
+            if (0 === count($validator->valid())) {
                 return;
             }
             $code = $this->convertString('code', '');

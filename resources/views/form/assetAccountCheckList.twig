@@ -5,7 +5,7 @@
         {% for groupName, accounts in grouped %}
             <strong>{{ groupName }}</strong><br/>
             {% for id, account in accounts %}
-                <div class="checkbox" style="margin-left:2em;">
+                <div class="checkbox ml-4">
                     <label>
                         {% if account in selected or (selected|length == 0 and options.select_all == true) %}
                             {{ Html.checkbox(name~'[]',true, id).id(id) }}

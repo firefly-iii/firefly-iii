@@ -31,7 +31,6 @@ use FireflyIII\Support\Facades\Preferences;
 use Illuminate\Contracts\View\Factory;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
-use Illuminate\Routing\Redirector;
 use Illuminate\View\View;
 
 /**
@@ -72,13 +71,13 @@ final class DeleteController extends Controller
 
         $journalsCreated = $this->repository->getTransactions($recurrence)->count();
 
-        return view('recurring.delete', ['recurrence'      => $recurrence, 'subTitle'        => $subTitle, 'journalsCreated' => $journalsCreated]);
+        return view('recurring.delete', ['recurrence' => $recurrence, 'subTitle' => $subTitle, 'journalsCreated' => $journalsCreated]);
     }
 
     /**
      * Destroy the recurring transaction.
      */
-    public function destroy(RecurringRepositoryInterface $repository, Request $request, Recurrence $recurrence): Redirector|RedirectResponse
+    public function destroy(RecurringRepositoryInterface $repository, Request $request, Recurrence $recurrence): RedirectResponse
     {
         $repository->destroy($recurrence);
         $request->session()->flash('success', (string) trans('firefly.recurrence_deleted', ['title' => $recurrence->title]));

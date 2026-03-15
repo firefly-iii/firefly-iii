@@ -74,7 +74,7 @@ final class ReconcileController extends Controller
     /**
      * Reconciliation overview.
      *
-     * @return Factory|Redirector|RedirectResponse|View
+     * @return Factory|RedirectResponse|View
      *
      * @throws FireflyException
      *                                              */
@@ -166,7 +166,7 @@ final class ReconcileController extends Controller
      *
      * @throws DuplicateTransactionException
      */
-    public function submit(ReconciliationStoreRequest $request, Account $account, Carbon $start, Carbon $end): Redirector|RedirectResponse
+    public function submit(ReconciliationStoreRequest $request, Account $account, Carbon $start, Carbon $end): RedirectResponse
     {
         if (!$this->isEditableAccount($account)) {
             return $this->redirectAccountToAccount($account);

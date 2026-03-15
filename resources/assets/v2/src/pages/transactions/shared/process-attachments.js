@@ -37,7 +37,7 @@ let uploadFiles = function (fileData) {
                         document.dispatchEvent(event);
                     }
                 }).catch(error => {
-                    console.error('Could not upload');
+                    console.error('[a] Could not upload');
                     console.error(error);
                     uploads++;
                     // break right away

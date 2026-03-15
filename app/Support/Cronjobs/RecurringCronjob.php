@@ -54,7 +54,7 @@ class RecurringCronjob extends AbstractCronjob
             Log::info('Recurring transactions cron-job has never fired before.');
         }
         // less than half a day ago:
-        if ($lastTime > 0 && $diff <= 43200) {
+        if ($lastTime > 0 && $diff <= 43_200) {
             Log::info(sprintf('It has been "%s" since the recurring transactions cron-job has fired.', $diffForHumans));
             if (false === $this->force) {
                 Log::info('The cron-job will not fire now.');
@@ -68,7 +68,7 @@ class RecurringCronjob extends AbstractCronjob
             Log::info('Execution of the recurring transaction cron-job has been FORCED.');
         }
 
-        if ($lastTime > 0 && $diff > 43200) {
+        if ($lastTime > 0 && $diff > 43_200) {
             Log::info(sprintf('It has been "%s" since the recurring transactions cron-job has fired. It will fire now!', $diffForHumans));
         }
 

@@ -433,7 +433,7 @@ class BillRepository implements BillRepositoryInterface, UserGroupInterface
         /** @var Rule $rule */
         foreach ($rules as $rule) {
             $array[$rule->action_value] ??= [];
-            $array[$rule->action_value][] = ['id'     => $rule->id, 'title'  => $rule->title, 'active' => $rule->active];
+            $array[$rule->action_value][] = ['id' => $rule->id, 'title' => $rule->title, 'active' => $rule->active];
         }
         $return = [];
         foreach ($collection as $bill) {

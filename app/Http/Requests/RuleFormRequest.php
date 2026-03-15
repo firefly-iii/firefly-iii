@@ -41,6 +41,8 @@ class RuleFormRequest extends FormRequest
     use ConvertsDataTypes;
     use GetRuleConfiguration;
 
+    protected array $acceptedRoles = [];
+
     public static function replaceAmountTrigger(array $array): array
     {
         // do some sneaky search and replace.

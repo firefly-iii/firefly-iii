@@ -188,7 +188,7 @@ class TransactionJournalFactory
 
     protected function storeMeta(TransactionJournal $journal, array $data, string $field): void
     {
-        $set     = ['journal' => $journal, 'name'    => $field, 'data'    => (string) ($data[$field] ?? '')];
+        $set     = ['journal' => $journal, 'name' => $field, 'data' => (string) ($data[$field] ?? '')];
         if (array_key_exists($field, $data) && $data[$field] instanceof Carbon) {
             $data[$field]->setTimezone(config('app.timezone'));
             Log::debug(sprintf('%s Date: %s (%s)', $field, $data[$field], $data[$field]->timezone->getName()));
@@ -338,7 +338,7 @@ class TransactionJournalFactory
             'date_tz'                 => $carbon->format('e'),
             'order'                   => $order,
             'tag_count'               => 0,
-            'completed'               => !$row['batch_submission'],
+            'completed'               => is_bool($row['batch_submission']) && !$row['batch_submission'],
         ]);
         Log::debug(sprintf('Created new journal #%d: "%s"', $journal->id, $journal->description));
 
@@ -574,16 +574,11 @@ class TransactionJournalFactory
             return [$sourceAccount, $account];
         }
 
-        if (!$sourceAccount instanceof Account) {
-            Log::debug('Source account is NULL, destination account is not.');
-            $account = $this->accountRepository->getReconciliation($destinationAccount);
-            Log::debug(sprintf('Will return account #%d ("%s") of type "%s"', $account->id, $account->name, $account->accountType->type));
+        Log::debug('Source account is NULL, destination account is not.');
+        $account = $this->accountRepository->getReconciliation($destinationAccount);
+        Log::debug(sprintf('Will return account #%d ("%s") of type "%s"', $account->id, $account->name, $account->accountType->type));
 
-            return [$account, $destinationAccount];
-        }
-        Log::debug('Unused fallback');
-
-        return [$sourceAccount, $destinationAccount];
+        return [$account, $destinationAccount];
     }
 
     private function storeLocation(TransactionJournal $journal, NullArrayObject $data): void

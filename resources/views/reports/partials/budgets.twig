@@ -3,13 +3,13 @@
     <tr>
         <th data-defaultsign="az">{{ 'budget'|_ }}</th>
         <th data-defaultsign="month" class="hidden-xs">{{ 'date'|_ }}</th>
-        <th data-defaultsign="_19" style="text-align: right;" class="hidden-xs">{{ 'budgeted'|_ }}</th>
+        <th data-defaultsign="_19"  class="text-right hidden-xs">{{ 'budgeted'|_ }}</th>
         <th data-defaultsign="_19" class="hidden-xs">{{ trans('list.percentage') }}</th>
-        <th data-defaultsign="_19" style="text-align: right;">{{ 'spent'|_ }}</th>
+        <th data-defaultsign="_19" class="text-right">{{ 'spent'|_ }}</th>
         <th data-defaultsign="_19" class="hidden-xs">{{ trans('list.percentage') }}</th>
         <th data-defaultsort="disabled" class="hidden-xs">&nbsp;</th>
-        <th data-defaultsign="_19" style="text-align: right;" class="hidden-xs">{{ 'left'|_ }}</th>
-        <th data-defaultsign="_19" style="text-align: right;">{{ 'overspent'|_ }}</th>
+        <th data-defaultsign="_19" class="text-right hidden-xs">{{ 'left'|_ }}</th>
+        <th data-defaultsign="_19" class="text-right">{{ 'overspent'|_ }}</th>
     </tr>
     </thead>
     <tbody>
@@ -37,7 +37,7 @@
                 </td>
 
                 <!-- budgeted, hidden on mobile -->
-                <td data-value="{{ budget_limit.budgeted|default(0) }}" style="text-align: right;" class="hidden-xs">
+                <td data-value="{{ budget_limit.budgeted|default(0) }}" class="text-right hidden-xs">
                     {% if null != budget_limit.budgeted %}
                         {{ formatAmountBySymbol(budget_limit.budgeted, budget_limit.currency_symbol, budget_limit.currency_decimal_places) }}
                     {% endif %}
@@ -49,7 +49,7 @@
 
 
                 <!-- spent, visible on mobile -->
-                <td data-value="{{ budget_limit.spent|default(0) }}" style="text-align: right;">
+                <td data-value="{{ budget_limit.spent|default(0) }}" class="text-right">
                     {{ formatAmountBySymbol(budget_limit.spent, budget_limit.currency_symbol, budget_limit.currency_decimal_places) }}
                 </td>
                 <!-- percentage, hidden -->
@@ -67,13 +67,13 @@
 
 
                 <!-- left, hidden on mobile  -->
-                <td data-value="{{ budget_limit.left|default(0) }}" style="text-align: right;" class="hidden-xs">
+                <td data-value="{{ budget_limit.left|default(0) }}" class="text-right hidden-xs">
                     {% if null != budget_limit.left %}
                         {{ formatAmountBySymbol(budget_limit.left, budget_limit.currency_symbol, budget_limit.currency_decimal_places) }}
                     {% endif %}
                 </td>
                 <!-- overspent, visible. -->
-                <td data-value="{{ budget_limit.overspent|default(0) }}" style="text-align: right;">
+                <td data-value="{{ budget_limit.overspent|default(0) }}" class="text-right">
                     {% if null != budget_limit.overspent %}
                         {{ formatAmountBySymbol(budget_limit.overspent, budget_limit.currency_symbol, budget_limit.currency_decimal_places) }}
                     {% endif %}
@@ -86,13 +86,13 @@
     {% for sum in report.sums %}
         <tr>
             <td colspan="2"><em>{{ 'sum'|_ }} ({{ sum.currency_name }})</em></td>
-            <td style="text-align: right;">{{ formatAmountBySymbol(sum.budgeted, sum.currency_symbol, sum.currency_decimal_places) }}</td>
+            <td class="text-right">{{ formatAmountBySymbol(sum.budgeted, sum.currency_symbol, sum.currency_decimal_places) }}</td>
             <td>&nbsp;</td>
-            <td style="text-align: right;">{{ formatAmountBySymbol(sum.spent, sum.currency_symbol, sum.currency_decimal_places) }}</td>
+            <td class="text-right">{{ formatAmountBySymbol(sum.spent, sum.currency_symbol, sum.currency_decimal_places) }}</td>
             <td>&nbsp;</td>
             <td>&nbsp;</td>
-            <td style="text-align: right;">{{ formatAmountBySymbol(sum.left, sum.currency_symbol, sum.currency_decimal_places) }}</td>
-            <td style="text-align: right;">{{ formatAmountBySymbol(sum.overspent, sum.currency_symbol, sum.currency_decimal_places) }}</td>
+            <td class="text-right">{{ formatAmountBySymbol(sum.left, sum.currency_symbol, sum.currency_decimal_places) }}</td>
+            <td class="text-right">{{ formatAmountBySymbol(sum.overspent, sum.currency_symbol, sum.currency_decimal_places) }}</td>
 
         </tr>
         {% endfor %}

@@ -29,7 +29,7 @@ use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Schema;
 
 return new class extends Migration {
-    protected static function hasForeign(string $table, string $column): bool
+    private static function hasForeign(string $table, string $column): bool
     {
         $foreignKeysDefinitions = Schema::getForeignKeys($table);
         foreach ($foreignKeysDefinitions as $foreignKeyDefinition) {

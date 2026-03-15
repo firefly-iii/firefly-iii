@@ -49,6 +49,8 @@ class StoreRequest extends FormRequest
     use RecurrenceValidation;
     use TransactionValidation;
 
+    protected array $acceptedRoles = [];
+
     /**
      * Get all data from the request.
      */
@@ -67,7 +69,7 @@ class StoreRequest extends FormRequest
         ];
         $recurrence = $this->getAllData($fields);
 
-        return ['recurrence'   => $recurrence, 'transactions' => $this->getTransactionData(), 'repetitions'  => $this->getRepetitionData()];
+        return ['recurrence' => $recurrence, 'transactions' => $this->getTransactionData(), 'repetitions' => $this->getRepetitionData()];
     }
 
     /**

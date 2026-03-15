@@ -40,6 +40,8 @@ class UserUpdateRequest extends FormRequest
     use ChecksLogin;
     use ConvertsDataTypes;
 
+    protected array $acceptedRoles = [];
+
     /**
      * Logged in + owner
      */

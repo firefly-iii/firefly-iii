@@ -34,10 +34,8 @@ use FireflyIII\Models\TransactionJournal;
 use FireflyIII\Repositories\Budget\BudgetRepositoryInterface;
 use FireflyIII\Repositories\Journal\JournalRepositoryInterface;
 use FireflyIII\Support\Facades\Preferences;
-use Illuminate\Contracts\Foundation\Application;
 use Illuminate\Contracts\View\Factory;
 use Illuminate\Http\RedirectResponse;
-use Illuminate\Routing\Redirector;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Log;
 use Illuminate\View\View;
@@ -47,8 +45,7 @@ use Illuminate\View\View;
  */
 final class BulkController extends Controller
 {
-    /** @var JournalRepositoryInterface Journals and transactions overview */
-    private $repository;
+    private JournalRepositoryInterface $repository;
 
     /**
      * BulkController constructor.
@@ -86,15 +83,13 @@ final class BulkController extends Controller
         $budgetRepos = app(BudgetRepositoryInterface::class);
         $budgetList  = app('expandedform')->makeSelectListWithEmpty($budgetRepos->getActiveBudgets());
 
-        return view('transactions.bulk.edit', ['journals'   => $journals, 'subTitle'   => $subTitle, 'budgetList' => $budgetList]);
+        return view('transactions.bulk.edit', ['journals' => $journals, 'subTitle' => $subTitle, 'budgetList' => $budgetList]);
     }
 
     /**
      * Update all journals.
-     *
-     * @return Application|Redirector|RedirectResponse
      */
-    public function update(BulkEditJournalRequest $request): Redirector|RedirectResponse
+    public function update(BulkEditJournalRequest $request): RedirectResponse
     {
         $journalIds     = $request->get('journals');
         $journalIds     = is_array($journalIds) ? $journalIds : [];

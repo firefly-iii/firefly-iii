@@ -23,6 +23,7 @@ declare(strict_types=1);
 
 namespace FireflyIII\Models;
 
+use Carbon\Carbon;
 use FireflyIII\Handlers\Observer\PiggyBankObserver;
 use FireflyIII\Support\Models\ReturnsIntegerIdTrait;
 use Illuminate\Database\Eloquent\Attributes\ObservedBy;
@@ -36,6 +37,11 @@ use Illuminate\Database\Eloquent\Relations\MorphToMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
+/**
+ * @property null|Carbon         $target_date
+ * @property null|Carbon         $start_date
+ * @property TransactionCurrency $transactionCurrency
+ */
 #[ObservedBy([PiggyBankObserver::class])]
 class PiggyBank extends Model
 {

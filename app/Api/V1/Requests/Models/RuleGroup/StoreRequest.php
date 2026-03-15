@@ -37,13 +37,15 @@ class StoreRequest extends FormRequest
     use ChecksLogin;
     use ConvertsDataTypes;
 
+    protected array $acceptedRoles = [];
+
     /**
      * Get all data from the request.
      */
     public function getAll(): array
     {
         $active = true;
-        $order  = 31337;
+        $order  = 31_337;
         if (null !== $this->get('active')) {
             $active = $this->boolean('active');
         }

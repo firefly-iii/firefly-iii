@@ -36,12 +36,14 @@ class StoreRequest extends FormRequest
     use ChecksLogin;
     use ConvertsDataTypes;
 
+    protected array $acceptedRoles = [];
+
     /**
      * Get all data from the request.
      */
     public function getAll(): array
     {
-        return ['name'  => $this->convertString('name'), 'notes' => $this->stringWithNewlines('notes')];
+        return ['name' => $this->convertString('name'), 'notes' => $this->stringWithNewlines('notes')];
     }
 
     /**

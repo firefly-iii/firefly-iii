@@ -3,9 +3,9 @@
     <tr>
         <th data-defaultsign="az" colspan="2">{{ 'category'|_ }}</th>
         {% for period in periods %}
-            <th data-defaultsign="_19" style="text-align: right;">{{ period }}</th>
+            <th data-defaultsign="_19" class="text-right">{{ period }}</th>
         {% endfor %}
-        <th data-defaultsign="_19" style="text-align: right;">{{ 'sum'|_ }}</th>
+        <th data-defaultsign="_19" class="text-right">{{ 'sum'|_ }}</th>
     </tr>
     </thead>
     <tbody>
@@ -24,11 +24,11 @@
             {% for key, period in periods %}
                 {# income first #}
                 {% if(info.entries[key]) %}
-                    <td data-value="{{ info.entries[key] }}" style="text-align: right;">
+                    <td data-value="{{ info.entries[key] }}" class="text-right">
                         {{ formatAmountBySymbol(info.entries[key], info.currency_symbol, info.currency_decimal_places) }}
                     </td>
                 {% else %}
-                    <td data-value="0" style="text-align: right;">
+                    <td data-value="0" class="text-right">
                         {{ formatAmountBySymbol(0, info.currency_symbol, info.currency_decimal_places) }}
                     </td>
                 {% endif %}
@@ -36,11 +36,11 @@
 
             {# if sum of income, display: #}
             {% if info.sum %}
-                <td data-value="{{ info.sum }}" style="text-align: right;">
+                <td data-value="{{ info.sum }}" class="text-right">
                     {{ formatAmountBySymbol(info.sum, info.currency_symbol, info.currency_decimal_places) }}
                 </td>
             {% else %}
-                <td data-value="0" style="text-align: right;">
+                <td data-value="0" class="text-right">
                     {{ formatAmountBySymbol(0, info.currency_symbol, info.currency_decimal_places) }}
                 </td>
             {% endif %}

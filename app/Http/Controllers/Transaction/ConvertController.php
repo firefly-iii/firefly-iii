@@ -84,7 +84,7 @@ final class ConvertController extends Controller
     /**
      * Show overview of a to be converted transaction.
      *
-     * @return Factory|Redirector|RedirectResponse|View
+     * @return Factory|RedirectResponse|View
      *
      * @throws Exception
      */
@@ -141,7 +141,7 @@ final class ConvertController extends Controller
     /**
      * Do the conversion.
      *
-     * @return Redirector|RedirectResponse
+     * @return RedirectResponse
      */
     public function postIndex(Request $request, TransactionType $destinationType, TransactionGroup $group)
     {
@@ -193,8 +193,8 @@ final class ConvertController extends Controller
         $sourceName        = '' === $sourceName ? null : (string) $sourceName;
         $destinationId     = '' === $destinationId || null === $destinationId ? null : (int) $destinationId;
         $destinationName   = '' === $destinationName ? null : (string) $destinationName;
-        $validSource       = $validator->validateSource(['id'   => $sourceId, 'name' => $sourceName]);
-        $validDestination  = $validator->validateDestination(['id'   => $destinationId, 'name' => $destinationName]);
+        $validSource       = $validator->validateSource(['id' => $sourceId, 'name' => $sourceName]);
+        $validDestination  = $validator->validateDestination(['id' => $destinationId, 'name' => $destinationName]);
 
         if (false === $validSource) {
             throw new FireflyException(sprintf(trans('firefly.convert_invalid_source'), $journal->id));

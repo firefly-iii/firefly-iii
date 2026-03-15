@@ -74,7 +74,7 @@ final class EditController extends Controller
      *
      * @SuppressWarnings("PHPMD.NPathComplexity")
      *
-     * @return Factory|Redirector|RedirectResponse|View
+     * @return Factory|RedirectResponse|View
      */
     public function edit(
         Request $request,
@@ -103,7 +103,7 @@ final class EditController extends Controller
             'has_location' => $hasLocation || 'true' === old('location_has_location'),
         ]];
 
-        $liabilityDirections  = ['debit'  => trans('firefly.liability_direction_debit'), 'credit' => trans('firefly.liability_direction_credit')];
+        $liabilityDirections  = ['debit' => trans('firefly.liability_direction_debit'), 'credit' => trans('firefly.liability_direction_credit')];
 
         // interest calculation periods:
         $interestPeriods      = [];
@@ -181,7 +181,7 @@ final class EditController extends Controller
     /**
      * Update the account.
      *
-     * @return $this|Redirector|RedirectResponse
+     * @return RedirectResponse
      */
     public function update(AccountFormRequest $request, Account $account)
     {

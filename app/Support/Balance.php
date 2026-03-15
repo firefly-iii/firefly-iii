@@ -68,7 +68,7 @@ class Balance
             if (array_key_exists($currencyId, $return[$accountId])) {
                 continue;
             }
-            $return[$accountId][$currencyId] = ['currency' => $currencies[$currencyId], 'balance'  => $entry->balance_after, 'date'     => clone $date];
+            $return[$accountId][$currencyId] = ['currency' => $currencies[$currencyId], 'balance' => $entry->balance_after, 'date' => clone $date];
         }
 
         return $return;

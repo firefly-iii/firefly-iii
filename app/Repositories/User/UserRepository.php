@@ -124,7 +124,7 @@ class UserRepository implements UserRepositoryInterface
 
     public function createRole(string $name, string $displayName, string $description): Role
     {
-        return Role::create(['name'         => $name, 'display_name' => $displayName, 'description'  => $description]);
+        return Role::create(['name' => $name, 'display_name' => $displayName, 'description' => $description]);
     }
 
     public function deleteEmptyGroups(): void

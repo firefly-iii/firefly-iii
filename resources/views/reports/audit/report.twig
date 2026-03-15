@@ -17,8 +17,8 @@
                         {% for hide in hideable %}
                             <li><input
                                     {% if hide in defaultShow %}checked{% endif %}
-                                    type="checkbox" class="audit-option-checkbox" name="option[]" value="{{ hide }}" id="option_{{ hide }}"/> <label
-                                    for="option_{{ hide }}" style="font-weight:normal;">{{ trans('list.'~hide) }}</label></li>
+                                    type="checkbox" class="fw-normal audit-option-checkbox" name="option[]" value="{{ hide }}" id="option_{{ hide }}"/> <label
+                                    for="option_{{ hide }}">{{ trans('list.'~hide) }}</label></li>
                         {% endfor %}
 
                     </ul>
@@ -52,7 +52,7 @@
                         </div>
                     {% else %}
                         <div class="box-body no-padding">
-                            <p style="padding:10px;">
+                            <p class="p-4">
                                 {{ trans('firefly.audit_end_balance',
                                     {
                                         account_name: account.name|escape,
@@ -63,7 +63,7 @@
                             </p>
                             {% include 'reports.partials.journals-audit'  with {'journals': auditData[account.id].journals,'account':account} %}
 
-                            <p style="padding:10px;">
+                            <p class="p-4">
 
                                 {{ trans('firefly.audit_end_balance',
                                     {

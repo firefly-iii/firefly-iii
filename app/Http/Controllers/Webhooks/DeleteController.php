@@ -27,7 +27,6 @@ namespace FireflyIII\Http\Controllers\Webhooks;
 use FireflyIII\Http\Controllers\Controller;
 use FireflyIII\Models\Webhook;
 use FireflyIII\Support\Facades\FireflyConfig;
-use Illuminate\Contracts\Foundation\Application;
 use Illuminate\Contracts\View\Factory;
 use Illuminate\Contracts\View\View;
 use Illuminate\Support\Facades\Log;
@@ -56,11 +55,6 @@ final class DeleteController extends Controller
         });
     }
 
-    /**
-     * Delete account screen.
-     *
-     * @return Application|Factory|View
-     */
     public function index(Webhook $webhook): Factory|View
     {
         if (false === FireflyConfig::get('allow_webhooks', config('firefly.allow_webhooks'))->data) {
@@ -72,6 +66,6 @@ final class DeleteController extends Controller
         $subTitle = (string) trans('firefly.delete_webhook', ['title' => $webhook->title]);
         $this->rememberPreviousUrl('webhooks.delete.url');
 
-        return view('webhooks.delete', ['webhook'  => $webhook, 'subTitle' => $subTitle]);
+        return view('webhooks.delete', ['webhook' => $webhook, 'subTitle' => $subTitle]);
     }
 }

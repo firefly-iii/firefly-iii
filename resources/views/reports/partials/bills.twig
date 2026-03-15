@@ -2,10 +2,10 @@
     <thead>
     <tr>
         <th data-defaultsign="az">{{ trans('form.name') }}</th>
-        <th data-defaultsign="_19" class="hidden-xs" style="text-align: right;">{{ trans('form.amount_min') }}</th>
-        <th data-defaultsign="_19" class="hidden-xs" style="text-align: right;">{{ trans('form.amount_max') }}</th>
+        <th data-defaultsign="_19" class="text-right hidden-xs">{{ trans('form.amount_min') }}</th>
+        <th data-defaultsign="_19" class="text-right hidden-xs">{{ trans('form.amount_max') }}</th>
         <th data-defaultsign="_19">{{ trans('form.expected_on') }}</th>
-        <th data-defaultsign="_19" style="text-align: right;">{{ trans('form.paid') }}</th>
+        <th data-defaultsign="_19" class="text-right">{{ trans('form.paid') }}</th>
     </tr>
     </thead>
     <tbody>
@@ -15,10 +15,10 @@
                 <td>
                     <a href="{{ route('subscriptions.show',bill.id) }}">{{ bill.name }}</a>
                 </td>
-                <td class="hidden-xs" style="text-align:right;">
+                <td class="hidden-xs text-right">
                     {{ formatAmountBySymbol(bill.amount_min, bill.currency_symbol, bill.currency_decimal_places) }}
                 </td>
-                <td class="hidden-xs" style="text-align:right;">
+                <td class="hidden-xs text-right">
                     {{ formatAmountBySymbol(bill.amount_max, bill.currency_symbol, bill.currency_decimal_places) }}
                 </td>
                 <td data-value="{{ bill.expected_dates[0].format('Y-m-d')|default('0000-00-00') }}">
@@ -26,7 +26,7 @@
                         {{ date.isoFormat(monthAndDayFormat) }}<br/>
                     {% endfor %}
                 </td>
-                <td style="text-align:right;">
+                <td class="text-right">
                     {% set hitCount = 0 %}
                     {% for journals in bill.paid_moments %}
                         {% for journal in journals %}
@@ -54,12 +54,12 @@
                     {{ trans('firefly.bill_expected_between', {start: line.getPayDate.isoFormat(monthAndDayFormat), end: line.getEndOfPayDate.isoFormat(monthAndDayFormat) }) }}
                 </small>
             </td>
-            <td class="hidden-xs" data-value="{{ line.getMin }}" style="text-align: right;">{{ formatAmountByCurrency(line.getCurrency, line.getMin) }}</td>
-            <td class="hidden-xs" data-value="{{ line.getMax }}" style="text-align: right;">{{ formatAmountByCurrency(line.getCurrency, line.getMax) }}</td>
+            <td class="text-right hidden-xs" data-value="{{ line.getMin }}">{{ formatAmountByCurrency(line.getCurrency, line.getMin) }}</td>
+            <td class="text-right hidden-xs" data-value="{{ line.getMax }}">{{ formatAmountByCurrency(line.getCurrency, line.getMax) }}</td>
 
             {# if bill is hit, show hit amount #}
             {% if line.isHit %}
-                <td data-value="{{ line.getAmount }}" style="text-align: right;">
+                <td data-value="{{ line.getAmount }}" class="text-right">
                     <a href="{{ route('transactions.show', line.getTransactionJournalId) }}">
                         {{ formatAmountByCurrency(line.getCurrency, line.getAmount) }}
                     </a>
@@ -72,7 +72,7 @@
             {% if not line.isActive and not line.isHit %}
                 <td data-value="-1">&nbsp;</td>
             {% endif %}
-            <td data-value="{{ (line.getMax - line.getAmount) }}" style="text-align: right;" class="hidden-xs">
+            <td data-value="{{ (line.getMax - line.getAmount) }}" class="text-right hidden-xs">
                 {% if line.isHit %}
                     {{ formatAmountByCurrency(line.getCurrency, (line.getMax + line.getAmount)) }}
                 {% endif %}

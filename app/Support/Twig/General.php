@@ -281,7 +281,7 @@ class General extends AbstractExtension
         return new TwigFilter(
             'markdown',
             static function (string $text): string {
-                $converter = new GithubFlavoredMarkdownConverter(['allow_unsafe_links' => false, 'max_nesting_level'  => 5, 'html_input'         => 'escape']);
+                $converter = new GithubFlavoredMarkdownConverter(['allow_unsafe_links' => false, 'max_nesting_level' => 5, 'html_input' => 'escape']);
 
                 return (string) $converter->convert($text);
             },

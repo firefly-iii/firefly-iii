@@ -43,6 +43,8 @@ class UpdateRequest extends FormRequest
     use ConvertsDataTypes;
     use ValidatesAutoBudgetRequest;
 
+    protected array $acceptedRoles = [];
+
     /**
      * Get all data from the request.
      */
@@ -65,7 +67,7 @@ class UpdateRequest extends FormRequest
         ];
         $allData = $this->getAllData($fields);
         if (array_key_exists('auto_budget_type', $allData)) {
-            $types                       = ['none'     => 0, 'reset'    => 1, 'rollover' => 2, 'adjusted' => 3];
+            $types                       = ['none' => 0, 'reset' => 1, 'rollover' => 2, 'adjusted' => 3];
             $allData['auto_budget_type'] = $types[$allData['auto_budget_type']] ?? 0;
         }
 

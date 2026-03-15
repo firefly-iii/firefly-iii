@@ -29,6 +29,8 @@ use FireflyIII\Models\Budget;
 use FireflyIII\Models\Category;
 use FireflyIII\Models\Tag;
 use FireflyIII\Models\TransactionJournal;
+use FireflyIII\Repositories\Budget\AvailableBudgetRepositoryInterface;
+use FireflyIII\User;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\DB;
 
@@ -92,6 +94,18 @@ class RemovesLinksToDeletedObjects extends Command
         if (count($deletedCategories) > 0) {
             $this->cleanupCategories($deletedCategories);
         }
+
+        // count and clean up available budgets in currencies with no budget limits.
+        // this is not entirely the place for it but OK.
+        /** @var AvailableBudgetRepositoryInterface $repository */
+        $repository        = app(AvailableBudgetRepositoryInterface::class);
+
+        /** @var User $user */
+        foreach (User::get() as $user) {
+            $repository->setUser($user);
+            $repository->cleanup();
+        }
+
         $this->friendlyNeutral('Validated links to deleted objects.');
     }
 

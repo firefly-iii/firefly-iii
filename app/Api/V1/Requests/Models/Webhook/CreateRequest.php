@@ -43,9 +43,11 @@ class CreateRequest extends FormRequest
     use ConvertsDataTypes;
     use ValidatesWebhooks;
 
+    protected array $acceptedRoles = [];
+
     public function getData(): array
     {
-        $fields               = ['title'  => ['title', 'convertString'], 'active' => ['active', 'boolean'], 'url'    => ['url', 'convertString']];
+        $fields               = ['title' => ['title', 'convertString'], 'active' => ['active', 'boolean'], 'url' => ['url', 'convertString']];
         $triggers             = $this->get('triggers', []);
         $responses            = $this->get('responses', []);
         $deliveries           = $this->get('deliveries', []);

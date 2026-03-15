@@ -34,6 +34,7 @@ use FireflyIII\Models\PiggyBank;
 use FireflyIII\Models\TransactionJournal;
 use FireflyIII\Models\UserGroup;
 use Illuminate\Contracts\Validation\ValidationRule;
+use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Log;
 
 /**
@@ -94,6 +95,8 @@ class BelongsUserGroup implements ValidationRule
             $objects = $class::where('user_group_id', '=', $this->userGroup->id)->get();
         }
         $count   = 0;
+
+        /** @var Model $object */
         foreach ($objects as $object) {
             $objectValue = trim((string) $object->{$field});
             Log::debug(sprintf('Comparing object "%s" with value "%s"', $objectValue, $value));

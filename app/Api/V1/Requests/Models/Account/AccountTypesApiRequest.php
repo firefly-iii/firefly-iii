@@ -42,7 +42,7 @@ class AccountTypesApiRequest extends ApiRequest
     public function withValidator(Validator $validator): void
     {
         $validator->after(function (Validator $validator): void {
-            if ($validator->failed()) {
+            if (count($validator->failed()) > 0) {
                 return;
             }
             $types  = explode(',', $this->convertString('types', 'all'));

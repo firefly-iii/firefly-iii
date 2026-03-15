@@ -89,16 +89,15 @@ trait ValidatesUserGroupTrait
             throw new AuthorizationException((string) trans('validation.belongs_user_or_user_group'));
         }
         Log::debug(sprintf('validateUserGroup: validate access of user to group #%d ("%s").', $groupId, $group->title));
-        $roles       = property_exists($this, 'acceptedRoles') ? $this->acceptedRoles : [];
-        if (0 === count($roles)) {
+        if (0 === count($this->acceptedRoles)) {
             Log::debug('validateUserGroup: no roles defined, so no access.');
 
             throw new AuthorizationException((string) trans('validation.no_accepted_roles_defined'));
         }
-        Log::debug(sprintf('validateUserGroup: have %d roles to check.', count($roles)), $roles);
+        Log::debug(sprintf('validateUserGroup: have %d roles to check.', count($this->acceptedRoles)), $this->acceptedRoles);
 
         /** @var UserRoleEnum $role */
-        foreach ($roles as $role) {
+        foreach ($this->acceptedRoles as $role) {
             if ($user->hasRoleInGroupOrOwner($group, $role)) {
                 Log::debug(sprintf('validateUserGroup: User has role "%s" in group #%d, return the group.', $role->value, $groupId));
                 $this->userGroup = $group;

@@ -98,7 +98,7 @@ final class AmountController extends Controller
         }
         $total      = (float) $total; // intentional float.
 
-        return view('piggy-banks.add', ['piggyBank' => $piggyBank, 'accounts'  => $accounts, 'total'     => $total]);
+        return view('piggy-banks.add', ['piggyBank' => $piggyBank, 'accounts' => $accounts, 'total' => $total]);
     }
 
     /**
@@ -127,7 +127,7 @@ final class AmountController extends Controller
             $total         = bcadd($total, $leftOnAccount);
         }
 
-        return view('piggy-banks.add-mobile', ['piggyBank' => $piggyBank, 'total'     => $total, 'accounts'  => $accounts]);
+        return view('piggy-banks.add-mobile', ['piggyBank' => $piggyBank, 'total' => $total, 'accounts' => $accounts]);
     }
 
     /**
@@ -247,10 +247,10 @@ final class AmountController extends Controller
     {
         $accounts = [];
         foreach ($piggyBank->accounts as $account) {
-            $accounts[] = ['account'      => $account, 'saved_so_far' => $this->piggyRepos->getCurrentAmount($piggyBank, $account)];
+            $accounts[] = ['account' => $account, 'saved_so_far' => $this->piggyRepos->getCurrentAmount($piggyBank, $account)];
         }
 
-        return view('piggy-banks.remove', ['piggyBank' => $piggyBank, 'accounts'  => $accounts]);
+        return view('piggy-banks.remove', ['piggyBank' => $piggyBank, 'accounts' => $accounts]);
     }
 
     /**
@@ -262,9 +262,9 @@ final class AmountController extends Controller
     {
         $accounts = [];
         foreach ($piggyBank->accounts as $account) {
-            $accounts[] = ['account'      => $account, 'saved_so_far' => $this->piggyRepos->getCurrentAmount($piggyBank, $account)];
+            $accounts[] = ['account' => $account, 'saved_so_far' => $this->piggyRepos->getCurrentAmount($piggyBank, $account)];
         }
 
-        return view('piggy-banks.remove-mobile', ['piggyBank' => $piggyBank, 'accounts'  => $accounts]);
+        return view('piggy-banks.remove-mobile', ['piggyBank' => $piggyBank, 'accounts' => $accounts]);
     }
 }

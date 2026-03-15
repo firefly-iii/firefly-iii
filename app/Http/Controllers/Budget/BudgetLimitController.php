@@ -42,7 +42,6 @@ use Illuminate\Contracts\View\Factory;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
-use Illuminate\Routing\Redirector;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Log;
 use Illuminate\View\View;
@@ -100,10 +99,10 @@ final class BudgetLimitController extends Controller
             return true;
         });
 
-        return view('budgets.budget-limits.create', ['start'      => $start, 'end'        => $end, 'currencies' => $currencies, 'budget'     => $budget]);
+        return view('budgets.budget-limits.create', ['start' => $start, 'end' => $end, 'currencies' => $currencies, 'budget' => $budget]);
     }
 
-    public function delete(BudgetLimit $budgetLimit): Redirector|RedirectResponse
+    public function delete(BudgetLimit $budgetLimit): RedirectResponse
     {
         $this->blRepository->destroyBudgetLimit($budgetLimit);
         session()->flash('success', trans('firefly.deleted_bl'));
@@ -118,7 +117,7 @@ final class BudgetLimitController extends Controller
     {
         $notes = $this->blRepository->getNoteText($budgetLimit);
 
-        return view('budgets.budget-limits.edit', ['budgetLimit' => $budgetLimit, 'notes'       => $notes]);
+        return view('budgets.budget-limits.edit', ['budgetLimit' => $budgetLimit, 'notes' => $notes]);
     }
 
     /**
@@ -128,7 +127,7 @@ final class BudgetLimitController extends Controller
     {
         $notes = $this->blRepository->getNoteText($budgetLimit);
 
-        return view('budgets.budget-limits.show', ['budgetLimit' => $budgetLimit, 'notes'       => $notes]);
+        return view('budgets.budget-limits.show', ['budgetLimit' => $budgetLimit, 'notes' => $notes]);
     }
 
     /**
@@ -173,7 +172,7 @@ final class BudgetLimitController extends Controller
             // return empty array:
             return response()->json([]);
         }
-        if ((int) $amount > 268435456) { // intentional cast to integer
+        if ((int) $amount > 268_435_456) { // intentional cast to integer
             $amount = '268435456';
         }
         if (-1 === bccomp($amount, '0')) {
@@ -233,7 +232,7 @@ final class BudgetLimitController extends Controller
         if ('' === $amount) {
             $amount = '0';
         }
-        if ((int) $amount > 268435456) { // 268 million, intentional integer
+        if ((int) $amount > 268_435_456) { // 268 million, intentional integer
             $amount = '268435456';
         }
         // sanity check on amount:
@@ -255,11 +254,11 @@ final class BudgetLimitController extends Controller
             $amount = bcmul($amount, '-1');
         }
         $notes                           = (string) $request->get('notes');
-        if (strlen($notes) > 32768) {
-            $notes = substr($notes, 0, 32768);
+        if (strlen($notes) > 32_768) {
+            $notes = substr($notes, 0, 32_768);
         }
 
-        $limit                           = $this->blRepository->update($budgetLimit, ['amount' => $amount, 'notes'  => $notes]);
+        $limit                           = $this->blRepository->update($budgetLimit, ['amount' => $amount, 'notes' => $notes]);
         Preferences::mark();
         $array                           = $limit->toArray();
 

@@ -31,7 +31,6 @@ use FireflyIII\Support\Facades\Preferences;
 use Illuminate\Contracts\View\Factory;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
-use Illuminate\Routing\Redirector;
 use Illuminate\View\View;
 
 /**
@@ -76,7 +75,7 @@ final class DeleteController extends Controller
     /**
      * Destroy a category.
      */
-    public function destroy(Request $request, Category $category): Redirector|RedirectResponse
+    public function destroy(Request $request, Category $category): RedirectResponse
     {
         $name = $category->name;
         $this->repository->destroy($category);

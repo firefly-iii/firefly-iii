@@ -1,4 +1,4 @@
-<div style="padding-left:8px;">
+<div class="ml-1">
     {{ accounts.links('pagination.bootstrap-4')|raw }}
 </div>
 <table class="table table-responsive table-hover" id="sortable-table">
@@ -16,10 +16,10 @@
         {% endif %}
         <th class="hidden-sm hidden-xs">{{ trans('form.account_number') }}</th>
         {% if objectType != 'liabilities' %}
-            <th style="text-align: right;">{{ trans('list.currentBalance') }}</th>
+            <th class="text-right">{{ trans('list.currentBalance') }}</th>
         {% endif %}
         {% if objectType == 'liabilities' %}
-            <th style="text-align: right;">
+            <th class="text-right">
                 {{ trans('firefly.left_in_debt') }}
             </th>
         {% endif %}
@@ -28,7 +28,7 @@
         {% if objectType != 'liabilities' %}
             <th class="hidden-sm hidden-xs hidden-md">{{ trans('list.lastActivity') }}</th>
         {% endif %}
-        <th style="width:15%;"
+        <th class="fifteen"
             class="hidden-sm hidden-xs hidden-md">{{ trans('list.balanceDiff') }}</th>
         <th class="hidden-sm hidden-xs">&nbsp;</th>
     </tr>
@@ -64,8 +64,8 @@
             {% endif %}
             <td class="hidden-sm hidden-xs">{{ account.iban }}{% if account.iban == '' %}{{ accountGetMetaField(account, 'account_number') }}{% endif %}</td>
             {% if objectType != 'liabilities' %}
-            <td style="text-align: right;">
-                <span style="margin-right:5px;">
+            <td class="text-right">
+                <span class="mr-2">
                     {% for key, balance in account.endBalances %}
                         <span title="{{ key }}">
                         {% if 'balance' == key %}
@@ -85,7 +85,7 @@
             </td>
             {% endif %}
             {% if objectType == 'liabilities' %}
-            <td style="text-align: right;">
+            <td class="text-right">
                 {% if '-' != account.current_debt %}
                     <span class="text-info money-transfer">
                         {{ formatAmountBySymbol(account.current_debt, account.currency.symbol, account.currency.decimal_places, false) }}
@@ -113,8 +113,8 @@
                     </td>
                 {% endif %}
             {% endif %}
-            <td class="hidden-sm hidden-xs hidden-md" style="text-align: right;">
-                <span style="margin-right:5px;">
+            <td class="text-right hidden-sm hidden-xs hidden-md">
+                <span class="mr-1">
                     {% for key, balance in account.differences %}
                         <span title="{{ key }}">
                         {% if 'balance' == key or 'pc_balance' == key %}
@@ -145,6 +145,6 @@
     {% endfor %}
     </tbody>
 </table>
-<div style="padding-left:8px;">
+<div class="pl-3">
     {{ accounts.links('pagination.bootstrap-4')|raw }}
 </div>

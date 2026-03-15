@@ -117,7 +117,7 @@ final class PiggyBankControllerTest extends TestCase
         }
         $currency = TransactionCurrency::whereCode('EUR')->first();
         if (null === $currency) {
-            $currency = TransactionCurrency::create(['code'   => 'EUR', 'name'   => 'Euro', 'symbol' => '€']);
+            $currency = TransactionCurrency::create(['code' => 'EUR', 'name' => 'Euro', 'symbol' => '€']);
         }
         for ($i = 1; $i <= $count; ++$i) {
             $piggyBank = PiggyBank::create([

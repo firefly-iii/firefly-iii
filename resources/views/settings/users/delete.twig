@@ -25,8 +25,8 @@
                         </p>
                     </div>
                     <div class="box-footer">
-                        <input type="submit" onclick="return confirm('{{ trans('firefly.are_you_sure')|escape('js') }}');" name="submit"
-                               value="{{ trans('form.deletePermanently') }}" class="btn btn-danger pull-right"/>
+                        <input type="submit" name="submit"
+                               value="{{ trans('form.deletePermanently') }}" class="btn btn-danger pull-right delete-user"/>
                         <a href="{{ URL.previous() }}" class="btn-default btn">{{ trans('form.cancel') }}</a>
                     </div>
 
@@ -35,4 +35,16 @@
             </div>
         </div>
     </form>
+{% endblock %}
+{% block scripts %}
+    <!-- just a bit of inline code -->
+    <script type="text/javascript" nonce="{{ JS_NONCE }}">
+        var confirmText= '{{ 'are_you_sure'|_|escape('js') }}';
+        $(function () {
+            "use strict";
+            $('.delete-user').click(function () {
+                return confirm(confirmText);
+            });
+        });
+    </script>
 {% endblock %}

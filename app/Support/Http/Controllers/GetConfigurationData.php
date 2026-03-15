@@ -221,7 +221,7 @@ trait GetConfigurationData
 
             return;
         }
-        if (($now - $lastTime) > 129600) {
+        if (($now - $lastTime) > 129_600) {
             request()->session()->flash('warning', trans('firefly.recurring_cron_long_ago'));
         }
     }

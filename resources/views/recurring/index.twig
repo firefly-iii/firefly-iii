@@ -25,13 +25,13 @@
                     </div>
 
                     <div class="box-body no-padding">
-                        <div style="padding:8px;">
+                        <div class="p-2">
                             <a href="{{ route('recurring.create') }}" class="btn btn-success"><span class="fa fa-plus fa-fw"></span> {{ ('make_new_recurring')|_ }}
                             </a>
                         </div>
 
                         <!-- list of recurring here -->
-                        <div style="padding-left:8px;">
+                        <div class="pl-2">
                             {{ paginator.links('pagination.bootstrap-4')|raw }}
                         </div>
                         <table class="table table-responsive  table-hover sortable">
@@ -141,7 +141,7 @@
                             {% endfor %}
                             </tbody>
                         </table>
-                        <div style="padding-left:8px;">
+                        <div class="pl-2">
                             {{ paginator.links('pagination.bootstrap-4')|raw }}
                         </div>
                     </div>

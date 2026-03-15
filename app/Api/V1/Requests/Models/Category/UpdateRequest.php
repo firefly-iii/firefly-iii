@@ -37,12 +37,14 @@ class UpdateRequest extends FormRequest
     use ChecksLogin;
     use ConvertsDataTypes;
 
+    protected array $acceptedRoles = [];
+
     /**
      * Get all data from the request.
      */
     public function getAll(): array
     {
-        $fields = ['name'  => ['name', 'convertString'], 'notes' => ['notes', 'stringWithNewlines']];
+        $fields = ['name' => ['name', 'convertString'], 'notes' => ['notes', 'stringWithNewlines']];
 
         return $this->getAllData($fields);
     }

@@ -113,7 +113,7 @@ final class ShowController extends Controller
         $groups    = $collector->getPaginatedGroups();
         $groups->setPath(route('budgets.no-budget'));
 
-        return view('budgets.no-budget', ['groups'   => $groups, 'subTitle' => $subTitle, 'periods'  => $periods, 'start'    => $start, 'end'      => $end]);
+        return view('budgets.no-budget', ['groups' => $groups, 'subTitle' => $subTitle, 'periods' => $periods, 'start' => $start, 'end' => $end]);
     }
 
     /**
@@ -147,7 +147,7 @@ final class ShowController extends Controller
         $groups    = $collector->getPaginatedGroups();
         $groups->setPath(route('budgets.no-budget-all'));
 
-        return view('budgets.no-budget', ['groups'   => $groups, 'subTitle' => $subTitle, 'start'    => $start, 'end'      => $end]);
+        return view('budgets.no-budget', ['groups' => $groups, 'subTitle' => $subTitle, 'start' => $start, 'end' => $end]);
     }
 
     /**

@@ -45,7 +45,7 @@ class CountRequest extends AggregateFormRequest
     public function withValidator(Validator $validator): void
     {
         $validator->after(function (Validator $validator): void {
-            if ($validator->failed()) {
+            if (count($validator->failed()) > 0) {
                 return;
             }
             $this->attributes->set('include_deleted', $this->convertBoolean($this->input('include_deleted', 'false')));

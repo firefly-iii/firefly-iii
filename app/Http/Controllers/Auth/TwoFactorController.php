@@ -35,7 +35,6 @@ use Illuminate\Contracts\View\Factory;
 use Illuminate\Contracts\View\View;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
-use Illuminate\Routing\Redirector;
 use Illuminate\Support\Facades\Log;
 use PragmaRX\Google2FALaravel\Support\Authenticator;
 use Psr\Container\ContainerExceptionInterface;
@@ -56,14 +55,14 @@ final class TwoFactorController extends Controller
         $siteOwner = config('firefly.site_owner');
         $title     = (string) trans('firefly.two_factor_forgot_title');
 
-        return view('auth.lost-two-factor', ['user'      => $user, 'siteOwner' => $siteOwner, 'title'     => $title]);
+        return view('auth.lost-two-factor', ['user' => $user, 'siteOwner' => $siteOwner, 'title' => $title]);
     }
 
     /**
      * @throws ContainerExceptionInterface
      * @throws NotFoundExceptionInterface
      */
-    public function submitMFA(Request $request): Redirector|RedirectResponse
+    public function submitMFA(Request $request): RedirectResponse
     {
         /** @var array $mfaHistory */
         $mfaHistory    = Preferences::get('mfa_history', [])->data;

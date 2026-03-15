@@ -60,6 +60,7 @@ final class BudgetController extends Controller
             $this->abRepository = app(AvailableBudgetRepositoryInterface::class);
             $this->blRepository = app(BudgetLimitRepositoryInterface::class);
             $this->repository->cleanupBudgets();
+            $this->abRepository->cleanup();
 
             return $next($request);
         });

@@ -38,6 +38,8 @@ class UpdateRequest extends FormRequest
     use ChecksLogin;
     use ConvertsDataTypes;
 
+    protected array $acceptedRoles = [];
+
     /**
      * Get all data from the request.
      */
@@ -61,7 +63,7 @@ class UpdateRequest extends FormRequest
      */
     public function rules(): array
     {
-        /** @var TransactionCurrency $currency */
+        /** @var string|TransactionCurrency $currency */
         $currency = $this->route()->parameter('currency_code');
         if (is_string($currency)) {
             $currency = TransactionCurrency::whereCode($currency)->first();

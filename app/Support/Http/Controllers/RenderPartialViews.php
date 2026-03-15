@@ -70,7 +70,7 @@ trait RenderPartialViews
         $journals         = $popupHelper->balanceForBudget($budget, $account, $attributes);
 
         try {
-            $view = view('popup.report.balance-amount', ['journals' => $journals, 'budget'   => $budget, 'account'  => $account])->render();
+            $view = view('popup.report.balance-amount', ['journals' => $journals, 'budget' => $budget, 'account' => $account])->render();
         } catch (Throwable $e) {
             Log::error(sprintf('Could not render: %s', $e->getMessage()));
             $view = 'Firefly III could not render the view. Please see the log files.';
@@ -125,7 +125,7 @@ trait RenderPartialViews
         $journals         = $popupHelper->byBudget($budget, $attributes);
 
         try {
-            $view = view('popup.report.budget-spent-amount', ['journals' => $journals, 'budget'   => $budget])->render();
+            $view = view('popup.report.budget-spent-amount', ['journals' => $journals, 'budget' => $budget])->render();
         } catch (Throwable $e) {
             Log::error(sprintf('Could not render: %s', $e->getMessage()));
             $view = 'Firefly III could not render the view. Please see the log files.';
@@ -261,7 +261,7 @@ trait RenderPartialViews
         $journals          = $popupHelper->byExpenses($account, $attributes);
 
         try {
-            $view = view('popup.report.expense-entry', ['journals' => $journals, 'account'  => $account])->render();
+            $view = view('popup.report.expense-entry', ['journals' => $journals, 'account' => $account])->render();
         } catch (Throwable $e) {
             Log::error(sprintf('Could not render: %s', $e->getMessage()));
             $view = 'Firefly III could not render the view. Please see the log files.';
@@ -382,7 +382,7 @@ trait RenderPartialViews
         $journals          = $popupHelper->byIncome($account, $attributes);
 
         try {
-            $view = view('popup.report.income-entry', ['journals' => $journals, 'account'  => $account])->render();
+            $view = view('popup.report.income-entry', ['journals' => $journals, 'account' => $account])->render();
         } catch (Throwable $e) {
             Log::error(sprintf('Could not render: %s', $e->getMessage()));
             $view = 'Firefly III could not render the view. Please see the log files.';

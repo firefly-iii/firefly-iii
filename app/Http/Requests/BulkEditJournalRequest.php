@@ -37,13 +37,15 @@ class BulkEditJournalRequest extends FormRequest
     use ChecksLogin;
     use ConvertsDataTypes;
 
+    protected array $acceptedRoles = [];
+
     /**
      * Rules for this request.
      */
     public function rules(): array
     {
         // fixed
-        return ['journals.*'  => 'required|belongsToUser:transaction_journals,id', 'tags_action' => 'in:no_nothing,do_replace,do_append'];
+        return ['journals.*' => 'required|belongsToUser:transaction_journals,id', 'tags_action' => 'in:no_nothing,do_replace,do_append'];
     }
 
     public function withValidator(Validator $validator): void

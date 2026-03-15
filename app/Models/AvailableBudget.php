@@ -35,6 +35,10 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
+/**
+ * @property User                $user
+ * @property TransactionCurrency $transactionCurrency
+ */
 #[ObservedBy([AvailableBudgetObserver::class])]
 class AvailableBudget extends Model
 {

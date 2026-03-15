@@ -58,8 +58,10 @@ class SecureHeaders
             "default-src 'none'",
             "object-src 'none'",
             sprintf("script-src 'unsafe-eval' 'strict-dynamic' 'nonce-%1s'", $nonce),
-            "style-src 'unsafe-inline' 'self'",
+            // sprintf("style-src 'self' 'nonce-%1s'", $nonce), // safe variant
+            "style-src 'self' 'unsafe-inline'", // unsafe variant
             "base-uri 'self'",
+            "form-action 'self'",
             "font-src 'self' data:",
             sprintf("connect-src 'self' %s", $trackingScriptSrc),
             sprintf("img-src 'self' data: 'nonce-%1s' ", $nonce),
@@ -67,13 +69,15 @@ class SecureHeaders
         ];
 
         // overrule in development mode
-        if (true === env('IS_LOCAL_DEV')) {
+        if (true === config('firefly.is_local_dev')) {
             $csp = [
                 "default-src 'none'",
                 "object-src 'none'",
-                sprintf("script-src 'unsafe-eval' 'strict-dynamic' 'nonce-%1s' https://firefly.sd.internal/_debugbar/assets", $nonce),
-                "style-src 'unsafe-inline' 'self' https://10.0.0.15:5173/",
+                sprintf("script-src 'unsafe-eval' 'strict-dynamic' 'nonce-%1s'", $nonce),
+                //                 sprintf("style-src 'self' 'nonce-%1s' https://10.0.0.15:5173/", $nonce), // safe variant
+                "style-src 'self' 'unsafe-inline' https://10.0.0.15:5173/", // unsafe variant
                 "base-uri 'self'",
+                "form-action 'self'",
                 "font-src 'self' data: https://10.0.0.15:5173/",
                 sprintf("connect-src 'self' %s https://10.0.0.15:5173/ wss://10.0.0.15:5173/", $trackingScriptSrc),
                 sprintf("img-src 'self' data: 'nonce-%1s'", $nonce),
@@ -89,7 +93,7 @@ class SecureHeaders
             $customUrl = $logoutUrl;
         }
 
-        if (null !== $route && 'oauth/authorize' !== $route->uri) {
+        if ('' !== $customUrl && null !== $route && 'oauth/authorize' !== $route->uri) {
             $csp[] = sprintf("form-action 'self' %s", $customUrl);
         }
 

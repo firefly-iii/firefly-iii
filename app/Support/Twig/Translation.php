@@ -23,7 +23,6 @@ declare(strict_types=1);
 
 namespace FireflyIII\Support\Twig;
 
-use Illuminate\Contracts\Translation\Translator;
 use Override;
 use Twig\Extension\AbstractExtension;
 use Twig\TwigFilter;
@@ -50,9 +49,9 @@ class Translation extends AbstractExtension
     {
         return new TwigFunction(
             'journalLinkTranslation',
-            static function (string $direction, string $original): array|string|Translator {
+            static function (string $direction, string $original): string {
                 $key         = sprintf('firefly.%s_%s', $original, $direction);
-                $translation = trans($key);
+                $translation = (string) trans($key);
                 if ($key === $translation) {
                     return $original;
                 }
@@ -65,8 +64,8 @@ class Translation extends AbstractExtension
 
     public function laravelTranslation(): TwigFunction
     {
-        return new TwigFunction('__', static function (string $key): array|string|Translator {
-            $translation = trans($key);
+        return new TwigFunction('__', static function (string $key): string {
+            $translation = (string) trans($key);
             if ($key === $translation) {
                 return $key;
             }

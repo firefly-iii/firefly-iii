@@ -158,9 +158,9 @@ class PiggyBankFactory
                     // event(new ChangedAmount($piggyBank, $diff, null, null));
                 }
 
-                // no amount set, use previous amount or go to ZERO.
+                // no amount set, use previous amount
                 $toBeLinked[$account->id] = ['current_amount' => $toBeLinked[$account->id]['current_amount'] ?? '0'];
-                Log::debug(sprintf('[b] Will link account #%d with amount %s', $account->id, $toBeLinked[$account->id]['current_amount'] ?? '0'));
+                Log::debug(sprintf('[b] Will link account #%d with amount %s', $account->id, $toBeLinked[$account->id]['current_amount']));
 
                 // create event:
                 Log::debug('linkToAccountIds: Trigger change for positive amount [b].');
@@ -246,7 +246,7 @@ class PiggyBankFactory
         $piggyBankData['target_date_tz']          = $piggyBankData['target_date']?->format('e');
         $piggyBankData['account_id']              = null;
         $piggyBankData['transaction_currency_id'] = $this->getCurrency($data)->id;
-        $piggyBankData['order']                   = 131337;
+        $piggyBankData['order']                   = 131_337;
 
         try {
             /** @var PiggyBank $piggyBank */

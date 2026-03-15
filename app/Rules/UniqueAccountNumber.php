@@ -125,7 +125,7 @@ class UniqueAccountNumber implements ValidationRule
 
     private function getMaxOccurrences(): array
     {
-        $maxCounts = [AccountTypeEnum::ASSET->value   => 0, AccountTypeEnum::EXPENSE->value => 0, AccountTypeEnum::REVENUE->value => 0];
+        $maxCounts = [AccountTypeEnum::ASSET->value => 0, AccountTypeEnum::EXPENSE->value => 0, AccountTypeEnum::REVENUE->value => 0];
 
         if ('expense' === $this->expectedType || AccountTypeEnum::EXPENSE->value === $this->expectedType) {
             // IBAN should be unique amongst expense and asset accounts.

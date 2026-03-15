@@ -92,7 +92,7 @@
                                 <td>
                                     {% if not occ.fired %}
                                         <form action="{{ route('recurring.trigger', [recurrence.id]) }}" method="post"
-                                              style="display: inline;">
+                                              class="inline">
                                             <input type="hidden" name="_token" value="{{ csrf_token() }}">
                                             <input type="hidden" name="date"
                                                    value="{{ occ.date.isoFormat('YYYY-MM-DD') }}">

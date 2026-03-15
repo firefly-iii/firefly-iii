@@ -128,6 +128,12 @@ class BillDateCalculator
             }
         }
         Log::debug('end of loop');
+
+        /** @template T
+         * @param Carbon $date
+         *
+         * @return null|T
+         */
         $simple             = $set->map(static fn (Carbon $date) => $date->format('Y-m-d'));
         Log::debug(sprintf('Found %d pay dates', $set->count()), $simple->toArray());
 

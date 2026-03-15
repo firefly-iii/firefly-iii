@@ -74,12 +74,12 @@
                             <table class="table table-hover table-striped group-rules">
                                 <thead>
                                 <tr>
-                                    <th style="width:5%;">&nbsp;</th>
-                                    <th style="width:10%;">&nbsp;</th>
-                                    <th style="width:10%;">&nbsp;</th>
-                                    <th style="width:25%;">{{ 'rule_name'|_ }}</th>
-                                    <th style="width:25%;" class="hidden-xs">{{ 'rule_triggers'|_ }}</th>
-                                    <th style="width:25%;" class="hidden-xs">{{ 'rule_actions'|_ }}</th>
+                                    <th class="five">&nbsp;</th>
+                                    <th class="ten">&nbsp;</th>
+                                    <th class="ten">&nbsp;</th>
+                                    <th class="quarter">{{ 'rule_name'|_ }}</th>
+                                    <th class="quarter hidden-xs">{{ 'rule_triggers'|_ }}</th>
+                                    <th class="quarter hidden-xs">{{ 'rule_actions'|_ }}</th>
                                 </tr>
                                 </thead>
                                 <tbody class="rule-connected-list">
@@ -152,7 +152,7 @@
                                                         {% endif %}
                                                     {% endfor %}
                                                 </ul>
-                                                <ul class="small rule-triggers-show" style="cursor:pointer;display:none;" data-id="{{ rule.id }}">
+                                                <ul class="small rule-triggers-show hidden pointer" data-id="{{ rule.id }}">
                                                     <li data-id="{{ rule.id }}">{{ 'show_triggers'|_ }}</li>
                                                 </ul>
                                             {% endif %}
@@ -172,7 +172,7 @@
                                                         </li>
                                                     {% endfor %}
                                                 </ul>
-                                                <ul class="small rule-actions-show" style="cursor:pointer;display:none;" data-id="{{ rule.id }}">
+                                                <ul class="small rule-actions-show hidden pointer" data-id="{{ rule.id }}">
                                                     <li>{{ 'show_actions'|_ }}</li>
                                                 </ul>
 

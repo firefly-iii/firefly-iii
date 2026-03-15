@@ -27,7 +27,7 @@ namespace FireflyIII\Api\V1\Requests\Data\Bulk;
 use FireflyIII\Repositories\Account\AccountRepositoryInterface;
 use FireflyIII\Support\Request\ChecksLogin;
 use FireflyIII\Support\Request\ConvertsDataTypes;
-use Illuminate\Contracts\Validation\Validator;
+use FireflyIII\Validation\FireflyValidator;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Support\Facades\Log;
 
@@ -39,9 +39,11 @@ class MoveTransactionsRequest extends FormRequest
     use ChecksLogin;
     use ConvertsDataTypes;
 
+    protected array $acceptedRoles = [];
+
     public function getAll(): array
     {
-        return ['original_account'    => $this->convertInteger('original_account'), 'destination_account' => $this->convertInteger('destination_account')];
+        return ['original_account' => $this->convertInteger('original_account'), 'destination_account' => $this->convertInteger('destination_account')];
     }
 
     /**
@@ -59,9 +61,9 @@ class MoveTransactionsRequest extends FormRequest
      * Configure the validator instance with special rules for after the basic validation rules.
      * TODO this is duplicate.
      */
-    public function withValidator(Validator $validator): void
+    public function withValidator(FireflyValidator $validator): void
     {
-        $validator->after(function (Validator $validator): void {
+        $validator->after(function (FireflyValidator $validator): void {
             // validate start before end only if both are there.
             $data = $validator->getData();
             if (array_key_exists('original_account', $data) && array_key_exists('destination_account', $data)) {
@@ -73,7 +75,7 @@ class MoveTransactionsRequest extends FormRequest
         }
     }
 
-    private function validateMove(Validator $validator): void
+    private function validateMove(FireflyValidator $validator): void
     {
         $data                = $validator->getData();
         $repository          = app(AccountRepositoryInterface::class);

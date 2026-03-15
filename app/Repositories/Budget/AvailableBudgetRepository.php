@@ -69,6 +69,21 @@ class AvailableBudgetRepository implements AvailableBudgetRepositoryInterface, U
             }
             $exists[$key] = true;
         }
+
+        // grab budget limit currencies.
+        $currencies       = BudgetLimit::leftJoin('budgets', 'budgets.id', '=', 'budget_limits.budget_id')
+            ->where('budgets.user_id', $this->user->id)
+            ->distinct()
+            ->get(['budget_limits.transaction_currency_id'])
+            ->pluck('transaction_currency_id')
+            ->toArray()
+        ;
+        // delete available budgets without these currencies.
+        $this->user
+            ->availableBudgets()
+            ->whereNotIn('transaction_currency_id', $currencies)
+            ->delete()
+        ;
     }
 
     /**
@@ -102,13 +117,14 @@ class AvailableBudgetRepository implements AvailableBudgetRepositoryInterface, U
 
     public function findById(int $id): ?AvailableBudget
     {
+        /** @var null|AvailableBudget */
         return $this->user->availableBudgets->find($id);
     }
 
     #[Override]
     public function findInRange(TransactionCurrency $currency, Carbon $start, Carbon $end): Collection
     {
-        /** @var null|AvailableBudget */
+        /** @var Collection */
         return $this->user
             ->availableBudgets()
             ->where('transaction_currency_id', $currency->id)
@@ -389,17 +405,13 @@ class AvailableBudgetRepository implements AvailableBudgetRepositoryInterface, U
             return (string) $budgetLimit->amount;
         }
         // if budget limit period is inside AB period, it can be added in full.
-        if (!$limitPeriod->equals($availableBudgetPeriod) && $availableBudgetPeriod->contains($limitPeriod)) {
+        if ($availableBudgetPeriod->contains($limitPeriod)) {
             Log::debug('This budget limit is smaller than the available budget period.');
 
             return (string) $budgetLimit->amount;
         }
 
-        if (
-            !$limitPeriod->equals($availableBudgetPeriod)
-            && !$availableBudgetPeriod->contains($limitPeriod)
-            && $availableBudgetPeriod->overlapsWith($limitPeriod)
-        ) {
+        if ($availableBudgetPeriod->overlapsWith($limitPeriod)) {
             Log::debug('This budget limit is something else entirely!');
             $overlap = $availableBudgetPeriod->overlap($limitPeriod);
             if ($overlap instanceof Period) {

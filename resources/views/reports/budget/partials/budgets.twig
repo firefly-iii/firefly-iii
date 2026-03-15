@@ -2,7 +2,7 @@
     <thead>
     <tr>
         <th data-defaultsign="az">{{ 'name'|_ }}</th>
-        <th data-defaultsign="_19" style="text-align: right;">{{ 'spent'|_ }}</th>
+        <th data-defaultsign="_19" class="text-right">{{ 'spent'|_ }}</th>
         <th data-defaultsign="_19">{{ trans('list.percentage') }}</th>
     </tr>
     </thead>
@@ -13,7 +13,7 @@
                 <td data-value="{{ budget.name }}">
                     <a href="{{ route('budgets.show', budget.id) }}" title="{{ budget.name }}">{{ budget.name }}</a>
                 </td>
-                <td style="text-align: right;">&mdash;</td>
+                <td class="text-right">&mdash;</td>
                 <td>&nbsp;</td>
             </tr>
         {% endif %}
@@ -22,7 +22,7 @@
                 <td data-value="{{ budget.name }} ({{ currency.currency_name }})">
                     <a href="{{ route('budgets.show', budget.id) }}" title="{{ budget.name }}">{{ budget.name }} ({{ currency.currency_name }})</a>
                 </td>
-                <td data-value="{{ currency.sum }}" style="text-align: right;">
+                <td data-value="{{ currency.sum }}" class="text-right">
                     {{ formatAmountBySymbol(currency.sum, currency.currency_symbol, currency.currency_decimal_places) }}
                 </td>
                 <td data-value="{{ currency.sum_pct }}">{{ currency.sum_pct }}%</td>
@@ -34,7 +34,7 @@
     {% for sum in sums %}
         <tr>
             <td>{{ 'sum'|_ }} ({{ sum.currency_name }})</td>
-            <td style="text-align: right;">
+            <td class="text-right">
                 {{ formatAmountBySymbol(sum.sum, sum.currency_symbol, sum.currency_decimal_places) }}
             </td>
             <td>&nbsp;</td>

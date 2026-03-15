@@ -32,7 +32,6 @@ use Illuminate\Contracts\View\Factory;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response as LaravelResponse;
-use Illuminate\Routing\Redirector;
 use Illuminate\View\View;
 
 /**
@@ -71,13 +70,13 @@ final class AttachmentController extends Controller
         // put previous url in session
         $this->rememberPreviousUrl('attachments.delete.url');
 
-        return view('attachments.delete', ['attachment' => $attachment, 'subTitle'   => $subTitle]);
+        return view('attachments.delete', ['attachment' => $attachment, 'subTitle' => $subTitle]);
     }
 
     /**
      * Destroy attachment.
      */
-    public function destroy(Request $request, Attachment $attachment): Redirector|RedirectResponse
+    public function destroy(Request $request, Attachment $attachment): RedirectResponse
     {
         $name = $attachment->filename;
 
@@ -141,7 +140,7 @@ final class AttachmentController extends Controller
         $preFilled    = ['notes' => $this->repository->getNoteText($attachment)];
         $request->session()->flash('preFilled', $preFilled);
 
-        return view('attachments.edit', ['attachment'   => $attachment, 'subTitleIcon' => $subTitleIcon, 'subTitle'     => $subTitle]);
+        return view('attachments.edit', ['attachment' => $attachment, 'subTitleIcon' => $subTitleIcon, 'subTitle' => $subTitle]);
     }
 
     /**

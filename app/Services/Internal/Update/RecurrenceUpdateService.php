@@ -124,7 +124,7 @@ class RecurrenceUpdateService
             return $recurrence->recurrenceRepetitions()->first();
         }
         // find it:
-        $fields        = ['id'      => 'id', 'type'    => 'repetition_type', 'moment'  => 'repetition_moment', 'skip'    => 'repetition_skip', 'weekend' => 'weekend'];
+        $fields        = ['id' => 'id', 'type' => 'repetition_type', 'moment' => 'repetition_moment', 'skip' => 'repetition_skip', 'weekend' => 'weekend'];
         $query         = $recurrence->recurrenceRepetitions();
         foreach ($fields as $field => $column) {
             if (array_key_exists($field, $data)) {
@@ -265,7 +265,7 @@ class RecurrenceUpdateService
             if (!$match instanceof RecurrenceRepetition) {
                 throw new FireflyException('Cannot match recurring repetition to existing repetition. Not sure what to do. Break.');
             }
-            $fields = ['type'    => 'repetition_type', 'moment'  => 'repetition_moment', 'skip'    => 'repetition_skip', 'weekend' => 'weekend'];
+            $fields = ['type' => 'repetition_type', 'moment' => 'repetition_moment', 'skip' => 'repetition_skip', 'weekend' => 'weekend'];
             foreach ($fields as $field => $column) {
                 if (array_key_exists($field, $current)) {
                     $match->{$column} = $current[$field];
@@ -298,7 +298,7 @@ class RecurrenceUpdateService
             foreach ($transactions as $ii => $submittedTransaction) {
                 if (array_key_exists('id', $submittedTransaction) && (int) $originalTransaction['id'] === (int) $submittedTransaction['id']) {
                     Log::debug(sprintf('Match original transaction #%d with an entry in the submitted array.', $originalTransaction['id']));
-                    $combinations[] = ['original'  => $originalTransaction, 'submitted' => $submittedTransaction];
+                    $combinations[] = ['original' => $originalTransaction, 'submitted' => $submittedTransaction];
                     unset($originalTransactions[$i], $transactions[$ii]);
                 }
             }
@@ -307,7 +307,7 @@ class RecurrenceUpdateService
         if (1 === count($originalTransactions) && 1 === count($transactions)) {
             $first          = array_shift($originalTransactions);
             Log::debug(sprintf('One left of each, link them (ID is #%d)', $first['id']));
-            $combinations[] = ['original'  => $first, 'submitted' => array_shift($transactions)];
+            $combinations[] = ['original' => $first, 'submitted' => array_shift($transactions)];
             unset($first);
         }
         // if they are both empty, we can safely loop all combinations and update them.

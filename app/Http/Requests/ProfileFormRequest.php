@@ -35,6 +35,8 @@ class ProfileFormRequest extends FormRequest
 {
     use ChecksLogin;
 
+    protected array $acceptedRoles = [];
+
     /**
      * Rules for this request.
      */

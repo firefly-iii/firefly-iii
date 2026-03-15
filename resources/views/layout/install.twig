@@ -26,7 +26,7 @@
 <div class="login-box">
     <div class="login-logo">
         <strong>Firefly</strong>III<br/>
-        <span style="font-family: monospace;font-size:16pt;">installation and upgrade</span>
+        <span class="install-box-title">installation and upgrade</span>
     </div>
     {% block content %}{% endblock %}
 </div>
@@ -57,7 +57,7 @@
             s.parentNode.insertBefore(g, s);
         })();
     </script>
-    <noscript><p><img src="//{{ config('firefly.tracker_url') }}/matomo.php?idsite={{ config('firefly.tracker_site_id') }}&amp;rec=1" style="border:0;" alt=""/></p></noscript>
+    <noscript><p><img src="//{{ config('firefly.tracker_url') }}/matomo.php?idsite={{ config('firefly.tracker_site_id') }}&amp;rec=1" class="no-border" alt=""/></p></noscript>
 {% endif %}
 
 </body>

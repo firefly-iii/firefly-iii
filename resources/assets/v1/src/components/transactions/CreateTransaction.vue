@@ -653,7 +653,7 @@ export default {
                                     // console.log('Upload complete!');
                                     return true;
                                 }).catch(error => {
-                                console.error('Could not upload');
+                                console.error('[b] Could not upload');
                                 console.error(error);
                                 // console.log('Uploaded attachment #' + key);
                                 uploads++;

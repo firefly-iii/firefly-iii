@@ -37,6 +37,8 @@ class LinkTypeFormRequest extends FormRequest
     use ChecksLogin;
     use ConvertsDataTypes;
 
+    protected array $acceptedRoles = [];
+
     /**
      * Rules for this request.
      */

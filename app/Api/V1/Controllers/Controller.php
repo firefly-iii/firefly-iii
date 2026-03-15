@@ -63,6 +63,8 @@ abstract class Controller extends BaseController
     use ValidatesRequests;
     use ValidatesUserGroupTrait;
 
+    protected array $acceptedRoles           = [];
+
     protected const string CONTENT_TYPE      = 'application/vnd.api+json';
     protected const string JSON_CONTENT_TYPE = 'application/json';
 
@@ -169,6 +171,9 @@ abstract class Controller extends BaseController
         return $manager->createData($resource)->toArray();
     }
 
+    /**
+     * @deprecated
+     */
     #[Deprecated(message: <<<'TXT'
         use Request classes
          Method to grab all parameters from the URL
@@ -222,7 +227,8 @@ abstract class Controller extends BaseController
                 $value = min(max(1, $value), 2 ** 16);
                 $bag->set($integer, $value);
             }
-            if (null === $value && 'limit' === $integer && auth()->check()) {
+            // && 'limit' === $integer
+            if (null === $value && auth()->check()) {
                 // set default for user:
                 /** @var User $user */
                 $user     = auth()->user();

@@ -44,6 +44,6 @@ final class IndexController extends Controller
         $mainTitleIcon = 'fa-book';
         Log::debug(sprintf('Now at %s', __METHOD__));
 
-        return view('administrations.index')->with(['title'         => $title, 'subTitle'      => $subTitle, 'mainTitleIcon' => $mainTitleIcon]);
+        return view('administrations.index')->with(['title' => $title, 'subTitle' => $subTitle, 'mainTitleIcon' => $mainTitleIcon]);
     }
 }

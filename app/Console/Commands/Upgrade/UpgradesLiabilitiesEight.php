@@ -101,8 +101,13 @@ class UpgradesLiabilitiesEight extends Command
 
     private function hasBadOpening(Account $account): bool
     {
+        /** @var TransactionType $openingBalanceType */
         $openingBalanceType = TransactionType::whereType(TransactionTypeEnum::OPENING_BALANCE->value)->first();
+
+        /** @var TransactionType $liabilityType */
         $liabilityType      = TransactionType::whereType(TransactionTypeEnum::LIABILITY_CREDIT->value)->first();
+
+        /** @var null|TransactionJournal $openingJournal */
         $openingJournal     = TransactionJournal::leftJoin('transactions', 'transactions.transaction_journal_id', '=', 'transaction_journals.id')
             ->where('transactions.account_id', $account->id)
             ->where('transaction_journals.transaction_type_id', $openingBalanceType->id)
@@ -111,6 +116,8 @@ class UpgradesLiabilitiesEight extends Command
         if (null === $openingJournal) {
             return false;
         }
+
+        /** @var null|TransactionJournal $liabilityJournal */
         $liabilityJournal   = TransactionJournal::leftJoin('transactions', 'transactions.transaction_journal_id', '=', 'transaction_journals.id')
             ->where('transactions.account_id', $account->id)
             ->where('transaction_journals.transaction_type_id', $liabilityType->id)
@@ -120,7 +127,7 @@ class UpgradesLiabilitiesEight extends Command
             return false;
         }
 
-        return (bool) $openingJournal->date->isSameDay($liabilityJournal->date);
+        return $openingJournal->date->isSameDay($liabilityJournal->date);
     }
 
     private function isExecuted(): bool

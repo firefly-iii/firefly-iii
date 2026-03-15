@@ -116,8 +116,15 @@ class LinkTypeRepository implements LinkTypeRepositoryInterface, UserGroupInterf
         $links        = $linkType->transactionJournalLinks()->get(['source_id', 'destination_id']);
         $sources      = $links->pluck('source_id')->toArray();
         $destinations = $links->pluck('destination_id')->toArray();
+        $joined       = array_unique(array_merge($sources, $destinations));
 
-        return array_unique(array_merge($sources, $destinations));
+        return $this->user
+            ->transactionJournals()
+            ->whereIn('id', $joined)
+            ->get(['transaction_journals.id'])
+            ->pluck('id')
+            ->toArray()
+        ;
     }
 
     /**

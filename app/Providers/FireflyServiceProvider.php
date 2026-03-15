@@ -70,6 +70,7 @@ use FireflyIII\Support\Form\RuleForm;
 use FireflyIII\Support\Navigation;
 use FireflyIII\Support\Preferences;
 use FireflyIII\Support\Steam;
+use FireflyIII\TransactionRules\Engine\CustomExpressionLanguage;
 use FireflyIII\TransactionRules\Engine\RuleEngineInterface;
 use FireflyIII\TransactionRules\Engine\SearchRuleEngine;
 use FireflyIII\TransactionRules\Expressions\ActionExpressionLanguageProvider;
@@ -161,7 +162,7 @@ class FireflyServiceProvider extends ServiceProvider
 
         // rule expression language
         $this->app->singleton(static function (): ExpressionLanguage {
-            $expressionLanguage = new ExpressionLanguage();
+            $expressionLanguage = new CustomExpressionLanguage();
             $expressionLanguage->registerProvider(new ActionExpressionLanguageProvider());
 
             return $expressionLanguage;

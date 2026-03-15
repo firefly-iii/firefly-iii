@@ -57,24 +57,28 @@ class CorrectsIbans extends Command
 
         /** @var Account $account */
         foreach ($accounts as $account) {
-            $userId = $account->user_id;
+            $userId                = $account->user_id;
             $set[$userId] ??= [];
-            $iban   = (string) $account->iban;
+            $iban                  = (string) $account->iban;
             if ('' === $iban) {
                 continue;
             }
-            $type   = $account->accountType->type;
+            $type                  = $account->accountType->type;
             if (in_array($type, [AccountTypeEnum::LOAN->value, AccountTypeEnum::DEBT->value, AccountTypeEnum::MORTGAGE->value], true)) {
                 $type = 'liabilities';
             }
-            // iban already in use! two exceptions exist:
-            if (
-                array_key_exists($iban, $set[$userId]) && (
-                    !AccountTypeEnum::EXPENSE->value === $set[$userId][$iban]
-                    && AccountTypeEnum::REVENUE->value === $type
-                    && !(AccountTypeEnum::REVENUE->value === $set[$userId][$iban] && AccountTypeEnum::EXPENSE->value === $type)
-                )
-            ) {
+            $showWarningAndCorrect = false;
+            if (array_key_exists($iban, $set[$userId])) {
+                // the type is a revenue account, and the existing IBAN is NOT an expense account.
+                if (AccountTypeEnum::REVENUE->value === $type && AccountTypeEnum::EXPENSE->value !== $set[$userId][$iban]) {
+                    $showWarningAndCorrect = true;
+                }
+                // the type is an expense account, and the existing IBAN is NOT a revenue account
+                if (AccountTypeEnum::EXPENSE->value === $type && AccountTypeEnum::REVENUE->value !== $set[$userId][$iban]) {
+                    $showWarningAndCorrect = true;
+                }
+            }
+            if ($showWarningAndCorrect) {
                 $this->friendlyWarning(sprintf(
                     'IBAN "%s" is used more than once and will be removed from %s #%d ("%s")',
                     $iban,

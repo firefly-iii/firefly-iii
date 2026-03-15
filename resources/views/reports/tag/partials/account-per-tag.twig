@@ -3,7 +3,7 @@
     <tr>
         <th data-defaultsign="az">{{ 'name'|_ }}</th>
         {% for tag in tags %}
-            <th data-defaultsign="_19" style="text-align: right;">{{ tag.tag }}</th>
+            <th data-defaultsign="_19" class="text-right">{{ tag.tag }}</th>
         {% endfor %}
     </tr>
     </thead>
@@ -15,7 +15,7 @@
                     <a href="{{ route('accounts.show', account.id) }}" title="{{ account.iban }}">{{ account.name }} ({{ currency.currency_name }})</a>
                 </td>
                 {% for tag in tags %}
-                    <td style="text-align: right;">
+                    <td class="text-right">
                         {% if currency.tags[tag.id] %}
                             <span title="{{ 'earned'|_ }}: {{ formatAmountBySymbol(currency.tags[tag.id].earned, currency.currency_symbol, currency.currency_decimal_places, false) }}, {{ 'spent'|_ }}: {{ formatAmountBySymbol(currency.tags[tag.id].spent, currency.currency_symbol, currency.currency_decimal_places, false) }}"
                             {{ formatAmountBySymbol(currency.tags[tag.id].sum, currency.currency_symbol, currency.currency_decimal_places) }}

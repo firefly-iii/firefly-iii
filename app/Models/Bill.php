@@ -23,6 +23,7 @@ declare(strict_types=1);
 
 namespace FireflyIII\Models;
 
+use Carbon\Carbon;
 use FireflyIII\Casts\SeparateTimezoneCaster;
 use FireflyIII\Handlers\Observer\BillObserver;
 use FireflyIII\Support\Models\ReturnsIntegerIdTrait;
@@ -38,6 +39,13 @@ use Illuminate\Database\Eloquent\Relations\MorphToMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
+/**
+ * @property Carbon              $date
+ * @property null|Carbon         $end_date
+ * @property null|Carbon         $extension_date
+ * @property User                $user
+ * @property TransactionCurrency $transactionCurrency
+ */
 #[ObservedBy([BillObserver::class])]
 class Bill extends Model
 {

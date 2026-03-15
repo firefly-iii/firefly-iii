@@ -165,7 +165,7 @@ final class ShowController extends Controller
 
     private function getAccounts(array $group): array
     {
-        $accounts                = ['source'      => [], 'destination' => []];
+        $accounts                = ['source' => [], 'destination' => []];
 
         foreach ($group['transactions'] as $transaction) {
             $accounts['source'][]      = [

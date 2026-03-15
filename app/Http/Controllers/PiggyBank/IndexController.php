@@ -89,7 +89,7 @@ final class IndexController extends Controller
 
         ksort($piggyBanks);
 
-        return view('piggy-banks.index', ['piggyBanks' => $piggyBanks, 'accounts'   => $accounts]);
+        return view('piggy-banks.index', ['piggyBanks' => $piggyBanks, 'accounts' => $accounts]);
     }
 
     /**

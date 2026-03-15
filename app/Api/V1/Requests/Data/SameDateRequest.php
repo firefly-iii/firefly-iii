@@ -40,12 +40,14 @@ class SameDateRequest extends FormRequest
     use ChecksLogin;
     use ConvertsDataTypes;
 
+    protected array $acceptedRoles = [];
+
     /**
      * Get all data from the request.
      */
     public function getAll(): array
     {
-        return ['start' => $this->getCarbonDate('start'), 'end'   => $this->getCarbonDate('end')];
+        return ['start' => $this->getCarbonDate('start'), 'end' => $this->getCarbonDate('end')];
     }
 
     /**
@@ -53,6 +55,6 @@ class SameDateRequest extends FormRequest
      */
     public function rules(): array
     {
-        return ['start' => 'required|date', 'end'   => 'required|date|after_or_equal:start'];
+        return ['start' => 'required|date', 'end' => 'required|date|after_or_equal:start'];
     }
 }

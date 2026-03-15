@@ -3,13 +3,12 @@
 Firefly III is an application to manage your personal finances. As such, the developer has adopted this security
 disclosure and response policy to ensure that critical issues are responsibly handled.
 
-## Supported Versions
+## Supported versions
 
 Only the latest Firefly III release is maintained. Applicable fixes, including security fixes, will not backported to
-older release branches. Please refer to [releases.md](https://github.com/firefly-iii/firefly-iii/blob/main/releases.md)
-for details.
+older release branches. Please refer to [releases.md](https://github.com/firefly-iii/firefly-iii/blob/main/releases.md) for details.
 
-## Reporting a Vulnerability - Private Disclosure Process
+## Reporting a vulnerability - private disclosure process
 
 Security is of the highest importance and all security vulnerabilities or suspected security vulnerabilities should be
 reported to Firefly III privately, to minimize attacks against current users of Firefly III before they are fixed.
@@ -28,7 +27,7 @@ within 3 business days, including a detailed plan to investigate the issue and a
 the meantime. Do not report non-security-impacting bugs through this channel.
 Use [GitHub issues](https://github.com/firefly-iii/firefly-iii/issues/new/choose) instead.
 
-### Proposed Email Content
+### Proposed email content
 
 Provide a descriptive subject line and in the body of the email include the following information:
 
@@ -47,7 +46,7 @@ Provide a descriptive subject line and in the body of the email include the foll
 * When you know of or suspect a potential vulnerability on another project that is used by Firefly III. For example
   Firefly III has a dependency on Docker, MySQL, etc.
 
-## Patch, Release, and Disclosure
+## Patch, release, and disclosure
 
 The Firefly III developer will respond to vulnerability reports as follows:
 
@@ -75,7 +74,7 @@ The Firefly III developer will respond to vulnerability reports as follows:
 8. Once the fix is confirmed, the developer will patch the vulnerability in the next patch or minor release. Upon
    release of the patched version of Firefly III, we will follow the **Public Disclosure Process**.
 
-### Public Disclosure Process
+### Public disclosure process
 
 The developer publishes a public [advisory](https://github.com/firefly-iii/firefly-iii/security/advisories) to the
 Firefly III community via GitHub. In most cases, additional communication via Mastodon, Gitter and other channels will
@@ -96,6 +95,16 @@ operators to explicitly configure settings, role based access control, and other
 III to provide a hardened Firefly III environment. We will not act on any security disclosure that relates to a lack of
 safe defaults. Over time, we will work towards improved safe-by-default configuration, taking into account backwards
 compatibility.
+
+## Security scanning through automated means
+
+There is some additional guidance for security vulnerabilities or suspected security vulnerabilities that have been 
+found with the full or partial support of AI coding agents, large language models and other code-scanning tools. These reports are often not applicable, not actually a vulnerability, or just plain wrong. This takes time away from responding to
+*actual* security vulnerabilities or suspected security vulnerabilities. If you use automated means to search for security vulnerabilities in the Firefly III code base, please take care to:
+
+1. manually validate the results before you submit a report,
+2. explain how the vulnerability can actually be abused by a nefarious third party, and
+3. try to limit the verbosity of your report.
 
 ## Credits
 

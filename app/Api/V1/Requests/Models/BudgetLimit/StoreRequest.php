@@ -26,6 +26,7 @@ namespace FireflyIII\Api\V1\Requests\Models\BudgetLimit;
 
 use Carbon\Carbon;
 use FireflyIII\Factory\TransactionCurrencyFactory;
+use FireflyIII\Models\Budget;
 use FireflyIII\Repositories\Currency\CurrencyRepositoryInterface;
 use FireflyIII\Rules\IsBoolean;
 use FireflyIII\Rules\IsValidPositiveAmount;
@@ -43,6 +44,8 @@ class StoreRequest extends FormRequest
 {
     use ChecksLogin;
     use ConvertsDataTypes;
+
+    protected array $acceptedRoles = [];
 
     /**
      * Get all data from the request.
@@ -85,6 +88,7 @@ class StoreRequest extends FormRequest
      */
     public function withValidator(Validator $validator): void
     {
+        /** @var Budget $budget */
         $budget = $this->route()->parameter('budget');
         $validator->after(static function (Validator $validator) use ($budget): void {
             if (0 !== count($validator->failed())) {

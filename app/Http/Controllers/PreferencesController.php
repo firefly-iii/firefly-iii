@@ -40,7 +40,6 @@ use FireflyIII\User;
 use Illuminate\Contracts\View\Factory;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
-use Illuminate\Routing\Redirector;
 use Illuminate\Support\Facades\Log;
 use Illuminate\View\View;
 use JsonException;
@@ -86,7 +85,7 @@ final class PreferencesController extends Controller
             AccountTypeEnum::DEBT->value,
             AccountTypeEnum::MORTGAGE->value,
         ]);
-        $isDocker                       = env('IS_DOCKER', false);
+        $isDocker                       = config('firefly.is_docker');
         $groupedAccounts                = [];
 
         /** @var Account $account */
@@ -227,7 +226,7 @@ final class PreferencesController extends Controller
      * @SuppressWarnings("PHPMD.ExcessiveMethodLength")
      * @SuppressWarnings("PHPMD.NPathComplexity")
      */
-    public function postIndex(PreferencesRequest $request): Redirector|RedirectResponse
+    public function postIndex(PreferencesRequest $request): RedirectResponse
     {
         Log::debug('postIndex for preferences.');
         // front page accounts

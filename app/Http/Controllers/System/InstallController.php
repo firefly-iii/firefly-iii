@@ -59,7 +59,7 @@ final class InstallController extends Controller
         // there are 5 initial commands
         // Check 4 places: InstallController, Docker image, UpgradeDatabase, composer.json
         'firefly-iii:create-database'        => [],
-        'migrate'                            => ['--seed'  => true, '--force' => true],
+        'migrate'                            => ['--seed' => true, '--force' => true],
         'generate-keys'                      => [], // an exception :(
         'firefly-iii:upgrade-database'       => [],
         'firefly-iii:set-latest-version'     => ['--james-is-cool' => true],
@@ -102,7 +102,7 @@ final class InstallController extends Controller
     public function runCommand(Request $request): JsonResponse
     {
         $requestIndex = (int) $request->get('index');
-        $response     = ['hasNextCommand' => false, 'done'           => true, 'previous'       => null, 'error'          => false, 'errorMessage'   => null];
+        $response     = ['hasNextCommand' => false, 'done' => true, 'previous' => null, 'error' => false, 'errorMessage' => null];
 
         Log::debug(sprintf('Will now run commands. Request index is %d', $requestIndex));
         $indexes      = array_keys($this->upgradeCommands);

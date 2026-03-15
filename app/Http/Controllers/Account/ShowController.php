@@ -77,7 +77,7 @@ final class ShowController extends Controller
     /**
      * Show an account.
      *
-     * @return Factory|Redirector|RedirectResponse|View
+     * @return Factory|RedirectResponse|View
      *
      * @throws ContainerExceptionInterface
      * @throws FireflyException
@@ -121,7 +121,7 @@ final class ShowController extends Controller
         $currency         = $accountCurrency ?? $this->primaryCurrency;
         $fStart           = $start->isoFormat($this->monthAndDayFormat);
         $fEnd             = $end->isoFormat($this->monthAndDayFormat);
-        $subTitle         = (string) trans('firefly.journals_in_period_for_account', ['name'  => $account->name, 'start' => $fStart, 'end'   => $fEnd]);
+        $subTitle         = (string) trans('firefly.journals_in_period_for_account', ['name' => $account->name, 'start' => $fStart, 'end' => $fEnd]);
         $chartUrl         = route('chart.account.period', [$account->id, $start->format('Y-m-d'), $end->format('Y-m-d')]);
         $firstTransaction = $this->repository->oldestJournalDate($account) ?? $start;
 
@@ -197,7 +197,7 @@ final class ShowController extends Controller
     /**
      * Show an account.
      *
-     * @return Factory|Redirector|RedirectResponse|View
+     * @return Factory|RedirectResponse|View
      *
      * @throws ContainerExceptionInterface
      * @throws NotFoundExceptionInterface

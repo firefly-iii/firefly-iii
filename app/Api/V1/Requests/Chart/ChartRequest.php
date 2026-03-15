@@ -28,7 +28,7 @@ use FireflyIII\Enums\UserRoleEnum;
 use FireflyIII\Support\Http\Api\ValidatesUserGroupTrait;
 use FireflyIII\Support\Request\ChecksLogin;
 use FireflyIII\Support\Request\ConvertsDataTypes;
-use Illuminate\Contracts\Validation\Validator;
+use FireflyIII\Validation\FireflyValidator;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Support\Facades\Log;
 
@@ -69,9 +69,9 @@ class ChartRequest extends FormRequest
         ];
     }
 
-    public function withValidator(Validator $validator): void
+    public function withValidator(FireflyValidator $validator): void
     {
-        $validator->after(static function (Validator $validator): void {
+        $validator->after(static function (FireflyValidator $validator): void {
             // validate transaction query data.
             $data = $validator->getData();
             if (!array_key_exists('accounts', $data)) {

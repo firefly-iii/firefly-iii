@@ -32,6 +32,9 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 use function Safe\json_decode;
 use function Safe\json_encode;
 
+/**
+ * @property TransactionJournal $transactionJournal
+ */
 class TransactionJournalMeta extends Model
 {
     use ReturnsIntegerIdTrait;

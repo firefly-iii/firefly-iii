@@ -151,7 +151,7 @@ class RecalculatesPrimaryCurrencyAmounts
             ->where(static function (Builder $q): void {
                 $q->whereNotNull('native_amount')->orWhereNotNull('native_foreign_amount');
             })
-            ->update(['native_amount'         => null, 'native_foreign_amount' => null])
+            ->update(['native_amount' => null, 'native_foreign_amount' => null])
         ;
         Log::debug(sprintf('Reset %d transactions.', $success));
     }

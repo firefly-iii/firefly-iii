@@ -27,14 +27,12 @@ use Carbon\Carbon;
 use FireflyIII\Events\Security\System\UnknownUserTriedLogin;
 use FireflyIII\Events\Security\User\UserFailedLoginAttempt;
 use FireflyIII\Events\Security\User\UserSuccessfullyLoggedIn;
-use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Http\Controllers\Controller;
 use FireflyIII\Providers\RouteServiceProvider;
 use FireflyIII\Repositories\User\UserRepositoryInterface;
 use FireflyIII\Support\Facades\FireflyConfig;
 use FireflyIII\Support\Facades\Steam;
 use FireflyIII\User;
-use Illuminate\Contracts\Foundation\Application;
 use Illuminate\Contracts\View\Factory;
 use Illuminate\Contracts\View\View;
 use Illuminate\Foundation\Auth\AuthenticatesUsers;
@@ -48,8 +46,6 @@ use Illuminate\Support\Facades\Cookie;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Validation\ValidationException;
-use Psr\Container\ContainerExceptionInterface;
-use Psr\Container\NotFoundExceptionInterface;
 use Symfony\Component\HttpFoundation\Response as ResponseAlias;
 
 /**
@@ -153,7 +149,7 @@ final class LoginController extends Controller
     /**
      * Log the user out of the application.
      */
-    public function logout(Request $request): Redirector|RedirectResponse|Response
+    public function logout(Request $request): RedirectResponse|Response
     {
         $authGuard  = config('firefly.authentication_guard');
         $logoutUrl  = config('firefly.custom_logout_url');
@@ -181,12 +177,6 @@ final class LoginController extends Controller
 
     /**
      * Show the application's login form.
-     *
-     * @return Application|Factory|Redirector|RedirectResponse|View
-     *
-     * @throws FireflyException
-     * @throws ContainerExceptionInterface
-     * @throws NotFoundExceptionInterface
      */
     public function showLoginForm(Request $request): Factory|Redirector|RedirectResponse|View
     {
@@ -275,7 +265,7 @@ final class LoginController extends Controller
         $request->session()->regenerate();
         $this->clearLoginAttempts($request);
         $response = $this->authenticated($request, $this->guard()->user());
-        if ($response) {
+        if (null !== $response) {
             return $response;
         }
         $path     = Steam::getSafeUrl(session()->pull('url.intended', route('index')), route('index'));

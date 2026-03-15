@@ -91,18 +91,18 @@
                         <h3 class="box-title">{{ 'transactions'|_ }}</h3>
                     </div>
                     <div class="box-body">
-                        <p class="search_ongoing text-center" style="margin-top:70px;">
+                        <p class="search_ongoing text-center">
                             {{ 'search_searching'|_ }}
                         </p>
-                        <div class="search_results" style="display: none;"></div>
+                        <div class="search_results hidden"></div>
                         {# loading indicator #}
                         <div class="overlay">
                             <span class="fa fa-refresh fa-spin"></span>
                         </div>
 
-                        <div class="row mass_edit_all hidden-xs" style="display: none;">
+                        <div class="row mass_edit_all hidden-xs hidden">
                             <div class="col-lg-6 col-md-12 col-sm-12 col-xs-12">
-                                <div class="mass_button_options btn-group btn-group" style="display:none;">
+                                <div class="mass_button_options btn-group btn-group hidden">
                                     <a href="#" class="btn btn-default mass_edit"><span class="fa fa-fw fa-pencil"></span> <span>{{ 'edit_selected'|_ }}</span></a>
                                     <a href="#" class="btn btn-default bulk_edit"><span>{{ 'bulk_edit'|_ }}</span></a>
                                     <a href="#" class="btn btn-danger mass_delete"><span class="fa fa-fw fa-trash"></span>
@@ -114,7 +114,7 @@
                                 <div class="mass_buttons btn-group btn-group pull-right">
                                     <a href="#" class="btn btn-default mass_select"><span
                                             class="fa fa-fw fa-check-square-o"></span> {{ 'select_transactions'|_ }}</a>
-                                    <a href="#" class="btn btn-default mass_stop_select" style="display:none;"><span class="fa faw-fw fa-square-o"
+                                    <a href="#" class="btn btn-default mass_stop_select hidden"><span class="fa faw-fw fa-square-o"
                                         ></span> {{ 'stop_selection'|_ }}</a>
                                 </div>
                             </div>
@@ -123,7 +123,7 @@
                 </div>
             </div>
         </div>
-        <div class="row error_row" style="display:none; ">
+        <div class="row error_row hidden">
             <div class="col-lg-12 col-md-12 col-sm-12">
                 <div class="box box-danger">
                     <div class="box-header with-border">

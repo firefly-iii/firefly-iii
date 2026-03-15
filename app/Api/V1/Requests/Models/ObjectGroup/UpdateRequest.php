@@ -37,6 +37,8 @@ class UpdateRequest extends FormRequest
     use ChecksLogin;
     use ConvertsDataTypes;
 
+    protected array $acceptedRoles = [];
+
     public function getUpdateData(): array
     {
         $fields = ['title' => ['title', 'convertString'], 'order' => ['order', 'convertInteger']];

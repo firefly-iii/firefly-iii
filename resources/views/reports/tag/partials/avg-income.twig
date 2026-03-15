@@ -2,8 +2,8 @@
     <thead>
     <tr>
         <th data-defaultsign="az">{{ 'account'|_ }}</th>
-        <th data-defaultsign="_19" style="text-align: right;">{{ 'spent_average'|_ }}</th>
-        <th data-defaultsign="_19" style="text-align: right;">{{ 'total'|_ }}</th>
+        <th data-defaultsign="_19" class="text-right">{{ 'spent_average'|_ }}</th>
+        <th data-defaultsign="_19" class="text-right">{{ 'total'|_ }}</th>
         <th data-defaultsign="_19">{{ 'transaction_count'|_ }}</th>
     </tr>
     </thead>
@@ -19,11 +19,11 @@
                 {{ row.source_account_name }}
             </a>
         </td>
-        <td data-value="{{ row.avg }}" style="text-align: right;">
+        <td data-value="{{ row.avg }}" class="text-right">
             {{ formatAmountBySymbol(row.avg, row.currency_symbol, row.currency_decimal_places) }}
         </td>
 
-        <td data-value="{{ row.sum }}" style="text-align: right;">
+        <td data-value="{{ row.sum }}" class="text-right">
             {{ formatAmountBySymbol(row.sum, row.currency_symbol, row.currency_decimal_places) }}
         </td>
 

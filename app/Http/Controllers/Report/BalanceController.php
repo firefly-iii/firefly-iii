@@ -66,11 +66,11 @@ final class BalanceController extends Controller
      */
     public function general(Collection $accounts, Carbon $start, Carbon $end)
     {
-        $report  = ['budgets'  => [], 'accounts' => []];
+        $report  = ['budgets' => [], 'accounts' => []];
 
         /** @var Account $account */
         foreach ($accounts as $account) {
-            $report['accounts'][$account->id] = ['id'   => $account->id, 'name' => $account->name, 'iban' => $account->iban, 'sum'  => '0'];
+            $report['accounts'][$account->id] = ['id' => $account->id, 'name' => $account->name, 'iban' => $account->iban, 'sum' => '0'];
         }
 
         $budgets = $this->repository->getBudgets();

@@ -219,7 +219,7 @@ class AccountFactory
             'user_group_id'   => $this->user->user_group_id,
             'account_type_id' => $type->id,
             'name'            => $data['name'],
-            'order'           => 25000,
+            'order'           => 25_000,
             'virtual_balance' => $virtualBalance,
             'active'          => $active,
             'iban'            => $data['iban'],

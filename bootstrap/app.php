@@ -47,7 +47,6 @@ use Illuminate\Http\Middleware\HandleCors;
 use Illuminate\Http\Middleware\ValidatePostSize;
 use Illuminate\View\Middleware\ShareErrorsFromSession;
 use Laravel\Passport\Http\Middleware\CreateFreshApiToken;
-use Laravel\Sanctum\Http\Middleware\EnsureFrontendRequestsAreStateful;
 use PragmaRX\Google2FALaravel\Middleware as MFAMiddleware;
 
 /*
@@ -63,19 +62,20 @@ use PragmaRX\Google2FALaravel\Middleware as MFAMiddleware;
 
 bcscale(12);
 
-if (!function_exists('envNonEmpty')) {
+if (!function_exists('envDefaultWhenEmpty')) {
     /**
      *
      * @return mixed|null
      */
-    function envNonEmpty(string $key, string | int | bool | null $default = null)
+    function envDefaultWhenEmpty(mixed $value, string | int | bool | null $default = null): mixed
     {
-        $result = env($key, $default);
-        if ('' === $result) {
+        if(null === $value) {
             return $default;
         }
-
-        return $result;
+        if('' === $value) {
+            return $default;
+        }
+        return $value;
     }
 }
 

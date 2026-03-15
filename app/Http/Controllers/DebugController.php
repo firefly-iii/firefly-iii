@@ -43,7 +43,6 @@ use FireflyIII\User;
 use Illuminate\Contracts\View\Factory;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
-use Illuminate\Routing\Redirector;
 use Illuminate\Support\Facades\Artisan;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
@@ -104,7 +103,7 @@ final class DebugController extends Controller
      *
      * @throws FireflyException
      */
-    public function flush(Request $request): Redirector|RedirectResponse
+    public function flush(Request $request): RedirectResponse
     {
         Preferences::mark();
         $request->session()->forget(['start', 'end', '_previous', 'viewRange', 'range', 'is_custom_range', 'temp-mfa-secret', 'temp-mfa-codes']);
@@ -161,10 +160,10 @@ final class DebugController extends Controller
         }
         if ('' !== $logContent) {
             // last few lines
-            $logContent = 'Truncated from this point <----|'.substr($logContent, -16384);
+            $logContent = 'Truncated from this point <----|'.substr($logContent, -16_384);
         }
 
-        return view('debug', ['table'      => $table, 'now'        => $now, 'logContent' => $logContent]);
+        return view('debug', ['table' => $table, 'now' => $now, 'logContent' => $logContent]);
     }
 
     public function routes(Request $request): never
@@ -267,7 +266,7 @@ final class DebugController extends Controller
     /**
      * Flash all types of messages.
      */
-    public function testFlash(Request $request): Redirector|RedirectResponse
+    public function testFlash(Request $request): RedirectResponse
     {
         $request->session()->flash('success', 'This is a success message.');
         $request->session()->flash('info', 'This is an info message.');
@@ -285,7 +284,7 @@ final class DebugController extends Controller
         $app    = $this->getAppInfo();
         $user   = $this->getUserInfo();
 
-        return (string) view('partials.debug-table', ['system' => $system, 'docker' => $docker, 'app'    => $app, 'user'   => $user]);
+        return (string) view('partials.debug-table', ['system' => $system, 'docker' => $docker, 'app' => $app, 'user' => $user]);
     }
 
     private function getAppInfo(): array
@@ -304,7 +303,7 @@ final class DebugController extends Controller
 
         return [
             'debug'              => var_export(config('app.debug'), true),
-            'audit_log_channel'  => envNonEmpty('AUDIT_LOG_CHANNEL', '(empty)'),
+            'audit_log_channel'  => implode(', ', config('logging.channels.audit.channels')),
             'default_language'   => (string) config('firefly.default_language'),
             'default_locale'     => (string) config('firefly.default_locale'),
             'remote_header'      => 'remote_user_guard' === $userGuard ? config('auth.guard_header') : 'N/A',
@@ -323,11 +322,11 @@ final class DebugController extends Controller
     private function getBuildInfo(): array
     {
         $return = [
-            'is_docker'       => env('IS_DOCKER', false),
+            'is_docker'       => config('firefly.is_docker'),
             'build'           => '(unknown)',
             'build_date'      => '(unknown)',
-            'base_build'      => '(unknown)',
-            'base_build_date' => '(unknown)',
+            'base_build'      => config('firefly.base_image_build'),
+            'base_build_date' => config('firefly.base_image_date'),
         ];
 
         try {
@@ -347,12 +346,6 @@ final class DebugController extends Controller
         } catch (Exception $e) {
             Log::debug('Could not check build date, but thats ok.');
             Log::warning($e->getMessage());
-        }
-        if ('' !== (string) env('BASE_IMAGE_BUILD')) {
-            $return['base_build'] = env('BASE_IMAGE_BUILD');
-        }
-        if ('' !== (string) env('BASE_IMAGE_DATE')) {
-            $return['base_build_date'] = env('BASE_IMAGE_DATE');
         }
 
         return $return;

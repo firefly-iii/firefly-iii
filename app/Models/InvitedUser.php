@@ -24,6 +24,7 @@ declare(strict_types=1);
 
 namespace FireflyIII\Models;
 
+use Carbon\Carbon;
 use FireflyIII\Casts\SeparateTimezoneCaster;
 use FireflyIII\Support\Models\ReturnsIntegerIdTrait;
 use FireflyIII\Support\Models\ReturnsIntegerUserIdTrait;
@@ -32,6 +33,9 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
+/**
+ * @property Carbon $expires
+ */
 class InvitedUser extends Model
 {
     use ReturnsIntegerIdTrait;
@@ -67,6 +71,6 @@ class InvitedUser extends Model
 
     protected function casts(): array
     {
-        return ['expires'       => SeparateTimezoneCaster::class, 'redeemed'      => 'boolean', 'user_id'       => 'integer', 'user_group_id' => 'integer'];
+        return ['expires' => SeparateTimezoneCaster::class, 'redeemed' => 'boolean', 'user_id' => 'integer', 'user_group_id' => 'integer'];
     }
 }

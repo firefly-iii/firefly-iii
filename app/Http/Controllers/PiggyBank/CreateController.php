@@ -33,7 +33,6 @@ use FireflyIII\Support\Facades\Preferences;
 use Illuminate\Contracts\View\Factory;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
-use Illuminate\Routing\Redirector;
 use Illuminate\Support\Facades\Log;
 use Illuminate\View\View;
 
@@ -84,13 +83,13 @@ final class CreateController extends Controller
         }
         session()->forget('piggy-banks.create.fromStore');
 
-        return view('piggy-banks.create', ['subTitle'     => $subTitle, 'subTitleIcon' => $subTitleIcon, 'preFilled'    => $preFilled]);
+        return view('piggy-banks.create', ['subTitle' => $subTitle, 'subTitleIcon' => $subTitleIcon, 'preFilled' => $preFilled]);
     }
 
     /**
      * Store a new piggy bank.
      *
-     * @return Redirector|RedirectResponse
+     * @return RedirectResponse
      *
      * @throws FireflyException
      */

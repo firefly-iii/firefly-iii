@@ -36,6 +36,8 @@ class DestroyRequest extends FormRequest
     use ChecksLogin;
     use ConvertsDataTypes;
 
+    protected array $acceptedRoles = [];
+
     /**
      * Get all data from the request.
      */
@@ -54,6 +56,6 @@ class DestroyRequest extends FormRequest
             .',accounts,asset_accounts,expense_accounts,revenue_accounts,liabilities,transactions,withdrawals,deposits,transfers'
             .',not_assets_liabilities';
 
-        return ['objects' => sprintf('required|max:255|min:1|string|in:%s', $valid), 'unused'  => 'in:true,false'];
+        return ['objects' => sprintf('required|max:255|min:1|string|in:%s', $valid), 'unused' => 'in:true,false'];
     }
 }

@@ -2,9 +2,9 @@
     <thead>
     <tr>
         <th data-defaultsign="az">{{ 'name'|_ }}</th>
-        <th data-defaultsign="_19" style="text-align: right;">{{ 'spent'|_ }}</th>
-        <th data-defaultsign="_19" style="text-align: right;">{{ 'earned'|_ }}</th>
-        <th data-defaultsign="_19" style="text-align: right;">{{ 'sum'|_ }}</th>
+        <th data-defaultsign="_19" class="text-right">{{ 'spent'|_ }}</th>
+        <th data-defaultsign="_19" class="text-right">{{ 'earned'|_ }}</th>
+        <th data-defaultsign="_19" class="text-right">{{ 'sum'|_ }}</th>
     </tr>
     </thead>
     <tbody>
@@ -14,9 +14,9 @@
                 <td data-value="{{ tag.name }}">
                     <a href="{{ route('tags.show', [tag.id]) }}" title="{{ tag.name }}">{{ tag.name }}</a>
                 </td>
-                <td style="text-align: right;">&mdash;</td>
-                <td style="text-align: right;">&mdash;</td>
-                <td style="text-align: right;">&mdash;</td>
+                <td class="text-right">&mdash;</td>
+                <td class="text-right">&mdash;</td>
+                <td class="text-right">&mdash;</td>
             </tr>
         {% endif %}
         {% for currency in tag.currencies %}
@@ -24,13 +24,13 @@
                 <td data-value="{{ tag.name }} ({{ currency.currency_name }})">
                     <a href="{{ route('tags.show', [tag.id]) }}" title="{{ tag.name }}">{{ tag.name }} ({{ currency.currency_name }})</a>
                 </td>
-                <td data-value="{{ currency.spent }}" style="text-align: right;">
+                <td data-value="{{ currency.spent }}" class="text-right">
                     {{ formatAmountBySymbol(currency.spent, currency.currency_symbol, currency.currency_decimal_places) }}
                 </td>
-                <td data-value="{{ currency.earned }}" style="text-align: right;">
+                <td data-value="{{ currency.earned }}" class="text-right">
                     {{ formatAmountBySymbol(currency.earned, currency.currency_symbol, currency.currency_decimal_places) }}
                 </td>
-                <td data-value="{{ currency.sum }}" style="text-align: right;">
+                <td data-value="{{ currency.sum }}" class="text-right">
                     {{ formatAmountBySymbol(currency.sum, currency.currency_symbol, currency.currency_decimal_places) }}
                 </td>
             </tr>
@@ -41,13 +41,13 @@
     {% for sum in sums %}
         <tr>
             <td>{{ 'sum'|_ }} ({{ sum.currency_name }})</td>
-            <td style="text-align: right;">
+            <td class="text-right">
                 {{ formatAmountBySymbol(sum.spent_sum, sum.currency_symbol, sum.currency_decimal_places) }}
             </td>
-            <td style="text-align: right;">
+            <td class="text-right">
                 {{ formatAmountBySymbol(sum.earned_sum, sum.currency_symbol, sum.currency_decimal_places) }}
             </td>
-            <td style="text-align: right;">
+            <td class="text-right">
                 {{ formatAmountBySymbol(sum.total_sum, sum.currency_symbol, sum.currency_decimal_places) }}
             </td>
         </tr>

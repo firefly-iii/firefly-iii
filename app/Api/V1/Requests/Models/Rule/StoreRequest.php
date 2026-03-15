@@ -42,6 +42,8 @@ class StoreRequest extends FormRequest
     use ConvertsDataTypes;
     use GetRuleConfiguration;
 
+    protected array $acceptedRoles = [];
+
     /**
      * Get all data from the request.
      */

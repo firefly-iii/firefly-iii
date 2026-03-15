@@ -52,7 +52,7 @@
                 <h4>
                     {{ trans('errors.stacktrace') }}
                 </h4>
-                <div style="font-family: monospace;font-size:11px;">
+                <div class="monospace">
                     {!!  nl2br($exception->getTraceAsString())  !!}
                 </div>
             </div>

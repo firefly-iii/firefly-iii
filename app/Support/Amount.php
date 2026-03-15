@@ -268,7 +268,7 @@ class Amount
         return [
             'mon_decimal_point' => $config['mon_decimal_point'],
             'mon_thousands_sep' => $config['mon_thousands_sep'],
-            'format'            => ['pos'  => $positive, 'neg'  => $negative, 'zero' => $positive],
+            'format'            => ['pos' => $positive, 'neg' => $negative, 'zero' => $positive],
         ];
     }
 

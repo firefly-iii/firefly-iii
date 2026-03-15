@@ -8,10 +8,10 @@
         {% endif %}
         <td colspan="1" class="hidden-xs">
             <!-- Single button -->
-            <div class="btn-group btn-group-xs action-menu pull-right" style="display: none;">
+            <div class="btn-group btn-group-xs action-menu pull-right hidden">
                 <button type="button" class="btn btn-default btn-sm dropdown-toggle" data-toggle="dropdown"
                         aria-haspopup="true" aria-expanded="false">
-                    {{ 'actions'|_ }} <span class="caret"></span>
+                    {{ 'actions'|_ }}<span class="caret"></span>
                 </button>
                 <ul class="dropdown-menu dropdown-menu-right">
                     <li><a href="#" class="mass-edit"><span class="fa fa-fw fa-pencil"></span>
@@ -52,14 +52,14 @@
     <tbody>
     {% for group in groups %}
         {% if group.count > 1 %}
-            <tr style="border-top:1px #aaa solid;">
-                <td colspan="2" style="border-top:1px #aaa solid;">
+            <tr class="top-light-border">
+                <td colspan="2" class="top-light-border">
                     <small><strong>
                             <a href="{{ route('transactions.show', [group.id]) }}"
                                title="{{ group.title }}">{{ group.title }}</a>
                         </strong></small>
                 </td>
-                <td colspan="1" style="text-align:right;border-top:1px #aaa solid;">
+                <td colspan="1" class="text-right top-light-border">
                     {% for sum in group.sums %}
                         {% if group.transaction_type == 'Deposit' %}
                             {{ formatAmountBySymbol(sum.amount*-1, sum.currency_symbol, sum.currency_decimal_places) }}
@@ -87,11 +87,11 @@
                 </td>
                 <!-- column to span accounts + extra fields -->
                 {% if showCategory or showBudget %}
-                    <td style="border-top:1px #aaa solid;" colspan="3">&nbsp;</td>
+                    <td class="top-light-border" colspan="3">&nbsp;</td>
                 {% else %}
-                    <td style="border-top:1px #aaa solid;" colspan="2">&nbsp;</td>
+                    <td class="top-light-border" colspan="2">&nbsp;</td>
                 {% endif %}
-                <td style="border-top:1px #aaa solid;" colspan="2" class="hidden-xs">
+                <td class="top-light-border hidden-xs" colspan="2">
                     <div class="btn-group btn-group-xs pull-right">
                         <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown"
                                 aria-haspopup="true" aria-expanded="false">
@@ -108,17 +108,17 @@
                         </ul>
                     </div>
                 </td>
-                <td style="border-top:1px #aaa solid;" class="hidden-xs">&nbsp;</td>
+                <td class="top-light-border hidden-xs">&nbsp;</td>
             </tr>
         {% endif %}
         {% for index, transaction in group.transactions %}
-            {% set style="" %}
+            {% set className="" %}
             {% if group.transactions|length == loop.index and group.count > 1 %}
-                {% set style="border-bottom:1px #aaa solid;" %}
+                {% set className="bottom-light-border" %}
             {% endif %}
             <tr data-date="{{ transaction.date.format('Y-m-d') }}" data-count="{{ group.count }}"
                 data-id="{{ group.id }}">
-                <td style=" {{ style|raw }}" class="hidden-xs">
+                <td class="hidden-xs {{ className }}">
                     {% if transaction.transaction_type_type == 'Withdrawal' %}
                         <span class="fa fa-long-arrow-left fa-fw"
                               title="{{ trans('firefly.Withdrawal') }}"></span>
@@ -147,7 +147,7 @@
                     {% endif %}
 
                 </td>
-                <td style=" {{ style|raw }}">
+                <td class="{{ className }}">
                     {% if transaction.reconciled %}
                         <span class="fa fa-check"></span>
                     {% endif %}
@@ -162,7 +162,7 @@
                     </a>
                     {% endif %}
                 </td>
-                <td style="{{ style|raw }};text-align:right">
+                <td class="{{ className }} text-right">
 
                     {#  deposit #}
                     {% if transaction.transaction_type_type == 'Deposit' %}
@@ -275,7 +275,7 @@
                     {% endif %}
                 </td>
                 {% if (fireflyiiiconfig('use_running_balance', true)) %}
-                <td style="{{ style|raw }};text-align:right">
+                <td class=" {{ className }} text-right">
                     {# RUNNING BALANCE #}
                     {% if (null == transaction.balance_dirty or false == transaction.balance_dirty) and null != transaction.destination_balance_after and null != transaction.source_balance_after %}
                         {% if transaction.transaction_type_type == 'Deposit' %}
@@ -335,10 +335,10 @@
                     {% endif %}
                 </td>
                 {% endif %}
-                <td style=" {{ style|raw }}">
+                <td class="{{ className }}">
                     {{ transaction.date.isoFormat(monthAndDayFormat) }}
                 </td>
-                <td style=" {{ style|raw }}">
+                <td class="{{ className }}">
                     {% if 'Cash account' == transaction.source_account_type %}
                         <span class="text-success">({{ 'cash'|_ }})</span>
                     {% else %}
@@ -346,7 +346,7 @@
                            title="{{ transaction.source_account_iban|default(transaction.source_account_name) }}">{{ transaction.source_account_name }}</a>
                     {% endif %}
                 </td>
-                <td style=" {{ style|raw }}">
+                <td class="{{ className }}">
                     {% if 'Cash account' == transaction.destination_account_type %}
                         <span class="text-success">({{ 'cash'|_ }})</span>
                     {% else %}
@@ -355,7 +355,7 @@
                     {% endif %}
                 </td>
                 {% if showCategory %}
-                    <td style=" {{ style|raw }}" class="hidden-xs">
+                    <td class="hidden-xs {{ className }}">
                         {% if transaction.category_id %}
                             <a href="{{ route('categories.show', [transaction.category_id]) }}"
                                title="{{ transaction.category_name }}">{{ transaction.category_name }}</a>
@@ -363,7 +363,7 @@
                     </td>
                 {% endif %}
                 {% if showBudget %}
-                    <td style=" {{ style|raw }}" class="hidden-xs">
+                    <td class="hidden-xs {{ className }}">
                         {% if transaction.budget_id %}
                             <a href="{{ route('budgets.show', [transaction.budget_id]) }}"
                                title="{{ transaction.budget_name }}">{{ transaction.budget_name }}</a>
@@ -372,7 +372,7 @@
                 {% endif %}
 
                 {% if group.count == 1 %}
-                    <td style=" {{ style|raw }};" class="hidden-xs">
+                    <td class="hidden-xs {{ className }}">
                         <div class="btn-group btn-group-xs pull-right">
                             <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown"
                                     aria-haspopup="true" aria-expanded="false">
@@ -400,11 +400,11 @@
 
                 {% endif %}
                 {% if group.count != 1 %}
-                    <td style=" {{ style|raw }};" class="hidden-xs">
+                    <td class="hidden-xs {{ className }}">
                         &nbsp;
                     </td>
                 {% endif %}
-                <td style="{{ style|raw }}" class="hidden-xs">
+                <td class="hidden-xs {{ className }}">
                     {% if transaction.transaction_type_type != 'Reconciliation' and transaction.transaction_type_type != 'Opening balance' and transaction.transaction_type_type != 'Liability credit' %}
                     <div class="pull-right">
                         <input id="list_{{ transaction.transaction_journal_id }}"
@@ -424,7 +424,7 @@
         <td colspan="8">
             <div class="pull-right">
                 <!-- Single button -->
-                <div class="btn-group action-menu btn-group-xs pull-right" style="display:none;">
+                <div class="btn-group action-menu btn-group-xs pull-right hidden">
                     <button type="button" class="btn btn-default btn-sm dropdown-toggle" data-toggle="dropdown"
                             aria-haspopup="true" aria-expanded="false">
                         {{ 'actions'|_ }} <span class="caret"></span>

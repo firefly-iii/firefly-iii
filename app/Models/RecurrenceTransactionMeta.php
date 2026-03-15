@@ -46,7 +46,7 @@ class RecurrenceTransactionMeta extends Model
 
     protected function casts(): array
     {
-        return ['created_at' => 'datetime', 'updated_at' => 'datetime', 'deleted_at' => 'datetime', 'name'       => 'string', 'value'      => 'string'];
+        return ['created_at' => 'datetime', 'updated_at' => 'datetime', 'deleted_at' => 'datetime', 'name' => 'string', 'value' => 'string'];
     }
 
     protected function rtId(): Attribute

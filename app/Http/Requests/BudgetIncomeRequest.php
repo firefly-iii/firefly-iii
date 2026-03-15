@@ -36,13 +36,15 @@ class BudgetIncomeRequest extends FormRequest
 {
     use ChecksLogin;
 
+    protected array $acceptedRoles = [];
+
     /**
      * Rules for this request.
      */
     public function rules(): array
     {
         // fixed
-        return ['amount' => ['required', new IsValidPositiveAmount()], 'start'  => 'required|date|before:end', 'end'    => 'required|date|after:start'];
+        return ['amount' => ['required', new IsValidPositiveAmount()], 'start' => 'required|date|before:end', 'end' => 'required|date|after:start'];
     }
 
     public function withValidator(Validator $validator): void

@@ -56,7 +56,7 @@ trait TransferValidation
         // or try to find the account:
         $search      = $this->findExistingAccount($validTypes, $array);
         if (null === $search) {
-            $this->destError = (string) trans('validation.transfer_dest_bad_data', ['id'   => $accountId, 'name' => $accountName]);
+            $this->destError = (string) trans('validation.transfer_dest_bad_data', ['id' => $accountId, 'name' => $accountName]);
 
             return false;
         }
@@ -94,7 +94,7 @@ trait TransferValidation
         // otherwise try to find the account:
         $search        = $this->findExistingAccount($validTypes, $array);
         if (null === $search) {
-            $this->sourceError = (string) trans('validation.transfer_source_bad_data', ['id'   => $accountId, 'name' => $accountName]);
+            $this->sourceError = (string) trans('validation.transfer_source_bad_data', ['id' => $accountId, 'name' => $accountName]);
             Log::warning('Not a valid source, cant find it.', $validTypes);
 
             return false;

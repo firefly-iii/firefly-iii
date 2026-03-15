@@ -3,6 +3,37 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
+## v6.5.5 - 2026-03-15
+
+<!-- summary: This release takes note of some security issues, and fixes interesting bugs. -->
+
+### Added
+
+- Add the ability for Fosstodon posts to read a summary of the changelog.
+
+### Changed
+
+- Lots of code cleanup and small quality issues fixed.
+
+### Fixed
+- [Issue 11803](https://github.com/firefly-iii/firefly-iii/issues/11803) (Monthly Left budget not correct) reported by @fabienfitoussi
+- [Issue 11641](https://github.com/firefly-iii/firefly-iii/issues/11641) (Annual budget “Remaining” resets in subsequent months) reported by @maxwell5555
+- [Discussion 11879](https://github.com/orgs/firefly-iii/discussions/11879) (Searching for accounts should include inactive accounts?) started by @b-ryan
+- [Issue 11916](https://github.com/firefly-iii/firefly-iii/issues/11916) (Balance is not recalculated when multiple transactions are selected and then deleted) reported by @elp3dr0
+- [Discussion 11936](https://github.com/orgs/firefly-iii/discussions/11936) (Links in emails don't link to correct domain) started by @SamLMB
+- [Issue 11944](https://github.com/firefly-iii/firefly-iii/issues/11944) (Stale available_budgets rows prevent disabling a currency after switching default) reported by @k-leveller
+
+### Security
+
+- Credits go to Igor for finding some interesting issues in Firefly III. They have been fixed.
+
+> [!NOTE] 
+> As AI-code scanning tools like Claude and Co-Pilot get more advanced, many (new) issues are being reported through (semi-)automated means. I have updated [the security policy](https://github.com/firefly-iii/firefly-iii/security/policy) to reflect my stance on this. The following security related issues no longer need reporting:
+
+- It is possible to point webhooks to private or internal IPs.
+- You can see all transaction link types.
+- `unsafe-inline` is allowed for CSS, which means you can overrule the layout if you manage to get CSS on the page.
+
 ## v6.5.4 - 2026-03-06
 
 ### Added
@@ -2588,6 +2619,8 @@ problems:
   back to a 404.
 
 ## x.x.x - 20xx-xx-xx
+
+<!-- summary: If you can read this I forgot to update the summary! -->
 
 ### Added
 

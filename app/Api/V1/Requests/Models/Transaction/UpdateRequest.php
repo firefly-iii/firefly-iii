@@ -50,6 +50,8 @@ class UpdateRequest extends FormRequest
     use GroupValidation;
     use TransactionValidation;
 
+    protected array $acceptedRoles = [];
+
     private array $arrayFields;
     private array $booleanFields;
     private array $dateFields;

@@ -66,7 +66,7 @@ class CreatesGroupMemberships extends Command
             ->first()
         ;
         if (null === $membership) {
-            GroupMembership::create(['user_id'       => $user->id, 'user_role_id'  => $userRole->id, 'user_group_id' => $userGroup->id]);
+            GroupMembership::create(['user_id' => $user->id, 'user_role_id' => $userRole->id, 'user_group_id' => $userGroup->id]);
         }
         if (null === $user->user_group_id) {
             $user->user_group_id = $userGroup->id;

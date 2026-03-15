@@ -40,12 +40,12 @@ class AccountTypeApiRequest extends ApiRequest
     public function withValidator(Validator $validator): void
     {
         $validator->after(function (Validator $validator): void {
-            if ($validator->failed()) {
+            if (count($validator->failed()) > 0) {
                 return;
             }
 
             $type = $this->convertString('type', 'all');
-            $this->attributes->add(['type'  => $type, 'types' => $this->mapAccountTypes($type)]);
+            $this->attributes->add(['type' => $type, 'types' => $this->mapAccountTypes($type)]);
         });
     }
 }

@@ -220,7 +220,7 @@ final class BudgetController extends Controller
                 'end_date'                        => $row['end'],
                 'yAxisID'                         => 0,
                 'type'                            => 'bar',
-                'entries'                         => ['budgeted'  => $row['budgeted'], 'spent'     => $row['spent'], 'left'      => $row['left'], 'overspent' => $row['overspent']],
+                'entries'                         => ['budgeted' => $row['budgeted'], 'spent' => $row['spent'], 'left' => $row['left'], 'overspent' => $row['overspent']],
                 'pc_entries'                      => [
                     'budgeted'  => $row['pc_budgeted'],
                     'spent'     => $row['pc_spent'],

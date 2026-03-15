@@ -69,7 +69,7 @@ final class DeleteController extends Controller
         // put previous url in session
         $this->rememberPreviousUrl('rules.delete.url');
 
-        return view('rules.rule.delete', ['rule'     => $rule, 'subTitle' => $subTitle]);
+        return view('rules.rule.delete', ['rule' => $rule, 'subTitle' => $subTitle]);
     }
 
     /**

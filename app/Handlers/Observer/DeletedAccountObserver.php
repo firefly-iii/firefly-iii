@@ -54,11 +54,10 @@ class DeletedAccountObserver
             ->pluck('transaction_journal_id')
             ->toArray()
         ;
-        $groupIds   = TransactionJournal::whereIn('id', $journalIds)
-            ->get(['transaction_journals.transaction_group_id'])
-            ->pluck('transaction_group_id')
-            ->toArray()
-        ;
+
+        $groupIds   = array_map(function (array $item) {
+            return $item['transaction_group_id'];
+        }, TransactionJournal::whereIn('id', $journalIds)->get(['transaction_journals.transaction_group_id'])->toArray());
 
         if (count($journalIds) > 0) {
             Transaction::whereIn('transaction_journal_id', $journalIds)->delete();

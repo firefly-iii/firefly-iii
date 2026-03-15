@@ -2,8 +2,8 @@
     <thead>
     <tr>
         <th data-defaultsign="az">{{ 'name'|_ }}</th>
-        <th data-defaultsign="_19" style="text-align: right;">{{ 'total'|_ }}</th>
-        <th data-defaultsign="_19" class="hidden-xs" style="text-align: right;">{{ 'average'|_ }}</th>
+        <th data-defaultsign="_19" class="text-right">{{ 'total'|_ }}</th>
+        <th data-defaultsign="_19" class="text-right hidden-xs">{{ 'average'|_ }}</th>
         <th data-defaultsort="disabled"></th>
     </tr>
     </thead>
@@ -23,10 +23,10 @@
                 </small>
             {% endif %}
         </td>
-        <td data-value="{{ account.sum }}" style="text-align: right;">
+        <td data-value="{{ account.sum }}" class="text-right">
             {{ formatAmountBySymbol(account.sum, account.currency_symbol, account.currency_decimal_places) }}
         </td>
-        <td class="hidden-xs" data-value="{{ account.average }}" style="text-align: right;">
+        <td class="text-right hidden-xs" data-value="{{ account.average }}">
             {% if account.count > 1 %}
                 {{ formatAmountBySymbol(account.average, account.currency_symbol, account.currency_decimal_places) }}
             {% else %}
@@ -52,7 +52,7 @@
     {% for sum in report.sums %}
         <tr>
             <td><em>{{ 'sum'|_ }} ({{ sum.currency_name }})</em></td>
-            <td style="text-align: right;">
+            <td class="text-right">
                 {{ formatAmountBySymbol(sum.sum, sum.currency_symbol, sum.currency_decimal_places) }}
             </td>
             <td>&nbsp;</td>

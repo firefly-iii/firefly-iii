@@ -3,7 +3,7 @@
     <tr class="ignore">
         <th class="hidden-xs" colspan="2">&nbsp;</th>
         <th>{{ trans('list.description') }}</th>
-        <th style="text-align:right;">{{ trans('list.amount') }}</th>
+        <th class="text-right">{{ trans('list.amount') }}</th>
         <th class="hidden-xs hidden-sm hidden-md">{{ trans('list.reconcile') }}</th>
         <th class="hidden-xs hidden-sm">{{ trans('list.date') }}</th>
         <th class="hidden-xs hidden-sm hidden-md">{{ trans('list.from') }}</th>
@@ -100,8 +100,8 @@
                     {{ journal.description }}</a>
             </td>
 
-            <td style="text-align: right;">
-                <span style="margin-right:5px;">
+            <td class="text-right">
+                <span class="mr-1">
                     {{ formatAmountBySymbol(journal.amount, journal.currency_symbol, journal.currency_decimal_places) }}
                 {% if null != journal.foreign_amount %}
                     ({{ formatAmountBySymbol(journal.foreign_amount, journal.foreign_currency_symbol, journal.foreign_currency_decimal_places) }})

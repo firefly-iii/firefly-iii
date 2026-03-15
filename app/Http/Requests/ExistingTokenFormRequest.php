@@ -35,13 +35,15 @@ class ExistingTokenFormRequest extends FormRequest
 {
     use ChecksLogin;
 
+    protected array $acceptedRoles = [];
+
     /**
      * Rules for this request.
      */
     public function rules(): array
     {
         // fixed
-        return ['password' => 'required|currentPassword', 'code'     => 'required|existingMfaCode'];
+        return ['password' => 'required|currentPassword', 'code' => 'required|existingMfaCode'];
     }
 
     public function withValidator(Validator $validator): void

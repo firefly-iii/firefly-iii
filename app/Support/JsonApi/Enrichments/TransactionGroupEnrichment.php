@@ -128,7 +128,7 @@ class TransactionGroupEnrichment implements EnrichmentInterface
                 $item['transactions'][$index]['attachment_count'] = array_key_exists($journalId, $attachmentCount) ? $attachmentCount[$journalId] : 0;
 
                 // default location data
-                $item['transactions'][$index]['location']         = ['latitude'   => null, 'longitude'  => null, 'zoom_level' => null];
+                $item['transactions'][$index]['location']         = ['latitude' => null, 'longitude' => null, 'zoom_level' => null];
 
                 // primary currency
                 $item['transactions'][$index]['primary_currency'] = [

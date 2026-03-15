@@ -52,9 +52,6 @@ class CategoryUpdateService
         }
     }
 
-    /**
-     * @param mixed $user
-     */
     public function setUser(User $user): void
     {
         $this->user = $user;

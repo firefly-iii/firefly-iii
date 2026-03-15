@@ -46,6 +46,8 @@ class RecurrenceFormRequest extends FormRequest
     use ChecksLogin;
     use ConvertsDataTypes;
 
+    protected array $acceptedRoles = [];
+
     /**
      * Get the data required by the controller.
      *
@@ -318,7 +320,7 @@ class RecurrenceFormRequest extends FormRequest
     private function parseRepetitionData(): array
     {
         $value  = $this->convertString('repetition_type');
-        $return = ['type'   => '', 'moment' => ''];
+        $return = ['type' => '', 'moment' => ''];
 
         if ('daily' === $value) {
             $return['type'] = $value;

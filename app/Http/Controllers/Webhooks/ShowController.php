@@ -27,7 +27,6 @@ namespace FireflyIII\Http\Controllers\Webhooks;
 use FireflyIII\Http\Controllers\Controller;
 use FireflyIII\Models\Webhook;
 use FireflyIII\Support\Facades\FireflyConfig;
-use Illuminate\Contracts\Foundation\Application;
 use Illuminate\Contracts\View\Factory;
 use Illuminate\Contracts\View\View;
 use Illuminate\Support\Facades\Log;
@@ -55,11 +54,6 @@ final class ShowController extends Controller
         });
     }
 
-    /**
-     * Delete account screen.
-     *
-     * @return Application|Factory|View
-     */
     public function index(Webhook $webhook): Factory|View
     {
         if (false === FireflyConfig::get('allow_webhooks', config('firefly.allow_webhooks'))->data) {
@@ -70,6 +64,6 @@ final class ShowController extends Controller
         Log::channel('audit')->info(sprintf('User visits webhook #%d page.', $webhook->id));
         $subTitle = (string) trans('firefly.show_webhook', ['title' => $webhook->title]);
 
-        return view('webhooks.show', ['webhook'  => $webhook, 'subTitle' => $subTitle]);
+        return view('webhooks.show', ['webhook' => $webhook, 'subTitle' => $subTitle]);
     }
 }

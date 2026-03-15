@@ -31,7 +31,6 @@ use FireflyIII\Support\Facades\FireflyConfig;
 use Illuminate\Contracts\View\Factory;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
-use Illuminate\Routing\Redirector;
 use Illuminate\View\View;
 
 /**
@@ -94,7 +93,7 @@ final class UpdateController extends Controller
     /**
      * Post new settings.
      */
-    public function post(Request $request): Redirector|RedirectResponse
+    public function post(Request $request): RedirectResponse
     {
         $checkForUpdates = (int) $request->get('check_for_updates');
         $channel         = $request->get('update_channel');
@@ -123,7 +122,7 @@ final class UpdateController extends Controller
         if ($release->isNewVersionAvailable()) {
             // if running develop, slightly different message.
             if (str_contains(config('firefly.version'), 'develop')) {
-                $message = trans('firefly.update_current_dev_older', ['version'     => config('firefly.version'), 'new_version' => $release->getNewVersion()]);
+                $message = trans('firefly.update_current_dev_older', ['version' => config('firefly.version'), 'new_version' => $release->getNewVersion()]);
             }
             if (!str_contains(config('firefly.version'), 'develop')) {
                 $message = trans('firefly.update_new_version_alert', [

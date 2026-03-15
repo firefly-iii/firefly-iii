@@ -36,6 +36,8 @@ class PreferenceUpdateRequest extends FormRequest
     use ChecksLogin;
     use ConvertsDataTypes;
 
+    protected array $acceptedRoles = [];
+
     public function getAll(): array
     {
         $array = ['name' => $this->convertString('name'), 'data' => $this->get('data')];

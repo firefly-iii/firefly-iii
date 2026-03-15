@@ -156,6 +156,8 @@ interface AccountRepositoryInterface
 
     public function searchAccount(string $query, array $types, int $limit): Collection;
 
+    public function searchAccountIncludingInactive(string $query, array $types, int $limit): Collection;
+
     public function searchAccountNr(string $query, array $types, int $limit): Collection;
 
     public function store(array $data): Account;

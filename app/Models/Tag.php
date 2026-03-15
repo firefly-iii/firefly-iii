@@ -23,6 +23,7 @@ declare(strict_types=1);
 
 namespace FireflyIII\Models;
 
+use Carbon\Carbon;
 use FireflyIII\Casts\SeparateTimezoneCaster;
 use FireflyIII\Handlers\Observer\DeletedTagObserver;
 use FireflyIII\Support\Models\ReturnsIntegerIdTrait;
@@ -36,6 +37,9 @@ use Illuminate\Database\Eloquent\Relations\MorphMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
+/**
+ * @property null|Carbon $date
+ */
 #[ObservedBy([DeletedTagObserver::class])]
 class Tag extends Model
 {

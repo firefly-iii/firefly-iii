@@ -26,13 +26,11 @@ namespace FireflyIII\Http\Middleware;
 
 use Closure;
 use FireflyIII\Exceptions\FireflyException;
-use FireflyIII\Exceptions\Handler;
 use FireflyIII\User;
 use Illuminate\Auth\AuthenticationException;
 use Illuminate\Contracts\Auth\Factory as Auth;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
-use League\OAuth2\Server\Exception\OAuthServerException;
 
 /**
  * Class Authenticate
@@ -100,7 +98,6 @@ class Authenticate
 
         throw new FireflyException('This point is generally unreachable.');
 
-        //
         //        exit('five');
         //        foreach ($guards as $guard) {
         //            exit('six');

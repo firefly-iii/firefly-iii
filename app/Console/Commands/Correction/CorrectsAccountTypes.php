@@ -229,12 +229,24 @@ class CorrectsAccountTypes extends Command
 
     private function getDestinationTransaction(TransactionJournal $journal): Transaction
     {
-        return $journal->transactions->firstWhere('amount', '>', 0);
+        /** @var null|Transaction $res */
+        $res = $journal->transactions->firstWhere('amount', '>', 0);
+        if (null === $res) {
+            throw new FireflyException('Could not find transaction.');
+        }
+
+        return $res;
     }
 
     private function getSourceTransaction(TransactionJournal $journal): Transaction
     {
-        return $journal->transactions->firstWhere('amount', '<', 0);
+        /** @var null|Transaction $res */
+        $res = $journal->transactions->firstWhere('amount', '<', 0);
+        if (null === $res) {
+            throw new FireflyException('Could not find transaction.');
+        }
+
+        return $res;
     }
 
     private function giveNewDestinationAccount(TransactionJournal $journal, Account $newDestination): void

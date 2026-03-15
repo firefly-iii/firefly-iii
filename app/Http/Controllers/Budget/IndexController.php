@@ -224,7 +224,7 @@ final class IndexController extends Controller
         Log::debug(sprintf('(getAllBudgets) Start is "%s", end is "%s"', $start->format('Y-m-d H:i:s'), $end->format('Y-m-d H:i:s')));
 
         // complement budget with budget limits in range, and expenses in currency X in range.
-        /** @var Budget $current */
+        /** @var Budget $budget */
         foreach ($collection as $budget) {
             Log::debug(sprintf('Working on budget #%d ("%s")', $budget->id, $budget->name));
             $array                = $budget->toArray();
@@ -300,7 +300,7 @@ final class IndexController extends Controller
 
     private function getSums(array $budgets): array
     {
-        $sums = ['budgeted' => [], 'spent'    => [], 'left'     => []];
+        $sums = ['budgeted' => [], 'spent' => [], 'left' => []];
 
         /** @var array $budget */
         foreach ($budgets as $budget) {

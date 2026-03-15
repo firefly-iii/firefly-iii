@@ -39,6 +39,8 @@ class RuleGroupFormRequest extends FormRequest
     use ChecksLogin;
     use ConvertsDataTypes;
 
+    protected array $acceptedRoles = [];
+
     /**
      * Get all data for controller.
      */
@@ -49,7 +51,7 @@ class RuleGroupFormRequest extends FormRequest
             $active = $this->boolean('active');
         }
 
-        return ['title'       => $this->convertString('title'), 'description' => $this->stringWithNewlines('description'), 'active'      => $active];
+        return ['title' => $this->convertString('title'), 'description' => $this->stringWithNewlines('description'), 'active' => $active];
     }
 
     /**
@@ -66,7 +68,7 @@ class RuleGroupFormRequest extends FormRequest
             $titleRule = 'required|min:1|max:255|uniqueObjectForUser:rule_groups,title,'.$ruleGroup->id;
         }
 
-        return ['title'       => $titleRule, 'description' => 'min:1|max:32768|nullable', 'active'      => [new IsBoolean()]];
+        return ['title' => $titleRule, 'description' => 'min:1|max:32768|nullable', 'active' => [new IsBoolean()]];
     }
 
     public function withValidator(Validator $validator): void

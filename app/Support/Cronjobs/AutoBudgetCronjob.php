@@ -47,7 +47,7 @@ class AutoBudgetCronjob extends AbstractCronjob
             Log::info('Auto budget cron-job has never fired before.');
         }
         // less than half a day ago:
-        if ($lastTime > 0 && $diff <= 43200) {
+        if ($lastTime > 0 && $diff <= 43_200) {
             Log::info(sprintf('It has been %s since the auto budget cron-job has fired.', $diffForHumans));
             if (false === $this->force) {
                 Log::info('The auto budget cron-job will not fire now.');
@@ -58,7 +58,7 @@ class AutoBudgetCronjob extends AbstractCronjob
             Log::info('Execution of the auto budget cron-job has been FORCED.');
         }
 
-        if ($lastTime > 0 && $diff > 43200) {
+        if ($lastTime > 0 && $diff > 43_200) {
             Log::info(sprintf('It has been %s since the auto budget cron-job has fired. It will fire now!', $diffForHumans));
         }
 

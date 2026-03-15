@@ -104,7 +104,7 @@ class Navigation
 
             // make sure we don't go overboard
             if ($workEnd->gt($start)) {
-                $periods[] = ['start'  => clone $workStart, 'end'    => clone $workEnd, 'period' => $range];
+                $periods[] = ['start' => clone $workStart, 'end' => clone $workEnd, 'period' => $range];
             }
             // skip to the next period:
             $workStart->subDay()->startOfDay();
@@ -120,7 +120,7 @@ class Navigation
 
                 // make sure we don't go overboard
                 if ($workEnd->gt($start)) {
-                    $periods[] = ['start'  => clone $workStart, 'end'    => clone $workEnd, 'period' => '1Y'];
+                    $periods[] = ['start' => clone $workStart, 'end' => clone $workEnd, 'period' => '1Y'];
                 }
                 // skip to the next period:
                 $workStart->subDay()->startOfDay();
@@ -201,27 +201,27 @@ class Navigation
             Log::debug('endOfPeriod() requests "YTD" + future, set it to "3M" instead.');
             $repeatFreq = '3M';
         }
-
+        $new         = Carbon::now();
         $functionMap = [
             '1D'        => 'endOfDay',
             'daily'     => 'endOfDay',
-            '1W'        => 'addWeek',
-            'week'      => 'addWeek',
-            'weekly'    => 'addWeek',
-            '1M'        => 'addMonth',
-            'month'     => 'addMonth',
-            'monthly'   => 'addMonth',
-            '3M'        => 'addQuarter',
-            'quarter'   => 'addQuarter',
-            'quarterly' => 'addQuarter',
+            '1W'        => 'addWeeks',
+            'week'      => 'addWeeks',
+            'weekly'    => 'addWeeks',
+            '1M'        => 'addMonths',
+            'month'     => 'addMonths',
+            'monthly'   => 'addMonths',
+            '3M'        => 'addQuarters',
+            'quarter'   => 'addQuarters',
+            'quarterly' => 'addQuarters',
             '6M'        => 'addMonths',
             'half-year' => 'addMonths',
             'half_year' => 'addMonths',
-            'year'      => 'addYear',
-            'yearly'    => 'addYear',
-            '1Y'        => 'addYear',
+            'year'      => 'addYears',
+            'yearly'    => 'addYears',
+            '1Y'        => 'addYears',
         ];
-        $modifierMap = ['half-year' => 6, 'half_year' => 6, '6M'        => 6];
+        $modifierMap = ['half-year' => 6, 'half_year' => 6, '6M' => 6];
         $subDay      = ['week', 'weekly', '1W', 'month', 'monthly', '1M', '3M', 'quarter', 'quarterly', '6M', 'half-year', 'half_year', '1Y', 'year', 'yearly'];
 
         if ('custom' === $repeatFreq) {
@@ -744,7 +744,7 @@ class Navigation
             '1Y'      => 'subYears',
             'yearly'  => 'subYears',
         ];
-        $modifierMap = ['quarter'   => 3, '3M'        => 3, 'quarterly' => 3, 'half-year' => 6, '6M'        => 6];
+        $modifierMap = ['quarter' => 3, '3M' => 3, 'quarterly' => 3, 'half-year' => 6, '6M' => 6];
         if (array_key_exists($repeatFreq, $functionMap)) {
             $function = $functionMap[$repeatFreq];
             $date->{$function}($subtract);
@@ -821,7 +821,7 @@ class Navigation
     public function updateEndDate(string $range, Carbon $start): Carbon
     {
         Log::debug(sprintf('updateEndDate("%s", "%s")', $range, $start->format('Y-m-d')));
-        $functionMap = ['1D'     => 'endOfDay', '1W'     => 'endOfWeek', '1M'     => 'endOfMonth', '3M'     => 'lastOfQuarter', 'custom' => 'startOfMonth']; // this only happens in test situations.
+        $functionMap = ['1D' => 'endOfDay', '1W' => 'endOfWeek', '1M' => 'endOfMonth', '3M' => 'lastOfQuarter', 'custom' => 'startOfMonth']; // this only happens in test situations.
         $end         = clone $start;
 
         if (array_key_exists($range, $functionMap)) {

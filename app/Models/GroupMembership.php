@@ -31,6 +31,9 @@ use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
+/**
+ * @property User $user
+ */
 class GroupMembership extends Model
 {
     use ReturnsIntegerIdTrait;
@@ -55,7 +58,7 @@ class GroupMembership extends Model
 
     protected function casts(): array
     {
-        return ['created_at'    => 'datetime', 'updated_at'    => 'datetime', 'user_id'       => 'integer', 'user_group_id' => 'integer'];
+        return ['created_at' => 'datetime', 'updated_at' => 'datetime', 'user_id' => 'integer', 'user_group_id' => 'integer'];
     }
 
     protected function userRoleId(): Attribute

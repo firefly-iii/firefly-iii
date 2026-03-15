@@ -19,7 +19,7 @@
                         {{ 'currencies_switch_default'|_ }}
                     </p>
                     {% if currencies|length > 0 %}
-                        <div style="padding-left:8px;">
+                        <div class="m-1">
                             {{ currencies.links('pagination.bootstrap-4')|raw }}
                         </div>
                         <table class="table table-hover">
@@ -81,7 +81,7 @@
                             {% endfor %}
                             </tbody>
                         </table>
-                        <div style="padding-left:8px;">
+                        <div class="m-1">
                             {{ currencies.links('pagination.bootstrap-4')|raw }}
                         </div>
                     {% endif %}

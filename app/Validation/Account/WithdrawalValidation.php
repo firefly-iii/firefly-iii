@@ -63,7 +63,7 @@ trait WithdrawalValidation
         // otherwise try to find the account:
         $search      = $this->findExistingAccount($validTypes, $array);
         if (null === $search) {
-            $this->sourceError = (string) trans('validation.withdrawal_source_bad_data', ['id'   => $accountId, 'name' => $accountName]);
+            $this->sourceError = (string) trans('validation.withdrawal_source_bad_data', ['id' => $accountId, 'name' => $accountName]);
             Log::warning('Not a valid source. Cant find it.', $validTypes);
 
             return false;
@@ -103,7 +103,7 @@ trait WithdrawalValidation
                     return true;
                 }
                 // todo explain error in log message.
-                $this->destError = (string) trans('validation.withdrawal_dest_bad_data', ['id'   => $accountId, 'name' => $accountName]);
+                $this->destError = (string) trans('validation.withdrawal_dest_bad_data', ['id' => $accountId, 'name' => $accountName]);
 
                 return false;
             }
@@ -147,7 +147,7 @@ trait WithdrawalValidation
         // otherwise try to find the account:
         $search        = $this->findExistingAccount($validTypes, $array);
         if (null === $search) {
-            $this->sourceError = (string) trans('validation.withdrawal_source_bad_data', ['id'   => $accountId, 'name' => $accountName]);
+            $this->sourceError = (string) trans('validation.withdrawal_source_bad_data', ['id' => $accountId, 'name' => $accountName]);
             Log::warning('Not a valid source. Cant find it.', $validTypes);
 
             return false;

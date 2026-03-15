@@ -68,7 +68,7 @@ final class EditController extends Controller
     }
 
     /**
-     * @return Factory|Redirector|RedirectResponse|View
+     * @return Factory|RedirectResponse|View
      *
      * @throws ContainerExceptionInterface
      * @throws NotFoundExceptionInterface

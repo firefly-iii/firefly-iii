@@ -60,7 +60,7 @@ class UpdateCheckCronjob extends AbstractCronjob
         $now                = Carbon::now()->getTimestamp();
         $diff               = $now - $lastCheckTime->data;
         Log::debug(sprintf('Last check time is %d, current time is %d, difference is %d', $lastCheckTime->data, $now, $diff));
-        if ($diff < 604800 && false === $this->force) {
+        if ($diff < 604_800 && false === $this->force) {
             // get stuff from job:
             $this->jobFired     = false;
             $this->jobErrored   = false;
