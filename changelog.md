@@ -25,17 +25,14 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 
 ### Security
 
+- Credits go to Igor for finding some interesting issues in Firefly III. They have been fixed.
+
 > [!NOTE] 
-> A lot of people have access to the new Claude model that has enhanced code scanning capabilities. Many new issues are being reported through (semi-)automated means. I will update the security policy to reflect this. The following security related issues no longer need reporting:
+> As AI-code scanning tools like Claude and Co-Pilot get more advanced, many (new) issues are being reported through (semi-)automated means. I have updated [the security policy](https://github.com/firefly-iii/firefly-iii/security/policy) to reflect my stance on this. The following security related issues no longer need reporting:
 
 - It is possible to point webhooks to private or internal IPs.
-- You can see all transaction link types. If you are an owner, you can also delete them.
+- You can see all transaction link types.
 - `unsafe-inline` is allowed for CSS, which means you can overrule the layout if you manage to get CSS on the page.
-- You can make the rule engine print internal enums.
-
-### API
-
-- Initial release.
 
 ## v6.5.4 - 2026-03-06
 
