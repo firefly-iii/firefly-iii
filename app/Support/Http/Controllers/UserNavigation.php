@@ -111,6 +111,7 @@ trait UserNavigation
 
                 return redirect(route('index'));
             }
+
             /** @var TransactionJournal $journal */
             $journal     = $transaction->transactionJournal;
 

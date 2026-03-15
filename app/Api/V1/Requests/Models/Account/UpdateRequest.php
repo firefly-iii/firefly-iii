@@ -91,7 +91,7 @@ class UpdateRequest extends FormRequest
         $types          = implode(',', array_keys(config('firefly.subTitlesByIdentifier')));
         $ccPaymentTypes = implode(',', array_keys(config('firefly.ccTypes')));
 
-        $rules = [
+        $rules          = [
             'name'                 => sprintf('min:1|max:1024|uniqueAccountForUser:%d', $account->id),
             'type'                 => sprintf('in:%s', $types),
             'iban'                 => ['iban', 'nullable', new UniqueIban($account, $this->convertString('type'))],
@@ -125,10 +125,10 @@ class UpdateRequest extends FormRequest
     {
         $validator->after(function (FireflyValidator $validator): void {
             // validate start before end only if both are there.
-            $data = $validator->getData();
+            $data       = $validator->getData();
 
             /** @var Account $account */
-            $account = $this->route()->parameter('account');
+            $account    = $this->route()->parameter('account');
 
             /** @var AccountRepositoryInterface $repository */
             $repository = app(AccountRepositoryInterface::class);
@@ -137,10 +137,10 @@ class UpdateRequest extends FormRequest
             // how many piggies are attached?
             $piggyBanks = $account->piggyBanks()->count();
             if ($piggyBanks > 0 && array_key_exists('currency_code', $data) && $data['currency_code'] !== $currency->code) {
-                $validator->errors()->add('currency_code', (string)trans('validation.piggy_no_change_currency'));
+                $validator->errors()->add('currency_code', (string) trans('validation.piggy_no_change_currency'));
             }
-            if ($piggyBanks > 0 && array_key_exists('currency_id', $data) && (int)$data['currency_id'] !== $currency->id) {
-                $validator->errors()->add('currency_id', (string)trans('validation.piggy_no_change_currency'));
+            if ($piggyBanks > 0 && array_key_exists('currency_id', $data) && (int) $data['currency_id'] !== $currency->id) {
+                $validator->errors()->add('currency_id', (string) trans('validation.piggy_no_change_currency'));
             }
         });
         if ($validator->fails()) {

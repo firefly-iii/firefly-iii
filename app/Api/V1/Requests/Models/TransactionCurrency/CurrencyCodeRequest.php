@@ -26,7 +26,6 @@ namespace FireflyIII\Api\V1\Requests\Models\TransactionCurrency;
 
 use FireflyIII\Api\V1\Requests\ApiRequest;
 use FireflyIII\Validation\FireflyValidator;
-use Illuminate\Contracts\Validation\Validator;
 
 class CurrencyCodeRequest extends ApiRequest
 {
