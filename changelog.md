@@ -22,8 +22,8 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 - [Issue 11916](https://github.com/firefly-iii/firefly-iii/issues/11916) (Balance is not recalculated when multiple transactions are selected and then deleted) reported by @elp3dr0
 - [Discussion 11936](https://github.com/orgs/firefly-iii/discussions/11936) (Links in emails don't link to correct domain) started by @SamLMB
 - [Issue 11944](https://github.com/firefly-iii/firefly-iii/issues/11944) (Stale available_budgets rows prevent disabling a currency after switching default) reported by @k-leveller
-- #11953
-- #11954
+- [Issue 11953](https://github.com/firefly-iii/firefly-iii/issues/11953) ("Actions" buttons no longer appears after selecting multiple transactions) reported by @crtxcr
+- [Issue 11954](https://github.com/firefly-iii/firefly-iii/issues/11954) (Search results are not shown after loading) reported by @fabienfitoussi
 
 ### Security
 
