@@ -99,12 +99,10 @@ compatibility.
 ## Security scanning through automated means
 
 There is some additional guidance for security vulnerabilities or suspected security vulnerabilities that have been 
-found with the full or partial support of AI coding agents, large language models and other code-scanning tools. Many of 
-such reports the developer of Firefly III receives are not applicable. This takes time away from responding to
-actual security vulnerabilities or suspected security vulnerabilities. If you use automated means to find these in
-the Firefly III code base, please take care to:
+found with the full or partial support of AI coding agents, large language models and other code-scanning tools. These reports are often not applicable, not actually a vulnerability, or just plain wrong. This takes time away from responding to
+*actual* security vulnerabilities or suspected security vulnerabilities. If you use automated means to search for security vulnerabilities in the Firefly III code base, please take care to:
 
-1. Manually validate the results before you submit a report,
+1. manually validate the results before you submit a report,
 2. explain how the vulnerability can actually be abused by a nefarious third party, and
 3. try to limit the verbosity of your report.
 
