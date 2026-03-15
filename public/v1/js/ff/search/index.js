@@ -32,7 +32,7 @@ function startSearch(query) {
 
 function searchFailure() {
     $('.result_row').hide();
-    $('.error_row').show();
+    $('.error_row').removeClass('hidden');
 }
 
 function presentSearchResults(data) {
@@ -42,7 +42,7 @@ function presentSearchResults(data) {
     }
     $('.search_ongoing').hide();
     $('.search_box').find('.overlay').remove();
-    $('.search_results').html(data.html).show();
+    $('.search_results').html(data.html).removeClass('hidden');
 
 
     updateListButtons();
