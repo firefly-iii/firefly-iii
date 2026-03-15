@@ -25,7 +25,10 @@ declare(strict_types=1);
 namespace FireflyIII\Repositories\PeriodStatistic;
 
 use Carbon\Carbon;
+use FireflyIII\Models\Account;
+use FireflyIII\Models\Category;
 use FireflyIII\Models\PeriodStatistic;
+use FireflyIII\Models\Tag;
 use FireflyIII\Support\Repositories\UserGroup\UserGroupInterface;
 use FireflyIII\Support\Repositories\UserGroup\UserGroupTrait;
 use Illuminate\Database\Eloquent\Builder;
@@ -38,7 +41,7 @@ class PeriodStatisticRepository implements PeriodStatisticRepositoryInterface, U
 {
     use UserGroupTrait;
 
-    public function allInRangeForModel(Model $model, Carbon $start, Carbon $end): Collection
+    public function allInRangeForModel(Account|Category|Tag $model, Carbon $start, Carbon $end): Collection
     {
         return $model->primaryPeriodStatistics()->where('start', '>=', $start)->where('end', '<=', $end)->get();
     }

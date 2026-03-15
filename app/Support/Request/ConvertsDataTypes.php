@@ -27,8 +27,10 @@ namespace FireflyIII\Support\Request;
 use Carbon\Carbon;
 use Carbon\Exceptions\InvalidDateException;
 use Carbon\Exceptions\InvalidFormatException;
+use FireflyIII\Models\UserGroup;
 use FireflyIII\Repositories\Account\AccountRepositoryInterface;
 use FireflyIII\Support\Facades\Steam;
+use Illuminate\Http\Request;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Log;
 
@@ -36,6 +38,7 @@ use function Safe\preg_replace;
 
 /**
  * Trait ConvertsDataTypes
+ * @method UserGroup validateUserGroup(Request $request)
  */
 trait ConvertsDataTypes
 {

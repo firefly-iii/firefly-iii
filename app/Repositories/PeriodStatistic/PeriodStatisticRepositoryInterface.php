@@ -25,13 +25,17 @@ declare(strict_types=1);
 namespace FireflyIII\Repositories\PeriodStatistic;
 
 use Carbon\Carbon;
+use FireflyIII\Models\Account;
+use FireflyIII\Models\Category;
 use FireflyIII\Models\PeriodStatistic;
+use FireflyIII\Models\Tag;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Collection;
 
 interface PeriodStatisticRepositoryInterface
 {
-    public function allInRangeForModel(Model $model, Carbon $start, Carbon $end): Collection;
+    public function allInRangeForModel(Account|Category|Tag $model, Carbon $start, Carbon $end): Collection;
+    public function deleteStatisticsForType(string $class, Collection $objects, Collection $dates): void;
 
     public function allInRangeForPrefix(string $prefix, Carbon $start, Carbon $end): Collection;
 

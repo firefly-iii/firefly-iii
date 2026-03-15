@@ -27,6 +27,8 @@ use FireflyIII\Enums\UserRoleEnum;
 use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Models\Attachment;
 use FireflyIII\Models\UserGroup;
+use FireflyIII\User;
+use Illuminate\Contracts\Auth\Authenticatable;
 use Illuminate\Support\Collection;
 
 /**
@@ -37,7 +39,8 @@ use Illuminate\Support\Collection;
  * @method getUser()
  * @method checkUserGroupAccess(UserRoleEnum $role)
  * @method setUserGroupById(int $userGroupId)
- */
+ * @method setUser(null|Authenticatable|User $user)
+*/
 interface AttachmentRepositoryInterface
 {
     public function destroy(Attachment $attachment): bool;
