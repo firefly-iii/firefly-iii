@@ -130,7 +130,7 @@ function uncheckAll() {
 
 function updateActionButtons() {
     if (0 !== count) {
-        $('.action-menu').show();
+        $('.action-menu').removeClass('hidden');
 
         // also update labels:
         $('.mass-edit span.txt').text(edit_selected_txt + ' (' + count + ')');
@@ -139,7 +139,7 @@ function updateActionButtons() {
 
     }
     if (0 === count) {
-        $('.action-menu').hide();
+        $('.action-menu').addClass('hidden');
     }
 }
 

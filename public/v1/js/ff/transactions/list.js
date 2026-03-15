@@ -25,7 +25,7 @@
  */
 $(document).ready(function () {
     "use strict";
-    $('.mass_edit_all').show();
+    $('.mass_edit_all').removeClass('hidden');
     $('.mass_select').click(startMassSelect);
     $('.mass_stop_select').click(stopMassSelect);
 
@@ -143,10 +143,10 @@ function countChecked() {
         // get amount for the transactions:
         //getAmounts();
 
-        $('.mass_button_options').show();
+        $('.mass_button_options').removeClass('hidden');
 
     } else {
-        $('.mass_button_options').hide();
+        $('.mass_button_options').addClass('hidden');
     }
 }
 
@@ -181,25 +181,25 @@ function stopMassSelect() {
 
 
     // hide "select all" box in table header.
-    $('.select_boxes').hide();
+    $('.select_boxes').addClass('hidden');
 
     // show the other header cell.
-    $('.no_select_boxes').show();
+    $('.no_select_boxes').removeClass('hidden');
 
     // show edit/delete buttons
-    $('.edit_buttons').show();
+    $('.edit_buttons').removeClass('hidden');
 
     // hide the checkbox.
-    $('.select_single').hide();
+    $('.select_single').addClass('hidden');
 
     // show the start button
-    $('.mass_select').show();
+    $('.mass_select').removeClass('hidden');
 
     // hide the stop button
-    $('.mass_stop_select').hide();
+    $('.mass_stop_select').addClass('hidden');
 
     // show reconcile account button, if present
-    $('.mass_reconcile').show();
+    $('.mass_reconcile').removeClass('hidden');
 
     return false;
 }
@@ -212,25 +212,25 @@ function startMassSelect() {
     "use strict";
     console.log('Now in startMassSelect()');
     // show "select all" box in table header.
-    $('.select_boxes').show();
+    $('.select_boxes').removeClass('hidden');
 
     // hide the other header cell.
-    $('.no_select_boxes').hide();
+    $('.no_select_boxes').addClass('hidden');
 
     // hide edit/delete buttons
-    $('.edit_buttons').hide();
+    $('.edit_buttons').addClass('hidden');
 
     // show the checkbox.
-    $('.select_single').show();
+    $('.select_single').removeClass('hidden');
 
     // hide the start button
-    $('.mass_select').hide();
+    $('.mass_select').addClass('hidden');
 
     // show the stop button
-    $('.mass_stop_select').show();
+    $('.mass_stop_select').removeClass('hidden');
 
     // hide reconcile account button, if present
-    $('.mass_reconcile').hide();
+    $('.mass_reconcile').addClass('hidden');
 
     return false;
 }
