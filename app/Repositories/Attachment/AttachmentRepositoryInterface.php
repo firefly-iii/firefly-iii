@@ -40,7 +40,7 @@ use Illuminate\Support\Collection;
  * @method checkUserGroupAccess(UserRoleEnum $role)
  * @method setUserGroupById(int $userGroupId)
  * @method setUser(null|Authenticatable|User $user)
-*/
+ */
 interface AttachmentRepositoryInterface
 {
     public function destroy(Attachment $attachment): bool;

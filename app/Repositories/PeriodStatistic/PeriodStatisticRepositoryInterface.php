@@ -35,7 +35,6 @@ use Illuminate\Support\Collection;
 interface PeriodStatisticRepositoryInterface
 {
     public function allInRangeForModel(Account|Category|Tag $model, Carbon $start, Carbon $end): Collection;
-    public function deleteStatisticsForType(string $class, Collection $objects, Collection $dates): void;
 
     public function allInRangeForPrefix(string $prefix, Carbon $start, Carbon $end): Collection;
 
@@ -44,6 +43,8 @@ interface PeriodStatisticRepositoryInterface
     public function deleteStatisticsForModel(Model $model, Carbon $date): void;
 
     public function deleteStatisticsForPrefix(string $prefix, Collection $dates): void;
+
+    public function deleteStatisticsForType(string $class, Collection $objects, Collection $dates): void;
 
     public function findPeriodStatistic(Model $model, Carbon $start, Carbon $end, string $type): Collection;
 
