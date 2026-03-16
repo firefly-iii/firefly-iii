@@ -3,6 +3,13 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
+## v6.5.7 - 2026-03-xx
+
+<!-- summary: Here -->
+
+### Fixed
+- #11966
+
 ## v6.5.6 - 2026-03-16
 
 <!-- summary: This release takes note of some security issues, and fixes interesting bugs. -->
