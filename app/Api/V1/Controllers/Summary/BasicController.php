@@ -323,7 +323,7 @@ final class BasicController extends Controller
         $today      = today(config('app.timezone'));
         $available  = $this->abRepository->getAvailableBudgetWithCurrency($start, $end);
         $budgets    = $this->budgetRepository->getActiveBudgets();
-        $spent      = $this->opsRepository->sumExpenses($start, $end, null, $budgets);
+        $spent      = $this->opsRepository->sumExpenses($start, $end, null, $budgets,null, true);
         $days       = (int) $today->diffInDays($end, true) + 1;
         $currencies = [];
 
@@ -440,7 +440,6 @@ final class BasicController extends Controller
             //                ),
             //            ];
         }
-
         return array_values($return);
     }
 
