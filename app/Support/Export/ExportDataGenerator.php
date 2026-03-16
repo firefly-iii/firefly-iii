@@ -76,18 +76,18 @@ class ExportDataGenerator
     private const string EXPORT_ERR     = 'Could not export to string: %s';
 
     private Collection $accounts;
-    private Carbon     $end;
-    private bool       $exportAccounts     = false;
-    private bool       $exportBills        = false;
-    private bool       $exportBudgets      = false;
-    private bool       $exportCategories   = false;
-    private bool       $exportPiggies      = false;
-    private bool       $exportRecurring    = false;
-    private bool       $exportRules        = false;
-    private bool       $exportTags         = false;
-    private bool       $exportTransactions = false;
-    private Carbon     $start;
-    private User       $user;
+    private Carbon $end;
+    private bool $exportAccounts        = false;
+    private bool $exportBills           = false;
+    private bool $exportBudgets         = false;
+    private bool $exportCategories      = false;
+    private bool $exportPiggies         = false;
+    private bool $exportRecurring       = false;
+    private bool $exportRules           = false;
+    private bool $exportTags            = false;
+    private bool $exportTransactions    = false;
+    private Carbon $start;
+    private User $user;
 
     // private UserGroup $userGroup;
 
@@ -96,7 +96,7 @@ class ExportDataGenerator
         $this->accounts = new Collection();
         $this->start    = today(config('app.timezone'));
         $this->start->subYear();
-        $this->end = today(config('app.timezone'));
+        $this->end      = today(config('app.timezone'));
     }
 
     /**
@@ -233,7 +233,7 @@ class ExportDataGenerator
      */
     private function exportAccounts(): string
     {
-        $header = [
+        $header      = [
             'user_id',
             'account_id',
             'created_at',
@@ -254,7 +254,7 @@ class ExportDataGenerator
         ];
 
         /** @var AccountRepositoryInterface $repository */
-        $repository = app(AccountRepositoryInterface::class);
+        $repository  = app(AccountRepositoryInterface::class);
         $repository->setUser($this->user);
         $allAccounts = $repository->getAccountsByType([]);
         $records     = [];
@@ -284,7 +284,7 @@ class ExportDataGenerator
         }
 
         // load the CSV document from a string
-        $csv = Writer::fromString();
+        $csv         = Writer::fromString();
 
         // insert the header
         try {
@@ -317,8 +317,8 @@ class ExportDataGenerator
         /** @var BillRepositoryInterface $repository */
         $repository = app(BillRepositoryInterface::class);
         $repository->setUser($this->user);
-        $bills   = $repository->getBills();
-        $header  = [
+        $bills      = $repository->getBills();
+        $header     = [
             'user_id',
             'bill_id',
             'created_at',
@@ -332,7 +332,7 @@ class ExportDataGenerator
             'skip',
             'active',
         ];
-        $records = [];
+        $records    = [];
 
         /** @var Bill $bill */
         foreach ($bills as $bill) {
@@ -353,7 +353,7 @@ class ExportDataGenerator
         }
 
         // load the CSV document from a string
-        $csv = Writer::fromString();
+        $csv        = Writer::fromString();
 
         // insert the header
         try {
@@ -383,13 +383,13 @@ class ExportDataGenerator
      */
     private function exportBudgets(): string
     {
-        $header = ['user_id', 'budget_id', 'name', 'active', 'order', 'start_date', 'end_date', 'currency_code', 'amount'];
+        $header      = ['user_id', 'budget_id', 'name', 'active', 'order', 'start_date', 'end_date', 'currency_code', 'amount'];
 
         $budgetRepos = app(BudgetRepositoryInterface::class);
         $budgetRepos->setUser($this->user);
-        $limitRepos = app(BudgetLimitRepositoryInterface::class);
-        $budgets    = $budgetRepos->getBudgets();
-        $records    = [];
+        $limitRepos  = app(BudgetLimitRepositoryInterface::class);
+        $budgets     = $budgetRepos->getBudgets();
+        $records     = [];
 
         /** @var Budget $budget */
         foreach ($budgets as $budget) {
@@ -412,7 +412,7 @@ class ExportDataGenerator
         }
 
         // load the CSV document from a string
-        $csv = Writer::fromString();
+        $csv         = Writer::fromString();
 
         // insert the header
         try {
@@ -442,10 +442,10 @@ class ExportDataGenerator
      */
     private function exportCategories(): string
     {
-        $header = ['user_id', 'category_id', 'created_at', 'updated_at', 'name'];
+        $header     = ['user_id', 'category_id', 'created_at', 'updated_at', 'name'];
 
         /** @var CategoryRepositoryInterface $catRepos */
-        $catRepos = app(CategoryRepositoryInterface::class);
+        $catRepos   = app(CategoryRepositoryInterface::class);
         $catRepos->setUser($this->user);
 
         $records    = [];
@@ -457,7 +457,7 @@ class ExportDataGenerator
         }
 
         // load the CSV document from a string
-        $csv = Writer::fromString();
+        $csv        = Writer::fromString();
 
         // insert the header
         try {
@@ -488,14 +488,14 @@ class ExportDataGenerator
     private function exportPiggies(): string
     {
         /** @var PiggyBankRepositoryInterface $piggyRepos */
-        $piggyRepos = app(PiggyBankRepositoryInterface::class);
+        $piggyRepos   = app(PiggyBankRepositoryInterface::class);
         $piggyRepos->setUser($this->user);
 
         /** @var AccountRepositoryInterface $accountRepos */
         $accountRepos = app(AccountRepositoryInterface::class);
         $accountRepos->setUser($this->user);
 
-        $header  = [
+        $header       = [
             'user_id',
             'piggy_bank_id',
             'created_at',
@@ -511,8 +511,8 @@ class ExportDataGenerator
             'order',
             'active',
         ];
-        $records = [];
-        $piggies = $piggyRepos->getPiggyBanks();
+        $records      = [];
+        $piggies      = $piggyRepos->getPiggyBanks();
 
         /** @var PiggyBank $piggy */
         foreach ($piggies as $piggy) {
@@ -537,7 +537,7 @@ class ExportDataGenerator
         }
 
         // load the CSV document from a string
-        $csv = Writer::fromString();
+        $csv          = Writer::fromString();
 
         // insert the header
         try {
@@ -570,7 +570,7 @@ class ExportDataGenerator
         /** @var RecurringRepositoryInterface $recurringRepos */
         $recurringRepos = app(RecurringRepositoryInterface::class);
         $recurringRepos->setUser($this->user);
-        $header      = [
+        $header         = [
             // recurrence:
             'user_id',
             'recurrence_id',
@@ -606,8 +606,8 @@ class ExportDataGenerator
             'piggy_bank',
             'tags',
         ];
-        $records     = [];
-        $recurrences = $recurringRepos->get();
+        $records        = [];
+        $recurrences    = $recurringRepos->get();
 
         /** @var Recurrence $recurrence */
         foreach ($recurrences as $recurrence) {
@@ -664,7 +664,7 @@ class ExportDataGenerator
                 $piggyBankId  = $recurringRepos->getPiggyBank($transaction);
                 $tags         = $recurringRepos->getTags($transaction);
 
-                $records[] = [
+                $records[]    = [
                     // recurrence
                     $this->user->id,
                     $recurrence->id,
@@ -704,7 +704,7 @@ class ExportDataGenerator
             }
         }
         // load the CSV document from a string
-        $csv = Writer::fromString();
+        $csv            = Writer::fromString();
 
         // insert the header
         try {
@@ -760,8 +760,8 @@ class ExportDataGenerator
         ];
         $ruleRepos = app(RuleRepositoryInterface::class);
         $ruleRepos->setUser($this->user);
-        $rules   = $ruleRepos->getAll();
-        $records = [];
+        $rules     = $ruleRepos->getAll();
+        $records   = [];
 
         /** @var Rule $rule */
         foreach ($rules as $rule) {
@@ -851,7 +851,7 @@ class ExportDataGenerator
         }
 
         // load the CSV document from a string
-        $csv = Writer::fromString();
+        $csv       = Writer::fromString();
 
         // insert the header
         try {
@@ -883,12 +883,12 @@ class ExportDataGenerator
      */
     private function exportTags(): string
     {
-        $header = ['user_id', 'tag_id', 'created_at', 'updated_at', 'tag', 'date', 'description', ]; // 'latitude', 'longitude', 'zoom_level'
+        $header   = ['user_id', 'tag_id', 'created_at', 'updated_at', 'tag', 'date', 'description']; // 'latitude', 'longitude', 'zoom_level'
 
         $tagRepos = app(TagRepositoryInterface::class);
         $tagRepos->setUser($this->user);
-        $tags    = $tagRepos->get();
-        $records = [];
+        $tags     = $tagRepos->get();
+        $records  = [];
 
         /** @var Tag $tag */
         foreach ($tags as $tag) {
@@ -900,14 +900,14 @@ class ExportDataGenerator
                 $tag->tag,
                 $tag->date?->format('Y-m-d'),
                 $tag->description,
-//                $tag->latitude,
-//                $tag->longitude,
-//                $tag->zoomLevel,
+                //                $tag->latitude,
+                //                $tag->longitude,
+                //                $tag->zoomLevel,
             ];
         }
 
         // load the CSV document from a string
-        $csv = Writer::fromString();
+        $csv      = Writer::fromString();
 
         // insert the header
         try {
@@ -939,7 +939,7 @@ class ExportDataGenerator
     {
         Log::debug('Will now export transactions.');
         // TODO better place for keys?
-        $header = [
+        $header     = [
             'user_id',
             'group_id',
             'journal_id',
@@ -974,7 +974,7 @@ class ExportDataGenerator
         $header     = array_merge($header, $metaFields);
         $primary    = Amount::getPrimaryCurrency();
 
-        $collector = app(GroupCollectorInterface::class);
+        $collector  = app(GroupCollectorInterface::class);
         $collector->setUser($this->user);
         $collector
             ->setRange($this->start, $this->end)
@@ -983,18 +983,19 @@ class ExportDataGenerator
             ->withBillInformation()
             ->withBudgetInformation()
             ->withTagInformation()
-            ->withNotes();
+            ->withNotes()
+        ;
         if (0 !== $this->accounts->count()) {
             $collector->setAccounts($this->accounts);
         }
 
-        $journals = $collector->getExtractedJournals();
+        $journals   = $collector->getExtractedJournals();
 
         // get repository for meta data:
         $repository = app(TransactionGroupRepositoryInterface::class);
         $repository->setUser($this->user);
 
-        $records = [];
+        $records    = [];
 
         /** @var array $journal */
         foreach ($journals as $journal) {
@@ -1034,7 +1035,7 @@ class ExportDataGenerator
                     : Steam::bcround(Steam::negative($journal['pc_foreign_amount']), $primary->decimal_places);
             }
 
-            $records[] = [
+            $records[]       = [
                 $journal['user_id'],
                 $journal['transaction_group_id'],
                 $journal['transaction_journal_id'],
@@ -1102,7 +1103,7 @@ class ExportDataGenerator
         }
 
         // load the CSV document from a string
-        $csv = Writer::fromString();
+        $csv        = Writer::fromString();
 
         // insert the header
         try {

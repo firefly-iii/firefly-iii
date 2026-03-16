@@ -640,8 +640,8 @@ class BillRepository implements BillRepositoryInterface, UserGroupInterface
         foreach ($bills as $bill) {
             // Log::debug(sprintf('Bill #%d ("%s")', $bill->id, $bill->name));
             /** @var Collection $set */
-            $set       = $bill->transactionJournals()->after($start)->before($end)->get(['transaction_journals.*']);
-            $currency  = $convertToPrimary && $bill->transactionCurrency->id !== $primary->id ? $primary : $bill->transactionCurrency;
+            $set      = $bill->transactionJournals()->after($start)->before($end)->get(['transaction_journals.*']);
+            $currency = $convertToPrimary && $bill->transactionCurrency->id !== $primary->id ? $primary : $bill->transactionCurrency;
             $return[(int) $currency->id] ??= [
                 'id'             => (string) $currency->id,
                 'name'           => $currency->name,
@@ -655,8 +655,8 @@ class BillRepository implements BillRepositoryInterface, UserGroupInterface
             /** @var TransactionJournal $transactionJournal */
             foreach ($set as $transactionJournal) {
                 // grab currency from journal.
-                $transactionCurrency                           = $transactionJournal->transactionCurrency;
-                $currencyId = (int) $transactionCurrency->id;
+                $transactionCurrency        = $transactionJournal->transactionCurrency;
+                $currencyId                 = (int) $transactionCurrency->id;
                 $return[$currencyId] ??= [
                     'id'             => (string) $transactionCurrency->id,
                     'name'           => $transactionCurrency->name,
@@ -665,7 +665,7 @@ class BillRepository implements BillRepositoryInterface, UserGroupInterface
                     'decimal_places' => $transactionCurrency->decimal_places,
                     'sum'            => '0',
                 ];
-                $amountFromJournal = Amount::getAmountFromJournalObject($transactionJournal);
+                $amountFromJournal          = Amount::getAmountFromJournalObject($transactionJournal);
                 // Log::debug(sprintf('Created a (new) array for currency #%d', $currencyId));
                 // Log::debug(sprintf('Amount to add is %s', $amountFromJournal));
                 // get currency from transaction as well.

@@ -241,8 +241,10 @@ class Amount
         if ((int) $sourceTransaction->foreign_currency_id === $currency->id) {
             // use foreign amount instead!
             $amount = (string) $sourceTransaction->foreign_amount; // hard coded to be foreign amount.
+
             // Log::debug(sprintf('Amount is now %s', $amount));
         }
+
         // Log::debug(sprintf('Final return is %s', $amount));
         return $amount;
     }
