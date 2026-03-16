@@ -115,8 +115,7 @@ final class EditController extends Controller
         ];
         $optionalFields['external_url'] ??= false;
         $optionalFields['location']     ??= false;
-        $optionalFields['location'] = $optionalFields['location']
-        && true === FireflyConfig::get('enable_external_map', config('firefly.enable_external_map'))->data;
+        $optionalFields['location'] = true === $optionalFields['location'] && true === FireflyConfig::get('enable_external_map', config('firefly.enable_external_map'))->data;
 
         // map info voor v2:
         $longitude                  = config('firefly.default_location.longitude');
