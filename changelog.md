@@ -5,10 +5,36 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 
 ## v6.5.7 - 2026-03-xx
 
-<!-- summary: Here -->
+<!-- summary: If you can read this I forgot to update the summary! -->
+
+### Added
+
+- Initial release.
+
+### Changed
+
+- Initial release.
+
+### Deprecated
+
+- Initial release.
+
+### Removed
+
+- Initial release.
 
 ### Fixed
+
+- #11964
 - #11966
+
+### Security
+
+- Initial release.
+
+### API
+
+- Initial release.
 
 ## v6.5.6 - 2026-03-16
 
