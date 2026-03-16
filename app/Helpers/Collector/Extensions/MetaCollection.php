@@ -955,9 +955,9 @@ trait MetaCollection
         $this->fields[] = 'tags.tag as tag_name';
         $this->fields[] = 'tags.date as tag_date';
         $this->fields[] = 'tags.description as tag_description';
-        $this->fields[] = 'tags.latitude as tag_latitude';
-        $this->fields[] = 'tags.longitude as tag_longitude';
-        $this->fields[] = 'tags.zoomLevel as tag_zoom_level';
+//        $this->fields[] = 'tags.latitude as tag_latitude';
+//        $this->fields[] = 'tags.longitude as tag_longitude';
+        // $this->fields[] = 'tags.zoomLevel as tag_zoom_level';
 
         $this->joinTagTables();
 

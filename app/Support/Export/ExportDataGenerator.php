@@ -883,7 +883,7 @@ class ExportDataGenerator
      */
     private function exportTags(): string
     {
-        $header = ['user_id', 'tag_id', 'created_at', 'updated_at', 'tag', 'date', 'description', 'latitude', 'longitude', 'zoom_level'];
+        $header = ['user_id', 'tag_id', 'created_at', 'updated_at', 'tag', 'date', 'description', ]; // 'latitude', 'longitude', 'zoom_level'
 
         $tagRepos = app(TagRepositoryInterface::class);
         $tagRepos->setUser($this->user);
@@ -900,9 +900,9 @@ class ExportDataGenerator
                 $tag->tag,
                 $tag->date?->format('Y-m-d'),
                 $tag->description,
-                $tag->latitude,
-                $tag->longitude,
-                $tag->zoomLevel,
+//                $tag->latitude,
+//                $tag->longitude,
+//                $tag->zoomLevel,
             ];
         }
 
