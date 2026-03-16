@@ -25,8 +25,8 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 
 ### Fixed
 
-- #11964
-- #11966
+- [Issue 11964](https://github.com/firefly-iii/firefly-iii/issues/11964) ("Left to spend" is not taking into account non-main currency withdrawals (when displaying in primary currency)) reported by @absdjfh
+- [Issue 11966](https://github.com/firefly-iii/firefly-iii/issues/11966) (Error when trying to export data in CSV (Export data via front end)) reported by @jgmm81
 
 ### Security
 
