@@ -81,7 +81,7 @@ class AccountTransformer extends AbstractTransformer
         }
 
         // no order for some accounts:
-        if (!in_array(strtolower($accountType), ['liability', 'liabilities', 'asset'], true)) {
+        if (!in_array(strtolower($accountType), ['liability', 'liabilities', 'asset'], strict: true)) {
             $order = null;
         }
 

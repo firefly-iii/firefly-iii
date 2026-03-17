@@ -86,7 +86,7 @@ class UpgradesToGroups extends Command
     private function findOpposingTransaction(TransactionJournal $journal, Transaction $transaction): ?Transaction
     {
         $set = $journal->transactions->filter(static function (Transaction $subject) use ($transaction): bool {
-            $amount     = ((float) $transaction->amount * -1) === (float) $subject->amount; // intentional float
+            $amount     = -(float) $transaction->amount === (float) $subject->amount; // intentional float
             $identifier = $transaction->identifier === $subject->identifier;
             Log::debug(sprintf('Amount the same? %s', var_export($amount, true)));
             Log::debug(sprintf('ID the same?     %s', var_export($identifier, true)));

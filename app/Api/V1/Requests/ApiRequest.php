@@ -38,7 +38,7 @@ class ApiRequest extends FormRequest
 
     public function handleConfig(array $config): void
     {
-        if (in_array('required', $config, true)) {
+        if (in_array('required', $config, strict: true)) {
             $this->required = 'required';
         }
     }

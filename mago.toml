@@ -43,7 +43,6 @@ no-literal-password = { enabled = false }
 too-many-enum-cases = { enabled = false }
 tagged-fixme = { enabled = false }
 excessive-parameter-list = { enabled = false }
-no-redundant-math={ enabled = false }
 prefer-first-class-callable={ enabled = false }
 prefer-arrow-function = { enabled = false }
 

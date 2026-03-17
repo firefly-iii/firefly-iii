@@ -63,7 +63,7 @@ final class AccountController extends Controller
         $query       = trim((string) $request->get('query'));
         $field       = trim((string) $request->get('field'));
         $type        = $request->get('type') ?? 'all';
-        if ('' === $query || !in_array($field, $this->validFields, true)) {
+        if ('' === $query || !in_array($field, $this->validFields, strict: true)) {
             return response(null, 422);
         }
         Log::debug(sprintf('Now in account search("%s", "%s")', $field, $query));

@@ -96,7 +96,7 @@ final class AccountController extends Controller
             $nameWithBalance = $account->name;
             $currency        = $this->repository->getAccountCurrency($account) ?? $this->primaryCurrency;
             $useCurrency     = $currency;
-            if (in_array($account->accountType->type, $this->balanceTypes, true)) {
+            if (in_array($account->accountType->type, $this->balanceTypes, strict: true)) {
                 // this one is correct.
                 Log::debug(sprintf('accounts: Call finalAccountBalance with date/time "%s"', $date->toIso8601String()));
                 $balance         = $allBalances[$account->id] ?? [];

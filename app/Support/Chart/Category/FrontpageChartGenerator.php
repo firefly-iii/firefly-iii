@@ -171,7 +171,7 @@ class FrontpageChartGenerator
             $direction                                = $array['sum_float'] < 0 ? 'spent' : 'earned';
             $key                                      = sprintf('%s-%d', $direction, $array['currency_id']);
             $category                                 = $array['name'];
-            $amount                                   = $array['sum_float'] < 0 ? $array['sum_float'] * -1 : $array['sum_float'];
+            $amount                                   = $array['sum_float'] < 0 ? -$array['sum_float'] : $array['sum_float'];
             $currencyData[$key]['entries'][$category] = $amount;
         }
 
