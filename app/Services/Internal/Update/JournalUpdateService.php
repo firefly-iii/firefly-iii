@@ -695,6 +695,7 @@ class JournalUpdateService
         $source               = $this->getSourceTransaction();
         $dest                 = $this->getDestinationTransaction();
         $foreignCurrency      = $source->foreignCurrency;
+        $oldForeignCurrency   = $foreignCurrency;
         $originalSourceAmount = $source->foreign_amount;
 
         // find currency in data array
@@ -773,11 +774,14 @@ class JournalUpdateService
                     $this->transactionJournal,
                     'update_foreign_amount',
                     [
-                        'currency_symbol' => $recordCurrency->symbol,
-                        'decimal_places'  => $recordCurrency->decimal_places,
+                        'currency_symbol' => $oldForeignCurrency->symbol,
+                        'decimal_places'  => $oldForeignCurrency->decimal_places,
                         'amount'          => $originalSourceAmount,
                     ],
-                    ['currency_symbol' => $recordCurrency->symbol, 'decimal_places' => $recordCurrency->decimal_places, 'amount' => $value]
+                    [
+                        'currency_symbol' => $recordCurrency->symbol,
+                        'decimal_places' => $recordCurrency->decimal_places,
+                        'amount' => $value]
                 )
             );
         }
