@@ -106,7 +106,7 @@ final class HomeController extends Controller
         }
 
         $request->session()->put('is_custom_range', $isCustomRange);
-        Log::debug(sprintf('Set is_custom_range to %s', var_export($isCustomRange, true)));
+        Log::debug(sprintf('Set is_custom_range to %s', var_export($isCustomRange, return: true)));
         $request->session()->put('start', $start);
         Log::debug(sprintf('Set start to %s', $start->format('Y-m-d H:i:s')));
         $request->session()->put('end', $end);

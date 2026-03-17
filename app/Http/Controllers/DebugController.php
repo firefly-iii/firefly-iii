@@ -302,7 +302,7 @@ final class DebugController extends Controller
         }
 
         return [
-            'debug'              => var_export(config('app.debug'), true),
+            'debug'              => var_export(config('app.debug'), return: true),
             'audit_log_channel'  => implode(', ', config('logging.channels.audit.channels')),
             'default_language'   => (string) config('firefly.default_language'),
             'default_locale'     => (string) config('firefly.default_locale'),

@@ -66,7 +66,7 @@ final class TransactionController extends Controller
         $internalRef    = (string) $request->attributes->get('internal_reference');
         $notes          = (string) $request->attributes->get('notes');
         $description    = (string) $request->attributes->get('description');
-        Log::debug(sprintf('Include deleted? %s', var_export($includeDeleted, true)));
+        Log::debug(sprintf('Include deleted? %s', var_export(value: $includeDeleted, return: true)));
         if ('' !== $externalId) {
             $count += $this->repository->countByMeta('external_id', $externalId, $includeDeleted);
             Log::debug(sprintf('Search for transactions with external_identifier "%s", count is now %d', $externalId, $count));

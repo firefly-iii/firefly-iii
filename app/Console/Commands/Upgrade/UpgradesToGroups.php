@@ -88,8 +88,8 @@ class UpgradesToGroups extends Command
         $set = $journal->transactions->filter(static function (Transaction $subject) use ($transaction): bool {
             $amount     = -(float) $transaction->amount === (float) $subject->amount; // intentional float
             $identifier = $transaction->identifier === $subject->identifier;
-            Log::debug(sprintf('Amount the same? %s', var_export($amount, true)));
-            Log::debug(sprintf('ID the same?     %s', var_export($identifier, true)));
+            Log::debug(sprintf('Amount the same? %s', var_export($amount, return: true)));
+            Log::debug(sprintf('ID the same?     %s', var_export($identifier, return: true)));
 
             return $amount && $identifier;
         });
