@@ -23,8 +23,6 @@ import laravel from 'laravel-vite-plugin';
 import manifestSRI from 'vite-plugin-manifest-sri';
 import * as fs from "fs";
 
-const host = '127.0.0.1';
-
 function manualChunks(id) {
     if (id.includes('node_modules')) {
         return 'vendor';
@@ -84,7 +82,7 @@ export default defineConfig(({command, mode, isSsrBuild, isPreview}) => {
         server: {
             cors: true,
             // make sure this IP matches the IP of the dev machine.
-            origin: 'https://192.168.96.162:5173',
+            origin: 'https://192.168.96.165:5173',
             watch: {
                 usePolling: true,
             },
