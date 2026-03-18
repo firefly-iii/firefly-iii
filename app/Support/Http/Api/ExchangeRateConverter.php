@@ -29,6 +29,7 @@ use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Models\CurrencyExchangeRate;
 use FireflyIII\Models\TransactionCurrency;
 use FireflyIII\Models\UserGroup;
+use FireflyIII\Support\ExchangeRate\ExchangeRateCacheInvalidation;
 use FireflyIII\Support\CacheProperties;
 use FireflyIII\Support\Facades\Amount;
 use FireflyIII\Support\Facades\FireflyConfig;
@@ -115,7 +116,14 @@ class ExchangeRateConverter
 
     private function getCacheKey(TransactionCurrency $from, TransactionCurrency $to, Carbon $date): string
     {
-        return sprintf('cer-%d-%d-%s', $from->id, $to->id, $date->format('Y-m-d'));
+        return sprintf(
+            'cer-%d-%d-%s-group-%d-v-%s',
+            $from->id,
+            $to->id,
+            $date->format('Y-m-d'),
+            $this->userGroup->id,
+            $this->getRateCacheVersion()
+        );
     }
 
     /**
@@ -178,7 +186,7 @@ class ExchangeRateConverter
 
             return '1';
         }
-        $key          = sprintf('cer-%d-%d-%s', $from, $to, $date);
+        $key          = sprintf('cer-%d-%d-%s-group-%d-v-%s', $from, $to, $date, $this->userGroup->id, $this->getRateCacheVersion());
 
         // perhaps the rate has been cached during this particular run
         $preparedRate = $this->prepared[$date][$from][$to] ?? null;
@@ -205,7 +213,7 @@ class ExchangeRateConverter
             ->currencyExchangeRates()
             ->where('from_currency_id', $from)
             ->where('to_currency_id', $to)
-            ->where('date', '<=', $date)
+            ->whereDate('date', '<=', $date)
             ->orderBy('date', 'DESC')
             ->first()
         ;
@@ -284,5 +292,13 @@ class ExchangeRateConverter
         Cache::forever($key, $rate);
 
         return $rate;
+    }
+
+    private function getRateCacheVersion(): string
+    {
+        /** @var ExchangeRateCacheInvalidation $service */
+        $service = app(ExchangeRateCacheInvalidation::class);
+
+        return $service->getVersion($this->userGroup);
     }
 }

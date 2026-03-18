@@ -27,6 +27,7 @@ namespace FireflyIII\Repositories\ExchangeRate;
 use Carbon\Carbon;
 use FireflyIII\Models\CurrencyExchangeRate;
 use FireflyIII\Models\TransactionCurrency;
+use FireflyIII\Support\ExchangeRate\ExchangeRateCacheInvalidation;
 use FireflyIII\Support\Repositories\UserGroup\UserGroupInterface;
 use FireflyIII\Support\Repositories\UserGroup\UserGroupTrait;
 use Illuminate\Database\Eloquent\Builder;
@@ -45,6 +46,7 @@ class ExchangeRateRepository implements ExchangeRateRepositoryInterface, UserGro
             ->where('id', $rate->id)
             ->delete()
         ;
+        $this->invalidateCaches();
     }
 
     public function deleteRates(TransactionCurrency $from, TransactionCurrency $to): void
@@ -55,6 +57,7 @@ class ExchangeRateRepository implements ExchangeRateRepositoryInterface, UserGro
             ->where('to_currency_id', $to->id)
             ->delete()
         ;
+        $this->invalidateCaches();
     }
 
     #[Override]
@@ -93,7 +96,7 @@ class ExchangeRateRepository implements ExchangeRateRepositoryInterface, UserGro
             ->currencyExchangeRates()
             ->where('from_currency_id', $from->id)
             ->where('to_currency_id', $to->id)
-            ->where('date', $date->format('Y-m-d'))
+            ->whereDate('date', $date->format('Y-m-d'))
             ->first()
         ;
     }
@@ -101,6 +104,7 @@ class ExchangeRateRepository implements ExchangeRateRepositoryInterface, UserGro
     #[Override]
     public function storeExchangeRate(TransactionCurrency $from, TransactionCurrency $to, string $rate, Carbon $date): CurrencyExchangeRate
     {
+        $date                     = $date->clone()->startOfDay();
         $object                   = new CurrencyExchangeRate();
         $object->user_id          = auth()->user()->id;
         $object->user_group_id    = $this->userGroup->id;
@@ -110,6 +114,7 @@ class ExchangeRateRepository implements ExchangeRateRepositoryInterface, UserGro
         $object->date             = $date;
         $object->date_tz          = $date->format('e');
         $object->save();
+        $this->invalidateCaches();
 
         return $object;
     }
@@ -119,10 +124,18 @@ class ExchangeRateRepository implements ExchangeRateRepositoryInterface, UserGro
     {
         $object->rate = $rate;
         if ($date instanceof Carbon) {
-            $object->date = $date;
+            $object->date = $date->clone()->startOfDay();
         }
         $object->save();
+        $this->invalidateCaches();
 
         return $object;
+    }
+
+    private function invalidateCaches(): void
+    {
+        /** @var ExchangeRateCacheInvalidation $service */
+        $service = app(ExchangeRateCacheInvalidation::class);
+        $service->invalidate($this->userGroup);
     }
 }

@@ -38,6 +38,7 @@ use FireflyIII\Models\TransactionCurrency;
 use FireflyIII\Repositories\User\UserRepositoryInterface;
 use FireflyIII\Services\Internal\Destroy\CurrencyDestroyService;
 use FireflyIII\Services\Internal\Update\CurrencyUpdateService;
+use FireflyIII\Support\ExchangeRate\ExchangeRateCacheInvalidation;
 use FireflyIII\Support\Facades\Amount;
 use FireflyIII\Support\Repositories\UserGroup\UserGroupInterface;
 use FireflyIII\Support\Repositories\UserGroup\UserGroupTrait;
@@ -362,7 +363,7 @@ class CurrencyRepository implements CurrencyRepositoryInterface, UserGroupInterf
             ->currencyExchangeRates()
             ->where('from_currency_id', $fromCurrency->id)
             ->where('to_currency_id', $toCurrency->id)
-            ->where('date', $date->format('Y-m-d'))
+            ->whereDate('date', $date->format('Y-m-d'))
             ->first()
         ;
         if (null !== $rate) {
@@ -410,7 +411,8 @@ class CurrencyRepository implements CurrencyRepositoryInterface, UserGroupInterf
      */
     public function setExchangeRate(TransactionCurrency $fromCurrency, TransactionCurrency $toCurrency, Carbon $date, float $rate): CurrencyExchangeRate
     {
-        return CurrencyExchangeRate::create([
+        $date         = $date->clone()->startOfDay();
+        $exchangeRate = CurrencyExchangeRate::create([
             'user_id'          => $this->user->id,
             'user_group_id'    => $this->userGroup->id,
             'from_currency_id' => $fromCurrency->id,
@@ -419,6 +421,12 @@ class CurrencyRepository implements CurrencyRepositoryInterface, UserGroupInterf
             'date_tz'          => $date->format('e'),
             'rate'             => $rate,
         ]);
+
+        /** @var ExchangeRateCacheInvalidation $service */
+        $service = app(ExchangeRateCacheInvalidation::class);
+        $service->invalidate($this->userGroup);
+
+        return $exchangeRate;
     }
 
     /**
