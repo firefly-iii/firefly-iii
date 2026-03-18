@@ -51,7 +51,7 @@ class StoreRequest extends FormRequest
     {
         $fields           = [
             'title'            => ['title', 'convertString'],
-            'description'      => ['description', 'convertString'],
+            'description'      => ['description', 'stringWithNewlines'],
             'rule_group_id'    => ['rule_group_id', 'convertInteger'],
             'order'            => ['order', 'convertInteger'],
             'rule_group_title' => ['rule_group_title', 'convertString'],

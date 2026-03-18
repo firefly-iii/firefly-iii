@@ -235,7 +235,12 @@ trait ConvertsDataTypes
      */
     public function stringWithNewlines(string $field): string
     {
-        return (string) $this->clearStringKeepNewlines((string) ($this->get($field) ?? ''));
+        $entry = $this->get($field);
+        if (!is_scalar($entry)) {
+            return '';
+        }
+
+        return (string) $this->clearStringKeepNewlines((string) $entry);
     }
 
     /**
