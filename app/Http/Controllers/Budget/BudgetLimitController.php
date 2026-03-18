@@ -137,15 +137,15 @@ final class BudgetLimitController extends Controller
      */
     public function store(Request $request): JsonResponse|RedirectResponse
     {
-        Log::debug('Going to store new budget-limit.', $request->all());
+        Log::debug('Going to store new budget-limit.');
         // first search for existing one and update it if necessary.
-        $currency = $this->currencyRepos->find((int) $request->get('transaction_currency_id'));
-        $budget   = $this->repository->find((int) $request->get('budget_id'));
+        $currency = $this->currencyRepos->find((int) $request->input('transaction_currency_id'));
+        $budget   = $this->repository->find((int) $request->input('budget_id'));
         if (!$currency instanceof TransactionCurrency || !$budget instanceof Budget) {
             throw new FireflyException('No valid currency or budget.');
         }
-        $start    = Carbon::createFromFormat('Y-m-d', $request->get('start'));
-        $end      = Carbon::createFromFormat('Y-m-d', $request->get('end'));
+        $start    = Carbon::createFromFormat('Y-m-d', $request->input('start'));
+        $end      = Carbon::createFromFormat('Y-m-d', $request->input('end'));
 
         if (!$start instanceof Carbon || !$end instanceof Carbon) {
             return response()->json();

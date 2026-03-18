@@ -24,18 +24,12 @@ integrations = ["symfony", "laravel", "phpunit"]
 excludes = ["app/Providers/AppServiceProvider.php"]  # Additionally excluded from linter only
 
 [linter.rules]
-ambiguous-function-call = { enabled = false }
-literal-named-argument = { enabled = false }
-halstead = { effort-threshold = 7000, enabled = false }
-prefer-early-continue = { enabled = false }
-cyclomatic-complexity = { enabled = false }
-middleware-in-routes = { enabled = false }
-too-many-methods = { enabled = false }
-kan-defect = { enabled = false }
-no-request-all = { enabled = false }
-tagged-todo = { enabled = false }
-too-many-properties = { enabled = false }
-prefer-view-array = { enabled = false }
+halstead = { effort-threshold = 250000, volume-threshold = 200000, difficulty-threshold = 1000, enabled = true } # way too high
+cyclomatic-complexity = { enabled = true, threshold = 255 } # way too high
+kan-defect = { enabled = true, threshold = 20 } # way too high
+too-many-properties = { enabled = true, threshold = 25 } # way too high
+no-request-all = { enabled = true }
+prefer-view-array = { enabled = false } # to be continued.
 assertion-style = { enabled = false }
 no-boolean-flag-parameter = { enabled = false }
 prefer-static-closure = { enabled = false }
@@ -45,6 +39,12 @@ tagged-fixme = { enabled = false }
 excessive-parameter-list = { enabled = false }
 prefer-first-class-callable={ enabled = false }
 prefer-arrow-function = { enabled = false }
+ambiguous-function-call = { enabled = false } # very specific rule.
+literal-named-argument = { enabled = false } # insanely specific.
+prefer-early-continue = { enabled = false } # does NOT improve readability.
+middleware-in-routes = { enabled = false } # I like to do this.
+too-many-methods = { enabled = false, threshold = 100 } # arbitrary nonsense.
+tagged-todo = { enabled = false } # weird rule
 
 
 

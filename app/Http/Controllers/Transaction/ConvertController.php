@@ -153,7 +153,7 @@ final class ConvertController extends Controller
         foreach ($group->transactionJournals as $journal) {
             // catch FF exception.
             try {
-                $this->convertJournal($journal, $destinationType, $request->all());
+                $this->convertJournal($journal, $destinationType, $request->only(['source_id', 'source_name', 'destination_id', 'destination_name',]));
             } catch (FireflyException $e) {
                 session()->flash('error', $e->getMessage());
 
