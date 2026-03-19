@@ -37,6 +37,7 @@ use FireflyIII\Support\Facades\Steam;
 use FireflyIII\Support\Http\Api\ApiSupport;
 use FireflyIII\Support\Http\Api\CleansChartData;
 use FireflyIII\Support\Http\Api\CollectsAccountsFromFilter;
+use FireflyIII\Support\Http\Api\ExchangeRateConverter;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
@@ -76,6 +77,7 @@ final class AccountController extends Controller
      */
     public function overview(ChartRequest $request): JsonResponse
     {
+        $this->chartData = [];
         $queryParameters = $request->getParameters();
         $accounts        = $this->getAccountList($queryParameters);
 
@@ -104,6 +106,7 @@ final class AccountController extends Controller
         $currentStart      = clone $params['start'];
         $range             = Steam::finalAccountBalanceInRange($account, $params['start'], clone $params['end'], $this->convertToPrimary);
         $period            = $params['period'] ?? '1D';
+        $converter         = new ExchangeRateConverter();
 
         $previous          = array_values($range)[0]['balance'];
         $pcPrevious        = null;
@@ -162,7 +165,11 @@ final class AccountController extends Controller
 
             $currentSet['entries'][$label] = $previous;
             if ($this->convertToPrimary) {
-                $currentSet['pc_entries'][$label] = $pcPrevious;
+                $pcValue = $pcPrevious;
+                if ($currency->id !== $this->primaryCurrency->id && is_string($previous)) {
+                    $pcValue = $converter->convert($currency, $this->primaryCurrency, $currentStart, $previous);
+                }
+                $currentSet['pc_entries'][$label] = $pcValue;
             }
 
             $currentStart                  = Navigation::addPeriod($currentStart, $period);

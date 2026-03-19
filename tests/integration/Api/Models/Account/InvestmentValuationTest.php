@@ -118,6 +118,62 @@ final class InvestmentValuationTest extends TestCase
         $this->showAccount($user, $asset)->assertJsonPath('data.attributes.pc_current_balance', '2.00');
     }
 
+    public function testDashboardOverviewChartRefreshesForeignCurrencyValuationAfterLaterRateChange(): void
+    {
+        $user        = $this->createUser('dashboard@example.com');
+        $asset       = $this->createInvestmentAccount($user, 'BTC dashboard');
+        $chartStart  = self::valuationDate()->clone()->startOfDay();
+        $chartEnd    = $chartStart->clone()->addDay();
+
+        $this->enablePrimaryConversion($user);
+        $this->createTransfer($user, $asset, '40000', '2');
+        $this->storeRate($user, '20000', $chartStart);
+
+        $initial = $this->showDashboardChart($user, $asset, $chartStart, $chartEnd);
+        $initial->assertOk();
+        self::assertSame('40000.00', array_values($initial->json()[0]['pc_entries'])[1]);
+
+        Passport::actingAs($user);
+        $storeResponse = $this->postJson(
+            route('api.v1.exchange-rates.store.by-currencies', [$this->btc->code, $this->eur->code]),
+            [$chartEnd->format('Y-m-d') => '25000']
+        );
+
+        $storeResponse->assertOk();
+
+        $updated = $this->showDashboardChart($user, $asset, $chartStart, $chartEnd);
+        $updated->assertOk();
+        self::assertSame('50000.00', array_values($updated->json()[0]['pc_entries'])[1]);
+    }
+
+    public function testClassicFrontpageDashboardChartRefreshesForeignCurrencyValuationAfterLaterRateChange(): void
+    {
+        $user        = $this->createUser('frontpage@example.com');
+        $asset       = $this->createInvestmentAccount($user, 'BTC frontpage');
+        $chartStart  = self::valuationDate()->clone()->startOfDay();
+        $chartEnd    = $chartStart->clone()->addDay();
+
+        $this->enablePrimaryConversion($user);
+        $this->createTransfer($user, $asset, '40000', '2');
+        $this->storeRate($user, '20000', $chartStart);
+
+        $initial = $this->showFrontpageDashboardChart($user, $asset, $chartStart, $chartEnd);
+        $initial->assertOk();
+        self::assertSame('40000.00', (string) $initial->json('datasets.0.data.1'));
+
+        Passport::actingAs($user);
+        $storeResponse = $this->postJson(
+            route('api.v1.exchange-rates.store.by-currencies', [$this->btc->code, $this->eur->code]),
+            [$chartEnd->format('Y-m-d') => '25000']
+        );
+
+        $storeResponse->assertOk();
+
+        $updated = $this->showFrontpageDashboardChart($user, $asset, $chartStart, $chartEnd);
+        $updated->assertOk();
+        self::assertSame('50000.00', (string) $updated->json('datasets.0.data.1'));
+    }
+
     #[Override]
     protected function setUp(): void
     {
@@ -234,9 +290,39 @@ final class InvestmentValuationTest extends TestCase
         return $this->getJson(route('api.v1.accounts.show', [$account]).'?date='.self::valuationDate()->format('Y-m-d'));
     }
 
-    private function storeRate(User $user, string $rate)
+    private function showDashboardChart(User $user, Account $account, Carbon $start, Carbon $end)
     {
-        $date = self::valuationDate()->clone()->startOfDay();
+        Passport::actingAs($user);
+        PreferencesSingleton::getInstance()->resetPreferences();
+
+        $params = http_build_query([
+            'start'    => $start->format('Y-m-d'),
+            'end'      => $end->format('Y-m-d'),
+            'period'   => '1D',
+            'accounts' => [$account->id],
+        ]);
+
+        return $this->getJson(route('api.v1.chart.account.overview').'?'.$params);
+    }
+
+    private function showFrontpageDashboardChart(User $user, Account $account, Carbon $start, Carbon $end)
+    {
+        $this->actingAs($user);
+        Preferences::setForUser($user, 'frontpageAccounts', [$account->id]);
+        PreferencesSingleton::getInstance()->resetPreferences();
+
+        return $this
+            ->withSession([
+                'start' => clone $start,
+                'end'   => clone $end,
+            ])
+            ->getJson(route('chart.account.frontpage'))
+        ;
+    }
+
+    private function storeRate(User $user, string $rate, ?Carbon $date = null)
+    {
+        $date ??= self::valuationDate()->clone()->startOfDay();
 
         return CurrencyExchangeRate::create([
             'user_id'          => $user->id,

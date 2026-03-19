@@ -28,10 +28,13 @@ use Carbon\Carbon;
 use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Generator\Chart\Basic\GeneratorInterface;
 use FireflyIII\Models\Account;
+use FireflyIII\Models\TransactionCurrency;
 use FireflyIII\Repositories\Account\AccountRepositoryInterface;
 use FireflyIII\Support\CacheProperties;
+use FireflyIII\Support\ExchangeRate\ExchangeRateCacheInvalidation;
 use FireflyIII\Support\Facades\Amount;
 use FireflyIII\Support\Facades\Steam;
+use FireflyIII\Support\Http\Api\ExchangeRateConverter;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Log;
 
@@ -55,6 +58,11 @@ trait ChartGeneration
         $cache->addProperty('chart.account.account-balance-chart');
         $cache->addProperty($accounts);
         $cache->addProperty($convertToPrimary);
+        if ($convertToPrimary && auth()->check()) {
+            /** @var ExchangeRateCacheInvalidation $invalidation */
+            $invalidation = app(ExchangeRateCacheInvalidation::class);
+            $cache->addProperty($invalidation->getVersion(auth()->user()->userGroup));
+        }
         if ($cache->has()) {
             return $cache->get();
         }
@@ -75,24 +83,34 @@ trait ChartGeneration
         /** @var Account $account */
         foreach ($accounts as $account) {
             Log::debug(sprintf('Now at account #%d ("%s)', $account->id, $account->name));
-            $currency     = $accountRepos->getAccountCurrency($account) ?? $primary;
-            $usePrimary   = $convertToPrimary && $primary->id !== $currency->id;
-            $field        = $convertToPrimary ? 'pc_balance' : 'balance';
-            $currency     = $usePrimary ? $primary : $currency;
+            $nativeCurrency = $accountRepos->getAccountCurrency($account) ?? $primary;
+            $usePrimary     = $convertToPrimary && $primary->id !== $nativeCurrency->id;
+            $field          = $convertToPrimary ? 'pc_balance' : 'balance';
+            $currency       = $usePrimary ? $primary : $nativeCurrency;
+            $converter      = new ExchangeRateConverter();
             Log::debug(sprintf('Will use field %s', $field));
-            $currentSet   = ['label' => $account->name, 'currency_symbol' => $currency->symbol, 'entries' => []];
+            $currentSet     = ['label' => $account->name, 'currency_symbol' => $currency->symbol, 'entries' => []];
 
-            $currentStart = clone $start;
-            $range        = Steam::finalAccountBalanceInRange($account, clone $start, clone $end, $this->convertToPrimary);
-            $previous     = array_values($range)[0];
+            $currentStart   = clone $start;
+            $range          = Steam::finalAccountBalanceInRange($account, clone $start, clone $end, $this->convertToPrimary);
+            $previous       = array_values($range)[0];
             Log::debug(sprintf('Start balance for account #%d ("%s) is', $account->id, $account->name), $previous);
             while ($currentStart <= $end) {
                 $format                        = $currentStart->format('Y-m-d');
                 $label                         = trim($currentStart->isoFormat((string) trans('config.month_and_day_js', [], $locale)));
                 $balance                       = $range[$format] ?? $previous;
                 $previous                      = $balance;
+                $chartValue                    = $balance[$field] ?? '0';
+                if (
+                    $convertToPrimary
+                    && $nativeCurrency instanceof TransactionCurrency
+                    && $nativeCurrency->id !== $primary->id
+                    && array_key_exists($nativeCurrency->code, $balance)
+                ) {
+                    $chartValue = $converter->convert($nativeCurrency, $primary, clone $currentStart, (string) $balance[$nativeCurrency->code]);
+                }
+                $currentSet['entries'][$label] = $chartValue;
                 $currentStart->addDay();
-                $currentSet['entries'][$label] = $balance[$field] ?? '0';
             }
             $chartData[]  = $currentSet;
         }
