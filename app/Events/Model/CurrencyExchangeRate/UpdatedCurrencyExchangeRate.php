@@ -1,4 +1,7 @@
 <?php
+
+declare(strict_types=1);
+
 /*
  * UpdatedCurrencyExchangeRate.php
  * Copyright (c) 2026 james@firefly-iii.org
@@ -30,7 +33,9 @@ class UpdatedCurrencyExchangeRate extends Event
 {
     use SerializesModels;
 
-    public function __construct(public CurrencyExchangeRate $rate) {
+    public function __construct(
+        public CurrencyExchangeRate $rate
+    ) {
         Log::debug(sprintf('UpdatedCurrencyExchangeRate(#%d) Event', $rate->id));
     }
 }

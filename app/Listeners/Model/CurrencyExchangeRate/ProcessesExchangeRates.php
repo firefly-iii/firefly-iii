@@ -1,4 +1,7 @@
 <?php
+
+declare(strict_types=1);
+
 /*
  * ProcessesExchangeRates.php
  * Copyright (c) 2026 james@firefly-iii.org
@@ -34,13 +37,14 @@ use Illuminate\Support\Facades\Log;
 
 class ProcessesExchangeRates
 {
-    public function handle(CreatedCurrencyExchangeRate | UpdatedCurrencyExchangeRate | DestroyedCurrencyExchangeRate $event): void
+    public function handle(CreatedCurrencyExchangeRate|DestroyedCurrencyExchangeRate|UpdatedCurrencyExchangeRate $event): void
     {
         Preferences::mark();
         Cache::clear();
         if ($event instanceof DestroyedCurrencyExchangeRate) {
             $this->handleCurrency($event->userGroup, $event->from);
             $this->handleCurrency($event->userGroup, $event->to);
+
             return;
         }
         $this->handleCurrency($event->rate->userGroup, $event->rate->fromCurrency);
@@ -49,18 +53,15 @@ class ProcessesExchangeRates
 
     private function handleCurrency(UserGroup $userGroup, TransactionCurrency $currency): void
     {
-
         $calculator = new PrimaryAmountRecalculationService();
         if (Amount::convertToPrimary()) {
             Log::debug(sprintf('Will now convert amounts to primary currency for currency %s.', $currency->code));
 
             $calculator->recalculateForGroupAndCurrency($userGroup, $currency);
-//            $calculator->recalculateForGroup($userGroup);
+            //            $calculator->recalculateForGroup($userGroup);
 
             return;
         }
         Log::debug('Will NOT convert to primary currency.');
-
     }
-
 }

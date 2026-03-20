@@ -1,4 +1,7 @@
 <?php
+
+declare(strict_types=1);
+
 /*
  * DestroyedCurrencyExchangeRate.php
  * Copyright (c) 2026 james@firefly-iii.org
@@ -31,8 +34,11 @@ class DestroyedCurrencyExchangeRate extends Event
 {
     use SerializesModels;
 
-    public function __construct(public TransactionCurrency $from, public TransactionCurrency $to, public UserGroup $userGroup)
-    {
+    public function __construct(
+        public TransactionCurrency $from,
+        public TransactionCurrency $to,
+        public UserGroup $userGroup
+    ) {
         Log::debug(sprintf('DestroyedCurrencyExchangeRate(%s, %s) Event', $from->code, $to->code));
     }
 }

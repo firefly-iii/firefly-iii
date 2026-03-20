@@ -44,7 +44,7 @@ final class UpdateController extends Controller
 
     public const string RESOURCE_KEY = 'exchange-rates';
 
-    protected array                         $acceptedRoles = [UserRoleEnum::OWNER];
+    protected array $acceptedRoles   = [UserRoleEnum::OWNER];
     private ExchangeRateRepositoryInterface $repository;
 
     public function __construct()
@@ -68,7 +68,7 @@ final class UpdateController extends Controller
         $rate         = $request->getRate();
         $exchangeRate = $this->repository->updateExchangeRate($exchangeRate, $rate, $date);
         event(new UpdatedCurrencyExchangeRate($exchangeRate));
-        $transformer = new ExchangeRateTransformer();
+        $transformer  = new ExchangeRateTransformer();
 
         return response()->api($this->jsonApiObject(self::RESOURCE_KEY, $exchangeRate, $transformer))->header('Content-Type', self::CONTENT_TYPE);
     }

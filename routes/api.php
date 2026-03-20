@@ -658,9 +658,9 @@ Route::group(
 // transaction currency API routes that require admin rights:
 Route::group(
     [
-        'namespace' => 'FireflyIII\Api\V1\Controllers\Models\TransactionCurrency',
-        'prefix'    => 'v1/currencies',
-        'as'        => 'api.v1.currencies.',
+        'namespace'  => 'FireflyIII\Api\V1\Controllers\Models\TransactionCurrency',
+        'prefix'     => 'v1/currencies',
+        'as'         => 'api.v1.currencies.',
         'middleware' => ['api-admin'],
     ],
     static function (): void {

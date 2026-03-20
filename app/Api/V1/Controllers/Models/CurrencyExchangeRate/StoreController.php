@@ -102,6 +102,7 @@ final class StoreController extends Controller
                 $existing = $this->repository->updateExchangeRate($existing, $rate);
                 $collection->push($existing);
                 event(new UpdatedCurrencyExchangeRate($existing));
+
                 continue;
             }
             $new      = $this->repository->storeExchangeRate($from, $to, $rate, $date);

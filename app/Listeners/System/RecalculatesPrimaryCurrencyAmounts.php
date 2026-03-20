@@ -25,15 +25,8 @@ declare(strict_types=1);
 namespace FireflyIII\Listeners\System;
 
 use FireflyIII\Events\Preferences\UserGroupChangedPrimaryCurrency;
-
-
-
-
-
 use FireflyIII\Services\Internal\Recalculate\PrimaryAmountRecalculationService;
 use FireflyIII\Support\Facades\Amount;
-
-
 use Illuminate\Support\Facades\Log;
 
 class RecalculatesPrimaryCurrencyAmounts
@@ -50,8 +43,4 @@ class RecalculatesPrimaryCurrencyAmounts
         }
         Log::debug('Will NOT convert to primary currency.');
     }
-
-
-
-
 }
