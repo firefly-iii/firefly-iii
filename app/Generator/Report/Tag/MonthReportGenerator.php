@@ -66,11 +66,11 @@ class MonthReportGenerator implements ReportGeneratorInterface
             $result = view('reports.tag.month', [
                 'accountIds' => $accountIds,
                 'reportType' => $reportType,
-                'tagIds' => $tagIds,
-                'start'     => $this->start,
-                'end'       => $this->end,
-                'tags' => $this->tags,
-                'accounts' => $this->accounts,
+                'tagIds'     => $tagIds,
+                'start'      => $this->start,
+                'end'        => $this->end,
+                'tags'       => $this->tags,
+                'accounts'   => $this->accounts,
             ])->render();
         } catch (Throwable $e) {
             Log::error(sprintf('Cannot render reports.tag.month: %s', $e->getMessage()));

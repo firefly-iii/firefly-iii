@@ -780,8 +780,9 @@ class JournalUpdateService
                     ],
                     [
                         'currency_symbol' => $recordCurrency->symbol,
-                        'decimal_places' => $recordCurrency->decimal_places,
-                        'amount' => $value]
+                        'decimal_places'  => $recordCurrency->decimal_places,
+                        'amount'          => $value,
+                    ]
                 )
             );
         }
