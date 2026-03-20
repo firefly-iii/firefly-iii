@@ -83,7 +83,7 @@ final class ListController extends Controller
         // use new group collector:
         /** @var GroupCollectorInterface $collector */
         $collector    = app(GroupCollectorInterface::class);
-        if(0 === count($journalIds)) {
+        if (0 === count($journalIds)) {
             $collector->findNothing();
         }
         $collector

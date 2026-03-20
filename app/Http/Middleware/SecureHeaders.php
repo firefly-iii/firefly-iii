@@ -61,7 +61,7 @@ class SecureHeaders
             // sprintf("style-src 'self' 'nonce-%1s'", $nonce), // safe variant
             "style-src 'self' 'unsafe-inline'", // unsafe variant
             "base-uri 'self'",
-            //"form-action 'self'", // safe
+            // "form-action 'self'", // safe
             "font-src 'self' data:",
             sprintf("connect-src 'self' %s", $trackingScriptSrc),
             sprintf("img-src 'self' data: 'nonce-%1s' ", $nonce),
@@ -70,7 +70,7 @@ class SecureHeaders
 
         // overrule in development mode
         if (true === config('firefly.is_local_dev')) {
-            $ip = '192.168.96.165';
+            $ip  = '192.168.96.165';
             $csp = [
                 "default-src 'none'",
                 "object-src 'none'",
