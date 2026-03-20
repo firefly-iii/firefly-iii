@@ -3,7 +3,7 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
-## v6.5.7 - 2026-03-xx
+## v6.5.7 - 2026-03-21
 
 <!-- summary: There is a new security policy for AI-generated security advisories and of course, interesting and annoying bugs fixed. -->
 
