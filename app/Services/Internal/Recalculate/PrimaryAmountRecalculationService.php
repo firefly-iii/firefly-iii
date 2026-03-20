@@ -115,7 +115,8 @@ class PrimaryAmountRecalculationService
                     $q->orWhere('virtual_balance', '!=', '');
                 }
             })
-            ->get();
+            ->get()
+        ;
 
         /** @var Account $account */
         foreach ($set as $account) {
