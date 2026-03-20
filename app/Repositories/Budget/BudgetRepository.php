@@ -368,10 +368,21 @@ class BudgetRepository implements BudgetRepositoryInterface, UserGroupInterface
 
     public function getBudgets(): Collection
     {
-        if(null === $this->user) {
-            return $this->userGroup->budgets()->orderBy('order', 'ASC')->orderBy('name', 'ASC')->get();
+        if (null === $this->user) {
+            return $this->userGroup
+                ->budgets()
+                ->orderBy('order', 'ASC')
+                ->orderBy('name', 'ASC')
+                ->get()
+            ;
         }
-        return $this->user->budgets()->orderBy('order', 'ASC')->orderBy('name', 'ASC')->get();
+
+        return $this->user
+            ->budgets()
+            ->orderBy('order', 'ASC')
+            ->orderBy('name', 'ASC')
+            ->get()
+        ;
     }
 
     /**

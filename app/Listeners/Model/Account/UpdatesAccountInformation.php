@@ -119,7 +119,11 @@ class UpdatesAccountInformation implements ShouldQueue
                 ++$fixed;
             }
             // fix account number: // account_number
-            if (array_key_exists('account_number', $oldData) && $oldData['account_number'] === $trigger->trigger_value && in_array($trigger->trigger_type, $numberFields, true)) {
+            if (
+                array_key_exists('account_number', $oldData)
+                && $oldData['account_number'] === $trigger->trigger_value
+                && in_array($trigger->trigger_type, $numberFields, true)
+            ) {
                 Log::debug(sprintf('Rule trigger #%d "%s" has old account account_number, replace with new.', $trigger->id, $trigger->trigger_type));
                 $trigger->trigger_value = $account->iban;
                 $trigger->save();

@@ -5781,27 +5781,27 @@
         },
         {
             "name": "rcrowe/twigbridge",
-            "version": "v0.14.6",
+            "version": "v0.14.7",
             "source": {
                 "type": "git",
                 "url": "https://github.com/rcrowe/TwigBridge.git",
-                "reference": "0798ee4b5e5b943d0200850acaa87ccd82e2fe45"
+                "reference": "03a767c8d5c1d74d5f14e9fc754619a271822663"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/rcrowe/TwigBridge/zipball/0798ee4b5e5b943d0200850acaa87ccd82e2fe45",
-                "reference": "0798ee4b5e5b943d0200850acaa87ccd82e2fe45",
+                "url": "https://api.github.com/repos/rcrowe/TwigBridge/zipball/03a767c8d5c1d74d5f14e9fc754619a271822663",
+                "reference": "03a767c8d5c1d74d5f14e9fc754619a271822663",
                 "shasum": ""
             },
             "require": {
-                "illuminate/support": "^9|^10|^11|^12",
-                "illuminate/view": "^9|^10|^11|^12",
+                "illuminate/support": "^9|^10|^11|^12|^13",
+                "illuminate/view": "^9|^10|^11|^12|^13",
                 "php": "^8.1",
                 "twig/twig": "~3.21"
             },
             "require-dev": {
                 "ext-json": "*",
-                "laravel/framework": "^9|^10|^11|^12",
+                "laravel/framework": "^9|^10|^11|^12|^13",
                 "mockery/mockery": "^1.3.1",
                 "phpunit/phpunit": "^8.5.8 || ^9.3.7 || ^10.0 || ^11.0 || ^12.0",
                 "squizlabs/php_codesniffer": "^3.6"
@@ -5847,9 +5847,9 @@
             ],
             "support": {
                 "issues": "https://github.com/rcrowe/TwigBridge/issues",
-                "source": "https://github.com/rcrowe/TwigBridge/tree/v0.14.6"
+                "source": "https://github.com/rcrowe/TwigBridge/tree/v0.14.7"
             },
-            "time": "2025-08-20T11:25:49+00:00"
+            "time": "2026-03-20T16:59:18+00:00"
         },
         {
             "name": "spatie/backtrace",

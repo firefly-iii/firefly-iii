@@ -11,16 +11,16 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 
 - [Issue 11964](https://github.com/firefly-iii/firefly-iii/issues/11964) ("Left to spend" is not taking into account non-main currency withdrawals (when displaying in primary currency)) reported by @absdjfh
 - [Issue 11966](https://github.com/firefly-iii/firefly-iii/issues/11966) (Error when trying to export data in CSV (Export data via front end)) reported by @jgmm81
-- #11969
-- #11974
-- #11977
-- #11978
-- #11982
+- [Issue 11969](https://github.com/firefly-iii/firefly-iii/issues/11969) (Problem found when editing a multi-currency record, as well as details in the "Audit log entries") reported by @jgmm81
+- [PR 11974](https://github.com/firefly-iii/firefly-iii/pull/11974) (Fix typo in SMTP server comment in .env.example) reported by @NorskNoobing
+- [Discussion 11977](https://github.com/orgs/firefly-iii/discussions/11977) (CSP header `form-action 'self'` prevents form submission because it's a redirect) started by @superrio0187
+- [Issue 11978](https://github.com/firefly-iii/firefly-iii/issues/11978) (Tags not associated with any record display incorrect information) reported by @jgmm81
+- [Issue 11982](https://github.com/firefly-iii/firefly-iii/issues/11982) (Foreign currency account value in primary currency does not update after changing exchange rates) reported by @gattacus
 - Remove old `zoomLevel` / `zoom_level` database references for tags, since they are no longer queries anyway.
 
 ### API
 
-- #11976
+- [Issue 11976](https://github.com/firefly-iii/firefly-iii/issues/11976) (New lines are removed from rule description when created using API POST) reported by @AlexRNL
 
 ## v6.5.6 - 2026-03-16
 
