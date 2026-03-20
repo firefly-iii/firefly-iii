@@ -5,36 +5,22 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 
 ## v6.5.7 - 2026-03-xx
 
-<!-- summary: If you can read this I forgot to update the summary! -->
-
-### Added
-
-- Initial release.
-
-### Changed
-
-- Initial release.
-
-### Deprecated
-
-- Initial release.
-
-### Removed
-
-- Initial release.
+<!-- summary: There is a new security policy for AI-generated security advisories and of course, interesting and annoying bugs fixed. -->
 
 ### Fixed
 
 - [Issue 11964](https://github.com/firefly-iii/firefly-iii/issues/11964) ("Left to spend" is not taking into account non-main currency withdrawals (when displaying in primary currency)) reported by @absdjfh
 - [Issue 11966](https://github.com/firefly-iii/firefly-iii/issues/11966) (Error when trying to export data in CSV (Export data via front end)) reported by @jgmm81
-
-### Security
-
-- Initial release.
+- #11969
+- #11974
+- #11977
+- #11978
+- #11982
+- Remove old `zoomLevel` / `zoom_level` database references for tags, since they are no longer queries anyway.
 
 ### API
 
-- Initial release.
+- #11976
 
 ## v6.5.6 - 2026-03-16
 
