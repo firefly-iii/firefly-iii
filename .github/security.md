@@ -106,6 +106,8 @@ found with the full or partial support of AI coding agents, large language model
 2. explain how the vulnerability can actually be abused by a nefarious third party, and
 3. try to limit the verbosity of your report.
 
+At the discretion of the maintainer of the developer, your report may be closed without resolve. 
+
 ## Credits
 
 This security policy is based on [Harbor](https://github.com/goharbor/harbor)'s security policy.
