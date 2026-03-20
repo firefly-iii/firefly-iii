@@ -96,6 +96,10 @@ class PrimaryAmountRecalculationService
         Log::debug(sprintf('Recalculated %d transactions.', $set->count()));
     }
 
+    /**
+     * Only recalculate accounts that have a virtual balance.
+     * TODO this routine must filter on accounts that are NOT in the userGroup's currency.
+     */
     private function recalculateAccounts(UserGroup $userGroup): void
     {
         $set = $userGroup
@@ -111,8 +115,7 @@ class PrimaryAmountRecalculationService
                     $q->orWhere('virtual_balance', '!=', '');
                 }
             })
-            ->get()
-        ;
+            ->get();
 
         /** @var Account $account */
         foreach ($set as $account) {
@@ -204,6 +207,9 @@ class PrimaryAmountRecalculationService
         Log::debug(sprintf('Recalculated %d piggy bank events.', $set->count()));
     }
 
+    /**
+     * This method collects ALL piggy banks, but only processes those that do not have the userGroup's primary currency.
+     */
     private function recalculatePiggyBanks(UserGroup $userGroup, TransactionCurrency $currency): void
     {
         $converter  = new ExchangeRateConverter();
