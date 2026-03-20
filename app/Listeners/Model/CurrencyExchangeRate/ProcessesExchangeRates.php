@@ -24,13 +24,12 @@ namespace FireflyIII\Listeners\Model\CurrencyExchangeRate;
 use FireflyIII\Events\Model\CurrencyExchangeRate\CreatedCurrencyExchangeRate;
 use FireflyIII\Events\Model\CurrencyExchangeRate\DestroyedCurrencyExchangeRate;
 use FireflyIII\Events\Model\CurrencyExchangeRate\UpdatedCurrencyExchangeRate;
-
 use FireflyIII\Models\TransactionCurrency;
 use FireflyIII\Models\UserGroup;
 use FireflyIII\Services\Internal\Recalculate\PrimaryAmountRecalculationService;
 use FireflyIII\Support\Facades\Amount;
 use FireflyIII\Support\Facades\Preferences;
-use Illuminate\Support\Facades\Artisan;
+use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Log;
 
 class ProcessesExchangeRates
@@ -38,7 +37,7 @@ class ProcessesExchangeRates
     public function handle(CreatedCurrencyExchangeRate | UpdatedCurrencyExchangeRate | DestroyedCurrencyExchangeRate $event): void
     {
         Preferences::mark();
-        Artisan::call('cache:clear');
+        Cache::clear();
         if ($event instanceof DestroyedCurrencyExchangeRate) {
             $this->handleCurrency($event->userGroup, $event->from);
             $this->handleCurrency($event->userGroup, $event->to);
@@ -48,7 +47,8 @@ class ProcessesExchangeRates
         $this->handleCurrency($event->rate->userGroup, $event->rate->toCurrency);
     }
 
-    private function handleCurrency(UserGroup $userGroup, TransactionCurrency $currency): void {
+    private function handleCurrency(UserGroup $userGroup, TransactionCurrency $currency): void
+    {
 
         $calculator = new PrimaryAmountRecalculationService();
         if (Amount::convertToPrimary()) {
