@@ -59,7 +59,7 @@ class UpdatesAccountInformation implements ShouldQueue
         /** @var RuleAction $action */
         foreach ($rule->ruleActions as $action) {
             // fix name:
-            if ($oldData['name'] === $action->action_value && in_array($action->action_type, $fields, true)) {
+            if (array_key_exists('name', $oldData) && $oldData['name'] === $action->action_value && in_array($action->action_type, $fields, true)) {
                 Log::debug(sprintf('Rule action #%d "%s" has old account name, replace with new.', $action->id, $action->action_type));
                 $action->action_value = $account->name;
                 $action->save();
@@ -105,21 +105,21 @@ class UpdatesAccountInformation implements ShouldQueue
         /** @var RuleTrigger $trigger */
         foreach ($rule->ruleTriggers as $trigger) {
             // fix name:
-            if ($oldData['name'] === $trigger->trigger_value && in_array($trigger->trigger_type, $nameFields, true)) {
+            if (array_key_exists('name', $oldData) && $oldData['name'] === $trigger->trigger_value && in_array($trigger->trigger_type, $nameFields, true)) {
                 Log::debug(sprintf('Rule trigger #%d "%s" has old account name, replace with new.', $trigger->id, $trigger->trigger_type));
                 $trigger->trigger_value = $account->name;
                 $trigger->save();
                 ++$fixed;
             }
             // fix IBAN:
-            if ($oldData['iban'] === $trigger->trigger_value && in_array($trigger->trigger_type, $numberFields, true)) {
+            if (array_key_exists('iban', $oldData) && $oldData['iban'] === $trigger->trigger_value && in_array($trigger->trigger_type, $numberFields, true)) {
                 Log::debug(sprintf('Rule trigger #%d "%s" has old account IBAN, replace with new.', $trigger->id, $trigger->trigger_type));
                 $trigger->trigger_value = $account->iban;
                 $trigger->save();
                 ++$fixed;
             }
             // fix account number: // account_number
-            if ($oldData['account_number'] === $trigger->trigger_value && in_array($trigger->trigger_type, $numberFields, true)) {
+            if (array_key_exists('account_number', $oldData) && $oldData['account_number'] === $trigger->trigger_value && in_array($trigger->trigger_type, $numberFields, true)) {
                 Log::debug(sprintf('Rule trigger #%d "%s" has old account account_number, replace with new.', $trigger->id, $trigger->trigger_type));
                 $trigger->trigger_value = $account->iban;
                 $trigger->save();
