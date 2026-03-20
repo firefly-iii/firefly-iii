@@ -30,7 +30,7 @@ class UpdatedCurrencyExchangeRate extends Event
 {
     use SerializesModels;
 
-    public function __construct(public CurrencyExchangeRate $rate,) {
+    public function __construct(public CurrencyExchangeRate $rate) {
         Log::debug(sprintf('UpdatedCurrencyExchangeRate(#%d) Event', $rate->id));
     }
 }
