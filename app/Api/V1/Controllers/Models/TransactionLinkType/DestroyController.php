@@ -32,7 +32,6 @@ use FireflyIII\Support\Facades\Preferences;
 use FireflyIII\Support\Http\Api\TransactionFilter;
 use FireflyIII\User;
 use Illuminate\Http\JsonResponse;
-use Illuminate\Support\Facades\Log;
 
 /**
  * Class DestroyController

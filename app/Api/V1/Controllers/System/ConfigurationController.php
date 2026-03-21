@@ -30,12 +30,10 @@ use FireflyIII\Enums\WebhookDelivery;
 use FireflyIII\Enums\WebhookResponse;
 use FireflyIII\Enums\WebhookTrigger;
 use FireflyIII\Exceptions\FireflyException;
-use FireflyIII\Repositories\User\UserRepositoryInterface;
 use FireflyIII\Support\Binder\EitherConfigKey;
 use FireflyIII\Support\Facades\FireflyConfig;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Facades\Log;
-use Illuminate\Support\Facades\Validator;
 use Illuminate\Validation\ValidationException;
 
 /**
