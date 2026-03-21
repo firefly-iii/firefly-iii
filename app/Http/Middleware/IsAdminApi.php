@@ -26,9 +26,10 @@ namespace FireflyIII\Http\Middleware;
 use Closure;
 use FireflyIII\Repositories\User\UserRepositoryInterface;
 use FireflyIII\User;
-use Illuminate\Auth\AuthenticationException;
+use Illuminate\Auth\Access\AuthorizationException;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Log;
 
 /**
  * Class IsAdmin.
@@ -41,7 +42,7 @@ class IsAdminApi
      * @param null|string $guard
      *
      * @return mixed
-     * @throws AuthenticationException
+     * @throws AuthorizationException
      */
     public function handle(Request $request, Closure $next, $guard = null)
     {
@@ -59,7 +60,8 @@ class IsAdminApi
         /** @var UserRepositoryInterface $repository */
         $repository = app(UserRepositoryInterface::class);
         if (!$repository->hasRole($user, 'owner')) {
-            throw new AuthenticationException();
+            Log::error(sprintf('Cannot access %s?%s.', $request->url(), $request->getQueryString()));
+            throw new AuthorizationException();
         }
 
         return $next($request);
