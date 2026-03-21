@@ -9,7 +9,7 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 
 ### Fixed
 
-- #11995
+- [Issue 11995](https://github.com/firefly-iii/firefly-iii/issues/11995) (User registration breaks on password validation) reported by @mikaelhm
 
 ## v6.5.7 - 2026-03-21
 
