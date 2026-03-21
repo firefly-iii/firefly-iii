@@ -346,7 +346,7 @@ Route::group(
     [
         'namespace'  => 'FireflyIII\Api\V1\Controllers\Models\UserGroup',
         'prefix'     => 'v1/user-groups',
-        'as'         => 'api.v1.user-groups.'
+        'as'         => 'api.v1.user-groups.',
     ],
     static function (): void {
         Route::get('', ['uses' => 'IndexController@index', 'as' => 'index']);
