@@ -83,7 +83,7 @@ final class RegisterController extends Controller
             throw new FireflyException('Registration is currently not available :(');
         }
 
-        $this->validator($request->only(['email', 'password']))->validate();
+        $this->validator($request->only(['email', 'password', 'password_confirmation']))->validate();
         $user              = $this->createUser($request->only(['email', 'password']));
         Log::info(sprintf('Registered new user %s', $user->email));
         $owner             = new OwnerNotifiable();
