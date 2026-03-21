@@ -29,6 +29,7 @@ use FireflyIII\Http\Middleware\EncryptCookies;
 use FireflyIII\Http\Middleware\Installer;
 use FireflyIII\Http\Middleware\InterestingMessage;
 use FireflyIII\Http\Middleware\IsAdmin;
+use FireflyIII\Http\Middleware\IsAdminApi;
 use FireflyIII\Http\Middleware\Range;
 use FireflyIII\Http\Middleware\RedirectIfAuthenticated;
 use FireflyIII\Http\Middleware\SecureHeaders;
@@ -157,7 +158,7 @@ $app = Application::configure(basePath: dirname(__DIR__))
                       // This middleware is added to ensure that the user is not only logged in and
                       // authenticated (with MFA and everything), but also admin.
                       $middleware->appendToGroup('api-admin', [
-                          IsAdmin::class,
+                          IsAdminApi::class,
                       ]);
                       $middleware->appendToGroup('admin', [
                           IsAdmin::class,

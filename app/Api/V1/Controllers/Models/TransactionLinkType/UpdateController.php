@@ -80,15 +80,6 @@ final class UpdateController extends Controller
             throw new FireflyException('200020: Link type cannot be changed.');
         }
 
-        /** @var User $admin */
-        $admin       = auth()->user();
-        $rules       = ['name' => 'required'];
-
-        if (!$this->userRepository->hasRole($admin, 'owner')) {
-            $messages = ['name' => '200005: You need the "owner" role to do this.'];
-            Validator::make([], $rules, $messages)->validate();
-        }
-
         $data        = $request->getAll();
         $this->repository->update($linkType, $data);
         $manager     = $this->getManager();

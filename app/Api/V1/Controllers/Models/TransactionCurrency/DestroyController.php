@@ -69,15 +69,8 @@ final class DestroyController extends Controller
      */
     public function destroy(TransactionCurrency $currency): JsonResponse
     {
-        /** @var User $admin */
-        $admin = auth()->user();
         $rules = ['currency_code' => 'required'];
 
-        if (!$this->userRepository->hasRole($admin, 'owner')) {
-            // access denied:
-            $messages = ['currency_code' => '200005: You need the "owner" role to do this.'];
-            Validator::make([], $rules, $messages)->validate();
-        }
         if ($this->repository->currencyInUse($currency)) {
             $messages = ['currency_code' => '200006: Currency in use.'];
             Validator::make([], $rules, $messages)->validate();

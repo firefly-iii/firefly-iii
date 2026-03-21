@@ -72,11 +72,6 @@ final class DestroyController extends Controller
         if (false === $linkType->editable) {
             throw new FireflyException('200020: Link type cannot be changed.');
         }
-        if (false === auth()->user()->hasRole('owner')) {
-            Log::channel('audit')->warning('Non-owner user tries to delete a link type.');
-
-            return response()->json([], 401);
-        }
 
         $this->repository->destroy($linkType);
         Preferences::mark();
