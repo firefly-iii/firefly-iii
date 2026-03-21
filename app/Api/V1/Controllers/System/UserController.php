@@ -88,24 +88,24 @@ final class UserController extends Controller
     public function index(): JsonResponse
     {
         // user preferences
-        $pageSize = $this->parameters->get('limit');
-        $manager  = $this->getManager();
+        $pageSize    = $this->parameters->get('limit');
+        $manager     = $this->getManager();
 
         // build collection
-        $collection = $this->repository->all();
-        $count      = $collection->count();
-        $users      = $collection->slice(($this->parameters->get('page') - 1) * $pageSize, $pageSize);
+        $collection  = $this->repository->all();
+        $count       = $collection->count();
+        $users       = $collection->slice(($this->parameters->get('page') - 1) * $pageSize, $pageSize);
 
         // make paginator:
-        $paginator = new LengthAwarePaginator($users, $count, $pageSize, $this->parameters->get('page'));
-        $paginator->setPath(route('api.v1.users.index') . $this->buildParams());
+        $paginator   = new LengthAwarePaginator($users, $count, $pageSize, $this->parameters->get('page'));
+        $paginator->setPath(route('api.v1.users.index').$this->buildParams());
 
         // make resource
         /** @var UserTransformer $transformer */
         $transformer = app(UserTransformer::class);
         $transformer->setParameters($this->parameters);
 
-        $resource = new FractalCollection($users, $transformer, 'users');
+        $resource    = new FractalCollection($users, $transformer, 'users');
         $resource->setPaginator(new IlluminatePaginatorAdapter($paginator));
 
         return response()->json($manager->createData($resource)->toArray())->header('Content-Type', self::CONTENT_TYPE);
@@ -120,14 +120,14 @@ final class UserController extends Controller
     public function show(User $user): JsonResponse
     {
         // make manager
-        $manager = $this->getManager();
+        $manager     = $this->getManager();
 
         // make resource
         /** @var UserTransformer $transformer */
         $transformer = app(UserTransformer::class);
         $transformer->setParameters($this->parameters);
 
-        $resource = new Item($user, $transformer, 'users');
+        $resource    = new Item($user, $transformer, 'users');
 
         return response()->json($manager->createData($resource)->toArray())->header('Content-Type', self::CONTENT_TYPE);
     }
@@ -140,9 +140,9 @@ final class UserController extends Controller
      */
     public function store(UserStoreRequest $request): JsonResponse
     {
-        $data    = $request->getAll();
-        $user    = $this->repository->store($data);
-        $manager = $this->getManager();
+        $data        = $request->getAll();
+        $user        = $this->repository->store($data);
+        $manager     = $this->getManager();
 
         // make resource
 
@@ -150,7 +150,7 @@ final class UserController extends Controller
         $transformer = app(UserTransformer::class);
         $transformer->setParameters($this->parameters);
 
-        $resource = new Item($user, $transformer, 'users');
+        $resource    = new Item($user, $transformer, 'users');
 
         return response()->json($manager->createData($resource)->toArray())->header('Content-Type', self::CONTENT_TYPE);
     }
@@ -163,7 +163,7 @@ final class UserController extends Controller
      */
     public function update(UserUpdateRequest $request, User $user): JsonResponse
     {
-        $data = $request->getAll();
+        $data        = $request->getAll();
 
         // can only update 'blocked' when user is admin.
         if (!$this->repository->hasRole(auth()->user(), 'owner')) {
@@ -171,15 +171,15 @@ final class UserController extends Controller
             unset($data['blocked'], $data['blocked_code']);
         }
 
-        $user    = $this->repository->update($user, $data);
-        $manager = $this->getManager();
+        $user        = $this->repository->update($user, $data);
+        $manager     = $this->getManager();
 
         // make resource
         /** @var UserTransformer $transformer */
         $transformer = app(UserTransformer::class);
         $transformer->setParameters($this->parameters);
 
-        $resource = new Item($user, $transformer, 'users');
+        $resource    = new Item($user, $transformer, 'users');
 
         return response()->json($manager->createData($resource)->toArray())->header('Content-Type', self::CONTENT_TYPE);
     }

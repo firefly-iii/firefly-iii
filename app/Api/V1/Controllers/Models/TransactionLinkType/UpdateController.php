@@ -29,12 +29,10 @@ use FireflyIII\Api\V1\Requests\Models\TransactionLinkType\UpdateRequest;
 use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Models\LinkType;
 use FireflyIII\Repositories\LinkType\LinkTypeRepositoryInterface;
-use FireflyIII\Repositories\User\UserRepositoryInterface;
 use FireflyIII\Support\Http\Api\TransactionFilter;
 use FireflyIII\Transformers\LinkTypeTransformer;
 use FireflyIII\User;
 use Illuminate\Http\JsonResponse;
-use Illuminate\Support\Facades\Validator;
 use Illuminate\Validation\ValidationException;
 use League\Fractal\Resource\Item;
 
@@ -55,8 +53,8 @@ final class UpdateController extends Controller
         parent::__construct();
         $this->middleware(function ($request, $next) {
             /** @var User $user */
-            $user                 = auth()->user();
-            $this->repository     = app(LinkTypeRepositoryInterface::class);
+            $user             = auth()->user();
+            $this->repository = app(LinkTypeRepositoryInterface::class);
             $this->repository->setUser($user);
 
             return $next($request);

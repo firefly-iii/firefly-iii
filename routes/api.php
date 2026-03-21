@@ -704,9 +704,9 @@ Route::group(
 // Transaction Link Type API routes that need admin rights.
 Route::group(
     [
-        'namespace' => 'FireflyIII\Api\V1\Controllers\Models\TransactionLinkType',
-        'prefix'    => 'v1/link-types',
-        'as'        => 'api.v1.link-types.',
+        'namespace'  => 'FireflyIII\Api\V1\Controllers\Models\TransactionLinkType',
+        'prefix'     => 'v1/link-types',
+        'as'         => 'api.v1.link-types.',
         'middleware' => ['api-admin'],
     ],
     static function (): void {

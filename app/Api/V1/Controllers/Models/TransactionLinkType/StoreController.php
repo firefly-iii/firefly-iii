@@ -27,12 +27,10 @@ namespace FireflyIII\Api\V1\Controllers\Models\TransactionLinkType;
 use FireflyIII\Api\V1\Controllers\Controller;
 use FireflyIII\Api\V1\Requests\Models\TransactionLinkType\StoreRequest;
 use FireflyIII\Repositories\LinkType\LinkTypeRepositoryInterface;
-use FireflyIII\Repositories\User\UserRepositoryInterface;
 use FireflyIII\Support\Http\Api\TransactionFilter;
 use FireflyIII\Transformers\LinkTypeTransformer;
 use FireflyIII\User;
 use Illuminate\Http\JsonResponse;
-use Illuminate\Support\Facades\Validator;
 use Illuminate\Validation\ValidationException;
 use League\Fractal\Resource\Item;
 
@@ -53,8 +51,8 @@ final class StoreController extends Controller
         parent::__construct();
         $this->middleware(function ($request, $next) {
             /** @var User $user */
-            $user                 = auth()->user();
-            $this->repository     = app(LinkTypeRepositoryInterface::class);
+            $user             = auth()->user();
+            $this->repository = app(LinkTypeRepositoryInterface::class);
             $this->repository->setUser($user);
 
             return $next($request);
