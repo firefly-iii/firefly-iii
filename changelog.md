@@ -3,6 +3,14 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
+### v6.5.8 - 2026-03-22
+
+<!-- summary: This release fixes a regression bug in user registration. -->
+
+### Fixed
+
+- [Issue 11995](https://github.com/firefly-iii/firefly-iii/issues/11995) (User registration breaks on password validation) reported by @mikaelhm
+
 ## v6.5.7 - 2026-03-21
 
 <!-- summary: There is a new security policy for AI-generated security advisories and of course, some interesting but annoying bugs fixed. -->
