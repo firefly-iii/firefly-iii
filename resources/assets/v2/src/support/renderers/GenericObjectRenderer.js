@@ -20,6 +20,14 @@
 
 export default class GenericObjectRenderer {
     renderUrl(url, title, text) {
-        return `<a href="${url}" title="${title}">${text}</a>`;
+        return `<a href="${url}" title="${this.escapeHtml(title)}">${this.escapeHtml(text)}</a>`;
     }
+    escapeHtml(unsafe) {
+        return unsafe
+            .replaceAll("&", "&amp;")
+            .replaceAll("<", "&lt;")
+            .replaceAll(">", "&gt;")
+            .replaceAll('"', "&quot;")
+            .replaceAll("'", "&#039;");
+    };
 }
