@@ -56,11 +56,12 @@ class YearReportGenerator implements ReportGeneratorInterface
         $reportType = 'default';
 
         try {
-            $result = view('reports.default.year', ['accountIds' => $accountIds, 'reportType' => $reportType])
-                ->with('start', $this->start)
-                ->with('end', $this->end)
-                ->render()
-            ;
+            $result = view('reports.default.year', [
+                'accountIds' => $accountIds,
+                'reportType' => $reportType,
+                'start'      => $this->start,
+                'end'        => $this->end,
+            ])->render();
         } catch (Throwable $e) {
             Log::error(sprintf('Cannot render reports.account.report: %s', $e->getMessage()));
             Log::error($e->getTraceAsString());

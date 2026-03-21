@@ -116,7 +116,7 @@ class StoreRequest extends FormRequest
                             $validator->errors()->add(sprintf('accounts.%d', $index), trans('validation.invalid_account_currency'));
                         }
                         $type            = $account->accountType->type;
-                        if (!in_array($type, $types, true)) {
+                        if (!in_array($type, $types, strict: true)) {
                             $validator->errors()->add(sprintf('accounts.%d', $index), trans('validation.invalid_account_type'));
                         }
                     }

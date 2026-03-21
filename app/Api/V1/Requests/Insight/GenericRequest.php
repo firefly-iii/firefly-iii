@@ -72,7 +72,7 @@ class GenericRequest extends FormRequest
             if (in_array(
                 $type,
                 [AccountTypeEnum::ASSET->value, AccountTypeEnum::LOAN->value, AccountTypeEnum::DEBT->value, AccountTypeEnum::MORTGAGE->value],
-                true
+                strict: true
             )) {
                 $return->push($account);
             }

@@ -28,6 +28,7 @@ use Carbon\Carbon;
 use FireflyIII\Api\V1\Controllers\Controller;
 use FireflyIII\Api\V1\Requests\Models\CurrencyExchangeRate\UpdateRequest;
 use FireflyIII\Enums\UserRoleEnum;
+use FireflyIII\Events\Model\CurrencyExchangeRate\UpdatedCurrencyExchangeRate;
 use FireflyIII\Models\CurrencyExchangeRate;
 use FireflyIII\Models\TransactionCurrency;
 use FireflyIII\Repositories\ExchangeRate\ExchangeRateRepositoryInterface;
@@ -66,7 +67,7 @@ final class UpdateController extends Controller
         $date         = $request->getDate();
         $rate         = $request->getRate();
         $exchangeRate = $this->repository->updateExchangeRate($exchangeRate, $rate, $date);
-
+        event(new UpdatedCurrencyExchangeRate($exchangeRate));
         $transformer  = new ExchangeRateTransformer();
 
         return response()->api($this->jsonApiObject(self::RESOURCE_KEY, $exchangeRate, $transformer))->header('Content-Type', self::CONTENT_TYPE);
@@ -77,6 +78,7 @@ final class UpdateController extends Controller
         $date         = $request->getDate();
         $rate         = $request->getRate();
         $exchangeRate = $this->repository->updateExchangeRate($exchangeRate, $rate, $date);
+        event(new UpdatedCurrencyExchangeRate($exchangeRate));
         $transformer  = new ExchangeRateTransformer();
         $transformer->setParameters($this->parameters);
 

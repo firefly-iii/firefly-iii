@@ -82,7 +82,7 @@ final class IntroController extends Controller
 
         Log::debug('Elements is array', $elements);
         Log::debug('Keys is', array_keys($elements));
-        Log::debug(sprintf('Keys has "outro": %s', var_export($hasStep, true)));
+        Log::debug(sprintf('Keys has "outro": %s', var_export($hasStep, return: true)));
 
         return $hasStep;
     }

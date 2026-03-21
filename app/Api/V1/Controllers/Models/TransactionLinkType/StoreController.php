@@ -27,12 +27,10 @@ namespace FireflyIII\Api\V1\Controllers\Models\TransactionLinkType;
 use FireflyIII\Api\V1\Controllers\Controller;
 use FireflyIII\Api\V1\Requests\Models\TransactionLinkType\StoreRequest;
 use FireflyIII\Repositories\LinkType\LinkTypeRepositoryInterface;
-use FireflyIII\Repositories\User\UserRepositoryInterface;
 use FireflyIII\Support\Http\Api\TransactionFilter;
 use FireflyIII\Transformers\LinkTypeTransformer;
 use FireflyIII\User;
 use Illuminate\Http\JsonResponse;
-use Illuminate\Support\Facades\Validator;
 use Illuminate\Validation\ValidationException;
 use League\Fractal\Resource\Item;
 
@@ -44,7 +42,6 @@ final class StoreController extends Controller
     use TransactionFilter;
 
     private LinkTypeRepositoryInterface $repository;
-    private UserRepositoryInterface $userRepository;
 
     /**
      * LinkTypeController constructor.
@@ -54,9 +51,8 @@ final class StoreController extends Controller
         parent::__construct();
         $this->middleware(function ($request, $next) {
             /** @var User $user */
-            $user                 = auth()->user();
-            $this->repository     = app(LinkTypeRepositoryInterface::class);
-            $this->userRepository = app(UserRepositoryInterface::class);
+            $user             = auth()->user();
+            $this->repository = app(LinkTypeRepositoryInterface::class);
             $this->repository->setUser($user);
 
             return $next($request);
@@ -73,15 +69,6 @@ final class StoreController extends Controller
      */
     public function store(StoreRequest $request): JsonResponse
     {
-        /** @var User $admin */
-        $admin       = auth()->user();
-        $rules       = ['name' => 'required'];
-
-        if (!$this->userRepository->hasRole($admin, 'owner')) {
-            // access denied:
-            $messages = ['name' => '200005: You need the "owner" role to do this.'];
-            Validator::make([], $rules, $messages)->validate();
-        }
         $data        = $request->getAll();
         // if currency ID is 0, find the currency by the code:
         $linkType    = $this->repository->store($data);

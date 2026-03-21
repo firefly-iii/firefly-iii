@@ -524,7 +524,7 @@ class User extends Authenticatable
                 $userGroup->id,
                 $userGroup->title
             ));
-            if (in_array($membership->userRole->title, $dbRolesTitles, true)) {
+            if (in_array($membership->userRole->title, $dbRolesTitles, strict: true)) {
                 Log::debug(sprintf('Return true, found role "%s"', $membership->userRole->title));
 
                 return true;

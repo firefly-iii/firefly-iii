@@ -231,8 +231,8 @@ final class PreferencesController extends Controller
         Log::debug('postIndex for preferences.');
         // front page accounts
         $frontpageAccounts = [];
-        if (is_array($request->get('frontpageAccounts')) && count($request->get('frontpageAccounts')) > 0) {
-            foreach ($request->get('frontpageAccounts') as $id) {
+        if (is_array($request->input('frontpageAccounts')) && count($request->input('frontpageAccounts')) > 0) {
+            foreach ($request->input('frontpageAccounts') as $id) {
                 $frontpageAccounts[] = (int) $id;
             }
             Log::debug('Update frontpageAccounts', $frontpageAccounts);
@@ -240,7 +240,10 @@ final class PreferencesController extends Controller
         }
 
         // extract notifications:
-        $all               = $request->all();
+        $keys              = array_map(function (string $value): string {
+            return sprintf('notification_%s', $value);
+        }, array_keys(config('notifications.notifications.user')));
+        $all               = $request->only($keys);
         foreach (config('notifications.notifications.user') as $key => $info) {
             $key = sprintf('notification_%s', $key);
             if (array_key_exists($key, $all)) {
@@ -252,10 +255,11 @@ final class PreferencesController extends Controller
                 Preferences::set($key, false);
             }
         }
+        unset($all);
 
         // view range:
-        Log::debug(sprintf('Let viewRange to "%s"', $request->get('viewRange')));
-        Preferences::set('viewRange', $request->get('viewRange'));
+        Log::debug(sprintf('Let viewRange to "%s"', $request->input('viewRange')));
+        Preferences::set('viewRange', $request->input('viewRange'));
         // forget session values:
         session()->forget('start');
         session()->forget('end');
@@ -264,6 +268,7 @@ final class PreferencesController extends Controller
         // notification settings, cannot be set by the demo user.
         if (!auth()->user()->hasRole('demo')) {
             $variables = ['slack_webhook_url', 'pushover_app_token', 'pushover_user_token', 'ntfy_server', 'ntfy_topic', 'ntfy_user', 'ntfy_pass'];
+            $all       = $request->only($variables);
             foreach ($variables as $variable) {
                 if ('' === $all[$variable]) {
                     Preferences::delete($variable);
@@ -274,9 +279,10 @@ final class PreferencesController extends Controller
             }
             Preferences::set('ntfy_auth', $all['ntfy_auth'] ?? false);
         }
+        unset($all);
 
         // convert primary
-        $convertToPrimary  = 1 === (int) $request->get('convertToPrimary');
+        $convertToPrimary  = 1 === (int) $request->input('convertToPrimary');
         if ($convertToPrimary && !$this->convertToPrimary) {
             // set to true!
             Log::debug('User sets convertToPrimary to true.');
@@ -288,9 +294,9 @@ final class PreferencesController extends Controller
         Preferences::set('convert_to_primary', $convertToPrimary);
 
         // custom fiscal year
-        $customFiscalYear  = 1 === (int) $request->get('customFiscalYear');
+        $customFiscalYear  = 1 === (int) $request->input('customFiscalYear');
         Preferences::set('customFiscalYear', $customFiscalYear);
-        $fiscalYearString  = (string) $request->get('fiscalYearStart');
+        $fiscalYearString  = (string) $request->input('fiscalYearStart');
         if ('' !== $fiscalYearString) {
             $fiscalYearStart = Carbon::parse($fiscalYearString, config('app.timezone'))->format('m-d');
             Preferences::set('fiscalYearStart', $fiscalYearStart);
@@ -298,7 +304,7 @@ final class PreferencesController extends Controller
 
         // save page size:
         Preferences::set('listPageSize', 50);
-        $listPageSize      = (int) $request->get('listPageSize');
+        $listPageSize      = (int) $request->input('listPageSize');
         if ($listPageSize > 0 && $listPageSize < 1337) {
             Preferences::set('listPageSize', $listPageSize);
         }
@@ -306,7 +312,7 @@ final class PreferencesController extends Controller
         // language:
         /** @var Preference $currentLang */
         $currentLang       = Preferences::get('language', 'en_US');
-        $lang              = $request->get('language');
+        $lang              = $request->input('language');
         if (array_key_exists($lang, config('firefly.languages'))) {
             Preferences::set('language', $lang);
         }
@@ -317,13 +323,13 @@ final class PreferencesController extends Controller
 
         // same for locale:
         if (!auth()->user()->hasRole('demo')) {
-            $locale = (string) $request->get('locale');
+            $locale = (string) $request->input('locale');
             $locale = '' === $locale ? null : $locale;
             Preferences::set('locale', $locale);
         }
 
         // optional fields for transactions:
-        $setOptions        = $request->get('tj') ?? [];
+        $setOptions        = $request->input('tj') ?? [];
         $optionalTj        = [
             'interest_date'      => array_key_exists('interest_date', $setOptions),
             'book_date'          => array_key_exists('book_date', $setOptions),
@@ -341,13 +347,13 @@ final class PreferencesController extends Controller
         Preferences::set('transaction_journal_optional_fields', $optionalTj);
 
         // dark mode
-        $darkMode          = $request->get('darkMode') ?? 'browser';
+        $darkMode          = $request->input('darkMode') ?? 'browser';
         if (in_array($darkMode, config('firefly.available_dark_modes'), true)) {
             Preferences::set('darkMode', $darkMode);
         }
 
         // anonymous amounts?
-        $anonymous         = '1' === $request->get('anonymous');
+        $anonymous         = '1' === $request->input('anonymous');
         Preferences::set('anonymous', $anonymous);
 
         // save and continue
@@ -360,7 +366,7 @@ final class PreferencesController extends Controller
 
     public function testNotification(Request $request): mixed
     {
-        $all     = $request->all();
+        $all     = $request->only(['channel']);
         $channel = $all['channel'] ?? '';
 
         switch ($channel) {

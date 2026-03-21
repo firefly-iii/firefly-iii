@@ -636,12 +636,9 @@ Route::group(
     ],
     static function (): void {
         Route::get('', ['uses' => 'ShowController@index', 'as' => 'index']);
-        Route::post('', ['uses' => 'StoreController@store', 'as' => 'store']);
         Route::get('primary', ['uses' => 'ShowController@showPrimary', 'as' => 'show.primary']);
         Route::get('default', ['uses' => 'ShowController@showPrimary', 'as' => 'show.default']);
         Route::get('{currency_code}', ['uses' => 'ShowController@show', 'as' => 'show']);
-        Route::put('{currency_code?}', ['uses' => 'UpdateController@update', 'as' => 'update']);
-        Route::delete('{currency_code}', ['uses' => 'DestroyController@destroy', 'as' => 'delete']);
 
         Route::post('{currency_code}/enable', ['uses' => 'UpdateController@enable', 'as' => 'enable']);
         Route::post('{currency_code}/disable', ['uses' => 'UpdateController@disable', 'as' => 'disable']);
@@ -657,6 +654,22 @@ Route::group(
         Route::get('{currency_code}/transactions', ['uses' => 'ListController@transactions', 'as' => 'transactions']);
     }
 );
+
+// Transaction currency API routes that require admin rights:
+Route::group(
+    [
+        'namespace'  => 'FireflyIII\Api\V1\Controllers\Models\TransactionCurrency',
+        'prefix'     => 'v1/currencies',
+        'as'         => 'api.v1.currencies.',
+        'middleware' => ['api-admin'],
+    ],
+    static function (): void {
+        Route::delete('{currency_code}', ['uses' => 'DestroyController@destroy', 'as' => 'delete']);
+        Route::post('', ['uses' => 'StoreController@store', 'as' => 'store']);
+        Route::put('{currency_code?}', ['uses' => 'UpdateController@update', 'as' => 'update']);
+    }
+);
+
 
 // Transaction Links API routes:
 Route::group(
@@ -683,11 +696,23 @@ Route::group(
     ],
     static function (): void {
         Route::get('', ['uses' => 'ShowController@index', 'as' => 'index']);
-        Route::post('', ['uses' => 'StoreController@store', 'as' => 'store']);
         Route::get('{linkType}', ['uses' => 'ShowController@show', 'as' => 'show']);
+        Route::get('{linkType}/transactions', ['uses' => 'ListController@transactions', 'as' => 'transactions']);
+    }
+);
+
+// Transaction Link Type API routes that need admin rights.
+Route::group(
+    [
+        'namespace'  => 'FireflyIII\Api\V1\Controllers\Models\TransactionLinkType',
+        'prefix'     => 'v1/link-types',
+        'as'         => 'api.v1.link-types.',
+        'middleware' => ['api-admin'],
+    ],
+    static function (): void {
+        Route::post('', ['uses' => 'StoreController@store', 'as' => 'store']);
         Route::put('{linkType}', ['uses' => 'UpdateController@update', 'as' => 'update']);
         Route::delete('{linkType}', ['uses' => 'DestroyController@destroy', 'as' => 'delete']);
-        Route::get('{linkType}/transactions', ['uses' => 'ListController@transactions', 'as' => 'transactions']);
     }
 );
 
@@ -727,10 +752,23 @@ Route::group(
     ],
     static function (): void {
         Route::get('', ['uses' => 'ConfigurationController@index', 'as' => 'index']);
-        Route::put('{dynamicConfigKey}', ['uses' => 'ConfigurationController@update', 'as' => 'update']);
         Route::get('{eitherConfigKey}', ['uses' => 'ConfigurationController@show', 'as' => 'show']);
     }
 );
+
+// Configuration API routes that need admin rights
+Route::group(
+    [
+        'namespace'  => 'FireflyIII\Api\V1\Controllers\System',
+        'prefix'     => 'v1/configuration',
+        'as'         => 'api.v1.configuration.',
+        'middleware' => ['api-admin'],
+    ],
+    static function (): void {
+        Route::put('{dynamicConfigKey}', ['uses' => 'ConfigurationController@update', 'as' => 'update']);
+    }
+);
+
 // Users API routes:
 Route::group(
     [

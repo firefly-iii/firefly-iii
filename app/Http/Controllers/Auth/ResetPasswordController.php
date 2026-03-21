@@ -132,7 +132,7 @@ final class ResetPasswordController extends Controller
             $allowRegistration = false;
         }
 
-        return view('auth.passwords.reset')->with([
+        return view('auth.passwords.reset', [
             'token'             => $token,
             'email'             => $request->email,
             'allowRegistration' => $allowRegistration,

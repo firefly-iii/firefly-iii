@@ -125,7 +125,7 @@ class CorrectsAccountTypes extends Command
 
     private function canCreateDestination(array $validDestinations): bool
     {
-        return in_array(AccountTypeEnum::EXPENSE->value, $validDestinations, true);
+        return in_array(AccountTypeEnum::EXPENSE->value, $validDestinations, strict: true);
     }
 
     /**
@@ -133,7 +133,7 @@ class CorrectsAccountTypes extends Command
      */
     private function canCreateSource(array $validSources): bool
     {
-        return in_array(AccountTypeEnum::REVENUE->value, $validSources, true);
+        return in_array(AccountTypeEnum::REVENUE->value, $validSources, strict: true);
     }
 
     private function fixJournal(TransactionJournal $journal, string $transactionType, Transaction $source, Transaction $dest): void
@@ -308,7 +308,7 @@ class CorrectsAccountTypes extends Command
 
     private function hasValidAccountType(array $validTypes, string $accountType): bool
     {
-        return in_array($accountType, $validTypes, true);
+        return in_array($accountType, $validTypes, strict: true);
     }
 
     private function inspectJournal(TransactionJournal $journal): void
@@ -342,7 +342,7 @@ class CorrectsAccountTypes extends Command
             return;
         }
         $expectedTypes     = $this->expected[$type][$sourceAccountType];
-        if (!in_array($destAccountType, $expectedTypes, true)) {
+        if (!in_array($destAccountType, $expectedTypes, strict: true)) {
             Log::debug(sprintf('[b] Going to fix journal #%d', $journal->id));
             $this->fixJournal($journal, $type, $sourceTransaction, $destTransaction);
         }

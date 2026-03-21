@@ -74,13 +74,9 @@ final class UserController extends Controller
             return response()->json([], 500);
         }
 
-        if ($this->repository->hasRole($admin, 'owner')) {
-            $this->repository->destroy($user);
+        $this->repository->destroy($user);
 
-            return response()->json([], 204);
-        }
-
-        throw new FireflyException('200025: No access to function.');
+        return response()->json([], 204);
     }
 
     /**

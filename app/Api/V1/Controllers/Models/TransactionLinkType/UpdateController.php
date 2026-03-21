@@ -29,12 +29,10 @@ use FireflyIII\Api\V1\Requests\Models\TransactionLinkType\UpdateRequest;
 use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Models\LinkType;
 use FireflyIII\Repositories\LinkType\LinkTypeRepositoryInterface;
-use FireflyIII\Repositories\User\UserRepositoryInterface;
 use FireflyIII\Support\Http\Api\TransactionFilter;
 use FireflyIII\Transformers\LinkTypeTransformer;
 use FireflyIII\User;
 use Illuminate\Http\JsonResponse;
-use Illuminate\Support\Facades\Validator;
 use Illuminate\Validation\ValidationException;
 use League\Fractal\Resource\Item;
 
@@ -46,7 +44,6 @@ final class UpdateController extends Controller
     use TransactionFilter;
 
     private LinkTypeRepositoryInterface $repository;
-    private UserRepositoryInterface $userRepository;
 
     /**
      * LinkTypeController constructor.
@@ -56,9 +53,8 @@ final class UpdateController extends Controller
         parent::__construct();
         $this->middleware(function ($request, $next) {
             /** @var User $user */
-            $user                 = auth()->user();
-            $this->repository     = app(LinkTypeRepositoryInterface::class);
-            $this->userRepository = app(UserRepositoryInterface::class);
+            $user             = auth()->user();
+            $this->repository = app(LinkTypeRepositoryInterface::class);
             $this->repository->setUser($user);
 
             return $next($request);
@@ -78,15 +74,6 @@ final class UpdateController extends Controller
     {
         if (false === $linkType->editable) {
             throw new FireflyException('200020: Link type cannot be changed.');
-        }
-
-        /** @var User $admin */
-        $admin       = auth()->user();
-        $rules       = ['name' => 'required'];
-
-        if (!$this->userRepository->hasRole($admin, 'owner')) {
-            $messages = ['name' => '200005: You need the "owner" role to do this.'];
-            Validator::make([], $rules, $messages)->validate();
         }
 
         $data        = $request->getAll();

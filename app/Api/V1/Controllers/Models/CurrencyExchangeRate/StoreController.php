@@ -30,6 +30,8 @@ use FireflyIII\Api\V1\Requests\Models\CurrencyExchangeRate\StoreByCurrenciesRequ
 use FireflyIII\Api\V1\Requests\Models\CurrencyExchangeRate\StoreByDateRequest;
 use FireflyIII\Api\V1\Requests\Models\CurrencyExchangeRate\StoreRequest;
 use FireflyIII\Enums\UserRoleEnum;
+use FireflyIII\Events\Model\CurrencyExchangeRate\CreatedCurrencyExchangeRate;
+use FireflyIII\Events\Model\CurrencyExchangeRate\UpdatedCurrencyExchangeRate;
 use FireflyIII\Models\CurrencyExchangeRate;
 use FireflyIII\Models\TransactionCurrency;
 use FireflyIII\Repositories\ExchangeRate\ExchangeRateRepositoryInterface;
@@ -73,10 +75,12 @@ final class StoreController extends Controller
         if ($object instanceof CurrencyExchangeRate) {
             // just update it, no matter.
             $rate = $this->repository->updateExchangeRate($object, $rate, $date);
+            event(new UpdatedCurrencyExchangeRate($rate));
         }
         if (!$object instanceof CurrencyExchangeRate) {
             // store new
             $rate = $this->repository->storeExchangeRate($from, $to, $rate, $date);
+            event(new CreatedCurrencyExchangeRate($rate));
         }
 
         $transformer = new ExchangeRateTransformer();
@@ -97,10 +101,12 @@ final class StoreController extends Controller
                 // update existing rate.
                 $existing = $this->repository->updateExchangeRate($existing, $rate);
                 $collection->push($existing);
+                event(new UpdatedCurrencyExchangeRate($existing));
 
                 continue;
             }
             $new      = $this->repository->storeExchangeRate($from, $to, $rate, $date);
+            event(new CreatedCurrencyExchangeRate($new));
             $collection->push($new);
         }
 
@@ -124,11 +130,13 @@ final class StoreController extends Controller
                 // update existing rate.
                 $existing = $this->repository->updateExchangeRate($existing, $rate);
                 $collection->push($existing);
+                event(new UpdatedCurrencyExchangeRate($existing));
 
                 continue;
             }
             $new      = $this->repository->storeExchangeRate($from, $to, $rate, $date);
             $collection->push($new);
+            event(new CreatedCurrencyExchangeRate($new));
         }
 
         $count       = $collection->count();

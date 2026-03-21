@@ -28,6 +28,7 @@ use Carbon\Carbon;
 use FireflyIII\Api\V1\Controllers\Controller;
 use FireflyIII\Api\V1\Requests\Models\CurrencyExchangeRate\DestroyRequest;
 use FireflyIII\Enums\UserRoleEnum;
+use FireflyIII\Events\Model\CurrencyExchangeRate\DestroyedCurrencyExchangeRate;
 use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Models\CurrencyExchangeRate;
 use FireflyIII\Models\TransactionCurrency;
@@ -59,11 +60,12 @@ final class DestroyController extends Controller
     public function destroy(DestroyRequest $request, TransactionCurrency $from, TransactionCurrency $to): JsonResponse
     {
         $this->repository->deleteRates($from, $to);
+        event(new DestroyedCurrencyExchangeRate($from, $to, $this->validateUserGroup($request)));
 
         return response()->json([], 204);
     }
 
-    public function destroySingleByDate(TransactionCurrency $from, TransactionCurrency $to, Carbon $date): JsonResponse
+    public function destroySingleByDate(Request $request, TransactionCurrency $from, TransactionCurrency $to, Carbon $date): JsonResponse
     {
         $exchangeRate = $this->repository->getSpecificRateOnDate($from, $to, $date);
         if ($exchangeRate instanceof CurrencyExchangeRate) {
@@ -72,13 +74,18 @@ final class DestroyController extends Controller
         if (!$exchangeRate instanceof CurrencyExchangeRate) {
             throw new FireflyException('Bla');
         }
+        event(new DestroyedCurrencyExchangeRate($from, $to, $this->validateUserGroup($request)));
 
         return response()->json([], 204);
     }
 
-    public function destroySingleById(CurrencyExchangeRate $exchangeRate): JsonResponse
+    public function destroySingleById(Request $request, CurrencyExchangeRate $exchangeRate): JsonResponse
     {
+        $from = $exchangeRate->fromCurrency;
+        $to   = $exchangeRate->toCurrency;
         $this->repository->deleteRate($exchangeRate);
+
+        event(new DestroyedCurrencyExchangeRate($from, $to, $this->validateUserGroup($request)));
 
         return response()->json([], 204);
     }

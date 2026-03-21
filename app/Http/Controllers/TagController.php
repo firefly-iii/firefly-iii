@@ -225,7 +225,7 @@ final class TagController extends Controller
     {
         // default values:
         $subTitleIcon = 'fa-tag';
-        $page         = (int) $request->get('page');
+        $page         = (int) $request->input('page');
         $pageSize     = (int) Preferences::get('listPageSize', 50)->data;
         $start       ??= session('start');
         $end         ??= session('end');
@@ -249,18 +249,20 @@ final class TagController extends Controller
         // collect transaction journal IDs in repository,
         // this makes the collector faster and more accurate.
         $journalIds   = $this->repository->getJournalIds($tag);
-
+        if (0 === count($journalIds)) {
+            $collector->findNothing();
+        }
         $collector
             ->setRange($start, $end)
             ->setLimit($pageSize)
             ->setPage($page)
             ->setJournalIds($journalIds)
             ->withAccountInformation()
-            // ->setTag($tag)
             ->withBudgetInformation()
             ->withCategoryInformation()
             ->withAttachmentInformation()
         ;
+
         $groups       = $collector->getPaginatedGroups();
         $groups->setPath($path);
         $sums         = $this->repository->sumsOfTag($tag, $start, $end);
@@ -303,10 +305,13 @@ final class TagController extends Controller
 
         // collect transaction journal IDs in repository,
         // this makes the collector faster and more accurate.
-        $journalIds   = $this->repository->getJournalIds($tag);
-
         /** @var GroupCollectorInterface $collector */
         $collector    = app(GroupCollectorInterface::class);
+        $journalIds   = $this->repository->getJournalIds($tag);
+        if (0 === count($journalIds)) {
+            $collector->findNothing();
+        }
+
         $collector
             ->setRange($start, $end)
             ->setLimit($pageSize)

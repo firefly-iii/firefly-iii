@@ -250,6 +250,7 @@ class Handler extends ExceptionHandler
             'json'         => request()->acceptsJson(),
             'method'       => request()->method(),
             'headers'      => $headers,
+            // @mago-expect lint:no-request-all
             'post'         => 'POST' === request()->method() ? json_encode(request()->all()) : '',
         ];
 

@@ -135,7 +135,7 @@ final class AmountController extends Controller
      */
     public function postAdd(Request $request, PiggyBank $piggyBank): RedirectResponse
     {
-        $data    = $request->all();
+        $data    = $request->only(['amount']);
         $amounts = $data['amount'] ?? [];
         $total   = '0';
         Log::debug('Start with loop.');

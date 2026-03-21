@@ -56,10 +56,10 @@ class UpdateRequest extends FormRequest
     public function getAll(): array
     {
         $name = $this->route()->parameter('dynamicConfigKey');
-        if (in_array($name, $this->booleans, true)) {
+        if (in_array($name, $this->booleans, strict: true)) {
             return ['value' => $this->boolean('value')];
         }
-        if (in_array($name, $this->integers, true)) {
+        if (in_array($name, $this->integers, strict: true)) {
             return ['value' => $this->convertInteger('value')];
         }
 
@@ -73,13 +73,13 @@ class UpdateRequest extends FormRequest
     {
         $name = $this->route()->parameter('configName');
 
-        if (in_array($name, $this->booleans, true)) {
+        if (in_array($name, $this->booleans, strict: true)) {
             return ['value' => ['required', new IsBoolean()]];
         }
         if ('configuration.permission_update_check' === $name) {
             return ['value' => 'required|numeric|min:-1|max:1'];
         }
-        if (in_array($name, $this->integers, true)) {
+        if (in_array($name, $this->integers, strict: true)) {
             return ['value' => 'required|numeric|min:464272080'];
         }
 

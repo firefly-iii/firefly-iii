@@ -132,7 +132,7 @@ final class NotificationController extends Controller
             return redirect(route('settings.notification.index'));
         }
 
-        $all              = $request->all();
+        $all              = $request->only(['channel']);
         $channel          = $all['test_submit'] ?? '';
 
         switch ($channel) {

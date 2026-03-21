@@ -3,7 +3,7 @@
 declare(strict_types=1);
 
 /*
- * RecalculatesPrimaryCurrencyAmounts.php
+ * DestroyedCurrencyExchangeRate.php
  * Copyright (c) 2026 james@firefly-iii.org
  *
  * This file is part of Firefly III (https://github.com/firefly-iii).
@@ -22,25 +22,23 @@ declare(strict_types=1);
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-namespace FireflyIII\Listeners\System;
+namespace FireflyIII\Events\Model\CurrencyExchangeRate;
 
-use FireflyIII\Events\Preferences\UserGroupChangedPrimaryCurrency;
-use FireflyIII\Services\Internal\Recalculate\PrimaryAmountRecalculationService;
-use FireflyIII\Support\Facades\Amount;
+use FireflyIII\Events\Event;
+use FireflyIII\Models\TransactionCurrency;
+use FireflyIII\Models\UserGroup;
+use Illuminate\Queue\SerializesModels;
 use Illuminate\Support\Facades\Log;
 
-class RecalculatesPrimaryCurrencyAmounts
+class DestroyedCurrencyExchangeRate extends Event
 {
-    public function handle(UserGroupChangedPrimaryCurrency $event): void
-    {
-        // fire laravel command to recalculate them all.
-        if (Amount::convertToPrimary()) {
-            Log::debug('Will now convert amounts to primary currency.');
-            $calculator = new PrimaryAmountRecalculationService();
-            $calculator->recalculate();
+    use SerializesModels;
 
-            return;
-        }
-        Log::debug('Will NOT convert to primary currency.');
+    public function __construct(
+        public TransactionCurrency $from,
+        public TransactionCurrency $to,
+        public UserGroup $userGroup
+    ) {
+        Log::debug(sprintf('DestroyedCurrencyExchangeRate(%s, %s) Event', $from->code, $to->code));
     }
 }

@@ -52,7 +52,7 @@ class CreateRequest extends FormRequest
         $responses            = $this->get('responses', []);
         $deliveries           = $this->get('deliveries', []);
 
-        if (in_array(0, [count($triggers), count($responses), count($deliveries)], true)) {
+        if (in_array(0, [count($triggers), count($responses), count($deliveries)], strict: true)) {
             throw new FireflyException('Unexpectedly got no responses, triggers or deliveries.');
         }
 
