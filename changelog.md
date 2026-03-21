@@ -3,7 +3,7 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
-### v6.5.8 - 2026-03-22
+## v6.5.8 - 2026-03-22
 
 <!-- summary: This release fixes a regression bug in user registration. -->
 
