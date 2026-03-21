@@ -42,6 +42,7 @@ class IsAdminApi
      * @param null|string $guard
      *
      * @return mixed
+     *
      * @throws AuthorizationException
      */
     public function handle(Request $request, Closure $next, $guard = null)
@@ -55,12 +56,13 @@ class IsAdminApi
         }
 
         /** @var User $user */
-        $user = auth()->user();
+        $user       = auth()->user();
 
         /** @var UserRepositoryInterface $repository */
         $repository = app(UserRepositoryInterface::class);
         if (!$repository->hasRole($user, 'owner')) {
             Log::error(sprintf('Cannot access %s?%s.', $request->url(), $request->getQueryString()));
+
             throw new AuthorizationException();
         }
 
