@@ -43,21 +43,6 @@ use Illuminate\Validation\ValidationException;
  */
 final class ConfigurationController extends Controller
 {
-    private UserRepositoryInterface $repository;
-
-    /**
-     * ConfigurationController constructor.
-     */
-    public function __construct()
-    {
-        parent::__construct();
-        $this->middleware(function ($request, $next) {
-            $this->repository = app(UserRepositoryInterface::class);
-
-            return $next($request);
-        });
-    }
-
     /**
      * This endpoint is documented at:
      * https://api-docs.firefly-iii.org/?urls.primaryName=2.0.0%20(v1)#/configuration/getConfiguration

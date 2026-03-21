@@ -44,7 +44,6 @@ final class StoreController extends Controller
     use TransactionFilter;
 
     private LinkTypeRepositoryInterface $repository;
-    private UserRepositoryInterface $userRepository;
 
     /**
      * LinkTypeController constructor.
@@ -56,7 +55,6 @@ final class StoreController extends Controller
             /** @var User $user */
             $user                 = auth()->user();
             $this->repository     = app(LinkTypeRepositoryInterface::class);
-            $this->userRepository = app(UserRepositoryInterface::class);
             $this->repository->setUser($user);
 
             return $next($request);
