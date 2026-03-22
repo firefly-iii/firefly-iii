@@ -28,6 +28,7 @@ use FireflyIII\Models\TransactionCurrency;
 use FireflyIII\Rules\IsBoolean;
 use FireflyIII\Support\Request\ChecksLogin;
 use FireflyIII\Support\Request\ConvertsDataTypes;
+use FireflyIII\User;
 use Illuminate\Foundation\Http\FormRequest;
 
 /**
@@ -45,15 +46,23 @@ class UpdateRequest extends FormRequest
      */
     public function getAll(): array
     {
-        // return nothing that isn't explicitly in the array:
+        /** @var User $user */
+        $user    = auth()->user();
+        $isAdmin = $user->hasRole('owner');
+
         $fields = [
-            'name'           => ['name', 'convertString'],
-            'code'           => ['code', 'convertString'],
-            'symbol'         => ['symbol', 'convertString'],
-            'decimal_places' => ['decimal_places', 'convertInteger'],
-            'default'        => ['default', 'boolean'],
-            'enabled'        => ['enabled', 'boolean'],
+            'enabled' => ['enabled', 'boolean'],
         ];
+        if ($isAdmin) {
+            $fields = [
+                'name'           => ['name', 'convertString'],
+                'code'           => ['code', 'convertString'],
+                'symbol'         => ['symbol', 'convertString'],
+                'decimal_places' => ['decimal_places', 'convertInteger'],
+                'default'        => ['default', 'boolean'],
+                'enabled'        => ['enabled', 'boolean'],
+            ];
+        }
 
         return $this->getAllData($fields);
     }

@@ -635,6 +635,7 @@ Route::group(
     ],
     static function (): void {
         Route::get('', ['uses' => 'ShowController@index', 'as' => 'index']);
+        Route::put('{currency_code?}', ['uses' => 'UpdateController@update', 'as' => 'update']);
         Route::get('primary', ['uses' => 'ShowController@showPrimary', 'as' => 'show.primary']);
         Route::get('default', ['uses' => 'ShowController@showPrimary', 'as' => 'show.default']);
         Route::get('{currency_code}', ['uses' => 'ShowController@show', 'as' => 'show']);
@@ -665,7 +666,6 @@ Route::group(
     static function (): void {
         Route::delete('{currency_code}', ['uses' => 'DestroyController@destroy', 'as' => 'delete']);
         Route::post('', ['uses' => 'StoreController@store', 'as' => 'store']);
-        Route::put('{currency_code?}', ['uses' => 'UpdateController@update', 'as' => 'update']);
     }
 );
 

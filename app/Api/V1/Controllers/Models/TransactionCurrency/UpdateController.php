@@ -154,8 +154,6 @@ final class UpdateController extends Controller
     public function update(UpdateRequest $request, TransactionCurrency $currency): JsonResponse
     {
         $data        = $request->getAll();
-        Log::debug(__METHOD__, $data);
-
         /** @var User $user */
         $user        = auth()->user();
 
