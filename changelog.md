@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
+## v6.5.9 - 2026-03-23
+
+<!-- summary: Bug fixes mainly, but also updated dependencies and new wording in the instructions you see when you open a PR. -->
+
+### Fixed
+- #12004
+- #12014
+
+# Changed
+- #12000
+
 ## v6.5.8 - 2026-03-22
 
 <!-- summary: This release fixes a regression bug in user registration. -->
