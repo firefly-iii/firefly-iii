@@ -8,11 +8,11 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 <!-- summary: Bug fixes mainly, but also updated dependencies and new wording in the instructions you see when you open a PR. -->
 
 ### Fixed
-- #12004
-- #12014
+- [Issue 12004](https://github.com/firefly-iii/firefly-iii/issues/12004) (Test notification buttons always generate an error) reported by @IDevJoe
+- [Issue 12014](https://github.com/firefly-iii/firefly-iii/issues/12014) (Converting a transaction to a transfer and setting the destination account to one with a different currency breaks the audit log) reported by @avee87
 
 # Changed
-- #12000
+- [Issue 12000](https://github.com/firefly-iii/firefly-iii/issues/12000) (Improved transaction pagination for large data sets) reported by @christiaanderidder
 
 ## v6.5.8 - 2026-03-22
 
