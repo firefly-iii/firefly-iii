@@ -774,8 +774,8 @@ class JournalUpdateService
                     $this->transactionJournal,
                     'update_foreign_amount',
                     [
-                        'currency_symbol' => $oldForeignCurrency->symbol,
-                        'decimal_places'  => $oldForeignCurrency->decimal_places,
+                        'currency_symbol' => $oldForeignCurrency?->symbol,
+                        'decimal_places'  => $oldForeignCurrency?->decimal_places,
                         'amount'          => $originalSourceAmount,
                     ],
                     [

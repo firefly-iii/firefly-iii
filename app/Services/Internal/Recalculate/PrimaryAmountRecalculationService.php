@@ -202,7 +202,7 @@ class PrimaryAmountRecalculationService
 
         /** @var Account $account */
         foreach ($set as $account) {
-            $currencyId = (int) $account->accountMeta()->where('name', 'currency_id')->first()->data;
+            $currencyId = (int) $account->accountMeta()->where('name', 'currency_id')->first()?->data;
             if ($groupCurrency->id === $currencyId) {
                 Log::debug(sprintf('Account "%s" is in group currency %s. Skip.', $account->name, $groupCurrency->code));
 

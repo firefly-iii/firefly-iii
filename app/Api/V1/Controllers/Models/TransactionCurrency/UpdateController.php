@@ -35,7 +35,6 @@ use FireflyIII\Support\Http\Api\TransactionFilter;
 use FireflyIII\Transformers\CurrencyTransformer;
 use FireflyIII\User;
 use Illuminate\Http\JsonResponse;
-use Illuminate\Support\Facades\Log;
 use League\Fractal\Resource\Item;
 
 /**
@@ -154,7 +153,6 @@ final class UpdateController extends Controller
     public function update(UpdateRequest $request, TransactionCurrency $currency): JsonResponse
     {
         $data        = $request->getAll();
-        Log::debug(__METHOD__, $data);
 
         /** @var User $user */
         $user        = auth()->user();

@@ -251,7 +251,7 @@ class Handler extends ExceptionHandler
             'method'       => request()->method(),
             'headers'      => $headers,
             // @mago-expect lint:no-request-all
-            'post'         => 'POST' === request()->method() ? json_encode(request()->all()) : '',
+            'post'         => 'PUT' === request()->method() || 'POST' === request()->method() ? json_encode(request()->all()) : '',
         ];
 
         // create job that will mail.

@@ -3,7 +3,18 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
-### v6.5.8 - 2026-03-22
+## v6.5.9 - 2026-03-23
+
+<!-- summary: Bug fixes mainly, but also updated dependencies and new wording in the instructions you see when you open a PR. -->
+
+### Fixed
+- [Issue 12004](https://github.com/firefly-iii/firefly-iii/issues/12004) (Test notification buttons always generate an error) reported by @IDevJoe
+- [Issue 12014](https://github.com/firefly-iii/firefly-iii/issues/12014) (Converting a transaction to a transfer and setting the destination account to one with a different currency breaks the audit log) reported by @avee87
+
+# Changed
+- [Issue 12000](https://github.com/firefly-iii/firefly-iii/issues/12000) (Improved transaction pagination for large data sets) reported by @christiaanderidder
+
+## v6.5.8 - 2026-03-22
 
 <!-- summary: This release fixes a regression bug in user registration. -->
 

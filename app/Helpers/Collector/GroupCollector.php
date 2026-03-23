@@ -75,8 +75,6 @@ class GroupCollector implements GroupCollectorInterface
         $this->userGroup            = null;
         $this->limit                = null;
         $this->page                 = null;
-        $this->startRow             = null;
-        $this->endRow               = null;
 
         $this->hasAccountInfo       = false;
         $this->hasCatInformation    = false;
@@ -443,9 +441,15 @@ class GroupCollector implements GroupCollectorInterface
             $this->query->orWhereIn('transaction_journals.transaction_group_id', $groupIds);
         }
         $result      = $this->query->get($this->fields);
+        $this->total = $result->count();
+        // if no post-filters are present, it can be sliced and returned.
+        if (0 === count($this->sorting) && 0 === count($this->postFilters) && null !== $this->limit && null !== $this->page) {
+            $offset = ($this->page - 1) * $this->limit;
+            $result = $result->slice($offset, $this->limit);
+        }
+
         // $this->dumpQueryInLogs();
-        // Log::debug(sprintf('Count of result is %d', $result->count()));
-        // now to parse this into an array.
+        // now to parse the rest into an array.
         $collection  = $this->parseArray($result);
 
         // filter the array using all available post filters:
@@ -454,18 +458,11 @@ class GroupCollector implements GroupCollectorInterface
         // sort the collection, if sort instructions are present.
         $collection  = $this->sortCollection($collection);
 
-        // count it and continue:
-        $this->total = $collection->count();
-
         // now filter the array according to the page and the limit (if necessary)
-        if (null !== $this->limit && null !== $this->page) {
+        if (count($this->postFilters) > 0 && null !== $this->limit && null !== $this->page) {
             $offset = ($this->page - 1) * $this->limit;
 
             return $collection->slice($offset, $this->limit);
-        }
-        // OR filter the array according to the start and end row variable
-        if (null !== $this->startRow && null !== $this->endRow) {
-            return $collection->slice($this->startRow, $this->endRow);
         }
 
         return $collection;
@@ -477,17 +474,11 @@ class GroupCollector implements GroupCollectorInterface
     public function getPaginatedGroups(): LengthAwarePaginator
     {
         Log::debug('Now in getPaginatedGroups()');
-        $set   = $this->getGroups();
+        $limit = $this->limit ?? 1;
         if (0 === $this->limit) {
             $this->setLimit(50);
         }
-        if (null !== $this->startRow && null !== $this->endRow) {
-            /** @var int $total */
-            $total = $this->endRow - $this->startRow;
-
-            return new LengthAwarePaginator($set, $this->total, $total, 1);
-        }
-        $limit = $this->limit ?? 1;
+        $set   = $this->getGroups();
 
         return new LengthAwarePaginator($set, $this->total, $limit, $this->page);
     }
@@ -515,13 +506,6 @@ class GroupCollector implements GroupCollectorInterface
             $q->where('source.transaction_currency_id', $currency->id);
             $q->orWhere('source.foreign_currency_id', $currency->id);
         });
-
-        return $this;
-    }
-
-    public function setEndRow(int $endRow): self
-    {
-        $this->endRow = $endRow;
 
         return $this;
     }
@@ -636,13 +620,6 @@ class GroupCollector implements GroupCollectorInterface
         return $this;
     }
 
-    public function setStartRow(int $startRow): self
-    {
-        $this->startRow = $startRow;
-
-        return $this;
-    }
-
     /**
      * Limit the search to one specific transaction group.
      */
@@ -692,6 +669,10 @@ class GroupCollector implements GroupCollectorInterface
     #[Override]
     public function sortCollection(Collection $collection): Collection
     {
+        if (0 === count($this->sorting)) {
+            return $collection;
+        }
+
         /**
          * @var string $field
          * @var string $direction

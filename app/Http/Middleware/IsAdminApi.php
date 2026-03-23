@@ -29,6 +29,7 @@ use FireflyIII\User;
 use Illuminate\Auth\Access\AuthorizationException;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Log;
 
 /**
  * Class IsAdmin.
@@ -41,6 +42,8 @@ class IsAdminApi
      * @param null|string $guard
      *
      * @return mixed
+     *
+     * @throws AuthorizationException
      */
     public function handle(Request $request, Closure $next, $guard = null)
     {
@@ -58,6 +61,8 @@ class IsAdminApi
         /** @var UserRepositoryInterface $repository */
         $repository = app(UserRepositoryInterface::class);
         if (!$repository->hasRole($user, 'owner')) {
+            Log::error(sprintf('Cannot access %s?%s.', $request->url(), $request->getQueryString()));
+
             throw new AuthorizationException();
         }
 

@@ -6,6 +6,8 @@
 2. If your PR is more than 25 lines, talk to me FIRST.
 3. If you fix spelling or code comments, talk to me FIRST.
 
+This is to prevent AI bots, low-effort PRs and spam. Sorry about that.
+
 Wanna talk to me? Open a GitHub Issue, Discussion, or email me: james@firefly-iii.org
 
 👀 Please ensure you have taken a look at the contribution guidelines:
@@ -17,7 +19,9 @@ Remember that your PR may be CLOSED:
 2. If you open a PR on the main branch, your PR will be CLOSED.
 3. If you only fix a spelling error or code comment, your PR will be CLOSED.
 
-Thanks again, and happy developing!
+Again, this is to prevent AI bots, low-effort PRs and spam. I apologize for the harsh tone.
+
+But if you made it this far thanks again for contributing, and happy developing!
 
 -->
 
@@ -48,3 +52,6 @@ I used AI assistance for:
 <!--
 Thanks for contributing!
 -->
+
+@JC5
+

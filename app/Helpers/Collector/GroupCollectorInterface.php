@@ -469,11 +469,6 @@ interface GroupCollectorInterface
      */
     public function setEnd(Carbon $end): self;
 
-    /**
-     * Set the page to get.
-     */
-    public function setEndRow(int $endRow): self;
-
     public function setExpandGroupSearch(bool $expandGroupSearch): self;
 
     /**
@@ -572,11 +567,6 @@ interface GroupCollectorInterface
      * Set the start time of the results to return.
      */
     public function setStart(Carbon $start): self;
-
-    /**
-     * Set the page to get.
-     */
-    public function setStartRow(int $startRow): self;
 
     /**
      * Limit results to a specific tag.
