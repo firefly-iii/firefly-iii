@@ -246,14 +246,13 @@ final class PreferencesController extends Controller
         $all               = $request->only($keys);
         foreach (config('notifications.notifications.user') as $key => $info) {
             $key = sprintf('notification_%s', $key);
-            if (array_key_exists($key, $all)) {
+            if (array_key_exists($key, $all) && false === auth()->user()->hasRole('demo')) {
                 Log::debug(sprintf('update notification to true: %s', $key));
                 Preferences::set($key, true);
+                continue;
             }
-            if (!array_key_exists($key, $all)) {
-                Log::debug(sprintf('update notification to false: %s', $key));
-                Preferences::set($key, false);
-            }
+            Log::debug(sprintf('update notification to false: %s', $key));
+            Preferences::set($key, false);
         }
         unset($all);
 
@@ -368,6 +367,12 @@ final class PreferencesController extends Controller
     {
         $all     = $request->only(['channel']);
         $channel = $all['channel'] ?? '';
+
+        if (true === auth()->user()->hasRole('demo')) {
+            session()->flash('error', (string) trans('firefly.not_available_demo_user'));
+
+            return redirect(route('preferences.index'));
+        }
 
         switch ($channel) {
             default:
