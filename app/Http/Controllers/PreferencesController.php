@@ -249,6 +249,7 @@ final class PreferencesController extends Controller
             if (array_key_exists($key, $all) && false === auth()->user()->hasRole('demo')) {
                 Log::debug(sprintf('update notification to true: %s', $key));
                 Preferences::set($key, true);
+
                 continue;
             }
             Log::debug(sprintf('update notification to false: %s', $key));
