@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "93912463b9c00da1cf4afbd38edd36a1",
+    "content-hash": "7e221e2496a89469f121036f554178ac",
     "packages": [
         {
             "name": "bacon/bacon-qr-code",
@@ -1812,28 +1812,28 @@
         },
         {
             "name": "laravel-notification-channels/pushover",
-            "version": "4.1.2",
+            "version": "5.0.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/laravel-notification-channels/pushover.git",
-                "reference": "53be939273e79e832a417d5863c1d443f0b3c665"
+                "reference": "a276d3cdbfede11bb5f4013c24ad1ef2a06bcb39"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/laravel-notification-channels/pushover/zipball/53be939273e79e832a417d5863c1d443f0b3c665",
-                "reference": "53be939273e79e832a417d5863c1d443f0b3c665",
+                "url": "https://api.github.com/repos/laravel-notification-channels/pushover/zipball/a276d3cdbfede11bb5f4013c24ad1ef2a06bcb39",
+                "reference": "a276d3cdbfede11bb5f4013c24ad1ef2a06bcb39",
                 "shasum": ""
             },
             "require": {
                 "guzzlehttp/guzzle": "^7.0.1",
-                "illuminate/notifications": "^8.0 || ^9.0 || ^10.0 || ^11.0 || ^12.0",
-                "illuminate/support": "^8.0 || ^9.0 || ^10.0 || ^11.0 || ^12.0",
-                "php": "^8.1"
+                "illuminate/notifications": "^11.0 || ^12.0 || ^13.0",
+                "illuminate/support": "^11.0 || ^12.0 || ^13.0",
+                "php": "^8.2"
             },
             "require-dev": {
                 "mockery/mockery": "^1.3.1",
-                "orchestra/testbench": "^6.0 || ^7.0 || ^8.0 || ^9.0 || ^10.0",
-                "phpunit/phpunit": "^9.3 || ^10.5 || ^11.5.3"
+                "orchestra/testbench": "^9.0 || ^10.0 || ^11.0",
+                "phpunit/phpunit": "^11.5.3 || ^12.5.12"
             },
             "suggest": {
                 "ext-exif": "Required for image attachment support"
@@ -1873,9 +1873,9 @@
             "homepage": "https://github.com/laravel-notification-channels/pushover",
             "support": {
                 "issues": "https://github.com/laravel-notification-channels/pushover/issues",
-                "source": "https://github.com/laravel-notification-channels/pushover/tree/4.1.2"
+                "source": "https://github.com/laravel-notification-channels/pushover/tree/5.0.0"
             },
-            "time": "2025-09-09T09:14:17+00:00"
+            "time": "2026-03-18T11:30:33+00:00"
         },
         {
             "name": "laravel/framework",
