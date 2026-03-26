@@ -152,8 +152,8 @@ class General extends AbstractExtension
             $session          = clone session('end', today(config('app.timezone'))->endOfMonth());
             if ($session->lt($date)) {
                 $date = $session->copy();
-                $date->endOfDay();
             }
+            $date->endOfDay();
             Log::debug(sprintf('twig balance: Call finalAccountBalance with date/time "%s"', $date->toIso8601String()));
 
             // 2025-10-08 replace finalAccountBalance with accountsBalancesOptimized.
