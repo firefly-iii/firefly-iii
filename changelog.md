@@ -2691,7 +2691,7 @@ problems:
 
 ## x.x.x - 20xx-xx-xx
 
-<!-- summary: If you can read this I forgot to update the summary! -->
+<!-- summary: This release fixes ... If you can read this I forgot to update the summary! -->
 
 ### Added
 
