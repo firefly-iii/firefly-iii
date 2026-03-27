@@ -474,7 +474,10 @@ trait ConvertsDataTypes
             if (!array_key_exists('current_amount', $entry)) {
                 $amount = null;
             }
-            $return[] = ['account_id' => $this->integerFromValue((string) ($entry['account_id'] ?? '0')), 'current_amount' => $amount];
+            $return[] = [
+                'account_id' => $this->integerFromValue((string) ($entry['account_id'] ?? '0')),
+                'current_amount' => $amount
+            ];
         }
 
         return $return;
