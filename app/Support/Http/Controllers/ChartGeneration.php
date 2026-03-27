@@ -60,47 +60,48 @@ trait ChartGeneration
             return $cache->get();
         }
         Log::debug('Regenerate chart.account.account-balance-chart from scratch.');
-        $locale    = Steam::getLocale();
-        $converter = new ExchangeRateConverter();
+        $locale           = Steam::getLocale();
+        $converter        = new ExchangeRateConverter();
+
         /** @var GeneratorInterface $generator */
-        $generator = app(GeneratorInterface::class);
+        $generator        = app(GeneratorInterface::class);
 
         /** @var AccountRepositoryInterface $accountRepos */
-        $accountRepos = app(AccountRepositoryInterface::class);
+        $accountRepos     = app(AccountRepositoryInterface::class);
 
-        $primary   = Amount::getPrimaryCurrency();
-        $chartData = [];
+        $primary          = Amount::getPrimaryCurrency();
+        $chartData        = [];
 
         Log::debug(sprintf('Start of accountBalanceChart(list, %s, %s)', $start->format('Y-m-d H:i:s'), $end->format('Y-m-d H:i:s')));
 
         /** @var Account $account */
         foreach ($accounts as $account) {
             Log::debug(sprintf('Now at account #%d ("%s)', $account->id, $account->name));
-            $currency = $accountRepos->getAccountCurrency($account) ?? $primary;
-            $currentSet = ['label' => $account->name, 'currency_symbol' => $currency->symbol, 'entries' => []];
+            $currency     = $accountRepos->getAccountCurrency($account) ?? $primary;
+            $currentSet   = ['label' => $account->name, 'currency_symbol' => $currency->symbol, 'entries' => []];
 
             $currentStart = clone $start;
             $range        = Steam::finalAccountBalanceInRange($account, clone $start, clone $end, $this->convertToPrimary);
             $previous     = array_values($range)[0];
             Log::debug(sprintf('Start balance for account #%d ("%s) is', $account->id, $account->name), $previous);
             while ($currentStart <= $end) {
-                $format             = $currentStart->format('Y-m-d');
-                $label              = trim($currentStart->isoFormat((string)trans('config.month_and_day_js', [], $locale)));
-                $balance            = $range[$format] ?? $previous;
-                $converted = $balance['balance'] ?? '0';
+                $format                        = $currentStart->format('Y-m-d');
+                $label                         = trim($currentStart->isoFormat((string) trans('config.month_and_day_js', [], $locale)));
+                $balance                       = $range[$format] ?? $previous;
+                $converted                     = $balance['balance'] ?? '0';
 
                 // convert balance if necessary:
                 if ($convertToPrimary) {
                     $converted = $converter->convert($currency, $primary, $currentStart, $balance['balance']);
                 }
 
-                $previous = $balance;
+                $previous                      = $balance;
                 $currentStart->addDay();
                 $currentSet['entries'][$label] = $converted;
             }
-            $chartData[] = $currentSet;
+            $chartData[]  = $currentSet;
         }
-        $data = $generator->multiSet($chartData);
+        $data             = $generator->multiSet($chartData);
         $cache->store($data);
 
         return $data;

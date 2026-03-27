@@ -111,6 +111,11 @@ class JournalUpdateService
         $this->transactionGroupRepository = app(TransactionGroupRepositoryInterface::class);
     }
 
+    public function getTransactionJournal(): ?TransactionJournal
+    {
+        return $this->transactionJournal;
+    }
+
     public function isCompareHashChanged(): bool
     {
         Log::debug(sprintf('Now in %s', __METHOD__));
@@ -195,13 +200,6 @@ class JournalUpdateService
         $this->transactionJournal->refresh();
         Log::debug('Done with update journal routine');
     }
-
-    public function getTransactionJournal(): ?TransactionJournal
-    {
-        return $this->transactionJournal;
-    }
-
-
 
     /**
      * Get destination transaction.
