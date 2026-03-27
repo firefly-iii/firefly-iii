@@ -196,6 +196,13 @@ class JournalUpdateService
         Log::debug('Done with update journal routine');
     }
 
+    public function getTransactionJournal(): ?TransactionJournal
+    {
+        return $this->transactionJournal;
+    }
+
+
+
     /**
      * Get destination transaction.
      */

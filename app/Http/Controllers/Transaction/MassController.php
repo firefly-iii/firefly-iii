@@ -170,7 +170,7 @@ final class MassController extends Controller
      */
     public function update(MassEditJournalRequest $request): RedirectResponse
     {
-        $journalIds = $request->get('journals');
+        $journalIds = $request->input('journals');
         if (!is_array($journalIds)) {
             // TODO this is a weird error, should be caught.
             throw new FireflyException('This is not an array.');
@@ -250,6 +250,8 @@ final class MassController extends Controller
     private function updateJournal(int $journalId, MassEditJournalRequest $request): void
     {
         $journal = $this->repository->find($journalId);
+        $objects = TransactionGroupEventObjects::collectFromTransactionGroup($journal->transactionGroup);
+
         if (!$journal instanceof TransactionJournal) {
             throw new FireflyException(sprintf('Trying to edit non-existent or deleted journal #%d', $journalId));
         }
@@ -274,8 +276,9 @@ final class MassController extends Controller
         // call service to update.
         $service->setData($data);
         $service->update();
+        $updated = $service->getTransactionJournal();
+        $objects->appendFromTransactionGroup($updated->transactionGroup);
         $flags   = new TransactionGroupEventFlags();
-        $objects = TransactionGroupEventObjects::collectFromTransactionGroup($journal->transactionGroup);
         event(new UpdatedSingleTransactionGroup($flags, $objects));
         event(new WebhookMessagesRequestSending());
     }
