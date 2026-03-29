@@ -41,7 +41,7 @@ class ProcessesUpdatedTransactionGroup
     {
         Log::debug(sprintf('Now handling event %s', get_class($event)));
         $effect = $this->unifyAccounts($event);
-
+        Log::debug(sprintf('Effect of unifyAccounts = %d', $effect));
         Log::debug(sprintf('Transaction journal count is %d', $event->objects->transactionJournals->count()));
         if (!$event->flags->applyRules) {
             Log::debug(sprintf('Will NOT process rules for %d journal(s)', $event->objects->transactionJournals->count()));
