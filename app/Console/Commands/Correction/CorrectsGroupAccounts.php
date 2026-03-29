@@ -70,6 +70,7 @@ class CorrectsGroupAccounts extends Command
         event(new UpdatedSingleTransactionGroup($flags, $objects));
         event(new WebhookMessagesRequestSending());
         Log::debug('End of correction:group-accounts');
+
         return 0;
     }
 }

@@ -1,4 +1,7 @@
 <?php
+
+declare(strict_types=1);
+
 /*
  * IsEnoughInAccounts.php
  * Copyright (c) 2026 james@firefly-iii.org
@@ -26,40 +29,44 @@ use FireflyIII\Models\PiggyBank;
 use FireflyIII\Repositories\Account\AccountRepositoryInterface;
 use FireflyIII\Repositories\PiggyBank\PiggyBankRepositoryInterface;
 use Illuminate\Contracts\Validation\ValidationRule;
+use Override;
 
 class IsEnoughInAccounts implements ValidationRule
 {
     public function __construct(
         private readonly PiggyBank $piggyBank,
-        private readonly array     $data
+        private readonly array $data
     ) {}
 
-
-    #[\Override]
+    #[Override]
     public function validate(string $attribute, mixed $value, Closure $fail): void
     {
         // TODO: Implement validate() method.
         if (!array_key_exists('accounts', $this->data)) {
             return;
         }
+
         /** @var AccountRepositoryInterface $repository */
         $repository = app(AccountRepositoryInterface::class);
+
         /** @var PiggyBankRepositoryInterface $piggyRepos */
         $piggyRepos = app(PiggyBankRepositoryInterface::class);
 
-        $accounts = $this->data['accounts'];
+        $accounts   = $this->data['accounts'];
         foreach ($accounts as $info) {
-            $account = $repository->find((int)$info['account_id']);
+            $account = $repository->find((int) $info['account_id']);
             $amount  = $info['current_amount'] ?? '0';
             if (null === $account) {
                 $fail('validation.no_asset_account')->translate();
+
                 return;
             }
             if ('' === $amount || 0 === bccomp($amount, '0')) {
                 $fail('validation.more_than_zero_correct')->translate();
+
                 return;
             }
-            $diff = bcsub($amount, $piggyRepos->getCurrentAmount($this->piggyBank, $account));
+            $diff    = bcsub($amount, $piggyRepos->getCurrentAmount($this->piggyBank, $account));
             if (1 === bccomp($diff, '0') && !$piggyRepos->canAddAmount($this->piggyBank, $account, $amount)) {
                 $fail('validation.cannot_add_piggy_amount')->translate();
             }

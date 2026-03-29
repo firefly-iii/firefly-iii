@@ -475,8 +475,8 @@ trait ConvertsDataTypes
                 $amount = null;
             }
             $return[] = [
-                'account_id' => $this->integerFromValue((string) ($entry['account_id'] ?? '0')),
-                'current_amount' => $amount
+                'account_id'     => $this->integerFromValue((string) ($entry['account_id'] ?? '0')),
+                'current_amount' => $amount,
             ];
         }
 

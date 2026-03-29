@@ -1009,16 +1009,16 @@
         },
         {
             "name": "firebase/php-jwt",
-            "version": "v7.0.3",
+            "version": "v7.0.4",
             "source": {
                 "type": "git",
                 "url": "https://github.com/firebase/php-jwt.git",
-                "reference": "28aa0694bcfdfa5e2959c394d5a1ee7a5083629e"
+                "reference": "e41f1bd7dbe3c5455c3f72d4338cfeb083b71931"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/firebase/php-jwt/zipball/28aa0694bcfdfa5e2959c394d5a1ee7a5083629e",
-                "reference": "28aa0694bcfdfa5e2959c394d5a1ee7a5083629e",
+                "url": "https://api.github.com/repos/firebase/php-jwt/zipball/e41f1bd7dbe3c5455c3f72d4338cfeb083b71931",
+                "reference": "e41f1bd7dbe3c5455c3f72d4338cfeb083b71931",
                 "shasum": ""
             },
             "require": {
@@ -1026,6 +1026,7 @@
             },
             "require-dev": {
                 "guzzlehttp/guzzle": "^7.4",
+                "phpfastcache/phpfastcache": "^9.2",
                 "phpspec/prophecy-phpunit": "^2.0",
                 "phpunit/phpunit": "^9.5",
                 "psr/cache": "^2.0||^3.0",
@@ -1066,9 +1067,9 @@
             ],
             "support": {
                 "issues": "https://github.com/firebase/php-jwt/issues",
-                "source": "https://github.com/firebase/php-jwt/tree/v7.0.3"
+                "source": "https://github.com/firebase/php-jwt/tree/v7.0.4"
             },
-            "time": "2026-02-25T22:16:40+00:00"
+            "time": "2026-03-27T21:17:19+00:00"
         },
         {
             "name": "fruitcake/php-cors",
@@ -10173,22 +10174,22 @@
         },
         {
             "name": "cloudcreativity/json-api-testing",
-            "version": "v6.2.0",
+            "version": "v6.3.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/cloudcreativity/json-api-testing.git",
-                "reference": "bb2ff0a87013d40781ca7f959023491d6f1b4ed2"
+                "reference": "c6f1460dae648a28217b182195f8ca4ed0ee9bd5"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/cloudcreativity/json-api-testing/zipball/bb2ff0a87013d40781ca7f959023491d6f1b4ed2",
-                "reference": "bb2ff0a87013d40781ca7f959023491d6f1b4ed2",
+                "url": "https://api.github.com/repos/cloudcreativity/json-api-testing/zipball/c6f1460dae648a28217b182195f8ca4ed0ee9bd5",
+                "reference": "c6f1460dae648a28217b182195f8ca4ed0ee9bd5",
                 "shasum": ""
             },
             "require": {
                 "ext-json": "*",
-                "illuminate/contracts": "^10.0|^11.0|^12.0",
-                "illuminate/support": "^10.0|^11.0|^12.0",
+                "illuminate/contracts": "^10.0|^11.0|^12.0|^13.0",
+                "illuminate/support": "^10.0|^11.0|^12.0|^13.0",
                 "php": "^8.2",
                 "phpunit/phpunit": "^10.5|^11.0|^12.0"
             },
@@ -10225,9 +10226,9 @@
             ],
             "support": {
                 "issues": "https://github.com/cloudcreativity/json-api/issues",
-                "source": "https://github.com/cloudcreativity/json-api-testing/tree/v6.2.0"
+                "source": "https://github.com/cloudcreativity/json-api-testing/tree/v6.3.0"
             },
-            "time": "2025-04-09T19:15:46+00:00"
+            "time": "2026-03-28T18:04:28+00:00"
         },
         {
             "name": "composer/class-map-generator",
@@ -10835,28 +10836,28 @@
         },
         {
             "name": "laravel-json-api/testing",
-            "version": "v3.1.0",
+            "version": "v3.2.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/laravel-json-api/testing.git",
-                "reference": "bbf3b31b977955eff93c47ff101c4a134a3ffa8f"
+                "reference": "506d434a47ebd9bcc7dfca0096c63b79d28427a8"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/laravel-json-api/testing/zipball/bbf3b31b977955eff93c47ff101c4a134a3ffa8f",
-                "reference": "bbf3b31b977955eff93c47ff101c4a134a3ffa8f",
+                "url": "https://api.github.com/repos/laravel-json-api/testing/zipball/506d434a47ebd9bcc7dfca0096c63b79d28427a8",
+                "reference": "506d434a47ebd9bcc7dfca0096c63b79d28427a8",
                 "shasum": ""
             },
             "require": {
-                "cloudcreativity/json-api-testing": "^6.1",
+                "cloudcreativity/json-api-testing": "^6.3",
                 "ext-json": "*",
-                "illuminate/http": "^11.0|^12.0",
-                "illuminate/support": "^11.0|^12.0",
-                "illuminate/testing": "^11.0|^12.0",
+                "illuminate/http": "^11.0|^12.0|^13.0",
+                "illuminate/support": "^11.0|^12.0|^13.0",
+                "illuminate/testing": "^11.0|^12.0|^13.0",
                 "php": "^8.2"
             },
             "require-dev": {
-                "laravel/framework": "^11.0|^12.0",
+                "laravel/framework": "^11.0|^12.0|^13.0",
                 "phpunit/phpunit": "^10.5|^11.0"
             },
             "type": "library",
@@ -10881,7 +10882,7 @@
                 },
                 {
                     "name": "Christopher Gammie",
-                    "email": "contact@gammie.co.uk"
+                    "email": "chris@cloudcreativity.co.uk"
                 }
             ],
             "description": "Test helpers for JSON:API compliant APIs.",
@@ -10894,9 +10895,9 @@
             ],
             "support": {
                 "issues": "https://github.com/laravel-json-api/testing/issues",
-                "source": "https://github.com/laravel-json-api/testing/tree/v3.1.0"
+                "source": "https://github.com/laravel-json-api/testing/tree/v3.2.0"
             },
-            "time": "2025-02-24T20:39:08+00:00"
+            "time": "2026-03-28T18:06:47+00:00"
         },
         {
             "name": "mockery/mockery",

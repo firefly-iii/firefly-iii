@@ -135,8 +135,9 @@ class PiggyBankFactory
                 $diff                     = bcsub($info['current_amount'], $previous);
 
                 // if money is added, check if we can!
-                if(1 === bccomp($diff, '0') && !$this->piggyBankRepository->canAddAmount($piggyBank, $account, $diff)) {
+                if (1 === bccomp($diff, '0') && !$this->piggyBankRepository->canAddAmount($piggyBank, $account, $diff)) {
                     Log::debug(sprintf('Cannot add amount %s to piggy bank #%d ("%s")', $diff, $piggyBank->id, $piggyBank->name));
+
                     continue;
                 }
 

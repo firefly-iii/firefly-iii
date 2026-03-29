@@ -52,6 +52,7 @@ interface PiggyBankRepositoryInterface
     public function addAmountToPiggyBank(PiggyBank $piggyBank, string $amount, TransactionJournal $journal): void;
 
     public function canAddAmount(PiggyBank $piggyBank, Account $account, string $amount): bool;
+
     public function canRemoveAmount(PiggyBank $piggyBank, Account $account, string $amount): bool;
 
     /**
