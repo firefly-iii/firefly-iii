@@ -116,13 +116,25 @@ class ProcessesUpdatedTransactionGroup
         $destAccount   = $first->transactions()->where('amount', '>', '0')->first()->account;
 
         $type          = $first->transactionType->type;
+        $effect = 0;
         if (TransactionTypeEnum::TRANSFER->value === $type || TransactionTypeEnum::WITHDRAWAL->value === $type) {
             // set all source transactions to source account:
-            Transaction::whereIn('transaction_journal_id', $all)->where('amount', '<', 0)->update(['account_id' => $sourceAccount->id]);
+            $effect += Transaction::whereIn('transaction_journal_id', $all)
+                                  ->where('account_id', '!=', $sourceAccount->id)
+                                  ->where('amount', '<', 0)
+                                  ->update(['account_id' => $sourceAccount->id]);
         }
         if (TransactionTypeEnum::TRANSFER->value === $type || TransactionTypeEnum::DEPOSIT->value === $type) {
             // set all destination transactions to destination account:
-            Transaction::whereIn('transaction_journal_id', $all)->where('amount', '>', 0)->update(['account_id' => $destAccount->id]);
+            $effect += Transaction::whereIn('transaction_journal_id', $all)
+                ->where('account_id', '!=', $destAccount->id)
+                                  ->where('amount', '>', 0)
+                                  ->update(['account_id' => $destAccount->id]);
         }
+        if(0 === $effect) {
+            Log::debug(sprintf('Had nothing to do in unifyAccounts(#%d)', $group->id));
+            return;
+        }
+        Log::debug(sprintf('Updated %d transaction(s) in unifyAccounts(#%d)', $effect, $group->id));
     }
 }
