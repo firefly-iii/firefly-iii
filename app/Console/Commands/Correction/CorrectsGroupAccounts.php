@@ -61,6 +61,7 @@ class CorrectsGroupAccounts extends Command
         $flags->applyRules        = false;
         $flags->fireWebhooks      = false;
         $flags->recalculateCredit = true;
+        $flags->unifyOnly         = true;
         $objects                  = new TransactionGroupEventObjects();
         foreach ($groups as $groupId) {
             $group = TransactionGroup::find($groupId);

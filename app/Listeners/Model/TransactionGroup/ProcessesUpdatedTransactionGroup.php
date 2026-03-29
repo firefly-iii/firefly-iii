@@ -40,7 +40,7 @@ class ProcessesUpdatedTransactionGroup
     public function handle(UpdatedSingleTransactionGroup $event): void
     {
         Log::debug(sprintf('Now handling event %s', get_class($event)));
-        $this->unifyAccounts($event);
+        $effect = $this->unifyAccounts($event);
 
         Log::debug(sprintf('Transaction journal count is %d', $event->objects->transactionJournals->count()));
         if (!$event->flags->applyRules) {
@@ -63,7 +63,14 @@ class ProcessesUpdatedTransactionGroup
             $this->createWebhookMessages($event->objects->transactionGroups, WebhookTrigger::UPDATE_TRANSACTION);
         }
         $this->removePeriodStatistics($event->objects);
-        $this->recalculateRunningBalance($event->objects);
+        if (0 === $effect && true === $event->flags->unifyOnly) {
+            Log::debug('Effect = 0, will not recalculate running balance.');
+        }
+        if (0 !== $effect || false === $event->flags->unifyOnly) {
+            Log::debug(sprintf('Effect is != 0 (%d) OR unifyOnly = false, will recalc running balance', $effect));
+            $this->recalculateRunningBalance($event->objects);
+        }
+
 
         Log::debug('Done with handle() for UpdatedSingleTransactionGroup');
     }
@@ -71,73 +78,73 @@ class ProcessesUpdatedTransactionGroup
     /**
      * This method will make sure all source / destination accounts are the same.
      */
-    protected function unifyAccounts(UpdatedSingleTransactionGroup $updatedGroupEvent): void
+    protected function unifyAccounts(UpdatedSingleTransactionGroup $updatedGroupEvent): int
     {
         Log::debug('Now in unifyAccounts()');
+        $effect = 0;
 
         /** @var TransactionGroup $group */
         foreach ($updatedGroupEvent->objects->transactionGroups as $group) {
-            $this->unifyAccountsForGroup($group);
+            $effect += $this->unifyAccountsForGroup($group);
         }
-        Log::debug('Done with unifyAccounts()');
+        Log::debug(sprintf('Done with unifyAccounts(%d)', $effect));
+        return $effect;
     }
 
-    private function unifyAccountsForGroup(TransactionGroup $group): void
+    private function unifyAccountsForGroup(TransactionGroup $group): int
     {
         if (1 === $group->transactionJournals->count()) {
             Log::debug('Nothing to do in unifyAccounts()');
 
-            return;
+            return 0;
         }
 
         // first journal:
         /** @var null|TransactionJournal $first */
-        $first         = $group
+        $first = $group
             ->transactionJournals()
             ->orderBy('transaction_journals.date', 'DESC')
             ->orderBy('transaction_journals.order', 'ASC')
             ->orderBy('transaction_journals.id', 'DESC')
             ->orderBy('transaction_journals.description', 'DESC')
-            ->first()
-        ;
+            ->first();
 
         if (null === $first) {
             Log::warning(sprintf('Group #%d has no transaction journals.', $group->id));
 
-            return;
+            return 0;
         }
 
-        $all           = $group->transactionJournals()->get()->pluck('id')->toArray();
+        $all = $group->transactionJournals()->get()->pluck('id')->toArray();
 
         /** @var Account $sourceAccount */
         $sourceAccount = $first->transactions()->where('amount', '<', '0')->first()->account;
 
         /** @var Account $destAccount */
-        $destAccount   = $first->transactions()->where('amount', '>', '0')->first()->account;
+        $destAccount = $first->transactions()->where('amount', '>', '0')->first()->account;
 
-        $type          = $first->transactionType->type;
-        $effect        = 0;
+        $type   = $first->transactionType->type;
+        $effect = 0;
         if (TransactionTypeEnum::TRANSFER->value === $type || TransactionTypeEnum::WITHDRAWAL->value === $type) {
             // set all source transactions to source account:
             $effect += Transaction::whereIn('transaction_journal_id', $all)
-                ->where('account_id', '!=', $sourceAccount->id)
-                ->where('amount', '<', 0)
-                ->update(['account_id' => $sourceAccount->id])
-            ;
+                                  ->where('account_id', '!=', $sourceAccount->id)
+                                  ->where('amount', '<', 0)
+                                  ->update(['account_id' => $sourceAccount->id]);
         }
         if (TransactionTypeEnum::TRANSFER->value === $type || TransactionTypeEnum::DEPOSIT->value === $type) {
             // set all destination transactions to destination account:
             $effect += Transaction::whereIn('transaction_journal_id', $all)
-                ->where('account_id', '!=', $destAccount->id)
-                ->where('amount', '>', 0)
-                ->update(['account_id' => $destAccount->id])
-            ;
+                                  ->where('account_id', '!=', $destAccount->id)
+                                  ->where('amount', '>', 0)
+                                  ->update(['account_id' => $destAccount->id]);
         }
         if (0 === $effect) {
             Log::debug(sprintf('Had nothing to do in unifyAccounts(#%d)', $group->id));
 
-            return;
+            return 0;
         }
         Log::debug(sprintf('Updated %d transaction(s) in unifyAccounts(#%d)', $effect, $group->id));
+        return $effect;
     }
 }
