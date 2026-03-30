@@ -30,6 +30,7 @@ use FireflyIII\Models\Account;
 use FireflyIII\Models\Bill;
 use FireflyIII\Models\Budget;
 use FireflyIII\Models\Category;
+use FireflyIII\Models\Note;
 use FireflyIII\Models\Recurrence;
 use FireflyIII\Models\Rule;
 use FireflyIII\Models\RuleGroup;
@@ -84,6 +85,9 @@ final class PurgeController extends Controller
 
         // rules
         Rule::whereUserId($user->id)->onlyTrashed()->forceDelete();
+
+        // notes (this will actually purge EVERYBODY's deleted notes)
+        Note::onlyTrashed()->forceDelete();
 
         // recurring transactions
         Recurrence::whereUserId($user->id)->onlyTrashed()->forceDelete();
