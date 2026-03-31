@@ -72,7 +72,7 @@ trait ValidatesAutoBudgetRequest
             $validator->errors()->add('auto_budget_amount', (string) trans('validation.require_currency_info'));
         }
         // too big amount
-        if ((int) $amount > 268_435_456) {
+        if ((int) $amount > 2_147_483_647) {
             $validator->errors()->add('auto_budget_amount', (string) trans('validation.amount_required_for_auto_budget'));
         }
     }

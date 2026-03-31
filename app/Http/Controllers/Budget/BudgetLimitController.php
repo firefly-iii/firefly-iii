@@ -172,8 +172,8 @@ final class BudgetLimitController extends Controller
             // return empty array:
             return response()->json([]);
         }
-        if ((int) $amount > 268_435_456) { // intentional cast to integer
-            $amount = '268435456';
+        if ((int) $amount > 2_147_483_647) { // intentional cast to integer
+            $amount = '2147483647';
         }
         if (-1 === bccomp($amount, '0')) {
             $amount = bcmul($amount, '-1');
@@ -232,8 +232,8 @@ final class BudgetLimitController extends Controller
         if ('' === $amount) {
             $amount = '0';
         }
-        if ((int) $amount > 268_435_456) { // 268 million, intentional integer
-            $amount = '268435456';
+        if ((int) $amount > 2_147_483_647) { // 268 million, intentional integer
+            $amount = '2147483647';
         }
         // sanity check on amount:
         if (0 === bccomp($amount, '0')) {
