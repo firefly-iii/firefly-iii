@@ -472,7 +472,7 @@ export default {
             let result = {
                 transaction_journal_id: transaction.transaction_journal_id,
                 description: transaction.description,
-                date: transaction.date.substring(0, 16),
+                date: moment(transaction.date).format().substring(0, 16),
                 reconciled: transaction.reconciled,
                 amount: this.roundNumber(this.positiveAmount(transaction.amount), transaction.currency_decimal_places),
                 category: transaction.category_name,
