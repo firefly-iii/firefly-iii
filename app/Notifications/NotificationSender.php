@@ -40,10 +40,11 @@ class NotificationSender
         // ::locale($user->locale))
         $lang = config('firefly.default_language');
         Log::debug(sprintf('Notification send language defaults to "%s"', $lang));
-        if($user instanceof User) {
+        if ($user instanceof User) {
             $lang = Preferences::getForUser($user, 'language', $lang)->data;
             Log::debug(sprintf('Notification send language set to "%s"', $lang));
         }
+
         try {
             NotificationFacade::locale($lang)->send($user, $notification);
         } catch (ClientException $e) {
