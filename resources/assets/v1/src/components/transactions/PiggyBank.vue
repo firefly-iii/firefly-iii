@@ -81,6 +81,9 @@ export default {
             let currentPiggy = res.data[key];
             if (null !== currentPiggy.object_group_id) {
               let groupOrder = currentPiggy.object_group_order;
+              if(0 === groupOrder) {
+                  groupOrder = 1;
+              }
               if (!tempList[groupOrder]) {
                 tempList[groupOrder] = {
                   group: {
