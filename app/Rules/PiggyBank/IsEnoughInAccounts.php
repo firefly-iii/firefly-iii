@@ -62,9 +62,7 @@ class IsEnoughInAccounts implements ValidationRule
                 return;
             }
             if ('' === $amount || 0 === bccomp($amount, '0')) {
-                $fail('validation.more_than_zero_correct')->translate();
-
-                return;
+                continue;
             }
             $diff    = bcsub($amount, $piggyRepos->getCurrentAmount($this->piggyBank, $account));
             if (1 === bccomp($diff, '0') && !$piggyRepos->canAddAmount($this->piggyBank, $account, $amount)) {
