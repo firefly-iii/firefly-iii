@@ -48,11 +48,9 @@ class UserTestNotificationEmail extends Notification
     public function toMail(User $notifiable): MailMessage
     {
         $address = (string) $notifiable->email;
+        $link      = route('index');
 
-        return new MailMessage()
-            ->markdown('emails.admin-test', ['email' => $address])
-            ->subject((string) trans('email.admin_test_subject'))
-        ;
+        return new MailMessage()->markdown('emails.admin-test', ['email' => $address, 'link' => $link   ])->subject((string) trans('email.admin_test_subject'));
     }
 
     /**
