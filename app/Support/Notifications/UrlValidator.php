@@ -34,6 +34,7 @@ class UrlValidator
         return
             str_starts_with($url, 'https://hooks.slack.com/services/')
             || str_starts_with($url, 'https://discord.com/api/webhooks/')
+            || str_starts_with($url, 'https://discordapp.com/api/webhooks/')
             || str_ends_with($url, '/slack');
     }
 }
