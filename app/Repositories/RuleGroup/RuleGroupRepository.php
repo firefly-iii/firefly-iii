@@ -115,20 +115,12 @@ class RuleGroupRepository implements RuleGroupRepositoryInterface, UserGroupInte
     public function findByTitle(string $title): ?RuleGroup
     {
         /** @var null|RuleGroup */
-        return $this->user
-            ->ruleGroups()
-            ->where('title', $title)
-            ->first()
-        ;
+        return $this->user->ruleGroups()->where('title', $title)->first();
     }
 
     public function get(): Collection
     {
-        return $this->user
-            ->ruleGroups()
-            ->orderBy('order', 'ASC')
-            ->get()
-        ;
+        return $this->user->ruleGroups()->orderBy('order', 'ASC')->get();
     }
 
     public function getActiveGroups(): Collection
@@ -278,11 +270,7 @@ class RuleGroupRepository implements RuleGroupRepositoryInterface, UserGroupInte
 
     public function maxOrder(): int
     {
-        return (int) $this->user
-            ->ruleGroups()
-            ->where('active', true)
-            ->max('order')
-        ;
+        return (int) $this->user->ruleGroups()->where('active', true)->max('order');
     }
 
     public function resetOrder(): bool

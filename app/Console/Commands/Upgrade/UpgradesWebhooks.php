@@ -104,11 +104,7 @@ class UpgradesWebhooks extends Command
 
     private function upgradeWebhooks(): void
     {
-        $set = Webhook::where('delivery', '>', 1)
-            ->orWhere('trigger', '>', 1)
-            ->orWhere('response', '>', 1)
-            ->get()
-        ;
+        $set = Webhook::where('delivery', '>', 1)->orWhere('trigger', '>', 1)->orWhere('response', '>', 1)->get();
 
         /** @var Webhook $webhook */
         foreach ($set as $webhook) {

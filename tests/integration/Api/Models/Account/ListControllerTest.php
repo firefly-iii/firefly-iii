@@ -68,11 +68,7 @@ final class ListControllerTest extends TestCase
         $this->user    = $this->createAuthenticatedUser();
         $this->actingAs($this->user);
 
-        $this->account = Account::factory()
-            ->for($this->user)
-            ->withType(AccountTypeEnum::ASSET)
-            ->create()
-        ;
+        $this->account = Account::factory()->for($this->user)->withType(AccountTypeEnum::ASSET)->create();
         app(AttachmentFactory::class)
             ->setUser($this->user)
             ->create([

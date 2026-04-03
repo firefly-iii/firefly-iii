@@ -155,12 +155,7 @@ class CurrencyRepository implements CurrencyRepositoryInterface, UserGroupInterf
         }
 
         // is the default currency for the user or the system
-        $count            = $this->userGroup
-            ->currencies()
-            ->where('transaction_currencies.id', $currency->id)
-            ->wherePivot('group_default', 1)
-            ->count()
-        ;
+        $count            = $this->userGroup->currencies()->where('transaction_currencies.id', $currency->id)->wherePivot('group_default', 1)->count();
         if ($count > 0) {
             Log::info('Is the default currency of the user, return true.');
 
@@ -168,12 +163,7 @@ class CurrencyRepository implements CurrencyRepositoryInterface, UserGroupInterf
         }
 
         // is the default currency for the user or the system
-        $count            = $this->userGroup
-            ->currencies()
-            ->where('transaction_currencies.id', $currency->id)
-            ->wherePivot('group_default', 1)
-            ->count()
-        ;
+        $count            = $this->userGroup->currencies()->where('transaction_currencies.id', $currency->id)->wherePivot('group_default', 1)->count();
         if ($count > 0) {
             Log::info('Is the default currency of the user group, return true.');
 
@@ -298,12 +288,7 @@ class CurrencyRepository implements CurrencyRepositoryInterface, UserGroupInterf
 
     public function get(): Collection
     {
-        $all = $this->userGroup
-            ->currencies()
-            ->orderBy('code', 'ASC')
-            ->withPivot(['group_default'])
-            ->get()
-        ;
+        $all = $this->userGroup->currencies()->orderBy('code', 'ASC')->withPivot(['group_default'])->get();
         $all->map(static function (TransactionCurrency $current): TransactionCurrency {
             $current->userGroupEnabled = true;
             $current->userGroupNative  = 1 === (int) $current->pivot->group_default;

@@ -87,11 +87,7 @@ class BillRepository implements BillRepositoryInterface, UserGroupInterface
      */
     public function correctOrder(): void
     {
-        $set     = $this->user
-            ->bills()
-            ->orderBy('order', 'ASC')
-            ->get()
-        ;
+        $set     = $this->user->bills()->orderBy('order', 'ASC')->get();
         $current = 1;
         foreach ($set as $bill) {
             if ($bill->order !== $current) {
@@ -110,12 +106,7 @@ class BillRepository implements BillRepositoryInterface, UserGroupInterface
         if (null === $withdrawal) {
             return;
         }
-        $this->user
-            ->transactionJournals()
-            ->whereNotNull('bill_id')
-            ->where('transaction_type_id', '!=', $withdrawal->id)
-            ->update(['bill_id' => null])
-        ;
+        $this->user->transactionJournals()->whereNotNull('bill_id')->where('transaction_type_id', '!=', $withdrawal->id)->update(['bill_id' => null]);
     }
 
     public function destroy(Bill $bill): bool
@@ -174,11 +165,7 @@ class BillRepository implements BillRepositoryInterface, UserGroupInterface
     public function findByName(string $name): ?Bill
     {
         /** @var null|Bill */
-        return $this->user
-            ->bills()
-            ->where('name', $name)
-            ->first(['bills.*'])
-        ;
+        return $this->user->bills()->where('name', $name)->first(['bills.*']);
     }
 
     public function getActiveBills(): Collection
@@ -261,11 +248,7 @@ class BillRepository implements BillRepositoryInterface, UserGroupInterface
      */
     public function getByIds(array $billIds): Collection
     {
-        return $this->user
-            ->bills()
-            ->whereIn('id', $billIds)
-            ->get()
-        ;
+        return $this->user->bills()->whereIn('id', $billIds)->get();
     }
 
     /**
@@ -329,12 +312,7 @@ class BillRepository implements BillRepositoryInterface, UserGroupInterface
 
     public function getPaginator(int $size): LengthAwarePaginator
     {
-        return $this->user
-            ->bills()
-            ->orderBy('active', 'DESC')
-            ->orderBy('name', 'ASC')
-            ->paginate($size)
-        ;
+        return $this->user->bills()->orderBy('active', 'DESC')->orderBy('name', 'ASC')->paginate($size);
     }
 
     /**
@@ -726,11 +704,7 @@ class BillRepository implements BillRepositoryInterface, UserGroupInterface
 
     public function unlinkAll(Bill $bill): void
     {
-        $this->user
-            ->transactionJournals()
-            ->where('bill_id', $bill->id)
-            ->update(['bill_id' => null])
-        ;
+        $this->user->transactionJournals()->where('bill_id', $bill->id)->update(['bill_id' => null]);
     }
 
     /**

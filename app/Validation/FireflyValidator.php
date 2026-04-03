@@ -109,11 +109,7 @@ class FireflyValidator extends Validator
         if (0 === (int) $value) {
             return true;
         }
-        $count = DB::table($parameters[0])
-            ->where('user_id', auth()->user()->id)
-            ->where($field, $value)
-            ->count()
-        ;
+        $count = DB::table($parameters[0])->where('user_id', auth()->user()->id)->where($field, $value)->count();
 
         return 1 === $count;
     }
@@ -634,11 +630,7 @@ class FireflyValidator extends Validator
      */
     public function validateUniqueCurrency(string $field, string $attribute, string $value): bool
     {
-        return 0 === DB::table('transaction_currencies')
-            ->where($field, $value)
-            ->whereNull('deleted_at')
-            ->count()
-        ;
+        return 0 === DB::table('transaction_currencies')->where($field, $value)->whereNull('deleted_at')->count();
     }
 
     /**

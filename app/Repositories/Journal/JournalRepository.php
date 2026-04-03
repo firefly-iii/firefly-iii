@@ -130,11 +130,7 @@ class JournalRepository implements JournalRepositoryInterface, UserGroupInterfac
     public function firstNull(): ?TransactionJournal
     {
         /** @var null|TransactionJournal */
-        return $this->user
-            ->transactionJournals()
-            ->orderBy('date', 'ASC')
-            ->first(['transaction_journals.*'])
-        ;
+        return $this->user->transactionJournals()->orderBy('date', 'ASC')->first(['transaction_journals.*']);
     }
 
     #[Override]
@@ -183,11 +179,7 @@ class JournalRepository implements JournalRepositoryInterface, UserGroupInterfac
     public function getLast(): ?TransactionJournal
     {
         /** @var null|TransactionJournal */
-        return $this->user
-            ->transactionJournals()
-            ->orderBy('date', 'DESC')
-            ->first(['transaction_journals.*'])
-        ;
+        return $this->user->transactionJournals()->orderBy('date', 'DESC')->first(['transaction_journals.*']);
     }
 
     public function getLinkNoteText(TransactionJournalLink $link): string
@@ -241,11 +233,7 @@ class JournalRepository implements JournalRepositoryInterface, UserGroupInterfac
     #[Override]
     public function getUncompletedJournals(): Collection
     {
-        return $this->userGroup
-            ->transactionJournals()
-            ->where('completed', false)
-            ->get(['transaction_journals.*'])
-        ;
+        return $this->userGroup->transactionJournals()->where('completed', false)->get(['transaction_journals.*']);
     }
 
     #[Override]
@@ -266,11 +254,7 @@ class JournalRepository implements JournalRepositoryInterface, UserGroupInterfac
      */
     public function searchJournalDescriptions(string $search, int $limit): Collection
     {
-        $query = $this->user
-            ->transactionJournals()
-            ->orderBy('date', 'DESC')
-            ->orderBy('description', 'ASC')
-        ;
+        $query = $this->user->transactionJournals()->orderBy('date', 'DESC')->orderBy('description', 'ASC');
         if ('' !== $search) {
             $query->whereLike('description', sprintf('%%%s%%', $search));
         }
