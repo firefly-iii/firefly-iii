@@ -21,7 +21,7 @@ parameters:
     noNamedArgument:
       enabled: false
     noParameterWithContainerTypeDeclaration:
-      enabled: false
+      enabled: true
   paths:
     - ../app
     - ../database
