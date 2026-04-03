@@ -109,11 +109,7 @@ class BudgetLimitEnrichment implements EnrichmentInterface
 
     private function collectBudgets(): void
     {
-        $budgetIds  = $this->collection
-            ->pluck('budget_id')
-            ->unique()
-            ->toArray()
-        ;
+        $budgetIds  = $this->collection->pluck('budget_id')->unique()->toArray();
         $budgets    = Budget::whereIn('id', $budgetIds)->get();
 
         $repository = app(OperationsRepository::class);

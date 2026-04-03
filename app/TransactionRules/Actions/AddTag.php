@@ -75,11 +75,7 @@ class AddTag implements ActionInterface
             return false;
         }
 
-        $count   = DB::table('tag_transaction_journal')
-            ->where('tag_id', $tag->id)
-            ->where('transaction_journal_id', $journal['transaction_journal_id'])
-            ->count()
-        ;
+        $count   = DB::table('tag_transaction_journal')->where('tag_id', $tag->id)->where('transaction_journal_id', $journal['transaction_journal_id'])->count();
         if (0 === $count) {
             // add to journal:
             DB::table('tag_transaction_journal')->insert([

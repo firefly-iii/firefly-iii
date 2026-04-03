@@ -122,11 +122,7 @@ class ObjectGroupRepository implements ObjectGroupRepositoryInterface, UserGroup
 
     public function search(string $query, int $limit): Collection
     {
-        $dbQuery = $this->user
-            ->objectGroups()
-            ->orderBy('order', 'ASC')
-            ->orderBy('title', 'ASC')
-        ;
+        $dbQuery = $this->user->objectGroups()->orderBy('order', 'ASC')->orderBy('title', 'ASC');
         if ('' !== $query) {
             // split query on spaces just in case:
             $parts = explode(' ', $query);

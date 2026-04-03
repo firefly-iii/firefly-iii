@@ -163,18 +163,10 @@ class ConvertToWithdrawal implements ActionInterface
         Log::debug(sprintf('ConvertToWithdrawal. Action value is "%s", expense name is "%s"', $actionValue, $opposingName));
 
         // update source transaction(s) to be the original destination account
-        DB::table('transactions')
-            ->where('transaction_journal_id', '=', $journal->id)
-            ->where('amount', '<', 0)
-            ->update(['account_id' => $destAccount->id])
-        ;
+        DB::table('transactions')->where('transaction_journal_id', '=', $journal->id)->where('amount', '<', 0)->update(['account_id' => $destAccount->id]);
 
         // update destination transaction(s) to be new expense account.
-        DB::table('transactions')
-            ->where('transaction_journal_id', '=', $journal->id)
-            ->where('amount', '>', 0)
-            ->update(['account_id' => $opposingAccount->id])
-        ;
+        DB::table('transactions')->where('transaction_journal_id', '=', $journal->id)->where('amount', '>', 0)->update(['account_id' => $opposingAccount->id]);
 
         // change transaction type of journal:
         $newType         = TransactionType::whereType(TransactionTypeEnum::WITHDRAWAL->value)->first();
@@ -218,11 +210,7 @@ class ConvertToWithdrawal implements ActionInterface
         Log::debug(sprintf('ConvertToWithdrawal. Action value is "%s", destination name is "%s"', $actionValue, $opposingName));
 
         // update destination transaction(s) to be new expense account.
-        DB::table('transactions')
-            ->where('transaction_journal_id', '=', $journal->id)
-            ->where('amount', '>', 0)
-            ->update(['account_id' => $opposingAccount->id])
-        ;
+        DB::table('transactions')->where('transaction_journal_id', '=', $journal->id)->where('amount', '>', 0)->update(['account_id' => $opposingAccount->id]);
 
         // change transaction type of journal:
         $newType         = TransactionType::whereType(TransactionTypeEnum::WITHDRAWAL->value)->first();

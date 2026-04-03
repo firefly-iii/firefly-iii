@@ -227,11 +227,7 @@ class BudgetRepository implements BudgetRepositoryInterface, UserGroupInterface
             $budget->saveQuietly();
         }
         // other budgets, set to 0.
-        $this->user
-            ->budgets()
-            ->where('active', 0)
-            ->update(['order' => 0])
-        ;
+        $this->user->budgets()->where('active', 0)->update(['order' => 0]);
 
         return true;
     }
@@ -316,11 +312,7 @@ class BudgetRepository implements BudgetRepositoryInterface, UserGroupInterface
         $query = sprintf('%%%s%%', $name);
 
         /** @var null|Budget */
-        return $this->user
-            ->budgets()
-            ->whereLike('name', $query)
-            ->first()
-        ;
+        return $this->user->budgets()->whereLike('name', $query)->first();
     }
 
     /**
@@ -369,20 +361,10 @@ class BudgetRepository implements BudgetRepositoryInterface, UserGroupInterface
     public function getBudgets(): Collection
     {
         if (null === $this->user) {
-            return $this->userGroup
-                ->budgets()
-                ->orderBy('order', 'ASC')
-                ->orderBy('name', 'ASC')
-                ->get()
-            ;
+            return $this->userGroup->budgets()->orderBy('order', 'ASC')->orderBy('name', 'ASC')->get();
         }
 
-        return $this->user
-            ->budgets()
-            ->orderBy('order', 'ASC')
-            ->orderBy('name', 'ASC')
-            ->get()
-        ;
+        return $this->user->budgets()->orderBy('order', 'ASC')->orderBy('name', 'ASC')->get();
     }
 
     /**
@@ -390,11 +372,7 @@ class BudgetRepository implements BudgetRepositoryInterface, UserGroupInterface
      */
     public function getByIds(array $budgetIds): Collection
     {
-        return $this->user
-            ->budgets()
-            ->whereIn('id', $budgetIds)
-            ->get()
-        ;
+        return $this->user->budgets()->whereIn('id', $budgetIds)->get();
     }
 
     public function getInactiveBudgets(): Collection

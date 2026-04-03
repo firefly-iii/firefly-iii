@@ -187,11 +187,7 @@ final class ProfileController extends Controller
         /** @var User $user */
         $user           = auth()->user();
         $isInternalAuth = $this->internalAuth;
-        $count          = DB::table('oauth_clients')
-            ->where('personal_access_client', true)
-            ->whereNull('user_id')
-            ->count()
-        ;
+        $count          = DB::table('oauth_clients')->where('personal_access_client', true)->whereNull('user_id')->count();
         $subTitle       = $user->email;
         $userId         = $user->id;
         $enabled2FA     = null !== $user->mfa_secret;

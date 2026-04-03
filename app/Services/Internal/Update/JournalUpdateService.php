@@ -208,11 +208,7 @@ class JournalUpdateService
     {
         if (!$this->destinationTransaction instanceof Transaction) {
             /** @var null|Transaction $result */
-            $result                       = $this->transactionJournal
-                ->transactions()
-                ->where('amount', '>', 0)
-                ->first()
-            ;
+            $result                       = $this->transactionJournal->transactions()->where('amount', '>', 0)->first();
             $this->destinationTransaction = $result;
         }
 
@@ -260,12 +256,7 @@ class JournalUpdateService
     {
         if (!$this->sourceTransaction instanceof Transaction) {
             /** @var null|Transaction $result */
-            $result                  = $this->transactionJournal
-                ->transactions()
-                ->with(['account'])
-                ->where('amount', '<', 0)
-                ->first()
-            ;
+            $result                  = $this->transactionJournal->transactions()->with(['account'])->where('amount', '<', 0)->first();
             $this->sourceTransaction = $result;
         }
         Log::debug(sprintf('getSourceTransaction: %s', $this->sourceTransaction->amount));
@@ -418,18 +409,10 @@ class JournalUpdateService
     private function isBetweenAssetAndLiability(): bool
     {
         /** @var null|Transaction $sourceTransaction */
-        $sourceTransaction      = $this->transactionJournal
-            ->transactions()
-            ->where('amount', '<', 0)
-            ->first()
-        ;
+        $sourceTransaction      = $this->transactionJournal->transactions()->where('amount', '<', 0)->first();
 
         /** @var null|Transaction $destinationTransaction */
-        $destinationTransaction = $this->transactionJournal
-            ->transactions()
-            ->where('amount', '>', 0)
-            ->first()
-        ;
+        $destinationTransaction = $this->transactionJournal->transactions()->where('amount', '>', 0)->first();
         if (null === $sourceTransaction || null === $destinationTransaction) {
             Log::warning('Either transaction is false, stop.');
 

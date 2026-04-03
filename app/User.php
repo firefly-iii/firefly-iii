@@ -497,12 +497,7 @@ class User extends Authenticatable
         $dbRolesIds       = $dbRoles->pluck('id')->toArray();
         $dbRolesTitles    = $dbRoles->pluck('title')->toArray();
 
-        $groupMemberships = $this
-            ->groupMemberships()
-            ->whereIn('user_role_id', $dbRolesIds)
-            ->where('user_group_id', $userGroup->id)
-            ->get()
-        ;
+        $groupMemberships = $this->groupMemberships()->whereIn('user_role_id', $dbRolesIds)->where('user_group_id', $userGroup->id)->get();
         if (0 === $groupMemberships->count()) {
             Log::error(sprintf(
                 'User #%d "%s" does not have roles %s in user group #%d "%s"',

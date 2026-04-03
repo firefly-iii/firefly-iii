@@ -111,11 +111,7 @@ class CategoryRepository implements CategoryRepositoryInterface, UserGroupInterf
     public function findByName(string $name): ?Category
     {
         /** @var null|Category */
-        return $this->user
-            ->categories()
-            ->where('name', $name)
-            ->first(['categories.*'])
-        ;
+        return $this->user->categories()->where('name', $name)->first(['categories.*']);
     }
 
     /**
@@ -184,11 +180,7 @@ class CategoryRepository implements CategoryRepositoryInterface, UserGroupInterf
      */
     public function getByIds(array $categoryIds): Collection
     {
-        return $this->user
-            ->categories()
-            ->whereIn('id', $categoryIds)
-            ->get()
-        ;
+        return $this->user->categories()->whereIn('id', $categoryIds)->get();
     }
 
     /**
@@ -196,12 +188,7 @@ class CategoryRepository implements CategoryRepositoryInterface, UserGroupInterf
      */
     public function getCategories(): Collection
     {
-        return $this->user
-            ->categories()
-            ->with(['attachments'])
-            ->orderBy('name', 'ASC')
-            ->get()
-        ;
+        return $this->user->categories()->with(['attachments'])->orderBy('name', 'ASC')->get();
     }
 
     public function getNoteText(Category $category): ?string
