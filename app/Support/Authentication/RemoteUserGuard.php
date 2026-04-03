@@ -30,7 +30,6 @@ use FireflyIII\User;
 use Illuminate\Contracts\Auth\Authenticatable;
 use Illuminate\Contracts\Auth\Guard;
 use Illuminate\Contracts\Auth\UserProvider;
-use Illuminate\Contracts\Foundation\Application;
 use Illuminate\Support\Facades\App;
 use Illuminate\Support\Facades\Log;
 
@@ -39,25 +38,21 @@ use Illuminate\Support\Facades\Log;
  */
 class RemoteUserGuard implements Guard
 {
-    protected Application $application;
-    protected ?User $user = null;
-    private bool $tried   = false;
+    // protected Application $application;
+    protected ?User $user  = null;
+    private bool    $tried = false;
 
     /**
      * Create a new authentication guard.
      */
-    public function __construct(
-        protected UserProvider $provider,
-        Application $app
-    ) {
-        $app->get('request');
-        Log::debug(sprintf('Created RemoteUserGuard for %s "%s"', $app->get('request')?->getMethod(), $app->get('request')?->getRequestUri()));
-        $this->application = $app;
+    public function __construct(protected UserProvider $provider)
+    {
+        Log::debug(sprintf('Created RemoteUserGuard for %s "%s"', app()->get('request')?->getMethod(), app()->get('request')?->getRequestUri()));
     }
 
     public function authenticate(): void
     {
-        $this->tried   = true;
+        $this->tried = true;
         Log::debug(sprintf('Now at %s', __METHOD__));
         if (App::runningInConsole()) {
             Log::debug('Running in console, will not authenticate.');
@@ -70,8 +65,8 @@ class RemoteUserGuard implements Guard
             return;
         }
         // Get the user identifier from $_SERVER or apache filtered headers
-        $header        = config('auth.guard_header', 'REMOTE_USER');
-        $userID        = request()->server($header) ?? null;
+        $header = config('auth.guard_header', 'REMOTE_USER');
+        $userID = request()->server($header) ?? null;
 
         if (function_exists('apache_request_headers')) {
             Log::debug('Use apache_request_headers to find user ID.');
@@ -94,10 +89,10 @@ class RemoteUserGuard implements Guard
         $retrievedUser = $this->provider->retrieveById($userID);
 
         // store email address if present in header and not already set.
-        $header        = config('auth.guard_email');
+        $header = config('auth.guard_email');
 
         if (null !== $header) {
-            $emailAddress = (string) (request()->server($header) ?? apache_request_headers()[$header] ?? null);
+            $emailAddress = (string)(request()->server($header) ?? apache_request_headers()[$header] ?? null);
             $preference   = Preferences::getForUser($retrievedUser, 'remote_guard_alt_email');
 
             if ('' !== $emailAddress && null === $preference && $emailAddress !== $userID) {
@@ -110,7 +105,7 @@ class RemoteUserGuard implements Guard
         }
 
         Log::debug(sprintf('Result of getting user from provider: %s', $retrievedUser->email));
-        $this->user    = $retrievedUser;
+        $this->user = $retrievedUser;
     }
 
     public function check(): bool
@@ -137,14 +132,14 @@ class RemoteUserGuard implements Guard
     /**
      * @SuppressWarnings("PHPMD.ShortMethodName")
      */
-    public function id(): int|string|null
+    public function id(): int | string | null
     {
         // Log::debug(sprintf('Now at %s', __METHOD__));
 
         return $this->user?->id;
     }
 
-    public function setUser(Authenticatable|User|null $user): Guard
+    public function setUser(Authenticatable | User | null $user): Guard
     {
         // Log::debug(sprintf('Now at %s', __METHOD__));
         if ($user instanceof User) {
