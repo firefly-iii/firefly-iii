@@ -96,12 +96,7 @@ class AccountFactory
         $type = AccountType::whereType($accountType)->first();
 
         /** @var null|Account */
-        return $this->user
-            ->accounts()
-            ->where('account_type_id', $type->id)
-            ->where('name', $accountName)
-            ->first()
-        ;
+        return $this->user->accounts()->where('account_type_id', $type->id)->where('name', $accountName)->first();
     }
 
     /**
@@ -117,12 +112,7 @@ class AccountFactory
         }
 
         /** @var null|Account $return */
-        $return = $this->user
-            ->accounts
-            ->where('account_type_id', $type->id)
-            ->where('name', $accountName)
-            ->first()
-        ;
+        $return = $this->user->accounts->where('account_type_id', $type->id)->where('name', $accountName)->first();
 
         if (null === $return) {
             Log::debug('Found nothing. Will create a new one.');

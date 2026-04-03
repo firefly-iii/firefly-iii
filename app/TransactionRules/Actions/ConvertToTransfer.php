@@ -196,11 +196,7 @@ class ConvertToTransfer implements ActionInterface
         }
 
         // update source transaction:
-        DB::table('transactions')
-            ->where('transaction_journal_id', '=', $journal->id)
-            ->where('amount', '<', 0)
-            ->update(['account_id' => $opposing->id])
-        ;
+        DB::table('transactions')->where('transaction_journal_id', '=', $journal->id)->where('amount', '<', 0)->update(['account_id' => $opposing->id]);
 
         // change transaction type of journal:
         $newType     = TransactionType::whereType(TransactionTypeEnum::TRANSFER->value)->first();

@@ -82,11 +82,7 @@ final class EditController extends Controller
         $currency->symbol = htmlentities($currency->symbol);
 
         // is currently enabled (for this user?)
-        $userCurrencies   = $this->repository
-            ->get()
-            ->pluck('id')
-            ->toArray()
-        ;
+        $userCurrencies   = $this->repository->get()->pluck('id')->toArray();
         $enabled          = in_array($currency->id, $userCurrencies, true);
 
         // code to handle active-checkboxes

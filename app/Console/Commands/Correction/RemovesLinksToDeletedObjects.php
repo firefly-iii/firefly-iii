@@ -57,30 +57,10 @@ class RemovesLinksToDeletedObjects extends Command
      */
     public function handle(): void
     {
-        $deletedTags       = Tag::withTrashed()
-            ->whereNotNull('deleted_at')
-            ->get('tags.id')
-            ->pluck('id')
-            ->toArray()
-        ;
-        $deletedJournals   = TransactionJournal::withTrashed()
-            ->whereNotNull('deleted_at')
-            ->get('transaction_journals.id')
-            ->pluck('id')
-            ->toArray()
-        ;
-        $deletedBudgets    = Budget::withTrashed()
-            ->whereNotNull('deleted_at')
-            ->get('budgets.id')
-            ->pluck('id')
-            ->toArray()
-        ;
-        $deletedCategories = Category::withTrashed()
-            ->whereNotNull('deleted_at')
-            ->get('categories.id')
-            ->pluck('id')
-            ->toArray()
-        ;
+        $deletedTags       = Tag::withTrashed()->whereNotNull('deleted_at')->get('tags.id')->pluck('id')->toArray();
+        $deletedJournals   = TransactionJournal::withTrashed()->whereNotNull('deleted_at')->get('transaction_journals.id')->pluck('id')->toArray();
+        $deletedBudgets    = Budget::withTrashed()->whereNotNull('deleted_at')->get('budgets.id')->pluck('id')->toArray();
+        $deletedCategories = Category::withTrashed()->whereNotNull('deleted_at')->get('categories.id')->pluck('id')->toArray();
 
         if (count($deletedTags) > 0) {
             $this->cleanupTags($deletedTags);

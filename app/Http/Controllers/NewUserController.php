@@ -109,11 +109,7 @@ final class NewUserController extends Controller
         $currencyRepository->makePrimary($currency);
 
         // store frontpage preferences:
-        $accounts      = $this->repository
-            ->getAccountsByType([AccountTypeEnum::ASSET->value])
-            ->pluck('id')
-            ->toArray()
-        ;
+        $accounts      = $this->repository->getAccountsByType([AccountTypeEnum::ASSET->value])->pluck('id')->toArray();
         Preferences::set('frontpageAccounts', $accounts);
 
         // mark.

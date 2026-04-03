@@ -105,11 +105,7 @@ class SetDestinationToCashAccount implements ActionInterface
         event(new TransactionGroupRequestsAuditLogEntry($this->action->rule, $object, 'set_destination', null, $cashAccount->name));
 
         // update destination transaction with new destination account:
-        DB::table('transactions')
-            ->where('transaction_journal_id', '=', $object->id)
-            ->where('amount', '>', 0)
-            ->update(['account_id' => $cashAccount->id])
-        ;
+        DB::table('transactions')->where('transaction_journal_id', '=', $object->id)->where('amount', '>', 0)->update(['account_id' => $cashAccount->id]);
 
         Log::debug(sprintf('Updated journal #%d (group #%d) and gave it new destination account ID.', $object->id, $object->transaction_group_id));
 

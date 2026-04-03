@@ -169,11 +169,7 @@ class ConvertToDeposit implements ActionInterface
         Log::debug(sprintf('ConvertToDeposit. Action value is "%s", revenue name is "%s"', $actionValue, $opposingAccount->name));
 
         // update source transaction(s) to be revenue account
-        DB::table('transactions')
-            ->where('transaction_journal_id', '=', $journal->id)
-            ->where('amount', '<', 0)
-            ->update(['account_id' => $opposingAccount->id])
-        ;
+        DB::table('transactions')->where('transaction_journal_id', '=', $journal->id)->where('amount', '<', 0)->update(['account_id' => $opposingAccount->id]);
 
         // change transaction type of journal:
         $newType         = TransactionType::whereType(TransactionTypeEnum::DEPOSIT->value)->first();
@@ -219,18 +215,10 @@ class ConvertToDeposit implements ActionInterface
         Log::debug(sprintf('ConvertToDeposit. Action value is "%s", new opposing name is "%s"', $actionValue, $opposingAccount->name));
 
         // update the source transaction and put in the new revenue ID.
-        DB::table('transactions')
-            ->where('transaction_journal_id', '=', $journal->id)
-            ->where('amount', '<', 0)
-            ->update(['account_id' => $opposingAccount->id])
-        ;
+        DB::table('transactions')->where('transaction_journal_id', '=', $journal->id)->where('amount', '<', 0)->update(['account_id' => $opposingAccount->id]);
 
         // update the destination transaction and put in the original source account ID.
-        DB::table('transactions')
-            ->where('transaction_journal_id', '=', $journal->id)
-            ->where('amount', '>', 0)
-            ->update(['account_id' => $sourceAccount->id])
-        ;
+        DB::table('transactions')->where('transaction_journal_id', '=', $journal->id)->where('amount', '>', 0)->update(['account_id' => $sourceAccount->id]);
 
         // change transaction type of journal:
         $newType         = TransactionType::whereType(TransactionTypeEnum::DEPOSIT->value)->first();

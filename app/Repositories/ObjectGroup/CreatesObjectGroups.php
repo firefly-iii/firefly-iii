@@ -34,21 +34,13 @@ trait CreatesObjectGroups
     protected function findObjectGroup(string $title): ?ObjectGroup
     {
         /** @var null|ObjectGroup */
-        return $this->user
-            ->objectGroups()
-            ->where('title', $title)
-            ->first()
-        ;
+        return $this->user->objectGroups()->where('title', $title)->first();
     }
 
     protected function findObjectGroupById(int $groupId): ?ObjectGroup
     {
         /** @var null|ObjectGroup */
-        return $this->user
-            ->objectGroups()
-            ->where('id', $groupId)
-            ->first()
-        ;
+        return $this->user->objectGroups()->where('id', $groupId)->first();
     }
 
     protected function findOrCreateObjectGroup(string $title): ?ObjectGroup
@@ -74,10 +66,6 @@ trait CreatesObjectGroups
 
     protected function hasObjectGroup(string $title): bool
     {
-        return 1 === $this->user
-            ->objectGroups()
-            ->where('title', $title)
-            ->count()
-        ;
+        return 1 === $this->user->objectGroups()->where('title', $title)->count();
     }
 }
