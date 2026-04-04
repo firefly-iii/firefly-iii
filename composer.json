@@ -128,6 +128,11 @@
         "thecodingmachine/phpstan-safe-rule": "^1.4",
         "ergebnis/phpstan-rules": "^2"
     },
+    "replace": {
+        "symfony/polyfill-php54": "*",
+        "paragonie/sodium_compat": "*",
+        "symfony/polyfill-mbstring": "*"
+    },
 
     "suggest": {},
     "autoload": {
