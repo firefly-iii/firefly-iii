@@ -382,11 +382,12 @@
                                         {{ ExpandedForm.text('pushover_app_token', pushoverAppToken, {}) }}
                                         {{ ExpandedForm.text('pushover_user_token', pushoverUserToken, {}) }}
 
-                                        {{ ExpandedForm.text('ntfy_server', ntfyServer, {}) }}
-                                        {{ ExpandedForm.text('ntfy_topic', ntfyTopic, {}) }}
-                                        {{ ExpandedForm.checkbox('ntfy_auth','1', ntfyAuth, {}) }}
-                                        {{ ExpandedForm.text('ntfy_user', ntfyUser, {}) }}
-                                        {{ ExpandedForm.passwordWithValue('ntfy_pass', ntfyPass, {autocomplete: 'off'}) }}
+
+                                        {{ Form.hidden('ntfy_server', ntfyServer, {}) }}
+                                        {{ Form.hidden('ntfy_topic', ntfyTopic, {}) }}
+                                        {{ Form.hidden('ntfy_auth','1', ntfyAuth, {}) }}
+                                        {{ Form.hidden('ntfy_user', ntfyUser, {}) }}
+                                        {{ Form.hidden('ntfy_pass', ntfyPass, {autocomplete: 'off'}) }}
                                         <p>
                                         {{ 'pref_notifications_settings_help'|_ }}
                                         </p>
