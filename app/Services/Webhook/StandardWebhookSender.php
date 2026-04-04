@@ -114,6 +114,7 @@ class StandardWebhookSender implements WebhookSenderInterface
         }
         $options             = [
             'body'    => $json,
+            'allow_redirects' => false,
             'headers' => [
                 'Content-Type'    => 'application/json',
                 'Accept'          => 'application/json',
