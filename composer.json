@@ -124,7 +124,7 @@
         "phpstan/phpstan-deprecation-rules": "^2",
         "phpstan/phpstan-strict-rules": "^2",
         "phpunit/phpunit": "^12",
-        "rector/rector": "^2.3",
+        "rector/rector": "^2.4",
         "thecodingmachine/phpstan-safe-rule": "^1.4",
         "ergebnis/phpstan-rules": "^2"
     },
