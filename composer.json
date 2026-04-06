@@ -81,7 +81,7 @@
         "ext-tokenizer": "*",
         "ext-xml": "*",
         "ext-xmlwriter": "*",
-        "bacon/bacon-qr-code": "^3.0",
+        "bacon/bacon-qr-code": "^3.1",
         "diglactic/laravel-breadcrumbs": "^10",
         "gdbots/query-parser": "^3.0",
         "guzzlehttp/guzzle": "^7.9",
