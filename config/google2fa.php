@@ -46,7 +46,8 @@ return [
 
     // 2FA verified session var
 
-    'session_var'          => 'google2fa',
+    'session_var'          => 'firefly_iii_mfa',
+    'cookie_name' => 'firefly_iii_mfa_token',
 
     // One Time Password request input name
     'otp_input'            => 'one_time_password',

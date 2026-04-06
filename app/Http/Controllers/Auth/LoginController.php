@@ -161,7 +161,7 @@ final class LoginController extends Controller
         }
 
         // also logout current 2FA tokens.
-        $cookieName = config('google2fa.cookie_name', 'google2fa_token');
+        $cookieName = config('google2fa.cookie_name', 'firefly_iii_mfa_token');
         Cookie::forget($cookieName);
 
         $this->guard()->logout();
@@ -217,7 +217,7 @@ final class LoginController extends Controller
 
         $storeInCookie     = config('google2fa.store_in_cookie', false);
         if (false !== $storeInCookie) {
-            $cookieName = config('google2fa.cookie_name', 'google2fa_token');
+            $cookieName = config('google2fa.cookie_name', 'firefly_iii_mfa_token');
             Cookie::queue(Cookie::make($cookieName, 'invalid-'.Carbon::now()->getTimestamp()));
         }
         $usernameField     = $this->username();
