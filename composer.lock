@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "7e221e2496a89469f121036f554178ac",
+    "content-hash": "df7673ab617dd06cb6467139410a419c",
     "packages": [
         {
             "name": "bacon/bacon-qr-code",
@@ -8261,91 +8261,6 @@
             "time": "2024-09-09T11:45:10+00:00"
         },
         {
-            "name": "symfony/polyfill-mbstring",
-            "version": "v1.33.0",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/symfony/polyfill-mbstring.git",
-                "reference": "6d857f4d76bd4b343eac26d6b539585d2bc56493"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/symfony/polyfill-mbstring/zipball/6d857f4d76bd4b343eac26d6b539585d2bc56493",
-                "reference": "6d857f4d76bd4b343eac26d6b539585d2bc56493",
-                "shasum": ""
-            },
-            "require": {
-                "ext-iconv": "*",
-                "php": ">=7.2"
-            },
-            "provide": {
-                "ext-mbstring": "*"
-            },
-            "suggest": {
-                "ext-mbstring": "For best performance"
-            },
-            "type": "library",
-            "extra": {
-                "thanks": {
-                    "url": "https://github.com/symfony/polyfill",
-                    "name": "symfony/polyfill"
-                }
-            },
-            "autoload": {
-                "files": [
-                    "bootstrap.php"
-                ],
-                "psr-4": {
-                    "Symfony\\Polyfill\\Mbstring\\": ""
-                }
-            },
-            "notification-url": "https://packagist.org/downloads/",
-            "license": [
-                "MIT"
-            ],
-            "authors": [
-                {
-                    "name": "Nicolas Grekas",
-                    "email": "p@tchwork.com"
-                },
-                {
-                    "name": "Symfony Community",
-                    "homepage": "https://symfony.com/contributors"
-                }
-            ],
-            "description": "Symfony polyfill for the Mbstring extension",
-            "homepage": "https://symfony.com",
-            "keywords": [
-                "compatibility",
-                "mbstring",
-                "polyfill",
-                "portable",
-                "shim"
-            ],
-            "support": {
-                "source": "https://github.com/symfony/polyfill-mbstring/tree/v1.33.0"
-            },
-            "funding": [
-                {
-                    "url": "https://symfony.com/sponsor",
-                    "type": "custom"
-                },
-                {
-                    "url": "https://github.com/fabpot",
-                    "type": "github"
-                },
-                {
-                    "url": "https://github.com/nicolas-grekas",
-                    "type": "github"
-                },
-                {
-                    "url": "https://tidelift.com/funding/github/packagist/symfony/symfony",
-                    "type": "tidelift"
-                }
-            ],
-            "time": "2024-12-23T08:48:59+00:00"
-        },
-        {
             "name": "symfony/polyfill-php80",
             "version": "v1.33.0",
             "source": {
@@ -10552,16 +10467,16 @@
         },
         {
             "name": "fruitcake/laravel-debugbar",
-            "version": "v4.2.3",
+            "version": "v4.2.4",
             "source": {
                 "type": "git",
                 "url": "https://github.com/fruitcake/laravel-debugbar.git",
-                "reference": "19b1d385cd5302aa4bf18737689e4e7115603e35"
+                "reference": "3c70910acfb35850b9304278b4af97fecb1128f4"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/fruitcake/laravel-debugbar/zipball/19b1d385cd5302aa4bf18737689e4e7115603e35",
-                "reference": "19b1d385cd5302aa4bf18737689e4e7115603e35",
+                "url": "https://api.github.com/repos/fruitcake/laravel-debugbar/zipball/3c70910acfb35850b9304278b4af97fecb1128f4",
+                "reference": "3c70910acfb35850b9304278b4af97fecb1128f4",
                 "shasum": ""
             },
             "require": {
@@ -10569,7 +10484,7 @@
                 "illuminate/session": "^11|^12|^13.0",
                 "illuminate/support": "^11|^12|^13.0",
                 "php": "^8.2",
-                "php-debugbar/php-debugbar": "^3.6",
+                "php-debugbar/php-debugbar": "^3.7",
                 "php-debugbar/symfony-bridge": "^1.1"
             },
             "replace": {
@@ -10638,7 +10553,7 @@
             ],
             "support": {
                 "issues": "https://github.com/fruitcake/laravel-debugbar/issues",
-                "source": "https://github.com/fruitcake/laravel-debugbar/tree/v4.2.3"
+                "source": "https://github.com/fruitcake/laravel-debugbar/tree/v4.2.4"
             },
             "funding": [
                 {
@@ -10650,7 +10565,7 @@
                     "type": "github"
                 }
             ],
-            "time": "2026-04-03T12:11:29+00:00"
+            "time": "2026-04-04T08:05:27+00:00"
         },
         {
             "name": "hamcrest/hamcrest-php",
@@ -11220,16 +11135,16 @@
         },
         {
             "name": "php-debugbar/php-debugbar",
-            "version": "v3.6.4",
+            "version": "v3.7.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/php-debugbar/php-debugbar.git",
-                "reference": "9b25a64b07a1d6820a3c33e0d59338d30fe1d683"
+                "reference": "4b920b8aa8198a3b7206842825bf86f43c61606f"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/php-debugbar/php-debugbar/zipball/9b25a64b07a1d6820a3c33e0d59338d30fe1d683",
-                "reference": "9b25a64b07a1d6820a3c33e0d59338d30fe1d683",
+                "url": "https://api.github.com/repos/php-debugbar/php-debugbar/zipball/4b920b8aa8198a3b7206842825bf86f43c61606f",
+                "reference": "4b920b8aa8198a3b7206842825bf86f43c61606f",
                 "shasum": ""
             },
             "require": {
@@ -11306,7 +11221,7 @@
             ],
             "support": {
                 "issues": "https://github.com/php-debugbar/php-debugbar/issues",
-                "source": "https://github.com/php-debugbar/php-debugbar/tree/v3.6.4"
+                "source": "https://github.com/php-debugbar/php-debugbar/tree/v3.7.0"
             },
             "funding": [
                 {
@@ -11318,7 +11233,7 @@
                     "type": "github"
                 }
             ],
-            "time": "2026-04-03T12:04:25+00:00"
+            "time": "2026-04-04T08:04:02+00:00"
         },
         {
             "name": "php-debugbar/symfony-bridge",
