@@ -469,10 +469,12 @@ export default {
             if (typeof window.expectedSourceTypes === 'undefined') {
                 console.error('window.expectedSourceTypes is unexpectedly empty.')
             }
+            let parsedDate = moment.parseZone(transaction.date);
             let result = {
                 transaction_journal_id: transaction.transaction_journal_id,
                 description: transaction.description,
-                date: moment(transaction.date).format().substring(0, 16),
+                dateOffsetTarget: parsedDate.utcOffset(),
+                date: parsedDate.local().format().substring(0, 16),
                 reconciled: transaction.reconciled,
                 amount: this.roundNumber(this.positiveAmount(transaction.amount), transaction.currency_decimal_places),
                 category: transaction.category_name,
@@ -673,6 +675,7 @@ export default {
             if (index > 0) {
                 date = this.transactions[0].date;
             }
+            date = moment(date).utcOffset(this.transactions[0].dateOffsetTarget).format().substring(0, 16);
 
             // if type is 'withdrawal' and destination is empty, cash withdrawal.
             if (transactionType === 'withdrawal' && '' === destName) {
