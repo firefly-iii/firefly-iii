@@ -28,7 +28,7 @@
     <div class="col-sm-12">
       <select ref="piggy" class="form-control" name="piggy_bank[]" @input="handleInput">
         <optgroup v-for="(option, key) in this.piggies" v-bind:label="key">
-          <option v-for="piggy in option.piggies" :label="piggy.name_with_balance" :value="piggy.id">
+          <option v-for="piggy in option.piggies" :label="piggy.name_with_balance" :selected="piggy.id === value" :value="piggy.id">
             {{ piggy.name_with_balance }}
           </option>
         </optgroup>
