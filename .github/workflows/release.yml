@@ -167,8 +167,8 @@ jobs:
       - name: Build JS
         run: |
           npm install
-          npm run prod  --workspace=v1
-          npm run build --workspace=v2
+          npm run prod  --workspace=v1 --verbose
+          npm run build --workspace=v2 --verbose
           npm update
       - name: Setup Mago
         uses: nhedger/setup-mago@v1
