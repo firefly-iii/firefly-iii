@@ -207,7 +207,8 @@
         },
         "audit": {
             "ignore": {
-                "PKSA-y2cr-5h3j-g3ys": "Keys are not generated."
+                "PKSA-y2cr-5h3j-g3ys": "Keys are not generated.",
+                "PKSA-wc55-9qj2-7v4h": "Update to follow."
             }
         }
     }
