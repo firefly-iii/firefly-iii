@@ -196,7 +196,7 @@
         </li>
     {% endif %}
 
-    <li class="{{ activeRoutePartial('administrations') }} {{ activeRoutePartial('setting') }} {{ activeRoutePartial('profile') }} {{ activeRoutePartial('preferences') }} {{ activeRoutePartial('currencies') }} {{ activeRoutePartial('exchange-rates') }} treeview"
+    <li class="{{ activeRoutePartial('administrations') }} {{ activeRoutePartial('setting') }} {{ activeRoutePartial('oauth') }} {{ activeRoutePartial('profile') }} {{ activeRoutePartial('preferences') }} {{ activeRoutePartial('currencies') }} {{ activeRoutePartial('exchange-rates') }} treeview"
         id="option-menu">
         <a href="#">
             <em class="fa fa-sliders fa-fw"></em>
@@ -211,6 +211,12 @@
                 <a class="{{ activeRouteStrict('profile.index') }}" href="{{ route('profile.index') }}">
                     <span class="fa fa-angle-right fa-fw"></span>
                     <span>{{ 'profile'|_ }}</span>
+                </a>
+            </li>
+            <li class="{{ activeRoutePartial('oauth') }}">
+                <a class="{{ activeRouteStrict('profile.oauth.index') }}" href="{{ route('profile.oauth.index') }}">
+                    <span class="fa fa-angle-right fa-fw"></span>
+                    <span>{{ 'oauth_tokens'|_ }}</span>
                 </a>
             </li>
             <li class="{{ activeRoutePartial('preferences') }}">

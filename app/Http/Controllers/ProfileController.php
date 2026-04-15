@@ -187,7 +187,8 @@ final class ProfileController extends Controller
         /** @var User $user */
         $user           = auth()->user();
         $isInternalAuth = $this->internalAuth;
-        $count          = DB::table('oauth_clients')->where('personal_access_client', true)->whereNull('user_id')->count();
+        // $count          = DB::table('oauth_clients')->where('personal_access_client', true)->whereNull('user_id')->count();
+        $count = 0;
         $subTitle       = $user->email;
         $userId         = $user->id;
         $enabled2FA     = null !== $user->mfa_secret;
@@ -198,12 +199,12 @@ final class ProfileController extends Controller
         $mfaBackupCount = count($recoveryData);
         $this->createOAuthKeys();
 
-        if (0 === $count) {
-            /** @var ClientRepository $repository */
-            $repository = app(ClientRepository::class);
-            $name       = sprintf('%s Personal Access Grant Client', config('app.name'));
-            $repository->createPersonalAccessClient(null, $name, 'http://localhost');
-        }
+//        if (0 === $count) {
+//            /** @var ClientRepository $repository */
+//            $repository = app(ClientRepository::class);
+//            $name       = sprintf('%s Personal Access Grant Client', config('app.name'));
+//            $repository->createPersonalAccessClient(null, $name, 'http://localhost');
+//        }
 
         $accessToken    = Preferences::get('access_token');
         if (null === $accessToken) {

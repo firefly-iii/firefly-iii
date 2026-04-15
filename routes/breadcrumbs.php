@@ -802,6 +802,16 @@ Breadcrumbs::for(
     }
 );
 
+Breadcrumbs::for(
+    'profile.oauth.index',
+    static function (Generator $breadcrumbs): void {
+        $breadcrumbs->parent('profile.index');
+        $breadcrumbs->push(trans('firefly.oauth_tokens'), route('profile.oauth.index'));
+    }
+);
+
+
+
 // REPORTS
 Breadcrumbs::for(
     'reports.index',

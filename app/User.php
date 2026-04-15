@@ -72,12 +72,13 @@ use Laravel\Passport\HasApiTokens;
 use NotificationChannels\Pushover\PushoverReceiver;
 use SensitiveParameter;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
+use Laravel\Passport\Contracts\OAuthenticatable;
 
 /**
  * @property null|UserGroup $userGroup
  * @property bool           $blocked
  */
-class User extends Authenticatable
+class User extends Authenticatable implements OAuthenticatable
 {
     use HasApiTokens;
     use Notifiable;

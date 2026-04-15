@@ -1638,6 +1638,7 @@ return [
     'external_auth_disabled'                              => 'This action is not available when Firefly III isn\'t responsible for authentication handling.',
     'delete_local_info_only'                              => "Because Firefly III isn't responsible for user management or authentication handling, this function will only delete local Firefly III information.",
     'oauth'                                               => 'OAuth',
+    'oauth_tokens' => 'Remote access and tokens',
     'profile_oauth_clients'                               => 'OAuth Clients',
     'profile_oauth_no_clients'                            => 'You have not created any OAuth clients.',
     'profile_oauth_clients_external_auth'                 => 'If you\'re using an external authentication provider like Authelia, OAuth Clients will not work. You can use Personal Access Tokens only.',

@@ -117,17 +117,39 @@ class SecureHeaders
         $disableFrameHeader = config('firefly.disable_frame_header');
         $disableCSP         = config('firefly.disable_csp_header');
         if (false === $disableFrameHeader) {
-            $response->header('X-Frame-Options', 'deny');
+            if(method_exists($response, 'header')) {
+                $response->header('X-Frame-Options', 'deny');
+            }
+            if(!method_exists($response, 'header')) {
+                $response->headers->set('X-Frame-Options', 'deny');
+            }
+
         }
         if (false === $disableCSP && !$response->headers->has('Content-Security-Policy')) {
-            $response->header('Content-Security-Policy', implode('; ', $csp));
+            if(method_exists($response, 'header')) {
+                $response->header('Content-Security-Policy', implode('; ', $csp));
+            }
+            if(!method_exists($response, 'header')) {
+                $response->header('Content-Security-Policy', implode('; ', $csp));
+            }
         }
-        $response->header('X-XSS-Protection', '1; mode=block');
-        $response->header('X-Content-Type-Options', 'nosniff');
-        $response->header('Referrer-Policy', 'no-referrer');
-        $response->header('X-Permitted-Cross-Domain-Policies', 'none');
-        $response->header('X-Robots-Tag', 'none');
-        $response->header('Feature-Policy', implode('; ', $featurePolicies));
+        if(method_exists($response, 'header')) {
+            $response->header('X-XSS-Protection', '1; mode=block');
+            $response->header('X-Content-Type-Options', 'nosniff');
+            $response->header('Referrer-Policy', 'no-referrer');
+            $response->header('X-Permitted-Cross-Domain-Policies', 'none');
+            $response->header('X-Robots-Tag', 'none');
+            $response->header('Feature-Policy', implode('; ', $featurePolicies));
+        }
+        if(!method_exists($response, 'header')) {
+            $response->headers->set('X-XSS-Protection', '1; mode=block');
+            $response->headers->set('X-Content-Type-Options', 'nosniff');
+            $response->headers->set('Referrer-Policy', 'no-referrer');
+            $response->headers->set('X-Permitted-Cross-Domain-Policies', 'none');
+            $response->headers->set('X-Robots-Tag', 'none');
+            $response->headers->set('Feature-Policy', implode('; ', $featurePolicies));
+        }
+
 
         return $response;
     }
