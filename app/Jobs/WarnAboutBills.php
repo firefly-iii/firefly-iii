@@ -48,6 +48,8 @@ class WarnAboutBills implements ShouldQueue
     use Queueable;
     use SerializesModels;
 
+    private const OVERDUE_ALERT_DAYS = 2;
+
     private Carbon $date;
     private bool $force;
 
@@ -168,7 +170,7 @@ class WarnAboutBills implements ShouldQueue
         $diff     = $earliest->diffInDays($this->date);
         Log::debug(sprintf('Difference in days is %s', $diff));
 
-        return $diff >= 6; // FIXME hard coded value.
+        return $diff >= self::OVERDUE_ALERT_DAYS;
     }
 
     private function needsWarning(Bill $bill, string $field): bool
