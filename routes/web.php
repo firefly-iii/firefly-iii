@@ -29,6 +29,28 @@ if (!defined('DATEFORMAT')) {
     define('DATEFORMAT', '(19|20)[0-9]{2}-?[0-9]{2}-?[0-9]{2}');
 }
 
+// new Passport routes.
+Route::group(
+    [
+        'as'        => 'passport.',
+        'prefix'    => 'oauth',
+        // 'namespace' => 'FireflyIII\Http\Controllers\OAuth',
+    ],
+    function (): void {
+        // routes with no extra middleware
+        // Route::post('/token', ['uses' => '\Laravel\Passport\Http\Controllers\AccessTokenController@issueToken', 'as' => 'token', 'middleware' => 'throttle']);
+        // Route::get('/authorize', ['uses' => 'AuthorizationController@authorize', 'as' => 'authorizations.authorize', 'middleware' => 'user-full-auth']);
+
+        // personal access tokens:
+        Route::post('/personal-access-tokens', ['uses' => 'FireflyIII\Http\Controllers\Profile\OAuthController@storePersonalAccessToken', 'as'   => 'personal.tokens.store']);
+        Route::get('/personal-access-tokens', ['uses' => 'FireflyIII\Http\Controllers\Profile\OAuthController@listPersonalAccessTokens', 'as'   => 'personal.tokens.index']);
+        Route::delete('/personal-access-tokens/{token_id}', ['uses' => 'FireflyIII\Http\Controllers\Profile\OAuthController@destroyPersonalAccessToken', 'as'   => 'personal.tokens.destroy']);
+
+        // clients:
+        Route::get('/clients', ['uses' => 'FireflyIII\Http\Controllers\Profile\OAuthController@listClients', 'as' => 'clients.index']);
+    }
+);
+
 // laravel passport routes
 //Route::group(
 //    [

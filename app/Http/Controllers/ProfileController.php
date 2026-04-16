@@ -38,6 +38,7 @@ use FireflyIII\Support\Http\Controllers\CreateStuff;
 use FireflyIII\User;
 use Illuminate\Auth\AuthenticationException;
 use Illuminate\Contracts\Auth\Guard;
+use Illuminate\Contracts\Validation\Factory as ValidationFactory;
 use Illuminate\Contracts\View\Factory;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
@@ -67,7 +68,7 @@ final class ProfileController extends Controller
     /**
      * ProfileController constructor.
      */
-    public function __construct()
+    public function __construct(protected ValidationFactory $validation,)
     {
         parent::__construct();
 

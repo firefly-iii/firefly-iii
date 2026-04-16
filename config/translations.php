@@ -139,6 +139,7 @@ return [
         ],
         'v1' => [
             'firefly' => [
+                'explain_pats',
                 'administrations_page_title',
                 'administrations_index_menu',
                 'expires_at',

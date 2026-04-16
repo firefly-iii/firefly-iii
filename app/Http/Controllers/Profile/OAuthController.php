@@ -23,17 +23,27 @@ namespace FireflyIII\Http\Controllers\Profile;
 
 use FireflyIII\Http\Controllers\Controller;
 use FireflyIII\Http\Middleware\IsDemoUser;
+use Illuminate\Contracts\Validation\Factory as ValidationFactory;
+use Illuminate\Http\JsonResponse;
+use Illuminate\Http\Request;
+use Illuminate\Http\Response;
+use Illuminate\Support\Facades\Date;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
+use Laravel\Passport\ClientRepository;
+use Laravel\Passport\Token;
+use Laravel\Passport\TokenRepository;
 
 class OAuthController extends Controller
 {
     protected bool $internalAuth;
-    public function __construct()
+
+    public function __construct(protected TokenRepository $tokenRepository,protected ValidationFactory $validation)
     {
         parent::__construct();
 
         $this->middleware(static function ($request, $next) {
-            app('view')->share('title', (string) trans('firefly.oauth_tokens'));
+            app('view')->share('title', (string)trans('firefly.oauth_tokens'));
             app('view')->share('mainTitleIcon', 'fa-user');
 
             return $next($request);
@@ -45,7 +55,60 @@ class OAuthController extends Controller
         $this->middleware(IsDemoUser::class)->except(['index']);
     }
 
-    public function index() {
+    public function index()
+    {
+        $count = DB::table('oauth_clients')->where('grant_types', '["personal_access"]')->whereNull('owner_id')->count();
+
+        if (0 === $count) {
+            /** @var ClientRepository $repository */
+            $repository = app(ClientRepository::class);
+            $repository->createPersonalAccessGrantClient('Firefly III Personal Access Grant Client', null);
+        }
+
         return view('profile.oauth.index');
     }
+
+    public function listClients(): JsonResponse
+    {
+        // Retrieving all the OAuth app clients that belong to the user...
+        $clients = auth()->user()->oauthApps()->get();
+        return response()->json($clients);
+    }
+
+    public function storePersonalAccessToken(Request $request): JsonResponse
+    {
+        $this->validation->make($request->all(), [
+            'name' => ['required', 'max:255']])->validate();
+
+        return response()->json($request->user()->createToken($request->name));
+    }
+
+    public function destroyPersonalAccessToken(Request $request, string $tokenId): Response
+    {
+        $token = $this->tokenRepository->findForUser(
+            $tokenId, $request->user()
+        );
+
+        if (is_null($token)) {
+            return new Response('', 404);
+        }
+
+        $token->revoke();
+
+        return new Response('', Response::HTTP_NO_CONTENT);
+    }
+
+    public function listPersonalAccessTokens(): JsonResponse
+    {
+        // Retrieving all the OAuth app clients that belong to the user...
+        $tokens = auth()->user()->tokens()
+                        ->with('client')
+                        ->where('revoked', false)
+                        ->where('expires_at', '>', Date::now())
+                        ->get()
+                        ->filter(fn(Token $token) => $token->client->hasGrantType('personal_access'));
+        return response()->json($tokens);
+    }
+
+
 }
