@@ -9,7 +9,21 @@
 
     <div class="row">
         <div class="col-lg-8 col-lg-offset-2 col-md-12 col-sm-12">
-                <!-- OAuth -->
+            <div class="row">
+                <div class="col-lg-12">
+                    <div class="box box-default">
+                        <div class="box-header">
+                            <h3 class="box-title">{{ 'oauth_tokens'|_ }}</h3>
+                        </div>
+
+                        <div class="box-body">
+                            <p>
+                                {{ trans('firefly.oauth_tokens_explain', {link: link})|raw }}
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </div>
                 <div role="tabpanel" class="tab-pane" id="oauth">
                     <div id="passport_clients"></div>
                 </div>

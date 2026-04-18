@@ -20,17 +20,6 @@
                     <a href="#cmd" aria-controls="profile" role="tab" data-toggle="tab">{{ 'command_line_token'|_ }}</a>
                 </li>
                 <li role="presentation">
-                    <a href="#oauth" aria-controls="messages" role="tab" data-toggle="tab">{{ 'oauth'|_ }}</a>
-                </li>
-                {#
-                {% if true == isInternalAuth %}
-                    <li role="presentation">
-                        <a href="#mfa" aria-controls="settings" role="tab"
-                           data-toggle="tab">{{ 'pref_two_factor_auth'|_ }}</a>
-                    </li>
-                {% endif %}
-                #}
-                <li role="presentation">
                     <a href="#delete" aria-controls="settings" role="tab"
                        data-toggle="tab">{{ 'delete_stuff_header'|_ }}</a>
                 </li>
@@ -109,52 +98,6 @@
                         </div>
                     </div>
                 </div>
-
-                <!-- OAuth -->
-                <div role="tabpanel" class="tab-pane" id="oauth">
-                    <div id="passport_clients"></div>
-                </div>
-
-                {#
-                {% if true == isInternalAuth %}
-                    <!-- MFA -->
-                    <div role="tabpanel" class="tab-pane" id="mfa">
-                        <div class="box box-default">
-                            <div class="box-body">
-                                <p class="text-info">{{ 'pref_two_factor_auth_help'|_ }}</p>
-                                {% if enabled2FA == true %}
-                                    <p class="text-info">
-                                        {{ trans_choice('firefly.pref_two_factor_backup_code_count', mfaBackupCount) }}
-                                    </p>
-
-                                    <div class="btn-group">
-                                        <a class="btn btn-info" href="{{ route('profile.code') }}">
-                                            <span class="fa fa-recycle"></span>
-                                            {{ 'pref_two_factor_auth_reset_code'|_ }}</a>
-                                    </div>
-                                    <form method="post" action="{{ route('profile.delete-code') }}">
-                                        <input type="hidden" name="_token" value="{{ csrf_token() }}"/>
-                                        <input class="btn btn-danger" style="margin-top:20px;" type="submit"
-                                               name="submit" value="{{ 'pref_two_factor_auth_disable_2fa'|_ }}"/>
-                                    </form>
-                                    <form method="post" action="{{ route('profile.new-backup-codes') }}">
-                                        <input type="hidden" name="_token" value="{{ csrf_token() }}"/>
-                                        <input class="btn btn-default" style="margin-top:20px;" type="submit"
-                                               name="submit" value="{{ 'pref_two_factor_new_backup_codes'|_ }}"/>
-                                    </form>
-                                {% else %}
-                                    <form action="{{ route('profile.enable2FA') }}" method="post">
-                                        <input type="hidden" name="_token" value="{{ csrf_token() }}"/>
-                                        <button type="submit" class="btn btn-info"><span
-                                                    class="fa fa-lock"></span> {{ 'pref_enable_two_factor_auth'|_ }}
-                                        </button>
-                                    </form>
-                                {% endif %}
-                            </div>
-                        </div>
-                    </div>
-                {% endif %}
-                #}
 
                 <!-- purge stuff -->
                 <div role="tabpanel" class="tab-pane" id="delete">

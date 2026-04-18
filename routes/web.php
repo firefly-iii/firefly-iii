@@ -48,6 +48,10 @@ Route::group(
 
         // clients:
         Route::get('/clients', ['uses' => 'FireflyIII\Http\Controllers\Profile\OAuthController@listClients', 'as' => 'clients.index']);
+        Route::post('/clients', ['uses' => 'FireflyIII\Http\Controllers\Profile\OAuthController@storeClient', 'as' => 'clients.store']);
+        Route::post('/clients/regenerate/{client_id}', ['uses' => 'FireflyIII\Http\Controllers\Profile\OAuthController@regenerateClientSecret', 'as' => 'clients.regen']);
+        Route::put('/clients/{client_id}', ['uses' => 'FireflyIII\Http\Controllers\Profile\OAuthController@updateClient', 'as' => 'clients.update']);
+        Route::delete('/clients/{client_id}', ['uses' => 'FireflyIII\Http\Controllers\Profile\OAuthController@destroyClient', 'as' => 'clients.destroy']);
     }
 );
 
@@ -71,10 +75,6 @@ Route::group(
 //            Route::delete('/authorize', ['uses' => 'DenyAuthorizationController@deny', 'as' => 'authorizations.deny']);
 //            Route::get('/tokens', ['uses' => 'AuthorizedAccessTokenController@forUser', 'as' => 'tokens.index']);
 //            Route::delete('/tokens/{token_id}', ['uses' => 'AuthorizedAccessTokenController@destroy', 'as' => 'tokens.destroy']);
-//            Route::get('/clients', ['uses' => 'ClientController@forUser', 'as' => 'clients.index']);
-//            Route::post('/clients', ['uses' => 'ClientController@store', 'as' => 'clients.store']);
-//            Route::put('/clients/{client_id}', ['uses' => 'ClientController@update', 'as' => 'clients.update']);
-//            Route::delete('/clients/{client_id}', ['uses' => 'ClientController@destroy', 'as'   => 'clients.destroy']);
 //            Route::get('/scopes', ['uses' => 'ScopeController@all', 'as'   => 'scopes.index']);
 //            Route::get('/personal-access-tokens', ['uses' => 'PersonalAccessTokenController@forUser', 'as'   => 'personal.tokens.index']);
 //            Route::post('/personal-access-tokens', ['uses' => 'PersonalAccessTokenController@store', 'as'   => 'personal.tokens.store']);

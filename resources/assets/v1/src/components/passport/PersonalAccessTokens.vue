@@ -229,7 +229,7 @@ export default {
          */
         prepareComponent() {
             this.getTokens();
-            this.getScopes();
+            // this.getScopes();
 
             $('#modal-create-token').on('shown.bs.modal', () => {
                 $('#create-token-name').focus();
