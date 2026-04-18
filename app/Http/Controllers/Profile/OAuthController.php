@@ -1,4 +1,5 @@
 <?php
+
 /*
  * OAuthController.php
  * Copyright (c) 2026 james@firefly-iii.org
@@ -35,17 +36,22 @@ use Illuminate\Support\Facades\Log;
 use Laravel\Passport\Client;
 use Laravel\Passport\ClientRepository;
 use Laravel\Passport\Token;
+use Illuminate\Contracts\View\Factory;
+use Illuminate\View\View;
+use SensitiveParameter;
 
 final class OAuthController extends Controller
 {
     protected bool $internalAuth;
 
-    public function __construct(protected ClientRepository $clients, protected ValidationFactory $validation)
-    {
+    public function __construct(
+        protected ClientRepository $clients,
+        protected ValidationFactory $validation
+    ) {
         parent::__construct();
 
         $this->middleware(static function ($request, $next) {
-            app('view')->share('title', (string)trans('firefly.oauth_tokens'));
+            app('view')->share('title', (string) trans('firefly.oauth_tokens'));
             app('view')->share('mainTitleIcon', 'fa-user');
 
             return $next($request);
@@ -57,8 +63,44 @@ final class OAuthController extends Controller
         $this->middleware(IsDemoUser::class)->except(['index']);
     }
 
+    public function destroyClient(Request $request, string $clientId): Response
+    {
+        /** @var null|Client $client */
+        $client = auth()->user()->oauthApps()->where('revoked', false)->find($clientId);
+
+        if (null === $client) {
+            return new Response('', 404);
+        }
+
+        $client
+            ->tokens()
+            ->with('refreshToken')
+            ->each(function (#[SensitiveParameter] Token $token): void {
+                $token->refreshToken?->revoke();
+                $token->revoke();
+            })
+        ;
+
+        $client->forceFill(['revoked' => true])->save();
+
+        return new Response('', Response::HTTP_NO_CONTENT);
+    }
+
+    public function destroyPersonalAccessToken(Request $request, string $tokenId): Response
+    {
+        $token = auth()->user()->tokens()->where('revoked', false)->find($tokenId);
+
+        if (null === $token) {
+            return new Response('', 404);
+        }
+
+        $token->revoke();
+
+        return new Response('', Response::HTTP_NO_CONTENT);
+    }
+
     /**
-     * @return \Illuminate\Contracts\View\Factory|\Illuminate\Contracts\View\View|\Illuminate\View\View
+     * @return Factory|\Illuminate\Contracts\View\View|View
      */
     public function index()
     {
@@ -69,7 +111,8 @@ final class OAuthController extends Controller
             $repository = app(ClientRepository::class);
             $repository->createPersonalAccessGrantClient('Firefly III Personal Access Grant Client', null);
         }
-        $link = route('index');
+        $link  = route('index');
+
         return view('profile.oauth.index', compact('link'));
     }
 
@@ -77,13 +120,43 @@ final class OAuthController extends Controller
     {
         // Retrieving all the OAuth app clients that belong to the user...
         $clients = auth()->user()->oauthApps()->where('revoked', false)->get();
+
         return response()->json($clients);
+    }
+
+    public function listPersonalAccessTokens(): JsonResponse
+    {
+        // Retrieving all the OAuth app clients that belong to the user...
+        $tokens = auth()
+            ->user()
+            ->tokens()
+            ->with('client')
+            ->where('revoked', false)
+            ->where('expires_at', '>', Date::now())
+            ->get()
+            ->filter(fn (#[SensitiveParameter] Token $token) => $token->client->hasGrantType('personal_access'))
+        ;
+
+        return response()->json($tokens);
+    }
+
+    public function regenerateClientSecret(Request $request, string $clientId): JsonResponse|Response
+    {
+        $client             = auth()->user()->oauthApps()->where('revoked', false)->find($clientId);
+        if (null === $client) {
+            return new Response('', 404);
+        }
+        // $client->
+        $this->clients->regenerateSecret($client);
+        $arr                = $client->toArray();
+        $arr['plainSecret'] = $client->plainSecret;
+
+        return response()->json($arr);
     }
 
     public function storeClient(Request $request): JsonResponse
     {
-
-        $this->validation->make($request->only(['name','redirect_uris','confidential']), [
+        $this->validation->make($request->only(['name', 'redirect_uris', 'confidential']), [
             'name'          => ['required', 'string', 'max:255'],
             'redirect_uris' => ['required', 'url'],
             'confidential'  => 'boolean',
@@ -91,103 +164,41 @@ final class OAuthController extends Controller
 
         // Creating an OAuth app client that belongs to the given user...
         $client             = app(ClientRepository::class)->createAuthorizationCodeGrantClient(
-            name        : $request->input('name'),
+            name: $request->input('name'),
             redirectUris: [$request->input('redirect_uris')],
             confidential: $request->input('confidential'),
-            user        : auth()->user()
+            user: auth()->user()
         );
         $arr                = $client->toArray();
         $arr['plainSecret'] = $client->plainSecret;
+
         return response()->json($arr);
-    }
-
-    public function regenerateClientSecret(Request $request, string $clientId): JsonResponse | Response
-    {
-
-
-        $client = auth()->user()->oauthApps()->where('revoked', false)->find($clientId);
-        if (null === $client) {
-            return new Response('', 404);
-        }
-        //$client->
-        $this->clients->regenerateSecret($client);
-        $arr                = $client->toArray();
-        $arr['plainSecret'] = $client->plainSecret;
-        return response()->json($arr);
-
-    }
-
-    public function updateClient(Request $request, string $clientId): Response | Client
-    {
-        $client = auth()->user()->oauthApps()->where('revoked', false)->find($clientId);
-
-        if (null === $client) {
-            return new Response('', 404);
-        }
-
-        $this->validation->make($request->only(['name','redirect_uris']), [
-            'name'          => ['required', 'string', 'max:255'],
-            'redirect_uris' => ['required', 'url'],
-        ])->validate();
-
-        $this->clients->update(
-            $client, $request->input('name'), explode(',', $request->input('redirect_uris'))
-        ); // FIXME replace
-
-        return $client;
-    }
-
-    public function destroyClient(Request $request, string $clientId): Response
-    {
-        /** @var Client|null $client */
-        $client = auth()->user()->oauthApps()->where('revoked', false)->find($clientId);
-
-        if (null === $client) {
-            return new Response('', 404);
-        }
-
-        $client->tokens()->with('refreshToken')->each(function (#[\SensitiveParameter] Token $token): void {
-            $token->refreshToken?->revoke();
-            $token->revoke();
-        });
-
-        $client->forceFill(['revoked' => true])->save();
-
-        return new Response('', Response::HTTP_NO_CONTENT);
     }
 
     public function storePersonalAccessToken(Request $request): JsonResponse
     {
         $this->validation->make($request->only(['name']), [
-            'name' => ['required', 'max:255']])->validate();
+            'name' => ['required', 'max:255'],
+        ])->validate();
 
         return response()->json($request->user()->createToken($request->name));
     }
 
-    public function destroyPersonalAccessToken(Request $request, string $tokenId): Response
+    public function updateClient(Request $request, string $clientId): Client|Response
     {
-        $token = auth()->user()->tokens()->where('revoked', false)->find($tokenId);
+        $client = auth()->user()->oauthApps()->where('revoked', false)->find($clientId);
 
-        if (is_null($token)) {
+        if (null === $client) {
             return new Response('', 404);
         }
 
-        $token->revoke();
+        $this->validation->make($request->only(['name', 'redirect_uris']), [
+            'name'          => ['required', 'string', 'max:255'],
+            'redirect_uris' => ['required', 'url'],
+        ])->validate();
 
-        return new Response('', Response::HTTP_NO_CONTENT);
+        $this->clients->update($client, $request->input('name'), explode(',', $request->input('redirect_uris'))); // FIXME replace
+
+        return $client;
     }
-
-    public function listPersonalAccessTokens(): JsonResponse
-    {
-        // Retrieving all the OAuth app clients that belong to the user...
-        $tokens = auth()->user()->tokens()
-                        ->with('client')
-                        ->where('revoked', false)
-                        ->where('expires_at', '>', Date::now())
-                        ->get()
-                        ->filter(fn(#[\SensitiveParameter] Token $token) => $token->client->hasGrantType('personal_access'));
-        return response()->json($tokens);
-    }
-
-
 }

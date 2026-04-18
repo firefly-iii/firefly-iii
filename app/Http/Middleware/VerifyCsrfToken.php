@@ -28,7 +28,7 @@ use Illuminate\Foundation\Http\Middleware\PreventRequestForgery as MiddleWare;
 /**
  * Class VerifyCsrfToken.
  */
-class VerifyCsrfToken extends Middleware
+class VerifyCsrfToken extends MiddleWare
 {
     protected $except = ['oauth/token'];
 }

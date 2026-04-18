@@ -63,16 +63,16 @@ class BelongsUserGroup implements ValidationRule
         Log::debug(sprintf('Group: Going to validate "%s"', $attribute));
 
         $result    = match ($attribute) {
-            'piggy_bank_id'          => $this->validatePiggyBankId((int) $value),
-            'piggy_bank_name'        => $this->validatePiggyBankName($value),
-            'bill_id'                => $this->validateBillId((int) $value),
-            'transaction_journal_id' => $this->validateJournalId((int) $value),
-            'bill_name'              => $this->validateBillName($value),
-            'budget_id'              => $this->validateBudgetId((int) $value),
-            'category_id'            => $this->validateCategoryId((int) $value),
-            'budget_name'            => $this->validateBudgetName($value),
+            'piggy_bank_id'               => $this->validatePiggyBankId((int) $value),
+            'piggy_bank_name'             => $this->validatePiggyBankName($value),
+            'bill_id'                     => $this->validateBillId((int) $value),
+            'transaction_journal_id'      => $this->validateJournalId((int) $value),
+            'bill_name'                   => $this->validateBillName($value),
+            'budget_id'                   => $this->validateBudgetId((int) $value),
+            'category_id'                 => $this->validateCategoryId((int) $value),
+            'budget_name'                 => $this->validateBudgetName($value),
             'source_id', 'destination_id' => $this->validateAccountId((int) $value),
-            default                  => throw new FireflyException(sprintf('Rule BelongsUser cannot handle "%s"', $attribute))
+            default                       => throw new FireflyException(sprintf('Rule BelongsUser cannot handle "%s"', $attribute))
         };
         if (false === $result) {
             $fail('validation.belongs_user_or_user_group')->translate();

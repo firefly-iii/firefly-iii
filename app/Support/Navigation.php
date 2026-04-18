@@ -432,11 +432,11 @@ class Navigation
         }
 
         return match ($range) {
-            'last7' => '1W',
-            'last30', 'MTD' => '1M',
-            'last90', 'QTD' => '3M',
+            'last7'          => '1W',
+            'last30', 'MTD'  => '1M',
+            'last90', 'QTD'  => '3M',
             'last365', 'YTD' => '1Y',
-            default => $range
+            default          => $range
         };
     }
 
@@ -565,12 +565,12 @@ class Navigation
     public function preferredCarbonFormatByPeriod(string $period): string
     {
         return match ($period) {
-            default => 'Y-m-d',
+            default    => 'Y-m-d',
             // '1D'    => 'Y-m-d',
-            '1W'    => '\WW,Y',
-            '1M'    => 'Y-m',
+            '1W'       => '\WW,Y',
+            '1M'       => 'Y-m',
             '3M', '6M' => '\QQ,Y',
-            '1Y'    => 'Y'
+            '1Y'       => 'Y'
         };
     }
 
