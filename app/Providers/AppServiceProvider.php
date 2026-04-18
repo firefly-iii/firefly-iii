@@ -46,7 +46,6 @@ class AppServiceProvider extends ServiceProvider
         // do not check permissions for key files.
         Passport::$validateKeyPermissions = false;
 
-
         Schema::defaultStringLength(191);
         Response::macro('api', function (array $value) {
             $headers = ['Cache-Control' => 'no-store'];

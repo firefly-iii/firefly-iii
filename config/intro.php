@@ -47,14 +47,11 @@ return [
         'split'         => ['element' => '.split_add_btn', 'position' => 'top'],
     ],
 
-    'transactions_create_withdrawal' => [
-    ],
+    'transactions_create_withdrawal' => [],
 
-    'transactions_create_deposit'    => [
-    ],
+    'transactions_create_deposit'    => [],
 
-    'transactions_create_transfer'   => [
-    ],
+    'transactions_create_transfer'   => [],
 
     // extra text for asset account creation.
     'accounts_create_asset'          => [

@@ -72,7 +72,7 @@ Route::group(
 //            Route::get('/scopes', ['uses' => 'ScopeController@all', 'as'   => 'scopes.index']);
 //        });
 //    }
-//);
+// );
 
 Route::group(
     [

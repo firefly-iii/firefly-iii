@@ -40,7 +40,7 @@ class AutocompleteTransactionApiRequest extends AggregateFormRequest
     {
         return [
             DateRequest::class,
-            [PaginationRequest::class, 'sort_class' => Account::class],
+            [PaginationRequest::class, 'sort_class'     => Account::class],
             [ObjectTypeApiRequest::class, 'object_type' => Transaction::class],
             QueryRequest::class,
         ];

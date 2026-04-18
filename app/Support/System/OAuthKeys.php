@@ -36,9 +36,9 @@ use Psr\Container\ContainerExceptionInterface;
 use Psr\Container\NotFoundExceptionInterface;
 use Safe\Exceptions\FilesystemException;
 
+use function Safe\chmod;
 use function Safe\file_get_contents;
 use function Safe\file_put_contents;
-use function Safe\chmod;
 
 /**
  * Class OAuthKeys
@@ -148,7 +148,7 @@ class OAuthKeys
         file_put_contents($private, $privateContent);
         file_put_contents($public, $publicContent);
 
-        if (! windows_os()) {
+        if (!windows_os()) {
             Log::debug('Set the correct permissions.');
             chmod(Passport::keyPath('oauth-public.key'), 0o660);
             chmod(Passport::keyPath('oauth-private.key'), 0o600);
@@ -163,8 +163,8 @@ class OAuthKeys
 
     public static function storeKeysInDB(): void
     {
-        $private    = Passport::keyPath('oauth-private.key');
-        $public     = Passport::keyPath('oauth-public.key');
+        $private        = Passport::keyPath('oauth-private.key');
+        $public         = Passport::keyPath('oauth-public.key');
         $privateContent = file_get_contents($private);
         $publicContent  = file_get_contents($public);
         FireflyConfig::set(self::PRIVATE_KEY, Crypt::encrypt($privateContent));

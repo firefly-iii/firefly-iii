@@ -2,14 +2,16 @@
 
 declare(strict_types=1);
 
-
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
+return new class extends Migration {
+    /**
+     * Reverse the migrations.
+     */
+    public function down(): void {}
 
-return new class extends Migration
-{
     /**
      * Run the migrations.
      */
@@ -62,7 +64,6 @@ return new class extends Migration
             $table->timestamps();
         });
 
-
         Schema::create('oauth_device_codes', function (Blueprint $table) {
             $table->char('id', 80)->primary();
             $table->foreignId('user_id')->nullable()->index();
@@ -74,17 +75,5 @@ return new class extends Migration
             $table->dateTime('last_polled_at')->nullable();
             $table->dateTime('expires_at')->nullable();
         });
-
-
-
-
-    }
-
-    /**
-     * Reverse the migrations.
-     */
-    public function down(): void
-    {
-        
     }
 };
