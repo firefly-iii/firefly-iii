@@ -129,7 +129,7 @@ class SecureHeaders
                 $response->header('Content-Security-Policy', implode('; ', $csp));
             }
             if (!method_exists($response, 'header')) {
-                $response->header('Content-Security-Policy', implode('; ', $csp));
+                $response->headers->set('Content-Security-Policy', implode('; ', $csp));
             }
         }
         if (method_exists($response, 'header')) {

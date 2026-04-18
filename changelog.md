@@ -8,7 +8,7 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 <!-- summary: This releases upgrades many dependencies and will invalidate all of your OAuth-tokens and clients. -->
 
 > [!WARNING]
-> This releases will invalidate ALL of your OAuth-tokens and clients. Sorry about that.
+> This releases will invalidate ALL of your OAuth-tokens and clients. Integrations with Home Assistant, AI-agents or the Firefly III Data Importer must be reconfigured with newly generated tokens. Old tokens and clients will no longer work. Sorry about that.
 
 ### Changed
 
