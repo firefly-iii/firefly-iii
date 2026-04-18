@@ -7,6 +7,9 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 
 <!-- summary: This releases upgrades many dependencies and will invalidate all of your OAuth-tokens and clients. -->
 
+> [!WARNING]
+> This releases will invalidate ALL of your OAuth-tokens and clients. Sorry about that.
+
 ### Changed
 
 - Updated many dependencies, amongst which are some backwards incompatible ones. Sorry about your OAuth-tokens. 
