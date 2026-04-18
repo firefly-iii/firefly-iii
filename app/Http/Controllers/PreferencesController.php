@@ -270,10 +270,10 @@ final class PreferencesController extends Controller
             $variables = ['slack_webhook_url', 'pushover_app_token', 'pushover_user_token', 'ntfy_server', 'ntfy_topic', 'ntfy_user', 'ntfy_pass'];
             $all       = $request->only($variables);
             foreach ($variables as $variable) {
-                if ('' === $all[$variable]) {
+                if (!array_key_exists($variable, $all) || '' === $all[$variable]) {
                     Preferences::delete($variable);
                 }
-                if ('' !== $all[$variable]) {
+                if (array_key_exists($variable, $all) && '' !== $all[$variable]) {
                     Preferences::setEncrypted($variable, $all[$variable]);
                 }
             }
