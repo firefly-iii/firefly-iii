@@ -864,7 +864,7 @@ Route::group(
         Route::post('logout-others', ['uses' => 'ProfileController@postLogoutOtherSessions', 'as' => 'logout-others.post']);
 
         // new oauth pages
-        Route::get('oauth', ['uses' => 'Profile\OauthController@index', 'as' => 'oauth.index']);
+        Route::get('oauth', ['uses' => 'Profile\OAuthController@index', 'as' => 'oauth.index']);
     }
 );
 
