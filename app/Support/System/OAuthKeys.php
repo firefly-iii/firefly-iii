@@ -38,6 +38,7 @@ use Safe\Exceptions\FilesystemException;
 
 use function Safe\file_get_contents;
 use function Safe\file_put_contents;
+use function Safe\chmod;
 
 /**
  * Class OAuthKeys

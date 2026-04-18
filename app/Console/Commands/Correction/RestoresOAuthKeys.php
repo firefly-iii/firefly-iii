@@ -29,6 +29,7 @@ use FireflyIII\Support\System\OAuthKeys;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\Log;
 use Laravel\Passport\Passport;
+use function Safe\chmod;
 
 class RestoresOAuthKeys extends Command
 {

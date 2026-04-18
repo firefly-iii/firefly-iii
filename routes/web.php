@@ -56,13 +56,7 @@ Route::group(
 );
 
 // laravel passport routes
-//Route::group(
-//    [
-//        'as'        => 'passport.',
-//        'prefix'    => config('passport.path', 'oauth'),
-//        'namespace' => '\Laravel\Passport\Http\Controllers',
-//    ],
-//    function (): void {
+
 //        // routes with no extra middleware
 //        Route::post('/token', ['uses' => 'AccessTokenController@issueToken', 'as' => 'token', 'middleware' => 'throttle']);
 //        Route::get('/authorize', ['uses' => 'AuthorizationController@authorize', 'as' => 'authorizations.authorize', 'middleware' => 'user-full-auth']);
@@ -76,9 +70,6 @@ Route::group(
 //            Route::get('/tokens', ['uses' => 'AuthorizedAccessTokenController@forUser', 'as' => 'tokens.index']);
 //            Route::delete('/tokens/{token_id}', ['uses' => 'AuthorizedAccessTokenController@destroy', 'as' => 'tokens.destroy']);
 //            Route::get('/scopes', ['uses' => 'ScopeController@all', 'as'   => 'scopes.index']);
-//            Route::get('/personal-access-tokens', ['uses' => 'PersonalAccessTokenController@forUser', 'as'   => 'personal.tokens.index']);
-//            Route::post('/personal-access-tokens', ['uses' => 'PersonalAccessTokenController@store', 'as'   => 'personal.tokens.store']);
-//            Route::delete('/personal-access-tokens/{token_id}', ['uses' => 'PersonalAccessTokenController@destroy', 'as'   => 'personal.tokens.destroy']);
 //        });
 //    }
 //);

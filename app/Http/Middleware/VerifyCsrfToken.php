@@ -23,7 +23,7 @@ declare(strict_types=1);
 
 namespace FireflyIII\Http\Middleware;
 
-use Illuminate\Foundation\Http\Middleware\VerifyCsrfToken as Middleware;
+use Illuminate\Foundation\Http\Middleware\PreventRequestForgery as MiddleWare;
 
 /**
  * Class VerifyCsrfToken.

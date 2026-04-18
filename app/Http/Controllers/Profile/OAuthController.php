@@ -19,6 +19,8 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
+declare(strict_types=1);
+
 namespace FireflyIII\Http\Controllers\Profile;
 
 use FireflyIII\Http\Controllers\Controller;
@@ -33,13 +35,12 @@ use Illuminate\Support\Facades\Log;
 use Laravel\Passport\Client;
 use Laravel\Passport\ClientRepository;
 use Laravel\Passport\Token;
-use Laravel\Passport\TokenRepository;
 
 class OAuthController extends Controller
 {
     protected bool $internalAuth;
 
-    public function __construct(protected ClientRepository $clients, protected TokenRepository $tokenRepository, protected ValidationFactory $validation)
+    public function __construct(protected ClientRepository $clients, protected ValidationFactory $validation)
     {
         parent::__construct();
 
@@ -56,6 +57,9 @@ class OAuthController extends Controller
         $this->middleware(IsDemoUser::class)->except(['index']);
     }
 
+    /**
+     * @return \Illuminate\Contracts\View\Factory|\Illuminate\Contracts\View\View|\Illuminate\View\View
+     */
     public function index()
     {
         $count = DB::table('oauth_clients')->where('grant_types', '["personal_access"]')->whereNull('owner_id')->count();
@@ -102,7 +106,7 @@ class OAuthController extends Controller
 
 
         $client = auth()->user()->oauthApps()->where('revoked', false)->find($clientId);
-        if (!$client) {
+        if (null === $client) {
             return new Response('', 404);
         }
         //$client->
@@ -117,7 +121,7 @@ class OAuthController extends Controller
     {
         $client = auth()->user()->oauthApps()->where('revoked', false)->find($clientId);
 
-        if (!$client) {
+        if (null === $client) {
             return new Response('', 404);
         }
 
@@ -135,10 +139,10 @@ class OAuthController extends Controller
 
     public function destroyClient(Request $request, string $clientId): Response
     {
-        /** @var Client $client */
+        /** @var Client|null $client */
         $client = auth()->user()->oauthApps()->where('revoked', false)->find($clientId);
 
-        if (!$client) {
+        if (null === $client) {
             return new Response('', 404);
         }
 
@@ -162,10 +166,7 @@ class OAuthController extends Controller
 
     public function destroyPersonalAccessToken(Request $request, string $tokenId): Response
     {
-//        auth()->user()->fin
-        $token = $this->tokenRepository->findForUser(
-            $tokenId, $request->user()
-        );
+        $token = auth()->user()->tokens()->where('revoked', false)->find($tokenId);
 
         if (is_null($token)) {
             return new Response('', 404);
