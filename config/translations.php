@@ -140,6 +140,7 @@ return [
         'v1' => [
             'firefly' => [
                 'explain_pats',
+                'profile_oauth_clients_explain',
                 'administrations_page_title',
                 'administrations_index_menu',
                 'expires_at',
