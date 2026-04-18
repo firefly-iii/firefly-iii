@@ -1,6 +1,7 @@
 {
     "firefly": {
         "explain_pats": "Personal Access Tokens are long lived (with a maximum of 1 year) keys that allow direct and unlimited access to your Firefly III data. Tools like the Firefly III Data Importer and the Firefly III integration in Home Assistant use such tokens to connect to Firefly III and do their thing. When you create a token, it is only visible once. The token is also very long.",
+        "profile_oauth_clients_explain": "An OAuth client can be used to connect \"smart\" applications to Firefly III: applications that are capable of redirecting you to your Firefly III, get your permission, and return you back. The Firefly III Data Importer is such an application. OAuth clients can be generated with or without a \"secret\". This secret is used to authenticate the client. Since not all clients are capable of storing the secret, so you have the option to generate a client without one.",
         "administrations_page_title": "\u0424\u0456\u043d\u0430\u043d\u0441\u043e\u0432\u0456 \u0430\u0434\u043c\u0456\u043d\u0456\u0441\u0442\u0440\u0430\u0446\u0456\u0457",
         "administrations_index_menu": "\u0424\u0456\u043d\u0430\u043d\u0441\u043e\u0432\u0456 \u0430\u0434\u043c\u0456\u043d\u0456\u0441\u0442\u0440\u0430\u0446\u0456\u0457",
         "expires_at": "Expires at",
