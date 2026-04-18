@@ -32,18 +32,6 @@ jobs:
         uses: actions/checkout@v6
         with:
           fetch-depth: 0
-      - name: Import GPG key
-        uses: crazy-max/ghaction-import-gpg@v7
-        with:
-          gpg_private_key: ${{ secrets.GPG_PRIVATE_KEY }}
-          passphrase: ${{ secrets.PASSPHRASE }}
-          git_user_signingkey: true
-          git_commit_gpgsign: true
-      - name: Setup PHP
-        uses: shivammathur/setup-php@v2
-        with:
-          php-version: ${{ github.event.inputs.phpversion || '8.5' }}
-          extensions: mbstring, intl, zip, bcmath
       - name: Switch and pull
         run: |
           # validate argument
@@ -52,7 +40,6 @@ jobs:
             echo 'Argument does not start with a d or with a v'
             exit 1
           fi
-
 
           #
           # Always check out origin/develop, unless its a branch release.
@@ -77,6 +64,11 @@ jobs:
           git config user.email release@firefly-iii.org
           git config advice.addIgnoredFile false
           git config push.autoSetupRemote true
+      - name: Setup PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: ${{ github.event.inputs.phpversion || '8.5' }}
+          extensions: mbstring, intl, zip, bcmath
       - name: Lint PHP
         run: |
           php_lint_file()
@@ -98,6 +90,40 @@ jobs:
           then
               exit 1
           fi
+      - name: Code cleanup
+        id: code-cleanup
+        uses: JC5/firefly-iii-dev@main
+        with:
+          action: 'ff3:code'
+          output: ''
+        env:
+          FIREFLY_III_ROOT: /github/workspace
+          GH_TOKEN: ''
+      - name: Setup Mago
+        uses: nhedger/setup-mago@v1
+        with:
+          version: "latest"
+          working-directory: "."
+      - name: Run CI
+        run: |
+          cp .env.example .env
+          # install all packages etc.
+          rm -rf vendor composer.lock
+          composer update --no-scripts -q
+
+          # format code.
+          echo "Will now run Mago Format"
+          mago format
+          sudo chown -R runner:docker resources/lang
+          echo "Will now run PHPCS"
+          .ci/phpcs.sh
+
+          # lint and check
+          echo "Will now run Mago Lint"
+          mago lint
+          echo "Will now run PHPstan"
+          .ci/phpstan.sh
+          rm .env
       - name: Crowdin action
         uses: crowdin/github-action@v2
         with:
@@ -109,6 +135,30 @@ jobs:
           GITHUB_TOKEN: ${{ github.token }}
           CROWDIN_PROJECT_NR: ${{ secrets.CROWDIN_PROJECT_NR }}
           CROWDIN_TOKEN: ${{ secrets.CROWDIN_TOKEN }}
+      - name: Generate JSON v1
+        id: json-v1
+        uses: JC5/firefly-iii-dev@main
+        with:
+          action: 'ff3:json-translations v1'
+          output: ''
+        env:
+          FIREFLY_III_ROOT: /github/workspace
+          GH_TOKEN: ''
+      - name: Generate JSON v2
+        id: json-v2
+        uses: JC5/firefly-iii-dev@main
+        with:
+          action: 'ff3:json-translations v2'
+          output: ''
+        env:
+          FIREFLY_III_ROOT: /github/workspace
+          GH_TOKEN: ''
+      - name: Build JS
+        run: |
+          npm install
+          npm run prod  --workspace=v1 --verbose
+          npm run build --workspace=v2 --verbose
+          npm update
       - name: Cleanup changelog
         id: cleanup-changelog
         uses: JC5/firefly-iii-dev@main
@@ -137,61 +187,7 @@ jobs:
           FIREFLY_III_ROOT: /github/workspace
           GH_TOKEN: ""
           FF_III_VERSION: ${{ github.event_name == 'schedule' && 'develop' || inputs.version }}
-      - name: Generate JSON v1
-        id: json-v1
-        uses: JC5/firefly-iii-dev@main
-        with:
-          action: 'ff3:json-translations v1'
-          output: ''
-        env:
-          FIREFLY_III_ROOT: /github/workspace
-          GH_TOKEN: ''
-      - name: Generate JSON v2
-        id: json-v2
-        uses: JC5/firefly-iii-dev@main
-        with:
-          action: 'ff3:json-translations v2'
-          output: ''
-        env:
-          FIREFLY_III_ROOT: /github/workspace
-          GH_TOKEN: ''
-      - name: Code cleanup
-        id: code-cleanup
-        uses: JC5/firefly-iii-dev@main
-        with:
-          action: 'ff3:code'
-          output: ''
-        env:
-          FIREFLY_III_ROOT: /github/workspace
-          GH_TOKEN: ''
-      - name: Build JS
-        run: |
-          npm install
-          npm run prod  --workspace=v1 --verbose
-          npm run build --workspace=v2 --verbose
-          npm update
-      - name: Setup Mago
-        uses: nhedger/setup-mago@v1
-      - name: Run CI
-        run: |
-          cp .env.example .env
-          # install all packages etc.
-          rm -rf vendor composer.lock
-          composer update --no-scripts -q
 
-          # format code.
-          echo "Will now run Mago Format"
-          mago format
-          sudo chown -R runner:docker resources/lang
-          echo "Will now run PHPCS"
-          .ci/phpcs.sh
-
-          # lint and check
-          echo "Will now run Mago Lint"
-          mago lint
-          echo "Will now run PHPstan"
-          .ci/phpstan.sh
-          rm .env
       - name: Calculate variables
         run: |
 
@@ -326,6 +322,13 @@ jobs:
         env:
           GH_TOKEN: ${{ github.token }}
           version: ${{ github.event_name == 'schedule' && 'develop' || inputs.version }}
+      - name: Import GPG key
+        uses: crazy-max/ghaction-import-gpg@v7
+        with:
+          gpg_private_key: ${{ secrets.GPG_PRIVATE_KEY }}
+          passphrase: ${{ secrets.PASSPHRASE }}
+          git_user_signingkey: true
+          git_commit_gpgsign: true
       - name: Create archives
         run: |
           echo "Create zip file $zipName"
@@ -410,7 +413,7 @@ jobs:
         env:
           GH_TOKEN: ${{ github.token }}
           version: ${{ github.event_name == 'schedule' && 'develop' || inputs.version }}
-      - name: Upload artifacts
+      - name: Upload the artifacts
         run: |
           # add zip file to release.
           echo "Upload $zipName to $releaseName"
