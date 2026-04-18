@@ -150,8 +150,8 @@ class OAuthKeys
 
         if (! windows_os()) {
             Log::debug('Set the correct permissions.');
-            chmod(Passport::keyPath('oauth-public.key'), 0660);
-            chmod(Passport::keyPath('oauth-private.key'), 0600);
+            chmod(Passport::keyPath('oauth-public.key'), 0o660);
+            chmod(Passport::keyPath('oauth-private.key'), 0o600);
         }
 
         Log::debug(sprintf('Will store private key with hash "%s" in file "%s"', hash('sha256', $privateContent), $private));

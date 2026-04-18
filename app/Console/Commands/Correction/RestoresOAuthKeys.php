@@ -47,8 +47,8 @@ class RestoresOAuthKeys extends Command
         $this->restoreOAuthKeys();
 
         if (! windows_os()) {
-            chmod(Passport::keyPath('oauth-public.key'), 0660);
-            chmod(Passport::keyPath('oauth-private.key'), 0600);
+            chmod(Passport::keyPath('oauth-public.key'), 0o660);
+            chmod(Passport::keyPath('oauth-private.key'), 0o600);
         }
 
         Log::debug('Done with OAuth Keys command.');

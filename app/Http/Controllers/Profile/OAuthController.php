@@ -36,7 +36,7 @@ use Laravel\Passport\Client;
 use Laravel\Passport\ClientRepository;
 use Laravel\Passport\Token;
 
-class OAuthController extends Controller
+final class OAuthController extends Controller
 {
     protected bool $internalAuth;
 
@@ -83,7 +83,7 @@ class OAuthController extends Controller
     public function storeClient(Request $request): JsonResponse
     {
 
-        $this->validation->make($request->all(), [
+        $this->validation->make($request->only(['name','redirect_uris','confidential']), [
             'name'          => ['required', 'string', 'max:255'],
             'redirect_uris' => ['required', 'url'],
             'confidential'  => 'boolean',
@@ -125,7 +125,7 @@ class OAuthController extends Controller
             return new Response('', 404);
         }
 
-        $this->validation->make($request->all(), [
+        $this->validation->make($request->only(['name','redirect_uris']), [
             'name'          => ['required', 'string', 'max:255'],
             'redirect_uris' => ['required', 'url'],
         ])->validate();
@@ -146,7 +146,7 @@ class OAuthController extends Controller
             return new Response('', 404);
         }
 
-        $client->tokens()->with('refreshToken')->each(function (Token $token): void {
+        $client->tokens()->with('refreshToken')->each(function (#[\SensitiveParameter] Token $token): void {
             $token->refreshToken?->revoke();
             $token->revoke();
         });
@@ -158,7 +158,7 @@ class OAuthController extends Controller
 
     public function storePersonalAccessToken(Request $request): JsonResponse
     {
-        $this->validation->make($request->all(), [
+        $this->validation->make($request->only(['name']), [
             'name' => ['required', 'max:255']])->validate();
 
         return response()->json($request->user()->createToken($request->name));
@@ -185,7 +185,7 @@ class OAuthController extends Controller
                         ->where('revoked', false)
                         ->where('expires_at', '>', Date::now())
                         ->get()
-                        ->filter(fn(Token $token) => $token->client->hasGrantType('personal_access'));
+                        ->filter(fn(#[\SensitiveParameter] Token $token) => $token->client->hasGrantType('personal_access'));
         return response()->json($tokens);
     }
 
