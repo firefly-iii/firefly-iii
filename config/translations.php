@@ -141,6 +141,7 @@ return [
             'firefly' => [
                 'explain_pats',
                 'profile_oauth_clients_explain',
+                'regenerate_secret',
                 'administrations_page_title',
                 'administrations_index_menu',
                 'expires_at',

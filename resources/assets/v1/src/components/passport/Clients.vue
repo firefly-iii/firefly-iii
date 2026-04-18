@@ -52,7 +52,7 @@
                     <tr>
                         <th class="width-30" scope="col">{{ $t('firefly.profile_oauth_client_id') }}</th>
                         <th class="width-30" scope="col">{{ $t('firefly.name') }}</th>
-                        <th class="width-40" scope="col" style="text-align:right">{{ $t('form.buttons') }}</th>
+                        <th class="width-40" scope="col" style="text-align:right">{{ $t('firefly.actions') }}</th>
                     </tr>
                     </thead>
 
@@ -71,7 +71,7 @@
                         <!-- Secret -->
                         <td style="vertical-align: middle;text-align:right">
                             <div class="btn-group">
-                            <a :title="$t('firefly.regenerate_secret')" class="btn btn-default btn-sm" @click="regenerateSecret(client)">
+                            <a v-if="client.confidential" :title="$t('firefly.regenerate_secret')" class="btn btn-default btn-sm" @click="regenerateSecret(client)">
                                 <em :title="$t('firefly.regenerate_secret')" class="fa fa-retweet"></em>
                                 {{ $t('firefly.regenerate_secret') }}
                             </a>

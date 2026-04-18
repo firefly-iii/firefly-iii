@@ -120,8 +120,15 @@ final class OAuthController extends Controller
     {
         // Retrieving all the OAuth app clients that belong to the user...
         $clients = auth()->user()->oauthApps()->where('revoked', false)->get();
+        $array = [];
+        /** @var Client $client */
+        foreach($clients as $client) {
+            $item = $client->toArray();
+            $item['confidential'] = $client->confidential();
+            $array[] = $item;
+        }
 
-        return response()->json($clients);
+        return response()->json($array);
     }
 
     public function listPersonalAccessTokens(): JsonResponse
