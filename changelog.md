@@ -3,6 +3,29 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
+## v6.6.0 - 2026-04-19
+
+<!-- summary: This releases upgrades many dependencies and will invalidate all of your OAuth-tokens and clients. -->
+
+### Changed
+
+- Updated many dependencies, amongst which are some backwards incompatible ones. Sorry about your OAuth-tokens. 
+
+### Fixed
+
+- #12029
+- #12030
+- #12034
+- #12035
+- #12043
+- #12044
+- #12056
+- #12063
+- #12066
+- #12070
+- #12081
+- #12083
+
 ## v6.5.9 - 2026-03-23
 
 <!-- summary: Bug fixes mainly, but also updated dependencies and new wording in the instructions you see when you open a PR. -->
