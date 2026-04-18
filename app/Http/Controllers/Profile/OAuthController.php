@@ -101,7 +101,7 @@ final class OAuthController extends Controller
         return response()->json($arr);
     }
 
-    public function regenerateClientSecret(Request $request, string $clientId): JsonResponse | Response | Client
+    public function regenerateClientSecret(Request $request, string $clientId): JsonResponse | Response
     {
 
 
