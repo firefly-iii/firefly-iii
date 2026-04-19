@@ -28,7 +28,7 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 - [Issue 12070](https://github.com/firefly-iii/firefly-iii/issues/12070) (can't add money to piggy bank) reported by @4e868df3
 - [Issue 12081](https://github.com/firefly-iii/firefly-iii/issues/12081) (Discord changes webhook domain) reported by @MinDBreaK
 - [Issue 12083](https://github.com/firefly-iii/firefly-iii/issues/12083) (Hide or remove the Ntfy fields if they dont work.) reported by @OrakMoya
-- #12107
+- [Issue 12107](https://github.com/firefly-iii/firefly-iii/issues/12107) (Exception sending test email notification) reported by @antrv
 
 ## v6.5.9 - 2026-03-23
 
