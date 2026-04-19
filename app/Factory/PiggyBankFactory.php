@@ -134,6 +134,13 @@ class PiggyBankFactory
                 $previous                 = $toBeLinked[$account->id]['current_amount'] ?? '0';
                 $diff                     = bcsub($info['current_amount'], $previous);
 
+                // if money is added, check if we can!
+                if (1 === bccomp($diff, '0') && !$this->piggyBankRepository->canAddAmount($piggyBank, $account, $diff)) {
+                    Log::debug(sprintf('Cannot add amount %s to piggy bank #%d ("%s")', $diff, $piggyBank->id, $piggyBank->name));
+
+                    continue;
+                }
+
                 // create event for difference.
                 if (0 !== bccomp($diff, '0')) {
                     // 2025-10-01 for issue #10990 disable this event.

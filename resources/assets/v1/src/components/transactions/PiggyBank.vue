@@ -28,7 +28,7 @@
     <div class="col-sm-12">
       <select ref="piggy" class="form-control" name="piggy_bank[]" @input="handleInput">
         <optgroup v-for="(option, key) in this.piggies" v-bind:label="key">
-          <option v-for="piggy in option.piggies" :label="piggy.name_with_balance" :value="piggy.id">
+          <option v-for="piggy in option.piggies" :label="piggy.name_with_balance" :selected="piggy.id === value" :value="piggy.id">
             {{ piggy.name_with_balance }}
           </option>
         </optgroup>
@@ -81,6 +81,9 @@ export default {
             let currentPiggy = res.data[key];
             if (null !== currentPiggy.object_group_id) {
               let groupOrder = currentPiggy.object_group_order;
+              if(0 === groupOrder) {
+                  groupOrder = 1;
+              }
               if (!tempList[groupOrder]) {
                 tempList[groupOrder] = {
                   group: {

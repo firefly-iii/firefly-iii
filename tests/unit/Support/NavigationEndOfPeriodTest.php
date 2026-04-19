@@ -59,109 +59,73 @@ final class NavigationEndOfPeriodTest extends TestCase
         yield '1W' => [
             '1W',
             Carbon::now(),
-            Carbon::now()
-                ->addWeek()
-                ->subDay()
-                ->endOfDay(),
+            Carbon::now()->addWeek()->subDay()->endOfDay(),
         ];
 
         yield 'week' => [
             'week',
             Carbon::now(),
-            Carbon::now()
-                ->addWeek()
-                ->subDay()
-                ->endOfDay(),
+            Carbon::now()->addWeek()->subDay()->endOfDay(),
         ];
 
         yield 'weekly' => [
             'weekly',
             Carbon::now(),
-            Carbon::now()
-                ->addWeek()
-                ->subDay()
-                ->endOfDay(),
+            Carbon::now()->addWeek()->subDay()->endOfDay(),
         ];
 
         yield 'month' => [
             'month',
             Carbon::now(),
-            Carbon::now()
-                ->addMonth()
-                ->subDay()
-                ->endOfDay(),
+            Carbon::now()->addMonth()->subDay()->endOfDay(),
         ];
 
         yield '1M' => [
             '1M',
             Carbon::now(),
-            Carbon::now()
-                ->addMonth()
-                ->subDay()
-                ->endOfDay(),
+            Carbon::now()->addMonth()->subDay()->endOfDay(),
         ];
 
         yield 'monthly' => [
             'monthly',
             Carbon::now(),
-            Carbon::now()
-                ->addMonth()
-                ->subDay()
-                ->endOfDay(),
+            Carbon::now()->addMonth()->subDay()->endOfDay(),
         ];
 
         yield '3M' => [
             '3M',
             Carbon::now(),
-            Carbon::now()
-                ->addQuarter()
-                ->subDay()
-                ->endOfDay(),
+            Carbon::now()->addQuarter()->subDay()->endOfDay(),
         ];
 
         yield 'quarter' => [
             'quarter',
             Carbon::now(),
-            Carbon::now()
-                ->addQuarter()
-                ->subDay()
-                ->endOfDay(),
+            Carbon::now()->addQuarter()->subDay()->endOfDay(),
         ];
 
         yield 'quarterly' => [
             'quarterly',
             Carbon::now(),
-            Carbon::now()
-                ->addQuarter()
-                ->subDay()
-                ->endOfDay(),
+            Carbon::now()->addQuarter()->subDay()->endOfDay(),
         ];
 
         yield 'year' => [
             'year',
             Carbon::now(),
-            Carbon::now()
-                ->addYearNoOverflow()
-                ->subDay()
-                ->endOfDay(),
+            Carbon::now()->addYearNoOverflow()->subDay()->endOfDay(),
         ];
 
         yield 'yearly' => [
             'yearly',
             Carbon::now(),
-            Carbon::now()
-                ->addYearNoOverflow()
-                ->subDay()
-                ->endOfDay(),
+            Carbon::now()->addYearNoOverflow()->subDay()->endOfDay(),
         ];
 
         yield '1Y' => [
             '1Y',
             Carbon::now(),
-            Carbon::now()
-                ->addYearNoOverflow()
-                ->subDay()
-                ->endOfDay(),
+            Carbon::now()->addYearNoOverflow()->subDay()->endOfDay(),
         ];
 
         yield 'half-year' => ['half-year', Carbon::parse('2023-05-20'), Carbon::parse('2023-11-19')->endOfDay()];

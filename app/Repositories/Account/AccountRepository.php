@@ -60,11 +60,7 @@ class AccountRepository implements AccountRepositoryInterface, UserGroupInterfac
 
     public function count(array $types): int
     {
-        return $this->user
-            ->accounts()
-            ->accountTypeIn($types)
-            ->count()
-        ;
+        return $this->user->accounts()->accountTypeIn($types)->count();
     }
 
     /**
@@ -88,12 +84,7 @@ class AccountRepository implements AccountRepositoryInterface, UserGroupInterfac
 
         /** @var Account $account */
         foreach ($accounts as $account) {
-            $byName = $this->user
-                ->accounts()
-                ->where('name', $account->name)
-                ->where('id', '!=', $account->id)
-                ->first()
-            ;
+            $byName = $this->user->accounts()->where('name', $account->name)->where('id', '!=', $account->id)->first();
             if (null !== $byName) {
                 $result->push($account);
                 $result->push($byName);
@@ -101,12 +92,7 @@ class AccountRepository implements AccountRepositoryInterface, UserGroupInterfac
                 continue;
             }
             if (null !== $account->iban) {
-                $byIban = $this->user
-                    ->accounts()
-                    ->where('iban', $account->iban)
-                    ->where('id', '!=', $account->id)
-                    ->first()
-                ;
+                $byIban = $this->user->accounts()->where('iban', $account->iban)->where('id', '!=', $account->id)->first();
                 if (null !== $byIban) {
                     $result->push($account);
                     $result->push($byIban);
@@ -151,11 +137,7 @@ class AccountRepository implements AccountRepositoryInterface, UserGroupInterfac
     public function findByIbanNull(string $iban, array $types): ?Account
     {
         $iban  = Steam::filterSpaces($iban);
-        $query = $this->user
-            ->accounts()
-            ->where('iban', '!=', '')
-            ->whereNotNull('iban')
-        ;
+        $query = $this->user->accounts()->where('iban', '!=', '')->whereNotNull('iban');
 
         if (0 !== count($types)) {
             $query->leftJoin('account_types', 'accounts.account_type_id', '=', 'account_types.id');
@@ -453,12 +435,7 @@ class AccountRepository implements AccountRepositoryInterface, UserGroupInterfac
         $type     = AccountType::where('type', AccountTypeEnum::RECONCILIATION->value)->first();
 
         /** @var null|Account $current */
-        $current  = $this->user
-            ->accounts()
-            ->where('account_type_id', $type->id)
-            ->where('name', $name)
-            ->first()
-        ;
+        $current  = $this->user->accounts()->where('account_type_id', $type->id)->where('name', $name)->first();
 
         if (null !== $current) {
             return $current;

@@ -33,6 +33,7 @@ use FireflyIII\Models\TransactionGroup;
 use FireflyIII\Models\TransactionJournal;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
 
 class CorrectsGroupAccounts extends Command
 {
@@ -46,6 +47,7 @@ class CorrectsGroupAccounts extends Command
      */
     public function handle(): int
     {
+        Log::debug('Start of correction:group-accounts');
         $groups                   = [];
         $res                      = TransactionJournal::groupBy('transaction_group_id')->get(['transaction_group_id', DB::raw('COUNT(transaction_group_id) as the_count')]);
 
@@ -59,13 +61,16 @@ class CorrectsGroupAccounts extends Command
         $flags->applyRules        = false;
         $flags->fireWebhooks      = false;
         $flags->recalculateCredit = true;
+        $flags->unifyOnly         = true;
         $objects                  = new TransactionGroupEventObjects();
         foreach ($groups as $groupId) {
             $group = TransactionGroup::find($groupId);
             $objects->appendFromTransactionGroup($group);
         }
+        Log::debug(sprintf('Fire event for %d transaction group(s)', count($groups)));
         event(new UpdatedSingleTransactionGroup($flags, $objects));
         event(new WebhookMessagesRequestSending());
+        Log::debug('End of correction:group-accounts');
 
         return 0;
     }

@@ -76,12 +76,7 @@ class TransactionGroupTwig extends AbstractExtension
     {
         return new TwigFunction('journalGetMetaDate', static function (int $journalId, string $metaField): Carbon|CarbonInterface {
             /** @var null|TransactionJournalMeta $entry */
-            $entry = DB::table('journal_meta')
-                ->where('name', $metaField)
-                ->where('transaction_journal_id', $journalId)
-                ->whereNull('deleted_at')
-                ->first()
-            ;
+            $entry = DB::table('journal_meta')->where('name', $metaField)->where('transaction_journal_id', $journalId)->whereNull('deleted_at')->first();
             if (null === $entry) {
                 return today(config('app.timezone'));
             }
@@ -94,12 +89,7 @@ class TransactionGroupTwig extends AbstractExtension
     {
         return new TwigFunction('journalGetMetaField', static function (int $journalId, string $metaField) {
             /** @var null|TransactionJournalMeta $entry */
-            $entry = DB::table('journal_meta')
-                ->where('name', $metaField)
-                ->where('transaction_journal_id', $journalId)
-                ->whereNull('deleted_at')
-                ->first()
-            ;
+            $entry = DB::table('journal_meta')->where('name', $metaField)->where('transaction_journal_id', $journalId)->whereNull('deleted_at')->first();
             if (null === $entry) {
                 return '';
             }
@@ -111,12 +101,7 @@ class TransactionGroupTwig extends AbstractExtension
     public function journalHasMeta(): TwigFunction
     {
         return new TwigFunction('journalHasMeta', static function (int $journalId, string $metaField): bool {
-            $count = DB::table('journal_meta')
-                ->where('name', $metaField)
-                ->where('transaction_journal_id', $journalId)
-                ->whereNull('deleted_at')
-                ->count()
-            ;
+            $count = DB::table('journal_meta')->where('name', $metaField)->where('transaction_journal_id', $journalId)->whereNull('deleted_at')->count();
 
             return 1 === $count;
         });

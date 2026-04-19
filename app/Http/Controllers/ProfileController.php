@@ -38,17 +38,16 @@ use FireflyIII\Support\Http\Controllers\CreateStuff;
 use FireflyIII\User;
 use Illuminate\Auth\AuthenticationException;
 use Illuminate\Contracts\Auth\Guard;
+use Illuminate\Contracts\Validation\Factory as ValidationFactory;
 use Illuminate\Contracts\View\Factory;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Redirector;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Log;
 use Illuminate\View\View;
-use Laravel\Passport\ClientRepository;
 use Psr\Container\ContainerExceptionInterface;
 use Psr\Container\NotFoundExceptionInterface;
 use SensitiveParameter;
@@ -67,8 +66,9 @@ final class ProfileController extends Controller
     /**
      * ProfileController constructor.
      */
-    public function __construct()
-    {
+    public function __construct(
+        protected ValidationFactory $validation
+    ) {
         parent::__construct();
 
         $this->middleware(static function ($request, $next) {
@@ -187,11 +187,8 @@ final class ProfileController extends Controller
         /** @var User $user */
         $user           = auth()->user();
         $isInternalAuth = $this->internalAuth;
-        $count          = DB::table('oauth_clients')
-            ->where('personal_access_client', true)
-            ->whereNull('user_id')
-            ->count()
-        ;
+        // $count          = DB::table('oauth_clients')->where('personal_access_client', true)->whereNull('user_id')->count();
+        $count          = 0;
         $subTitle       = $user->email;
         $userId         = $user->id;
         $enabled2FA     = null !== $user->mfa_secret;
@@ -202,12 +199,12 @@ final class ProfileController extends Controller
         $mfaBackupCount = count($recoveryData);
         $this->createOAuthKeys();
 
-        if (0 === $count) {
-            /** @var ClientRepository $repository */
-            $repository = app(ClientRepository::class);
-            $name       = sprintf('%s Personal Access Grant Client', config('app.name'));
-            $repository->createPersonalAccessClient(null, $name, 'http://localhost');
-        }
+        //        if (0 === $count) {
+        //            /** @var ClientRepository $repository */
+        //            $repository = app(ClientRepository::class);
+        //            $name       = sprintf('%s Personal Access Grant Client', config('app.name'));
+        //            $repository->createPersonalAccessClient(null, $name, 'http://localhost');
+        //        }
 
         $accessToken    = Preferences::get('access_token');
         if (null === $accessToken) {

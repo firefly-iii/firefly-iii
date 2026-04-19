@@ -11,7 +11,7 @@ class CustomExpressionLanguage extends ExpressionLanguage
 {
     protected function registerFunctions(): void
     {
-        $basicPhpFunctions = ['min', 'max', 'substr', 'strlen', 'strpos'];
+        $basicPhpFunctions = ['min', 'max', 'substr', 'strlen', 'strpos', 'strtolower', 'strtoupper', 'ucfirst', 'ucwords'];
         foreach ($basicPhpFunctions as $function) {
             $this->addFunction(ExpressionFunction::fromPhp($function));
         }

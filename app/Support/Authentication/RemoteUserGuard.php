@@ -30,7 +30,6 @@ use FireflyIII\User;
 use Illuminate\Contracts\Auth\Authenticatable;
 use Illuminate\Contracts\Auth\Guard;
 use Illuminate\Contracts\Auth\UserProvider;
-use Illuminate\Contracts\Foundation\Application;
 use Illuminate\Support\Facades\App;
 use Illuminate\Support\Facades\Log;
 
@@ -39,7 +38,7 @@ use Illuminate\Support\Facades\Log;
  */
 class RemoteUserGuard implements Guard
 {
-    protected Application $application;
+    // protected Application $application;
     protected ?User $user = null;
     private bool $tried   = false;
 
@@ -47,12 +46,9 @@ class RemoteUserGuard implements Guard
      * Create a new authentication guard.
      */
     public function __construct(
-        protected UserProvider $provider,
-        Application $app
+        protected UserProvider $provider
     ) {
-        $app->get('request');
-        Log::debug(sprintf('Created RemoteUserGuard for %s "%s"', $app->get('request')?->getMethod(), $app->get('request')?->getRequestUri()));
-        $this->application = $app;
+        Log::debug(sprintf('Created RemoteUserGuard for %s "%s"', app()->get('request')?->getMethod(), app()->get('request')?->getRequestUri()));
     }
 
     public function authenticate(): void

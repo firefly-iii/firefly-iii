@@ -77,29 +77,10 @@ final class ShowControllerTest extends TestCase
         $this->user = $this->createAuthenticatedUser();
         $this->actingAs($this->user);
 
-        Account::factory()
-            ->for($this->user)
-            ->withType(AccountTypeEnum::ASSET)
-            ->create()
-        ;
-        Account::factory()
-            ->for($this->user)
-            ->withType(AccountTypeEnum::REVENUE)
-            ->create()
-        ;
-        Account::factory()
-            ->for($this->user)
-            ->withType(AccountTypeEnum::EXPENSE)
-            ->create()
-        ;
-        Account::factory()
-            ->for($this->user)
-            ->withType(AccountTypeEnum::DEBT)
-            ->create()
-        ;
-        Account::factory()
-            ->for($this->user)
-            ->withType(AccountTypeEnum::ASSET)
-            ->create();
+        Account::factory()->for($this->user)->withType(AccountTypeEnum::ASSET)->create();
+        Account::factory()->for($this->user)->withType(AccountTypeEnum::REVENUE)->create();
+        Account::factory()->for($this->user)->withType(AccountTypeEnum::EXPENSE)->create();
+        Account::factory()->for($this->user)->withType(AccountTypeEnum::DEBT)->create();
+        Account::factory()->for($this->user)->withType(AccountTypeEnum::ASSET)->create();
     }
 }

@@ -49,11 +49,7 @@ class DeletedAccountObserver
             $repository->destroy($attachment);
         }
 
-        $journalIds = Transaction::where('account_id', $account->id)
-            ->get(['transactions.transaction_journal_id'])
-            ->pluck('transaction_journal_id')
-            ->toArray()
-        ;
+        $journalIds = Transaction::where('account_id', $account->id)->get(['transactions.transaction_journal_id'])->pluck('transaction_journal_id')->toArray();
 
         $groupIds   = array_map(function (array $item) {
             return $item['transaction_group_id'];

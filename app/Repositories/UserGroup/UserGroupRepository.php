@@ -157,11 +157,7 @@ class UserGroupRepository implements UserGroupRepositoryInterface, UserGroupInte
     #[Override]
     public function getMembershipsFromGroupId(int $groupId): Collection
     {
-        return $this->user
-            ->groupMemberships()
-            ->where('user_group_id', $groupId)
-            ->get()
-        ;
+        return $this->user->groupMemberships()->where('user_group_id', $groupId)->get();
     }
 
     /**

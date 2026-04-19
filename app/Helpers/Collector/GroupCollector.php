@@ -750,11 +750,7 @@ class GroupCollector implements GroupCollectorInterface
 
     private function getCollectedGroupIds(): array
     {
-        return $this->query
-            ->get(['transaction_journals.transaction_group_id'])
-            ->pluck('transaction_group_id')
-            ->toArray()
-        ;
+        return $this->query->get(['transaction_journals.transaction_group_id'])->pluck('transaction_group_id')->toArray();
     }
 
     private function mergeAttachments(array $existingJournal, TransactionJournal $newJournal): array
@@ -1126,6 +1122,7 @@ class GroupCollector implements GroupCollectorInterface
             ->orderBy('transaction_journals.order', 'ASC')
             ->orderBy('transaction_journals.id', 'DESC')
             ->orderBy('transaction_journals.description', 'DESC')
-            ->orderBy('source.amount', 'DESC');
+            ->orderBy('source.amount', 'DESC')
+        ;
     }
 }

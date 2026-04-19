@@ -172,7 +172,7 @@ final class MfaController extends Controller
         session()->flash('info', (string) trans('firefly.pref_two_factor_auth_remove_it'));
 
         // also logout current 2FA tokens.
-        $cookieName = config('google2fa.cookie_name', 'google2fa_token');
+        $cookieName = config('google2fa.cookie_name', 'firefly_iii_mfa_token');
         Cookie::forget($cookieName);
 
         // send user notification.

@@ -34,13 +34,13 @@ trait SupportsGroupProcessingTrait
             return;
         }
 
-        $array               = $set->pluck('id')->toArray();
+        $array               = array_unique($set->pluck('id')->toArray());
 
         /** @var TransactionJournal $first */
         $first               = $set->first();
         $journalIds          = implode(',', $array);
         $user                = $first->user;
-        // Log::debug(sprintf('Add local operator for journal(s): %s', $journalIds));
+        Log::debug(sprintf('Fire rule engine for journal(s): %s', $journalIds));
 
         // collect rules:
         $ruleGroupRepository = app(RuleGroupRepositoryInterface::class);
@@ -56,6 +56,7 @@ trait SupportsGroupProcessingTrait
         $newRuleEngine->setUser($user);
         $newRuleEngine->setRuleGroups($groups);
         foreach ($array as $journalId) {
+            Log::debug(sprintf('Fire rule engine for journal #%d', $journalId));
             $newRuleEngine->removeOperator('journal_id');
             $newRuleEngine->addOperator(['type' => 'journal_id', 'value' => $journalId]);
             $newRuleEngine->fire();

@@ -68,6 +68,7 @@ use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Request;
 use Illuminate\Support\Str;
+use Laravel\Passport\Contracts\OAuthenticatable;
 use Laravel\Passport\HasApiTokens;
 use NotificationChannels\Pushover\PushoverReceiver;
 use SensitiveParameter;
@@ -77,7 +78,7 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
  * @property null|UserGroup $userGroup
  * @property bool           $blocked
  */
-class User extends Authenticatable
+class User extends Authenticatable implements OAuthenticatable
 {
     use HasApiTokens;
     use Notifiable;
@@ -497,12 +498,7 @@ class User extends Authenticatable
         $dbRolesIds       = $dbRoles->pluck('id')->toArray();
         $dbRolesTitles    = $dbRoles->pluck('title')->toArray();
 
-        $groupMemberships = $this
-            ->groupMemberships()
-            ->whereIn('user_role_id', $dbRolesIds)
-            ->where('user_group_id', $userGroup->id)
-            ->get()
-        ;
+        $groupMemberships = $this->groupMemberships()->whereIn('user_role_id', $dbRolesIds)->where('user_group_id', $userGroup->id)->get();
         if (0 === $groupMemberships->count()) {
             Log::error(sprintf(
                 'User #%d "%s" does not have roles %s in user group #%d "%s"',

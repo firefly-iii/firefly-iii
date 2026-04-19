@@ -26,6 +26,7 @@ namespace FireflyIII\Notifications;
 
 use Exception;
 use FireflyIII\Notifications\Notifiables\OwnerNotifiable;
+use FireflyIII\Support\Facades\Preferences;
 use FireflyIII\User;
 use GuzzleHttp\Exception\ClientException;
 use Illuminate\Notifications\Notification;
@@ -36,8 +37,16 @@ class NotificationSender
 {
     public static function send(OwnerNotifiable|User $user, Notification $notification): void
     {
+        // ::locale($user->locale))
+        $lang = config('firefly.default_language');
+        Log::debug(sprintf('Notification send language defaults to "%s"', $lang));
+        if ($user instanceof User) {
+            $lang = Preferences::getForUser($user, 'language', $lang)->data;
+            Log::debug(sprintf('Notification send language set to "%s"', $lang));
+        }
+
         try {
-            NotificationFacade::send($user, $notification);
+            NotificationFacade::locale($lang)->send($user, $notification);
         } catch (ClientException $e) {
             Log::error(sprintf('[a] Error sending notification: %s', $e->getMessage()));
         } catch (Exception $e) {

@@ -188,16 +188,16 @@ class PiggyBankEnrichment implements EnrichmentInterface
             $this->ids[]            = $id;
             $this->currencyIds[$id] = (int) $piggy->transaction_currency_id;
         }
-        $this->ids  = array_unique($this->ids);
+        $this->ids     = array_unique($this->ids);
 
         // collect currencies.
-        $currencies = TransactionCurrency::whereIn('id', $this->currencyIds)->get();
+        $currencies    = TransactionCurrency::whereIn('id', $this->currencyIds)->get();
         foreach ($currencies as $currency) {
             $this->currencies[(int) $currency->id] = $currency;
         }
 
         // collect accounts
-        $set        = DB::table('account_piggy_bank')->whereIn('piggy_bank_id', $this->ids)->get([
+        $set           = DB::table('account_piggy_bank')->whereIn('piggy_bank_id', $this->ids)->get([
             'piggy_bank_id',
             'account_id',
             'current_amount',
@@ -208,8 +208,9 @@ class PiggyBankEnrichment implements EnrichmentInterface
             $accountId                                        = (int) $item->account_id;
             $this->amounts[$id] ??= [];
             if (!array_key_exists($id, $this->accountIds)) {
-                $this->accountIds[$id] = (int) $item->account_id;
+                $this->accountIds[$id] = [];
             }
+            $this->accountIds[$id][]                          = (int) $item->account_id;
             if (!array_key_exists($accountId, $this->amounts[$id])) {
                 $this->amounts[$id][$accountId] = ['current_amount' => '0', 'pc_current_amount' => '0'];
             }
@@ -225,12 +226,17 @@ class PiggyBankEnrichment implements EnrichmentInterface
             }
         }
 
+        $allAccountIds = [];
+        foreach ($this->accountIds as $accountIds) {
+            $allAccountIds = array_merge($allAccountIds, $accountIds);
+        }
+
         // get account currency preference for ALL.
-        $set        = AccountMeta::whereIn('account_id', array_values($this->accountIds))->where('name', 'currency_id')->get();
+        $set           = AccountMeta::whereIn('account_id', $allAccountIds)->where('name', 'currency_id')->get();
 
         /** @var AccountMeta $item */
         foreach ($set as $item) {
-            $accountId  = (int) $item->account_id;
+            // $accountId  = (int) $item->account_id;
             $currencyId = (int) $item->data;
             if (!array_key_exists($currencyId, $this->currencies)) {
                 $this->currencies[$currencyId] = Amount::getTransactionCurrencyById($currencyId);
@@ -239,8 +245,7 @@ class PiggyBankEnrichment implements EnrichmentInterface
             // $this->accountCurrencies[$accountId] = $this->currencies[$currencyId];
         }
 
-        // get account info.
-        $set        = Account::whereIn('id', array_values($this->accountIds))->get();
+        $set           = Account::whereIn('id', $allAccountIds)->get();
 
         /** @var Account $item */
         foreach ($set as $item) {

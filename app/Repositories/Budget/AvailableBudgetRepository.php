@@ -79,11 +79,7 @@ class AvailableBudgetRepository implements AvailableBudgetRepositoryInterface, U
             ->toArray()
         ;
         // delete available budgets without these currencies.
-        $this->user
-            ->availableBudgets()
-            ->whereNotIn('transaction_currency_id', $currencies)
-            ->delete()
-        ;
+        $this->user->availableBudgets()->whereNotIn('transaction_currency_id', $currencies)->delete();
     }
 
     /**
@@ -180,11 +176,7 @@ class AvailableBudgetRepository implements AvailableBudgetRepositoryInterface, U
      */
     public function getAvailableBudgetsByCurrency(TransactionCurrency $currency): Collection
     {
-        return $this->user
-            ->availableBudgets()
-            ->where('transaction_currency_id', $currency->id)
-            ->get()
-        ;
+        return $this->user->availableBudgets()->where('transaction_currency_id', $currency->id)->get();
     }
 
     /**
@@ -209,24 +201,14 @@ class AvailableBudgetRepository implements AvailableBudgetRepositoryInterface, U
      */
     public function getAvailableBudgetsByExactDate(Carbon $start, Carbon $end): Collection
     {
-        return $this->user
-            ->availableBudgets()
-            ->where('start_date', '=', $start->format('Y-m-d'))
-            ->where('end_date', '=', $end->format('Y-m-d'))
-            ->get()
-        ;
+        return $this->user->availableBudgets()->where('start_date', '=', $start->format('Y-m-d'))->where('end_date', '=', $end->format('Y-m-d'))->get();
     }
 
     public function getAvailableBudgetWithCurrency(Carbon $start, Carbon $end): array
     {
         Log::debug(sprintf('Now in %s(%s, %s)', __METHOD__, $start->format('Y-m-d H:i:s'), $end->format('Y-m-d H:i:s')));
         $return           = [];
-        $availableBudgets = $this->user
-            ->availableBudgets()
-            ->where('start_date', $start->format('Y-m-d'))
-            ->where('end_date', $end->format('Y-m-d'))
-            ->get()
-        ;
+        $availableBudgets = $this->user->availableBudgets()->where('start_date', $start->format('Y-m-d'))->where('end_date', $end->format('Y-m-d'))->get();
 
         Log::debug(sprintf('Found %d available budgets (already converted)', $availableBudgets->count()));
 

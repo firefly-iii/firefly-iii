@@ -31,10 +31,12 @@ use Illuminate\Support\Facades\Artisan;
 use Illuminate\Support\Facades\Crypt;
 use Illuminate\Support\Facades\Log;
 use Laravel\Passport\Console\KeysCommand;
+use Laravel\Passport\Passport;
 use Psr\Container\ContainerExceptionInterface;
 use Psr\Container\NotFoundExceptionInterface;
 use Safe\Exceptions\FilesystemException;
 
+use function Safe\chmod;
 use function Safe\file_get_contents;
 use function Safe\file_put_contents;
 
@@ -57,8 +59,8 @@ class OAuthKeys
     public static function hasKeyFiles(): bool
     {
         Log::debug('hasKeyFiles()');
-        $private       = storage_path('oauth-private.key');
-        $public        = storage_path('oauth-public.key');
+        $private       = Passport::keyPath('oauth-private.key');
+        $public        = Passport::keyPath('oauth-public.key');
         $privateExists = file_exists($private);
         $publicExists  = file_exists($public);
 
@@ -141,10 +143,16 @@ class OAuthKeys
 
             return false;
         }
-        $private    = storage_path('oauth-private.key');
-        $public     = storage_path('oauth-public.key');
+        $private    = Passport::keyPath('oauth-private.key');
+        $public     = Passport::keyPath('oauth-public.key');
         file_put_contents($private, $privateContent);
         file_put_contents($public, $publicContent);
+
+        if (!windows_os()) {
+            Log::debug('Set the correct permissions.');
+            chmod(Passport::keyPath('oauth-public.key'), 0o660);
+            chmod(Passport::keyPath('oauth-private.key'), 0o600);
+        }
 
         Log::debug(sprintf('Will store private key with hash "%s" in file "%s"', hash('sha256', $privateContent), $private));
         Log::debug(sprintf('Will store public key with hash "%s" in file "%s"', hash('sha256', $publicContent), $public));
@@ -155,8 +163,8 @@ class OAuthKeys
 
     public static function storeKeysInDB(): void
     {
-        $private        = storage_path('oauth-private.key');
-        $public         = storage_path('oauth-public.key');
+        $private        = Passport::keyPath('oauth-private.key');
+        $public         = Passport::keyPath('oauth-public.key');
         $privateContent = file_get_contents($private);
         $publicContent  = file_get_contents($public);
         FireflyConfig::set(self::PRIVATE_KEY, Crypt::encrypt($privateContent));

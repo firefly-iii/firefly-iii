@@ -28,6 +28,9 @@ use FireflyIII\Console\Commands\ShowsFriendlyMessages;
 use FireflyIII\Support\System\OAuthKeys;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\Log;
+use Laravel\Passport\Passport;
+
+use function Safe\chmod;
 
 class RestoresOAuthKeys extends Command
 {
@@ -43,6 +46,12 @@ class RestoresOAuthKeys extends Command
     {
         Log::debug('Restore OAuth Keys command.');
         $this->restoreOAuthKeys();
+
+        if (!windows_os()) {
+            chmod(Passport::keyPath('oauth-public.key'), 0o660);
+            chmod(Passport::keyPath('oauth-private.key'), 0o600);
+        }
+
         Log::debug('Done with OAuth Keys command.');
 
         return 0;

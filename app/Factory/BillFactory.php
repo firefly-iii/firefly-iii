@@ -136,11 +136,7 @@ class BillFactory
     public function findByName(string $name): ?Bill
     {
         /** @var null|Bill */
-        return $this->user
-            ->bills()
-            ->whereLike('name', sprintf('%%%s%%', $name))
-            ->first()
-        ;
+        return $this->user->bills()->whereLike('name', sprintf('%%%s%%', $name))->first();
     }
 
     public function setUser(User $user): void

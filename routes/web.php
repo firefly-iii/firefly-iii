@@ -29,37 +29,50 @@ if (!defined('DATEFORMAT')) {
     define('DATEFORMAT', '(19|20)[0-9]{2}-?[0-9]{2}-?[0-9]{2}');
 }
 
-// laravel passport routes
+// new Passport routes.
 Route::group(
     [
         'as'        => 'passport.',
-        'prefix'    => config('passport.path', 'oauth'),
-        'namespace' => '\Laravel\Passport\Http\Controllers',
+        'prefix'    => 'oauth',
+        // 'namespace' => 'FireflyIII\Http\Controllers\OAuth',
     ],
     function (): void {
         // routes with no extra middleware
-        Route::post('/token', ['uses' => 'AccessTokenController@issueToken', 'as' => 'token', 'middleware' => 'throttle']);
-        Route::get('/authorize', ['uses' => 'AuthorizationController@authorize', 'as' => 'authorizations.authorize', 'middleware' => 'user-full-auth']);
+        // Route::post('/token', ['uses' => '\Laravel\Passport\Http\Controllers\AccessTokenController@issueToken', 'as' => 'token', 'middleware' => 'throttle']);
+        // Route::get('/authorize', ['uses' => 'AuthorizationController@authorize', 'as' => 'authorizations.authorize', 'middleware' => 'user-full-auth']);
 
-        // the rest
-        $guard = config('passport.guard');
-        Route::middleware(['web', null !== $guard ? 'auth:'.$guard : 'auth'])->group(function (): void {
-            Route::post('/token/refresh', ['uses' => 'TransientTokenController@refresh', 'as' => 'token.refresh']);
-            Route::post('/authorize', ['uses' => 'ApproveAuthorizationController@approve', 'as' => 'authorizations.approve']);
-            Route::delete('/authorize', ['uses' => 'DenyAuthorizationController@deny', 'as' => 'authorizations.deny']);
-            Route::get('/tokens', ['uses' => 'AuthorizedAccessTokenController@forUser', 'as' => 'tokens.index']);
-            Route::delete('/tokens/{token_id}', ['uses' => 'AuthorizedAccessTokenController@destroy', 'as' => 'tokens.destroy']);
-            Route::get('/clients', ['uses' => 'ClientController@forUser', 'as' => 'clients.index']);
-            Route::post('/clients', ['uses' => 'ClientController@store', 'as' => 'clients.store']);
-            Route::put('/clients/{client_id}', ['uses' => 'ClientController@update', 'as' => 'clients.update']);
-            Route::delete('/clients/{client_id}', ['uses' => 'ClientController@destroy', 'as'   => 'clients.destroy']);
-            Route::get('/scopes', ['uses' => 'ScopeController@all', 'as'   => 'scopes.index']);
-            Route::get('/personal-access-tokens', ['uses' => 'PersonalAccessTokenController@forUser', 'as'   => 'personal.tokens.index']);
-            Route::post('/personal-access-tokens', ['uses' => 'PersonalAccessTokenController@store', 'as'   => 'personal.tokens.store']);
-            Route::delete('/personal-access-tokens/{token_id}', ['uses' => 'PersonalAccessTokenController@destroy', 'as'   => 'personal.tokens.destroy']);
-        });
+        // personal access tokens:
+        Route::post('/personal-access-tokens', ['uses' => 'FireflyIII\Http\Controllers\Profile\OAuthController@storePersonalAccessToken', 'as'   => 'personal.tokens.store']);
+        Route::get('/personal-access-tokens', ['uses' => 'FireflyIII\Http\Controllers\Profile\OAuthController@listPersonalAccessTokens', 'as'   => 'personal.tokens.index']);
+        Route::delete('/personal-access-tokens/{token_id}', ['uses' => 'FireflyIII\Http\Controllers\Profile\OAuthController@destroyPersonalAccessToken', 'as'   => 'personal.tokens.destroy']);
+
+        // clients:
+        Route::get('/clients', ['uses' => 'FireflyIII\Http\Controllers\Profile\OAuthController@listClients', 'as' => 'clients.index']);
+        Route::post('/clients', ['uses' => 'FireflyIII\Http\Controllers\Profile\OAuthController@storeClient', 'as' => 'clients.store']);
+        Route::post('/clients/regenerate/{client_id}', ['uses' => 'FireflyIII\Http\Controllers\Profile\OAuthController@regenerateClientSecret', 'as' => 'clients.regen']);
+        Route::put('/clients/{client_id}', ['uses' => 'FireflyIII\Http\Controllers\Profile\OAuthController@updateClient', 'as' => 'clients.update']);
+        Route::delete('/clients/{client_id}', ['uses' => 'FireflyIII\Http\Controllers\Profile\OAuthController@destroyClient', 'as' => 'clients.destroy']);
     }
 );
+
+// laravel passport routes
+
+//        // routes with no extra middleware
+//        Route::post('/token', ['uses' => 'AccessTokenController@issueToken', 'as' => 'token', 'middleware' => 'throttle']);
+//        Route::get('/authorize', ['uses' => 'AuthorizationController@authorize', 'as' => 'authorizations.authorize', 'middleware' => 'user-full-auth']);
+//
+//        // the rest
+//        $guard = config('passport.guard');
+//        Route::middleware(['web', null !== $guard ? 'auth:'.$guard : 'auth'])->group(function (): void {
+//            Route::post('/token/refresh', ['uses' => 'TransientTokenController@refresh', 'as' => 'token.refresh']);
+//            Route::post('/authorize', ['uses' => 'ApproveAuthorizationController@approve', 'as' => 'authorizations.approve']);
+//            Route::delete('/authorize', ['uses' => 'DenyAuthorizationController@deny', 'as' => 'authorizations.deny']);
+//            Route::get('/tokens', ['uses' => 'AuthorizedAccessTokenController@forUser', 'as' => 'tokens.index']);
+//            Route::delete('/tokens/{token_id}', ['uses' => 'AuthorizedAccessTokenController@destroy', 'as' => 'tokens.destroy']);
+//            Route::get('/scopes', ['uses' => 'ScopeController@all', 'as'   => 'scopes.index']);
+//        });
+//    }
+// );
 
 Route::group(
     [
@@ -850,7 +863,8 @@ Route::group(
         Route::get('logout-others', ['uses' => 'ProfileController@logoutOtherSessions', 'as' => 'logout-others']);
         Route::post('logout-others', ['uses' => 'ProfileController@postLogoutOtherSessions', 'as' => 'logout-others.post']);
 
-
+        // new oauth pages
+        Route::get('oauth', ['uses' => 'Profile\OAuthController@index', 'as' => 'oauth.index']);
     }
 );
 

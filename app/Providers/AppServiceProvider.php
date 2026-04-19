@@ -43,8 +43,10 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
+        // do not check permissions for key files.
+        Passport::$validateKeyPermissions = false;
+
         Schema::defaultStringLength(191);
-        // Passport::$clientUuids = false;
         Response::macro('api', function (array $value) {
             $headers = ['Cache-Control' => 'no-store'];
             $uuid    = (string) request()->header('X-Trace-Id');
@@ -85,8 +87,7 @@ class AppServiceProvider extends ServiceProvider
     #[Override]
     public function register(): void
     {
-        Passport::ignoreRoutes();
-
+        // Passport::ignoreRoutes();
         //        Passport::ignoreMigrations();
         //        Sanctum::ignoreMigrations();
     }
