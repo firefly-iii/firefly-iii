@@ -72,8 +72,6 @@ class RepairsPostgresSequences extends Command
             'locations',
             'migrations',
             'notes',
-            'oauth_clients',
-            'oauth_personal_access_clients',
             'object_groups',
             'permissions',
             'piggy_bank_events',
