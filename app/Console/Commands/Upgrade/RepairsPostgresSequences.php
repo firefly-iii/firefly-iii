@@ -26,7 +26,9 @@ namespace FireflyIII\Console\Commands\Upgrade;
 
 use FireflyIII\Console\Commands\ShowsFriendlyMessages;
 use Illuminate\Console\Command;
+use Illuminate\Database\QueryException;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
 
 class RepairsPostgresSequences extends Command
 {
@@ -72,8 +74,6 @@ class RepairsPostgresSequences extends Command
             'locations',
             'migrations',
             'notes',
-            'oauth_clients',
-            'oauth_personal_access_clients',
             'object_groups',
             'permissions',
             'piggy_bank_events',
@@ -106,11 +106,23 @@ class RepairsPostgresSequences extends Command
         foreach ($tablesToCheck as $tableToCheck) {
             $this->friendlyLine(sprintf('Checking the next id sequence for table "%s".', $tableToCheck));
 
-            $highestId = DB::table($tableToCheck)->select(DB::raw('MAX(id)'))->first();
-            $nextId    = DB::table($tableToCheck)
-                ->select(DB::raw(sprintf('nextval(\'%s_id_seq\')', $tableToCheck)))
-                ->first()
-            ;
+            try {
+                $highestId = DB::table($tableToCheck)->select(DB::raw('MAX(id)'))->first();
+            } catch (QueryException $e) {
+                Log::warning(sprintf('Could not select max, but will ignore this: %s', $e->getMessage()));
+
+                continue;
+            }
+
+            try {
+                $nextId = DB::table($tableToCheck)
+                    ->select(DB::raw(sprintf('nextval(\'%s_id_seq\')', $tableToCheck)))
+                    ->first()
+                ;
+            } catch (QueryException $e) {
+                Log::warning(sprintf('Could not get nextval, but will ignore this: %s', $e->getMessage()));
+                $nextId = null;
+            }
             if (null === $nextId) {
                 $this->friendlyInfo(sprintf('nextval is NULL for table "%s", go to next table.', $tableToCheck));
 

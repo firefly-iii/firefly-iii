@@ -3,6 +3,34 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
+## v6.6.1 - 2026-04-19
+
+<!-- summary: This releases upgrades many dependencies and will invalidate all of your OAuth-tokens and clients. -->
+
+> [!WARNING]
+> This releases will invalidate ALL of your OAuth-tokens and clients. Integrations with Home Assistant, AI-agents or the Firefly III Data Importer must be reconfigured with newly generated tokens. Old tokens and clients will no longer work. Sorry about that.
+
+### Changed
+
+- Updated many dependencies, amongst which are some backwards incompatible ones. Sorry about your OAuth-tokens.
+
+### Fixed
+
+- [Issue 12029](https://github.com/firefly-iii/firefly-iii/issues/12029) (PrimaryAmountRecalculationService - Attempt to read property "data" on null.) reported by @MihataBG
+- [Issue 12030](https://github.com/firefly-iii/firefly-iii/issues/12030) (Rule engine fires twice in some cases) reported by @Robubble
+- [Issue 12034](https://github.com/firefly-iii/firefly-iii/issues/12034) (The new Piggy Banks accounts are not being displayed properly grouped in the record creation form) reported by @jgmm81
+- [Issue 12035](https://github.com/firefly-iii/firefly-iii/issues/12035) (Foreign currency account value in primary currency does not update after changing exchange rates (Dashboard)) reported by @gattacus
+- [Issue 12043](https://github.com/firefly-iii/firefly-iii/issues/12043) (Detail in the Running balance indicator through the Liabilities accounts (multi currencies)) reported by @jgmm81
+- [Discussion 12044](https://github.com/orgs/firefly-iii/discussions/12044) (Very slow startup) started by @pelaxa
+- [Issue 12056](https://github.com/firefly-iii/firefly-iii/issues/12056) (Details regarding the Note records in the Database and the "Purge data from Firefly III" function) reported by @jgmm81
+- [Issue 12063](https://github.com/firefly-iii/firefly-iii/issues/12063) (Cannot set budget higher than 268435456) reported by @Permagate
+- [Issue 12066](https://github.com/firefly-iii/firefly-iii/issues/12066) (Email notifications ignore user language preferences) reported by @examosa
+- [Issue 12070](https://github.com/firefly-iii/firefly-iii/issues/12070) (can't add money to piggy bank) reported by @4e868df3
+- [Issue 12081](https://github.com/firefly-iii/firefly-iii/issues/12081) (Discord changes webhook domain) reported by @MinDBreaK
+- [Issue 12083](https://github.com/firefly-iii/firefly-iii/issues/12083) (Hide or remove the Ntfy fields if they dont work.) reported by @OrakMoya
+- [Issue 12107](https://github.com/firefly-iii/firefly-iii/issues/12107) (Exception sending test email notification) reported by @antrv
+- [Issue 12154](https://github.com/firefly-iii/firefly-iii/issues/12154) (Error on artisan firefly-iii:upgrade-database v6.6.0) reported by @Tealk
+
 ## v6.6.0 - 2026-04-19
 
 <!-- summary: This releases upgrades many dependencies and will invalidate all of your OAuth-tokens and clients. -->
