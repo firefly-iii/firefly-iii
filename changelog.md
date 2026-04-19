@@ -29,7 +29,7 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 - [Issue 12081](https://github.com/firefly-iii/firefly-iii/issues/12081) (Discord changes webhook domain) reported by @MinDBreaK
 - [Issue 12083](https://github.com/firefly-iii/firefly-iii/issues/12083) (Hide or remove the Ntfy fields if they dont work.) reported by @OrakMoya
 - [Issue 12107](https://github.com/firefly-iii/firefly-iii/issues/12107) (Exception sending test email notification) reported by @antrv
-- #12154
+- [Issue 12154](https://github.com/firefly-iii/firefly-iii/issues/12154) (Error on artisan firefly-iii:upgrade-database v6.6.0) reported by @Tealk
 
 ## v6.6.0 - 2026-04-19
 
