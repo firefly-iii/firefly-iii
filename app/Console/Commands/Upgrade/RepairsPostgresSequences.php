@@ -36,7 +36,7 @@ class RepairsPostgresSequences extends Command
 
     protected $description = 'Fixes issues with PostgreSQL sequences.';
 
-    protected $signature = 'upgrade:600-pgsql-sequences';
+    protected $signature   = 'upgrade:600-pgsql-sequences';
 
     /**
      * Execute the console command.
@@ -110,10 +110,15 @@ class RepairsPostgresSequences extends Command
                 $highestId = DB::table($tableToCheck)->select(DB::raw('MAX(id)'))->first();
             } catch (QueryException $e) {
                 Log::warning(sprintf('Could not select max, but will ignore this: %s', $e->getMessage()));
+
                 continue;
             }
+
             try {
-                $nextId = DB::table($tableToCheck)->select(DB::raw(sprintf('nextval(\'%s_id_seq\')', $tableToCheck)))->first();
+                $nextId = DB::table($tableToCheck)
+                    ->select(DB::raw(sprintf('nextval(\'%s_id_seq\')', $tableToCheck)))
+                    ->first()
+                ;
             } catch (QueryException $e) {
                 Log::warning(sprintf('Could not get nextval, but will ignore this: %s', $e->getMessage()));
                 $nextId = null;
@@ -128,8 +133,9 @@ class RepairsPostgresSequences extends Command
                 DB::select(sprintf('SELECT setval(\'%s_id_seq\', %d)', $tableToCheck, $highestId->max));
                 $highestId = DB::table($tableToCheck)->select(DB::raw('MAX(id)'))->first();
                 $nextId    = DB::table($tableToCheck)
-                               ->select(DB::raw(sprintf('nextval(\'%s_id_seq\')', $tableToCheck)))
-                               ->first();
+                    ->select(DB::raw(sprintf('nextval(\'%s_id_seq\')', $tableToCheck)))
+                    ->first()
+                ;
                 if ($nextId->nextval > $highestId->max) {
                     $this->friendlyInfo(sprintf('Table "%s" autoincrement corrected.', $tableToCheck));
                 }
