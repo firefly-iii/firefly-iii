@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 return [
 
     /*
@@ -35,7 +37,7 @@ return [
         'secret' => env('PASSPORT_PERSONAL_ACCESS_CLIENT_SECRET'),
     ],
 
-    'middleware' => [],
-    'connection' => env('PASSPORT_CONNECTION'),
+    'middleware'             => [],
+    'connection'             => env('PASSPORT_CONNECTION'),
 
 ];

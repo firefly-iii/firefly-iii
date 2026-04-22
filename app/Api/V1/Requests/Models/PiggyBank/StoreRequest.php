@@ -49,7 +49,7 @@ class StoreRequest extends FormRequest
      */
     public function getAll(): array
     {
-        $fields                            = ['order'                            => ['order', 'convertInteger']];
+        $fields                            = ['order' => ['order', 'convertInteger']];
         $data                              = $this->getAllData($fields);
         $data['name']                      = $this->convertString('name');
         $data['accounts']                  = $this->parseAccounts($this->get('accounts'));
