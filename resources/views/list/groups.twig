@@ -282,8 +282,15 @@
                             {% if transaction.source_account_id == account.id %}
                                 <span title="Deposit, source">{{ formatAmountBySymbol(transaction.source_balance_after, transaction.currency_symbol, transaction.currency_decimal_places) }}</span>
                             {% else %}
+                                {% if transaction.source_account_type == 'Revenue account' %}
+                                    <span title="Deposit from revenue">{{ formatAmountBySymbol(transaction.destination_balance_after, transaction.currency_symbol, transaction.currency_decimal_places) }}</span>
+                                {% else %}
+                                    <span title="Deposit from liab">{{ formatAmountBySymbol(transaction.destination_balance_after, transaction.foreign_currency_symbol, transaction.foreign_currency_decimal_places) }}</span>
+                                {% endif %}
+                                {# if this is a deposit from revenue account, use the destination account currency? For #12043 and #12169 #}
+                                {# otherwise, keep at source account #}
                                 {# changed from normal currency_symbol to foreign_currency_symbol for #12043 #}
-                                <span title="Deposit, dest">{{ formatAmountBySymbol(transaction.destination_balance_after, transaction.foreign_currency_symbol, transaction.foreign_currency_decimal_places) }}</span>
+
                             {%  endif %}
 
                         {% elseif transaction.transaction_type_type == 'Withdrawal' %}
