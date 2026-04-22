@@ -402,11 +402,11 @@ class SearchRuleEngine implements RuleEngineInterface
     private function fireNonStrictRule(Rule $rule): bool
     {
         Log::debug(sprintf('SearchRuleEngine::fireNonStrictRule(%d)!', $rule->id));
-        $flags                    = new TransactionGroupEventFlags();
-        $flags->applyRules        = false;
-        $flags->fireWebhooks      = false;
-        $objects                  = new TransactionGroupEventObjects();
-        $collection = $this->findNonStrictRule($rule);
+        $flags               = new TransactionGroupEventFlags();
+        $flags->applyRules   = false;
+        $flags->fireWebhooks = false;
+        $objects             = new TransactionGroupEventObjects();
+        $collection          = $this->findNonStrictRule($rule);
         $objects->collectFromCollection($collection);
 
         $this->processResults($rule, $collection);
@@ -450,11 +450,11 @@ class SearchRuleEngine implements RuleEngineInterface
     {
         Log::debug(sprintf('SearchRuleEngine::fireStrictRule(%d)!', $rule->id));
 
-        $flags                    = new TransactionGroupEventFlags();
-        $flags->applyRules        = false;
-        $flags->fireWebhooks      = false;
-        $objects                  = new TransactionGroupEventObjects();
-        $collection = $this->findStrictRule($rule);
+        $flags               = new TransactionGroupEventFlags();
+        $flags->applyRules   = false;
+        $flags->fireWebhooks = false;
+        $objects             = new TransactionGroupEventObjects();
+        $collection          = $this->findStrictRule($rule);
 
         $objects->collectFromCollection($collection);
         $this->processResults($rule, $collection);
@@ -465,8 +465,7 @@ class SearchRuleEngine implements RuleEngineInterface
         // fire event for changed groups.
         event(new UpdatedSingleTransactionGroup($flags, $objects));
 
-
-        $result     = $collection->count() > 0;
+        $result              = $collection->count() > 0;
         if ($result) {
             Log::debug(sprintf('SearchRuleEngine:: Done. Rule #%d was triggered (on %d transaction(s)).', $rule->id, $collection->count()));
 

@@ -70,7 +70,7 @@ class UpdateRequest extends FormRequest
         ];
         $reps                   = $this->getRepetitionData();
         $transactions           = $this->getTransactionData();
-        $return                 = ['recurrence'       => $this->getAllData($fields)];
+        $return                 = ['recurrence' => $this->getAllData($fields)];
         if (null !== $reps) {
             $return['repetitions'] = $reps;
         }

@@ -470,10 +470,9 @@ class SubscriptionEnrichment implements EnrichmentInterface
             } catch (InvalidFormatException) {
                 $temp2 = today(config('app.timezone'));
             }
-            $nemDiff = trans('firefly.bill_expected_date', ['date' => $temp2->diffForHumans(
-                today(config('app.timezone')),
-                CarbonInterface::DIFF_RELATIVE_TO_NOW
-            )]);
+            $nemDiff = trans('firefly.bill_expected_date', [
+                'date' => $temp2->diffForHumans(today(config('app.timezone')), CarbonInterface::DIFF_RELATIVE_TO_NOW),
+            ]);
         }
         unset($temp2);
 

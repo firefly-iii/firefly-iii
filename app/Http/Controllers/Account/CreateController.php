@@ -78,12 +78,14 @@ final class CreateController extends Controller
         $roles               = $this->getRoles();
         $liabilityTypes      = $this->getLiabilityTypes();
         $hasOldInput         = null !== $request->old('_token');
-        $locations           = ['location'           => [
-            'latitude'     => $hasOldInput ? old('location_latitude') : config('firefly.default_location.latitude'),
-            'longitude'    => $hasOldInput ? old('location_longitude') : config('firefly.default_location.longitude'),
-            'zoom_level'   => $hasOldInput ? old('location_zoom_level') : config('firefly.default_location.zoom_level'),
-            'has_location' => $hasOldInput && 'true' === old('location_has_location'),
-        ]];
+        $locations           = [
+            'location' => [
+                'latitude'     => $hasOldInput ? old('location_latitude') : config('firefly.default_location.latitude'),
+                'longitude'    => $hasOldInput ? old('location_longitude') : config('firefly.default_location.longitude'),
+                'zoom_level'   => $hasOldInput ? old('location_zoom_level') : config('firefly.default_location.zoom_level'),
+                'has_location' => $hasOldInput && 'true' === old('location_has_location'),
+            ],
+        ];
         $liabilityDirections = ['debit' => trans('firefly.liability_direction_debit'), 'credit' => trans('firefly.liability_direction_credit')];
 
         // interest calculation periods:

@@ -59,7 +59,7 @@ final class JavascriptController extends Controller
             AccountTypeEnum::MORTGAGE->value,
             AccountTypeEnum::CREDITCARD->value,
         ]);
-        $data     = ['accounts'     => []];
+        $data     = ['accounts' => []];
 
         /** @var Account $account */
         foreach ($accounts as $account) {
@@ -79,7 +79,7 @@ final class JavascriptController extends Controller
     public function currencies(CurrencyRepositoryInterface $repository): Response
     {
         $currencies = $repository->get();
-        $data       = ['currencies'       => []];
+        $data       = ['currencies' => []];
 
         /** @var TransactionCurrency $currency */
         foreach ($currencies as $currency) {
