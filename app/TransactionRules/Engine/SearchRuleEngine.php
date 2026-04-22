@@ -25,6 +25,9 @@ declare(strict_types=1);
 namespace FireflyIII\TransactionRules\Engine;
 
 use Carbon\Carbon;
+use FireflyIII\Events\Model\TransactionGroup\TransactionGroupEventFlags;
+use FireflyIII\Events\Model\TransactionGroup\TransactionGroupEventObjects;
+use FireflyIII\Events\Model\TransactionGroup\UpdatedSingleTransactionGroup;
 use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Models\Note;
 use FireflyIII\Models\Rule;
@@ -399,9 +402,17 @@ class SearchRuleEngine implements RuleEngineInterface
     private function fireNonStrictRule(Rule $rule): bool
     {
         Log::debug(sprintf('SearchRuleEngine::fireNonStrictRule(%d)!', $rule->id));
+        $flags                    = new TransactionGroupEventFlags();
+        $flags->applyRules        = false;
+        $flags->fireWebhooks      = false;
+        $objects                  = new TransactionGroupEventObjects();
         $collection = $this->findNonStrictRule($rule);
+        $objects->collectFromCollection($collection);
 
         $this->processResults($rule, $collection);
+        // collect from collection, again!
+        $objects->collectFromCollection($collection);
+        event(new UpdatedSingleTransactionGroup($flags, $objects));
         Log::debug(sprintf('SearchRuleEngine:: Done processing non-strict rule #%d', $rule->id));
 
         return $collection->count() > 0;
@@ -438,9 +449,22 @@ class SearchRuleEngine implements RuleEngineInterface
     private function fireStrictRule(Rule $rule): bool
     {
         Log::debug(sprintf('SearchRuleEngine::fireStrictRule(%d)!', $rule->id));
+
+        $flags                    = new TransactionGroupEventFlags();
+        $flags->applyRules        = false;
+        $flags->fireWebhooks      = false;
+        $objects                  = new TransactionGroupEventObjects();
         $collection = $this->findStrictRule($rule);
 
+        $objects->collectFromCollection($collection);
         $this->processResults($rule, $collection);
+
+        // collect from collection, again!
+        $objects->collectFromCollection($collection);
+
+        // fire event for changed groups.
+        event(new UpdatedSingleTransactionGroup($flags, $objects));
+
 
         $result     = $collection->count() > 0;
         if ($result) {

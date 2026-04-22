@@ -46,12 +46,36 @@ class TransactionGroupEventObjects
         return $object;
     }
 
+    public function collectFromCollection(Collection $collection): void
+    {
+        Log::debug('Will now collect info from collection.');
+        /** @var TransactionGroup|null $object */
+        foreach ($collection as $object) {
+            if ($object instanceof TransactionGroup) {
+                Log::debug(sprintf('Added group #%d', $object->id));
+                $this->appendFromTransactionGroup($object);
+            }
+            if (!($object instanceof TransactionGroup)) {
+                if (is_array($object) && array_key_exists('id', $object)) {
+                    // FIXME technically speaking not sure of this is the user's transaction group.
+                    $group = TransactionGroup::find((int)$object['id']);
+                    if (null !== $group) {
+                        Log::debug(sprintf('Added group #%d', $group->id));
+                        $this->appendFromTransactionGroup($group);
+                    }
+                }
+            }
+        }
+    }
+
     public function appendFromTransactionGroup(TransactionGroup $transactionGroup): void
     {
+        Log::debug(sprintf('Appended transaction group #%d', $transactionGroup->id));
         $this->transactionGroups->push($transactionGroup);
 
         /** @var TransactionJournal $journal */
         foreach ($transactionGroup->transactionJournals as $journal) {
+            Log::debug(sprintf('Appended transaction journal #%d', $journal->id));
             $this->transactionJournals->push($journal);
             $this->budgets    = $this->budgets->merge($journal->budgets);
             $this->categories = $this->categories->merge($journal->categories);
@@ -59,6 +83,7 @@ class TransactionGroupEventObjects
 
             /** @var Transaction $transaction */
             foreach ($journal->transactions as $transaction) {
+                Log::debug(sprintf('Appended account #%d', $transaction->account->id));
                 $this->accounts->push($transaction->account);
             }
         }
