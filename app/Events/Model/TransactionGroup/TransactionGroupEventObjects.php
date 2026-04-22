@@ -55,14 +55,12 @@ class TransactionGroupEventObjects
                 Log::debug(sprintf('Added group #%d', $object->id));
                 $this->appendFromTransactionGroup($object);
             }
-            if (!($object instanceof TransactionGroup)) {
-                if (is_array($object) && array_key_exists('id', $object)) {
-                    // FIXME technically speaking not sure of this is the user's transaction group.
-                    $group = TransactionGroup::find((int)$object['id']);
-                    if (null !== $group) {
-                        Log::debug(sprintf('Added group #%d', $group->id));
-                        $this->appendFromTransactionGroup($group);
-                    }
+            if (is_array($object) && array_key_exists('id', $object)) {
+                // FIXME technically speaking not sure of this is the user's transaction group.
+                $group = TransactionGroup::find((int)$object['id']);
+                if (null !== $group) {
+                    Log::debug(sprintf('Added group #%d', $group->id));
+                    $this->appendFromTransactionGroup($group);
                 }
             }
         }
