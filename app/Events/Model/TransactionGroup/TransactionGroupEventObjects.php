@@ -49,7 +49,7 @@ class TransactionGroupEventObjects
     public function collectFromCollection(Collection $collection): void
     {
         Log::debug('Will now collect info from collection.');
-        /** @var TransactionGroup|null $object */
+        /** @var TransactionGroup|array $object */
         foreach ($collection as $object) {
             if ($object instanceof TransactionGroup) {
                 Log::debug(sprintf('Added group #%d', $object->id));
