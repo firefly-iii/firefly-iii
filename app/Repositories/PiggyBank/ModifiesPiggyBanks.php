@@ -98,7 +98,7 @@ trait ModifiesPiggyBanks
         $maxAmount     = $leftOnAccount;
 
         Log::debug(sprintf('Left on account: %s on %s', $leftOnAccount, $today->format('Y-m-d H:i:s')));
-        Log::debug(sprintf('Saved so far: %s', $savedSoFar));
+        Log::debug(sprintf('Saved so far   : %s', $savedSoFar));
 
         if (0 !== bccomp($piggyBank->target_amount, '0')) {
             $leftToSave = bcsub($piggyBank->target_amount, (string) $savedSoFar);
@@ -110,7 +110,7 @@ trait ModifiesPiggyBanks
         $compare       = bccomp($amount, (string) $maxAmount);
         $result        = $compare <= 0;
 
-        Log::debug(sprintf('Compare <= 0? %d, so canAddAmount is %s', $compare, var_export($result, true)));
+        Log::debug(sprintf('Compare %s to %s <= 0? %d, so canAddAmount is %s', $amount, $maxAmount, $compare, var_export($result, true)));
 
         return $result;
     }
