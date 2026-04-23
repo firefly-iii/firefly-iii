@@ -57,12 +57,13 @@ class Cron extends Command
 
     public function handle(): int
     {
-        $doAll = !$this->option('download-cer')
-        && !$this->option('create-recurring')
-        && !$this->option('create-auto-budgets')
-        && !$this->option('send-subscription-warnings')
-        && !$this->option('check-version')
-        && !$this->option('send-webhook-messages');
+        $doAll
+               = !$this->option('download-cer')
+            && !$this->option('create-recurring')
+            && !$this->option('create-auto-budgets')
+            && !$this->option('send-subscription-warnings')
+            && !$this->option('check-version')
+            && !$this->option('send-webhook-messages');
         $date  = null;
 
         try {

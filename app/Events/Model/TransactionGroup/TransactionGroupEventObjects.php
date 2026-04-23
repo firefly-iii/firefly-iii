@@ -46,26 +46,6 @@ class TransactionGroupEventObjects
         return $object;
     }
 
-    public function collectFromCollection(Collection $collection): void
-    {
-        Log::debug('Will now collect info from collection.');
-        /** @var TransactionGroup|array $object */
-        foreach ($collection as $object) {
-            if ($object instanceof TransactionGroup) {
-                Log::debug(sprintf('Added group #%d', $object->id));
-                $this->appendFromTransactionGroup($object);
-            }
-            if (is_array($object) && array_key_exists('id', $object)) {
-                // FIXME technically speaking not sure of this is the user's transaction group.
-                $group = TransactionGroup::find((int)$object['id']);
-                if (null !== $group) {
-                    Log::debug(sprintf('Added group #%d', $group->id));
-                    $this->appendFromTransactionGroup($group);
-                }
-            }
-        }
-    }
-
     public function appendFromTransactionGroup(TransactionGroup $transactionGroup): void
     {
         Log::debug(sprintf('Appended transaction group #%d', $transactionGroup->id));
@@ -91,5 +71,26 @@ class TransactionGroupEventObjects
         $this->categories          = $this->categories->unique('id');
         $this->tags                = $this->tags->unique('id');
         $this->accounts            = $this->accounts->unique('id');
+    }
+
+    public function collectFromCollection(Collection $collection): void
+    {
+        Log::debug('Will now collect info from collection.');
+
+        /** @var array|TransactionGroup $object */
+        foreach ($collection as $object) {
+            if ($object instanceof TransactionGroup) {
+                Log::debug(sprintf('Added group #%d', $object->id));
+                $this->appendFromTransactionGroup($object);
+            }
+            if (is_array($object) && array_key_exists('id', $object)) {
+                // FIXME technically speaking not sure of this is the user's transaction group.
+                $group = TransactionGroup::find((int) $object['id']);
+                if (null !== $group) {
+                    Log::debug(sprintf('Added group #%d', $group->id));
+                    $this->appendFromTransactionGroup($group);
+                }
+            }
+        }
     }
 }

@@ -96,12 +96,14 @@ final class EditController extends Controller
         $zoomLevel            = $location instanceof Location ? $location->zoom_level : config('firefly.default_location.zoom_level');
         $canEditCurrency      = 0 === $account->piggyBanks()->count();
         $hasLocation          = $location instanceof Location;
-        $locations            = ['location'       => [
-            'latitude'     => old('location_latitude') ?? $latitude,
-            'longitude'    => old('location_longitude') ?? $longitude,
-            'zoom_level'   => old('location_zoom_level') ?? $zoomLevel,
-            'has_location' => $hasLocation || 'true' === old('location_has_location'),
-        ]];
+        $locations            = [
+            'location' => [
+                'latitude'     => old('location_latitude') ?? $latitude,
+                'longitude'    => old('location_longitude') ?? $longitude,
+                'zoom_level'   => old('location_zoom_level') ?? $zoomLevel,
+                'has_location' => $hasLocation || 'true' === old('location_has_location'),
+            ],
+        ];
 
         $liabilityDirections  = ['debit' => trans('firefly.liability_direction_debit'), 'credit' => trans('firefly.liability_direction_credit')];
 

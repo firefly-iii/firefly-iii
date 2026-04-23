@@ -56,7 +56,7 @@ class ReportHelper implements ReportHelperInterface
         /** @var BillRepositoryInterface $repository */
         $repository = app(BillRepositoryInterface::class);
         $bills      = $repository->getBillsForAccounts($accounts);
-        $report     = ['bills'     => []];
+        $report     = ['bills' => []];
 
         /** @var Bill $bill */
         foreach ($bills as $bill) {

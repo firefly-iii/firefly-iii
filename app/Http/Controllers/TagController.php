@@ -82,12 +82,14 @@ final class TagController extends Controller
 
         // location info:
         $hasOldInput  = null !== $request->old('_token');
-        $locations    = ['location'   => [
-            'latitude'     => $hasOldInput ? old('location_latitude') : config('firefly.default_location.latitude'),
-            'longitude'    => $hasOldInput ? old('location_longitude') : config('firefly.default_location.longitude'),
-            'zoom_level'   => $hasOldInput ? old('location_zoom_level') : config('firefly.default_location.zoom_level'),
-            'has_location' => $hasOldInput && 'true' === old('location_has_location'),
-        ]];
+        $locations    = [
+            'location' => [
+                'latitude'     => $hasOldInput ? old('location_latitude') : config('firefly.default_location.latitude'),
+                'longitude'    => $hasOldInput ? old('location_longitude') : config('firefly.default_location.longitude'),
+                'zoom_level'   => $hasOldInput ? old('location_zoom_level') : config('firefly.default_location.zoom_level'),
+                'has_location' => $hasOldInput && 'true' === old('location_has_location'),
+            ],
+        ];
 
         // put previous url in session if not redirect from store (not "create another").
         if (true !== session('tags.create.fromStore')) {
@@ -142,12 +144,14 @@ final class TagController extends Controller
         $longitude    = $location instanceof Location ? $location->longitude : config('firefly.default_location.longitude');
         $zoomLevel    = $location instanceof Location ? $location->zoom_level : config('firefly.default_location.zoom_level');
         $hasLocation  = $location instanceof Location;
-        $locations    = ['location'   => [
-            'latitude'     => old('location_latitude') ?? $latitude,
-            'longitude'    => old('location_longitude') ?? $longitude,
-            'zoom_level'   => old('location_zoom_level') ?? $zoomLevel,
-            'has_location' => $hasLocation || 'true' === old('location_has_location'),
-        ]];
+        $locations    = [
+            'location' => [
+                'latitude'     => old('location_latitude') ?? $latitude,
+                'longitude'    => old('location_longitude') ?? $longitude,
+                'zoom_level'   => old('location_zoom_level') ?? $zoomLevel,
+                'has_location' => $hasLocation || 'true' === old('location_has_location'),
+            ],
+        ];
 
         // put previous url in session if not redirect from store (not "return_to_edit").
         if (true !== session('tags.edit.fromUpdate')) {

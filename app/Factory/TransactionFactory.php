@@ -192,10 +192,12 @@ class TransactionFactory
             return;
         }
         // validate info:
-        $validator = Validator::make(['iban' => $this->accountInformation['iban']], ['iban' => [
-            'required',
-            new UniqueIban($this->account, $this->account->accountType->type),
-        ]]);
+        $validator = Validator::make(['iban' => $this->accountInformation['iban']], [
+            'iban' => [
+                'required',
+                new UniqueIban($this->account, $this->account->accountType->type),
+            ],
+        ]);
         if ($validator->fails()) {
             Log::debug('Invalid or non-unique IBAN, will not update.');
 
