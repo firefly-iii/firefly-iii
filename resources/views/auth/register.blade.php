@@ -21,6 +21,10 @@
         </div>
     @endif
 
+    <div id="client-errors" class="alert alert-danger" role="alert" style="display:none;">
+        <ul id="client-errors-list"></ul>
+    </div>
+
     <div class="card">
         <div class="card-body register-card-body">
             <p class="login-box-msg">{{ trans('firefly.register_new_account') }}</p>
@@ -77,4 +81,84 @@
 @endsection
 @section('scripts')
     @vite(['src/pages/dashboard/dashboard.js'])
+    <script nonce="{{ $JS_NONCE }}">
+    (function () {
+        const form        = document.querySelector('form[action="{{ route('register') }}"]');
+        const errorBox    = document.getElementById('client-errors');
+        const errorList   = document.getElementById('client-errors-list');
+        const submitBtn   = form.querySelector('button[type="submit"]');
+        const originalBtnText = submitBtn.textContent;
+
+        function showErrors(errors) {
+            errorList.innerHTML = errors.map(function(e) { return '<li>' + e + '</li>'; }).join('');
+            errorBox.style.display = 'block';
+            errorBox.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+        }
+
+        async function sha1Hex(str) {
+            const buf = await crypto.subtle.digest('SHA-1', new TextEncoder().encode(str));
+            return Array.from(new Uint8Array(buf))
+                .map(function(b) { return b.toString(16).padStart(2, '0'); })
+                .join('')
+                .toUpperCase();
+        }
+
+        async function isPwned(password) {
+            const hash   = await sha1Hex(password);
+            const prefix = hash.slice(0, 5);
+            const suffix = hash.slice(5);
+            const res    = await fetch('https://api.pwnedpasswords.com/range/' + prefix, {
+                headers: { 'Add-Padding': 'true' }
+            });
+            if (!res.ok) { return false; }
+            const text = await res.text();
+            return text.toUpperCase().split('\n').some(function(line) {
+                return line.split(':')[0] === suffix;
+            });
+        }
+
+        form.addEventListener('submit', async function (e) {
+            e.preventDefault();
+            errorBox.style.display = 'none';
+
+            const password = form.querySelector('[name="password"]').value;
+            const confirm  = form.querySelector('[name="password_confirmation"]').value;
+            const verify   = form.querySelector('[name="verify_password"]');
+            const errors   = [];
+
+            if (password.length < 16) {
+                errors.push('{{ trans('validation.min.string', ['attribute' => 'password', 'min' => 16]) }}');
+            }
+            if (password !== confirm) {
+                errors.push('{{ trans('validation.confirmed', ['attribute' => 'password']) }}');
+            }
+
+            if (errors.length > 0) {
+                showErrors(errors);
+                return;
+            }
+
+            if (verify && verify.checked) {
+                submitBtn.disabled    = true;
+                submitBtn.textContent = 'Checking password…';
+                try {
+                    if (await isPwned(password)) {
+                        errors.push('{{ trans('validation.secure_password') }}');
+                    }
+                } catch (_) {
+                    // network failure — let server validate
+                }
+                submitBtn.disabled    = false;
+                submitBtn.textContent = originalBtnText;
+            }
+
+            if (errors.length > 0) {
+                showErrors(errors);
+                return;
+            }
+
+            form.submit();
+        });
+    })();
+    </script>
 @endsection
