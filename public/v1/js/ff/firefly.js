@@ -56,6 +56,20 @@ $(function () {
         return false;
     });
 
+    // save sidebar collapsed state when page loads.
+    $(document).on('click', '[data-toggle="push-menu"]', function () {
+        setTimeout(function () {
+            try {
+                if (window.localStorage) {
+                    localStorage.setItem(
+                        'ff3_sidebar_collapsed',
+                        $('body').hasClass('sidebar-collapse') ? '1' : '0'
+                    );
+                }
+            } catch (e) {}
+        }, 0);
+    });
+
     // on submit of form, disable any button in form:
     $('form.form-horizontal:not(.nodisablebutton)').on('submit', function () {
         $('button[type="submit"]').prop('disabled', true);
