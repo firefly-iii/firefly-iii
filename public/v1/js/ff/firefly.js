@@ -70,13 +70,6 @@ $(function () {
         }, 0);
     });
 
-    (function () {
-        try {
-            if (localStorage.getItem('ff3_sidebar_collapsed') === '1') {
-                document.body.classList.add('sidebar-collapse');
-            }
-        } catch (_) {}
-    })();
 
 
     // on submit of form, disable any button in form:
