@@ -81,83 +81,11 @@
 @endsection
 @section('scripts')
     <script nonce="{{ $JS_NONCE }}">
-    (function () {
-        const form        = document.querySelector('form[action="{{ route('register') }}"]');
-        const errorBox    = document.getElementById('client-errors');
-        const errorList   = document.getElementById('client-errors-list');
-        const submitBtn   = form.querySelector('button[type="submit"]');
-        const originalBtnText = submitBtn.textContent;
-
-        function showErrors(errors) {
-            errorList.innerHTML = errors.map(function(e) { return '<li>' + e + '</li>'; }).join('');
-            errorBox.style.display = 'block';
-            errorBox.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
-        }
-
-        async function sha1Hex(str) {
-            const buf = await crypto.subtle.digest('SHA-1', new TextEncoder().encode(str));
-            return Array.from(new Uint8Array(buf))
-                .map(function(b) { return b.toString(16).padStart(2, '0'); })
-                .join('')
-                .toUpperCase();
-        }
-
-        async function isPwned(password) {
-            const hash   = await sha1Hex(password);
-            const prefix = hash.slice(0, 5);
-            const suffix = hash.slice(5);
-            const res    = await fetch('https://api.pwnedpasswords.com/range/' + prefix, {
-                headers: { 'Add-Padding': 'true' }
-            });
-            if (!res.ok) { return false; }
-            const text = await res.text();
-            return text.toUpperCase().split('\n').some(function(line) {
-                return line.split(':')[0] === suffix;
-            });
-        }
-
-        form.addEventListener('submit', async function (e) {
-            e.preventDefault();
-            errorBox.style.display = 'none';
-
-            const password = form.querySelector('[name="password"]').value;
-            const confirm  = form.querySelector('[name="password_confirmation"]').value;
-            const verify   = form.querySelector('[name="verify_password"]');
-            const errors   = [];
-
-            if (password.length < 16) {
-                errors.push('{{ blade_escape_js((string)trans('validation.min.string', ['attribute' => 'password', 'min' => 16])) }}');
-            }
-            if (password !== confirm) {
-                errors.push('{{ blade_escape_js(trans('validation.confirmed', ['attribute' => 'password'])) }}');
-            }
-
-            if (errors.length > 0) {
-                showErrors(errors);
-                return;
-            }
-
-            if (verify && verify.checked) {
-                submitBtn.disabled    = true;
-                submitBtn.textContent = '{{ blade_escape_js(trans('validation.verifying_password')) }}';
-                try {
-                    if (await isPwned(password)) {
-                        errors.push('{{ blade_escape_js(trans('validation.secure_password')) }}');
-                    }
-                } catch (_) {
-                    // network failure — let server validate
-                }
-                submitBtn.disabled    = false;
-                submitBtn.textContent = originalBtnText;
-            }
-
-            if (errors.length > 0) {
-                showErrors(errors);
-                return;
-            }
-
-            form.submit();
-        });
-    })();
-    </script>
+        var route = '{{ route('register') }}';
+        var passwordLengthError = '{{ blade_escape_js((string)trans('validation.min.string', ['attribute' => 'password', 'min' => 16])) }}';
+        var passwordMatchError = '{{ blade_escape_js(trans('validation.confirmed', ['attribute' => 'password'])) }}';
+        var waitForVerify = '{{ blade_escape_js(trans('validation.verifying_password')) }}';
+        var needSecurePassword = '{{ blade_escape_js(trans('validation.secure_password')) }}';
+        </script>
+    <script nonce="{{$JS_NONCE}}" src="v1/js/ff/auth/register.js"></script>
 @endsection
