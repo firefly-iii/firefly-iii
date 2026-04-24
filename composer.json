@@ -135,6 +135,9 @@
 
     "suggest": {},
     "autoload": {
+        "files": [
+            "app/Helpers/Functions/helpers.php"
+        ],
         "psr-4": {
             "FireflyIII\\": "app/",
             "Domain\\": "domain/",

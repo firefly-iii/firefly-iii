@@ -39,11 +39,11 @@
                 </div>
                 <div class="input-group mb-3">
                     <input type="password" autocomplete="new-password" required class="form-control"
-                           placeholder="{{ trans('form.password') }}" name="password"/>
+                           placeholder="{{ trans('form.password') }}" minlength="16" name="password"/>
                     <div class="input-group-text"> <em class="fa-solid fa-lock"></em> </div>
                 </div>
                 <div class="input-group mb-3">
-                    <input type="password" autocomplete="new-password" required class="form-control"
+                    <input type="password" autocomplete="new-password" minlength="16" required class="form-control"
                            placeholder="{{ trans('form.password_confirmation') }}" name="password_confirmation"/>
                     <div class="input-group-text"> <em class="fa-solid fa-lock"></em> </div>
                 </div>
@@ -80,7 +80,6 @@
 
 @endsection
 @section('scripts')
-    @vite(['src/pages/dashboard/dashboard.js'])
     <script nonce="{{ $JS_NONCE }}">
     (function () {
         const form        = document.querySelector('form[action="{{ route('register') }}"]');
@@ -127,10 +126,10 @@
             const errors   = [];
 
             if (password.length < 16) {
-                errors.push('{{ trans('validation.min.string', ['attribute' => 'password', 'min' => 16]) }}');
+                errors.push('{{ blade_escape_js((string)trans('validation.min.string', ['attribute' => 'password', 'min' => 16])) }}');
             }
             if (password !== confirm) {
-                errors.push('{{ trans('validation.confirmed', ['attribute' => 'password']) }}');
+                errors.push('{{ blade_escape_js(trans('validation.confirmed', ['attribute' => 'password'])) }}');
             }
 
             if (errors.length > 0) {
@@ -140,10 +139,10 @@
 
             if (verify && verify.checked) {
                 submitBtn.disabled    = true;
-                submitBtn.textContent = 'Checking password…';
+                submitBtn.textContent = '{{ blade_escape_js(trans('validation.verifying_password')) }}';
                 try {
                     if (await isPwned(password)) {
-                        errors.push('{{ trans('validation.secure_password') }}');
+                        errors.push('{{ blade_escape_js(trans('validation.secure_password')) }}');
                     }
                 } catch (_) {
                     // network failure — let server validate

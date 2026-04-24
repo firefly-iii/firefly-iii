@@ -63,29 +63,7 @@ use PragmaRX\Google2FALaravel\Middleware as MFAMiddleware;
 
 bcscale(12);
 
-if (!function_exists('envDefaultWhenEmpty')) {
-    /**
-     *
-     * @return mixed|null
-     */
-    function envDefaultWhenEmpty(mixed $value, string | int | bool | null $default = null): mixed
-    {
-        if(null === $value) {
-            return $default;
-        }
-        if('' === $value) {
-            return $default;
-        }
-        return $value;
-    }
-}
 
-if (!function_exists('stringIsEqual')) {
-    function stringIsEqual(string $left, string $right): bool
-    {
-        return $left === $right;
-    }
-}
 
 $app = Application::configure(basePath: dirname(__DIR__))
                   ->withRouting(

@@ -23,6 +23,7 @@ declare(strict_types=1);
 
 namespace FireflyIII\Providers;
 
+use FireflyIII\Exceptions\FireflyException;
 use Illuminate\Support\Facades\Blade;
 use Illuminate\Support\Facades\Response;
 use Illuminate\Support\Facades\Route;
@@ -30,7 +31,6 @@ use Illuminate\Support\Facades\Schema;
 use Illuminate\Support\ServiceProvider;
 use Laravel\Passport\Passport;
 use Override;
-
 use function Safe\preg_match;
 
 /**
@@ -49,7 +49,7 @@ class AppServiceProvider extends ServiceProvider
         Schema::defaultStringLength(191);
         Response::macro('api', function (array $value) {
             $headers = ['Cache-Control' => 'no-store'];
-            $uuid    = (string) request()->header('X-Trace-Id');
+            $uuid    = (string)request()->header('X-Trace-Id');
             if ('' !== trim($uuid) && 1 === preg_match('/^[a-f\d]{8}(-[a-f\d]{4}){4}[a-f\d]{8}$/i', trim($uuid))) {
                 $headers['X-Trace-Id'] = $uuid;
             }
@@ -67,18 +67,20 @@ class AppServiceProvider extends ServiceProvider
             return '';
         });
         Blade::if('partialroute', function (string $route, string $firstParam = ''): bool {
-            $name       = Route::getCurrentRoute()->getName() ?? '';
+            $name = Route::getCurrentRoute()->getName() ?? '';
             if ('' === $firstParam && str_contains($name, $route)) {
                 return true;
             }
 
             /** @var null|array $params */
             $params     = Route::getCurrentRoute()->parameters();
-            $params ??= [];
+            $params     ??= [];
             $objectType = $params['objectType'] ?? '';
 
             return $objectType === $firstParam && str_contains($name, $route);
         });
+
+
     }
 
     /**
