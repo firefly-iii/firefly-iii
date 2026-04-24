@@ -19,10 +19,12 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
+declare(strict_types=1);
 
 use FireflyIII\Exceptions\FireflyException;
 use function Safe\preg_match;
 use function Safe\preg_replace_callback;
+use function Safe\mb_ord;
 
 if (!function_exists('env_default_when_empty')) {
     /**
@@ -81,7 +83,7 @@ if (!function_exists('blade_escape_js')) {
             }
 
             $codepoint = mb_ord($char, 'UTF-8');
-            if (0x10000 > $codepoint) {
+            if (0x10_000 > $codepoint) {
                 return \sprintf('\u%04X', $codepoint);
             }
 
