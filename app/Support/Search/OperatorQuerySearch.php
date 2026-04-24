@@ -522,7 +522,7 @@ class OperatorQuerySearch implements SearchInterface
             $stringMethod = 'str_contains';
         }
         if (StringPosition::IS === $stringPosition) {
-            $stringMethod = 'stringIsEqual';
+            $stringMethod = 'string_is_equal';
         }
 
         // get accounts:
@@ -619,7 +619,7 @@ class OperatorQuerySearch implements SearchInterface
             $stringMethod = 'str_contains';
         }
         if (StringPosition::IS === $stringPosition) {
-            $stringMethod = 'stringIsEqual';
+            $stringMethod = 'string_is_equal';
         }
 
         // search for accounts:

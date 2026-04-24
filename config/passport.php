@@ -15,7 +15,7 @@ return [
 |
 */
 
-    'guard'                  => envDefaultWhenEmpty(env('AUTHENTICATION_GUARD'), 'web'),
+    'guard'                  => env_default_when_empty(env('AUTHENTICATION_GUARD'), 'web'),
 
     /*
     |--------------------------------------------------------------------------

@@ -37,10 +37,10 @@ return [
     */
 
     'defaults'         => [
-        'guard'     => envDefaultWhenEmpty(env('AUTHENTICATION_GUARD'), 'web'),
+        'guard'     => env_default_when_empty(env('AUTHENTICATION_GUARD'), 'web'),
         'passwords' => 'users',
     ],
-    'guard_header'     => envDefaultWhenEmpty(env('AUTHENTICATION_GUARD_HEADER'), 'REMOTE_USER'),
+    'guard_header'     => env_default_when_empty(env('AUTHENTICATION_GUARD_HEADER'), 'REMOTE_USER'),
     'guard_email'      => env('AUTHENTICATION_GUARD_EMAIL'),
 
     /*

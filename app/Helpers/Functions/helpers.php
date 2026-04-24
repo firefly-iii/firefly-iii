@@ -22,13 +22,14 @@
 
 use FireflyIII\Exceptions\FireflyException;
 use function Safe\preg_match;
+use function Safe\preg_replace_callback;
 
-if (!function_exists('envDefaultWhenEmpty')) {
+if (!function_exists('env_default_when_empty')) {
     /**
      *
      * @return mixed|null
      */
-    function envDefaultWhenEmpty(mixed $value, string | int | bool | null $default = null): mixed
+    function env_default_when_empty(mixed $value, string | int | bool | null $default = null): mixed
     {
         if (null === $value) {
             return $default;
@@ -40,8 +41,8 @@ if (!function_exists('envDefaultWhenEmpty')) {
     }
 }
 
-if (!function_exists('stringIsEqual')) {
-    function stringIsEqual(string $left, string $right): bool
+if (!function_exists('string_is_equal')) {
+    function string_is_equal(string $left, string $right): bool
     {
         return $left === $right;
     }
@@ -52,7 +53,7 @@ if (!function_exists('blade_escape_js')) {
     {
         // escape all non-alphanumeric characters
         // into their \x or \uHHHH representations
-        if (!preg_match('//u', $string)) {
+        if (0 === preg_match('//u', $string)) {
             throw new FireflyException('The string to escape is not a valid UTF-8 string.');
         }
 
@@ -86,7 +87,7 @@ if (!function_exists('blade_escape_js')) {
 
             // Split characters outside the BMP into surrogate pairs
             // https://tools.ietf.org/html/rfc2781.html#section-2.1
-            $u    = $codepoint - 0x10000;
+            $u    = $codepoint - 0x10_000;
             $high = 0xD800 | ($u >> 10);
             $low  = 0xDC00 | ($u & 0x3FF);
 

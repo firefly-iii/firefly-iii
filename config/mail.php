@@ -34,16 +34,16 @@ return [
     | and used as needed; however, this mailer will be used by default.
     |
     */
-    'default'  => envDefaultWhenEmpty(env('MAIL_MAILER'), 'log'),
+    'default'  => env_default_when_empty(env('MAIL_MAILER'), 'log'),
 
     'mailers'  => [
         'smtp'       => [
             'transport'         => 'smtp',
-            'host'              => envDefaultWhenEmpty(env('MAIL_HOST'), 'smtp.mailtrap.io'),
+            'host'              => env_default_when_empty(env('MAIL_HOST'), 'smtp.mailtrap.io'),
             'port'              => (int) env('MAIL_PORT', 2525),
-            'encryption'        => envDefaultWhenEmpty(env('MAIL_ENCRYPTION'), 'tls'),
-            'username'          => envDefaultWhenEmpty(env('MAIL_USERNAME'), 'user@example.com'),
-            'password'          => envDefaultWhenEmpty(env('MAIL_PASSWORD'), 'password'),
+            'encryption'        => env_default_when_empty(env('MAIL_ENCRYPTION'), 'tls'),
+            'username'          => env_default_when_empty(env('MAIL_USERNAME'), 'user@example.com'),
+            'password'          => env_default_when_empty(env('MAIL_PASSWORD'), 'password'),
             'timeout'           => null,
             'scheme'            => env('MAIL_SCHEME'),
             'url'               => env('MAIL_URL'),
@@ -73,7 +73,7 @@ return [
 
         'sendmail'   => [
             'transport' => 'sendmail',
-            'path'      => envDefaultWhenEmpty(env('MAIL_SENDMAIL_COMMAND'), '/usr/sbin/sendmail -bs'),
+            'path'      => env_default_when_empty(env('MAIL_SENDMAIL_COMMAND'), '/usr/sbin/sendmail -bs'),
         ],
         'log'        => [
             'transport' => 'log',
@@ -91,7 +91,7 @@ return [
         ],
     ],
 
-    'from'     => ['address' => envDefaultWhenEmpty(env('MAIL_FROM'), 'changeme@example.com'), 'name' => 'Firefly III Mailer'],
+    'from'     => ['address' => env_default_when_empty(env('MAIL_FROM'), 'changeme@example.com'), 'name' => 'Firefly III Mailer'],
     'markdown' => [
         'theme' => 'default',
 

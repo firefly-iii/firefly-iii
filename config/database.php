@@ -49,7 +49,7 @@ $mysql_ssl_ciphers = env('MYSQL_SSL_CIPHER');
 $mysql_ssl_verify  = env('MYSQL_SSL_VERIFY_SERVER_CERT');
 
 $mySqlSSLOptions   = [];
-$useSSL            = envDefaultWhenEmpty(env('MYSQL_USE_SSL'), false);
+$useSSL            = env_default_when_empty(env('MYSQL_USE_SSL'), false);
 if (false !== $useSSL && null !== $useSSL && '' !== $useSSL) {
     if (null !== $mysql_ssl_ca_dir) {
         $mySqlSSLOptions[PDO::MYSQL_ATTR_SSL_CAPATH] = $mysql_ssl_ca_dir;
@@ -72,19 +72,19 @@ if (false !== $useSSL && null !== $useSSL && '' !== $useSSL) {
 }
 
 return [
-    'default'     => envDefaultWhenEmpty(env('DB_CONNECTION'), 'mysql'),
+    'default'     => env_default_when_empty(env('DB_CONNECTION'), 'mysql'),
     'connections' => [
         'sqlite' => [
             'driver'   => 'sqlite',
-            'database' => envDefaultWhenEmpty(env('DB_DATABASE'), storage_path('database/database.sqlite')),
+            'database' => env_default_when_empty(env('DB_DATABASE'), storage_path('database/database.sqlite')),
             'prefix'   => '',
         ],
         'mysql'  => [
             'driver'      => 'mysql',
-            'host'        => envDefaultWhenEmpty(env('DB_HOST'), $host),
-            'port'        => envDefaultWhenEmpty(env('DB_PORT'), $port),
-            'database'    => envDefaultWhenEmpty(env('DB_DATABASE'), $database),
-            'username'    => envDefaultWhenEmpty(env('DB_USERNAME'), $username),
+            'host'        => env_default_when_empty(env('DB_HOST'), $host),
+            'port'        => env_default_when_empty(env('DB_PORT'), $port),
+            'database'    => env_default_when_empty(env('DB_DATABASE'), $database),
+            'username'    => env_default_when_empty(env('DB_USERNAME'), $username),
             'password'    => env('DB_PASSWORD', $password),
             'unix_socket' => env('DB_SOCKET', ''),
             'charset'     => 'utf8mb4',
@@ -96,16 +96,16 @@ return [
         ],
         'pgsql'  => [
             'driver'      => 'pgsql',
-            'host'        => envDefaultWhenEmpty(env('DB_HOST'), $host),
-            'port'        => envDefaultWhenEmpty(env('DB_PORT'), $port),
-            'database'    => envDefaultWhenEmpty(env('DB_DATABASE'), $database),
-            'username'    => envDefaultWhenEmpty(env('DB_USERNAME'), $username),
+            'host'        => env_default_when_empty(env('DB_HOST'), $host),
+            'port'        => env_default_when_empty(env('DB_PORT'), $port),
+            'database'    => env_default_when_empty(env('DB_DATABASE'), $database),
+            'username'    => env_default_when_empty(env('DB_USERNAME'), $username),
             'password'    => env('DB_PASSWORD', $password),
             'charset'     => 'utf8',
             'prefix'      => '',
-            'search_path' => envDefaultWhenEmpty(env('PGSQL_SCHEMA'), 'public'),
-            'schema'      => envDefaultWhenEmpty(env('PGSQL_SCHEMA'), 'public'),
-            'sslmode'     => envDefaultWhenEmpty(env('PGSQL_SSL_MODE'), 'prefer'),
+            'search_path' => env_default_when_empty(env('PGSQL_SCHEMA'), 'public'),
+            'schema'      => env_default_when_empty(env('PGSQL_SCHEMA'), 'public'),
+            'sslmode'     => env_default_when_empty(env('PGSQL_SSL_MODE'), 'prefer'),
             'sslcert'     => env('PGSQL_SSL_CERT'),
             'sslkey'      => env('PGSQL_SSL_KEY'),
             'sslrootcert' => env('PGSQL_SSL_ROOT_CERT'),
@@ -139,21 +139,21 @@ return [
             // 'prefix'  => env('REDIS_PREFIX', Str::slug(env('APP_NAME', 'laravel'), '_') . '_database_'),
         ],
         'default' => [
-            'scheme'   => envDefaultWhenEmpty(env('REDIS_SCHEME'), 'tcp'),
+            'scheme'   => env_default_when_empty(env('REDIS_SCHEME'), 'tcp'),
             'url'      => env('REDIS_URL'),
             'path'     => env('REDIS_PATH'),
-            'host'     => envDefaultWhenEmpty(env('REDIS_HOST'), '127.0.0.1'),
-            'port'     => envDefaultWhenEmpty(env('REDIS_PORT'), 6379),
+            'host'     => env_default_when_empty(env('REDIS_HOST'), '127.0.0.1'),
+            'port'     => env_default_when_empty(env('REDIS_PORT'), 6379),
             'username' => env('REDIS_USERNAME'),
             'password' => env('REDIS_PASSWORD'),
             'database' => env('REDIS_DB', '0'),
         ],
         'cache'   => [
-            'scheme'   => envDefaultWhenEmpty(env('REDIS_SCHEME'), 'tcp'),
+            'scheme'   => env_default_when_empty(env('REDIS_SCHEME'), 'tcp'),
             'url'      => env('REDIS_URL'),
             'path'     => env('REDIS_PATH'),
-            'host'     => envDefaultWhenEmpty(env('REDIS_HOST'), '127.0.0.1'),
-            'port'     => envDefaultWhenEmpty(env('REDIS_PORT'), 6379),
+            'host'     => env_default_when_empty(env('REDIS_HOST'), '127.0.0.1'),
+            'port'     => env_default_when_empty(env('REDIS_PORT'), 6379),
             'username' => env('REDIS_USERNAME'),
             'password' => env('REDIS_PASSWORD'),
             'database' => env('REDIS_CACHE_DB', '1'),
