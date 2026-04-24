@@ -1,4 +1,5 @@
 <?php
+
 /*
  * helpers.php
  * Copyright (c) 2026 james@firefly-iii.org
@@ -22,16 +23,16 @@
 declare(strict_types=1);
 
 use FireflyIII\Exceptions\FireflyException;
+
+use function Safe\mb_ord;
 use function Safe\preg_match;
 use function Safe\preg_replace_callback;
-use function Safe\mb_ord;
 
 if (!function_exists('env_default_when_empty')) {
     /**
-     *
-     * @return mixed|null
+     * @return null|mixed
      */
-    function env_default_when_empty(mixed $value, string | int | bool | null $default = null): mixed
+    function env_default_when_empty(mixed $value, bool|int|string|null $default = null): mixed
     {
         if (null === $value) {
             return $default;
@@ -39,6 +40,7 @@ if (!function_exists('env_default_when_empty')) {
         if ('' === $value) {
             return $default;
         }
+
         return $value;
     }
 }
@@ -59,41 +61,45 @@ if (!function_exists('blade_escape_js')) {
             throw new FireflyException('The string to escape is not a valid UTF-8 string.');
         }
 
-        return preg_replace_callback('#[^a-zA-Z0-9,\._]#Su', static function ($matches) {
-            $char = $matches[0];
+        return preg_replace_callback(
+            '#[^a-zA-Z0-9,\._]#Su',
+            static function ($matches) {
+                $char      = $matches[0];
 
-            /*
-            * A few characters have short escape sequences in JSON and JavaScript.
-            * Escape sequences supported only by JavaScript, not JSON, are omitted.
-            * \" is also supported but omitted, because the resulting string is not HTML safe.
-            */
-            $short = match ($char) {
-                '\\'    => '\\\\',
-                '/'     => '\\/',
-                "\x08"  => '\b',
-                "\x0C"  => '\f',
-                "\x0A"  => '\n',
-                "\x0D"  => '\r',
-                "\x09"  => '\t',
-                default => false,
-            };
+                /*
+                 * A few characters have short escape sequences in JSON and JavaScript.
+                 * Escape sequences supported only by JavaScript, not JSON, are omitted.
+                 * \" is also supported but omitted, because the resulting string is not HTML safe.
+                 */
+                $short     = match ($char) {
+                    '\\'    => '\\\\',
+                    '/'     => '\/',
+                    "\x08"  => '\b',
+                    "\x0C"  => '\f',
+                    "\x0A"  => '\n',
+                    "\x0D"  => '\r',
+                    "\x09"  => '\t',
+                    default => false
+                };
 
-            if ($short) {
-                return $short;
-            }
+                if ($short) {
+                    return $short;
+                }
 
-            $codepoint = mb_ord($char, 'UTF-8');
-            if (0x10_000 > $codepoint) {
-                return \sprintf('\u%04X', $codepoint);
-            }
+                $codepoint = mb_ord($char, 'UTF-8');
+                if (0x10_000 > $codepoint) {
+                    return \sprintf('\u%04X', $codepoint);
+                }
 
-            // Split characters outside the BMP into surrogate pairs
-            // https://tools.ietf.org/html/rfc2781.html#section-2.1
-            $u    = $codepoint - 0x10_000;
-            $high = 0xD800 | ($u >> 10);
-            $low  = 0xDC00 | ($u & 0x3FF);
+                // Split characters outside the BMP into surrogate pairs
+                // https://tools.ietf.org/html/rfc2781.html#section-2.1
+                $u         = $codepoint - 0x10_000;
+                $high      = 0xD800 | ($u >> 10);
+                $low       = 0xDC00 | ($u & 0x3FF);
 
-            return \sprintf('\u%04X\u%04X', $high, $low);
-        },                           $string);
+                return \sprintf('\u%04X\u%04X', $high, $low);
+            },
+            $string
+        );
     }
 }
