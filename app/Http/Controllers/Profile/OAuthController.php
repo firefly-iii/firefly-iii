@@ -115,7 +115,7 @@ final class OAuthController extends Controller
 
     public function listClients(): JsonResponse
     {
-        if(!auth()->check()) {
+        if (!auth()->check()) {
             return response()->json([]);
         }
         Log::debug('Now in listClients()');

@@ -32,9 +32,9 @@ if (!defined('DATEFORMAT')) {
 // new Passport routes.
 Route::group(
     [
-        'as'        => 'passport.',
-        'prefix'    => 'oauth',
-        'middleware' => ['user-full-auth']
+        'as'         => 'passport.',
+        'prefix'     => 'oauth',
+        'middleware' => ['user-full-auth'],
         // 'namespace' => 'FireflyIII\Http\Controllers\OAuth',
     ],
     function (): void {

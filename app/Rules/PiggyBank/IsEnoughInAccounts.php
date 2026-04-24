@@ -54,9 +54,9 @@ class IsEnoughInAccounts implements ValidationRule
 
         $accounts   = $this->data['accounts'];
         foreach ($accounts as $info) {
-            $account = $repository->find((int) $info['account_id']);
-            $amount  = $info['current_amount'] ?? '0';
-            $savedSoFar    = $piggyRepos->getCurrentAmount($this->piggyBank, $account);
+            $account    = $repository->find((int) $info['account_id']);
+            $amount     = $info['current_amount'] ?? '0';
+            $savedSoFar = $piggyRepos->getCurrentAmount($this->piggyBank, $account);
             if (null === $account) {
                 $fail('validation.no_asset_account')->translate();
 
@@ -65,7 +65,7 @@ class IsEnoughInAccounts implements ValidationRule
             if ('' === $amount || 0 === bccomp($amount, '0')) {
                 continue;
             }
-            $diff    = bcsub($amount, $savedSoFar);
+            $diff       = bcsub($amount, $savedSoFar);
             if (1 === bccomp($diff, '0') && !$piggyRepos->canAddAmount($this->piggyBank, $account, $diff)) {
                 $fail('validation.cannot_add_piggy_amount')->translate();
             }
