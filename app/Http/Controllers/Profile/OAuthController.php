@@ -115,6 +115,9 @@ final class OAuthController extends Controller
 
     public function listClients(): JsonResponse
     {
+        if(!auth()->check()) {
+            return response()->json([]);
+        }
         Log::debug('Now in listClients()');
         // Retrieving all the OAuth app clients that belong to the user...
         $clients = auth()->user()->oauthApps()->where('revoked', false)->get();
