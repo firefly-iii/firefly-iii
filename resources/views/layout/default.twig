@@ -95,16 +95,6 @@
 
 </head>
 <body class="skin-firefly-iii sidebar-mini hold-transition">
-<script type="text/javascript" nonce="{{ JS_NONCE }}">
-    // Restore sidebar collapsed state from localStorage before the rest of the page renders
-    (function () {
-        try {
-            if (localStorage.getItem('ff3_sidebar_collapsed') === '1') {
-                document.body.classList.add('sidebar-collapse');
-            }
-        } catch (_) {}
-    })();
-</script>
 <div class="wrapper" id="app">
 
     <header class="main-header">
@@ -308,19 +298,6 @@
     <input type="hidden" name="_token" value="{{ csrf_token() }}"/>
 </form>
 
-<script type="text/javascript" nonce="{{ JS_NONCE }}">
-    // Persist sidebar collapsed state across page loads
-    $(document).on('click', '[data-toggle="push-menu"]', function () {
-        setTimeout(function () {
-            try {
-                localStorage.setItem(
-                    'ff3_sidebar_collapsed',
-                    document.body.classList.contains('sidebar-collapse') ? '1' : '0'
-                );
-            } catch (_) {}
-        }, 0);
-    });
-</script>
 
 </body>
 </html>
