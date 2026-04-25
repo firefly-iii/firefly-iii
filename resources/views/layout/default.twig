@@ -94,6 +94,16 @@
 
 </head>
 <body class="skin-firefly-iii sidebar-mini hold-transition">
+<script type="text/javascript" nonce="{{ JS_NONCE }}">
+    // get sidebar collapsed state from localStorage before the rest of the page renders
+    (function () {
+        try {
+            if (localStorage.getItem('ff3_sidebar_collapsed') === '1') {
+                document.body.classList.add('sidebar-collapse');
+            }
+        } catch (_) {}
+    })();
+</script>
 <div class="wrapper" id="app">
 
     <header class="main-header">
