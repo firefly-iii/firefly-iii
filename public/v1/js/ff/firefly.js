@@ -38,9 +38,9 @@ function parseToLocalDates() {
         var obj = moment.utc(date).local();
 
         console.log('auto convert to timezone is:     "' + obj.format() + '"');
-        console.log('moment.js format is:             "'+date_time_js+'"');
+        console.log('moment.js format is:             "' + date_time_js + '"');
 
-        $(this).text(obj.format(date_time_js) + ' ('+ timeZone +')');
+        $(this).text(obj.format(date_time_js) + ' (' + timeZone + ')');
     });
 }
 
@@ -50,24 +50,15 @@ $(function () {
     configAccounting(currencySymbol);
 
     // on submit of logout button:
-    $('.logout-link').click(function(e) {
+    $('.logout-link').click(function (e) {
         e.preventDefault();
         document.getElementById('logout-form').submit();
         return false;
     });
 
     // save sidebar collapsed state when page loads.
-    $(document).on('click', '[data-toggle="push-menu"]', function () {
-        setTimeout(function () {
-            try {
-                if (window.localStorage) {
-                    localStorage.setItem(
-                        'ff3_sidebar_collapsed',
-                        $('body').hasClass('sidebar-collapse') ? '1' : '0'
-                    );
-                }
-            } catch (e) {}
-        }, 0);
+    $('[data-toggle="push-menu"]').click(function () {
+        localStorage.setItem('ff3_sidebar_collapsed', (!$('body').hasClass('sidebar-collapse')).toString());
     });
 
 
@@ -76,7 +67,6 @@ $(function () {
     $('form.form-horizontal:not(.nodisablebutton)').on('submit', function () {
         $('button[type="submit"]').prop('disabled', true);
     });
-
 
 
     // when you click on a currency, this happens:

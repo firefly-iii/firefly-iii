@@ -86,23 +86,17 @@
     <script src="v1/js/lib/respond.min.js?v={{ FF_BUILD_TIME }}" nonce="{{ JS_NONCE }}"></script>
     <![endif]-->
 
-    {# this entry is in the header so it's loaded early #}
-    <script type="text/javascript" nonce="{{ JS_NONCE }}">var forceDemoOff = false;</script>
-
     {# favicons #}
     {% include 'partials.favicons' %}
 
 </head>
 <body class="skin-firefly-iii sidebar-mini hold-transition">
+{# this entry is in the header so it's loaded early #}
 <script type="text/javascript" nonce="{{ JS_NONCE }}">
-    // get sidebar collapsed state from localStorage before the rest of the page renders
-    (function () {
-        try {
-            if (localStorage.getItem('ff3_sidebar_collapsed') === '1') {
-                document.body.classList.add('sidebar-collapse');
-            }
-        } catch (_) {}
-    })();
+    var forceDemoOff = false;
+    if ('true' === localStorage.getItem('ff3_sidebar_collapsed')) {
+        document.body.classList.add('sidebar-collapse');
+    }
 </script>
 <div class="wrapper" id="app">
 
