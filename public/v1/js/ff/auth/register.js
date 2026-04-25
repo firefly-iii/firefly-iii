@@ -18,7 +18,8 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-(function () {
+$(function () {
+    "use strict";
     const form        = document.querySelector('form[action="'+route+'"]');
     const errorBox    = document.getElementById('client-errors');
     const errorList   = document.getElementById('client-errors-list');
