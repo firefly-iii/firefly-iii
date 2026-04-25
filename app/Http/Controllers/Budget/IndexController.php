@@ -245,7 +245,13 @@ final class IndexController extends Controller
                 $inPast                       = $limitPeriod->startsBefore(now()) && $limitPeriod->endsBefore(now());
                 $currency                     = $limit->transactionCurrency ?? $primaryCurrency;
                 $amount                       = Steam::bcround($limit->amount, $currency->decimal_places);
-                $spent                        = $this->opsRepository->sumExpenses($limit->start_date, $limit->end_date, null, new Collection()->push($budget), $currency);
+                $spent                        = $this->opsRepository->sumExpenses(
+                    $limit->start_date,
+                    $limit->end_date,
+                    null,
+                    new Collection()->push($budget),
+                    $currency
+                );
                 $spentAmount                  = $spent[$currency->id]['sum'] ?? '0';
                 $array['budgeted'][]          = [
                     'id'                      => $limit->id,
@@ -283,10 +289,7 @@ final class IndexController extends Controller
 
                 if (array_key_exists($currency->id, $spentArr) && array_key_exists('sum', $spentArr[$currency->id])) {
                     $array['spent'][$currency->id]['spent']                   = $spentArr[$currency->id]['sum'];
-                    $array['spent'][$currency->id]['spent_outside']           = bcmul(
-                        bcsub($spentInLimits[$currency->id], $spentArr[$currency->id]['sum']),
-                        '-1'
-                    );
+                    $array['spent'][$currency->id]['spent_outside']           = bcmul(bcsub($spentInLimits[$currency->id], $spentArr[$currency->id]['sum']), '-1');
                     $array['spent'][$currency->id]['currency_id']             = $currency->id;
                     $array['spent'][$currency->id]['currency_symbol']         = $currency->symbol;
                     $array['spent'][$currency->id]['currency_decimal_places'] = $currency->decimal_places;

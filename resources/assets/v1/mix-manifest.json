@@ -36,6 +36,7 @@
     "/public/v1/js/ff/accounts/show.js": "/public/v1/js/ff/accounts/show.js",
     "/public/v1/js/ff/admin/update/index.js": "/public/v1/js/ff/admin/update/index.js",
     "/public/v1/js/ff/admin/users.js": "/public/v1/js/ff/admin/users.js",
+    "/public/v1/js/ff/auth/register.js": "/public/v1/js/ff/auth/register.js",
     "/public/v1/js/ff/bills/create.js": "/public/v1/js/ff/bills/create.js",
     "/public/v1/js/ff/bills/edit.js": "/public/v1/js/ff/bills/edit.js",
     "/public/v1/js/ff/bills/index.js": "/public/v1/js/ff/bills/index.js",
