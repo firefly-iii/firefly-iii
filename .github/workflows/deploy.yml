@@ -1,0 +1,96 @@
+name: Build & Deploy
+
+on:
+  push:
+    branches: [ develop ]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+
+      # ---------- PHP ----------
+      - name: Setup PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: 8.5
+          extensions: mbstring, intl, pdo_mysql, bcmath, curl, zip, xml
+
+      - name: Install Composer deps
+        run: composer install --no-dev --optimize-autoloader
+
+      # ---------- NODE ----------
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+
+      # v2 (Vite)
+      - name: Build v2
+        run: |
+          cd resources/assets/v2
+          npm ci
+          npm run build
+
+      # v1 (Mix)
+      - name: Build v1
+        run: |
+          cd resources/assets/v1
+          npm ci
+          npm run production
+
+      # ---------- ARTIFACT ----------
+      - name: Upload build
+        uses: actions/upload-artifact@v4
+        with:
+          name: app-build
+          path: |
+            public/v1
+            public/v2
+            vendor
+            bootstrap/cache
+            config
+            app
+            routes
+            database
+            artisan
+            composer.json
+            composer.lock
+
+  deploy:
+    runs-on: self-hosted
+    needs: build
+
+    steps:
+      - name: Download artifact
+        uses: actions/download-artifact@v4
+        with:
+          name: app-build
+          path: /tmp/build
+
+      - name: Deploy
+        run: |
+          set -e
+
+          TARGET=/var/www/firefly-iii
+
+          # очистка
+          rm -rf $TARGET/*
+
+          # копирование
+          cp -r /tmp/build/* $TARGET/
+
+          cd $TARGET
+
+          # env не трогаем
+          if [ ! -f .env ]; then
+            cp .env.example .env
+            php artisan key:generate
+          fi
+
+          php artisan migrate --force
+          php artisan optimize:clear
+
+          chown -R www-data:www-data storage bootstrap/cache
