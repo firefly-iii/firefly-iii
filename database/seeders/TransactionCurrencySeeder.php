@@ -89,6 +89,7 @@ class TransactionCurrencySeeder extends Seeder
         $currencies[] = ['code' => 'RSD', 'name' => 'Serbian Dinar', 'symbol' => 'RSD', 'decimal_places' => 2];
         $currencies[] = ['code' => 'TWD', 'name' => 'New Taiwan Dollar', 'symbol' => 'NT$', 'decimal_places' => 0];
         $currencies[] = ['code' => 'THB', 'name' => 'Thai baht', 'symbol' => '฿', 'decimal_places' => 2];
+        $currencies[] = ['code' => 'BYN', 'name' => 'Belarusian ruble', 'symbol' => 'BYN', 'decimal_places' => 2];
 
         foreach ($currencies as $currency) {
             if (null === TransactionCurrency::where('code', $currency['code'])->first()) {
