@@ -100,29 +100,29 @@ $(function () {
       // show rule triggers
       $('.rule-triggers-show').click(function (e) {
           var obj = $(e.currentTarget);
-          $('.rule-trigger-list[data-id="' + obj.data('id') + '"]').show();
-          $('.rule-triggers-show[data-id="' + obj.data('id') + '"]').hide();
+          $('.rule-trigger-list[data-id="' + obj.data('id') + '"]').removeClass('hidden');
+          $('.rule-triggers-show[data-id="' + obj.data('id') + '"]').addClass('hidden');
       });
 
       $('.rule-trigger-list').each(function(i,v) {
           var obj = $(v);
           if(obj.data('count') > 2) {
-              obj.hide();
-              $('.rule-triggers-show[data-id="' + obj.data('id') + '"]').show();
+              obj.addClass('hidden');
+              $('.rule-triggers-show[data-id="' + obj.data('id') + '"]').removeClass('hidden');
           }
       });
     // show rule actions
     $('.rule-actions-show').click(function (e) {
         var obj = $(e.currentTarget);
-        $('.rule-action-list[data-id="' + obj.data('id') + '"]').show();
-        $('.rule-actions-show[data-id="' + obj.data('id') + '"]').hide();
+        $('.rule-action-list[data-id="' + obj.data('id') + '"]').removeClass('hidden');
+        $('.rule-actions-show[data-id="' + obj.data('id') + '"]').addClass('hidden');
     });
 
     $('.rule-action-list').each(function(i,v) {
         var obj = $(v);
         if(obj.data('count') > 1) {
-            obj.hide();
-            $('.rule-actions-show[data-id="' + obj.data('id') + '"]').show();
+            obj.addClass('hidden');
+            $('.rule-actions-show[data-id="' + obj.data('id') + '"]').removeClass('hidden');
         }
     });
 
@@ -194,9 +194,9 @@ function testRuleTriggers(e) {
         // Show warning if appropriate
         if (data.warning) {
             modal.find(".transaction-warning .warning-contents").text(data.warning);
-            modal.find(".transaction-warning").show();
+            modal.find(".transaction-warning").removeClass('hidden');
         } else {
-            modal.find(".transaction-warning").hide();
+            modal.find(".transaction-warning").addClass('hidden');
         }
 
         // Show the modal dialog
