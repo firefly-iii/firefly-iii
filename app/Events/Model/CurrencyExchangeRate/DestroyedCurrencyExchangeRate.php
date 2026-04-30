@@ -24,6 +24,7 @@ declare(strict_types=1);
 
 namespace FireflyIII\Events\Model\CurrencyExchangeRate;
 
+use Carbon\Carbon;
 use FireflyIII\Events\Event;
 use FireflyIII\Models\TransactionCurrency;
 use FireflyIII\Models\UserGroup;
@@ -37,7 +38,8 @@ class DestroyedCurrencyExchangeRate extends Event
     public function __construct(
         public TransactionCurrency $from,
         public TransactionCurrency $to,
-        public UserGroup $userGroup
+        public UserGroup $userGroup,
+        public Carbon $date
     ) {
         Log::debug(sprintf('DestroyedCurrencyExchangeRate(%s, %s) Event', $from->code, $to->code));
     }
