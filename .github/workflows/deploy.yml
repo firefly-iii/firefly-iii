@@ -18,8 +18,14 @@ jobs:
           php-version: 8.5
           extensions: mbstring, intl, pdo_mysql, bcmath, curl, zip, xml
 
+      # 🔥 обязательно для Firefly (иначе composer падает)
+      - name: Prepare Laravel env
+        run: |
+          cp .env.example .env
+          php -r "file_put_contents('.env', preg_replace('/APP_KEY=.*/', 'APP_KEY=base64:'.base64_encode(random_bytes(32)), file_get_contents('.env')));"
+
       - name: Install Composer deps
-        run: composer install --no-dev --optimize-autoloader
+        run: composer install --no-dev --optimize-autoloader --no-scripts
 
       # ---------- NODE ----------
       - name: Setup Node
@@ -47,14 +53,14 @@ jobs:
         with:
           name: app-build
           path: |
-            public/v1
-            public/v2
-            vendor
-            bootstrap/cache
-            config
             app
-            routes
+            bootstrap
+            config
             database
+            public
+            resources
+            routes
+            vendor
             artisan
             composer.json
             composer.lock
@@ -70,25 +76,30 @@ jobs:
           name: app-build
           path: /tmp/build
 
-      - name: Deploy
+      - name: Deploy to server
         run: |
           set -e
 
           TARGET=/var/www/firefly-iii
 
-          # очистка
-          rm -rf $TARGET/*
+          mkdir -p $TARGET
 
-          # копирование
-          cp -r /tmp/build/* $TARGET/
+          # безопасный деплой (не удаляет .env)
+          rsync -a --delete --exclude=".env" /tmp/build/ $TARGET/
 
           cd $TARGET
 
-          # env не трогаем
+          # если первый запуск
           if [ ! -f .env ]; then
             cp .env.example .env
             php artisan key:generate
           fi
+
+          # storage (важно для Laravel)
+          mkdir -p storage/framework/cache
+          mkdir -p storage/framework/sessions
+          mkdir -p storage/framework/views
+          mkdir -p storage/logs
 
           php artisan migrate --force
           php artisan optimize:clear
