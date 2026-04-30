@@ -25,7 +25,9 @@ jobs:
           php -r "file_put_contents('.env', preg_replace('/APP_KEY=.*/', 'APP_KEY=base64:'.base64_encode(random_bytes(32)), file_get_contents('.env')));"
 
       - name: Install Composer deps
-        run: composer install --no-dev --optimize-autoloader --no-scripts
+        run: |
+          composer config --no-plugins allow-plugins false
+          composer install --no-dev --optimize-autoloader --no-scripts
 
       # ---------- NODE ----------
       - name: Setup Node
