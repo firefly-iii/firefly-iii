@@ -26,25 +26,27 @@ jobs:
 
       - name: Install Composer deps
         run: composer install --no-dev --optimize-autoloader
-
       # ---------- NODE ----------
       - name: Setup Node
         uses: actions/setup-node@v4
         with:
           node-version: 20
 
+      - name: Install root npm deps
+        run: npm ci --include=dev
+
       # v2 (Vite)
       - name: Build v2
         run: |
           cd resources/assets/v2
-          npm ci
+          npm ci --include=dev
           npm run build
 
       # v1 (Mix)
       - name: Build v1
         run: |
           cd resources/assets/v1
-          npm ci
+          npm ci --include=dev
           npm run production
 
       # ---------- ARTIFACT ----------
