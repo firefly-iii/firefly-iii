@@ -113,4 +113,4 @@ jobs:
           php artisan migrate --force
           php artisan optimize:clear
 
-          sudo chown -R www-data:www-data storage bootstrap/cache
+          sudo chown -R www-data:www-data /var/www/firefly-iii
