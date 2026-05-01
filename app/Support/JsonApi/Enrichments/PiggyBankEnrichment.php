@@ -296,7 +296,6 @@ class PiggyBankEnrichment implements EnrichmentInterface
 
     /**
      * Returns the suggested amount the user should save per month, or "".
-     * TODO same as in repository.
      */
     private function getSuggestedMonthlyAmount(?Carbon $startDate, ?Carbon $targetDate, ?string $targetAmount, string $currentAmount): string
     {
