@@ -26,23 +26,30 @@ jobs:
 
       - name: Install Composer deps
         run: composer install --no-dev --optimize-autoloader
+
+
       # ---------- NODE ----------
       - name: Setup Node
         uses: actions/setup-node@v4
         with:
           node-version: 20
 
+      # 🔥 ключевой фикс
+      - name: Disable patch-package (CI only)
+        run: npm pkg delete scripts.postinstall
+
+      # root (можно оставить или убрать, уже не критично)
       - name: Install root npm deps
         run: npm ci --include=dev
 
-      # v2 (Vite)
+      # v2
       - name: Build v2
         run: |
           cd resources/assets/v2
           npm ci --include=dev
           npm run build
 
-      # v1 (Mix)
+      # v1
       - name: Build v1
         run: |
           cd resources/assets/v1
