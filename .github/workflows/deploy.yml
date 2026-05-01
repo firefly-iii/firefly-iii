@@ -85,6 +85,7 @@ jobs:
           name: app-build
           path: /tmp/build
 
+
       - name: Deploy to server
         run: |
           set -e
@@ -93,24 +94,26 @@ jobs:
 
           mkdir -p $TARGET
 
-          # безопасный деплой (не удаляет .env)
           rsync -a --delete --exclude=".env" /tmp/build/ $TARGET/
 
           cd $TARGET
 
-          # если первый запуск
           if [ ! -f .env ]; then
             cp .env.example .env
             php artisan key:generate
           fi
 
-          # storage (важно для Laravel)
           mkdir -p storage/framework/cache
           mkdir -p storage/framework/sessions
           mkdir -p storage/framework/views
           mkdir -p storage/logs
 
           php artisan migrate --force
-          php artisan optimize:clear
 
-          sudo chown -R www-data:www-data /var/www/firefly-iii
+          php artisan optimize:clear
+          php artisan config:cache
+          php artisan route:cache
+          php artisan view:cache
+
+          sudo chown -R www-data:www-data storage bootstrap/cache
+          sudo chmod -R 775 storage bootstrap/cache
