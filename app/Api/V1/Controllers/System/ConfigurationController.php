@@ -156,6 +156,7 @@ final class ConfigurationController extends Controller
         $useRunningBalance     = FireflyConfig::get('use_running_balance', true);
         $enableExternalMap     = FireflyConfig::get('enable_external_map', false);
         $enableExternalRates   = FireflyConfig::get('enable_external_rates', false);
+        $exchangeRateSource    = FireflyConfig::get('exchange_rate_source', config('cer.source'));
         $allowWebhooks         = FireflyConfig::get('allow_webhooks', false);
         $enableBatchProcessing = FireflyConfig::get('enable_batch_processing', false);
         $validUrlProtocols     = FireflyConfig::get('valid_url_protocols', 'http,https');
@@ -169,6 +170,7 @@ final class ConfigurationController extends Controller
             'use_running_balance'     => $useRunningBalance?->data,
             'enable_external_map'     => $enableExternalMap?->data,
             'enable_external_rates'   => $enableExternalRates?->data,
+            'exchange_rate_source'    => $exchangeRateSource?->data,
             'allow_webhooks'          => $allowWebhooks?->data,
             'enable_batch_processing' => $enableBatchProcessing?->data,
             'valid_url_protocols'     => $validUrlProtocols->data ?? 'http,https',

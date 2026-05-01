@@ -63,6 +63,16 @@ Technical stuff
                         </p>
                         {{ ExpandedForm.checkbox('enable_exchange_rates','1', enableExchangeRates) }}
 
+                        <div id="exchange-rate-source-wrapper"{% if not enableExchangeRates %} style="display:none;"{% endif %}>
+                            <h4>
+                                {{ 'setting_exchange_rate_source'|_ }}
+                            </h4>
+                            <p>
+                                {{ 'setting_exchange_rate_source_explain'|_ }}
+                            </p>
+                            {{ ExpandedForm.select('exchange_rate_source', exchangeRateSources, exchangeRateSource) }}
+                        </div>
+
                         <h4>
                             {{ 'setting_use_running_balance'|_ }}
                         </h4>
@@ -151,4 +161,21 @@ Technical stuff
         </div>
     </form>
 
+{% endblock %}
+
+{% block scripts %}
+    <script nonce="{{ JS_NONCE }}">
+        document.addEventListener('DOMContentLoaded', function () {
+            var exchangeRatesToggle = document.getElementById('ffInput_enable_exchange_rates');
+            var exchangeRateSourceWrapper = document.getElementById('exchange-rate-source-wrapper');
+            if (!exchangeRatesToggle || !exchangeRateSourceWrapper) {
+                return;
+            }
+            var syncExchangeRateSourceVisibility = function () {
+                exchangeRateSourceWrapper.style.display = exchangeRatesToggle.checked ? '' : 'none';
+            };
+            exchangeRatesToggle.addEventListener('change', syncExchangeRateSourceVisibility);
+            syncExchangeRateSourceVisibility();
+        });
+    </script>
 {% endblock %}

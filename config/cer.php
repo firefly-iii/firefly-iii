@@ -22,7 +22,12 @@
 
 declare(strict_types=1);
 
+$source         = strtolower((string) env('EXCHANGE_RATE_SOURCE', 'external'));
+$allowedSources = ['external', 'internal', 'country_national'];
+
 return [
+    'allowed_sources'  => $allowedSources,
+    'source'           => in_array($source, $allowedSources, true) ? $source : 'external',
     'url'              => 'https://ff3exchangerates.z6.web.core.windows.net',
     'enabled'          => env('ENABLE_EXCHANGE_RATES', false), // no longer used, is the default.
     'download_enabled' => env('ENABLE_EXTERNAL_RATES', false), // no longer used, only for default.

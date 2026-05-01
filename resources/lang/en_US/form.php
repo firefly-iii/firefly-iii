@@ -68,6 +68,7 @@ return [
     'valid_url_protocols'         => 'Valid URL protocols',
     'allow_webhooks'              => 'Allow webhooks',
     'enable_external_rates'       => 'Enable external exchange rates',
+    'exchange_rate_source'        => 'Exchange rate source',
     'enable_external_map'         => 'Enable external map',
     'use_running_balance'         => 'Calculate running balances',
     'enable_exchange_rates'       => 'Enable exchange rates',
