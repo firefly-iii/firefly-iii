@@ -76,6 +76,11 @@ final class ConfigurationController extends Controller
         $useRunningBalance     = FireflyConfig::get('use_running_balance', config('firefly.feature_flags.running_balance_column'))->data;
         $enableExternalMap     = FireflyConfig::get('enable_external_map', config('firefly.enable_external_map'))->data;
         $enableExternalRates   = FireflyConfig::get('enable_external_rates', config('cer.download_enabled'))->data;
+        $exchangeRateSource    = FireflyConfig::get('exchange_rate_source', config('cer.source'))->data;
+        $exchangeRateSources   = [];
+        foreach (config('cer.allowed_sources', []) as $source) {
+            $exchangeRateSources[$source] = (string) trans(sprintf('firefly.setting_exchange_rate_source_%s', $source));
+        }
         $allowWebhooks         = FireflyConfig::get('allow_webhooks', config('firefly.allow_webhooks'))->data;
         $enableBatchProcessing = FireflyConfig::get('enable_batch_processing', false)->data;
         $validUrlProtocols     = FireflyConfig::get('valid_url_protocols', config('firefly.valid_url_protocols'))->data;
@@ -90,6 +95,8 @@ final class ConfigurationController extends Controller
             'useRunningBalance'     => $useRunningBalance,
             'enableExternalMap'     => $enableExternalMap,
             'enableExternalRates'   => $enableExternalRates,
+            'exchangeRateSource'    => $exchangeRateSource,
+            'exchangeRateSources'   => $exchangeRateSources,
             'allowWebhooks'         => $allowWebhooks,
             'enableBatchProcessing' => $enableBatchProcessing,
             'validUrlProtocols'     => $validUrlProtocols,
@@ -114,6 +121,7 @@ final class ConfigurationController extends Controller
 
         FireflyConfig::set('enable_external_map', $data['enable_external_map']);
         FireflyConfig::set('enable_external_rates', $data['enable_external_rates']);
+        FireflyConfig::set('exchange_rate_source', $data['exchange_rate_source']);
         FireflyConfig::set('allow_webhooks', $data['allow_webhooks']);
         FireflyConfig::set('enable_batch_processing', $data['enable_batch_processing']);
 

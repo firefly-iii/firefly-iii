@@ -71,13 +71,18 @@ class UpdateRequest extends FormRequest
      */
     public function rules(): array
     {
-        $name = $this->route()->parameter('configName');
+        $name = $this->route()->parameter('dynamicConfigKey', $this->route()->parameter('configName'));
 
         if (in_array($name, $this->booleans, strict: true)) {
             return ['value' => ['required', new IsBoolean()]];
         }
         if ('configuration.permission_update_check' === $name) {
             return ['value' => 'required|numeric|min:-1|max:1'];
+        }
+        if ('configuration.exchange_rate_source' === $name) {
+            $allowed = implode(',', config('cer.allowed_sources', ['external', 'internal', 'country_national']));
+
+            return ['value' => sprintf('required|string|in:%s', $allowed)];
         }
         if (in_array($name, $this->integers, strict: true)) {
             return ['value' => 'required|numeric|min:464272080'];

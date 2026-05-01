@@ -41,6 +41,7 @@ class DynamicConfigKey
         'configuration.use_running_balance', // boolean
         'configuration.enable_external_map', // boolean
         'configuration.enable_external_rates', // boolean
+        'configuration.exchange_rate_source', // string ("external|internal|country_national")
         'configuration.allow_webhooks', // boolean
         'configuration.enable_batch_processing', // boolean
         'configuration.valid_url_protocols', // string ("http,https")
