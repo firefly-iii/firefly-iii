@@ -163,6 +163,7 @@ class PiggyBankEnrichment implements EnrichmentInterface
             }
 
             // get suggested per month.
+
             $meta['save_per_month']    = Steam::bcround(
                 $this->getSuggestedMonthlyAmount($this->date, $item->target_date, $meta['target_amount'], $meta['current_amount']),
                 $currency->decimal_places
@@ -295,6 +296,7 @@ class PiggyBankEnrichment implements EnrichmentInterface
 
     /**
      * Returns the suggested amount the user should save per month, or "".
+     * TODO same as in repository.
      */
     private function getSuggestedMonthlyAmount(?Carbon $startDate, ?Carbon $targetDate, ?string $targetAmount, string $currentAmount): string
     {
@@ -303,8 +305,7 @@ class PiggyBankEnrichment implements EnrichmentInterface
         }
         $savePerMonth = '0';
         if (1 === bccomp($targetAmount, $currentAmount)) {
-            $now             = today(config('app.timezone'));
-            $diffInMonths    = (int) $startDate->diffInMonths($targetDate);
+            $diffInMonths    = ceil($startDate->diffInMonths($targetDate));
             $remainingAmount = bcsub($targetAmount, $currentAmount);
 
             // more than 1 month to go and still need money to save:
