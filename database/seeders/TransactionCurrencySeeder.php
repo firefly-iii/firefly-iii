@@ -24,6 +24,7 @@ declare(strict_types=1);
 namespace Database\Seeders;
 
 use FireflyIII\Models\TransactionCurrency;
+use FireflyIII\Models\Country;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\Log;
 use PDOException;
@@ -91,13 +92,85 @@ class TransactionCurrencySeeder extends Seeder
         $currencies[] = ['code' => 'THB', 'name' => 'Thai baht', 'symbol' => '฿', 'decimal_places' => 2];
         $currencies[] = ['code' => 'BYN', 'name' => 'Belarusian ruble', 'symbol' => 'BYN', 'decimal_places' => 2];
 
+        //country mapper
+        $countryMap = [
+            'EUR' => 'EU',
+            'HUF' => 'HU',
+            'GBP' => 'GB',
+            'UAH' => 'UA',
+            'PLN' => 'PL',
+            'TRY' => 'TR',
+            'DKK' => 'DK',
+            'ISK' => 'IS',
+            'NOK' => 'NO',
+            'SEK' => 'SE',
+            'RON' => 'RO',
+
+            'USD' => 'US',
+            'BRL' => 'BR',
+            'CAD' => 'CA',
+            'MXN' => 'MX',
+            'PEN' => 'PE',
+            'ARS' => 'AR',
+            'COP' => 'CO',
+            'CLP' => 'CL',
+            'UYU' => 'UY',
+
+            'IDR' => 'ID',
+            'AUD' => 'AU',
+            'NZD' => 'NZ',
+
+            'EGP' => 'EG',
+            'MAD' => 'MA',
+            'ZAR' => 'ZA',
+
+            'JPY' => 'JP',
+            'CNY' => 'CN',
+            'KRW' => 'KR',
+            'RUB' => 'RU',
+            'INR' => 'IN',
+
+            'ILS' => 'IL',
+            'CHF' => 'CH',
+            'HRK' => 'HR',
+            'HKD' => 'HK',
+            'CZK' => 'CZ',
+            'KZT' => 'KZ',
+            'SAR' => 'SA',
+            'RSD' => 'RS',
+            'TWD' => 'TW',
+            'THB' => 'TH',
+            'BYN' => 'BY',
+        ];
+
         foreach ($currencies as $currency) {
-            if (null === TransactionCurrency::where('code', $currency['code'])->first()) {
+            $countryCode = $countryMap[$currency['code']] ?? null;
+            $countryId = null;
+
+            if (null !== $countryCode) {
+                $countryId = Country::query()
+                    ->where('code', $countryCode)
+                    ->value('id');
+            }
+
+            $existing = TransactionCurrency::query()
+                ->where('code', $currency['code'])
+                ->first();
+
+            if (null === $existing) {
                 try {
-                    TransactionCurrency::create($currency);
-                } catch (PDOException) {
-                    Log::debug(sprintf('Currency "%s" already exists and that is OK.', $currency['code']));
+                    TransactionCurrency::create(array_merge($currency, [
+                        'country_id' => $countryId,
+                    ]));
+                } catch (\PDOException $e) { Log::debug(sprintf('Currency "%s" already exists and that is OK.', $currency['code']));
                 }
+
+                continue;
+            }
+
+            if (null === $existing->country_id && null !== $countryId) {
+                $existing->country_id = $countryId;
+                $existing->save();
             }
         }
     }

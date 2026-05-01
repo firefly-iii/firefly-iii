@@ -36,6 +36,7 @@ class DatabaseSeeder extends Seeder
     public function run(): void
     {
         $this->call(AccountTypeSeeder::class);
+        $this->call([CountrySeeder::class, TransactionCurrencySeeder::class]);
         $this->call(TransactionCurrencySeeder::class);
         $this->call(TransactionTypeSeeder::class);
         $this->call(PermissionSeeder::class);

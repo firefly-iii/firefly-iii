@@ -845,3 +845,15 @@ Route::group(
         );
     }
 );
+
+// Countries API routes
+Route::group(
+    [
+        'namespace' => 'FireflyIII\Api\V1\Controllers\Country',
+        'prefix'    => 'v1/countries',
+        'as'        => 'api.v1.countries.',
+    ],
+    static function (): void {
+        Route::get('', ['uses' => 'IndexController@index', 'as' => 'index']);
+    }
+);
