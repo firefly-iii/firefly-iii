@@ -114,26 +114,32 @@ class PrimaryAmountRecalculationService
         $this->calculateTransactionsForCurrency($userGroup, $currency, $limitCurrency);
     }
 
+    public function setDate(?Carbon $date): void
+    {
+        $this->date = $date;
+    }
+
     private function calculateTransactions(UserGroup $userGroup, TransactionCurrency $currency): void
     {
         // custom query because of the potential size of this update.
         $set                              = DB::table('transactions')
-                                              ->join('transaction_journals', 'transaction_journals.id', '=', 'transactions.transaction_journal_id')
-                                              ->where('transaction_journals.user_group_id', $userGroup->id)
-                                              ->where('transaction_journals.date', '>=', $this->date)
-                                              ->where(static function (DatabaseBuilder $q1) use ($currency): void {
-                                                  $q1->where(static function (DatabaseBuilder $q2) use ($currency): void {
-                                                      $q2->whereNot('transactions.transaction_currency_id', $currency->id)->whereNull('transactions.foreign_currency_id');
-                                                  })->orWhere(static function (DatabaseBuilder $q3) use ($currency): void {
-                                                      $q3->whereNot('transactions.transaction_currency_id', $currency->id)->whereNot('transactions.foreign_currency_id', $currency->id);
-                                                  });
-                                              })
+            ->join('transaction_journals', 'transaction_journals.id', '=', 'transactions.transaction_journal_id')
+            ->where('transaction_journals.user_group_id', $userGroup->id)
+            ->where('transaction_journals.date', '>=', $this->date)
+            ->where(static function (DatabaseBuilder $q1) use ($currency): void {
+                $q1->where(static function (DatabaseBuilder $q2) use ($currency): void {
+                    $q2->whereNot('transactions.transaction_currency_id', $currency->id)->whereNull('transactions.foreign_currency_id');
+                })->orWhere(static function (DatabaseBuilder $q3) use ($currency): void {
+                    $q3->whereNot('transactions.transaction_currency_id', $currency->id)->whereNot('transactions.foreign_currency_id', $currency->id);
+                });
+            })
             //            ->where(static function (DatabaseBuilder $q) use ($currency): void {
             //                $q->whereNot('transactions.transaction_currency_id', $currency->id)
             //                    ->whereNot('transactions.foreign_currency_id', $currency->id)
             //                ;
             //            })
-                                              ->get(['transactions.id']);
+            ->get(['transactions.id'])
+        ;
         TransactionObserver::$recalculate = false;
         Log::debug(sprintf('Count of set is %d', $set->count()));
         foreach ($set as $item) {
@@ -153,20 +159,21 @@ class PrimaryAmountRecalculationService
         Log::debug(sprintf('Now in calculateTransactionsForCurrency(#%d, %s, %s)', $userGroup->id, $currency->code, $limitCurrency->code));
         // custom query because of the potential size of this update.
         $set                              = DB::table('transactions')
-                                              ->join('transaction_journals', 'transaction_journals.id', '=', 'transactions.transaction_journal_id')
-                                              ->where('transaction_journals.user_group_id', $userGroup->id)
-                                              ->where('transaction_journals.date', '>=', $this->date)
-                                              ->where(static function (DatabaseBuilder $q1) use ($currency): void {
-                                                  $q1->where(static function (DatabaseBuilder $q2) use ($currency): void {
-                                                      $q2->whereNot('transactions.transaction_currency_id', $currency->id)->whereNull('transactions.foreign_currency_id');
-                                                  })->orWhere(static function (DatabaseBuilder $q3) use ($currency): void {
-                                                      $q3->whereNot('transactions.transaction_currency_id', $currency->id)->whereNot('transactions.foreign_currency_id', $currency->id);
-                                                  });
-                                              })
+            ->join('transaction_journals', 'transaction_journals.id', '=', 'transactions.transaction_journal_id')
+            ->where('transaction_journals.user_group_id', $userGroup->id)
+            ->where('transaction_journals.date', '>=', $this->date)
+            ->where(static function (DatabaseBuilder $q1) use ($currency): void {
+                $q1->where(static function (DatabaseBuilder $q2) use ($currency): void {
+                    $q2->whereNot('transactions.transaction_currency_id', $currency->id)->whereNull('transactions.foreign_currency_id');
+                })->orWhere(static function (DatabaseBuilder $q3) use ($currency): void {
+                    $q3->whereNot('transactions.transaction_currency_id', $currency->id)->whereNot('transactions.foreign_currency_id', $currency->id);
+                });
+            })
             // must be in the limit currency.
-                                              ->where('transactions.transaction_currency_id', $limitCurrency->id)
-                                              ->orWhere('transactions.foreign_currency_id', $limitCurrency->id)
-                                              ->get(['transactions.id']);
+            ->where('transactions.transaction_currency_id', $limitCurrency->id)
+            ->orWhere('transactions.foreign_currency_id', $limitCurrency->id)
+            ->get(['transactions.id'])
+        ;
         TransactionObserver::$recalculate = false;
         Log::debug(sprintf('Count of set is %d', $set->count()));
         foreach ($set as $item) {
@@ -196,7 +203,8 @@ class PrimaryAmountRecalculationService
                     $q->orWhere('virtual_balance', '!=', '');
                 }
             })
-            ->get();
+            ->get()
+        ;
     }
 
     /**
@@ -209,7 +217,7 @@ class PrimaryAmountRecalculationService
 
         /** @var Account $account */
         foreach ($set as $account) {
-            $currencyId = (int)$account->accountMeta()->where('name', 'currency_id')->first()?->data;
+            $currencyId = (int) $account->accountMeta()->where('name', 'currency_id')->first()?->data;
             if ($groupCurrency->id === $currencyId) {
                 Log::debug(sprintf('Account "%s" is in group currency %s. Skip.', $account->name, $groupCurrency->code));
 
@@ -232,7 +240,7 @@ class PrimaryAmountRecalculationService
 
         /** @var Account $account */
         foreach ($set as $account) {
-            $currencyId = (int)$account->accountMeta()->where('name', 'currency_id')->first()?->data;
+            $currencyId = (int) $account->accountMeta()->where('name', 'currency_id')->first()?->data;
             if ($groupCurrency->id === $currencyId) {
                 Log::debug(sprintf('Account "%s" is in group currency %s. Skip.', $account->name, $groupCurrency->code));
 
@@ -286,12 +294,15 @@ class PrimaryAmountRecalculationService
 
     private function recalculateBudgetLimits(Budget $budget, TransactionCurrency $currency): void
     {
-        $set = $budget->budgetlimits()
-                      ->where(function (EloquentBuilder $q) {
-                          $q->where('budget_limits.start_date', '>=', $this->date);
-                          $q->orWhere('budget_limits.end_date', '<=', $this->date);
-                      })
-                      ->where('transaction_currency_id', '!=', $currency->id)->get();
+        $set = $budget
+            ->budgetlimits()
+            ->where(function (EloquentBuilder $q): void {
+                $q->where('budget_limits.start_date', '>=', $this->date);
+                $q->orWhere('budget_limits.end_date', '<=', $this->date);
+            })
+            ->where('transaction_currency_id', '!=', $currency->id)
+            ->get()
+        ;
 
         /** @var BudgetLimit $limit */
         foreach ($set as $limit) {
@@ -328,25 +339,25 @@ class PrimaryAmountRecalculationService
      */
     private function recalculatePiggyBanks(UserGroup $userGroup, TransactionCurrency $currency): void
     {
-        $converter = new ExchangeRateConverter();
+        $converter  = new ExchangeRateConverter();
         $converter->setUserGroup($userGroup);
         $converter->setIgnoreSettings(true);
         $repository = app(PiggyBankRepositoryInterface::class);
         $repository->setUserGroup($userGroup);
-        $set = $repository->getPiggyBanks();
-        $set = $set->filter(static fn(PiggyBank $piggyBank): bool => $currency->id !== $piggyBank->transaction_currency_id);
+        $set        = $repository->getPiggyBanks();
+        $set        = $set->filter(static fn (PiggyBank $piggyBank): bool => $currency->id !== $piggyBank->transaction_currency_id);
         foreach ($set as $piggyBank) {
             $piggyBank->encrypted = false;
             $piggyBank->save();
 
             foreach ($piggyBank->accounts as $account) {
                 $account->pivot->native_current_amount = null;
-                if (0 !== bccomp((string)$account->pivot->current_amount, '0')) {
+                if (0 !== bccomp((string) $account->pivot->current_amount, '0')) {
                     $account->pivot->native_current_amount = $converter->convert(
                         $piggyBank->transactionCurrency,
                         $currency,
                         today(),
-                        (string)$account->pivot->current_amount
+                        (string) $account->pivot->current_amount
                     );
                 }
                 $account->pivot->save();
@@ -359,7 +370,7 @@ class PrimaryAmountRecalculationService
     private function resetBudget(Budget $budget): void
     {
         foreach ($budget->autoBudgets as $autoBudget) {
-            if ('' === (string)$autoBudget->native_amount) {
+            if ('' === (string) $autoBudget->native_amount) {
                 continue;
             }
             Log::debug(sprintf('Resetting native_amount for budget #%d and auto budget #%d.', $budget->id, $autoBudget->id));
@@ -367,7 +378,7 @@ class PrimaryAmountRecalculationService
             $autoBudget->saveQuietly();
         }
         foreach ($budget->budgetlimits as $limit) {
-            if ('' !== (string)$limit->native_amount) {
+            if ('' !== (string) $limit->native_amount) {
                 Log::debug(sprintf('Resetting native_amount for budget #%d and budget limit #%d.', $budget->id, $limit->id));
                 $limit->native_amount = null;
                 $limit->saveQuietly();
@@ -379,7 +390,7 @@ class PrimaryAmountRecalculationService
     {
         $repository = app(BudgetRepositoryInterface::class);
         $repository->setUserGroup($userGroup);
-        $set = $repository->getBudgets();
+        $set        = $repository->getBudgets();
 
         Log::debug(sprintf('Reset primary currency of %d budget(s).', $set->count()));
 
@@ -408,20 +419,20 @@ class PrimaryAmountRecalculationService
 
     private function resetPiggyBank(PiggyBank $piggyBank): void
     {
-        if ('' !== (string)$piggyBank->native_target_amount) {
+        if ('' !== (string) $piggyBank->native_target_amount) {
             Log::debug(sprintf('Resetting native_target_amount for piggy bank #%d.', $piggyBank->id));
             $piggyBank->native_target_amount = null;
             $piggyBank->saveQuietly();
         }
         foreach ($piggyBank->accounts as $account) {
-            if ('' !== (string)$account->pivot->native_current_amount) {
+            if ('' !== (string) $account->pivot->native_current_amount) {
                 Log::debug(sprintf('Resetting native_current_amount for piggy bank #%d and account #%d.', $piggyBank->id, $account->id));
                 $account->pivot->native_current_amount = null;
                 $account->pivot->save();
             }
         }
         foreach ($piggyBank->piggyBankEvents as $event) {
-            if ('' !== (string)$event->native_amount) {
+            if ('' !== (string) $event->native_amount) {
                 Log::debug(sprintf('Resetting native_amount for piggy bank #%d and event #%d.', $piggyBank->id, $event->id));
                 $event->native_amount = null;
                 $event->saveQuietly();
@@ -446,19 +457,14 @@ class PrimaryAmountRecalculationService
     {
         // custom query because of the potential size of this update.
         $success = DB::table('transactions')
-                     ->join('transaction_journals', 'transaction_journals.id', '=', 'transactions.transaction_journal_id')
-                     ->where('transaction_journals.user_group_id', $userGroup->id)
-                     ->where('transaction_journals.date', '>=', $this->date)
-                     ->where(static function (Builder $q): void {
-                         $q->whereNotNull('native_amount')->orWhereNotNull('native_foreign_amount');
-                     })
-                     ->update(['native_amount' => null, 'native_foreign_amount' => null]);
+            ->join('transaction_journals', 'transaction_journals.id', '=', 'transactions.transaction_journal_id')
+            ->where('transaction_journals.user_group_id', $userGroup->id)
+            ->where('transaction_journals.date', '>=', $this->date)
+            ->where(static function (Builder $q): void {
+                $q->whereNotNull('native_amount')->orWhereNotNull('native_foreign_amount');
+            })
+            ->update(['native_amount' => null, 'native_foreign_amount' => null])
+        ;
         Log::debug(sprintf('Reset %d transactions.', $success));
     }
-
-    public function setDate(?Carbon $date): void
-    {
-        $this->date = $date;
-    }
-
 }
