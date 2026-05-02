@@ -59,7 +59,7 @@ final class DestroyController extends Controller
 
     public function destroy(DestroyRequest $request, TransactionCurrency $from, TransactionCurrency $to): JsonResponse
     {
-        $first = Carbon::create(1970,1,1);
+        $first = Carbon::create(1970, 1, 1);
         $this->repository->deleteRates($from, $to);
         event(new DestroyedCurrencyExchangeRate($from, $to, $this->validateUserGroup($request), $first));
 

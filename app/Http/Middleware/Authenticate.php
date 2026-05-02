@@ -40,10 +40,9 @@ class Authenticate
     /**
      * Create a new middleware instance.
      */
-    public function __construct(
-        /**
-         * The authentication factory instance.
-         */
+    public function __construct(/**
+     * The authentication factory instance.
+     */
         protected Auth $auth
     ) {}
 
