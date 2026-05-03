@@ -1814,6 +1814,13 @@ return [
     'options'                                             => 'Options',
 
     // budgets:
+    'spent_this_period' => 'Spent on this budget',
+    'spent_this_period_per_day'=> 'Spent on this budget per day (:days day(s))',
+    'spent_in_budget_limit_outside_period' => 'Spent on this budget, but NOT in this period',
+    'spent_in_budget_limit_outside_period_per_day' => 'Spent on this budget, but NOT in this period per day (:days day(s))',
+    'left_in_budget_limit_overview' => 'Left in this budget',
+    'left_in_budget_limit_per_day'=> 'Left in this budget per day (:days day(s))',
+    'nothing_left_in_budget' => 'The budget is now empty',
     'daily_budgets'                                       => 'Daily budgets',
     'weekly_budgets'                                      => 'Weekly budgets',
     'monthly_budgets'                                     => 'Monthly budgets',

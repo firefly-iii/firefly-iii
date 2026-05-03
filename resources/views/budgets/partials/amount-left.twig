@@ -2,21 +2,21 @@
 {% for budgetLimit in budget.budgeted %}
     <span class="left_span" data-currency="{{ budgetLimit.currency_id }}" data-limit="{{ budgetLimit.id }}" data-value="{{ budgetLimit.left }}" class="amount_left">
         {# the amount left #}
-        {{ formatAmountBySymbol(budgetLimit.left, budgetLimit.currency_symbol, budgetLimit.currency_decimal_places) }}
+        <span title="{{ 'left_in_budget_limit_overview'|_ }}">{{ formatAmountBySymbol(budgetLimit.left, budgetLimit.currency_symbol, budgetLimit.currency_decimal_places) }}</span>
 
         {# if the budget limit is in the past, this is not interesting. #}
         {# if there is nothing left, this is not interesting. #}
         {% if not budgetLimit.in_past and -1 == bccomp('0',budgetLimit.left) %}
             {% if 0 == budgetLimit.active_days_left %}
-                ({{ formatAmountBySymbol(budgetLimit.left, budgetLimit.currency_symbol, budgetLimit.currency_decimal_places) }})
+                <span title="{{ trans('firefly.left_in_budget_limit_per_day', {days: 0}) }}">({{ formatAmountBySymbol(budgetLimit.left, budgetLimit.currency_symbol, budgetLimit.currency_decimal_places) }})
             {% else %}
-                ({{ formatAmountBySymbol(budgetLimit.left / budgetLimit.active_days_left, budgetLimit.currency_symbol, budgetLimit.currency_decimal_places) }})
+                <span title="{{ trans('firefly.left_in_budget_limit_per_day', {days: budgetLimit.active_days_left}) }}">({{ formatAmountBySymbol(budgetLimit.left / budgetLimit.active_days_left, budgetLimit.currency_symbol, budgetLimit.currency_decimal_places) }})</span>
             {% endif %}
         {% endif %}
 
         {# if there is nothing left, just format 0.00 #}
         {% if not budgetLimit.in_past and -1 != bccomp('0',budgetLimit.left) %}
-            ({{ formatAmountBySymbol('0', budgetLimit.currency_symbol, budgetLimit.currency_decimal_places) }})
+            <span title="{{ 'nothing_left_in_budget'|_ }}">({{ formatAmountBySymbol('0', budgetLimit.currency_symbol, budgetLimit.currency_decimal_places) }})</span>
         {% endif %}
 </span><br />
 {% endfor %}
