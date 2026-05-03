@@ -21,6 +21,7 @@
  */
 
 declare(strict_types=1);
+use Pdo\Mysql;
 
 use function Safe\parse_url;
 
@@ -52,22 +53,22 @@ $mySqlSSLOptions   = [];
 $useSSL            = env_default_when_empty(env('MYSQL_USE_SSL'), false);
 if (false !== $useSSL && null !== $useSSL && '' !== $useSSL) {
     if (null !== $mysql_ssl_ca_dir) {
-        $mySqlSSLOptions[\Pdo\Mysql::ATTR_SSL_CAPATH] = $mysql_ssl_ca_dir;
+        $mySqlSSLOptions[Mysql::ATTR_SSL_CAPATH] = $mysql_ssl_ca_dir;
     }
     if (null !== $mysql_ssl_ca_file) {
-        $mySqlSSLOptions[\Pdo\Mysql::ATTR_SSL_CA] = $mysql_ssl_ca_file;
+        $mySqlSSLOptions[Mysql::ATTR_SSL_CA] = $mysql_ssl_ca_file;
     }
     if (null !== $mysql_ssl_cert) {
-        $mySqlSSLOptions[\Pdo\Mysql::ATTR_SSL_CERT] = $mysql_ssl_cert;
+        $mySqlSSLOptions[Mysql::ATTR_SSL_CERT] = $mysql_ssl_cert;
     }
     if (null !== $mysql_ssl_key) {
-        $mySqlSSLOptions[\Pdo\Mysql::ATTR_SSL_KEY] = $mysql_ssl_key;
+        $mySqlSSLOptions[Mysql::ATTR_SSL_KEY] = $mysql_ssl_key;
     }
     if (null !== $mysql_ssl_ciphers) {
-        $mySqlSSLOptions[\Pdo\Mysql::ATTR_SSL_CIPHER] = $mysql_ssl_ciphers;
+        $mySqlSSLOptions[Mysql::ATTR_SSL_CIPHER] = $mysql_ssl_ciphers;
     }
     if (null !== $mysql_ssl_verify) {
-        $mySqlSSLOptions[\Pdo\Mysql::ATTR_SSL_VERIFY_SERVER_CERT] = $mysql_ssl_verify;
+        $mySqlSSLOptions[Mysql::ATTR_SSL_VERIFY_SERVER_CERT] = $mysql_ssl_verify;
     }
 }
 
