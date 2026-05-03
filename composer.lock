@@ -10176,16 +10176,16 @@
         },
         {
             "name": "carthage-software/mago",
-            "version": "1.25.1",
+            "version": "1.25.2",
             "source": {
                 "type": "git",
                 "url": "https://github.com/carthage-software/mago.git",
-                "reference": "b00c5dc1c73eaa9d7af7d24fcff68d3ca3c07806"
+                "reference": "54e9645d15381aa78bf7113e01dcd1734ec43737"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/carthage-software/mago/zipball/b00c5dc1c73eaa9d7af7d24fcff68d3ca3c07806",
-                "reference": "b00c5dc1c73eaa9d7af7d24fcff68d3ca3c07806",
+                "url": "https://api.github.com/repos/carthage-software/mago/zipball/54e9645d15381aa78bf7113e01dcd1734ec43737",
+                "reference": "54e9645d15381aa78bf7113e01dcd1734ec43737",
                 "shasum": ""
             },
             "require": {
@@ -10220,7 +10220,7 @@
             ],
             "support": {
                 "issues": "https://github.com/carthage-software/mago/issues",
-                "source": "https://github.com/carthage-software/mago/tree/1.25.1"
+                "source": "https://github.com/carthage-software/mago/tree/1.25.2"
             },
             "funding": [
                 {
@@ -10228,7 +10228,7 @@
                     "type": "github"
                 }
             ],
-            "time": "2026-04-30T21:09:36+00:00"
+            "time": "2026-05-02T23:21:31+00:00"
         },
         {
             "name": "cloudcreativity/json-api-testing",
@@ -11597,16 +11597,16 @@
         },
         {
             "name": "phpstan/phpstan-strict-rules",
-            "version": "2.0.10",
+            "version": "2.0.11",
             "source": {
                 "type": "git",
                 "url": "https://github.com/phpstan/phpstan-strict-rules.git",
-                "reference": "1aba28b697c1e3b6bbec8a1725f8b11b6d3e5a5f"
+                "reference": "9b000a578b85b32945b358b172c7b20e91189024"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/phpstan/phpstan-strict-rules/zipball/1aba28b697c1e3b6bbec8a1725f8b11b6d3e5a5f",
-                "reference": "1aba28b697c1e3b6bbec8a1725f8b11b6d3e5a5f",
+                "url": "https://api.github.com/repos/phpstan/phpstan-strict-rules/zipball/9b000a578b85b32945b358b172c7b20e91189024",
+                "reference": "9b000a578b85b32945b358b172c7b20e91189024",
                 "shasum": ""
             },
             "require": {
@@ -11642,9 +11642,9 @@
             ],
             "support": {
                 "issues": "https://github.com/phpstan/phpstan-strict-rules/issues",
-                "source": "https://github.com/phpstan/phpstan-strict-rules/tree/2.0.10"
+                "source": "https://github.com/phpstan/phpstan-strict-rules/tree/2.0.11"
             },
-            "time": "2026-02-11T14:17:32+00:00"
+            "time": "2026-05-02T06:54:10+00:00"
         },
         {
             "name": "phpunit/php-code-coverage",
