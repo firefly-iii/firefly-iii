@@ -1398,7 +1398,7 @@ return [
     'pref_locale'                                         => 'Locale settings',
     'pref_languages_help'                                 => 'Firefly III supports several languages. Which one do you prefer?',
     'pref_locale_help'                                    => 'Firefly III allows you to set other local settings, like how currencies, numbers and dates are formatted. Entries in this list may not be supported by your system. Firefly III doesn\'t have the correct date settings for every locale; contact me for improvements.',
-    'pref_locale_exception'                               => 'Date input fields will always follow your browser settings, not Firefly III settings. If your browser is set to "English (US)" the date will always be formatted mm/dd/yyyy. No setting in Firefly III can change that.',
+    'pref_locale_exception' => 'Firefly III can only change how you view dates. Entering a date will always be formatted according to your browser settings, not Firefly III settings. If your browser is set to "English (US)" you must always enter the date formatted as mm/dd/yyyy. No setting in Firefly III can change that.',
     'pref_locale_no_demo'                                 => 'This feature won\'t work for the demo user.',
     'pref_convert_to_primary'                             => 'Display amounts in your primary currency',
     'pref_convert_to_primary_help'                        => 'This option will make Firefly III try to display and show your primary currency in as many places as possible, converting amounts where necessary. This sacrifices accuracy for ease of use, because conversion is not always exact. Please verify that Firefly III has the necessary conversion rates on the "exchange rates"-page.',
