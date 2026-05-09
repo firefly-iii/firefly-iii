@@ -70,7 +70,6 @@ final class BudgetController extends Controller
      */
     public function accountPerBudget(Collection $accounts, Collection $budgets, Carbon $start, Carbon $end): Factory|\Illuminate\Contracts\View\View
     {
-
         /** @var BudgetReportGenerator $generator */
         $generator = app(BudgetReportGenerator::class);
 
@@ -91,7 +90,6 @@ final class BudgetController extends Controller
      */
     public function accounts(Collection $accounts, Collection $budgets, Carbon $start, Carbon $end): Factory|\Illuminate\Contracts\View\View
     {
-
         $spent  = $this->opsRepository->listExpenses($start, $end, $accounts, $budgets);
         $report = [];
         $sums   = [];
@@ -257,7 +255,6 @@ final class BudgetController extends Controller
      */
     public function general(Collection $accounts, Carbon $start, Carbon $end)
     {
-
         /** @var BudgetReportGenerator $generator */
         $generator = app(BudgetReportGenerator::class);
 
