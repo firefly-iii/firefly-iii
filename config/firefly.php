@@ -198,6 +198,7 @@ return [
     'default_locale'                       => env_default_when_empty(env('DEFAULT_LOCALE'), 'equal'),
 
     // account types that may have or set a currency
+
     'valid_currency_account_types'         => [
         AccountTypeEnum::ASSET->value,
         AccountTypeEnum::LOAN->value,
