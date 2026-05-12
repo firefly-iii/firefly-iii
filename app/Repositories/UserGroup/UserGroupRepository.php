@@ -175,6 +175,11 @@ class UserGroupRepository implements UserGroupRepositoryInterface, UserGroupInte
 
     public function update(UserGroup $userGroup, array $data): UserGroup
     {
+        if (array_key_exists('country_id', $data)) {
+            $countryId = (int)$data['country_id'];
+            $userGroup->country_id = 0 === $countryId ? null : $countryId;
+        }
+
         $userGroup->title = $data['title'];
         $userGroup->save();
         $currency         = null;

@@ -69,6 +69,14 @@
                         <Title :value=administration.title :error="errors.title" v-on:input="administration.title = $event"></Title>
                         <UserGroupCurrency :value=administration.currency_id :error="errors.currency_id"
                                         v-on:input="administration.currency_id = $event"></UserGroupCurrency>
+
+                        <UserGroupCountry
+                            v-if="showCountrySelector"
+                            :value="administration.country_id"
+                            :error="errors.country_id"
+                            :show-country-selector="showCountrySelector"
+                            v-on:input="administration.country_id = $event">
+                        </UserGroupCountry>
                     </div>
                     <div class="box-footer">
                         <div class="btn-group">
@@ -90,29 +98,41 @@
 import Title from "../form/Title.vue";
 import WebhookTrigger from "../form/WebhookTrigger.vue";
 import UserGroupCurrency from "../form/UserGroupCurrency.vue";
+import UserGroupCountry from "../form/UserGroupCountry.vue";
 
 export default {
     name: "Edit",
-    components: {UserGroupCurrency, WebhookTrigger, Title},
+    components: {UserGroupCurrency, WebhookTrigger, Title, UserGroupCountry},
     data() {
         return {
             pageTitle: '',
+            exchange_rate_source: 'external',
             administration: {
-              title: '',
+                title: '',
                 currency_id: 0,
+                country_id: 0,
             },
             errors: {
                 title: [],
                 currency_id: [],
+                country_id: [],
             },
             error_message: '',
             success_message: '',
         };
     },
+    computed: {
+        showCountrySelector() {
+            return this.exchange_rate_source === 'country_national';
+        },
+    },
     mounted() {
         const page = window.location.href.split('/');
         const administrationId = parseInt(page[page.length - 1]);
-        this.downloadAdministration(administrationId);
+
+        this.downloadExchangeRateSource().then(() => {
+            this.downloadAdministration(administrationId);
+        });
     },
     methods: {
         downloadAdministration: function (id) {
@@ -124,8 +144,16 @@ export default {
                     currency_id: parseInt(current.attributes.primary_currency_id),
                     currency_code: current.attributes.primary_currency_code,
                     currency_name: current.attributes.primary_currency_name,
+                    country_id: parseInt(current.attributes.country_id ?? 0),
                 };
                 this.pageTitle = this.administration.title;
+            });
+        },
+        downloadExchangeRateSource: function () {
+            return axios.get("./api/v1/configuration/configuration.exchange_rate_source").then((response) => {
+                this.exchange_rate_source = response.data.data.value ?? 'external';
+            }).catch(() => {
+                this.exchange_rate_source = 'external';
             });
         },
         submit: function (e) {
@@ -135,6 +163,7 @@ export default {
             this.errors = {
                 title: [],
                 currency_id: [],
+                country_id: [],
             };
 
             // disable button
@@ -144,6 +173,7 @@ export default {
             let data = {
                 title: this.administration.title,
                 primary_currency_id: parseInt(this.administration.currency_id),
+                country_id: this.administration.country_id > 0 ? parseInt(this.administration.country_id) : null,
             };
 
             // post!

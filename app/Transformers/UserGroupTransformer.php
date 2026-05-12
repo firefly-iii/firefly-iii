@@ -93,6 +93,7 @@ class UserGroupTransformer extends AbstractTransformer
             'primary_currency_symbol'         => $currency->symbol,
             'primary_currency_decimal_places' => $currency->decimal_places,
             'members'                         => array_values($this->memberships[$userGroup->id] ?? []),
+            'country_id' => (string)($userGroup->country_id ?? 0),
         ];
 
         // if the user has a specific role in this group, then collect the memberships.

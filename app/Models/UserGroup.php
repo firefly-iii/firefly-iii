@@ -32,6 +32,8 @@ use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\HasManyThrough;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
+use FireflyIII\Models\Country;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class UserGroup extends Model
 {
@@ -198,5 +200,10 @@ class UserGroup extends Model
     public function webhooks(): HasMany
     {
         return $this->hasMany(Webhook::class);
+    }
+
+    public function country(): BelongsTo
+    {
+        return $this->belongsTo(Country::class);
     }
 }

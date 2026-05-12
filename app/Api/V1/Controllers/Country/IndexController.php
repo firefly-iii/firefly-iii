@@ -12,10 +12,22 @@ final class IndexController extends Controller
 {
     public function index(): JsonResponse
     {
-        return response()->json(
-            Country::query()
-                ->orderBy('name')
-                ->get()
-        );
+        $countries = Country::query()
+            ->orderBy('name')
+            ->get()
+            ->map(function (Country $country): Country {
+                $flag = $country->flag_src;
+
+                if (null === $flag || '' === $flag) {
+                    $flag = 'default.png';
+                }
+
+                // сразу отдаём готовый путь (лучше для фронта)
+                $country->flag_src = sprintf('/v1/images/flags/%s', $flag);
+
+                return $country;
+            });
+
+        return response()->json($countries);
     }
 }
