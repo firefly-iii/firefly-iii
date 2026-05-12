@@ -32,6 +32,25 @@ return [
     'enabled'          => env('ENABLE_EXCHANGE_RATES', false), // no longer used, is the default.
     'download_enabled' => env('ENABLE_EXTERNAL_RATES', false), // no longer used, only for default.
 
+    /*
+     * National bank providers, keyed by ISO-3166 alpha-2 country code.
+     * Each provider must implement FireflyIII\Services\ExchangeRate\Providers\NationalRateProviderInterface
+     * and expose a public static `base()` currency code.
+     *
+     * To add a new provider:
+     *   1. Implement a new class extending AbstractNationalRateProvider.
+     *   2. Add it here under the country code it serves.
+     *   3. Make sure the corresponding Country row is seeded.
+     */
+    'national_providers' => [
+        'BY' => FireflyIII\Services\ExchangeRate\Providers\NbrbProvider::class,
+        'RU' => FireflyIII\Services\ExchangeRate\Providers\CbrProvider::class,
+        'EU' => FireflyIII\Services\ExchangeRate\Providers\EcbProvider::class,
+    ],
+
+    // HTTP timeout (seconds) for national bank requests.
+    'national_http_timeout' => (int) env('NATIONAL_RATES_HTTP_TIMEOUT', 15),
+
     // if currencies are added, default rates must be added as well!
     // source: https://www.xe.com/currencyconverter/
     'date'             => '2025-04-15',

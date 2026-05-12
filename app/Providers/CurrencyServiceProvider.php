@@ -28,6 +28,9 @@ use FireflyIII\Repositories\Currency\CurrencyRepository as GroupCurrencyReposito
 use FireflyIII\Repositories\Currency\CurrencyRepositoryInterface as GroupCurrencyRepositoryInterface;
 use FireflyIII\Repositories\ExchangeRate\ExchangeRateRepository;
 use FireflyIII\Repositories\ExchangeRate\ExchangeRateRepositoryInterface;
+use FireflyIII\Services\ExchangeRate\NationalRateProviderRegistry;
+use FireflyIII\Services\ExchangeRate\NationalRatesAdapter;
+use FireflyIII\Services\ExchangeRate\UserCountryResolver;
 use Illuminate\Foundation\Application;
 use Illuminate\Support\ServiceProvider;
 use Override;
@@ -79,5 +82,10 @@ class CurrencyServiceProvider extends ServiceProvider
 
             return $repository;
         });
+
+        // National-bank exchange-rate plumbing.
+        $this->app->singleton(NationalRateProviderRegistry::class);
+        $this->app->singleton(NationalRatesAdapter::class);
+        $this->app->singleton(UserCountryResolver::class);
     }
 }
