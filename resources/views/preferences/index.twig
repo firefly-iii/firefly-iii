@@ -327,6 +327,30 @@
                                             </div>
                                         {% endfor %}
                                     </div>
+                                    {% if nationalRatesCountries|length > 0 %}
+                                        <div class="preferences-box">
+                                            <h3>{{ 'pref_national_rates_country_title'|_ }}</h3>
+                                            <p class="text-info">{{ 'pref_national_rates_country_help'|_ }}</p>
+                                            <div class="form-group">
+                                                <label class="col-sm-4 control-label" for="national_rates_country">
+                                                    {{ 'pref_national_rates_country_label'|_ }}
+                                                </label>
+                                                <div class="col-sm-8">
+                                                    <select id="national_rates_country"
+                                                            name="national_rates_country"
+                                                            class="form-control">
+                                                        <option value="">{{ 'pref_national_rates_country_none'|_ }}</option>
+                                                        {% for code, name in nationalRatesCountries %}
+                                                            <option value="{{ code }}"
+                                                                {% if nationalRatesCountry == code %}selected{% endif %}>
+                                                                {{ name }} ({{ code }})
+                                                            </option>
+                                                        {% endfor %}
+                                                    </select>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    {% endif %}
                                 </div>
                             </div>
                         </div>

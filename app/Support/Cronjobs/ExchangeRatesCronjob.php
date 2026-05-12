@@ -26,6 +26,7 @@ namespace FireflyIII\Support\Cronjobs;
 
 use Carbon\Carbon;
 use FireflyIII\Jobs\DownloadExchangeRates;
+use FireflyIII\Jobs\DownloadNationalExchangeRates;
 use FireflyIII\Models\Configuration;
 use FireflyIII\Support\Facades\FireflyConfig;
 use FireflyIII\Support\Facades\Preferences;
@@ -71,18 +72,48 @@ class ExchangeRatesCronjob extends AbstractCronjob
     {
         Log::info(sprintf('Will now fire exchange rates cron job task for date "%s".', $this->date->format('Y-m-d')));
 
-        /** @var DownloadExchangeRates $job */
-        $job                = app(DownloadExchangeRates::class);
-        $job->setDate($this->date);
-        $job->handle();
+        $source = (string) FireflyConfig::get('exchange_rate_source', config('cer.source'))->data;
+        Log::info(sprintf('Exchange rate source is "%s".', $source));
+
+        switch ($source) {
+            case 'country_national':
+                $this->runNationalProviders();
+                break;
+            case 'internal':
+                // "Internal" mode relies on the static fallback rates already
+                // shipped in config/cer.php — nothing to download. We still
+                // mark the cron as fired so the UI shows it as alive.
+                Log::info('Internal exchange-rate source selected — skipping download.');
+                break;
+            case 'external':
+            default:
+                /** @var DownloadExchangeRates $job */
+                $job = app(DownloadExchangeRates::class);
+                $job->setDate($this->date);
+                $job->handle();
+                break;
+        }
 
         // get stuff from job:
         $this->jobFired     = true;
         $this->jobErrored   = false;
         $this->jobSucceeded = true;
-        $this->message      = 'Exchange rates cron job fired successfully.';
+        $this->message      = sprintf('Exchange rates cron job fired successfully (source: %s).', $source);
 
         FireflyConfig::set('last_cer_job', (int) $this->date->format('U'));
         Log::info('Done with exchange rates job task.');
+    }
+
+    private function runNationalProviders(): void
+    {
+        /** @var DownloadNationalExchangeRates $job */
+        $job = app(DownloadNationalExchangeRates::class);
+        $job->setDate($this->date);
+        $written = $job->handle(
+            app(\FireflyIII\Services\ExchangeRate\NationalRateProviderRegistry::class),
+            app(\FireflyIII\Services\ExchangeRate\NationalRatesAdapter::class),
+            app(\FireflyIII\Services\ExchangeRate\UserCountryResolver::class),
+        );
+        Log::info(sprintf('National exchange-rate adapter wrote %d rows.', $written));
     }
 }

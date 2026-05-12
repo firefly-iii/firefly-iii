@@ -40,10 +40,12 @@ class PreferencesRequest extends FormRequest
     public function rules(): array
     {
         $rules = [
-            'slack_webhook_url' => ['nullable', 'url', 'min:1', new IsValidSlackOrDiscordUrl()],
-            'ntfy_server'       => ['nullable', 'url', 'min:1'],
-            'ntfy_user'         => ['required_with:ntfy_pass,ntfy_auth', 'nullable', 'string', 'min:1'],
-            'ntfy_pass'         => ['required_with:ntfy_user,ntfy_auth', 'nullable', 'string', 'min:1'],
+            'slack_webhook_url'      => ['nullable', 'url', 'min:1', new IsValidSlackOrDiscordUrl()],
+            'ntfy_server'            => ['nullable', 'url', 'min:1'],
+            'ntfy_user'              => ['required_with:ntfy_pass,ntfy_auth', 'nullable', 'string', 'min:1'],
+            'ntfy_pass'              => ['required_with:ntfy_user,ntfy_auth', 'nullable', 'string', 'min:1'],
+            // National-bank exchange rate country (2-letter ISO code or empty).
+            'national_rates_country' => ['nullable', 'string', 'size:2'],
         ];
         foreach (config('notifications.notifications.user') as $key => $info) {
             $rules[sprintf('notification_%s', $key)] = 'in:0,1';

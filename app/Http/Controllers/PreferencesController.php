@@ -30,8 +30,11 @@ use FireflyIII\Events\Test\UserTestsNotificationChannel;
 use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Http\Requests\PreferencesRequest;
 use FireflyIII\Models\Account;
+use FireflyIII\Models\Country;
 use FireflyIII\Models\Preference;
 use FireflyIII\Repositories\Account\AccountRepositoryInterface;
+use FireflyIII\Services\ExchangeRate\NationalRateProviderRegistry;
+use FireflyIII\Services\ExchangeRate\UserCountryResolver;
 use FireflyIII\Support\Facades\Navigation;
 use FireflyIII\Support\Facades\Preferences;
 use FireflyIII\Support\Facades\Steam;
@@ -211,10 +214,12 @@ final class PreferencesController extends Controller
             'locales'            => $locales,
             'locale'             => $locale,
             'tjOptionalFields'   => $tjOptionalFields,
-            'viewRange'          => $viewRange,
-            'customFiscalYear'   => $customFiscalYear,
-            'listPageSize'       => $listPageSize,
-            'fiscalYearStart'    => $fiscalYearStart,
+            'viewRange'             => $viewRange,
+            'customFiscalYear'      => $customFiscalYear,
+            'listPageSize'          => $listPageSize,
+            'fiscalYearStart'       => $fiscalYearStart,
+            'nationalRatesCountry'  => $this->currentNationalRatesCountry(),
+            'nationalRatesCountries' => $this->availableNationalRatesCountries(),
         ]);
     }
 
@@ -356,12 +361,63 @@ final class PreferencesController extends Controller
         $anonymous         = '1' === $request->input('anonymous');
         Preferences::set('anonymous', $anonymous);
 
+        // national bank country (per-user selector for country_national source)
+        $rawCountry        = trim((string) $request->input('national_rates_country', ''));
+        if ('' === $rawCountry) {
+            Preferences::set(UserCountryResolver::PREF_KEY, null);
+        } else {
+            /** @var UserCountryResolver $resolver */
+            $resolver = app(UserCountryResolver::class);
+            if ($resolver->isSelectable($rawCountry)) {
+                Preferences::set(UserCountryResolver::PREF_KEY, strtoupper($rawCountry));
+            }
+        }
+
         // save and continue
         session()->flash('success', (string) trans('firefly.saved_preferences'));
         Preferences::mark();
         Log::debug('Done saving settings.');
 
         return redirect(route('preferences.index'));
+    }
+
+    /**
+     * Returns the user's currently saved national-rates country code, or ''.
+     */
+    private function currentNationalRatesCountry(): string
+    {
+        $pref = Preferences::get(UserCountryResolver::PREF_KEY, null);
+        if (null === $pref || null === $pref->data) {
+            return '';
+        }
+
+        return strtoupper((string) $pref->data);
+    }
+
+    /**
+     * Build a [code => name] map of countries the user can choose from.
+     * Only countries with a registered provider AND a Country row are returned.
+     *
+     * @return array<string, string>
+     */
+    private function availableNationalRatesCountries(): array
+    {
+        /** @var NationalRateProviderRegistry $registry */
+        $registry = app(NationalRateProviderRegistry::class);
+        $codes    = $registry->supportedCountries();
+        if ([] === $codes) {
+            return [];
+        }
+        $rows = Country::query()
+            ->whereIn('code', $codes)
+            ->orderBy('name')
+            ->get(['code', 'name']);
+        $out  = [];
+        foreach ($rows as $row) {
+            $out[(string) $row->code] = (string) $row->name;
+        }
+
+        return $out;
     }
 
     public function testNotification(Request $request): mixed
