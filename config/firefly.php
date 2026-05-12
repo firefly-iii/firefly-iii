@@ -225,7 +225,7 @@ return [
     'available_dark_modes'                 => ['light', 'dark', 'browser'],
     'bill_reminder_periods'                => [90, 30, 14, 7, 0],
     'valid_view_ranges'                    => ['1D', '1W', '1M', '3M', '6M', '1Y'],
-    'valid_url_protocols'                  => env_default_when_empty(env('VALID_URL_PROTOCOLS'), 'http,https,ftp,ftps,mailto'), // no longer used, only for default.
+    'valid_url_protocols'                  => env_default_when_empty(env('VALID_URL_PROTOCOLS'), 'http,https,ftp,ftps,mailto,abacusfiiiapp'), // no longer used, only for default.
     'allowedMimes'                         => [
         // plain files
         'text/plain',

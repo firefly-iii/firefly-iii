@@ -442,11 +442,16 @@ export default {
                     }
                 })
                 .catch(error => {
+
                     if (typeof error.response.data === 'object') {
-                        form.errors = _.flatten(_.toArray(error.response.data.errors));
+                        for (const [key, value] of Object.entries(error.response.data.errors)) {
+                            console.log(`${key}: ${value}`);
+                            form.errors.push(value);
+                        }
                     } else {
                         form.errors = ['Something went wrong. Please try again.'];
                     }
+                    console.log(form.errors);
                 });
         },
 

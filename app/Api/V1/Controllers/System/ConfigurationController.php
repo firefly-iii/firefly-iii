@@ -158,7 +158,7 @@ final class ConfigurationController extends Controller
         $enableExternalRates   = FireflyConfig::get('enable_external_rates', false);
         $allowWebhooks         = FireflyConfig::get('allow_webhooks', false);
         $enableBatchProcessing = FireflyConfig::get('enable_batch_processing', false);
-        $validUrlProtocols     = FireflyConfig::get('valid_url_protocols', 'http,https');
+        $validUrlProtocols     = FireflyConfig::get('valid_url_protocols', config('firefly.valid_url_protocols'));
 
         return [
             'is_demo_site'            => $isDemoSite?->data,
@@ -171,7 +171,7 @@ final class ConfigurationController extends Controller
             'enable_external_rates'   => $enableExternalRates?->data,
             'allow_webhooks'          => $allowWebhooks?->data,
             'enable_batch_processing' => $enableBatchProcessing?->data,
-            'valid_url_protocols'     => $validUrlProtocols->data ?? 'http,https',
+            'valid_url_protocols'     => $validUrlProtocols->data ?? config('firefly.valid_url_protocols'),
         ];
     }
 
