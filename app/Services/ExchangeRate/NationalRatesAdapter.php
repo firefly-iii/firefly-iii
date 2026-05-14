@@ -91,21 +91,34 @@ final class NationalRatesAdapter
 
         $written = 0;
         foreach ($quotes as $quote) {
-            if ($quote->fromCode !== $baseCurrency->code) {
+            // Accept both orientations:
+            //   from=base, to=foreign  — ECB-style (1 base = rate foreign)
+            //   from=foreign, to=base  — NBRB/CBR-style (1 foreign = rate base)
+            // and normalise to the (base, foreign, baseToForeignRate) tuple.
+            if ($quote->fromCode === $baseCurrency->code) {
+                $foreignCode        = $quote->toCode;
+                $baseToForeignRate  = $quote->rate;
+            } elseif ($quote->toCode === $baseCurrency->code) {
+                $foreignCode        = $quote->fromCode;
+                // 1 foreign = $quote->rate base  ⇒  1 base = 1/$quote->rate foreign
+                $baseToForeignRate  = $quote->rate > 0.0 ? 1.0 / $quote->rate : 0.0;
+            } else {
                 Log::warning(sprintf(
-                    '[NationalRatesAdapter] %s produced quote with fromCode=%s, expected %s. Skipped.',
+                    '[NationalRatesAdapter] %s produced quote %s→%s that does not involve base %s. Skipped.',
                     $providerName,
                     $quote->fromCode,
+                    $quote->toCode,
                     $baseCurrency->code,
                 ));
 
                 continue;
             }
-            $toCurrency = $this->resolveCurrency($quote->toCode);
+
+            $toCurrency = $this->resolveCurrency($foreignCode);
             if (!$toCurrency instanceof TransactionCurrency) {
                 continue;
             }
-            if ($toCurrency->id === $baseCurrency->id || $quote->rate <= 0.0) {
+            if ($toCurrency->id === $baseCurrency->id || $baseToForeignRate <= 0.0) {
                 continue;
             }
 
@@ -114,7 +127,11 @@ final class NationalRatesAdapter
                 $baseCurrency,
                 $toCurrency,
                 $quote->date,
-                $quote->rate,
+                $baseToForeignRate,
+                // When the provider published "1 foreign = X base" we already
+                // have the exact published value — use it for the inverse
+                // direction instead of dividing 1.0 by the derived rate.
+                $quote->toCode === $baseCurrency->code ? $quote->rate : null,
             );
         }
 
@@ -130,7 +147,14 @@ final class NationalRatesAdapter
     }
 
     /**
-     * @param User[] $users
+     * Persist both base→foreign and foreign→base for every target user.
+     *
+     * @param User[]     $users
+     * @param null|float $foreignToBaseExact when set, used verbatim for the
+     *                                       inverse direction — this is the
+     *                                       provider's natural published value
+     *                                       and avoids floating-point drift
+     *                                       from a `1 / x` round-trip.
      */
     private function storeBothDirections(
         array $users,
@@ -138,9 +162,10 @@ final class NationalRatesAdapter
         TransactionCurrency $foreign,
         Carbon $date,
         float $rate,
+        ?float $foreignToBaseExact = null,
     ): int {
         $written = 0;
-        $inverse = 1.0 / $rate;
+        $inverse = $foreignToBaseExact ?? (1.0 / $rate);
 
         foreach ($users as $user) {
             $this->currencyRepository->setUser($user);
@@ -177,6 +202,12 @@ final class NationalRatesAdapter
         return $hits;
     }
 
+    /**
+     * Resolve a currency by ISO code. The `enabled` flag is intentionally
+     * NOT checked here — national-bank rates should be stored for every
+     * currency that exists in the DB, even if the admin hasn't activated
+     * it yet, so the data is ready the moment they do.
+     */
     private function resolveCurrency(string $code): ?TransactionCurrency
     {
         $key = strtoupper($code);
@@ -187,12 +218,6 @@ final class NationalRatesAdapter
         $currency = $this->currencyRepository->findByCode($key);
         if (!$currency instanceof TransactionCurrency) {
             Log::debug(sprintf('[NationalRatesAdapter] Currency %s not in DB — skipped.', $key));
-            $this->currencyCache[$key] = null;
-
-            return null;
-        }
-        if (false === $currency->enabled) {
-            Log::debug(sprintf('[NationalRatesAdapter] Currency %s is disabled — skipped.', $key));
             $this->currencyCache[$key] = null;
 
             return null;

@@ -19,12 +19,17 @@ use Carbon\Carbon;
  * Immutable value object representing a single exchange rate quote
  * produced by a national bank provider.
  *
- *   1 unit of $fromCode (base) = $rate units of $toCode (quote).
+ *   1 unit of $fromCode = $rate units of $toCode.
  *
- * Providers are expected to normalise rates to "per 1 unit of base"
- * regardless of the original publication scale (e.g. NBRB publishes
- * "10 RUB = X BYN" — the provider must divide before constructing
- * the DTO).
+ * Providers MUST involve their own base currency (provider::base()) in
+ * either $fromCode or $toCode and normalise the rate to "per 1 unit of
+ * $fromCode" — the publication scale (e.g. NBRB's "10 RUB = X BYN")
+ * must be divided out before constructing the DTO.
+ *
+ * Use the natural publication direction of the source to avoid
+ * floating-point drift from double inversion:
+ *   - ECB publishes "1 EUR = X foreign"  → from=EUR,  to=foreign
+ *   - NBRB / CBR publish "1 foreign = X base" → from=foreign, to=base
  */
 final class RateQuote
 {
