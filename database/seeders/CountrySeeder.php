@@ -5,12 +5,25 @@ declare(strict_types=1);
 namespace Database\Seeders;
 
 use FireflyIII\Models\Country;
+use FireflyIII\Services\ExchangeRate\Providers\CbrProvider;
+use FireflyIII\Services\ExchangeRate\Providers\EcbProvider;
+use FireflyIII\Services\ExchangeRate\Providers\NbrbProvider;
 use Illuminate\Database\Seeder;
 
 class CountrySeeder extends Seeder
 {
     public function run(): void
     {
+        // Provider mapping: ISO-3166 alpha-2 => FQCN implementing
+        // NationalRateProviderInterface. Countries omitted from this map
+        // (or with a null entry) are seeded without a provider and will
+        // be hidden from the administration country selector.
+        $providers = [
+            'BY' => NbrbProvider::class,
+            'RU' => CbrProvider::class,
+            'EU' => EcbProvider::class,
+        ];
+
         $countries = [
             ['code' => 'EU', 'name' => 'European Union'],
             ['code' => 'BY', 'name' => 'Belarus'],
@@ -57,7 +70,10 @@ class CountrySeeder extends Seeder
         foreach ($countries as $country) {
             Country::updateOrCreate(
                 ['code' => $country['code']],
-                ['name' => $country['name']]
+                [
+                    'name'           => $country['name'],
+                    'provider_class' => $providers[$country['code']] ?? null,
+                ]
             );
         }
     }

@@ -69,6 +69,8 @@
                         <Title :value=administration.title :error="errors.title" v-on:input="administration.title = $event"></Title>
                         <UserGroupCurrency :value=administration.currency_id :error="errors.currency_id"
                                         v-on:input="administration.currency_id = $event"></UserGroupCurrency>
+                        <UserGroupCountry :value=administration.country_id :error="errors.country_id"
+                                          v-on:input="administration.country_id = $event"></UserGroupCountry>
                     </div>
                     <div class="box-footer">
                         <div class="btn-group">
@@ -90,20 +92,23 @@
 import Title from "../form/Title.vue";
 import WebhookTrigger from "../form/WebhookTrigger.vue";
 import UserGroupCurrency from "../form/UserGroupCurrency.vue";
+import UserGroupCountry from "../form/UserGroupCountry.vue";
 
 export default {
     name: "Edit",
-    components: {UserGroupCurrency, WebhookTrigger, Title},
+    components: {UserGroupCountry, UserGroupCurrency, WebhookTrigger, Title},
     data() {
         return {
             pageTitle: '',
             administration: {
               title: '',
                 currency_id: 0,
+                country_id: 0,
             },
             errors: {
                 title: [],
                 currency_id: [],
+                country_id: [],
             },
             error_message: '',
             success_message: '',
@@ -124,6 +129,8 @@ export default {
                     currency_id: parseInt(current.attributes.primary_currency_id),
                     currency_code: current.attributes.primary_currency_code,
                     currency_name: current.attributes.primary_currency_name,
+                    country_id: parseInt(current.attributes.country_id) || 0,
+                    country_code: current.attributes.country_code || null,
                 };
                 this.pageTitle = this.administration.title;
             });
@@ -135,6 +142,7 @@ export default {
             this.errors = {
                 title: [],
                 currency_id: [],
+                country_id: [],
             };
 
             // disable button
@@ -144,6 +152,8 @@ export default {
             let data = {
                 title: this.administration.title,
                 primary_currency_id: parseInt(this.administration.currency_id),
+                // 0 = clear binding; backend tolerates null too.
+                country_id: this.administration.country_id ? parseInt(this.administration.country_id) : null,
             };
 
             // post!
@@ -155,6 +165,7 @@ export default {
                 this.error_message = error.response.data.message;
                 this.errors.title = error.response.data.errors.title;
                 this.errors.primary_currency_id = error.response.data.errors.primary_currency_id;
+                this.errors.country_id = error.response.data.errors.country_id || [];
 
                 // enable button again
                 $('#submitButton').prop("disabled", false);

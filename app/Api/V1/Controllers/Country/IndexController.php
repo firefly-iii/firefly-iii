@@ -7,15 +7,26 @@ namespace FireflyIII\Api\V1\Controllers\Country;
 use FireflyIII\Http\Controllers\Controller;
 use FireflyIII\Models\Country;
 use Illuminate\Http\JsonResponse;
+use Illuminate\Http\Request;
 
 final class IndexController extends Controller
 {
-    public function index(): JsonResponse
+    /**
+     * GET /api/v1/countries
+     *
+     * Query params:
+     *   - with_provider=1  → return only countries that have a registered
+     *                        national-bank provider. Used by the
+     *                        administration country selector.
+     */
+    public function index(Request $request): JsonResponse
     {
-        return response()->json(
-            Country::query()
-                ->orderBy('name')
-                ->get()
-        );
+        $query        = Country::query()->orderBy('name');
+        $withProvider = $request->boolean('with_provider', false);
+        if ($withProvider) {
+            $query->withProvider();
+        }
+
+        return response()->json($query->get());
     }
 }

@@ -79,6 +79,7 @@ class UserGroupTransformer extends AbstractTransformer
     public function transform(UserGroup $userGroup): array
     {
         $currency = Amount::getPrimaryCurrencyByUserGroup($userGroup);
+        $country  = $userGroup->country()->first();
 
         return [
             'id'                              => $userGroup->id,
@@ -92,6 +93,9 @@ class UserGroupTransformer extends AbstractTransformer
             'primary_currency_code'           => $currency->code,
             'primary_currency_symbol'         => $currency->symbol,
             'primary_currency_decimal_places' => $currency->decimal_places,
+            'country_id'                      => null === $country ? null : (string) $country->id,
+            'country_code'                    => null === $country ? null : strtoupper((string) $country->code),
+            'country_name'                    => null === $country ? null : (string) $country->name,
             'members'                         => array_values($this->memberships[$userGroup->id] ?? []),
         ];
 
