@@ -88,16 +88,17 @@ final class NbrbProvider extends AbstractNationalRateProvider
                 continue;
             }
 
-            // perBaseUnit: how many BYN per 1 unit of $code.
+            // Natural NBRB form: $scale units of $code = $rate BYN.
+            // Normalise to "1 $code = perBaseUnit BYN" and emit as
+            // foreign -> BYN. The adapter derives BYN -> foreign with a
+            // single division, avoiding double-inversion error.
             $perBaseUnit = $this->perUnit($rate, $scale);
-            // We want: 1 BYN -> X $code  =>  invert.
-            $byn2foreign = 1.0 / $perBaseUnit;
 
             $quotes[] = new RateQuote(
-                fromCode: $base,
-                toCode: $code,
+                fromCode: $code,
+                toCode: $base,
                 date: $date->copy()->startOfDay(),
-                rate: $byn2foreign,
+                rate: $perBaseUnit,
             );
         }
 

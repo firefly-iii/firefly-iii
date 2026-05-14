@@ -93,14 +93,16 @@ final class CbrProvider extends AbstractNationalRateProvider
                 continue;
             }
 
-            $perBaseUnit = $this->perUnit($value, $nominal); // RUB per 1 foreign
-            $rub2foreign = 1.0 / $perBaseUnit;
+            // Natural CBR form: $nominal units of $code = $value RUB.
+            // Normalise to "1 $code = perBaseUnit RUB" and emit as
+            // foreign -> RUB. Adapter derives the inverse direction.
+            $perBaseUnit = $this->perUnit($value, $nominal);
 
             $quotes[] = new RateQuote(
-                fromCode: $base,
-                toCode: $code,
+                fromCode: $code,
+                toCode: $base,
                 date: $date->copy()->startOfDay(),
-                rate: $rub2foreign,
+                rate: $perBaseUnit,
             );
         }
 
