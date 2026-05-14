@@ -28,6 +28,7 @@ use FireflyIII\Enums\UserRoleEnum;
 use FireflyIII\Support\Models\ReturnsIntegerIdTrait;
 use FireflyIII\User;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\HasManyThrough;
@@ -39,7 +40,16 @@ class UserGroup extends Model
 {
     use ReturnsIntegerIdTrait;
 
-    protected $fillable = ['title'];
+    protected $fillable = ['title', 'country_id'];
+
+    protected $casts = [
+        'country_id' => 'integer',
+    ];
+
+    public function country(): BelongsTo
+    {
+        return $this->belongsTo(Country::class);
+    }
 
     /**
      * Route binder. Converts the key in the URL to the specified object (or throw 404).

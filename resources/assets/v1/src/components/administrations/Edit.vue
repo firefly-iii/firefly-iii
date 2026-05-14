@@ -69,14 +69,8 @@
                         <Title :value=administration.title :error="errors.title" v-on:input="administration.title = $event"></Title>
                         <UserGroupCurrency :value=administration.currency_id :error="errors.currency_id"
                                         v-on:input="administration.currency_id = $event"></UserGroupCurrency>
-
-                        <UserGroupCountry
-                            v-if="showCountrySelector"
-                            :value="administration.country_id"
-                            :error="errors.country_id"
-                            :show-country-selector="showCountrySelector"
-                            v-on:input="administration.country_id = $event">
-                        </UserGroupCountry>
+                        <UserGroupCountry :value=administration.country_id :error="errors.country_id"
+                                          v-on:input="administration.country_id = $event"></UserGroupCountry>
                     </div>
                     <div class="box-footer">
                         <div class="btn-group">
@@ -102,13 +96,12 @@ import UserGroupCountry from "../form/UserGroupCountry.vue";
 
 export default {
     name: "Edit",
-    components: {UserGroupCurrency, WebhookTrigger, Title, UserGroupCountry},
+    components: {UserGroupCountry, UserGroupCurrency, WebhookTrigger, Title},
     data() {
         return {
             pageTitle: '',
-            exchange_rate_source: 'external',
             administration: {
-                title: '',
+              title: '',
                 currency_id: 0,
                 country_id: 0,
             },
@@ -121,18 +114,10 @@ export default {
             success_message: '',
         };
     },
-    computed: {
-        showCountrySelector() {
-            return this.exchange_rate_source === 'country_national';
-        },
-    },
     mounted() {
         const page = window.location.href.split('/');
         const administrationId = parseInt(page[page.length - 1]);
-
-        this.downloadExchangeRateSource().then(() => {
-            this.downloadAdministration(administrationId);
-        });
+        this.downloadAdministration(administrationId);
     },
     methods: {
         downloadAdministration: function (id) {
@@ -144,16 +129,10 @@ export default {
                     currency_id: parseInt(current.attributes.primary_currency_id),
                     currency_code: current.attributes.primary_currency_code,
                     currency_name: current.attributes.primary_currency_name,
-                    country_id: parseInt(current.attributes.country_id ?? 0),
+                    country_id: parseInt(current.attributes.country_id) || 0,
+                    country_code: current.attributes.country_code || null,
                 };
                 this.pageTitle = this.administration.title;
-            });
-        },
-        downloadExchangeRateSource: function () {
-            return axios.get("./api/v1/configuration/configuration.exchange_rate_source").then((response) => {
-                this.exchange_rate_source = response.data.data.value ?? 'external';
-            }).catch(() => {
-                this.exchange_rate_source = 'external';
             });
         },
         submit: function (e) {
@@ -173,7 +152,8 @@ export default {
             let data = {
                 title: this.administration.title,
                 primary_currency_id: parseInt(this.administration.currency_id),
-                country_id: this.administration.country_id > 0 ? parseInt(this.administration.country_id) : null,
+                // 0 = clear binding; backend tolerates null too.
+                country_id: this.administration.country_id ? parseInt(this.administration.country_id) : null,
             };
 
             // post!
@@ -185,6 +165,7 @@ export default {
                 this.error_message = error.response.data.message;
                 this.errors.title = error.response.data.errors.title;
                 this.errors.primary_currency_id = error.response.data.errors.primary_currency_id;
+                this.errors.country_id = error.response.data.errors.country_id || [];
 
                 // enable button again
                 $('#submitButton').prop("disabled", false);

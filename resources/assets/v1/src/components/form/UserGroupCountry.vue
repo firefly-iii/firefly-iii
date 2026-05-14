@@ -1,131 +1,90 @@
+<!--
+  - UserGroupCountry.vue
+  -
+  - Country selector for an administration (user group).
+  - Lists only countries that have a registered national-bank exchange-rate
+  - provider (server-side filter via `?with_provider=1`).
+  - An empty option lets the admin clear the binding.
+  -->
+
 <template>
-    <div v-if="showCountrySelector" class="form-group" :class="{ 'has-error': hasError() }">
-        <label class="col-sm-4 control-label">
-            Country
-        </label>
-
-        <div class="col-sm-8">
-            <div class="input-group">
-                <span v-if="selectedFlagSrc !== ''" class="input-group-addon">
-                    <img
-                        :src="selectedFlagSrc"
-                        :alt="selectedCountry ? selectedCountry.name : 'Country flag'"
-                        width="24"
-                        height="24"
-                        style="display:block;"
-                    >
-                </span>
-
-                <select
-                    v-model.number="country"
-                    title="Country"
-                    class="form-control"
-                    name="user_group_country"
-                >
-                    <option :value="0">-- Select country --</option>
-                    <option
-                        v-for="country in countries"
-                        :key="country.id"
-                        :value="country.id"
-                    >
-                        {{ country.name }} ({{ country.code }})
-                    </option>
-                </select>
-            </div>
-
-            <p class="help-block">
-                Visible only when exchange rate source is country_national.
-            </p>
-
-            <ul v-if="hasError()" class="list-unstyled">
-                <li v-for="message in error" :key="message" class="text-danger">
-                    {{ message }}
-                </li>
-            </ul>
-        </div>
+  <div class="form-group" v-bind:class="{ 'has-error': hasError() }">
+    <label class="col-sm-4 control-label">
+      {{ $t('form.administration_country') }}
+    </label>
+    <div class="col-sm-8">
+      <select
+          v-model="country"
+          :title="$t('form.administration_country')"
+          class="form-control"
+          name="user_group_country"
+      >
+        <option :value="0">{{ $t('firefly.administration_country_none') }}</option>
+        <option v-for="c in countries"
+                :key="c.id"
+                :label="c.name"
+                :value="c.id">
+          {{ c.name }} ({{ c.code }})
+        </option>
+      </select>
+      <p class="help-block" v-text="$t('firefly.administration_country_form_help')"></p>
+      <ul v-for="(err, idx) in this.error" :key="idx" class="list-unstyled">
+        <li class="text-danger">{{ err }}</li>
+      </ul>
     </div>
+  </div>
 </template>
 
 <script>
 export default {
-    name: "UserGroupCountry",
-
-    props: {
-        error: {
-            type: Array,
-            default() {
-                return [];
-            },
-        },
-        value: {
-            type: Number,
-            default: 0,
-        },
-        showCountrySelector: {
-            type: Boolean,
-            default: false,
-        },
+  name: "UserGroupCountry",
+  data() {
+    return {
+      country: 0,
+      countries: [],
+    };
+  },
+  props: {
+    error: {
+      type: Array,
+      required: true,
+      default() { return [] }
     },
-
-    data() {
-        return {
-            country: 0,
-            countries: [],
-        };
+    value: {
+      // accept 0 / null / undefined
+      type: [Number, String],
+      required: false,
+      default: 0,
+    }
+  },
+  mounted() {
+    this.country = parseInt(this.value) || 0;
+    this.downloadCountries();
+  },
+  watch: {
+    value(newValue) {
+      this.country = parseInt(newValue) || 0;
     },
-
-    computed: {
-        selectedCountry() {
-            const selectedId = parseInt(this.country, 10);
-
-            return this.countries.find((country) => parseInt(country.id, 10) === selectedId) || null;
-        },
-
-        selectedFlagSrc() {
-            if (null === this.selectedCountry) {
-                return '';
-            }
-
-            return this.selectedCountry.flag_src ?? '';
-        },
+    country(newValue) {
+      // Emit either a numeric id, or 0 → null (cleared) to the parent.
+      this.$emit('input', newValue ? parseInt(newValue) : 0);
+    }
+  },
+  methods: {
+    downloadCountries() {
+      axios.get('./api/v1/countries?with_provider=1').then((response) => {
+        // response is a flat array (Eloquent collection ->toArray()).
+        const items = Array.isArray(response.data) ? response.data : (response.data.data || []);
+        this.countries = items.map((row) => ({
+          id: parseInt(row.id),
+          code: row.code,
+          name: row.name,
+        }));
+      });
     },
-
-    mounted() {
-        this.country = this.value || 0;
-        this.downloadCountries();
-    },
-
-    watch: {
-        value(newValue) {
-            this.country = parseInt(newValue, 10) || 0;
-        },
-
-        country(newValue) {
-            this.$emit('input', parseInt(newValue, 10) || 0);
-        },
-    },
-
-    methods: {
-        downloadCountries() {
-            axios.get("./api/v1/countries").then((response) => {
-                const rows = response.data.data ?? response.data;
-
-                this.countries = rows.map((row) => {
-                    const current = row.attributes ?? row;
-
-                    return {
-                        id: parseInt(row.id ?? current.id, 10),
-                        name: current.name ?? '',
-                        code: (current.code ?? '').toUpperCase(),
-                        flag_src: current.flag_src ?? current.flag_file ?? '',
-                    };
-                });
-            });
-        },
-
-        hasError() {
-            return Array.isArray(this.error) && this.error.length > 0;
-        },
-    },
+    hasError() {
+      return this.error?.length > 0;
+    }
+  },
 }
 </script>

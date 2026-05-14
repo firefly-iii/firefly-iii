@@ -181,6 +181,13 @@ class UserGroupRepository implements UserGroupRepositoryInterface, UserGroupInte
         }
 
         $userGroup->title = $data['title'];
+
+        // National-bank country binding. Accept either country_id (int) or
+        // country_code (ISO-3166 alpha-2). A null / 0 / '' value clears it.
+        if (array_key_exists('country_id', $data) || array_key_exists('country_code', $data)) {
+            $userGroup->country_id = $this->resolveCountryId($data);
+        }
+
         $userGroup->save();
         $currency         = null;
 
@@ -201,6 +208,36 @@ class UserGroupRepository implements UserGroupRepositoryInterface, UserGroupInte
         }
 
         return $userGroup;
+    }
+
+    /**
+     * Returns the id of an existing & provider-backed country row, or null
+     * when the input is empty or invalid. Unknown codes/ids are coerced to
+     * null instead of throwing — the API contract treats them as “clear”.
+     */
+    private function resolveCountryId(array $data): ?int
+    {
+        $rawId   = $data['country_id'] ?? null;
+        $rawCode = isset($data['country_code']) ? trim((string) $data['country_code']) : '';
+
+        if (null !== $rawId && (int) $rawId > 0) {
+            $country = \FireflyIII\Models\Country::query()->withProvider()->find((int) $rawId);
+            if ($country instanceof \FireflyIII\Models\Country) {
+                return (int) $country->id;
+            }
+        }
+
+        if ('' !== $rawCode) {
+            $country = \FireflyIII\Models\Country::query()
+                ->withProvider()
+                ->where('code', strtoupper($rawCode))
+                ->first();
+            if ($country instanceof \FireflyIII\Models\Country) {
+                return (int) $country->id;
+            }
+        }
+
+        return null;
     }
 
     /**
