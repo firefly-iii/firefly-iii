@@ -9,13 +9,11 @@ use Illuminate\Support\Facades\Schema;
 return new class extends Migration {
     public function up(): void
     {
-        Schema::table('user_groups', static function (Blueprint $table): void {
-            $table->foreignId('country_id')
-                ->nullable()
-                ->after('title')
-                ->constrained('countries')
-                ->nullOnDelete();
-        });
+        if (!Schema::hasColumn('user_groups', 'country_id')) {
+            Schema::table('user_groups', function (Blueprint $table) {
+                $table->unsignedBigInteger('country_id')->nullable()->after('title')->constrained('countries')->nullOnDelete();
+            });
+        }
     }
 
     public function down(): void
