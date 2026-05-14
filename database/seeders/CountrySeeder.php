@@ -5,9 +5,17 @@ declare(strict_types=1);
 namespace Database\Seeders;
 
 use FireflyIII\Models\Country;
+use FireflyIII\Services\ExchangeRate\Providers\BoiProvider;
 use FireflyIII\Services\ExchangeRate\Providers\CbrProvider;
+use FireflyIII\Services\ExchangeRate\Providers\CnbProvider;
 use FireflyIII\Services\ExchangeRate\Providers\EcbProvider;
+use FireflyIII\Services\ExchangeRate\Providers\NbkProvider;
+use FireflyIII\Services\ExchangeRate\Providers\NbpProvider;
 use FireflyIII\Services\ExchangeRate\Providers\NbrbProvider;
+use FireflyIII\Services\ExchangeRate\Providers\NbuProvider;
+use FireflyIII\Services\ExchangeRate\Providers\NorgesBankProvider;
+use FireflyIII\Services\ExchangeRate\Providers\RiksbankProvider;
+use FireflyIII\Services\ExchangeRate\Providers\TcmbProvider;
 use Illuminate\Database\Seeder;
 
 class CountrySeeder extends Seeder
@@ -22,6 +30,14 @@ class CountrySeeder extends Seeder
             'BY' => NbrbProvider::class,
             'RU' => CbrProvider::class,
             'EU' => EcbProvider::class,
+            'PL' => NbpProvider::class,
+            'UA' => NbuProvider::class,
+            'CZ' => CnbProvider::class,
+            'IL' => BoiProvider::class,
+            'NO' => NorgesBankProvider::class,
+            'SE' => RiksbankProvider::class,
+            'KZ' => NbkProvider::class,
+            'TR' => TcmbProvider::class,
         ];
 
         $countries = [
