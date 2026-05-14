@@ -46,6 +46,14 @@ return [
         'BY' => FireflyIII\Services\ExchangeRate\Providers\NbrbProvider::class,
         'RU' => FireflyIII\Services\ExchangeRate\Providers\CbrProvider::class,
         'EU' => FireflyIII\Services\ExchangeRate\Providers\EcbProvider::class,
+        'PL' => FireflyIII\Services\ExchangeRate\Providers\NbpProvider::class,
+        'UA' => FireflyIII\Services\ExchangeRate\Providers\NbuProvider::class,
+        'CZ' => FireflyIII\Services\ExchangeRate\Providers\CnbProvider::class,
+        'IL' => FireflyIII\Services\ExchangeRate\Providers\BoiProvider::class,
+        'NO' => FireflyIII\Services\ExchangeRate\Providers\NorgesBankProvider::class,
+        'SE' => FireflyIII\Services\ExchangeRate\Providers\RiksbankProvider::class,
+        'KZ' => FireflyIII\Services\ExchangeRate\Providers\NbkProvider::class,
+        'TR' => FireflyIII\Services\ExchangeRate\Providers\TcmbProvider::class,
     ],
 
     // HTTP timeout (seconds) for national bank requests.
