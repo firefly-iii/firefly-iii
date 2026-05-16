@@ -34,7 +34,6 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\HasManyThrough;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use FireflyIII\Models\Country;
-use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class UserGroup extends Model
 {
