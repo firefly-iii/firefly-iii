@@ -145,7 +145,8 @@ final class OAuthController extends Controller
             ->where('expires_at', '>', Date::now())
             ->get()
             ->filter(fn (#[SensitiveParameter] Token $token) => $token->client->hasGrantType('personal_access'))
-            ->values();
+            ->values()
+        ;
 
         return response()->json($tokens);
     }
