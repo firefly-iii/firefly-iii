@@ -213,6 +213,7 @@ export default {
      * Prepare the component (Vue 1.x).
      */
     ready() {
+        console.log('ready()');
         this.prepareComponent();
     },
 
@@ -220,6 +221,7 @@ export default {
      * Prepare the component (Vue 2.x).
      */
     mounted() {
+        console.log('mounted()');
         this.prepareComponent();
     },
 
@@ -228,6 +230,7 @@ export default {
          * Prepare the component.
          */
         prepareComponent() {
+            console.log('prepareComponent()');
             this.getTokens();
             // this.getScopes();
 
@@ -251,8 +254,10 @@ export default {
          * Get all of the personal access tokens for the user.
          */
         getTokens() {
+            console.log('getTokens()');
             axios.get('./oauth/personal-access-tokens')
                 .then(response => {
+                    console.log(response.data);
                     this.tokens = response.data;
                 });
         },
@@ -261,6 +266,7 @@ export default {
          * Get all the available scopes.
          */
         getScopes() {
+            console.log('getScopes()');
             axios.get('./oauth/scopes')
                 .then(response => {
                     this.scopes = response.data;
@@ -271,6 +277,7 @@ export default {
          * Show the form for creating new tokens.
          */
         showCreateTokenForm() {
+            console.log('showCreateTokenForm()');
             $('#modal-create-token').modal('show');
         },
 
@@ -278,12 +285,14 @@ export default {
          * Create a new personal access token.
          */
         store() {
+            console.log('store()');
             this.accessToken = null;
 
             this.form.errors = [];
 
             axios.post('./oauth/personal-access-tokens', this.form)
                 .then(response => {
+                    console.log('Successful POST new token, reset form content.');
                     this.form.name = '';
                     this.form.scopes = [];
                     this.form.errors = [];
@@ -293,6 +302,7 @@ export default {
 
                 })
                 .catch(error => {
+                    console.warn('Bad POST new token, show error.');
                     if (typeof error.response.data === 'object') {
                         this.form.errors = _.flatten(_.toArray(error.response.data.errors));
                     } else {
@@ -323,6 +333,7 @@ export default {
          * Show the given access token to the user.
          */
         showAccessToken(accessToken) {
+            console.log('showAccessToken');
             $('#modal-create-token').modal('hide');
 
             this.accessToken = accessToken;

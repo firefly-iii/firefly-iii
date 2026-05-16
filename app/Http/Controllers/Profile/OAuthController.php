@@ -145,7 +145,7 @@ final class OAuthController extends Controller
             ->where('expires_at', '>', Date::now())
             ->get()
             ->filter(fn (#[SensitiveParameter] Token $token) => $token->client->hasGrantType('personal_access'))
-        ;
+            ->values();
 
         return response()->json($tokens);
     }
@@ -166,7 +166,7 @@ final class OAuthController extends Controller
 
     public function storeClient(Request $request): JsonResponse
     {
-        $validProtocols = FireflyConfig::get('valid_url_protocols', config('firefly.valid_url_protocols'))->data;
+        $validProtocols     = FireflyConfig::get('valid_url_protocols', config('firefly.valid_url_protocols'))->data;
         $this->validation->make($request->only(['name', 'redirect_uris', 'confidential']), [
             'name'          => ['required', 'string', 'max:255'],
             'redirect_uris' => ['required', sprintf('url:%s', $validProtocols)],
@@ -197,7 +197,7 @@ final class OAuthController extends Controller
 
     public function updateClient(Request $request, string $clientId): Client|Response
     {
-        $client = auth()->user()->oauthApps()->where('revoked', false)->find($clientId);
+        $client         = auth()->user()->oauthApps()->where('revoked', false)->find($clientId);
         $validProtocols = FireflyConfig::get('valid_url_protocols', config('firefly.valid_url_protocols'))->data;
         if (null === $client) {
             return new Response('', 404);

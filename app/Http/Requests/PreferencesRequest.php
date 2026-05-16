@@ -48,6 +48,7 @@ class PreferencesRequest extends FormRequest
             'ntfy_pass'              => ['required_with:ntfy_user,ntfy_auth', 'nullable', 'string', 'min:1'],
             // National-bank exchange rate country (2-letter ISO code or empty).
             'national_rates_country' => ['nullable', 'string', 'size:2'],
+        $rules          = [
             'slack_webhook_url' => ['nullable', sprintf('url:%s', $validProtocols), 'min:1', new IsValidSlackOrDiscordUrl()],
             'ntfy_server'       => ['nullable', sprintf('url:%s', $validProtocols), 'min:1'],
             'ntfy_user'         => ['required_with:ntfy_pass,ntfy_auth', 'nullable', 'string', 'min:1'],
