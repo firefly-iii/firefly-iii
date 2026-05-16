@@ -741,12 +741,12 @@ class JournalUpdateService
             if (null === $group || null === $this->transactionJournal) {
                 return;
             }
-            if (0 === bccomp($source->foreign_amount, $foreignAmount)) {
+            if (0 === bccomp(Steam::positive($originalSourceAmount), Steam::positive($foreignAmount))) {
                 Log::debug('Amount was not actually changed, return.');
 
                 return;
             }
-            Log::debug('Amount was changed, needs audit log entry.');
+            Log::debug(sprintf('Amount was changed (%s -> %s), needs audit log entry.', $originalSourceAmount, $foreignAmount));
             $transfer                    = TransactionTypeEnum::TRANSFER->value === $this->transactionJournal->transactionType->type;
             // $withdrawal           = TransactionTypeEnum::WITHDRAWAL->value === $this->transactionJournal->transactionType->type;
             $deposit                     = TransactionTypeEnum::DEPOSIT->value === $this->transactionJournal->transactionType->type;

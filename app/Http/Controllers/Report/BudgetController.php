@@ -284,7 +284,7 @@ final class BudgetController extends Controller
         $cache->addProperty('budget-period-report');
         $cache->addProperty($accounts->pluck('id')->toArray());
         if ($cache->has()) {
-            return $cache->get();
+            // return $cache->get();
         }
 
         $periods   = Navigation::listOfPeriods($start, $end);
@@ -292,7 +292,6 @@ final class BudgetController extends Controller
 
         // list expenses for budgets in account(s)
         $expenses  = $this->opsRepository->listExpenses($start, $end, $accounts);
-
         $report    = [];
         foreach ($expenses as $currency) {
             foreach ($currency['budgets'] as $budget) {
@@ -300,9 +299,12 @@ final class BudgetController extends Controller
                 foreach ($budget['transaction_journals'] as $journal) {
                     // #10678
                     // skip transactions between two asset / liability accounts.
+                    // #12223
+                    // must also be of the same type to be skipped
                     if (
                         in_array($journal['source_account_type'], config('firefly.valid_currency_account_types'), true)
                         && in_array($journal['destination_account_type'], config('firefly.valid_currency_account_types'), true)
+                        && $journal['source_account_type'] === $journal['destination_account_type']
                     ) {
                         continue;
                     }

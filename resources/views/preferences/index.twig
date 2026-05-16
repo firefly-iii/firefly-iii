@@ -44,7 +44,7 @@
                                     {# language #}
                                     <div class="preferences-box">
                                         <h3>{{ 'pref_languages'|_ }}</h3>
-                                        <p class="text-info">{{ 'pref_languages_help'|_ }}</p>
+                                        <p>{{ 'pref_languages_help'|_ }}</p>
                                         <div class="form-group">
                                             <div class="col-sm-12">
                                                 <select class="form-control" id="lang_holder" name="language">
@@ -63,7 +63,7 @@
                                         </div>
 
 
-                                        <p class="text-info">
+                                        <p>
                                             <br/>
                                             {{ 'pref_languages_locale'|_ }}
                                         </p>
@@ -73,7 +73,8 @@
                                     {% if not isDocker %}
                                         <div class="preferences-box">
                                             <h3>{{ 'pref_locale'|_ }}</h3>
-                                            <p class="text-info">{{ 'pref_locale_help'|_ }}</p>
+                                            <p>{{ 'pref_locale_help'|_ }}</p>
+                                            <p class="text-warning">{{ 'pref_locale_exception'|_ }}</p>
                                             <div class="form-group">
                                                 <div class="col-sm-12">
                                                     <select class="form-control" id="locale_holder" name="locale">
@@ -104,7 +105,7 @@
                                     {# fiscal year #}
                                     <div class="preferences-box">
                                         <h3>{{ 'pref_custom_fiscal_year'|_ }}</h3>
-                                        <p class="text-info">
+                                        <p>
                                             {{ 'pref_custom_fiscal_year_help'|_ }}
                                         </p>
                                         {% set isCustomFiscalYear = customFiscalYear == 1 ? true : false %}
@@ -116,7 +117,7 @@
                                     {% if fireflyiiiconfig('enable_exchange_rates', true) %}
                                     <div class="preferences-box">
                                         <h3>{{ 'pref_convert_to_primary'|_ }}</h3>
-                                        <p class="text-info">
+                                        <p>
                                             {{ 'pref_convert_to_primary_help'|_ }}
                                         </p>
                                         {{ ExpandedForm.checkbox('convertToPrimary','1',convertToPrimary,{ 'label' : 'pref_convert_primary_help'|_ }) }}
@@ -125,7 +126,7 @@
                                     {#  conversion back to primary currency #}
                                         <div class="preferences-box">
                                             <h3>{{ 'pref_anonymous'|_ }}</h3>
-                                            <p class="text-info">
+                                            <p>
                                                 {{ 'pref_anonymous_help'|_ }}
                                             </p>
                                             {{ ExpandedForm.checkbox('anonymous','1',anonymous,{ 'label' : 'pref_anonymous_label'|_ }) }}
@@ -138,7 +139,7 @@
                                     {# transaction preferences #}
                                     <div class="preferences-box">
                                         <h3>{{ 'pref_optional_fields_transaction'|_ }}</h3>
-                                        <p class="text-info">
+                                        <p>
                                             {{ 'pref_optional_fields_transaction_help'|_ }}
                                         </p>
                                         <h4>{{ 'optional_tj_date_fields'|_ }}</h4>
@@ -169,7 +170,7 @@
                                 <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
                                     <div class="preferences-box">
                                         <h3>{{ 'pref_home_screen_accounts'|_ }}</h3>
-                                        <p class="text-info">{{ 'pref_home_screen_accounts_help'|_ }}</p>
+                                        <p>{{ 'pref_home_screen_accounts_help'|_ }}</p>
                                         {% for type, accounts in groupedAccounts %}
                                             <strong>{{ type }}</strong>
                                             {% for id, name in accounts %}
@@ -206,7 +207,7 @@
                                     {# view range #}
                                     <div class="preferences-box">
                                         <h3>{{ 'pref_view_range'|_ }}</h3>
-                                        <p class="text-info">{{ 'pref_view_range_help'|_ }}</p>
+                                        <p>{{ 'pref_view_range_help'|_ }}</p>
 
                                         <div class="radio">
                                             <label>
@@ -311,12 +312,12 @@
                                 <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
                                     <div class="preferences-box">
                                         <h3>{{ 'list_page_size_title'|_ }}</h3>
-                                        <p class="text-info">{{ 'list_page_size_help'|_ }}</p>
+                                        <p>{{ 'list_page_size_help'|_ }}</p>
                                         {{ ExpandedForm.integer('listPageSize',listPageSize,{'label' : 'list_page_size_label'|_}) }}
                                     </div>
                                     <div class="preferences-box">
                                         <h3>{{ 'dark_mode_preference'|_ }}</h3>
-                                        <p class="text-info">{{ 'dark_mode_preference_help'|_ }}</p>
+                                        <p>{{ 'dark_mode_preference_help'|_ }}</p>
                                         {% for mode in availableDarkModes %}
                                             <div class="radio">
                                                 <label>

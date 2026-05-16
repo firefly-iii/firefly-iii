@@ -335,7 +335,9 @@ class BudgetLimitRepository implements BudgetLimitRepositoryInterface, UserGroup
         $limit                          = new BudgetLimit();
         $limit->budget()->associate($budget);
         $limit->start_date              = $data['start_date']->format('Y-m-d');
+        $limit->start_date_tz           = $data['start_date']->format('e');
         $limit->end_date                = $data['end_date']->format('Y-m-d');
+        $limit->end_date_tz             = $data['end_date']->format('e');
         $limit->amount                  = $data['amount'];
         $limit->generated               = $data['generated'] ?? false;
         $limit->period                  = $data['period'] ?? '';

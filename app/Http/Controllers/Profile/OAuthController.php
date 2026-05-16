@@ -25,6 +25,7 @@ declare(strict_types=1);
 namespace FireflyIII\Http\Controllers\Profile;
 
 use FireflyIII\Http\Controllers\Controller;
+use FireflyIII\Support\Facades\FireflyConfig;
 use Illuminate\Contracts\Validation\Factory as ValidationFactory;
 use Illuminate\Contracts\View\Factory;
 use Illuminate\Http\JsonResponse;
@@ -165,9 +166,10 @@ final class OAuthController extends Controller
 
     public function storeClient(Request $request): JsonResponse
     {
+        $validProtocols = FireflyConfig::get('valid_url_protocols', config('firefly.valid_url_protocols'))->data;
         $this->validation->make($request->only(['name', 'redirect_uris', 'confidential']), [
             'name'          => ['required', 'string', 'max:255'],
-            'redirect_uris' => ['required', 'url'],
+            'redirect_uris' => ['required', sprintf('url:%s', $validProtocols)],
             'confidential'  => 'boolean',
         ])->validate();
 
@@ -196,14 +198,14 @@ final class OAuthController extends Controller
     public function updateClient(Request $request, string $clientId): Client|Response
     {
         $client = auth()->user()->oauthApps()->where('revoked', false)->find($clientId);
-
+        $validProtocols = FireflyConfig::get('valid_url_protocols', config('firefly.valid_url_protocols'))->data;
         if (null === $client) {
             return new Response('', 404);
         }
 
         $this->validation->make($request->only(['name', 'redirect_uris']), [
             'name'          => ['required', 'string', 'max:255'],
-            'redirect_uris' => ['required', 'url'],
+            'redirect_uris' => ['required', sprintf('url:%s', $validProtocols)],
         ])->validate();
 
         $this->clients->update($client, $request->input('name'), explode(',', $request->input('redirect_uris'))); // FIXME replace

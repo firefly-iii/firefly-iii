@@ -59,8 +59,9 @@ final class DestroyController extends Controller
 
     public function destroy(DestroyRequest $request, TransactionCurrency $from, TransactionCurrency $to): JsonResponse
     {
+        $first = Carbon::create(1970, 1, 1);
         $this->repository->deleteRates($from, $to);
-        event(new DestroyedCurrencyExchangeRate($from, $to, $this->validateUserGroup($request)));
+        event(new DestroyedCurrencyExchangeRate($from, $to, $this->validateUserGroup($request), $first));
 
         return response()->json([], 204);
     }
@@ -74,7 +75,7 @@ final class DestroyController extends Controller
         if (!$exchangeRate instanceof CurrencyExchangeRate) {
             throw new FireflyException('Bla');
         }
-        event(new DestroyedCurrencyExchangeRate($from, $to, $this->validateUserGroup($request)));
+        event(new DestroyedCurrencyExchangeRate($from, $to, $this->validateUserGroup($request), $date));
 
         return response()->json([], 204);
     }
@@ -85,7 +86,7 @@ final class DestroyController extends Controller
         $to   = $exchangeRate->toCurrency;
         $this->repository->deleteRate($exchangeRate);
 
-        event(new DestroyedCurrencyExchangeRate($from, $to, $this->validateUserGroup($request)));
+        event(new DestroyedCurrencyExchangeRate($from, $to, $this->validateUserGroup($request), $exchangeRate->date));
 
         return response()->json([], 204);
     }

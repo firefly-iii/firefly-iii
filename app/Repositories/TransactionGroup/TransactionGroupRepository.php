@@ -166,7 +166,7 @@ class TransactionGroupRepository implements TransactionGroupRepositoryInterface,
         $set      = TransactionJournalLink::where(static function (Builder $q) use ($journals): void {
             $q->whereIn('source_id', $journals);
             $q->orWhereIn('destination_id', $journals);
-        })->with(['source', 'destination', 'source.transactions'])->leftJoin('link_types', 'link_types.id', '=', 'journal_links.link_type_id')->get([
+        })->with(['source', 'notes', 'destination', 'source.transactions'])->leftJoin('link_types', 'link_types.id', '=', 'journal_links.link_type_id')->get([
             'journal_links.*',
             'link_types.inward',
             'link_types.outward',
@@ -191,6 +191,7 @@ class TransactionGroupRepository implements TransactionGroupRepositoryInterface,
                     'editable'       => 1 === (int) $entry->editable,
                     'amount'         => $amount,
                     'foreign_amount' => $foreignAmount,
+                    'notes'          => null === $entry->notes->first() ? '' : $entry->notes->first()->text,
                 ];
             }
             if ($journalId === $entry->destination_id) {
@@ -204,6 +205,7 @@ class TransactionGroupRepository implements TransactionGroupRepositoryInterface,
                     'editable'       => 1 === (int) $entry->editable,
                     'amount'         => $amount,
                     'foreign_amount' => $foreignAmount,
+                    'notes'          => null === $entry->notes->first() ? '' : $entry->notes->first()->text,
                 ];
             }
         }

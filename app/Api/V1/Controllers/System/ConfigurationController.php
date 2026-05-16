@@ -159,7 +159,7 @@ final class ConfigurationController extends Controller
         $exchangeRateSource    = FireflyConfig::get('exchange_rate_source', config('cer.source'));
         $allowWebhooks         = FireflyConfig::get('allow_webhooks', false);
         $enableBatchProcessing = FireflyConfig::get('enable_batch_processing', false);
-        $validUrlProtocols     = FireflyConfig::get('valid_url_protocols', 'http,https');
+        $validUrlProtocols     = FireflyConfig::get('valid_url_protocols', config('firefly.valid_url_protocols'));
 
         return [
             'is_demo_site'            => $isDemoSite?->data,
@@ -173,7 +173,7 @@ final class ConfigurationController extends Controller
             'exchange_rate_source'    => $exchangeRateSource?->data,
             'allow_webhooks'          => $allowWebhooks?->data,
             'enable_batch_processing' => $enableBatchProcessing?->data,
-            'valid_url_protocols'     => $validUrlProtocols->data ?? 'http,https',
+            'valid_url_protocols'     => $validUrlProtocols->data ?? config('firefly.valid_url_protocols'),
         ];
     }
 

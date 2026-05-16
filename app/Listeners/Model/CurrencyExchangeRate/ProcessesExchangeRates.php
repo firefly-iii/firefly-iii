@@ -24,6 +24,7 @@ declare(strict_types=1);
 
 namespace FireflyIII\Listeners\Model\CurrencyExchangeRate;
 
+use Carbon\Carbon;
 use FireflyIII\Events\Model\CurrencyExchangeRate\CreatedCurrencyExchangeRate;
 use FireflyIII\Events\Model\CurrencyExchangeRate\DestroyedCurrencyExchangeRate;
 use FireflyIII\Events\Model\CurrencyExchangeRate\UpdatedCurrencyExchangeRate;
@@ -42,20 +43,22 @@ class ProcessesExchangeRates
         Preferences::mark();
         Cache::clear();
         if ($event instanceof DestroyedCurrencyExchangeRate) {
-            $this->handleCurrency($event->userGroup, $event->from);
-            $this->handleCurrency($event->userGroup, $event->to);
+            $this->handleCurrency($event->userGroup, $event->from, $event->date);
+            $this->handleCurrency($event->userGroup, $event->to, $event->date);
 
             return;
         }
-        $this->handleCurrency($event->rate->userGroup, $event->rate->fromCurrency);
-        $this->handleCurrency($event->rate->userGroup, $event->rate->toCurrency);
+        $this->handleCurrency($event->rate->userGroup, $event->rate->fromCurrency, $event->rate->date);
+        $this->handleCurrency($event->rate->userGroup, $event->rate->toCurrency, $event->rate->date);
     }
 
-    private function handleCurrency(UserGroup $userGroup, TransactionCurrency $currency): void
+    private function handleCurrency(UserGroup $userGroup, TransactionCurrency $currency, Carbon $date): void
     {
         $calculator = new PrimaryAmountRecalculationService();
+        $calculator->setDate($date);
         if (Amount::convertToPrimary()) {
-            Log::debug(sprintf('Will now convert amounts to primary currency for currency %s.', $currency->code));
+            $date->startOfDay();
+            Log::debug(sprintf('Will now convert amounts to primary currency for currency %s after %s.', $currency->code, $date->format('Y-m-d')));
 
             $calculator->recalculateForGroupAndCurrency($userGroup, $currency);
             //            $calculator->recalculateForGroup($userGroup);

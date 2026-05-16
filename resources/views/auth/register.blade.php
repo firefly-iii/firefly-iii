@@ -49,7 +49,7 @@
                 </div>
                 <div class="row">
                     <div class="col-12">
-                            <input type="checkbox" id="verify_password" checked name="verify_password" value="1">
+                            <input type="checkbox" id="verify_password" name="verify_password" value="1">
                             <label for="verify_password">
                                 {{ trans('form.verify_password') }}
                                 <a href="#"

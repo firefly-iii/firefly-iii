@@ -78,8 +78,8 @@ return [
         'running_balance_column' => (bool)env_default_when_empty(env('USE_RUNNING_BALANCE'), true), // this is only the default value, is not used.
         // see cer.php for exchange rates feature flag.
     ],
-'version' => '6.6.2',
-'build_time' => 1777308933,
+'version' => 'develop/2026-05-11',
+'build_time' => 1778473850,
     'api_version'                          => '2.1.0', // field is no longer used.
     'db_version'                           => 28, // field is no longer used.
 
@@ -198,6 +198,7 @@ return [
     'default_locale'                       => env_default_when_empty(env('DEFAULT_LOCALE'), 'equal'),
 
     // account types that may have or set a currency
+
     'valid_currency_account_types'         => [
         AccountTypeEnum::ASSET->value,
         AccountTypeEnum::LOAN->value,
@@ -224,7 +225,7 @@ return [
     'available_dark_modes'                 => ['light', 'dark', 'browser'],
     'bill_reminder_periods'                => [90, 30, 14, 7, 0],
     'valid_view_ranges'                    => ['1D', '1W', '1M', '3M', '6M', '1Y'],
-    'valid_url_protocols'                  => env_default_when_empty(env('VALID_URL_PROTOCOLS'), 'http,https,ftp,ftps,mailto'), // no longer used, only for default.
+    'valid_url_protocols'                  => env_default_when_empty(env('VALID_URL_PROTOCOLS'), 'http,https,ftp,ftps,mailto,abacusfiiiapp'), // no longer used, only for default.
     'allowedMimes'                         => [
         // plain files
         'text/plain',
