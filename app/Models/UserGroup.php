@@ -210,9 +210,4 @@ class UserGroup extends Model
     {
         return $this->hasMany(Webhook::class);
     }
-
-    public function country(): BelongsTo
-    {
-        return $this->belongsTo(Country::class);
-    }
 }
