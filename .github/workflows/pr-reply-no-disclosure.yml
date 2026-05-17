@@ -1,0 +1,104 @@
+name: 'PRs - Check for AI disclosure'
+
+# the workflow to execute on is comments that are newly created
+on:
+  pull_request:
+    types: [ opened ]
+
+# permissions needed for reacting to IssueOps commands on issues and PRs
+permissions:
+  contents: read
+  pull-requests: write
+  issues: write
+  checks: read
+
+jobs:
+  respond:
+    runs-on: ubuntu-latest
+    steps:
+      - run: |
+          ISSUE_BODY=$(gh issue view $NUMBER --json body)
+
+          echo $ISSUE_BODY
+          exit 1
+
+          # sure this can be done in a single step but still.
+          FFNOV="${{ steps.ff3version.outputs.release }}"
+          FFNOV="${FFNOV:1}"
+
+          DDNOV="${{ steps.importerversion.outputs.release }}"
+          DDNOV="${DDNOV:1}"
+
+          echo "Firefly III version is ${{ steps.ff3version.outputs.release }}, without v is $FFNOV"
+          echo "Data importer version is ${{ steps.ff3version.outputs.release }}, without v is $DDNOV"
+
+          # user includes no debug info at all, and does not mention current version.
+          # user includes no debug info at all, but does mention current version
+          # user includes debug info, but not the current version.
+          # user includes debug info, and the current version.
+
+          # first test: user includes no debug info at all, and does not mention current version.
+          if [[ $ISSUE_BODY == *"MZ2udTpin6FL"* && $ISSUE_BODY != *"Debug information generated at"* && $ISSUE_BODY != *${{ steps.ff3version.outputs.release }}* && $ISSUE_BODY != *${{ steps.importerversion.outputs.release }}* && $ISSUE_BODY != *$FFNOV* && $ISSUE_BODY != *$DDNOV* ]]; then
+            MESSAGE="Hi there!
+
+          This is an automated reply. \`Share and enjoy\`
+
+          You triggered an automated reply, because it looks like you didn't include the output from the \`/debug\` page. Would you be so kind as to do that? It helps the developers debug your issue more easily.
+
+          If you *did* include debug information or of if the debug information isn't relevant (or even reachable), my apologies for the intrusion."
+
+            gh issue comment "$NUMBER" --body "$MESSAGE"
+            echo "Triggered on first test"
+            exit 0
+          fi
+
+          # second test: user includes no debug info at all, but does mention current version
+          if [[ $ISSUE_BODY == *"MZ2udTpin6FL"* && $ISSUE_BODY != *"Debug information generated at"* && ( $ISSUE_BODY == *${{ steps.ff3version.outputs.release }}* || $ISSUE_BODY == *${{ steps.importerversion.outputs.release }}* || $ISSUE_BODY == *$FFNOV* || $ISSUE_BODY == *$DDNOV* ) ]]; then
+            MESSAGE="Hi there!
+
+          This is an automated reply. \`Share and enjoy\`
+
+          Thank you for running the latest version of Firefly III (or the data importer). You triggered an automated reply, because it looks like you didn't include the output from the \`/debug\` page. Would you be so kind as to do that? It helps the developers debug your issue more easily.
+
+          If you *did* include debug information or of if the debug information isn't relevant (or even reachable), my apologies for the intrusion."
+
+            gh issue comment "$NUMBER" --body "$MESSAGE"
+            echo "Triggered on second test"
+            exit 0
+          fi
+
+          # third test: user includes debug info, but not the current version.
+          if [[ $ISSUE_BODY == *"MZ2udTpin6FL"* && $ISSUE_BODY == *"Debug information generated at"* && $ISSUE_BODY != *${{ steps.ff3version.outputs.release }}* && $ISSUE_BODY != *${{ steps.importerversion.outputs.release }}* && $ISSUE_BODY != *$FFNOV* && $ISSUE_BODY != *$DDNOV* ]]; then
+
+            MESSAGE="Hi there!
+
+          This is an automated reply. \`Share and enjoy\`
+
+          Thank you for including debug information. You triggered an automated reply, because it looks like you're not running Firefly III version **${{ steps.ff3version.outputs.release }}** or version **${{ steps.importerversion.outputs.release }}** of the data importer.
+
+          Please make sure to upgrade to the latest version of Firefly III (or the data importer) *first*. This may already solve your issue.
+
+          If you *are* running the latest version, and this message is wrong, my apologies for the intrusion."
+
+            gh issue comment "$NUMBER" --body "$MESSAGE"
+            echo "Triggered on third test"
+            exit 0
+          fi
+
+          # fourth test: user includes debug info, and the current version.
+          if [[ $ISSUE_BODY == *"MZ2udTpin6FL"* && $ISSUE_BODY == *"Debug information generated at"* && ( $ISSUE_BODY == *${{ steps.ff3version.outputs.release }}* || $ISSUE_BODY == *${{ steps.importerversion.outputs.release }}* || $ISSUE_BODY == *$FFNOV* || $ISSUE_BODY == *$DDNOV* ) ]]; then
+
+            MESSAGE="Hi there!
+
+          This is an automated reply. \`Share and enjoy\`
+
+          Thank you for running the latest version of Firefly III (or the data importer)."
+
+            # gh issue comment "$NUMBER" --body "$MESSAGE"
+            echo "Triggered on fourth test"
+            exit 0
+          fi
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GH_REPO: ${{ github.repository }}
+          NUMBER: ${{ github.event.issue.number }}
