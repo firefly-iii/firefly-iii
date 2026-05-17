@@ -245,7 +245,10 @@ class PiggyBankFactory
         );
 
         // validate amount:
-        if (array_key_exists('target_amount', $piggyBankData) && '' === (string) $piggyBankData['target_amount']) {
+        if (array_key_exists('target_amount', $piggyBankData) && '' === trim((string) $piggyBankData['target_amount'])) {
+            $piggyBankData['target_amount'] = '0';
+        }
+        if (!array_key_exists('target_amount', $piggyBankData)) {
             $piggyBankData['target_amount'] = '0';
         }
 
