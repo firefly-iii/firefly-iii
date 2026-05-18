@@ -1,0 +1,60 @@
+name: 'PRs - Check for AI disclosure'
+
+# the workflow to execute on is comments that are newly created
+on:
+  pull_request:
+    types: [ opened ]
+
+# permissions needed for reacting to IssueOps commands on issues and PRs
+permissions:
+  contents: read
+  pull-requests: write
+  issues: write
+  checks: read
+
+jobs:
+  respond:
+    runs-on: ubuntu-latest
+    steps:
+      - run: |
+          BODY=$(gh pr view $NUMBER --json body)
+
+          # I used AI assistance for:
+          # - [ ] Code generation (e.g., when writing an implementation or fixing a bug)
+          # - [ ] Test/benchmark generation
+          # - [ ] Documentation (including examples)
+          # - [ ] Research and understanding
+
+
+
+          # $BODY must contain one of these four uses.
+          if [[ $BODY != *"Code generation"* &&
+                $BODY != *"Test/benchmark generation"* &&
+                $BODY != *"Documentation"* &&
+                $BODY != *"Research and understanding"* &&
+                $BODY != *"I used AI assistance for"* ]]; then
+            MESSAGE="Hi there!
+
+          This is an automated reply. \`Share and enjoy\`
+
+          You triggered an automated reply, because it seems you removed or changed the AI assistance disclosure from the PR template. Without a valid disclosure, your PR cannot be processed.
+
+          Even if you did not use AI, this disclosure must be present. Please reply to your PR and explain your use of AI in any or all of the following areas:
+
+          1. Code generation (e.g., when writing an implementation or fixing a bug)
+          2. Test/benchmark generation
+          3. Documentation (including examples)
+          4. Research and understanding
+
+          There cannot be interaction with your PR without this disclosure.
+
+          If the disclosure is present but the bot did not pick up on it, please accept my apologies for the intrusion. Contrary to other bots, this one is just a simple \`bash\` script and it may be wrong."
+
+            gh pr comment "$NUMBER" --body "$MESSAGE"
+            echo "Triggered on AI disclosure missing."
+            exit 0
+          fi
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GH_REPO: ${{ github.repository }}
+          NUMBER: ${{ github.event.pull_request.number }}
