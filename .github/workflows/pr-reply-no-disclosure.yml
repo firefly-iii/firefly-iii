@@ -18,6 +18,12 @@ jobs:
     steps:
       - run: |
           BODY=$(gh pr view $NUMBER --json body)
+          AUTHOR=$(gh pr view $NUMBER --json author)
+
+          if [[ $BODY == *"app/dependabot"* ]]; then
+            echo "Is dependabot, stop"
+            exit 0
+          fi
 
           # I used AI assistance for:
           # - [ ] Code generation (e.g., when writing an implementation or fixing a bug)
