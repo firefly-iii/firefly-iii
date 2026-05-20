@@ -13,21 +13,21 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 
 ### Fixed
 
-- #11408
-- #11455
-- #12097
-- #12204
-- #12207
-- #12210
-- #12223
-- #12243
-- #12254
-- #12257
-- #12258
+- [Discussion 11408](https://github.com/orgs/firefly-iii/discussions/11408) (How do I see the content of link notes?) started by @Coderdude112
+- [Discussion 11455](https://github.com/orgs/firefly-iii/discussions/11455) ("Sum" Line In Account Charts) started by @PVTejas
+- [Discussion 12097](https://github.com/orgs/firefly-iii/discussions/12097) (Error updating Exchange Rates) started by @gpampuro
+- [Issue 12204](https://github.com/firefly-iii/firefly-iii/issues/12204) (A change is shown in "Audit log entries" when there was actually no movement (currency values fields)) reported by @jgmm81
+- [Issue 12207](https://github.com/firefly-iii/firefly-iii/issues/12207) (Rule triggers hidden on rules page for rules with multiple triggers) reported by @frankakn7
+- [Discussion 12210](https://github.com/orgs/firefly-iii/discussions/12210) (PiggyBanks and suggested amount per month) started by @Thieume
+- [Issue 12223](https://github.com/firefly-iii/firefly-iii/issues/12223) (Budget figures on the default financial report does not include transactions in liability accounts) reported by @likinon1981
+- [Issue 12243](https://github.com/firefly-iii/firefly-iii/issues/12243) (Abacus App is not working with the new OAuth) reported by @darkmatter18
+- [Issue 12254](https://github.com/firefly-iii/firefly-iii/issues/12254) (Personal Access Tokens not listed on web UI) reported by @imjuzcy
+- [Issue 12257](https://github.com/firefly-iii/firefly-iii/issues/12257) (getLatestBalance(): Argument #2 ($currencyId) must be of type int, string given) reported by @LaCarotteSauvage
+- [Issue 12258](https://github.com/firefly-iii/firefly-iii/issues/12258) (500 Internal Server Error when creating piggy bank) reported by @davbrito
 
 ### Security
 
-- #12271
+- [PR 12271](https://github.com/firefly-iii/firefly-iii/pull/12271) (Fix stored XSS in audit log view via piggy bank name (ale.twig)) reported by @alanturing881
 
 ## v6.6.2 - 2026-04-28
 
