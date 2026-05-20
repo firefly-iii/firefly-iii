@@ -20,7 +20,7 @@ jobs:
           BODY=$(gh pr view $NUMBER --json body)
           AUTHOR=$(gh pr view $NUMBER --json author)
 
-          if [[ $BODY == *"app/dependabot"* ]]; then
+          if [[ $AUTHOR == *"app/dependabot"* ]]; then
             echo "Is dependabot, stop"
             exit 0
           fi
