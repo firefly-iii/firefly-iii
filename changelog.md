@@ -3,6 +3,32 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
+## v6.6.3 - 2026-05-21
+
+<!-- summary: This release fixes an XSS issue and some minor other bugs -->
+
+### Changed
+
+- Better explanation text for the password validation code.
+
+### Fixed
+
+- #11408
+- #11455
+- #12097
+- #12204
+- #12207
+- #12210
+- #12223
+- #12243
+- #12254
+- #12257
+- #12258
+
+### Security
+
+- #12271
+
 ## v6.6.2 - 2026-04-28
 
 <!-- summary: This releases fixes a security issue and some small UI issues. Please upgrade at your earliest convenience. -->
