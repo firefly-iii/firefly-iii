@@ -10,10 +10,10 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 ### Changed
 
 - Better explanation text for the password validation code.
+- [Discussion 11408](https://github.com/orgs/firefly-iii/discussions/11408) (How do I see the content of link notes?) started by @Coderdude112
 
 ### Fixed
 
-- [Discussion 11408](https://github.com/orgs/firefly-iii/discussions/11408) (How do I see the content of link notes?) started by @Coderdude112
 - [Discussion 11455](https://github.com/orgs/firefly-iii/discussions/11455) ("Sum" Line In Account Charts) started by @PVTejas
 - [Discussion 12097](https://github.com/orgs/firefly-iii/discussions/12097) (Error updating Exchange Rates) started by @gpampuro
 - [Issue 12204](https://github.com/firefly-iii/firefly-iii/issues/12204) (A change is shown in "Audit log entries" when there was actually no movement (currency values fields)) reported by @jgmm81
