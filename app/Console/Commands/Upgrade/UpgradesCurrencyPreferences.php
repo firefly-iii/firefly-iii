@@ -66,7 +66,8 @@ class UpgradesCurrencyPreferences extends Command
 
     private function getPreference(User $user): string
     {
-        $preference = Preference::where('user_id', $user->id)
+        $preference = Preference::query()
+            ->where('user_id', $user->id)
             ->where('name', 'currencyPreference')
             ->first(['id', 'user_id', 'name', 'data', 'updated_at', 'created_at'])
         ;
@@ -144,7 +145,7 @@ class UpgradesCurrencyPreferences extends Command
         try {
             $primaryCurrency = Amount::getTransactionCurrencyByCode($preference);
         } catch (FireflyException) {
-            $primaryCurrency = TransactionCurrency::where('code', 'EUR')->first();
+            $primaryCurrency = TransactionCurrency::query()->where('code', 'EUR')->first();
         }
         $user->currencies()->updateExistingPivot($primaryCurrency->id, ['user_default' => true]);
         $user->userGroup->currencies()->updateExistingPivot($primaryCurrency->id, ['group_default' => true]);

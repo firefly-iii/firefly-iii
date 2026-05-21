@@ -111,7 +111,8 @@ class TransactionGroupRepository implements TransactionGroupRepositoryInterface,
         $repository = app(AttachmentRepositoryInterface::class);
         $repository->setUser($this->user);
         $journals   = $group->transactionJournals->pluck('id')->toArray();
-        $set        = Attachment::whereIn('attachable_id', $journals)
+        $set        = Attachment::query()
+            ->whereIn('attachable_id', $journals)
             ->where('attachable_type', TransactionJournal::class)
             ->where('uploaded', true)
             ->whereNull('deleted_at')
@@ -163,15 +164,20 @@ class TransactionGroupRepository implements TransactionGroupRepositoryInterface,
     {
         $return   = [];
         $journals = $group->transactionJournals->pluck('id')->toArray();
-        $set      = TransactionJournalLink::where(static function (Builder $q) use ($journals): void {
-            $q->whereIn('source_id', $journals);
-            $q->orWhereIn('destination_id', $journals);
-        })->with(['source', 'destination', 'source.transactions'])->leftJoin('link_types', 'link_types.id', '=', 'journal_links.link_type_id')->get([
-            'journal_links.*',
-            'link_types.inward',
-            'link_types.outward',
-            'link_types.editable',
-        ]);
+        $set      = TransactionJournalLink::query()
+            ->where(static function (Builder $q) use ($journals): void {
+                $q->whereIn('source_id', $journals);
+                $q->orWhereIn('destination_id', $journals);
+            })
+            ->with(['source', 'notes', 'destination', 'source.transactions'])
+            ->leftJoin('link_types', 'link_types.id', '=', 'journal_links.link_type_id')
+            ->get([
+                'journal_links.*',
+                'link_types.inward',
+                'link_types.outward',
+                'link_types.editable',
+            ])
+        ;
 
         /** @var TransactionJournalLink $entry */
         foreach ($set as $entry) {
@@ -191,6 +197,7 @@ class TransactionGroupRepository implements TransactionGroupRepositoryInterface,
                     'editable'       => 1 === (int) $entry->editable,
                     'amount'         => $amount,
                     'foreign_amount' => $foreignAmount,
+                    'notes'          => null === $entry->notes->first() ? '' : $entry->notes->first()->text,
                 ];
             }
             if ($journalId === $entry->destination_id) {
@@ -204,6 +211,7 @@ class TransactionGroupRepository implements TransactionGroupRepositoryInterface,
                     'editable'       => 1 === (int) $entry->editable,
                     'amount'         => $amount,
                     'foreign_amount' => $foreignAmount,
+                    'notes'          => null === $entry->notes->first() ? '' : $entry->notes->first()->text,
                 ];
             }
         }
@@ -268,7 +276,7 @@ class TransactionGroupRepository implements TransactionGroupRepositoryInterface,
     public function getNoteText(int $journalId): ?string
     {
         /** @var null|Note $note */
-        $note = Note::where('noteable_id', $journalId)->where('noteable_type', TransactionJournal::class)->first();
+        $note = Note::query()->where('noteable_id', $journalId)->where('noteable_type', TransactionJournal::class)->first();
 
         return $note?->text;
     }
@@ -283,7 +291,7 @@ class TransactionGroupRepository implements TransactionGroupRepositoryInterface,
         $return   = [];
         $journals = $group->transactionJournals->pluck('id')->toArray();
         $currency = Amount::getPrimaryCurrencyByUserGroup($this->user->userGroup);
-        $data     = PiggyBankEvent::whereIn('transaction_journal_id', $journals)->with('piggyBank', 'piggyBank.account')->get(['piggy_bank_events.*']);
+        $data     = PiggyBankEvent::query()->whereIn('transaction_journal_id', $journals)->with('piggyBank', 'piggyBank.account')->get(['piggy_bank_events.*']);
 
         /** @var PiggyBankEvent $row */
         foreach ($data as $row) {
@@ -291,7 +299,7 @@ class TransactionGroupRepository implements TransactionGroupRepositoryInterface,
                 continue;
             }
             // get currency preference.
-            $currencyPreference   = AccountMeta::where('account_id', $row->piggyBank->account_id)->where('name', 'currency_id')->first();
+            $currencyPreference   = AccountMeta::query()->where('account_id', $row->piggyBank->account_id)->where('name', 'currency_id')->first();
             if (null !== $currencyPreference) {
                 $currency = Amount::getTransactionCurrencyById((int) $currencyPreference->data);
             }

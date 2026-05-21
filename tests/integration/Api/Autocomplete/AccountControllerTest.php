@@ -42,7 +42,7 @@ final class AccountControllerTest extends TestCase
     {
         // test API
         $response = $this->get(route('api.v1.autocomplete.accounts'), ['Accept' => 'application/json']);
-        $response->assertStatus(401);
+        $response->assertUnauthorized();
         $response->assertHeader('Content-Type', 'application/json');
         $response->assertContent('{"message":"Unauthenticated.","exception":"AuthenticationException"}');
     }

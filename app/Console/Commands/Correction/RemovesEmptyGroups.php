@@ -57,7 +57,7 @@ class RemovesEmptyGroups extends Command
             // again, chunks for SQLite.
             $chunks = array_chunk($groupIds, 500);
             foreach ($chunks as $chunk) {
-                TransactionGroup::whereNull('deleted_at')->whereIn('id', $chunk)->delete();
+                TransactionGroup::query()->whereNull('deleted_at')->whereIn('id', $chunk)->delete();
             }
         }
 

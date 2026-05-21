@@ -212,7 +212,11 @@ class TransactionGroupEnrichment implements EnrichmentInterface
 
     private function collectMetaData(): void
     {
-        $set = TransactionJournalMeta::whereIn('transaction_journal_id', $this->journalIds)->get(['transaction_journal_id', 'name', 'data'])->toArray();
+        $set = TransactionJournalMeta::query()
+            ->whereIn('transaction_journal_id', $this->journalIds)
+            ->get(['transaction_journal_id', 'name', 'data'])
+            ->toArray()
+        ;
         foreach ($set as $entry) {
             $name                                                          = $entry['name'];
             $data                                                          = (string) $entry['data'];

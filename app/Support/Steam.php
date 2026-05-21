@@ -83,7 +83,8 @@ class Steam
         $currencies  = $this->getCurrencies($accounts);
 
         // balance(s) in all currencies for ALL accounts.
-        $arrayOfSums = Transaction::whereIn('account_id', $accounts->pluck('id')->toArray())
+        $arrayOfSums = Transaction::query()
+            ->whereIn('account_id', $accounts->pluck('id')->toArray())
             ->leftJoin('transaction_journals', 'transaction_journals.id', '=', 'transactions.transaction_journal_id')
             ->leftJoin('transaction_currencies', 'transaction_currencies.id', '=', 'transactions.transaction_currency_id')
             ->where('transaction_journals.date', $inclusive ? '<=' : '<', $date->format('Y-m-d H:i:s'))
@@ -828,7 +829,7 @@ class Steam
         $currencies[$primary->id] = $primary;
 
         $ids                      = $accounts->pluck('id')->toArray();
-        $result                   = AccountMeta::whereIn('account_id', $ids)->where('name', 'currency_id')->get();
+        $result                   = AccountMeta::query()->whereIn('account_id', $ids)->where('name', 'currency_id')->get();
 
         /** @var AccountMeta $item */
         foreach ($result as $item) {
@@ -838,7 +839,7 @@ class Steam
             }
         }
         // collect those currencies, skip primary because we already have it.
-        $set                      = TransactionCurrency::whereIn('id', $accountPreferences)->where('id', '!=', $primary->id)->get();
+        $set                      = TransactionCurrency::query()->whereIn('id', $accountPreferences)->where('id', '!=', $primary->id)->get();
         foreach ($set as $item) {
             $currencies[$item->id] = $item;
         }

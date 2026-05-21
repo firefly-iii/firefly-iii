@@ -98,7 +98,7 @@ class JournalCLIRepository implements JournalCLIRepositoryInterface, UserGroupIn
      */
     public function getJournalsWithoutGroup(): array
     {
-        return TransactionJournal::whereNull('transaction_group_id')->get(['id', 'user_id'])->toArray();
+        return TransactionJournal::query()->whereNull('transaction_group_id')->get(['id', 'user_id'])->toArray();
     }
 
     /**
@@ -190,7 +190,7 @@ class JournalCLIRepository implements JournalCLIRepositoryInterface, UserGroupIn
         }
         $journalIds = array_unique($journalIds);
 
-        return TransactionJournal::with(['transactions'])->whereIn('id', $journalIds)->get();
+        return TransactionJournal::query()->with(['transactions'])->whereIn('id', $journalIds)->get();
     }
 
     /**

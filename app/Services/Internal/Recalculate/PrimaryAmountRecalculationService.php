@@ -24,6 +24,7 @@ declare(strict_types=1);
 
 namespace FireflyIII\Services\Internal\Recalculate;
 
+use Carbon\Carbon;
 use FireflyIII\Events\Model\Account\UpdatedExistingAccount;
 use FireflyIII\Handlers\Observer\TransactionObserver;
 use FireflyIII\Models\Account;
@@ -52,6 +53,13 @@ use Illuminate\Support\Facades\Log;
 
 class PrimaryAmountRecalculationService
 {
+    private Carbon $date;
+
+    public function __construct()
+    {
+        $this->date = Carbon::createFromDate(1970, 1, 1);
+    }
+
     public function recalculate(): void
     {
         if (false === FireflyConfig::get('enable_exchange_rates', config('cer.enabled'))->data) {
@@ -106,12 +114,18 @@ class PrimaryAmountRecalculationService
         $this->calculateTransactionsForCurrency($userGroup, $currency, $limitCurrency);
     }
 
+    public function setDate(?Carbon $date): void
+    {
+        $this->date = $date;
+    }
+
     private function calculateTransactions(UserGroup $userGroup, TransactionCurrency $currency): void
     {
         // custom query because of the potential size of this update.
         $set                              = DB::table('transactions')
             ->join('transaction_journals', 'transaction_journals.id', '=', 'transactions.transaction_journal_id')
             ->where('transaction_journals.user_group_id', $userGroup->id)
+            ->where('transaction_journals.date', '>=', $this->date)
             ->where(static function (DatabaseBuilder $q1) use ($currency): void {
                 $q1->where(static function (DatabaseBuilder $q2) use ($currency): void {
                     $q2->whereNot('transactions.transaction_currency_id', $currency->id)->whereNull('transactions.foreign_currency_id');
@@ -147,6 +161,7 @@ class PrimaryAmountRecalculationService
         $set                              = DB::table('transactions')
             ->join('transaction_journals', 'transaction_journals.id', '=', 'transactions.transaction_journal_id')
             ->where('transaction_journals.user_group_id', $userGroup->id)
+            ->where('transaction_journals.date', '>=', $this->date)
             ->where(static function (DatabaseBuilder $q1) use ($currency): void {
                 $q1->where(static function (DatabaseBuilder $q2) use ($currency): void {
                     $q2->whereNot('transactions.transaction_currency_id', $currency->id)->whereNull('transactions.foreign_currency_id');
@@ -279,7 +294,15 @@ class PrimaryAmountRecalculationService
 
     private function recalculateBudgetLimits(Budget $budget, TransactionCurrency $currency): void
     {
-        $set = $budget->budgetlimits()->where('transaction_currency_id', '!=', $currency->id)->get();
+        $set = $budget
+            ->budgetlimits()
+            ->where(function (EloquentBuilder $q): void {
+                $q->where('budget_limits.start_date', '>=', $this->date);
+                $q->orWhere('budget_limits.end_date', '<=', $this->date);
+            })
+            ->where('transaction_currency_id', '!=', $currency->id)
+            ->get()
+        ;
 
         /** @var BudgetLimit $limit */
         foreach ($set as $limit) {
@@ -436,6 +459,7 @@ class PrimaryAmountRecalculationService
         $success = DB::table('transactions')
             ->join('transaction_journals', 'transaction_journals.id', '=', 'transactions.transaction_journal_id')
             ->where('transaction_journals.user_group_id', $userGroup->id)
+            ->where('transaction_journals.date', '>=', $this->date)
             ->where(static function (Builder $q): void {
                 $q->whereNotNull('native_amount')->orWhereNotNull('native_foreign_amount');
             })

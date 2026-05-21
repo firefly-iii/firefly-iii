@@ -45,14 +45,14 @@ final class CategoryControllerTest extends TestCase
         $this->actingAs($this->user);
         $params   = ['start' => '2024-01-01', 'end' => '2024-01-31'];
         $response = $this->getJson(route('api.v1.chart.category.overview').'?'.http_build_query($params));
-        $response->assertStatus(200);
+        $response->assertOk();
     }
 
     public function testGetOverviewChartFails(): void
     {
         $this->actingAs($this->user);
         $response = $this->getJson(route('api.v1.chart.category.overview'));
-        $response->assertStatus(422);
+        $response->assertUnprocessable();
     }
 
     #[Override]

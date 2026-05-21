@@ -66,10 +66,10 @@ class UpgradesAccountMetaData extends Command
          * @var string $new
          */
         foreach ($array as $old => $new) {
-            $count += AccountMeta::where('name', $old)->update(['name' => $new]);
+            $count += AccountMeta::query()->where('name', $old)->update(['name' => $new]);
 
             // delete empty entries while we're at it.
-            AccountMeta::where('name', $new)->where('data', '""')->delete();
+            AccountMeta::query()->where('name', $new)->where('data', '""')->delete();
         }
 
         $this->markAsExecuted();

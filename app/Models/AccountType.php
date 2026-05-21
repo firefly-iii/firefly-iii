@@ -31,19 +31,15 @@ class AccountType extends Model
 {
     use ReturnsIntegerIdTrait;
 
-    protected $casts    = ['created_at' => 'datetime', 'updated_at' => 'datetime'];
+    protected function casts(): array
+    {
+        return ['created_at' => 'datetime', 'updated_at' => 'datetime'];
+    }
 
     protected $fillable = ['type'];
 
     public function accounts(): HasMany
     {
         return $this->hasMany(Account::class);
-    }
-
-    protected function casts(): array
-    {
-        return [
-            // 'type' => AccountTypeEnum::class,
-        ];
     }
 }

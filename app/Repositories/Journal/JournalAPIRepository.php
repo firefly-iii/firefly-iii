@@ -87,7 +87,7 @@ class JournalAPIRepository implements JournalAPIRepositoryInterface, UserGroupIn
     {
         $events = $journal->piggyBankEvents()->get();
         $events->each(static function (PiggyBankEvent $event): void {
-            $event->piggyBank = PiggyBank::withTrashed()->find($event->piggy_bank_id);
+            $event->piggyBank = PiggyBank::query()->withTrashed()->find($event->piggy_bank_id);
         });
 
         return $events;

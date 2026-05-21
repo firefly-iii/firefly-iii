@@ -125,7 +125,8 @@ class PeriodStatisticRepository implements PeriodStatisticRepositoryInterface, U
 
             return;
         }
-        $count = PeriodStatistic::where('primary_statable_type', $class)
+        $count = PeriodStatistic::query()
+            ->where('primary_statable_type', $class)
             ->whereIn('primary_statable_id', $objects->pluck('id')->toArray())
             ->where(function (Builder $q) use ($dates): void {
                 foreach ($dates as $date) {

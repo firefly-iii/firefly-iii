@@ -45,7 +45,7 @@ class ValidJournals implements ValidationRule
         }
         $userId = auth()->user()->id;
         foreach ($value as $journalId) {
-            $count = TransactionJournal::where('id', $journalId)->where('user_id', $userId)->count();
+            $count = TransactionJournal::query()->where('id', $journalId)->where('user_id', $userId)->count();
             if (0 === $count) {
                 Log::debug(sprintf('Count for transaction #%d and user #%d is zero! Return FALSE', $journalId, $userId));
 

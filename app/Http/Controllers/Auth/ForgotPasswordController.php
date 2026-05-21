@@ -84,7 +84,7 @@ final class ForgotPasswordController extends Controller
 
         // verify if the user is not a demo user. If so, we give him back an error.
         /** @var null|User $user */
-        $user     = User::where('email', $request->get('email'))->first();
+        $user     = User::query()->where('email', $request->get('email'))->first();
 
         if (null !== $user && $repository->hasRole($user, 'demo')) {
             return back()->withErrors(['email' => (string) trans('firefly.cannot_reset_demo_user')]);

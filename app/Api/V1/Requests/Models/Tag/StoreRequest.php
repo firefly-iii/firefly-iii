@@ -62,9 +62,9 @@ class StoreRequest extends FormRequest
     public function rules(): array
     {
         $rules = [
-            'tag'         => 'required|min:1|uniqueObjectForUser:tags,tag|max:1024',
-            'description' => 'min:1|nullable|max:32768',
-            'date'        => 'date|nullable|after:1970-01-02|before:2038-01-17',
+            'tag'         => ['required', 'min:1', 'uniqueObjectForUser:tags,tag', 'max:1024'],
+            'description' => ['min:1', 'nullable', 'max:32768'],
+            'date'        => ['date', 'nullable', 'after:1970-01-02', 'before:2038-01-17'],
         ];
 
         return Location::requestRules($rules);

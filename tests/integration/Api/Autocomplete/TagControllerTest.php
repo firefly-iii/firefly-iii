@@ -48,7 +48,7 @@ final class TagControllerTest extends TestCase
         $this->actingAs($user);
 
         $response = $this->get(route('api.v1.autocomplete.tags'), ['Accept' => 'application/json']);
-        $response->assertStatus(200);
+        $response->assertOk();
         $response->assertHeader('Content-Type', 'application/json');
     }
 
@@ -59,7 +59,7 @@ final class TagControllerTest extends TestCase
 
         $this->createTestTags(5, $user);
         $response = $this->get(route('api.v1.autocomplete.tags'), ['Accept' => 'application/json']);
-        $response->assertStatus(200);
+        $response->assertOk();
         $response->assertHeader('Content-Type', 'application/json');
         $response->assertJsonCount(5);
         $response->assertJsonFragment(['name' => 'Tag 1']);
@@ -74,7 +74,7 @@ final class TagControllerTest extends TestCase
         $this->createTestTags(5, $user);
         $response = $this->get(route('api.v1.autocomplete.tags', ['query' => 'Tag', 'limit' => 3]), ['Accept' => 'application/json']);
 
-        $response->assertStatus(200);
+        $response->assertOk();
         $response->assertHeader('Content-Type', 'application/json');
         $response->assertJsonCount(3);
         $response->assertJsonFragment(['name' => 'Tag 1']);
@@ -89,7 +89,7 @@ final class TagControllerTest extends TestCase
         $this->createTestTags(20, $user);
         $response = $this->get(route('api.v1.autocomplete.tags', ['query' => 'Tag 1', 'limit' => 20]), ['Accept' => 'application/json']);
 
-        $response->assertStatus(200);
+        $response->assertOk();
         $response->assertHeader('Content-Type', 'application/json');
         // Bill 1, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19 (11)
         $response->assertJsonCount(11);
@@ -100,7 +100,7 @@ final class TagControllerTest extends TestCase
     {
         // test API
         $response = $this->get(route('api.v1.autocomplete.tags'), ['Accept' => 'application/json']);
-        $response->assertStatus(401);
+        $response->assertUnauthorized();
         $response->assertHeader('Content-Type', 'application/json');
         $response->assertContent('{"message":"Unauthenticated.","exception":"AuthenticationException"}');
     }

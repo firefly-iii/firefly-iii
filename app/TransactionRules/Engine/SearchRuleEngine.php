@@ -189,7 +189,8 @@ class SearchRuleEngine implements RuleEngineInterface
     private function addNotes(array $transaction): array
     {
         $transaction['notes'] = '';
-        $dbNote               = Note::where('noteable_id', (int) $transaction['transaction_journal_id'])
+        $dbNote               = Note::query()
+            ->where('noteable_id', (int) $transaction['transaction_journal_id'])
             ->where('noteable_type', TransactionJournal::class)
             ->first(['notes.*'])
         ;
@@ -543,12 +544,13 @@ class SearchRuleEngine implements RuleEngineInterface
         }
 
         // pick up from the action if it actually acted or not:
-        if (true === $ruleAction->stop_processing && $result) {
+        if (true === $ruleAction->stop_processing && true === $result) {
             Log::debug(sprintf('Rule action "%s" reports changes AND asks to break, so break!', $ruleAction->action_type));
 
             return true;
         }
-        if (true === $ruleAction->stop_processing && false === $result) {
+        //  reset is false at this point.
+        if (true === $ruleAction->stop_processing) {
             Log::debug(sprintf('Rule action "%s" reports NO changes AND asks to break, but we wont break!', $ruleAction->action_type));
         }
 

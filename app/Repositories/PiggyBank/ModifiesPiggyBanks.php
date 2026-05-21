@@ -385,9 +385,9 @@ trait ModifiesPiggyBanks
             $piggyBank->target_date    = $data['target_date'];
             $piggyBank->target_date_tz = $data['target_date']?->format('e');
         }
-        if (array_key_exists('start_date', $data)) {
+        if (array_key_exists('start_date', $data) && '' !== $data['start_date']) {
             $piggyBank->start_date    = $data['start_date'];
-            $piggyBank->start_date_tz = $data['target_date']?->format('e');
+            $piggyBank->start_date_tz = $data['start_date']?->format('e');
         }
         $piggyBank->save();
 

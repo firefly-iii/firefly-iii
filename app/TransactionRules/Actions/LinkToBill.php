@@ -57,7 +57,7 @@ class LinkToBill implements ActionInterface
         $bill       = $repository->findByName($billName);
 
         /** @var TransactionJournal $object */
-        $object     = TransactionJournal::with('transactionType')->find($journal['transaction_journal_id']);
+        $object     = TransactionJournal::query()->with('transactionType')->find($journal['transaction_journal_id']);
         $type       = $object->transactionType->type;
 
         if (null !== $bill && TransactionTypeEnum::WITHDRAWAL->value === $type) {
@@ -82,7 +82,7 @@ class LinkToBill implements ActionInterface
             ));
 
             /** @var TransactionJournal $object */
-            $object = TransactionJournal::where('user_id', $journal['user_id'])->find($journal['transaction_journal_id']);
+            $object = TransactionJournal::query()->where('user_id', $journal['user_id'])->find($journal['transaction_journal_id']);
             event(new TransactionGroupRequestsAuditLogEntry($this->action->rule, $object, 'set_bill', null, $bill->name));
 
             return true;

@@ -46,7 +46,7 @@ final class ShowControllerTest extends TestCase
     {
         $this->actingAs($this->user);
         $response = $this->getJson(route('api.v1.accounts.index'));
-        $response->assertStatus(200);
+        $response->assertOk();
         $response->assertJson(['meta' => ['pagination' => ['total' => 5]]]);
     }
 
@@ -54,7 +54,7 @@ final class ShowControllerTest extends TestCase
     {
         $this->actingAs($this->user);
         $response = $this->getJson(route('api.v1.accounts.index').'?type=asset');
-        $response->assertStatus(200);
+        $response->assertOk();
         $response->assertJson([
             'data' => [['attributes' => ['type' => 'asset']], ['attributes' => ['type' => 'asset']]],
             'meta' => ['pagination' => ['total' => 2]],
@@ -65,7 +65,7 @@ final class ShowControllerTest extends TestCase
     {
         $this->actingAs($this->user);
         $response = $this->getJson(route('api.v1.accounts.index').'?type=foobar');
-        $response->assertStatus(422);
+        $response->assertUnprocessable();
         $response->assertJson(['errors' => ['type' => ['The selected type is invalid.']]]);
     }
 

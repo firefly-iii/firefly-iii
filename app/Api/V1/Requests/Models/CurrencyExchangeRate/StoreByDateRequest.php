@@ -54,12 +54,14 @@ class StoreByDateRequest extends FormRequest
 
     /**
      * The rules that the incoming request must be matched against.
-     *
-     * @return array<string, string>
      */
     public function rules(): array
     {
-        return ['from' => 'required|exists:transaction_currencies,code', 'rates' => 'required|array', 'rates.*' => 'required|numeric|min:0.0000000001'];
+        return [
+            'from'    => ['required', 'exists:transaction_currencies,code'],
+            'rates'   => ['required', 'array'],
+            'rates.*' => ['required', 'numeric', 'min:0.0000000001'],
+        ];
     }
 
     public function withValidator(Validator $validator): void

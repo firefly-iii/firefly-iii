@@ -37,7 +37,7 @@ class AccountTypeSeeder extends Seeder
     public function run(): void
     {
         foreach (AccountTypeEnum::cases() as $type) {
-            if (null === AccountType::where('type', $type->value)->first()) {
+            if (null === AccountType::query()->where('type', $type->value)->first()) {
                 try {
                     AccountType::create(['type' => $type->value]);
                 } catch (PDOException) {

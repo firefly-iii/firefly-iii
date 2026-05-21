@@ -79,7 +79,7 @@ class PiggyBankObserver
         }
 
         $params                     = new ConversionParameters();
-        $params->user               = $piggyBank->accounts()->first()?->user;
+        $params->user               = $piggyBank->accounts()->first()->user;
         $params->model              = $piggyBank;
         $params->originalCurrency   = $piggyBank->transactionCurrency;
         $params->amountField        = 'target_amount';

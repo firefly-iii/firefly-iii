@@ -43,7 +43,7 @@ class FireflyConfig
         if (Cache::has($fullName)) {
             Cache::forget($fullName);
         }
-        Configuration::where('name', $name)->forceDelete();
+        Configuration::query()->where('name', $name)->forceDelete();
     }
 
     /**
@@ -60,7 +60,7 @@ class FireflyConfig
 
         try {
             /** @var null|Configuration $config */
-            $config = Configuration::where('name', $name)->first(['id', 'name', 'data']);
+            $config = Configuration::query()->where('name', $name)->first(['id', 'name', 'data']);
         } catch (Exception|QueryException $e) {
             throw new FireflyException(sprintf('Could not poll the database: %s', $e->getMessage()), 0, $e);
         }
@@ -103,7 +103,7 @@ class FireflyConfig
 
     public function getFresh(string $name, mixed $default = null): ?Configuration
     {
-        $config = Configuration::where('name', $name)->first(['id', 'name', 'data']);
+        $config = Configuration::query()->where('name', $name)->first(['id', 'name', 'data']);
         if (null !== $config) {
             return $config;
         }
@@ -117,7 +117,7 @@ class FireflyConfig
 
     public function has(string $name): bool
     {
-        return 1 === Configuration::where('name', $name)->count();
+        return 1 === Configuration::query()->where('name', $name)->count();
     }
 
     /**

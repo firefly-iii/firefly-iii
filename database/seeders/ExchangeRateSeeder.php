@@ -88,7 +88,7 @@ class ExchangeRateSeeder extends Seeder
 
     private function getCurrency(string $code): null|TransactionCurrency
     {
-        return TransactionCurrency::whereNull('deleted_at')->where('code', $code)->first();
+        return TransactionCurrency::query()->whereNull('deleted_at')->where('code', $code)->first();
     }
 
     private function hasRate(User $user, TransactionCurrency $from, TransactionCurrency $to, string $date): bool

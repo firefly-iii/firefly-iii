@@ -179,9 +179,9 @@ final class CategoryController extends Controller
 
         // order by amount
         usort($return, static fn (array $a, array $b): int => ((float) $a['entries']['spent'] + (float) $a['entries']['earned'])
-        < ((float) $b['entries']['spent'] + (float) $b['entries']['earned'])
-            ? 1
-            : -1);
+            < ((float) $b['entries']['spent'] + (float) $b['entries']['earned'])
+                ? 1
+                : -1);
 
         return response()->json($this->clean($return));
     }

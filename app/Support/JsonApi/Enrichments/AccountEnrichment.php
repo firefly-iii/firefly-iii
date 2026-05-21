@@ -332,18 +332,19 @@ class AccountEnrichment implements EnrichmentInterface
 
     private function collectMetaData(): void
     {
-        $set                 = AccountMeta::whereIn('name', [
-            'is_multi_currency',
-            'include_net_worth',
-            'currency_id',
-            'account_role',
-            'account_number',
-            'BIC',
-            'liability_direction',
-            'interest',
-            'interest_period',
-            'current_debt',
-        ])
+        $set                 = AccountMeta::query()
+            ->whereIn('name', [
+                'is_multi_currency',
+                'include_net_worth',
+                'currency_id',
+                'account_role',
+                'account_number',
+                'BIC',
+                'liability_direction',
+                'interest',
+                'interest_period',
+                'current_debt',
+            ])
             ->whereIn('account_id', $this->ids)
             ->get(['account_meta.id', 'account_meta.account_id', 'account_meta.name', 'account_meta.data'])
             ->toArray()
@@ -357,7 +358,7 @@ class AccountEnrichment implements EnrichmentInterface
             }
         }
         if (count($this->currencies) > 0) {
-            $currencies = TransactionCurrency::whereIn('id', array_keys($this->currencies))->get();
+            $currencies = TransactionCurrency::query()->whereIn('id', array_keys($this->currencies))->get();
             foreach ($currencies as $currency) {
                 $this->currencies[(int) $currency->id] = $currency;
             }
@@ -401,7 +402,7 @@ class AccountEnrichment implements EnrichmentInterface
             $this->mappedObjects[(int) $entry->object_groupable_id] = (int) $entry->object_group_id;
         }
 
-        $groups = ObjectGroup::whereIn('id', $ids)->get(['id', 'title', 'order'])->toArray();
+        $groups = ObjectGroup::query()->whereIn('id', $ids)->get(['id', 'title', 'order'])->toArray();
         foreach ($groups as $group) {
             $group['id']                            = (int) $group['id'];
             $group['order']                         = (int) $group['order'];
@@ -430,7 +431,7 @@ class AccountEnrichment implements EnrichmentInterface
 
     private function getAccountTypes(): void
     {
-        $types = AccountType::whereIn('id', $this->accountTypeIds)->get();
+        $types = AccountType::query()->whereIn('id', $this->accountTypeIds)->get();
 
         /** @var AccountType $type */
         foreach ($types as $type) {

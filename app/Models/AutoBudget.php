@@ -41,7 +41,11 @@ class AutoBudget extends Model
     use ReturnsIntegerIdTrait;
     use SoftDeletes;
 
-    protected $casts    = ['amount' => 'string', 'native_amount' => 'string'];
+    protected function casts(): array
+    {
+        return ['amount' => 'string', 'native_amount' => 'string'];
+    }
+
     protected $fillable = ['budget_id', 'amount', 'period', 'native_amount'];
 
     public function budget(): BelongsTo
@@ -62,13 +66,6 @@ class AutoBudget extends Model
     protected function budgetId(): Attribute
     {
         return Attribute::make(get: static fn ($value): int => (int) $value);
-    }
-
-    protected function casts(): array
-    {
-        return [
-            // 'auto_budget_type' => AutoBudgetType::class,
-        ];
     }
 
     protected function transactionCurrencyId(): Attribute

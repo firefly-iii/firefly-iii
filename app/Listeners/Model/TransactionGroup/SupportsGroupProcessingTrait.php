@@ -156,7 +156,7 @@ trait SupportsGroupProcessingTrait
 
     private function getFromInternalDate(array $ids): Carbon
     {
-        $entries = TransactionJournalMeta::whereIn('transaction_journal_id', $ids)->where('name', '_internal_previous_date')->get(['journal_meta.*']);
+        $entries = TransactionJournalMeta::query()->whereIn('transaction_journal_id', $ids)->where('name', '_internal_previous_date')->get(['journal_meta.*']);
         $array   = $entries->toArray();
         $return  = today()->subDay();
         if (count($array) > 0) {

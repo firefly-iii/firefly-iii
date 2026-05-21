@@ -104,7 +104,7 @@ class UpgradesRecurrenceMetaData extends Command
     {
         $count      = 0;
         // get all recurrence meta data:
-        $collection = RecurrenceMeta::with('recurrence')->get();
+        $collection = RecurrenceMeta::query()->with('recurrence')->get();
 
         /** @var RecurrenceMeta $meta */
         foreach ($collection as $meta) {

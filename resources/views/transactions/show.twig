@@ -487,6 +487,9 @@
                                             {% if '' != link.foreign_amount %}
                                                 ({{ link.foreign_amount|raw }})
                                             {% endif %}
+                                            {% if link.notes != "" %}
+                                                ({{ link.notes }})
+                                            {% endif %}
                                         </td>
                                     </tr>
                                 {% endfor %}

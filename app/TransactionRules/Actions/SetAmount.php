@@ -49,7 +49,7 @@ class SetAmount implements ActionInterface
         $this->refreshNotes($journal);
 
         // not on slpit transactions
-        $groupCount = TransactionJournal::where('transaction_group_id', $journal['transaction_group_id'])->count();
+        $groupCount = TransactionJournal::query()->where('transaction_group_id', $journal['transaction_group_id'])->count();
         if ($groupCount > 1) {
             Log::error(sprintf('Group #%d has more than one transaction in it, cannot convert to transfer.', $journal['transaction_group_id']));
             event(new RuleActionFailedOnArray($this->action, $journal, trans('rules.split_group')));
@@ -67,7 +67,7 @@ class SetAmount implements ActionInterface
         }
 
         /** @var TransactionJournal $object */
-        $object     = TransactionJournal::where('user_id', $journal['user_id'])->find($journal['transaction_journal_id']);
+        $object     = TransactionJournal::query()->where('user_id', $journal['user_id'])->find($journal['transaction_journal_id']);
 
         $positive   = Steam::positive($value);
         $negative   = Steam::negative($value);

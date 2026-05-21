@@ -34,10 +34,10 @@ class CountRequest extends AggregateFormRequest
     public function rules(): array
     {
         return [
-            'notes'               => 'string|min:1|max:255',
-            'external_identifier' => 'string|min:1|max:255',
-            'description'         => 'string|min:1|max:255',
-            'internal_reference'  => 'string|min:1|max:255',
+            'notes'               => ['string', 'min:1', 'max:255'],
+            'external_identifier' => ['string', 'min:1', 'max:255'],
+            'description'         => ['string', 'min:1', 'max:255'],
+            'internal_reference'  => ['string', 'min:1', 'max:255'],
             'include_deleted'     => new IsBoolean(),
         ];
     }

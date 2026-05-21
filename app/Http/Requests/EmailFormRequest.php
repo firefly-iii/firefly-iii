@@ -45,7 +45,7 @@ class EmailFormRequest extends FormRequest
     public function rules(): array
     {
         // fixed
-        return ['email' => 'required|email'];
+        return ['email' => ['required', 'email']];
     }
 
     public function withValidator(Validator $validator): void

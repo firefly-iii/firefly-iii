@@ -47,7 +47,7 @@ final class BillControllerTest extends TestCase
     {
         // test API
         $response = $this->get(route('api.v1.autocomplete.bills'), ['Accept' => 'application/json']);
-        $response->assertStatus(401);
+        $response->assertUnauthorized();
         $response->assertHeader('Content-Type', 'application/json');
         $response->assertContent('{"message":"Unauthenticated.","exception":"AuthenticationException"}');
     }
@@ -59,7 +59,7 @@ final class BillControllerTest extends TestCase
         $this->actingAs($user);
 
         $response = $this->get(route('api.v1.autocomplete.bills'), ['Accept' => 'application/json']);
-        $response->assertStatus(200);
+        $response->assertOk();
         $response->assertHeader('Content-Type', 'application/json');
     }
 
@@ -70,7 +70,7 @@ final class BillControllerTest extends TestCase
 
         $this->createTestBills(5, $user);
         $response = $this->get(route('api.v1.autocomplete.bills'), ['Accept' => 'application/json']);
-        $response->assertStatus(200);
+        $response->assertOk();
         $response->assertHeader('Content-Type', 'application/json');
         $response->assertJsonCount(5);
         $response->assertJsonFragment(['name' => 'Bill 1']);
@@ -85,7 +85,7 @@ final class BillControllerTest extends TestCase
         $this->createTestBills(20, $user);
         $response = $this->get(route('api.v1.autocomplete.bills', ['query' => 'Bill 1', 'limit' => 20]), ['Accept' => 'application/json']);
 
-        $response->assertStatus(200);
+        $response->assertOk();
         $response->assertHeader('Content-Type', 'application/json');
         // Bill 1, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19 (11)
         $response->assertJsonCount(11);
@@ -100,7 +100,7 @@ final class BillControllerTest extends TestCase
         $this->createTestBills(5, $user);
         $response = $this->get(route('api.v1.autocomplete.bills', ['query' => 'Bill', 'limit' => 3]), ['Accept' => 'application/json']);
 
-        $response->assertStatus(200);
+        $response->assertOk();
         $response->assertHeader('Content-Type', 'application/json');
         $response->assertJsonCount(3);
         $response->assertJsonFragment(['name' => 'Bill 1']);

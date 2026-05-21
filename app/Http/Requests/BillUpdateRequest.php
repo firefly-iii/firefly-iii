@@ -75,14 +75,14 @@ class BillUpdateRequest extends FormRequest
             'name'                    => sprintf('required|min:1|max:255|uniqueObjectForUser:bills,name,%d', $bill->id),
             'amount_min'              => ['required', new IsValidPositiveAmount()],
             'amount_max'              => ['required', new IsValidPositiveAmount()],
-            'transaction_currency_id' => 'required|exists:transaction_currencies,id',
-            'date'                    => 'required|date',
-            'bill_end_date'           => 'nullable|date',
-            'extension_date'          => 'nullable|date',
+            'transaction_currency_id' => ['required', 'exists:transaction_currencies,id'],
+            'date'                    => ['required', 'date'],
+            'bill_end_date'           => ['nullable', 'date'],
+            'extension_date'          => ['nullable', 'date'],
             'repeat_freq'             => sprintf('required|in:%s', implode(',', config('firefly.bill_periods'))),
-            'skip'                    => 'required|integer|gte:0|lte:31',
+            'skip'                    => ['required', 'integer', 'gte:0', 'lte:31'],
             'active'                  => 'boolean',
-            'notes'                   => 'min:1|max:32768|nullable',
+            'notes'                   => ['min:1', 'max:32768', 'nullable'],
         ];
     }
 

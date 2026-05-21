@@ -73,12 +73,12 @@ class UpdateRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'start'         => 'date|after:1970-01-02|before:2038-01-17',
-            'end'           => 'date|after:1970-01-02|before:2038-01-17',
+            'start'         => ['date', 'after:1970-01-02', 'before:2038-01-17'],
+            'end'           => ['date', 'after:1970-01-02', 'before:2038-01-17'],
             'amount'        => ['nullable', new IsValidPositiveAmount()],
-            'currency_id'   => 'numeric|exists:transaction_currencies,id',
-            'currency_code' => 'min:3|max:51|exists:transaction_currencies,code',
-            'notes'         => 'nullable|min:0|max:32768',
+            'currency_id'   => ['numeric', 'exists:transaction_currencies,id'],
+            'currency_code' => ['min:3', 'max:51', 'exists:transaction_currencies,code'],
+            'notes'         => ['nullable', 'min:0', 'max:32768'],
 
             // webhooks
             'fire_webhooks' => [new IsBoolean()],

@@ -67,7 +67,7 @@ class RemovesOrphanedTransactions extends Command
             /** @var null|TransactionJournal $journal */
             $journal = TransactionJournal::find($transaction->transaction_journal_id);
             $journal?->delete();
-            Transaction::where('transaction_journal_id', $transaction->transaction_journal_id)->delete();
+            Transaction::query()->where('transaction_journal_id', $transaction->transaction_journal_id)->delete();
             $this->friendlyWarning(sprintf(
                 'Deleted transaction journal #%d because account #%d was already deleted.',
                 $transaction->transaction_journal_id,
@@ -93,7 +93,7 @@ class RemovesOrphanedTransactions extends Command
         $this->friendlyInfo(sprintf('Found %d orphaned journal(s).', $count));
         foreach ($set as $entry) {
             /** @var null|TransactionJournal $journal */
-            $journal = TransactionJournal::withTrashed()->find($entry->id);
+            $journal = TransactionJournal::query()->withTrashed()->find($entry->id);
             if (null !== $journal) {
                 $journal->delete();
                 $this->friendlyWarning(sprintf(

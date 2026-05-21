@@ -53,7 +53,7 @@ class AttachmentFormRequest extends FormRequest
     public function rules(): array
     {
         // fixed
-        return ['title' => 'min:1|max:255|nullable', 'notes' => 'min:1|max:32768|nullable'];
+        return ['title' => ['min:1', 'max:255', 'nullable'], 'notes' => ['min:1', 'max:32768', 'nullable']];
     }
 
     public function withValidator(Validator $validator): void

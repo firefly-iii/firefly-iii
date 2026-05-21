@@ -63,8 +63,8 @@ class UpdateRequest extends FormRequest
         $tag   = $this->route()->parameter('tagOrId');
         $rules = [
             'tag'         => 'min:1|max:1024|uniqueObjectForUser:tags,tag,'.$tag->id,
-            'description' => 'min:1|nullable|max:32768',
-            'date'        => 'date|nullable|after:1970-01-02|before:2038-01-17',
+            'description' => ['min:1', 'nullable', 'max:32768'],
+            'date'        => ['date', 'nullable', 'after:1970-01-02', 'before:2038-01-17'],
         ];
 
         return Location::requestRules($rules);

@@ -52,15 +52,15 @@ class ClearsEmptyForeignAmounts extends Command
     public function handle(): int
     {
         // transaction: has no amount, but reference to currency.
-        $count = Transaction::whereNull('foreign_amount')->whereNotNull('foreign_currency_id')->count();
+        $count = Transaction::query()->whereNull('foreign_amount')->whereNotNull('foreign_currency_id')->count();
         if ($count > 0) {
-            Transaction::whereNull('foreign_amount')->whereNotNull('foreign_currency_id')->update(['foreign_currency_id' => null]);
+            Transaction::query()->whereNull('foreign_amount')->whereNotNull('foreign_currency_id')->update(['foreign_currency_id' => null]);
             $this->friendlyInfo(sprintf('Corrected %d invalid foreign amount reference(s)', $count));
         }
         // transaction: has amount, but no currency.
-        $count = Transaction::whereNull('foreign_currency_id')->whereNotNull('foreign_amount')->count();
+        $count = Transaction::query()->whereNull('foreign_currency_id')->whereNotNull('foreign_amount')->count();
         if ($count > 0) {
-            Transaction::whereNull('foreign_currency_id')->whereNotNull('foreign_amount')->update(['foreign_amount' => null]);
+            Transaction::query()->whereNull('foreign_currency_id')->whereNotNull('foreign_amount')->update(['foreign_amount' => null]);
             $this->friendlyInfo(sprintf('Corrected %d invalid foreign amount reference(s)', $count));
         }
 

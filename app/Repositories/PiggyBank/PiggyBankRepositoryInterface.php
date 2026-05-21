@@ -112,11 +112,6 @@ interface PiggyBankRepositoryInterface
     public function getRepetition(PiggyBank $piggyBank, bool $overrule = false): ?PiggyBankRepetition;
 
     /**
-     * Returns the suggested amount the user should save per month, or "".
-     */
-    public function getSuggestedMonthlyAmount(PiggyBank $piggyBank): string;
-
-    /**
      * Get for piggy account what is left to put in piggies.
      */
     public function leftOnAccount(PiggyBank $piggyBank, Account $account, Carbon $date): string;

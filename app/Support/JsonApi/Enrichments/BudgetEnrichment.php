@@ -128,7 +128,7 @@ class BudgetEnrichment implements EnrichmentInterface
 
     private function collectAutoBudgets(): void
     {
-        $set = AutoBudget::whereIn('budget_id', $this->ids)->with(['transactionCurrency'])->get();
+        $set = AutoBudget::query()->whereIn('budget_id', $this->ids)->with(['transactionCurrency'])->get();
 
         /** @var AutoBudget $autoBudget */
         foreach ($set as $autoBudget) {
@@ -201,7 +201,7 @@ class BudgetEnrichment implements EnrichmentInterface
             $this->mappedObjects[(int) $entry->object_groupable_id] = (int) $entry->object_group_id;
         }
 
-        $groups = ObjectGroup::whereIn('id', $ids)->get(['id', 'title', 'order'])->toArray();
+        $groups = ObjectGroup::query()->whereIn('id', $ids)->get(['id', 'title', 'order'])->toArray();
         foreach ($groups as $group) {
             $group['id']                            = (int) $group['id'];
             $group['order']                         = (int) $group['order'];

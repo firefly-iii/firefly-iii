@@ -35,15 +35,18 @@ class RecurrenceRepetition extends Model
     use ReturnsIntegerIdTrait;
     use SoftDeletes;
 
-    protected $casts    = [
-        'created_at'        => 'datetime',
-        'updated_at'        => 'datetime',
-        'deleted_at'        => 'datetime',
-        'repetition_type'   => 'string',
-        'repetition_moment' => 'string',
-        'repetition_skip'   => 'int',
-        'weekend'           => 'int',
-    ];
+    protected function casts(): array
+    {
+        return [
+            'created_at'        => 'datetime',
+            'updated_at'        => 'datetime',
+            'deleted_at'        => 'datetime',
+            'repetition_type'   => 'string',
+            'repetition_moment' => 'string',
+            'repetition_skip'   => 'int',
+            'weekend'           => 'int',
+        ];
+    }
 
     protected $fillable = ['recurrence_id', 'weekend', 'repetition_type', 'repetition_moment', 'repetition_skip'];
 
@@ -52,13 +55,6 @@ class RecurrenceRepetition extends Model
     public function recurrence(): BelongsTo
     {
         return $this->belongsTo(Recurrence::class);
-    }
-
-    protected function casts(): array
-    {
-        return [
-            // 'weekend' => RecurrenceRepetitionWeekend::class,
-        ];
     }
 
     protected function recurrenceId(): Attribute

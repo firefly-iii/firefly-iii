@@ -47,7 +47,8 @@ class Preferences
             return new Collection();
         }
 
-        return Preference::where('user_id', $user->id)
+        return Preference::query()
+            ->where('user_id', $user->id)
             ->where('name', '!=', 'currencyPreference')
             ->where(static function (Builder $q) use ($user): void {
                 $q->whereNull('user_group_id');
@@ -61,7 +62,7 @@ class Preferences
     {
         $value = sprintf('%s%%', $search);
 
-        return Preference::where('user_id', $user->id)->whereLike('name', $value)->get();
+        return Preference::query()->where('user_id', $user->id)->whereLike('name', $value)->get();
     }
 
     public function delete(string $name): bool
@@ -70,7 +71,7 @@ class Preferences
         if (Cache::has($fullName)) {
             Cache::forget($fullName);
         }
-        Preference::where('user_id', auth()->user()->id)->where('name', $name)->delete();
+        Preference::query()->where('user_id', auth()->user()->id)->where('name', $name)->delete();
 
         return true;
     }
@@ -81,7 +82,7 @@ class Preferences
         if (Cache::has($fullName)) {
             Cache::forget($fullName);
         }
-        Preference::where('user_id', $user->id)->where('name', $name)->delete();
+        Preference::query()->where('user_id', $user->id)->where('name', $name)->delete();
 
         return true;
     }
@@ -91,7 +92,7 @@ class Preferences
      */
     public function findByName(string $name): Collection
     {
-        return Preference::where('name', $name)->get();
+        return Preference::query()->where('name', $name)->get();
     }
 
     public function forget(User $user, string $name): void
@@ -118,7 +119,8 @@ class Preferences
     public function getArrayForUser(User $user, array $list): array
     {
         $result      = [];
-        $preferences = Preference::where('user_id', $user->id)
+        $preferences = Preference::query()
+            ->where('user_id', $user->id)
             ->where(static function (Builder $q) use ($user): void {
                 $q->whereNull('user_group_id');
                 $q->orWhere('user_group_id', $user->user_group_id);
@@ -196,7 +198,7 @@ class Preferences
         // Log::debug(sprintf('getForUser(#%d, "%s")', $user->id, $name));
         // don't care about user group ID, except for some specific preferences.
         $userGroupId = $this->getUserGroupId($user, $name);
-        $query       = Preference::where('user_id', $user->id)->where('name', $name);
+        $query       = Preference::query()->where('user_id', $user->id)->where('name', $name);
         if (null !== $userGroupId) {
             Log::debug('Include user group ID in query');
             $query->where('user_group_id', $userGroupId);
@@ -308,7 +310,7 @@ class Preferences
 
         Cache::forget($fullName);
 
-        $query            = Preference::where('user_id', $user->id)->where('name', $name);
+        $query            = Preference::query()->where('user_id', $user->id)->where('name', $name);
         if (null !== $userGroupId) {
             Log::debug('Include user group ID in query');
             $query->where('user_group_id', $userGroupId);

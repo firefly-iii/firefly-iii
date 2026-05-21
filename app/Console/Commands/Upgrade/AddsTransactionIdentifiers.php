@@ -93,7 +93,8 @@ class AddsTransactionIdentifiers extends Command
 
         try {
             /** @var Transaction $opposing */
-            $opposing = Transaction::where('transaction_journal_id', $transaction->transaction_journal_id)
+            $opposing = Transaction::query()
+                ->where('transaction_journal_id', $transaction->transaction_journal_id)
                 ->where('amount', $amount)
                 ->where('identifier', '=', 0)
                 ->whereNotIn('id', $exclude)

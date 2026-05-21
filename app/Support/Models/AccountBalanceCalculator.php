@@ -141,6 +141,9 @@ class AccountBalanceCalculator
         foreach ($set as $entry) {
             // Log::debug(sprintf('Processing transaction #%d with currency #%d and amount %s', $entry->id, $entry->transaction_currency_id, Steam::bcround($entry->amount, 2)));
             // start with empty array:
+            $entry->account_id                                             = (int) $entry->account_id;
+            $entry->transaction_currency_id                                = (int) $entry->transaction_currency_id;
+
             $balances[$entry->account_id]                                  ??= [];
             $balances[$entry->account_id][$entry->transaction_currency_id] ??= [
                 self::getLatestBalance($entry->account_id, $entry->transaction_currency_id, $notBefore),
@@ -178,7 +181,7 @@ class AccountBalanceCalculator
     public static function recalculateAll(bool $forced): void
     {
         if ($forced) {
-            Transaction::whereNull('deleted_at')->update(['balance_dirty' => true]);
+            Transaction::query()->whereNull('deleted_at')->update(['balance_dirty' => true]);
 
             // also delete account balances.
             // AccountBalance::whereNotNull('created_at')->delete();

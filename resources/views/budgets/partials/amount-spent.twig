@@ -1,10 +1,10 @@
 {# this is spent in budget limits: #}
 {% for budgetLimit in budget.budgeted %}
-    {{ formatAmountBySymbol(budgetLimit.spent, budgetLimit.currency_symbol, budgetLimit.currency_decimal_places) }}
+    <span title="{{ 'spent_this_period'|_ }}">{{ formatAmountBySymbol(budgetLimit.spent, budgetLimit.currency_symbol, budgetLimit.currency_decimal_places) }}</span>
     {% if 0 == budgetLimit.active_days_passed %}
-        ({{ formatAmountBySymbol(budgetLimit.spent, budgetLimit.currency_symbol, budgetLimit.currency_decimal_places) }})
+        <span title="{{ trans('firefly.spent_this_period_per_day', {days: 0}) }}">({{ formatAmountBySymbol(budgetLimit.spent, budgetLimit.currency_symbol, budgetLimit.currency_decimal_places) }})</span>
     {% else %}
-        ({{ formatAmountBySymbol(budgetLimit.spent / budgetLimit.active_days_passed, budgetLimit.currency_symbol, budgetLimit.currency_decimal_places) }})
+        <span title="{{ trans('firefly.spent_this_period_per_day', {days: budgetLimit.active_days_passed}) }}">({{ formatAmountBySymbol(budgetLimit.spent / budgetLimit.active_days_passed, budgetLimit.currency_symbol, budgetLimit.currency_decimal_places) }})</span>
     {% endif %}
 <br />
 {% endfor %}
@@ -12,11 +12,11 @@
 {# this is spent NOT in budget limits: #}
 {% for spent in budget.spent %}
     {% if 0 != bccomp('0', spent.spent_outside)  %}
-        {{ formatAmountBySymbol(spent.spent_outside, spent.currency_symbol, spent.currency_decimal_places) }}
+        <span title="{{ 'spent_in_budget_limit_outside_period'|_ }}">{{ formatAmountBySymbol(spent.spent_outside, spent.currency_symbol, spent.currency_decimal_places) }}</span>
         {% if 0 == activeDaysPassed %}
-            ({{ formatAmountBySymbol(spent.spent_outside, spent.currency_symbol, spent.currency_decimal_places) }})
+            <span title="{{ trans('firefly.spent_in_budget_limit_outside_period_per_day', {days: 0}) }}">({{ formatAmountBySymbol(spent.spent_outside, spent.currency_symbol, spent.currency_decimal_places) }})</span>
         {% else %}
-            ({{ formatAmountBySymbol(spent.spent_outside / activeDaysPassed, spent.currency_symbol, spent.currency_decimal_places) }})
+            <span title="{{ trans('firefly.spent_in_budget_limit_outside_period_per_day', {days: activeDaysPassed}) }}">({{ formatAmountBySymbol(spent.spent_outside / activeDaysPassed, spent.currency_symbol, spent.currency_decimal_places) }})</span>
             {% endif %}
         <br />
     {% endif %}

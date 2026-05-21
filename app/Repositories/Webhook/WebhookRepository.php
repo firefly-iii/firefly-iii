@@ -121,7 +121,7 @@ class WebhookRepository implements WebhookRepositoryInterface, UserGroupInterfac
 
         foreach ($data['triggers'] as $trigger) {
             // get the relevant ID:
-            $object = WebhookTrigger::where('title', $trigger)->first();
+            $object = WebhookTrigger::query()->where('title', $trigger)->first();
             if (null === $object) {
                 throw new FireflyException(sprintf('Could not find webhook trigger with title "%s".', $trigger));
             }
@@ -131,7 +131,7 @@ class WebhookRepository implements WebhookRepositoryInterface, UserGroupInterfac
 
         foreach ($data['responses'] as $response) {
             // get the relevant ID:
-            $object = WebhookResponse::where('title', $response)->first();
+            $object = WebhookResponse::query()->where('title', $response)->first();
             if (null === $object) {
                 throw new FireflyException(sprintf('Could not find webhook response with title "%s".', $response));
             }
@@ -141,7 +141,7 @@ class WebhookRepository implements WebhookRepositoryInterface, UserGroupInterfac
 
         foreach ($data['deliveries'] as $delivery) {
             // get the relevant ID:
-            $object = WebhookDelivery::where('title', $delivery)->first();
+            $object = WebhookDelivery::query()->where('title', $delivery)->first();
             if (null === $object) {
                 throw new FireflyException(sprintf('Could not find webhook delivery with title "%s".', $delivery));
             }
@@ -171,7 +171,7 @@ class WebhookRepository implements WebhookRepositoryInterface, UserGroupInterfac
 
         foreach ($data['triggers'] as $trigger) {
             // get the relevant ID:
-            $object = WebhookTrigger::where('title', $trigger)->first();
+            $object = WebhookTrigger::query()->where('title', $trigger)->first();
             if (null === $object) {
                 throw new FireflyException(sprintf('Could not find webhook trigger with title "%s".', $trigger));
             }
@@ -181,7 +181,7 @@ class WebhookRepository implements WebhookRepositoryInterface, UserGroupInterfac
 
         foreach ($data['responses'] as $response) {
             // get the relevant ID:
-            $object = WebhookResponse::where('title', $response)->first();
+            $object = WebhookResponse::query()->where('title', $response)->first();
             if (null === $object) {
                 throw new FireflyException(sprintf('Could not find webhook response with title "%s".', $response));
             }
@@ -191,7 +191,7 @@ class WebhookRepository implements WebhookRepositoryInterface, UserGroupInterfac
 
         foreach ($data['deliveries'] as $delivery) {
             // get the relevant ID:
-            $object = WebhookDelivery::where('title', $delivery)->first();
+            $object = WebhookDelivery::query()->where('title', $delivery)->first();
             if (null === $object) {
                 throw new FireflyException(sprintf('Could not find webhook delivery with title "%s".', $delivery));
             }

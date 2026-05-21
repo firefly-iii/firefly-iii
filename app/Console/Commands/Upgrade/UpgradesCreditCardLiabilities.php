@@ -55,8 +55,8 @@ class UpgradesCreditCardLiabilities extends Command
             return 0;
         }
 
-        $ccType   = AccountType::where('type', AccountTypeEnum::CREDITCARD->value)->first();
-        $debtType = AccountType::where('type', AccountTypeEnum::DEBT->value)->first();
+        $ccType   = AccountType::query()->where('type', AccountTypeEnum::CREDITCARD->value)->first();
+        $debtType = AccountType::query()->where('type', AccountTypeEnum::DEBT->value)->first();
         if (null === $ccType || null === $debtType) {
             $this->markAsExecuted();
 
@@ -64,7 +64,7 @@ class UpgradesCreditCardLiabilities extends Command
         }
 
         /** @var Collection $accounts */
-        $accounts = Account::where('account_type_id', $ccType->id)->get();
+        $accounts = Account::query()->where('account_type_id', $ccType->id)->get();
         foreach ($accounts as $account) {
             $account->account_type_id = $debtType->id;
             $account->save();

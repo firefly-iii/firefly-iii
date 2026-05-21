@@ -128,7 +128,7 @@ class BelongsUserGroup implements ValidationRule
             // it's ok to submit 0. other checks will fail.
             return true;
         }
-        $count = Account::where('id', '=', $value)->where('user_group_id', '=', $this->userGroup->id)->count();
+        $count = Account::query()->where('id', '=', $value)->where('user_group_id', '=', $this->userGroup->id)->count();
 
         return 1 === $count;
     }
@@ -138,7 +138,7 @@ class BelongsUserGroup implements ValidationRule
         if (0 === $value) {
             return true;
         }
-        $count = Bill::where('id', '=', $value)->where('user_group_id', '=', $this->userGroup->id)->count();
+        $count = Bill::query()->where('id', '=', $value)->where('user_group_id', '=', $this->userGroup->id)->count();
 
         return 1 === $count;
     }
@@ -156,7 +156,7 @@ class BelongsUserGroup implements ValidationRule
         if (0 === $value) {
             return true;
         }
-        $count = Budget::where('id', '=', $value)->where('user_group_id', '=', $this->userGroup->id)->count();
+        $count = Budget::query()->where('id', '=', $value)->where('user_group_id', '=', $this->userGroup->id)->count();
 
         return 1 === $count;
     }
@@ -170,7 +170,7 @@ class BelongsUserGroup implements ValidationRule
 
     private function validateCategoryId(int $value): bool
     {
-        $count = Category::where('id', '=', $value)->where('user_group_id', '=', $this->userGroup->id)->count();
+        $count = Category::query()->where('id', '=', $value)->where('user_group_id', '=', $this->userGroup->id)->count();
 
         return 1 === $count;
     }
@@ -180,7 +180,7 @@ class BelongsUserGroup implements ValidationRule
         if (0 === $value) {
             return true;
         }
-        $count = TransactionJournal::where('id', '=', $value)->where('user_group_id', '=', $this->userGroup->id)->count();
+        $count = TransactionJournal::query()->where('id', '=', $value)->where('user_group_id', '=', $this->userGroup->id)->count();
 
         return 1 === $count;
     }

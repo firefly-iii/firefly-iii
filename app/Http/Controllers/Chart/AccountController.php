@@ -589,7 +589,6 @@ final class AccountController extends Controller
         Log::debug('End of chart loop.');
         // second loop (yes) to create nice array with info! Yay!
         $chartData       = [];
-
         foreach ($return as $key => $info) {
             if ('balance' !== $key && 'pc_balance' !== $key) {
                 // assume it's a currency:
@@ -607,6 +606,11 @@ final class AccountController extends Controller
                 $info['currency_symbol'] = $this->primaryCurrency->symbol;
                 $info['currency_code']   = $this->primaryCurrency->code;
                 $info['label']           = sprintf('%s (%s) (%s)', $account->name, (string) trans('firefly.sum'), $this->primaryCurrency->symbol);
+            }
+            // do not add pc_balance to the array if the account is in the primary currency anyway,
+            // and it has no currency balances.
+            if (2 === count(array_keys($return)) && 'pc_balance' === $key && $accountCurrency->id === $this->primaryCurrency->id) {
+                continue;
             }
             $chartData[] = $info;
         }

@@ -12,11 +12,11 @@ class AccountFactory extends Factory
 {
     public function definition(): array
     {
-        return ['name' => $this->faker->name(), 'active' => true];
+        return ['name' => fake()->name(), 'active' => true];
     }
 
     public function withType(AccountTypeEnum $type): static
     {
-        return $this->for(AccountType::where('type', $type->value)->first());
+        return $this->for(AccountType::query()->where('type', $type->value)->first());
     }
 }

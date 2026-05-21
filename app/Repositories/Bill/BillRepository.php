@@ -102,7 +102,7 @@ class BillRepository implements BillRepositoryInterface, UserGroupInterface
     public function correctTransfers(): void
     {
         /** @var null|TransactionType $withdrawal */
-        $withdrawal = TransactionType::where('type', TransactionTypeEnum::WITHDRAWAL->value)->first();
+        $withdrawal = TransactionType::query()->where('type', TransactionTypeEnum::WITHDRAWAL->value)->first();
         if (null === $withdrawal) {
             return;
         }

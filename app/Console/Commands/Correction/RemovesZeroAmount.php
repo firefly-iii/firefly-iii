@@ -42,16 +42,16 @@ class RemovesZeroAmount extends Command
      */
     public function handle(): int
     {
-        $set      = Transaction::where('amount', 0)->get(['transaction_journal_id'])->pluck('transaction_journal_id')->toArray();
+        $set      = Transaction::query()->where('amount', 0)->get(['transaction_journal_id'])->pluck('transaction_journal_id')->toArray();
         $set      = array_unique($set);
-        $journals = TransactionJournal::whereIn('id', $set)->get();
+        $journals = TransactionJournal::query()->whereIn('id', $set)->get();
 
         /** @var TransactionJournal $journal */
         foreach ($journals as $journal) {
             $this->friendlyWarning(sprintf('Deleted transaction journal #%d because the amount is zero (0.00).', $journal->id));
             $journal->delete();
 
-            Transaction::where('transaction_journal_id', $journal->id)->delete();
+            Transaction::query()->where('transaction_journal_id', $journal->id)->delete();
         }
 
         return 0;

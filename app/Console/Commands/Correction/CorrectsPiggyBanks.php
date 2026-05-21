@@ -42,7 +42,7 @@ class CorrectsPiggyBanks extends Command
     public function handle(): int
     {
         $count = 0;
-        $set   = PiggyBankEvent::with(['PiggyBank', 'TransactionJournal'])->get();
+        $set   = PiggyBankEvent::query()->with(['PiggyBank', 'TransactionJournal'])->get();
 
         /** @var PiggyBankEvent $event */
         foreach ($set as $event) {

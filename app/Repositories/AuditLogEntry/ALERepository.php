@@ -36,13 +36,13 @@ class ALERepository implements ALERepositoryInterface
     public function getForId(string $model, int $modelId): Collection
     {
         // all Models have an ID.
-        return AuditLogEntry::where('auditable_id', $modelId)->where('auditable_type', $model)->get();
+        return AuditLogEntry::query()->where('auditable_id', $modelId)->where('auditable_type', $model)->get();
     }
 
     public function getForObject(Model $model): Collection
     {
         // all Models have an ID.
-        return AuditLogEntry::where('auditable_id', $model->id)->where('auditable_type', $model::class)->get();
+        return AuditLogEntry::query()->where('auditable_id', $model->id)->where('auditable_type', $model::class)->get();
     }
 
     public function store(array $data): AuditLogEntry

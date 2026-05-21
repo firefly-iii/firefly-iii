@@ -50,8 +50,8 @@ class PaginationRequest extends ApiRequest
     {
         return [
             'sort'  => ['nullable', new IsValidSortInstruction((string) $this->sortClass)],
-            'limit' => 'numeric|min:1|max:131337',
-            'page'  => 'numeric|min:1|max:131337',
+            'limit' => ['numeric', 'min:1', 'max:131337'],
+            'page'  => ['numeric', 'min:1', 'max:131337'],
         ];
     }
 

@@ -49,18 +49,23 @@ class DeletedAccountObserver
             $repository->destroy($attachment);
         }
 
-        $journalIds = Transaction::where('account_id', $account->id)->get(['transactions.transaction_journal_id'])->pluck('transaction_journal_id')->toArray();
+        $journalIds = Transaction::query()
+            ->where('account_id', $account->id)
+            ->get(['transactions.transaction_journal_id'])
+            ->pluck('transaction_journal_id')
+            ->toArray()
+        ;
 
         $groupIds   = array_map(function (array $item) {
             return $item['transaction_group_id'];
-        }, TransactionJournal::whereIn('id', $journalIds)->get(['transaction_journals.transaction_group_id'])->toArray());
+        }, TransactionJournal::query()->whereIn('id', $journalIds)->get(['transaction_journals.transaction_group_id'])->toArray());
 
         if (count($journalIds) > 0) {
-            Transaction::whereIn('transaction_journal_id', $journalIds)->delete();
-            TransactionJournal::whereIn('id', $journalIds)->delete();
+            Transaction::query()->whereIn('transaction_journal_id', $journalIds)->delete();
+            TransactionJournal::query()->whereIn('id', $journalIds)->delete();
         }
         if (count($groupIds) > 0) {
-            TransactionGroup::whereIn('id', $groupIds)->delete();
+            TransactionGroup::query()->whereIn('id', $groupIds)->delete();
         }
 
         Log::debug(sprintf('Delete %d journal(s)', count($journalIds)));

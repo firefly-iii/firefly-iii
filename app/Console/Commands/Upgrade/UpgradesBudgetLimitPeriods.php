@@ -152,7 +152,7 @@ class UpgradesBudgetLimitPeriods extends Command
 
     private function theresNoLimit(): void
     {
-        $limits = BudgetLimit::whereNull('period')->get();
+        $limits = BudgetLimit::query()->whereNull('period')->get();
 
         /** @var BudgetLimit $limit */
         foreach ($limits as $limit) {

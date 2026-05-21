@@ -122,7 +122,7 @@ class AvailableBudgetEnrichment implements EnrichmentInterface
     private function collectCurrencies(): void
     {
         $ids = array_unique(array_values($this->currencyIds));
-        $set = TransactionCurrency::whereIn('id', $ids)->get();
+        $set = TransactionCurrency::query()->whereIn('id', $ids)->get();
         foreach ($set as $currency) {
             $this->currencies[(int) $currency->id] = $currency;
         }

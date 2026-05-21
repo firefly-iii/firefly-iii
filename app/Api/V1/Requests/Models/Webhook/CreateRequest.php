@@ -75,16 +75,16 @@ class CreateRequest extends FormRequest
         $validProtocols = FireflyConfig::get('valid_url_protocols', config('firefly.valid_url_protocols'))->data;
 
         return [
-            'title'        => 'required|min:1|max:255|uniqueObjectForUser:webhooks,title',
+            'title'        => ['required', 'min:1', 'max:255', 'uniqueObjectForUser:webhooks,title'],
             'active'       => [new IsBoolean()],
             'trigger'      => 'prohibited',
-            'triggers'     => 'required|array|min:1|max:10',
+            'triggers'     => ['required', 'array', 'min:1', 'max:10'],
             'triggers.*'   => sprintf('required|in:%s', $triggers),
             'response'     => 'prohibited',
-            'responses'    => 'required|array|min:1|max:1',
+            'responses'    => ['required', 'array', 'min:1', 'max:1'],
             'responses.*'  => sprintf('required|in:%s', $responses),
             'delivery'     => 'prohibited',
-            'deliveries'   => 'required|array|min:1|max:1',
+            'deliveries'   => ['required', 'array', 'min:1', 'max:1'],
             'deliveries.*' => sprintf('required|in:%s', $deliveries),
             'url'          => ['required', sprintf('url:%s', $validProtocols), new IsValidWebhookUrl()],
         ];

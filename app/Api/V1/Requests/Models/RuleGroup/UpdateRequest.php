@@ -66,7 +66,7 @@ class UpdateRequest extends FormRequest
 
         return [
             'title'       => 'min:1|max:100|uniqueObjectForUser:rule_groups,title,'.$ruleGroup->id,
-            'description' => 'min:1|max:32768|nullable',
+            'description' => ['min:1', 'max:32768', 'nullable'],
             'active'      => [new IsBoolean()],
         ];
     }

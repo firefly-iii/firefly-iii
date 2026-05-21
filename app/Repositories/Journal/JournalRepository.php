@@ -79,7 +79,8 @@ class JournalRepository implements JournalRepositoryInterface, UserGroupInterfac
     #[Override]
     public function countByNotes(string $value, bool $includeDeleted): int
     {
-        $search = Note::where('noteable_type', TransactionJournal::class)
+        $search = Note::query()
+            ->where('noteable_type', TransactionJournal::class)
             ->leftJoin('transaction_journals', 'transaction_journals.id', '=', 'notes.noteable_id')
             ->where('transaction_journals.user_id', $this->user->id)
             ->where('text', 'LIKE', sprintf('%%%s%%', $value))
@@ -136,7 +137,7 @@ class JournalRepository implements JournalRepositoryInterface, UserGroupInterfac
     #[Override]
     public function getAllUncompletedJournals(): Collection
     {
-        return TransactionJournal::where('completed', false)->get(['transaction_journals.*']);
+        return TransactionJournal::query()->where('completed', false)->get(['transaction_journals.*']);
     }
 
     public function getDestinationAccount(TransactionJournal $journal): Account
@@ -203,7 +204,7 @@ class JournalRepository implements JournalRepositoryInterface, UserGroupInterfac
         if ($cache->has()) {
             return new Carbon($cache->get());
         }
-        $entry = TransactionJournalMeta::where('transaction_journal_id', $journalId)->where('name', $field)->first();
+        $entry = TransactionJournalMeta::query()->where('transaction_journal_id', $journalId)->where('name', $field)->first();
         if (null === $entry) {
             return null;
         }
@@ -239,7 +240,7 @@ class JournalRepository implements JournalRepositoryInterface, UserGroupInterfac
     #[Override]
     public function markAsCompleted(Collection $set): void
     {
-        TransactionJournal::whereIn('id', $set->pluck('id')->toArray())->update(['completed' => true]);
+        TransactionJournal::query()->whereIn('id', $set->pluck('id')->toArray())->update(['completed' => true]);
     }
 
     public function reconcileById(int $journalId): void

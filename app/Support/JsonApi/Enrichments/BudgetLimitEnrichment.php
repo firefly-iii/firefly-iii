@@ -110,7 +110,7 @@ class BudgetLimitEnrichment implements EnrichmentInterface
     private function collectBudgets(): void
     {
         $budgetIds  = $this->collection->pluck('budget_id')->unique()->toArray();
-        $budgets    = Budget::whereIn('id', $budgetIds)->get();
+        $budgets    = Budget::query()->whereIn('id', $budgetIds)->get();
 
         $repository = app(OperationsRepository::class);
         $repository->setUser($this->user);
@@ -148,10 +148,11 @@ class BudgetLimitEnrichment implements EnrichmentInterface
     private function collectCurrencies(): void
     {
         $this->currencies[$this->primaryCurrency->id] = $this->primaryCurrency;
-        $currencies                                   = TransactionCurrency::whereIn('id', $this->currencyIds)->whereNot(
-            'id',
-            $this->primaryCurrency->id
-        )->get();
+        $currencies                                   = TransactionCurrency::query()
+            ->whereIn('id', $this->currencyIds)
+            ->whereNot('id', $this->primaryCurrency->id)
+            ->get()
+        ;
         foreach ($currencies as $currency) {
             $this->currencies[(int) $currency->id] = $currency;
         }

@@ -113,7 +113,7 @@ class PiggyBankEventEnrichment implements EnrichmentInterface
         }
         $this->ids = array_unique($this->ids);
         // collect groups with journal info.
-        $set       = TransactionJournal::whereIn('id', $this->journalIds)->get(['id', 'transaction_group_id']);
+        $set       = TransactionJournal::query()->whereIn('id', $this->journalIds)->get(['id', 'transaction_group_id']);
 
         /** @var TransactionJournal $item */
         foreach ($set as $item) {
@@ -130,7 +130,7 @@ class PiggyBankEventEnrichment implements EnrichmentInterface
         }
 
         // get account currency preference for ALL.
-        $set       = AccountMeta::whereIn('account_id', array_values($this->accountIds))->where('name', 'currency_id')->get();
+        $set       = AccountMeta::query()->whereIn('account_id', array_values($this->accountIds))->where('name', 'currency_id')->get();
 
         /** @var AccountMeta $item */
         foreach ($set as $item) {

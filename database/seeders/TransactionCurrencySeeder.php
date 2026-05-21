@@ -91,7 +91,7 @@ class TransactionCurrencySeeder extends Seeder
         $currencies[] = ['code' => 'THB', 'name' => 'Thai baht', 'symbol' => '฿', 'decimal_places' => 2];
 
         foreach ($currencies as $currency) {
-            if (null === TransactionCurrency::where('code', $currency['code'])->first()) {
+            if (null === TransactionCurrency::query()->where('code', $currency['code'])->first()) {
                 try {
                     TransactionCurrency::create($currency);
                 } catch (PDOException) {

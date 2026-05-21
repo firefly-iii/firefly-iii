@@ -95,7 +95,9 @@ final class StoreController extends Controller
             $transactionGroup = $this->groupRepository->store($data);
         } catch (DuplicateTransactionException $e) {
             Log::warning('Caught a duplicate transaction. Return error message.');
-            $validator = Validator::make(['transactions' => [['description' => $e->getMessage()]]], ['transactions.0.description' => new IsDuplicateTransaction()]);
+            $validator = Validator::make(['transactions' => [['description' => $e->getMessage()]]], [
+                'transactions.0.description' => new IsDuplicateTransaction(),
+            ]);
 
             throw new ValidationException($validator);
         } catch (FireflyException $e) {

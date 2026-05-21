@@ -81,7 +81,7 @@ class CorrectsCurrencies extends Command
         }
 
         // get all from journals:
-        $journals        = TransactionJournal::where('user_group_id', $userGroup->id)->groupBy('transaction_currency_id')->get(['transaction_currency_id']);
+        $journals        = TransactionJournal::query()->where('user_group_id', $userGroup->id)->groupBy('transaction_currency_id')->get(['transaction_currency_id']);
         foreach ($journals as $entry) {
             $found[] = (int) $entry->transaction_currency_id;
         }

@@ -489,7 +489,7 @@ class User extends Authenticatable implements OAuthenticatable
         Log::debug(sprintf('in hasAnyRoleInGroup(%s)', implode(', ', $roles)));
 
         /** @var Collection $dbRoles */
-        $dbRoles          = UserRole::whereIn('title', $roles)->get();
+        $dbRoles          = UserRole::query()->whereIn('title', $roles)->get();
         if (0 === $dbRoles->count()) {
             Log::error(sprintf('Could not find role(s): %s. Probably migration mishap.', implode(', ', $roles)));
 

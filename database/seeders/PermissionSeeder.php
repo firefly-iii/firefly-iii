@@ -40,7 +40,7 @@ class PermissionSeeder extends Seeder
             ['name' => 'demo', 'display_name' => 'Demo User', 'description' => 'User is a demo user']
         ];
         foreach ($roles as $role) {
-            if (null === Role::where('name', $role['name'])->first()) {
+            if (null === Role::query()->where('name', $role['name'])->first()) {
                 try {
                     Role::create($role);
                 } catch (PDOException) {

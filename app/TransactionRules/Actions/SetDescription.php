@@ -49,7 +49,7 @@ class SetDescription implements ActionInterface
         $this->refreshNotes($journal);
 
         /** @var TransactionJournal $object */
-        $object = TransactionJournal::where('user_id', $journal['user_id'])->find($journal['transaction_journal_id']);
+        $object = TransactionJournal::query()->where('user_id', $journal['user_id'])->find($journal['transaction_journal_id']);
         $before = $object->description;
         $after  = $this->action->getValue($journal);
 

@@ -223,7 +223,7 @@ class SubscriptionEnrichment implements EnrichmentInterface
             $this->mappedObjects[(int) $entry->object_groupable_id] = (int) $entry->object_group_id;
         }
 
-        $groups = ObjectGroup::whereIn('id', $ids)->get(['id', 'title', 'order'])->toArray();
+        $groups = ObjectGroup::query()->whereIn('id', $ids)->get(['id', 'title', 'order'])->toArray();
         foreach ($groups as $group) {
             $group['id']                            = (int) $group['id'];
             $group['order']                         = (int) $group['order'];

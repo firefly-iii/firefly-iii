@@ -35,7 +35,11 @@ class TransactionType extends Model
     use ReturnsIntegerIdTrait;
     use SoftDeletes;
 
-    protected $casts    = ['created_at' => 'datetime', 'updated_at' => 'datetime', 'deleted_at' => 'datetime'];
+    protected function casts(): array
+    {
+        return ['created_at' => 'datetime', 'updated_at' => 'datetime', 'deleted_at' => 'datetime'];
+    }
+
     protected $fillable = ['type'];
 
     /**
@@ -82,12 +86,5 @@ class TransactionType extends Model
     public function transactionJournals(): HasMany
     {
         return $this->hasMany(TransactionJournal::class);
-    }
-
-    protected function casts(): array
-    {
-        return [
-            // 'type' => TransactionTypeEnum::class,
-        ];
     }
 }

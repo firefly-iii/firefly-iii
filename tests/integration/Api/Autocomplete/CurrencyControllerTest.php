@@ -46,7 +46,7 @@ final class CurrencyControllerTest extends TestCase
     {
         // test API
         $response = $this->get(route('api.v1.autocomplete.currencies'), ['Accept' => 'application/json']);
-        $response->assertStatus(401);
+        $response->assertUnauthorized();
         $response->assertHeader('Content-Type', 'application/json');
         $response->assertContent('{"message":"Unauthenticated.","exception":"AuthenticationException"}');
     }
@@ -62,7 +62,7 @@ final class CurrencyControllerTest extends TestCase
 
         // test API
         $response = $this->get(route('api.v1.autocomplete.currencies'), ['Accept' => 'application/json']);
-        $response->assertStatus(200);
+        $response->assertOk();
         $response->assertHeader('Content-Type', 'application/json');
         $response->assertJsonCount(1); // always connects to EUR.
     }
@@ -75,7 +75,7 @@ final class CurrencyControllerTest extends TestCase
 
         // test API
         $response = $this->get(route('api.v1.autocomplete.currencies'), ['Accept' => 'application/json']);
-        $response->assertStatus(200);
+        $response->assertOk();
         $response->assertHeader('Content-Type', 'application/json');
     }
 
@@ -90,7 +90,7 @@ final class CurrencyControllerTest extends TestCase
 
         // test API
         $response = $this->get(route('api.v1.autocomplete.currencies'), ['Accept' => 'application/json']);
-        $response->assertStatus(200);
+        $response->assertOk();
         $response->assertHeader('Content-Type', 'application/json');
         $response->assertJsonFragment(['name' => 'Currency 1']);
         $response->assertJsonFragment(['code' => 'CUR1']);
@@ -106,7 +106,7 @@ final class CurrencyControllerTest extends TestCase
 
         $this->createTestCurrencies(20, true);
         $response = $this->get(route('api.v1.autocomplete.currencies', ['query' => 'Currency 1', 'limit' => 20]), ['Accept' => 'application/json']);
-        $response->assertStatus(200);
+        $response->assertOk();
         $response->assertHeader('Content-Type', 'application/json');
         // Currency 1, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19 (11)
         $response->assertJsonCount(11);
@@ -123,7 +123,7 @@ final class CurrencyControllerTest extends TestCase
 
         // test API
         $response = $this->get(route('api.v1.autocomplete.currencies', ['query' => 'Currency 1']), ['Accept' => 'application/json']);
-        $response->assertStatus(200);
+        $response->assertOk();
         $response->assertHeader('Content-Type', 'application/json');
         $response->assertJsonFragment(['name' => 'Currency 1']);
         $response->assertJsonStructure(['*' => ['id', 'name', 'code', 'symbol', 'decimal_places']]);

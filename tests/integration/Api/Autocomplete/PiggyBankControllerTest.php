@@ -51,7 +51,7 @@ final class PiggyBankControllerTest extends TestCase
     {
         // test API
         $response = $this->get(route('api.v1.autocomplete.piggy-banks'), ['Accept' => 'application/json']);
-        $response->assertStatus(401);
+        $response->assertUnauthorized();
         $response->assertHeader('Content-Type', 'application/json');
         $response->assertContent('{"message":"Unauthenticated.","exception":"AuthenticationException"}');
     }
@@ -63,7 +63,7 @@ final class PiggyBankControllerTest extends TestCase
         $this->actingAs($user);
 
         $response = $this->get(route('api.v1.autocomplete.piggy-banks'), ['Accept' => 'application/json']);
-        $response->assertStatus(200);
+        $response->assertOk();
         $response->assertHeader('Content-Type', 'application/json');
     }
 
@@ -74,7 +74,7 @@ final class PiggyBankControllerTest extends TestCase
 
         $this->createTestPiggyBanks(5, $user);
         $response = $this->get(route('api.v1.autocomplete.piggy-banks'), ['Accept' => 'application/json']);
-        $response->assertStatus(200);
+        $response->assertOk();
         $response->assertHeader('Content-Type', 'application/json');
         $response->assertJsonCount(5);
         $response->assertJsonFragment(['name' => 'Piggy bank 1']);
@@ -89,7 +89,7 @@ final class PiggyBankControllerTest extends TestCase
         $this->createTestPiggyBanks(20, $user);
         $response = $this->get(route('api.v1.autocomplete.piggy-banks', ['query' => 'Piggy bank 1', 'limit' => 20]), ['Accept' => 'application/json']);
 
-        $response->assertStatus(200);
+        $response->assertOk();
         $response->assertHeader('Content-Type', 'application/json');
         // Budget 1, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19 (11)
         $response->assertJsonCount(11);
@@ -104,7 +104,7 @@ final class PiggyBankControllerTest extends TestCase
         $this->createTestPiggyBanks(5, $user);
         $response = $this->get(route('api.v1.autocomplete.piggy-banks', ['query' => 'Piggy', 'limit' => 3]), ['Accept' => 'application/json']);
 
-        $response->assertStatus(200);
+        $response->assertOk();
         $response->assertHeader('Content-Type', 'application/json');
         $response->assertJsonCount(3);
     }

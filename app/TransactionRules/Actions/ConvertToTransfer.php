@@ -62,14 +62,14 @@ class ConvertToTransfer implements ActionInterface
 
         // make object from array (so the data is fresh).
         /** @var null|TransactionJournal $object */
-        $object       = TransactionJournal::where('user_id', $journal['user_id'])->find($journal['transaction_journal_id']);
+        $object       = TransactionJournal::query()->where('user_id', $journal['user_id'])->find($journal['transaction_journal_id']);
         if (null === $object) {
             Log::error(sprintf('Cannot find journal #%d, cannot convert to transfer.', $journal['transaction_journal_id']));
             event(new RuleActionFailedOnArray($this->action, $journal, trans('rules.journal_not_found')));
 
             return false;
         }
-        $groupCount   = TransactionJournal::where('transaction_group_id', $journal['transaction_group_id'])->count();
+        $groupCount   = TransactionJournal::query()->where('transaction_group_id', $journal['transaction_group_id'])->count();
         if ($groupCount > 1) {
             Log::error(sprintf('Group #%d has more than one transaction in it, cannot convert to transfer.', $journal['transaction_group_id']));
             event(new RuleActionFailedOnArray($this->action, $journal, trans('rules.split_group')));
@@ -232,10 +232,10 @@ class ConvertToTransfer implements ActionInterface
         }
 
         /** @var Transaction $sourceTransaction */
-        $sourceTransaction           = Transaction::where('transaction_journal_id', '=', $journal->id)->where('amount', '<', 0)->first();
+        $sourceTransaction           = Transaction::query()->where('transaction_journal_id', '=', $journal->id)->where('amount', '<', 0)->first();
 
         /** @var Transaction $destTransaction */
-        $destTransaction             = Transaction::where('transaction_journal_id', '=', $journal->id)->where('amount', '>', 0)->first();
+        $destTransaction             = Transaction::query()->where('transaction_journal_id', '=', $journal->id)->where('amount', '>', 0)->first();
         // update destination transaction:
         $destTransaction->account_id = $opposing->id;
         $destTransaction->save();

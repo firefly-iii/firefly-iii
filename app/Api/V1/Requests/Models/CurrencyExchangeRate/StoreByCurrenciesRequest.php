@@ -48,7 +48,7 @@ class StoreByCurrenciesRequest extends FormRequest
      */
     public function rules(): array
     {
-        return ['*' => 'required|numeric|min:0.0000000001'];
+        return ['*' => ['required', 'numeric', 'min:0.0000000001']];
     }
 
     public function withValidator(Validator $validator): void

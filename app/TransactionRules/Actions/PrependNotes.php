@@ -44,7 +44,8 @@ class PrependNotes implements ActionInterface
 
     public function actOnArray(array $journal): bool
     {
-        $dbNote       = Note::where('noteable_id', (int) $journal['transaction_journal_id'])
+        $dbNote       = Note::query()
+            ->where('noteable_id', (int) $journal['transaction_journal_id'])
             ->where('noteable_type', TransactionJournal::class)
             ->first(['notes.*'])
         ;
@@ -63,7 +64,7 @@ class PrependNotes implements ActionInterface
 
         // journal
         /** @var TransactionJournal $object */
-        $object       = TransactionJournal::where('user_id', $journal['user_id'])->find($journal['transaction_journal_id']);
+        $object       = TransactionJournal::query()->where('user_id', $journal['user_id'])->find($journal['transaction_journal_id']);
 
         // audit log
         event(new TransactionGroupRequestsAuditLogEntry($this->action->rule, $object, 'update_notes', $before, $text));

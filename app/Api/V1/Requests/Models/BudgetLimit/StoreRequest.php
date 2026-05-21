@@ -71,12 +71,12 @@ class StoreRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'start'         => 'required|before:end|date',
-            'end'           => 'required|after:start|date',
+            'start'         => ['required', 'before:end', 'date'],
+            'end'           => ['required', 'after:start', 'date'],
             'amount'        => ['required', new IsValidPositiveAmount()],
-            'currency_id'   => 'numeric|exists:transaction_currencies,id',
-            'currency_code' => 'min:3|max:51|exists:transaction_currencies,code',
-            'notes'         => 'nullable|min:0|max:32768',
+            'currency_id'   => ['numeric', 'exists:transaction_currencies,id'],
+            'currency_code' => ['min:3', 'max:51', 'exists:transaction_currencies,code'],
+            'notes'         => ['nullable', 'min:0', 'max:32768'],
 
             // webhooks
             'fire_webhooks' => [new IsBoolean()],

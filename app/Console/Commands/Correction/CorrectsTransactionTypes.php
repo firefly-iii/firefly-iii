@@ -81,7 +81,7 @@ class CorrectsTransactionTypes extends Command
      */
     private function collectJournals(): Collection
     {
-        return TransactionJournal::with(['transactionType', 'transactions', 'transactions.account', 'transactions.account.accountType'])->get();
+        return TransactionJournal::query()->with(['transactionType', 'transactions', 'transactions.account', 'transactions.account.accountType'])->get();
     }
 
     private function fixJournal(TransactionJournal $journal): bool

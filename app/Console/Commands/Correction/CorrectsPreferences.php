@@ -47,7 +47,7 @@ class CorrectsPreferences extends Command
         foreach ($users as $user) {
             $count = 0;
             foreach ($items as $item) {
-                $preference = Preference::where('name', $item)->where('user_id', $user->id)->first();
+                $preference = Preference::query()->where('name', $item)->where('user_id', $user->id)->first();
                 if (null === $preference) {
                     continue;
                 }
