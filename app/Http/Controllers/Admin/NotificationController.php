@@ -129,7 +129,7 @@ final class NotificationController extends Controller
         if ((time() - $lastNotification) < 120) {
             session()->flash('error', (string) trans('firefly.test_rate_limited'));
 
-            return redirect(route('settings.notification.index'));
+             return redirect(route('settings.notification.index'));
         }
 
         $all              = $request->only(['test_submit']);
