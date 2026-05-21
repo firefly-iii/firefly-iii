@@ -55,7 +55,7 @@ class StoreByDateRequest extends FormRequest
     /**
      * The rules that the incoming request must be matched against.
      *
-     * @return array<string, string>
+     * @return array
      */
     public function rules(): array
     {

@@ -47,7 +47,7 @@ class MoveTransactionsRequest extends FormRequest
     }
 
     /**
-     * @return string[]
+     * @return array
      */
     public function rules(): array
     {
