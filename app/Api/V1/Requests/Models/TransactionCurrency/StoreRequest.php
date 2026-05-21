@@ -69,10 +69,10 @@ class StoreRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'name'           => 'required|min:1|max:255|unique:transaction_currencies,name',
-            'code'           => 'required|min:3|max:32|unique:transaction_currencies,code',
-            'symbol'         => 'required|min:1|max:32|unique:transaction_currencies,symbol',
-            'decimal_places' => 'numeric|min:0|max:12',
+            'name'           => ['required', 'min:1', 'max:255', 'unique:transaction_currencies,name'],
+            'code'           => ['required', 'min:3', 'max:32', 'unique:transaction_currencies,code'],
+            'symbol'         => ['required', 'min:1', 'max:32', 'unique:transaction_currencies,symbol'],
+            'decimal_places' => ['numeric', 'min:0', 'max:12'],
             'enabled'        => [new IsBoolean()],
             'default'        => [new IsBoolean()],
         ];

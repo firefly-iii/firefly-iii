@@ -64,9 +64,9 @@ class StoreRequest extends FormRequest
         $model  = $this->convertString('attachable_type');
 
         return [
-            'filename'        => 'required|min:1|max:255',
+            'filename'        => ['required', 'min:1', 'max:255'],
             'title'           => ['min:1', 'max:255'],
-            'notes'           => 'min:1|max:32768',
+            'notes'           => ['min:1', 'max:32768'],
             'attachable_type' => sprintf('required|in:%s', $models),
             'attachable_id'   => ['required', 'numeric', new IsValidAttachmentModel($model)],
         ];

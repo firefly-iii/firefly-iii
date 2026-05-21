@@ -38,7 +38,7 @@ class TransactionTypeSeeder extends Seeder
     {
         /** @var TransactionTypeEnum $type */
         foreach (TransactionTypeEnum::cases() as $type) {
-            if (null === TransactionType::where('type', $type->value)->first()) {
+            if (null === TransactionType::query()->where('type', $type->value)->first()) {
                 try {
                     TransactionType::create(['type' => $type->value]);
                 } catch (PDOException $e) {

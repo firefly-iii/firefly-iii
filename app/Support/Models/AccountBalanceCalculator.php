@@ -181,7 +181,7 @@ class AccountBalanceCalculator
     public static function recalculateAll(bool $forced): void
     {
         if ($forced) {
-            Transaction::whereNull('deleted_at')->update(['balance_dirty' => true]);
+            Transaction::query()->whereNull('deleted_at')->update(['balance_dirty' => true]);
 
             // also delete account balances.
             // AccountBalance::whereNotNull('created_at')->delete();

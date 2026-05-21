@@ -86,7 +86,7 @@ class CurrencyRepository implements CurrencyRepositoryInterface, UserGroupInterf
         }
 
         // is being used in accounts:
-        $meta             = AccountMeta::where('name', 'currency_id')
+        $meta             = AccountMeta::query()->where('name', 'currency_id')
             ->where('data', json_encode((string) $currency->id))
             ->count()
         ;
@@ -97,7 +97,7 @@ class CurrencyRepository implements CurrencyRepositoryInterface, UserGroupInterf
         }
 
         // second search using integer check.
-        $meta             = AccountMeta::where('name', 'currency_id')
+        $meta             = AccountMeta::query()->where('name', 'currency_id')
             ->where('data', json_encode((int) $currency->id))
             ->count()
         ;
@@ -108,7 +108,7 @@ class CurrencyRepository implements CurrencyRepositoryInterface, UserGroupInterf
         }
 
         // is being used in bills:
-        $bills            = Bill::where('transaction_currency_id', $currency->id)->count();
+        $bills            = Bill::query()->where('transaction_currency_id', $currency->id)->count();
         if ($bills > 0) {
             Log::info(sprintf('Used in %d bills as currency, return true. ', $bills));
 
@@ -116,8 +116,8 @@ class CurrencyRepository implements CurrencyRepositoryInterface, UserGroupInterf
         }
 
         // is being used in recurring transactions
-        $recurringAmount  = RecurrenceTransaction::where('transaction_currency_id', $currency->id)->count();
-        $recurringForeign = RecurrenceTransaction::where('foreign_currency_id', $currency->id)->count();
+        $recurringAmount  = RecurrenceTransaction::query()->where('transaction_currency_id', $currency->id)->count();
+        $recurringForeign = RecurrenceTransaction::query()->where('foreign_currency_id', $currency->id)->count();
 
         if ($recurringAmount > 0 || $recurringForeign > 0) {
             Log::info(sprintf('Used in %d recurring transactions as (foreign) currency id, return true. ', $recurringAmount + $recurringForeign));
@@ -139,7 +139,7 @@ class CurrencyRepository implements CurrencyRepositoryInterface, UserGroupInterf
         }
 
         // is being used in available budgets
-        $availableBudgets = AvailableBudget::where('transaction_currency_id', $currency->id)->count();
+        $availableBudgets = AvailableBudget::query()->where('transaction_currency_id', $currency->id)->count();
         if ($availableBudgets > 0) {
             Log::info(sprintf('Used in %d available budgets as currency, return true. ', $availableBudgets));
 
@@ -147,7 +147,7 @@ class CurrencyRepository implements CurrencyRepositoryInterface, UserGroupInterf
         }
 
         // is being used in budget limits
-        $budgetLimit      = BudgetLimit::where('transaction_currency_id', $currency->id)->count();
+        $budgetLimit      = BudgetLimit::query()->where('transaction_currency_id', $currency->id)->count();
         if ($budgetLimit > 0) {
             Log::info(sprintf('Used in %d budget limits as currency, return true. ', $budgetLimit));
 
@@ -230,7 +230,7 @@ class CurrencyRepository implements CurrencyRepositoryInterface, UserGroupInterf
 
     public function findByName(string $name): ?TransactionCurrency
     {
-        return TransactionCurrency::where('name', $name)->first();
+        return TransactionCurrency::query()->where('name', $name)->first();
     }
 
     /**
@@ -305,7 +305,7 @@ class CurrencyRepository implements CurrencyRepositoryInterface, UserGroupInterf
      */
     public function getAll(): Collection
     {
-        $all   = TransactionCurrency::orderBy('code', 'ASC')->get();
+        $all   = TransactionCurrency::query()->orderBy('code', 'ASC')->get();
         $local = $this->get();
 
         return $all->map(static function (TransactionCurrency $current) use ($local): TransactionCurrency {
@@ -326,7 +326,7 @@ class CurrencyRepository implements CurrencyRepositoryInterface, UserGroupInterf
      */
     public function getCompleteSet(): Collection
     {
-        return TransactionCurrency::where('enabled', true)->orderBy('code', 'ASC')->get();
+        return TransactionCurrency::query()->where('enabled', true)->orderBy('code', 'ASC')->get();
     }
 
     /**
@@ -382,7 +382,7 @@ class CurrencyRepository implements CurrencyRepositoryInterface, UserGroupInterf
 
     public function searchCurrency(string $search, int $limit): Collection
     {
-        $query = TransactionCurrency::where('enabled', true)->orderBy('code', 'ASC');
+        $query = TransactionCurrency::query()->where('enabled', true)->orderBy('code', 'ASC');
         if ('' !== $search) {
             $query->whereLike('name', sprintf('%%%s%%', $search));
         }
@@ -466,6 +466,6 @@ class CurrencyRepository implements CurrencyRepositoryInterface, UserGroupInterf
         $count = $currency->transactions()->whereNull('deleted_at')->count() + $currency->transactionJournals()->whereNull('deleted_at')->count();
 
         // also count foreign:
-        return $count + Transaction::where('foreign_currency_id', $currency->id)->count();
+        return $count + Transaction::query()->where('foreign_currency_id', $currency->id)->count();
     }
 }

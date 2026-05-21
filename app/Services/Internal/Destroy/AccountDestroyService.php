@@ -55,7 +55,7 @@ class AccountDestroyService
         }
 
         // delete piggy banks:
-        PiggyBank::where('account_id', $account->id)->delete();
+        PiggyBank::query()->where('account_id', $account->id)->delete();
 
         // delete account meta:
         $account->accountMeta()->delete();
@@ -69,7 +69,7 @@ class AccountDestroyService
         Log::debug(sprintf('Move from account #%d to #%d', $account->id, $moveTo->id));
         DB::table('transactions')->where('account_id', $account->id)->update(['account_id' => $moveTo->id]);
 
-        $collection = Transaction::groupBy('transaction_journal_id', 'account_id')->where('account_id', $moveTo->id)->get([
+        $collection = Transaction::query()->groupBy('transaction_journal_id', 'account_id')->where('account_id', $moveTo->id)->get([
             'transaction_journal_id',
             'account_id',
             DB::raw('count(*) as the_count'),
@@ -112,7 +112,7 @@ class AccountDestroyService
             Log::debug(sprintf('Found opening balance journal with ID #%d', $journalId));
 
             // get transactions with this journal (should be just one):
-            $transactions = Transaction::where('transaction_journal_id', $journalId)->where('account_id', '!=', $account->id)->get();
+            $transactions = Transaction::query()->where('transaction_journal_id', $journalId)->where('account_id', '!=', $account->id)->get();
 
             /** @var Transaction $transaction */
             foreach ($transactions as $transaction) {
@@ -137,7 +137,7 @@ class AccountDestroyService
 
     private function destroyRecurrences(Account $account): void
     {
-        $recurrences    = RecurrenceTransaction::where(static function (Builder $q) use ($account): void {
+        $recurrences    = RecurrenceTransaction::query()->where(static function (Builder $q) use ($account): void {
             $q->where('source_id', $account->id);
             $q->orWhere('destination_id', $account->id);
         })->get(['recurrence_id'])->pluck('recurrence_id')->toArray();

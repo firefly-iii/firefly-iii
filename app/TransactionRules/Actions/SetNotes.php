@@ -43,7 +43,7 @@ class SetNotes implements ActionInterface
 
     public function actOnArray(array $journal): bool
     {
-        $dbNote       = Note::where('noteable_id', $journal['transaction_journal_id'])->where('noteable_type', TransactionJournal::class)->first();
+        $dbNote       = Note::query()->where('noteable_id', $journal['transaction_journal_id'])->where('noteable_type', TransactionJournal::class)->first();
         if (null === $dbNote) {
             $dbNote                = new Note();
             $dbNote->noteable_id   = $journal['transaction_journal_id'];
@@ -63,7 +63,7 @@ class SetNotes implements ActionInterface
         ));
 
         /** @var TransactionJournal $object */
-        $object       = TransactionJournal::where('user_id', $journal['user_id'])->find($journal['transaction_journal_id']);
+        $object       = TransactionJournal::query()->where('user_id', $journal['user_id'])->find($journal['transaction_journal_id']);
 
         event(new TransactionGroupRequestsAuditLogEntry($this->action->rule, $object, 'update_notes', $oldNotes, $newNotes));
 

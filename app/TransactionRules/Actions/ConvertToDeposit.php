@@ -57,14 +57,14 @@ class ConvertToDeposit implements ActionInterface
 
         // make object from array (so the data is fresh).
         /** @var null|TransactionJournal $object */
-        $object      = TransactionJournal::where('user_id', $journal['user_id'])->find($journal['transaction_journal_id']);
+        $object      = TransactionJournal::query()->where('user_id', $journal['user_id'])->find($journal['transaction_journal_id']);
         if (null === $object) {
             Log::error(sprintf('Cannot find journal #%d, cannot convert to deposit.', $journal['transaction_journal_id']));
             event(new RuleActionFailedOnArray($this->action, $journal, trans('rules.journal_not_found')));
 
             return false;
         }
-        $groupCount  = TransactionJournal::where('transaction_group_id', $journal['transaction_group_id'])->count();
+        $groupCount  = TransactionJournal::query()->where('transaction_group_id', $journal['transaction_group_id'])->count();
         if ($groupCount > 1) {
             Log::error(sprintf('Group #%d has more than one transaction in it, cannot convert to deposit.', $journal['transaction_group_id']));
             event(new RuleActionFailedOnArray($this->action, $journal, trans('rules.split_group')));

@@ -490,7 +490,7 @@ class ForcesDecimalSize extends Command
     {
         // select all transactions with this currency and issue.
         /** @var Builder $query */
-        $query  = Transaction::where('transaction_currency_id', $currency->id)->where(
+        $query  = Transaction::query()->where('transaction_currency_id', $currency->id)->where(
             DB::raw(sprintf('CAST(amount as %s)', $this->cast)),
             $this->operator,
             DB::raw(sprintf($this->regularExpression, $currency->decimal_places))
@@ -519,7 +519,7 @@ class ForcesDecimalSize extends Command
 
         // select all transactions with this FOREIGN currency and issue.
         /** @var Builder $query */
-        $query  = Transaction::where('foreign_currency_id', $currency->id)->where(
+        $query  = Transaction::query()->where('foreign_currency_id', $currency->id)->where(
             DB::raw(sprintf('CAST(foreign_amount as %s)', $this->cast)),
             $this->operator,
             DB::raw(sprintf($this->regularExpression, $currency->decimal_places))

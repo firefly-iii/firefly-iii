@@ -169,7 +169,7 @@ class GenericRequest extends FormRequest
         $this->bills      = new Collection();
         $this->tags       = new Collection();
 
-        return ['start' => 'required|date', 'end' => 'required|date|after_or_equal:start'];
+        return ['start' => ['required', 'date'], 'end' => ['required', 'date', 'after_or_equal:start']];
     }
 
     private function parseAccounts(): void

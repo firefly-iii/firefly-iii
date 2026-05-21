@@ -63,7 +63,7 @@ class CategoryFormRequest extends FormRequest
         }
 
         // fixed
-        return ['name' => $nameRule, 'notes' => 'min:1|max:32768|nullable'];
+        return ['name' => $nameRule, 'notes' => ['min:1', 'max:32768', 'nullable']];
     }
 
     public function withValidator(Validator $validator): void

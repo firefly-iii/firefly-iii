@@ -68,13 +68,13 @@ class RemoteUserProvider implements UserProvider
     public function retrieveById($identifier): User
     {
         Log::debug(sprintf('Now at %s(%s)', __METHOD__, $identifier));
-        $user = User::where('email', $identifier)->first();
+        $user = User::query()->where('email', $identifier)->first();
         if (null === $user) {
             Log::debug(sprintf('User with email "%s" not found. Will be created.', $identifier));
             $user = User::create(['blocked' => false, 'blocked_code' => null, 'email' => $identifier, 'password' => bcrypt(Str::random(64))]);
             // if this is the first user, give them admin as well.
             if (1 === User::count()) {
-                $roleObject = Role::where('name', 'owner')->first();
+                $roleObject = Role::query()->where('name', 'owner')->first();
                 $user->roles()->attach($roleObject);
             }
         }

@@ -62,15 +62,15 @@ class ConfigurationRequest extends FormRequest
     {
         // fixed
         return [
-            'single_user_mode'        => 'min:0|max:1|numeric',
-            'enable_exchange_rates'   => 'min:0|max:1|numeric',
-            'use_running_balance'     => 'min:0|max:1|numeric',
-            'enable_external_map'     => 'min:0|max:1|numeric',
-            'enable_external_rates'   => 'min:0|max:1|numeric',
-            'allow_webhooks'          => 'min:0|max:1|numeric',
-            'enable_batch_processing' => 'min:0|max:1|numeric',
-            'valid_url_protocols'     => 'min:0|max:255',
-            'is_demo_site'            => 'min:0|max:1|numeric',
+            'single_user_mode'        => ['min:0', 'max:1', 'numeric'],
+            'enable_exchange_rates'   => ['min:0', 'max:1', 'numeric'],
+            'use_running_balance'     => ['min:0', 'max:1', 'numeric'],
+            'enable_external_map'     => ['min:0', 'max:1', 'numeric'],
+            'enable_external_rates'   => ['min:0', 'max:1', 'numeric'],
+            'allow_webhooks'          => ['min:0', 'max:1', 'numeric'],
+            'enable_batch_processing' => ['min:0', 'max:1', 'numeric'],
+            'valid_url_protocols'     => ['min:0', 'max:255'],
+            'is_demo_site'            => ['min:0', 'max:1', 'numeric'],
         ];
     }
 

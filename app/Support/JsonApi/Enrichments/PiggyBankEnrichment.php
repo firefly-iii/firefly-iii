@@ -192,7 +192,7 @@ class PiggyBankEnrichment implements EnrichmentInterface
         $this->ids     = array_unique($this->ids);
 
         // collect currencies.
-        $currencies    = TransactionCurrency::whereIn('id', $this->currencyIds)->get();
+        $currencies    = TransactionCurrency::query()->whereIn('id', $this->currencyIds)->get();
         foreach ($currencies as $currency) {
             $this->currencies[(int) $currency->id] = $currency;
         }
@@ -233,7 +233,7 @@ class PiggyBankEnrichment implements EnrichmentInterface
         }
 
         // get account currency preference for ALL.
-        $set           = AccountMeta::whereIn('account_id', $allAccountIds)->where('name', 'currency_id')->get();
+        $set           = AccountMeta::query()->whereIn('account_id', $allAccountIds)->where('name', 'currency_id')->get();
 
         /** @var AccountMeta $item */
         foreach ($set as $item) {
@@ -246,7 +246,7 @@ class PiggyBankEnrichment implements EnrichmentInterface
             // $this->accountCurrencies[$accountId] = $this->currencies[$currencyId];
         }
 
-        $set           = Account::whereIn('id', $allAccountIds)->get();
+        $set           = Account::query()->whereIn('id', $allAccountIds)->get();
 
         /** @var Account $item */
         foreach ($set as $item) {
@@ -286,7 +286,7 @@ class PiggyBankEnrichment implements EnrichmentInterface
             $this->mappedObjects[(int) $entry->object_groupable_id] = (int) $entry->object_group_id;
         }
 
-        $groups = ObjectGroup::whereIn('id', $ids)->get(['id', 'title', 'order'])->toArray();
+        $groups = ObjectGroup::query()->whereIn('id', $ids)->get(['id', 'title', 'order'])->toArray();
         foreach ($groups as $group) {
             $group['id']                            = (int) $group['id'];
             $group['order']                         = (int) $group['order'];

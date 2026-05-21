@@ -48,7 +48,7 @@ class AppendNotes implements ActionInterface
     public function actOnArray(array $journal): bool
     {
         $this->refreshNotes($journal);
-        $dbNote       = Note::where('noteable_id', (int) $journal['transaction_journal_id'])
+        $dbNote       = Note::query()->where('noteable_id', (int) $journal['transaction_journal_id'])
             ->where('noteable_type', TransactionJournal::class)
             ->first(['notes.*'])
         ;
@@ -65,7 +65,7 @@ class AppendNotes implements ActionInterface
         $dbNote->save();
 
         /** @var TransactionJournal $object */
-        $object       = TransactionJournal::where('user_id', $journal['user_id'])->find($journal['transaction_journal_id']);
+        $object       = TransactionJournal::query()->where('user_id', $journal['user_id'])->find($journal['transaction_journal_id']);
 
         Log::debug(sprintf('RuleAction AppendNotes appended "%s" to "%s".', $append, $before));
         event(new TransactionGroupRequestsAuditLogEntry($this->action->rule, $object, 'update_notes', $before, $text));

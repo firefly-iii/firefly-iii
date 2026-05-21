@@ -42,7 +42,7 @@ class LinkTypeSeeder extends Seeder
             ['name' => 'Reimbursement', 'inward' => 'is (partially) reimbursed by', 'outward' => '(partially) reimburses', 'editable' => false]
         ];
         foreach ($types as $type) {
-            if (null === LinkType::where('name', $type['name'])->first()) {
+            if (null === LinkType::query()->where('name', $type['name'])->first()) {
                 try {
                     LinkType::create($type);
                 } catch (PDOException) {

@@ -48,12 +48,12 @@ class UserRepository implements UserRepositoryInterface
 {
     public function all(): Collection
     {
-        return User::orderBy('id', 'DESC')->get(['users.*']);
+        return User::query()->orderBy('id', 'DESC')->get(['users.*']);
     }
 
     public function attachRole(User $user, string $role): bool
     {
-        $roleObject = Role::where('name', $role)->first();
+        $roleObject = Role::query()->where('name', $role)->first();
         if (null === $roleObject) {
             Log::error(sprintf('Could not find role "%s" in attachRole()', $role));
 
@@ -168,7 +168,7 @@ class UserRepository implements UserRepositoryInterface
 
     public function findByEmail(string $email): ?User
     {
-        return User::where('email', $email)->first();
+        return User::query()->where('email', $email)->first();
     }
 
     /**
@@ -176,17 +176,17 @@ class UserRepository implements UserRepositoryInterface
      */
     public function first(): ?User
     {
-        return User::orderBy('id', 'ASC')->first();
+        return User::query()->orderBy('id', 'ASC')->first();
     }
 
     public function getInvitedUsers(): Collection
     {
-        return InvitedUser::with('user')->get();
+        return InvitedUser::query()->with('user')->get();
     }
 
     public function getRole(string $role): ?Role
     {
-        return Role::where('name', $role)->first();
+        return Role::query()->where('name', $role)->first();
     }
 
     public function getRoleByUser(User $user): ?string
@@ -237,7 +237,7 @@ class UserRepository implements UserRepositoryInterface
             'bills'               => $user->bills()->count(),
             'categories'          => $user->categories()->count(),
             'budgets'             => $user->budgets()->count(),
-            'budgets_with_limits' => BudgetLimit::distinct()
+            'budgets_with_limits' => BudgetLimit::query()->distinct()
                 ->leftJoin('budgets', 'budgets.id', '=', 'budget_limits.budget_id')
                 ->where('amount', '>', 0)
                 ->whereNull('budgets.deleted_at')
@@ -311,7 +311,7 @@ class UserRepository implements UserRepositoryInterface
 
     public function redeemCode(string $code): void
     {
-        $obj = InvitedUser::where('invite_code', $code)->where('redeemed', 0)->first();
+        $obj = InvitedUser::query()->where('invite_code', $code)->where('redeemed', 0)->first();
         if (null !== $obj) {
             $obj->redeemed = true;
             $obj->save();
@@ -412,7 +412,7 @@ class UserRepository implements UserRepositoryInterface
     public function validateInviteCode(string $code): bool
     {
         $now     = today(config('app.timezone'));
-        $invitee = InvitedUser::where('invite_code', $code)->where('expires', '>', $now->format('Y-m-d H:i:s'))->where('redeemed', 0)->first();
+        $invitee = InvitedUser::query()->where('invite_code', $code)->where('expires', '>', $now->format('Y-m-d H:i:s'))->where('redeemed', 0)->first();
 
         return null !== $invitee;
     }

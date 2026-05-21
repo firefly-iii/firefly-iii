@@ -85,7 +85,7 @@ class UpdateRequest extends FormRequest
         return [
             'name'                      => sprintf('min:1|max:100|uniqueObjectForUser:budgets,name,%d', $budget->id),
             'active'                    => [new IsBoolean()],
-            'notes'                     => 'nullable|min:1|max:32768',
+            'notes'                     => ['nullable', 'min:1', 'max:32768'],
             'auto_budget_type'          => 'in:reset,rollover,adjusted,none',
             'auto_budget_currency_id'   => 'exists:transaction_currencies,id',
             'auto_budget_currency_code' => 'exists:transaction_currencies,code',

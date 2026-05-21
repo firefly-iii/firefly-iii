@@ -89,8 +89,8 @@ class CategoryRepository implements CategoryRepositoryInterface, UserGroupInterf
         foreach ($categories as $category) {
             DB::table('category_transaction')->where('category_id', $category->id)->delete();
             DB::table('category_transaction_journal')->where('category_id', $category->id)->delete();
-            RecurrenceTransactionMeta::where('name', 'category_id')->where('value', $category->id)->delete();
-            RuleAction::where('action_type', 'set_category')->where('action_value', $category->name)->delete();
+            RecurrenceTransactionMeta::query()->where('name', 'category_id')->where('value', $category->id)->delete();
+            RuleAction::query()->where('action_type', 'set_category')->where('action_value', $category->name)->delete();
             $category->delete();
         }
         Log::channel('audit')->info('Delete all categories through destroyAll');

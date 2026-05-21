@@ -50,8 +50,8 @@ class DeletedTransactionJournalObserver
         });
 
         // delete all links:
-        TransactionJournalLink::where('source_id', $transactionJournal->id)->delete();
-        TransactionJournalLink::where('destination_id', $transactionJournal->id)->delete();
+        TransactionJournalLink::query()->where('source_id', $transactionJournal->id)->delete();
+        TransactionJournalLink::query()->where('destination_id', $transactionJournal->id)->delete();
 
         // update events
         // TODO move to repository

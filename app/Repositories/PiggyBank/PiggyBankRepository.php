@@ -372,7 +372,7 @@ class PiggyBankRepository implements PiggyBankRepositoryInterface, UserGroupInte
     #[Override]
     public function purgeAll(): void
     {
-        PiggyBank::withTrashed()
+        PiggyBank::query()->withTrashed()
             ->whereNotNull('piggy_banks.deleted_at')
             ->leftJoin('account_piggy_bank', 'account_piggy_bank.piggy_bank_id', '=', 'piggy_banks.id')
             ->leftJoin('accounts', 'accounts.id', '=', 'account_piggy_bank.account_id')

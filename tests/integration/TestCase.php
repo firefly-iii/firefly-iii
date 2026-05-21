@@ -60,7 +60,7 @@ abstract class TestCase extends BaseTestCase
     protected function createAuthenticatedUser(): User
     {
         $group = UserGroup::create(['title' => 'test@email.com']);
-        $role  = UserRole::where('title', 'owner')->first();
+        $role  = UserRole::query()->where('title', 'owner')->first();
         $user  = User::create(['email' => 'test@email.com', 'password' => 'password', 'user_group_id' => $group->id]);
 
         GroupMembership::create(['user_id' => $user->id, 'user_group_id' => $group->id, 'user_role_id' => $role->id]);
@@ -70,6 +70,6 @@ abstract class TestCase extends BaseTestCase
 
     protected function getAuthenticatedUser(): User
     {
-        return User::where('email', 'james@firefly')->first();
+        return User::query()->where('email', 'james@firefly')->first();
     }
 }

@@ -159,35 +159,35 @@ class RecurrenceFormRequest extends FormRequest
         $before     = today(config('app.timezone'))->addYears(25);
         $rules      = [
             // mandatory info for recurrence.
-            'title'                   => 'required|min:1|max:255|uniqueObjectForUser:recurrences,title',
+            'title'                   => ['required', 'min:1', 'max:255', 'uniqueObjectForUser:recurrences,title'],
             'first_date'              => sprintf('required|date|before:%s|after:%s', $before->format('Y-m-d'), $today->format('Y-m-d')),
             'repetition_type'         => ['required', new ValidRecurrenceRepetitionValue(), new ValidRecurrenceRepetitionType(), 'min:1', 'max:32'],
-            'skip'                    => 'required|numeric|integer|gte:0|lte:31',
-            'notes'                   => 'min:1|max:32768|nullable',
+            'skip'                    => ['required', 'numeric', 'integer', 'gte:0', 'lte:31'],
+            'notes'                   => ['min:1', 'max:32768', 'nullable'],
             // optional for recurrence:
-            'recurring_description'   => 'min:0|max:32768',
-            'active'                  => 'numeric|min:0|max:1',
-            'apply_rules'             => 'numeric|min:0|max:1',
+            'recurring_description'   => ['min:0', 'max:32768'],
+            'active'                  => ['numeric', 'min:0', 'max:1'],
+            'apply_rules'             => ['numeric', 'min:0', 'max:1'],
 
             // mandatory for transaction:
-            'transaction_description' => 'required|min:1|max:255',
-            'transaction_type'        => 'required|in:withdrawal,deposit,transfer',
-            'transaction_currency_id' => 'required|exists:transaction_currencies,id',
+            'transaction_description' => ['required', 'min:1', 'max:255'],
+            'transaction_type'        => ['required', 'in:withdrawal,deposit,transfer'],
+            'transaction_currency_id' => ['required', 'exists:transaction_currencies,id'],
             'amount'                  => ['required', new IsValidPositiveAmount()],
             // mandatory account info:
-            'source_id'               => 'numeric|belongsToUser:accounts,id|nullable',
-            'source_name'             => 'min:1|max:255|nullable',
-            'destination_id'          => 'numeric|belongsToUser:accounts,id|nullable',
-            'destination_name'        => 'min:1|max:255|nullable',
+            'source_id'               => ['numeric', 'belongsToUser:accounts,id', 'nullable'],
+            'source_name'             => ['min:1', 'max:255', 'nullable'],
+            'destination_id'          => ['numeric', 'belongsToUser:accounts,id', 'nullable'],
+            'destination_name'        => ['min:1', 'max:255', 'nullable'],
 
             // foreign amount data:
             'foreign_amount'          => ['nullable', new IsValidPositiveAmount()],
 
             // optional fields:
-            'budget_id'               => 'mustExist:budgets,id|belongsToUser:budgets,id|nullable',
-            'bill_id'                 => 'mustExist:bills,id|belongsToUser:bills,id|nullable',
-            'category'                => 'min:1|max:255|nullable',
-            'tags'                    => 'min:1|max:255|nullable',
+            'budget_id'               => ['mustExist:budgets,id', 'belongsToUser:budgets,id', 'nullable'],
+            'bill_id'                 => ['mustExist:bills,id', 'belongsToUser:bills,id', 'nullable'],
+            'category'                => ['min:1', 'max:255', 'nullable'],
+            'tags'                    => ['min:1', 'max:255', 'nullable'],
         ];
         if ($this->convertInteger('foreign_currency_id') > 0) {
             $rules['foreign_currency_id'] = 'exists:transaction_currencies,id';

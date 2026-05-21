@@ -215,7 +215,7 @@ class BudgetRepository implements BudgetRepositoryInterface, UserGroupInterface
     public function cleanupBudgets(): bool
     {
         // delete limits with amount 0:
-        BudgetLimit::where('amount', 0)->delete();
+        BudgetLimit::query()->where('amount', 0)->delete();
         $budgets = $this->getActiveBudgets();
 
         /**
@@ -252,11 +252,11 @@ class BudgetRepository implements BudgetRepositoryInterface, UserGroupInterface
         foreach ($budgets as $budget) {
             DB::table('budget_transaction')->where('budget_id', $budget->id)->delete();
             DB::table('budget_transaction_journal')->where('budget_id', $budget->id)->delete();
-            RecurrenceTransactionMeta::where('name', 'budget_id')
+            RecurrenceTransactionMeta::query()->where('name', 'budget_id')
                 ->where('value', (string) $budget->id)
                 ->delete()
             ;
-            RuleAction::where('action_type', 'set_budget')
+            RuleAction::query()->where('action_type', 'set_budget')
                 ->where('action_value', (string) $budget->id)
                 ->delete()
             ;

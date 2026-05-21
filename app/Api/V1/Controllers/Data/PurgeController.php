@@ -87,7 +87,7 @@ final class PurgeController extends Controller
         Rule::whereUserId($user->id)->onlyTrashed()->forceDelete();
 
         // notes (this will actually purge EVERYBODY's deleted notes)
-        Note::onlyTrashed()->forceDelete();
+        Note::query()->onlyTrashed()->forceDelete();
 
         // recurring transactions
         Recurrence::whereUserId($user->id)->onlyTrashed()->forceDelete();

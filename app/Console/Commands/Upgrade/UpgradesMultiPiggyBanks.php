@@ -105,7 +105,7 @@ class UpgradesMultiPiggyBanks extends Command
     {
         $this->repository        = app(PiggyBankRepositoryInterface::class);
         $this->accountRepository = app(AccountRepositoryInterface::class);
-        $set                     = PiggyBank::whereNotNull('account_id')->get();
+        $set                     = PiggyBank::query()->whereNotNull('account_id')->get();
         Log::debug(sprintf('Will update %d piggy banks(s).', $set->count()));
 
         /** @var PiggyBank $piggyBank */

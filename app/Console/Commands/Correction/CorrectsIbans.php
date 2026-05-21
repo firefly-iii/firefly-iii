@@ -44,7 +44,7 @@ class CorrectsIbans extends Command
      */
     public function handle(): int
     {
-        $accounts = Account::with('accountMeta')->get();
+        $accounts = Account::query()->with('accountMeta')->get();
         $this->filterIbans($accounts);
         $this->countAndCorrectIbans($accounts);
 

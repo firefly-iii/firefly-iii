@@ -45,7 +45,7 @@ class ClearBudget implements ActionInterface
     public function actOnArray(array $journal): bool
     {
         /** @var TransactionJournal $object */
-        $object = TransactionJournal::where('user_id', $journal['user_id'])->find($journal['transaction_journal_id']);
+        $object = TransactionJournal::query()->where('user_id', $journal['user_id'])->find($journal['transaction_journal_id']);
         $budget = $object->budgets()->first();
         if (null === $budget) {
             Log::debug(sprintf('RuleAction ClearBudget, no budget in journal #%d.', $journal['transaction_journal_id']));

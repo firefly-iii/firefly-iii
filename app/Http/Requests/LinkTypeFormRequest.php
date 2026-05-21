@@ -59,8 +59,8 @@ class LinkTypeFormRequest extends FormRequest
         return [
             'id'      => $idRule,
             'name'    => $nameRule,
-            'inward'  => 'required|max:255|min:1|different:outward',
-            'outward' => 'required|max:255|min:1|different:inward',
+            'inward'  => ['required', 'max:255', 'min:1', 'different:outward'],
+            'outward' => ['required', 'max:255', 'min:1', 'different:inward'],
         ];
     }
 

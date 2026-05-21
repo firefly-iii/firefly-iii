@@ -50,7 +50,7 @@ class TestRuleFormRequest extends FormRequest
 
         return [
             'rule-trigger.*'       => 'required|max:1024|min:1|in:'.implode(',', $validTriggers),
-            'rule-trigger-value.*' => 'required|max:1024|min:1|ruleTriggerValue',
+            'rule-trigger-value.*' => ['required', 'max:1024', 'min:1', 'ruleTriggerValue'],
         ];
     }
 

@@ -55,7 +55,7 @@ class RemoveAllTags implements ActionInterface
         Log::debug(sprintf('RuleAction RemoveAllTags removed all tags from journal %d.', $journal['transaction_journal_id']));
 
         /** @var TransactionJournal $object */
-        $object = TransactionJournal::where('user_id', $journal['user_id'])->find($journal['transaction_journal_id']);
+        $object = TransactionJournal::query()->where('user_id', $journal['user_id'])->find($journal['transaction_journal_id']);
 
         // audit log
         event(new TransactionGroupRequestsAuditLogEntry($this->action->rule, $object, 'clear_all_tags', null, null));

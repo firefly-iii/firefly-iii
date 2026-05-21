@@ -77,18 +77,18 @@ class StoreRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'name'           => 'min:1|max:255|uniqueObjectForUser:bills,name',
+            'name'           => ['min:1', 'max:255', 'uniqueObjectForUser:bills,name'],
             'amount_min'     => ['required', new IsValidPositiveAmount()],
             'amount_max'     => ['required', new IsValidPositiveAmount()],
-            'currency_id'    => 'numeric|exists:transaction_currencies,id',
-            'currency_code'  => 'min:3|max:51|exists:transaction_currencies,code',
-            'date'           => 'date|required|after:1970-01-02|before:2038-01-17',
-            'end_date'       => 'nullable|date|after:date|after:1970-01-02|before:2038-01-17',
-            'extension_date' => 'nullable|date|after:date|after:1970-01-02|before:2038-01-17',
-            'repeat_freq'    => 'in:weekly,monthly,quarterly,half-year,yearly|required',
-            'skip'           => 'min:0|max:31|numeric',
+            'currency_id'    => ['numeric', 'exists:transaction_currencies,id'],
+            'currency_code'  => ['min:3', 'max:51', 'exists:transaction_currencies,code'],
+            'date'           => ['date', 'required', 'after:1970-01-02', 'before:2038-01-17'],
+            'end_date'       => ['nullable', 'date', 'after:date', 'after:1970-01-02', 'before:2038-01-17'],
+            'extension_date' => ['nullable', 'date', 'after:date', 'after:1970-01-02', 'before:2038-01-17'],
+            'repeat_freq'    => ['in:weekly,monthly,quarterly,half-year,yearly', 'required'],
+            'skip'           => ['min:0', 'max:31', 'numeric'],
             'active'         => [new IsBoolean()],
-            'notes'          => 'nullable|min:1|max:32768',
+            'notes'          => ['nullable', 'min:1', 'max:32768'],
         ];
     }
 

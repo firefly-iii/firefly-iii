@@ -65,9 +65,9 @@ class UpdateRequest extends FormRequest
         return [
             'link_type_id'   => 'exists:link_types,id',
             'link_type_name' => 'exists:link_types,name',
-            'inward_id'      => 'belongsToUser:transaction_journals,id|different:outward_id',
-            'outward_id'     => 'belongsToUser:transaction_journals,id|different:inward_id',
-            'notes'          => 'min:1|max:32768|nullable',
+            'inward_id'      => ['belongsToUser:transaction_journals,id', 'different:outward_id'],
+            'outward_id'     => ['belongsToUser:transaction_journals,id', 'different:inward_id'],
+            'notes'          => ['min:1', 'max:32768', 'nullable'],
         ];
     }
 

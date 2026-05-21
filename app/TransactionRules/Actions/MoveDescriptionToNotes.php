@@ -47,7 +47,7 @@ class MoveDescriptionToNotes implements ActionInterface
     public function actOnArray(array $journal): bool
     {
         /** @var null|TransactionJournal $object */
-        $object            = TransactionJournal::where('user_id', $journal['user_id'])->find($journal['transaction_journal_id']);
+        $object            = TransactionJournal::query()->where('user_id', $journal['user_id'])->find($journal['transaction_journal_id']);
         if (null === $object) {
             Log::error(sprintf('No journal #%d belongs to user #%d.', $journal['transaction_journal_id'], $journal['user_id']));
             event(new RuleActionFailedOnArray($this->action, $journal, trans('rules.journal_other_user')));

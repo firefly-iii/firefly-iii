@@ -46,9 +46,9 @@ class TransactionCurrencyFactory
         $data['decimal_places'] = (int) $data['decimal_places'];
         // if the code already exists (deleted)
         // force delete it and then create the transaction:
-        $count                  = TransactionCurrency::withTrashed()->whereCode($data['code'])->count();
+        $count                  = TransactionCurrency::query()->withTrashed()->whereCode($data['code'])->count();
         if (1 === $count) {
-            $old = TransactionCurrency::withTrashed()->whereCode($data['code'])->first();
+            $old = TransactionCurrency::query()->withTrashed()->whereCode($data['code'])->first();
             $old->forceDelete();
             Log::warning(sprintf('Force deleted old currency with ID #%d and code "%s".', $old->id, $data['code']));
         }

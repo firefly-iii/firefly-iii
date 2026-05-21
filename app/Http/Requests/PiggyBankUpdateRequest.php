@@ -80,15 +80,15 @@ class PiggyBankUpdateRequest extends FormRequest
 
         return [
             'name'                    => sprintf('required|min:1|max:255|uniquePiggyBankForUser:%d', $piggy->id),
-            'accounts'                => 'required|array',
-            'accounts.*'              => 'required|belongsToUser:accounts',
+            'accounts'                => ['required', 'array'],
+            'accounts.*'              => ['required', 'belongsToUser:accounts'],
             'target_amount'           => ['nullable', new IsValidPositiveAmount()],
             'start_date'              => 'date',
             'transaction_currency_id' => 'exists:transaction_currencies,id',
-            'target_date'             => 'date|nullable',
-            'order'                   => 'integer|max:32768|min:1',
-            'object_group'            => 'min:0|max:255',
-            'notes'                   => 'min:1|max:32768|nullable',
+            'target_date'             => ['date', 'nullable'],
+            'order'                   => ['integer', 'max:32768', 'min:1'],
+            'object_group'            => ['min:0', 'max:255'],
+            'notes'                   => ['min:1', 'max:32768', 'nullable'],
         ];
     }
 

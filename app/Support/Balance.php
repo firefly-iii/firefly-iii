@@ -50,7 +50,7 @@ class Balance
             return $cache->get();
         }
 
-        $query      = Transaction::whereIn('transactions.account_id', $accounts->pluck('id')->toArray())
+        $query      = Transaction::query()->whereIn('transactions.account_id', $accounts->pluck('id')->toArray())
             ->leftJoin('transaction_journals', 'transactions.transaction_journal_id', '=', 'transaction_journals.id')
             ->orderBy('transaction_journals.date', 'desc')
             ->orderBy('transaction_journals.order', 'asc')

@@ -45,7 +45,7 @@ class InviteUserFormRequest extends FormRequest
      */
     public function rules(): array
     {
-        return ['invited_user' => 'required|email|unique:invited_users,email'];
+        return ['invited_user' => ['required', 'email', 'unique:invited_users,email']];
     }
 
     public function withValidator(Validator $validator): void

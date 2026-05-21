@@ -46,7 +46,7 @@ class ClearNotes implements ActionInterface
     public function actOnArray(array $journal): bool
     {
         /** @var TransactionJournal $object */
-        $object = TransactionJournal::where('user_id', $journal['user_id'])->find($journal['transaction_journal_id']);
+        $object = TransactionJournal::query()->where('user_id', $journal['user_id'])->find($journal['transaction_journal_id']);
 
         /** @var null|Note $notes */
         $notes  = $object->notes()->first();

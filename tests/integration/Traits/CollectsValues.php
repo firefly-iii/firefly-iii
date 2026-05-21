@@ -33,6 +33,6 @@ trait CollectsValues
 {
     public function user(): User
     {
-        return User::where('email', 'james@firefly')->first();
+        return User::query()->where('email', 'james@firefly')->first();
     }
 }

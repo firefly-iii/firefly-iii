@@ -71,14 +71,14 @@ class RecurringRepository implements RecurringRepositoryInterface, UserGroupInte
     public function createdPreviously(Recurrence $recurrence, Carbon $date): bool
     {
         // if not, loop set and try to read the recurrence_date. If it matches start or end, return it as well.
-        $set = TransactionJournalMeta::where(static function (Builder $q1) use ($recurrence): void {
+        $set = TransactionJournalMeta::query()->where(static function (Builder $q1) use ($recurrence): void {
             $q1->where('name', 'recurrence_id');
             $q1->where('data', json_encode((string) $recurrence->id));
         })->get(['journal_meta.transaction_journal_id']);
 
         // there are X journals made for this recurrence. Any of them meant for today?
         foreach ($set as $journalMeta) {
-            $count = TransactionJournalMeta::where(static function (Builder $q2) use ($date): void {
+            $count = TransactionJournalMeta::query()->where(static function (Builder $q2) use ($date): void {
                 $string = (string) $date;
                 Log::debug(sprintf('Search for date: %s', json_encode($string)));
                 $q2->where('name', 'recurrence_date');
@@ -131,7 +131,7 @@ class RecurringRepository implements RecurringRepositoryInterface, UserGroupInte
     public function getAll(): Collection
     {
         // grab ALL recurring transactions:
-        return Recurrence::with(['TransactionCurrency', 'TransactionType', 'RecurrenceRepetitions', 'RecurrenceTransactions'])
+        return Recurrence::query()->with(['TransactionCurrency', 'TransactionType', 'RecurrenceRepetitions', 'RecurrenceTransactions'])
             ->orderBy('active', 'DESC')
             ->orderBy('title', 'ASC')
             ->get()

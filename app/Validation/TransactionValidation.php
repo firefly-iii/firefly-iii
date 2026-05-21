@@ -495,14 +495,14 @@ trait TransactionValidation
         }
 
         /** @var null|Transaction $source */
-        $source      = Transaction::where('transaction_journal_id', $journalId)->where('amount', '<', 0)->with(['account'])->first();
+        $source      = Transaction::query()->where('transaction_journal_id', $journalId)->where('amount', '<', 0)->with(['account'])->first();
         if (null !== $source) {
             $return['source_id']   = $source->account_id;
             $return['source_name'] = $source->account->name;
         }
 
         /** @var null|Transaction $destination */
-        $destination = Transaction::where('transaction_journal_id', $journalId)->where('amount', '>', 0)->with(['account'])->first();
+        $destination = Transaction::query()->where('transaction_journal_id', $journalId)->where('amount', '>', 0)->with(['account'])->first();
         if (null !== $destination) {
             $return['destination_id']   = $destination->account_id;
             $return['destination_name'] = $destination->account->name;
@@ -537,7 +537,7 @@ trait TransactionValidation
         }
 
         /** @var null|TransactionJournal $journal */
-        $journal = TransactionJournal::with(['transactionType'])->find($journalId);
+        $journal = TransactionJournal::query()->with(['transactionType'])->find($journalId);
         if (null !== $journal) {
             return strtolower((string) $journal->transactionType->type);
         }

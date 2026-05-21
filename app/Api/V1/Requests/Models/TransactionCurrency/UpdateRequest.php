@@ -82,7 +82,7 @@ class UpdateRequest extends FormRequest
             'name'           => sprintf('min:1|max:255|unique:transaction_currencies,name,%d', $currency->id),
             'code'           => sprintf('min:3|max:32|unique:transaction_currencies,code,%d', $currency->id),
             'symbol'         => sprintf('min:1|max:32|unique:transaction_currencies,symbol,%d', $currency->id),
-            'decimal_places' => 'numeric|min:0|max:12',
+            'decimal_places' => ['numeric', 'min:0', 'max:12'],
             'enabled'        => [new IsBoolean()],
             'default'        => [new IsBoolean()],
         ];

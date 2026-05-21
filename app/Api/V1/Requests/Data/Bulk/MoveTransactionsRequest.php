@@ -52,8 +52,8 @@ class MoveTransactionsRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'original_account'    => 'required|different:destination_account|belongsToUser:accounts,id',
-            'destination_account' => 'required|different:original_account|belongsToUser:accounts,id',
+            'original_account'    => ['required', 'different:destination_account', 'belongsToUser:accounts,id'],
+            'destination_account' => ['required', 'different:original_account', 'belongsToUser:accounts,id'],
         ];
     }
 

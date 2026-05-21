@@ -55,6 +55,6 @@ class SameDateRequest extends FormRequest
      */
     public function rules(): array
     {
-        return ['start' => 'required|date', 'end' => 'required|date|after_or_equal:start'];
+        return ['start' => ['required', 'date'], 'end' => ['required', 'date', 'after_or_equal:start']];
     }
 }

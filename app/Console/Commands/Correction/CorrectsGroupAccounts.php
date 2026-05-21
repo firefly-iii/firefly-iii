@@ -49,7 +49,7 @@ class CorrectsGroupAccounts extends Command
     {
         Log::debug('Start of correction:group-accounts');
         $groups                   = [];
-        $res                      = TransactionJournal::groupBy('transaction_group_id')->get(['transaction_group_id', DB::raw('COUNT(transaction_group_id) as the_count')]);
+        $res                      = TransactionJournal::query()->groupBy('transaction_group_id')->get(['transaction_group_id', DB::raw('COUNT(transaction_group_id) as the_count')]);
 
         /** @var TransactionJournal $journal */
         foreach ($res as $journal) {

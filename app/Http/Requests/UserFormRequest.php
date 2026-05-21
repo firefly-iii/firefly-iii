@@ -59,12 +59,12 @@ class UserFormRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'id'           => 'required|exists:users,id',
-            'email'        => 'email|required',
-            'password'     => 'confirmed|secure_password',
-            'blocked_code' => 'min:0|max:32|nullable',
-            'blocked'      => 'min:0|max:1|numeric',
-            'is_owner'     => 'min:0|max:1|numeric',
+            'id'           => ['required', 'exists:users,id'],
+            'email'        => ['email', 'required'],
+            'password'     => ['confirmed', 'secure_password'],
+            'blocked_code' => ['min:0', 'max:32', 'nullable'],
+            'blocked'      => ['min:0', 'max:1', 'numeric'],
+            'is_owner'     => ['min:0', 'max:1', 'numeric'],
         ];
     }
 

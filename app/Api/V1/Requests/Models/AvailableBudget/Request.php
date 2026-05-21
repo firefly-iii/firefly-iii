@@ -65,11 +65,11 @@ class Request extends FormRequest
     public function rules(): array
     {
         return [
-            'currency_id'   => 'numeric|exists:transaction_currencies,id',
-            'currency_code' => 'min:3|max:51|exists:transaction_currencies,code',
+            'currency_id'   => ['numeric', 'exists:transaction_currencies,id'],
+            'currency_code' => ['min:3', 'max:51', 'exists:transaction_currencies,code'],
             'amount'        => ['nullable', new IsValidPositiveAmount()],
-            'start'         => 'date|after:1970-01-02|before:2038-01-17',
-            'end'           => 'date|after:1970-01-02|before:2038-01-17',
+            'start'         => ['date', 'after:1970-01-02', 'before:2038-01-17'],
+            'end'           => ['date', 'after:1970-01-02', 'before:2038-01-17'],
         ];
     }
 

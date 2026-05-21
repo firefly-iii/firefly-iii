@@ -106,7 +106,7 @@ class UpgradesRuleActions extends Command
             'move_descr_to_notes',
             'move_notes_to_descr',
         ];
-        $actions  = RuleAction::whereIn('action_type', $obsolete)->get();
+        $actions  = RuleAction::query()->whereIn('action_type', $obsolete)->get();
 
         /** @var RuleAction $action */
         foreach ($actions as $action) {

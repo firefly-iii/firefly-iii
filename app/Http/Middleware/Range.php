@@ -73,7 +73,7 @@ class Range
         app('view')->share('listLength', $pref);
 
         // share security message:
-        if (FireflyConfig::has('upgrade_security_message') && FireflyConfig::has('upgrade_security_level')) {
+        if (FireflyConfig::query()->has('upgrade_security_message') && FireflyConfig::query()->has('upgrade_security_level')) {
             app('view')->share('upgrade_security_message', FireflyConfig::get('upgrade_security_message')->data);
             app('view')->share('upgrade_security_level', FireflyConfig::get('upgrade_security_level')->data);
         }

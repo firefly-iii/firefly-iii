@@ -195,7 +195,7 @@ class Amount
 
     public function getAllCurrencies(): Collection
     {
-        return TransactionCurrency::orderBy('code', 'ASC')->get();
+        return TransactionCurrency::query()->orderBy('code', 'ASC')->get();
     }
 
     /**
@@ -314,7 +314,7 @@ class Amount
 
     public function getSystemCurrency(): TransactionCurrency
     {
-        return TransactionCurrency::whereNull('deleted_at')->where('code', 'EUR')->first();
+        return TransactionCurrency::query()->whereNull('deleted_at')->where('code', 'EUR')->first();
     }
 
     public function getTransactionCurrencyByCode(string $code): TransactionCurrency

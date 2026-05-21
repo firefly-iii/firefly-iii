@@ -43,7 +43,7 @@ class MassDeleteJournalRequest extends FormRequest
     public function rules(): array
     {
         // fixed
-        return ['confirm_mass_delete.*' => 'required|belongsToUser:transaction_journals,id'];
+        return ['confirm_mass_delete.*' => ['required', 'belongsToUser:transaction_journals,id']];
     }
 
     public function withValidator(Validator $validator): void

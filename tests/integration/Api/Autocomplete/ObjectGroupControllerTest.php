@@ -46,7 +46,7 @@ final class ObjectGroupControllerTest extends TestCase
     public function testGivenAnUnauthenticatedRequestWhenCallingTheObjectGroupEndpointThenReturn401HttpCode(): void
     {
         $response = $this->get(route('api.v1.autocomplete.object-groups'), ['Accept' => 'application/json']);
-        $response->assertStatus(401);
+        $response->assertUnauthorized();
         $response->assertHeader('Content-Type', 'application/json');
         $response->assertContent('{"message":"Unauthenticated.","exception":"AuthenticationException"}');
     }
@@ -59,7 +59,7 @@ final class ObjectGroupControllerTest extends TestCase
 
         // test API
         $response = $this->get(route('api.v1.autocomplete.object-groups'), ['Accept' => 'application/json']);
-        $response->assertStatus(200);
+        $response->assertOk();
         $response->assertHeader('Content-Type', 'application/json');
     }
 
@@ -70,7 +70,7 @@ final class ObjectGroupControllerTest extends TestCase
 
         $this->createTestObjectGroups(5, $user);
         $response = $this->get(route('api.v1.autocomplete.object-groups'), ['Accept' => 'application/json']);
-        $response->assertStatus(200);
+        $response->assertOk();
         $response->assertHeader('Content-Type', 'application/json');
         $response->assertJsonCount(5);
         $response->assertJsonFragment(['title' => 'Object Group 1']);
@@ -85,7 +85,7 @@ final class ObjectGroupControllerTest extends TestCase
         $this->createTestObjectGroups(20, $user);
         $response = $this->get(route('api.v1.autocomplete.object-groups', ['query' => 'Object Group 1', 'limit' => 20]), ['Accept' => 'application/json']);
 
-        $response->assertStatus(200);
+        $response->assertOk();
         $response->assertHeader('Content-Type', 'application/json');
         // Object Group 1, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19 (11)
         $response->assertJsonCount(11);
@@ -100,7 +100,7 @@ final class ObjectGroupControllerTest extends TestCase
         $this->createTestObjectGroups(5, $user);
         $response = $this->get(route('api.v1.autocomplete.object-groups', ['query' => 'Object Group', 'limit' => 3]), ['Accept' => 'application/json']);
 
-        $response->assertStatus(200);
+        $response->assertOk();
         $response->assertHeader('Content-Type', 'application/json');
         $response->assertJsonCount(3);
         $response->assertJsonFragment(['name' => 'Object Group 1']);

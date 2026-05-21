@@ -293,7 +293,7 @@ class AccountRepository implements AccountRepositoryInterface, UserGroupInterfac
     public function getCashAccount(): Account
     {
         /** @var AccountType $type */
-        $type    = AccountType::where('type', AccountTypeEnum::CASH->value)->first();
+        $type    = AccountType::query()->where('type', AccountTypeEnum::CASH->value)->first();
 
         /** @var AccountFactory $factory */
         $factory = app(AccountFactory::class);
@@ -432,7 +432,7 @@ class AccountRepository implements AccountRepositoryInterface, UserGroupInterfac
         $name     = trans('firefly.reconciliation_account_name', ['name' => $account->name, 'currency' => $currency->code]);
 
         /** @var AccountType $type */
-        $type     = AccountType::where('type', AccountTypeEnum::RECONCILIATION->value)->first();
+        $type     = AccountType::query()->where('type', AccountTypeEnum::RECONCILIATION->value)->first();
 
         /** @var null|Account $current */
         $current  = $this->user->accounts()->where('account_type_id', $type->id)->where('name', $name)->first();
@@ -466,7 +466,7 @@ class AccountRepository implements AccountRepositoryInterface, UserGroupInterfac
         }
         $currencyIds = array_unique($currencyIds);
 
-        return TransactionCurrency::whereIn('id', $currencyIds)->get();
+        return TransactionCurrency::query()->whereIn('id', $currencyIds)->get();
     }
 
     public function isLiability(Account $account): bool

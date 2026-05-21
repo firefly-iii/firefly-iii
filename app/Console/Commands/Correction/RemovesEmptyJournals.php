@@ -80,7 +80,7 @@ class RemovesEmptyJournals extends Command
      */
     private function deleteUnevenJournals(): void
     {
-        $set   = Transaction::whereNull('deleted_at')->groupBy('transactions.transaction_journal_id')->get([
+        $set   = Transaction::query()->whereNull('deleted_at')->groupBy('transactions.transaction_journal_id')->get([
             DB::raw('COUNT(transactions.transaction_journal_id) as the_count'),
             'transaction_journal_id',
         ]);
@@ -100,7 +100,7 @@ class RemovesEmptyJournals extends Command
                     Log::error($e->getTraceAsString());
                 }
 
-                Transaction::where('transaction_journal_id', $row->transaction_journal_id)->delete();
+                Transaction::query()->where('transaction_journal_id', $row->transaction_journal_id)->delete();
                 $this->friendlyWarning(sprintf(
                     'Deleted transaction journal #%d because it had an uneven number of transactions.',
                     $row->transaction_journal_id

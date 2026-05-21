@@ -75,11 +75,11 @@ class StoreRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'name'               => 'required|min:1|max:255|uniqueObjectForUser:budgets,name',
+            'name'               => ['required', 'min:1', 'max:255', 'uniqueObjectForUser:budgets,name'],
             'active'             => [new IsBoolean()],
             'currency_id'        => 'exists:transaction_currencies,id',
             'currency_code'      => 'exists:transaction_currencies,code',
-            'notes'              => 'nullable|min:1|max:32768',
+            'notes'              => ['nullable', 'min:1', 'max:32768'],
             // auto budget info
             'auto_budget_type'   => 'in:reset,rollover,adjusted,none',
             'auto_budget_amount' => [
@@ -88,7 +88,7 @@ class StoreRequest extends FormRequest
                 'required_if:auto_budget_type,adjusted',
                 new IsValidPositiveAmount(),
             ],
-            'auto_budget_period' => 'in:daily,weekly,monthly,quarterly,half_year,yearly|required_if:auto_budget_type,reset|required_if:auto_budget_type,rollover|required_if:auto_budget_type,adjusted',
+            'auto_budget_period' => ['in:daily,weekly,monthly,quarterly,half_year,yearly', 'required_if:auto_budget_type,reset', 'required_if:auto_budget_type,rollover', 'required_if:auto_budget_type,adjusted'],
 
             // webhooks
             'fire_webhooks'      => [new IsBoolean()],

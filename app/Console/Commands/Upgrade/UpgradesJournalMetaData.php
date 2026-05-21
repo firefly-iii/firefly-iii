@@ -131,7 +131,7 @@ class UpgradesJournalMetaData extends Command
         $allIds   = $this->getIdsForBudgets();
         $chunks   = array_chunk($allIds, 500);
         foreach ($chunks as $journalIds) {
-            $collected = TransactionJournal::whereIn('id', $journalIds)->with(['transactions', 'budgets', 'transactions.budgets'])->get();
+            $collected = TransactionJournal::query()->whereIn('id', $journalIds)->with(['transactions', 'budgets', 'transactions.budgets'])->get();
             $journals  = $journals->merge($collected);
         }
 
@@ -180,7 +180,7 @@ class UpgradesJournalMetaData extends Command
 
         $chunks   = array_chunk($allIds, 500);
         foreach ($chunks as $chunk) {
-            $collected = TransactionJournal::whereIn('id', $chunk)->with(['transactions', 'categories', 'transactions.categories'])->get();
+            $collected = TransactionJournal::query()->whereIn('id', $chunk)->with(['transactions', 'categories', 'transactions.categories'])->get();
             $journals  = $journals->merge($collected);
         }
 

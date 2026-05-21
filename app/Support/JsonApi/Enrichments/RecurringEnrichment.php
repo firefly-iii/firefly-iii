@@ -200,7 +200,7 @@ class RecurringEnrichment implements EnrichmentInterface
     private function collectAccounts(): void
     {
         $all      = array_merge(array_unique($this->sourceAccountIds), array_unique($this->destinationAccountIds));
-        $accounts = Account::with(['accountType'])->whereIn('id', array_unique($all))->get();
+        $accounts = Account::query()->with(['accountType'])->whereIn('id', array_unique($all))->get();
 
         /** @var Account $account */
         foreach ($accounts as $account) {
@@ -216,7 +216,7 @@ class RecurringEnrichment implements EnrichmentInterface
             return;
         }
         $ids    = Arr::pluck($billIds, 'bill_id');
-        $bills  = Bill::whereIn('id', $ids)->get();
+        $bills  = Bill::query()->whereIn('id', $ids)->get();
         $mapped = [];
         foreach ($bills as $bill) {
             $mapped[(int) $bill->id] = $bill;
@@ -234,7 +234,7 @@ class RecurringEnrichment implements EnrichmentInterface
             return;
         }
         $ids        = Arr::pluck($budgetIds, 'budget_id');
-        $categories = Budget::whereIn('id', $ids)->get();
+        $categories = Budget::query()->whereIn('id', $ids)->get();
         $mapped     = [];
         foreach ($categories as $category) {
             $mapped[(int) $category->id] = $category;
@@ -252,7 +252,7 @@ class RecurringEnrichment implements EnrichmentInterface
             return;
         }
         $ids        = Arr::pluck($categoryIds, 'category_id');
-        $categories = Category::whereIn('id', $ids)->get();
+        $categories = Category::query()->whereIn('id', $ids)->get();
         $mapped     = [];
         foreach ($categories as $category) {
             $mapped[(int) $category->id] = $category;
@@ -288,7 +288,7 @@ class RecurringEnrichment implements EnrichmentInterface
     private function collectCurrencies(): void
     {
         $all        = array_merge(array_unique($this->currencyIds), array_unique($this->foreignCurrencyIds));
-        $currencies = TransactionCurrency::whereIn('id', array_unique($all))->get();
+        $currencies = TransactionCurrency::query()->whereIn('id', array_unique($all))->get();
         foreach ($currencies as $currency) {
             $id                    = (int) $currency->id;
             $this->currencies[$id] = $currency;
@@ -333,7 +333,7 @@ class RecurringEnrichment implements EnrichmentInterface
             return;
         }
         $ids        = Arr::pluck($piggyBankIds, 'piggy_bank_id');
-        $piggyBanks = PiggyBank::whereIn('id', $ids)->get();
+        $piggyBanks = PiggyBank::query()->whereIn('id', $ids)->get();
         $mapped     = [];
         foreach ($piggyBanks as $piggyBank) {
             $mapped[(int) $piggyBank->id] = $piggyBank;
@@ -350,7 +350,7 @@ class RecurringEnrichment implements EnrichmentInterface
         Log::debug('Start of enrichment: collectRepetitions()');
         $repository = app(RecurringRepositoryInterface::class);
         $repository->setUserGroup($this->userGroup);
-        $set        = RecurrenceRepetition::whereIn('recurrence_id', $this->ids)->get();
+        $set        = RecurrenceRepetition::query()->whereIn('recurrence_id', $this->ids)->get();
 
         /** @var RecurrenceRepetition $repetition */
         foreach ($set as $repetition) {
@@ -394,7 +394,7 @@ class RecurringEnrichment implements EnrichmentInterface
         foreach ($this->ids as $recurrenceId) {
             $rtIds = array_merge($rtIds, array_keys($this->transactions[$recurrenceId]));
         }
-        $meta          = RecurrenceTransactionMeta::whereNull('deleted_at')->whereIn('rt_id', $rtIds)->get();
+        $meta          = RecurrenceTransactionMeta::query()->whereNull('deleted_at')->whereIn('rt_id', $rtIds)->get();
         // other meta-data to be collected:
         $billIds       = [];
         $piggyBankIds  = [];
@@ -492,7 +492,7 @@ class RecurringEnrichment implements EnrichmentInterface
 
     private function collectTransactions(): void
     {
-        $set = RecurrenceTransaction::whereIn('recurrence_id', $this->ids)->get();
+        $set = RecurrenceTransaction::query()->whereIn('recurrence_id', $this->ids)->get();
 
         /** @var RecurrenceTransaction $transaction */
         foreach ($set as $transaction) {

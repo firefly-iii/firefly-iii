@@ -78,7 +78,7 @@ class RemoveTag implements ActionInterface
         DB::table('tag_transaction_journal')->where('transaction_journal_id', $journal['transaction_journal_id'])->where('tag_id', $tag->id)->delete();
 
         /** @var TransactionJournal $object */
-        $object = TransactionJournal::where('user_id', $journal['user_id'])->find($journal['transaction_journal_id']);
+        $object = TransactionJournal::query()->where('user_id', $journal['user_id'])->find($journal['transaction_journal_id']);
         event(new TransactionGroupRequestsAuditLogEntry($this->action->rule, $object, 'clear_tag', $tag->tag, null));
 
         return true;

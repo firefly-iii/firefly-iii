@@ -472,7 +472,7 @@ class FireflyValidator extends Validator
         // check transaction type.
         // TODO create a helper to automatically return these.
         if ('transaction_type' === $triggerType) {
-            $count = TransactionType::where('type', ucfirst((string) $value))->count();
+            $count = TransactionType::query()->where('type', ucfirst((string) $value))->count();
 
             return 1 === $count;
         }
@@ -881,7 +881,7 @@ class FireflyValidator extends Validator
             return false;
         }
 
-        $accountTypes   = AccountType::whereIn('type', $search)->get();
+        $accountTypes   = AccountType::query()->whereIn('type', $search)->get();
         $ignore         = (int) ($parameters[0] ?? 0.0);
         $accountTypeIds = $accountTypes->pluck('id')->toArray();
 
