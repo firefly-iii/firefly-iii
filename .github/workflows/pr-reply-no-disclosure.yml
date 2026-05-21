@@ -25,13 +25,7 @@ jobs:
             exit 0
           fi
 
-          # I used AI assistance for:
-          # - [ ] Code generation (e.g., when writing an implementation or fixing a bug)
-          # - [ ] Test/benchmark generation
-          # - [ ] Documentation (including examples)
-          # - [ ] Research and understanding
-
-
+          echo "Not dependabot!"
 
           # $BODY must contain one of these four uses.
           if [[ $BODY != *"Code generation"* &&
@@ -60,5 +54,8 @@ jobs:
             echo "Triggered on AI disclosure missing."
             exit 0
           fi
+          echo "It has the disclosure"
         env:
           NUMBER: ${{ github.event.pull_request.number }}
+          GH_TOKEN: ${{ github.token }}
+          GH_REPO: ${{ github.repository }}
