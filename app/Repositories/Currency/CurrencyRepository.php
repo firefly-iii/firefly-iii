@@ -86,7 +86,8 @@ class CurrencyRepository implements CurrencyRepositoryInterface, UserGroupInterf
         }
 
         // is being used in accounts:
-        $meta             = AccountMeta::query()->where('name', 'currency_id')
+        $meta             = AccountMeta::query()
+            ->where('name', 'currency_id')
             ->where('data', json_encode((string) $currency->id))
             ->count()
         ;
@@ -97,7 +98,8 @@ class CurrencyRepository implements CurrencyRepositoryInterface, UserGroupInterf
         }
 
         // second search using integer check.
-        $meta             = AccountMeta::query()->where('name', 'currency_id')
+        $meta             = AccountMeta::query()
+            ->where('name', 'currency_id')
             ->where('data', json_encode((int) $currency->id))
             ->count()
         ;

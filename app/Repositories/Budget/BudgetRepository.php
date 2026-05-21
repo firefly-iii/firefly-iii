@@ -252,11 +252,13 @@ class BudgetRepository implements BudgetRepositoryInterface, UserGroupInterface
         foreach ($budgets as $budget) {
             DB::table('budget_transaction')->where('budget_id', $budget->id)->delete();
             DB::table('budget_transaction_journal')->where('budget_id', $budget->id)->delete();
-            RecurrenceTransactionMeta::query()->where('name', 'budget_id')
+            RecurrenceTransactionMeta::query()
+                ->where('name', 'budget_id')
                 ->where('value', (string) $budget->id)
                 ->delete()
             ;
-            RuleAction::query()->where('action_type', 'set_budget')
+            RuleAction::query()
+                ->where('action_type', 'set_budget')
                 ->where('action_value', (string) $budget->id)
                 ->delete()
             ;

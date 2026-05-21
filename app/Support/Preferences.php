@@ -47,7 +47,8 @@ class Preferences
             return new Collection();
         }
 
-        return Preference::query()->where('user_id', $user->id)
+        return Preference::query()
+            ->where('user_id', $user->id)
             ->where('name', '!=', 'currencyPreference')
             ->where(static function (Builder $q) use ($user): void {
                 $q->whereNull('user_group_id');
@@ -118,7 +119,8 @@ class Preferences
     public function getArrayForUser(User $user, array $list): array
     {
         $result      = [];
-        $preferences = Preference::query()->where('user_id', $user->id)
+        $preferences = Preference::query()
+            ->where('user_id', $user->id)
             ->where(static function (Builder $q) use ($user): void {
                 $q->whereNull('user_group_id');
                 $q->orWhere('user_group_id', $user->user_group_id);

@@ -96,7 +96,12 @@ class LinkTypeRepository implements LinkTypeRepositoryInterface, UserGroupInterf
      */
     public function findSpecificLink(LinkType $linkType, TransactionJournal $inward, TransactionJournal $outward): ?TransactionJournalLink
     {
-        return TransactionJournalLink::query()->where('link_type_id', $linkType->id)->where('source_id', $inward->id)->where('destination_id', $outward->id)->first();
+        return TransactionJournalLink::query()
+            ->where('link_type_id', $linkType->id)
+            ->where('source_id', $inward->id)
+            ->where('destination_id', $outward->id)
+            ->first()
+        ;
     }
 
     public function get(): Collection
@@ -128,7 +133,8 @@ class LinkTypeRepository implements LinkTypeRepositoryInterface, UserGroupInterf
      */
     public function getJournalLinks(?LinkType $linkType = null): Collection
     {
-        $query = TransactionJournalLink::query()->with(['source', 'destination'])
+        $query = TransactionJournalLink::query()
+            ->with(['source', 'destination'])
             ->leftJoin('transaction_journals as source_journals', 'journal_links.source_id', '=', 'source_journals.id')
             ->leftJoin('transaction_journals as dest_journals', 'journal_links.destination_id', '=', 'dest_journals.id')
             ->where('source_journals.user_id', $this->user->id)

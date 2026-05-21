@@ -43,7 +43,8 @@ class SendsWebhookMessages implements ShouldQueue
         }
 
         // kick off the job!
-        $messages = WebhookMessage::query()->where('webhook_messages.sent', false)
+        $messages = WebhookMessage::query()
+            ->where('webhook_messages.sent', false)
             ->get(['webhook_messages.*'])
             ->filter(static fn (WebhookMessage $message): bool => $message->webhookAttempts()->count() <= 2)
             ->splice(0, 5)

@@ -46,9 +46,6 @@ class MoveTransactionsRequest extends FormRequest
         return ['original_account' => $this->convertInteger('original_account'), 'destination_account' => $this->convertInteger('destination_account')];
     }
 
-    /**
-     * @return array
-     */
     public function rules(): array
     {
         return [

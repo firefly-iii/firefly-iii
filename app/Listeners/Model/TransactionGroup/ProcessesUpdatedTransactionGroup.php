@@ -128,7 +128,8 @@ class ProcessesUpdatedTransactionGroup
         $effect        = 0;
         if (TransactionTypeEnum::TRANSFER->value === $type || TransactionTypeEnum::WITHDRAWAL->value === $type) {
             // set all source transactions to source account:
-            $effect += Transaction::query()->whereIn('transaction_journal_id', $all)
+            $effect += Transaction::query()
+                ->whereIn('transaction_journal_id', $all)
                 ->where('account_id', '!=', $sourceAccount->id)
                 ->where('amount', '<', 0)
                 ->update(['account_id' => $sourceAccount->id])
@@ -136,7 +137,8 @@ class ProcessesUpdatedTransactionGroup
         }
         if (TransactionTypeEnum::TRANSFER->value === $type || TransactionTypeEnum::DEPOSIT->value === $type) {
             // set all destination transactions to destination account:
-            $effect += Transaction::query()->whereIn('transaction_journal_id', $all)
+            $effect += Transaction::query()
+                ->whereIn('transaction_journal_id', $all)
                 ->where('account_id', '!=', $destAccount->id)
                 ->where('amount', '>', 0)
                 ->update(['account_id' => $destAccount->id])

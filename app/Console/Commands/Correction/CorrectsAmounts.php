@@ -188,7 +188,10 @@ class CorrectsAmounts extends Command
 
     private function fixAutoBudgets(): void
     {
-        $count = AutoBudget::query()->where('amount', '<', 0)->update(['amount' => DB::raw('amount * -1')]);
+        $count = AutoBudget::query()
+            ->where('amount', '<', 0)
+            ->update(['amount' => DB::raw('amount * -1')])
+        ;
         if (0 === $count) {
             return;
         }
@@ -197,7 +200,10 @@ class CorrectsAmounts extends Command
 
     private function fixAvailableBudgets(): void
     {
-        $count = AvailableBudget::query()->where('amount', '<', 0)->update(['amount' => DB::raw('amount * -1')]);
+        $count = AvailableBudget::query()
+            ->where('amount', '<', 0)
+            ->update(['amount' => DB::raw('amount * -1')])
+        ;
         if (0 === $count) {
             return;
         }
@@ -207,8 +213,14 @@ class CorrectsAmounts extends Command
     private function fixBills(): void
     {
         $count = 0;
-        $count += Bill::query()->where('amount_max', '<', 0)->update(['amount_max' => DB::raw('amount_max * -1')]);
-        $count += Bill::query()->where('amount_min', '<', 0)->update(['amount_min' => DB::raw('amount_min * -1')]);
+        $count += Bill::query()
+            ->where('amount_max', '<', 0)
+            ->update(['amount_max' => DB::raw('amount_max * -1')])
+        ;
+        $count += Bill::query()
+            ->where('amount_min', '<', 0)
+            ->update(['amount_min' => DB::raw('amount_min * -1')])
+        ;
         if (0 === $count) {
             return;
         }
@@ -217,7 +229,10 @@ class CorrectsAmounts extends Command
 
     private function fixBudgetLimits(): void
     {
-        $count = BudgetLimit::query()->where('amount', '<', 0)->update(['amount' => DB::raw('amount * -1')]);
+        $count = BudgetLimit::query()
+            ->where('amount', '<', 0)
+            ->update(['amount' => DB::raw('amount * -1')])
+        ;
         if (0 === $count) {
             return;
         }
@@ -226,7 +241,10 @@ class CorrectsAmounts extends Command
 
     private function fixExchangeRates(): void
     {
-        $count = CurrencyExchangeRate::query()->where('rate', '<', 0)->update(['rate' => DB::raw('rate * -1')]);
+        $count = CurrencyExchangeRate::query()
+            ->where('rate', '<', 0)
+            ->update(['rate' => DB::raw('rate * -1')])
+        ;
         if (0 === $count) {
             return;
         }
@@ -235,7 +253,10 @@ class CorrectsAmounts extends Command
 
     private function fixPiggyBanks(): void
     {
-        $count = PiggyBank::query()->where('target_amount', '<', 0)->update(['target_amount' => DB::raw('target_amount * -1')]);
+        $count = PiggyBank::query()
+            ->where('target_amount', '<', 0)
+            ->update(['target_amount' => DB::raw('target_amount * -1')])
+        ;
         if (0 === $count) {
             return;
         }
@@ -245,8 +266,14 @@ class CorrectsAmounts extends Command
     private function fixRecurrences(): void
     {
         $count = 0;
-        $count += RecurrenceTransaction::query()->where('amount', '<', 0)->update(['amount' => DB::raw('amount * -1')]);
-        $count += RecurrenceTransaction::query()->where('foreign_amount', '<', 0)->update(['foreign_amount' => DB::raw('foreign_amount * -1')]);
+        $count += RecurrenceTransaction::query()
+            ->where('amount', '<', 0)
+            ->update(['amount' => DB::raw('amount * -1')])
+        ;
+        $count += RecurrenceTransaction::query()
+            ->where('foreign_amount', '<', 0)
+            ->update(['foreign_amount' => DB::raw('foreign_amount * -1')])
+        ;
         if (0 === $count) {
             return;
         }

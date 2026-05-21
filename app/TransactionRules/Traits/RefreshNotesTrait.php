@@ -33,7 +33,8 @@ trait RefreshNotesTrait
     final protected function refreshNotes(array $transaction): array
     {
         $transaction['notes'] = '';
-        $dbNote               = Note::query()->where('noteable_id', (int) $transaction['transaction_journal_id'])
+        $dbNote               = Note::query()
+            ->where('noteable_id', (int) $transaction['transaction_journal_id'])
             ->where('noteable_type', TransactionJournal::class)
             ->first(['notes.*'])
         ;

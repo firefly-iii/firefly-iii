@@ -111,7 +111,8 @@ class TransactionGroupRepository implements TransactionGroupRepositoryInterface,
         $repository = app(AttachmentRepositoryInterface::class);
         $repository->setUser($this->user);
         $journals   = $group->transactionJournals->pluck('id')->toArray();
-        $set        = Attachment::query()->whereIn('attachable_id', $journals)
+        $set        = Attachment::query()
+            ->whereIn('attachable_id', $journals)
             ->where('attachable_type', TransactionJournal::class)
             ->where('uploaded', true)
             ->whereNull('deleted_at')
@@ -163,15 +164,20 @@ class TransactionGroupRepository implements TransactionGroupRepositoryInterface,
     {
         $return   = [];
         $journals = $group->transactionJournals->pluck('id')->toArray();
-        $set      = TransactionJournalLink::query()->where(static function (Builder $q) use ($journals): void {
-            $q->whereIn('source_id', $journals);
-            $q->orWhereIn('destination_id', $journals);
-        })->with(['source', 'notes', 'destination', 'source.transactions'])->leftJoin('link_types', 'link_types.id', '=', 'journal_links.link_type_id')->get([
-            'journal_links.*',
-            'link_types.inward',
-            'link_types.outward',
-            'link_types.editable',
-        ]);
+        $set      = TransactionJournalLink::query()
+            ->where(static function (Builder $q) use ($journals): void {
+                $q->whereIn('source_id', $journals);
+                $q->orWhereIn('destination_id', $journals);
+            })
+            ->with(['source', 'notes', 'destination', 'source.transactions'])
+            ->leftJoin('link_types', 'link_types.id', '=', 'journal_links.link_type_id')
+            ->get([
+                'journal_links.*',
+                'link_types.inward',
+                'link_types.outward',
+                'link_types.editable',
+            ])
+        ;
 
         /** @var TransactionJournalLink $entry */
         foreach ($set as $entry) {

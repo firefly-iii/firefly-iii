@@ -66,7 +66,8 @@ class UpgradesCurrencyPreferences extends Command
 
     private function getPreference(User $user): string
     {
-        $preference = Preference::query()->where('user_id', $user->id)
+        $preference = Preference::query()
+            ->where('user_id', $user->id)
             ->where('name', 'currencyPreference')
             ->first(['id', 'user_id', 'name', 'data', 'updated_at', 'created_at'])
         ;

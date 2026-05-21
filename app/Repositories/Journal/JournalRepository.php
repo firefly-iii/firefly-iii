@@ -79,7 +79,8 @@ class JournalRepository implements JournalRepositoryInterface, UserGroupInterfac
     #[Override]
     public function countByNotes(string $value, bool $includeDeleted): int
     {
-        $search = Note::query()->where('noteable_type', TransactionJournal::class)
+        $search = Note::query()
+            ->where('noteable_type', TransactionJournal::class)
             ->leftJoin('transaction_journals', 'transaction_journals.id', '=', 'notes.noteable_id')
             ->where('transaction_journals.user_id', $this->user->id)
             ->where('text', 'LIKE', sprintf('%%%s%%', $value))

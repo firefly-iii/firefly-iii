@@ -237,7 +237,8 @@ class UserRepository implements UserRepositoryInterface
             'bills'               => $user->bills()->count(),
             'categories'          => $user->categories()->count(),
             'budgets'             => $user->budgets()->count(),
-            'budgets_with_limits' => BudgetLimit::query()->distinct()
+            'budgets_with_limits' => BudgetLimit::query()
+                ->distinct()
                 ->leftJoin('budgets', 'budgets.id', '=', 'budget_limits.budget_id')
                 ->where('amount', '>', 0)
                 ->whereNull('budgets.deleted_at')
