@@ -425,7 +425,8 @@ class TransactionJournalFactory
         Log::debug('Will verify duplicate!');
 
         /** @var null|TransactionJournalMeta $result */
-        $result = TransactionJournalMeta::query()->withTrashed()
+        $result = TransactionJournalMeta::query()
+            ->withTrashed()
             ->leftJoin('transaction_journals', 'transaction_journals.id', '=', 'journal_meta.transaction_journal_id')
             ->whereNotNull('transaction_journals.id')
             ->where('transaction_journals.user_id', $this->user->id)

@@ -47,13 +47,13 @@ class TransactionType extends Model
      *
      * @throws NotFoundHttpException
      */
-    public static function routeBinder(self | string $value): self
+    public static function routeBinder(self|string $value): self
     {
         if (!auth()->check()) {
             throw new NotFoundHttpException();
         }
         if ($value instanceof self) {
-            $value = (string)$value->type;
+            $value = (string) $value->type;
         }
         $transactionType = self::where('type', ucfirst($value))->first();
         if (null !== $transactionType) {
@@ -87,5 +87,4 @@ class TransactionType extends Model
     {
         return $this->hasMany(TransactionJournal::class);
     }
-
 }

@@ -80,10 +80,14 @@ class RemovesEmptyJournals extends Command
      */
     private function deleteUnevenJournals(): void
     {
-        $set   = Transaction::query()->whereNull('deleted_at')->groupBy('transactions.transaction_journal_id')->get([
-            DB::raw('COUNT(transactions.transaction_journal_id) as the_count'),
-            'transaction_journal_id',
-        ]);
+        $set   = Transaction::query()
+            ->whereNull('deleted_at')
+            ->groupBy('transactions.transaction_journal_id')
+            ->get([
+                DB::raw('COUNT(transactions.transaction_journal_id) as the_count'),
+                'transaction_journal_id',
+            ])
+        ;
         $total = 0;
 
         /** @var Transaction $row */

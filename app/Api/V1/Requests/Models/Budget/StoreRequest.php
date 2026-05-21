@@ -88,7 +88,12 @@ class StoreRequest extends FormRequest
                 'required_if:auto_budget_type,adjusted',
                 new IsValidPositiveAmount(),
             ],
-            'auto_budget_period' => ['in:daily,weekly,monthly,quarterly,half_year,yearly', 'required_if:auto_budget_type,reset', 'required_if:auto_budget_type,rollover', 'required_if:auto_budget_type,adjusted'],
+            'auto_budget_period' => [
+                'in:daily,weekly,monthly,quarterly,half_year,yearly',
+                'required_if:auto_budget_type,reset',
+                'required_if:auto_budget_type,rollover',
+                'required_if:auto_budget_type,adjusted',
+            ],
 
             // webhooks
             'fire_webhooks'      => [new IsBoolean()],

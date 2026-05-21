@@ -83,7 +83,8 @@ class Steam
         $currencies  = $this->getCurrencies($accounts);
 
         // balance(s) in all currencies for ALL accounts.
-        $arrayOfSums = Transaction::query()->whereIn('account_id', $accounts->pluck('id')->toArray())
+        $arrayOfSums = Transaction::query()
+            ->whereIn('account_id', $accounts->pluck('id')->toArray())
             ->leftJoin('transaction_journals', 'transaction_journals.id', '=', 'transactions.transaction_journal_id')
             ->leftJoin('transaction_currencies', 'transaction_currencies.id', '=', 'transactions.transaction_currency_id')
             ->where('transaction_journals.date', $inclusive ? '<=' : '<', $date->format('Y-m-d H:i:s'))

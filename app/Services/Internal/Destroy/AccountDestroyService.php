@@ -69,11 +69,15 @@ class AccountDestroyService
         Log::debug(sprintf('Move from account #%d to #%d', $account->id, $moveTo->id));
         DB::table('transactions')->where('account_id', $account->id)->update(['account_id' => $moveTo->id]);
 
-        $collection = Transaction::query()->groupBy('transaction_journal_id', 'account_id')->where('account_id', $moveTo->id)->get([
-            'transaction_journal_id',
-            'account_id',
-            DB::raw('count(*) as the_count'),
-        ]);
+        $collection = Transaction::query()
+            ->groupBy('transaction_journal_id', 'account_id')
+            ->where('account_id', $moveTo->id)
+            ->get([
+                'transaction_journal_id',
+                'account_id',
+                DB::raw('count(*) as the_count'),
+            ])
+        ;
         if (0 === $collection->count()) {
             return;
         }
@@ -137,10 +141,15 @@ class AccountDestroyService
 
     private function destroyRecurrences(Account $account): void
     {
-        $recurrences    = RecurrenceTransaction::query()->where(static function (Builder $q) use ($account): void {
-            $q->where('source_id', $account->id);
-            $q->orWhere('destination_id', $account->id);
-        })->get(['recurrence_id'])->pluck('recurrence_id')->toArray();
+        $recurrences    = RecurrenceTransaction::query()
+            ->where(static function (Builder $q) use ($account): void {
+                $q->where('source_id', $account->id);
+                $q->orWhere('destination_id', $account->id);
+            })
+            ->get(['recurrence_id'])
+            ->pluck('recurrence_id')
+            ->toArray()
+        ;
 
         /** @var RecurrenceDestroyService $destroyService */
         $destroyService = app(RecurrenceDestroyService::class);

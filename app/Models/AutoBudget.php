@@ -60,16 +60,16 @@ class AutoBudget extends Model
 
     protected function amount(): Attribute
     {
-        return Attribute::make(get: static fn($value): string => (string)$value);
+        return Attribute::make(get: static fn ($value): string => (string) $value);
     }
 
     protected function budgetId(): Attribute
     {
-        return Attribute::make(get: static fn($value): int => (int)$value);
+        return Attribute::make(get: static fn ($value): int => (int) $value);
     }
 
     protected function transactionCurrencyId(): Attribute
     {
-        return Attribute::make(get: static fn($value): int => (int)$value);
+        return Attribute::make(get: static fn ($value): int => (int) $value);
     }
 }

@@ -134,19 +134,19 @@ class Webhook extends Model
      *
      * @throws NotFoundHttpException
      */
-    public static function routeBinder(self | string $value): self
+    public static function routeBinder(self|string $value): self
     {
         if (auth()->check()) {
             if ($value instanceof self) {
-                $value = (int)$value->id;
+                $value = (int) $value->id;
             }
-            $webhookId = (int)$value;
+            $webhookId = (int) $value;
 
             /** @var User $user */
-            $user = auth()->user();
+            $user      = auth()->user();
 
             /** @var null|Webhook $webhook */
-            $webhook = $user->webhooks()->find($webhookId);
+            $webhook   = $user->webhooks()->find($webhookId);
             if (null !== $webhook) {
                 return $webhook;
             }
@@ -179,5 +179,4 @@ class Webhook extends Model
     {
         return $this->belongsToMany(WebhookTrigger::class);
     }
-
 }

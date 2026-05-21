@@ -44,7 +44,8 @@ class PrependNotes implements ActionInterface
 
     public function actOnArray(array $journal): bool
     {
-        $dbNote       = Note::query()->where('noteable_id', (int) $journal['transaction_journal_id'])
+        $dbNote       = Note::query()
+            ->where('noteable_id', (int) $journal['transaction_journal_id'])
             ->where('noteable_type', TransactionJournal::class)
             ->first(['notes.*'])
         ;

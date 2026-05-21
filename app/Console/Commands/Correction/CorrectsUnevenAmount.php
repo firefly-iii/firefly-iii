@@ -76,7 +76,8 @@ class CorrectsUnevenAmount extends Command
         $repository   = app(AccountRepositoryInterface::class);
         Log::debug('convertOldStyleTransactions()');
         $count        = 0;
-        $transactions = Transaction::query()->distinct()
+        $transactions = Transaction::query()
+            ->distinct()
             ->leftJoin('transaction_journals', 'transaction_journals.id', 'transactions.transaction_journal_id')
             ->leftJoin('transaction_types', 'transaction_types.id', 'transaction_journals.transaction_type_id')
             ->leftJoin('accounts', 'accounts.id', 'transactions.account_id')
@@ -188,7 +189,8 @@ class CorrectsUnevenAmount extends Command
     {
         Log::debug('convertOldStyleTransfers()');
         // select transactions with a foreign amount and a foreign currency. and it's a transfer. and they are different.
-        $transactions = Transaction::query()->distinct()
+        $transactions = Transaction::query()
+            ->distinct()
             ->leftJoin('transaction_journals', 'transaction_journals.id', 'transactions.transaction_journal_id')
             ->leftJoin('transaction_types', 'transaction_types.id', 'transaction_journals.transaction_type_id')
             ->where('transaction_types.type', TransactionTypeEnum::TRANSFER->value)
@@ -262,8 +264,14 @@ class CorrectsUnevenAmount extends Command
                 $journal->id ?? 0,
                 $journal->description ?? ''
             ));
-            Transaction::query()->where('transaction_journal_id', $journal->id ?? 0)->forceDelete();
-            TransactionJournal::query()->where('id', $journal->id ?? 0)->forceDelete();
+            Transaction::query()
+                ->where('transaction_journal_id', $journal->id ?? 0)
+                ->forceDelete()
+            ;
+            TransactionJournal::query()
+                ->where('id', $journal->id ?? 0)
+                ->forceDelete()
+            ;
             ++$this->count;
 
             return;
@@ -282,8 +290,14 @@ class CorrectsUnevenAmount extends Command
                 $journal->description ?? ''
             ));
 
-            Transaction::query()->where('transaction_journal_id', $journal->id ?? 0)->forceDelete();
-            TransactionJournal::query()->where('id', $journal->id ?? 0)->forceDelete();
+            Transaction::query()
+                ->where('transaction_journal_id', $journal->id ?? 0)
+                ->forceDelete()
+            ;
+            TransactionJournal::query()
+                ->where('id', $journal->id ?? 0)
+                ->forceDelete()
+            ;
             ++$this->count;
 
             return;
