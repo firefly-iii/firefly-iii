@@ -62,7 +62,7 @@
         })()
     </script>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    @vite(['src/sass/app.scss'])
+    @vite(['css/app.css', 'js/app.js'])
     <style nonce="{{ $JS_NONCE ?? '' }}">
         .monospace {font-family: monospace;font-size:11px;}
     </style>

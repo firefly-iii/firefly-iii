@@ -1,0 +1,22 @@
+{
+    "$schema": "https://www.schemastore.org/package.json",
+    "name": "v3",
+    "private": true,
+    "dependencies": {
+        "admin-lte": "^4.0.0",
+        "bootstrap-icons": "^1.13.1",
+        "overlayscrollbars": "^2.16.0"
+    },
+    "type": "module",
+    "scripts": {
+        "build": "vite build",
+        "dev": "vite"
+    },
+    "devDependencies": {
+        "concurrently": "^9.0.1",
+        "laravel-vite-plugin": "^3.1",
+        "tailwindcss": "^4.0.0",
+        "vite": "^8.0.0",
+        "vite-plugin-manifest-sri": "^0.2.0"
+    }
+}
