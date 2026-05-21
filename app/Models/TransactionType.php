@@ -35,7 +35,11 @@ class TransactionType extends Model
     use ReturnsIntegerIdTrait;
     use SoftDeletes;
 
-    protected $casts    = ['created_at' => 'datetime', 'updated_at' => 'datetime', 'deleted_at' => 'datetime'];
+    protected function casts(): array
+    {
+        return ['created_at' => 'datetime', 'updated_at' => 'datetime', 'deleted_at' => 'datetime'];
+    }
+
     protected $fillable = ['type'];
 
     /**
@@ -43,13 +47,13 @@ class TransactionType extends Model
      *
      * @throws NotFoundHttpException
      */
-    public static function routeBinder(self|string $value): self
+    public static function routeBinder(self | string $value): self
     {
         if (!auth()->check()) {
             throw new NotFoundHttpException();
         }
         if ($value instanceof self) {
-            $value = (string) $value->type;
+            $value = (string)$value->type;
         }
         $transactionType = self::where('type', ucfirst($value))->first();
         if (null !== $transactionType) {
@@ -84,10 +88,4 @@ class TransactionType extends Model
         return $this->hasMany(TransactionJournal::class);
     }
 
-    protected function casts(): array
-    {
-        return [
-            // 'type' => TransactionTypeEnum::class,
-        ];
-    }
 }

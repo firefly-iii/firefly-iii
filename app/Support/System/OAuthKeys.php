@@ -78,8 +78,8 @@ class OAuthKeys
         $privateKey = '';
         $publicKey  = '';
         // better check if keys are in the database:
-        $hasPrivate = FireflyConfig::query()->has(self::PRIVATE_KEY);
-        $hasPublic  = FireflyConfig::query()->has(self::PUBLIC_KEY);
+        $hasPrivate = FireflyConfig::has(self::PRIVATE_KEY);
+        $hasPublic  = FireflyConfig::has(self::PUBLIC_KEY);
 
         Log::debug(sprintf('keysInDatabase: hasPrivate:%s, hasPublic:%s', var_export($hasPrivate, true), var_export($hasPublic, true)));
 
