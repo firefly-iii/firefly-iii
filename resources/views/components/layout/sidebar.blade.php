@@ -43,10 +43,10 @@
 
     <li class="nav-item">
         <a href="#" class="nav-link">
-            <em class="nav-icon bi bi-wallet2"></em>
+            <em class="nav-icon fa fa-wallet"></em>
             <p>
                 {{ __('firefly.transactions') }}
-                <em class="nav-arrow bi bi-chevron-right"></em>
+                <em class="nav-arrow fa fa-chevron-right"></em>
             </p>
         </a>
         <ul class="nav nav-treeview">
@@ -81,7 +81,7 @@
             <em class="nav-icon bi bi-cpu"></em>
             <p>
                 {{ __('firefly.automation') }}
-                <i class="nav-arrow bi bi-chevron-right"></i>
+                <i class="nav-arrow fa fa-chevron-right"></i>
             </p>
         </a>
         <ul class="nav nav-treeview">
@@ -121,7 +121,7 @@
             <em class="nav-icon bi bi-credit-card"></em>
             <p>
                 {{__('firefly.accounts')}}
-                <i class="nav-arrow bi bi-chevron-right"></i>
+                <i class="nav-arrow fa fa-chevron-right"></i>
             </p>
         </a>
         <ul class="nav nav-treeview">
@@ -157,7 +157,7 @@
             <em class="nav-icon bi bi-tags"></em>
             <p>
                 {{trans('firefly.classification')}}
-                <em class="nav-arrow bi bi-chevron-right"></em>
+                <em class="nav-arrow fa fa-chevron-right"></em>
             </p>
         </a>
         <ul class="nav nav-treeview">

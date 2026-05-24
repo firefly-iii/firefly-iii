@@ -20,4 +20,6 @@
 
 import '../../boot/bootstrap.js';
 
+
+
 console.log('Loaded C');
