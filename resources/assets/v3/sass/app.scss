@@ -36,15 +36,15 @@ $success: #64B624 !default;
     $success: $success
 );
 
-@use '../../../../node_modules/@fortawesome/fontawesome-free/scss/variables' with (
-  $font-path: "@fortawesome/fontawesome-free/webfonts"
-);
+//@use '../../../../node_modules/@fortawesome/fontawesome-free/scss/variables' with (
+//  $font-path: "@fortawesome/fontawesome-free/webfonts"
+//);
 
-@use '../../../../node_modules/@fortawesome/fontawesome-free/scss/fontawesome';
-@use '../../../../node_modules/@fortawesome/fontawesome-free/scss/fa' as fa;
-@use '../../../../node_modules/@fortawesome/fontawesome-free/scss/solid' as fa-solid;
-@use '../../../../node_modules/@fortawesome/fontawesome-free/scss/brands' as fa-brands;
-@use '../../../../node_modules/@fortawesome/fontawesome-free/scss/regular' as fa-regular;
+//@use '../../../../node_modules/@fortawesome/fontawesome-free/scss/fontawesome';
+//@use '../../../../node_modules/@fortawesome/fontawesome-free/scss/fa' as fa;
+//@use '../../../../node_modules/@fortawesome/fontawesome-free/scss/solid' as fa-solid;
+//@use '../../../../node_modules/@fortawesome/fontawesome-free/scss/brands' as fa-brands;
+//@use '../../../../node_modules/@fortawesome/fontawesome-free/scss/regular' as fa-regular;
 
 
 // some local CSS

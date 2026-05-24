@@ -24,6 +24,7 @@ declare(strict_types=1);
 namespace FireflyIII\Providers;
 
 use Illuminate\Support\Facades\Blade;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Response;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Schema;
@@ -55,6 +56,17 @@ class AppServiceProvider extends ServiceProvider
             }
 
             return response()->json($value)->withHeaders($headers);
+        });
+
+        // blade extension for active menu link
+        Blade::directive('menuItemActive', function (string $route): string {
+            $name = Route::getCurrentRoute()->getName() ?? '';
+            Log::debug(sprintf('menuItemActive("%s", "%s")', $route, $name));
+            if (str_contains($route, $name)) {
+                return 'active';
+            }
+
+            return '';
         });
 
         // blade extension

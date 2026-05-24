@@ -18,8 +18,46 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
+// CSS
+// import "admin-lte/dist/css/adminlte.min.css"
+// Plus Bootstrap and dependency CSS
+import "bootstrap-icons/font/bootstrap-icons.css"
+// import "overlayscrollbars/styles/overlayscrollbars.css"
+
+
 import '../../boot/bootstrap.js';
+import sidebar from '../../pages/shared/sidebar.js';
+
+let index = function () {
+    return {
+        foo2: 'bar2',
+        init() {
+            console.log('init op index')
+        }
+    }
+};
 
 
+const comps = {
+    index,
+    sidebar
+};
 
-console.log('Loaded C');
+function loadPage(comps) {
+    Object.keys(comps).forEach(comp => {
+        let data = comps[comp]();
+        Alpine.data(comp, () => data);
+    });
+    Alpine.start();
+}
+
+// wait for load until bootstrapped event is received.
+document.addEventListener('firefly-iii-bootstrapped', () => {
+    console.log('Loaded through event listener.');
+    loadPage(comps);
+});
+// or is bootstrapped before event is triggered.
+if (window.bootstrapped) {
+    console.log('Loaded through window variable.');
+    loadPage(comps);
+}

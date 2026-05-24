@@ -3,9 +3,14 @@
     TODO boxes
     TODO charts
     TODO piggy bank overview
+    TODO side menu voor het maken van shit
+    TODO internals modal voor pagina settings
+    TODO wizard modal voor weet ik veel
+    TODO dark mode ook onthouden en dat script in het template
+    TODO fix create menu.
 
 
-    <div class="row">
+    <div class="row" x-data="index">
         <div class="col-lg-8 col-md-12 col-sm-12">
             <!--ACCOUNTS -->
             <div class="box box-primary">

@@ -62,7 +62,7 @@
         })()
     </script>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    @vite(['src/sass/app.scss'])
+    @vite(['sass/app.scss'])
 </head>
 
 <body class="login-page bg-body-secondary">

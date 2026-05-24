@@ -1,5 +1,5 @@
 /*
- * bootstrap.js
+ * sidebar.js
  * Copyright (c) 2026 james@firefly-iii.org
  *
  * This file is part of Firefly III (https://github.com/firefly-iii).
@@ -18,21 +18,14 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-// JS
-import "bootstrap"
-import "admin-lte"
-import Alpine from 'alpinejs'
-
-console.log('Loaded A');
-
-
-// start alpine JS
-window.Alpine = Alpine
-
-console.log('Loaded B');
-
-const event = new Event('firefly-iii-bootstrapped');
-document.dispatchEvent(event);
-window.bootstrapped = true;
-
-console.log('Bootstrapped!');
+export default () => ({
+    foo: 'bar',
+    init() {
+        console.log('init op sidebar')
+    },
+    logoutUser(e) {
+        e.preventDefault();
+        document.getElementById('logout-form').submit();
+        console.log('Logout user');
+    }
+});
