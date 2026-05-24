@@ -27,6 +27,7 @@ import "bootstrap-icons/font/bootstrap-icons.css"
 
 import '../../boot/bootstrap.js';
 import sidebar from '../../pages/shared/sidebar.js';
+import boxes from 'boxes.js';
 
 let index = function () {
     return {
@@ -40,7 +41,8 @@ let index = function () {
 
 const comps = {
     index,
-    sidebar
+    sidebar,
+    boxes
 };
 
 function loadPage(comps) {

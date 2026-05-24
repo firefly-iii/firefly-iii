@@ -208,13 +208,16 @@
                 <!--begin::Row-->
                 <div class="row">
                     <div class="col-sm-6">
-                        <h3 class="mb-0">Header</h3>
+                        <h3 class="mb-0">
+                            <em class="bi {{ $mainTitleIcon }}"></em>
+                            {{ $pageTitle }}
+
+                            <small class="text-xs text-muted">@if(isset($subTitleIcon))<em class="bi {{ $subTitleIcon }}"></em>X @endif{{$subTitle}}</small>
+                        </h3>
                     </div>
+
                     <div class="col-sm-6">
-                        <ol class="breadcrumb float-sm-end">
-                            <li class="breadcrumb-item"><a href="#">Home</a></li>
-                            <li class="breadcrumb-item active" aria-current="page">Dashboard</li>
-                        </ol>
+                        {{ Breadcrumbs::render() }}
                     </div>
                 </div>
                 <!--end::Row-->
@@ -241,14 +244,14 @@
     <!--begin::Footer-->
     <footer class="app-footer">
         <!--begin::To the end-->
-        <div class="float-end d-none d-sm-inline">Anything you want</div>
+        <div class="float-end d-none d-sm-inline">
+            <a href="{{route('debug')}}">v{{ $FF_VERSION }}</a>
+        </div>
         <!--end::To the end-->
         <!--begin::Copyright-->
-        <strong>
-            Bla bla bla
-            <a href="https://adminlte.io" class="text-decoration-none">AdminLTE.io</a>.
-        </strong>
-        All rights reserved.
+        <span>
+            <a href="https://www.firefly-iii.org/" target="_blank" title="Firefly III">Firefly III</a> &copy; James Cole, <a href="https://www.gnu.org/licenses/agpl-3.0.html" title="AGPL-3.0-or-later.">AGPL-3.0-or-later</a>.
+        </span>
         <!--end::Copyright-->
     </footer>
     <!--end::Footer-->
