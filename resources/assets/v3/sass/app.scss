@@ -1,0 +1,99 @@
+/*!
+ * app.scss
+ * Copyright (c) 2026 james@firefly-iii.org
+ *
+ * This file is part of Firefly III (https://github.com/firefly-iii).
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Affero General Public License as
+ * published by the Free Software Foundation, either version 3 of the
+ * License, or (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU Affero General Public License for more details.
+ *
+ * You should have received a copy of the GNU Affero General Public License
+ * along with this program.  If not, see <https://www.gnu.org/licenses/>.
+ */
+
+$color-mode-type: media-query;
+$link-decoration: none !default;
+$font-family-sans-serif: "Roboto", sans-serif;
+
+$danger: #CD5029 !default;
+$primary: #1E6581 !default;
+$success: #64B624 !default;
+
+// admin LTE
+@use "../../../../node_modules/admin-lte/src/scss/adminlte" with (
+    $color-mode-type: $color-mode-type,
+    $link-decoration: $link-decoration,
+    $font-family-sans-serif: $font-family-sans-serif,
+    $danger: $danger,
+    $primary: $primary,
+    $success: $success
+);
+
+@use '../../../../node_modules/@fortawesome/fontawesome-free/scss/variables' with (
+  $font-path: "@fortawesome/fontawesome-free/webfonts"
+);
+
+@use '../../../../node_modules/@fortawesome/fontawesome-free/scss/fontawesome';
+@use '../../../../node_modules/@fortawesome/fontawesome-free/scss/fa' as fa;
+@use '../../../../node_modules/@fortawesome/fontawesome-free/scss/solid' as fa-solid;
+@use '../../../../node_modules/@fortawesome/fontawesome-free/scss/brands' as fa-brands;
+@use '../../../../node_modules/@fortawesome/fontawesome-free/scss/regular' as fa-regular;
+
+
+// some local CSS
+.skip-links {display: none;}
+
+/*
+Remove bottom margin from unstyled lists
+ */
+.list-no-margin {margin-bottom: 0;}
+.list-no-margin li.list-indent {margin-left:1.6em;}
+
+.hover-footer {
+    overflow-x:hidden;
+    width:100%;
+    text-align:right;
+    white-space: nowrap;
+    text-overflow: ellipsis
+}
+.hover-footer:hover {
+    overflow: auto;
+    text-overflow: unset;
+    white-space: normal;
+}
+h3.hover-expand {
+    overflow-x: hidden;
+    text-overflow: ellipsis
+}
+h3.hover-expand:hover {
+    overflow-x: auto;
+}
+
+.form-control {
+    appearance: auto;
+}
+
+// edit buttons
+.hidden-edit-button {
+    cursor: pointer;
+}
+td:not(:hover) .hidden-edit-button {
+    visibility: hidden;
+}
+
+// Bootstrap
+// @import "bootstrap/scss/bootstrap";
+
+
+// @import "~bootstrap-sass/assets/stylesheets/bootstrap";
+
+// hover buttons
+
+

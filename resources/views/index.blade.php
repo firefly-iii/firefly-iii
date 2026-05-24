@@ -191,6 +191,10 @@
             </div>
         </div>
     </div>
+
+@endsection
+@section('scripts')
+    @vite(['js/pages/dashboard/dashboard.js'])
 @endsection
     {{--
     <script type="text/javascript" nonce="{{ $JS_NONCE }}">

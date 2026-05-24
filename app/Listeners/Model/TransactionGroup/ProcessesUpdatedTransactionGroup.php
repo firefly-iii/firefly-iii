@@ -118,11 +118,19 @@ class ProcessesUpdatedTransactionGroup
 
         $all           = $group->transactionJournals()->get()->pluck('id')->toArray();
 
-        /** @var Account $sourceAccount */
-        $sourceAccount = $first->transactions()->where('amount', '<', '0')->first()->account;
+        /** @var Account|null $sourceAccount */
+        $sourceAccount = $first->transactions()->where('amount', '<', '0')->first()?->account;
 
-        /** @var Account $destAccount */
-        $destAccount   = $first->transactions()->where('amount', '>', '0')->first()->account;
+        /** @var Account|null $destAccount */
+        $destAccount   = $first->transactions()->where('amount', '>', '0')->first()?->account;
+        if(null === $destAccount) {
+            Log::warning(sprintf('Group #%d (journal #%d) has no destination account. Break.', $group->id, $first->id));
+            return 0;
+        }
+        if(null === $sourceAccount) {
+            Log::warning(sprintf('Group #%d (journal #%d) has no source account. Break.', $group->id, $first->id));
+            return 0;
+        }
 
         $type          = $first->transactionType->type;
         $effect        = 0;

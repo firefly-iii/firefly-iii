@@ -1,5 +1,5 @@
 /*
- * app.js
+ * bootstrap.js
  * Copyright (c) 2026 james@firefly-iii.org
  *
  * This file is part of Firefly III (https://github.com/firefly-iii).
@@ -18,4 +18,17 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-// unused, see the specific pages.
+// JS
+import "bootstrap"
+import "admin-lte"
+import Alpine from 'alpinejs'
+
+console.log('Loaded A');
+
+
+// start alpine JS
+window.Alpine = Alpine
+Alpine.start()
+
+console.log('Loaded B');
+

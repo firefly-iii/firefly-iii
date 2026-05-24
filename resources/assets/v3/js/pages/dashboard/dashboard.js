@@ -1,5 +1,5 @@
 /*
- * app.js
+ * dashboard.js
  * Copyright (c) 2026 james@firefly-iii.org
  *
  * This file is part of Firefly III (https://github.com/firefly-iii).
@@ -18,4 +18,6 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-// unused, see the specific pages.
+import '../../boot/bootstrap.js';
+
+console.log('Loaded C');

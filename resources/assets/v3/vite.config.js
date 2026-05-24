@@ -18,25 +18,52 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-import { defineConfig } from 'vite';
+import {defineConfig} from 'vite';
 import laravel from 'laravel-vite-plugin';
 import manifestSRI from 'vite-plugin-manifest-sri';
+import fs from "fs";
 
-export default defineConfig({
-    base: './',
-    plugins: [
-        laravel({
-            input: ['css/app.css', 'js/app.js'],
-            buildDirectory: '../../../../public/build',
-            refresh: true,
-            fonts: [
-            ],
-        }),
-        manifestSRI(),
-    ],
-    server: {
-        watch: {
-            ignored: ['**/storage/framework/views/**'],
+export default defineConfig(({command, mode, isSsrBuild, isPreview}) => {
+    let https = null;
+    if (command === 'serve') {
+        https = {
+            key: fs.readFileSync(`/vagrant/tls-certificates/wildcard.sd.internal.key`),
+            cert: fs.readFileSync(`/vagrant/tls-certificates/wildcard.sd.internal.crt`),
+        };
+    }
+
+    return {
+        base: './',
+        plugins: [
+            laravel({
+                input: [
+                    // CSS for entire app
+                    'sass/app.scss',
+
+                    // dashboard
+                    'js/pages/dashboard/dashboard.js'
+                ],
+                buildDirectory: '../../../../public/build',
+                // publicDirectory: '../../../public',
+                refresh: true,
+                fonts: [],
+            }),
+            manifestSRI(),
+        ],
+        server: {
+            watch: {
+                ignored: ['**/storage/framework/views/**'],
+                usePolling: true,
+            },
+            cors: true,
+            // make sure this IP matches the IP of the dev machine.
+            origin: 'https://192.168.96.169:5173',
+            port: 5173,
+            host: true,
+            // hmr: {
+            //     protocol: 'wss',
+            // },
+            https: https,
         },
-    },
+    }
 });

@@ -28,3 +28,6 @@ public/v1/js/webhooks
 resources/assets/v2/node_modules
 resources/assets/v2/build
 public/v2/i18n
+
+# ignore v3 build files
+resources/assets/v3/node_modules

@@ -203,6 +203,8 @@ class JournalUpdateService
 
     /**
      * Get destination transaction.
+     *
+     * @throws FireflyException
      */
     private function getDestinationTransaction(): Transaction
     {
@@ -210,6 +212,9 @@ class JournalUpdateService
             /** @var null|Transaction $result */
             $result                       = $this->transactionJournal->transactions()->where('amount', '>', 0)->first();
             $this->destinationTransaction = $result;
+        }
+        if(null === $this->destinationTransaction) {
+            throw new FireflyException(sprintf('Destination transaction for transaction group #%d could not be found.', $this->transactionGroup->transaction_group_id ?? 0));
         }
 
         return $this->destinationTransaction;
