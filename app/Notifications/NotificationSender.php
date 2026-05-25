@@ -45,7 +45,7 @@ class NotificationSender
             Log::debug(sprintf('Notification send language set to "%s"', $lang));
         }
 
-        if ((in_array('email', $notification->broadcastOn() ) || 0 === count($notification->broadCastOn())) && 'smtp' === config('mail.default')) {
+        if ((in_array('email', $notification->broadCastOn() ) || 0 === count($notification->broadCastOn())) && 'smtp' === config('mail.default')) {
             Log::debug(
                 sprintf('Trying to send notification %s via "%s:%s" using encryption "%s" with username "%s" to "%s".',
                         get_class($notification),
