@@ -111,7 +111,7 @@
     },
     "require-dev": {
         "barryvdh/laravel-ide-helper": "^3",
-        "carthage-software/mago": "^1.24.0",
+        "carthage-software/mago": "^1.29.0",
         "driftingly/rector-laravel": "^2.0",
         "ergebnis/phpstan-rules": "^2",
         "fakerphp/faker": "1.*",
