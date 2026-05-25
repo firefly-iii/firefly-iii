@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "7f960fa15bddd432267fb2bb9b730195",
+    "content-hash": "440b393f68baef84b8cd18e5d07638cd",
     "packages": [
         {
             "name": "bacon/bacon-qr-code",
@@ -10458,16 +10458,16 @@
         },
         {
             "name": "driftingly/rector-laravel",
-            "version": "2.3.0",
+            "version": "2.4.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/driftingly/rector-laravel.git",
-                "reference": "3c1c13f335b3b4d1a1f944a8ea194020044871ed"
+                "reference": "5342df61b0a77e5a408744e5686d80a51a07a48d"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/driftingly/rector-laravel/zipball/3c1c13f335b3b4d1a1f944a8ea194020044871ed",
-                "reference": "3c1c13f335b3b4d1a1f944a8ea194020044871ed",
+                "url": "https://api.github.com/repos/driftingly/rector-laravel/zipball/5342df61b0a77e5a408744e5686d80a51a07a48d",
+                "reference": "5342df61b0a77e5a408744e5686d80a51a07a48d",
                 "shasum": ""
             },
             "require": {
@@ -10488,9 +10488,9 @@
             "description": "Rector upgrades rules for Laravel Framework",
             "support": {
                 "issues": "https://github.com/driftingly/rector-laravel/issues",
-                "source": "https://github.com/driftingly/rector-laravel/tree/2.3.0"
+                "source": "https://github.com/driftingly/rector-laravel/tree/2.4.0"
             },
-            "time": "2026-04-08T10:52:44+00:00"
+            "time": "2026-05-22T18:34:15+00:00"
         },
         {
             "name": "ergebnis/phpstan-rules",
