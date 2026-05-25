@@ -42,9 +42,10 @@ class Binder
     /**
      * Binder constructor.
      */
-    public function __construct(/**
-     * The authentication factory instance.
-     */
+    public function __construct(
+        /**
+         * The authentication factory instance.
+         */
         protected Auth $auth
     ) {
         $this->binders = Domain::getBindables();
