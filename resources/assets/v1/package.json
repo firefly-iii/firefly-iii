@@ -10,7 +10,7 @@
         "prod": "mix --production"
     },
     "dependencies": {
-        "date-fns": "4.1.0",
+        "date-fns": "4.3.0",
         "stream-browserify": "^3.0.0"
     },
     "devDependencies": {
@@ -28,6 +28,6 @@
         "vue-i18n": "^8",
         "vue-loader": "^15",
         "vue-template-compiler": "^2.7",
-        "webpack": "~5.105.4"
+        "webpack": "~5.107.1"
     }
 }
