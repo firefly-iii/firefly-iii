@@ -267,6 +267,26 @@
 
 <!--end::OverlayScrollbars Configure-->
 
+{{-- Moment JS  --}}
+<script src="v1/js/lib/moment.min.js?v={{ $FF_BUILD_TIME }}" type="text/javascript" nonce="{{ $JS_NONCE }}"></script>
+<script src="v1/js/lib/moment/{{ str_replace($language,'-','_') }}.js?v={{ $FF_BUILD_TIME }}" type="text/javascript" nonce="{{ $JS_NONCE }}"></script>
+
+{{-- All kinds of variables. --}}
+<script src="{{ route('javascript.variables') }}?ext=.js&amp;v={{ $FF_VERSION }}@if(isset($account))&amp;account={{ $account->id }}@endif" type="text/javascript" nonce="{{ $JS_NONCE }}"></script>
+
+{{-- Base script: jquery and bootstrap --}}
+<script src="v1/js/app.js?v={{ $FF_BUILD_TIME }}" type="text/javascript" nonce="{{ $JS_NONCE }}"></script>
+
+
+{{-- date range picker, current template, etc. --}}
+<script src="v1/js/lib/daterangepicker.js?v={{ $FF_BUILD_TIME }}" type="text/javascript" nonce="{{ $JS_NONCE }}"></script>
+<script src="v1/lib/adminlte/js/adminlte.min.js?v={{ $FF_BUILD_TIME }}" type="text/javascript" nonce="{{ $JS_NONCE }}"></script>
+<script type="text/javascript" src="v1/js/lib/accounting.min.js?v={{ $FF_BUILD_TIME }}" nonce="{{ $JS_NONCE }}"></script>
+
+{{--  Firefly III code --}}
+<script type="text/javascript" src="v1/js/ff/firefly.js?v={{ $FF_BUILD_TIME }}" nonce="{{ $JS_NONCE }}"></script>
+<script type="text/javascript" src="v1/js/ff/help.js?v={{ $FF_BUILD_TIME }}" nonce="{{ $JS_NONCE }}"></script>
+
 @yield('scripts')
 
 <!--begin::Color Mode Toggle (#6010)-->

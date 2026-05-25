@@ -22,17 +22,61 @@
 import "bootstrap"
 import "admin-lte"
 import Alpine from 'alpinejs'
+import store from "store";
+import axios from 'axios';
+import observePlugin from 'store/plugins/observe';
+import {getFreshVariable} from "v2/src/store/get-fresh-variable.js";
+import {getVariable} from "v2/src/store/get-variable.js";
+import {getViewRange} from "v2/src/support/get-viewrange.js";
+import {loadTranslations} from "v2/src/support/load-translations.js";
 
-console.log('Loaded A');
+store.addPlugin(observePlugin);
 
-
-// start alpine JS
+window.bootstrapped = false;
+window.store = store;
 window.Alpine = Alpine
 
-console.log('Loaded B');
+window.axios = axios;
+window.axios.defaults.headers.common['X-Requested-With'] = 'XMLHttpRequest';
 
-const event = new Event('firefly-iii-bootstrapped');
-document.dispatchEvent(event);
-window.bootstrapped = true;
+// always grab the preference "marker" from Firefly III.
+getFreshVariable('lastActivity').then((serverValue) => {
+    if(null === serverValue) {
+        console.log('Server value is null in getFreshVariable.');
+        throw new Error('401 in getFreshVariable.');
+    }
+    const localValue = store.get('lastActivity');
+    store.set('cacheValid', localValue === serverValue);
+    store.set('lastActivity', serverValue);
+    console.log('Server value: ' + serverValue);
+    console.log('Local value:  ' + localValue);
+    console.log('Cache valid:  ' + (localValue === serverValue));
+}).then(() => {
+    Promise.all([
+        getVariable('viewRange'),
+        getVariable('darkMode'),
+        getVariable('locale'),
+        getVariable('language')
+    ]).then((values) => {
+        if (!store.get('start') || !store.get('end')) {
+            // calculate new start and end, and store them.
+            const range = getViewRange(values[0], new Date);
+            store.set('start', range.start);
+            store.set('end', range.end);
+        }
 
-console.log('Bootstrapped!');
+        // save local in window.__ something
+        window.__localeId__ = values[2];
+        store.set('language', values[3]);
+        store.set('locale', values[3]);
+        loadTranslations(values[3]).then(() => {
+            const event = new Event('firefly-iii-bootstrapped');
+            document.dispatchEvent(event);
+            window.bootstrapped = true;
+            console.log('Bootstrapped!');
+        });
+    });
+}).catch((error) => {
+    console.error('Error while bootstrapping: ' + error);
+});
+

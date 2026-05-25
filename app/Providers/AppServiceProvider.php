@@ -23,6 +23,7 @@ declare(strict_types=1);
 
 namespace FireflyIII\Providers;
 
+use FireflyIII\Models\Account;
 use Illuminate\Support\Facades\Blade;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Response;
@@ -67,6 +68,13 @@ class AppServiceProvider extends ServiceProvider
             }
 
             return '';
+        });
+
+        // blade extension for account balance.
+        Blade::directive('balance', function (string $account): string {
+            var_dump($account);exit;
+            return $account;
+            return 'blablabla';
         });
 
         // blade extension

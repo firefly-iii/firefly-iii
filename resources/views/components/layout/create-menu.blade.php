@@ -1,83 +1,154 @@
 <!-- begin create menu -->
 <li class="nav-item dropdown">
     <a class="nav-link" data-bs-toggle="dropdown" href="#" aria-expanded="false">
-        <i class="bi bi-chat-text"></i>
-        <span class="navbar-badge badge text-bg-danger">3</span>
+        <em class="bi bi-plus-circle"></em>
     </a>
     <div class="dropdown-menu dropdown-menu-lg dropdown-menu-end">
-        <a href="#" class="dropdown-item">
-            <!--begin::Message-->
+        <a href="{{ route('transactions.create', ['withdrawal']) }}" class="dropdown-item">
             <div class="d-flex">
-                <div class="flex-shrink-0">
-                    <img src="./assets/img/user1-128x128.jpg" alt="User Avatar" class="img-size-50 rounded-circle me-3">
-                </div>
-                <div class="flex-grow-1">
+                <div class="grow">
                     <h3 class="dropdown-item-title">
-                        Brad Diesel
-                        <span class="float-end fs-7 text-danger"><i class="bi bi-star-fill"></i></span>
-                    </h3>
-                    <p class="fs-7">Call me whenever you can...</p>
-                    <p class="fs-7 text-secondary">
-                        <i class="bi bi-clock-fill me-1"></i> 4 Hours Ago
-                    </p>
-                </div>
-            </div>
-            <!--end::Message-->
-        </a>
-        <div class="dropdown-divider"></div>
-        <a href="#" class="dropdown-item">
-            <!--begin::Message-->
-            <div class="d-flex">
-                <div class="flex-shrink-0">
-                    <img src="./assets/img/user8-128x128.jpg" alt="User Avatar" class="img-size-50 rounded-circle me-3">
-                </div>
-                <div class="flex-grow-1">
-                    <h3 class="dropdown-item-title">
-                        John Pierce
-                        <span class="float-end fs-7 text-secondary">
-                          <i class="bi bi-star-fill"></i>
-                        </span>
-                    </h3>
-                    <p class="fs-7">I got your message bro</p>
-                    <p class="fs-7 text-secondary">
-                        <i class="bi bi-clock-fill me-1"></i> 4 Hours Ago
-                    </p>
-                </div>
-            </div>
-            <!--end::Message-->
-        </a>
-        <div class="dropdown-divider"></div>
-        <a href="#" class="dropdown-item">
-            <!--begin::Message-->
-            <div class="d-flex">
-                <div class="flex-grow-1">
-                    <h3 class="dropdown-item-title">
-                        <em class="bi bi-car-front"></em> Nora SilvesterX
+                        <!-- withdrawal, deposit, transfer -->
+                        <em class="bi bi-arrow-left me-2"></em>
+                        {{ __('firefly.create_new_withdrawal') }}
                     </h3>
                 </div>
             </div>
-            <!--end::Message-->
         </a>
         <div class="dropdown-divider"></div>
-        <a href="#" class="dropdown-item">
-            <!--begin::Message-->
+        <a href="{{ route('transactions.create', ['deposit']) }}" class="dropdown-item">
             <div class="d-flex">
-                <div class="flex-grow-1">
-                    <p class="fs-7">The subject goes here</p>
+                <div class="grow">
+                    <h3 class="dropdown-item-title">
+                        <!-- withdrawal, deposit, transfer -->
+                        <em class="bi bi-arrow-right me-2"></em>
+                        {{ __('firefly.create_new_deposit') }}
+                    </h3>
                 </div>
             </div>
-            <!--end::Message-->
         </a>
-
         <div class="dropdown-divider"></div>
-        <a href="#" class="dropdown-item">
-            Bla bla
-
-            <!--end::Message-->
+        <a href="{{ route('transactions.create', ['transfer']) }}" class="dropdown-item">
+            <div class="d-flex">
+                <div class="grow">
+                    <h3 class="dropdown-item-title">
+                        <!-- withdrawal, deposit, transfer -->
+                        <em class="bi bi-arrow-left-right me-2"></em>
+                        {{ __('firefly.create_new_transfer') }}
+                    </h3>
+                </div>
+            </div>
         </a>
-
         <div class="dropdown-divider"></div>
-        <a href="#" class="dropdown-item dropdown-footer">See All Messages</a>
+
+        <a href="{{ route('accounts.create', ['asset']) }}" class="dropdown-item">
+            <div class="d-flex">
+                <div class="grow">
+                    <h3 class="dropdown-item-title">
+                        <!-- withdrawal, deposit, transfer -->
+                        <em class="bi bi-cash me-2"></em>
+                        {{ __('firefly.create_new_asset') }}
+                    </h3>
+                </div>
+            </div>
+        </a>
+        <div class="dropdown-divider"></div>
+        <a href="{{ route('accounts.create', ['liabilities']) }}" class="dropdown-item">
+            <div class="d-flex">
+                <div class="grow">
+                    <h3 class="dropdown-item-title">
+                        <!-- withdrawal, deposit, transfer -->
+                        <em class="bi bi-ticket-detailed me-2"></em>
+                        {{ __('firefly.create_new_liabilities') }}
+                    </h3>
+                </div>
+            </div>
+        </a>
+        <div class="dropdown-divider"></div>
+
+        <a href="{{ route('budgets.create') }}" class="dropdown-item">
+            <div class="d-flex">
+                <div class="grow">
+                    <h3 class="dropdown-item-title">
+                        <!-- withdrawal, deposit, transfer -->
+                        <em class="bi bi-pie-chart me-2"></em>
+                        {{ __('firefly.create_new_budget') }}
+                    </h3>
+                </div>
+            </div>
+        </a>
+        <div class="dropdown-divider"></div>
+        <a href="{{ route('categories.create') }}" class="dropdown-item">
+            <div class="d-flex">
+                <div class="grow">
+                    <h3 class="dropdown-item-title">
+                        <!-- withdrawal, deposit, transfer -->
+                        <em class="bi bi-bookmark me-2"></em>
+                        {{ __('firefly.create_new_category') }}
+                    </h3>
+                </div>
+            </div>
+        </a>
+        <div class="dropdown-divider"></div>
+        <a href="{{ route('piggy-banks.create') }}" class="dropdown-item">
+            <div class="d-flex">
+                <div class="grow">
+                    <h3 class="dropdown-item-title">
+                        <!-- withdrawal, deposit, transfer -->
+                        <em class="bi bi-bullseye me-2"></em>
+                        {{ __('firefly.create_new_piggy_bank') }}
+                    </h3>
+                </div>
+            </div>
+        </a>
+        <div class="dropdown-divider"></div>
+        <a href="{{ route('subscriptions.create') }}" class="dropdown-item">
+            <div class="d-flex">
+                <div class="grow">
+                    <h3 class="dropdown-item-title">
+                        <!-- withdrawal, deposit, transfer -->
+                        <em class="bi bi-calendar me-2"></em>
+                        {{ __('firefly.create_new_subscription') }}
+                    </h3>
+                </div>
+            </div>
+        </a>
+        <div class="dropdown-divider"></div>
+        <a href="{{ route('rules.create') }}" class="dropdown-item">
+            <div class="d-flex">
+                <div class="grow">
+                    <h3 class="dropdown-item-title">
+                        <!-- withdrawal, deposit, transfer -->
+                        <em class="bi bi-shuffle me-2"></em>
+                        {{ __('firefly.create_new_rule') }}
+                    </h3>
+                </div>
+            </div>
+        </a>
+        <div class="dropdown-divider"></div>
+        <a href="{{ route('recurring.create') }}" class="dropdown-item">
+            <div class="d-flex">
+                <div class="grow">
+                    <h3 class="dropdown-item-title">
+                        <!-- withdrawal, deposit, transfer -->
+                        <em class="bi bi-paint-bucket me-2"></em>
+                        {{ __('firefly.create_new_recurrence') }}
+                    </h3>
+                </div>
+            </div>
+        </a>
+        <div class="dropdown-divider"></div>
+        <a href="{{ route('webhooks.create') }}" class="dropdown-item">
+            <div class="d-flex">
+                <div class="grow">
+                    <h3 class="dropdown-item-title">
+                        <!-- withdrawal, deposit, transfer -->
+                        <em class="bi bi-lightning me-2"></em>
+                        {{ __('firefly.create_new_webhook') }}
+                    </h3>
+                </div>
+            </div>
+        </a>
     </div>
 </li>
 <!-- end create menu -->

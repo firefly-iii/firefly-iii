@@ -1,17 +1,18 @@
 <?php
 
-namespace FireflyIII\View\Components\Lists;
+namespace FireflyIII\View\Components\Generic;
 
 use Closure;
 use Illuminate\Contracts\View\View;
 use Illuminate\View\Component;
 
-class GroupsTiny extends Component
+class Amount extends Component
 {
+
     /**
      * Create a new component instance.
      */
-    public function __construct(public array $transactions)
+    public function __construct(public array $transaction)
     {
         //
     }
@@ -21,6 +22,6 @@ class GroupsTiny extends Component
      */
     public function render(): View|Closure|string
     {
-        return view('components.lists.groups-tiny');
+        return view('components.generic.amount');
     }
 }

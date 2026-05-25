@@ -22,8 +22,13 @@
 
 declare(strict_types=1);
 
+use Carbon\Carbon;
 use FireflyIII\Exceptions\FireflyException;
-
+use FireflyIII\Models\TransactionCurrency;
+use FireflyIII\Support\Facades\Amount;
+use FireflyIII\Support\Facades\Steam;
+use Illuminate\Support\Collection;
+use Illuminate\Support\Facades\Log;
 use function Safe\mb_ord;
 use function Safe\preg_match;
 use function Safe\preg_replace_callback;
@@ -32,7 +37,7 @@ if (!function_exists('env_default_when_empty')) {
     /**
      * @return null|mixed
      */
-    function env_default_when_empty(mixed $value, bool|int|string|null $default = null): mixed
+    function env_default_when_empty(mixed $value, bool | int | string | null $default = null): mixed
     {
         if (null === $value) {
             return $default;
@@ -42,6 +47,59 @@ if (!function_exists('env_default_when_empty')) {
         }
 
         return $value;
+    }
+}
+
+
+if (!function_exists('bladeAccountBalance')) {
+    function bladeAccountBalance(\FireflyIII\Models\Account $account): string
+    {
+        /** @var Carbon $date */
+        $date = now();
+
+        // get the date from the current session. If it's in the future, keep `now()`.
+        /** @var Carbon $session */
+        $session = clone session('end', today(config('app.timezone'))->endOfMonth());
+        if ($session->lt($date)) {
+            $date = $session->copy();
+            $date->endOfDay();
+        }
+        Log::debug(sprintf('twig balance: Call finalAccountBalance with date/time "%s"', $date->toIso8601String()));
+
+        // 2025-10-08 replace finalAccountBalance with accountsBalancesOptimized.
+        $info = Steam::accountsBalancesOptimized(new Collection()->push($account), $date)[$account->id];
+        // $info             = Steam::finalAccountBalance($account, $date);
+        $currency         = Steam::getAccountCurrency($account);
+        $primary          = Amount::getPrimaryCurrency();
+        $convertToPrimary = Amount::convertToPrimary();
+        $usePrimary       = $convertToPrimary && $primary->id !== $currency->id;
+        $currency         ??= $primary;
+        $strings          = [];
+        foreach ($info as $key => $balance) {
+            if ('balance' === $key) {
+                // balance in account currency.
+                if (!$usePrimary) {
+                    $strings[] = Amount::formatAnything($currency, $balance, false);
+                }
+
+                continue;
+            }
+            if ('pc_balance' === $key) {
+                // balance in primary currency.
+                if ($usePrimary) {
+                    $strings[] = Amount::formatAnything($primary, $balance, false);
+                }
+
+                continue;
+            }
+            // for multi currency accounts.
+            if ($usePrimary && $key !== $primary->code) {
+                $strings[] = Amount::formatAnything(Amount::getTransactionCurrencyByCode($key), $balance, false);
+            }
+        }
+
+        return implode(', ', $strings);
+
     }
 }
 
@@ -64,14 +122,14 @@ if (!function_exists('blade_escape_js')) {
         return preg_replace_callback(
             '#[^a-zA-Z0-9,\._]#Su',
             static function ($matches) {
-                $char      = $matches[0];
+                $char = $matches[0];
 
                 /*
                  * A few characters have short escape sequences in JSON and JavaScript.
                  * Escape sequences supported only by JavaScript, not JSON, are omitted.
                  * \" is also supported but omitted, because the resulting string is not HTML safe.
                  */
-                $short     = match ($char) {
+                $short = match ($char) {
                     '\\'    => '\\\\',
                     '/'     => '\/',
                     "\x08"  => '\b',
@@ -93,9 +151,9 @@ if (!function_exists('blade_escape_js')) {
 
                 // Split characters outside the BMP into surrogate pairs
                 // https://tools.ietf.org/html/rfc2781.html#section-2.1
-                $u         = $codepoint - 0x10_000;
-                $high      = 0xD800 | ($u >> 10);
-                $low       = 0xDC00 | ($u & 0x3FF);
+                $u    = $codepoint - 0x10_000;
+                $high = 0xD800 | ($u >> 10);
+                $low  = 0xDC00 | ($u & 0x3FF);
 
                 return \sprintf('\u%04X\u%04X', $high, $low);
             },

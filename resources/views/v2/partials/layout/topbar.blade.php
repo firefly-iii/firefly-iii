@@ -57,11 +57,7 @@
         <i class="fa-solid fa-plus-circle"></i>
     </a>
     <div class="dropdown-menu dropdown-menu-lg dropdown-menu-end">
-        <!-- withdrawal, deposit, transfer -->
-        <a href="{{ route('transactions.create', ['withdrawal']) }}" class="dropdown-item">
-            <em class="fa-solid fa-arrow-left fa-fw me-2"></em>
-            {{ __('firefly.create_new_withdrawal') }}
-        </a>
+
         <a href="{{ route('transactions.create', ['deposit']) }}" class="dropdown-item">
             <em class="fa-solid fa-arrow-right fa-fw me-2"></em>
             {{ __('firefly.create_new_deposit') }}
