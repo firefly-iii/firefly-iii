@@ -1,6 +1,6 @@
 /*
- * index.js
- * Copyright (c) 2023 james@firefly-iii.org
+ * post.js
+ * Copyright (c) 2022 james@firefly-iii.org
  *
  * This file is part of Firefly III (https://github.com/firefly-iii).
  *
@@ -18,11 +18,11 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
+import {api} from "../../boot/axios";
 
-import {api} from "../../boot/axios.js";
-
-export default class Summary {
-    get(start, end, code) {
-        return api.get('/api/v1/summary/basic', {params: {start: start, end: end, code: code}});
+export default class Post {
+    post(name, value) {
+        let url = '/api/v1/preferences';
+        return api.post(url, {name: name, data: value});
     }
 }

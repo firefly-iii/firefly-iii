@@ -41,6 +41,7 @@ export default defineConfig(({command, mode, isSsrBuild, isPreview}) => {
                     'sass/app.scss',
 
                     // dashboard
+                    'js/pages/dashboard/boxes.js',
                     'js/pages/dashboard/dashboard.js'
                 ],
                 buildDirectory: '../../../../public/build',

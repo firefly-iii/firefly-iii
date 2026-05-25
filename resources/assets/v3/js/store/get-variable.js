@@ -18,8 +18,8 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-import Get from "../api/v1/preferences/index.js";
-import Post from "../api/v1/preferences/post.js";
+import Get from "../api/preferences/index.js";
+import Post from "../api/preferences/post.js";
 
 export function getVariable(name, defaultValue = null) {
     const validCache = window.store.get('cacheValid');
