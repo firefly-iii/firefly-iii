@@ -1,6 +1,5 @@
 @extends('layout.v3.session')
 @section('content')
-    TODO boxes
     TODO internals modal voor pagina settings
     TODO wizard modal voor weet ik veel
     TODO dark mode ook onthouden en dat script in het template
@@ -127,7 +126,7 @@
 
             @if($billCount > 0)
             <!--BILLS -->
-            <div class="card">
+            <div class="card mb-4">
                 <div class="card-header with-border">
                     <div class="card-title"><a href="{{ route('subscriptions.index') }}" title="{{ __('firefly.bills') }}">{{ __('firefly.bills') }}</a></div>
 
@@ -153,10 +152,9 @@
     <div class="row">
         <div class="col-lg-12 col-md-12 col-sm-12">
             <!--EXPENSE ACCOUNTS -->
-            <div class="card">
-                <div class="box-header with-border">
-                    <div class="card-title"><a href="{{ route('accounts.index',['expense']) }}"
-                                             title="{{ __('firefly.expense_accounts') }}">{{ __('firefly.expense_accounts') }}</a>
+            <div class="card mb-4">
+                <div class="card-header with-border">
+                    <div class="card-title"><a href="{{ route('accounts.index',['expense']) }}" title="{{ __('firefly.expense_accounts') }}">{{ __('firefly.expense_accounts') }}</a>
                     </div>
                 </div>
                 <div class="card-body">
@@ -169,8 +167,8 @@
                 </div>
             </div>
             <!--OPTIONAL REVENUE ACCOUNTS -->
-            <div class="card">
-                <div class="box-header with-border">
+            <div class="card mb-4">
+                <div class="card-header with-border">
                     <div class="card-title"><a href="{{ route('accounts.index',['revenue']) }}"
                                              title="{{ __('firefly.revenue_accounts') }}">{{ __('firefly.revenue_accounts') }}</a></div>
 
