@@ -250,10 +250,11 @@ class CurrencyRepository implements CurrencyRepositoryInterface, UserGroupInterf
         }
 
         Log::debug(sprintf('Final result: %s', $result->code));
-        if (false === $result->enabled) {
-            Log::debug(sprintf('Also enabled currency %s', $result->code));
-            $this->enable($result);
-        }
+        // code below is no longer relevant.
+//        if (false === $result->enabled) {
+//            Log::debug(sprintf('Also enabled currency %s', $result->code));
+//            $this->enable($result);
+//        }
 
         return $result;
     }
@@ -276,10 +277,10 @@ class CurrencyRepository implements CurrencyRepositoryInterface, UserGroupInterf
             Log::debug(sprintf('Searching for currency with code "%s"...', $currencyCode));
             $result = $this->findByCode($currencyCode);
 
-            if ($result instanceof TransactionCurrency && false === $result->enabled) {
-                Log::debug(sprintf('Also enabled currency %s', $result->code));
-                $this->enable($result);
-            }
+//            if ($result instanceof TransactionCurrency && false === $result->enabled) {
+//                Log::debug(sprintf('Also enabled currency %s', $result->code));
+//                $this->enable($result);
+//            }
 
             return $result;
         }
@@ -469,5 +470,19 @@ class CurrencyRepository implements CurrencyRepositoryInterface, UserGroupInterf
 
         // also count foreign:
         return $count + Transaction::query()->where('foreign_currency_id', $currency->id)->count();
+    }
+
+    #[\Override]
+    public function isEnabled(TransactionCurrency $currency): bool
+    {
+        if(null === $this->user && null === $this->userGroup){
+            throw new FireflyException(sprintf('Cannot check enabled status for currency "%s" in stateless currency repository', $currency->code));
+        }
+        $userGroup = $this->userGroup;
+        if(null === $this->userGroup) {
+            $userGroup = $this->user->userGroup;
+        }
+        $currency = $userGroup->currencies()->find($currency->id);
+        return null !== $currency;
     }
 }

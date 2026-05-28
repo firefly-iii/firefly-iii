@@ -93,6 +93,8 @@ interface CurrencyRepositoryInterface
      */
     public function getCompleteSet(): Collection;
 
+    public function isEnabled(TransactionCurrency $currency): bool;
+
     /**
      * Get currency exchange rate.
      *
