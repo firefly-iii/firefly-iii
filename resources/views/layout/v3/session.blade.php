@@ -1,6 +1,5 @@
 <!doctype html>
 <html lang="{{ __('config.html_language') }}">
-<!--begin::Head-->
 <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     <meta charset="UTF-8">
@@ -54,6 +53,7 @@
 <!--end::Head-->
 <!--begin::Body-->
 <body class="layout-fixed sidebar-mini  sidebar-expand-lg bg-body-tertiary">
+
 <!--begin::App Wrapper-->
 <div class="app-wrapper">
     <!--begin::Header-->
@@ -86,6 +86,36 @@
                     </a>
                 </li>
                 <!--end::Fullscreen Toggle-->
+
+                <li class="nav-item">
+                    <a href="#" class="nav-link date-range-holder">
+                            <span id="daterange"></span>
+                    </a>
+                </li>
+
+                <!-- anonymous -->
+
+                <li class="nav-item">
+                    <a  class="nav-link" href="#" id="anonymous">
+                        @if($anonymous)
+                            <span class="text-danger bi bi-eye-slash"></span>
+                        @endif
+                        @if(!$anonymous)
+                            <span class="text-success bi bi-eye"></span>
+                        @endif
+                    </a>
+                </li>
+                <!-- end anonymous -->
+
+                <!-- help button -->
+                <li class="nav-item hidden-sm hidden-xs">
+                    <a href="#" class="nav-link" id="help" data-route="{{ $original_route_name }}"
+                       data-extra="{{ $objectType ?? '' }}">
+                            <span class="bi bi-question-circle" data-route="{{ $original_route_name }}" data-extra="{{ $objectType ?? '' }}"></span>
+                    </a>
+                </li>
+                <!-- end help button -->
+
 
                 <!--begin::Color Mode Toggle (#6010)-->
                 <li class="nav-item dropdown">
@@ -267,6 +297,7 @@
 
 <!--end::OverlayScrollbars Configure-->
 
+
 {{-- Moment JS  --}}
 <script src="v1/js/lib/moment.min.js?v={{ $FF_BUILD_TIME }}" type="text/javascript" nonce="{{ $JS_NONCE }}"></script>
 <script src="v1/js/lib/moment/{{ str_replace($language,'-','_') }}.js?v={{ $FF_BUILD_TIME }}" type="text/javascript" nonce="{{ $JS_NONCE }}"></script>
@@ -280,8 +311,6 @@
 
 {{-- date range picker, current template, etc. --}}
 <script src="v1/js/lib/daterangepicker.js?v={{ $FF_BUILD_TIME }}" type="text/javascript" nonce="{{ $JS_NONCE }}"></script>
-<script src="v1/lib/adminlte/js/adminlte.min.js?v={{ $FF_BUILD_TIME }}" type="text/javascript" nonce="{{ $JS_NONCE }}"></script>
-<script type="text/javascript" src="v1/js/lib/accounting.min.js?v={{ $FF_BUILD_TIME }}" nonce="{{ $JS_NONCE }}"></script>
 
 {{--  Firefly III code --}}
 <script type="text/javascript" src="v1/js/ff/firefly.js?v={{ $FF_BUILD_TIME }}" nonce="{{ $JS_NONCE }}"></script>
@@ -371,6 +400,34 @@
 <form id="logout-form" action="{{ route('logout') }}" method="POST" class="hidden">
     <input type="hidden" name="_token" value="{{ csrf_token() }}"/>
 </form>
+
+
+
+<div class="modal fade" tabindex="-1" role="dialog" id="helpModal">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title" id="helpTitle">&nbsp;</h4>
+            </div>
+            <div class="modal-body" id="helpBody">&nbsp;</div>
+            <div class="modal-footer">
+                <small class="pull-left">
+                    {!! __('firefly.need_more_help') !!}
+                </small>
+                <br/>
+                <small class="pull-left">
+                    {!!  trans('firefly.reenable_intro_text')  !!}
+                </small>
+                <button type="button" class="btn btn-primary" data-dismiss="modal">{{ trans('firefly.close') }}</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+
+
 </body>
 <!--end::Body-->
 </html>

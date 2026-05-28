@@ -1,9 +1,9 @@
 @extends('layout.v3.session')
 @section('content')
-    TODO internals modal voor pagina settings
-    TODO wizard modal voor weet ik veel
-    TODO dark mode ook onthouden en dat script in het template
-    TODO date picker
+    X TODO internals modal voor pagina settings
+   X TODO wizard modal voor weet ik veel
+    XTODO dark mode ook onthouden en dat script in het template
+    XTODO date picker
     TODO intro js
 
     <x-dashboard.boxes :start="$start" :end="$end" />
@@ -11,7 +11,7 @@
     <div class="row" x-data="index">
         <div class="col-lg-8 col-md-12 col-sm-12">
             <!--ACCOUNTS -->
-            <div class="card card-primary card-outline mb-4">
+            <div class="card card-primary mb-4">
                 <div class="card-header with-border">
                     <div class="card-title"><a href="{{ route('accounts.index',['asset']) }}" title="{{ __('firefly.yourAccounts') }}">{{ __('firefly.yourAccounts') }}</a></div>
                 </div>
