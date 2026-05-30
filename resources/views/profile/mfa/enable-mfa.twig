@@ -19,7 +19,7 @@
                         </p>
                         <div class="form group">
                             <div class="col-sm-8 col-md-offset-4 hidden-print">
-                                {{ image|raw }}
+                                <img src="{{ image }}" alt="{{ 'pref_two_factor_qr_code'|_ }}">
                             </div>
                             <p class="hidden-print">
                                 {{ trans('firefly.2fa_use_secret_instead', {secret: secret|escape})|raw }}
