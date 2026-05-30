@@ -85,7 +85,7 @@ class StoreRequest extends FormRequest
             'apply_rules'                          => [new IsBoolean()],
             'active'                               => [new IsBoolean()],
             'repeat_until'                         => ['nullable', 'date'],
-            'nr_of_repetitions'                    => ['nullable', 'numeric', 'min:1', 'max:31'],
+            'nr_of_repetitions'                    => ['nullable', 'numeric', 'min:1', 'max:255'],
 
             'repetitions.*.type'                   => ['required', 'in:daily,weekly,ndom,monthly,yearly'],
             'repetitions.*.moment'                 => ['min:0', 'max:10'],
