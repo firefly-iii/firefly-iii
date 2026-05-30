@@ -88,7 +88,7 @@ final class HomeController extends Controller
             $end = Carbon::now()->endOfMonth();
         }
 
-        $label         = $request->get('label');
+        $label         = $request->input('label');
         $isCustomRange = false;
 
         Log::debug('dateRange: Received dateRange', ['start' => $stringStart, 'end' => $stringEnd, 'label' => $request->get('label')]);

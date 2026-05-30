@@ -57,7 +57,7 @@ $(function () {
     });
 
     // save sidebar collapsed state when page loads.
-    $('[data-toggle="push-menu"]').click(function () {
+    $('[data-lte-toggle="sidebar"]').click(function () {
         localStorage.setItem('ff3_sidebar_collapsed', (!$('body').hasClass('sidebar-collapse')).toString());
     });
 
@@ -70,50 +70,50 @@ $(function () {
 
 
     // when you click on a currency, this happens:
-    $('.currency-option').on('click', currencySelect);
+    // $('.currency-option').on('click', currencySelect);
 
     // build the data range:
-    $('#daterange').text(dateRangeMeta.title).daterangepicker(
-        {
-            ranges: dateRangeConfig.ranges,
-            opens: 'left',
-            locale: {
-                applyLabel: dateRangeMeta.labels.apply,
-                cancelLabel: dateRangeMeta.labels.cancel,
-                fromLabel: dateRangeMeta.labels.from,
-                toLabel: dateRangeMeta.labels.to,
-                weekLabel: 'W',
-                customRangeLabel: dateRangeMeta.labels.customRange,
-                daysOfWeek: moment.weekdaysMin(),
-                monthNames: moment.monthsShort(),
-                firstDay: moment.localeData()._week.dow
-            },
-            format: 'YYYY-MM-DD',
-            startDate: dateRangeConfig.startDate,
-            endDate: dateRangeConfig.endDate
-        },
-        function (start, end, label) {
-
-            // send post.
-            $.ajax({
-                url: dateRangeMeta.url,
-                data: {
-                    start: start.format('YYYY-MM-DD'),
-                    end: end.format('YYYY-MM-DD'),
-                    label: label
-                },
-                type: 'POST',
-                headers: {
-                    'X-CSRF-Token': $('meta[name="csrf-token"]').attr('content'),
-                    'Content-Type': 'application/x-www-form-urlencoded'
-                }
-            }).done(function () {
-                window.location.reload(true);
-            }).fail(function () {
-                console.error('Could not change date range');
-            });
-        }
-    );
+    // $('#daterange').text(dateRangeMeta.title).daterangepicker(
+    //     {
+    //         ranges: dateRangeConfig.ranges,
+    //         opens: 'left',
+    //         locale: {
+    //             applyLabel: dateRangeMeta.labels.apply,
+    //             cancelLabel: dateRangeMeta.labels.cancel,
+    //             fromLabel: dateRangeMeta.labels.from,
+    //             toLabel: dateRangeMeta.labels.to,
+    //             weekLabel: 'W',
+    //             customRangeLabel: dateRangeMeta.labels.customRange,
+    //             daysOfWeek: moment.weekdaysMin(),
+    //             monthNames: moment.monthsShort(),
+    //             firstDay: moment.localeData()._week.dow
+    //         },
+    //         format: 'YYYY-MM-DD',
+    //         startDate: dateRangeConfig.startDate,
+    //         endDate: dateRangeConfig.endDate
+    //     },
+    //     function (start, end, label) {
+    //
+    //         // send post.
+    //         $.ajax({
+    //             url: dateRangeMeta.url,
+    //             data: {
+    //                 start: start.format('YYYY-MM-DD'),
+    //                 end: end.format('YYYY-MM-DD'),
+    //                 label: label
+    //             },
+    //             type: 'POST',
+    //             headers: {
+    //                 'X-CSRF-Token': $('meta[name="csrf-token"]').attr('content'),
+    //                 'Content-Type': 'application/x-www-form-urlencoded'
+    //             }
+    //         }).done(function () {
+    //             window.location.reload(true);
+    //         }).fail(function () {
+    //             console.error('Could not change date range');
+    //         });
+    //     }
+    // );
 
 
     // trigger list thing

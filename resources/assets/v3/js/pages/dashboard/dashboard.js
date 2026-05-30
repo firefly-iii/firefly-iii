@@ -28,6 +28,7 @@ import "bootstrap-icons/font/bootstrap-icons.css"
 import '../../boot/bootstrap.js';
 import sidebar from '../../pages/shared/sidebar.js';
 import boxes from './boxes.js';
+import dates from '../shared/dates.js';
 
 let index = function () {
     return {
@@ -42,7 +43,8 @@ let index = function () {
 const comps = {
     index,
     sidebar,
-    boxes
+    boxes,
+    dates
 };
 
 function loadPage(comps) {

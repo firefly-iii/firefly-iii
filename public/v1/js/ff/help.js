@@ -20,7 +20,7 @@
 /** global: token, helpPageTitle, anonymous */
 $(function () {
     "use strict";
-    $('#help').click(showHelp);
+    // $('#help').click(showHelp);
     $('#anonymous').click(changeAnonymity)
 
 });

@@ -53,7 +53,13 @@
 <!--end::Head-->
 <!--begin::Body-->
 <body class="layout-fixed sidebar-mini  sidebar-expand-lg bg-body-tertiary">
-
+{{-- this entry is in the header so it's loaded early --}}
+<script type="text/javascript" nonce="{{ $JS_NONCE }}">
+    var forceDemoOff = false;
+    if ('true' === localStorage.getItem('ff3_sidebar_collapsed')) {
+        document.body.classList.add('sidebar-collapse');
+    }
+</script>
 <!--begin::App Wrapper-->
 <div class="app-wrapper">
     <!--begin::Header-->
@@ -87,11 +93,73 @@
                 </li>
                 <!--end::Fullscreen Toggle-->
 
-                <li class="nav-item">
-                    <a href="#" class="nav-link date-range-holder">
-                            <span id="daterange"></span>
+                <li class="nav-item dropdown" x-data="dates">
+                    <div class="modal fade" tabindex="-1" role="dialog" id="customDateRangeModal" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                        <div class="modal-dialog modal-lg">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <h4 class="modal-title">Bla bla date modal</h4>
+                                </div>
+                                <div class="modal-body">Bla bla title</div>
+                                <div class="modal-footer">
+                                    <small class="pull-left">
+                                        {{ trans('firefly.submit') }}
+                                    </small>
+                                    <button type="button" class="btn btn-default" data-dismiss="modal">{{ __('firefly.close') }}</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <a
+                        href="#"
+                        class="nav-link"
+                        data-bs-toggle="dropdown"
+                        aria-expanded="false"
+                        id="date-range"
+                    >
+                        <em class="bi bi-calendar"></em>
+                        <span class="daterange-holder"></span>
                     </a>
+                    <ul
+                        class="dropdown-menu"
+                        aria-labelledby="date-range"
+                        style="--bs-dropdown-min-width: 8rem"
+                    >
+                        <li>
+                            <a href="#" class="dropdown-item daterange-current" @click="changeDateRange">current</a>
+                        </li>
+                        <li>
+                            <a href="#" @click="changeDateRange" class="dropdown-item daterange-next">next</a>
+                        </li>
+                        <li>
+                            <a href="#" class="dropdown-item daterange-prev" @click="changeDateRange">prev</a>
+                        </li>
+                        <li>
+                            <a href="#" class="dropdown-item daterange-7d" @click="changeDateRange">{{ __('firefly.last_seven_days') }}</a>
+                        </li>
+                        <li>
+                            <a href="#" class="dropdown-item daterange-30d" @click="changeDateRange">
+                                {{ __('firefly.last_thirty_days') }}
+                            </a>
+                        </li>
+                        <li>
+                            <a href="#" class="dropdown-item daterange-mtd" @click="changeDateRange">
+                                {{ __('firefly.month_to_date') }}
+                            </a>
+                        </li>
+                        <li>
+                            <a href="#" class="dropdown-item daterange-ytd" @click="changeDateRange">
+                                {{ __('firefly.year_to_date') }}
+                            </a>
+                        </li>
+                        <li>
+                            <a href="#" type="button" class="dropdown-item" data-bs-toggle="modal" data-bs-target="#customDateRangeModal">
+                                {{ __('firefly.customRange') }}
+                            </a>
+                        </li>
+                    </ul>
                 </li>
+
 
                 <!-- anonymous -->
 
@@ -109,9 +177,8 @@
 
                 <!-- help button -->
                 <li class="nav-item hidden-sm hidden-xs">
-                    <a href="#" class="nav-link" id="help" data-route="{{ $original_route_name }}"
-                       data-extra="{{ $objectType ?? '' }}">
-                            <span class="bi bi-question-circle" data-route="{{ $original_route_name }}" data-extra="{{ $objectType ?? '' }}"></span>
+                    <a href="#" class="nav-link" data-extra="{{ $objectType ?? '' }}" data-route="{{ $original_route_name }}" data-bs-toggle="modal" data-bs-target="#helpModal">
+                        <em class="bi bi-question-circle"></em>
                     </a>
                 </li>
                 <!-- end help button -->
@@ -259,6 +326,33 @@
         <div class="app-content">
             <!--begin::Container-->
             <div class="container-fluid">
+
+                <!-- Button trigger modal -->
+
+
+                <!-- Modal -->
+                <div class="modal fade" id="customDateRangeModal2" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                    <div class="modal-dialog">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h1 class="modal-title fs-5" id="exampleModalLabel">Modal title</h1>
+                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                            </div>
+                            <div class="modal-body">
+                                ...abc
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                                <button type="button" class="btn btn-primary">Save changes</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+
+                <br><br>
+
+
                 @yield('content')
 
                 <!--begin::Row-->
@@ -300,7 +394,7 @@
 
 {{-- Moment JS  --}}
 <script src="v1/js/lib/moment.min.js?v={{ $FF_BUILD_TIME }}" type="text/javascript" nonce="{{ $JS_NONCE }}"></script>
-<script src="v1/js/lib/moment/{{ str_replace($language,'-','_') }}.js?v={{ $FF_BUILD_TIME }}" type="text/javascript" nonce="{{ $JS_NONCE }}"></script>
+<script src="v1/js/lib/moment/{{ str_replace('-','_', $language) }}.js?v={{ $FF_BUILD_TIME }}" type="text/javascript" nonce="{{ $JS_NONCE }}"></script>
 
 {{-- All kinds of variables. --}}
 <script src="{{ route('javascript.variables') }}?ext=.js&amp;v={{ $FF_VERSION }}@if(isset($account))&amp;account={{ $account->id }}@endif" type="text/javascript" nonce="{{ $JS_NONCE }}"></script>
@@ -311,6 +405,7 @@
 
 {{-- date range picker, current template, etc. --}}
 <script src="v1/js/lib/daterangepicker.js?v={{ $FF_BUILD_TIME }}" type="text/javascript" nonce="{{ $JS_NONCE }}"></script>
+<script type="text/javascript" src="v1/js/lib/accounting.min.js?v={{ $FF_BUILD_TIME }}" nonce="{{ $JS_NONCE }}"></script>
 
 {{--  Firefly III code --}}
 <script type="text/javascript" src="v1/js/ff/firefly.js?v={{ $FF_BUILD_TIME }}" nonce="{{ $JS_NONCE }}"></script>
@@ -397,6 +492,7 @@
 <!-- jsvectormap -->
 <!-- jsvectormap -->
 <!--end::Script-->
+
 <form id="logout-form" action="{{ route('logout') }}" method="POST" class="hidden">
     <input type="hidden" name="_token" value="{{ csrf_token() }}"/>
 </form>
@@ -423,6 +519,7 @@
         </div>
     </div>
 </div>
+
 
 
 
