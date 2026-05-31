@@ -83,12 +83,7 @@ final class ShowController extends Controller
      * @throws FireflyException
      * @throws NotFoundExceptionInterface
      */
-    public function show(
-        Request $request,
-        Account $account,
-        ?Carbon $start = null,
-        ?Carbon $end = null
-    ): Factory|\Illuminate\Contracts\View\View|Redirector|RedirectResponse {
+    public function show(Request $request, Account $account, ?Carbon $start = null, ?Carbon $end = null): Factory|\Illuminate\Contracts\View\View|Redirector|RedirectResponse {
         if (0 === $account->id) {
             throw new NotFoundHttpException();
         }
@@ -115,7 +110,7 @@ final class ShowController extends Controller
         $attachments      = $this->repository->getAttachments($account);
         $today            = today(config('app.timezone'));
         $subTitleIcon     = config(sprintf('firefly.subIconsByIdentifier.%s', $account->accountType->type));
-        $page             = (int) $request->get('page');
+        $page             = (int) $request->input('page');
         $pageSize         = (int) Preferences::get('listPageSize', 50)->data;
         $accountCurrency  = $this->repository->getAccountCurrency($account);
         $currency         = $accountCurrency ?? $this->primaryCurrency;
