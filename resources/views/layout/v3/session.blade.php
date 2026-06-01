@@ -94,72 +94,11 @@
                 </li>
                 <!--end::Fullscreen Toggle-->
 
-                <li class="nav-item dropdown" x-data="dates">
-                    <div class="modal fade" tabindex="-1" role="dialog" id="customDateRangeModal" aria-labelledby="exampleModalLabel" aria-hidden="true">
-                        <div class="modal-dialog modal-lg">
-                            <div class="modal-content">
-                                <div class="modal-header">
-                                    <h4 class="modal-title">Bla bla date modal</h4>
-                                </div>
-                                <div class="modal-body">Bla bla title</div>
-                                <div class="modal-footer">
-                                    <small class="pull-left">
-                                        {{ trans('firefly.submit') }}
-                                    </small>
-                                    <button type="button" class="btn btn-default" data-dismiss="modal">{{ __('firefly.close') }}</button>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <a
-                        href="#"
-                        class="nav-link"
-                        data-bs-toggle="dropdown"
-                        aria-expanded="false"
-                        id="date-range"
-                    >
-                        <em class="bi bi-calendar"></em>
-                        <span class="daterange-holder"></span>
-                    </a>
-                    <ul
-                        class="dropdown-menu"
-                        aria-labelledby="date-range"
-                        style="--bs-dropdown-min-width: 8rem"
-                    >
-                        <li>
-                            <a href="#" class="dropdown-item daterange-current" @click="changeDateRange">current</a>
-                        </li>
-                        <li>
-                            <a href="#" @click="changeDateRange" class="dropdown-item daterange-next">next</a>
-                        </li>
-                        <li>
-                            <a href="#" class="dropdown-item daterange-prev" @click="changeDateRange">prev</a>
-                        </li>
-                        <li>
-                            <a href="#" class="dropdown-item daterange-7d" @click="changeDateRange">{{ __('firefly.last_seven_days') }}</a>
-                        </li>
-                        <li>
-                            <a href="#" class="dropdown-item daterange-30d" @click="changeDateRange">
-                                {{ __('firefly.last_thirty_days') }}
-                            </a>
-                        </li>
-                        <li>
-                            <a href="#" class="dropdown-item daterange-mtd" @click="changeDateRange">
-                                {{ __('firefly.month_to_date') }}
-                            </a>
-                        </li>
-                        <li>
-                            <a href="#" class="dropdown-item daterange-ytd" @click="changeDateRange">
-                                {{ __('firefly.year_to_date') }}
-                            </a>
-                        </li>
-                        <li>
-                            <a href="#" type="button" class="dropdown-item" data-bs-toggle="modal" data-bs-target="#customDateRangeModal">
-                                {{ __('firefly.customRange') }}
-                            </a>
-                        </li>
-                    </ul>
-                </li>
+                <!-- start: date range selector -->
+                <x-layout.range />
+                <!-- end: date range selector -->
+
+
 
 
                 <!-- anonymous -->
@@ -498,6 +437,107 @@
     <input type="hidden" name="_token" value="{{ csrf_token() }}"/>
 </form>
 
+<div class="modal fade" tabindex="-1" role="dialog" id="customDateRangeModal" aria-hidden="true" x-data="dates">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title">Bla bla date modal</h4>
+            </div>
+            <div class="modal-body">
+                <style>
+                    calendar-range {
+                        svg {
+                            height: 16px;
+                            width: 16px;
+                            fill: none;
+                            stroke: currentColor;
+                            stroke-width: 1.5;
+                        }
+
+                        path {
+                            stroke-linecap: round;
+                            stroke-linejoin: round;
+                        }
+
+                        &::part(months) {
+                            display: flex;
+                            gap: 1.5em;
+                            flex-wrap: wrap;
+                            justify-content: center;
+                        }
+
+                        &::part(button) {
+                            border: 1px solid #adb5bd;
+                            border-radius: 3px;
+                            width: 26px;
+                            height: 26px;
+                        }
+
+                        &::part(button):focus-visible {
+                            outline: 2px solid #7048e8;
+                        }
+                    }
+
+                    calendar-month {
+                        --color-accent: #7048e8;
+                        --color-text-on-accent: #ffffff;
+
+                        &::part(button) {
+                            border-radius: 3px;
+                        }
+
+                        &::part(range-inner) {
+                            border-radius: 0;
+                            background-color: #845ef7;
+                        }
+
+                        &::part(range-start) {
+                            border-start-end-radius: 0;
+                            border-end-end-radius: 0;
+                        }
+
+                        &::part(range-end) {
+                            border-start-start-radius: 0;
+                            border-end-start-radius: 0;
+                        }
+
+                        &::part(range-start range-end) {
+                            border-radius: 3px;
+                        }
+                    }
+                </style>
+                <div class="row">
+                    <div class="col" style="content-align:center;width:100%;display:flex;justify-content:center;">
+                        <calendar-range months="2">
+                            <svg
+                                aria-label="Previous"
+                                slot="previous"
+                                xmlns="http://www.w3.org/2000/svg"
+                                viewBox="0 0 24 24"
+                            >
+                                <path d="M15.75 19.5 8.25 12l7.5-7.5"></path>
+                            </svg>
+                            <svg
+                                aria-label="Next"
+                                slot="next"
+                                xmlns="http://www.w3.org/2000/svg"
+                                viewBox="0 0 24 24"
+                            >
+                                <path d="m8.25 4.5 7.5 7.5-7.5 7.5"></path>
+                            </svg>
+                            <calendar-month></calendar-month>
+                            <calendar-month offset="1"></calendar-month>
+                        </calendar-range>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">{{ __('firefly.close') }}</button>
+                <button type="button" class="btn btn-primary">{{ trans('firefly.submit') }}</button>
+            </div>
+        </div>
+    </div>
+</div>
 
 
 <div class="modal fade" tabindex="-1" role="dialog" id="helpModal">
@@ -515,7 +555,7 @@
                 <small class="pull-left">
                     {!!  trans('firefly.reenable_intro_text')  !!}
                 </small>
-                <button type="button" class="btn btn-primary" data-dismiss="modal">{{ trans('firefly.close') }}</button>
+                <button type="button" class="btn btn-primary" data-bs-dismiss="modal">{{ trans('firefly.close') }}</button>
             </div>
         </div>
     </div>

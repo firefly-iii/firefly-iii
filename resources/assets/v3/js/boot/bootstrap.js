@@ -24,6 +24,7 @@ import "admin-lte"
 import Alpine from 'alpinejs'
 import store from "store";
 import axios from 'axios';
+import "cally";
 import observePlugin from 'store/plugins/observe';
 import {getFreshVariable} from "v2/src/store/get-fresh-variable.js";
 import {getVariable} from "v2/src/store/get-variable.js";
