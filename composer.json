@@ -104,7 +104,7 @@
         "spatie/laravel-html": "^3.13",
         "spatie/laravel-ignition": "^2",
         "spatie/period": "^2.4",
-        "symfony/expression-language": "^8.0",
+        "symfony/expression-language": "^8.1",
         "symfony/http-client": "^8.0",
         "symfony/mailgun-mailer": "^8.0",
         "thecodingmachine/safe": "^3.1"
