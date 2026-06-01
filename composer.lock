@@ -11514,11 +11514,11 @@
         },
         {
             "name": "phpstan/phpstan",
-            "version": "2.1.55",
+            "version": "2.2.1",
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/phpstan/phpstan/zipball/9eaac3826ed5e9b8427350a43cac825eeca3f566",
-                "reference": "9eaac3826ed5e9b8427350a43cac825eeca3f566",
+                "url": "https://api.github.com/repos/phpstan/phpstan/zipball/dea9c8f2d25cc849391042b71e429c1a4bf82660",
+                "reference": "dea9c8f2d25cc849391042b71e429c1a4bf82660",
                 "shasum": ""
             },
             "require": {
@@ -11540,6 +11540,17 @@
             "notification-url": "https://packagist.org/downloads/",
             "license": [
                 "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Ondřej Mirtes"
+                },
+                {
+                    "name": "Markus Staab"
+                },
+                {
+                    "name": "Vincent Langlet"
+                }
             ],
             "description": "PHPStan - PHP Static Analysis Tool",
             "keywords": [
@@ -11563,7 +11574,7 @@
                     "type": "github"
                 }
             ],
-            "time": "2026-05-18T11:57:34+00:00"
+            "time": "2026-05-28T14:44:12+00:00"
         },
         {
             "name": "phpstan/phpstan-deprecation-rules",
