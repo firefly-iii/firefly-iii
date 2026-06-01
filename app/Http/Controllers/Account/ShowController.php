@@ -83,7 +83,12 @@ final class ShowController extends Controller
      * @throws FireflyException
      * @throws NotFoundExceptionInterface
      */
-    public function show(Request $request, Account $account, ?Carbon $start = null, ?Carbon $end = null): Factory|\Illuminate\Contracts\View\View|Redirector|RedirectResponse {
+    public function show(
+        Request $request,
+        Account $account,
+        ?Carbon $start = null,
+        ?Carbon $end = null
+    ): Factory|\Illuminate\Contracts\View\View|Redirector|RedirectResponse {
         if (0 === $account->id) {
             throw new NotFoundHttpException();
         }

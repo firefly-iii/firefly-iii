@@ -93,14 +93,14 @@ interface CurrencyRepositoryInterface
      */
     public function getCompleteSet(): Collection;
 
-    public function isEnabled(TransactionCurrency $currency): bool;
-
     /**
      * Get currency exchange rate.
      *
      * Used in the download exchange rate cron job. Needs the user object!
      */
     public function getExchangeRate(TransactionCurrency $fromCurrency, TransactionCurrency $toCurrency, Carbon $date): ?CurrencyExchangeRate;
+
+    public function isEnabled(TransactionCurrency $currency): bool;
 
     public function isFallbackCurrency(TransactionCurrency $currency): bool;
 
