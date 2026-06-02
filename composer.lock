@@ -10570,16 +10570,16 @@
         },
         {
             "name": "driftingly/rector-laravel",
-            "version": "2.4.0",
+            "version": "2.5.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/driftingly/rector-laravel.git",
-                "reference": "5342df61b0a77e5a408744e5686d80a51a07a48d"
+                "reference": "0dbdd842dfdbc821cfe5f47ca7326e2502b2a107"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/driftingly/rector-laravel/zipball/5342df61b0a77e5a408744e5686d80a51a07a48d",
-                "reference": "5342df61b0a77e5a408744e5686d80a51a07a48d",
+                "url": "https://api.github.com/repos/driftingly/rector-laravel/zipball/0dbdd842dfdbc821cfe5f47ca7326e2502b2a107",
+                "reference": "0dbdd842dfdbc821cfe5f47ca7326e2502b2a107",
                 "shasum": ""
             },
             "require": {
@@ -10600,9 +10600,9 @@
             "description": "Rector upgrades rules for Laravel Framework",
             "support": {
                 "issues": "https://github.com/driftingly/rector-laravel/issues",
-                "source": "https://github.com/driftingly/rector-laravel/tree/2.4.0"
+                "source": "https://github.com/driftingly/rector-laravel/tree/2.5.0"
             },
-            "time": "2026-05-22T18:34:15+00:00"
+            "time": "2026-06-02T16:22:14+00:00"
         },
         {
             "name": "ergebnis/phpstan-rules",
