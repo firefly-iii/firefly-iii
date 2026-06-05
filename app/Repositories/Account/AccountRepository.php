@@ -114,8 +114,7 @@ class AccountRepository implements AccountRepositoryInterface, UserGroupInterfac
 
     public function findByAccountNumber(string $number, array $types): ?Account
     {
-        $dbQuery = $this->user
-            ->accounts()
+        $dbQuery = $this->user->accounts()
             ->leftJoin('account_meta', 'accounts.id', '=', 'account_meta.account_id')
             ->where('accounts.active', true)
             ->where(static function (EloquentBuilder $q1) use ($number): void {
@@ -251,8 +250,7 @@ class AccountRepository implements AccountRepositoryInterface, UserGroupInterfac
 
     public function getActiveAccountsByType(array $types): Collection
     {
-        $query = $this->user
-            ->accounts()
+        $query = $this->user->accounts()
             ->with([
                 'accountmeta' => static function (HasMany $query): void {
                     $query->where('name', 'account_role');
@@ -315,8 +313,7 @@ class AccountRepository implements AccountRepositoryInterface, UserGroupInterfac
 
     public function getInactiveAccountsByType(array $types): Collection
     {
-        $query = $this->user
-            ->accounts()
+        $query = $this->user->accounts()
             ->with(['accountmeta' => static function (HasMany $query): void {
                 $query->where('name', 'account_role');
             }])
@@ -630,8 +627,7 @@ class AccountRepository implements AccountRepositoryInterface, UserGroupInterfac
             AccountTypeEnum::CREDITCARD->value,
             AccountTypeEnum::MORTGAGE->value,
         ];
-        $this->user
-            ->accounts()
+        $this->user->accounts()
             ->leftJoin('account_types', 'account_types.id', '=', 'accounts.account_type_id')
             ->whereNotIn('account_types.type', $all)
             ->update(['order' => 0])
@@ -640,8 +636,7 @@ class AccountRepository implements AccountRepositoryInterface, UserGroupInterfac
 
     public function searchAccount(string $query, array $types, int $limit): Collection
     {
-        $dbQuery = $this->user
-            ->accounts()
+        $dbQuery = $this->user->accounts()
             ->where('active', true)
             ->orderBy('accounts.order', 'ASC')
             ->orderBy('accounts.account_type_id', 'ASC')
@@ -666,8 +661,7 @@ class AccountRepository implements AccountRepositoryInterface, UserGroupInterfac
 
     public function searchAccountIncludingInactive(string $query, array $types, int $limit): Collection
     {
-        $dbQuery = $this->user
-            ->accounts()
+        $dbQuery = $this->user->accounts()
             ->orderBy('accounts.order', 'ASC')
             ->orderBy('accounts.account_type_id', 'ASC')
             ->orderBy('accounts.name', 'ASC')
@@ -691,8 +685,7 @@ class AccountRepository implements AccountRepositoryInterface, UserGroupInterfac
 
     public function searchAccountNr(string $query, array $types, int $limit): Collection
     {
-        $dbQuery = $this->user
-            ->accounts()
+        $dbQuery = $this->user->accounts()
             ->distinct()
             ->leftJoin('account_meta', 'accounts.id', '=', 'account_meta.account_id')
             ->where('accounts.active', true)

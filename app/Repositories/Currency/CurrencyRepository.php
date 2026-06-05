@@ -345,8 +345,7 @@ class CurrencyRepository implements CurrencyRepositoryInterface, UserGroupInterf
         }
 
         /** @var null|CurrencyExchangeRate $rate */
-        $rate = $this->user
-            ->currencyExchangeRates()
+        $rate = $this->user->currencyExchangeRates()
             ->where('from_currency_id', $fromCurrency->id)
             ->where('to_currency_id', $toCurrency->id)
             ->where('date', $date->format('Y-m-d'))

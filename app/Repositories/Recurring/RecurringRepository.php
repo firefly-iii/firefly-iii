@@ -119,8 +119,7 @@ class RecurringRepository implements RecurringRepositoryInterface, UserGroupInte
      */
     public function get(): Collection
     {
-        return $this->user
-            ->recurrences()
+        return $this->user->recurrences()
             ->with(['TransactionCurrency', 'TransactionType', 'RecurrenceRepetitions', 'RecurrenceTransactions'])
             ->orderBy('active', 'DESC')
             ->orderBy('transaction_type_id', 'ASC')

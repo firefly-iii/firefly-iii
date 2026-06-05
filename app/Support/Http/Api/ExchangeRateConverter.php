@@ -201,8 +201,7 @@ class ExchangeRateConverter
         }
 
         /** @var null|CurrencyExchangeRate $result */
-        $result       = $this->userGroup
-            ->currencyExchangeRates()
+        $result       = $this->userGroup->currencyExchangeRates()
             ->where('from_currency_id', $from)
             ->where('to_currency_id', $to)
             ->where('date', '<=', $date)
