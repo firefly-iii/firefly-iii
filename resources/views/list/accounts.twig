@@ -117,12 +117,17 @@
                 <span class="mr-1">
                     {% for key, balance in account.differences %}
                         <span title="{{ key }}">
-                        {% if 'balance' == key or 'pc_balance' == key %}
-                            {{ formatAmountBySymbol(balance, account.currency.symbol, account.currency.currency.decimal_places)  }}
-
-                        {% else %}
-                            ({{ formatAmountByCode(balance, key)  }})
-                        {% endif %}
+                              {% if 'balance' == key %}
+                                  {% if not convertToPrimary %}
+                                      {{ formatAmountBySymbol(balance, account.currency.symbol, account.currency.decimal_places)  }}
+                                  {% endif %}
+                              {% elseif 'pc_balance' == key %}
+                                  {% if convertToPrimary %}
+                                      {{ formatAmountBySymbol(balance, primaryCurrency.symbol, primaryCurrency.decimal_places)  }}
+                                  {% endif %}
+                              {% else %}
+                                  ({{ formatAmountByCode(balance, key)  }})
+                              {% endif %}
                             </span>
                     {% endfor %}
                 </span>
