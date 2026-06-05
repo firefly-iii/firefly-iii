@@ -163,8 +163,7 @@ class BillUpdateService
     private function updateOrder(Bill $bill, int $oldOrder, int $newOrder): void
     {
         if ($newOrder > $oldOrder) {
-            $this->user
-                ->bills()
+            $this->user->bills()
                 ->where('order', '<=', $newOrder)
                 ->where('order', '>', $oldOrder)
                 ->where('bills.id', '!=', $bill->id)
@@ -174,8 +173,7 @@ class BillUpdateService
             $bill->save();
         }
         if ($newOrder < $oldOrder) {
-            $this->user
-                ->bills()
+            $this->user->bills()
                 ->where('order', '>=', $newOrder)
                 ->where('order', '<', $oldOrder)
                 ->where('bills.id', '!=', $bill->id)

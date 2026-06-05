@@ -167,8 +167,7 @@ class RuleRepository implements RuleRepositoryInterface, UserGroupInterface
 
     public function getStoreRules(): Collection
     {
-        $collection = $this->user
-            ->rules()
+        $collection = $this->user->rules()
             ->leftJoin('rule_groups', 'rule_groups.id', '=', 'rules.rule_group_id')
             ->where('rules.active', true)
             ->where('rule_groups.active', true)
@@ -195,8 +194,7 @@ class RuleRepository implements RuleRepositoryInterface, UserGroupInterface
 
     public function getUpdateRules(): Collection
     {
-        $collection = $this->user
-            ->rules()
+        $collection = $this->user->rules()
             ->leftJoin('rule_groups', 'rule_groups.id', '=', 'rules.rule_group_id')
             ->where('rules.active', true)
             ->where('rule_groups.active', true)
@@ -267,8 +265,7 @@ class RuleRepository implements RuleRepositoryInterface, UserGroupInterface
         Log::debug(sprintf('New order will be %d', $newOrder));
 
         if ($newOrder > $oldOrder) {
-            $this->user
-                ->rules()
+            $this->user->rules()
                 ->where('rules.rule_group_id', $groupId)
                 ->where('rules.order', '<=', $newOrder)
                 ->where('rules.order', '>', $oldOrder)
@@ -282,8 +279,7 @@ class RuleRepository implements RuleRepositoryInterface, UserGroupInterface
             return;
         }
 
-        $this->user
-            ->rules()
+        $this->user->rules()
             ->where('rules.rule_group_id', $groupId)
             ->where('rules.order', '>=', $newOrder)
             ->where('rules.order', '<', $oldOrder)

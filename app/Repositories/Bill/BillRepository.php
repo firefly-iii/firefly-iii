@@ -170,8 +170,7 @@ class BillRepository implements BillRepositoryInterface, UserGroupInterface
 
     public function getActiveBills(): Collection
     {
-        return $this->user
-            ->bills()
+        return $this->user->bills()
             ->where('active', true)
             ->orderBy('bills.name', 'ASC')
             ->get(['bills.*', DB::raw('((bills.amount_min + bills.amount_max) / 2) AS expectedAmount')])
@@ -197,8 +196,7 @@ class BillRepository implements BillRepositoryInterface, UserGroupInterface
 
     public function getBills(): Collection
     {
-        return $this->user
-            ->bills()
+        return $this->user->bills()
             ->orderBy('order', 'ASC')
             ->orderBy('active', 'DESC')
             ->orderBy('name', 'ASC')
@@ -226,8 +224,7 @@ class BillRepository implements BillRepositoryInterface, UserGroupInterface
         ];
         $ids    = $accounts->pluck('id')->toArray();
 
-        return $this->user
-            ->bills()
+        return $this->user->bills()
             ->leftJoin('transaction_journals', static function (JoinClause $join): void {
                 $join->on('transaction_journals.bill_id', '=', 'bills.id')->whereNull('transaction_journals.deleted_at');
             })
@@ -383,8 +380,7 @@ class BillRepository implements BillRepositoryInterface, UserGroupInterface
      */
     public function getRulesForBill(Bill $bill): Collection
     {
-        return $this->user
-            ->rules()
+        return $this->user->rules()
             ->leftJoin('rule_actions', 'rule_actions.rule_id', '=', 'rules.id')
             ->where('rule_actions.action_type', 'link_to_bill')
             ->where('rule_actions.action_value', $bill->name)
@@ -400,8 +396,7 @@ class BillRepository implements BillRepositoryInterface, UserGroupInterface
      */
     public function getRulesForBills(Collection $collection): array
     {
-        $rules  = $this->user
-            ->rules()
+        $rules  = $this->user->rules()
             ->leftJoin('rule_actions', 'rule_actions.rule_id', '=', 'rules.id')
             ->where('rule_actions.action_type', 'link_to_bill')
             ->get(['rules.id', 'rules.title', 'rule_actions.action_value', 'rules.active'])
@@ -569,8 +564,7 @@ class BillRepository implements BillRepositoryInterface, UserGroupInterface
     {
         $query = sprintf('%%%s%%', $query);
 
-        return $this->user
-            ->bills()
+        return $this->user->bills()
             ->orderBy('name', 'ASC')
             ->whereLike('name', $query)
             ->take($limit)

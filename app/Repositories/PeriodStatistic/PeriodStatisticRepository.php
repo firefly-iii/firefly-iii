@@ -52,8 +52,7 @@ class PeriodStatisticRepository implements PeriodStatisticRepositoryInterface, U
         Log::debug(sprintf('Collect all statistics where type starts with "%s"', $prefix));
         Log::debug(sprintf('Between %s and %s', $start->format('Y-m-d H:i:s'), $end->format('Y-m-d H:i:s')));
 
-        return $this->userGroup
-            ->periodStatistics()
+        return $this->userGroup->periodStatistics()
             ->where('type', 'LIKE', sprintf('%s%%', $prefix))
             ->where('start', '>=', $start)
             ->where('end', '<=', $end)
@@ -103,8 +102,7 @@ class PeriodStatisticRepository implements PeriodStatisticRepositoryInterface, U
 
             return;
         }
-        $count = $this->userGroup
-            ->periodStatistics()
+        $count = $this->userGroup->periodStatistics()
             ->where(function (Builder $q) use ($dates): void {
                 foreach ($dates as $date) {
                     $q->where(function (Builder $q1) use ($date): void {
