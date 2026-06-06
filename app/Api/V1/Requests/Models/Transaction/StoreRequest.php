@@ -30,7 +30,7 @@ use FireflyIII\Rules\IsBoolean;
 use FireflyIII\Rules\IsDateOrTime;
 use FireflyIII\Rules\IsValidPositiveAmount;
 use FireflyIII\Rules\IsValidZeroOrMoreAmount;
-use FireflyIII\Support\Facades\FireflyConfig;
+use FireflyIII\Support\Facades\AppConfiguration;
 use FireflyIII\Support\NullArrayObject;
 use FireflyIII\Support\Request\AppendsLocationData;
 use FireflyIII\Support\Request\ChecksLogin;
@@ -81,7 +81,7 @@ class StoreRequest extends FormRequest
     public function rules(): array
     {
         Log::debug('Collect rules of TransactionStoreRequest');
-        $validProtocols = FireflyConfig::get('valid_url_protocols', config('firefly.valid_url_protocols'))->data;
+        $validProtocols = AppConfiguration::get('valid_url_protocols', config('firefly.valid_url_protocols'))->data;
         $locationRules  = Location::requestRules([]);
 
         return [

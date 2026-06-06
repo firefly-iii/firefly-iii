@@ -25,7 +25,7 @@ declare(strict_types=1);
 namespace FireflyIII\Http\Controllers\Webhooks;
 
 use FireflyIII\Http\Controllers\Controller;
-use FireflyIII\Support\Facades\FireflyConfig;
+use FireflyIII\Support\Facades\AppConfiguration;
 use Illuminate\Contracts\View\Factory;
 use Illuminate\Support\Facades\Log;
 use Illuminate\View\View;
@@ -58,7 +58,7 @@ final class CreateController extends Controller
      */
     public function index(): Factory|\Illuminate\Contracts\View\View
     {
-        if (false === FireflyConfig::get('allow_webhooks', config('firefly.allow_webhooks'))->data) {
+        if (false === AppConfiguration::get('allow_webhooks', config('firefly.allow_webhooks'))->data) {
             Log::channel('audit')->warning('User visits webhook create page, but webhooks are DISABLED.');
 
             throw new NotFoundHttpException('Webhooks are not enabled.');

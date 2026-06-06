@@ -31,7 +31,7 @@ use FireflyIII\Enums\WebhookResponse;
 use FireflyIII\Enums\WebhookTrigger;
 use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Support\Binder\EitherConfigKey;
-use FireflyIII\Support\Facades\FireflyConfig;
+use FireflyIII\Support\Facades\AppConfiguration;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Validation\ValidationException;
@@ -128,7 +128,7 @@ final class ConfigurationController extends Controller
         $data      = $request->getAll();
         $shortName = str_replace('configuration.', '', $name);
 
-        FireflyConfig::set($shortName, $data['value']);
+        AppConfiguration::set($shortName, $data['value']);
 
         // get updated config:
         $newConfig = $this->getDynamicConfiguration();
@@ -148,17 +148,17 @@ final class ConfigurationController extends Controller
      */
     private function getDynamicConfiguration(): array
     {
-        $isDemoSite            = FireflyConfig::get('is_demo_site', false);
-        $updateCheck           = FireflyConfig::get('permission_update_check', -1);
-        $singleUser            = FireflyConfig::get('single_user_mode', true);
-        $lastCheck             = FireflyConfig::get('last_update_check', 1);
-        $enableExchangeRates   = FireflyConfig::get('enable_exchange_rates', config('cer.enabled'));
-        $useRunningBalance     = FireflyConfig::get('use_running_balance', true);
-        $enableExternalMap     = FireflyConfig::get('enable_external_map', false);
-        $enableExternalRates   = FireflyConfig::get('enable_external_rates', false);
-        $allowWebhooks         = FireflyConfig::get('allow_webhooks', false);
-        $enableBatchProcessing = FireflyConfig::get('enable_batch_processing', false);
-        $validUrlProtocols     = FireflyConfig::get('valid_url_protocols', config('firefly.valid_url_protocols'));
+        $isDemoSite            = AppConfiguration::get('is_demo_site', false);
+        $updateCheck           = AppConfiguration::get('permission_update_check', -1);
+        $singleUser            = AppConfiguration::get('single_user_mode', true);
+        $lastCheck             = AppConfiguration::get('last_update_check', 1);
+        $enableExchangeRates   = AppConfiguration::get('enable_exchange_rates', config('cer.enabled'));
+        $useRunningBalance     = AppConfiguration::get('use_running_balance', true);
+        $enableExternalMap     = AppConfiguration::get('enable_external_map', false);
+        $enableExternalRates   = AppConfiguration::get('enable_external_rates', false);
+        $allowWebhooks         = AppConfiguration::get('allow_webhooks', false);
+        $enableBatchProcessing = AppConfiguration::get('enable_batch_processing', false);
+        $validUrlProtocols     = AppConfiguration::get('valid_url_protocols', config('firefly.valid_url_protocols'));
 
         return [
             'is_demo_site'            => $isDemoSite?->data,

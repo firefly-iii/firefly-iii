@@ -25,7 +25,7 @@ declare(strict_types=1);
 namespace FireflyIII\Notifications;
 
 use FireflyIII\Exceptions\FireflyException;
-use FireflyIII\Support\Facades\FireflyConfig;
+use FireflyIII\Support\Facades\AppConfiguration;
 use FireflyIII\Support\Facades\Preferences;
 use FireflyIII\User;
 use Illuminate\Support\Facades\Log;
@@ -54,11 +54,11 @@ class ReturnsSettings
             Log::debug(sprintf('Auth is %s, user = "%s"', var_export($settings['ntfy_auth'], true), $settings['ntfy_user']));
         }
         if ('owner' === $type) {
-            $settings['ntfy_server'] = FireflyConfig::getEncrypted('ntfy_server', 'https://ntfy.sh')->data;
-            $settings['ntfy_topic']  = FireflyConfig::getEncrypted('ntfy_topic', '')->data;
-            $settings['ntfy_auth']   = FireflyConfig::get('ntfy_auth', false)->data;
-            $settings['ntfy_user']   = FireflyConfig::getEncrypted('ntfy_user', '')->data;
-            $settings['ntfy_pass']   = FireflyConfig::getEncrypted('ntfy_pass', '')->data;
+            $settings['ntfy_server'] = AppConfiguration::getEncrypted('ntfy_server', 'https://ntfy.sh')->data;
+            $settings['ntfy_topic']  = AppConfiguration::getEncrypted('ntfy_topic', '')->data;
+            $settings['ntfy_auth']   = AppConfiguration::get('ntfy_auth', false)->data;
+            $settings['ntfy_user']   = AppConfiguration::getEncrypted('ntfy_user', '')->data;
+            $settings['ntfy_pass']   = AppConfiguration::getEncrypted('ntfy_pass', '')->data;
             Log::debug(sprintf('Auth is %s, user = "%s"', var_export($settings['ntfy_auth'], true), $settings['ntfy_user']));
         }
 

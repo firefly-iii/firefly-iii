@@ -26,7 +26,7 @@ namespace FireflyIII\Api\V1\Controllers\System;
 
 use FireflyIII\Api\V1\Controllers\Controller;
 use FireflyIII\Api\V1\Requests\System\CronRequest;
-use FireflyIII\Support\Facades\FireflyConfig;
+use FireflyIII\Support\Facades\AppConfiguration;
 use FireflyIII\Support\Http\Controllers\CronRunner;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Facades\Log;
@@ -51,7 +51,7 @@ final class CronController extends Controller
         $return                           = [];
         $return['recurring_transactions'] = $this->runRecurring($config['force'], $config['date']);
         $return['auto_budgets']           = $this->runAutoBudget($config['force'], $config['date']);
-        if (true === FireflyConfig::get('enable_external_rates', config('cer.download_enabled'))->data) {
+        if (true === AppConfiguration::get('enable_external_rates', config('cer.download_enabled'))->data) {
             $return['exchange_rates'] = $this->exchangeRatesCronJob($config['force'], $config['date']);
         }
         $return['bill_notifications']     = $this->billWarningCronJob($config['force'], $config['date']);

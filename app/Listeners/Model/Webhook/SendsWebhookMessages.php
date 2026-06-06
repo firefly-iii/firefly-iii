@@ -27,7 +27,7 @@ namespace FireflyIII\Listeners\Model\Webhook;
 use FireflyIII\Events\Model\Webhook\WebhookMessagesRequestSending;
 use FireflyIII\Jobs\SendWebhookMessage;
 use FireflyIII\Models\WebhookMessage;
-use FireflyIII\Support\Facades\FireflyConfig;
+use FireflyIII\Support\Facades\AppConfiguration;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Support\Facades\Log;
 
@@ -36,7 +36,7 @@ class SendsWebhookMessages implements ShouldQueue
     public function handle(WebhookMessagesRequestSending $event): void
     {
         Log::debug(sprintf('Now in %s for %s', __METHOD__, get_class($event)));
-        if (false === config('firefly.feature_flags.webhooks') || false === FireflyConfig::get('allow_webhooks', config('firefly.allow_webhooks'))->data) {
+        if (false === config('firefly.feature_flags.webhooks') || false === AppConfiguration::get('allow_webhooks', config('firefly.allow_webhooks'))->data) {
             Log::debug('Webhook event handler is disabled, do not run sendWebhookMessages().');
 
             return;

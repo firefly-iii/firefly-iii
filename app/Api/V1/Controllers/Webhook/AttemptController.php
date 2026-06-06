@@ -30,7 +30,7 @@ use FireflyIII\Models\Webhook;
 use FireflyIII\Models\WebhookAttempt;
 use FireflyIII\Models\WebhookMessage;
 use FireflyIII\Repositories\Webhook\WebhookRepositoryInterface;
-use FireflyIII\Support\Facades\FireflyConfig;
+use FireflyIII\Support\Facades\AppConfiguration;
 use FireflyIII\Transformers\WebhookAttemptTransformer;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Pagination\LengthAwarePaginator;
@@ -71,7 +71,7 @@ final class AttemptController extends Controller
         if ($message->webhook_id !== $webhook->id) {
             throw new FireflyException('200040: Webhook and webhook message are no match');
         }
-        if (false === FireflyConfig::get('allow_webhooks', config('firefly.allow_webhooks'))->data) {
+        if (false === AppConfiguration::get('allow_webhooks', config('firefly.allow_webhooks'))->data) {
             Log::channel('audit')->warning(sprintf(
                 'User lists webhook attempts of webhook #%d and message #%d, but webhooks are DISABLED.',
                 $webhook->id,
@@ -119,7 +119,7 @@ final class AttemptController extends Controller
             throw new FireflyException('200041: Webhook message and webhook attempt are no match');
         }
 
-        if (false === FireflyConfig::get('allow_webhooks', config('firefly.allow_webhooks'))->data) {
+        if (false === AppConfiguration::get('allow_webhooks', config('firefly.allow_webhooks'))->data) {
             Log::channel('audit')->warning(sprintf(
                 'User views single webhook attempt #%d of webhook #%d and message #%d, but webhooks are DISABLED',
                 $attempt->id,

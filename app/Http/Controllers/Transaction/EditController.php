@@ -29,7 +29,7 @@ use FireflyIII\Models\TransactionGroup;
 use FireflyIII\Models\TransactionJournal;
 use FireflyIII\Repositories\Account\AccountRepositoryInterface;
 use FireflyIII\Repositories\Journal\JournalRepositoryInterface;
-use FireflyIII\Support\Facades\FireflyConfig;
+use FireflyIII\Support\Facades\AppConfiguration;
 use FireflyIII\Support\Facades\Preferences;
 use Illuminate\Contracts\View\Factory;
 use Illuminate\Http\JsonResponse;
@@ -116,7 +116,7 @@ final class EditController extends Controller
         $optionalFields['external_url'] ??= false;
         $optionalFields['location']     ??= false;
         $optionalFields['location'] = true === $optionalFields['location']
-        && true === FireflyConfig::get('enable_external_map', config('firefly.enable_external_map'))->data;
+        && true === AppConfiguration::get('enable_external_map', config('firefly.enable_external_map'))->data;
 
         // map info voor v2:
         $longitude                  = config('firefly.default_location.longitude');

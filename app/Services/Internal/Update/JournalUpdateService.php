@@ -45,7 +45,7 @@ use FireflyIII\Repositories\Category\CategoryRepositoryInterface;
 use FireflyIII\Repositories\Currency\CurrencyRepositoryInterface;
 use FireflyIII\Repositories\TransactionGroup\TransactionGroupRepositoryInterface;
 use FireflyIII\Services\Internal\Support\JournalServiceTrait;
-use FireflyIII\Support\Facades\FireflyConfig;
+use FireflyIII\Support\Facades\AppConfiguration;
 use FireflyIII\Support\Facades\Preferences;
 use FireflyIII\Support\Facades\Steam;
 use FireflyIII\Support\NullArrayObject;
@@ -634,7 +634,7 @@ class JournalUpdateService
 
                 $value->setTimezone(config('app.timezone'));
                 // 2024-11-22, overrule timezone with UTC and store it as UTC.
-                if (true === FireflyConfig::get('utc', false)->data) {
+                if (true === AppConfiguration::get('utc', false)->data) {
                     $value->setTimezone('UTC');
                 }
 

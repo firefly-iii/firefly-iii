@@ -28,7 +28,7 @@ use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Http\Controllers\Controller;
 use FireflyIII\Notifications\Notifiables\OwnerNotifiable;
 use FireflyIII\Repositories\User\UserRepositoryInterface;
-use FireflyIII\Support\Facades\FireflyConfig;
+use FireflyIII\Support\Facades\AppConfiguration;
 use FireflyIII\Support\Http\Controllers\CreateStuff;
 use FireflyIII\User;
 use Illuminate\Contracts\View\Factory;
@@ -113,7 +113,7 @@ final class RegisterController extends Controller
      */
     public function showInviteForm(Request $request, string $code): Factory|\Illuminate\Contracts\View\View
     {
-        $isDemoSite        = FireflyConfig::get('is_demo_site', config('firefly.configuration.is_demo_site'))->data;
+        $isDemoSite        = AppConfiguration::get('is_demo_site', config('firefly.configuration.is_demo_site'))->data;
         $pageTitle         = (string) trans('firefly.register_page_title');
         $repository        = app(UserRepositoryInterface::class);
         $allowRegistration = $this->allowedToRegister();
@@ -147,7 +147,7 @@ final class RegisterController extends Controller
      */
     public function showRegistrationForm(?Request $request = null): Factory|\Illuminate\Contracts\View\View
     {
-        $isDemoSite        = FireflyConfig::get('is_demo_site', config('firefly.configuration.is_demo_site'))->data;
+        $isDemoSite        = AppConfiguration::get('is_demo_site', config('firefly.configuration.is_demo_site'))->data;
         $pageTitle         = (string) trans('firefly.register_page_title');
         $allowRegistration = $this->allowedToRegister();
 
@@ -171,7 +171,7 @@ final class RegisterController extends Controller
         $allowRegistration = true;
 
         try {
-            $singleUserMode = FireflyConfig::get('single_user_mode', config('firefly.configuration.single_user_mode'))->data;
+            $singleUserMode = AppConfiguration::get('single_user_mode', config('firefly.configuration.single_user_mode'))->data;
         } catch (ContainerExceptionInterface|NotFoundExceptionInterface) {
             $singleUserMode = true;
         }

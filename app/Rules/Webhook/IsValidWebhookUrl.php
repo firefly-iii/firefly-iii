@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace FireflyIII\Rules\Webhook;
 
 use Closure;
-use FireflyIII\Support\Facades\FireflyConfig;
+use FireflyIII\Support\Facades\AppConfiguration;
 use Illuminate\Contracts\Validation\ValidationRule;
 use Illuminate\Support\Facades\Log;
 use Symfony\Component\HttpFoundation\IpUtils;
@@ -43,7 +43,7 @@ class IsValidWebhookUrl implements ValidationRule
             Log::error(sprintf('The resolved IP address "%s" is invalid.', $resolved));
             $fail('validation.no_reserved_ip')->translate();
         }
-        $validProtocols = FireflyConfig::get('valid_url_protocols', config('firefly.valid_url_protocols'))->data;
+        $validProtocols = AppConfiguration::get('valid_url_protocols', config('firefly.valid_url_protocols'))->data;
         $parts          = explode(',', $validProtocols);
         $valid          = false;
         foreach ($parts as $part) {

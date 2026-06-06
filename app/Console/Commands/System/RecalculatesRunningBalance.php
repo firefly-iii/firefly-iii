@@ -25,7 +25,7 @@ declare(strict_types=1);
 namespace FireflyIII\Console\Commands\System;
 
 use FireflyIII\Console\Commands\ShowsFriendlyMessages;
-use FireflyIII\Support\Facades\FireflyConfig;
+use FireflyIII\Support\Facades\AppConfiguration;
 use FireflyIII\Support\Models\AccountBalanceCalculator;
 use Illuminate\Console\Command;
 
@@ -52,7 +52,7 @@ class RecalculatesRunningBalance extends Command
      */
     public function handle(): int
     {
-        if (true === FireflyConfig::get('use_running_balance', config('firefly.feature_flags.running_balance_column'))->data) {
+        if (true === AppConfiguration::get('use_running_balance', config('firefly.feature_flags.running_balance_column'))->data) {
             $this->friendlyInfo('Will recalculate account balances. This may take a LONG time. Please be patient.');
             $this->correctBalanceAmounts($this->option('force'));
             $this->friendlyInfo('Done recalculating account balances.');

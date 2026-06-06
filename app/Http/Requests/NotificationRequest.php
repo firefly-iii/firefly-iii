@@ -25,7 +25,7 @@ declare(strict_types=1);
 namespace FireflyIII\Http\Requests;
 
 use FireflyIII\Rules\Admin\IsValidSlackOrDiscordUrl;
-use FireflyIII\Support\Facades\FireflyConfig;
+use FireflyIII\Support\Facades\AppConfiguration;
 use FireflyIII\Support\Request\ChecksLogin;
 use FireflyIII\Support\Request\ConvertsDataTypes;
 use Illuminate\Foundation\Http\FormRequest;
@@ -66,7 +66,7 @@ class NotificationRequest extends FormRequest
      */
     public function rules(): array
     {
-        $validProtocols = FireflyConfig::get('valid_url_protocols', config('firefly.valid_url_protocols'))->data;
+        $validProtocols = AppConfiguration::get('valid_url_protocols', config('firefly.valid_url_protocols'))->data;
         $rules          = [
             'slack_webhook_url' => ['nullable', sprintf('url:%s', $validProtocols), 'min:1', new IsValidSlackOrDiscordUrl()],
             'ntfy_server'       => ['nullable', sprintf('url:%s', $validProtocols), 'min:1'],

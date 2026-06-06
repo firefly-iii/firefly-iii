@@ -26,7 +26,7 @@ namespace FireflyIII\Console\Commands\Correction;
 
 use FireflyIII\Console\Commands\ShowsFriendlyMessages;
 use FireflyIII\Services\Internal\Recalculate\PrimaryAmountRecalculationService;
-use FireflyIII\Support\Facades\FireflyConfig;
+use FireflyIII\Support\Facades\AppConfiguration;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\Log;
 
@@ -43,7 +43,7 @@ class CorrectsPrimaryCurrencyAmounts extends Command
      */
     public function handle(): int
     {
-        if (false === FireflyConfig::get('enable_exchange_rates', config('cer.enabled'))->data) {
+        if (false === AppConfiguration::get('enable_exchange_rates', config('cer.enabled'))->data) {
             $this->friendlyInfo('This command will not run because currency exchange rates are disabled.');
 
             return 0;

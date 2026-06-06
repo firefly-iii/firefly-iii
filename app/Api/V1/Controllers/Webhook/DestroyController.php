@@ -30,7 +30,7 @@ use FireflyIII\Models\Webhook;
 use FireflyIII\Models\WebhookAttempt;
 use FireflyIII\Models\WebhookMessage;
 use FireflyIII\Repositories\Webhook\WebhookRepositoryInterface;
-use FireflyIII\Support\Facades\FireflyConfig;
+use FireflyIII\Support\Facades\AppConfiguration;
 use FireflyIII\Support\Facades\Preferences;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Facades\Log;
@@ -62,7 +62,7 @@ final class DestroyController extends Controller
      */
     public function destroy(Webhook $webhook): JsonResponse
     {
-        if (false === FireflyConfig::get('allow_webhooks', config('firefly.allow_webhooks'))->data) {
+        if (false === AppConfiguration::get('allow_webhooks', config('firefly.allow_webhooks'))->data) {
             Log::channel('audit')->warning(sprintf('User tries to destroy webhook #%d. but webhooks are DISABLED.', $webhook->id));
 
             throw new NotFoundHttpException('Webhooks are not enabled.');
@@ -92,7 +92,7 @@ final class DestroyController extends Controller
             throw new FireflyException('200041: Webhook message and webhook attempt are no match');
         }
 
-        if (false === FireflyConfig::get('allow_webhooks', config('firefly.allow_webhooks'))->data) {
+        if (false === AppConfiguration::get('allow_webhooks', config('firefly.allow_webhooks'))->data) {
             Log::channel('audit')->warning(sprintf(
                 'User tries to destroy webhook #%d, message #%d, attempt #%d, but webhooks are DISABLED.',
                 $webhook->id,
@@ -125,7 +125,7 @@ final class DestroyController extends Controller
             throw new FireflyException('200040: Webhook and webhook message are no match');
         }
 
-        if (false === FireflyConfig::get('allow_webhooks', config('firefly.allow_webhooks'))->data) {
+        if (false === AppConfiguration::get('allow_webhooks', config('firefly.allow_webhooks'))->data) {
             Log::channel('audit')->warning(sprintf('User tries to destroy webhook #%d, message #%d, but webhooks are DISABLED.', $webhook->id, $message->id));
 
             throw new NotFoundHttpException('Webhooks are not enabled.');

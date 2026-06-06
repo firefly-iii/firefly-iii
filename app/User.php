@@ -54,7 +54,7 @@ use FireflyIII\Models\UserRole;
 use FireflyIII\Models\Webhook;
 use FireflyIII\Notifications\Admin\UserRegistration;
 use FireflyIII\Notifications\Admin\VersionCheckResult;
-use FireflyIII\Support\Facades\FireflyConfig;
+use FireflyIII\Support\Facades\AppConfiguration;
 use FireflyIII\Support\Facades\Preferences;
 use FireflyIII\Support\Models\ReturnsIntegerIdTrait;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -354,7 +354,7 @@ class User extends Authenticatable implements OAuthenticatable
     public function routeNotificationForSlack(Notification $notification): ?string
     {
         // this check does not validate if the user is owner, Should be done by notification itself.
-        $res  = FireflyConfig::getEncrypted('slack_webhook_url', '')->data;
+        $res  = AppConfiguration::getEncrypted('slack_webhook_url', '')->data;
         if (is_array($res)) {
             $res = '';
         }

@@ -25,7 +25,7 @@ declare(strict_types=1);
 namespace FireflyIII\Support\System;
 
 use FireflyIII\Exceptions\FireflyException;
-use FireflyIII\Support\Facades\FireflyConfig;
+use FireflyIII\Support\Facades\AppConfiguration;
 use Illuminate\Contracts\Encryption\DecryptException;
 use Illuminate\Support\Facades\Artisan;
 use Illuminate\Support\Facades\Crypt;
@@ -78,15 +78,15 @@ class OAuthKeys
         $privateKey = '';
         $publicKey  = '';
         // better check if keys are in the database:
-        $hasPrivate = FireflyConfig::has(self::PRIVATE_KEY);
-        $hasPublic  = FireflyConfig::has(self::PUBLIC_KEY);
+        $hasPrivate = AppConfiguration::hasSetting(self::PRIVATE_KEY);
+        $hasPublic  = AppConfiguration::hasSetting(self::PUBLIC_KEY);
 
         Log::debug(sprintf('keysInDatabase: hasPrivate:%s, hasPublic:%s', var_export($hasPrivate, true), var_export($hasPublic, true)));
 
         if ($hasPrivate && $hasPublic) {
             try {
-                $privateKey = trim((string) FireflyConfig::get(self::PRIVATE_KEY)?->data);
-                $publicKey  = trim((string) FireflyConfig::get(self::PUBLIC_KEY)?->data);
+                $privateKey = trim((string) AppConfiguration::get(self::PRIVATE_KEY)?->data);
+                $publicKey  = trim((string) AppConfiguration::get(self::PUBLIC_KEY)?->data);
             } catch (ContainerExceptionInterface|FireflyException|NotFoundExceptionInterface $e) {
                 Log::error(sprintf('Could not validate keysInDatabase(): %s', $e->getMessage()));
                 Log::error($e->getTraceAsString());
@@ -119,8 +119,8 @@ class OAuthKeys
     public static function restoreKeysFromDB(): bool
     {
         Log::debug('restoreKeysFromDB()');
-        $privateKey = (string) FireflyConfig::get(self::PRIVATE_KEY)?->data;
-        $publicKey  = (string) FireflyConfig::get(self::PUBLIC_KEY)?->data;
+        $privateKey = (string) AppConfiguration::get(self::PRIVATE_KEY)?->data;
+        $publicKey  = (string) AppConfiguration::get(self::PUBLIC_KEY)?->data;
 
         if ('' === $privateKey) {
             Log::warning('Private key is not in the database.');
@@ -137,8 +137,8 @@ class OAuthKeys
             Log::error($e->getMessage());
 
             // delete config vars from DB:
-            FireflyConfig::delete(self::PRIVATE_KEY);
-            FireflyConfig::delete(self::PUBLIC_KEY);
+            AppConfiguration::delete(self::PRIVATE_KEY);
+            AppConfiguration::delete(self::PUBLIC_KEY);
             Log::debug('Done with generateKeysFromDB(), return FALSE');
 
             return false;
@@ -167,8 +167,8 @@ class OAuthKeys
         $public         = Passport::keyPath('oauth-public.key');
         $privateContent = file_get_contents($private);
         $publicContent  = file_get_contents($public);
-        FireflyConfig::set(self::PRIVATE_KEY, Crypt::encrypt($privateContent));
-        FireflyConfig::set(self::PUBLIC_KEY, Crypt::encrypt($publicContent));
+        AppConfiguration::set(self::PRIVATE_KEY, Crypt::encrypt($privateContent));
+        AppConfiguration::set(self::PUBLIC_KEY, Crypt::encrypt($publicContent));
 
         Log::debug(sprintf(
             'Will store the content of file "%s" as "%s" in the database (hash: %s)',
