@@ -60,11 +60,11 @@ class Amount
 
         // there are five possible positions for the "+" or "-" sign (if it is even used)
         // pos_a and pos_e could be the ( and ) symbol.
-        $posA  = ''; // before everything
-        $posB  = ''; // before currency symbol
-        $posC  = ''; // after currency symbol
-        $posD  = ''; // before amount
-        $posE  = ''; // after everything
+        $posA = ''; // before everything
+        $posB = ''; // before currency symbol
+        $posC = ''; // after currency symbol
+        $posD = ''; // before amount
+        $posE = ''; // after everything
 
         // format would be (currency before amount)
         // AB%sC_D%vE
@@ -106,10 +106,10 @@ class Amount
         }
 
         if ($csPrecedes) {
-            return $posA.$posB.'%s'.$posC.$space.$posD.'%v'.$posE;
+            return $posA . $posB . '%s' . $posC . $space . $posD . '%v' . $posE;
         }
 
-        return $posA.$posD.'%v'.$space.$posB.'%s'.$posC.$posE;
+        return $posA . $posD . '%v' . $space . $posB . '%s' . $posC . $posE;
     }
 
     public function convertToPrimary(?User $user = null): bool
@@ -120,7 +120,7 @@ class Amount
             if (null === $pref) {
                 $res
                     = true === Preferences::get('convert_to_primary', false)->data
-                    && true === AppConfiguration::get('enable_exchange_rates', config('cer.enabled'))->data;
+                      && true === AppConfiguration::get('enable_exchange_rates', config('cer.enabled'))->data;
                 $instance->setPreference('convert_to_primary_no_user', $res);
 
                 return $res;
@@ -128,12 +128,12 @@ class Amount
 
             return $pref;
         }
-        $key      = sprintf('convert_to_primary_%d', $user->id);
-        $pref     = $instance->getPreference($key);
+        $key  = sprintf('convert_to_primary_%d', $user->id);
+        $pref = $instance->getPreference($key);
         if (null === $pref) {
             $res
                 = true === Preferences::getForUser($user, 'convert_to_primary', false)->data
-                && true === AppConfiguration::get('enable_exchange_rates', config('cer.enabled'))->data;
+                  && true === AppConfiguration::get('enable_exchange_rates', config('cer.enabled'))->data;
             $instance->setPreference($key, $res);
 
             return $res;
@@ -168,16 +168,16 @@ class Amount
      */
     public function formatFlat(string $symbol, int $decimalPlaces, string $amount, ?bool $coloured = null): string
     {
-        $amount  = Steam::anonymous() ? '0' : $amount;
-        $locale  = Steam::getLocale();
-        $rounded = Steam::bcround($amount, $decimalPlaces);
+        $amount   = Steam::anonymous() ? '0' : $amount;
+        $locale   = Steam::getLocale();
+        $rounded  = Steam::bcround($amount, $decimalPlaces);
         $coloured ??= true;
 
-        $fmt     = new NumberFormatter($locale, NumberFormatter::CURRENCY);
+        $fmt = new NumberFormatter($locale, NumberFormatter::CURRENCY);
         $fmt->setSymbol(NumberFormatter::CURRENCY_SYMBOL, $symbol);
         $fmt->setAttribute(NumberFormatter::MIN_FRACTION_DIGITS, $decimalPlaces);
         $fmt->setAttribute(NumberFormatter::MAX_FRACTION_DIGITS, $decimalPlaces);
-        $result  = (string) $fmt->format((float) $rounded); // intentional float
+        $result = (string)$fmt->format((float)$rounded); // intentional float
 
         if ($coloured) {
             if (1 === bccomp($rounded, '0')) {
@@ -210,13 +210,13 @@ class Amount
         $amount           = $journal[$field] ?? '0';
         // Log::debug(sprintf('Field is %s, amount is %s', $field, $amount));
         // fallback, the transaction has a foreign amount in $currency.
-        if ($convertToPrimary && null !== $journal['foreign_amount'] && $currency->id === (int) $journal['foreign_currency_id']) {
+        if ($convertToPrimary && null !== $journal['foreign_amount'] && $currency->id === (int)$journal['foreign_currency_id']) {
             $amount = $journal['foreign_amount'];
 
             // Log::debug(sprintf('Overruled, amount is now %s', $amount));
         }
 
-        return (string) $amount;
+        return (string)$amount;
     }
 
     /**
@@ -226,9 +226,9 @@ class Amount
     public function getAmountFromJournalObject(TransactionJournal $journal): string
     {
         // Log::debug(sprintf('Get amount from journal #%d', $journal->id));
-        $convertToPrimary  = $this->convertToPrimary();
-        $currency          = $this->getPrimaryCurrency();
-        $field             = $convertToPrimary && $currency->id !== $journal->transaction_currency_id ? 'native_amount' : 'amount';
+        $convertToPrimary = $this->convertToPrimary();
+        $currency         = $this->getPrimaryCurrency();
+        $field            = $convertToPrimary && $currency->id !== $journal->transaction_currency_id ? 'native_amount' : 'amount';
 
         /** @var null|Transaction $sourceTransaction */
         $sourceTransaction = $journal->transactions()->where('amount', '<', 0)->first();
@@ -236,11 +236,11 @@ class Amount
             // Log::debug('Return zero!');
             return '0';
         }
-        $amount            = $sourceTransaction->{$field} ?? '0';
+        $amount = $sourceTransaction->{$field} ?? '0';
         // Log::debug(sprintf('Amount is %s', $amount));
-        if ((int) $sourceTransaction->foreign_currency_id === $currency->id) {
+        if ((int)$sourceTransaction->foreign_currency_id === $currency->id) {
             // use foreign amount instead!
-            $amount = (string) $sourceTransaction->foreign_amount; // hard coded to be foreign amount.
+            $amount = (string)$sourceTransaction->foreign_amount; // hard coded to be foreign amount.
 
             // Log::debug(sprintf('Amount is now %s', $amount));
         }
@@ -293,16 +293,18 @@ class Amount
 
     public function getPrimaryCurrencyByUserGroup(UserGroup $userGroup): TransactionCurrency
     {
-        $cache   = new CacheProperties();
+        $cache = new CacheProperties();
         $cache->addProperty('getPrimaryCurrencyByGroup');
         $cache->addProperty($userGroup->id);
         if ($cache->has()) {
+            Log::debug(sprintf('getPrimaryCurrencyByUserGroup(#%d, "%s") = %s', $userGroup->id, $userGroup->title, $cache->get()->code));
             return $cache->get();
         }
 
         /** @var null|TransactionCurrency $primary */
         $primary = $userGroup->currencies()->where('group_default', true)->first();
         if (null === $primary) {
+            Log::debug(sprintf('User group #%d ("%s") has no default currency, will use system default.', $userGroup->id, $userGroup->name));
             $primary = $this->getSystemCurrency();
             // could be the user group has no default right now.
             $userGroup->currencies()->sync([$primary->id => ['group_default' => true]]);
@@ -323,7 +325,7 @@ class Amount
         $key      = sprintf('transaction_currency_%s', $code);
 
         /** @var null|TransactionCurrency $pref */
-        $pref     = $instance->getPreference($key);
+        $pref = $instance->getPreference($key);
         if (null !== $pref) {
             return $pref;
         }
@@ -350,7 +352,7 @@ class Amount
         $key      = sprintf('transaction_currency_%d', $currencyId);
 
         /** @var null|TransactionCurrency $pref */
-        $pref     = $instance->getPreference($key);
+        $pref = $instance->getPreference($key);
         if (null !== $pref) {
             return $pref;
         }
@@ -377,20 +379,20 @@ class Amount
     private function getLocaleInfo(): array
     {
         // get config from preference, not from translation:
-        $locale                    = Steam::getLocale();
-        $array                     = Steam::getLocaleArray($locale);
+        $locale = Steam::getLocale();
+        $array  = Steam::getLocaleArray($locale);
 
         setlocale(LC_MONETARY, $array);
-        $info                      = localeconv();
+        $info = localeconv();
 
         // correct variables
-        $info['n_cs_precedes']     = $this->getLocaleField($info, 'n_cs_precedes');
-        $info['p_cs_precedes']     = $this->getLocaleField($info, 'p_cs_precedes');
+        $info['n_cs_precedes'] = $this->getLocaleField($info, 'n_cs_precedes');
+        $info['p_cs_precedes'] = $this->getLocaleField($info, 'p_cs_precedes');
 
-        $info['n_sep_by_space']    = $this->getLocaleField($info, 'n_sep_by_space');
-        $info['p_sep_by_space']    = $this->getLocaleField($info, 'p_sep_by_space');
+        $info['n_sep_by_space'] = $this->getLocaleField($info, 'n_sep_by_space');
+        $info['p_sep_by_space'] = $this->getLocaleField($info, 'p_sep_by_space');
 
-        $fmt                       = new NumberFormatter($locale, NumberFormatter::CURRENCY);
+        $fmt = new NumberFormatter($locale, NumberFormatter::CURRENCY);
 
         $info['mon_decimal_point'] = $fmt->getSymbol(NumberFormatter::MONETARY_SEPARATOR_SYMBOL);
         $info['mon_thousands_sep'] = $fmt->getSymbol(NumberFormatter::MONETARY_GROUPING_SEPARATOR_SYMBOL);

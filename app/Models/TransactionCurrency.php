@@ -31,6 +31,7 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use Illuminate\Support\Facades\Log;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 class TransactionCurrency extends Model
@@ -73,8 +74,13 @@ class TransactionCurrency extends Model
 
     public function refreshForUser(User $user): void
     {
+        Log::debug(sprintf('refreshForUser(#%d, "%s")', $user->id, $this->code));
         $current                = $user->userGroup->currencies()->where('transaction_currencies.id', $this->id)->first();
         $native                 = Amount::getPrimaryCurrencyByUserGroup($user->userGroup);
+
+        Log::debug(sprintf('Current is "%s"', $current?->code));
+        Log::debug(sprintf('Native  is %s', $native->code));
+
         $this->userGroupNative  = $native->id === $this->id;
         $this->userGroupEnabled = null !== $current;
     }

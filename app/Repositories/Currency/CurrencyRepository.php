@@ -449,10 +449,14 @@ class CurrencyRepository implements CurrencyRepositoryInterface, UserGroupInterf
         // remove illegal combo's:
         if (false === $enabled && true === $default) {
             $enabled = true;
+            Log::debug('Enabled is now forced to be TRUE.');
         }
 
         // update currency with current user specific settings
         $currency->refreshForUser($this->user);
+
+        // get current default for this group.
+        $currentDefaultCurrency = Amount::getPrimaryCurrencyByUserGroup($this->userGroup);
 
         // currency is enabled, must be disabled.
         if (false === $enabled) {
@@ -463,11 +467,12 @@ class CurrencyRepository implements CurrencyRepositoryInterface, UserGroupInterf
         if (true === $enabled) {
             Log::debug(sprintf('Enabled currency %s for user #%d', $currency->code, $this->userGroup->id));
             $this->userGroup->currencies()->detach($currency->id);
-            $this->userGroup->currencies()->syncWithoutDetaching([$currency->id => ['group_default' => false]]);
+            $this->userGroup->currencies()->syncWithoutDetaching([$currency->id => ['group_default' => $currentDefaultCurrency->id === $currency->id]]);
         }
 
         // currency must be made default.
         if (true === $default) {
+            Log::debug('Will now be default.');
             $this->makePrimary($currency);
         }
 
