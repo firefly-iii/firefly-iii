@@ -53,8 +53,9 @@ class TransactionGroupEventObjects
 
         /** @var TransactionJournal $journal */
         foreach ($transactionGroup->transactionJournals as $journal) {
-            Log::debug(sprintf('Appended transaction journal #%d', $journal->id));
-            $this->transactionJournals->push($journal);
+            $journal->refresh();
+            Log::debug(sprintf('Appended transaction journal #%d (%s)', $journal->id, $journal->date->format('Y-m-d H:i:s')));
+            $this->transactionJournals->put($journal->id, $journal);
             $this->budgets    = $this->budgets->merge($journal->budgets);
             $this->categories = $this->categories->merge($journal->categories);
             $this->tags       = $this->tags->merge($journal->tags);
