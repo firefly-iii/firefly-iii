@@ -140,10 +140,6 @@ final class ShowController extends Controller
         Log::debug('End period overview');
         $timer->stop('period-overview');
 
-        // if layout = v2, overrule the page title.
-        if ('v1' !== config('view.layout')) {
-            $subTitle = (string) trans('firefly.all_journals_for_account', ['name' => $account->name]);
-        }
         Log::debug('Collect transactions');
         $timer->start('collection');
 

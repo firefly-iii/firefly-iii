@@ -52,7 +52,7 @@ class GroupCloneService
         foreach ($group->transactionJournals as $journal) {
             $this->cloneJournal($journal, $newGroup, $group->id);
         }
-
+        $group->refresh();
         // event!
         $flags    = new TransactionGroupEventFlags();
         $objects  = TransactionGroupEventObjects::collectFromTransactionGroup($newGroup);
