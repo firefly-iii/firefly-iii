@@ -31,7 +31,7 @@ use FireflyIII\Generator\Webhook\MessageGeneratorInterface;
 use FireflyIII\Models\TransactionGroup;
 use FireflyIII\Models\Webhook;
 use FireflyIII\Repositories\Webhook\WebhookRepositoryInterface;
-use FireflyIII\Support\Facades\FireflyConfig;
+use FireflyIII\Support\Facades\AppConfiguration;
 use FireflyIII\Support\JsonApi\Enrichments\WebhookEnrichment;
 use FireflyIII\Transformers\WebhookTransformer;
 use FireflyIII\User;
@@ -72,7 +72,7 @@ final class ShowController extends Controller
      */
     public function index(): JsonResponse
     {
-        if (false === FireflyConfig::get('allow_webhooks', config('firefly.allow_webhooks'))->data) {
+        if (false === AppConfiguration::get('allow_webhooks', config('firefly.allow_webhooks'))->data) {
             Log::channel('audit')->info('User tries to view all webhooks, but webhooks are DISABLED.');
 
             throw new NotFoundHttpException('Webhooks are not enabled.');
@@ -114,7 +114,7 @@ final class ShowController extends Controller
      */
     public function show(Webhook $webhook): JsonResponse
     {
-        if (false === FireflyConfig::get('allow_webhooks', config('firefly.allow_webhooks'))->data) {
+        if (false === AppConfiguration::get('allow_webhooks', config('firefly.allow_webhooks'))->data) {
             Log::channel('audit')->info(sprintf('User tries to view webhook #%d, but webhooks are DISABLED.', $webhook->id));
 
             throw new NotFoundHttpException('Webhooks are not enabled.');
@@ -146,7 +146,7 @@ final class ShowController extends Controller
      */
     public function triggerTransaction(Webhook $webhook, TransactionGroup $group): JsonResponse
     {
-        if (false === FireflyConfig::get('allow_webhooks', config('firefly.allow_webhooks'))->data) {
+        if (false === AppConfiguration::get('allow_webhooks', config('firefly.allow_webhooks'))->data) {
             Log::channel('audit')->info(sprintf(
                 'User tries to trigger webhook #%d on transaction group #%d, but webhooks are DISABLED.',
                 $webhook->id,

@@ -27,7 +27,7 @@ namespace FireflyIII\Helpers\Update;
 use Carbon\Carbon;
 use FireflyIII\Services\FireflyIIIOrg\Update\UpdateRequestInterface;
 use FireflyIII\Services\FireflyIIIOrg\Update\UpdateResponse;
-use FireflyIII\Support\Facades\FireflyConfig;
+use FireflyIII\Support\Facades\AppConfiguration;
 use Illuminate\Support\Facades\Log;
 
 /**
@@ -46,7 +46,7 @@ trait UpdateTrait
 
         /** @var UpdateRequestInterface $checker */
         $checker       = app(UpdateRequestInterface::class);
-        $channelConfig = FireflyConfig::get('update_channel', 'stable');
+        $channelConfig = AppConfiguration::get('update_channel', 'stable');
         $channel       = (string) $channelConfig->data;
         $build         = Carbon::createFromTimestamp(config('firefly.build_time'), config('app.timezone'));
         $version       = config('firefly.version');

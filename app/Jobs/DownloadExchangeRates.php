@@ -41,6 +41,7 @@ use Illuminate\Queue\SerializesModels;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Log;
 use Safe\Exceptions\JsonException;
+
 use function Safe\json_decode;
 
 /**
@@ -53,10 +54,10 @@ class DownloadExchangeRates implements ShouldQueue
     use Queueable;
     use SerializesModels;
 
-    private array                       $active = [];
-    private Carbon                      $date;
+    private array $active = [];
+    private Carbon $date;
     private CurrencyRepositoryInterface $repository;
-    private Collection                  $users;
+    private Collection $users;
 
     /**
      * Create a new job instance.
@@ -67,11 +68,11 @@ class DownloadExchangeRates implements ShouldQueue
 
         // get all users:
         /** @var UserRepositoryInterface $userRepository */
-        $userRepository = app(UserRepositoryInterface::class);
-        $this->users    = $userRepository->all();
+        $userRepository   = app(UserRepositoryInterface::class);
+        $this->users      = $userRepository->all();
 
         if ($date instanceof Carbon) {
-            $newDate = clone $date;
+            $newDate    = clone $date;
             $newDate->startOfDay();
             $this->date = $newDate;
             Log::debug(sprintf('Created new DownloadExchangeRates("%s")', $this->date->format('Y-m-d')));
@@ -94,7 +95,7 @@ class DownloadExchangeRates implements ShouldQueue
 
     public function setDate(Carbon $date): void
     {
-        $newDate = clone $date;
+        $newDate    = clone $date;
         $newDate->startOfDay();
         $this->date = $newDate;
     }
@@ -106,13 +107,13 @@ class DownloadExchangeRates implements ShouldQueue
     private function downloadRates(TransactionCurrency $currency): void
     {
         Log::debug(sprintf('Now downloading new exchange rates for currency %s.', $currency->code));
-        $base   = sprintf('%s/%s/%s', (string)config('cer.url'), $this->date->year, $this->date->isoWeek);
-        $client = new Client();
-        $url    = sprintf('%s/%s.json', $base, $currency->code);
+        $base       = sprintf('%s/%s/%s', (string) config('cer.url'), $this->date->year, $this->date->isoWeek);
+        $client     = new Client();
+        $url        = sprintf('%s/%s.json', $base, $currency->code);
 
         try {
             $res = $client->get($url);
-        } catch (ConnectException | RequestException $e) {
+        } catch (ConnectException|RequestException $e) {
             Log::warning(sprintf('Trying to grab "%s" resulted in error "%s".', $url, $e->getMessage()));
 
             return;
@@ -123,14 +124,14 @@ class DownloadExchangeRates implements ShouldQueue
 
             return;
         }
-        $body = (string)$res->getBody();
-        $json = json_decode($body, true);
+        $body       = (string) $res->getBody();
+        $json       = json_decode($body, true);
         if (false === $json || null === $json) {
             Log::warning(sprintf('Trying to grab "%s" resulted in bad JSON.', $url));
 
             return;
         }
-        $date = Carbon::createFromFormat('Y-m-d', $json['date'], config('app.timezone'));
+        $date       = Carbon::createFromFormat('Y-m-d', $json['date'], config('app.timezone'));
         if (!$date instanceof Carbon) {
             return;
         }
@@ -146,19 +147,19 @@ class DownloadExchangeRates implements ShouldQueue
             return $this->active[$code];
         }
         // find it in the database.
-        $currency = $this->repository->findByCode($code);
+        $currency            = $this->repository->findByCode($code);
         if (!$currency instanceof TransactionCurrency) {
             Log::debug(sprintf('Did not find currency %s.', $code));
             $this->active[$code] = null;
 
             return null;
         }
-//        if (false === $currency->enabled) {
-//            Log::debug(sprintf('Currency %s is not enabled.', $code));
-//            $this->active[$code] = null;
-//
-//            return null;
-//        }
+        //        if (false === $currency->enabled) {
+        //            Log::debug(sprintf('Currency %s is not enabled.', $code));
+        //            $this->active[$code] = null;
+        //
+        //            return null;
+        //        }
         Log::debug(sprintf('Currency %s is enabled.', $code));
         $this->active[$code] = $currency;
 

@@ -330,8 +330,7 @@ class BudgetRepository implements BudgetRepositoryInterface, UserGroupInterface
 
     public function getActiveBudgets(): Collection
     {
-        return $this->user
-            ->budgets()
+        return $this->user->budgets()
             ->where('active', true)
             ->orderBy('order', 'ASC')
             ->orderBy('name', 'ASC')
@@ -379,8 +378,7 @@ class BudgetRepository implements BudgetRepositoryInterface, UserGroupInterface
 
     public function getInactiveBudgets(): Collection
     {
-        return $this->user
-            ->budgets()
+        return $this->user->budgets()
             ->orderBy('order', 'ASC')
             ->orderBy('name', 'ASC')
             ->where('active', 0)

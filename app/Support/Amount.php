@@ -28,7 +28,7 @@ use FireflyIII\Models\Transaction;
 use FireflyIII\Models\TransactionCurrency;
 use FireflyIII\Models\TransactionJournal;
 use FireflyIII\Models\UserGroup;
-use FireflyIII\Support\Facades\FireflyConfig;
+use FireflyIII\Support\Facades\AppConfiguration;
 use FireflyIII\Support\Facades\Preferences;
 use FireflyIII\Support\Facades\Steam;
 use FireflyIII\Support\Singleton\PreferencesSingleton;
@@ -120,7 +120,7 @@ class Amount
             if (null === $pref) {
                 $res
                     = true === Preferences::get('convert_to_primary', false)->data
-                    && true === FireflyConfig::get('enable_exchange_rates', config('cer.enabled'))->data;
+                    && true === AppConfiguration::get('enable_exchange_rates', config('cer.enabled'))->data;
                 $instance->setPreference('convert_to_primary_no_user', $res);
 
                 return $res;
@@ -133,7 +133,7 @@ class Amount
         if (null === $pref) {
             $res
                 = true === Preferences::getForUser($user, 'convert_to_primary', false)->data
-                && true === FireflyConfig::get('enable_exchange_rates', config('cer.enabled'))->data;
+                && true === AppConfiguration::get('enable_exchange_rates', config('cer.enabled'))->data;
             $instance->setPreference($key, $res);
 
             return $res;

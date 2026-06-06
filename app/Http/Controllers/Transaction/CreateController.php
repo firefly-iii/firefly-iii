@@ -29,7 +29,7 @@ use FireflyIII\Models\TransactionGroup;
 use FireflyIII\Repositories\Account\AccountRepositoryInterface;
 use FireflyIII\Repositories\TransactionGroup\TransactionGroupRepositoryInterface;
 use FireflyIII\Services\Internal\Update\GroupCloneService;
-use FireflyIII\Support\Facades\FireflyConfig;
+use FireflyIII\Support\Facades\AppConfiguration;
 use FireflyIII\Support\Facades\Preferences;
 use Illuminate\Contracts\View\Factory;
 use Illuminate\Contracts\View\View;
@@ -136,7 +136,7 @@ final class CreateController extends Controller
         $optionalFields['external_url'] ??= false;
         $optionalFields['location']     ??= false;
         $optionalFields['location'] = $optionalFields['location']
-        && true === FireflyConfig::get('enable_external_map', config('firefly.enable_external_map'))->data;
+        && true === AppConfiguration::get('enable_external_map', config('firefly.enable_external_map'))->data;
 
         // map info:
         $longitude                  = config('firefly.default_location.longitude');

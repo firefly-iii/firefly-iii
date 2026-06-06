@@ -29,7 +29,7 @@ use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Models\Webhook;
 use FireflyIII\Models\WebhookMessage;
 use FireflyIII\Repositories\Webhook\WebhookRepositoryInterface;
-use FireflyIII\Support\Facades\FireflyConfig;
+use FireflyIII\Support\Facades\AppConfiguration;
 use FireflyIII\Transformers\WebhookMessageTransformer;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Pagination\LengthAwarePaginator;
@@ -65,7 +65,7 @@ final class MessageController extends Controller
      */
     public function index(Webhook $webhook): JsonResponse
     {
-        if (false === FireflyConfig::get('allow_webhooks', config('firefly.allow_webhooks'))->data) {
+        if (false === AppConfiguration::get('allow_webhooks', config('firefly.allow_webhooks'))->data) {
             Log::channel('audit')->warning(sprintf('User tries to view messages of webhook #%d, but webhooks are DISABLED.', $webhook->id));
 
             throw new NotFoundHttpException('Webhooks are not enabled.');
@@ -105,7 +105,7 @@ final class MessageController extends Controller
         if ($message->webhook_id !== $webhook->id) {
             throw new FireflyException('200040: Webhook and webhook message are no match');
         }
-        if (false === FireflyConfig::get('allow_webhooks', config('firefly.allow_webhooks'))->data) {
+        if (false === AppConfiguration::get('allow_webhooks', config('firefly.allow_webhooks'))->data) {
             Log::channel('audit')->warning(sprintf('User tries to view message #%d of webhook #%d, but webhooks are DISABLED.', $message->id, $webhook->id));
 
             throw new NotFoundHttpException('Webhooks are not enabled.');

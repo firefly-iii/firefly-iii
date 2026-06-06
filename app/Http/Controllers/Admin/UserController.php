@@ -31,7 +31,7 @@ use FireflyIII\Http\Requests\InviteUserFormRequest;
 use FireflyIII\Http\Requests\UserFormRequest;
 use FireflyIII\Models\InvitedUser;
 use FireflyIII\Repositories\User\UserRepositoryInterface;
-use FireflyIII\Support\Facades\FireflyConfig;
+use FireflyIII\Support\Facades\AppConfiguration;
 use FireflyIII\Support\Facades\Preferences;
 use FireflyIII\User;
 use Illuminate\Contracts\View\Factory;
@@ -167,7 +167,7 @@ final class UserController extends Controller
         $subTitle       = (string) trans('firefly.user_administration');
         $subTitleIcon   = 'fa-users';
         $users          = $this->repository->all();
-        $singleUserMode = (bool) FireflyConfig::get('single_user_mode', config('firefly.configuration.single_user_mode'))->data;
+        $singleUserMode = (bool) AppConfiguration::get('single_user_mode', config('firefly.configuration.single_user_mode'))->data;
         $allowInvites   = false;
         if (!$this->externalIdentity && $singleUserMode) {
             // also registration enabled.

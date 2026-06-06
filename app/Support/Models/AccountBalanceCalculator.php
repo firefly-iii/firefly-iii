@@ -27,7 +27,7 @@ namespace FireflyIII\Support\Models;
 use Carbon\Carbon;
 use FireflyIII\Models\Transaction;
 use FireflyIII\Models\TransactionJournal;
-use FireflyIII\Support\Facades\FireflyConfig;
+use FireflyIII\Support\Facades\AppConfiguration;
 use FireflyIII\Support\Facades\Steam;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Log;
@@ -192,7 +192,7 @@ class AccountBalanceCalculator
 
     public static function recalculateForJournal(TransactionJournal $transactionJournal): void
     {
-        if (false === FireflyConfig::get('use_running_balance', config('firefly.feature_flags.running_balance_column'))->data) {
+        if (false === AppConfiguration::get('use_running_balance', config('firefly.feature_flags.running_balance_column'))->data) {
             return;
         }
         Log::debug(__METHOD__);

@@ -28,14 +28,14 @@ use FireflyIII\Events\Security\System\SystemFoundNewVersionOnline;
 use FireflyIII\Notifications\Admin\VersionCheckResult;
 use FireflyIII\Notifications\Notifiables\OwnerNotifiable;
 use FireflyIII\Notifications\NotificationSender;
-use FireflyIII\Support\Facades\FireflyConfig;
+use FireflyIII\Support\Facades\AppConfiguration;
 use Illuminate\Contracts\Queue\ShouldQueue;
 
 class NotifiesOwnerAboutNewVersion implements ShouldQueue
 {
     public function handle(SystemFoundNewVersionOnline $event): void
     {
-        $sendMail = FireflyConfig::get('notification_new_version', true)->data;
+        $sendMail = AppConfiguration::get('notification_new_version', true)->data;
         if (false === $sendMail) {
             return;
         }

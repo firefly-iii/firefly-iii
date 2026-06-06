@@ -33,7 +33,7 @@ use FireflyIII\Models\TransactionType;
 use FireflyIII\Repositories\Account\AccountRepositoryInterface;
 use FireflyIII\Services\Internal\Destroy\TransactionGroupDestroyService;
 use FireflyIII\Services\Internal\Support\CreditRecalculateService;
-use FireflyIII\Support\Facades\FireflyConfig;
+use FireflyIII\Support\Facades\AppConfiguration;
 use FireflyIII\User;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\Log;
@@ -132,14 +132,14 @@ class UpgradesLiabilitiesEight extends Command
 
     private function isExecuted(): bool
     {
-        $configVar = FireflyConfig::get(self::CONFIG_NAME, false);
+        $configVar = AppConfiguration::get(self::CONFIG_NAME, false);
 
         return (bool) $configVar?->data;
     }
 
     private function markAsExecuted(): void
     {
-        FireflyConfig::set(self::CONFIG_NAME, true);
+        AppConfiguration::set(self::CONFIG_NAME, true);
     }
 
     private function reverseOpeningBalance(Account $account): void

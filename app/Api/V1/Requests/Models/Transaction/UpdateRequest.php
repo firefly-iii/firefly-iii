@@ -31,7 +31,7 @@ use FireflyIII\Rules\IsBoolean;
 use FireflyIII\Rules\IsDateOrTime;
 use FireflyIII\Rules\IsValidPositiveAmount;
 use FireflyIII\Rules\IsValidZeroOrMoreAmount;
-use FireflyIII\Support\Facades\FireflyConfig;
+use FireflyIII\Support\Facades\AppConfiguration;
 use FireflyIII\Support\Request\ChecksLogin;
 use FireflyIII\Support\Request\ConvertsDataTypes;
 use FireflyIII\Validation\GroupValidation;
@@ -141,7 +141,7 @@ class UpdateRequest extends FormRequest
     public function rules(): array
     {
         Log::debug(sprintf('Now in %s', __METHOD__));
-        $validProtocols = FireflyConfig::get('valid_url_protocols', config('firefly.valid_url_protocols'))->data;
+        $validProtocols = AppConfiguration::get('valid_url_protocols', config('firefly.valid_url_protocols'))->data;
 
         return [
             // basic fields for group:

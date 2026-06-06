@@ -26,7 +26,7 @@ namespace FireflyIII\Http\Controllers\Webhooks;
 
 use FireflyIII\Http\Controllers\Controller;
 use FireflyIII\Models\Webhook;
-use FireflyIII\Support\Facades\FireflyConfig;
+use FireflyIII\Support\Facades\AppConfiguration;
 use Illuminate\Contracts\View\Factory;
 use Illuminate\Contracts\View\View;
 use Illuminate\Support\Facades\Log;
@@ -56,7 +56,7 @@ final class ShowController extends Controller
 
     public function index(Webhook $webhook): Factory|View
     {
-        if (false === FireflyConfig::get('allow_webhooks', config('firefly.allow_webhooks'))->data) {
+        if (false === AppConfiguration::get('allow_webhooks', config('firefly.allow_webhooks'))->data) {
             Log::channel('audit')->warning(sprintf('User visits webhook #%d page, but webhooks are DISABLED.', $webhook->id));
 
             throw new NotFoundHttpException('Webhooks are not enabled.');

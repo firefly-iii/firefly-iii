@@ -45,8 +45,7 @@ class WebhookRepository implements WebhookRepositoryInterface, UserGroupInterfac
 
     public function all(): Collection
     {
-        return $this->user
-            ->webhooks()
+        return $this->user->webhooks()
             // only get upgraded webhooks
             ->where('delivery', 1)
             ->where('response', 1)

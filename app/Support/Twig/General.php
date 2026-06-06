@@ -28,7 +28,7 @@ use FireflyIII\Models\Account;
 use FireflyIII\Repositories\Account\AccountRepositoryInterface;
 use FireflyIII\Repositories\User\UserRepositoryInterface;
 use FireflyIII\Support\Facades\Amount;
-use FireflyIII\Support\Facades\FireflyConfig;
+use FireflyIII\Support\Facades\AppConfiguration;
 use FireflyIII\Support\Facades\Steam;
 use FireflyIII\Support\Search\OperatorQuerySearch;
 use Illuminate\Support\Collection;
@@ -400,6 +400,6 @@ class General extends AbstractExtension
 
     private function fireflyIIIConfig(): TwigFunction
     {
-        return new TwigFunction('fireflyiiiconfig', static fn (string $string, mixed $default): mixed => FireflyConfig::get($string, $default)->data);
+        return new TwigFunction('fireflyiiiconfig', static fn (string $string, mixed $default): mixed => AppConfiguration::get($string, $default)->data);
     }
 }

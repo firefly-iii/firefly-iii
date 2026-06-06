@@ -87,8 +87,7 @@ final class BalanceController extends Controller
 
         // get journals for entire period:
 
-        $this->collector
-            ->setRange($queryParameters['start'], $queryParameters['end'])
+        $this->collector->setRange($queryParameters['start'], $queryParameters['end'])
             ->withAccountInformation()
             ->setXorAccounts($accounts)
             ->setTypes([

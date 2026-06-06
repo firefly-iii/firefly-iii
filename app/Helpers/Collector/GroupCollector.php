@@ -1063,9 +1063,8 @@ class GroupCollector implements GroupCollectorInterface
     private function startQuery(): void
     {
         // Log::debug('GroupCollector::startQuery');
-        $this->query = $this->user
-            // ->transactionGroups()
-            // ->leftJoin('transaction_journals', 'transaction_journals.transaction_group_id', 'transaction_groups.id')
+        $this->query = $this->user// ->transactionGroups()
+        // ->leftJoin('transaction_journals', 'transaction_journals.transaction_group_id', 'transaction_groups.id')
             ->transactionJournals()
             ->leftJoin('transaction_groups', 'transaction_journals.transaction_group_id', 'transaction_groups.id')
             // join source transaction.
@@ -1099,8 +1098,7 @@ class GroupCollector implements GroupCollectorInterface
     private function startQueryForGroup(): void
     {
         // Log::debug('GroupCollector::startQuery');
-        $this->query = $this->userGroup
-            ->transactionJournals()
+        $this->query = $this->userGroup->transactionJournals()
             ->leftJoin('transaction_groups', 'transaction_journals.transaction_group_id', 'transaction_groups.id')
             // join source transaction.
             ->leftJoin('transactions as source', static function (JoinClause $join): void {

@@ -27,7 +27,7 @@ namespace FireflyIII\Console\Commands\Upgrade;
 use FireflyIII\Console\Commands\ShowsFriendlyMessages;
 use FireflyIII\Models\Location;
 use FireflyIII\Models\Tag;
-use FireflyIII\Support\Facades\FireflyConfig;
+use FireflyIII\Support\Facades\AppConfiguration;
 use Illuminate\Console\Command;
 
 class UpgradesTagLocations extends Command
@@ -63,14 +63,14 @@ class UpgradesTagLocations extends Command
 
     private function isExecuted(): bool
     {
-        $configVar = FireflyConfig::get(self::CONFIG_NAME, false);
+        $configVar = AppConfiguration::get(self::CONFIG_NAME, false);
 
         return (bool) $configVar?->data;
     }
 
     private function markAsExecuted(): void
     {
-        FireflyConfig::set(self::CONFIG_NAME, true);
+        AppConfiguration::set(self::CONFIG_NAME, true);
     }
 
     private function migrateLocationDetails(Tag $tag): void

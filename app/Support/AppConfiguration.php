@@ -1,7 +1,7 @@
 <?php
 
 /**
- * FireflyConfig.php
+ * AppConfiguration.php
  * Copyright (c) 2019 james@firefly-iii.org
  *
  * This file is part of Firefly III (https://github.com/firefly-iii).
@@ -33,9 +33,9 @@ use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Log;
 
 /**
- * Class FireflyConfig.
+ * Class AppConfiguration.
  */
-class FireflyConfig
+class AppConfiguration
 {
     public function delete(string $name): void
     {
@@ -115,7 +115,7 @@ class FireflyConfig
         return $this->set($name, $default);
     }
 
-    public function has(string $name): bool
+    public function hasSetting(string $name): bool
     {
         return 1 === Configuration::query()->where('name', $name)->count();
     }

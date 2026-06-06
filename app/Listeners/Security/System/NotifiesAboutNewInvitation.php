@@ -32,7 +32,7 @@ use FireflyIII\Models\InvitedUser;
 use FireflyIII\Notifications\Admin\UserInvitation;
 use FireflyIII\Notifications\Notifiables\OwnerNotifiable;
 use FireflyIII\Notifications\NotificationSender;
-use FireflyIII\Support\Facades\FireflyConfig;
+use FireflyIII\Support\Facades\AppConfiguration;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Mail;
@@ -47,7 +47,7 @@ class NotifiesAboutNewInvitation implements ShouldQueue
 
     private function sendInvitationNotification(InvitedUser $invitee): void
     {
-        $sendMail = FireflyConfig::get('notification_invite_created', true)->data;
+        $sendMail = AppConfiguration::get('notification_invite_created', true)->data;
         if (false === $sendMail) {
             return;
         }

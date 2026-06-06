@@ -27,7 +27,7 @@ namespace FireflyIII\Console\Commands\Tools;
 use Carbon\Carbon;
 use FireflyIII\Console\Commands\ShowsFriendlyMessages;
 use FireflyIII\Services\FireflyIIIOrg\Update\UpdateRequestInterface;
-use FireflyIII\Support\Facades\FireflyConfig;
+use FireflyIII\Support\Facades\AppConfiguration;
 use Illuminate\Console\Command;
 
 class ChecksForUpdates extends Command
@@ -57,7 +57,7 @@ class ChecksForUpdates extends Command
         $version    = config('firefly.version');
 
         $this->friendlyLine(sprintf('You are running version "%s", built on %s', $version, $build->format('Y-m-d H:i')));
-        $permission = FireflyConfig::get('permission_update_check', -1)->data;
+        $permission = AppConfiguration::get('permission_update_check', -1)->data;
         if (1 !== $permission && false === $this->option('force')) {
             $this->friendlyWarning('Checking for updates is disabled. To overrule, use --force.');
 

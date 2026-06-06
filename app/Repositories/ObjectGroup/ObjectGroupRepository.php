@@ -78,8 +78,7 @@ class ObjectGroupRepository implements ObjectGroupRepositoryInterface, UserGroup
 
     public function get(): Collection
     {
-        return $this->user
-            ->objectGroups()
+        return $this->user->objectGroups()
             ->with(['piggyBanks', 'bills'])
             ->orderBy('order', 'ASC')
             ->orderBy('title', 'ASC')
@@ -140,8 +139,7 @@ class ObjectGroupRepository implements ObjectGroupRepositoryInterface, UserGroup
         $oldOrder = $objectGroup->order;
 
         if ($newOrder > $oldOrder) {
-            $this->user
-                ->objectGroups()
+            $this->user->objectGroups()
                 ->where('object_groups.order', '<=', $newOrder)
                 ->where('object_groups.order', '>', $oldOrder)
                 ->where('object_groups.id', '!=', $objectGroup->id)
@@ -152,8 +150,7 @@ class ObjectGroupRepository implements ObjectGroupRepositoryInterface, UserGroup
             $objectGroup->save();
         }
         if ($newOrder < $oldOrder) {
-            $this->user
-                ->objectGroups()
+            $this->user->objectGroups()
                 ->where('object_groups.order', '>=', $newOrder)
                 ->where('object_groups.order', '<', $oldOrder)
                 ->where('object_groups.id', '!=', $objectGroup->id)

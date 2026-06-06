@@ -31,7 +31,7 @@ use FireflyIII\Models\TransactionCurrency;
 use FireflyIII\Models\UserGroup;
 use FireflyIII\Support\CacheProperties;
 use FireflyIII\Support\Facades\Amount;
-use FireflyIII\Support\Facades\FireflyConfig;
+use FireflyIII\Support\Facades\AppConfiguration;
 use FireflyIII\Support\Facades\Steam;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Log;
@@ -72,7 +72,7 @@ class ExchangeRateConverter
 
     public function enabled(): bool
     {
-        return false !== FireflyConfig::get('enable_exchange_rates', config('cer.enabled'))->data || $this->ignoreSettings;
+        return false !== AppConfiguration::get('enable_exchange_rates', config('cer.enabled'))->data || $this->ignoreSettings;
     }
 
     /**
@@ -201,8 +201,7 @@ class ExchangeRateConverter
         }
 
         /** @var null|CurrencyExchangeRate $result */
-        $result       = $this->userGroup
-            ->currencyExchangeRates()
+        $result       = $this->userGroup->currencyExchangeRates()
             ->where('from_currency_id', $from)
             ->where('to_currency_id', $to)
             ->where('date', '<=', $date)

@@ -313,8 +313,7 @@ class StandardMessageGenerator implements MessageGeneratorInterface
 
     private function getWebhooks(): Collection
     {
-        return $this->user
-            ->webhooks()
+        return $this->user->webhooks()
             ->leftJoin('webhook_webhook_trigger', 'webhook_webhook_trigger.webhook_id', 'webhooks.id')
             ->leftJoin('webhook_triggers', 'webhook_webhook_trigger.webhook_trigger_id', 'webhook_triggers.id')
             ->where('active', true)

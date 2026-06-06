@@ -34,7 +34,7 @@ use FireflyIII\Models\TransactionJournal;
 use FireflyIII\Repositories\Account\AccountRepositoryInterface;
 use FireflyIII\Repositories\User\UserRepositoryInterface;
 use FireflyIII\Support\Facades\Amount;
-use FireflyIII\Support\Facades\FireflyConfig;
+use FireflyIII\Support\Facades\AppConfiguration;
 use FireflyIII\User;
 use Illuminate\Console\Command;
 
@@ -75,14 +75,14 @@ class UpgradesAccountCurrencies extends Command
 
     private function isExecuted(): bool
     {
-        $configVar = FireflyConfig::get(self::CONFIG_NAME, false);
+        $configVar = AppConfiguration::get(self::CONFIG_NAME, false);
 
         return (bool) $configVar?->data;
     }
 
     private function markAsExecuted(): void
     {
-        FireflyConfig::set(self::CONFIG_NAME, true);
+        AppConfiguration::set(self::CONFIG_NAME, true);
     }
 
     /**

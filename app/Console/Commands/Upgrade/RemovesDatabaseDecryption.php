@@ -27,7 +27,7 @@ namespace FireflyIII\Console\Commands\Upgrade;
 use FireflyIII\Console\Commands\ShowsFriendlyMessages;
 use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Models\Preference;
-use FireflyIII\Support\Facades\FireflyConfig;
+use FireflyIII\Support\Facades\AppConfiguration;
 use Illuminate\Console\Command;
 use Illuminate\Contracts\Encryption\DecryptException;
 use Illuminate\Support\Facades\Crypt;
@@ -145,7 +145,7 @@ class RemovesDatabaseDecryption extends Command
         $this->friendlyPositive(sprintf('Decrypted the data in table "%s".', $table));
         // mark as decrypted:
         $configName = sprintf('is_decrypted_%s', $table);
-        FireflyConfig::set($configName, true);
+        AppConfiguration::set($configName, true);
     }
 
     private function isDecrypted(string $table): bool
@@ -154,7 +154,7 @@ class RemovesDatabaseDecryption extends Command
         $configVar  = null;
 
         try {
-            $configVar = FireflyConfig::get($configName, false);
+            $configVar = AppConfiguration::get($configName, false);
         } catch (FireflyException $e) {
             Log::error($e->getMessage());
         }

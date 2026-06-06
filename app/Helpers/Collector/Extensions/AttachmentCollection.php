@@ -515,8 +515,7 @@ trait AttachmentCollection
         if (false === $this->hasJoinedAttTables) {
             // join some extra tables:
             $this->hasJoinedAttTables = true;
-            $this->query
-                ->leftJoin('attachments', 'attachments.attachable_id', '=', 'transaction_journals.id')
+            $this->query->leftJoin('attachments', 'attachments.attachable_id', '=', 'transaction_journals.id')
                 ->where(static function (EloquentBuilder $q1): void {
                     $q1->where('attachments.attachable_type', TransactionJournal::class);
                     // $q1->where('attachments.uploaded', true);

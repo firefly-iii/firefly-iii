@@ -251,10 +251,10 @@ class CurrencyRepository implements CurrencyRepositoryInterface, UserGroupInterf
 
         Log::debug(sprintf('Final result: %s', $result->code));
         // code below is no longer relevant.
-//        if (false === $result->enabled) {
-//            Log::debug(sprintf('Also enabled currency %s', $result->code));
-//            $this->enable($result);
-//        }
+        //        if (false === $result->enabled) {
+        //            Log::debug(sprintf('Also enabled currency %s', $result->code));
+        //            $this->enable($result);
+        //        }
 
         return $result;
     }
@@ -275,14 +275,13 @@ class CurrencyRepository implements CurrencyRepositoryInterface, UserGroupInterf
         }
         if (null !== $currencyCode && '' !== $currencyCode) {
             Log::debug(sprintf('Searching for currency with code "%s"...', $currencyCode));
-            $result = $this->findByCode($currencyCode);
 
-//            if ($result instanceof TransactionCurrency && false === $result->enabled) {
-//                Log::debug(sprintf('Also enabled currency %s', $result->code));
-//                $this->enable($result);
-//            }
+            return $this->findByCode($currencyCode);
 
-            return $result;
+            //            if ($result instanceof TransactionCurrency && false === $result->enabled) {
+            //                Log::debug(sprintf('Also enabled currency %s', $result->code));
+            //                $this->enable($result);
+            //            }
         }
         Log::debug('Found no currency, returning NULL.');
 
@@ -346,8 +345,7 @@ class CurrencyRepository implements CurrencyRepositoryInterface, UserGroupInterf
         }
 
         /** @var null|CurrencyExchangeRate $rate */
-        $rate = $this->user
-            ->currencyExchangeRates()
+        $rate = $this->user->currencyExchangeRates()
             ->where('from_currency_id', $fromCurrency->id)
             ->where('to_currency_id', $toCurrency->id)
             ->where('date', $date->format('Y-m-d'))
@@ -360,6 +358,21 @@ class CurrencyRepository implements CurrencyRepositoryInterface, UserGroupInterf
         }
 
         return null;
+    }
+
+    #[Override]
+    public function isEnabled(TransactionCurrency $currency): bool
+    {
+        if (null === $this->user && null === $this->userGroup) {
+            throw new FireflyException(sprintf('Cannot check enabled status for currency "%s" in stateless currency repository', $currency->code));
+        }
+        $userGroup = $this->userGroup;
+        if (null === $this->userGroup) {
+            $userGroup = $this->user->userGroup;
+        }
+        $currency  = $userGroup->currencies()->find($currency->id);
+
+        return null !== $currency;
     }
 
     public function isFallbackCurrency(TransactionCurrency $currency): bool
@@ -470,19 +483,5 @@ class CurrencyRepository implements CurrencyRepositoryInterface, UserGroupInterf
 
         // also count foreign:
         return $count + Transaction::query()->where('foreign_currency_id', $currency->id)->count();
-    }
-
-    #[\Override]
-    public function isEnabled(TransactionCurrency $currency): bool
-    {
-        if(null === $this->user && null === $this->userGroup){
-            throw new FireflyException(sprintf('Cannot check enabled status for currency "%s" in stateless currency repository', $currency->code));
-        }
-        $userGroup = $this->userGroup;
-        if(null === $this->userGroup) {
-            $userGroup = $this->user->userGroup;
-        }
-        $currency = $userGroup->currencies()->find($currency->id);
-        return null !== $currency;
     }
 }

@@ -27,7 +27,7 @@ namespace FireflyIII\Http\Controllers\System;
 use Exception;
 use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Http\Controllers\Controller;
-use FireflyIII\Support\Facades\FireflyConfig;
+use FireflyIII\Support\Facades\AppConfiguration;
 use FireflyIII\Support\Facades\Preferences;
 use FireflyIII\Support\Http\Controllers\GetConfigurationData;
 use Illuminate\Contracts\View\Factory;
@@ -76,8 +76,8 @@ final class InstallController extends Controller
         app('view')->share('FF_VERSION', config('firefly.version'));
 
         // index will set FF3 version.
-        FireflyConfig::set('ff3_version', (string) config('firefly.version'));
-        FireflyConfig::set('ff3_build_time', (int) config('firefly.build_time'));
+        AppConfiguration::set('ff3_version', (string) config('firefly.version'));
+        AppConfiguration::set('ff3_build_time', (int) config('firefly.build_time'));
 
         return view('install.index');
     }

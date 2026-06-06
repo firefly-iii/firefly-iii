@@ -26,7 +26,7 @@ namespace FireflyIII\Console\Commands;
 
 use FireflyIII\Events\Test\OwnerTestsNotificationChannel;
 use FireflyIII\Notifications\Notifiables\OwnerNotifiable;
-use FireflyIII\Support\Facades\FireflyConfig;
+use FireflyIII\Support\Facades\AppConfiguration;
 use Illuminate\Console\Command;
 
 class SendTestEmail extends Command
@@ -63,7 +63,7 @@ class SendTestEmail extends Command
         }
 
         /** @var int $lastNotification */
-        $lastNotification = FireflyConfig::get('last_test_notification', 123)->data;
+        $lastNotification = AppConfiguration::get('last_test_notification', 123)->data;
         if ((time() - $lastNotification) < 120) {
             $this->friendlyError((string) trans('firefly.test_rate_limited'));
 
@@ -72,7 +72,7 @@ class SendTestEmail extends Command
 
         $owner            = new OwnerNotifiable();
         event(new OwnerTestsNotificationChannel('email', $owner));
-        FireflyConfig::set('last_test_notification', time());
+        AppConfiguration::set('last_test_notification', time());
 
         return Command::SUCCESS;
     }

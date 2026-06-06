@@ -28,7 +28,7 @@ use FireflyIII\Enums\WebhookTrigger;
 use FireflyIII\Events\Model\TransactionGroup\CreatedSingleTransactionGroup;
 use FireflyIII\Events\Model\TransactionGroup\UserRequestedBatchProcessing;
 use FireflyIII\Repositories\Journal\JournalRepositoryInterface;
-use FireflyIII\Support\Facades\FireflyConfig;
+use FireflyIII\Support\Facades\AppConfiguration;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Support\Facades\Log;
 
@@ -40,7 +40,7 @@ class ProcessesNewTransactionGroup implements ShouldQueue
     {
         Log::debug(sprintf('Running event handler for %s', get_class($event)));
 
-        $setting    = FireflyConfig::get('enable_batch_processing', false)->data;
+        $setting    = AppConfiguration::get('enable_batch_processing', false)->data;
         if (true === $event->flags->batchSubmission && true === $setting) {
             Log::debug('Will do nothing for event because it is part of a batch.');
 

@@ -28,7 +28,7 @@ use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Models\Webhook;
 use FireflyIII\Rules\IsBoolean;
 use FireflyIII\Rules\Webhook\IsValidWebhookUrl;
-use FireflyIII\Support\Facades\FireflyConfig;
+use FireflyIII\Support\Facades\AppConfiguration;
 use FireflyIII\Support\Request\ChecksLogin;
 use FireflyIII\Support\Request\ConvertsDataTypes;
 use FireflyIII\Support\Request\ValidatesWebhooks;
@@ -72,7 +72,7 @@ class CreateRequest extends FormRequest
         $triggers       = implode(',', array_values(Webhook::getTriggers()));
         $responses      = implode(',', array_values(Webhook::getResponses()));
         $deliveries     = implode(',', array_values(Webhook::getDeliveries()));
-        $validProtocols = FireflyConfig::get('valid_url_protocols', config('firefly.valid_url_protocols'))->data;
+        $validProtocols = AppConfiguration::get('valid_url_protocols', config('firefly.valid_url_protocols'))->data;
 
         return [
             'title'        => ['required', 'min:1', 'max:255', 'uniqueObjectForUser:webhooks,title'],

@@ -28,7 +28,7 @@ use FireflyIII\Api\V1\Controllers\Controller;
 use FireflyIII\Api\V1\Requests\Models\Webhook\UpdateRequest;
 use FireflyIII\Models\Webhook;
 use FireflyIII\Repositories\Webhook\WebhookRepositoryInterface;
-use FireflyIII\Support\Facades\FireflyConfig;
+use FireflyIII\Support\Facades\AppConfiguration;
 use FireflyIII\Support\JsonApi\Enrichments\WebhookEnrichment;
 use FireflyIII\Transformers\WebhookTransformer;
 use FireflyIII\User;
@@ -62,7 +62,7 @@ final class UpdateController extends Controller
     public function update(Webhook $webhook, UpdateRequest $request): JsonResponse
     {
         $data        = $request->getData();
-        if (false === FireflyConfig::get('allow_webhooks', config('firefly.allow_webhooks'))->data) {
+        if (false === AppConfiguration::get('allow_webhooks', config('firefly.allow_webhooks'))->data) {
             Log::channel('audit')->info(sprintf('User tries to update webhook #%d, but webhooks are DISABLED.', $webhook->id), $data);
 
             throw new NotFoundHttpException('Webhooks are not enabled.');

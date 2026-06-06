@@ -30,7 +30,7 @@ use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Helpers\Update\UpdateTrait;
 use FireflyIII\Models\Configuration;
 use FireflyIII\Repositories\User\UserRepositoryInterface;
-use FireflyIII\Support\Facades\FireflyConfig;
+use FireflyIII\Support\Facades\AppConfiguration;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Support\Facades\Log;
 use Psr\Container\ContainerExceptionInterface;
@@ -45,7 +45,7 @@ class ChecksForNewVersion implements ShouldQueue
         Log::debug(sprintf('Now in %s', __METHOD__));
 
         // should not check for updates:
-        $permission    = FireflyConfig::get('permission_update_check', -1);
+        $permission    = AppConfiguration::get('permission_update_check', -1);
         $value         = (int) $permission->data;
         if (1 !== $value) {
             Log::debug('Update check is not enabled.');
@@ -64,7 +64,7 @@ class ChecksForNewVersion implements ShouldQueue
         }
 
         /** @var Configuration $lastCheckTime */
-        $lastCheckTime = FireflyConfig::get('last_update_check', Carbon::now()->getTimestamp());
+        $lastCheckTime = AppConfiguration::get('last_update_check', Carbon::now()->getTimestamp());
         $now           = Carbon::now()->getTimestamp();
         $diff          = $now - $lastCheckTime->data;
         Log::debug(sprintf('Last check time is %d, current time is %d, difference is %d', $lastCheckTime->data, $now, $diff));
@@ -97,7 +97,7 @@ class ChecksForNewVersion implements ShouldQueue
         }
 
         session()->flash($level, $message);
-        FireflyConfig::set('last_update_check', Carbon::now()->getTimestamp());
+        AppConfiguration::set('last_update_check', Carbon::now()->getTimestamp());
     }
 
     /**
@@ -117,7 +117,7 @@ class ChecksForNewVersion implements ShouldQueue
         }
 
         /** @var Configuration $lastCheckTime */
-        $lastCheckTime = FireflyConfig::get('last_update_warning', Carbon::now()->getTimestamp());
+        $lastCheckTime = AppConfiguration::get('last_update_warning', Carbon::now()->getTimestamp());
         $now           = Carbon::now()->getTimestamp();
         $diff          = $now - $lastCheckTime->data;
         Log::debug(sprintf('Last warning time is %d, current time is %d, difference is %d', $lastCheckTime->data, $now, $diff));
@@ -133,6 +133,6 @@ class ChecksForNewVersion implements ShouldQueue
         Log::debug('Have warned about a new version in four weeks!');
 
         session()->flash('info', (string) trans('firefly.disabled_but_check'));
-        FireflyConfig::set('last_update_warning', Carbon::now()->getTimestamp());
+        AppConfiguration::set('last_update_warning', Carbon::now()->getTimestamp());
     }
 }

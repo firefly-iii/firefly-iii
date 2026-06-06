@@ -25,7 +25,7 @@ declare(strict_types=1);
 namespace FireflyIII\Support\System;
 
 use Carbon\Carbon;
-use FireflyIII\Support\Facades\FireflyConfig;
+use FireflyIII\Support\Facades\AppConfiguration;
 use Illuminate\Support\Facades\Log;
 
 trait IsOldVersion
@@ -69,7 +69,7 @@ trait IsOldVersion
     {
         // version compare thing.
         $configBuildTime = (int) config('firefly.build_time');
-        $dbBuildTime     = (int) FireflyConfig::getFresh('ff3_build_time', 123)->data;
+        $dbBuildTime     = (int) AppConfiguration::getFresh('ff3_build_time', 123)->data;
         $configTime      = Carbon::createFromTimestamp($configBuildTime, config('app.timezone'));
         $dbTime          = Carbon::createFromTimestamp($dbBuildTime, config('app.timezone'));
         if ($dbBuildTime < $configBuildTime) {

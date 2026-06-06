@@ -26,7 +26,7 @@ namespace FireflyIII\Http\Controllers;
 use FireflyIII\Events\Model\Webhook\WebhookMessagesRequestSending;
 use FireflyIII\Models\TransactionCurrency;
 use FireflyIII\Support\Facades\Amount;
-use FireflyIII\Support\Facades\FireflyConfig;
+use FireflyIII\Support\Facades\AppConfiguration;
 use FireflyIII\Support\Facades\Preferences;
 use FireflyIII\Support\Facades\Steam;
 use FireflyIII\Support\Http\Controllers\RequestInformation;
@@ -72,7 +72,7 @@ abstract class Controller extends BaseController
     public function __construct()
     {
         // is site a demo site?
-        $isDemoSiteConfig = FireflyConfig::get('is_demo_site', config('firefly.configuration.is_demo_site', false));
+        $isDemoSiteConfig = AppConfiguration::get('is_demo_site', config('firefly.configuration.is_demo_site', false));
         $isDemoSite       = (bool) $isDemoSiteConfig->data;
         View::share('IS_DEMO_SITE', $isDemoSite);
         View::share('DEMO_USERNAME', config('firefly.demo_username'));
@@ -91,7 +91,7 @@ abstract class Controller extends BaseController
         // is webhooks enabled?
         View::share(
             'featuringWebhooks',
-            true === config('firefly.feature_flags.webhooks') && true === FireflyConfig::get('allow_webhooks', config('firefly.allow_webhooks'))->data
+            true === config('firefly.feature_flags.webhooks') && true === AppConfiguration::get('allow_webhooks', config('firefly.allow_webhooks'))->data
         );
 
         // share custom auth guard info.

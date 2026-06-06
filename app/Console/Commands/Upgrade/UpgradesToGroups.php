@@ -35,7 +35,7 @@ use FireflyIII\Models\TransactionJournal;
 use FireflyIII\Repositories\Journal\JournalCLIRepositoryInterface;
 use FireflyIII\Repositories\Journal\JournalRepositoryInterface;
 use FireflyIII\Services\Internal\Destroy\JournalDestroyService;
-use FireflyIII\Support\Facades\FireflyConfig;
+use FireflyIII\Support\Facades\AppConfiguration;
 use Illuminate\Console\Command;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\DB;
@@ -260,7 +260,7 @@ class UpgradesToGroups extends Command
 
     private function isMigrated(): bool
     {
-        $configVar = FireflyConfig::get(self::CONFIG_NAME, false);
+        $configVar = AppConfiguration::get(self::CONFIG_NAME, false);
 
         return (bool) $configVar?->data;
     }
@@ -355,7 +355,7 @@ class UpgradesToGroups extends Command
 
     private function markAsMigrated(): void
     {
-        FireflyConfig::set(self::CONFIG_NAME, true);
+        AppConfiguration::set(self::CONFIG_NAME, true);
     }
 
     /**

@@ -192,6 +192,6 @@
     },
     "config": {
         "html_language": "ko",
-        "date_time_fns": "YYYY\ub144 M\uc6d4 D\uc77c HH:mm:ss"
+        "date_time_fns": "yyyy\ub144 M\uc6d4 D\uc77c HH:mm:ss"
     }
 }

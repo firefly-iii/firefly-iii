@@ -27,7 +27,7 @@ use Carbon\Carbon;
 use Closure;
 use FireflyIII\Repositories\Journal\JournalRepositoryInterface;
 use FireflyIII\Support\Facades\Amount;
-use FireflyIII\Support\Facades\FireflyConfig;
+use FireflyIII\Support\Facades\AppConfiguration;
 use FireflyIII\Support\Facades\Navigation;
 use FireflyIII\Support\Facades\Preferences;
 use FireflyIII\Support\Facades\Steam;
@@ -73,9 +73,9 @@ class Range
         app('view')->share('listLength', $pref);
 
         // share security message:
-        if (FireflyConfig::has('upgrade_security_message') && FireflyConfig::has('upgrade_security_level')) {
-            app('view')->share('upgrade_security_message', FireflyConfig::get('upgrade_security_message')->data);
-            app('view')->share('upgrade_security_level', FireflyConfig::get('upgrade_security_level')->data);
+        if (AppConfiguration::hasSetting('upgrade_security_message') && AppConfiguration::hasSetting('upgrade_security_level')) {
+            app('view')->share('upgrade_security_message', AppConfiguration::get('upgrade_security_message')->data);
+            app('view')->share('upgrade_security_level', AppConfiguration::get('upgrade_security_level')->data);
         }
     }
 

@@ -32,7 +32,7 @@ use FireflyIII\Models\TransactionCurrency;
 use FireflyIII\Models\TransactionJournal;
 use FireflyIII\Repositories\Account\AccountRepositoryInterface;
 use FireflyIII\Repositories\Journal\JournalCLIRepositoryInterface;
-use FireflyIII\Support\Facades\FireflyConfig;
+use FireflyIII\Support\Facades\AppConfiguration;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\Log;
 
@@ -333,7 +333,7 @@ class UpgradesTransferCurrencies extends Command
 
     private function isExecuted(): bool
     {
-        $configVar = FireflyConfig::get(self::CONFIG_NAME, false);
+        $configVar = AppConfiguration::get(self::CONFIG_NAME, false);
 
         return (bool) $configVar?->data;
     }
@@ -375,7 +375,7 @@ class UpgradesTransferCurrencies extends Command
 
     private function markAsExecuted(): void
     {
-        FireflyConfig::set(self::CONFIG_NAME, true);
+        AppConfiguration::set(self::CONFIG_NAME, true);
     }
 
     /**

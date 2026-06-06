@@ -30,7 +30,7 @@ use FireflyIII\Events\Security\User\UserSuccessfullyLoggedIn;
 use FireflyIII\Http\Controllers\Controller;
 use FireflyIII\Providers\RouteServiceProvider;
 use FireflyIII\Repositories\User\UserRepositoryInterface;
-use FireflyIII\Support\Facades\FireflyConfig;
+use FireflyIII\Support\Facades\AppConfiguration;
 use FireflyIII\Support\Facades\Steam;
 use FireflyIII\User;
 use Illuminate\Contracts\View\Factory;
@@ -199,7 +199,7 @@ final class LoginController extends Controller
         }
 
         // is allowed to register, etc.
-        $singleUserMode    = FireflyConfig::get('single_user_mode', config('firefly.configuration.single_user_mode'))->data;
+        $singleUserMode    = AppConfiguration::get('single_user_mode', config('firefly.configuration.single_user_mode'))->data;
         $allowRegistration = true;
         $allowReset        = true;
         if (true === $singleUserMode && $count > 0) {

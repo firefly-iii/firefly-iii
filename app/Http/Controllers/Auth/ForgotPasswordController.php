@@ -26,7 +26,7 @@ namespace FireflyIII\Http\Controllers\Auth;
 use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Http\Controllers\Controller;
 use FireflyIII\Repositories\User\UserRepositoryInterface;
-use FireflyIII\Support\Facades\FireflyConfig;
+use FireflyIII\Support\Facades\AppConfiguration;
 use FireflyIII\User;
 use Illuminate\Contracts\View\Factory;
 use Illuminate\Foundation\Auth\SendsPasswordResetEmails;
@@ -122,7 +122,7 @@ final class ForgotPasswordController extends Controller
         }
 
         // is allowed to?
-        $singleUserMode    = FireflyConfig::get('single_user_mode', config('firefly.configuration.single_user_mode'))->data;
+        $singleUserMode    = AppConfiguration::get('single_user_mode', config('firefly.configuration.single_user_mode'))->data;
         $userCount         = User::count();
         $allowRegistration = true;
         $pageTitle         = (string) trans('firefly.forgot_pw_page_title');

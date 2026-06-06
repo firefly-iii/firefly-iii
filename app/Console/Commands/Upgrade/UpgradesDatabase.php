@@ -25,7 +25,7 @@ declare(strict_types=1);
 namespace FireflyIII\Console\Commands\Upgrade;
 
 use FireflyIII\Console\Commands\ShowsFriendlyMessages;
-use FireflyIII\Support\Facades\FireflyConfig;
+use FireflyIII\Support\Facades\AppConfiguration;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\Log;
 use Safe\Exceptions\InfoException;
@@ -87,7 +87,7 @@ class UpgradesDatabase extends Command
             $this->call($command, $args);
         }
         // index will set FF3 version.
-        FireflyConfig::set('ff3_build_time', (int) config('firefly.build_time'));
+        AppConfiguration::set('ff3_build_time', (int) config('firefly.build_time'));
 
         return 0;
     }

@@ -62,7 +62,7 @@ use FireflyIII\Services\Webhook\WebhookSenderInterface;
 use FireflyIII\Support\Amount;
 use FireflyIII\Support\Balance;
 use FireflyIII\Support\ExpandedForm;
-use FireflyIII\Support\FireflyConfig;
+use FireflyIII\Support\AppConfiguration;
 use FireflyIII\Support\Form\AccountForm;
 use FireflyIII\Support\Form\CurrencyForm;
 use FireflyIII\Support\Form\PiggyBankForm;
@@ -106,7 +106,7 @@ class FireflyServiceProvider extends ServiceProvider
     {
         $this->app->bind('preferences', static fn (): Preferences => new Preferences());
 
-        $this->app->bind('fireflyconfig', static fn (): FireflyConfig => new FireflyConfig());
+        $this->app->bind('appconfiguration', static fn (): AppConfiguration => new AppConfiguration());
         $this->app->bind('navigation', static fn (): Navigation => new Navigation());
         $this->app->bind('amount', static fn (): Amount => new Amount());
 

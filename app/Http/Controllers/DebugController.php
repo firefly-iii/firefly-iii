@@ -34,7 +34,7 @@ use FireflyIII\Models\PeriodStatistic;
 use FireflyIII\Models\TransactionType;
 use FireflyIII\Repositories\PiggyBank\PiggyBankRepositoryInterface;
 use FireflyIII\Support\Facades\Amount;
-use FireflyIII\Support\Facades\FireflyConfig;
+use FireflyIII\Support\Facades\AppConfiguration;
 use FireflyIII\Support\Facades\Preferences;
 use FireflyIII\Support\Facades\Steam;
 use FireflyIII\Support\Http\Controllers\GetConfigurationData;
@@ -118,7 +118,7 @@ final class DebugController extends Controller
 
         // also do some recalculations.
         Artisan::call('correction:recalculates-liabilities');
-        if (true === FireflyConfig::get('use_running_balance', config('firefly.feature_flags.running_balance_column'))->data) {
+        if (true === AppConfiguration::get('use_running_balance', config('firefly.feature_flags.running_balance_column'))->data) {
             AccountBalanceCalculator::recalculateAll(false);
         }
 
@@ -292,7 +292,7 @@ final class DebugController extends Controller
     {
         $userGuard      = config('auth.defaults.guard');
 
-        $config         = FireflyConfig::get('last_rt_job', 0);
+        $config         = AppConfiguration::get('last_rt_job', 0);
         $lastTime       = (int) $config->data;
         $lastCronjob    = 'never';
         $lastCronjobAgo = 'never';
