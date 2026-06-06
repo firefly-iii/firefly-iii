@@ -36,6 +36,7 @@ use FireflyIII\Repositories\Bill\BillRepositoryInterface;
 use FireflyIII\Support\Facades\Preferences;
 use FireflyIII\User;
 use Illuminate\Http\JsonResponse;
+use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Log;
@@ -61,13 +62,13 @@ final class HomeController extends Controller
      *
      * @throws Exception
      */
-    public function dateRange(Request $request): JsonResponse
+    public function dateRange(Request $request): JsonResponse|RedirectResponse
     {
         $stringStart   = '';
         $stringEnd     = '';
 
         try {
-            $stringStart = e((string) $request->get('start'));
+            $stringStart = e((string) $request->input('start'));
             $start       = Carbon::createFromFormat('Y-m-d', $stringStart);
         } catch (InvalidFormatException) {
             Log::error(sprintf('Start: could not parse date string "%s" so ignore it.', $stringStart));
@@ -75,7 +76,7 @@ final class HomeController extends Controller
         }
 
         try {
-            $stringEnd = e((string) $request->get('end'));
+            $stringEnd = e((string) $request->input('end'));
             $end       = Carbon::createFromFormat('Y-m-d', $stringEnd);
         } catch (InvalidFormatException) {
             Log::error(sprintf('End could not parse date string "%s" so ignore it.', $stringEnd));
@@ -111,8 +112,11 @@ final class HomeController extends Controller
         Log::debug(sprintf('Set start to %s', $start->format('Y-m-d H:i:s')));
         $request->session()->put('end', $end);
         Log::debug(sprintf('Set end to %s', $end->format('Y-m-d H:i:s')));
-
+        if('true' === $request->input('redirect')) {
+            return redirect(route('home'));
+        }
         return response()->json(['ok' => 'ok']);
+
     }
 
     /**

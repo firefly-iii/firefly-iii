@@ -1,7 +1,7 @@
 <!doctype html>
 <html lang="{{ __('config.html_language') }}">
 <head>
-    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="csrf-token" content="{{ csrf_token() }}">
@@ -15,39 +15,39 @@
     <base href="{{ route('index', null, true) }}/">
     <title>
         @if('' !== (string)$pageTitle)
-        {{ $pageTitle }} »
+            {{ $pageTitle }} »
         @endif
         @if('' !== (string)$subTitle && '' === (string) $pageTitle)
-        {{ $subTitle }} »
+            {{ $subTitle }} »
         @endif
         @if('Firefly III' !== $title)
-        {{ $title }} »
+            {{ $title }} »
         @endif
         Firefly III
     </title>
 
     <!--begin::Accessibility Meta Tags-->
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
-    <meta name="color-scheme" content="light dark" />
-    <meta name="theme-color" content="#007bff" media="(prefers-color-scheme: light)" />
-    <meta name="theme-color" content="#1a1a1a" media="(prefers-color-scheme: dark)" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes"/>
+    <meta name="color-scheme" content="light dark"/>
+    <meta name="theme-color" content="#007bff" media="(prefers-color-scheme: light)"/>
+    <meta name="theme-color" content="#1a1a1a" media="(prefers-color-scheme: dark)"/>
     <!--end::Accessibility Meta Tags-->
 
     <!--begin::Accessibility Features-->
     <!-- Skip links will be dynamically added by accessibility.js -->
     @if('browser' === $darkMode)
-     <meta name="color-scheme" content="light dark">
-   @endif
+        <meta name="color-scheme" content="light dark">
+    @endif
     @if('dark' === $darkMode)
-    <meta name="color-scheme" content="dark">
+        <meta name="color-scheme" content="dark">
     @endif
     @if('light' === $darkMode)
-    <meta name="color-scheme" content="light">
+        <meta name="color-scheme" content="light">
     @endif
 
     @vite(['sass/app.scss'])
 
-    <x-layout.fav-icons />
+    <x-layout.fav-icons/>
     <!--end::Accessibility Features-->
 
 </head>
@@ -95,16 +95,14 @@
                 <!--end::Fullscreen Toggle-->
 
                 <!-- start: date range selector -->
-                <x-layout.range />
+                <x-layout.range/>
                 <!-- end: date range selector -->
-
-
 
 
                 <!-- anonymous -->
 
                 <li class="nav-item">
-                    <a  class="nav-link" href="#" id="anonymous">
+                    <a class="nav-link" href="#" id="anonymous">
                         @if($anonymous)
                             <span class="text-danger bi bi-eye-slash"></span>
                         @endif
@@ -117,7 +115,8 @@
 
                 <!-- help button -->
                 <li class="nav-item hidden-sm hidden-xs">
-                    <a href="#" class="nav-link" data-extra="{{ $objectType ?? '' }}" data-route="{{ $original_route_name }}" data-bs-toggle="modal" data-bs-target="#helpModal">
+                    <a href="#" class="nav-link" data-extra="{{ $objectType ?? '' }}"
+                       data-route="{{ $original_route_name }}" data-bs-toggle="modal" data-bs-target="#helpModal">
                         <em class="bi bi-question-circle"></em>
                     </a>
                 </li>
@@ -182,8 +181,8 @@
                     </ul>
                 </li>
                 <!--end::Color Mode Toggle-->
-                <x-layout.create-menu />
-                <x-layout.user-menu />
+                <x-layout.create-menu/>
+                <x-layout.user-menu/>
 
                 <!--end::User Menu Dropdown-->
             </ul>
@@ -216,7 +215,7 @@
         <div class="sidebar-wrapper">
             <nav class="mt-2">
                 <!--begin::Sidebar Menu-->
-                <x-layout.sidebar />
+                <x-layout.sidebar/>
                 <!--end::Sidebar Menu-->
 
                 <!-- Docs CTA (bottom of sidebar) -->
@@ -249,7 +248,9 @@
                             <em class="bi {{ $mainTitleIcon }}"></em>
                             {{ $pageTitle }}
 
-                            <small class="text-xs text-muted">@if(isset($subTitleIcon))<em class="bi {{ $subTitleIcon }}"></em>X @endif{{$subTitle}}</small>
+                            <small class="text-xs text-muted">@if(isset($subTitleIcon))
+                                    <em class="bi {{ $subTitleIcon }}"></em>X
+                                @endif{{$subTitle}}</small>
                         </h3>
                     </div>
 
@@ -271,12 +272,14 @@
 
 
                 <!-- Modal -->
-                <div class="modal fade" id="customDateRangeModal2" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                <div class="modal fade" id="customDateRangeModal2" tabindex="-1" aria-labelledby="exampleModalLabel"
+                     aria-hidden="true">
                     <div class="modal-dialog">
                         <div class="modal-content">
                             <div class="modal-header">
                                 <h1 class="modal-title fs-5" id="exampleModalLabel">Modal title</h1>
-                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                <button type="button" class="btn-close" data-bs-dismiss="modal"
+                                        aria-label="Close"></button>
                             </div>
                             <div class="modal-body">
                                 ...abc
@@ -314,7 +317,8 @@
         <!--end::To the end-->
         <!--begin::Copyright-->
         <span>
-            <a href="https://www.firefly-iii.org/" target="_blank" title="Firefly III">Firefly III</a> &copy; James Cole, <a href="https://www.gnu.org/licenses/agpl-3.0.html" title="AGPL-3.0-or-later.">AGPL-3.0-or-later</a>.
+            <a href="https://www.firefly-iii.org/" target="_blank" title="Firefly III">Firefly III</a> &copy; James Cole, <a
+                href="https://www.gnu.org/licenses/agpl-3.0.html" title="AGPL-3.0-or-later.">AGPL-3.0-or-later</a>.
         </span>
         <!--end::Copyright-->
     </footer>
@@ -334,18 +338,23 @@
 
 {{-- Moment JS  --}}
 <script src="v1/js/lib/moment.min.js?v={{ $FF_BUILD_TIME }}" type="text/javascript" nonce="{{ $JS_NONCE }}"></script>
-<script src="v1/js/lib/moment/{{ str_replace('-','_', $language) }}.js?v={{ $FF_BUILD_TIME }}" type="text/javascript" nonce="{{ $JS_NONCE }}"></script>
+<script src="v1/js/lib/moment/{{ str_replace('-','_', $language) }}.js?v={{ $FF_BUILD_TIME }}" type="text/javascript"
+        nonce="{{ $JS_NONCE }}"></script>
 
 {{-- All kinds of variables. --}}
-<script src="{{ route('javascript.variables') }}?ext=.js&amp;v={{ $FF_VERSION }}@if(isset($account))&amp;account={{ $account->id }}@endif" type="text/javascript" nonce="{{ $JS_NONCE }}"></script>
+<script
+    src="{{ route('javascript.variables') }}?ext=.js&amp;v={{ $FF_VERSION }}@if(isset($account))&amp;account={{ $account->id }}@endif"
+    type="text/javascript" nonce="{{ $JS_NONCE }}"></script>
 
 {{-- Base script: jquery and bootstrap --}}
 <script src="v1/js/app.js?v={{ $FF_BUILD_TIME }}" type="text/javascript" nonce="{{ $JS_NONCE }}"></script>
 
 
 {{-- date range picker, current template, etc. --}}
-<script src="v1/js/lib/daterangepicker.js?v={{ $FF_BUILD_TIME }}" type="text/javascript" nonce="{{ $JS_NONCE }}"></script>
-<script type="text/javascript" src="v1/js/lib/accounting.min.js?v={{ $FF_BUILD_TIME }}" nonce="{{ $JS_NONCE }}"></script>
+<script src="v1/js/lib/daterangepicker.js?v={{ $FF_BUILD_TIME }}" type="text/javascript"
+        nonce="{{ $JS_NONCE }}"></script>
+<script type="text/javascript" src="v1/js/lib/accounting.min.js?v={{ $FF_BUILD_TIME }}"
+        nonce="{{ $JS_NONCE }}"></script>
 
 {{--  Firefly III code --}}
 <script type="text/javascript" src="v1/js/ff/firefly.js?v={{ $FF_BUILD_TIME }}" nonce="{{ $JS_NONCE }}"></script>
@@ -439,103 +448,106 @@
 
 <div class="modal fade" tabindex="-1" role="dialog" id="customDateRangeModal" aria-hidden="true" x-data="dates">
     <div class="modal-dialog modal-lg">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h4 class="modal-title">Bla bla date modal</h4>
-            </div>
-            <div class="modal-body">
-                <style>
-                    calendar-range {
-                        svg {
-                            height: 16px;
-                            width: 16px;
-                            fill: none;
-                            stroke: currentColor;
-                            stroke-width: 1.5;
+        <form action="{{ route('daterange') }}?redirect=true" method="POST">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h4 class="modal-title">{{ __('firefly.customRange') }}</h4>
+                </div>
+                <div class="modal-body">
+                    <style>
+                        calendar-range {
+                            svg {
+                                height: 16px;
+                                width: 16px;
+                                fill: none;
+                                stroke: currentColor;
+                                stroke-width: 1.5;
+                            }
+
+                            path {
+                                stroke-linecap: round;
+                                stroke-linejoin: round;
+                            }
+
+                            &::part(months) {
+                                display: flex;
+                                gap: 1.5em;
+                                flex-wrap: wrap;
+                                justify-content: center;
+                            }
+
+                            &::part(button) {
+                                border: 1px solid #adb5bd;
+                                border-radius: 3px;
+                                width: 26px;
+                                height: 26px;
+                            }
+
+                            &::part(button):focus-visible {
+                                outline: 2px solid #7048e8;
+                            }
                         }
 
-                        path {
-                            stroke-linecap: round;
-                            stroke-linejoin: round;
-                        }
+                        calendar-month {
+                            --color-accent: #7048e8;
+                            --color-text-on-accent: #ffffff;
 
-                        &::part(months) {
-                            display: flex;
-                            gap: 1.5em;
-                            flex-wrap: wrap;
-                            justify-content: center;
-                        }
+                            &::part(button) {
+                                border-radius: 3px;
+                            }
 
-                        &::part(button) {
-                            border: 1px solid #adb5bd;
-                            border-radius: 3px;
-                            width: 26px;
-                            height: 26px;
-                        }
+                            &::part(range-inner) {
+                                border-radius: 0;
+                                background-color: #845ef7;
+                            }
 
-                        &::part(button):focus-visible {
-                            outline: 2px solid #7048e8;
-                        }
-                    }
+                            &::part(range-start) {
+                                border-start-end-radius: 0;
+                                border-end-end-radius: 0;
+                            }
 
-                    calendar-month {
-                        --color-accent: #7048e8;
-                        --color-text-on-accent: #ffffff;
+                            &::part(range-end) {
+                                border-start-start-radius: 0;
+                                border-end-start-radius: 0;
+                            }
 
-                        &::part(button) {
-                            border-radius: 3px;
+                            &::part(range-start range-end) {
+                                border-radius: 3px;
+                            }
                         }
-
-                        &::part(range-inner) {
-                            border-radius: 0;
-                            background-color: #845ef7;
-                        }
-
-                        &::part(range-start) {
-                            border-start-end-radius: 0;
-                            border-end-end-radius: 0;
-                        }
-
-                        &::part(range-end) {
-                            border-start-start-radius: 0;
-                            border-end-start-radius: 0;
-                        }
-
-                        &::part(range-start range-end) {
-                            border-radius: 3px;
-                        }
-                    }
-                </style>
-                <div class="row">
-                    <div class="col" style="content-align:center;width:100%;display:flex;justify-content:center;">
-                        <calendar-range months="2">
-                            <svg
-                                aria-label="Previous"
-                                slot="previous"
-                                xmlns="http://www.w3.org/2000/svg"
-                                viewBox="0 0 24 24"
-                            >
-                                <path d="M15.75 19.5 8.25 12l7.5-7.5"></path>
-                            </svg>
-                            <svg
-                                aria-label="Next"
-                                slot="next"
-                                xmlns="http://www.w3.org/2000/svg"
-                                viewBox="0 0 24 24"
-                            >
-                                <path d="m8.25 4.5 7.5 7.5-7.5 7.5"></path>
-                            </svg>
-                            <calendar-month></calendar-month>
-                            <calendar-month offset="1"></calendar-month>
-                        </calendar-range>
+                    </style>
+                    <div class="row">
+                        <div class="col" style="width:100%;display:flex;justify-content:center;">
+                            <calendar-range months="2" @change="updateDates($event.detail.value)">
+                                <svg
+                                    aria-label="Previous"
+                                    slot="previous"
+                                    xmlns="http://www.w3.org/2000/svg"
+                                    viewBox="0 0 24 24"
+                                >
+                                    <path d="M15.75 19.5 8.25 12l7.5-7.5"></path>
+                                </svg>
+                                <svg
+                                    aria-label="Next"
+                                    slot="next"
+                                    xmlns="http://www.w3.org/2000/svg"
+                                    viewBox="0 0 24 24"
+                                >
+                                    <path d="m8.25 4.5 7.5 7.5-7.5 7.5"></path>
+                                </svg>
+                                <calendar-month></calendar-month>
+                                <calendar-month offset="1"></calendar-month>
+                            </calendar-range>
+                        </div>
                     </div>
                 </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary"
+                            data-bs-dismiss="modal">{{ __('firefly.close') }}</button>
+                    <button type="submit" class="btn btn-primary">{{ trans('firefly.submit') }}</button>
+                </div>
             </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">{{ __('firefly.close') }}</button>
-                <button type="button" class="btn btn-primary">{{ trans('firefly.submit') }}</button>
-            </div>
-        </div>
+        </form>
     </div>
 </div>
 
@@ -555,15 +567,12 @@
                 <small class="pull-left">
                     {!!  trans('firefly.reenable_intro_text')  !!}
                 </small>
-                <button type="button" class="btn btn-primary" data-bs-dismiss="modal">{{ trans('firefly.close') }}</button>
+                <button type="button" class="btn btn-primary"
+                        data-bs-dismiss="modal">{{ trans('firefly.close') }}</button>
             </div>
         </div>
     </div>
 </div>
-
-
-
-
 
 
 </body>

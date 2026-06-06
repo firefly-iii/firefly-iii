@@ -3,10 +3,10 @@
     "name": "v3",
     "private": true,
     "dependencies": {
-        "@eonasdan/tempus-dominus": "^6.10.4",
         "@popperjs/core": "^2.11.8",
         "admin-lte": "^4.0.0",
         "alpinejs": "^3.15.12",
+        "bootstrap-icons": "^1.13.1",
         "cally": "^0.9.2"
     },
     "type": "module",

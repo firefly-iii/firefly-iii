@@ -25,6 +25,7 @@ import "bootstrap-icons/font/bootstrap-icons.css"
 // import "overlayscrollbars/styles/overlayscrollbars.css"
 
 
+
 import '../../boot/bootstrap.js';
 import sidebar from '../../pages/shared/sidebar.js';
 import boxes from './boxes.js';
