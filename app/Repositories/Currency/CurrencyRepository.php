@@ -442,9 +442,9 @@ class CurrencyRepository implements CurrencyRepositoryInterface, UserGroupInterf
     {
         Log::debug('Now in update()');
         // can be true, false, null
-        $enabled = $data['enabled'] ?? null;
+        $enabled                = $data['enabled'] ?? null;
         // can be true, false, but method only responds to "true".
-        $default = array_key_exists('default', $data) ? $data['default'] : false;
+        $default                = array_key_exists('default', $data) ? $data['default'] : false;
 
         // remove illegal combo's:
         if (false === $enabled && true === $default) {
@@ -477,7 +477,7 @@ class CurrencyRepository implements CurrencyRepositoryInterface, UserGroupInterf
         }
 
         /** @var CurrencyUpdateService $service */
-        $service = app(CurrencyUpdateService::class);
+        $service                = app(CurrencyUpdateService::class);
 
         return $service->update($currency, $data);
     }

@@ -700,7 +700,7 @@ class JournalUpdateService
 
         // add foreign currency info to source and destination if possible.
         if (null !== $foreignCurrency && null !== $foreignAmount) {
-            $source->foreign_currency_id = $foreignCurrency->id;
+            $source->foreign_currency_id = (int) $foreignCurrency->id;
             $source->foreign_amount      = Steam::negative($foreignAmount);
             $source->save();
 
@@ -713,13 +713,13 @@ class JournalUpdateService
 
             if ($isTransfer || $isBetween) {
                 Log::debug('Switch amounts, store in amount and not foreign_amount');
-                $dest->transaction_currency_id = $foreignCurrency->id;
+                $dest->transaction_currency_id = (int) $foreignCurrency->id;
                 $dest->amount                  = Steam::positive($foreignAmount);
                 $dest->foreign_amount          = Steam::positive($source->amount);
                 $dest->foreign_currency_id     = $source->transaction_currency_id;
             }
             if (!$isTransfer && !$isBetween) {
-                $dest->foreign_currency_id = $foreignCurrency->id;
+                $dest->foreign_currency_id = (int) $foreignCurrency->id;
                 $dest->foreign_amount      = Steam::positive($foreignAmount);
             }
 
