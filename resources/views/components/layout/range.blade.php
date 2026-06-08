@@ -1,4 +1,4 @@
-<li class="nav-item dropdown" x-data="dates">
+<li class="nav-item dropdown">
     <a
         href="#"
         class="nav-link"

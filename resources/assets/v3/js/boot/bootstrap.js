@@ -24,13 +24,14 @@ import "admin-lte"
 import Alpine from 'alpinejs'
 import store from "store";
 import axios from 'axios';
+import introJs from "intro.js";
+import "intro.js/introjs.css";
 import "cally";
 import observePlugin from 'store/plugins/observe';
 import {getFreshVariable} from "v2/src/store/get-fresh-variable.js";
 import {getVariable} from "v2/src/store/get-variable.js";
 import {getViewRange} from "v2/src/support/get-viewrange.js";
 import {loadTranslations} from "v2/src/support/load-translations.js";
-
 store.addPlugin(observePlugin);
 
 window.bootstrapped = false;
@@ -76,6 +77,34 @@ getFreshVariable('lastActivity').then((serverValue) => {
             window.bootstrapped = true;
             console.log('Bootstrapped!');
         });
+
+        // page may have an introduction necessary to be played.
+        const url = '/';
+        let site = axios.create({baseURL: url, withCredentials: true});
+        axios.defaults.withCredentials = true;
+        axios.defaults.baseURL = url;
+
+        // console.log('setupIntro().');
+        site.get(routeStepsUrl).then(function(data) {
+            console.log('Done with axios');
+            console.log(data.data);
+            introJs.tour().setOptions({
+                nextLabel: nextLabel,
+                prevLabel: prevLabel,
+                skipLabel: skipLabel,
+                doneLabel: doneLabel,
+                steps: data.data,
+                exitOnEsc: true,
+                exitOnOverlayClick: true,
+                keyboardNavigation: true
+            });
+            introJs.tour().onComplete(reportIntroFinished);
+            introJs.tour().onExit(reportIntroFinished);
+        });
+        // introJs.tour().start();
+
+
+
     });
 }).catch((error) => {
     console.error('Error while bootstrapping: ' + error);

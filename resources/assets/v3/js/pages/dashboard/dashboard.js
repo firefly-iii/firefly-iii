@@ -19,13 +19,6 @@
  */
 
 // CSS
-// import "admin-lte/dist/css/adminlte.min.css"
-// Plus Bootstrap and dependency CSS
-import "bootstrap-icons/font/bootstrap-icons.css"
-// import "overlayscrollbars/styles/overlayscrollbars.css"
-
-
-
 import '../../boot/bootstrap.js';
 import sidebar from '../../pages/shared/sidebar.js';
 import boxes from './boxes.js';
@@ -35,7 +28,7 @@ let index = function () {
     return {
         foo2: 'bar2',
         init() {
-            console.log('init op index')
+            console.log('init op index xxx');
         }
     }
 };
@@ -49,9 +42,11 @@ const comps = {
 };
 
 function loadPage(comps) {
+    console.log('loadPage');
     Object.keys(comps).forEach(comp => {
         let data = comps[comp]();
         Alpine.data(comp, () => data);
+        console.log(comp);
     });
     Alpine.start();
 }

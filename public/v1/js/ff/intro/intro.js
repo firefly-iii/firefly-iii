@@ -20,14 +20,18 @@
 
 $(function () {
     "use strict";
+    console.log('Start introJS.');
     if (!forceDemoOff) {
+        console.log('Mark as done.');
         $.getJSON(routeStepsUrl).done(setupIntro)
     }
 });
 
-function setupIntro(steps) {
 
-    var intro = introJs();
+function setupIntro(steps) {
+    console.log('setupIntro().');
+    return;
+    var intro = introJs;
     intro.setOptions({
                          nextLabel: nextLabel,
                          prevLabel: prevLabel,
@@ -40,7 +44,7 @@ function setupIntro(steps) {
                      });
     intro.oncomplete(reportIntroFinished);
     intro.onexit(reportIntroFinished);
-    intro.start();
+    intro.tour().start();
 }
 
 function reportIntroFinished() {

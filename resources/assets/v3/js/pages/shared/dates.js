@@ -18,28 +18,32 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-import {
-    addMonths,
-    endOfDay,
-    endOfMonth,
-    endOfQuarter,
-    endOfWeek,
-    startOfDay,
-    startOfMonth,
-    startOfQuarter,
-    startOfWeek,
-    startOfYear,
-    subDays,
-    subMonths
-} from "date-fns";
+import {addMonths, endOfMonth, startOfMonth, startOfYear, subDays, subMonths} from "date-fns";
 import format from '../../util/format'
-import i18next from "i18next";
-import { TempusDominus } from '@eonasdan/tempus-dominus';
 
 
 export default () => ({
     range: {
         start: null, end: null
+    },
+    eventListeners: {
+        ['@CustomEvents.change'](event) {
+            console.log('I heard that! (dashboard/dates)');
+        }
+    },
+    updateDates(e) {
+        console.log('updateDates (e.originalTarget._props.value)');
+        console.log(e.originalTarget._props.value);
+        let split = e.originalTarget._props.value.split('/');
+        document.getElementById('customStart').value = split[0];
+        document.getElementById('customEnd').value = split[1];
+        // this.range.start = split[0];
+        // this.range.end = split[1];
+        console.log('Start is now ' + split[0]);
+        console.log('End is now   ' + split[1]);
+        window.store.set('start', split[0]);
+        window.store.set('end', split[1]);
+        document.getElementById('daterange-form').submit();
     },
     defaultRange: {
         start: null, end: null
@@ -67,7 +71,7 @@ export default () => ({
         });
         window.store.observe('end', (newValue) => {
             this.range.end = new Date(newValue);
-            this.buildDateRange();
+                this.buildDateRange();
         });
     },
 

@@ -26,9 +26,37 @@
         Firefly III
     </title>
 
+    <!--begin::Theme Init (prevents flash of incorrect theme on load, #6043)-->
+    <script nonce="{{ $JS_NONCE }}">
+        (() => {
+            'use strict';
+            console.log('Init for dark/light.');
+            const STORAGE_KEY = 'lte-theme';
+            let stored = null;
+            try {
+                console.log('Init for thing.');
+                stored = localStorage.getItem(STORAGE_KEY);
+            } catch {
+                // localStorage may be unavailable (private mode, sandboxed iframe).
+            }
+            const prefersDark = globalThis.matchMedia('(prefers-color-scheme: dark)').matches;
+            // Mirror the resolution in _scripts.astro: explicit "dark"/"light" win,
+            // otherwise ("auto" or unset) fall back to the OS preference.
+            let resolved = 'light';
+            if (stored === 'dark' || stored === 'light') {
+                resolved = stored;
+            } else if (prefersDark) {
+                resolved = 'dark';
+            }
+            console.log(resolved);
+            document.documentElement.setAttribute('data-bs-theme', resolved);
+            document.documentElement.style.colorScheme = resolved;
+        })();
+    </script>
+    <!--end::Theme Init-->
+
     <!--begin::Accessibility Meta Tags-->
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes"/>
-    <meta name="color-scheme" content="light dark"/>
     <meta name="theme-color" content="#007bff" media="(prefers-color-scheme: light)"/>
     <meta name="theme-color" content="#1a1a1a" media="(prefers-color-scheme: dark)"/>
     <!--end::Accessibility Meta Tags-->
@@ -39,10 +67,12 @@
         <meta name="color-scheme" content="light dark">
     @endif
     @if('dark' === $darkMode)
-        <meta name="color-scheme" content="dark">
+        <!-- <meta name="color-scheme" content="dark"> -->
+        <meta name="color-scheme" content="light dark" />
     @endif
     @if('light' === $darkMode)
-        <meta name="color-scheme" content="light">
+        <!-- <meta name="color-scheme" content="light"> -->
+        <meta name="color-scheme" content="light dark" />
     @endif
 
     @vite(['sass/app.scss'])
@@ -53,7 +83,7 @@
 </head>
 <!--end::Head-->
 <!--begin::Body-->
-<body class="layout-fixed sidebar-mini  sidebar-expand-lg bg-body-tertiary">
+<body class="layout-fixed sidebar-mini sidebar-expand-lg bg-body-tertiary">
 {{-- this entry is in the header so it's loaded early --}}
 <script type="text/javascript" nonce="{{ $JS_NONCE }}">
     var forceDemoOff = false;
@@ -115,7 +145,7 @@
 
                 <!-- help button -->
                 <li class="nav-item hidden-sm hidden-xs">
-                    <a href="#" class="nav-link" data-extra="{{ $objectType ?? '' }}"
+                    <a href="#" class="nav-link" id="help" data-extra="{{ $objectType ?? '' }}"
                        data-route="{{ $original_route_name }}" data-bs-toggle="modal" data-bs-target="#helpModal">
                         <em class="bi bi-question-circle"></em>
                     </a>
@@ -349,8 +379,19 @@
 {{-- Base script: jquery and bootstrap --}}
 <script src="v1/js/app.js?v={{ $FF_BUILD_TIME }}" type="text/javascript" nonce="{{ $JS_NONCE }}"></script>
 
+{{-- introduction --}}
+<!-- intro -->
+<script type="text/javascript" nonce="{{ $JS_NONCE }}">
+    var routeForTour = "{{ $current_route_name }}";
+    var routeStepsUrl = "{{ route('json.intro', [$current_route_name, $objectType ?? '']) }}";
+    var routeForFinishedTour = "{{ route('json.intro.finished', [$current_route_name, $objectType ?? '']) }}";
+</script>
+@if(!$shownDemo)
+<script type="text/javascript" src="v1/js/ff/intro/intro.js?v={{ $FF_BUILD_TIME }}" nonce="{{ $JS_NONCE }}"></script>
+@endif
 
 {{-- date range picker, current template, etc. --}}
+
 <script src="v1/js/lib/daterangepicker.js?v={{ $FF_BUILD_TIME }}" type="text/javascript"
         nonce="{{ $JS_NONCE }}"></script>
 <script type="text/javascript" src="v1/js/lib/accounting.min.js?v={{ $FF_BUILD_TIME }}"
@@ -361,6 +402,13 @@
 <script type="text/javascript" src="v1/js/ff/help.js?v={{ $FF_BUILD_TIME }}" nonce="{{ $JS_NONCE }}"></script>
 
 @yield('scripts')
+
+
+<!-- start: previous color mode -->
+
+
+
+<!-- end: previous color mode -->
 
 <!--begin::Color Mode Toggle (#6010)-->
 <script>
@@ -446,9 +494,11 @@
     <input type="hidden" name="_token" value="{{ csrf_token() }}"/>
 </form>
 
-<div class="modal fade" tabindex="-1" role="dialog" id="customDateRangeModal" aria-hidden="true" x-data="dates">
+<div class="modal fade" tabindex="-1" role="dialog" id="customDateRangeModal" aria-hidden="true" x-data="dates" x-bind="eventListeners">
     <div class="modal-dialog modal-lg">
-        <form action="{{ route('daterange') }}?redirect=true" method="POST">
+        <form action="{{ route('daterange') }}?redirect=true" method="POST" id="daterange-form">
+            <input type="hidden" name="start" value="" id="customStart" />
+            <input type="hidden" name="end" value="" id="customEnd" />
             <div class="modal-content">
                 <div class="modal-header">
                     <h4 class="modal-title">{{ __('firefly.customRange') }}</h4>
@@ -484,12 +534,12 @@
                             }
 
                             &::part(button):focus-visible {
-                                outline: 2px solid #7048e8;
+                                outline: 2px solid #1E6581;
                             }
                         }
 
                         calendar-month {
-                            --color-accent: #7048e8;
+                            --color-accent: #1E6581;
                             --color-text-on-accent: #ffffff;
 
                             &::part(button) {
@@ -498,7 +548,7 @@
 
                             &::part(range-inner) {
                                 border-radius: 0;
-                                background-color: #845ef7;
+                                background-color: #2885AA;
                             }
 
                             &::part(range-start) {
@@ -518,7 +568,7 @@
                     </style>
                     <div class="row">
                         <div class="col" style="width:100%;display:flex;justify-content:center;">
-                            <calendar-range months="2" @change="updateDates($event.detail.value)">
+                            <calendar-range months="2" x-on:change="updateDates">
                                 <svg
                                     aria-label="Previous"
                                     slot="previous"

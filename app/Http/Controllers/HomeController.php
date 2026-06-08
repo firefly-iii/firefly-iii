@@ -69,7 +69,7 @@ final class HomeController extends Controller
 
         try {
             $stringStart = e((string) $request->input('start'));
-            $start       = Carbon::createFromFormat('Y-m-d', $stringStart);
+            $start       = Carbon::createFromFormat('!Y-m-d', $stringStart);
         } catch (InvalidFormatException) {
             Log::error(sprintf('Start: could not parse date string "%s" so ignore it.', $stringStart));
             $start = Carbon::now()->startOfMonth();
@@ -77,7 +77,7 @@ final class HomeController extends Controller
 
         try {
             $stringEnd = e((string) $request->input('end'));
-            $end       = Carbon::createFromFormat('Y-m-d', $stringEnd);
+            $end       = Carbon::createFromFormat('!Y-m-d', $stringEnd);
         } catch (InvalidFormatException) {
             Log::error(sprintf('End could not parse date string "%s" so ignore it.', $stringEnd));
             $end = Carbon::now()->endOfMonth();
@@ -88,7 +88,8 @@ final class HomeController extends Controller
         if (null === $end) {
             $end = Carbon::now()->endOfMonth();
         }
-
+        $end->endOfDay();
+        $end->setMilli(0);
         $label         = $request->input('label');
         $isCustomRange = false;
 
@@ -105,6 +106,7 @@ final class HomeController extends Controller
         if ($diff > 366) {
             $request->session()->flash('warning', (string) trans('firefly.warning_much_data', ['days' => (int) $diff]));
         }
+
 
         $request->session()->put('is_custom_range', $isCustomRange);
         Log::debug(sprintf('Set is_custom_range to %s', var_export($isCustomRange, return: true)));

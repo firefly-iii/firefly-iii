@@ -1,11 +1,12 @@
 @extends('layout.v3.session')
 @section('content')
-    X TODO internals modal voor pagina settings
-   X TODO wizard modal voor weet ik veel
-    XTODO dark mode ook onthouden en dat script in het template
-    XTODO date picker
+    <!-- TODO internals modal voor pagina settings -->
+    <!-- TODO wizard modal voor weet ik veel -->
     TODO intro js
-
+    <span data-intro='Hello step one!'>XTODO dark mode ook onthouden en dat script in het template</span>
+    @if('light' === $darkMode)
+        LIGHT
+    @endif
     <x-dashboard.boxes :start="$start" :end="$end" />
 
     <div class="row" x-data="index">
@@ -188,7 +189,6 @@
 @endsection
 @section('scripts')
     @vite(['js/pages/dashboard/dashboard.js'])
-
 
     <script type="text/javascript" nonce="{{ $JS_NONCE }}">
         var lineColor = 'red';

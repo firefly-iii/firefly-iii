@@ -18,82 +18,172 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-$color-mode-type: media-query;
-$link-decoration: none !default;
-$font-family-sans-serif: "Roboto", sans-serif;
 
-$danger: #CD5029 !default;
-$primary: #1E6581 !default;
-$success: #64B624 !default;
-
-// admin LTE
-@use "../../../../node_modules/admin-lte/src/scss/adminlte" with (
-    $color-mode-type: $color-mode-type,
-    $link-decoration: $link-decoration,
-    $font-family-sans-serif: $font-family-sans-serif,
-    $danger: $danger,
-    $primary: $primary,
-    $success: $success
-);
-
-//@use '../../../../node_modules/@fortawesome/fontawesome-free/scss/variables' with (
-//  $font-path: "@fortawesome/fontawesome-free/webfonts"
-//);
-
-//@use '../../../../node_modules/@fortawesome/fontawesome-free/scss/fontawesome';
-//@use '../../../../node_modules/@fortawesome/fontawesome-free/scss/fa' as fa;
-//@use '../../../../node_modules/@fortawesome/fontawesome-free/scss/solid' as fa-solid;
-//@use '../../../../node_modules/@fortawesome/fontawesome-free/scss/brands' as fa-brands;
-//@use '../../../../node_modules/@fortawesome/fontawesome-free/scss/regular' as fa-regular;
-
-
-// some local CSS
-.skip-links {display: none;}
-
-/*
-Remove bottom margin from unstyled lists
+/*!
+ *   AdminLTE v4.0.0
+ *   Author: Colorlib
+ *   Website: AdminLTE.io <https://adminlte\.io>
+ *   License: Open source - MIT <https://opensource.org/licenses/MIT>
  */
-.list-no-margin {margin-bottom: 0;}
-.list-no-margin li.list-indent {margin-left:1.6em;}
 
-.hover-footer {
-    overflow-x:hidden;
-    width:100%;
-    text-align:right;
-    white-space: nowrap;
-    text-overflow: ellipsis
-}
-.hover-footer:hover {
-    overflow: auto;
-    text-overflow: unset;
-    white-space: normal;
-}
-h3.hover-expand {
-    overflow-x: hidden;
-    text-overflow: ellipsis
-}
-h3.hover-expand:hover {
-    overflow-x: auto;
-}
+// Bootstrap Configuration
+// ---------------------------------------------------
+@import "bootstrap/scss/functions";
+@import "bootstrap-icons/font/bootstrap-icons.css";
 
-.form-control {
-    appearance: auto;
-}
-
-// edit buttons
-.hidden-edit-button {
-    cursor: pointer;
-}
-td:not(:hover) .hidden-edit-button {
-    visibility: hidden;
-}
-
-// Bootstrap
-// @import "bootstrap/scss/bootstrap";
+// AdminLTE Configuration
+// ---------------------------------------------------
+@import "admin-lte/src/scss/bootstrap-variables"; // little modified are here
 
 
-// @import "~bootstrap-sass/assets/stylesheets/bootstrap";
 
-// hover buttons
+// Bootstrap Configuration
+// ---------------------------------------------------
+@import "bootstrap/scss/variables";
+@import "bootstrap/scss/variables-dark";
+@import "bootstrap/scss/maps";
+@import "bootstrap/scss/mixins";
+@import "bootstrap/scss/utilities";
+
+// Bootstrap Layout & components
+@import "bootstrap/scss/root";
+@import "bootstrap/scss/reboot";
+@import "bootstrap/scss/type";
+@import "bootstrap/scss/images";
+@import "bootstrap/scss/containers";
+@import "bootstrap/scss/grid";
+@import "bootstrap/scss/tables";
+@import "bootstrap/scss/forms";
+@import "bootstrap/scss/buttons";
+@import "bootstrap/scss/transitions";
+@import "bootstrap/scss/dropdown";
+@import "bootstrap/scss/button-group";
+@import "bootstrap/scss/nav";
+@import "bootstrap/scss/navbar";
+@import "bootstrap/scss/card";
+@import "bootstrap/scss/accordion";
+@import "bootstrap/scss/breadcrumb";
+@import "bootstrap/scss/pagination";
+@import "bootstrap/scss/badge";
+@import "bootstrap/scss/alert";
+@import "bootstrap/scss/progress";
+@import "bootstrap/scss/list-group";
+@import "bootstrap/scss/close";
+@import "bootstrap/scss/toasts";
+@import "bootstrap/scss/modal";
+@import "bootstrap/scss/tooltip";
+@import "bootstrap/scss/popover";
+@import "bootstrap/scss/carousel";
+@import "bootstrap/scss/spinners";
+@import "bootstrap/scss/offcanvas";
+@import "bootstrap/scss/placeholders";
+
+// Bootstrap Helpers
+@import "bootstrap/scss/helpers";
+
+// Bootstrap Utilities
+@import "bootstrap/scss/utilities/api";
+
+// AdminLTE Configuration
+// ---------------------------------------------------
+@import "admin-lte/src/scss/variables";
+@import "admin-lte/src/scss/variables-dark";
+@import "admin-lte/src/scss/mixins";
+
+// AdiminLTE Parts
+// ---------------------------------------------------
+@import "admin-lte/src/scss/parts/core";
+@import "admin-lte/src/scss/parts/components";
+@import "admin-lte/src/scss/parts/extra-components";
+@import "admin-lte/src/scss/parts/pages";
+@import "admin-lte/src/scss/parts/miscellaneous";
+
+// AdminLTE Accessibility Styles - WCAG 2.1 AA Compliance
+@import "admin-lte/src/scss/accessibility";
+
+// AdminLTE Documentation Styles (only applies to pages with body.docs-page)
+// @import "docs";
 
 
+
+
+
+
+//
+//
+////// Plus Bootstrap and dependency CSS
+////// import "overlayscrollbars/styles/overlayscrollbars.css"
+//
+//// $color-mode-type: media-query;
+//$link-decoration: none !default;
+//$font-family-sans-serif: "Roboto", sans-serif;
+//
+//$danger: #CD5029 !default;
+//$primary: #1E6581 !default;
+//$success: #64B624 !default;
+//
+//@use "admin-lte/dist/css/adminlte.min.css";
+//// @use "admin-lte/src/scss/adminlte";
+//
+//
+//// admin LTE
+//// @use "admin-lte/src/scss/adminlte";
+////@use "admin-lte/src/scss/adminlte" with (
+////   // $color-mode-type: $color-mode-type,
+////    $link-decoration: $link-decoration,
+////    $font-family-sans-serif: $font-family-sans-serif,
+////    $danger: $danger,
+////    $primary: $primary,
+////    $success: $success
+////);
+//
+//// some local CSS
+//.skip-links {display: none;}
+//
+///*
+//Remove bottom margin from unstyled lists
+// */
+//.list-no-margin {margin-bottom: 0;}
+//.list-no-margin li.list-indent {margin-left:1.6em;}
+//
+//.hover-footer {
+//    overflow-x:hidden;
+//    width:100%;
+//    text-align:right;
+//    white-space: nowrap;
+//    text-overflow: ellipsis
+//}
+//.hover-footer:hover {
+//    overflow: auto;
+//    text-overflow: unset;
+//    white-space: normal;
+//}
+//h3.hover-expand {
+//    overflow-x: hidden;
+//    text-overflow: ellipsis
+//}
+//h3.hover-expand:hover {
+//    overflow-x: auto;
+//}
+//
+//.form-control {
+//    appearance: auto;
+//}
+//
+//// edit buttons
+//.hidden-edit-button {
+//    cursor: pointer;
+//}
+//td:not(:hover) .hidden-edit-button {
+//    visibility: hidden;
+//}
+//
+//// Bootstrap
+//// @import "bootstrap/scss/bootstrap";
+//
+//
+//// @import "~bootstrap-sass/assets/stylesheets/bootstrap";
+//
+//// hover buttons
+//
+//

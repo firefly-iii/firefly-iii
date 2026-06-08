@@ -20,7 +20,7 @@
 /** global: token, helpPageTitle, anonymous */
 $(function () {
     "use strict";
-    // $('#help').click(showHelp);
+    $('#help').click(showHelp);
     $('#anonymous').click(changeAnonymity)
 
 });
@@ -55,13 +55,17 @@ function changeAnonymity(e) {
 
 function showHelp(e) {
     "use strict";
-    var target = $(e.target);
+    console.log('showHelp');
+    var target = $(e.currentTarget);
     var route = target.data('route');
     var specialPage = target.data('extra');
+    console.log('route', route);
 
     if (typeof specialPage === 'undefined') {
         specialPage = '';
     }
+    console.log('route', route);
+    console.log('special page', specialPage);
     $('#helpBody').html('<span class="fa fa-refresh fa-spin"></span>');
     $('#helpModal').modal('show');
     $('#helpTitle').html(helpPageTitle);
