@@ -17,6 +17,9 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
+// import css
+import "admin-lte/dist/css/adminlte.min.css"
+import "bootstrap-icons/font/bootstrap-icons.css"
 
 // JS
 import "bootstrap"
@@ -32,7 +35,9 @@ import {getFreshVariable} from "v2/src/store/get-fresh-variable.js";
 import {getVariable} from "v2/src/store/get-variable.js";
 import {getViewRange} from "v2/src/support/get-viewrange.js";
 import {loadTranslations} from "v2/src/support/load-translations.js";
+
 store.addPlugin(observePlugin);
+
 
 window.bootstrapped = false;
 window.store = store;
@@ -76,32 +81,34 @@ getFreshVariable('lastActivity').then((serverValue) => {
             document.dispatchEvent(event);
             window.bootstrapped = true;
             console.log('Bootstrapped!');
-        });
 
-        // page may have an introduction necessary to be played.
-        const url = '/';
-        let site = axios.create({baseURL: url, withCredentials: true});
-        axios.defaults.withCredentials = true;
-        axios.defaults.baseURL = url;
+            // page may have an introduction necessary to be played.
+            const url = '/';
+            let site = axios.create({baseURL: url, withCredentials: true});
+            axios.defaults.withCredentials = true;
+            axios.defaults.baseURL = url;
 
-        // console.log('setupIntro().');
-        site.get(routeStepsUrl).then(function(data) {
-            console.log('Done with axios');
-            console.log(data.data);
-            introJs.tour().setOptions({
-                nextLabel: nextLabel,
-                prevLabel: prevLabel,
-                skipLabel: skipLabel,
-                doneLabel: doneLabel,
-                steps: data.data,
-                exitOnEsc: true,
-                exitOnOverlayClick: true,
-                keyboardNavigation: true
+            site.get(routeStepsUrl).then(function(data) {
+                console.log('Done with loading hints.');
+                introJs.tour().setOptions({
+                    //     //     nextLabel: nextLabel,
+                    //     //     prevLabel: prevLabel,
+                    //     //     skipLabel: skipLabel,
+                    //     //     doneLabel: doneLabel,
+                    hints: data.data,
+                    //     //     exitOnEsc: true,
+                    //     //     exitOnOverlayClick: true,
+                    //     //     keyboardNavigation: true
+                });
+                //     // introJs.tour().onComplete(reportIntroFinished);
+                //     // introJs.tour().onExit(reportIntroFinished);
+                introJs.tour().start();
+
             });
-            introJs.tour().onComplete(reportIntroFinished);
-            introJs.tour().onExit(reportIntroFinished);
+
         });
-        // introJs.tour().start();
+
+
 
 
 

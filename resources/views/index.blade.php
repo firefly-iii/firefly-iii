@@ -2,11 +2,6 @@
 @section('content')
     <!-- TODO internals modal voor pagina settings -->
     <!-- TODO wizard modal voor weet ik veel -->
-    TODO intro js
-    <span data-intro='Hello step one!'>XTODO dark mode ook onthouden en dat script in het template</span>
-    @if('light' === $darkMode)
-        LIGHT
-    @endif
     <x-dashboard.boxes :start="$start" :end="$end" />
 
     <div class="row" x-data="index">

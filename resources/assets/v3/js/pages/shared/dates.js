@@ -89,7 +89,7 @@ export default () => ({
 
         // set the title:
         let element = document.getElementsByClassName('daterange-holder')[0];
-        console.log('element', element);
+        //console.log('element', element);
         element.textContent = format(this.range.start) + ' - ' + format(this.range.end);
         element.setAttribute('data-start', format(this.range.start, 'yyyy-MM-dd'));
         element.setAttribute('data-end', format(this.range.end, 'yyyy-MM-dd'));

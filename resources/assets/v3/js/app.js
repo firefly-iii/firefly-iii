@@ -18,4 +18,4 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-// unused, see the specific pages.
+// unused, see bootstrap for app-wide stuff.

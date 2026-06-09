@@ -292,6 +292,7 @@ function columnChartCustomColours(URL, container) {
  */
 function stackedColumnChart(URL, container) {
     "use strict";
+    console.log('stackedColumnChart('+URL+', '+container+')');
 
     var colorData = true;
     var options = $.extend(true, {}, defaultChartOptions);
@@ -346,14 +347,16 @@ function multiCurrencyPieChart(URL, container) {
  * @param today
  */
 function drawAChart(URL, container, chartType, options, colorData) {
-    var containerObj = $('#' + container);
+    var containerObj = document.getElementById(container);
     if (containerObj.length === 0) {
+        console.log('Return because 0');
         return;
     }
-
-    $.getJSON(URL).done(function (data) {
-        containerObj.removeClass('general-chart-error');
-
+    console.log('drawAChart('+URL+', '+container+')');
+    window.axios.get(URL).then(function (response) {
+        console.log('GET drawAChart('+URL+', '+container+')');
+        containerObj.classList.remove('general-chart-error');
+        var data = response.data;
         // if result is empty array, or the labels array is empty, show error.
         // console.log(URL);
         // console.log(data.length);
@@ -367,18 +370,26 @@ function drawAChart(URL, container, chartType, options, colorData) {
             // isn't empty but contains no labels
             (typeof data === 'object' && typeof data.labels === 'object' && 0 === data.labels.length)
         ) {
+            console.log('NODATA drawAChart('+URL+', '+container+')');
+            console.log(data);
             // remove the chart container + parent
-            var holder = $('#' + container).parent().parent();
-            if (holder.hasClass('box') || holder.hasClass('box-body')) {
+            var holder = document.getElementById(container).parentNode.parentNode;
+            if (holder.classList.contains('card') || holder.classList.contains('card-body')) {
+                console.log('found holder');
                 // find box-body:
                 var boxBody;
-                if (!holder.hasClass('box-body')) {
-                    boxBody = holder.find('.box-body');
+                if (!holder.classList.contains('card-body')) {
+                    // console.log('Look for card body', holder.querySelector('.card-body').length);
+                    boxBody = holder.querySelector('.card-body');
                 } else {
                     boxBody = holder;
                 }
-                boxBody.empty().append($('<p>').append($('<em>').text(noDataForChart)));
+                console.log('found box body', boxBody);
+                // boxBody.innerHtml = '<p><em>'+noDataForChart+'</em></p>';
+                boxBody.innerHTML = '<p><em>'+noDataForChart+'</em></p>';
+                //boxBody.empty().append($('<p>').append($('<em>').text(noDataForChart)));
             }
+            console.log('return');
             return;
         }
 
@@ -430,7 +441,8 @@ function drawAChart(URL, container, chartType, options, colorData) {
             allCharts[container] = new Chart(ctx, chartOpts);
         }
 
-    }).fail(function () {
-        $('#' + container).addClass('general-chart-error');
+    }).catch(function (reason) {
+        console.error('Add error because error with chart.', reason);
+        document.getElementById(container).classList.add('general-chart-error');
     });
 }

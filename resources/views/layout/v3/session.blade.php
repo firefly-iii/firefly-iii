@@ -30,15 +30,8 @@
     <script nonce="{{ $JS_NONCE }}">
         (() => {
             'use strict';
-            console.log('Init for dark/light.');
-            const STORAGE_KEY = 'lte-theme';
-            let stored = null;
-            try {
-                console.log('Init for thing.');
-                stored = localStorage.getItem(STORAGE_KEY);
-            } catch {
-                // localStorage may be unavailable (private mode, sandboxed iframe).
-            }
+            let stored = '{{ $darkMode }}';
+            console.log('Init for dark/light using user preference (not local storage).', stored);
             const prefersDark = globalThis.matchMedia('(prefers-color-scheme: dark)').matches;
             // Mirror the resolution in _scripts.astro: explicit "dark"/"light" win,
             // otherwise ("auto" or unset) fall back to the OS preference.
@@ -48,7 +41,7 @@
             } else if (prefersDark) {
                 resolved = 'dark';
             }
-            console.log(resolved);
+            console.log('Final verdict for dark mode:', resolved);
             document.documentElement.setAttribute('data-bs-theme', resolved);
             document.documentElement.style.colorScheme = resolved;
         })();
@@ -67,12 +60,10 @@
         <meta name="color-scheme" content="light dark">
     @endif
     @if('dark' === $darkMode)
-        <!-- <meta name="color-scheme" content="dark"> -->
-        <meta name="color-scheme" content="light dark" />
+        <meta name="color-scheme" content="dark">
     @endif
     @if('light' === $darkMode)
-        <!-- <meta name="color-scheme" content="light"> -->
-        <meta name="color-scheme" content="light dark" />
+        <meta name="color-scheme" content="light">
     @endif
 
     @vite(['sass/app.scss'])
@@ -165,7 +156,7 @@
                     >
                         <i class="bi bi-sun-fill" data-lte-theme-icon="light"></i>
                         <i class="bi bi-moon-fill d-none" data-lte-theme-icon="dark"></i>
-                        <i class="bi bi-circle-half d-none" data-lte-theme-icon="auto"></i>
+                        <i class="bi bi-circle-half d-none" data-lte-theme-icon="browser"></i>
                     </a>
                     <ul
                         class="dropdown-menu dropdown-menu-end"
@@ -180,7 +171,7 @@
                                 aria-pressed="false"
                             >
                                 <i class="bi bi-sun-fill me-2"></i>
-                                Light
+                                {{ __('firefly.dark_mode_option_light') }}
                                 <i class="bi bi-check-lg ms-auto d-none"></i>
                             </button>
                         </li>
@@ -192,7 +183,7 @@
                                 aria-pressed="false"
                             >
                                 <i class="bi bi-moon-fill me-2"></i>
-                                Dark
+                                {{ __('firefly.dark_mode_option_dark') }}
                                 <i class="bi bi-check-lg ms-auto d-none"></i>
                             </button>
                         </li>
@@ -200,11 +191,11 @@
                             <button
                                 type="button"
                                 class="dropdown-item d-flex align-items-center active"
-                                data-bs-theme-value="auto"
+                                data-bs-theme-value="browser"
                                 aria-pressed="true"
                             >
                                 <i class="bi bi-circle-half me-2"></i>
-                                Auto
+                                {{ __('firefly.dark_mode_option_browser') }}
                                 <i class="bi bi-check-lg ms-auto d-none"></i>
                             </button>
                         </li>
@@ -411,31 +402,40 @@
 <!-- end: previous color mode -->
 
 <!--begin::Color Mode Toggle (#6010)-->
-<script>
+<script nonce="{{ $JS_NONCE }}">
     (() => {
         'use strict';
-
+        console.log('Color mode script (later)');
         const STORAGE_KEY = 'lte-theme';
 
-        const getStoredTheme = () => localStorage.getItem(STORAGE_KEY);
-        const setStoredTheme = (theme) => localStorage.setItem(STORAGE_KEY, theme);
+        const setStoredTheme = (theme) => {
+            localStorage.setItem(STORAGE_KEY, theme);
+            window.axios.put('api/v1/preferences/darkMode', {data: theme});
+        }
 
         const prefersDark = () => globalThis.matchMedia('(prefers-color-scheme: dark)').matches;
 
         const getPreferredTheme = () => {
-            const stored = getStoredTheme();
-            if (stored) return stored;
-            return prefersDark() ? 'dark' : 'light';
+            return '{{ $darkMode }}';
+            // if ('dark' === stored || 'light' === stored) {
+            //     console.log('Later: getPreferredTheme returns ', stored);
+            //     return stored;
+            // }
+            // console.log('Later: getPreferredTheme returns ', prefersDark() ? 'dark' : 'light');
+            // return prefersDark() ? 'dark' : 'light';
         };
 
         const setTheme = (theme) => {
-            const resolved = theme === 'auto' ? (prefersDark() ? 'dark' : 'light') : theme;
+            console.log('setTheme('+theme+')');
+            const resolved = theme === 'browser' ? (prefersDark() ? 'dark' : 'light') : theme;
+            console.log('Later: setTheme sets', resolved);
             document.documentElement.setAttribute('data-bs-theme', resolved);
         };
 
         setTheme(getPreferredTheme());
 
         const showActiveTheme = (theme) => {
+            console.log('Later: showActiveTheme('+theme+')');
             // Highlight the active dropdown option
             document.querySelectorAll('[data-bs-theme-value]').forEach((el) => {
                 el.classList.remove('active');
@@ -457,11 +457,13 @@
         };
 
         globalThis.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', () => {
-            const stored = getStoredTheme();
-            if (!stored || stored === 'auto') setTheme(getPreferredTheme());
+            console.log('Later: Match on prefers color scheme.');
+            const stored = '{{ $darkMode }}';
+            if (!stored || stored === 'browser') setTheme(getPreferredTheme());
         });
 
         document.addEventListener('DOMContentLoaded', () => {
+            console.log('Later: Color mode DOMContentLoaded.');
             showActiveTheme(getPreferredTheme());
             document.querySelectorAll('[data-bs-theme-value]').forEach((toggle) => {
                 toggle.addEventListener('click', () => {
