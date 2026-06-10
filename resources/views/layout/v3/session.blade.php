@@ -286,12 +286,20 @@
         <div class="app-content">
             <!--begin::Container-->
             <div class="container-fluid">
-
-                <!-- Button trigger modal -->
-
-                TODO DEMO WARNING,
-                TODO MESSAGE FLASHES.
-                TODO DEMO tracking
+                @if($IS_DEMO_SITE)
+                <div class="row no-print">
+                    <div class="col-lg-12">
+                        <div class="alert alert-info" role="alert">
+                            @includeFirst(['demo.' . Route::getCurrentRoute()->getName(), 'demo.no-demo-text'])
+                        </div>
+                    </div>
+                </div>
+                @endif
+                <x-layout.flash
+                    :invalid-monetary-locale="$invalidMonetaryLocale ?? false"
+                    :upgrade-security-level="$upgrade_security_level ?? ''"
+                    :upgrade-security-message="$upgrade_security_message ?? ''"
+                />
 
                 @yield('content')
 
@@ -605,12 +613,12 @@
         </div>
     </div>
 </div>
+<x-layout.tracking />
 
-{{--
-{% if config('firefly.tracker_site_id') != '' and config('firefly.tracker_url') != '' %}
+@if('' !== config('firefly.tracker_site_id') && '' !== config('firefly.tracker_url'))
     <!-- This tracker tag is only here because this instance of Firefly III was purposefully configured to include it -->
     <!-- Your own installation will NOT include it, unless you explicitly configure it to have it. -->
-    <script type="text/javascript" nonce="{{ JS_NONCE }}">
+    <script type="text/javascript" nonce="{{ $JS_NONCE }}">
         var _paq = window._paq || [];
         _paq.push(['trackPageView']);
         _paq.push(['enableLinkTracking']);
@@ -629,9 +637,7 @@
     <noscript><p><img
                 src="//{{ config('firefly.tracker_url') }}/matomo.php?idsite={{ config('firefly.tracker_site_id') }}&amp;rec=1"
                 class="no-border" alt=""/></p></noscript>
-{% endif %}
-
---}}
+@endif
 
 
 </body>

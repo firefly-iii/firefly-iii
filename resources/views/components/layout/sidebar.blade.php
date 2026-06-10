@@ -7,23 +7,20 @@
     id="navigation"
     x-data="sidebar"
 >
-    <!-- <li class="nav-item menu-open"> -->
-    <!-- <a href="route('index')" class="nav-link active"> -->
     <li class="nav-item">
-        TODO SEARCH
-
-        {{--
-                    <form action="{{ route('search.index') }}" method="get" class="sidebar-form">
-                <div class="input-group">
-                    <input autocomplete="off" type="text" name="search" class="form-control"
-                           placeholder="{{ 'searchPlaceholder'|_ }}" value="{{ query }}" spellcheck="false"/>
-                    <span class="input-group-btn">
-                <button type='submit' name='go' id='search-btn' class="btn btn-flat"><span class="fa fa-search"></span></button>
-              </span>
+        <form action="{{ route('search.index') }}" method="get" class="pb-2">
+            <div class="form-row align-items-center">
+                <div class="col-auto">
+                    <div class="input-group mb-2">
+                    <label class="sr-only" for="searchInput">{{ trans('firefly.searchPlaceholder') }}</label>
+                    <input autocomplete="off" type="text" id="searchInput" name="search" class="form-control" placeholder="{{ trans('firefly.searchPlaceholder') }}" value="{{ $query ?? '' }}" spellcheck="false"/>
+                        <div class="input-group-append">
+                            <button type='submit' name='go' id='search-btn' class="btn btn-outline-secondary"><span class="bi bi-search"></span></button>
+                        </div>
                 </div>
-            </form>
-
-        --}}
+            </div>
+            </div>
+        </form>
     </li>
     <li class="nav-item">
         <a href="{{ route('index') }}" class="nav-link {{ \FireflyIII\Support\Blade\Navigation::menuItemActive('index') }}">
