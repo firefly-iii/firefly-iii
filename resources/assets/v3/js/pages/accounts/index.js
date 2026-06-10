@@ -18,12 +18,10 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
+// CSS
 import '../../boot/bootstrap.js';
 import sidebar from '../../pages/shared/sidebar.js';
 import dates from '../shared/dates.js';
-
-
-import boxes from './boxes.js';
 
 let index = function () {
     return {
@@ -38,7 +36,6 @@ let index = function () {
 const comps = {
     index,
     sidebar,
-    boxes,
     dates
 };
 

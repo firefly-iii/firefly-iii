@@ -35,6 +35,7 @@ import {getVariable} from "v2/src/store/get-variable.js";
 import {getViewRange} from "v2/src/support/get-viewrange.js";
 import {loadTranslations} from "v2/src/support/load-translations.js";
 
+
 store.addPlugin(observePlugin);
 
 
@@ -82,7 +83,7 @@ getFreshVariable('lastActivity').then((serverValue) => {
             console.log('Bootstrapped!');
 
             // page may have an introduction necessary to be played.
-            if(!showTour) {
+            if (!showTour) {
                 return;
             }
             const url = '/';

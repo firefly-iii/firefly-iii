@@ -56,7 +56,7 @@ final class IndexController extends Controller
 
         // translations:
         $this->middleware(function ($request, $next) {
-            app('view')->share('mainTitleIcon', 'fa-credit-card');
+            app('view')->share('mainTitleIcon', 'bi-credit-card');
             app('view')->share('title', (string) trans('firefly.accounts'));
 
             $this->repository = app(AccountRepositoryInterface::class);
@@ -134,6 +134,7 @@ final class IndexController extends Controller
     public function index(Request $request, string $objectType): Factory|\Illuminate\Contracts\View\View
     {
         Log::debug(sprintf('Now at %s', __METHOD__));
+        $inactivePage                  = false;
         $subTitle                      = (string) trans(sprintf('firefly.%s_accounts', $objectType));
         $subTitleIcon                  = config(sprintf('firefly.subIconsByIdentifier.%s', $objectType));
         $types                         = config(sprintf('firefly.accountTypesByIdentifier.%s', $objectType));
@@ -198,6 +199,7 @@ final class IndexController extends Controller
         return view('accounts.index', [
             'objectType'    => $objectType,
             'inactiveCount' => $inactiveCount,
+            'inactivePage' => $inactivePage,
             'subTitleIcon'  => $subTitleIcon,
             'subTitle'      => $subTitle,
             'page'          => $page,

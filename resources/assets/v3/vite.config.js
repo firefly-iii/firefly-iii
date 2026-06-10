@@ -42,7 +42,10 @@ export default defineConfig(({command, mode, isSsrBuild, isPreview}) => {
 
                     // dashboard
                     'js/pages/dashboard/boxes.js',
-                    'js/pages/dashboard/dashboard.js'
+                    'js/pages/dashboard/dashboard.js',
+
+                    // accounts
+                    'js/pages/accounts/index.js',
                 ],
                 buildDirectory: '../../../../public/build',
                 // publicDirectory: '../../../public',

@@ -14,10 +14,10 @@
     -->
     <base href="{{ route('index', null, true) }}/">
     <title>
-        @if('' !== (string)$pageTitle)
+        @if('' !== (string)($pageTitle ?? ''))
             {{ $pageTitle }} »
         @endif
-        @if('' !== (string)$subTitle && '' === (string) $pageTitle)
+        @if('' !== (string)$subTitle && '' === (string) ($pageTitle ?? ''))
             {{ $subTitle }} »
         @endif
         @if('Firefly III' !== $title)
@@ -265,10 +265,10 @@
                     <div class="col-sm-6">
                         <h3 class="mb-0">
                             <em class="bi {{ $mainTitleIcon }}"></em>
-                            {{ $pageTitle }}
+                            {{ $pageTitle ?? $title ?? '(no title)' }}
 
                             <small class="text-xs text-muted">@if(isset($subTitleIcon))
-                                    <em class="bi {{ $subTitleIcon }}"></em>X
+                                    <em class="bi {{ $subTitleIcon }}"></em>
                                 @endif{{$subTitle}}</small>
                         </h3>
                     </div>
