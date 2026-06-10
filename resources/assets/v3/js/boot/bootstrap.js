@@ -17,27 +17,19 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
-// import css
-// import "admin-lte/dist/css/adminlte.min.css"
-// import "bootstrap-icons/font/bootstrap-icons.css"
 
 // JS
 import "bootstrap"
 import "admin-lte"
 import Alpine from 'alpinejs'
-import store from "store";
+import store from "../store/store.js";
 import axios from 'axios';
 import Shepherd from 'shepherd.js';
 import "cally";
-import observePlugin from 'store/plugins/observe';
 import {getFreshVariable} from "v2/src/store/get-fresh-variable.js";
 import {getVariable} from "v2/src/store/get-variable.js";
 import {getViewRange} from "v2/src/support/get-viewrange.js";
 import {loadTranslations} from "v2/src/support/load-translations.js";
-
-
-store.addPlugin(observePlugin);
-
 
 window.bootstrapped = false;
 window.store = store;
