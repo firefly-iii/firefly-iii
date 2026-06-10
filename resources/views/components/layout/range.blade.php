@@ -10,6 +10,7 @@
         <span class="daterange-holder"></span>
     </a>
     <ul
+        x-data="dates" x-bind="eventListeners"
         class="dropdown-menu"
         aria-labelledby="date-range"
         style="--bs-dropdown-min-width: 8rem"

@@ -35,18 +35,24 @@ export default () => ({
         console.log('updateDates (e.originalTarget._props.value)');
         console.log(e.originalTarget._props.value);
         let split = e.originalTarget._props.value.split('/');
-        document.getElementById('customStart').value = split[0];
-        document.getElementById('customEnd').value = split[1];
         // this.range.start = split[0];
         // this.range.end = split[1];
         console.log('Start is now ' + split[0]);
         console.log('End is now   ' + split[1]);
         window.store.set('start', split[0]);
         window.store.set('end', split[1]);
-        document.getElementById('daterange-form').submit();
+        this.submitForm();
+
     },
     defaultRange: {
         start: null, end: null
+    },
+    submitForm() {
+        console.log('submitForm');
+        // save form and submit for v1.
+        document.getElementById('customStart').value = window.store.get('start');
+        document.getElementById('customEnd').value = window.store.get('end');
+        document.getElementById('daterange-form').submit();
     },
     language: 'en_US',
 
@@ -71,7 +77,7 @@ export default () => ({
         });
         window.store.observe('end', (newValue) => {
             this.range.end = new Date(newValue);
-                this.buildDateRange();
+            this.buildDateRange();
         });
     },
 
@@ -184,6 +190,7 @@ export default () => ({
     },
 
     changeDateRange(e) {
+        console.log('changeDateRange');
         e.preventDefault();
         // console.log('MainApp: changeDateRange');
         let target = e.currentTarget;
@@ -194,7 +201,7 @@ export default () => ({
 
         window.store.set('start', start);
         window.store.set('end', end);
-        //this.buildDateRange();
+        this.submitForm();
         return false;
     },
 

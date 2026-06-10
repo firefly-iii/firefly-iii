@@ -70,6 +70,8 @@ export default () => ({
             this.boxData = response.data;
             window.store.set(boxesCacheKey, response.data);
             this.generateOptions(this.boxData);
+        }).catch((error) => {
+            console.error('Request gave error.');
         });
     },
     generateOptions(data) {

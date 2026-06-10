@@ -386,8 +386,6 @@
 
 {{-- date range picker, current template, etc. --}}
 
-<script src="v1/js/lib/daterangepicker.js?v={{ $FF_BUILD_TIME }}" type="text/javascript"
-        nonce="{{ $JS_NONCE }}"></script>
 <script type="text/javascript" src="v1/js/lib/accounting.min.js?v={{ $FF_BUILD_TIME }}"
         nonce="{{ $JS_NONCE }}"></script>
 
@@ -492,8 +490,7 @@
     <input type="hidden" name="_token" value="{{ csrf_token() }}"/>
 </form>
 
-<div class="modal fade" tabindex="-1" role="dialog" id="customDateRangeModal" aria-hidden="true" x-data="dates"
-     x-bind="eventListeners">
+<div class="modal fade" tabindex="-1" role="dialog" id="customDateRangeModal" aria-hidden="true">
     <div class="modal-dialog modal-lg">
         <form action="{{ route('daterange') }}?redirect=true" method="POST" id="daterange-form">
             <input type="hidden" name="start" value="" id="customStart"/>
