@@ -18,8 +18,8 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 // import css
-import "admin-lte/dist/css/adminlte.min.css"
-import "bootstrap-icons/font/bootstrap-icons.css"
+// import "admin-lte/dist/css/adminlte.min.css"
+// import "bootstrap-icons/font/bootstrap-icons.css"
 
 // JS
 import "bootstrap"
@@ -27,8 +27,7 @@ import "admin-lte"
 import Alpine from 'alpinejs'
 import store from "store";
 import axios from 'axios';
-import introJs from "intro.js";
-import "intro.js/introjs.css";
+import Shepherd from 'shepherd.js';
 import "cally";
 import observePlugin from 'store/plugins/observe';
 import {getFreshVariable} from "v2/src/store/get-fresh-variable.js";
@@ -88,21 +87,48 @@ getFreshVariable('lastActivity').then((serverValue) => {
             axios.defaults.withCredentials = true;
             axios.defaults.baseURL = url;
 
+
+
+
             site.get(routeStepsUrl).then(function(data) {
                 console.log('Done with loading hints.');
-                introJs.tour().setOptions({
-                    //     //     nextLabel: nextLabel,
-                    //     //     prevLabel: prevLabel,
-                    //     //     skipLabel: skipLabel,
-                    //     //     doneLabel: doneLabel,
-                    hints: data.data,
-                    //     //     exitOnEsc: true,
-                    //     //     exitOnOverlayClick: true,
-                    //     //     keyboardNavigation: true
+                let hints = data.data;
+                console.log(hints);
+
+                const tour = new Shepherd.Tour({
+                    useModalOverlay: true,
+                    defaultStepOptions: {
+                        // classes: 'shadow-md bg-purple-dark',
+                        scrollTo: true
+                    }
                 });
-                //     // introJs.tour().onComplete(reportIntroFinished);
-                //     // introJs.tour().onExit(reportIntroFinished);
-                introJs.tour().start();
+                for(let i=0;i<hints.length;i++) {
+                    if(hints.hasOwnProperty(i)){
+                        let hint = hints[i];
+
+                        let step = {
+                            // id: 'example-step',
+                            text: hint.text,
+
+                            classes: 'example-step-extra-class',
+                            buttons: [
+                                {
+                                    text: 'Next',
+                                    action: tour.next
+                                }
+                            ]
+                        };
+                        if(hint.hasOwnProperty('element')) {
+                            step.attachTo = {
+                                element: hint.element,
+                                    on: hint.position
+                            };
+                        }
+                        tour.addStep(step);
+                    }
+                }
+                tour.start();
+
 
             });
 

@@ -31,7 +31,6 @@
         (() => {
             'use strict';
             let stored = '{{ $darkMode }}';
-            console.log('Init for dark/light using user preference (not local storage).', stored);
             const prefersDark = globalThis.matchMedia('(prefers-color-scheme: dark)').matches;
             // Mirror the resolution in _scripts.astro: explicit "dark"/"light" win,
             // otherwise ("auto" or unset) fall back to the OS preference.
@@ -41,7 +40,6 @@
             } else if (prefersDark) {
                 resolved = 'dark';
             }
-            console.log('Final verdict for dark mode:', resolved);
             document.documentElement.setAttribute('data-bs-theme', resolved);
             document.documentElement.style.colorScheme = resolved;
         })();
@@ -378,7 +376,7 @@
     var routeForFinishedTour = "{{ route('json.intro.finished', [$current_route_name, $objectType ?? '']) }}";
 </script>
 @if(!$shownDemo)
-<script type="text/javascript" src="v1/js/ff/intro/intro.js?v={{ $FF_BUILD_TIME }}" nonce="{{ $JS_NONCE }}"></script>
+<!-- <script type="text/javascript" src="v1/js/ff/intro/intro.js?v={{ $FF_BUILD_TIME }}" nonce="{{ $JS_NONCE }}"></script> -->
 @endif
 
 {{-- date range picker, current template, etc. --}}
@@ -405,7 +403,6 @@
 <script nonce="{{ $JS_NONCE }}">
     (() => {
         'use strict';
-        console.log('Color mode script (later)');
         const STORAGE_KEY = 'lte-theme';
 
         const setStoredTheme = (theme) => {
@@ -426,16 +423,13 @@
         };
 
         const setTheme = (theme) => {
-            console.log('setTheme('+theme+')');
             const resolved = theme === 'browser' ? (prefersDark() ? 'dark' : 'light') : theme;
-            console.log('Later: setTheme sets', resolved);
             document.documentElement.setAttribute('data-bs-theme', resolved);
         };
 
         setTheme(getPreferredTheme());
 
         const showActiveTheme = (theme) => {
-            console.log('Later: showActiveTheme('+theme+')');
             // Highlight the active dropdown option
             document.querySelectorAll('[data-bs-theme-value]').forEach((el) => {
                 el.classList.remove('active');
@@ -457,13 +451,11 @@
         };
 
         globalThis.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', () => {
-            console.log('Later: Match on prefers color scheme.');
             const stored = '{{ $darkMode }}';
             if (!stored || stored === 'browser') setTheme(getPreferredTheme());
         });
 
         document.addEventListener('DOMContentLoaded', () => {
-            console.log('Later: Color mode DOMContentLoaded.');
             showActiveTheme(getPreferredTheme());
             document.querySelectorAll('[data-bs-theme-value]').forEach((toggle) => {
                 toggle.addEventListener('click', () => {

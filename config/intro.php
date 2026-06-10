@@ -31,7 +31,7 @@ return [
         'accounts-chart' => ['element' => '#accounts-chart'],
         'box_out_holder' => ['element' => '#box_out_holder'],
         'help'           => ['element' => '#help', 'position' => 'bottom'],
-        'sidebar-toggle' => ['element' => '#sidebar-toggle', 'position' => 'bottom'],
+        'sidebar-toggle' => ['element' => '#create-menu', 'position' => 'bottom'],
         'cash_account'   => ['element' => '#all_transactions', 'position' => 'left'],
         'outro'          => [],
     ],

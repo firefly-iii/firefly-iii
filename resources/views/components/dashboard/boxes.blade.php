@@ -1,4 +1,4 @@
-<div class="row mb-2" x-data="boxes">
+<div class="row mb-2" x-data="boxes" id="box_out_holder">
     <div class="col-xl-3 col-lg-6 col-md-12 col-sm-12">
         <div class="small-box text-bg-primary">
             <div class="inner balance-box">

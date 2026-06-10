@@ -65,7 +65,7 @@ trait GetConfigurationData
                 $currentStep          = $options;
 
                 // get the text:
-                $currentStep['hint'] = (string) trans('intro.'.$route.'_'.$key);
+                $currentStep['text'] = (string) trans('intro.'.$route.'_'.$key);
 
                 // save in array:
                 $steps[]              = $currentStep;
@@ -198,7 +198,7 @@ trait GetConfigurationData
                     $currentStep          = $options;
 
                     // get the text:
-                    $currentStep['intro'] = (string) trans('intro.'.$route.'_'.$specificPage.'_'.$key);
+                    $currentStep['text'] = (string) trans('intro.'.$route.'_'.$specificPage.'_'.$key);
 
                     // save in array:
                     $steps[]              = $currentStep;

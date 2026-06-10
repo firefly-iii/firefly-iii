@@ -20,31 +20,31 @@
 
 $(function () {
     "use strict";
-    console.log('Start introJS.');
+    // console.log('Start introJS.');
     if (!forceDemoOff) {
-        console.log('Mark as done.');
-        $.getJSON(routeStepsUrl).done(setupIntro)
+        // console.log('Mark as done.');
+        // $.getJSON(routeStepsUrl).done(setupIntro)
     }
 });
 
 
 function setupIntro(steps) {
     console.log('setupIntro().');
-    return;
-    var intro = introJs;
-    intro.setOptions({
-                         nextLabel: nextLabel,
-                         prevLabel: prevLabel,
-                         skipLabel: skipLabel,
-                         doneLabel: doneLabel,
-                         steps: steps,
-                         exitOnEsc: true,
-                         exitOnOverlayClick: true,
-                         keyboardNavigation: true
-                     });
-    intro.oncomplete(reportIntroFinished);
-    intro.onexit(reportIntroFinished);
-    intro.tour().start();
+    // return;
+    // var intro = introJs;
+    // intro.setOptions({
+    //                      nextLabel: nextLabel,
+    //                      prevLabel: prevLabel,
+    //                      skipLabel: skipLabel,
+    //                      doneLabel: doneLabel,
+    //                      steps: steps,
+    //                      exitOnEsc: true,
+    //                      exitOnOverlayClick: true,
+    //                      keyboardNavigation: true
+    //                  });
+    // intro.oncomplete(reportIntroFinished);
+    // intro.onexit(reportIntroFinished);
+    // intro.tour().start();
 }
 
 function reportIntroFinished() {

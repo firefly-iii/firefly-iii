@@ -150,7 +150,7 @@ function otherCurrencyLineChart(URL, container, currencySymbol) {
     //var options = $.extend(true, newOpts, defaultChartOptions);
     var options = $.extend(true, defaultChartOptions, newOpts);
 
-    console.log(options);
+    // console.log(options);
     var chartType = 'line';
 
     drawAChart(URL, container, chartType, options, colorData);
@@ -349,12 +349,12 @@ function multiCurrencyPieChart(URL, container) {
 function drawAChart(URL, container, chartType, options, colorData) {
     var containerObj = document.getElementById(container);
     if (containerObj.length === 0) {
-        console.log('Return because 0');
+        //console.log('Return because 0');
         return;
     }
-    console.log('drawAChart('+URL+', '+container+')');
+    //console.log('drawAChart('+URL+', '+container+')');
     window.axios.get(URL).then(function (response) {
-        console.log('GET drawAChart('+URL+', '+container+')');
+        //console.log('GET drawAChart('+URL+', '+container+')');
         containerObj.classList.remove('general-chart-error');
         var data = response.data;
         // if result is empty array, or the labels array is empty, show error.
@@ -370,12 +370,12 @@ function drawAChart(URL, container, chartType, options, colorData) {
             // isn't empty but contains no labels
             (typeof data === 'object' && typeof data.labels === 'object' && 0 === data.labels.length)
         ) {
-            console.log('NODATA drawAChart('+URL+', '+container+')');
-            console.log(data);
+            // console.log('NODATA drawAChart('+URL+', '+container+')');
+            // console.log(data);
             // remove the chart container + parent
             var holder = document.getElementById(container).parentNode.parentNode;
             if (holder.classList.contains('card') || holder.classList.contains('card-body')) {
-                console.log('found holder');
+                // console.log('found holder');
                 // find box-body:
                 var boxBody;
                 if (!holder.classList.contains('card-body')) {
@@ -384,12 +384,12 @@ function drawAChart(URL, container, chartType, options, colorData) {
                 } else {
                     boxBody = holder;
                 }
-                console.log('found box body', boxBody);
+                // console.log('found box body', boxBody);
                 // boxBody.innerHtml = '<p><em>'+noDataForChart+'</em></p>';
                 boxBody.innerHTML = '<p><em>'+noDataForChart+'</em></p>';
                 //boxBody.empty().append($('<p>').append($('<em>').text(noDataForChart)));
             }
-            console.log('return');
+            // console.log('return');
             return;
         }
 
@@ -442,7 +442,7 @@ function drawAChart(URL, container, chartType, options, colorData) {
         }
 
     }).catch(function (reason) {
-        console.error('Add error because error with chart.', reason);
+        // console.error('Add error because error with chart.', reason);
         document.getElementById(container).classList.add('general-chart-error');
     });
 }
