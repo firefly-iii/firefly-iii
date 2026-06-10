@@ -2898,6 +2898,7 @@ return [
     'box_left_to_spend_in_currency'                       => 'Left to spend (:currency)',
     'box_net_worth_in_currency'                           => 'Net worth (:currency)',
     'box_spend_per_day'                                   => 'Left to spend per day: :amount',
+    'box_no_budgeted'=> 'No money was budgeted for this period',
 
     // debug page
     'debug_page'                                          => 'Debug page',

@@ -125,7 +125,7 @@
                     <p class="d-none d-sm-block"><a href="{{ route('budgets.index') }}">{{ __('firefly.left_to_spend') }}</a></p>
                 </template>
                 <template x-if="!loading && 0 === leftBox.left.length">
-                    <p class="d-none d-sm-block">TODO no money is budgeted in this period</p>
+                    <p class="d-none d-sm-block"><em>{{ __('firefly.box_no_budgeted') }}</em></p>
                 </template>
             </div>
             <span class="small-box-icon">

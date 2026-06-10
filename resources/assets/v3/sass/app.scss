@@ -18,29 +18,28 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-
 @use "bootstrap-icons/font/bootstrap-icons.css";
 
-$color-mode-type: media-query;
-$link-decoration: none !default;
+$color-mode-type: data;
+$link-decoration: none;
 $font-family-sans-serif: "Roboto", sans-serif;
 
-$danger: #CD5029 !default;
-$primary: #1E6581 !default;
-$success: #64B624 !default;
+$danger: #CD5029;
+$primary: #1E6581;
+$success: #64B624;
+
+@use "admin-lte/src/scss/adminlte" with (
+     $color-mode-type: $color-mode-type,
+    $link-decoration: $link-decoration,
+    $font-family-sans-serif: $font-family-sans-serif,
+    $danger: $danger,
+    $primary: $primary,
+    $success: $success
+);
+
 
 @import 'shepherd.js/dist/css/shepherd.css';
-@import "admin-lte/dist/css/adminlte.min.css";
-
-//@use "admin-lte/src/scss/adminlte" with (
-//    $color-mode-type: $color-mode-type,
-//    $link-decoration: $link-decoration,
-//    $font-family-sans-serif: $font-family-sans-serif,
-//    $danger: $danger,
-//    $primary: $primary,
-//    $success: $success
-//);
-
+// @import "admin-lte/dist/css/adminlte.min.css";
 
 //
 //$color-mode-type: media-query;
