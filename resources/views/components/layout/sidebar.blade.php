@@ -10,6 +10,22 @@
     <!-- <li class="nav-item menu-open"> -->
     <!-- <a href="route('index')" class="nav-link active"> -->
     <li class="nav-item">
+        TODO SEARCH
+
+        {{--
+                    <form action="{{ route('search.index') }}" method="get" class="sidebar-form">
+                <div class="input-group">
+                    <input autocomplete="off" type="text" name="search" class="form-control"
+                           placeholder="{{ 'searchPlaceholder'|_ }}" value="{{ query }}" spellcheck="false"/>
+                    <span class="input-group-btn">
+                <button type='submit' name='go' id='search-btn' class="btn btn-flat"><span class="fa fa-search"></span></button>
+              </span>
+                </div>
+            </form>
+
+        --}}
+    </li>
+    <li class="nav-item">
         <a href="{{ route('index') }}" class="nav-link {{ \FireflyIII\Support\Blade\Navigation::menuItemActive('index') }}">
             <em class="nav-icon bi bi-speedometer"></em>
             <p>{{ __('firefly.dashboard') }}</p>

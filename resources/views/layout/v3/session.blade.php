@@ -289,31 +289,9 @@
 
                 <!-- Button trigger modal -->
 
-
-                <!-- Modal -->
-                <div class="modal fade" id="customDateRangeModal2" tabindex="-1" aria-labelledby="exampleModalLabel"
-                     aria-hidden="true">
-                    <div class="modal-dialog">
-                        <div class="modal-content">
-                            <div class="modal-header">
-                                <h1 class="modal-title fs-5" id="exampleModalLabel">Modal title</h1>
-                                <button type="button" class="btn-close" data-bs-dismiss="modal"
-                                        aria-label="Close"></button>
-                            </div>
-                            <div class="modal-body">
-                                ...abc
-                            </div>
-                            <div class="modal-footer">
-                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                                <button type="button" class="btn btn-primary">Save changes</button>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-
-                <br><br>
-
+                TODO DEMO WARNING,
+                TODO MESSAGE FLASHES.
+                TODO DEMO tracking
 
                 @yield('content')
 
@@ -338,6 +316,14 @@
         <span>
             <a href="https://www.firefly-iii.org/" target="_blank" title="Firefly III">Firefly III</a> &copy; James Cole, <a
                 href="https://www.gnu.org/licenses/agpl-3.0.html" title="AGPL-3.0-or-later.">AGPL-3.0-or-later</a>.
+            TODO BETA WARNING
+            TODO ALPHA WARNING
+            TODO DEV RELEASE WARNING
+            {{--
+                    {% if FF_IS_ALPHA %}<small class="text-danger hidden-xs"><br>{{ 'is_alpha_warning'|_ }}</small>{% endif %}
+        {% if FF_IS_BETA %}<small class="text-warning hidden-xs"><br>{{ 'is_beta_warning'|_ }}</small>{% endif %}
+
+            --}}
         </span>
         <!--end::Copyright-->
     </footer>
@@ -619,6 +605,33 @@
         </div>
     </div>
 </div>
+
+{{--
+{% if config('firefly.tracker_site_id') != '' and config('firefly.tracker_url') != '' %}
+    <!-- This tracker tag is only here because this instance of Firefly III was purposefully configured to include it -->
+    <!-- Your own installation will NOT include it, unless you explicitly configure it to have it. -->
+    <script type="text/javascript" nonce="{{ JS_NONCE }}">
+        var _paq = window._paq || [];
+        _paq.push(['trackPageView']);
+        _paq.push(['enableLinkTracking']);
+        (function () {
+            var u = "//{{ config('firefly.tracker_url') }}/";
+            _paq.push(['setTrackerUrl', u + 'matomo.php']);
+            _paq.push(['setSiteId', '{{ config('firefly.tracker_site_id') }}']);
+            var d = document, g = d.createElement('script'), s = d.getElementsByTagName('script')[0];
+            g.type = 'text/javascript';
+            g.async = true;
+            g.defer = true;
+            g.src = u + 'matomo.js';
+            s.parentNode.insertBefore(g, s);
+        })();
+    </script>
+    <noscript><p><img
+                src="//{{ config('firefly.tracker_url') }}/matomo.php?idsite={{ config('firefly.tracker_site_id') }}&amp;rec=1"
+                class="no-border" alt=""/></p></noscript>
+{% endif %}
+
+--}}
 
 
 </body>
