@@ -47,7 +47,7 @@ window.axios.defaults.headers.common['X-Requested-With'] = 'XMLHttpRequest';
 
 // always grab the preference "marker" from Firefly III.
 getFreshVariable('lastActivity').then((serverValue) => {
-    if(null === serverValue) {
+    if (null === serverValue) {
         console.log('Server value is null in getFreshVariable.');
         throw new Error('401 in getFreshVariable.');
     }
@@ -82,18 +82,16 @@ getFreshVariable('lastActivity').then((serverValue) => {
             console.log('Bootstrapped!');
 
             // page may have an introduction necessary to be played.
+            if(!showTour) {
+                return;
+            }
             const url = '/';
             let site = axios.create({baseURL: url, withCredentials: true});
             axios.defaults.withCredentials = true;
             axios.defaults.baseURL = url;
 
-
-
-
-            site.get(routeStepsUrl).then(function(data) {
-                console.log('Done with loading hints.');
+            site.get(routeStepsUrl).then(function (data) {
                 let hints = data.data;
-                console.log(hints);
 
                 const tour = new Shepherd.Tour({
                     useModalOverlay: true,
@@ -102,8 +100,16 @@ getFreshVariable('lastActivity').then((serverValue) => {
                         scrollTo: true
                     }
                 });
-                for(let i=0;i<hints.length;i++) {
-                    if(hints.hasOwnProperty(i)){
+// cancel, complete
+                tour.on('cancel', (eventOptions) => {
+                    site.post(routeForFinishedTour);
+                });
+                tour.on('complete', (eventOptions) => {
+                    site.post(routeForFinishedTour);
+                });
+
+                for (let i = 0; i < hints.length; i++) {
+                    if (hints.hasOwnProperty(i)) {
                         let hint = hints[i];
 
                         let step = {
@@ -118,10 +124,10 @@ getFreshVariable('lastActivity').then((serverValue) => {
                                 }
                             ]
                         };
-                        if(hint.hasOwnProperty('element')) {
+                        if (hint.hasOwnProperty('element')) {
                             step.attachTo = {
                                 element: hint.element,
-                                    on: hint.position
+                                on: hint.position
                             };
                         }
                         tour.addStep(step);
@@ -133,9 +139,6 @@ getFreshVariable('lastActivity').then((serverValue) => {
             });
 
         });
-
-
-
 
 
     });

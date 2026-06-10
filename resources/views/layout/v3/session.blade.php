@@ -370,13 +370,18 @@
 
 {{-- introduction --}}
 <!-- intro -->
-<script type="text/javascript" nonce="{{ $JS_NONCE }}">
-    var routeForTour = "{{ $current_route_name }}";
-    var routeStepsUrl = "{{ route('json.intro', [$current_route_name, $objectType ?? '']) }}";
-    var routeForFinishedTour = "{{ route('json.intro.finished', [$current_route_name, $objectType ?? '']) }}";
-</script>
 @if(!$shownDemo)
-<!-- <script type="text/javascript" src="v1/js/ff/intro/intro.js?v={{ $FF_BUILD_TIME }}" nonce="{{ $JS_NONCE }}"></script> -->
+    <script type="text/javascript" nonce="{{ $JS_NONCE }}">
+        var showTour = true;
+        var routeForTour = "{{ $current_route_name }}";
+        var routeStepsUrl = "{{ route('json.intro', [$current_route_name, $objectType ?? '']) }}";
+        var routeForFinishedTour = "{{ route('json.intro.finished', [$current_route_name, $objectType ?? '']) }}";
+    </script>
+@endif
+@if($shownDemo)
+    <script type="text/javascript" nonce="{{ $JS_NONCE }}">
+        var showTour = false;
+    </script>
 @endif
 
 {{-- date range picker, current template, etc. --}}
@@ -394,7 +399,6 @@
 
 
 <!-- start: previous color mode -->
-
 
 
 <!-- end: previous color mode -->
@@ -488,11 +492,12 @@
     <input type="hidden" name="_token" value="{{ csrf_token() }}"/>
 </form>
 
-<div class="modal fade" tabindex="-1" role="dialog" id="customDateRangeModal" aria-hidden="true" x-data="dates" x-bind="eventListeners">
+<div class="modal fade" tabindex="-1" role="dialog" id="customDateRangeModal" aria-hidden="true" x-data="dates"
+     x-bind="eventListeners">
     <div class="modal-dialog modal-lg">
         <form action="{{ route('daterange') }}?redirect=true" method="POST" id="daterange-form">
-            <input type="hidden" name="start" value="" id="customStart" />
-            <input type="hidden" name="end" value="" id="customEnd" />
+            <input type="hidden" name="start" value="" id="customStart"/>
+            <input type="hidden" name="end" value="" id="customEnd"/>
             <div class="modal-content">
                 <div class="modal-header">
                     <h4 class="modal-title">{{ __('firefly.customRange') }}</h4>
