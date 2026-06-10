@@ -1,4 +1,4 @@
-@extends('layout.v2.error')
+@extends('layout.v3.blank')
 @section('status_code','404')
 @section('status','Not Found')
 @section('sub_title', trans('errors.404_header'))
@@ -21,8 +21,4 @@
         </p>
     </div>
 </div>
-
-
-</body>
-</html>
 @endsection

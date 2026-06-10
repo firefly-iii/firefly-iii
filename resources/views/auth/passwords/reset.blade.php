@@ -1,4 +1,4 @@
-@extends('layout.v2.session')
+@extends('layout.v3.auth')
 @section('content')
 
     @if($errors->any())
@@ -30,17 +30,17 @@
                 <div class="input-group mb-3">
                     <input type="email" name="email" required autofocus class="form-control" value="{{ old('email') }}"
                            placeholder="{{ trans('form.email') }}"/>
-                    <div class="input-group-text"> <em class="fa-solid fa-envelope"></em> </div>
+                    <div class="input-group-text"> <em class="bi bi-envelope"></em> </div>
                 </div>
                 <div class="input-group mb-3">
                     <input type="password" class="form-control" required placeholder="{{ trans('form.password') }}"
                            name="password"/>
-                    <div class="input-group-text"> <em class="fa-solid fa-lock"></em> </div>
+                    <div class="input-group-text"> <em class="bi bi-lock"></em> </div>
                 </div>
                 <div class="input-group mb-3">
                     <input type="password" class="form-control" required placeholder="{{ trans('form.password_confirmation') }}"
                            name="password_confirmation"/>
-                    <div class="input-group-text"> <em class="fa-solid fa-lock"></em> </div>
+                    <div class="input-group-text"> <em class="bi bi-lock"></em> </div>
                 </div>
                 <div class="row">
                     <div class="col-12">
@@ -50,7 +50,7 @@
                             <a href="#"
                                data-bs-toggle="modal" data-bs-target="#passwordModal"
                             ><span
-                                    class="fa fa-fw fa-question-circle"></span></a>
+                                    class="bi bi-question-circle"></span></a>
                         </label>
                     </div>
                 </div>

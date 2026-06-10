@@ -4,7 +4,7 @@
     @if(true===$IS_DEMO_SITE)
     <div class="card mb-3">
         <div class="card-body">
-            <p class="">
+            <p>
                 Welcome to the Firefly III demo!<br/>
                 <br/>
                 To log in, please use email address <strong>{{ $DEMO_USERNAME }}</strong> with password
@@ -49,18 +49,18 @@
                 <input type="hidden" name="_token" value="{{ csrf_token() }}"/>
                 @if(config('firefly.authentication_guard') === 'web')
                 <div class="input-group mb-3"> <input type="email" name="email" autofocus required class="form-control" placeholder="{{ trans('form.email') }}" value="@if(true===$IS_DEMO_SITE){{ $DEMO_USERNAME }}@else{{ $email }}@endif">
-                    <div class="input-group-text"> <em class="fa-solid fa-envelope"></em> </div>
+                    <div class="input-group-text"> <em class="bi bi-envelope"></em> </div>
                 </div>
                 @else
                 <div class="input-group mb-3"> <input type="text" autocomplete="username" autofocus required name="{{ $usernameField }}" class="form-control" placeholder="{{ trans('form.login_name') }}" value="{{ $email }}">
-                    <div class="input-group-text"> <em class="fa-solid fa-user"></em> </div>
+                    <div class="input-group-text"> <em class="bi bi-person"></em> </div>
                 </div>
                 @endif
                 <div class="input-group mb-3">
                     <input type="password" id="password" name="password" class="form-control" placeholder="{{ trans('form.password') }}" @if(true===$IS_DEMO_SITE)value="{{ $DEMO_PASSWORD }}"@endif autocomplete="current-password">
                     <div class="input-group-text">
-                        <em class="fa-solid fa-lock"></em>
-                        <i class="fa-solid fa-eye-slash fa-eye" id="togglePassword"></i>
+                        <em class="bi bi-lock"></em>
+                        <em class="bi bi-eye-slash" id="togglePassword"></em>
                     </div>
                 </div> <!--begin::Row-->
                 <div class="row">
@@ -91,12 +91,12 @@
     togglePassword.addEventListener('click', () => {
         const type = password.getAttribute('type') === 'password' ? 'text' : 'password';
         if('text' === type) {
-            togglePassword.classList.add('fa-eye');
-            togglePassword.classList.remove('fa-eye-slash');
+            togglePassword.classList.add('bi-eye');
+            togglePassword.classList.remove('bi-eye-slash');
         }
         if('password' === type) {
-            togglePassword.classList.add('fa-eye-slash');
-            togglePassword.classList.remove('fa-eye');
+            togglePassword.classList.add('bi-eye-slash');
+            togglePassword.classList.remove('bi-eye');
         }
         password.setAttribute('type', type);
     });

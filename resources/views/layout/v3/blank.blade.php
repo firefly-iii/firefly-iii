@@ -20,23 +20,29 @@
     <meta name="color-scheme" content="light dark">
     @vite(['sass/app.scss'])
     <x-layout.fav-icons/>
-    <script nonce="{{ $JS_NONCE }}">
+    <script nonce="{{ $JS_NONCE ?? '' }}">
         (() => {
             'use strict'
             document.documentElement.setAttribute('data-bs-theme', (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light'))
         })()
     </script>
 </head>
-<body class="login-page bg-body-secondary">
-<div class="login-box">
-    <div class="login-logo">
-        <img src="images/logo-session.png" width="68" height="100" alt="Firefly III Logo" title="Firefly III"/><br>
-        <a href='https://demo.firefly-iii.org'><b>Firefly</b> III</a>
+<body class="bg-body-tertiary">
+<main class="align-items-center min-vh-100 py-5">
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-md-12 col-lg-8 col-xl-8">
+                <p class="text-center">
+                    <img src="images/logo-session.png" width="68" height="100" alt="Firefly III Logo" title="Firefly III"/><br>
+                </p>
+                <h1><strong>Firefly</strong> III - @yield('status_code') @yield('status') :(</h1>
+                <h2 class="text-danger">@yield('sub_title')</h2>
+                @yield('content')
+            </div>
+        </div>
     </div>
-    @yield('content')
-</div>
+</main>
 @vite(['js/pages/auth/auth.js'])
-@yield('scripts')
 
 </body>
 </html>
