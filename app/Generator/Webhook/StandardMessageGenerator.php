@@ -136,7 +136,7 @@ class StandardMessageGenerator implements MessageGeneratorInterface
 
         /** @var WebhookResponseModel $response */
         $response      = $webhook->webhookResponses()->first();
-        $this->getTriggerTitles($webhook->webhookTriggers()->get());
+        // $this->getTriggerTitles($webhook->webhookTriggers()->get());
         $basicMessage  = [
             'uuid'          => $uuid->toString(),
             'user_id'       => 0,
@@ -299,17 +299,17 @@ class StandardMessageGenerator implements MessageGeneratorInterface
         return $response->title;
     }
 
-    private function getTriggerTitles(Collection $collection): array
-    {
-        $return = [];
-
-        /** @var WebhookTriggerModel $item */
-        foreach ($collection as $item) {
-            $return[] = $item->title;
-        }
-
-        return array_unique($return);
-    }
+    //    private function getTriggerTitles(Collection $collection): array
+    //    {
+    //        $return = [];
+    //
+    //        /** @var WebhookTriggerModel $item */
+    //        foreach ($collection as $item) {
+    //            $return[] = $item->title;
+    //        }
+    //
+    //        return array_unique($return);
+    //    }
 
     private function getWebhooks(): Collection
     {
