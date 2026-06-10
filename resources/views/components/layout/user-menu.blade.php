@@ -5,24 +5,24 @@
     <div class="dropdown-menu dropdown-menu-lg dropdown-menu-end">
         <span class="dropdown-item dropdown-header">{{  Auth::user()->email  }}</span>
         <div class="dropdown-divider"></div>
-        <a href="#" class="dropdown-item">
-            <i class="bi bi-envelope me-2"></i> Profile
+        <a href="{{ route('profile.index') }}" class="dropdown-item">
+            <em class="bi bi-person me-2"></em> {{ __('firefly.profile') }}
         </a>
         <div class="dropdown-divider"></div>
-        <a href="#" class="dropdown-item">
-            <i class="bi bi-people-fill me-2"></i> Preferences
+        <a href="{{ route('preferences.index') }}" class="dropdown-item">
+            <em class="bi bi-gear-wide-connected me-2"></em> {{ __('firefly.preferences') }}
         </a>
         <div class="dropdown-divider"></div>
-        <a href="#" class="dropdown-item">
-            <i class="bi bi-file-earmark-fill me-2"></i> Tokens
+        <a href="{{ route('profile.oauth.index') }}" class="dropdown-item">
+            <em class="bi bi-shield-lock me-2"></em> {{ __('firefly.oauth_tokens') }}
         </a>
         <div class="dropdown-divider"></div>
-        <a href="#" class="dropdown-item">
-            <i class="bi bi-file-earmark-fill me-2"></i> Financial administrations
+        <a href="{{ route('administrations.index') }}" class="dropdown-item">
+            <em class="bi bi-journals me-2"></em> {{ __('firefly.administrations_index_menu') }}
         </a>
         <div class="dropdown-divider"></div>
-        <a href="#" class="dropdown-item">
-            <i class="bi bi-file-earmark-fill me-2"></i> System settings
+        <a href="{{ route('settings.index') }}" class="dropdown-item">
+            <em class="bi bi-cpu me-2"></em> {{ __('firefly.system_settings') }}
         </a>
     </div>
 </li>

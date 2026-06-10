@@ -53,7 +53,7 @@ final class HomeController extends Controller
     {
         parent::__construct();
         app('view')->share('title', 'Firefly III');
-        app('view')->share('mainTitleIcon', 'fa-fire');
+        app('view')->share('mainTitleIcon', 'bi-fire');
         $this->middleware(Installer::class);
     }
 
@@ -135,15 +135,8 @@ final class HomeController extends Controller
         if (0 === $count) {
             return redirect(route('new-user.index'));
         }
-
-        if ('v1' === (string) config('view.layout')) {
-            return $this->indexV1($repository);
-        }
-        if ('v2' === (string) config('view.layout')) {
-            return $this->indexV2();
-        }
-
-        throw new FireflyException('Invalid layout configuration');
+        // ignore v2.
+        return $this->indexV1($repository);
     }
 
     private function indexV1(AccountRepositoryInterface $repository): mixed
@@ -152,6 +145,7 @@ final class HomeController extends Controller
         $pageTitle      = (string) trans('firefly.main_dashboard_page_title');
         $count          = $repository->count($types);
         $subTitle       = (string) trans('firefly.welcome_back');
+        $subTitleIcon = 'bi-piggy-bank';
         $transactions   = [];
         $frontpage      = Preferences::getFresh('frontpageAccounts', $repository->getAccountsByType([AccountTypeEnum::ASSET->value])->pluck('id')->toArray());
         $frontpageArray = $frontpage->data;
@@ -188,6 +182,7 @@ final class HomeController extends Controller
 
         return view('index', [
             'count'        => $count,
+            'subTitleIcon' => $subTitleIcon,
             'subTitle'     => $subTitle,
             'transactions' => $transactions,
             'billCount'    => $billCount,
@@ -198,18 +193,4 @@ final class HomeController extends Controller
         ]);
     }
 
-    private function indexV2(): mixed
-    {
-        $subTitle  = (string) trans('firefly.welcome_back');
-        $pageTitle = (string) trans('firefly.main_dashboard_page_title');
-
-        $start     = session('start', today(config('app.timezone'))->startOfMonth());
-        $end       = session('end', today(config('app.timezone'))->endOfMonth());
-
-        /** @var User $user */
-        $user      = auth()->user();
-        event(new SystemRequestedVersionCheck($user));
-
-        return view('index', ['subTitle' => $subTitle, 'start' => $start, 'end' => $end, 'pageTitle' => $pageTitle]);
-    }
 }

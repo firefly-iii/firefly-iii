@@ -7,9 +7,9 @@
     <div class="row" x-data="index">
         <div class="col-lg-8 col-md-12 col-sm-12">
             <!--ACCOUNTS -->
-            <div class="card card-primary mb-4">
-                <div class="card-header with-border">
-                    <div class="card-title"><a href="{{ route('accounts.index',['asset']) }}" title="{{ __('firefly.yourAccounts') }}">{{ __('firefly.yourAccounts') }}</a></div>
+            <div class="card card-primary card-outline mb-4">
+                <div class="card-header">
+                <div class="card-title"><a href="{{ route('accounts.index',['asset']) }}" title="{{ __('firefly.yourAccounts') }}">{{ __('firefly.yourAccounts') }}</a></div>
                 </div>
                 <div class="card-body">
                     <canvas id="accounts-chart" class="wide-chart"  height="400" width="100%"></canvas>
@@ -21,7 +21,7 @@
 
             <!--BUDGETS -->
             <div class="card card-outline mb-4">
-                <div class="card-header with-border">
+                <div class="card-header ">
                     <div class="card-title"><a href="{{ route('budgets.index') }}"
                                              title="{{ __('firefly.budgetsAndSpending') }}">{{ __('firefly.budgetsAndSpending') }}</a></div>
                 </div>
@@ -37,7 +37,7 @@
             </div>
             <!--CATEGORIES -->
             <div class="card card-outline mb-4">
-                <div class="card-header with-border">
+                <div class="card-header">
                     <div class="card-title"><a href="{{ route('categories.index') }}"
                                              title="{{ __('firefly.categories') }}">{{ __('firefly.categories') }}</a></div>
 
@@ -59,7 +59,7 @@
             <div id="all_transactions">
                 @foreach($transactions as $data)
                 <div class="card mb-4">
-                    <div class="card-header with-border">
+                    <div class="card-header">
                         <div class="card-title"><a href="{{ route('accounts.show', [$data['account']['id']]) }}">{{ $data['account']['name'] }}</a>
                         </div>
                     </div>
@@ -123,7 +123,7 @@
             @if($billCount > 0)
             <!--BILLS -->
             <div class="card mb-4">
-                <div class="card-header with-border">
+                <div class="card-header">
                     <div class="card-title"><a href="{{ route('subscriptions.index') }}" title="{{ __('firefly.bills') }}">{{ __('firefly.bills') }}</a></div>
 
                 </div>
@@ -149,7 +149,7 @@
         <div class="col-lg-12 col-md-12 col-sm-12">
             <!--EXPENSE ACCOUNTS -->
             <div class="card mb-4">
-                <div class="card-header with-border">
+                <div class="card-header">
                     <div class="card-title"><a href="{{ route('accounts.index',['expense']) }}" title="{{ __('firefly.expense_accounts') }}">{{ __('firefly.expense_accounts') }}</a>
                     </div>
                 </div>
@@ -164,7 +164,7 @@
             </div>
             <!--OPTIONAL REVENUE ACCOUNTS -->
             <div class="card mb-4">
-                <div class="card-header with-border">
+                <div class="card-header">
                     <div class="card-title"><a href="{{ route('accounts.index',['revenue']) }}"
                                              title="{{ __('firefly.revenue_accounts') }}">{{ __('firefly.revenue_accounts') }}</a></div>
 

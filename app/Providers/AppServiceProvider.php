@@ -24,6 +24,7 @@ declare(strict_types=1);
 namespace FireflyIII\Providers;
 
 use FireflyIII\Models\Account;
+use FireflyIII\Repositories\Account\AccountRepositoryInterface;
 use Illuminate\Support\Facades\Blade;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Response;
@@ -32,7 +33,6 @@ use Illuminate\Support\Facades\Schema;
 use Illuminate\Support\ServiceProvider;
 use Laravel\Passport\Passport;
 use Override;
-
 use function Safe\preg_match;
 
 /**
@@ -49,9 +49,10 @@ class AppServiceProvider extends ServiceProvider
         Passport::$validateKeyPermissions = false;
 
         Schema::defaultStringLength(191);
+
         Response::macro('api', function (array $value) {
             $headers = ['Cache-Control' => 'no-store'];
-            $uuid    = (string) request()->header('X-Trace-Id');
+            $uuid    = (string)request()->header('X-Trace-Id');
             if ('' !== trim($uuid) && 1 === preg_match('/^[a-f\d]{8}(-[a-f\d]{4}){4}[a-f\d]{8}$/i', trim($uuid))) {
                 $headers['X-Trace-Id'] = $uuid;
             }
@@ -59,24 +60,37 @@ class AppServiceProvider extends ServiceProvider
             return response()->json($value)->withHeaders($headers);
         });
 
-        // blade extension for active menu link
-        Blade::directive('menuItemActive', function (string $route): string {
+
+        // blade extension for active top menu sub menu (like "accounts")
+        // TODO DO NOT USE ME
+        Blade::directive('menuSubActive', function (string $route): string {
+            $route = trim($route, "'");
             $name = Route::getCurrentRoute()->getName() ?? '';
-            Log::debug(sprintf('menuItemActive("%s", "%s")', $route, $name));
-            if (str_contains($route, $name)) {
-                return 'active';
+            Log::debug(sprintf('menuSubActive("%s", "%s")', $route, $name));
+            if (str_contains($name, $route)) {
+                return 'menu-open';
             }
 
             return '';
         });
 
+        // blade extension for active top menu sub menu item (like "accounts" => "asset accounts)
+        // TODO DO NOT USE ME
+        Blade::directive('menuSubItemActive', function (string $routeAndType): string {
+
+        });
+
+
+        // TODO @deprecated
         // blade extension for account balance.
         Blade::directive('balance', function (string $account): string {
-            var_dump($account);exit;
+            var_dump($account);
+            exit;
             return $account;
             return 'blablabla';
         });
 
+        // TODO @deprecated
         // blade extension
         Blade::directive('activeXRoutePartial', function (string $route): string {
             $name = Route::getCurrentRoute()->getName() ?? '';
@@ -87,14 +101,14 @@ class AppServiceProvider extends ServiceProvider
             return '';
         });
         Blade::if('partialroute', function (string $route, string $firstParam = ''): bool {
-            $name       = Route::getCurrentRoute()->getName() ?? '';
+            $name = Route::getCurrentRoute()->getName() ?? '';
             if ('' === $firstParam && str_contains($name, $route)) {
                 return true;
             }
 
             /** @var null|array $params */
             $params     = Route::getCurrentRoute()->parameters();
-            $params ??= [];
+            $params     ??= [];
             $objectType = $params['objectType'] ?? '';
 
             return $objectType === $firstParam && str_contains($name, $route);

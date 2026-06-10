@@ -24,7 +24,8 @@ declare(strict_types=1);
 
 use Carbon\Carbon;
 use FireflyIII\Exceptions\FireflyException;
-use FireflyIII\Models\TransactionCurrency;
+use FireflyIII\Models\Account;
+use FireflyIII\Repositories\Account\AccountRepositoryInterface;
 use FireflyIII\Support\Facades\Amount;
 use FireflyIII\Support\Facades\Steam;
 use Illuminate\Support\Collection;
@@ -47,6 +48,19 @@ if (!function_exists('env_default_when_empty')) {
         }
 
         return $value;
+    }
+}
+
+if (!function_exists('bladeAccountGetMetaField')) {
+    function bladeAccountGetMetaField(Account $account, string $field): string
+    {
+        /** @var AccountRepositoryInterface $repository */
+        $repository = app(AccountRepositoryInterface::class);
+        $result     = $repository->getMetaValue($account, $field);
+        if (null === $result) {
+            return '';
+        }
+        return $result;
     }
 }
 

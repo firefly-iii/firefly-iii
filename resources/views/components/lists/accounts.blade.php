@@ -1,4 +1,4 @@
-<div class="ml-1">
+<div class="m-2">
     {{ $accounts->links('pagination.bootstrap-4') }}
 </div>
 <table class="table table-responsive table-hover" id="sortable-table">
@@ -38,111 +38,113 @@
     @foreach($accounts as $account)
     <tr class="sortable-object" data-id="{{ $account->id }}" data-order="{{ $account->order }}" data-position="{{ $loop->index }}">
         <td class="hidden-sm hidden-xs">
-            <span class="fa fa-fw fa-bars object-handle"></span>
+            <span class="bi bi-list object-handle"></span>
         </td>
         <td>
             <a href="{{ route('accounts.show',$account->id) }}">{{ $account->name }}</a>
-            {% if account.location %}
-            <span class="fa fa-fw fa-map-marker"></span>
-            {% endif %}
-            {% if account.attachments.count() > 0 %}
-            <span class="fa fa-fw fa-paperclip"></span>
-            {% endif %}
+            @if($account->location)
+                <span class="bi bi-map"></span>
+            @endif
+            @if($account->attachments->count() > 0)
+                <span class="bi bi-paperclip"></span>
+            @endif
         </td>
-        {% if objectType == "asset" %}
+        @if('asset' === $objectType)
         <td class="hidden-sm hidden-xs hidden-md">
-            {% for entry in account.accountmeta %}
-            {% if entry.name == 'account_role' %}
-            {{ __('firefly.account_role_'.$entry['data']) }}
-            {% endif %}
-            {% endfor %}
+            @foreach($account->accountMeta as $entry)
+            @if('account_role' === $entry->name)
+                {{ __('firefly.account_role_'.$entry['data']) }}
+            @endif
+            @endforeach
         </td>
-        {% endif %}
-        {% if objectType == 'liabilities' %}
+        @endif
+        @if('liabilities' === $objectType)
         <td>{{ $account->accountTypeString }}</td>
         <td>{{ trans('firefly.liability_direction_' . $account->liability_direction . '_short')  }}</td>
         <td>{{ $account->interest }}% ({{ strtolower($account->interestPeriod) }})</td>
-        {% endif %}
-        <td class="hidden-sm hidden-xs">{{ $account->iban }}{% if account.iban == '' %}{{ accountGetMetaField($account, 'account_number') }}{% endif %}</td>
-        {% if objectType != 'liabilities' %}
+        @endif
+        <td class="hidden-sm hidden-xs">{{ $account->iban }} @if('' === $account->iban) {{ bladeAccountGetMetaField($account, 'account_number') }}@endif</td>
+        @if('liabilities' !== $objectType)
         <td class="text-right">
                 <span class="mr-2">
-                    {% for key, balance in account.endBalances %}
+                    @foreach($account->endBalances as $key => $balance)
                         <span title="{{ $key }}">
-                        {% if 'balance' == key %}
-                            {% if not convertToPrimary %}
-                                {{ formatAmountBySymbol($balance, $account->currency->symbol, $account->currency->decimal_places)  }}
-                            {% endif %}
-                        {% elseif 'pc_balance' == key %}
-                            {% if convertToPrimary %}
-                                {{ formatAmountBySymbol($balance, $primaryCurrency->symbol, $primaryCurrency->decimal_places)  }}
-                            {% endif %}
-                        {% else %}
-                            ({{ formatAmountByCode($balance, $key)  }})
-                        {% endif %}
+                        @if('balance' === $key)
+                            @if(!$convertToPrimary)
+                                {!! \FireflyIII\Support\Facades\Steam::formatAmountBySymbol($balance, $account->currency->symbol, $account->currency->decimal_places) !!}
+                            @endif
+                        @elseif('pc_balance' === $key)
+                            @if($convertToPrimary)
+                                {!! \FireflyIII\Support\Facades\Steam::formatAmountBySymbol($balance, $primaryCurrency->symbol, $primaryCurrency->decimal_places)   !!}
+                            @endif
+                        @else
+                            ({!! \FireflyIII\Support\Facades\Steam::formatAmountByCode($balance, $key)   !!})
+                        @endif
                         </span>
-                    {% endfor %}
+                    @endforeach
                 </span>
         </td>
-        {% endif %}
-        {% if objectType == 'liabilities' %}
+        @endif
+        @if('liabilities' === $objectType)
         <td class="text-right">
-            {% if '-' != account.current_debt %}
+            @if('' !== $account->current_debt)
             <span class="text-info money-transfer">
-                        {{ formatAmountBySymbol($account->current_debt, $account->currency->symbol, $account->currency->decimal_places, false) }}
+                        {!!  \FireflyIII\Support\Facades\Steam::formatAmountBySymbol($account->current_debt, $account->currency->symbol, $account->currency->decimal_places, false)  !!}
                     </span>
-            {% endif %}
+            @endif
         </td>
-        {% endif %}
+        @endif
         <td class="hidden-sm hidden-xs">
-            {% if account.active %}
-            <span class="fa fa-fw fa-check"></span>
-            {% else %}
-            <span class="fa fa-fw fa-ban"></span>
-            {% endif %}
+            @if($account->active)
+                <span class="bi bi-check"></span>
+            @endif
+                @if(!$account->active)
+            <span class="bi bi-ban"></span>
+            @endif
         </td>
-        {# hide last activity to make room for other stuff #}
-        {% if objectType != 'liabilities' %}
-        {% if account.lastActivityDate %}
+        {{-- hide last activity to make room for other stuff --}}
+        @if('liabilities' !== $objectType)
+        @if($account->lastActivityDate)
         <td class="hidden-sm hidden-xs hidden-md">
             <!-- {{ $account->lastActivityDate }} -->
-            {{ $account->lastActivityDate->isoFormat($monthAndDayFormat) }}
+            {{ $account->lastActivityDate?->isoFormat($monthAndDayFormat) }}
         </td>
-        {% else %}
+        @else
         <td class="hidden-sm hidden-xs hidden-md">
-            <em>{{ 'never'|_ }}</em>
+            <em>{{ __('firefly.never') }}</em>
         </td>
-        {% endif %}
-        {% endif %}
+        @endif
+        @endif
         <td class="text-right hidden-sm hidden-xs hidden-md">
                 <span class="mr-1">
-                    {% for key, balance in account.differences %}
+                    @foreach($account->differences as $key => $balance)
                         <span title="{{ $key }}">
-                              {% if 'balance' == key %}
-                                  {% if not convertToPrimary %}
-                                      {{ formatAmountBySymbol($balance, $account->currency->symbol, $account->currency->decimal_places)  }}
-                                  {% endif %}
-                              {% elseif 'pc_balance' == key %}
-                                  {% if convertToPrimary %}
-                                      {{ formatAmountBySymbol($balance, $primaryCurrency->symbol, $primaryCurrency->decimal_places)  }}
-                                  {% endif %}
-                              {% else %}
-                                  ({{ formatAmountByCode($balance, $key)  }})
-                              {% endif %}
+                            @if('balance' === $key)
+                                @if(!$convertToPrimary)
+                                      {!! \FireflyIII\Support\Facades\Steam::formatAmountBySymbol($balance, $account->currency->symbol, $account->currency->decimal_places) !!}
+                                  @endif
+                            @elseif('pc_balance' === $key)
+                                @if($convertToPrimary)
+                                      {!! \FireflyIII\Support\Facades\Steam::formatAmountBySymbol($balance, $primaryCurrency->symbol, $primaryCurrency->decimal_places) !!}
+                                  @endif
+                              @else
+                                  ({!! \FireflyIII\Support\Facades\Steam::formatAmountByCode($balance, $key) !!})
+                              @endif
                             </span>
-                    {% endfor %}
+                    @endforeach
                 </span>
         </td>
-        <td class="hidden-sm hidden-xs">
-            <div class="btn-group btn-group-xs pull-right">
-                <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                    {{ __('firefly.actions') }} <span class="caret"></span></button>
-                <ul class="dropdown-menu dropdown-menu-right" role="menu">
-                    <li><a href="{{ route('accounts.edit',$account->id) }}"><span class="fa fa-fw fa-pencil"></span> {{ __('firefly.edit') }}</a></li>
-                    <li><a href="{{ route('accounts.delete',$account->id) }}"><span class="fa fa-fw fa-trash"></span> {{ __('firefly.delete') }}</a></li>
-                    {% if objectType == 'asset' %}
-                    <li><a href="{{ route('accounts.reconcile',$account->id) }}"><span class="fa fa-fw fa-check"></span> {{ __('firefly.reconcile_this_account') }}</a></li>
-                    {% endif %}
+        <td class="hidden-sm hidden-xs justify-content-end">
+            <div class="dropdown">
+                <button class="btn btn-secondary btn-sm dropdown-toggle" type="button" id="action_menu_{{$account->id}}" data-bs-toggle="dropdown" aria-expanded="false">
+                    {{ __('firefly.actions') }}
+                </button>
+                <ul class="dropdown-menu" aria-labelledby="action_menu_{{$account->id}}">
+                    <li><a class="dropdown-item" href="{{ route('accounts.edit',$account->id) }}"><span class="bi bi-pencil"></span> {{ __('firefly.edit') }}</a></li>
+                    <li><a class="dropdown-item" href="{{ route('accounts.delete',$account->id) }}"><span class="bi bi-trash"></span> {{ __('firefly.delete') }}</a></li>
+                    @if('asset' === $objectType)
+                        <li><a class="dropdown-item" href="{{ route('accounts.reconcile',$account->id) }}"><span class="bi bi-check"></span> {{ __('firefly.reconcile_this_account') }}</a></li>
+                    @endif
                 </ul>
             </div>
         </td>
@@ -151,6 +153,6 @@
     @endforeach
     </tbody>
 </table>
-<div class="pl-3">
+<div class="m-2">
     {{ $accounts->links('pagination.bootstrap-4')}}
 </div>

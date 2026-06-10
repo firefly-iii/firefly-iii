@@ -10,14 +10,15 @@ use Illuminate\View\Component;
 
 class Accounts extends Component
 {
-    public LengthAwarePaginator|null $accounts = null;
+    public LengthAwarePaginator $accounts;
     public string $objectType = '';
     /**
      * Create a new component instance.
      */
-    public function __construct()
+    public function __construct(LengthAwarePaginator $accounts, string $objectType)
     {
-        //
+        $this->accounts = $accounts;
+        $this->objectType = $objectType;
     }
 
     /**
@@ -27,4 +28,6 @@ class Accounts extends Component
     {
         return view('components.lists.accounts');
     }
+
+
 }
