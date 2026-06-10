@@ -28,7 +28,7 @@ let index = function () {
     return {
         foo2: 'bar2',
         init() {
-            console.log('init op index xxx');
+            //console.log('init op index xxx');
         }
     }
 };
@@ -46,7 +46,7 @@ function loadPage(comps) {
     Object.keys(comps).forEach(comp => {
         let data = comps[comp]();
         Alpine.data(comp, () => data);
-        console.log(comp);
+        // console.log(comp);
     });
     Alpine.start();
 }

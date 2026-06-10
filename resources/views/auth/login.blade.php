@@ -1,4 +1,4 @@
-@extends('layout.v2.session')
+@extends('layout.v3.auth')
 @section('content')
 
     @if(true===$IS_DEMO_SITE)
