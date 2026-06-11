@@ -7,7 +7,7 @@
                     <div class="card-header">
                         <div class="row">
                             <div class="col">
-                                <div class="card-title">{{ trans('firefly.asset_accounts') }}</div>
+                                <div class="card-title">{{ trans('firefly.'.$objectType.'_accounts') }}</div>
                             </div>
                             <div class="col text-end">
                                 <div class="dropdown">
@@ -36,7 +36,7 @@
 
                     </div>
                 </div>
-                @if($inactiveCount > 0)
+                @if($inactiveCount > 0 && !$inactivePage)
                     <p class="m-2"><small>
                             <em>
                                 <a href="{{ route('accounts.inactive.index', $objectType) }}" class="text-muted">

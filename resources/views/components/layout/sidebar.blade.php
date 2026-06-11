@@ -146,19 +146,19 @@
                 </a>
             </li>
             <li class="nav-item">
-                <a href="{{ route('accounts.index', ['expense']) }}" class="nav-link">
+                <a href="{{ route('accounts.index', ['expense']) }}" class="nav-link {{ \FireflyIII\Support\Blade\Navigation::menuSubItemActive('accounts.index','expense') }}">
                     <em class="nav-icon bi bi-cart"></em>
                     <p>{{trans('firefly.expense_accounts')}}</p>
                 </a>
             </li>
             <li class="nav-item">
-                <a href="{{ route('accounts.index', ['revenue']) }}" class="nav-link">
+                <a href="{{ route('accounts.index', ['revenue']) }}" class="nav-link {{ \FireflyIII\Support\Blade\Navigation::menuSubItemActive('accounts.index','revenue') }}">
                     <em class="nav-icon bi bi-box-arrow-down"></em>
                     <p>{{ __('firefly.revenue_accounts') }}</p>
                 </a>
             </li>
             <li class="nav-item">
-                <a href="{{ route('accounts.index', ['liabilities']) }}" class="nav-link">
+                <a href="{{ route('accounts.index', ['liabilities']) }}" class="nav-link {{ \FireflyIII\Support\Blade\Navigation::menuSubItemActive('accounts.index','liabilities') }}">
                     <em class="nav-icon bi bi-ticket-detailed"></em>
                     <p>{{ __('firefly.liabilities_accounts') }}</p>
                 </a>

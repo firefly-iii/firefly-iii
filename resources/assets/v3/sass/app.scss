@@ -39,6 +39,32 @@ $success: #64B624;
 
 
 @import 'shepherd.js/dist/css/shepherd.css';
+
+// custom Firefly III CSS
+.general-chart-error {
+    height: 30px;
+    background: url('/v1/images/error.png') no-repeat center center;
+}
+.piggy-handle {
+    cursor: move;
+}
+.object-handle {
+    cursor: move;
+}
+.rule-handle {
+    cursor: move;
+}
+.bill-handle {
+    cursor: move;
+}
+
+body.waiting * {
+    cursor: progress;
+}
+
+
+
+
 // @import "admin-lte/dist/css/adminlte.min.css";
 
 //

@@ -82,6 +82,7 @@ final class IndexController extends Controller
         $page                          = 0 === (int) $request->get('page') ? 1 : (int) $request->get('page');
         $pageSize                      = (int) Preferences::get('listPageSize', 50)->data;
         $accounts                      = $collection->slice(($page - 1) * $pageSize, $pageSize);
+        $inactiveCount                 = $this->repository->getInactiveAccountsByType($types)->count();
         unset($collection);
 
         /** @var Carbon $start */
@@ -116,6 +117,7 @@ final class IndexController extends Controller
         return view('accounts.index', [
             'objectType'   => $objectType,
             'inactivePage' => $inactivePage,
+            'inactiveCount' => $inactiveCount,
             'subTitleIcon' => $subTitleIcon,
             'subTitle'     => $subTitle,
             'page'         => $page,
