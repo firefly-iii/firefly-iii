@@ -23,6 +23,7 @@
  */
 $(function () {
     "use strict";
+    console.log('Here we are, loaded /budgets.');
     /*
      On start, fill the "spent"-bar using the content from the page.
      */

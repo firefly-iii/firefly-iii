@@ -24,15 +24,23 @@
                         </div>
                     </div>
                     <div class="card-body p-0">
-                        <p class="m-2">
-                            <a href="{{ route('accounts.create', $objectType) }}" class="btn btn-success"><span class="bi bi-plus-circle"></span> {{ __('firefly.make_new_' . $objectType . '_account') }}</a>
-                        </p>
                         <x-lists.accounts :accounts="$accounts" :objectType="$objectType" />
                     </div>
-                    <div class="card-footer p-0">
-                        <p class="m-2">
-                            <a href="{{ route('accounts.create', $objectType) }}" class="btn btn-success"><span class="bi bi-plus-circle"></span> {{ __('firefly.make_new_' . $objectType . '_account') }}</a>
-                        </p>
+                    <div class="card-footer">
+                        <div class="row">
+                            <div class="col text-end">
+                                <div class="dropdown">
+                                    <button class="btn btn-sm btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton1" data-bs-toggle="dropdown" aria-expanded="false">
+                                        <span class="bi bi-list"></span>
+                                    </button>
+                                    <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton1">
+                                        <li><a class="dropdown-item" href="{{ route('accounts.create', $objectType) }}"><span
+                                                    class="bi bi-plus-circle"></span> {{ __('firefly.make_new_'. $objectType . '_account') }}
+                                            </a></li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
 
                     </div>
                 </div>
@@ -47,7 +55,7 @@
                     </p>
                 @endif
                 @if($inactivePage)
-                    <p class="m-2""><small class="text-muted">
+                    <p class="m-2"><small class="text-muted">
                             <em>
                                 {{ trans('firefly.all_accounts_inactive') }}
                                 <a href="{{ route('accounts.index', $objectType) }}">
@@ -61,6 +69,7 @@
         </div>
     @endif
     @if(0 === count($accounts) && 1 === $page)
+        TODO TODO TODO TODO
         {% include 'partials.empty' with {objectType: objectType, type: 'accounts',route: route('accounts.create', [objectType])} %}
 
         @if($inactiveCount > 0)

@@ -31,6 +31,7 @@ var fixObjectHelper = function (e, tr) {
 
 $(function () {
     "use strict";
+    console.log('Here we are, loaded.');
     // table may have multiple tbody's.
     $('#sortable-table').find('tbody').sortable(
         {

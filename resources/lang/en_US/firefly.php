@@ -1866,6 +1866,7 @@ return [
     'update_budget_amount_range'                          => 'Update (expected) available amount between :start and :end',
     'set_budget_limit_title'                              => 'Set budgeted amount for budget :budget between :start and :end',
     'set_budget_limit'                                    => 'Set budgeted amount',
+    'add_budget_limit_currency'=> 'Set budgeted amount in another currency',
     'budget_period_navigator'                             => 'Period navigator',
     'info_on_available_amount'                            => 'What do I have available?',
     'available_amount_indication'                         => 'Use these amounts to get an indication of what your total budget could be.',

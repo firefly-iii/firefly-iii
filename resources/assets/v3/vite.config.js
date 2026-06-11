@@ -49,6 +49,9 @@ export default defineConfig(({command, mode, isSsrBuild, isPreview}) => {
 
                     // accounts
                     'js/pages/accounts/index.js',
+
+                    // budgets
+                    'js/pages/budgets/index.js',
                 ],
                 buildDirectory: '../../../../public/build',
                 // publicDirectory: '../../../public',

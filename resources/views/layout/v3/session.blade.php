@@ -17,7 +17,7 @@
         @if('' !== (string)($pageTitle ?? ''))
             {{ $pageTitle }} »
         @endif
-        @if('' !== (string)$subTitle && '' === (string) ($pageTitle ?? ''))
+        @if($subTitle ?? false && '' !== (string)$subTitle && '' === (string) ($pageTitle ?? ''))
             {{ $subTitle }} »
         @endif
         @if('Firefly III' !== $title)
@@ -267,9 +267,11 @@
                             <em class="bi {{ $mainTitleIcon }}"></em>
                             {{ $pageTitle ?? $title ?? '(no title)' }}
 
+                            @if($subTitle ?? false)
                             <small class="text-xs text-muted">@if(isset($subTitleIcon))
                                     <em class="bi {{ $subTitleIcon }}"></em>
                                 @endif{{$subTitle}}</small>
+                            @endif
                         </h3>
                     </div>
 
@@ -302,52 +304,21 @@
                 />
 
                 @yield('content')
-
-                <!--begin::Row-->
-                <!--end::Row-->
-                <!--begin::Row-->
-                <!-- /.row (main row) -->
             </div>
-            <!--end::Container-->
         </div>
-        <!--end::App Content-->
     </main>
-    <!--end::App Main-->
-    <!--begin::Footer-->
     <footer class="app-footer">
-        <!--begin::To the end-->
         <div class="float-end d-none d-sm-inline">
             <a href="{{route('debug')}}">v{{ $FF_VERSION }}</a>
         </div>
-        <!--end::To the end-->
-        <!--begin::Copyright-->
         <span>
             <a href="https://www.firefly-iii.org/" target="_blank" title="Firefly III">Firefly III</a> &copy; James Cole, <a
                 href="https://www.gnu.org/licenses/agpl-3.0.html" title="AGPL-3.0-or-later.">AGPL-3.0-or-later</a>.
-            TODO BETA WARNING
-            TODO ALPHA WARNING
-            TODO DEV RELEASE WARNING
-            {{--
-                    {% if FF_IS_ALPHA %}<small class="text-danger hidden-xs"><br>{{ 'is_alpha_warning'|_ }}</small>{% endif %}
-        {% if FF_IS_BETA %}<small class="text-warning hidden-xs"><br>{{ 'is_beta_warning'|_ }}</small>{% endif %}
-
-            --}}
+            @if($FF_IS_ALPHA)<small class="text-danger hidden-xs"><br>{{ __('firefly.is_alpha_warning') }}</small>@endif
+            @if($FF_IS_BETA)<small class="text-warning hidden-xs"><br>{{ __('firefly.is_beta_warning') }}</small>@endif
         </span>
-        <!--end::Copyright-->
     </footer>
-    <!--end::Footer-->
 </div>
-<!--end::App Wrapper-->
-<!--begin::Script-->
-<!--begin::Third Party Plugin(OverlayScrollbars)-->
-<!--end::Third Party Plugin(OverlayScrollbars)--><!--begin::Required Plugin(popperjs for Bootstrap 5)-->
-<!--end::Required Plugin(popperjs for Bootstrap 5)--><!--begin::Required Plugin(Bootstrap 5)-->
-<!--end::Required Plugin(Bootstrap 5)--><!--begin::Required Plugin(AdminLTE)-->
-<!--end::Required Plugin(AdminLTE)-->
-<!--begin::OverlayScrollbars Configure-->
-
-<!--end::OverlayScrollbars Configure-->
-
 
 {{-- Moment JS  --}}
 <script src="v1/js/lib/moment.min.js?v={{ $FF_BUILD_TIME }}" type="text/javascript" nonce="{{ $JS_NONCE }}"></script>
@@ -363,7 +334,6 @@
 <script src="v1/js/app.js?v={{ $FF_BUILD_TIME }}" type="text/javascript" nonce="{{ $JS_NONCE }}"></script>
 
 {{-- introduction --}}
-<!-- intro -->
 @if(!$shownDemo)
     <script type="text/javascript" nonce="{{ $JS_NONCE }}">
         var showTour = true;
@@ -389,13 +359,6 @@
 
 @yield('scripts')
 
-
-<!-- start: previous color mode -->
-
-
-<!-- end: previous color mode -->
-
-<!--begin::Color Mode Toggle (#6010)-->
 <script nonce="{{ $JS_NONCE }}">
     (() => {
         'use strict';
@@ -408,22 +371,12 @@
 
         const prefersDark = () => globalThis.matchMedia('(prefers-color-scheme: dark)').matches;
 
-        const getPreferredTheme = () => {
-            return '{{ $darkMode }}';
-            // if ('dark' === stored || 'light' === stored) {
-            //     console.log('Later: getPreferredTheme returns ', stored);
-            //     return stored;
-            // }
-            // console.log('Later: getPreferredTheme returns ', prefersDark() ? 'dark' : 'light');
-            // return prefersDark() ? 'dark' : 'light';
-        };
-
         const setTheme = (theme) => {
             const resolved = theme === 'browser' ? (prefersDark() ? 'dark' : 'light') : theme;
             document.documentElement.setAttribute('data-bs-theme', resolved);
         };
 
-        setTheme(getPreferredTheme());
+        setTheme('{{ $darkMode }}');
 
         const showActiveTheme = (theme) => {
             // Highlight the active dropdown option
@@ -448,11 +401,11 @@
 
         globalThis.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', () => {
             const stored = '{{ $darkMode }}';
-            if (!stored || stored === 'browser') setTheme(getPreferredTheme());
+            if (!stored || stored === 'browser') setTheme('{{ $darkMode }}');
         });
 
         document.addEventListener('DOMContentLoaded', () => {
-            showActiveTheme(getPreferredTheme());
+            showActiveTheme('{{ $darkMode }}');
             document.querySelectorAll('[data-bs-theme-value]').forEach((toggle) => {
                 toggle.addEventListener('click', () => {
                     const theme = toggle.getAttribute('data-bs-theme-value');
@@ -464,22 +417,6 @@
         });
     })();
 </script>
-<!--end::Color Mode Toggle-->
-
-<!-- OPTIONAL SCRIPTS -->
-
-<!-- sortablejs -->
-
-<!-- sortablejs -->
-
-<!-- apexcharts -->
-
-<!-- ChartJS -->
-
-<!-- jsvectormap -->
-<!-- jsvectormap -->
-<!--end::Script-->
-
 <form id="logout-form" action="{{ route('logout') }}" method="POST" class="hidden">
     <input type="hidden" name="_token" value="{{ csrf_token() }}"/>
 </form>
@@ -582,8 +519,7 @@
                     </div>
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary"
-                            data-bs-dismiss="modal">{{ __('firefly.close') }}</button>
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">{{ __('firefly.close') }}</button>
                     <button type="submit" class="btn btn-primary">{{ trans('firefly.submit') }}</button>
                 </div>
             </div>
@@ -591,6 +527,8 @@
     </div>
 </div>
 
+<div class="modal fade" id="defaultModal" tabindex="-1" role="dialog">
+</div>
 
 <div class="modal fade" tabindex="-1" role="dialog" id="helpModal">
     <div class="modal-dialog modal-lg">
@@ -607,8 +545,7 @@
                 <small class="pull-left">
                     {!!  trans('firefly.reenable_intro_text')  !!}
                 </small>
-                <button type="button" class="btn btn-primary"
-                        data-bs-dismiss="modal">{{ trans('firefly.close') }}</button>
+                <button type="button" class="btn btn-primary" data-bs-dismiss="modal">{{ trans('firefly.close') }}</button>
             </div>
         </div>
     </div>
