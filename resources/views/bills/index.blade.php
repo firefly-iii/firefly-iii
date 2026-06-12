@@ -1,46 +1,58 @@
-{% extends './layout/default' %}
-
-{% block breadcrumbs %}
-    {{ Breadcrumbs.render(Route.getCurrentRoute.getName) }}
-{% endblock %}
-
-{% block content %}
-    {% if total == 0 %}
+@extends('layout.v3.session')
+@section('content')
+    @if(0 === $total)
+        TODO TODO TODO
         {% include 'partials.empty' with {objectType: 'default', type: 'bills',route: route('subscriptions.create')} %}
-    {% else %}
+    @endif
+    @if($total > 0)
         <div class="row">
             <div class="col-lg-12 col-sm-12 col-md-12">
-                <div class="box">
-                    <div class="box-header with-border">
-                        <h3 class="box-title">{{ title }}</h3>
-                        <div class="box-tools pull-right">
-                            <div class="btn-group">
-                                <button class="btn btn-box-tool dropdown-toggle" data-toggle="dropdown"><span class="fa fa-ellipsis-v"></span></button>
-                                <ul class="dropdown-menu" role="menu">
-                                    <li><a href="{{ route('subscriptions.create') }}"><span class="fa fa-plus fa-fw"></span> {{ 'new_bill'|_ }}</a></li>
-                                </ul>
+                <div class="card mb-2">
+                    <div class="card-header">
+                        <div class="row">
+                            <div class="col">
+                                <h3 class="card-title">{{ $title }}</h3>
+                            </div>
+                            <div class="col text-end">
+                                <div class="dropdown">
+                                    <button class="btn btn-sm btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton1" data-bs-toggle="dropdown" aria-expanded="false">
+                                        <span class="bi bi-list"></span>
+                                    </button>
+                                    <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton1">
+                                        <li><a class="dropdown-item" href="{{ route('subscriptions.create') }}"><span
+                                                    class="bi bi-plus-circle"></span> {{ __('firefly.create_new_bill') }}
+                                            </a></li>
+                                    </ul>
+                                </div>
                             </div>
                         </div>
                     </div>
-                    <div class="box-body no-padding">
-                        <div class="m-1">
-                            <a class="btn btn-success" href="{{ route('subscriptions.create') }}"><span class="fa fa-plus fa-fw"></span> {{ 'create_new_bill'|_ }}</a>
-                        </div>
-                        {% include 'list/bills' %}
+                    <div class="card-body p-0">
+                        <x-lists.subscriptions :bills="$bills" :sums="$sums" :totals="$totals" />
                     </div>
-                    <div class="box-footer">
-                        <a class="btn btn-success" href="{{ route('subscriptions.create') }}"><span class="fa fa-plus fa-fw"></span> {{ 'create_new_bill'|_ }}</a>
+                    <div class="card-footer">
+                        <div class="row">
+                            <div class="col text-end">
+                                <div class="dropdown">
+                                    <button class="btn btn-sm btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton1" data-bs-toggle="dropdown" aria-expanded="false">
+                                        <span class="bi bi-list"></span>
+                                    </button>
+                                    <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton1">
+                                        <li><a class="dropdown-item" href="{{ route('subscriptions.create') }}"><span
+                                                    class="bi bi-plus-circle"></span> {{ __('firefly.create_new_bill') }}
+                                            </a></li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
         </div>
-    {% endif %}
-{% endblock %}
-
-{% block styles %}
-{% endblock %}
-
-{% block scripts %}
-    <script src="v1/js/lib/jquery-ui.min.js?v={{ FF_BUILD_TIME }}" type="text/javascript" nonce="{{ JS_NONCE }}"></script>
-    <script type="text/javascript" src="v1/js/ff/bills/index.js?v={{ FF_BUILD_TIME }}" nonce="{{ JS_NONCE }}"></script>
-{% endblock %}
+@endif
+@endsection
+@section('scripts')
+    @vite(['js/pages/subscriptions/index.js'])
+    <script src="v1/js/lib/jquery-ui.min.js?v={{ $FF_BUILD_TIME }}" type="text/javascript" nonce="{{ $JS_NONCE }}"></script>
+    <script type="text/javascript" src="v1/js/ff/bills/index.js?v={{ $FF_BUILD_TIME }}" nonce="{{ $JS_NONCE }}"></script>
+@endsection

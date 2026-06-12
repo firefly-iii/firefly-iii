@@ -5,21 +5,21 @@ namespace FireflyIII\View\Components\Lists;
 use Closure;
 use Illuminate\Contracts\View\View;
 use Illuminate\Pagination\LengthAwarePaginator;
-use Illuminate\Support\Collection;
 use Illuminate\View\Component;
 
-class Accounts extends Component
+class Subscriptions extends Component
 {
-    public LengthAwarePaginator $accounts;
-    public string $objectType = '';
-
+    public array $bills;
+    public array $sums;
+    public array $totals;
     /**
      * Create a new component instance.
      */
-    public function __construct(LengthAwarePaginator $accounts, string $objectType)
+    public function __construct(array $bills, array $sums, array $totals)
     {
-        $this->accounts = $accounts;
-        $this->objectType = $objectType;
+        $this->bills = $bills;
+        $this->sums = $sums;
+        $this->totals = $totals;
     }
 
     /**
@@ -27,8 +27,6 @@ class Accounts extends Component
      */
     public function render(): View|Closure|string
     {
-        return view('components.lists.accounts');
+        return view('components.lists.subscriptions');
     }
-
-
 }
