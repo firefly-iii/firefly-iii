@@ -55,6 +55,9 @@ export default defineConfig(({command, mode, isSsrBuild, isPreview}) => {
 
                     // subscriptions
                     'js/pages/subscriptions/index.js',
+
+                    // piggy banks
+                    'js/pages/piggy-banks/index.js',
                 ],
                 buildDirectory: '../../../../public/build',
                 // publicDirectory: '../../../public',

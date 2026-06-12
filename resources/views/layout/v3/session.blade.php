@@ -96,6 +96,17 @@
             </ul>
             <!--begin::End Navbar Links-->
             <ul class="navbar-nav ms-auto">
+                <li class="nav-item">
+                    <span class="nav-link">
+                        Size:
+                        <span class="d-inline d-sm-none">xs</span>
+                        <span class="d-none d-sm-inline d-md-none">sm</span>
+                        <span class="d-none d-md-inline d-lg-none">md</span>
+                        <span class="d-none d-lg-inline d-xl-none">lg</span>
+                        <span class="d-none d-xl-inline d-xxl-none">xl</span>
+                        <span class="d-none d-xxl-inline">xxl</span>
+                    </span>
+                </li>
                 <!--begin::Navbar Search-->
                 <li class="nav-item">
                     <a class="nav-link" data-widget="navbar-search" href="{{route('search.index')}}" role="button">
