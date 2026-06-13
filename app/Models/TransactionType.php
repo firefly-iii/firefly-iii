@@ -25,6 +25,7 @@ namespace FireflyIII\Models;
 
 use FireflyIII\Enums\TransactionTypeEnum;
 use FireflyIII\Support\Models\ReturnsIntegerIdTrait;
+use Illuminate\Auth\AuthenticationException;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
@@ -50,7 +51,7 @@ class TransactionType extends Model
     public static function routeBinder(self|string $value): self
     {
         if (!auth()->check()) {
-            throw new NotFoundHttpException();
+            throw new AuthenticationException();
         }
         if ($value instanceof self) {
             $value = (string) $value->type;

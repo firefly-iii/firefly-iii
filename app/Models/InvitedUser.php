@@ -29,6 +29,7 @@ use FireflyIII\Casts\SeparateTimezoneCaster;
 use FireflyIII\Support\Models\ReturnsIntegerIdTrait;
 use FireflyIII\Support\Models\ReturnsIntegerUserIdTrait;
 use FireflyIII\User;
+use Illuminate\Auth\AuthenticationException;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
@@ -61,7 +62,7 @@ class InvitedUser extends Model
             }
         }
 
-        throw new NotFoundHttpException();
+        throw new AuthenticationException();
     }
 
     public function user(): BelongsTo

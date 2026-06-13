@@ -24,6 +24,7 @@ declare(strict_types=1);
 namespace FireflyIII\Models;
 
 use FireflyIII\Support\Models\ReturnsIntegerIdTrait;
+use Illuminate\Auth\AuthenticationException;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
@@ -54,7 +55,7 @@ class LinkType extends Model
             }
         }
 
-        throw new NotFoundHttpException();
+        throw new AuthenticationException();
     }
 
     public function transactionJournalLinks(): HasMany
