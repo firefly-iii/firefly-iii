@@ -51,6 +51,13 @@ if (!function_exists('env_default_when_empty')) {
     }
 }
 
+if(!function_exists('formatAmountBySymbol')) {
+    function formatAmountBySymbol(string $amount, ?string $symbol = null, ?int $decimalPlaces = null, ?bool $coloured = null): string
+    {
+        return Steam::formatAmountBySymbol($amount, $symbol, $decimalPlaces, $coloured);
+    }
+}
+
 if (!function_exists('bladeAccountGetMetaField')) {
     function bladeAccountGetMetaField(Account $account, string $field): string
     {

@@ -68,6 +68,13 @@ body.waiting * {
 .bottom-light-border {border-bottom:1px #aaa solid;}
 
 
+/** new classes because of CSP */
+.wide-chart {width:100%;height:400px;}
+.low-chart {width:100%;height:200px;}
+.medium-chart {width:100%;height:250px;}
+.center-chart {width:100%;margin:0 auto;}
+.map-size {width:100%;height:300px;}
+
 
 // @import "admin-lte/dist/css/adminlte.min.css";
 
