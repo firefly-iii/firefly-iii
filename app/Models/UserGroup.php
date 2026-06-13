@@ -27,6 +27,7 @@ namespace FireflyIII\Models;
 use FireflyIII\Enums\UserRoleEnum;
 use FireflyIII\Support\Models\ReturnsIntegerIdTrait;
 use FireflyIII\User;
+use Illuminate\Auth\AuthenticationException;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
@@ -69,7 +70,7 @@ class UserGroup extends Model
             }
         }
 
-        throw new NotFoundHttpException();
+        throw new AuthenticationException();
     }
 
     /**
