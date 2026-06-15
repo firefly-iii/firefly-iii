@@ -94,7 +94,7 @@
         {{-- boxes with info --}}
         @if(count($periods) > 0)
             <div class="col-lg-2 col-md-2 col-sm-12 col-xs-12">
-                {% include 'list.periods' %}
+                <x-lists.periods :periods="$periods" />
             </div>
         @endif
 

@@ -1,8 +1,10 @@
 @extends('layout.v3.session')
 @section('content')
     @if(0 === $total)
-        TODO TODO TODO
-        {% include 'partials.empty' with {objectType: 'default', type: 'bills',route: route('subscriptions.create')} %}
+        @php
+            $shownDemo = true
+        @endphp
+        <x-empty-page :route="route('subscriptions.create')" type="bills" object-type="default" />
     @endif
     @if($total > 0)
         <div class="row">

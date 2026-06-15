@@ -1,8 +1,7 @@
 @extends('layout.v3.session')
 @section('content')
     @if(0 === count($piggyBanks))
-    TODO TODO TODO TODO
-        {% include 'partials.empty' with {objectType: 'default', type: 'piggies',route: route('piggy-banks.create')} %}
+        <x-empty-page :route="route('piggy-banks.create')" type="piggies" object-type="default" />
     @endif
     @if(count($piggyBanks) > 0)
         <div class="row">

@@ -1,7 +1,7 @@
 <table class="table table-condensed table-hover table-responsive">
     <thead>
     <tr>
-        @if($showCategory || $showBudget)
+        @if($showCategory || ($showBudget ?? false))
         <td colspan="7" class="no-margin-pagination">{{ $groups->links('pagination.bootstrap-4') }}</td>
         @else
         <td colspan="6" class="no-margin-pagination">{{ $groups->links('pagination.bootstrap-4') }}</td>
@@ -42,7 +42,7 @@
         @if($showCategory)
         <th class="d-xs-none">{{ trans('list.category') }}</th>
         @endif
-        @if($showBudget)
+        @if($showBudget ?? false)
         <th class="d-xs-none">{{ trans('list.budget') }}</th>
         @endif
         <th class="d-xs-none">&nbsp;</th><!-- actions -->
@@ -85,7 +85,7 @@
             @endforeach
         </td>
         <!-- column to span accounts + extra fields -->
-        @if($showCategory || $showBudget)
+        @if($showCategory || $showBudget ?? false)
         <td class="top-light-border" colspan="3">&nbsp;</td>
         @else
         <td class="top-light-border" colspan="2">&nbsp;</td>
@@ -274,157 +274,146 @@
                 @endif
             @endif
         </td>
-        {% if (fireflyiiiconfig('use_running_balance', true)) %}
+        @if(\FireflyIII\Support\Facades\AppConfiguration::get('use_running_balance', true))
         <td class=" {{ $className }} text-end">
-            {# RUNNING BALANCE #}
-            {% if (null == transaction.balance_dirty or false == transaction.balance_dirty) and null != transaction.destination_balance_after and null != transaction.source_balance_after %}
-            {% if $transaction['transaction_type_type'] == 'Deposit' %}
-            {% if $transaction['source_account_id'] == $account?->id %}
-            <span title="Deposit, source">{{ formatAmountBySymbol(transaction.source_balance_after, $transaction['currency_symbol'], $transaction['currency_decimal_places']) }}</span>
-            {% else %}
-            {% if $transaction['source_account_type'] == 'Revenue account' %}
-            <span title="Deposit from revenue">{{ formatAmountBySymbol(transaction.destination_balance_after, $transaction['currency_symbol'], $transaction['currency_decimal_places']) }}</span>
-            {% else %}
-            <span title="Deposit from liab">{{ formatAmountBySymbol(transaction.destination_balance_after, $transaction['foreign_currency_symbol'], $transaction['foreign_currency_decimal_places']) }}</span>
-            {% endif %}
-            {# if this is a deposit from revenue account, use the destination account currency? For #12043 and #12169 #}
-            {# otherwise, keep at source account #}
-            {# changed from normal currency_symbol to foreign_currency_symbol for #12043 #}
-
-            {%  endif %}
-
-            {% elseif $transaction['transaction_type_type'] == 'Withdrawal' %}
-            {# withdrawal into a liability #}
-            {% if 'Loan' == transaction.destination_account_type or 'Mortgage' == transaction.destination_account_type or 'Debt' == transaction.destination_account_type %}
-            {% if currency.id == transaction.currency_id %}
-            {% if $account?->id == $transaction['source_account_id'] %}
-            <span title="Withdrawal, liab, source">{{ formatAmountBySymbol(transaction.source_balance_after, $transaction['currency_symbol'], $transaction['currency_decimal_places']) }}</span>
-            {% elseif $account?->id == transaction.destination_account_id %}
-            <span title="Withdrawal, liab, dest">{{ formatAmountBySymbol(transaction.destination_balance_after, $transaction['currency_symbol'], $transaction['currency_decimal_places']) }}</span>
-            {% else %}
-            -
-            {% endif %}
-            {% endif %}
-            {% if currency.id == transaction.foreign_currency_id and null != transaction.destination_balance_after and null != transaction.destination_balance_after %}
-            <span title="Withdrawal, liab, dest 2">{{ formatAmountBySymbol(transaction.destination_balance_after, $transaction['foreign_currency_symbol'] ?? $transaction['currency_symbol'], $transaction['foreign_currency_decimal_places'] ?? $transaction['currency_decimal_places']) }}</span>
-            {% endif %}
-            {# withdrawal into an expense account #}
-            {% else %}
-            {% if $account?->id == $transaction['source_account_id'] %}
-            <span title="Withdrawal, source">{{ formatAmountBySymbol(transaction.source_balance_after, $transaction['currency_symbol'], $transaction['currency_decimal_places']) }}</span>
-            {% elseif $account?->id == transaction.destination_account_id %}
-            <span title="Withdrawal, dest">{{ formatAmountBySymbol(transaction.destination_balance_after, $transaction['currency_symbol'], $transaction['currency_decimal_places']) }}</span>
-            {% else %}
-            -
-            {% endif %}
-            {% endif %}
-            {% elseif $transaction['transaction_type_type'] == 'Opening balance' %}
-            {% if $account?->id == $transaction['source_account_id'] %}
-            <span title="Opening balance, src">{{ formatAmountBySymbol(transaction.source_balance_after, $transaction['currency_symbol'], $transaction['currency_decimal_places']) }}</span>
-            {% elseif $account?->id == transaction.destination_account_id %}
-            <span title="Opening balance, dest">{{ formatAmountBySymbol(transaction.destination_balance_after, $transaction['currency_symbol'], $transaction['currency_decimal_places']) }}</span>
-            {% else %}
-            -
-            {% endif %}
-            {% elseif $transaction['transaction_type_type'] == 'Transfer' %}
-            {% if $account?->id == $transaction['source_account_id'] %}
-            <span title="Transfer, source">{{ formatAmountBySymbol(transaction.source_balance_after, $transaction['currency_symbol'], $transaction['currency_decimal_places']) }}</span>
-            {% else %}
-            {% if null == transaction.foreign_currency_id %}
-            <span title="Transfer, dest, normal currency">{{ formatAmountBySymbol(transaction.destination_balance_after, $transaction['currency_symbol'], $transaction['currency_decimal_places']) }}</span>
-            {% endif %}
-            {% if null != transaction.foreign_currency_id %}
-            <span title="Transfer, dest, foreign currency">{{ formatAmountBySymbol(transaction.destination_balance_after, $transaction['foreign_currency_symbol'], $transaction['foreign_currency_decimal_places']) }}</span>
-            {% endif %}
-            {% endif %}
-            {% else %}
+            {{-- RUNNING BALANCE --}}
+            @if((null === $transaction['balance_dirty'] || false === $transaction['balance_dirty']) && null !== $transaction['destination_balance_after'] && null !== $transaction['source_balance_after'])
+                @if('Deposit' === $transaction['transaction_type_type'])
+                    @if($transaction['source_account_id'] == $account?->id)
+                        <span title="Deposit, source">{{ formatAmountBySymbol($transaction['source_balance_after'], $transaction['currency_symbol'], $transaction['currency_decimal_places']) }}</span>
+                    @else
+                    @if('Revenue account' === $transaction['source_account_type'])
+                        <span title="Deposit from revenue">{{ formatAmountBySymbol($transaction['destination_balance_after'], $transaction['currency_symbol'], $transaction['currency_decimal_places']) }}</span>
+                    @else
+                        <span title="Deposit from liab">{{ formatAmountBySymbol($transaction['destination_balance_after'], $transaction['foreign_currency_symbol'], $transaction['foreign_currency_decimal_places']) }}</span>
+                    @endif
+                    {{-- if this is a deposit from revenue account, use the destination account currency? For #12043 and #12169. Otherwise, keep at source account -}}
+                    {{-- changed from normal currency_symbol to foreign_currency_symbol for #12043 --}}
+                @endif
+            @elseif('Withdrawal' === $transaction['transaction_type_type'])
+                {{-- withdrawal into a liability --}}
+                @if(in_array($transaction['destination_account_type'], ['Mortgage','Debt','Loan'], true))
+                    @if($currency['id'] === $transaction['currency_id'])
+                        @if($account?->id === $transaction['source_account_id'])
+                            <span title="Withdrawal, liab, source">{{ formatAmountBySymbol($transaction['source_balance_after'], $transaction['currency_symbol'], $transaction['currency_decimal_places']) }}</span>
+                        @elseif($account?->id === $transaction['destination_account_id'])
+                            <span title="Withdrawal, liab, dest">{{ formatAmountBySymbol($transaction['destination_balance_after'], $transaction['currency_symbol'], $transaction['currency_decimal_places']) }}</span>
+                        @else
+                            -
+                        @endif
+                    @endif
+                    @if($currency['id'] === $transaction['foreign_currency_id'] && null !== $transaction['destination_balance_after'] && null !== $transaction['destination_balance_after'])
+                        <span title="Withdrawal, liab, dest 2">{{ formatAmountBySymbol($transaction['destination_balance_after'], $transaction['foreign_currency_symbol'] ?? $transaction['currency_symbol'], $transaction['foreign_currency_decimal_places'] ?? $transaction['currency_decimal_places']) }}</span>
+                    @endif
+                {{-- withdrawal into an expense account --}}
+                @else
+                    @if($account?->id === $transaction['source_account_id'])
+                        <span title="Withdrawal, source">{{ formatAmountBySymbol($transaction['source_balance_after'], $transaction['currency_symbol'], $transaction['currency_decimal_places']) }}</span>
+                    @elseif($account?->id === $transaction['destination_account_id'])
+                        <span title="Withdrawal, dest">{{ formatAmountBySymbol($transaction['destination_balance_after'], $transaction['currency_symbol'], $transaction['currency_decimal_places']) }}</span>
+                    @else
+                        -
+                    @endif
+               @endif
+            @elseif('Opening balance' === $transaction['transaction_type_type'])
+                @if($account?->id == $transaction['source_account_id'])
+                    <span title="Opening balance, src">{{ formatAmountBySymbol($transaction['source_balance_after'], $transaction['currency_symbol'], $transaction['currency_decimal_places']) }}</span>
+                @elseif($account?->id == $transaction['destination_account_id'])
+                    <span title="Opening balance, dest">{{ formatAmountBySymbol($transaction['destination_balance_after'], $transaction['currency_symbol'], $transaction['currency_decimal_places']) }}</span>
+                @else
+                -
+                @endif
+            @elseif('Transfer' === $transaction['transaction_type_type'])
+                @if($account?->id == $transaction['source_account_id'])
+                    <span title="Transfer, source">{{ formatAmountBySymbol($transaction['source_balance_after'], $transaction['currency_symbol'], $transaction['currency_decimal_places']) }}</span>
+                @else
+                    @if(null === $transaction['foreign_currency_id'])
+                        <span title="Transfer, dest, normal currency">{{ formatAmountBySymbol($transaction['destination_balance_after'], $transaction['currency_symbol'], $transaction['currency_decimal_places']) }}</span>
+                    @endif
+                    @if(null !== $transaction['foreign_currency_id'])
+                        <span title="Transfer, dest, foreign currency">{{ formatAmountBySymbol($transaction['destination_balance_after'], $transaction['foreign_currency_symbol'], $transaction['foreign_currency_decimal_places']) }}</span>
+                    @endif
+                @endif
+            @else
             &nbsp;
-            {% endif %}
-            {% endif %}
+            @endif
+        @endif
         </td>
-        {% endif %}
+        @endif
         <td class="{{ $className }}">
-            {{ transaction.date.isoFormat(monthAndDayFormat) }}
-        </td>
-        <td class="{{ $className }}">
-            {% if 'Cash account' == $transaction['source_account_type'] %}
-            <span class="text-success">({{ 'cash'|_ }})</span>
-            {% else %}
-            <a href="{{ route('accounts.show', [$transaction['source_account_id']|default(1)]) }}"
-               title="{{ transaction.source_account_iban|default(transaction.source_account_name) }}">{{ transaction.source_account_name }}</a>
-            {% endif %}
+            {{ $transaction['date']->isoFormat($monthAndDayFormat) }}
         </td>
         <td class="{{ $className }}">
-            {% if 'Cash account' == transaction.destination_account_type %}
-            <span class="text-success">({{ 'cash'|_ }})</span>
-            {% else %}
-            <a href="{{ route('accounts.show', [transaction.destination_account_id|default(1)]) }}"
-               title="{{ transaction.destination_account_iban|default(transaction.destination_account_name) }}">{{ transaction.destination_account_name }}</a>
-            {% endif %}
+            @if('Cash account' === $transaction['source_account_type'])
+                <span class="text-success">({{ __('firefly.cash') }})</span>
+            @else
+            <a href="{{ route('accounts.show', [$transaction['source_account_id'] ?? 1]) }}"
+               title="{{ $transaction['source_account_iban'] ?? $transaction['source_account_name'] }}">{{ $transaction['source_account_name'] }}</a>
+            @endif
         </td>
-        {% if showCategory %}
+        <td class="{{ $className }}">
+            @if('Cash account' == $transaction['destination_account_type'])
+                <span class="text-success">({{ __('firefly.cash') }})</span>
+            @else
+                <a href="{{ route('accounts.show', [$transaction['destination_account_id'] ?? 1]) }}" title="{{ $transaction['destination_account_iban'] ?? $transaction['destination_account_name'] }}">{{ $transaction['destination_account_name'] }}</a>
+            @endif
+        </td>
+        @if($showCategory)
         <td class="d-xs-none {{ $className }}">
-            {% if transaction.category_id %}
-            <a href="{{ route('categories.show', [transaction.category_id]) }}"
-               title="{{ transaction.category_name }}">{{ transaction.category_name }}</a>
-            {% endif %}
+            @if(null !== $transaction['category_id'])
+            <a href="{{ route('categories.show', [$transaction['category_id']]) }}"
+               title="{{ $transaction['category_name'] }}">{{ $transaction['category_name'] }}</a>
+            @endif
         </td>
-        {% endif %}
-        {% if showBudget %}
+        @endif
+        @if($showBudget)
         <td class="d-xs-none {{ $className }}">
-            {% if transaction.budget_id %}
-            <a href="{{ route('budgets.show', [transaction.budget_id]) }}"
-               title="{{ transaction.budget_name }}">{{ transaction.budget_name }}</a>
-            {% endif %}
+            @if(null !== $transaction['budget_id'])
+            <a href="{{ route('budgets.show', [$transaction['budget_id']]) }}"
+               title="{{ $transaction['budget_name'] }}">{{ $transaction['budget_name'] }}</a>
+            @endif
         </td>
-        {% endif %}
+        @endif
 
-        {% if group.count == 1 %}
+        @if(1 === count($group))
         <td class="d-xs-none {{ $className }}">
             <div class="btn-group btn-group-sm pull-right">
                 <button type="button" class="btn btn-secondary dropdown-toggle" data-toggle="dropdown"
                         aria-haspopup="true" aria-expanded="false">
-                    {{ 'actions'|_ }} <span class="caret"></span></button>
+                    {{ __('firefly.actions') }} <span class="caret"></span></button>
                 <ul class="dropdown-menu dropdown-menu-right" role="menu">
-                    <li><a href="{{ route('transactions.edit', [$group->id]) }}"><span
-                                class="fa fa-fw fa-pencil"></span> {{ 'edit'|_ }}</a></li>
-                    {% if $transaction['transaction_type_type'] != 'Opening balance' and $transaction['transaction_type_type'] != 'Liability credit' %}
-                    <li><a href="{{ route('transactions.delete', [$group->id]) }}"><span
-                                class="fa fa-fw fa-trash"></span> {{ 'delete'|_ }}</a></li>
-                    {% endif %}
-                    {% if $transaction['transaction_type_type'] != 'Reconciliation' and $transaction['transaction_type_type'] != 'Opening balance' and $transaction['transaction_type_type'] != 'Liability credit' %}
-                    <li><a href="#" data-id="{{ $group->id }}" class="clone-transaction"><span
-                                class="fa fa-copy fa-fw"></span> {{ 'clone'|_ }}</a></li>
-                    <li><a href="#" data-id="{{ $group->id }}" class="clone-transaction-and-edit"><span
-                                class="fa fa-copy fa-fw"></span> {{ 'clone_and_edit'|_ }}</a></li>
-                    <li>
-                        <a href="{{ route('rules.create-from-journal', [transaction.transaction_journal_id]) }}"><span
-                                class="fa fa-fw fa-random"></span> {{ 'create_rule_from_transaction'|_ }}
-                        </a></li>
-                    {% endif %}
+                    <li><a href="{{ route('transactions.edit', [$group->id]) }}"><span class="fa fa-fw fa-pencil"></span> {{ __('firefly.edit') }}</a></li>
+                    @if($transaction['transaction_type_type'] !== 'Opening balance' && $transaction['transaction_type_type'] !== 'Liability credit')
+                        <li><a href="{{ route('transactions.delete', [$group->id]) }}"><span class="fa fa-fw fa-trash"></span> {{ __('firefly.delete') }}</a></li>
+                    @endif
+                    @if($transaction['transaction_type_type'] !== 'Reconciliation' and $transaction['transaction_type_type'] !== 'Opening balance' and $transaction['transaction_type_type'] !== 'Liability credit')
+                        <li><a href="#" data-id="{{ $group->id }}" class="clone-transaction"><span class="fa fa-copy fa-fw"></span> {{ __('firefly.clone') }}</a></li>
+                        <li><a href="#" data-id="{{ $group->id }}" class="clone-transaction-and-edit"><span class="fa fa-copy fa-fw"></span> {{ __('firefly.clone_and_edit') }}</a></li>
+                        <li><a href="{{ route('rules.create-from-journal', [$transaction['transaction_journal_id']]) }}"><span class="fa fa-fw fa-random"></span> {{ __('firefly.create_rule_from_transaction') }}</a></li>
+                    @endif
                 </ul>
             </div>
         </td>
 
-        {% endif %}
-        {% if group.count != 1 %}
+        @endif
+        @if(1 !== count($group))
         <td class="d-xs-none {{ $className }}">
             &nbsp;
         </td>
-        {% endif %}
+        @endif
         <td class="d-xs-none {{ $className }}">
-            {% if $transaction['transaction_type_type'] != 'Reconciliation' and $transaction['transaction_type_type'] != 'Opening balance' and $transaction['transaction_type_type'] != 'Liability credit' %}
+            @if($transaction['transaction_type_type'] !== 'Reconciliation' and $transaction['transaction_type_type'] !== 'Opening balance' and $transaction['transaction_type_type'] !== 'Liability credit')
             <div class="pull-right">
-                <input id="list_{{ transaction.transaction_journal_id }}"
-                       value="{{ transaction.transaction_journal_id }}"
-                       name="journals[{{ transaction.transaction_journal_id }}]"
+                <input id="list_{{ $transaction['transaction_journal_id'] }}"
+                       value="{{ $transaction['transaction_journal_id'] }}"
+                       name="journals[{{ $transaction['transaction_journal_id'] }}]"
                        type="checkbox" class="mass-select form-check-inline"
-                       data-value="{{ transaction.transaction_journal_id }}"/>
-                {% endif %}
+                       data-value="{{ $transaction['transaction_journal_id'] }}"/>
+            @endif
             </div>
         </td>
     </tr>
-    {% endfor %}
+    @endforeach
     @endforeach
     </tbody>
     <tfoot>
@@ -435,26 +424,26 @@
                 <div class="btn-group action-menu btn-group-sm pull-right hidden">
                     <button type="button" class="btn btn-secondary btn-sm dropdown-toggle" data-toggle="dropdown"
                             aria-haspopup="true" aria-expanded="false">
-                        {{ 'actions'|_ }} <span class="caret"></span>
+                        {{ __('firefly.actions') }} <span class="caret"></span>
                     </button>
                     <ul class="dropdown-menu btn-group-sm dropdown-menu-right">
                         <li><a href="#" class="mass-edit"><span class="fa fa-fw fa-pencil"></span>
-                                <span>{{ 'mass_edit'|_ }}</span></a></li>
+                                <span>{{ __('firefly.mass_edit') }}</span></a></li>
                         <li><a href="#" class="bulk-edit"><span class="fa fa-fw fa-pencil-square-o"></span>
-                                <span>{{ 'bulk_edit'|_ }}</span></a></li>
+                                <span>{{ __('firefly.bulk_edit') }}</span></a></li>
                         <li><a href="#" class="mass-delete"><span class="fa fa-fw fa-trash"></span>
-                                <span>{{ 'mass_delete'|_ }}</span></a></li>
+                                <span>{{ __('firefly.mass_delete') }}</span></a></li>
                     </ul>
                 </div>
             </div>
         </td>
     </tr>
     <tr>
-        {% if showCategory or showBudget %}
-        <td colspan="9" class="no-margin-pagination">{{ $groups->links('pagination.bootstrap-4')|raw }}</td>
-        {% else %}
-        <td colspan="8" class="no-margin-pagination">{{ $groups->links('pagination.bootstrap-4')|raw }}</td>
-        {% endif %}
+        @if($showCategory || $showBudget)
+        <td colspan="9" class="no-margin-pagination">{{ $groups->links('pagination.bootstrap-4') }}</td>
+        @else
+        <td colspan="8" class="no-margin-pagination">{{ $groups->links('pagination.bootstrap-4') }}</td>
+        @endif
     </tr>
     </tfoot>
 </table>

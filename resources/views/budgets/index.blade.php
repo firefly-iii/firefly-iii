@@ -180,10 +180,10 @@
         </div>
     @endif
     @if(0 === count($budgets) && 0 === count($inactive))
-        TODO TODO TODO TODO
-        {% include 'partials.empty' with {objectType: 'default', type: 'budgets',route: route('budgets.create')} %}
-        {# make FF ignore demo for now. #}
-        {% set shownDemo = true %}
+        @php
+            $shownDemo = true
+        @endphp
+        <x-empty-page :route="route('budgets.create')" type="budgets" object-type="default" />
     @else
         <div class="row">
             <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
