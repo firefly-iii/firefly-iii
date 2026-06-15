@@ -32,7 +32,6 @@ use FireflyIII\User;
 use Illuminate\Auth\AuthenticationException;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
-use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 /**
  * @property Carbon $expires
