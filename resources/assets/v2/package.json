@@ -18,7 +18,7 @@
     "dependencies": {
         "@fortawesome/fontawesome-free": "^7",
         "@popperjs/core": "^2.11.8",
-        "admin-lte": "^4.0.0-rc4",
+        "admin-lte": "^4.0.2",
         "alpinejs": "^3.15.2",
         "bootstrap": "^5",
         "bootstrap5-autocomplete": "^1",
