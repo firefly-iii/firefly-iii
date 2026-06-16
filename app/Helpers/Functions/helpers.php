@@ -25,8 +25,10 @@ declare(strict_types=1);
 use Carbon\Carbon;
 use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Models\Account;
+use FireflyIII\Models\Configuration;
 use FireflyIII\Repositories\Account\AccountRepositoryInterface;
 use FireflyIII\Support\Facades\Amount;
+use FireflyIII\Support\Facades\AppConfiguration;
 use FireflyIII\Support\Facades\Steam;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Log;
@@ -48,6 +50,16 @@ if (!function_exists('env_default_when_empty')) {
         }
 
         return $value;
+    }
+}
+
+if(!function_exists('getAppConfiguration')) {
+    function getAppConfiguration(string $name, mixed $default = null): mixed {
+        try {
+            return AppConfiguration::get($name, $default)?->data;
+        } catch (FireflyException) {
+            return null;
+        }
     }
 }
 

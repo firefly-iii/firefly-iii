@@ -1,7 +1,7 @@
 <div class="m-2">
     {{ $accounts->links('pagination.bootstrap-4') }}
 </div>
-<table class="table table-responsive table-hover" id="sortable-table">
+<table class="table table-sm table-hover" id="sortable-table">
     <thead>
     <tr>
         <th class="hidden-sm hidden-xs">&nbsp;</th>
@@ -136,7 +136,7 @@
         </td>
         <td class="hidden-sm hidden-xs justify-content-end">
             <div class="dropdown">
-                <button class="btn btn-secondary btn-sm dropdown-toggle" type="button" id="action_menu_{{$account->id}}" data-bs-toggle="dropdown" aria-expanded="false">
+                <button class="btn btn-outline-secondary btn-sm dropdown-toggle" type="button" id="action_menu_{{$account->id}}" data-bs-toggle="dropdown" aria-expanded="false">
                     {{ __('firefly.actions') }}
                 </button>
                 <ul class="dropdown-menu" aria-labelledby="action_menu_{{$account->id}}">

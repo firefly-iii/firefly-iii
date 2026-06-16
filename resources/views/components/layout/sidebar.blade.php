@@ -65,25 +65,25 @@
         </a>
         <ul class="nav nav-treeview">
             <li class="nav-item">
-                <a href="{{ route('transactions.index', ['withdrawal']) }}" class="nav-link">
+                <a href="{{ route('transactions.index', ['withdrawal']) }}" class="nav-link {{ \FireflyIII\Support\Blade\Navigation::menuSubItemActive('transactions.index','withdrawal') }}">
                     <em class="nav-icon bi bi-arrow-left"></em>
                     <p>{{ __('firefly.expenses') }}</p>
                 </a>
             </li>
             <li class="nav-item">
-                <a href="{{ route('transactions.index', ['deposit']) }}" class="nav-link">
+                <a href="{{ route('transactions.index', ['deposit']) }}" class="nav-link {{ \FireflyIII\Support\Blade\Navigation::menuSubItemActive('transactions.index','deposit') }}">
                     <em class="nav-icon bi bi-arrow-right"></em>
                     <p>{{ __('firefly.income') }}</p>
                 </a>
             </li>
             <li class="nav-item">
-                <a href="{{ route('transactions.index', ['transfers']) }}" class="nav-link">
+                <a href="{{ route('transactions.index', ['transfers']) }}" class="nav-link {{ \FireflyIII\Support\Blade\Navigation::menuSubItemActive('transactions.index','transfers') }}">
                     <em class="nav-icon bi bi-arrow-left-right"></em>
                     <p>{{ __('firefly.transfers') }}</p>
                 </a>
             </li>
             <li class="nav-item">
-                <a href="{{ route('transactions.index', ['all']) }}" class="nav-link">
+                <a href="{{ route('transactions.index', ['all']) }}" class="nav-link {{ \FireflyIII\Support\Blade\Navigation::menuSubItemActive('transactions.index','all') }}">
                     <em class="nav-icon bi bi-arrow-repeat"></em>
                     <p>{{ __('firefly.all_transactions') }}</p>
                 </a>

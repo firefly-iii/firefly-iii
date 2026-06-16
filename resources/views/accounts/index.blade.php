@@ -4,45 +4,13 @@
         <div class="row">
             <div class="col-lg-12 col-md-12 col-sm-12">
                 <div class="card" id="account-index-{{ $objectType }}">
-                    <div class="card-header">
-                        <div class="row">
-                            <div class="col">
-                                <div class="card-title">{{ trans('firefly.'.$objectType.'_accounts') }}</div>
-                            </div>
-                            <div class="col text-end">
-                                <div class="dropdown">
-                                    <button class="btn btn-sm btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton1" data-bs-toggle="dropdown" aria-expanded="false">
-                                        <span class="bi bi-list"></span>
-                                    </button>
-                                    <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton1">
-                                        <li><a class="dropdown-item" href="{{ route('accounts.create', $objectType) }}"><span
-                                                    class="bi bi-plus-circle"></span> {{ __('firefly.make_new_'. $objectType . '_account') }}
-                                            </a></li>
-                                    </ul>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
+                    <x-elements.card-header-with-menu
+                        :cardTitle="trans('firefly.'.$objectType.'_accounts')" :route="route('accounts.create', $objectType)" :linkTitle="__('firefly.make_new_'. $objectType . '_account')"
+                    />
                     <div class="card-body p-0">
                         <x-lists.accounts :accounts="$accounts" :objectType="$objectType" />
                     </div>
-                    <div class="card-footer">
-                        <div class="row">
-                            <div class="col text-end">
-                                <div class="dropdown">
-                                    <button class="btn btn-sm btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton1" data-bs-toggle="dropdown" aria-expanded="false">
-                                        <span class="bi bi-list"></span>
-                                    </button>
-                                    <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton1">
-                                        <li><a class="dropdown-item" href="{{ route('accounts.create', $objectType) }}"><span
-                                                    class="bi bi-plus-circle"></span> {{ __('firefly.make_new_'. $objectType . '_account') }}
-                                            </a></li>
-                                    </ul>
-                                </div>
-                            </div>
-                        </div>
-
-                    </div>
+                    <x-elements.card-footer-with-menu :route="route('accounts.create', $objectType)" :linkTitle="__('firefly.make_new_'. $objectType . '_account')" />
                 </div>
                 @if($inactiveCount > 0 && !$inactivePage)
                     <p class="m-2"><small>

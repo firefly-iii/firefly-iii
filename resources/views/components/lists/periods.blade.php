@@ -12,36 +12,38 @@
                     <td class="text-right">{{ $period['total_transactions'] }}</td>
                 </tr>
             @endif
-            @foreach($period['spent'] ?? [] as $entry)
-                @if(($entry['amount'] ?? 0) !== 0)
+            @if(array_key_exists('spent', $period))
+            @foreach($period['spent'] as $spent)
+                @if($spent['amount'] !== 0)
                     <tr>
                         <td class="third">{{ __('firefly.spent') }}</td>
                         <td class="text-right">
-                            <span title="Count: {{ $entry['count'] }}">
-                                {!! formatAmountBySymbol($entry['amount'], $entry['currency_symbol'], $entry['currency_decimal_places']) !!}
+                            <span title="Count: {{ $spent['count'] }}">
+                                {!! formatAmountBySymbol($spent['amount'], $spent['currency_symbol'], $spent['currency_decimal_places']) !!}
                             </span>
                         </td>
                     </tr>
                 @endif
             @endforeach
-            @if(array_key_exists('earned', $entry))
-                @foreach($period['earned'] as $entry)
-                    @if($entry['amount'] !== 0)
-                        <tr>
-                            <td class="third">{{ __('firefly.earned') }}</td>
-                            <td class="text-right">
-                                <span title="Count: {{ $entry['count'] }}">
-                                    @if($entry['amount'] < 0)
-                                        {!! formatAmountBySymbol($entry['amount']*-1, $entry['currency_symbol'], $entry['currency_decimal_places']) !!}
-                                    @else
-                                        {!! formatAmountBySymbol($entry['amount'], $entry['currency_symbol'], $entry['currency_decimal_places']) !!}
-                                    @endif
-                                </span>
-                            </td>
-                        </tr>
-                    @endif
-                @endforeach
             @endif
+                @if(array_key_exists('earned', $period))
+                    @foreach($period['earned'] as $entry)
+                        @if(is_array($entry) && $entry['amount'] !== 0)
+                            <tr>
+                                <td class="third">{{ __('firefly.earned') }}</td>
+                                <td class="text-right">
+                                    <span title="Count: {{ $entry['count'] }}">
+                                        @if($entry['amount'] < 0)
+                                            {!! formatAmountBySymbol($entry['amount']*-1, $entry['currency_symbol'], $entry['currency_decimal_places']) !!}
+                                        @else
+                                            {!! formatAmountBySymbol($entry['amount'], $entry['currency_symbol'], $entry['currency_decimal_places']) !!}
+                                        @endif
+                                    </span>
+                                </td>
+                            </tr>
+                        @endif
+                    @endforeach
+                @endif
                 @foreach($period['transferred'] ?? [] as $entry)
                         @if($entry['amount'] !== 0)
             <tr>
