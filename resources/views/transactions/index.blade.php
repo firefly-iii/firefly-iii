@@ -64,25 +64,7 @@
     <div class="row">
         <div class="@if(count($periods) > 0) col-lg-10 col-md-10 col-sm-12 @else col-lg-12 col-md-12 col-sm-12 @endif">
             <div class="card mb-2">
-                <div class="card-header with-border">
-                    <div class="row">
-                        <div class="col">
-                            <h3 class="card-title">{{ $subTitle }}</h3>
-                        </div>
-                        <div class="col text-end">
-                            <div class="dropdown">
-                                <button class="btn btn-sm btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton1" data-bs-toggle="dropdown" aria-expanded="false">
-                                    <span class="bi bi-list"></span>
-                                </button>
-                                <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton1">
-                                    <li><a class="dropdown-item" href="{{ route('transactions.create', [$objectType]) }}"><span
-                                                class="bi bi-plus-circle"></span> {{ __('firefly.create_new_transaction') }}
-                                        </a></li>
-                                </ul>
-                            </div>
-                        </div>
-                    </div>
-                </div>
+                <x-elements.card-header-with-menu :cardTitle="$subTitle" :route="route('transactions.create', [$objectType])" :linkTitle="__('firefly.create_new_transaction')" />
                 <div class="card-body p-0">
                     <x-lists.groups-large :groups="$groups" :account="null" />
                 </div>

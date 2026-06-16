@@ -10,44 +10,11 @@
         <div class="row">
             <div class="col-lg-12 col-sm-12 col-md-12">
                 <div class="card mb-2">
-                    <div class="card-header">
-                        <div class="row">
-                            <div class="col">
-                                <h3 class="card-title">{{ $title }}</h3>
-                            </div>
-                            <div class="col text-end">
-                                <div class="dropdown">
-                                    <button class="btn btn-sm btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton1" data-bs-toggle="dropdown" aria-expanded="false">
-                                        <span class="bi bi-list"></span>
-                                    </button>
-                                    <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton1">
-                                        <li><a class="dropdown-item" href="{{ route('subscriptions.create') }}"><span
-                                                    class="bi bi-plus-circle"></span> {{ __('firefly.create_new_bill') }}
-                                            </a></li>
-                                    </ul>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
+                    <x-elements.card-header-with-menu :cardTitle="$title" :route="route('subscriptions.create')" :linkTitle="__('firefly.create_new_bill')" />
                     <div class="card-body p-0">
                         <x-lists.subscriptions :bills="$bills" :sums="$sums" :totals="$totals" />
                     </div>
-                    <div class="card-footer">
-                        <div class="row">
-                            <div class="col text-end">
-                                <div class="dropdown">
-                                    <button class="btn btn-sm btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton1" data-bs-toggle="dropdown" aria-expanded="false">
-                                        <span class="bi bi-list"></span>
-                                    </button>
-                                    <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton1">
-                                        <li><a class="dropdown-item" href="{{ route('subscriptions.create') }}"><span
-                                                    class="bi bi-plus-circle"></span> {{ __('firefly.create_new_bill') }}
-                                            </a></li>
-                                    </ul>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
+                    <x-elements.card-footer-with-menu :route="route('subscriptions.create')" :linkTitle="__('firefly.create_new_bill')" />
                 </div>
             </div>
         </div>

@@ -7,48 +7,11 @@
         <div class="row">
             <div class="col-lg-12 col-md-12 col-sm-12">
                 <div class="card mb-3">
-                    <div class="card-header">
-                        <div class="row">
-                            <div class="col">
-                                <h3 class="card-title">{{ __('firefly.piggyBanks') }}</h3>
-                            </div>
-                            <div class="col">
-                                <div class="col text-end">
-                                    <div class="dropdown">
-                                        <button class="btn btn-sm btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton1" data-bs-toggle="dropdown" aria-expanded="false">
-                                            <span class="bi bi-list"></span>
-                                        </button>
-                                        <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton1">
-                                            <li><a class="dropdown-item" href="{{ route('piggy-banks.create') }}"><span
-                                                        class="bi bi-plus-circle"></span> {{ __('firefly.create_new_piggy_bank') }}
-                                                </a></li>
-                                        </ul>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
+                    <x-elements.card-header-with-menu :cardTitle="__('firefly.piggyBanks')" :route="route('piggy-banks.create')" :linkTitle="__('firefly.create_new_piggy_bank')" />
                     <div class="card-body p-0">
                         <x-lists.piggy-banks :piggyBanks="$piggyBanks" />
                     </div>
-                    <div class="card-footer">
-                        <div class="row">
-                            <div class="col">
-                                <div class="col text-end">
-                                    <div class="dropdown">
-                                        <button class="btn btn-sm btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton1" data-bs-toggle="dropdown" aria-expanded="false">
-                                            <span class="bi bi-list"></span>
-                                        </button>
-                                        <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton1">
-                                            <li><a class="dropdown-item" href="{{ route('piggy-banks.create') }}"><span
-                                                        class="bi bi-plus-circle"></span> {{ __('firefly.create_new_piggy_bank') }}
-                                                </a></li>
-                                        </ul>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
+                    <x-elements.card-footer-with-menu :route="route('piggy-banks.create')" :linkTitle="__('firefly.create_new_piggy_bank')" />
                 </div>
             </div>
         </div>
