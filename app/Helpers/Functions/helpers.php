@@ -30,8 +30,10 @@ use FireflyIII\Repositories\Account\AccountRepositoryInterface;
 use FireflyIII\Support\Facades\Amount;
 use FireflyIII\Support\Facades\AppConfiguration;
 use FireflyIII\Support\Facades\Steam;
+use FireflyIII\Support\Search\OperatorQuerySearch;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Log;
+use League\CommonMark\GithubFlavoredMarkdownConverter;
 use function Safe\mb_ord;
 use function Safe\preg_match;
 use function Safe\preg_replace_callback;
@@ -50,6 +52,22 @@ if (!function_exists('env_default_when_empty')) {
         }
 
         return $value;
+    }
+}
+
+if(!function_exists('parseMarkdown')) {
+    function parseMarkdown(string $string): string {
+        $converter = new GithubFlavoredMarkdownConverter(['allow_unsafe_links' => false, 'max_nesting_level' => 5, 'html_input' => 'escape']);
+
+        return (string) $converter->convert($string);
+    }
+}
+
+if(!function_exists('getRootSearchOperator')) {
+    function getRootSearchOperator(string $operator): string {
+        $result = OperatorQuerySearch::getRootOperator($operator);
+
+        return str_replace('-', 'not_', $result);
     }
 }
 

@@ -37,9 +37,10 @@
         </div>
     @endif
     @if(0 === count($accounts) && 1 === $page)
-        TODO TODO TODO TODO
-        {% include 'partials.empty' with {objectType: objectType, type: 'accounts',route: route('accounts.create', [objectType])} %}
-
+        @php
+            $shownDemo = true
+        @endphp
+        <x-empty-page :route="route('accounts.create', [$objectType])" type="accounts" :object-type="$objectType" />
         @if($inactiveCount > 0)
             <p class="text-center"><small>
                     <em>

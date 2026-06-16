@@ -1,6 +1,6 @@
 @foreach($piggyBanks as $objectGroupOrder => $objectGroup)
     <h5 class="m-3">{{ $objectGroup['object_group_title'] }}</h5>
-<table class="table table-hover table-condensed mb-3" id="piggy-sortable">
+<table class="table table-hover table-sm table-condensed" id="piggy-sortable">
     <thead>
     <tr>
         <th style="width:50px;" class="d-none d-md-table-cell">&nbsp;</th>

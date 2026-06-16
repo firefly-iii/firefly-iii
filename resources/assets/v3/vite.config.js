@@ -53,6 +53,9 @@ export default defineConfig(({command, mode, isSsrBuild, isPreview}) => {
                     // budgets
                     'js/pages/budgets/index.js',
 
+                    // rules
+                    'js/pages/rules/index.js',
+
                     // subscriptions
                     'js/pages/subscriptions/index.js',
 

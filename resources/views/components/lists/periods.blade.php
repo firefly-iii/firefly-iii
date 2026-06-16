@@ -14,7 +14,7 @@
             @endif
             @if(array_key_exists('spent', $period))
             @foreach($period['spent'] as $spent)
-                @if($spent['amount'] !== 0)
+                @if(is_array($spent) && $spent['amount'] !== 0)
                     <tr>
                         <td class="third">{{ __('firefly.spent') }}</td>
                         <td class="text-right">
@@ -45,7 +45,7 @@
                     @endforeach
                 @endif
                 @foreach($period['transferred'] ?? [] as $entry)
-                        @if($entry['amount'] !== 0)
+                        @if(is_array($entry) && $entry['amount'] !== 0)
             <tr>
                 <td class="third">{{ __('firefly.transferred') }}</td>
                 <td class="text-right">
@@ -58,7 +58,7 @@
             @endforeach
 
             @foreach($period['transferred_away'] ?? [] as $entry)
-                            @if($entry['amount'] !== 0)
+                            @if(is_array($entry) && $entry['amount'] !== 0)
             <tr>
                 <td class="third">{{ __('firefly.transferred_away') }}</td>
                 <td class="text-right">

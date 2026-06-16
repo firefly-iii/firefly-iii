@@ -390,6 +390,7 @@ return [
         AccountTypeEnum::MORTGAGE->value   => AccountTypeEnum::MORTGAGE->value,
     ],
     'transactionTypesByType'               => [
+        'all' => ['Withdrawal','Deposit','Transfer'],
         'expenses'   => ['Withdrawal'],
         'withdrawal' => ['Withdrawal'],
         'revenue'    => ['Deposit'],

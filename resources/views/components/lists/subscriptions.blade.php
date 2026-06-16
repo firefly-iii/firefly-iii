@@ -1,7 +1,7 @@
 @foreach($bills as $objectGroupOrder => $objectGroup)
 <h5 class="m-3">{{ $objectGroup['object_group_title'] }}</h5>
 
-<table class="table table-hover table-bordered mb-3" id="bill-sortable">
+<table class="table table-hover table-sm table-bordered" id="bill-sortable">
     <thead class="table-secondary">
     <tr>
         <th class="hidden-sm hidden-xs">&nbsp;</th>
@@ -202,8 +202,9 @@
 </table>
 @endforeach
 
-<h5 class="m-3">Totals</h5>
 @if(count($totals) > 0)
+
+<h5 class="m-3">Totals</h5>
 
 <table class="table table-bordered table-hover mb-3">
     <tbody>
