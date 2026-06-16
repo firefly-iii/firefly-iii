@@ -61,6 +61,7 @@ export default defineConfig(({command, mode, isSsrBuild, isPreview}) => {
 
                     // transactions
                     'js/pages/transactions/index.js',
+                    'js/pages/transactions/create.js',
 
                     // piggy banks
                     'js/pages/piggy-banks/index.js',

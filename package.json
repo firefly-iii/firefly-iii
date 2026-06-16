@@ -4,7 +4,6 @@
     },
     "workspaces": [
         "resources/assets/v1",
-        "resources/assets/v2",
         "resources/assets/v3"
     ],
     "devDependencies": {

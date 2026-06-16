@@ -107,14 +107,6 @@
                         <span class="d-none d-xxl-inline">xxl</span>
                     </span>
                 </li>
-                <!--begin::Navbar Search-->
-                <li class="nav-item">
-                    <a class="nav-link" data-widget="navbar-search" href="{{route('search.index')}}" role="button">
-                        <em class="bi bi-search"></em>
-                    </a>
-                </li>
-                <!--end::Navbar Search-->
-
                 <!--begin::Fullscreen Toggle-->
                 <li class="nav-item">
                     <a class="nav-link" href="#" data-lte-toggle="fullscreen">
