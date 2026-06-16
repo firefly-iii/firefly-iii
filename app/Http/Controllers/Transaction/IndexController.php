@@ -111,7 +111,6 @@ final class IndexController extends Controller
         }
 
         $periods       = $this->getTransactionPeriodOverview($objectType, $startPeriod, $endPeriod);
-
         /** @var GroupCollectorInterface $collector */
         $collector     = app(GroupCollectorInterface::class);
 

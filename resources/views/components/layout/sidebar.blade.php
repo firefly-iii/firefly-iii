@@ -71,7 +71,7 @@
                 </a>
             </li>
             <li class="nav-item">
-                <a href="{{ route('transactions.index', ['withdrawal']) }}" class="nav-link">
+                <a href="{{ route('transactions.index', ['deposit']) }}" class="nav-link">
                     <em class="nav-icon bi bi-arrow-right"></em>
                     <p>{{ __('firefly.income') }}</p>
                 </a>
