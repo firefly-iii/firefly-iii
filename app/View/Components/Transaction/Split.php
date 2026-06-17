@@ -8,12 +8,14 @@ use Illuminate\View\Component;
 
 class Split extends Component
 {
+    public array $optionalFields;
+
     /**
      * Create a new component instance.
      */
-    public function __construct()
+    public function __construct(array $optionalFields)
     {
-        //
+        $this->optionalFields = $optionalFields;
     }
 
     /**

@@ -19,7 +19,7 @@
  */
 
 
-import Get from "../../../api/v1/model/currency/get.js";
+import Get from "../../../api/model/currency/get.js";
 
 export function loadCurrencies() {
     let params = {
@@ -52,7 +52,9 @@ export function loadCurrencies() {
 
                         };
                     if (obj.primary) {
+                        console.log('Made ' + obj.code + ' primary.');
                         returnData.primaryCurrency = obj;
+                        console.log(returnData.primaryCurrency);
                     }
                     returnData.enabledCurrencies.push(obj);
                     returnData.primaryCurrencies.push(obj);

@@ -9,8 +9,8 @@
                         :zoomLevel="$zoomLevel"
                         :latitude="$latitude"
                         :longitude="$longitude"
-                        :optionalFields="$optionalFields"
-                        :optionalDateFields="$optionalDateFields" />
+                        :optional-fields="$optionalFields"
+                        :optional-date-fields="$optionalDateFields" />
                 </template>
             </div>
     </div>

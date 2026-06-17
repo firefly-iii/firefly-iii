@@ -27,6 +27,7 @@ import LocalStorageBackend from "i18next-localstorage-backend";
 let loaded = false;
 
 function loadTranslations(locale) {
+    console.log('loadTranslations(' + locale + ')');
     if (false === loaded) {
         const replacedLocale = locale.replace('-', '_');
         loaded = true;

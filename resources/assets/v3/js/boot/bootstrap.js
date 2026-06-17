@@ -75,61 +75,61 @@ getFreshVariable('lastActivity').then((serverValue) => {
             console.log('Bootstrapped!');
 
             // page may have an introduction necessary to be played.
-            if (!showTour) {
-                return;
-            }
-            const url = '/';
-            let site = axios.create({baseURL: url, withCredentials: true});
-            axios.defaults.withCredentials = true;
-            axios.defaults.baseURL = url;
-
-            site.get(routeStepsUrl).then(function (data) {
-                let hints = data.data;
-
-                const tour = new Shepherd.Tour({
-                    useModalOverlay: true,
-                    defaultStepOptions: {
-                        // classes: 'shadow-md bg-purple-dark',
-                        scrollTo: true
-                    }
-                });
-// cancel, complete
-                tour.on('cancel', (eventOptions) => {
-                    site.post(routeForFinishedTour);
-                });
-                tour.on('complete', (eventOptions) => {
-                    site.post(routeForFinishedTour);
-                });
-
-                for (let i = 0; i < hints.length; i++) {
-                    if (hints.hasOwnProperty(i)) {
-                        let hint = hints[i];
-
-                        let step = {
-                            // id: 'example-step',
-                            text: hint.text,
-
-                            classes: 'example-step-extra-class',
-                            buttons: [
-                                {
-                                    text: 'Next',
-                                    action: tour.next
-                                }
-                            ]
-                        };
-                        if (hint.hasOwnProperty('element')) {
-                            step.attachTo = {
-                                element: hint.element,
-                                on: hint.position
-                            };
-                        }
-                        tour.addStep(step);
-                    }
-                }
-                tour.start();
-
-
-            });
+            // if (!showTour) {
+            //     return;
+            // }
+//             const url = '/';
+//             let site = axios.create({baseURL: url, withCredentials: true});
+//             axios.defaults.withCredentials = true;
+//             axios.defaults.baseURL = url;
+//
+//             site.get(routeStepsUrl).then(function (data) {
+//                 let hints = data.data;
+//
+//                 const tour = new Shepherd.Tour({
+//                     useModalOverlay: true,
+//                     defaultStepOptions: {
+//                         // classes: 'shadow-md bg-purple-dark',
+//                         scrollTo: true
+//                     }
+//                 });
+// // cancel, complete
+//                 tour.on('cancel', (eventOptions) => {
+//                     site.post(routeForFinishedTour);
+//                 });
+//                 tour.on('complete', (eventOptions) => {
+//                     site.post(routeForFinishedTour);
+//                 });
+//
+//                 for (let i = 0; i < hints.length; i++) {
+//                     if (hints.hasOwnProperty(i)) {
+//                         let hint = hints[i];
+//
+//                         let step = {
+//                             // id: 'example-step',
+//                             text: hint.text,
+//
+//                             classes: 'example-step-extra-class',
+//                             buttons: [
+//                                 {
+//                                     text: 'Next',
+//                                     action: tour.next
+//                                 }
+//                             ]
+//                         };
+//                         if (hint.hasOwnProperty('element')) {
+//                             step.attachTo = {
+//                                 element: hint.element,
+//                                 on: hint.position
+//                             };
+//                         }
+//                         tour.addStep(step);
+//                     }
+//                 }
+//                 tour.start();
+//
+//
+//             });
 
         });
 

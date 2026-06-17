@@ -18,7 +18,7 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-import SubscriptionGet from "../../../api/v1/model/subscription/get.js";
+import SubscriptionGet from "../../../api/model/subscription/get.js";
 
 export function loadSubscriptions() {
     let params = {

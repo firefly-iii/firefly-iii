@@ -8,16 +8,16 @@
                 </div>
                 <div class="card-body">
                     <!-- DESCRIPTION -->
-                    include('partials.form.transaction.description')
+                    @include('partials.form.transaction.description')
 
                     <!-- SOURCE ACCOUNT -->
-                    include('partials.form.transaction.source-account')
+                    @include('partials.form.transaction.source-account')
 
                     <!-- DESTINATION ACCOUNT -->
-                    include('partials.form.transaction.destination-account')
+                    @include('partials.form.transaction.destination-account')
 
                     <!-- DATE AND TIME -->
-                    include('partials.form.transaction.date-time')
+                    @include('partials.form.transaction.date-time')
                 </div>
             </div>
         </div>
@@ -32,10 +32,10 @@
                 </div>
                 <div class="card-body">
                     <!-- AMOUNT -->
-                    include('partials.form.transaction.amount')
+                    @include('partials.form.transaction.amount')
 
                     <!-- FOREIGN AMOUNT -->
-                    include('partials.form.transaction.foreign-amount')
+                    @include('partials.form.transaction.foreign-amount')
                 </div>
             </div>
         </div>
@@ -49,22 +49,22 @@
                 </div>
                 <div class="card-body">
                     <!-- BUDGET -->
-                    include('partials.form.transaction.budget')
+                    @include('partials.form.transaction.budget')
 
                     <!-- CATEGORY -->
-                    include('partials.form.transaction.category')
+                    @include('partials.form.transaction.category')
 
                     <!-- PIGGY BANK -->
-                    include('partials.form.transaction.piggy-bank')
+                    @include('partials.form.transaction.piggy-bank')
 
                     <!-- SUBSCRIPTION -->
-                    include('partials.form.transaction.subscription')
+                    @include('partials.form.transaction.subscription')
 
                     <!-- TAGS -->
-                    include('partials.form.transaction.tags')
+                    @include('partials.form.transaction.tags')
 
                     <!-- NOTES -->
-                    include('partials.form.transaction.notes')
+                    @include('partials.form.transaction.notes')
                 </div>
             </div>
 

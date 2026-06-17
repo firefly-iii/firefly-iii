@@ -25,27 +25,26 @@ import {createEmptySplit, defaultErrorSet} from "./shared/create-empty-split.js"
 // import {parseFromEntries} from "./shared/parse-from-entries.js";
 import formatMoney from "../../util/format-money.js";
 // import Post from "../../api/model/transaction/post.js";
-// import {loadCurrencies} from "./shared/load-currencies.js";
-// import {loadBudgets} from "./shared/load-budgets.js";
-// import {loadBudgets} from "./shared/load-budgets.js";
-// import {loadPiggyBanks} from "./shared/load-piggy-banks.js";
-// import {loadSubscriptions} from "./shared/load-subscriptions.js";
+import {loadCurrencies} from "./shared/load-currencies.js";
+import {loadBudgets} from "./shared/load-budgets.js";
+import {loadPiggyBanks} from "./shared/load-piggy-banks.js";
+import {loadSubscriptions} from "./shared/load-subscriptions.js";
 //
 // import 'leaflet/dist/leaflet.css';
 import {addAutocomplete, getUrls} from "./shared/add-autocomplete.js";
-// import {
-//     changeCategory,
-//     changeDescription,
-//     changeDestinationAccount,
-//     changeSourceAccount,
-//     selectDestinationAccount,
-//     selectSourceAccount
-// } from "./shared/autocomplete-functions.js";
+import {
+    changeCategory,
+    changeDescription,
+    changeDestinationAccount,
+    changeSourceAccount,
+    selectDestinationAccount,
+    selectSourceAccount
+} from "./shared/autocomplete-functions.js";
 // import {processAttachments} from "./shared/process-attachments.js";
 // import {spliceErrorsIntoTransactions} from "./shared/splice-errors-into-transactions.js";
 // import Tags from "bootstrap5-tags";
 // import {addLocation} from "./shared/manage-locations.js";
-// import i18next from "i18next";
+import i18next from "i18next";
 // TODO upload attachments to other file
 // TODO fix two maps, perhaps disconnect from entries entirely.
 // TODO group title
@@ -58,30 +57,31 @@ let create = function () {
     return {
         // transactions are stored in "entries":
         entries: [],
-    //
-    //     // state of the form is stored in formState:
-    //     formStates: {
-    //         loadingCurrencies: true,
-    //         loadingBudgets: true,
-    //         loadingPiggyBanks: true,
-    //         loadingSubscriptions: true,
-    //         isSubmitting: false,
-    //         returnHereButton: false,
-    //         saveAsNewButton: false, // edit form only
-    //         resetButton: false,
-    //         rulesButton: true,
-    //         webhooksButton: true,
-    //         categorySelectVisible: false
-    //     },
-    //
-    //     // form behavior during transaction
-    //     formBehaviour: {
-    //         formType: 'create',
-    //         foreignCurrencyEnabled: true,
-    //     },
-    //
-    //     // form data (except transactions) is stored in formData
+
+        // state of the form is stored in formState:
+        formStates: {
+            loadingCurrencies: true,
+            loadingBudgets: true,
+            loadingPiggyBanks: true,
+            loadingSubscriptions: true,
+            isSubmitting: false,
+            returnHereButton: false,
+            saveAsNewButton: false, // edit form only
+            resetButton: false,
+            rulesButton: true,
+            webhooksButton: true,
+            categorySelectVisible: false
+        },
+
+        // form behavior during transaction
+        formBehaviour: {
+            formType: 'create',
+            foreignCurrencyEnabled: true,
+        },
+
+        // form data (except transactions) is stored in formData
         formData: {
+            primaryCurrency: null,
             defaultCurrency: null,
             enabledCurrencies: [],
             primaryCurrencies: [],
@@ -90,16 +90,16 @@ let create = function () {
             piggyBanks: [],
             subscriptions: [],
         },
-    //
-    //     // properties for the entire transaction group
+
+        // properties for the entire transaction group
         groupProperties: {
             transactionType: 'unknown',
             title: null,
             id: null,
             totalAmount: 0,
         },
-    //
-    //     // notifications
+
+        // notifications
         notifications: {
             error: {
                 show: false, text: '', url: '',
@@ -110,170 +110,169 @@ let create = function () {
 
             }
         },
-    //
-    //
-    //     // part of the account selection auto-complete
-    //     filters: {
-    //         source: [], destination: [],
-    //     },
-    //
-    //     // events in the form
-    //     changedDateTime(event) {
-    //         console.warn('changedDateTime, event is not used');
-    //     },
-    //
-    //     changedDescription(event) {
-    //         console.warn('changedDescription, event is not used');
-    //     },
-    //
-    //     changedDestinationAccount(event) {
-    //         this.detectTransactionType();
-    //     },
-    //
-    //     changedSourceAccount(event) {
-    //         this.detectTransactionType();
-    //     },
-    //
-    //     detectTransactionType() {
-    //         const sourceType = this.entries[0].source_account.type ?? 'unknown';
-    //         const destType = this.entries[0].destination_account.type ?? 'unknown';
-    //         if ('unknown' === sourceType && 'unknown' === destType) {
-    //             this.groupProperties.transactionType = 'unknown';
-    //             console.warn('Cannot infer transaction type from two unknown accounts.');
-    //             return;
-    //         }
-    //
-    //         // transfer: both are the same and in strict set of account types
-    //         if (sourceType === destType && ['Asset account', 'Loan', 'Debt', 'Mortgage'].includes(sourceType)) {
-    //             this.groupProperties.transactionType = 'transfer';
-    //             console.log('Transaction type is detected to be "' + this.groupProperties.transactionType + '".');
-    //
-    //             // this also locks the amount into the amount of the source account
-    //             // and the foreign amount (if different) in that of the destination account.
-    //             console.log('filter down currencies for transfer.');
-    //             this.filterPrimaryCurrencies(this.entries[0].source_account.currency_code);
-    //             this.filterForeignCurrencies(this.entries[0].destination_account.currency_code);
-    //             return;
-    //         }
-    //         // withdrawals:
-    //         if ('Asset account' === sourceType && ['Expense account', 'Debt', 'Loan', 'Mortgage'].includes(destType)) {
-    //             this.groupProperties.transactionType = 'withdrawal';
-    //             console.log('[a] Transaction type is detected to be "' + this.groupProperties.transactionType + '".');
-    //             this.filterPrimaryCurrencies(this.entries[0].source_account.currency_code);
-    //             return;
-    //         }
-    //         if ('Asset account' === sourceType && 'unknown' === destType) {
-    //             this.groupProperties.transactionType = 'withdrawal';
-    //             console.log('[b] Transaction type is detected to be "' + this.groupProperties.transactionType + '".');
-    //             console.log(this.entries[0].source_account);
-    //             this.filterPrimaryCurrencies(this.entries[0].source_account.currency_code);
-    //             return;
-    //         }
-    //         if (['Debt', 'Loan', 'Mortgage'].includes(sourceType) && 'Expense account' === destType) {
-    //             this.groupProperties.transactionType = 'withdrawal';
-    //             console.log('[c] Transaction type is detected to be "' + this.groupProperties.transactionType + '".');
-    //             this.filterPrimaryCurrencies(this.entries[0].source_account.currency_code);
-    //             return;
-    //         }
-    //
-    //         // deposits:
-    //         if ('Revenue account' === sourceType && ['Asset account', 'Debt', 'Loan', 'Mortgage'].includes(destType)) {
-    //             this.groupProperties.transactionType = 'deposit';
-    //             console.log('Transaction type is detected to be "' + this.groupProperties.transactionType + '".');
-    //             return;
-    //         }
-    //         if ('unknown' === sourceType && ['Asset account', 'Debt', 'Loan', 'Mortgage'].includes(destType)) {
-    //             this.groupProperties.transactionType = 'deposit';
-    //             console.log('Transaction type is detected to be "' + this.groupProperties.transactionType + '".');
-    //             return;
-    //         }
-    //         if ('Expense account' === sourceType && ['Asset account', 'Debt', 'Loan', 'Mortgage'].includes(destType)) {
-    //             this.groupProperties.transactionType = 'deposit';
-    //             console.warn('FORCE transaction type to be "' + this.groupProperties.transactionType + '".');
-    //             this.entries[0].source_account.id = '';
-    //             return;
-    //         }
-    //         if (['Debt', 'Loan', 'Mortgage'].includes(sourceType) && 'Asset account' === destType) {
-    //             this.groupProperties.transactionType = 'deposit';
-    //             console.log('Transaction type is detected to be "' + this.groupProperties.transactionType + '".');
-    //             return;
-    //         }
-    //         console.warn('Unknown account combination between "' + sourceType + '" and "' + destType + '".');
-    //     },
-    //
+
+
+        // part of the account selection auto-complete
+        filters: {
+            source: [], destination: [],
+        },
+
+        // events in the form
+        changedDateTime(event) {
+            console.warn('changedDateTime, event is not used');
+        },
+
+        changedDescription(event) {
+            console.warn('changedDescription, event is not used');
+        },
+
+        changedDestinationAccount(event) {
+            this.detectTransactionType();
+        },
+
+        changedSourceAccount(event) {
+            this.detectTransactionType();
+        },
+
+        detectTransactionType() {
+            const sourceType = this.entries[0].source_account.type ?? 'unknown';
+            const destType = this.entries[0].destination_account.type ?? 'unknown';
+            if ('unknown' === sourceType && 'unknown' === destType) {
+                this.groupProperties.transactionType = 'unknown';
+                console.warn('Cannot infer transaction type from two unknown accounts.');
+                return;
+            }
+
+            // transfer: both are the same and in strict set of account types
+            if (sourceType === destType && ['Asset account', 'Loan', 'Debt', 'Mortgage'].includes(sourceType)) {
+                this.groupProperties.transactionType = 'transfer';
+                console.log('Transaction type is detected to be "' + this.groupProperties.transactionType + '".');
+
+                // this also locks the amount into the amount of the source account
+                // and the foreign amount (if different) in that of the destination account.
+                console.log('filter down currencies for transfer.');
+                this.filterPrimaryCurrencies(this.entries[0].source_account.currency_code);
+                this.filterForeignCurrencies(this.entries[0].destination_account.currency_code);
+                return;
+            }
+            // withdrawals:
+            if ('Asset account' === sourceType && ['Expense account', 'Debt', 'Loan', 'Mortgage'].includes(destType)) {
+                this.groupProperties.transactionType = 'withdrawal';
+                console.log('[a] Transaction type is detected to be "' + this.groupProperties.transactionType + '".');
+                this.filterPrimaryCurrencies(this.entries[0].source_account.currency_code);
+                return;
+            }
+            if ('Asset account' === sourceType && 'unknown' === destType) {
+                this.groupProperties.transactionType = 'withdrawal';
+                console.log('[b] Transaction type is detected to be "' + this.groupProperties.transactionType + '".');
+                console.log(this.entries[0].source_account);
+                this.filterPrimaryCurrencies(this.entries[0].source_account.currency_code);
+                return;
+            }
+            if (['Debt', 'Loan', 'Mortgage'].includes(sourceType) && 'Expense account' === destType) {
+                this.groupProperties.transactionType = 'withdrawal';
+                console.log('[c] Transaction type is detected to be "' + this.groupProperties.transactionType + '".');
+                this.filterPrimaryCurrencies(this.entries[0].source_account.currency_code);
+                return;
+            }
+
+            // deposits:
+            if ('Revenue account' === sourceType && ['Asset account', 'Debt', 'Loan', 'Mortgage'].includes(destType)) {
+                this.groupProperties.transactionType = 'deposit';
+                console.log('Transaction type is detected to be "' + this.groupProperties.transactionType + '".');
+                return;
+            }
+            if ('unknown' === sourceType && ['Asset account', 'Debt', 'Loan', 'Mortgage'].includes(destType)) {
+                this.groupProperties.transactionType = 'deposit';
+                console.log('Transaction type is detected to be "' + this.groupProperties.transactionType + '".');
+                return;
+            }
+            if ('Expense account' === sourceType && ['Asset account', 'Debt', 'Loan', 'Mortgage'].includes(destType)) {
+                this.groupProperties.transactionType = 'deposit';
+                console.warn('FORCE transaction type to be "' + this.groupProperties.transactionType + '".');
+                this.entries[0].source_account.id = '';
+                return;
+            }
+            if (['Debt', 'Loan', 'Mortgage'].includes(sourceType) && 'Asset account' === destType) {
+                this.groupProperties.transactionType = 'deposit';
+                console.log('Transaction type is detected to be "' + this.groupProperties.transactionType + '".');
+                return;
+            }
+            console.warn('Unknown account combination between "' + sourceType + '" and "' + destType + '".');
+        },
+
         formattedTotalAmount() {
             if (this.entries.length === 0) {
                 return formatMoney(this.groupProperties.totalAmount, 'EUR');
             }
             return formatMoney(this.groupProperties.totalAmount, this.entries[0].currency_code ?? 'EUR');
         },
-    //
-    //     filterForeignCurrencies(code) {
-    //         let list = [];
-    //         let currency;
-    //         for (let i in this.formData.enabledCurrencies) {
-    //             if (this.formData.enabledCurrencies.hasOwnProperty(i)) {
-    //                 let current = this.formData.enabledCurrencies[i];
-    //                 if (current.code === code) {
-    //                     currency = current;
-    //                 }
-    //             }
-    //         }
-    //         list.push(currency);
-    //         this.formData.foreignCurrencies = list;
-    //         // is he source account currency anyway:
-    //         if (1 === list.length && list[0].code === this.entries[0].source_account.currency_code) {
-    //             console.log('Foreign currency is same as source currency. Disable foreign amount.');
-    //             this.formBehaviour.foreignCurrencyEnabled = false;
-    //         }
-    //         if (1 === list.length && list[0].code !== this.entries[0].source_account.currency_code) {
-    //             console.log('Foreign currency is NOT same as source currency. Enable foreign amount.');
-    //             this.formBehaviour.foreignCurrencyEnabled = true;
-    //         }
-    //
-    //         // this also forces the currency_code on ALL entries.
-    //         for (let i in this.entries) {
-    //             if (this.entries.hasOwnProperty(i)) {
-    //                 this.entries[i].foreign_currency_code = code;
-    //             }
-    //         }
-    //     },
-    //
-    //     filterPrimaryCurrencies(code) {
-    //         let list = [];
-    //         let currency;
-    //         for (let i in this.formData.enabledCurrencies) {
-    //             if (this.formData.enabledCurrencies.hasOwnProperty(i)) {
-    //                 let current = this.formData.enabledCurrencies[i];
-    //                 if (current.code === code) {
-    //                     currency = current;
-    //                 }
-    //             }
-    //         }
-    //         list.push(currency);
-    //         this.formData.primaryCurrencies = list;
-    //
-    //         // this also forces the currency_code on ALL entries.
-    //         for (let i in this.entries) {
-    //             if (this.entries.hasOwnProperty(i)) {
-    //                 this.entries[i].currency_code = code;
-    //             }
-    //         }
-    //     },
-    //
-    //     changedAmount(e) {
-    //         const index = parseInt(e.target.dataset.index);
-    //         this.entries[index].amount = parseFloat(e.target.value);
-    //         this.groupProperties.totalAmount = 0;
-    //         for (let i in this.entries) {
-    //             if (this.entries.hasOwnProperty(i)) {
-    //                 this.groupProperties.totalAmount = this.groupProperties.totalAmount + parseFloat(this.entries[i].amount);
-    //             }
-    //         }
-    //     },
-    //
-        addedSplit() {
 
+        filterForeignCurrencies(code) {
+            let list = [];
+            let currency;
+            for (let i in this.formData.enabledCurrencies) {
+                if (this.formData.enabledCurrencies.hasOwnProperty(i)) {
+                    let current = this.formData.enabledCurrencies[i];
+                    if (current.code === code) {
+                        currency = current;
+                    }
+                }
+            }
+            list.push(currency);
+            this.formData.foreignCurrencies = list;
+            // is he source account currency anyway:
+            if (1 === list.length && list[0].code === this.entries[0].source_account.currency_code) {
+                console.log('Foreign currency is same as source currency. Disable foreign amount.');
+                this.formBehaviour.foreignCurrencyEnabled = false;
+            }
+            if (1 === list.length && list[0].code !== this.entries[0].source_account.currency_code) {
+                console.log('Foreign currency is NOT same as source currency. Enable foreign amount.');
+                this.formBehaviour.foreignCurrencyEnabled = true;
+            }
+
+            // this also forces the currency_code on ALL entries.
+            for (let i in this.entries) {
+                if (this.entries.hasOwnProperty(i)) {
+                    this.entries[i].foreign_currency_code = code;
+                }
+            }
+        },
+
+        filterPrimaryCurrencies(code) {
+            let list = [];
+            let currency;
+            for (let i in this.formData.enabledCurrencies) {
+                if (this.formData.enabledCurrencies.hasOwnProperty(i)) {
+                    let current = this.formData.enabledCurrencies[i];
+                    if (current.code === code) {
+                        currency = current;
+                    }
+                }
+            }
+            list.push(currency);
+            this.formData.primaryCurrencies = list;
+
+            // this also forces the currency_code on ALL entries.
+            for (let i in this.entries) {
+                if (this.entries.hasOwnProperty(i)) {
+                    this.entries[i].currency_code = code;
+                }
+            }
+        },
+
+        changedAmount(e) {
+            const index = parseInt(e.target.dataset.index);
+            this.entries[index].amount = parseFloat(e.target.value);
+            this.groupProperties.totalAmount = 0;
+            for (let i in this.entries) {
+                if (this.entries.hasOwnProperty(i)) {
+                    this.groupProperties.totalAmount = this.groupProperties.totalAmount + parseFloat(this.entries[i].amount);
+                }
+            }
+        },
+
+        addedSplit() {
 
         },
     //
@@ -293,28 +292,29 @@ let create = function () {
         init() {
             console.log('init()');
             this.addSplit();
-    //
-    //         // load currencies and save in form data.
-    //         loadCurrencies().then(data => {
-    //             this.formStates.loadingCurrencies = false;
-    //             this.formData.defaultCurrency = data.defaultCurrency;
-    //             this.formData.enabledCurrencies = data.enabledCurrencies;
-    //             this.formData.primaryCurrencies = data.primaryCurrencies;
-    //             this.formData.foreignCurrencies = data.foreignCurrencies;
-    //         });
-    //
-    //         loadBudgets().then(data => {
-    //             this.formData.budgets = data;
-    //             this.formStates.loadingBudgets = false;
-    //         });
-    //         loadPiggyBanks().then(data => {
-    //             this.formData.piggyBanks = data;
-    //             this.formStates.loadingPiggyBanks = false;
-    //         });
-    //         loadSubscriptions().then(data => {
-    //             this.formData.subscriptions = data;
-    //             this.formStates.loadingSubscriptions = false;
-    //         });
+
+            // load currencies and save in form data.
+            loadCurrencies().then(data => {
+                this.formStates.loadingCurrencies = false;
+                this.formData.primaryCurrency = data.primaryCurrency;
+                this.formData.defaultCurrency = data.defaultCurrency;
+                this.formData.enabledCurrencies = data.enabledCurrencies;
+                this.formData.primaryCurrencies = data.primaryCurrencies;
+                this.formData.foreignCurrencies = data.foreignCurrencies;
+            });
+
+            loadBudgets().then(data => {
+                this.formData.budgets = data;
+                this.formStates.loadingBudgets = false;
+            });
+            loadPiggyBanks().then(data => {
+                this.formData.piggyBanks = data;
+                this.formStates.loadingPiggyBanks = false;
+            });
+            loadSubscriptions().then(data => {
+                this.formData.subscriptions = data;
+                this.formStates.loadingSubscriptions = false;
+            });
     //
     //         document.addEventListener('upload-success', (event) => {
     //             this.processUpload(event);
@@ -342,10 +342,10 @@ let create = function () {
     //         });
     //
     //
-    //         // source can never be expense account
-    //         this.filters.source = ['Asset account', 'Loan', 'Debt', 'Mortgage', 'Revenue account'];
-    //         // destination can never be revenue account
-    //         this.filters.destination = ['Expense account', 'Loan', 'Debt', 'Mortgage', 'Asset account'];
+            // source can never be expense account
+            this.filters.source = ['Asset account', 'Loan', 'Debt', 'Mortgage', 'Revenue account'];
+            // destination can never be revenue account
+            this.filters.destination = ['Expense account', 'Loan', 'Debt', 'Mortgage', 'Asset account'];
         },
     //     keyUpFromCategory(e) {
     //         if (e.key === 'Enter' && false === this.formStates.categorySelectVisible) {
@@ -467,6 +467,45 @@ let create = function () {
             console.log('addSplit()');
             this.entries.push(createEmptySplit());
 
+            setTimeout(() => {
+                const count = this.entries.length - 1;
+                const renderAccount = function (item, b, c) {
+                    return item.name_with_balance + '<br><small class="text-muted">' + i18next.t('firefly.account_type_' + item.type) + '</small>';
+                };
+
+                addAutocomplete({
+                    selector: 'input.ac-description',
+                    serverUrl: urls.description,
+                    valueField: 'id',
+                    labelField: 'description',
+                    onChange: changeDescription,
+                    onSelectItem: changeDescription,
+                });
+
+                addAutocomplete({
+                    selector: 'input.ac-source',
+                    serverUrl: urls.account,
+                    onRenderItem: renderAccount,
+                    valueField: 'id',
+                    labelField: 'name_with_balance',
+                    onChange: changeSourceAccount,
+                    onSelectItem: selectSourceAccount,
+                    hiddenValue: this.entries[count].source_account.alpine_name
+                });
+
+                addAutocomplete({
+                    selector: 'input.ac-dest',
+                    serverUrl: urls.account,
+                    account_types: this.filters.destination,
+                    valueField: 'id',
+                    labelField: 'name_with_balance',
+                    onRenderItem: renderAccount,
+                    onChange: changeDestinationAccount,
+                    onSelectItem: selectDestinationAccount
+                });
+
+            }, 150);
+
     //         setTimeout(() => {
     //             // render tags:
     //             Tags.init('select.ac-tags', {
@@ -487,36 +526,16 @@ let create = function () {
     //                     }
     //                 }
     //             });
-    //             const count = this.entries.length - 1;
+    //
     //             // if(document.querySelector('#location_map_' + count)) { }
     //             addLocation(count);
     //
     //             // addedSplit, is called from the HTML
     //             // for source account
-    //             const renderAccount = function (item, b, c) {
-    //                 return item.name_with_balance + '<br><small class="text-muted">' + i18next.t('firefly.account_type_' + item.type) + '</small>';
-    //             };
+
     //             console.log('here we are in');
-    //             addAutocomplete({
-    //                 selector: 'input.ac-source',
-    //                 serverUrl: urls.account,
-    //                 onRenderItem: renderAccount,
-    //                 valueField: 'id',
-    //                 labelField: 'name_with_balance',
-    //                 onChange: changeSourceAccount,
-    //                 onSelectItem: selectSourceAccount,
-    //                 hiddenValue: this.entries[count].source_account.alpine_name
-    //             });
-    //             addAutocomplete({
-    //                 selector: 'input.ac-dest',
-    //                 serverUrl: urls.account,
-    //                 account_types: this.filters.destination,
-    //                 valueField: 'id',
-    //                 labelField: 'name_with_balance',
-    //                 onRenderItem: renderAccount,
-    //                 onChange: changeDestinationAccount,
-    //                 onSelectItem: selectDestinationAccount
-    //             });
+
+
     //             addAutocomplete({
     //                 selector: 'input.ac-category',
     //                 serverUrl: urls.category,
@@ -536,13 +555,13 @@ let create = function () {
     //
     //         }, 150);
         },
-    //
-    //     removeSplit(index) {
-    //         this.entries.splice(index, 1);
-    //         // fall back to index 0
-    //         const triggerFirstTabEl = document.querySelector('#split-0-tab')
-    //         triggerFirstTabEl.click();
-    //     },
+
+        removeSplit(index) {
+            this.entries.splice(index, 1);
+            // fall back to index 0
+            const triggerFirstTabEl = document.querySelector('#split-0-tab')
+            triggerFirstTabEl.click();
+        },
     //
     //     clearLocation(e) {
     //         e.preventDefault();
