@@ -2118,6 +2118,7 @@ return [
     'wait_loading_data'                                   => 'Please wait for your information to load...',
     'wait_attachments'                                    => 'Please wait for the attachments to upload.',
     'errors_upload'                                       => 'The upload has failed. Please check your browser console for the error.',
+    'upload_too_large' => 'The upload has failed, the file is too large. Please try again.',
     'amount_foreign_if'                                   => 'Amount in foreign currency, if any',
     'amount_destination_account'                          => 'Amount in the currency of the destination account',
     'edit_transaction_title'                              => 'Edit transaction ":description"',

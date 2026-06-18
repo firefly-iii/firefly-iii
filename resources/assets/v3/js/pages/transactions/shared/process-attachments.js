@@ -33,7 +33,7 @@ let uploadFiles = function (fileData) {
                 poster.upload(attachmentId, fileData[key].content).then(attachmentResponse => {
                     uploads++;
                     if (uploads === count) {
-                        const event = new CustomEvent('upload-success', {some: 'details'});
+                        const event = new CustomEvent('upload-success', {detail: {some: 'details'}});
                         document.dispatchEvent(event);
                     }
                 }).catch(error => {
@@ -41,7 +41,7 @@ let uploadFiles = function (fileData) {
                     // console.error(error);
                     uploads++;
                     // break right away
-                    const event = new CustomEvent('upload-failed', {error: error});
+                    const event = new CustomEvent('upload-failed', {detail: {error: error}});
                     document.dispatchEvent(event);
                     hasError = true;
                 });
@@ -49,7 +49,7 @@ let uploadFiles = function (fileData) {
                 console.error('Could not create upload.');
                 console.error(error);
                 uploads++;
-                const event = new CustomEvent('upload-failed', {error: error});
+                const event = new CustomEvent('upload-failed', {detail: {error: error}});
                 document.dispatchEvent(event);
                 hasError = true;
             });

@@ -25,6 +25,7 @@ import {createEmptySplit, defaultErrorSet} from "./shared/create-empty-split.js"
 import {parseFromEntries} from "./shared/parse-from-entries.js";
 import formatMoney from "../../util/format-money.js";
 import Post from "../../api/model/transaction/post.js";
+import Delete from "../../api/model/transaction/delete.js";
 import {loadCurrencies} from "./shared/load-currencies.js";
 import {loadBudgets} from "./shared/load-budgets.js";
 import {loadPiggyBanks} from "./shared/load-piggy-banks.js";
@@ -289,6 +290,13 @@ let create = function () {
             this.notifications.error.show = true;
             this.formStates.isSubmitting = false;
             this.notifications.error.text = i18next.t('firefly.errors_upload');
+            console.log(event.detail.error.response.status);
+            if(413 === event.detail.error.response.status) {
+                this.notifications.error.text = i18next.t('firefly.upload_too_large');
+            }
+            // delete transaction and let user try again.
+            let del = new Delete();
+            del.delete(this.groupProperties.id);
             // console.error(event);
         },
 

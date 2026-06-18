@@ -26,10 +26,10 @@ import store from "../store/store.js";
 import axios from 'axios';
 import Shepherd from 'shepherd.js';
 import "cally";
-import {getFreshVariable} from "v2/src/store/get-fresh-variable.js";
-import {getVariable} from "v2/src/store/get-variable.js";
-import {getViewRange} from "v2/src/support/get-viewrange.js";
-import {loadTranslations} from "v2/src/support/load-translations.js";
+import {getFreshVariable} from "../store/get-fresh-variable.js";
+import {getVariable} from "../store/get-variable.js";
+import {getViewRange} from "../support/get-viewrange.js";
+import {loadTranslations} from "../support/load-translations.js";
 
 window.bootstrapped = false;
 window.store = store;
