@@ -9,13 +9,15 @@ use Illuminate\View\Component;
 class Split extends Component
 {
     public array $optionalFields;
+    public array $optionalDateFields;
 
     /**
      * Create a new component instance.
      */
-    public function __construct(array $optionalFields)
+    public function __construct(array $optionalFields, array $optionalDateFields)
     {
         $this->optionalFields = $optionalFields;
+        $this->optionalDateFields = $optionalDateFields;
     }
 
     /**

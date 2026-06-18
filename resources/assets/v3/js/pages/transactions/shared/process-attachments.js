@@ -18,7 +18,7 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-import AttachmentPost from "../../../api/v1/model/attachment/post.js";
+import AttachmentPost from "../../../api/model/attachment/post.js";
 
 let uploadFiles = function (fileData) {
     let count = fileData.length;
@@ -38,7 +38,7 @@ let uploadFiles = function (fileData) {
                     }
                 }).catch(error => {
                     console.error('[a] Could not upload');
-                    console.error(error);
+                    // console.error(error);
                     uploads++;
                     // break right away
                     const event = new CustomEvent('upload-failed', {error: error});

@@ -8,6 +8,7 @@
             class="form-select ac-tags"
             :id="'tags_' + index"
             :name="'tags['+index+'][]'"
+            x-model="transaction.tags"
             multiple>
             <option value="">{{ __('firefly.select_tag') }}</option>
         </select>

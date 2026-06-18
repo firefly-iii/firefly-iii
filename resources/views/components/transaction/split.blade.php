@@ -79,19 +79,19 @@
                 </div>
                 <div class="card-body">
                     <!-- ATTACHMENTS -->
-                    include('partials.form.transaction.attachments')
+                    @include('partials.form.transaction.attachments')
 
                     <!-- INTERNAL REFERENCE -->
-                    include('partials.form.transaction.internal-reference')
+                    @include('partials.form.transaction.internal-reference')
 
                     <!-- EXTERNAL URL -->
-                    include('partials.form.transaction.external-url')
+                    @include('partials.form.transaction.external-url')
 
                     <!-- LOCATION -->
-                    include('partials.form.transaction.location')
+                    @include('partials.form.transaction.location')
 
                     <!-- DATE FIELDS -->
-                    include('partials.form.transaction.date-fields')
+                    @include('partials.form.transaction.date-fields')
                 </div>
             </div>
         </div>
@@ -103,7 +103,7 @@
                     </h3>
                 </div>
                 <div class="card-body">
-                    include('partials.form.transaction.submission-options')
+                    @include('partials.form.transaction.submission-options')
                 </div>
                 <div class="card-footer">
                     <div class="row">

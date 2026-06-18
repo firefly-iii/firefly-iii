@@ -22,9 +22,9 @@ import '../../boot/bootstrap.js';
 import sidebar from '../../pages/shared/sidebar.js';
 import dates from '../shared/dates.js';
 import {createEmptySplit, defaultErrorSet} from "./shared/create-empty-split.js";
-// import {parseFromEntries} from "./shared/parse-from-entries.js";
+import {parseFromEntries} from "./shared/parse-from-entries.js";
 import formatMoney from "../../util/format-money.js";
-// import Post from "../../api/model/transaction/post.js";
+import Post from "../../api/model/transaction/post.js";
 import {loadCurrencies} from "./shared/load-currencies.js";
 import {loadBudgets} from "./shared/load-budgets.js";
 import {loadPiggyBanks} from "./shared/load-piggy-banks.js";
@@ -40,11 +40,12 @@ import {
     selectDestinationAccount,
     selectSourceAccount
 } from "./shared/autocomplete-functions.js";
-// import {processAttachments} from "./shared/process-attachments.js";
-// import {spliceErrorsIntoTransactions} from "./shared/splice-errors-into-transactions.js";
-// import Tags from "bootstrap5-tags";
+import {processAttachments} from "./shared/process-attachments.js";
+import {spliceErrorsIntoTransactions} from "./shared/splice-errors-into-transactions.js";
+import Tags from "bootstrap5-tags";
 // import {addLocation} from "./shared/manage-locations.js";
 import i18next from "i18next";
+// TODO fix tags
 // TODO upload attachments to other file
 // TODO fix two maps, perhaps disconnect from entries entirely.
 // TODO group title
@@ -275,20 +276,22 @@ let create = function () {
         addedSplit() {
 
         },
-    //
-    //     processUpload(event) {
-    //         this.showMessageOrRedirectUser();
-    //     },
-    //
-    //     processUploadError(event) {
-    //         this.notifications.success.show = false;
-    //         this.notifications.wait.show = false;
-    //         this.notifications.error.show = true;
-    //         this.formStates.isSubmitting = false;
-    //         this.notifications.error.text = i18next.t('firefly.errors_upload');
-    //         console.error(event);
-    //     },
-    //
+
+        processUpload(event) {
+            console.log('Now in processUpload()');
+            this.showMessageOrRedirectUser();
+        },
+
+        processUploadError(event) {
+            console.log('Now in processUploadError()');
+            this.notifications.success.show = false;
+            this.notifications.wait.show = false;
+            this.notifications.error.show = true;
+            this.formStates.isSubmitting = false;
+            this.notifications.error.text = i18next.t('firefly.errors_upload');
+            // console.error(event);
+        },
+
         init() {
             console.log('init()');
             this.addSplit();
@@ -315,19 +318,25 @@ let create = function () {
                 this.formData.subscriptions = data;
                 this.formStates.loadingSubscriptions = false;
             });
-    //
-    //         document.addEventListener('upload-success', (event) => {
-    //             this.processUpload(event);
-    //             document.querySelectorAll("input[type=file]").value = "";
-    //         });
-    //
-    //         document.addEventListener('upload-error', (event) => {
-    //             this.processUploadError(event);
-    //         });
-    //         document.addEventListener('location-move', (event) => {
-    //             this.entries[event.detail.index].latitude = event.detail.latitude;
-    //             this.entries[event.detail.index].longitude = event.detail.longitude;
-    //         });
+
+            document.addEventListener('upload-success', (event) => {
+                console.log('Now in event listener "upload-success"');
+                this.processUpload(event);
+                document.querySelectorAll("input[type=file]").value = "";
+            });
+
+            document.addEventListener('upload-error', (event) => {
+                console.log('Now in event listener "upload-error"')
+                this.processUploadError(event);
+            });
+            document.addEventListener('upload-failed', (event) => {
+                console.log('Now in event listener "upload-failed"')
+                this.processUploadError(event);
+            });
+            // document.addEventListener('location-move', (event) => {
+            //     this.entries[event.detail.index].latitude = event.detail.latitude;
+            //     this.entries[event.detail.index].longitude = event.detail.longitude;
+            // });
     //
     //         document.addEventListener('location-set', (event) => {
     //             this.entries[event.detail.index].hasLocation = true;
@@ -347,122 +356,122 @@ let create = function () {
             // destination can never be revenue account
             this.filters.destination = ['Expense account', 'Loan', 'Debt', 'Mortgage', 'Asset account'];
         },
-    //     keyUpFromCategory(e) {
-    //         if (e.key === 'Enter' && false === this.formStates.categorySelectVisible) {
-    //             this.submitTransaction();
-    //             return;
-    //         }
-    //         this.formStates.categorySelectVisible = document.querySelector('input.ac-category').nextSibling.classList.contains('show');
-    //     },
-    //     submitTransaction() {
-    //         // reset all messages:
-    //         this.notifications.error.show = false;
-    //         this.notifications.success.show = false;
-    //         this.notifications.wait.show = false;
+        keyUpFromCategory(e) {
+            if (e.key === 'Enter' && false === this.formStates.categorySelectVisible) {
+                this.submitTransaction();
+                return;
+            }
+            this.formStates.categorySelectVisible = document.querySelector('input.ac-category').nextSibling.classList.contains('show');
+        },
+        submitTransaction() {
+            // reset all messages:
+            this.notifications.error.show = false;
+            this.notifications.success.show = false;
+            this.notifications.wait.show = false;
     //
-    //         // reset all errors in the entries array:
-    //         for (let i in this.entries) {
-    //             if (this.entries.hasOwnProperty(i)) {
-    //                 this.entries[i].errors = defaultErrorSet();
-    //             }
-    //         }
-    //
-    //         // form is now submitting:
-    //         this.formStates.isSubmitting = true;
-    //
-    //         // final check on transaction type.
-    //         this.detectTransactionType();
-    //
-    //         // parse transaction:
-    //         let transactions = parseFromEntries(this.entries, null, this.groupProperties.transactionType);
-    //         let submission = {
-    //             group_title: this.groupProperties.title,
-    //             fire_webhooks: this.formStates.webhooksButton,
-    //             apply_rules: this.formStates.rulesButton,
-    //             transactions: transactions
-    //         };
-    //
-    //         // catch for group title:
-    //         // TODO later this must be handled with more care (ie use the group title input)
-    //         if (transactions.length > 1) {
-    //             submission.group_title = transactions[0].description;
-    //         }
-    //
-    //         // submit the transaction. Multi-stage process thing going on here!
-    //         let poster = new Post();
-    //         console.log(submission);
-    //         poster.post(submission).then((response) => {
-    //             const group = response.data.data;
-    //             // submission was a success!
-    //             this.groupProperties.id = parseInt(group.id);
-    //             this.groupProperties.title = group.attributes.group_title ?? group.attributes.transactions[0].description
-    //             console.log('group title is now: ', this.groupProperties.title);
-    //
-    //             // process attachments, if any:
-    //             const attachmentCount = processAttachments(this.groupProperties.id, group.attributes.transactions);
-    //
-    //             if (attachmentCount > 0) {
-    //                 // if count is more than zero, system is processing transactions in the background.
-    //                 this.notifications.wait.show = true;
-    //                 this.notifications.wait.text = i18next.t('firefly.wait_attachments');
-    //                 return;
-    //             }
-    //
-    //             // if not, respond to user options:
-    //             this.showMessageOrRedirectUser();
-    //         }).catch((error) => {
-    //
-    //             this.submitting = false;
-    //             console.log(error);
-    //             // todo put errors in form
-    //             if (typeof error.response !== 'undefined') {
-    //                 this.parseErrors(error.response.data);
-    //             }
-    //
-    //
-    //         });
-    //     },
-    //
-    //     showMessageOrRedirectUser() {
-    //         // disable all messages:
-    //         this.notifications.error.show = false;
-    //         this.notifications.success.show = false;
-    //         this.notifications.wait.show = false;
-    //
-    //         if (this.formStates.returnHereButton) {
-    //             this.notifications.success.show = true;
-    //             this.notifications.success.url = 'transactions/show/' + this.groupProperties.id;
-    //             this.notifications.success.text = i18next.t('firefly.stored_journal_js', {
-    //                 description: this.groupProperties.title,
-    //                 interpolation: {escapeValue: false}
-    //             });
-    //             this.formStates.isSubmitting = false;
-    //             // reset group title again
-    //             this.groupProperties.title = null;
-    //
-    //             if (this.formStates.resetButton) {
-    //                 this.entries = [];
-    //                 this.addSplit();
-    //                 this.groupProperties.totalAmount = 0;
-    //             }
-    //             return;
-    //         }
-    //         window.location = 'transactions/show/' + this.groupProperties.id + '?transaction_group_id=' + this.groupProperties.id + '&message=created';
-    //     },
-    //
-    //     parseErrors(data) {
-    //         // disable all messages:
-    //         this.notifications.error.show = true;
-    //         this.notifications.success.show = false;
-    //         this.notifications.wait.show = false;
-    //         this.formStates.isSubmitting = false;
-    //         this.notifications.error.text = i18next.t('firefly.errors_submission_v2', {errorMessage: data.message});
-    //
-    //         if (data.hasOwnProperty('errors')) {
-    //             this.entries = spliceErrorsIntoTransactions(data.errors, this.entries);
-    //         }
-    //     },
-    //
+            // reset all errors in the entries array:
+            for (let i in this.entries) {
+                if (this.entries.hasOwnProperty(i)) {
+                    this.entries[i].errors = defaultErrorSet();
+                }
+            }
+
+            // form is now submitting:
+            this.formStates.isSubmitting = true;
+
+            // final check on transaction type.
+            this.detectTransactionType();
+
+            // parse transaction:
+            let transactions = parseFromEntries(this.entries, null, this.groupProperties.transactionType);
+            let submission = {
+                group_title: this.groupProperties.title,
+                fire_webhooks: this.formStates.webhooksButton,
+                apply_rules: this.formStates.rulesButton,
+                transactions: transactions
+            };
+
+            // catch for group title:
+            // TODO later this must be handled with more care (ie use the group title input)
+            if (transactions.length > 1) {
+                submission.group_title = transactions[0].description;
+            }
+
+            // submit the transaction. Multi-stage process thing going on here!
+            let poster = new Post();
+            console.log(submission);
+            poster.post(submission).then((response) => {
+                const group = response.data.data;
+                // submission was a success!
+                this.groupProperties.id = parseInt(group.id);
+                this.groupProperties.title = group.attributes.group_title ?? group.attributes.transactions[0].description
+                console.log('group title is now: ', this.groupProperties.title);
+
+                // process attachments, if any:
+                const attachmentCount = processAttachments(this.groupProperties.id, group.attributes.transactions);
+
+                if (attachmentCount > 0) {
+                    // if count is more than zero, system is processing transactions in the background.
+                    this.notifications.wait.show = true;
+                    this.notifications.wait.text = i18next.t('firefly.wait_attachments');
+                    return;
+                }
+
+                // if not, respond to user options:
+                this.showMessageOrRedirectUser();
+            }).catch((error) => {
+
+                this.submitting = false;
+                console.log(error);
+                // todo put errors in form
+                if (typeof error.response !== 'undefined') {
+                    this.parseErrors(error.response.data);
+                }
+
+
+            });
+        },
+
+        showMessageOrRedirectUser() {
+            // disable all messages:
+            this.notifications.error.show = false;
+            this.notifications.success.show = false;
+            this.notifications.wait.show = false;
+
+            if (this.formStates.returnHereButton) {
+                this.notifications.success.show = true;
+                this.notifications.success.url = 'transactions/show/' + parseInt(this.groupProperties.id);
+                this.notifications.success.text = i18next.t('firefly.stored_journal_js', {
+                    description: this.groupProperties.title,
+                    interpolation: {escapeValue: false}
+                });
+                this.formStates.isSubmitting = false;
+                // reset group title again
+                this.groupProperties.title = null;
+
+                if (this.formStates.resetButton) {
+                    this.entries = [];
+                    this.addSplit();
+                    this.groupProperties.totalAmount = 0;
+                }
+                return;
+            }
+            window.location = 'transactions/show/' + this.groupProperties.id + '?transaction_group_id=' + this.groupProperties.id + '&message=created';
+        },
+
+        parseErrors(data) {
+            // disable all messages:
+            this.notifications.error.show = true;
+            this.notifications.success.show = false;
+            this.notifications.wait.show = false;
+            this.formStates.isSubmitting = false;
+            this.notifications.error.text = i18next.t('firefly.errors_submission_v2', {errorMessage: data.message});
+
+            if (data.hasOwnProperty('errors')) {
+                this.entries = spliceErrorsIntoTransactions(data.errors, this.entries);
+            }
+        },
+
         addSplit() {
             console.log('addSplit()');
             this.entries.push(createEmptySplit());
@@ -472,6 +481,29 @@ let create = function () {
                 const renderAccount = function (item, b, c) {
                     return item.name_with_balance + '<br><small class="text-muted">' + i18next.t('firefly.account_type_' + item.type) + '</small>';
                 };
+                // if(document.querySelector('#location_map_' + count)) {
+                //     addLocation(count);
+                // }
+
+                // render tags:
+                Tags.init('select.ac-tags', {
+                    allowClear: true,
+                    server: urls.tag,
+                    liveServer: true,
+                    clearEnd: true,
+                    labelField: 'tag',
+                    valueField: 'id',
+                    queryParam: 'query',
+                    allowNew: true,
+                    //serverDataKey: 'data',
+                    notFoundMessage: i18next.t('firefly.nothing_found'),
+                    noCache: true,
+                    fetchOptions: {
+                        headers: {
+                            'X-CSRF-TOKEN': document.head.querySelector('meta[name="csrf-token"]').content
+                        }
+                    }
+                });
 
                 addAutocomplete({
                     selector: 'input.ac-description',
@@ -504,31 +536,19 @@ let create = function () {
                     onSelectItem: selectDestinationAccount
                 });
 
+                addAutocomplete({
+                    selector: 'input.ac-category',
+                    serverUrl: urls.category,
+                    valueField: 'id',
+                    labelField: 'name',
+                    onChange: changeCategory,
+                    onSelectItem: changeCategory
+                });
+
             }, 150);
 
     //         setTimeout(() => {
-    //             // render tags:
-    //             Tags.init('select.ac-tags', {
-    //                 allowClear: true,
-    //                 server: urls.tag,
-    //                 liveServer: true,
-    //                 clearEnd: true,
-    //                 labelField: 'title',
-    //                 valueField: 'id',
-    //                 queryParam: 'filter[query]',
-    //                 allowNew: true,
-    //                 serverDataKey: 'data',
-    //                 notFoundMessage: i18next.t('firefly.nothing_found'),
-    //                 noCache: true,
-    //                 fetchOptions: {
-    //                     headers: {
-    //                         'X-CSRF-TOKEN': document.head.querySelector('meta[name="csrf-token"]').content
-    //                     }
-    //                 }
-    //             });
-    //
-    //             // if(document.querySelector('#location_map_' + count)) { }
-    //             addLocation(count);
+    //             //
     //
     //             // addedSplit, is called from the HTML
     //             // for source account
@@ -536,22 +556,7 @@ let create = function () {
     //             console.log('here we are in');
 
 
-    //             addAutocomplete({
-    //                 selector: 'input.ac-category',
-    //                 serverUrl: urls.category,
-    //                 valueField: 'id',
-    //                 labelField: 'title',
-    //                 onChange: changeCategory,
-    //                 onSelectItem: changeCategory
-    //             });
-    //             addAutocomplete({
-    //                 selector: 'input.ac-description',
-    //                 serverUrl: urls.description,
-    //                 valueField: 'id',
-    //                 labelField: 'title',
-    //                 onChange: changeDescription,
-    //                 onSelectItem: changeDescription,
-    //             });
+
     //
     //         }, 150);
         },
