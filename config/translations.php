@@ -24,7 +24,7 @@ declare(strict_types=1);
 
 return [
     'json'      => [
-        'v2' => [
+        'v3' => [
             'config'     => [
                 'html_language',
                 'date_time_fns',
