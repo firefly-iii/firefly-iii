@@ -23,7 +23,7 @@ jobs:
           # validate argument
           if  [[ $version != develo* ]] && [[ $version != v* ]] && [[ $version != branch* ]] ;
           then
-            echo "Argument '$version' does not start with a d or with a v or a b"
+            echo "Argument '$version' does not start with a d or with a v or 'branch'"
             exit 1
           fi
         env:
@@ -35,9 +35,9 @@ jobs:
       - name: Switch and pull
         run: |
           # validate argument
-          if  [[ $version != d* ]] && [[ $version != v* ]] ;
+          if  [[ $version != develo* ]] && [[ $version != v* ]] && [[ $version != branch* ]] ;
           then
-            echo 'Argument does not start with a d or with a v'
+            echo "Argument '$version' does not start with a d or with a v or 'branch'"
             exit 1
           fi
 
