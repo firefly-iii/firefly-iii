@@ -81,6 +81,7 @@ class TransactionGroup extends Model
 
                 return $group;
             }
+
             throw new NotFoundHttpException();
         }
         Log::debug('Found no group.');

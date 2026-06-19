@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace FireflyIII\View\Components;
 
 use Closure;
@@ -11,20 +13,21 @@ class EmptyPage extends Component
     public string $route;
     public string $objectType;
     public string $type;
+
     /**
      * Create a new component instance.
      */
     public function __construct(string $route, string $objectType, string $type)
     {
-        $this->route = $route;
+        $this->route      = $route;
         $this->objectType = $objectType;
-        $this->type= $type;
+        $this->type       = $type;
     }
 
     /**
      * Get the view / contents that represent the component.
      */
-    public function render(): View|Closure|string
+    public function render(): Closure|string|View
     {
         return view('components.empty-page');
     }

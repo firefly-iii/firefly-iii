@@ -25,7 +25,6 @@ declare(strict_types=1);
 use Carbon\Carbon;
 use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Models\Account;
-use FireflyIII\Models\Configuration;
 use FireflyIII\Repositories\Account\AccountRepositoryInterface;
 use FireflyIII\Support\Facades\Amount;
 use FireflyIII\Support\Facades\AppConfiguration;
@@ -34,6 +33,7 @@ use FireflyIII\Support\Search\OperatorQuerySearch;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Log;
 use League\CommonMark\GithubFlavoredMarkdownConverter;
+
 use function Safe\mb_ord;
 use function Safe\preg_match;
 use function Safe\preg_replace_callback;
@@ -42,7 +42,7 @@ if (!function_exists('env_default_when_empty')) {
     /**
      * @return null|mixed
      */
-    function env_default_when_empty(mixed $value, bool | int | string | null $default = null): mixed
+    function env_default_when_empty(mixed $value, bool|int|string|null $default = null): mixed
     {
         if (null === $value) {
             return $default;
@@ -55,24 +55,27 @@ if (!function_exists('env_default_when_empty')) {
     }
 }
 
-if(!function_exists('parse_markdown')) {
-    function parse_markdown(string $string): string {
+if (!function_exists('parse_markdown')) {
+    function parse_markdown(string $string): string
+    {
         $converter = new GithubFlavoredMarkdownConverter(['allow_unsafe_links' => false, 'max_nesting_level' => 5, 'html_input' => 'escape']);
 
         return (string) $converter->convert($string);
     }
 }
 
-if(!function_exists('get_root_search_operator')) {
-    function get_root_search_operator(string $operator): string {
+if (!function_exists('get_root_search_operator')) {
+    function get_root_search_operator(string $operator): string
+    {
         $result = OperatorQuerySearch::getRootOperator($operator);
 
         return str_replace('-', 'not_', $result);
     }
 }
 
-if(!function_exists('get_app_configuration')) {
-    function get_app_configuration(string $name, mixed $default = null): mixed {
+if (!function_exists('get_app_configuration')) {
+    function get_app_configuration(string $name, mixed $default = null): mixed
+    {
         try {
             return AppConfiguration::get($name, $default)?->data;
         } catch (FireflyException) {
@@ -81,7 +84,7 @@ if(!function_exists('get_app_configuration')) {
     }
 }
 
-if(!function_exists('format_amount_by_symbol')) {
+if (!function_exists('format_amount_by_symbol')) {
     function format_amount_by_symbol(string $amount, ?string $symbol = null, ?int $decimalPlaces = null, ?bool $coloured = null): string
     {
         return Steam::formatAmountBySymbol($amount, $symbol, $decimalPlaces, $coloured);
@@ -97,20 +100,20 @@ if (!function_exists('account_get_meta_field')) {
         if (null === $result) {
             return '';
         }
+
         return $result;
     }
 }
 
-
 if (!function_exists('account_balance')) {
-    function account_balance(\FireflyIII\Models\Account $account): string
+    function account_balance(Account $account): string
     {
         /** @var Carbon $date */
-        $date = now();
+        $date             = now();
 
         // get the date from the current session. If it's in the future, keep `now()`.
         /** @var Carbon $session */
-        $session = clone session('end', today(config('app.timezone'))->endOfMonth());
+        $session          = clone session('end', today(config('app.timezone'))->endOfMonth());
         if ($session->lt($date)) {
             $date = $session->copy();
             $date->endOfDay();
@@ -118,13 +121,13 @@ if (!function_exists('account_balance')) {
         Log::debug(sprintf('twig balance: Call finalAccountBalance with date/time "%s"', $date->toIso8601String()));
 
         // 2025-10-08 replace finalAccountBalance with accountsBalancesOptimized.
-        $info = Steam::accountsBalancesOptimized(new Collection()->push($account), $date)[$account->id];
+        $info             = Steam::accountsBalancesOptimized(new Collection()->push($account), $date)[$account->id];
         // $info             = Steam::finalAccountBalance($account, $date);
         $currency         = Steam::getAccountCurrency($account);
         $primary          = Amount::getPrimaryCurrency();
         $convertToPrimary = Amount::convertToPrimary();
         $usePrimary       = $convertToPrimary && $primary->id !== $currency->id;
-        $currency         ??= $primary;
+        $currency ??= $primary;
         $strings          = [];
         foreach ($info as $key => $balance) {
             if ('balance' === $key) {
@@ -150,7 +153,6 @@ if (!function_exists('account_balance')) {
         }
 
         return implode(', ', $strings);
-
     }
 }
 
@@ -173,14 +175,14 @@ if (!function_exists('blade_escape_js')) {
         return preg_replace_callback(
             '#[^a-zA-Z0-9,\._]#Su',
             static function ($matches) {
-                $char = $matches[0];
+                $char      = $matches[0];
 
                 /*
                  * A few characters have short escape sequences in JSON and JavaScript.
                  * Escape sequences supported only by JavaScript, not JSON, are omitted.
                  * \" is also supported but omitted, because the resulting string is not HTML safe.
                  */
-                $short = match ($char) {
+                $short     = match ($char) {
                     '\\'    => '\\\\',
                     '/'     => '\/',
                     "\x08"  => '\b',
@@ -202,9 +204,9 @@ if (!function_exists('blade_escape_js')) {
 
                 // Split characters outside the BMP into surrogate pairs
                 // https://tools.ietf.org/html/rfc2781.html#section-2.1
-                $u    = $codepoint - 0x10_000;
-                $high = 0xD800 | ($u >> 10);
-                $low  = 0xDC00 | ($u & 0x3FF);
+                $u         = $codepoint - 0x10_000;
+                $high      = 0xD800 | ($u >> 10);
+                $low       = 0xDC00 | ($u & 0x3FF);
 
                 return \sprintf('\u%04X\u%04X', $high, $low);
             },

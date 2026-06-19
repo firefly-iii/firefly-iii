@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace FireflyIII\View\Components\Transaction;
 
 use Closure;
@@ -16,14 +18,14 @@ class Split extends Component
      */
     public function __construct(array $optionalFields, array $optionalDateFields)
     {
-        $this->optionalFields = $optionalFields;
+        $this->optionalFields     = $optionalFields;
         $this->optionalDateFields = $optionalDateFields;
     }
 
     /**
      * Get the view / contents that represent the component.
      */
-    public function render(): View|Closure|string
+    public function render(): Closure|string|View
     {
         return view('components.transaction.split');
     }

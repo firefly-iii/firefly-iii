@@ -107,18 +107,17 @@ final class HomeController extends Controller
             $request->session()->flash('warning', (string) trans('firefly.warning_much_data', ['days' => (int) $diff]));
         }
 
-
         $request->session()->put('is_custom_range', $isCustomRange);
         Log::debug(sprintf('Set is_custom_range to %s', var_export($isCustomRange, return: true)));
         $request->session()->put('start', $start);
         Log::debug(sprintf('Set start to %s', $start->format('Y-m-d H:i:s')));
         $request->session()->put('end', $end);
         Log::debug(sprintf('Set end to %s', $end->format('Y-m-d H:i:s')));
-        if('true' === $request->input('redirect')) {
+        if ('true' === $request->input('redirect')) {
             return redirect(route('home'));
         }
-        return response()->json(['ok' => 'ok']);
 
+        return response()->json(['ok' => 'ok']);
     }
 
     /**
@@ -135,6 +134,7 @@ final class HomeController extends Controller
         if (0 === $count) {
             return redirect(route('new-user.index'));
         }
+
         // ignore v2.
         return $this->indexV1($repository);
     }
@@ -145,7 +145,7 @@ final class HomeController extends Controller
         $pageTitle      = (string) trans('firefly.main_dashboard_page_title');
         $count          = $repository->count($types);
         $subTitle       = (string) trans('firefly.welcome_back');
-        $subTitleIcon = 'bi-piggy-bank';
+        $subTitleIcon   = 'bi-piggy-bank';
         $transactions   = [];
         $frontpage      = Preferences::getFresh('frontpageAccounts', $repository->getAccountsByType([AccountTypeEnum::ASSET->value])->pluck('id')->toArray());
         $frontpageArray = $frontpage->data;
@@ -192,5 +192,4 @@ final class HomeController extends Controller
             'pageTitle'    => $pageTitle,
         ]);
     }
-
 }

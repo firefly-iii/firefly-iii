@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace FireflyIII\View\Components\Layout;
 
 use Closure;
@@ -8,7 +10,7 @@ use Illuminate\View\Component;
 
 class Flash extends Component
 {
-    public bool   $invalidMonetaryLocale;
+    public bool $invalidMonetaryLocale;
     public string $upgradeSecurityMessage;
     public string $upgradeSecurityLevel;
 
@@ -25,7 +27,7 @@ class Flash extends Component
     /**
      * Get the view / contents that represent the component.
      */
-    public function render(): View | Closure | string
+    public function render(): Closure|string|View
     {
         return view('components.layout.flash');
     }
