@@ -46,10 +46,11 @@ jobs:
           #
           BRANCH_TO_PULL=origin/develop
           if [[ "$version" == branch* ]]; then
-            BRANCH_TO_PULL=origin/${version:7}
+            SHORT=${version:7}
+            BRANCH_TO_PULL="origin/$SHORT"
           fi
 
-          echo "Version is '$version', check out '$BRANCH_TO_PULL'-branch"
+          echo "Version is '$version', check out '$BRANCH_TO_PULL' branch"
 
           git checkout --track $BRANCH_TO_PULL
           git pull
