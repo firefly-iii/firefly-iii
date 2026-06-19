@@ -281,6 +281,7 @@ jobs:
           GH_TOKEN: ""
       - name: Merge all into working branch
         run: |
+          git status
           MERGE_INTO=develop
             if [[ "$version" == branch* ]]; then
                 MERGE_INTO=$version
