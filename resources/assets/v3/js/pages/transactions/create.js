@@ -21,7 +21,7 @@
 import '../../boot/bootstrap.js';
 import sidebar from '../../pages/shared/sidebar.js';
 import dates from '../shared/dates.js';
-import {createEmptySplit, defaultErrorSet} from "./shared/create-empty-split.js";
+import {createEmptySplit, getAccount, defaultErrorSet} from "./shared/create-empty-split.js";
 import {parseFromEntries} from "./shared/parse-from-entries.js";
 import formatMoney from "../../util/format-money.js";
 import Post from "../../api/model/transaction/post.js";
@@ -298,6 +298,17 @@ let create = function () {
             let del = new Delete();
             del.delete(this.groupProperties.id);
             // console.error(event);
+        },
+        clearDescription(index) {
+            this.entries[index].description = '';
+        },
+        clearSourceAccount(index) {
+            this.entries[index].source_account = getAccount();
+            this.detectTransactionType();
+        },
+        clearDestinationAccount(index) {
+            this.entries[index].destination_account = getAccount();
+            this.detectTransactionType();
         },
 
         init() {

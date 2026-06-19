@@ -4,6 +4,7 @@
         <em title="{{ __('firefly.destination_account') }}" class="bi bi-arrow-right"></em>
     </label>
     <div class="col-sm-10">
+        <div class="input-group">
         <input type="text"
                :class="{'is-invalid': transaction.errors.destination_account.length > 0, 'form-control': true, 'ac-dest': true}"
                :id="'dest_' + index"
@@ -11,6 +12,8 @@
                :data-index="index"
                @changed="changedDestinationAccount"
                placeholder="{{ __('firefly.destination_account')  }}">
+            <button tabindex="-1" class="btn btn-outline-secondary" type="button" @click="clearDestinationAccount(index)"><em class="bi bi-trash"></em></button>
+        </div>
         <template x-if="transaction.errors.destination_account.length > 0">
             <div class="invalid-feedback"
                  x-text="transaction.errors.destination_account[0]">

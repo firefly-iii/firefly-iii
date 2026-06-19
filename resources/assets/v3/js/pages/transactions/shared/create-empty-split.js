@@ -21,7 +21,7 @@
 
 import format from "date-fns/format";
 
-function getAccount() {
+export function getAccount() {
     return {
         id: '',
         name: '',
