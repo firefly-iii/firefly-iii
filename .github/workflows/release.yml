@@ -46,7 +46,7 @@ jobs:
           #
           BRANCH_TO_PULL=origin/develop
           if [[ "$version" == branch* ]]; then
-            BRANCH_TO_PULL=origin/$version
+            BRANCH_TO_PULL=origin/${version:7}
           fi
 
           echo "Version is '$version', check out '$BRANCH_TO_PULL'-branch"
