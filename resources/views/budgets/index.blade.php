@@ -61,14 +61,14 @@
                             <div class="col-lg-3 col-md-3 col-sm-3 col-xs-3">
                                 <small>{{ __('firefly.budgeted') }} ({{ __('firefly.see_below') }}):
                                     <span class="budgeted_amount" data-value="{{ $budgeted }}" data-id="0" data-currency="{{ $primaryCurrency['id'] }}">
-                                        {!! \FireflyIII\Support\Facades\Steam::formatAmountBySymbol($budgeted, $primaryCurrency->symbol, $primaryCurrency->decimal_places) !!}
+                                        {!! format_amount_by_symbol($budgeted, $primaryCurrency->symbol, $primaryCurrency->decimal_places) !!}
                                     </span>
                                 </small>
                             </div>
                             {{-- info about the amount spent --}}
                             <div class="col-lg-9 col-md-9 col-sm-9 col-xs-9 text-end">
                                 <small class="available_bar" data-id="0">{{ trans('firefly.available_between', ['start' => $start->isoFormat($monthAndDayFormat), 'end' => $end->isoFormat($monthAndDayFormat)]) }}:
-                                    <span class="available_amount" data-id="0" data-value="0" data-currency="{{ $primaryCurrency['id'] }}" data-value="0">{!! \FireflyIII\Support\Facades\Steam::formatAmountBySymbol(0, $primaryCurrency->symbol, $primaryCurrency->decimal_places, true) !!}</span>
+                                    <span class="available_amount" data-id="0" data-value="0" data-currency="{{ $primaryCurrency['id'] }}" data-value="0">{!! format_amount_by_symbol(0, $primaryCurrency->symbol, $primaryCurrency->decimal_places, true) !!}</span>
                                 </small>
                             </div>
                         </div>
@@ -76,7 +76,7 @@
                         <div class="row spentInfo" data-id="0" data-value="{{ $spent }}">
                             <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
                                 <small>{{ trans('firefly.spent_between', ['start' => $start->isoFormat($monthAndDayFormat), 'end' => $end->isoFormat($monthAndDayFormat)]) }}:
-                                    {!! \FireflyIII\Support\Facades\Steam::formatAmountBySymbol($spent, $primaryCurrency->symbol, $primaryCurrency->decimal_places) !!} </small>
+                                    {!! format_amount_by_symbol($spent, $primaryCurrency->symbol, $primaryCurrency->decimal_places) !!} </small>
                             </div>
                         </div>
                     </div>
@@ -106,9 +106,9 @@
                                 <div class="col-lg-3 col-md-3 col-sm-3 col-xs-3">
                                     <small>{{ __('firefly.budgeted') }}:
                                         <span class="text-success money-positive budgeted_amount" data-id="{{ $budget['id'] }}" data-currency="{{ $budget['transaction_currency']['id'] }}">
-                                        {!!  \FireflyIII\Support\Facades\Steam::formatAmountBySymbol($budget['budgeted'], $budget['transaction_currency']['symbol'], $budget['transaction_currency']['decimal_places'], false)  !!}
+                                        {!!  format_amount_by_symbol($budget['budgeted'], $budget['transaction_currency']['symbol'], $budget['transaction_currency']['decimal_places'], false)  !!}
                                             @if(null !== $budget['pc_budgeted'])
-                                            ({!! \FireflyIII\Support\Facades\Steam::formatAmountBySymbol($budget['pc_budgeted'], $primaryCurrency->symbol, $primaryCurrency->decimal_places, false)  !!})
+                                            ({!! format_amount_by_symbol($budget['pc_budgeted'], $primaryCurrency->symbol, $primaryCurrency->decimal_places, false)  !!})
                                             @endif
                                     </span>
                                     </small>
@@ -118,9 +118,9 @@
                                     <small class="available_bar" data-id="{{ $budget['id'] }}">{{ trans('firefly.available_between', ['start' => $budget['start_date']->isoFormat($monthAndDayFormat), 'end' => $budget['end_date']->isoFormat($monthAndDayFormat)]) }}:
                                         <span class="available_amount" data-id="{{ $budget['id'] }}" data-currency="{{ $budget['transaction_currency']['id'] }}"
                                               data-value="{{ $budget['amount'] }}">
-                                            {!! \FireflyIII\Support\Facades\Steam::formatAmountBySymbol($budget['amount'], $budget['transaction_currency']['symbol'], $budget['transaction_currency']['decimal_places'], true) !!}
+                                            {!! format_amount_by_symbol($budget['amount'], $budget['transaction_currency']['symbol'], $budget['transaction_currency']['decimal_places'], true) !!}
                                         @if($convertToPrimary && 0 !== $budget->pc_amount)
-                                                ({!!  \FireflyIII\Support\Facades\Steam::formatAmountBySymbol($budget->pc_amount, $primaryCurrency->symbol, $primaryCurrency->decimal_places, true)  !!})
+                                                ({!!  format_amount_by_symbol($budget->pc_amount, $primaryCurrency->symbol, $primaryCurrency->decimal_places, true)  !!})
                                             @endif
                                         </span>
                                     </small>
@@ -154,8 +154,8 @@
                                     <small>{!! trans('firefly.spent_between_left', [
                                             'start' => $budget['start_date']->isoFormat($monthAndDayFormat),
                                             'end' => $budget['end_date']->isoFormat($monthAndDayFormat),
-                                            'spent' => \FireflyIII\Support\Facades\Steam::formatAmountBySymbol($budget['spent'], $budget['transaction_currency']['symbol'], $budget['transaction_currency']['decimal_places']),
-                                            'left' => \FireflyIII\Support\Facades\Steam::formatAmountBySymbol($budget['budgeted'] + $budget['spent'], $budget['transaction_currency']['symbol'], $budget['transaction_currency']['decimal_places']),
+                                            'spent' => format_amount_by_symbol($budget['spent'], $budget['transaction_currency']['symbol'], $budget['transaction_currency']['decimal_places']),
+                                            'left' => format_amount_by_symbol($budget['budgeted'] + $budget['spent'], $budget['transaction_currency']['symbol'], $budget['transaction_currency']['decimal_places']),
                                         ])  !!}
                                         </small>
                                 </div>
@@ -323,11 +323,11 @@
                                     <td class="hidden-sm hidden-xs spent text-end" data-id="{{ $budget['id'] }}">
                                         {{-- this is spent in budget limits: --}}
                                         @foreach($budget['budgeted'] as $budgetLimit)
-                                        <span title="{{ __('firefly.spent_this_period') }}">{!! \FireflyIII\Support\Facades\Steam::formatAmountBySymbol($budgetLimit['spent'], $budgetLimit['currency_symbol'], $budgetLimit['currency_decimal_places'])  !!}</span>
+                                        <span title="{{ __('firefly.spent_this_period') }}">{!! format_amount_by_symbol($budgetLimit['spent'], $budgetLimit['currency_symbol'], $budgetLimit['currency_decimal_places'])  !!}</span>
                                         @if(0 === $budgetLimit['active_days_passed'])
-                                            <span title="{{ trans('firefly.spent_this_period_per_day', ['days' => 0]) }}">({!! \FireflyIII\Support\Facades\Steam::formatAmountBySymbol($budgetLimit['spent'], $budgetLimit['currency_symbol'], $budgetLimit['currency_decimal_places'])  !!})</span>
+                                            <span title="{{ trans('firefly.spent_this_period_per_day', ['days' => 0]) }}">({!! format_amount_by_symbol($budgetLimit['spent'], $budgetLimit['currency_symbol'], $budgetLimit['currency_decimal_places'])  !!})</span>
                                         @else
-                                            <span title="{{ trans('firefly.spent_this_period_per_day', ['days' => $budgetLimit['active_days_passed']]) }}">({!! \FireflyIII\Support\Facades\Steam::formatAmountBySymbol($budgetLimit['spent'] / $budgetLimit['active_days_passed'], $budgetLimit['currency_symbol'], $budgetLimit['currency_decimal_places'])  !!})</span>
+                                            <span title="{{ trans('firefly.spent_this_period_per_day', ['days' => $budgetLimit['active_days_passed']]) }}">({!! format_amount_by_symbol($budgetLimit['spent'] / $budgetLimit['active_days_passed'], $budgetLimit['currency_symbol'], $budgetLimit['currency_decimal_places'])  !!})</span>
                                         @endif
                                         <br />
                                         @endforeach
@@ -335,11 +335,11 @@
                                         {{-- this is spent NOT in budget limits: --}}
                                         @foreach($budget['spent'] as $spent)
                                         @if(0 !== bccomp('0', $spent['spent_outside']))
-                                            <span title="{{ __('firefly.spent_in_budget_limit_outside_period') }}">{!! \FireflyIII\Support\Facades\Steam::formatAmountBySymbol($spent['spent_outside'], $spent['currency_symbol'], $spent['currency_decimal_places']) !!}</span>
+                                            <span title="{{ __('firefly.spent_in_budget_limit_outside_period') }}">{!! format_amount_by_symbol($spent['spent_outside'], $spent['currency_symbol'], $spent['currency_decimal_places']) !!}</span>
                                         @if(0 === $activeDaysPassed)
-                                            <span title="{{ trans('firefly.spent_in_budget_limit_outside_period_per_day', ['days' => 0]) }}">({!!  \FireflyIII\Support\Facades\Steam::formatAmountBySymbol($spent['spent_outside'], $spent['currency_symbol'], $spent['currency_decimal_places'])  !!})</span>
+                                            <span title="{{ trans('firefly.spent_in_budget_limit_outside_period_per_day', ['days' => 0]) }}">({!!  format_amount_by_symbol($spent['spent_outside'], $spent['currency_symbol'], $spent['currency_decimal_places'])  !!})</span>
                                         @else
-                                            <span title="{{ trans('firefly.spent_in_budget_limit_outside_period_per_day', ['days' => $activeDaysPassed]) }}">({!! \FireflyIII\Support\Facades\Steam::formatAmountBySymbol($spent['spent_outside'] / $activeDaysPassed, $spent['currency_symbol'], $spent['currency_decimal_places'])  !!})</span>
+                                            <span title="{{ trans('firefly.spent_in_budget_limit_outside_period_per_day', ['days' => $activeDaysPassed]) }}">({!! format_amount_by_symbol($spent['spent_outside'] / $activeDaysPassed, $spent['currency_symbol'], $spent['currency_decimal_places'])  !!})</span>
                                         @endif
                                         <br />
                                         @endif
@@ -352,19 +352,19 @@
                                         @foreach($budget['budgeted'] as $budgetLimit)
                                             <span data-currency="{{ $budgetLimit['currency_id'] }}" data-limit="{{ $budgetLimit['id'] }}" data-value="{{ $budgetLimit['left'] }}" class="left_span amount_left">
                                                 {{-- the amount left --}}
-                                                <span title="{{ __('firefly.left_in_budget_limit_overview') }}">{!!  \FireflyIII\Support\Facades\Steam::formatAmountBySymbol($budgetLimit['left'], $budgetLimit['currency_symbol'], $budgetLimit['currency_decimal_places'])  !!}</span>
+                                                <span title="{{ __('firefly.left_in_budget_limit_overview') }}">{!!  format_amount_by_symbol($budgetLimit['left'], $budgetLimit['currency_symbol'], $budgetLimit['currency_decimal_places'])  !!}</span>
                                                 {{-- if the budget limit is in the past, this is not interesting. --}}
                                                 {{-- if there is nothing left, this is not interesting. --}}
                                                 @if(!$budgetLimit['in_past'] && -1 === bccomp('0', $budgetLimit['left']))
                                                     @if(0 === $budgetLimit['active_days_left'])
-                                                        <span title="{{ trans('firefly.left_in_budget_limit_per_day', ['days' => 0]) }}">({!! \FireflyIII\Support\Facades\Steam::formatAmountBySymbol($budgetLimit['left'], $budgetLimit['currency_symbol'], $budgetLimit['currency_decimal_places'])  !!})
+                                                        <span title="{{ trans('firefly.left_in_budget_limit_per_day', ['days' => 0]) }}">({!! format_amount_by_symbol($budgetLimit['left'], $budgetLimit['currency_symbol'], $budgetLimit['currency_decimal_places'])  !!})
                                                     @else
-                                                        <span title="{{ trans('firefly.left_in_budget_limit_per_day', ['days' => $budgetLimit['active_days_left']]) }}">({!! \FireflyIII\Support\Facades\Steam::formatAmountBySymbol($budgetLimit['left'] / $budgetLimit['active_days_left'], $budgetLimit['currency_symbol'], $budgetLimit['currency_decimal_places'])  !!})</span>
+                                                        <span title="{{ trans('firefly.left_in_budget_limit_per_day', ['days' => $budgetLimit['active_days_left']]) }}">({!! format_amount_by_symbol($budgetLimit['left'] / $budgetLimit['active_days_left'], $budgetLimit['currency_symbol'], $budgetLimit['currency_decimal_places'])  !!})</span>
                                                     @endif
                                                 @endif
                                                 {{-- if there is nothing left, just format 0.00 --}}
                                                 @if(!$budgetLimit['in_past'] && -1 !== bccomp('0', $budgetLimit['left']))
-                                                    <span title="{{ trans('firefly.nothing_left_in_budget') }}">({!! \FireflyIII\Support\Facades\Steam::formatAmountBySymbol('0', $budgetLimit['currency_symbol'], $budgetLimit['currency_decimal_places'])  !!})</span>
+                                                    <span title="{{ trans('firefly.nothing_left_in_budget') }}">({!! format_amount_by_symbol('0', $budgetLimit['currency_symbol'], $budgetLimit['currency_decimal_places'])  !!})</span>
                                                 @endif
                                             </span><br />
                                         @endforeach

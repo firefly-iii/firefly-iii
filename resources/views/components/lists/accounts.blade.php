@@ -63,7 +63,7 @@
         <td>{{ trans('firefly.liability_direction_' . $account->liability_direction . '_short')  }}</td>
         <td>{{ $account->interest }}% ({{ strtolower($account->interestPeriod) }})</td>
         @endif
-        <td class="hidden-sm hidden-xs">{{ $account->iban }} @if('' === $account->iban) {{ bladeAccountGetMetaField($account, 'account_number') }}@endif</td>
+        <td class="hidden-sm hidden-xs">{{ $account->iban }} @if('' === $account->iban) {{ account_get_meta_field($account, 'account_number') }}@endif</td>
         @if('liabilities' !== $objectType)
         <td class="text-right">
                 <span class="mr-2">
@@ -71,11 +71,11 @@
                         <span title="{{ $key }}">
                         @if('balance' === $key)
                             @if(!$convertToPrimary)
-                                {!! \FireflyIII\Support\Facades\Steam::formatAmountBySymbol($balance, $account->currency->symbol, $account->currency->decimal_places) !!}
+                                {!! format_amount_by_symbol($balance, $account->currency->symbol, $account->currency->decimal_places) !!}
                             @endif
                         @elseif('pc_balance' === $key)
                             @if($convertToPrimary)
-                                {!! \FireflyIII\Support\Facades\Steam::formatAmountBySymbol($balance, $primaryCurrency->symbol, $primaryCurrency->decimal_places)   !!}
+                                {!! format_amount_by_symbol($balance, $primaryCurrency->symbol, $primaryCurrency->decimal_places)   !!}
                             @endif
                         @else
                             ({!! \FireflyIII\Support\Facades\Steam::formatAmountByCode($balance, $key)   !!})
@@ -89,7 +89,7 @@
         <td class="text-right">
             @if('' !== $account->current_debt)
             <span class="text-info money-transfer">
-                        {!!  \FireflyIII\Support\Facades\Steam::formatAmountBySymbol($account->current_debt, $account->currency->symbol, $account->currency->decimal_places, false)  !!}
+                        {!!  format_amount_by_symbol($account->current_debt, $account->currency->symbol, $account->currency->decimal_places, false)  !!}
                     </span>
             @endif
         </td>
@@ -121,11 +121,11 @@
                         <span title="{{ $key }}">
                             @if('balance' === $key)
                                 @if(!$convertToPrimary)
-                                      {!! \FireflyIII\Support\Facades\Steam::formatAmountBySymbol($balance, $account->currency->symbol, $account->currency->decimal_places) !!}
+                                      {!! format_amount_by_symbol($balance, $account->currency->symbol, $account->currency->decimal_places) !!}
                                   @endif
                             @elseif('pc_balance' === $key)
                                 @if($convertToPrimary)
-                                      {!! \FireflyIII\Support\Facades\Steam::formatAmountBySymbol($balance, $primaryCurrency->symbol, $primaryCurrency->decimal_places) !!}
+                                      {!! format_amount_by_symbol($balance, $primaryCurrency->symbol, $primaryCurrency->decimal_places) !!}
                                   @endif
                               @else
                                   ({!! \FireflyIII\Support\Facades\Steam::formatAmountByCode($balance, $key) !!})

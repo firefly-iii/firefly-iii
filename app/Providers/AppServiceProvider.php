@@ -61,34 +61,34 @@ class AppServiceProvider extends ServiceProvider
         });
 
 
-        // blade extension for active top menu sub menu (like "accounts")
-        // TODO DO NOT USE ME
-        Blade::directive('menuSubActive', function (string $route): string {
-            $route = trim($route, "'");
-            $name = Route::getCurrentRoute()->getName() ?? '';
-            Log::debug(sprintf('menuSubActive("%s", "%s")', $route, $name));
-            if (str_contains($name, $route)) {
-                return 'menu-open';
-            }
+//        // blade extension for active top menu sub menu (like "accounts")
+//        // TODO DO NOT USE ME
+//        Blade::directive('menuSubActive', function (string $route): string {
+//            $route = trim($route, "'");
+//            $name = Route::getCurrentRoute()->getName() ?? '';
+//            Log::debug(sprintf('menuSubActive("%s", "%s")', $route, $name));
+//            if (str_contains($name, $route)) {
+//                return 'menu-open';
+//            }
+//
+//            return '';
+//        });
 
-            return '';
-        });
-
-        // blade extension for active top menu sub menu item (like "accounts" => "asset accounts)
-        // TODO DO NOT USE ME
-        Blade::directive('menuSubItemActive', function (string $routeAndType): string {
-
-        });
+//        // blade extension for active top menu sub menu item (like "accounts" => "asset accounts)
+//        // TODO DO NOT USE ME
+//        Blade::directive('menuSubItemActive', function (string $routeAndType): string {
+//
+//        });
 
 
-        // TODO @deprecated
-        // blade extension for account balance.
-        Blade::directive('balance', function (string $account): string {
-            var_dump($account);
-            exit;
-            return $account;
-            return 'blablabla';
-        });
+//        // TODO @deprecated
+//        // blade extension for account balance.
+//        Blade::directive('balance', function (string $account): string {
+//            var_dump($account);
+//            exit;
+//            return $account;
+//            return 'blablabla';
+//        });
 
         // TODO @deprecated
         // blade extension

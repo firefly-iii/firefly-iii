@@ -55,24 +55,24 @@ if (!function_exists('env_default_when_empty')) {
     }
 }
 
-if(!function_exists('parseMarkdown')) {
-    function parseMarkdown(string $string): string {
+if(!function_exists('parse_markdown')) {
+    function parse_markdown(string $string): string {
         $converter = new GithubFlavoredMarkdownConverter(['allow_unsafe_links' => false, 'max_nesting_level' => 5, 'html_input' => 'escape']);
 
         return (string) $converter->convert($string);
     }
 }
 
-if(!function_exists('getRootSearchOperator')) {
-    function getRootSearchOperator(string $operator): string {
+if(!function_exists('get_root_search_operator')) {
+    function get_root_search_operator(string $operator): string {
         $result = OperatorQuerySearch::getRootOperator($operator);
 
         return str_replace('-', 'not_', $result);
     }
 }
 
-if(!function_exists('getAppConfiguration')) {
-    function getAppConfiguration(string $name, mixed $default = null): mixed {
+if(!function_exists('get_app_configuration')) {
+    function get_app_configuration(string $name, mixed $default = null): mixed {
         try {
             return AppConfiguration::get($name, $default)?->data;
         } catch (FireflyException) {
@@ -81,15 +81,15 @@ if(!function_exists('getAppConfiguration')) {
     }
 }
 
-if(!function_exists('formatAmountBySymbol')) {
-    function formatAmountBySymbol(string $amount, ?string $symbol = null, ?int $decimalPlaces = null, ?bool $coloured = null): string
+if(!function_exists('format_amount_by_symbol')) {
+    function format_amount_by_symbol(string $amount, ?string $symbol = null, ?int $decimalPlaces = null, ?bool $coloured = null): string
     {
         return Steam::formatAmountBySymbol($amount, $symbol, $decimalPlaces, $coloured);
     }
 }
 
-if (!function_exists('bladeAccountGetMetaField')) {
-    function bladeAccountGetMetaField(Account $account, string $field): string
+if (!function_exists('account_get_meta_field')) {
+    function account_get_meta_field(Account $account, string $field): string
     {
         /** @var AccountRepositoryInterface $repository */
         $repository = app(AccountRepositoryInterface::class);
@@ -102,8 +102,8 @@ if (!function_exists('bladeAccountGetMetaField')) {
 }
 
 
-if (!function_exists('bladeAccountBalance')) {
-    function bladeAccountBalance(\FireflyIII\Models\Account $account): string
+if (!function_exists('account_balance')) {
+    function account_balance(\FireflyIII\Models\Account $account): string
     {
         /** @var Carbon $date */
         $date = now();

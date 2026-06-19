@@ -123,7 +123,7 @@ $shownDemo = true
                                                         text-muted
                                                    @endif
                                                    "
-                                                ><br/>{{ parseMarkdown($rule->description) }}</small>
+                                                ><br/>{{ parse_markdown($rule->description) }}</small>
                                                @endif
                                             <small>(@if($rule->strict)<span class="text-danger">{{ __('firefly.rule_is_strict') }}</span>@else<span class="text-success">{{ __('firefly.rule_is_not_strict') }}</span>@endif&ZeroWidthSpace;)</small>
                                         </td>
@@ -137,7 +137,7 @@ $shownDemo = true
                                                                     class="text-muted"
                                                                 @endif
                                                                 data-id="{{ $trigger->id }}">
-                                                                {{ trans(('firefly.rule_trigger_' . getRootSearchOperator($trigger->trigger_type)), ['trigger_value' => $trigger->trigger_value]) }}
+                                                                {{ trans(('firefly.rule_trigger_' . get_root_search_operator($trigger->trigger_type)), ['trigger_value' => $trigger->trigger_value]) }}
                                                                 @if($trigger->stop_processing)
                                                                     <span class="fa fa-stop-circle-o"></span>
                                                                 @endif

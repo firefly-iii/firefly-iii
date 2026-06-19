@@ -39,19 +39,19 @@
                                 <tr>
                                     <td><a href="{{ route('accounts.show', $id) }}" title="{{ $info['name'] }}">{{ $info['name'] }}</a></td>
                                     <td class="text-right hidden-sm hidden-xs">
-                                        {!! \FireflyIII\Support\Facades\Steam::formatAmountBySymbol($info['current_balance'],$info['currency_symbol'],$info['currency_decimal_places']) !!}
+                                        {!! format_amount_by_symbol($info['current_balance'],$info['currency_symbol'],$info['currency_decimal_places']) !!}
                                     </td>
                                     <td class="text-right">
-                                        {!! \FireflyIII\Support\Facades\Steam::formatAmountBySymbol($info['left'],$info['currency_symbol'],$info['currency_decimal_places']) !!}
+                                        {!! format_amount_by_symbol($info['left'],$info['currency_symbol'],$info['currency_decimal_places']) !!}
                                     </td>
                                     <td class="text-right hidden-sm hidden-xs">
-                                        {!! \FireflyIII\Support\Facades\Steam::formatAmountBySymbol($info['target'],$info['currency_symbol'],$info['currency_decimal_places']) !!}
+                                        {!! format_amount_by_symbol($info['target'],$info['currency_symbol'],$info['currency_decimal_places']) !!}
                                     </td>
                                     <td class="text-right hidden-sm hidden-xs">
-                                        {!! \FireflyIII\Support\Facades\Steam::formatAmountBySymbol($info['saved'],$info['currency_symbol'],$info['currency_decimal_places']) !!}
+                                        {!! format_amount_by_symbol($info['saved'],$info['currency_symbol'],$info['currency_decimal_places']) !!}
                                     </td>
                                     <td class="text-right hidden-sm hidden-xs">
-                                        {!! \FireflyIII\Support\Facades\Steam::formatAmountBySymbol($info['to_save'],$info['currency_symbol'],$info['currency_decimal_places']) !!}
+                                        {!! format_amount_by_symbol($info['to_save'],$info['currency_symbol'],$info['currency_decimal_places']) !!}
                                     </td>
                                 </tr>
                             @endforeach

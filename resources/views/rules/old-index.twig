@@ -143,7 +143,7 @@
                                                                     class="text-muted"
                                                                 {% endif %}
                                                                 data-id="{{ trigger.id }}">
-                                                                {{ trans(('firefly.rule_trigger_' ~ getRootSearchOperator(trigger.trigger_type)), {trigger_value: trigger.trigger_value}) }}
+                                                                {{ trans(('firefly.rule_trigger_' ~ get_root_search_operator(trigger.trigger_type)), {trigger_value: trigger.trigger_value}) }}
 
                                                                 {% if trigger.stop_processing %}
                                                                     <span class="fa fa-stop-circle-o"></span>

@@ -19,7 +19,7 @@
                         <td class="third">{{ __('firefly.spent') }}</td>
                         <td class="text-right">
                             <span title="Count: {{ $spent['count'] }}">
-                                {!! formatAmountBySymbol($spent['amount'], $spent['currency_symbol'], $spent['currency_decimal_places']) !!}
+                                {!! format_amount_by_symbol($spent['amount'], $spent['currency_symbol'], $spent['currency_decimal_places']) !!}
                             </span>
                         </td>
                     </tr>
@@ -34,9 +34,9 @@
                                 <td class="text-right">
                                     <span title="Count: {{ $entry['count'] }}">
                                         @if($entry['amount'] < 0)
-                                            {!! formatAmountBySymbol($entry['amount']*-1, $entry['currency_symbol'], $entry['currency_decimal_places']) !!}
+                                            {!! format_amount_by_symbol($entry['amount']*-1, $entry['currency_symbol'], $entry['currency_decimal_places']) !!}
                                         @else
-                                            {!! formatAmountBySymbol($entry['amount'], $entry['currency_symbol'], $entry['currency_decimal_places']) !!}
+                                            {!! format_amount_by_symbol($entry['amount'], $entry['currency_symbol'], $entry['currency_decimal_places']) !!}
                                         @endif
                                     </span>
                                 </td>
@@ -50,7 +50,7 @@
                 <td class="third">{{ __('firefly.transferred') }}</td>
                 <td class="text-right">
                                 <span title="Count: {{ $entry['count'] }}">
-                                    {!! formatAmountBySymbol($entry['amount']*-1, $entry['currency_symbol'], $entry['currency_decimal_places']) !!}
+                                    {!! format_amount_by_symbol($entry['amount']*-1, $entry['currency_symbol'], $entry['currency_decimal_places']) !!}
                                 </span>
                 </td>
             </tr>
@@ -64,9 +64,9 @@
                 <td class="text-right">
                                 <span title="Count: {{ $entry['count'] }}">
                                     @if($entry['amount'] < 0)
-                                        {!! formatAmountBySymbol($entry['amount'], $entry['currency_symbol'], $entry['currency_decimal_places']) !!}
+                                        {!! format_amount_by_symbol($entry['amount'], $entry['currency_symbol'], $entry['currency_decimal_places']) !!}
                                     @else
-                                        {!! formatAmountBySymbol($entry['amount']*-1, $entry['currency_symbol'], $entry['currency_decimal_places']) !!}
+                                        {!! format_amount_by_symbol($entry['amount']*-1, $entry['currency_symbol'], $entry['currency_decimal_places']) !!}
                                     @endif
                                 </span>
                 </td>
@@ -81,9 +81,9 @@
                 <td class="text-right">
                                 <span title="Count: {{ $entry['count'] }}">
                                     @if($entry['amount'] < 0)
-                                        {!! formatAmountBySymbol($entry['amount']*-1, $entry['currency_symbol'], $entry['currency_decimal_places']) !!}
+                                        {!! format_amount_by_symbol($entry['amount']*-1, $entry['currency_symbol'], $entry['currency_decimal_places']) !!}
                                     @else
-                                        {!! formatAmountBySymbol($entry['amount'], $entry['currency_symbol'], $entry['currency_decimal_places']) !!}
+                                        {!! format_amount_by_symbol($entry['amount'], $entry['currency_symbol'], $entry['currency_decimal_places']) !!}
                                     @endif
                                 </span>
                 </td>

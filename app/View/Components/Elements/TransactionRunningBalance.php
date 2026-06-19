@@ -3,6 +3,7 @@
 namespace FireflyIII\View\Components\Elements;
 
 use Closure;
+use FireflyIII\Models\Account;
 use Illuminate\Contracts\View\View;
 use Illuminate\View\Component;
 

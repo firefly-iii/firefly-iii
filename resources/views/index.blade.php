@@ -98,7 +98,7 @@
 
                         <div class="btn-group" role="group">
                             <button type="button" class="btn btn-primary btn-sm dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">
-                                 {{ bladeAccountBalance($data['account']) }}
+                                 {{ account_balance($data['account']) }}
                             </button>
                             <ul class="dropdown-menu">
                                 <li>

@@ -44,9 +44,9 @@
         </td>
         <td class="text-end piggySaved">
                     <span title="Saved so far" class="text-end">
-                        {!! \FireflyIII\Support\Facades\Steam::formatAmountBySymbol($piggy['current_amount'],$piggy['currency_symbol'],$piggy['currency_decimal_places']) !!}
+                        {!! format_amount_by_symbol($piggy['current_amount'],$piggy['currency_symbol'],$piggy['currency_decimal_places']) !!}
                         @if($convertToPrimary and $piggy['currency_id'] !== $primaryCurrency->id && null !== $piggy['pc_current_amount'])
-                            ({!! \FireflyIII\Support\Facades\Steam::formatAmountBySymbol($piggy['pc_current_amount'],$primaryCurrency->symbol,$primaryCurrency->decimal_places) !!})
+                            ({!! format_amount_by_symbol($piggy['pc_current_amount'],$primaryCurrency->symbol,$primaryCurrency->decimal_places) !!})
                         @endif
                     </span>
         </td>
@@ -84,25 +84,25 @@
         </td>
         <td class="text-end">
             @if(null !== $piggy['target_amount'] && 0 !== $piggy['target_amount'])
-            <span title="{{ __('firefly.target_amount') }}">{!! \FireflyIII\Support\Facades\Steam::formatAmountBySymbol($piggy['target_amount'],$piggy['currency_symbol'],$piggy['currency_decimal_places']) !!}</span>
+            <span title="{{ __('firefly.target_amount') }}">{!! format_amount_by_symbol($piggy['target_amount'],$piggy['currency_symbol'],$piggy['currency_decimal_places']) !!}</span>
             @if($convertToPrimary && $piggy['currency_id'] !== $primaryCurrency->id && null !== $piggy['pc_target_amount'])
-            (<span title="{{ __('firefly.target_amount') }}">{!! \FireflyIII\Support\Facades\Steam::formatAmountBySymbol($piggy['pc_target_amount'],$primaryCurrency->symbol, $primaryCurrency->decimal_places)  !!}</span>)
+            (<span title="{{ __('firefly.target_amount') }}">{!! format_amount_by_symbol($piggy['pc_target_amount'],$primaryCurrency->symbol, $primaryCurrency->decimal_places)  !!}</span>)
             @endif
             @endif
         </td>
         <td class="text-end d-none d-md-table-cell">
             @if($piggy['left_to_save'] > 0)
-            <span title="{{ __('firefly.left_to_save') }}">{!! \FireflyIII\Support\Facades\Steam::formatAmountBySymbol($piggy['left_to_save'],$piggy['currency_symbol'],$piggy['currency_decimal_places']) !!}</span>
+            <span title="{{ __('firefly.left_to_save') }}">{!! format_amount_by_symbol($piggy['left_to_save'],$piggy['currency_symbol'],$piggy['currency_decimal_places']) !!}</span>
                 @if($convertToPrimary && $piggy['currency_id'] !== $primaryCurrency->id && null !== $piggy['pc_left_to_save'])
-            (<span title="{{ __('firefly.left_to_save') }}">{!! \FireflyIII\Support\Facades\Steam::formatAmountBySymbol($piggy['pc_left_to_save'], $primaryCurrency->symbol,$primaryCurrency->decimal_places) !!}</span>)
+            (<span title="{{ __('firefly.left_to_save') }}">{!! format_amount_by_symbol($piggy['pc_left_to_save'], $primaryCurrency->symbol,$primaryCurrency->decimal_places) !!}</span>)
             @endif
             @endif
         </td>
         <td class="d-none d-md-table-cell text-end">
             @if(null !== $piggy['target_date'] && null !== $piggy['save_per_month'])
-            {!! \FireflyIII\Support\Facades\Steam::formatAmountBySymbol($piggy['save_per_month'], $piggy['currency_symbol'], $piggy['currency_decimal_places']) !!}
+            {!! format_amount_by_symbol($piggy['save_per_month'], $piggy['currency_symbol'], $piggy['currency_decimal_places']) !!}
                 @if($convertToPrimary && $piggy['currency_id'] !== $primaryCurrency->id && null !== $piggy['pc_save_per_month'])
-            ({!! \FireflyIII\Support\Facades\Steam::formatAmountBySymbol($piggy['pc_save_per_month'], $primaryCurrency->symbol, $primaryCurrency->decimal_places) !!})
+            ({!! format_amount_by_symbol($piggy['pc_save_per_month'], $primaryCurrency->symbol, $primaryCurrency->decimal_places) !!})
             @endif
             @endif
         </td>
@@ -115,7 +115,7 @@
         <td>&nbsp;</td> {{-- title --}}
         <td class="text-end">
             @foreach($objectGroup['sums'] as $sum)
-            {!! \FireflyIII\Support\Facades\Steam::formatAmountBySymbol($sum['saved'], $sum['currency_symbol'], $sum['currency_decimal_places']) !!}<br />
+            {!! format_amount_by_symbol($sum['saved'], $sum['currency_symbol'], $sum['currency_decimal_places']) !!}<br />
             @endforeach
         </td>
         <td class="d-none d-md-table-cell">&nbsp;</td> {{-- remove money --}}
@@ -123,17 +123,17 @@
         <td class="d-none d-md-table-cell">&nbsp;</td> {{-- add money --}}
         <td class="text-end">
             @foreach($objectGroup['sums'] as $sum)
-            {!! \FireflyIII\Support\Facades\Steam::formatAmountBySymbol($sum['target'], $sum['currency_symbol'], $sum['currency_decimal_places']) !!}<br />
+            {!! format_amount_by_symbol($sum['target'], $sum['currency_symbol'], $sum['currency_decimal_places']) !!}<br />
             @endforeach
         </td>
         <td class="text-end d-none d-md-table-cell">
             @foreach($objectGroup['sums'] as $sum)
-            {!! \FireflyIII\Support\Facades\Steam::formatAmountBySymbol($sum['left_to_save'], $sum['currency_symbol'], $sum['currency_decimal_places']) !!}<br />
+            {!! format_amount_by_symbol($sum['left_to_save'], $sum['currency_symbol'], $sum['currency_decimal_places']) !!}<br />
             @endforeach
         </td>
         <td class="d-none d-md-table-cell text-end">
             @foreach($objectGroup['sums'] as $sum)
-            {!! \FireflyIII\Support\Facades\Steam::formatAmountBySymbol($sum['save_per_month'], $sum['currency_symbol'], $sum['currency_decimal_places']) !!}<br />
+            {!! format_amount_by_symbol($sum['save_per_month'], $sum['currency_symbol'], $sum['currency_decimal_places']) !!}<br />
             @endforeach
         </td>
     </tr>

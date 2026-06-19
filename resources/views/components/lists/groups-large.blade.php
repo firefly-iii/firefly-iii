@@ -27,7 +27,7 @@
         <th class="d-xs-none">&nbsp;</th>
         <th>{{ trans('list.description') }}</th>
         <th class="text-end">{{ trans('list.amount') }}</th>
-        @if(getAppConfiguration('use_running_balance', true))
+        @if(get_app_configuration('use_running_balance', true))
             <th class="text-end">{{ trans('list.running_balance') }}</th>
         @endif
         <th>{{ trans('list.date') }}</th>
@@ -54,23 +54,23 @@
                 {{-- Total amount of all journals in the group. --}}
                 @foreach($group['sums'] as $sum)
                     @if('Deposit' === $group['transaction_type'])
-                        {!! formatAmountBySymbol($sum['amount']*-1, $sum['currency_symbol'], $sum['currency_decimal_places']) !!}
+                        {!! format_amount_by_symbol($sum['amount']*-1, $sum['currency_symbol'], $sum['currency_decimal_places']) !!}
                         @if($convertToPrimary && 0 !== $sum['pc_amount'])
-                            (~ {!! formatAmountBySymbol($sum['pc_amount']*-1, $primaryCurrency->symbol, $primaryCurrency->decimal_places) !!})
+                            (~ {!! format_amount_by_symbol($sum['pc_amount']*-1, $primaryCurrency->symbol, $primaryCurrency->decimal_places) !!})
                         @endif
                         @if($loop->index !== count($group['sums'])-1),@endif
                     @elseif('Transfer' === $group['transaction_type'])
                         <span class="text-info money-transfer">
-                        {!! formatAmountBySymbol($sum['amount']*-1, $sum['currency_symbol'], $sum['currency_decimal_places'], false) !!}
+                        {!! format_amount_by_symbol($sum['amount']*-1, $sum['currency_symbol'], $sum['currency_decimal_places'], false) !!}
                         @if($convertToPrimary && 0 !== $sum['pc_amount'])
-                            (~ {!! formatAmountBySymbol($sum['pc_amount']*-1, $primaryCurrency->symbol, $primaryCurrency->decimal_places) !!})
+                            (~ {!! format_amount_by_symbol($sum['pc_amount']*-1, $primaryCurrency->symbol, $primaryCurrency->decimal_places) !!})
                         @endif
                         @if($loop->index !== count($group['sums'])-1),@endif
                         </span>
                     @else
-                        {!! formatAmountBySymbol($sum['amount'], $sum['currency_symbol'], $sum['currency_decimal_places']) !!}
+                        {!! format_amount_by_symbol($sum['amount'], $sum['currency_symbol'], $sum['currency_decimal_places']) !!}
                         @if($convertToPrimary && 0 !== $sum['pc_amount'])
-                            (~ {!! formatAmountBySymbol($sum['pc_amount'], $primaryCurrency->symbol, $primaryCurrency->decimal_places) !!})
+                            (~ {!! format_amount_by_symbol($sum['pc_amount'], $primaryCurrency->symbol, $primaryCurrency->decimal_places) !!})
                          @endif
                         @if($loop->index !== count($group['sums'])-1),@endif
                    @endif
@@ -130,7 +130,7 @@
                 :pc-amount="$transaction['pc_amount']"
             />
         </td>
-        @if(getAppConfiguration('use_running_balance', true))
+        @if(get_app_configuration('use_running_balance', true))
         <td class=" {{ $className }} text-end">
             <x-elements.transaction-running-balance
                 :balance-dirty="$transaction['balance_dirty'] ?? false"
