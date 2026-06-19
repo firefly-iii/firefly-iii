@@ -115,13 +115,13 @@ final class IndexController extends Controller
         $accounts->setPath(route('accounts.inactive.index', [$objectType]));
 
         return view('accounts.index', [
-            'objectType'   => $objectType,
-            'inactivePage' => $inactivePage,
+            'objectType'    => $objectType,
+            'inactivePage'  => $inactivePage,
             'inactiveCount' => $inactiveCount,
-            'subTitleIcon' => $subTitleIcon,
-            'subTitle'     => $subTitle,
-            'page'         => $page,
-            'accounts'     => $accounts,
+            'subTitleIcon'  => $subTitleIcon,
+            'subTitle'      => $subTitle,
+            'page'          => $page,
+            'accounts'      => $accounts,
         ]);
     }
 
@@ -201,7 +201,7 @@ final class IndexController extends Controller
         return view('accounts.index', [
             'objectType'    => $objectType,
             'inactiveCount' => $inactiveCount,
-            'inactivePage' => $inactivePage,
+            'inactivePage'  => $inactivePage,
             'subTitleIcon'  => $subTitleIcon,
             'subTitle'      => $subTitle,
             'page'          => $page,

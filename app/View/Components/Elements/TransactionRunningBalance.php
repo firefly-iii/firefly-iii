@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace FireflyIII\View\Components\Elements;
 
 use Closure;
@@ -15,32 +17,33 @@ class TransactionRunningBalance extends Component
     public array $source;
     public array $destination;
     public string $type;
-    public null|Account $account;
+    public ?Account $account;
+
     /**
      * Create a new component instance.
      */
     public function __construct(
-        bool|null $balanceDirty,
+        ?bool $balanceDirty,
         array $source,
         array $destination,
         array $currency,
-        array $foreign, string $type,
-        null|Account $account
-    )
-    {
+        array $foreign,
+        string $type,
+        ?Account $account
+    ) {
         $this->balanceDirty = $balanceDirty ?? false;
-        $this->currency = $currency;
-        $this->foreign= $foreign;
-        $this->type = $type;
-        $this->source = $source;
-        $this->destination = $destination;
-        $this->account = $account;
+        $this->currency     = $currency;
+        $this->foreign      = $foreign;
+        $this->type         = $type;
+        $this->source       = $source;
+        $this->destination  = $destination;
+        $this->account      = $account;
     }
 
     /**
      * Get the view / contents that represent the component.
      */
-    public function render(): View|Closure|string
+    public function render(): Closure|string|View
     {
         return view('components.elements.transaction-running-balance');
     }

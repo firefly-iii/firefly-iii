@@ -155,7 +155,7 @@ trait PeriodOverview
             'revenue'    => 'earned',
             'transfer'   => 'transferred',
             'transfers'  => 'transferred',
-            'all' => 'all',
+            'all'        => 'all',
         ];
         if (!array_key_exists($type, $setTypes)) {
             throw new FireflyException(sprintf('[c] Cannot deal with type "%s"', $type));

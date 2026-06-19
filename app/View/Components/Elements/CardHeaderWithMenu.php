@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace FireflyIII\View\Components\Elements;
 
 use Closure;
@@ -11,20 +13,21 @@ class CardHeaderWithMenu extends Component
     public string $cardTitle;
     public string $route;
     public string $linkTitle;
+
     /**
      * Create a new component instance.
      */
     public function __construct(string $cardTitle, string $route, string $linkTitle)
     {
         $this->cardTitle = $cardTitle;
-        $this->route = $route;
+        $this->route     = $route;
         $this->linkTitle = $linkTitle;
     }
 
     /**
      * Get the view / contents that represent the component.
      */
-    public function render(): View|Closure|string
+    public function render(): Closure|string|View
     {
         return view('components.elements.card-header-with-menu');
     }
