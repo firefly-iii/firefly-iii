@@ -26,8 +26,8 @@
                         {% for link in links %}
                             <tr>
                                 <td>
-                                    <div class="btn-group btn-group-xs">
-                                        <a href="{{ route('transactions.link.delete', [link.id]) }}" class="btn btn-danger delete-link" data-id="{{ link.id }}"><span class="fa fa-trash"></span></a>
+                                    <div class="btn-group btn-group-sm">
+                                        <a href="{{ route('transactions.link.delete', [link.id]) }}" class="btn btn-danger delete-link" data-id="{{ link.id }}"><span class="bi bi-trash"></span></a>
                                         <a href="#" class="btn btn-default switch-link" data-id="{{ link.id }}"><span
                                                 class="fa fa-fw fa-arrows-h"></span></a>
                                     </div>

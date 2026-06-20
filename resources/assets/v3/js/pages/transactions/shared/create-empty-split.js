@@ -26,6 +26,7 @@ export function getAccount() {
         id: '',
         name: '',
         alpine_name: '',
+        disabled: false,
     };
 }
 

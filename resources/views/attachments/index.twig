@@ -29,9 +29,9 @@
                         {% for att in set %}
                             <tr>
                                 <td data-value="{{ att.id }}">
-                                    <div class="btn-group btn-group-xs">
-                                        <a href="{{ route('attachments.edit', att.id) }}" class="btn btn-default"><span class="fa fa-pencil"></span></a>
-                                        <a href="{{ route('attachments.delete', att.id) }}" class="btn btn-danger"><span class="fa fa-trash"></span></a>
+                                    <div class="btn-group btn-group-sm">
+                                        <a href="{{ route('attachments.edit', att.id) }}" class="btn btn-default"><span class="bi bi-pencil"></span></a>
+                                        <a href="{{ route('attachments.delete', att.id) }}" class="btn btn-danger"><span class="bi bi-trash"></span></a>
                                         <a href="{{ route('attachments.download', att.id) }}" class="btn btn-default"><span class="fa fa-download"></span></a>
                                     </div>
                                 </td>

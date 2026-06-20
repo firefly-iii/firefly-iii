@@ -42,8 +42,8 @@
                                 <button class="btn btn-box-tool dropdown-toggle" data-toggle="dropdown"><span
                                         class="fa fa-ellipsis-v"></span></button>
                                 <ul class="dropdown-menu" role="menu">
-                                    <li><a href="{{ route('rule-groups.edit',ruleGroup.id) }}"><span class="fa fa-fw fa-pencil"></span> {{ 'edit'|_ }}</a></li>
-                                    <li><a href="{{ route('rule-groups.delete',ruleGroup.id) }}"><span class="fa fa-fw fa-trash"></span> {{ 'delete'|_ }}</a></li>
+                                    <li><a href="{{ route('rule-groups.edit',ruleGroup.id) }}"><span class="bi bi-pencil"></span> {{ 'edit'|_ }}</a></li>
+                                    <li><a href="{{ route('rule-groups.delete',ruleGroup.id) }}"><span class="bi bi-trash"></span> {{ 'delete'|_ }}</a></li>
                                     <li><a href="{{ route('rule-groups.select-transactions',ruleGroup.id) }}"><span
                                                 class="fa fa-fw fa-power-off"></span> {{ trans('firefly.apply_rule_group_selection', {title: ruleGroup.title}) }}
                                         </a></li>
@@ -86,23 +86,23 @@
                                 {% for rule in ruleGroup.rules %}
                                     <tr class="single-rule" data-order="{{ rule.order }}" data-id="{{ rule.id }}" data-group-id="{{ ruleGroup.id }}" data-position="{{ loop.index0 }}">
                                         <td>
-                                            <div class="btn-group btn-group-xs prio_buttons">
+                                            <div class="btn-group btn-group-sm prio_buttons">
                                                 <span class="fa fa-fw fa-bars rule-handle"></span>
                                             </div>
                                         </td>
                                         <td>
-                                            <div class="btn-group btn-group-xs edit_buttons">
+                                            <div class="btn-group btn-group-sm edit_buttons">
                                                 <a title="{{ 'edit'|_ }}" href="{{ route('rules.edit', rule.id) }}"
                                                    class="btn btn-default"><span
-                                                        class="fa fa-fw fa-pencil"></span></a>
+                                                        class="bi bi-pencil"></span></a>
                                                 <a title="{{ 'delete'|_ }}"
                                                    href="{{ route('rules.delete', rule.id) }}"
                                                    class="btn btn-danger"><span
-                                                        class="fa fa-fw fa-trash"></span></a>
+                                                        class="bi bi-trash"></span></a>
                                             </div>
                                         </td>
                                         <td>
-                                            <div class="btn-group btn-group-xs test_buttons">
+                                            <div class="btn-group btn-group-sm test_buttons">
                                                 {# show which transactions would match #}
                                                 <a href="{{ route('rules.search',rule.id) }}" class="btn btn-default {% if false == rule.strict %}test_rule_triggers{% endif %}" data-id="{{ rule.id }}" title="{{ 'test_rule_triggers'|_ }}"><span data-id="{{ rule.id }}" class="fa fa-fw fa-flask"></span></a>
                                                 {% if rule.active %}

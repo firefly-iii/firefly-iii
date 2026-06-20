@@ -26,11 +26,11 @@
                             <tr>
                                 <td>
                                     {% if linkType.editable %}
-                                        <div class="btn-group btn-group-xs">
+                                        <div class="btn-group btn-group-sm">
                                             <a class="btn btn-default btn-xs" href="{{ route('settings.links.edit',linkType.id) }}"><span
-                                                    class="fa fa-fw fa-pencil"></span></a>
+                                                    class="bi bi-pencil"></span></a>
                                             <a class="btn btn-danger btn-xs" href="{{ route('settings.links.delete',linkType.id) }}"><span
-                                                    class="fa fa-fw fa-trash-o"></span></a>
+                                                    class="bi bi-trash-o"></span></a>
                                         </div>
                                     {% endif %}
                                 </td>

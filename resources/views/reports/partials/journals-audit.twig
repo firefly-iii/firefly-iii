@@ -39,9 +39,9 @@
         <tr data-date="{{ journal.date.format('Y-m-d') }}" data-id="{{ journal.id }}">
 
             <td class="hide-buttons">
-                <div class="btn-group btn-group-xs">
-                    <a href="{{ route('transactions.edit',journal.transaction_group_id) }}" class="btn btn-xs btn-default"><span class="fa fa-fw fa-pencil"></span></a>
-                    <a href="{{ route('transactions.delete',journal.transaction_group_id) }}" class="btn btn-xs btn-danger"><span class="fa fa-fw fa-trash-o"></span></a>
+                <div class="btn-group btn-group-sm">
+                    <a href="{{ route('transactions.edit',journal.transaction_group_id) }}" class="btn btn-xs btn-default"><span class="bi bi-pencil"></span></a>
+                    <a href="{{ route('transactions.delete',journal.transaction_group_id) }}" class="btn btn-xs btn-danger"><span class="bi bi-trash-o"></span></a>
                 </div>
             </td>
 

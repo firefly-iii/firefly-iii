@@ -30,7 +30,7 @@
     </li>
     <li class="nav-header text-uppercase">{{ __('firefly.financial_control') }}</li>
     <li class="nav-item">
-        <a href="{{ route('budgets.index') }}" class="nav-link {{ \FireflyIII\Support\Blade\Navigation::menuItemActivePartial('budgets.') }}">
+        <a href="{{ route('budgets.index') }}" class="nav-link {{ menu_item_active_partial('budgets.') }}">
             <em class="nav-icon bi bi-pie-chart"></em>
             <p>
                 {{ __('firefly.budgets') }}
@@ -38,7 +38,7 @@
         </a>
     </li>
     <li class="nav-item">
-        <a href="{{ route('subscriptions.index') }}" class="nav-link {{ \FireflyIII\Support\Blade\Navigation::menuItemActivePartial('subscriptions.') }}">
+        <a href="{{ route('subscriptions.index') }}" class="nav-link {{ menu_item_active_partial('subscriptions.') }}">
             <em class="nav-icon bi bi-calendar"></em>
             <p>
                 {{ __('firefly.subscriptions') }}
@@ -46,7 +46,7 @@
         </a>
     </li>
     <li class="nav-item">
-        <a href="{{ route('piggy-banks.index') }}" class="nav-link {{ \FireflyIII\Support\Blade\Navigation::menuItemActivePartial('piggy-banks.') }}">
+        <a href="{{ route('piggy-banks.index') }}" class="nav-link {{ menu_item_active_partial('piggy-banks.') }}">
             <em class="nav-icon bi bi-bullseye"></em>
             <p>
                 {{ __('firefly.piggyBanks') }}
@@ -55,7 +55,7 @@
     </li>
     <li class="nav-header text-uppercase">{{ __('firefly.accounting') }}</li>
 
-    <li class="nav-item {{ \FireflyIII\Support\Blade\Navigation::menuOpenPartial('transactions.') }}">
+    <li class="nav-item {{ menu_open_partial('transactions.') }}">
         <a href="#" class="nav-link">
             <em class="nav-icon bi bi-wallet"></em>
             <p>
@@ -65,32 +65,32 @@
         </a>
         <ul class="nav nav-treeview">
             <li class="nav-item">
-                <a href="{{ route('transactions.index', ['withdrawal']) }}" class="nav-link {{ \FireflyIII\Support\Blade\Navigation::menuSubItemActive('transactions.index','withdrawal') }}">
+                <a href="{{ route('transactions.index', ['withdrawal']) }}" class="nav-link {{ menu_sub_item_active('transactions.index','withdrawal') }}">
                     <em class="nav-icon bi bi-arrow-left"></em>
                     <p>{{ __('firefly.expenses') }}</p>
                 </a>
             </li>
             <li class="nav-item">
-                <a href="{{ route('transactions.index', ['deposit']) }}" class="nav-link {{ \FireflyIII\Support\Blade\Navigation::menuSubItemActive('transactions.index','deposit') }}">
+                <a href="{{ route('transactions.index', ['deposit']) }}" class="nav-link {{ menu_sub_item_active('transactions.index','deposit') }}">
                     <em class="nav-icon bi bi-arrow-right"></em>
                     <p>{{ __('firefly.income') }}</p>
                 </a>
             </li>
             <li class="nav-item">
-                <a href="{{ route('transactions.index', ['transfers']) }}" class="nav-link {{ \FireflyIII\Support\Blade\Navigation::menuSubItemActive('transactions.index','transfers') }}">
+                <a href="{{ route('transactions.index', ['transfers']) }}" class="nav-link {{ menu_sub_item_active('transactions.index','transfers') }}">
                     <em class="nav-icon bi bi-arrow-left-right"></em>
                     <p>{{ __('firefly.transfers') }}</p>
                 </a>
             </li>
             <li class="nav-item">
-                <a href="{{ route('transactions.index', ['all']) }}" class="nav-link {{ \FireflyIII\Support\Blade\Navigation::menuSubItemActive('transactions.index','all') }}">
+                <a href="{{ route('transactions.index', ['all']) }}" class="nav-link {{ menu_sub_item_active('transactions.index','all') }}">
                     <em class="nav-icon bi bi-arrow-repeat"></em>
                     <p>{{ __('firefly.all_transactions') }}</p>
                 </a>
             </li>
         </ul>
     </li>
-    <li class="nav-item {{ \FireflyIII\Support\Blade\Navigation::menuOpenPartial('rules.') }}  {{ \FireflyIII\Support\Blade\Navigation::menuOpenPartial('recurring.') }}">
+    <li class="nav-item {{ menu_open_partial('rules.') }}  {{ menu_open_partial('recurring.') }}">
         <a href="#" class="nav-link">
             <em class="nav-icon bi bi-cpu"></em>
             <p>
@@ -100,7 +100,7 @@
         </a>
         <ul class="nav nav-treeview">
             <li class="nav-item">
-                <a href="{{ route('rules.index') }}" class="nav-link">
+                <a href="{{ route('rules.index') }}" class="nav-link {{ menu_item_active_partial('rules.') }}">
                     <em class="nav-icon bi bi-shuffle"></em>
                     <p>{{__('firefly.rules')}}</p>
                 </a>
@@ -130,7 +130,7 @@
         </ul>
     </li>
     <li class="nav-header text-uppercase">{{ __('firefly.organization') }}</li>
-    <li class="nav-item {{ \FireflyIII\Support\Blade\Navigation::menuOpenPartial('accounts.') }}">
+    <li class="nav-item {{ menu_open_partial('accounts.') }}">
         <a href="#" class="nav-link">
             <em class="nav-icon bi bi-credit-card"></em>
             <p>
@@ -140,25 +140,25 @@
         </a>
         <ul class="nav nav-treeview">
             <li class="nav-item">
-                <a href="{{ route('accounts.index', ['asset']) }}" class="nav-link {{ \FireflyIII\Support\Blade\Navigation::menuSubItemActive('accounts.index','asset') }}">
+                <a href="{{ route('accounts.index', ['asset']) }}" class="nav-link {{ menu_sub_item_active('accounts.index','asset') }}">
                     <em class="nav-icon bi bi-cash"></em>
                     <p>{{ __('firefly.asset_accounts') }}</p>
                 </a>
             </li>
             <li class="nav-item">
-                <a href="{{ route('accounts.index', ['expense']) }}" class="nav-link {{ \FireflyIII\Support\Blade\Navigation::menuSubItemActive('accounts.index','expense') }}">
+                <a href="{{ route('accounts.index', ['expense']) }}" class="nav-link {{ menu_sub_item_active('accounts.index','expense') }}">
                     <em class="nav-icon bi bi-cart"></em>
                     <p>{{trans('firefly.expense_accounts')}}</p>
                 </a>
             </li>
             <li class="nav-item">
-                <a href="{{ route('accounts.index', ['revenue']) }}" class="nav-link {{ \FireflyIII\Support\Blade\Navigation::menuSubItemActive('accounts.index','revenue') }}">
+                <a href="{{ route('accounts.index', ['revenue']) }}" class="nav-link {{ menu_sub_item_active('accounts.index','revenue') }}">
                     <em class="nav-icon bi bi-box-arrow-down"></em>
                     <p>{{ __('firefly.revenue_accounts') }}</p>
                 </a>
             </li>
             <li class="nav-item">
-                <a href="{{ route('accounts.index', ['liabilities']) }}" class="nav-link {{ \FireflyIII\Support\Blade\Navigation::menuSubItemActive('accounts.index','liabilities') }}">
+                <a href="{{ route('accounts.index', ['liabilities']) }}" class="nav-link {{ menu_sub_item_active('accounts.index','liabilities') }}">
                     <em class="nav-icon bi bi-ticket-detailed"></em>
                     <p>{{ __('firefly.liabilities_accounts') }}</p>
                 </a>
@@ -166,7 +166,7 @@
         </ul>
     </li>
 
-    <li class="nav-item {{ \FireflyIII\Support\Blade\Navigation::menuOpenPartial('categories.') }} {{ \FireflyIII\Support\Blade\Navigation::menuOpenPartial('tags.') }} {{ \FireflyIII\Support\Blade\Navigation::menuOpenPartial('object-groups.') }}">
+    <li class="nav-item {{ menu_open_partial('categories.') }} {{ menu_open_partial('tags.') }} {{ menu_open_partial('object-groups.') }}">
         <a href="#" class="nav-link">
             <em class="nav-icon bi bi-tags"></em>
             <p>
@@ -198,25 +198,25 @@
 
 
     <li class="nav-header text-uppercase">{{ __('firefly.others') }}</li>
-    <li class="nav-item {{ \FireflyIII\Support\Blade\Navigation::menuItemActivePartial('currencies.') }}">
+    <li class="nav-item {{ menu_item_active_partial('currencies.') }}">
         <a href="{{ route('currencies.index') }}" class="nav-link">
             <em class="nav-icon bi bi-currency-euro"></em>
             <p>{{ __('firefly.currencies') }}</p>
         </a>
     </li>
-    <li class="nav-item {{ \FireflyIII\Support\Blade\Navigation::menuItemActivePartial('exchange-rates.') }}">
+    <li class="nav-item {{ menu_item_active_partial('exchange-rates.') }}">
         <a href="{{ route('exchange-rates.index') }}" class="nav-link">
             <em class="nav-icon bi bi-currency-exchange"></em>
             <p>{{ __('firefly.menu_exchange_rates_index') }}</p>
         </a>
     </li>
-    <li class="nav-item {{ \FireflyIII\Support\Blade\Navigation::menuItemActivePartial('reports.') }}">
+    <li class="nav-item {{ menu_item_active_partial('reports.') }}">
         <a href="{{ route('reports.index') }}" class="nav-link">
             <em class="nav-icon bi bi-bar-chart"></em>
             <p>{{ __('firefly.reports') }}</p>
         </a>
     </li>
-    <li class="nav-item {{ \FireflyIII\Support\Blade\Navigation::menuItemActivePartial('export.') }}">
+    <li class="nav-item {{ menu_item_active_partial('export.') }}">
         <a href="{{ route('export.index') }}" class="nav-link">
             <em class="nav-icon bi bi-upload"></em>
             <p>{{ __('firefly.export_data_menu') }}</p>

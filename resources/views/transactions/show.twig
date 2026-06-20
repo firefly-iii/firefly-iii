@@ -10,7 +10,7 @@
             <div class="box box-primary">
                 <div class="box-header with-border">
                     <h3 class="box-title">{{ 'transaction_journal_information'|_ }}</h3>
-                    <div class="btn-group btn-group-xs pull-right">
+                    <div class="btn-group btn-group-sm pull-right">
                         <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown"
                                 aria-haspopup="true" aria-expanded="false">
                             {{ 'actions'|_ }} <span class="caret"></span>
@@ -18,10 +18,10 @@
                         <ul class="dropdown-menu">
                             {# edit + delete #}
                             <li><a href="{{ route('transactions.edit', [transactionGroup.id]) }}"><span
-                                        class="fa fa-pencil"></span> {{ 'edit'|_ }}</a></li>
+                                        class="bi bi-pencil"></span> {{ 'edit'|_ }}</a></li>
                             {% if groupArray.transactions[0].type != 'reconciliation' and groupArray.transactions[0].type != 'opening balance' and groupArray.transactions[0].type != 'liability credit' %}
                             <li><a href="{{ route('transactions.delete', [transactionGroup.id]) }}"><span
-                                        class="fa fa-trash"></span> {{ 'delete'|_ }}</a></li>
+                                        class="bi bi-trash"></span> {{ 'delete'|_ }}</a></li>
                             {% endif %}
                             {% if groupArray.transactions[0].type != 'reconciliation' and groupArray.transactions[0].type != 'opening balance' and groupArray.transactions[0].type != 'liability credit' %}
                             <li role="separator" class="divider"></li>
@@ -223,7 +223,7 @@
                         </h3>
 
 
-                        <div class="btn-group btn-group-xs pull-right">
+                        <div class="btn-group btn-group-sm pull-right">
                             <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown"
                                     aria-haspopup="true" aria-expanded="false">
                                 {{ 'actions'|_ }} <span class="caret"></span>
@@ -231,10 +231,10 @@
                             <ul class="dropdown-menu">
                                 {# edit + delete #}
                                 <li><a href="{{ route('transactions.edit', [transactionGroup.id]) }}"><span
-                                            class="fa fa-pencil"></span> {{ 'edit'|_ }}</a></li>
+                                            class="bi bi-pencil"></span> {{ 'edit'|_ }}</a></li>
                                 {% if groupArray.transactions[0].type != 'reconciliation' and groupArray.transactions[0].type != 'opening balance' and groupArray.transactions[0].type != 'liability credit' %}
                                 <li><a href="{{ route('transactions.delete', [transactionGroup.id]) }}"><span
-                                            class="fa fa-trash"></span> {{ 'delete'|_ }}</a></li>
+                                            class="bi bi-trash"></span> {{ 'delete'|_ }}</a></li>
                                 {% endif %}
                                 {% if journal.reconciled %}
                                 <li><a class="reconcile-button" href="{{ route('transactions.unreconcile', [journal.transaction_journal_id]) }}"><span
@@ -467,11 +467,11 @@
                                 {% for link in links[journal.transaction_journal_id] %}
                                     <tr>
                                         <td class="onetwenty">
-                                            <div class="btn-group btn-group-xs">
+                                            <div class="btn-group btn-group-sm">
                                                 <a href="#" class="btn btn-default switch-link" data-id="{{ link.id }}"><span
                                                         class="fa fa-fw fa-arrows-h"></span></a>
                                                 <a href="{{ route('transactions.link.delete', [link.id]) }}"
-                                                   class="btn btn-danger"><span class="fa fa-trash"></span></a>
+                                                   class="btn btn-danger"><span class="bi bi-trash"></span></a>
                                             </div>
                                         </td>
                                         <td>

@@ -10,10 +10,17 @@
                :id="'source_' + index"
                x-model="transaction.source_account.alpine_name"
                :data-index="index"
+               x-bind:disabled="true===transaction.source_account.disabled"
+               x-bind:readonly="true===transaction.source_account.disabled"
                @changed="changedSourceAccount"
                placeholder="{{ __('firefly.source_account')  }}">
             <button tabindex="-1" class="btn btn-outline-secondary" type="button" @click="clearSourceAccount(index)"><em class="bi bi-trash"></em></button>
         </div>
+        <template x-if="true===transaction.source_account.disabled">
+            <div class="small form-control-feedback">
+                {{ __('firefly.disabled_split_account_src') }}
+            </div>
+        </template>
         <template x-if="transaction.errors.source_account.length > 0">
             <div class="invalid-feedback"
                  x-text="transaction.errors.source_account[0]">

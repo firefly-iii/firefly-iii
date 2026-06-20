@@ -1,14 +1,5 @@
 @extends('layout.v3.session')
 @section('content')
-    <div class="row">
-        <div class="col-lg-12 col-md-12 col-sm-12">
-            <div class="btn-group">
-                <a href="{{ route('rule-groups.create') }}" id="new_rule_group" class="btn btn-success">{{ __('firefly.new_rule_group') }}</a>
-                <a href="{{ route('rules.create') }}" class="btn btn-success new_rule">{{ __('firefly.new_rule') }}</a>
-            </div>
-            <p></p>
-        </div>
-    </div>
 @if(1 === count($ruleGroups) && 0 === $ruleGroups[0]->count())
 @php
 $shownDemo = true
@@ -36,18 +27,22 @@ $shownDemo = true
                                         <span class="bi bi-list"></span>
                                     </button>
                                     <ul class="dropdown-menu" aria-labelledby="card_header_{{ $ruleGroup->id }}">
-                                        <li><a class="dropdown-item" href="{{ route('rule-groups.edit',$ruleGroup->id) }}"><span class="fa fa-fw fa-pencil"></span> {{ __('firefly.edit') }}</a></li>
-                                        <li><a class="dropdown-item" href="{{ route('rule-groups.delete',$ruleGroup->id) }}"><span class="fa fa-fw fa-trash"></span> {{ __('firefly.delete') }}</a></li>
+                                        <li><a class="dropdown-item" href="{{ route('rule-groups.edit',$ruleGroup->id) }}"><span class="bi bi-pencil"></span> {{ __('firefly.edit') }}</a></li>
+                                        <li><a class="dropdown-item" href="{{ route('rule-groups.delete',$ruleGroup->id) }}"><span class="bi bi-trash"></span> {{ __('firefly.delete') }}</a></li>
                                         <li><a class="dropdown-item" href="{{ route('rule-groups.select-transactions',$ruleGroup->id) }}"><span
-                                                    class="fa fa-fw fa-power-off"></span> {{ trans('firefly.apply_rule_group_selection', ['title' => $ruleGroup->title]) }}
+                                                    class="bi bi-power"></span> {{ trans('firefly.apply_rule_group_selection', ['title' => $ruleGroup->title]) }}
                                             </a></li>
+
+                                        <li><a class="dropdown-item" href="{{ route('rule-groups.create') }}"><em class="bi bi-plus"></em> {{ __('firefly.new_rule_group') }}</a></li>
+                                        <li><a href="{{ route('rules.create', $ruleGroup->id) }}" class="dropdown-item new_rule"><em class="bi bi-plus"></em> {{ __('firefly.new_rule') }}</a></li>
+
                                         @if($ruleGroup->order > 1)
                                             <li><a href="#" class="dropdown-item move-group" data-direction="up" data-id="{{ $ruleGroup->id }}"><span
-                                                        class="fa fa-fw fa-arrow-up"></span> {{ __('firefly.move_rule_group_up') }}</a></li>
+                                                        class="bi bi-arrow-up"></span> {{ __('firefly.move_rule_group_up') }}</a></li>
                                         @endif
                                         @if($ruleGroup->order < count($ruleGroups))
                                             <li><a href="#" class="dropdown-item move-group" data-direction="down" data-id="{{ $ruleGroup->id }}"><span
-                                                        class="fa fa-fw fa-arrow-down"></span> {{ __('firefly.move_rule_group_down') }}
+                                                        class="bi bi-arrow-down"></span> {{ __('firefly.move_rule_group_down') }}
                                                 </a></li>
                                         @endif
                                     </ul>
@@ -59,10 +54,6 @@ $shownDemo = true
                         <p>
                             <em>{{ $ruleGroup->description }}</em>
                         </p>
-                        <p>
-                            <a href="{{ route('rules.create', $ruleGroup->id) }}"
-                               class="btn btn-success new_rule">{{ __('firefly.new_rule') }}</a>
-                        </p>
 
                         @if($ruleGroup->rules->count() > 0)
                             <table class="table table-sm table-hover table-striped group-rules">
@@ -72,40 +63,37 @@ $shownDemo = true
                                     <th class="ten">&nbsp;</th>
                                     <th class="ten">&nbsp;</th>
                                     <th class="quarter">{{ __('firefly.rule_name') }}</th>
-                                    <th class="quarter hidden-xs">{{ __('firefly.rule_triggers') }}</th>
-                                    <th class="quarter hidden-xs">{{ __('firefly.rule_actions') }}</th>
+                                    <th class="quarter d-xs-none">{{ __('firefly.rule_triggers') }}</th>
+                                    <th class="quarter d-xs-none">{{ __('firefly.rule_actions') }}</th>
                                 </tr>
                                 </thead>
                                 <tbody class="rule-connected-list">
                                 @foreach($ruleGroup->rules as $rule)
                                     <tr class="single-rule" data-order="{{ $rule->order }}" data-id="{{ $rule->id }}" data-group-id="{{ $ruleGroup->id }}" data-position="{{ $loop->index }}">
                                         <td>
-                                            <div class="btn-group btn-group-xs prio_buttons">
-                                                <span class="fa fa-fw fa-bars rule-handle"></span>
+                                            <div class="btn-group btn-group-sm prio_buttons">
+                                                <span class="bi bi-list rule-handle"></span>
                                             </div>
                                         </td>
                                         <td>
-                                            <div class="btn-group btn-group-xs edit_buttons">
+                                            <div class="btn-group btn-group-sm edit_buttons">
                                                 <a title="{{ __('firefly.edit') }}" href="{{ route('rules.edit', $rule->id) }}"
                                                    class="btn btn-default"><span
-                                                        class="fa fa-fw fa-pencil"></span></a>
-                                                <a title="{{ __('firefly.delete') }}"
-                                                   href="{{ route('rules.delete', $rule->id) }}"
-                                                   class="btn btn-danger"><span
-                                                        class="fa fa-fw fa-trash"></span></a>
+                                                        class="bi bi-pencil"></span></a>
+                                                <a title="{{ __('firefly.delete') }}" href="{{ route('rules.delete', $rule->id) }}" class="btn btn-danger"><span class="bi bi-trash"></span></a>
                                             </div>
                                         </td>
                                         <td>
-                                            <div class="btn-group btn-group-xs test_buttons">
+                                            <div class="btn-group btn-group-sm test_buttons">
                                                 {{-- show which transactions would match --}}
-                                                <a href="{{ route('rules.search',$rule->id) }}" class="btn btn-default {% if false == rule.strict %}test_rule_triggers{% endif %}" data-id="{{ $rule->id }}" title="{{ __('firefly.test_rule_triggers') }}"><span data-id="{{ $rule->id }}" class="fa fa-fw fa-flask"></span></a>
+                                                <a href="{{ route('rules.search',$rule->id) }}" class="btn btn-default {% if false == rule.strict %}test_rule_triggers{% endif %}" data-id="{{ $rule->id }}" title="{{ __('firefly.test_rule_triggers') }}"><span data-id="{{ $rule->id }}" class="bi bi-flask"></span></a>
                                                 @if($rule->active)
                                                     {{-- actually execute rule --}}
-                                                    <a href="{{ route('rules.select-transactions',$rule->id) }}" class="btn btn-default" title=" {{ trans('firefly.apply_rule_selection', ['title' => $rule->title]) }}"><span class="fa fa-fw fa-power-off "></span></a>
+                                                    <a href="{{ route('rules.select-transactions',$rule->id) }}" class="btn btn-default" title=" {{ trans('firefly.apply_rule_selection', ['title' => $rule->title]) }}"><span class="bi bi-power "></span></a>
                                                 @endif
 
                                                 {{--  duplicate rule --}}
-                                                <a href="#" class="btn btn-default duplicate-rule" data-id="{{ $rule->id }}" title=" {{ trans('firefly.duplicate_rule', ['title' => $rule->title]) }}"><span class="fa fa-fw fa-copy"></span></a>
+                                                <a href="#" class="btn btn-default duplicate-rule" data-id="{{ $rule->id }}" title=" {{ trans('firefly.duplicate_rule', ['title' => $rule->title]) }}"><span class="bi bi-copy"></span></a>
                                             </div>
                                         </td>
                                         <td class="markdown">
@@ -115,7 +103,7 @@ $shownDemo = true
                                                 <s>{{ $rule->title }}</s> ({{ strtolower(__('firefly.inactive')) }})
                                             @endif
                                                 @if($rule->stop_processing)
-                                                <span class="fa fa-stop-circle-o"></span>
+                                                <span class="bi bi-stop-circle"></span>
                                             @endif
                                                 @if('' !== $rule->description)
                                                 <small class="hidden-xs
@@ -127,11 +115,11 @@ $shownDemo = true
                                                @endif
                                             <small>(@if($rule->strict)<span class="text-danger">{{ __('firefly.rule_is_strict') }}</span>@else<span class="text-success">{{ __('firefly.rule_is_not_strict') }}</span>@endif&ZeroWidthSpace;)</small>
                                         </td>
-                                        <td class="hidden-xs">
+                                        <td class="d-xs-none">
                                             @if($rule->ruleTriggers->count() > 0)
                                                 <ul class="small rule-trigger-list" data-count="{{ $rule->ruleTriggers->count() }}" data-id="{{ $rule->id }}">
                                                     @foreach($rule->ruleTriggers as $trigger)
-                                                        @if('user_action' === $trigger->trigger_type)
+                                                        @if('user_action' !== $trigger->trigger_type)
                                                             <li
                                                                 @if(!$rule->active)
                                                                     class="text-muted"
@@ -139,18 +127,18 @@ $shownDemo = true
                                                                 data-id="{{ $trigger->id }}">
                                                                 {{ trans(('firefly.rule_trigger_' . get_root_search_operator($trigger->trigger_type)), ['trigger_value' => $trigger->trigger_value]) }}
                                                                 @if($trigger->stop_processing)
-                                                                    <span class="fa fa-stop-circle-o"></span>
+                                                                    <span class="bi bi-stop-circle"></span>
                                                                 @endif
                                                             </li>
                                                         @endif
                                                     @endforeach
                                                 </ul>
-                                                <ul class="small rule-triggers-show hidden pointer" data-id="{{ $rule->id }}">
+                                                <ul class="small rule-triggers-show d-none pointer" data-id="{{ $rule->id }}">
                                                     <li data-id="{{ $rule->id }}">{{ __('firefly.show_triggers') }}</li>
                                                 </ul>
                                             @endif
                                         </td>
-                                        <td class="hidden-xs">
+                                        <td class="d-xs-none">
                                             @if($rule->ruleActions->count() > 0)
                                                 <ul class="small rule-action-list" data-count="{{ $rule->ruleActions->count() }}" data-id="{{ $rule->id }}">
                                                     @foreach($rule->ruleActions as $action)
@@ -160,12 +148,12 @@ $shownDemo = true
                                                             @endif
                                                             data-id="{{ $action->id }}">{{ trans(('firefly.rule_action_' . $action->action_type), ['action_value' => $action->action_value]) }}
                                                             @if($action->stop_processing)
-                                                                <span class="fa fa-stop-circle-o"></span>
+                                                                <span class="bi bi-stop-circle"></span>
                                                             @endif
                                                         </li>
                                                     @endforeach
                                                 </ul>
-                                                <ul class="small rule-actions-show hidden pointer" data-id="{{ $rule->id }}">
+                                                <ul class="small rule-actions-show d-none pointer" data-id="{{ $rule->id }}">
                                                     <li>{{ __('firefly.show_actions') }}</li>
                                                 </ul>
                                             @endif
@@ -179,24 +167,14 @@ $shownDemo = true
                                 <em>{{ __('firefly.no_rules_in_group') }}</em>
                             </p>
                         @endif
-                        <p>
-                            <br/>
-                            <a href="{{ route('rules.create', $ruleGroup->id) }}"
-                               class="btn btn-success new_rule">{{ __('firefly.new_rule') }}</a>
-                        </p>
                     </div>
                 </div>
             </div>
         </div>
 @endforeach
 
-    {% include 'rules.partials.test-trigger-modal' %}
+    @include('rules.partials.test-trigger-modal')
 
-    <div class="row">
-        <div class="col-lg-12 col-md-12 col-sm-12">
-            <a href="{{ route('rule-groups.create') }}" class="btn btn-success">{{ __('firefly.new_rule_group') }}</a>
-        </div>
-    </div>
 
 @endsection
 @section('scripts')

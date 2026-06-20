@@ -10,7 +10,13 @@
                             :data-bs-target="'#split-'+index+'-pane'"
                             type="button" role="tab"
                             :aria-controls="'split-'+index+'-pane'"
-                            aria-selected="true">{{ __('firefly.single_split') }} #<span x-text="index+1"></span>
+                            aria-selected="true">
+                        <template x-if="'' === transaction.description">
+                            <span>{{ __('firefly.single_split') }} #<span x-text="index+1"></span></span>
+                        </template>
+                        <template x-if="'' !== transaction.description">
+                            <span x-text="transaction.description"></span>
+                        </template>
                     </button>
                 </li>
             </template>

@@ -1960,6 +1960,8 @@ return [
     'extension_date_is'                                   => 'Extension date is {date}',
 
     // accounts:
+    'disabled_split_account_dest' => 'This field is disabled. You can only change the destination account from the first split,  and it will be applied to all splits.',
+    'disabled_split_account_src' => 'This field is disabled. You can only change the source account from the first split,  and it will be applied to all splits.',
     'account_locked_currency'                             => 'The currency of this account must remain :name as long as piggy banks are linked to it.',
     'i_am_owed_amount'                                    => 'I am owed amount',
     'i_owe_amount'                                        => 'I owe amount',
@@ -2142,6 +2144,7 @@ return [
     'deleted_reconciliation'                              => 'Successfully deleted reconciliation transaction ":description"',
     'stored_journal'                                      => 'Successfully created new transaction ":description"',
     'stored_journal_js'                                   => 'Successfully created new transaction "{{description}}"',
+    'updated_journal_js'                                 => 'Successfully updated transaction "{{description}}"',
     'stored_journal_no_descr'                             => 'Successfully created your new transaction',
     'updated_journal_no_descr'                            => 'Successfully updated your transaction',
     'select_transactions'                                 => 'Select transactions',

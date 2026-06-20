@@ -53,11 +53,11 @@
                         {% for user in users %}
                             <tr>
                                 <td class="hidden-xs" data-value="{{ user.id }}">
-                                    <div class="btn-group btn-group-xs">
+                                    <div class="btn-group btn-group-sm">
                                         <a class="btn btn-default" href="{{ route('settings.users.edit',user.id) }}"><span
-                                                class="fa fa-pencil"></span></a>
+                                                class="bi bi-pencil"></span></a>
                                         <a class="btn btn-danger" href="{{ route('settings.users.delete',user.id) }}"><span
-                                                class="fa fa-trash"></span></a>
+                                                class="bi bi-trash"></span></a>
                                     </div>
                                 </td>
                                 <td class="hidden-xs" data-value="{{ user.id }}">#{{ user.id }}</td>
@@ -136,9 +136,9 @@
                             {% for invitee in invitedUsers %}
                                 <tr>
                                     <td class="hidden-xs" data-value="{{ user.id }}">
-                                        <div class="btn-group btn-group-xs">
+                                        <div class="btn-group btn-group-sm">
                                             <a class="btn btn-danger delete-invite" href="{{ route('settings.users.delete-invite', invitee.id) }}"><span
-                                                    class="fa fa-trash"></span></a>
+                                                    class="bi bi-trash"></span></a>
                                         </div>
                                     </td>
                                     <td>

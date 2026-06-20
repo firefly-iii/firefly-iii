@@ -32,18 +32,9 @@ import {loadPiggyBanks} from "./shared/load-piggy-banks.js";
 import {loadSubscriptions} from "./shared/load-subscriptions.js";
 //
 // import 'leaflet/dist/leaflet.css';
-import {addAutocomplete, getUrls} from "./shared/add-autocomplete.js";
-import {
-    changeCategory,
-    changeDescription,
-    changeDestinationAccount,
-    changeSourceAccount,
-    selectDestinationAccount,
-    selectSourceAccount
-} from "./shared/autocomplete-functions.js";
+import {addAllAutocompleteToForm, getUrls} from "./shared/add-autocomplete.js";
 import {processAttachments} from "./shared/process-attachments.js";
 import {spliceErrorsIntoTransactions} from "./shared/splice-errors-into-transactions.js";
-import Tags from "bootstrap5-tags";
 // import {addLocation} from "./shared/manage-locations.js";
 import i18next from "i18next";
 // TODO fix tags
@@ -135,6 +126,23 @@ let create = function () {
         changedSourceAccount(event) {
             this.detectTransactionType();
         },
+        disableSplitAccounts() {
+            if(this.entries.length > 1) {
+                // disable source and/or destination, based on account type.
+                for(let i = 1;i<this.entries.length;i++) {
+                    // disable source when withdrawal or transfer
+                    if('transfer' === this.groupProperties.transactionType || 'withdrawal' === this.groupProperties.transactionType) {
+                        this.entries[i].source_account.disabled = true;
+                        console.log('Disable source account #' + i);
+                    }
+                    // disable destination when deposit or transfer
+                    if('transfer' === this.groupProperties.transactionType || 'deposit' === this.groupProperties.transactionType) {
+                        this.entries[i].destination_account.disabled = true;
+                        console.log('Disable destination account #' + i);
+                    }
+                }
+            }
+        },
 
         detectTransactionType() {
             const sourceType = this.entries[0].source_account.type ?? 'unknown';
@@ -142,6 +150,7 @@ let create = function () {
             if ('unknown' === sourceType && 'unknown' === destType) {
                 this.groupProperties.transactionType = 'unknown';
                 console.warn('Cannot infer transaction type from two unknown accounts.');
+                this.disableSplitAccounts();
                 return;
             }
 
@@ -155,6 +164,7 @@ let create = function () {
                 console.log('filter down currencies for transfer.');
                 this.filterPrimaryCurrencies(this.entries[0].source_account.currency_code);
                 this.filterForeignCurrencies(this.entries[0].destination_account.currency_code);
+                this.disableSplitAccounts();
                 return;
             }
             // withdrawals:
@@ -162,6 +172,7 @@ let create = function () {
                 this.groupProperties.transactionType = 'withdrawal';
                 console.log('[a] Transaction type is detected to be "' + this.groupProperties.transactionType + '".');
                 this.filterPrimaryCurrencies(this.entries[0].source_account.currency_code);
+                this.disableSplitAccounts();
                 return;
             }
             if ('Asset account' === sourceType && 'unknown' === destType) {
@@ -169,12 +180,14 @@ let create = function () {
                 console.log('[b] Transaction type is detected to be "' + this.groupProperties.transactionType + '".');
                 console.log(this.entries[0].source_account);
                 this.filterPrimaryCurrencies(this.entries[0].source_account.currency_code);
+                this.disableSplitAccounts();
                 return;
             }
             if (['Debt', 'Loan', 'Mortgage'].includes(sourceType) && 'Expense account' === destType) {
                 this.groupProperties.transactionType = 'withdrawal';
                 console.log('[c] Transaction type is detected to be "' + this.groupProperties.transactionType + '".');
                 this.filterPrimaryCurrencies(this.entries[0].source_account.currency_code);
+                this.disableSplitAccounts();
                 return;
             }
 
@@ -182,25 +195,30 @@ let create = function () {
             if ('Revenue account' === sourceType && ['Asset account', 'Debt', 'Loan', 'Mortgage'].includes(destType)) {
                 this.groupProperties.transactionType = 'deposit';
                 console.log('Transaction type is detected to be "' + this.groupProperties.transactionType + '".');
+                this.disableSplitAccounts();
                 return;
             }
             if ('unknown' === sourceType && ['Asset account', 'Debt', 'Loan', 'Mortgage'].includes(destType)) {
                 this.groupProperties.transactionType = 'deposit';
                 console.log('Transaction type is detected to be "' + this.groupProperties.transactionType + '".');
+                this.disableSplitAccounts();
                 return;
             }
             if ('Expense account' === sourceType && ['Asset account', 'Debt', 'Loan', 'Mortgage'].includes(destType)) {
                 this.groupProperties.transactionType = 'deposit';
                 console.warn('FORCE transaction type to be "' + this.groupProperties.transactionType + '".');
                 this.entries[0].source_account.id = '';
+                this.disableSplitAccounts();
                 return;
             }
             if (['Debt', 'Loan', 'Mortgage'].includes(sourceType) && 'Asset account' === destType) {
                 this.groupProperties.transactionType = 'deposit';
                 console.log('Transaction type is detected to be "' + this.groupProperties.transactionType + '".');
+                this.disableSplitAccounts();
                 return;
             }
             console.warn('Unknown account combination between "' + sourceType + '" and "' + destType + '".');
+            this.disableSplitAccounts();
         },
 
         formattedTotalAmount() {
@@ -275,7 +293,7 @@ let create = function () {
         },
 
         addedSplit() {
-
+            addAllAutocompleteToForm(this.filters);
         },
 
         processUpload(event) {
@@ -301,6 +319,9 @@ let create = function () {
         },
         clearDescription(index) {
             this.entries[index].description = '';
+        },
+        clearCategory(index) {
+            this.entries[index].category_name = '';
         },
         clearSourceAccount(index) {
             this.entries[index].source_account = getAccount();
@@ -377,26 +398,22 @@ let create = function () {
         },
         keyUpFromCategory(e) {
             if (e.key === 'Enter' && false === this.formStates.categorySelectVisible) {
-                this.submitTransaction();
+                this.save();
                 return;
             }
             this.formStates.categorySelectVisible = document.querySelector('input.ac-category').nextSibling.classList.contains('show');
         },
-        submitTransaction() {
-            // reset all messages:
+        save() {
             this.notifications.error.show = false;
             this.notifications.success.show = false;
             this.notifications.wait.show = false;
-    //
-            // reset all errors in the entries array:
-            for (let i in this.entries) {
-                if (this.entries.hasOwnProperty(i)) {
-                    this.entries[i].errors = defaultErrorSet();
-                }
-            }
-
-            // form is now submitting:
             this.formStates.isSubmitting = true;
+
+            for (let i in this.entries) {
+                    if (this.entries.hasOwnProperty(i)) {
+                        this.entries[i].errors = defaultErrorSet();
+                    }
+                }
 
             // final check on transaction type.
             this.detectTransactionType();
@@ -418,13 +435,11 @@ let create = function () {
 
             // submit the transaction. Multi-stage process thing going on here!
             let poster = new Post();
-            console.log(submission);
             poster.post(submission).then((response) => {
                 const group = response.data.data;
                 // submission was a success!
                 this.groupProperties.id = parseInt(group.id);
                 this.groupProperties.title = group.attributes.group_title ?? group.attributes.transactions[0].description
-                console.log('group title is now: ', this.groupProperties.title);
 
                 // process attachments, if any:
                 const attachmentCount = processAttachments(this.groupProperties.id, group.attributes.transactions);
@@ -436,18 +451,12 @@ let create = function () {
                     return;
                 }
 
-                // if not, respond to user options:
                 this.showMessageOrRedirectUser();
             }).catch((error) => {
-
-                this.submitting = false;
-                console.log(error);
-                // todo put errors in form
+                this.formStates.isSubmitting = true;
                 if (typeof error.response !== 'undefined') {
                     this.parseErrors(error.response.data);
                 }
-
-
             });
         },
 
@@ -494,90 +503,8 @@ let create = function () {
         addSplit() {
             console.log('addSplit()');
             this.entries.push(createEmptySplit());
-
-            setTimeout(() => {
-                const count = this.entries.length - 1;
-                const renderAccount = function (item, b, c) {
-                    return item.name_with_balance + '<br><small class="text-muted">' + i18next.t('firefly.account_type_' + item.type) + '</small>';
-                };
-                // if(document.querySelector('#location_map_' + count)) {
-                //     addLocation(count);
-                // }
-
-                // render tags:
-                Tags.init('select.ac-tags', {
-                    allowClear: true,
-                    server: urls.tag,
-                    liveServer: true,
-                    clearEnd: true,
-                    labelField: 'tag',
-                    valueField: 'id',
-                    queryParam: 'query',
-                    allowNew: true,
-                    //serverDataKey: 'data',
-                    notFoundMessage: i18next.t('firefly.nothing_found'),
-                    noCache: true,
-                    fetchOptions: {
-                        headers: {
-                            'X-CSRF-TOKEN': document.head.querySelector('meta[name="csrf-token"]').content
-                        }
-                    }
-                });
-
-                addAutocomplete({
-                    selector: 'input.ac-description',
-                    serverUrl: urls.description,
-                    valueField: 'id',
-                    labelField: 'description',
-                    onChange: changeDescription,
-                    onSelectItem: changeDescription,
-                });
-
-                addAutocomplete({
-                    selector: 'input.ac-source',
-                    serverUrl: urls.account,
-                    onRenderItem: renderAccount,
-                    valueField: 'id',
-                    labelField: 'name_with_balance',
-                    onChange: changeSourceAccount,
-                    onSelectItem: selectSourceAccount,
-                    hiddenValue: this.entries[count].source_account.alpine_name
-                });
-
-                addAutocomplete({
-                    selector: 'input.ac-dest',
-                    serverUrl: urls.account,
-                    account_types: this.filters.destination,
-                    valueField: 'id',
-                    labelField: 'name_with_balance',
-                    onRenderItem: renderAccount,
-                    onChange: changeDestinationAccount,
-                    onSelectItem: selectDestinationAccount
-                });
-
-                addAutocomplete({
-                    selector: 'input.ac-category',
-                    serverUrl: urls.category,
-                    valueField: 'id',
-                    labelField: 'name',
-                    onChange: changeCategory,
-                    onSelectItem: changeCategory
-                });
-
-            }, 150);
-
-    //         setTimeout(() => {
-    //             //
-    //
-    //             // addedSplit, is called from the HTML
-    //             // for source account
-
-    //             console.log('here we are in');
-
-
-
-    //
-    //         }, 150);
+            this.disableSplitAccounts();
+            addAllAutocompleteToForm(this.filters);
         },
 
         removeSplit(index) {

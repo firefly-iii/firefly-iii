@@ -2,11 +2,11 @@
     {% for attachment in attachments %}
         <tr>
             <td class="onetwenty">
-                <div class="btn-group btn-group-xs">
+                <div class="btn-group btn-group-sm">
                     <a href="{{ route('attachments.edit', attachment.id) }}" class="btn btn-default"><span
-                                class="fa fa-pencil"></span></a>
+                                class="bi bi-pencil"></span></a>
                     <a href="{{ route('attachments.delete', attachment.id) }}" class="btn btn-danger"><span
-                                class="fa fa-trash"></span></a>
+                                class="bi bi-trash"></span></a>
                     {% if attachment.file_exists %}
                         <a href="{{ route('attachments.download', attachment.id) }}" class="btn btn-default"><span
                                     class="fa fa-download"></span></a>

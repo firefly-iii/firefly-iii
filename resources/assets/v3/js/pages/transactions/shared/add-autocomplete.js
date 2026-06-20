@@ -19,6 +19,15 @@
  */
 
 import Autocomplete from "bootstrap5-autocomplete";
+import i18next from "i18next";
+import {
+    changeCategory, changeDescription,
+    changeDestinationAccount,
+    changeSourceAccount,
+    selectDestinationAccount,
+    selectSourceAccount
+} from "./autocomplete-functions.js";
+import Tags from "bootstrap5-tags";
 
 export function getUrls() {
     return {
@@ -29,7 +38,74 @@ export function getUrls() {
     }
 }
 
-export function addAutocomplete(options) {
+export function addAllAutocompleteToForm(filters) {
+    const urls = getUrls();
+    setTimeout(() => {
+        // addedSplit, is called from the HTML
+        // for source account
+        const renderAccount = function (item, b, c) {
+            return item.name_with_balance + '<br><small class="text-muted">' + i18next.t('firefly.account_type_' + item.type) + '</small>';
+        };
+
+        // render tags:
+        Tags.init('select.ac-tags', {
+            allowClear: true,
+            server: urls.tag,
+            liveServer: true,
+            clearEnd: true,
+            labelField: 'tag',
+            valueField: 'id',
+            queryParam: 'query',
+            allowNew: true,
+            //serverDataKey: 'data',
+            notFoundMessage: i18next.t('firefly.nothing_found'),
+            noCache: true,
+            fetchOptions: {
+                headers: {
+                    'X-CSRF-TOKEN': document.head.querySelector('meta[name="csrf-token"]').content
+                }
+            }
+        });
+        addAutocomplete({
+            selector: 'input.ac-source',
+            serverUrl: urls.account,
+            account_types: filters.source,
+            onRenderItem: renderAccount,
+            valueField: 'id',
+            labelField: 'name',
+            onChange: changeSourceAccount,
+            onSelectItem: selectSourceAccount
+        });
+        addAutocomplete({
+            selector: 'input.ac-dest',
+            serverUrl: urls.account,
+            valueField: 'id',
+            labelField: 'name',
+            account_types: filters.destination,
+            onRenderItem: renderAccount,
+            onChange: changeDestinationAccount,
+            onSelectItem: selectDestinationAccount
+        });
+        addAutocomplete({
+            selector: 'input.ac-category',
+            serverUrl: urls.category,
+            valueField: 'id',
+            labelField: 'name',
+            onChange: changeCategory,
+            onSelectItem: changeCategory
+        });
+        addAutocomplete({
+            selector: 'input.ac-description',
+            serverUrl: urls.description,
+            valueField: 'id',
+            labelField: 'title',
+            onChange: changeDescription,
+            onSelectItem: changeDescription,
+        });
+    }, 150);
+}
+
+function addAutocomplete(options) {
     const params = {
         server: options.serverUrl,
         serverParams: {},

@@ -13,9 +13,9 @@
                     {{ __('firefly.actions') }}<span class="caret"></span>
                 </button>
                 <ul class="dropdown-menu" aria-labelledby="top_action_menu">
-                    <li><a href="#" class="dropdown-item mass-edit"><span class="fa fa-fw fa-pencil"></span><span class="txt">{{ __('firefly.mass_edit') }}</span></a></li>
-                    <li><a href="#" class="dropdown-item bulk-edit"><span class="fa fa-fw fa-pencil-square-o"></span><span class="txt">{{ __('firefly.bulk_edit') }}</span></a></li>
-                    <li><a href="#" class="dropdown-item mass-delete"><span class="fa fa-fw fa-trash"></span><span class="txt">{{ __('firefly.mass_delete') }}</span></a></li>
+                    <li><a href="#" class="dropdown-item mass-edit"><span class="bi bi-pencil"></span><span class="txt">{{ __('firefly.mass_edit') }}</span></a></li>
+                    <li><a href="#" class="dropdown-item bulk-edit"><span class="bi bi-pencil-square-o"></span><span class="txt">{{ __('firefly.bulk_edit') }}</span></a></li>
+                    <li><a href="#" class="dropdown-item mass-delete"><span class="bi bi-trash"></span><span class="txt">{{ __('firefly.mass_delete') }}</span></a></li>
                 </ul>
             </div>
         </td>
@@ -87,8 +87,8 @@
                 <button type="button" class="btn btn-sm btn-outline-secondary dropdown-toggle" data-toggle="dropdown"
                         aria-haspopup="true" aria-expanded="false">{{ __('firefly.actions') }} <span class="caret"></span></button>
                 <ul class="dropdown-menu dropdown-menu-right" role="menu">
-                    <li><a href="{{ route('transactions.edit', [$group['id']]) }}"><span class="fa fa-fw fa-pencil"></span> {{ __('firefly.edit') }}</a></li>
-                    <li><a href="{{ route('transactions.delete', [$group['id']]) }}"><span class="fa fa-fw fa-trash"></span> {{ __('firefly.delete') }}</a></li>
+                    <li><a href="{{ route('transactions.edit', [$group['id']]) }}"><span class="bi bi-pencil"></span> {{ __('firefly.edit') }}</a></li>
+                    <li><a href="{{ route('transactions.delete', [$group['id']]) }}"><span class="bi bi-trash"></span> {{ __('firefly.delete') }}</a></li>
                     <li><a href="#" data-id="{{ $group['id'] }}" class="clone-transaction"><span class="fa fa-copy fa-fw"></span> {{ __('firefly.clone') }}</a></li>
                     <li><a href="#" data-id="{{ $group['id'] }}" class="clone-transaction-and-edit"><span class="fa fa-copy fa-fw"></span> {{ __('firefly.clone_and_edit') }}</a></li>
                 </ul>

@@ -116,7 +116,7 @@
                                             @click="removeSplit(index)">{{ __('firefly.transaction_remove_split') }}</button>
                                 </template>
                                 <button class="btn btn-success text-white" :disabled="formStates.isSubmitting"
-                                        @click="submitTransaction()">{{ __('firefly.submit') }}</button>
+                                        @click="save()">{{ __('firefly.submit') }}</button>
                             </div>
                         </div>
                     </div>

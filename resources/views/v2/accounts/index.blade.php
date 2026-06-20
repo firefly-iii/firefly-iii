@@ -66,7 +66,7 @@
                                     <td x-show="tableColumns.active.visible && tableColumns.active.enabled">&nbsp;</td>
                                     <td x-show="tableColumns.name.visible && tableColumns.name.enabled">
                                         <em x-show="'' !== filters.name && null !== filters.name">"<span x-text="filters.name"></span>"</em>
-                                        <a href="#" @click.prevent="removeFilter('name')"><em class="text-danger fa fa-trash-can"></em></a>
+                                        <a href="#" @click.prevent="removeFilter('name')"><em class="text-danger bi bi-trash-can"></em></a>
                                     </td>
                                     <td x-show="tableColumns.type.visible && tableColumns.type.enabled">&nbsp;</td>
                                     <td x-show="tableColumns.liability_type.visible && tableColumns.liability_type.enabled">

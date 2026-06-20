@@ -8,17 +8,17 @@
         {% endif %}
         <td colspan="1" class="hidden-xs">
             <!-- Single button -->
-            <div class="btn-group btn-group-xs action-menu pull-right hidden">
+            <div class="btn-group btn-group-sm action-menu pull-right hidden">
                 <button type="button" class="btn btn-default btn-sm dropdown-toggle" data-toggle="dropdown"
                         aria-haspopup="true" aria-expanded="false">
                     {{ 'actions'|_ }}<span class="caret"></span>
                 </button>
                 <ul class="dropdown-menu dropdown-menu-right">
-                    <li><a href="#" class="mass-edit"><span class="fa fa-fw fa-pencil"></span>
+                    <li><a href="#" class="mass-edit"><span class="bi bi-pencil"></span>
                             <span class="txt">{{ 'mass_edit'|_ }}</span></a></li>
-                    <li><a href="#" class="bulk-edit"><span class="fa fa-fw fa-pencil-square-o"></span>
+                    <li><a href="#" class="bulk-edit"><span class="bi bi-pencil-square-o"></span>
                             <span class="txt">{{ 'bulk_edit'|_ }}</span></a></li>
-                    <li><a href="#" class="mass-delete"><span class="fa fa-fw fa-trash"></span>
+                    <li><a href="#" class="mass-delete"><span class="bi bi-trash"></span>
                             <span class="txt">{{ 'mass_delete'|_ }}</span></a></li>
                 </ul>
             </div>
@@ -92,15 +92,15 @@
                     <td class="top-light-border" colspan="2">&nbsp;</td>
                 {% endif %}
                 <td class="top-light-border hidden-xs" colspan="2">
-                    <div class="btn-group btn-group-xs pull-right">
+                    <div class="btn-group btn-group-sm pull-right">
                         <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown"
                                 aria-haspopup="true" aria-expanded="false">
                             {{ 'actions'|_ }} <span class="caret"></span></button>
                         <ul class="dropdown-menu dropdown-menu-right" role="menu">
                             <li><a href="{{ route('transactions.edit', [group.id]) }}"><span
-                                        class="fa fa-fw fa-pencil"></span> {{ 'edit'|_ }}</a></li>
+                                        class="bi bi-pencil"></span> {{ 'edit'|_ }}</a></li>
                             <li><a href="{{ route('transactions.delete', [group.id]) }}"><span
-                                        class="fa fa-fw fa-trash"></span> {{ 'delete'|_ }}</a></li>
+                                        class="bi bi-trash"></span> {{ 'delete'|_ }}</a></li>
                             <li><a href="#" data-id="{{ group.id }}" class="clone-transaction"><span
                                         class="fa fa-copy fa-fw"></span> {{ 'clone'|_ }}</a></li>
                             <li><a href="#" data-id="{{ group.id }}" class="clone-transaction-and-edit"><span
@@ -381,16 +381,16 @@
 
                 {% if group.count == 1 %}
                     <td class="hidden-xs {{ className }}">
-                        <div class="btn-group btn-group-xs pull-right">
+                        <div class="btn-group btn-group-sm pull-right">
                             <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown"
                                     aria-haspopup="true" aria-expanded="false">
                                 {{ 'actions'|_ }} <span class="caret"></span></button>
                             <ul class="dropdown-menu dropdown-menu-right" role="menu">
                                 <li><a href="{{ route('transactions.edit', [group.id]) }}"><span
-                                            class="fa fa-fw fa-pencil"></span> {{ 'edit'|_ }}</a></li>
+                                            class="bi bi-pencil"></span> {{ 'edit'|_ }}</a></li>
                                 {% if transaction.transaction_type_type != 'Opening balance' and transaction.transaction_type_type != 'Liability credit' %}
                                 <li><a href="{{ route('transactions.delete', [group.id]) }}"><span
-                                            class="fa fa-fw fa-trash"></span> {{ 'delete'|_ }}</a></li>
+                                            class="bi bi-trash"></span> {{ 'delete'|_ }}</a></li>
                                 {% endif %}
                                 {% if transaction.transaction_type_type != 'Reconciliation' and transaction.transaction_type_type != 'Opening balance' and transaction.transaction_type_type != 'Liability credit' %}
                                 <li><a href="#" data-id="{{ group.id }}" class="clone-transaction"><span
@@ -432,17 +432,17 @@
         <td colspan="8">
             <div class="pull-right">
                 <!-- Single button -->
-                <div class="btn-group action-menu btn-group-xs pull-right hidden">
+                <div class="btn-group action-menu btn-group-sm pull-right hidden">
                     <button type="button" class="btn btn-default btn-sm dropdown-toggle" data-toggle="dropdown"
                             aria-haspopup="true" aria-expanded="false">
                         {{ 'actions'|_ }} <span class="caret"></span>
                     </button>
-                    <ul class="dropdown-menu btn-group-xs dropdown-menu-right">
-                        <li><a href="#" class="mass-edit"><span class="fa fa-fw fa-pencil"></span>
+                    <ul class="dropdown-menu btn-group-sm dropdown-menu-right">
+                        <li><a href="#" class="mass-edit"><span class="bi bi-pencil"></span>
                                 <span>{{ 'mass_edit'|_ }}</span></a></li>
-                        <li><a href="#" class="bulk-edit"><span class="fa fa-fw fa-pencil-square-o"></span>
+                        <li><a href="#" class="bulk-edit"><span class="bi bi-pencil-square-o"></span>
                                 <span>{{ 'bulk_edit'|_ }}</span></a></li>
-                        <li><a href="#" class="mass-delete"><span class="fa fa-fw fa-trash"></span>
+                        <li><a href="#" class="mass-delete"><span class="bi bi-trash"></span>
                                 <span>{{ 'mass_delete'|_ }}</span></a></li>
                     </ul>
                 </div>
