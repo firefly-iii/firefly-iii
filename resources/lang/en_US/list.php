@@ -26,6 +26,7 @@ return [
     'buttons'                 => 'Buttons',
     'icon'                    => 'Icon',
     'id'                      => 'ID',
+    'hide' => 'Hide',
     'create_date'             => 'Created at',
     'primary_currency'        => 'Primary currency',
     'update_date'             => 'Updated at',

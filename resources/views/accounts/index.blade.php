@@ -4,9 +4,7 @@
         <div class="row">
             <div class="col-lg-12 col-md-12 col-sm-12">
                 <div class="card" id="account-index-{{ $objectType }}">
-                    <x-elements.card-header-with-menu
-                        :cardTitle="trans('firefly.'.$objectType.'_accounts')" :route="route('accounts.create', $objectType)" :linkTitle="__('firefly.make_new_'. $objectType . '_account')"
-                    />
+                    <x-elements.card-header-with-menu :cardTitle="trans('firefly.'.$objectType.'_accounts')" :route="route('accounts.create', $objectType)" :linkTitle="__('firefly.make_new_'. $objectType . '_account')"/>
                     <div class="card-body p-0">
                         <x-lists.accounts :accounts="$accounts" :objectType="$objectType" />
                     </div>

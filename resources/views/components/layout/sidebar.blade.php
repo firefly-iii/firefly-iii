@@ -90,7 +90,7 @@
             </li>
         </ul>
     </li>
-    <li class="nav-item {{ menu_open_partial('rules.') }}  {{ menu_open_partial('recurring.') }}">
+    <li class="nav-item {{ menu_open_partial('rules.') }} {{ menu_open_partial('webhooks.') }}  {{ menu_open_partial('recurring.') }}">
         <a href="#" class="nav-link">
             <em class="nav-icon bi bi-cpu"></em>
             <p>

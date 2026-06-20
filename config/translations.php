@@ -114,6 +114,7 @@ return [
                 'expense_account',
                 'revenue_account',
                 'budget',
+                'hide',
                 'account_type_undefined',
                 'account_type_Asset account',
                 'account_type_Expense account',
@@ -126,6 +127,10 @@ return [
                 'account_role_savingAsset',
                 'account_role_ccAsset',
                 'account_role_cashWalletAsset',
+                'webhook_trigger_STORE_TRANSACTION',
+                'webhook_trigger_UPDATE_TRANSACTION',
+                'webhook_response_RELEVANT',
+                'webhook_delivery_JSON'
                 //                'account_column_opt_drag_and_drop',
                 //                'account_column_opt_active',
                 //                'account_column_opt_name',
