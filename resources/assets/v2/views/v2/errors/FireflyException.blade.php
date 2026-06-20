@@ -1,4 +1,4 @@
-@extends('layout.v2.error')
+@extends('views.layout.v2.error')
 @section('status_code','500')
 @section('status','Internal Server Error')
 @section('sub_title', trans('errors.error_occurred'))
