@@ -40,20 +40,20 @@
                                 <button type="button" class="btn btn-box-tool" data-widget="collapse"><span class="fa fa-minus"></span>
                                 </button>
                                 <button class="btn btn-box-tool dropdown-toggle" data-toggle="dropdown"><span
-                                        class="fa fa-ellipsis-v"></span></button>
+                                        class="bi bi-list"></span></button>
                                 <ul class="dropdown-menu" role="menu">
                                     <li><a href="{{ route('rule-groups.edit',ruleGroup.id) }}"><span class="bi bi-pencil"></span> {{ __('firefly.edit') }}</a></li>
                                     <li><a href="{{ route('rule-groups.delete',ruleGroup.id) }}"><span class="bi bi-trash"></span> {{ __('firefly.delete') }}</a></li>
                                     <li><a href="{{ route('rule-groups.select-transactions',ruleGroup.id) }}"><span
-                                                class="fa fa-fw fa-power-off"></span> {{ trans('firefly.apply_rule_group_selection', {title: ruleGroup.title}) }}
+                                                class="fa fa-power-off"></span> {{ trans('firefly.apply_rule_group_selection', {title: ruleGroup.title}) }}
                                         </a></li>
                                     {% if ruleGroup.order > 1 %}
                                         <li><a href="#" class="move-group" data-direction="up" data-id="{{ ruleGroup.id }}"><span
-                                                    class="fa fa-fw fa-arrow-up"></span> {{ 'move_rule_group_up'|_ }}</a></li>
+                                                    class="fa fa-arrow-up"></span> {{ 'move_rule_group_up'|_ }}</a></li>
                                     {% endif %}
                                     {% if ruleGroup.order < ruleGroups|length %}
                                         <li><a href="#" class="move-group" data-direction="down" data-id="{{ ruleGroup.id }}"><span
-                                                    class="fa fa-fw fa-arrow-down"></span> {{ 'move_rule_group_down'|_ }}
+                                                    class="fa fa-arrow-down"></span> {{ 'move_rule_group_down'|_ }}
                                             </a></li>
                                     {% endif %}
                                 </ul>
@@ -87,7 +87,7 @@
                                     <tr class="single-rule" data-order="{{ rule.order }}" data-id="{{ rule.id }}" data-group-id="{{ ruleGroup.id }}" data-position="{{ loop.index0 }}">
                                         <td>
                                             <div class="btn-group btn-group-sm prio_buttons">
-                                                <span class="fa fa-fw fa-bars rule-handle"></span>
+                                                <span class="fa fa-bars rule-handle"></span>
                                             </div>
                                         </td>
                                         <td>
@@ -104,14 +104,14 @@
                                         <td>
                                             <div class="btn-group btn-group-sm test_buttons">
                                                 {# show which transactions would match #}
-                                                <a href="{{ route('rules.search',rule.id) }}" class="btn btn-default {% if false == rule.strict %}test_rule_triggers{% endif %}" data-id="{{ rule.id }}" title="{{ 'test_rule_triggers'|_ }}"><span data-id="{{ rule.id }}" class="fa fa-fw fa-flask"></span></a>
+                                                <a href="{{ route('rules.search',rule.id) }}" class="btn btn-default {% if false == rule.strict %}test_rule_triggers{% endif %}" data-id="{{ rule.id }}" title="{{ 'test_rule_triggers'|_ }}"><span data-id="{{ rule.id }}" class="fa fa-flask"></span></a>
                                                 {% if rule.active %}
                                                     {# actually execute rule #}
-                                                    <a href="{{ route('rules.select-transactions',rule.id) }}" class="btn btn-default" title=" {{ trans('firefly.apply_rule_selection', {title: rule.title}) }}"><span class="fa fa-fw fa-power-off "></span></a>
+                                                    <a href="{{ route('rules.select-transactions',rule.id) }}" class="btn btn-default" title=" {{ trans('firefly.apply_rule_selection', {title: rule.title}) }}"><span class="fa fa-power-off "></span></a>
                                                 {% endif %}
 
                                                 {# duplicate rule #}
-                                                <a href="#" class="btn btn-default duplicate-rule" data-id="{{ rule.id }}" title=" {{ trans('firefly.duplicate_rule', {title: rule.title}) }}"><span class="fa fa-fw fa-copy"></span></a>
+                                                <a href="#" class="btn btn-default duplicate-rule" data-id="{{ rule.id }}" title=" {{ trans('firefly.duplicate_rule', {title: rule.title}) }}"><span class="bi bi-copy"></span></a>
                                             </div>
                                         </td>
                                         <td class="markdown">

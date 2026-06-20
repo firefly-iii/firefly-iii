@@ -45,7 +45,7 @@
                                                 {% if currency.userGroupEnabled %}
                                                     <a class="btn btn-default disable-currency" data-code="{{ currency.code }}"
                                                        href="#">
-                                                        <span class="fa fa-fw fa-square-o"></span>
+                                                        <span class="bi bi-app"></span>
                                                         {{ 'disable_currency'|_ }}</a>
                                                 {% endif %}
 
@@ -53,7 +53,7 @@
                                                 {% if not currency.userGroupEnabled %}
                                                     <a class="btn btn-default enable-currency" data-code="{{ currency.code }}"
                                                        href="#">
-                                                        <span class="fa fa-fw fa-check-square-o"></span>
+                                                        <span class="bi bi-check-square-o"></span>
                                                         {{ 'enable_currency'|_ }}</a>
                                                 {% endif %}
                                             </div>

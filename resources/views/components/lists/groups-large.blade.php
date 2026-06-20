@@ -89,8 +89,8 @@
                 <ul class="dropdown-menu dropdown-menu-right" role="menu">
                     <li><a href="{{ route('transactions.edit', [$group['id']]) }}"><span class="bi bi-pencil"></span> {{ __('firefly.edit') }}</a></li>
                     <li><a href="{{ route('transactions.delete', [$group['id']]) }}"><span class="bi bi-trash"></span> {{ __('firefly.delete') }}</a></li>
-                    <li><a href="#" data-id="{{ $group['id'] }}" class="clone-transaction"><span class="fa fa-copy fa-fw"></span> {{ __('firefly.clone') }}</a></li>
-                    <li><a href="#" data-id="{{ $group['id'] }}" class="clone-transaction-and-edit"><span class="fa fa-copy fa-fw"></span> {{ __('firefly.clone_and_edit') }}</a></li>
+                    <li><a href="#" data-id="{{ $group['id'] }}" class="clone-transaction"><span class="bi bi-copy"></span> {{ __('firefly.clone') }}</a></li>
+                    <li><a href="#" data-id="{{ $group['id'] }}" class="clone-transaction-and-edit"><span class="bi bi-copy"></span> {{ __('firefly.clone_and_edit') }}</a></li>
                 </ul>
             </div>
         </td>

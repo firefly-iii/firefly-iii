@@ -120,17 +120,17 @@
                     <li class="hidden-sm hidden-xs">
                         <a href="#" id="anonymous">
                             {% if anonymous %}
-                                <span class="text-danger fa fa-eye-slash"></span>
+                                <span class="text-danger bi bi-eye-slash"></span>
                             {% endif %}
                             {% if not anonymous %}
-                                <span class="text-success fa fa-eye"></span>
+                                <span class="text-success bi bi-eye"></span>
                             {% endif %}
                         </a>
                     </li>
                     <li class="hidden-sm hidden-xs">
                         <a href="#" id="help" data-route="{{ original_route_name }}"
                            data-extra="{{ objectType|default("") }}">
-                            <span class="fa fa-question-circle" data-route="{{ original_route_name }}"
+                            <span class="bi bi-question-circle" data-route="{{ original_route_name }}"
                                   data-extra="{{ objectType|default("") }}"></span>
                         </a>
                     </li>
@@ -147,7 +147,7 @@
                     </span>
                     </li>
                     <li id="sidebar-toggle">
-                        <a href="#" data-toggle="control-sidebar"><span class="fa fa-plus-circle"></span></a>
+                        <a href="#" data-toggle="control-sidebar"><span class="bi bi-plus-circle-circle"></span></a>
                     </li>
                 </ul>
             </div>
@@ -161,7 +161,7 @@
                     <input autocomplete="off" type="text" name="search" class="form-control"
                            placeholder="{{ 'searchPlaceholder'|_ }}" value="{{ query }}" spellcheck="false"/>
                     <span class="input-group-btn">
-                <button type='submit' name='go' id='search-btn' class="btn btn-flat"><span class="fa fa-search"></span></button>
+                <button type='submit' name='go' id='search-btn' class="btn btn-flat"><span class="bi bi-search"></span></button>
               </span>
                 </div>
             </form>

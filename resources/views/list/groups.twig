@@ -102,9 +102,9 @@
                             <li><a href="{{ route('transactions.delete', [group.id]) }}"><span
                                         class="bi bi-trash"></span> {{ __('firefly.delete') }}</a></li>
                             <li><a href="#" data-id="{{ group.id }}" class="clone-transaction"><span
-                                        class="fa fa-copy fa-fw"></span> {{ 'clone'|_ }}</a></li>
+                                        class="bi bi-copy"></span> {{ 'clone'|_ }}</a></li>
                             <li><a href="#" data-id="{{ group.id }}" class="clone-transaction-and-edit"><span
-                                        class="fa fa-copy fa-fw"></span> {{ 'clone_and_edit'|_ }}</a></li>
+                                        class="bi bi-copy"></span> {{ 'clone_and_edit'|_ }}</a></li>
                         </ul>
                     </div>
                 </td>
@@ -120,36 +120,36 @@
                 data-id="{{ group.id }}">
                 <td class="hidden-xs {{ className }}">
                     {% if transaction.transaction_type_type == 'Withdrawal' %}
-                        <span class="fa fa-long-arrow-left fa-fw"
+                        <span class="bi bi-arrow-left"
                               title="{{ trans('firefly.Withdrawal') }}"></span>
                     {% endif %}
 
                     {% if transaction.transaction_type_type == 'Deposit' %}
-                        <span class="fa fa-long-arrow-right fa-fw"
+                        <span class="bi bi-arrow-right"
                               title="{{ trans('firefly.Deposit') }}"></span>
                     {% endif %}
 
                     {% if transaction.transaction_type_type == 'Transfer' %}
-                        <span class="fa fa-exchange fa-fw" title="{{ trans('firefly.Transfer') }}"></span>
+                        <span class="bi bi-arrow-left-right" title="{{ trans('firefly.Transfer') }}"></span>
                     {% endif %}
 
                     {% if transaction.transaction_type_type == 'Reconciliation' %}
-                        <span class="fa-fw fa fa-calculator"
+                        <span class="bi bi-calculator"
                               title="{{ trans('firefly.reconciliation_transaction') }}"></span>
                     {% endif %}
                     {% if transaction.transaction_type_type == 'Opening balance' %}
-                        <span class="fa-fw fa fa-star-o"
+                        <span class="bi bi-star"
                               title="{{ trans('firefly.Opening balance') }}"></span>
                     {% endif %}
                     {% if transaction.transaction_type_type == 'Liability credit' %}
-                        <span class="fa-fw fa fa-star-o"
+                        <span class="bi bi-star"
                               title="{{ trans('firefly.Liability credit') }}"></span>
                     {% endif %}
 
                 </td>
                 <td class="{{ className }}">
                     {% if transaction.reconciled %}
-                        <span class="fa fa-check"></span>
+                        <span class="bi bi-check"></span>
                     {% endif %}
                     {% if transaction.attachments|length > 0 %}
                         <span class="bi bi-paperclip"></span>
@@ -394,12 +394,12 @@
                                 {% endif %}
                                 {% if transaction.transaction_type_type != 'Reconciliation' and transaction.transaction_type_type != 'Opening balance' and transaction.transaction_type_type != 'Liability credit' %}
                                 <li><a href="#" data-id="{{ group.id }}" class="clone-transaction"><span
-                                            class="fa fa-copy fa-fw"></span> {{ 'clone'|_ }}</a></li>
+                                            class="bi bi-copy"></span> {{ 'clone'|_ }}</a></li>
                                 <li><a href="#" data-id="{{ group.id }}" class="clone-transaction-and-edit"><span
-                                            class="fa fa-copy fa-fw"></span> {{ 'clone_and_edit'|_ }}</a></li>
+                                            class="bi bi-copy"></span> {{ 'clone_and_edit'|_ }}</a></li>
                                 <li>
                                     <a href="{{ route('rules.create-from-journal', [transaction.transaction_journal_id]) }}"><span
-                                            class="fa fa-fw fa-random"></span> {{ 'create_rule_from_transaction'|_ }}
+                                            class="bi bi-shuffle"></span> {{ 'create_rule_from_transaction'|_ }}
                                     </a></li>
                                 {% endif %}
                             </ul>

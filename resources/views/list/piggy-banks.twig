@@ -26,17 +26,17 @@
                     <td class="visible-xs visible-sm hidden-md hidden-lg">
                         <div class="btn-group btn-group-sm">
                             <a href="{{ route('piggy-banks.remove-money-mobile', piggy.id) }}" class="btn btn-default btn-xs"><span class="fa fa-minus"></span></a>
-                            <a href="{{ route('piggy-banks.add-money-mobile', piggy.id) }}" class="btn btn-default btn-xs"><span class="fa fa-plus"></span></a>
+                            <a href="{{ route('piggy-banks.add-money-mobile', piggy.id) }}" class="btn btn-default btn-xs"><span class="bi bi-plus-circle"></span></a>
                         </div>
                     </td>
                     <td  class="hidden-sm hidden-xs sixty-px">
-                        <span class="fa fa-fw fa-bars piggy-handle"></span>
+                        <span class="fa fa-bars piggy-handle"></span>
                         <span class="loadSpin"></span>
                     </td>
                     <td class="hidden-sm hidden-xs hundred-px">
                         <div class="btn-group btn-group-sm">
-                            <a href="{{ route('piggy-banks.edit', piggy.id) }}" class="btn btn-default btn-xs"><span class="bi bi-pencil fa-fw"></span></a>
-                            <a href="{{ route('piggy-banks.delete', piggy.id) }}" class="btn btn-danger btn-xs"><span class="bi bi-trash fa-fw"></span></a>
+                            <a href="{{ route('piggy-banks.edit', piggy.id) }}" class="btn btn-default btn-xs"><span class="bi bi-pencil"></span></a>
+                            <a href="{{ route('piggy-banks.delete', piggy.id) }}" class="btn btn-danger btn-xs"><span class="bi bi-trash"></span></a>
                         </div>
                     </td>
                     <td>
@@ -83,7 +83,7 @@
 
                         {% if piggy.left_to_save > 0 or null == piggy.left_to_save %}
                             <a href="{{ route('piggy-banks.add-money', piggy.id) }}" class="btn btn-default btn-xs addMoney" data-id="{{ piggy.id }}">
-                                <span data-id="{{ piggy.id }}" class="fa fa-plus"></span></a>
+                                <span data-id="{{ piggy.id }}" class="bi bi-plus-circle"></span></a>
                         {% endif %}
                     </td>
                     <td class="hidden-sm hidden-xs text-right">

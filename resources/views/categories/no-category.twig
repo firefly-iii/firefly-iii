@@ -26,13 +26,13 @@
                     {% if periods|length > 0 %}
                         {% include 'list.groups' %}
                         <p>
-                            <span class="fa fa-calendar"></span>
+                            <span class="bi bi-calendar"></span>
                             <a href="{{ route('categories.no-category.all') }}">{{ 'show_all_no_filter'|_ }}</a>
                         </p>
                     {% else %}
                         {% include 'list.groups' %}
                         <p>
-                            <span class="fa fa-calendar"></span>
+                            <span class="bi bi-calendar"></span>
                             <a href="{{ route('categories.no-category') }}">{{ 'show_the_current_period_and_overview'|_ }}</a>
                         </p>
                     {% endif %}

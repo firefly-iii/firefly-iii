@@ -33,12 +33,12 @@
                     {% if enabledMFA == true %}
                         <div class="btn-group">
                             <a href="{{ route('profile.mfa.disableMFA') }}" class="btn btn-danger"><em class="fa fa-unlock-alt"></em> {{ 'pref_two_factor_auth_disable_2fa'|_ }}</a>
-                            <a href="{{ route('profile.mfa.backup-codes') }}" class="btn btn-default"><em class="fa fa-calculator"></em> {{ 'pref_two_factor_new_backup_codes'|_ }}</a>
+                            <a href="{{ route('profile.mfa.backup-codes') }}" class="btn btn-default"><em class="bi bi-calculator"></em> {{ 'pref_two_factor_new_backup_codes'|_ }}</a>
                         </div>
                     {% endif %}
                     {% if enabledMFA == false %}
                         <p>
-                            <a class="btn btn-info" href="{{ route('profile.mfa.enableMFA') }}"><em class="fa fa-calculator"></em> {{ 'pref_enable_two_factor_auth'|_ }}</a>
+                            <a class="btn btn-info" href="{{ route('profile.mfa.enableMFA') }}"><em class="bi bi-calculator"></em> {{ 'pref_enable_two_factor_auth'|_ }}</a>
                         </p>
                     {% endif %}
                 </div>

@@ -15,7 +15,9 @@
                 </h4>
                 <template x-if="loading">
                     <p class="d-none d-xs-block">
-                        <em class="fa-solid fa-spinner fa-spin"></em>
+                        <div class="spinner-border spinner-border-sm" role="status">
+  <span class="visually-hidden">Loading...</span>
+</div>
                     </p>
                 </template>
                 <template x-if="!loading && 0 !== balanceBox.amounts.length">
@@ -30,7 +32,7 @@
                 </template>
             </div>
             <span class="small-box-icon">
-                <i class="fa-solid fa-scale-balanced"></i>
+                <em class="bi bi-boxes"></em>
             </span>
 
             <div class="small-box-footer hover-footer d-none d-xl-block">
@@ -67,7 +69,9 @@
                 </template>
                 <template x-if="loading">
                     <p class="d-none d-sm-block">
-                        <em class="fa-solid fa-spinner fa-spin"></em>
+                        <div class="spinner-border spinner-border-sm" role="status">
+  <span class="visually-hidden">Loading...</span>
+</div>
                     </p>
                 </template>
                 <template x-if="!loading && billBox.unpaid.length > 0">
@@ -78,7 +82,7 @@
                 </template>
             </div>
             <span class="small-box-icon">
-                <em class="fa-regular fa-calendar"></em>
+                <em class="bi bi-calendar"></em>
             </span>
             <span class="small-box-footer d-none d-xl-block">
                 <template x-if="0 === billBox.paid.length">
@@ -118,7 +122,9 @@
 
                 <template x-if="loading">
                     <p class="d-none d-sm-block">
-                        <em class="fa-solid fa-spinner fa-spin"></em>
+                        <div class="spinner-border spinner-border-sm" role="status">
+  <span class="visually-hidden">Loading...</span>
+</div>
                     </p>
                 </template>
                 <template x-if="!loading && 0 !== leftBox.left.length">
@@ -129,7 +135,7 @@
                 </template>
             </div>
             <span class="small-box-icon">
-                <em class="fa-solid fa-money-check-dollar"></em>
+                <em class="bi bi-cash"></em>
             </span>
             <span class="small-box-footer d-none d-xl-block">
                 <template x-if="0 !== leftBox.perDay.length">
@@ -164,7 +170,9 @@
 
                 <template x-if="loading">
                     <p class="d-none d-sm-block">
-                        <em class="fa-solid fa-spinner fa-spin"></em>
+                        <div class="spinner-border spinner-border-sm" role="status">
+  <span class="visually-hidden">Loading...</span>
+</div>
                     </p>
                 </template>
                 <template x-if="!loading">
@@ -174,7 +182,7 @@
                 </template>
             </div>
             <span class="small-box-icon">
-                <i class="fa-solid fa-chart-line"></i>
+                <i class="bi bi-graph-up"></i>
             </span>
             <span class="small-box-footer d-none d-xl-block">
                 &nbsp;

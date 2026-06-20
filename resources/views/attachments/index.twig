@@ -32,7 +32,7 @@
                                     <div class="btn-group btn-group-sm">
                                         <a href="{{ route('attachments.edit', att.id) }}" class="btn btn-default"><span class="bi bi-pencil"></span></a>
                                         <a href="{{ route('attachments.delete', att.id) }}" class="btn btn-danger"><span class="bi bi-trash"></span></a>
-                                        <a href="{{ route('attachments.download', att.id) }}" class="btn btn-default"><span class="fa fa-download"></span></a>
+                                        <a href="{{ route('attachments.download', att.id) }}" class="btn btn-default"><span class="bi bi-download"></span></a>
                                     </div>
                                 </td>
                                 <td data-value="{{ att.filename }}">
@@ -53,9 +53,9 @@
                                 </td>
                                 <td data-value="{% if att.file_exists %}1{% else %}0{% endif %}">
                                     {% if att.file_exists %}
-                                        <span class="fa fa-check text-success"></span>
+                                        <span class="bi bi-check text-success"></span>
                                     {% else %}
-                                        <span class="fa fa-warning text-danger"></span>
+                                        <span class="bi bi-exclamation-triangle text-danger"></span>
                                     {% endif %}
                                 </td>
                             </tr>

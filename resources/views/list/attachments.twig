@@ -9,10 +9,10 @@
                                 class="bi bi-trash"></span></a>
                     {% if attachment.file_exists %}
                         <a href="{{ route('attachments.download', attachment.id) }}" class="btn btn-default"><span
-                                    class="fa fa-download"></span></a>
+                                    class="bi bi-download"></span></a>
                     {% endif %}
                     {% if not attachment.file_exists %}
-                        <a href="#" class="btn btn-danger"><span class="fa fa-exclamation-triangle"></span></a>
+                        <a href="#" class="btn btn-danger"><span class="bi bi-exclamation-triangle"></span></a>
                     {% endif %}
                 </div>
             </td>
@@ -32,7 +32,7 @@
                     {% endif %}
                 {% endif %}
                 {% if not attachment.file_exists %}
-                    <span class="fa fa-fw fa-exclamation-triangle"></span>
+                    <span class="bi bi-exclamation-triangle"></span>
                     {% if attachment.title %}
                         {{ attachment.title }}
                     {% else %}

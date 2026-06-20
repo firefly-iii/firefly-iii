@@ -106,7 +106,7 @@
                 </a>
             </li>
             <li class="nav-item">
-                <a href="{{ route('recurring.index') }}" class="nav-link {{ menu_item_active_partial('recurrinng.') }}">
+                <a href="{{ route('recurring.index') }}" class="nav-link {{ menu_item_active_partial('recurring.') }}">
                     <em class="nav-icon bi bi-paint-bucket"></em>
                     <p>{{__('firefly.recurrences') }}</p>
                 </a>

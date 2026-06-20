@@ -24,7 +24,9 @@
         </template>
         <template x-if="notifications.wait.show">
             <div class="alert alert-info alert-dismissible fade show" role="alert">
-                <em class="fa-solid fa-spinner fa-spin"></em>
+                <div class="spinner-border spinner-border-sm" role="status">
+  <span class="visually-hidden">Loading...</span>
+</div>
                 <span x-text="notifications.wait.text"></span>
                 <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="{{ __('firefly.close') }}"></button>
             </div>

@@ -97,7 +97,9 @@
                         <div class="search_results hidden"></div>
                         {# loading indicator #}
                         <div class="overlay">
-                            <span class="fa fa-refresh fa-spin"></span>
+                            <div class="spinner-border spinner-border-sm" role="status">
+  <span class="visually-hidden">Loading...</span>
+</div>
                         </div>
 
                         <div class="row mass_edit_all hidden-xs hidden">
@@ -113,7 +115,7 @@
 
                                 <div class="mass_buttons btn-group btn-group pull-right">
                                     <a href="#" class="btn btn-default mass_select"><span
-                                            class="fa fa-fw fa-check-square-o"></span> {{ 'select_transactions'|_ }}</a>
+                                            class="bi bi-check-square-o"></span> {{ 'select_transactions'|_ }}</a>
                                     <a href="#" class="btn btn-default mass_stop_select hidden"><span class="fa faw-fw fa-square-o"
                                         ></span> {{ 'stop_selection'|_ }}</a>
                                 </div>

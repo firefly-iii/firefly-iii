@@ -41,22 +41,22 @@
                                     </td>
                                     <td>
                                         {% if journal.transaction_type_type == 'Withdrawal' %}
-                                            <span class="fa fa-long-arrow-left fa-fw" title="{{ trans('firefly.Withdrawal') }}"></span>
+                                            <span class="bi bi-arrow-left" title="{{ trans('firefly.Withdrawal') }}"></span>
                                         {% endif %}
 
                                         {% if journal.transaction_type_type == 'Deposit' %}
-                                            <span class="fa fa-long-arrow-right fa-fw" title="{{ trans('firefly.Deposit') }}"></span>
+                                            <span class="bi bi-arrow-right" title="{{ trans('firefly.Deposit') }}"></span>
                                         {% endif %}
 
                                         {% if journal.transaction_type_type == 'Transfer' %}
-                                            <span class="fa fa-exchange fa-fw" title="{{ trans('firefly.Deposit') }}"></span>
+                                            <span class="bi bi-arrow-left-right" title="{{ trans('firefly.Deposit') }}"></span>
                                         {% endif %}
 
                                         {% if journal.transaction_type_type == 'Reconciliation' %}
-                                            <span class="fa-fw fa fa-calculator" title="{{ trans('firefly.reconciliation_transaction') }}"></span>
+                                            <span class="bi bi-calculator" title="{{ trans('firefly.reconciliation_transaction') }}"></span>
                                         {% endif %}
                                         {% if journal.transaction_type_type == 'Opening balance' %}
-                                            <span class="fa-fw fa fa-star-o" title="{{ trans('firefly.Opening balance') }}"></span>
+                                            <span class="bi bi-star" title="{{ trans('firefly.Opening balance') }}"></span>
                                         {% endif %}
                                     </td>
                                     <td>

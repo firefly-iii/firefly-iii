@@ -73,24 +73,24 @@
                                 </td>
                                 <td class="hidden-xs" data-value="{% if user.isAdmin %}1{% else %}0{% endif %}">
                                     {% if user.isAdmin %}
-                                        <small class="text-success"><span class="fa fa-fw fa-check"></span></small>
+                                        <small class="text-success"><span class="bi bi-check"></span></small>
                                     {% else %}
-                                        <small class="text-danger"><span class="fa fa-fw fa-times"></span></small>
+                                        <small class="text-danger"><span class="bi bi-x"></span></small>
                                     {% endif %}
                                 </td>
                                 <td class="hidden-xs" data-value="{% if user.has2FA %}1{% else %}0{% endif %}">
                                     {% if user.has2FA %}
-                                        <small class="text-success"><span class="fa fa-fw fa-check"></span></small>
+                                        <small class="text-success"><span class="bi bi-check"></span></small>
                                     {% else %}
-                                        <small class="text-danger"><span class="fa fa-fw fa-times"></span></small>
+                                        <small class="text-danger"><span class="bi bi-x"></span></small>
                                     {% endif %}
                                 </td>
                                 <td data-value="{% if user.blocked %}1{% else %}0{% endif %}">
                                     {% if user.blocked == 1 %}
-                                        <small class="text-danger"><span class="fa fa-fw fa-check"
+                                        <small class="text-danger"><span class="bi bi-check"
                                                                          title="{{ 'yes'|_ }}"></span></small>
                                     {% else %}
-                                        <small class="text-success"><span class="fa fa-fw fa-times"
+                                        <small class="text-success"><span class="bi bi-x"
                                                                           title="{{ 'no'|_ }}"></span></small>
                                     {% endif %}
                                 </td>

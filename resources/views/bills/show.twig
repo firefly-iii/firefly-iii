@@ -14,7 +14,7 @@
 
                     <div class="box-tools pull-right">
                         <div class="btn-group">
-                            <button class="btn btn-box-tool dropdown-toggle" data-toggle="dropdown"><span class="fa fa-ellipsis-v"></span></button>
+                            <button class="btn btn-box-tool dropdown-toggle" data-toggle="dropdown"><span class="bi bi-list"></span></button>
                             <ul class="dropdown-menu" role="menu">
                                 <li><a href="{{ route('subscriptions.edit', object.data.id) }}"><span class="bi bi-pencil"></span> {{ __('firefly.edit') }}</a></li>
                                 <li><a href="{{ route('subscriptions.delete', object.data.id) }}"><span class="bi bi-trash"></span> {{ __('firefly.delete') }}</a></li>
@@ -45,9 +45,9 @@
                             <td class="half">{{ 'bill_is_active'|_ }}</td>
                             <td>
                                 {% if object.data.active %}
-                                    <span class="fa fa-check fa-fw" title="{{ 'active'|_ }}"></span> {{ 'yes'|_ }}
+                                    <span class="bi bi-check" title="{{ 'active'|_ }}"></span> {{ 'yes'|_ }}
                                 {% else %}
-                                    <span class="fa fa-times fa-fw" title="{{ 'inactive'|_ }}"></span> {{ 'no'|_ }}
+                                    <span class="bi bi-x" title="{{ 'inactive'|_ }}"></span> {{ 'no'|_ }}
                                 {% endif %}
                             </td>
                         </tr>

@@ -85,7 +85,9 @@
                 <div class="row">
                     <div class="col-lg-12">
                         <div id="status-box" class="p-3 install-box-border">
-                            <span class="fa fa-spin fa-spinner"></span> Waiting to start...
+                            <div class="spinner-border spinner-border-sm" role="status">
+                                <span class="visually-hidden">Loading...</span>
+                            </div>
                         </div>
                     </div>
                 </div>

@@ -3,7 +3,9 @@
     <div class="col-sm-3">
         <!-- is loading currencies -->
         <template x-if="formStates.loadingCurrencies">
-            <span class="form-control-plaintext"><em class="fa-solid fa-spinner fa-spin"></em></span>
+            <span class="form-control-plaintext"><div class="spinner-border spinner-border-sm" role="status">
+  <span class="visually-hidden">Loading...</span>
+</div></span>
         </template>
         <!-- is no longer loading currencies -->
         <template x-if="!formStates.loadingCurrencies">

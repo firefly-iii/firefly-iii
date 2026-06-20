@@ -78,7 +78,7 @@
                 </div>
                 <div class="box-body no-padding">
                     <div class="p-2">
-                        <a href="{{ route('transactions.create', [objectType]) }}" class="btn btn-success"><span class="fa fa-plus fa-fw"></span> {{ 'create_new_transaction'|_ }}</a>
+                        <a href="{{ route('transactions.create', [objectType]) }}" class="btn btn-success"><span class="bi bi-plus-circle"></span> {{ 'create_new_transaction'|_ }}</a>
                     </div>
                     {# actual list #}
                     {% include 'list.groups' %}
@@ -87,12 +87,12 @@
                     {# links for other views #}
                     {% if periods|length > 0 %}
                         <p>
-                            <span class="fa fa-calendar"></span>
+                            <span class="bi bi-calendar"></span>
                             <a href="{{ route('transactions.index.all', [objectType]) }}">{{ 'show_all_no_filter'|_ }}</a>
                         </p>
                     {% else %}
                         <p>
-                            <span class="fa fa-calendar"></span>
+                            <span class="bi bi-calendar"></span>
                             <a href="{{ route('transactions.index', [objectType]) }}">{{ 'show_the_current_period_and_overview'|_ }}</a>
                         </p>
                     {% endif %}

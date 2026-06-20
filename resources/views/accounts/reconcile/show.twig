@@ -13,11 +13,11 @@
 
                     <div class="box-tools pull-right">
                         <div class="btn-group">
-                            <button id="transaction_menu" class="btn btn-box-tool dropdown-toggle" data-toggle="dropdown"><span class="fa fa-ellipsis-v"></span>
+                            <button id="transaction_menu" class="btn btn-box-tool dropdown-toggle" data-toggle="dropdown"><span class="bi bi-list"></span>
                             </button>
                             <ul class="dropdown-menu" role="menu">
-                                <li><a href="{{ route('transactions.edit',journal.id) }}"><span class="bi bi-pencil fa-fw"></span> {{ __('firefly.edit') }}</a></li>
-                                <li><a href="{{ route('transactions.delete',journal.id) }}"><span class="bi bi-trash fa-fw"></span> {{ __('firefly.delete') }}</a></li>
+                                <li><a href="{{ route('transactions.edit',journal.id) }}"><span class="bi bi-pencil"></span> {{ __('firefly.edit') }}</a></li>
+                                <li><a href="{{ route('transactions.delete',journal.id) }}"><span class="bi bi-trash"></span> {{ __('firefly.delete') }}</a></li>
                             </ul>
                         </div>
                     </div>
@@ -52,8 +52,8 @@
                 <div class="box-footer">
                     <div class="pull-right">
                         <div class="btn-group">
-                            <a class="btn btn-default" href="{{ route('transactions.edit',journal.id) }}"><span class="bi bi-pencil fa-fw"></span> {{ __('firefly.edit') }}</a>
-                            <a href="{{ route('transactions.delete',journal.id) }}" class="btn btn-danger"><span class="bi bi-trash fa-fw"></span> {{ __('firefly.delete') }}
+                            <a class="btn btn-default" href="{{ route('transactions.edit',journal.id) }}"><span class="bi bi-pencil"></span> {{ __('firefly.edit') }}</a>
+                            <a href="{{ route('transactions.delete',journal.id) }}" class="btn btn-danger"><span class="bi bi-trash"></span> {{ __('firefly.delete') }}
                             </a>
                         </div>
                     </div>
@@ -83,13 +83,13 @@
 
                                         <h4 class="inline"><a class="label label-success" href="{{ route('tags.show',tag) }}">
                                                 {% if tag.tag_mode == 'nothing' %}
-                                                    <span class="fa fa-fw fa-tag"></span>
+                                                    <span class="bi bi-tag"></span>
                                                 {% endif %}
                                                 {% if tag.tag_mode == 'balancingAct' %}
-                                                    <span class="fa fa-fw fa-refresh"></span>
+                                                    <span class="bi bi-arrow-repeat"></span>
                                                 {% endif %}
                                                 {% if tag.tag_mode == 'advancePayment' %}
-                                                    <span class="fa fa-fw fa-sort-numeric-desc"></span>
+                                                    <span class="bi bi-sort-numeric-down"></span>
                                                 {% endif %}
                                                 {{ tag.tag }}</a>
                                         </h4>
