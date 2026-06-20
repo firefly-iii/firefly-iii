@@ -18,10 +18,10 @@
                         <ul class="dropdown-menu">
                             {# edit + delete #}
                             <li><a href="{{ route('transactions.edit', [transactionGroup.id]) }}"><span
-                                        class="bi bi-pencil"></span> {{ 'edit'|_ }}</a></li>
+                                        class="bi bi-pencil"></span> {{ __('firefly.edit') }}</a></li>
                             {% if groupArray.transactions[0].type != 'reconciliation' and groupArray.transactions[0].type != 'opening balance' and groupArray.transactions[0].type != 'liability credit' %}
                             <li><a href="{{ route('transactions.delete', [transactionGroup.id]) }}"><span
-                                        class="bi bi-trash"></span> {{ 'delete'|_ }}</a></li>
+                                        class="bi bi-trash"></span> {{ __('firefly.delete') }}</a></li>
                             {% endif %}
                             {% if groupArray.transactions[0].type != 'reconciliation' and groupArray.transactions[0].type != 'opening balance' and groupArray.transactions[0].type != 'liability credit' %}
                             <li role="separator" class="divider"></li>
@@ -231,10 +231,10 @@
                             <ul class="dropdown-menu">
                                 {# edit + delete #}
                                 <li><a href="{{ route('transactions.edit', [transactionGroup.id]) }}"><span
-                                            class="bi bi-pencil"></span> {{ 'edit'|_ }}</a></li>
+                                            class="bi bi-pencil"></span> {{ __('firefly.edit') }}</a></li>
                                 {% if groupArray.transactions[0].type != 'reconciliation' and groupArray.transactions[0].type != 'opening balance' and groupArray.transactions[0].type != 'liability credit' %}
                                 <li><a href="{{ route('transactions.delete', [transactionGroup.id]) }}"><span
-                                            class="bi bi-trash"></span> {{ 'delete'|_ }}</a></li>
+                                            class="bi bi-trash"></span> {{ __('firefly.delete') }}</a></li>
                                 {% endif %}
                                 {% if journal.reconciled %}
                                 <li><a class="reconcile-button" href="{{ route('transactions.unreconcile', [journal.transaction_journal_id]) }}"><span

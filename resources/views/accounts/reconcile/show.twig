@@ -16,8 +16,8 @@
                             <button id="transaction_menu" class="btn btn-box-tool dropdown-toggle" data-toggle="dropdown"><span class="fa fa-ellipsis-v"></span>
                             </button>
                             <ul class="dropdown-menu" role="menu">
-                                <li><a href="{{ route('transactions.edit',journal.id) }}"><span class="bi bi-pencil fa-fw"></span> {{ 'edit'|_ }}</a></li>
-                                <li><a href="{{ route('transactions.delete',journal.id) }}"><span class="bi bi-trash fa-fw"></span> {{ 'delete'|_ }}</a></li>
+                                <li><a href="{{ route('transactions.edit',journal.id) }}"><span class="bi bi-pencil fa-fw"></span> {{ __('firefly.edit') }}</a></li>
+                                <li><a href="{{ route('transactions.delete',journal.id) }}"><span class="bi bi-trash fa-fw"></span> {{ __('firefly.delete') }}</a></li>
                             </ul>
                         </div>
                     </div>
@@ -52,8 +52,8 @@
                 <div class="box-footer">
                     <div class="pull-right">
                         <div class="btn-group">
-                            <a class="btn btn-default" href="{{ route('transactions.edit',journal.id) }}"><span class="bi bi-pencil fa-fw"></span> {{ 'edit'|_ }}</a>
-                            <a href="{{ route('transactions.delete',journal.id) }}" class="btn btn-danger"><span class="bi bi-trash fa-fw"></span> {{ 'delete'|_ }}
+                            <a class="btn btn-default" href="{{ route('transactions.edit',journal.id) }}"><span class="bi bi-pencil fa-fw"></span> {{ __('firefly.edit') }}</a>
+                            <a href="{{ route('transactions.delete',journal.id) }}" class="btn btn-danger"><span class="bi bi-trash fa-fw"></span> {{ __('firefly.delete') }}
                             </a>
                         </div>
                     </div>

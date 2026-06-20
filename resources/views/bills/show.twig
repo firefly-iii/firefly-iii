@@ -16,8 +16,8 @@
                         <div class="btn-group">
                             <button class="btn btn-box-tool dropdown-toggle" data-toggle="dropdown"><span class="fa fa-ellipsis-v"></span></button>
                             <ul class="dropdown-menu" role="menu">
-                                <li><a href="{{ route('subscriptions.edit', object.data.id) }}"><span class="bi bi-pencil"></span> {{ 'edit'|_ }}</a></li>
-                                <li><a href="{{ route('subscriptions.delete', object.data.id) }}"><span class="bi bi-trash-o"></span> {{ 'delete'|_ }}</a></li>
+                                <li><a href="{{ route('subscriptions.edit', object.data.id) }}"><span class="bi bi-pencil"></span> {{ __('firefly.edit') }}</a></li>
+                                <li><a href="{{ route('subscriptions.delete', object.data.id) }}"><span class="bi bi-trash"></span> {{ __('firefly.delete') }}</a></li>
                             </ul>
                         </div>
                     </div>
@@ -93,8 +93,8 @@
                 </div>
                 <div class="box-footer">
                     <div class="btn-group">
-                        <a class="btn btn-default" href="{{ route('subscriptions.edit', [object.data.id]) }}">{{ 'edit'|_ }}</a>
-                        <a class="btn btn-danger" href="{{ route('subscriptions.delete', [object.data.id]) }}">{{ 'delete'|_ }}</a>
+                        <a class="btn btn-default" href="{{ route('subscriptions.edit', [object.data.id]) }}">{{ __('firefly.edit') }}</a>
+                        <a class="btn btn-danger" href="{{ route('subscriptions.delete', [object.data.id]) }}">{{ __('firefly.delete') }}</a>
                     </div>
                 </div>
             </div>

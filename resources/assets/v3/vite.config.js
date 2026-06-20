@@ -56,6 +56,9 @@ export default defineConfig(({command, mode, isSsrBuild, isPreview}) => {
                     // rules
                     'js/pages/rules/index.js',
 
+                    // recurring transactions
+                    'js/pages/recurring/index.js',
+
                     // subscriptions
                     'js/pages/subscriptions/index.js',
 

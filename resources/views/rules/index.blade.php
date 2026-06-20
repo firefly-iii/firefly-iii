@@ -33,8 +33,8 @@ $shownDemo = true
                                                     class="bi bi-power"></span> {{ trans('firefly.apply_rule_group_selection', ['title' => $ruleGroup->title]) }}
                                             </a></li>
 
-                                        <li><a class="dropdown-item" href="{{ route('rule-groups.create') }}"><em class="bi bi-plus"></em> {{ __('firefly.new_rule_group') }}</a></li>
-                                        <li><a href="{{ route('rules.create', $ruleGroup->id) }}" class="dropdown-item new_rule"><em class="bi bi-plus"></em> {{ __('firefly.new_rule') }}</a></li>
+                                        <li><a class="dropdown-item" href="{{ route('rule-groups.create') }}"><em class="bi bi-plus-circle"></em> {{ __('firefly.new_rule_group') }}</a></li>
+                                        <li><a href="{{ route('rules.create', $ruleGroup->id) }}" class="dropdown-item new_rule"><em class="bi bi-plus-circle"></em> {{ __('firefly.new_rule') }}</a></li>
 
                                         @if($ruleGroup->order > 1)
                                             <li><a href="#" class="dropdown-item move-group" data-direction="up" data-id="{{ $ruleGroup->id }}"><span

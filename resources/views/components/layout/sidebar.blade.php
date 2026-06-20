@@ -106,14 +106,14 @@
                 </a>
             </li>
             <li class="nav-item">
-                <a href="{{ route('recurring.index') }}" class="nav-link">
+                <a href="{{ route('recurring.index') }}" class="nav-link {{ menu_item_active_partial('recurrinng.') }}">
                     <em class="nav-icon bi bi-paint-bucket"></em>
                     <p>{{__('firefly.recurrences') }}</p>
                 </a>
             </li>
             @if(true === $featuringWebhooks)
             <li class="nav-item">
-                <a href="{{ route('webhooks.index') }}" class="nav-link">
+                <a href="{{ route('webhooks.index') }}" class="nav-link {{ menu_item_active_partial('webhooks.') }}">
                     <em class="nav-icon bi bi-lightning"></em>
                     <p>{{ __('firefly.webhooks') }}</p>
                 </a>
@@ -121,10 +121,10 @@
             @endif
             @if(false === $featuringWebhooks)
                 <li class="nav-item">
-                    <a href="#" class="nav-link">
+                    <span class="nav-link">
                         <em class="nav-icon bi bi-lightning"></em>
                         <p>{{ __('firefly.webhooks') }} ({{ trans('firefly.webhooks_menu_disabled') }})</p>
-                    </a>
+                    </span>
                 </li>
             @endif
         </ul>

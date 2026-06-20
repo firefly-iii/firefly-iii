@@ -20,13 +20,13 @@
             <td>
                 <div class="btn-group btn-group-sm">
                     <a href="{{ route('categories.edit', category.id) }}" class="btn btn-default btn-xs"><span class="bi bi-pencil"></span></a>
-                    <a href="{{ route('categories.delete', category.id) }}" class="btn btn-danger btn-xs"><span class="bi bi-trash-o"></span></a>
+                    <a href="{{ route('categories.delete', category.id) }}" class="btn btn-danger btn-xs"><span class="bi bi-trash"></span></a>
                 </div>
             </td>
             <td data-value="{{ category.name }}">
                 <a href="{{ route('categories.show', category.id) }}" title="{{ category.name }}">{{ category.name }}</a>
                 {% if category.attachments.count() > 0 %}
-                    <span class="fa fa-fw fa-paperclip"></span>
+                    <span class="bi bi-paperclip"></span>
                 {% endif %}
             </td>
             {% if category.lastActivity %}

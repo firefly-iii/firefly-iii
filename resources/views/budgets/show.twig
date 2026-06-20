@@ -20,8 +20,8 @@
                         <div class="btn-group">
                             <button class="btn btn-box-tool dropdown-toggle" data-toggle="dropdown"><span class="fa fa-ellipsis-v"></span></button>
                             <ul class="dropdown-menu" role="menu">
-                                <li><a href="{{ route('budgets.edit',budget.id) }}"><span class="bi bi-pencil fa-fw"></span> {{ 'edit'|_ }}</a></li>
-                                <li><a href="{{ route('budgets.delete',budget.id) }}"><span class="bi bi-trash fa-fw"></span> {{ 'delete'|_ }}</a></li>
+                                <li><a href="{{ route('budgets.edit',budget.id) }}"><span class="bi bi-pencil fa-fw"></span> {{ __('firefly.edit') }}</a></li>
+                                <li><a href="{{ route('budgets.delete',budget.id) }}"><span class="bi bi-trash fa-fw"></span> {{ __('firefly.delete') }}</a></li>
                             </ul>
                         </div>
                     </div>

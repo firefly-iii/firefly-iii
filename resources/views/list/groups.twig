@@ -98,9 +98,9 @@
                             {{ 'actions'|_ }} <span class="caret"></span></button>
                         <ul class="dropdown-menu dropdown-menu-right" role="menu">
                             <li><a href="{{ route('transactions.edit', [group.id]) }}"><span
-                                        class="bi bi-pencil"></span> {{ 'edit'|_ }}</a></li>
+                                        class="bi bi-pencil"></span> {{ __('firefly.edit') }}</a></li>
                             <li><a href="{{ route('transactions.delete', [group.id]) }}"><span
-                                        class="bi bi-trash"></span> {{ 'delete'|_ }}</a></li>
+                                        class="bi bi-trash"></span> {{ __('firefly.delete') }}</a></li>
                             <li><a href="#" data-id="{{ group.id }}" class="clone-transaction"><span
                                         class="fa fa-copy fa-fw"></span> {{ 'clone'|_ }}</a></li>
                             <li><a href="#" data-id="{{ group.id }}" class="clone-transaction-and-edit"><span
@@ -152,7 +152,7 @@
                         <span class="fa fa-check"></span>
                     {% endif %}
                     {% if transaction.attachments|length > 0 %}
-                        <span class="fa fa-paperclip"></span>
+                        <span class="bi bi-paperclip"></span>
                     {% endif %}
                     {% if group.count == 1 %}
                     <a href="{{ route('transactions.show', [group.id]) }}" title="{{ transaction.description }}">
@@ -387,10 +387,10 @@
                                 {{ 'actions'|_ }} <span class="caret"></span></button>
                             <ul class="dropdown-menu dropdown-menu-right" role="menu">
                                 <li><a href="{{ route('transactions.edit', [group.id]) }}"><span
-                                            class="bi bi-pencil"></span> {{ 'edit'|_ }}</a></li>
+                                            class="bi bi-pencil"></span> {{ __('firefly.edit') }}</a></li>
                                 {% if transaction.transaction_type_type != 'Opening balance' and transaction.transaction_type_type != 'Liability credit' %}
                                 <li><a href="{{ route('transactions.delete', [group.id]) }}"><span
-                                            class="bi bi-trash"></span> {{ 'delete'|_ }}</a></li>
+                                            class="bi bi-trash"></span> {{ __('firefly.delete') }}</a></li>
                                 {% endif %}
                                 {% if transaction.transaction_type_type != 'Reconciliation' and transaction.transaction_type_type != 'Opening balance' and transaction.transaction_type_type != 'Liability credit' %}
                                 <li><a href="#" data-id="{{ group.id }}" class="clone-transaction"><span

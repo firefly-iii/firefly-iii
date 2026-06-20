@@ -42,8 +42,8 @@
                                 <button class="btn btn-box-tool dropdown-toggle" data-toggle="dropdown"><span
                                         class="fa fa-ellipsis-v"></span></button>
                                 <ul class="dropdown-menu" role="menu">
-                                    <li><a href="{{ route('rule-groups.edit',ruleGroup.id) }}"><span class="bi bi-pencil"></span> {{ 'edit'|_ }}</a></li>
-                                    <li><a href="{{ route('rule-groups.delete',ruleGroup.id) }}"><span class="bi bi-trash"></span> {{ 'delete'|_ }}</a></li>
+                                    <li><a href="{{ route('rule-groups.edit',ruleGroup.id) }}"><span class="bi bi-pencil"></span> {{ __('firefly.edit') }}</a></li>
+                                    <li><a href="{{ route('rule-groups.delete',ruleGroup.id) }}"><span class="bi bi-trash"></span> {{ __('firefly.delete') }}</a></li>
                                     <li><a href="{{ route('rule-groups.select-transactions',ruleGroup.id) }}"><span
                                                 class="fa fa-fw fa-power-off"></span> {{ trans('firefly.apply_rule_group_selection', {title: ruleGroup.title}) }}
                                         </a></li>
@@ -92,10 +92,10 @@
                                         </td>
                                         <td>
                                             <div class="btn-group btn-group-sm edit_buttons">
-                                                <a title="{{ 'edit'|_ }}" href="{{ route('rules.edit', rule.id) }}"
+                                                <a title="{{ __('firefly.edit') }}" href="{{ route('rules.edit', rule.id) }}"
                                                    class="btn btn-default"><span
                                                         class="bi bi-pencil"></span></a>
-                                                <a title="{{ 'delete'|_ }}"
+                                                <a title="{{ __('firefly.delete') }}"
                                                    href="{{ route('rules.delete', rule.id) }}"
                                                    class="btn btn-danger"><span
                                                         class="bi bi-trash"></span></a>

@@ -39,7 +39,7 @@
         <td>
             <a href="{{ route('piggy-banks.show', $piggy['id']) }}" title="{{ $piggy['name'] }}">{{ $piggy['name'] }}</a>
             @if(count($piggy['attachments']) > 0)
-                <span class="fa fa-fw fa-paperclip"></span>
+                <span class="bi bi-paperclip"></span>
             @endif
         </td>
         <td class="text-end piggySaved">

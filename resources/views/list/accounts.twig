@@ -45,7 +45,7 @@
                     <span class="fa fa-fw fa-map-marker"></span>
                 {% endif %}
                 {% if account.attachments.count() > 0 %}
-                    <span class="fa fa-fw fa-paperclip"></span>
+                    <span class="bi bi-paperclip"></span>
                 {% endif %}
             </td>
             {% if objectType == "asset" %}
@@ -137,8 +137,8 @@
                     <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                         {{ 'actions'|_ }} <span class="caret"></span></button>
                     <ul class="dropdown-menu dropdown-menu-right" role="menu">
-                        <li><a href="{{ route('accounts.edit',account.id) }}"><span class="bi bi-pencil"></span> {{ 'edit'|_ }}</a></li>
-                        <li><a href="{{ route('accounts.delete',account.id) }}"><span class="bi bi-trash"></span> {{ 'delete'|_ }}</a></li>
+                        <li><a href="{{ route('accounts.edit',account.id) }}"><span class="bi bi-pencil"></span> {{ __('firefly.edit') }}</a></li>
+                        <li><a href="{{ route('accounts.delete',account.id) }}"><span class="bi bi-trash"></span> {{ __('firefly.delete') }}</a></li>
                         {% if objectType == 'asset' %}
                         <li><a href="{{ route('accounts.reconcile',account.id) }}"><span class="fa fa-fw fa-check"></span> {{ 'reconcile_this_account'|_ }}</a></li>
                         {% endif %}
