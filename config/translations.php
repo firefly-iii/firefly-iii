@@ -59,6 +59,7 @@ return [
                 'interest_calc_yearly',
                 'loading',
                 'errors_upload',
+                'updated_journal_js',
                 'upload_too_large',
                 'interest_calc_',
                 'wait_attachments',

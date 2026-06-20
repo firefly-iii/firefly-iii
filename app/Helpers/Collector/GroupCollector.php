@@ -1086,7 +1086,7 @@ class GroupCollector implements GroupCollectorInterface
             ->whereNull('destination.deleted_at')
             ->orderBy('transaction_journals.date', 'DESC')
             ->orderBy('transaction_journals.order', 'ASC')
-            ->orderBy('transaction_journals.id', 'DESC')
+            ->orderBy('transaction_journals.id', 'ASC')
             ->orderBy('transaction_journals.description', 'DESC')
             ->orderBy('source.amount', 'DESC')
         ;
@@ -1118,7 +1118,7 @@ class GroupCollector implements GroupCollectorInterface
             ->whereNull('destination.deleted_at')
             ->orderBy('transaction_journals.date', 'DESC')
             ->orderBy('transaction_journals.order', 'ASC')
-            ->orderBy('transaction_journals.id', 'DESC')
+            ->orderBy('transaction_journals.id', 'ASC')
             ->orderBy('transaction_journals.description', 'DESC')
             ->orderBy('source.amount', 'DESC')
         ;

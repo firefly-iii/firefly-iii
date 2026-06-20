@@ -122,7 +122,6 @@ final class ShowController extends Controller
 
         /** @var TransactionGroupTransformer $transformer */
         $transformer     = app(TransactionGroupTransformer::class);
-        $transformer->setParameters(new ParameterBag());
         $groupArray      = $transformer->transformObject($transactionGroup);
 
         // do some calculations:

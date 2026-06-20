@@ -32,6 +32,7 @@ use FireflyIII\Support\Facades\Steam;
 use FireflyIII\Support\Search\OperatorQuerySearch;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Route;
 use League\CommonMark\GithubFlavoredMarkdownConverter;
 
 use function Safe\mb_ord;
@@ -102,6 +103,43 @@ if (!function_exists('account_get_meta_field')) {
         }
 
         return $result;
+    }
+}
+if(!function_exists('menu_sub_item_active')) {
+    function menu_sub_item_active(string $route, string $objectType): string
+    {
+        $name = Route::getCurrentRoute()->getName() ?? '';
+        Log::debug(sprintf('menuSubItemActive("%s" = "%s","%s" = "%s")', $route, $name, $objectType, Route::getCurrentRoute()->parameter('objectType')));
+        if ($name === $route && $objectType === Route::getCurrentRoute()->parameter('objectType')) {
+            return 'active';
+        }
+
+        return '';
+    }
+}
+
+if(!function_exists('menu_item_active_partial')) {
+    function menu_item_active_partial(string $route): string
+    {
+        $name = Route::getCurrentRoute()->getName() ?? '';
+        Log::debug(sprintf('menuItemActivePartial("%s" starts with "%s")', $name, $route));
+        if (str_starts_with($name, $route)) {
+            return 'active';
+        }
+
+        return '';
+    }
+}
+
+if(!function_exists('menu_open_partial')) {
+    function menu_open_partial(string $route): string {
+        $name = Route::getCurrentRoute()->getName() ?? '';
+        Log::debug(sprintf('menuOpenPartial("%s" starts with "%s")', $name, $route));
+        if (str_starts_with($name, $route)) {
+            return 'menu-open';
+        }
+
+        return '';
     }
 }
 
