@@ -27,6 +27,7 @@ import i18next from "i18next";
 let index = function () {
     return {
         webhooks: [],
+        loading: false,
         triggers: {
         },
         responses: {
@@ -35,11 +36,10 @@ let index = function () {
         },
 
         init() {
-            console.log('init');
+            this.loading = true;
             this.getOptions();
         },
         getWebhooks: function () {
-            console.log('getWebhooks');
             this.webhooks = [];
             this.downloadWebhooks(1);
         },
@@ -73,6 +73,8 @@ let index = function () {
 
                 if (response.data.meta.pagination.current_page < response.data.meta.pagination.total_pages) {
                     this.downloadWebhooks(response.data.meta.pagination.current_page + 1);
+                } else {
+                    this.loading = false;
                 }
             });
         },

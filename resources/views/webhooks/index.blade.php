@@ -5,7 +5,24 @@
                 <div class="card">
                     <x-elements.card-header-with-menu :cardTitle="trans('firefly.webhooks')" :route="route('webhooks.create')" :linkTitle="__('firefly.create_new_webhook')"/>
                     <div class="card-body p-0">
-                        <template x-if="webhooks.length > 0">
+                        <template x-if="0 === webhooks.length && loading">
+                            <div class="d-flex justify-content-center m-2">
+                                <div class="spinner-border" role="status">
+                                    <span class="visually-hidden">Loading...</span>
+                                </div>
+                            </div>
+                        </template>
+                        <template x-if="0 === webhooks.length && !loading">
+                            <div>
+                            <div class="d-flex justify-content-center m-2">
+                                <em class="bi bi-battery"></em>
+                            </div>
+                            <div class="d-flex justify-content-center m-2">
+                                <p>{{ __('firefly.no_webhooks') }}</p>
+                            </div>
+                            </div>
+                        </template>
+                        <template x-if="webhooks.length > 0 && !loading">
                         <table class="table table-responsive table-hover" aria-label="A table.">
                             <thead>
                             <tr>
@@ -71,16 +88,16 @@
 
                                 </td>
                                 <td class="hidden-sm hidden-xs">
-                                    <div class="btn-group btn-group-xs pull-right">
-                                        <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown"
-                                                aria-haspopup="true" aria-expanded="false">
-                                            {{ __('firefly.actions') }} <span class="caret"></span></button>
-                                        <ul class="dropdown-menu dropdown-menu-right" role="menu">
-                                            <li><a :href="'webhooks/show/' + webhook.id"><span
+                                    <div class="dropdown">
+                                        <button class="btn btn-sm btn-secondary-outline dropdown-toggle" type="button" :id="'webhook_menu_' +  webhook.id" data-bs-toggle="dropdown" aria-expanded="false">
+                                            {{ __('firefly.actions') }}
+                                        </button>
+                                        <ul class="dropdown-menu" :aria-labelledby="'webhook_menu_' +  webhook.id">
+                                            <li><a class="dropdown-item" :href="'webhooks/show/' + webhook.id"><span
                                                         class="bi bi-search"></span> {{ __('firefly.inspect') }}</a></li>
-                                            <li><a :href="'webhooks/edit/' + webhook.id"><span
+                                            <li><a class="dropdown-item" :href="'webhooks/edit/' + webhook.id"><span
                                                         class="bi bi-pencil"></span> {{ __('firefly.edit') }}</a></li>
-                                            <li><a :href="'webhooks/delete/' + webhook.id"><span
+                                            <li><a class="dropdown-item" :href="'webhooks/delete/' + webhook.id"><span
                                                         class="bi bi-trash"></span> {{ __('firefly.delete') }}</a></li>
                                         </ul>
                                     </div>

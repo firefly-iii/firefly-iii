@@ -293,6 +293,7 @@ return [
     'reset_webhook_secret'                                => 'Reset webhook secret',
     'webhook_stored_link'                                 => '<a href="webhooks/show/{ID}">Webhook #{ID} ("{title}")</a> has been stored.',
     'webhook_updated_link'                                => '<a href="webhooks/show/{ID}">Webhook #{ID}</a> ("{title}") has been updated.',
+    'no_webhooks' => 'You have no webhooks. Please create one. Webhooks can be used to make external systems respond to Firefly III events, like newly created transactions or updated budgets.',
 
     // API access
     'authorization_request'                               => 'Firefly III v:version Authorization Request',
@@ -2068,6 +2069,7 @@ return [
     'reconcile_this_account'                              => 'Reconcile this account',
     'reconcile'                                           => 'Reconcile',
     'show'                                                => 'Show',
+    'hide' => 'Hide',
     'confirm_reconciliation'                              => 'Confirm reconciliation',
     'submitted_start_balance'                             => 'Submitted start balance',
     'selected_transactions'                               => 'Selected transactions (:count)',
