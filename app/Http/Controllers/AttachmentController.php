@@ -50,7 +50,7 @@ final class AttachmentController extends Controller
 
         // translations:
         $this->middleware(function ($request, $next) {
-            app('view')->share('mainTitleIcon', 'fa-paperclip');
+            app('view')->share('mainTitleIcon', 'bi-paperclip');
             app('view')->share('title', (string) trans('firefly.attachments'));
             $this->repository = app(AttachmentRepositoryInterface::class);
 
@@ -129,7 +129,7 @@ final class AttachmentController extends Controller
      */
     public function edit(Request $request, Attachment $attachment): Factory|\Illuminate\Contracts\View\View
     {
-        $subTitleIcon = 'fa-pencil';
+        $subTitleIcon = 'bi-pencil';
         $subTitle     = (string) trans('firefly.edit_attachment', ['name' => $attachment->filename]);
 
         // put previous url in session if not redirect from store (not "return_to_edit").

@@ -63,7 +63,7 @@ final class EditController extends Controller
     public function edit(ObjectGroup $objectGroup): Factory|View
     {
         $subTitle     = (string) trans('firefly.edit_object_group', ['title' => $objectGroup->title]);
-        $subTitleIcon = 'fa-pencil';
+        $subTitleIcon = 'bi-pencil';
 
         if (true !== session('object-groups.edit.fromUpdate')) {
             $this->rememberPreviousUrl('object-groups.edit.url');

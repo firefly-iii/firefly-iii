@@ -89,10 +89,9 @@ abstract class Controller extends BaseController
             |> strtolower(...);
 
         // is webhooks enabled?
-        View::share(
-            'featuringWebhooks',
-            true === config('firefly.feature_flags.webhooks') && true === AppConfiguration::get('allow_webhooks', config('firefly.allow_webhooks'))->data
-        );
+        View::share('featuringWebhooks', true === config('firefly.feature_flags.webhooks') && true === AppConfiguration::get('allow_webhooks', config('firefly.allow_webhooks'))->data);
+        // is currency exchange enabled?
+        View::share('featuringCer', true === AppConfiguration::get('enable_exchange_rates', config('cer.enabled'))->data);
 
         // share custom auth guard info.
         $authGuard        = config('firefly.authentication_guard');

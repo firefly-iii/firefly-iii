@@ -60,6 +60,7 @@ return [
                 'liability_direction_null_short',
                 'interest_calc_yearly',
                 'loading',
+                'exchange_rates_from_to',
                 'errors_upload',
                 'updated_journal_js',
                 'upload_too_large',

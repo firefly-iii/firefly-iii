@@ -77,7 +77,7 @@ final class EditController extends Controller
             return redirect(route('currencies.index'));
         }
 
-        $subTitleIcon     = 'fa-pencil';
+        $subTitleIcon     = 'bi-pencil';
         $subTitle         = (string) trans('breadcrumbs.edit_currency', ['name' => $currency->name]);
         $currency->symbol = htmlentities($currency->symbol);
 

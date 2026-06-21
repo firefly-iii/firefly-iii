@@ -94,6 +94,7 @@ class ExpandedForm
         $options            = $this->expandOptionArray($name, $label, $options);
         $classes            = $this->getHolderClasses($name);
         $value              = $this->fillFieldValue($name, $value);
+        $inputClasses       = $this->getErrorClassesForCheckbox($name);
 
         unset($options['placeholder'], $options['autocomplete'], $options['class']);
 
@@ -104,8 +105,10 @@ class ExpandedForm
                 'label'   => $label,
                 'value'   => $value,
                 'options' => $options,
+                'inputClasses' => $inputClasses,
             ])->render();
         } catch (Throwable $e) {
+
             Log::debug(sprintf('Could not render checkbox(): %s', $e->getMessage()));
             $html = 'Could not render checkbox.';
 
