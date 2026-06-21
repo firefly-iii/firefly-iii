@@ -79,11 +79,11 @@
 
                             <div class="col-sm-8">
                                 <div class="btn-group btn-group-sm">
-                                    <a href="#" class="btn btn-default switch-button"
+                                    <a href="#" class="btn btn-outline-secondary switch-button"
                                        data-value="withdrawal">{{ 'withdrawal'|_ }}</a>
-                                    <a href="#" class="btn btn-default switch-button"
+                                    <a href="#" class="btn btn-outline-secondary switch-button"
                                        data-value="deposit">{{ 'deposit'|_ }}</a>
-                                    <a href="#" class="btn btn-default switch-button"
+                                    <a href="#" class="btn btn-outline-secondary switch-button"
                                        data-value="transfer">{{ 'transfer'|_ }}</a>
                                 </div>
                             </div>
@@ -197,40 +197,40 @@
 
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                    <button type="button" class="btn btn-outline-secondary" data-dismiss="modal">Close</button>
                 </div>
             </div>
         </div>
     </div>
 {% endblock %}
 {% block scripts %}
-    <script type="text/javascript" src="v1/js/lib/modernizr-custom.js?v={{ FF_BUILD_TIME }}"
-            nonce="{{ JS_NONCE }}"></script>
-    <script type="text/javascript" src="v1/js/lib/typeahead/typeahead.bundle.min.js?v={{ FF_BUILD_TIME }}"
-            nonce="{{ JS_NONCE }}"></script>
-    <script type="text/javascript" src="v1/js/ff/common/autocomplete.js?v={{ FF_BUILD_TIME }}"
-            nonce="{{ JS_NONCE }}"></script>
-    <script type="text/javascript" src="v1/js/lib/bootstrap-tagsinput.min.js?v={{ FF_BUILD_TIME }}"
-            nonce="{{ JS_NONCE }}"></script>
-    <script type="text/javascript" src="v1/js/lib/jquery-ui.min.js?v={{ FF_BUILD_TIME }}" nonce="{{ JS_NONCE }}"></script>
-    <script type="text/javascript" src="v1/lib/fc/fullcalendar.min.js?v={{ FF_BUILD_TIME }}"
-            nonce="{{ JS_NONCE }}"></script>
-    <script type="text/javascript" nonce="{{ JS_NONCE }}">
+    <script type="text/javascript" src="v1/js/lib/modernizr-custom.js?v={{ $FF_BUILD_TIME }}"
+            nonce="{{ $JS_NONCE }}"></script>
+    <script type="text/javascript" src="v1/js/lib/typeahead/typeahead.bundle.min.js?v={{ $FF_BUILD_TIME }}"
+            nonce="{{ $JS_NONCE }}"></script>
+    <script type="text/javascript" src="v1/js/ff/common/autocomplete.js?v={{ $FF_BUILD_TIME }}"
+            nonce="{{ $JS_NONCE }}"></script>
+    <script type="text/javascript" src="v1/js/lib/bootstrap-tagsinput.min.js?v={{ $FF_BUILD_TIME }}"
+            nonce="{{ $JS_NONCE }}"></script>
+    <script type="text/javascript" src="v1/js/lib/jquery-ui.min.js?v={{ $FF_BUILD_TIME }}" nonce="{{ $JS_NONCE }}"></script>
+    <script type="text/javascript" src="v1/lib/fc/fullcalendar.min.js?v={{ $FF_BUILD_TIME }}"
+            nonce="{{ $JS_NONCE }}"></script>
+    <script type="text/javascript" nonce="{{ $JS_NONCE }}">
         var transactionType = "{{ preFilled.transaction_type }}";
         var suggestUrl = "{{ route('recurring.suggest') }}";
         var eventsUrl = "{{ route('recurring.events') }}";
         var currentRepType = "{{ currentRepType }}";
     </script>
-    <script type="text/javascript" src="v1/js/ff/recurring/edit.js?v={{ FF_BUILD_TIME }}" nonce="{{ JS_NONCE }}"></script>
+    <script type="text/javascript" src="v1/js/ff/recurring/edit.js?v={{ $FF_BUILD_TIME }}" nonce="{{ $JS_NONCE }}"></script>
 {% endblock %}
 
 {% block styles %}
-    <link href="v1/css/bootstrap-tagsinput.css?v={{ FF_BUILD_TIME }}" type="text/css" rel="stylesheet" media="all"
-          nonce="{{ JS_NONCE }}">
-    <link href="v1/css/jquery-ui/jquery-ui.structure.min.css?v={{ FF_BUILD_TIME }}" type="text/css" rel="stylesheet"
-          media="all" nonce="{{ JS_NONCE }}">
-    <link href="v1/css/jquery-ui/jquery-ui.theme.min.css?v={{ FF_BUILD_TIME }}" type="text/css" rel="stylesheet"
-          media="all" nonce="{{ JS_NONCE }}">
-    <link href="v1/lib/fc/fullcalendar.min.css?v={{ FF_BUILD_TIME }}" type="text/css" rel="stylesheet" media="all"
-          nonce="{{ JS_NONCE }}">
+    <link href="v1/css/bootstrap-tagsinput.css?v={{ $FF_BUILD_TIME }}" type="text/css" rel="stylesheet" media="all"
+          nonce="{{ $JS_NONCE }}">
+    <link href="v1/css/jquery-ui/jquery-ui.structure.min.css?v={{ $FF_BUILD_TIME }}" type="text/css" rel="stylesheet"
+          media="all" nonce="{{ $JS_NONCE }}">
+    <link href="v1/css/jquery-ui/jquery-ui.theme.min.css?v={{ $FF_BUILD_TIME }}" type="text/css" rel="stylesheet"
+          media="all" nonce="{{ $JS_NONCE }}">
+    <link href="v1/lib/fc/fullcalendar.min.css?v={{ $FF_BUILD_TIME }}" type="text/css" rel="stylesheet" media="all"
+          nonce="{{ $JS_NONCE }}">
 {% endblock %}

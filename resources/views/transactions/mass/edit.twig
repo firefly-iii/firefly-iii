@@ -35,7 +35,7 @@
                                 <tr>
                                     <td>
                                         {# LINK TO EDIT FORM #}
-                                        <a href="{{ route('transactions.edit', journal.transaction_group_id) }}" class="btn btn-xs btn-default"><span
+                                        <a href="{{ route('transactions.edit', journal.transaction_group_id) }}" class="btn btn-xs btn-outline-secondary"><span
                                                 class="bi bi-pencil"></span></a>
                                         <input type="hidden" name="journals[]" value="{{ journal.transaction_journal_id }}"/>
                                     </td>
@@ -173,7 +173,7 @@
                     </div>
                     <div class="box-footer">
                         <input type="submit" name="submit" value="{{ trans('form.update_all_journals') }}" class="btn btn-success pull-right"/>
-                        <a href="{{ route('index') }}" class="btn-default btn">{{ trans('form.cancel') }}</a>
+                        <a href="{{ route('index') }}" class="btn-outline-secondary btn">{{ trans('form.cancel') }}</a>
                     </div>
                 </div>
             </div>
@@ -181,10 +181,10 @@
     </form>
 {% endblock %}
 {% block scripts %}
-    <script type="text/javascript" nonce="{{ JS_NONCE }}">
+    <script type="text/javascript" nonce="{{ $JS_NONCE }}">
         var what = "";
     </script>
-    <script type="text/javascript" src="v1/js/lib/typeahead/typeahead.bundle.min.js?v={{ FF_BUILD_TIME }}" nonce="{{ JS_NONCE }}"></script>
-    <script type="text/javascript" src="v1/js/ff/common/autocomplete.js?v={{ FF_BUILD_TIME }}" nonce="{{ JS_NONCE }}"></script>
-    <script type="text/javascript" src="v1/js/ff/transactions/mass/edit.js?v={{ FF_BUILD_TIME }}" nonce="{{ JS_NONCE }}"></script>
+    <script type="text/javascript" src="v1/js/lib/typeahead/typeahead.bundle.min.js?v={{ $FF_BUILD_TIME }}" nonce="{{ $JS_NONCE }}"></script>
+    <script type="text/javascript" src="v1/js/ff/common/autocomplete.js?v={{ $FF_BUILD_TIME }}" nonce="{{ $JS_NONCE }}"></script>
+    <script type="text/javascript" src="v1/js/ff/transactions/mass/edit.js?v={{ $FF_BUILD_TIME }}" nonce="{{ $JS_NONCE }}"></script>
 {% endblock %}

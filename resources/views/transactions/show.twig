@@ -11,7 +11,7 @@
                 <div class="box-header with-border">
                     <h3 class="box-title">{{ 'transaction_journal_information'|_ }}</h3>
                     <div class="btn-group btn-group-sm pull-right">
-                        <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown"
+                        <button type="button" class="btn btn-outline-secondary dropdown-toggle" data-toggle="dropdown"
                                 aria-haspopup="true" aria-expanded="false">
                             {{ 'actions'|_ }} <span class="caret"></span>
                         </button>
@@ -224,7 +224,7 @@
 
 
                         <div class="btn-group btn-group-sm pull-right">
-                            <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown"
+                            <button type="button" class="btn btn-outline-secondary dropdown-toggle" data-toggle="dropdown"
                                     aria-haspopup="true" aria-expanded="false">
                                 {{ 'actions'|_ }} <span class="caret"></span>
                             </button>
@@ -444,7 +444,7 @@
                                     <td>
                                         {% for tag in journal.tags %}
                                             {% if null != tag.id and '' != tag.id %}
-                                                <h4 class="inline"><a class="label label-success" href="{{ route('tags.show', [tag.id]) }}"><span class="bi bi-tag"></span>{{ tag.tag }}</a></h4>
+                                                <h4 class="inline"><a class="badge text-bg-success" href="{{ route('tags.show', [tag.id]) }}"><span class="bi bi-tag"></span>{{ tag.tag }}</a></h4>
                                             {% endif %}
                                         {% endfor %}
                                     </td>
@@ -468,7 +468,7 @@
                                     <tr>
                                         <td class="onetwenty">
                                             <div class="btn-group btn-group-sm">
-                                                <a href="#" class="btn btn-default switch-link" data-id="{{ link.id }}"><span
+                                                <a href="#" class="btn btn-outline-secondary switch-link" data-id="{{ link.id }}"><span
                                                         class="fa fa-arrows-h"></span></a>
                                                 <a href="{{ route('transactions.link.delete', [link.id]) }}"
                                                    class="btn btn-danger"><span class="bi bi-trash"></span></a>
@@ -552,7 +552,7 @@
     </div>
 {% endblock %}
 {% block scripts %}
-    <script type="text/javascript" nonce="{{ JS_NONCE }}">
+    <script type="text/javascript" nonce="{{ $JS_NONCE }}">
         var modalDialogURL = '{{ route('transactions.link.modal', ['%JOURNAL%']) }}';
         var acURL = '{{ route('api.v1.autocomplete.transactions-with-id') }}';
         var groupURL = '{{ route('transactions.show',['%GROUP%']) }}';
@@ -595,9 +595,9 @@
             return false
         }
     </script>
-    <script type="text/javascript" src="v1/js/lib/typeahead/typeahead.bundle.min.js?v={{ FF_BUILD_TIME }}"
-            nonce="{{ JS_NONCE }}"></script>
-    <script type="text/javascript" src="v1/js/ff/transactions/show.js?v={{ FF_BUILD_TIME }}"
-            nonce="{{ JS_NONCE }}"></script>
+    <script type="text/javascript" src="v1/js/lib/typeahead/typeahead.bundle.min.js?v={{ $FF_BUILD_TIME }}"
+            nonce="{{ $JS_NONCE }}"></script>
+    <script type="text/javascript" src="v1/js/ff/transactions/show.js?v={{ $FF_BUILD_TIME }}"
+            nonce="{{ $JS_NONCE }}"></script>
 {% endblock %}
 

@@ -198,26 +198,26 @@
 
 
     <li class="nav-header text-uppercase">{{ __('firefly.others') }}</li>
-    <li class="nav-item {{ menu_item_active_partial('currencies.') }}">
-        <a href="{{ route('currencies.index') }}" class="nav-link">
+    <li class="nav-item">
+        <a href="{{ route('currencies.index') }}" class="nav-link {{ menu_item_active_partial('currencies.') }}">
             <em class="nav-icon bi bi-currency-euro"></em>
             <p>{{ __('firefly.currencies') }}</p>
         </a>
     </li>
-    <li class="nav-item {{ menu_item_active_partial('exchange-rates.') }}">
-        <a href="{{ route('exchange-rates.index') }}" class="nav-link">
+    <li class="nav-item">
+        <a href="{{ route('exchange-rates.index') }}" class="nav-link {{ menu_item_active_partial('exchange-rates.') }}">
             <em class="nav-icon bi bi-currency-exchange"></em>
             <p>{{ __('firefly.menu_exchange_rates_index') }}</p>
         </a>
     </li>
-    <li class="nav-item {{ menu_item_active_partial('reports.') }}">
-        <a href="{{ route('reports.index') }}" class="nav-link">
+    <li class="nav-item">
+        <a href="{{ route('reports.index') }}" class="nav-link {{ menu_item_active_partial('reports.') }}">
             <em class="nav-icon bi bi-bar-chart"></em>
             <p>{{ __('firefly.reports') }}</p>
         </a>
     </li>
-    <li class="nav-item {{ menu_item_active_partial('export.') }}">
-        <a href="{{ route('export.index') }}" class="nav-link">
+    <li class="nav-item">
+        <a href="{{ route('export.index') }}" class="nav-link {{ menu_item_active_partial('export.') }}">
             <em class="nav-icon bi bi-upload"></em>
             <p>{{ __('firefly.export_data_menu') }}</p>
         </a>

@@ -68,6 +68,9 @@ export default defineConfig(({command, mode, isSsrBuild, isPreview}) => {
                     // subscriptions
                     'js/pages/subscriptions/index.js',
 
+                    // transaction currencies
+                    'js/pages/currencies/index.js',
+
                     // transactions
                     'js/pages/transactions/index.js',
                     'js/pages/transactions/create.js',

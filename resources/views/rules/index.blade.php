@@ -78,7 +78,7 @@ $shownDemo = true
                                         <td>
                                             <div class="btn-group btn-group-sm edit_buttons">
                                                 <a title="{{ __('firefly.edit') }}" href="{{ route('rules.edit', $rule->id) }}"
-                                                   class="btn btn-default"><span
+                                                   class="btn btn-outline-secondary"><span
                                                         class="bi bi-pencil"></span></a>
                                                 <a title="{{ __('firefly.delete') }}" href="{{ route('rules.delete', $rule->id) }}" class="btn btn-danger"><span class="bi bi-trash"></span></a>
                                             </div>
@@ -86,14 +86,14 @@ $shownDemo = true
                                         <td>
                                             <div class="btn-group btn-group-sm test_buttons">
                                                 {{-- show which transactions would match --}}
-                                                <a href="{{ route('rules.search',$rule->id) }}" class="btn btn-default {% if false == rule.strict %}test_rule_triggers{% endif %}" data-id="{{ $rule->id }}" title="{{ __('firefly.test_rule_triggers') }}"><span data-id="{{ $rule->id }}" class="bi bi-flask"></span></a>
+                                                <a href="{{ route('rules.search',$rule->id) }}" class="btn btn-outline-secondary {% if false == rule.strict %}test_rule_triggers{% endif %}" data-id="{{ $rule->id }}" title="{{ __('firefly.test_rule_triggers') }}"><span data-id="{{ $rule->id }}" class="bi bi-flask"></span></a>
                                                 @if($rule->active)
                                                     {{-- actually execute rule --}}
-                                                    <a href="{{ route('rules.select-transactions',$rule->id) }}" class="btn btn-default" title=" {{ trans('firefly.apply_rule_selection', ['title' => $rule->title]) }}"><span class="bi bi-power "></span></a>
+                                                    <a href="{{ route('rules.select-transactions',$rule->id) }}" class="btn btn-outline-secondary" title=" {{ trans('firefly.apply_rule_selection', ['title' => $rule->title]) }}"><span class="bi bi-power "></span></a>
                                                 @endif
 
                                                 {{--  duplicate rule --}}
-                                                <a href="#" class="btn btn-default duplicate-rule" data-id="{{ $rule->id }}" title=" {{ trans('firefly.duplicate_rule', ['title' => $rule->title]) }}"><span class="bi bi-copy"></span></a>
+                                                <a href="#" class="btn btn-outline-secondary duplicate-rule" data-id="{{ $rule->id }}" title=" {{ trans('firefly.duplicate_rule', ['title' => $rule->title]) }}"><span class="bi bi-copy"></span></a>
                                             </div>
                                         </td>
                                         <td class="markdown">

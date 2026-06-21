@@ -10,7 +10,7 @@
 
 
 {% block definitions %}
-    <script type="text/javascript" nonce="{{ JS_NONCE }}">
+    <script type="text/javascript" nonce="{{ $JS_NONCE }}">
         var allowedOpposingTypes = {{ allowedOpposingTypes|json_encode|raw }};
         var accountToTypes = {{ accountToTypes|json_encode|raw }};
         var primaryCurrency = {{ primaryCurrency.toArray()|json_encode|raw }};

@@ -93,7 +93,7 @@
                                         <td>
                                             <div class="btn-group btn-group-sm edit_buttons">
                                                 <a title="{{ __('firefly.edit') }}" href="{{ route('rules.edit', rule.id) }}"
-                                                   class="btn btn-default"><span
+                                                   class="btn btn-outline-secondary"><span
                                                         class="bi bi-pencil"></span></a>
                                                 <a title="{{ __('firefly.delete') }}"
                                                    href="{{ route('rules.delete', rule.id) }}"
@@ -104,14 +104,14 @@
                                         <td>
                                             <div class="btn-group btn-group-sm test_buttons">
                                                 {# show which transactions would match #}
-                                                <a href="{{ route('rules.search',rule.id) }}" class="btn btn-default {% if false == rule.strict %}test_rule_triggers{% endif %}" data-id="{{ rule.id }}" title="{{ 'test_rule_triggers'|_ }}"><span data-id="{{ rule.id }}" class="fa fa-flask"></span></a>
+                                                <a href="{{ route('rules.search',rule.id) }}" class="btn btn-outline-secondary {% if false == rule.strict %}test_rule_triggers{% endif %}" data-id="{{ rule.id }}" title="{{ 'test_rule_triggers'|_ }}"><span data-id="{{ rule.id }}" class="fa fa-flask"></span></a>
                                                 {% if rule.active %}
                                                     {# actually execute rule #}
-                                                    <a href="{{ route('rules.select-transactions',rule.id) }}" class="btn btn-default" title=" {{ trans('firefly.apply_rule_selection', {title: rule.title}) }}"><span class="fa fa-power-off "></span></a>
+                                                    <a href="{{ route('rules.select-transactions',rule.id) }}" class="btn btn-outline-secondary" title=" {{ trans('firefly.apply_rule_selection', {title: rule.title}) }}"><span class="fa fa-power-off "></span></a>
                                                 {% endif %}
 
                                                 {# duplicate rule #}
-                                                <a href="#" class="btn btn-default duplicate-rule" data-id="{{ rule.id }}" title=" {{ trans('firefly.duplicate_rule', {title: rule.title}) }}"><span class="bi bi-copy"></span></a>
+                                                <a href="#" class="btn btn-outline-secondary duplicate-rule" data-id="{{ rule.id }}" title=" {{ trans('firefly.duplicate_rule', {title: rule.title}) }}"><span class="bi bi-copy"></span></a>
                                             </div>
                                         </td>
                                         <td class="markdown">
@@ -208,10 +208,10 @@
 
 {% endblock %}
 {% block scripts %}
-    <script type="text/javascript" nonce="{{ JS_NONCE }}">
+    <script type="text/javascript" nonce="{{ $JS_NONCE }}">
         var moveRuleGroupUrl = '{{ route('rule-groups.move') }}';
         var duplicateRuleUrl = '{{ route('rules.duplicate') }}';
     </script>
-    <script type="text/javascript" src="v1/js/lib/jquery-ui.min.js?v={{ FF_BUILD_TIME }}" nonce="{{ JS_NONCE }}"></script>
-    <script type="text/javascript" src="v1/js/ff/rules/index.js?v={{ FF_BUILD_TIME }}" nonce="{{ JS_NONCE }}"></script>
+    <script type="text/javascript" src="v1/js/lib/jquery-ui.min.js?v={{ $FF_BUILD_TIME }}" nonce="{{ $JS_NONCE }}"></script>
+    <script type="text/javascript" src="v1/js/ff/rules/index.js?v={{ $FF_BUILD_TIME }}" nonce="{{ $JS_NONCE }}"></script>
 {% endblock %}

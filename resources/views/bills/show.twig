@@ -93,7 +93,7 @@
                 </div>
                 <div class="box-footer">
                     <div class="btn-group">
-                        <a class="btn btn-default" href="{{ route('subscriptions.edit', [object.data.id]) }}">{{ __('firefly.edit') }}</a>
+                        <a class="btn btn-outline-secondary" href="{{ route('subscriptions.edit', [object.data.id]) }}">{{ __('firefly.edit') }}</a>
                         <a class="btn btn-danger" href="{{ route('subscriptions.delete', [object.data.id]) }}">{{ __('firefly.delete') }}</a>
                     </div>
                 </div>
@@ -119,7 +119,7 @@
                     <form action="{{ route('subscriptions.rescan',object.data.id) }}" method="post">
                         <input type="hidden" name="_token" value="{{ csrf_token() }}"/>
                         <p>
-                            <input type="submit" name="submit" value="{{ 'rescan_old'|_ }}" class="btn btn-default"/>
+                            <input type="submit" name="submit" value="{{ 'rescan_old'|_ }}" class="btn btn-outline-secondary"/>
                         </p>
                     </form>
 
@@ -184,14 +184,14 @@
 {% endblock %}
 
 {% block scripts %}
-    <script type="text/javascript" nonce="{{ JS_NONCE }}">
+    <script type="text/javascript" nonce="{{ $JS_NONCE }}">
         var billCurrencySymbol = "{{ convertToPrimary ? primaryCurrency.symbol : object.data.currency.symbol }}";
         var billUrl = '{{ route('chart.bill.single', [object.data.id]) }}';
     </script>
-    <script type="text/javascript" src="v1/js/lib/Chart.bundle.min.js?v={{ FF_BUILD_TIME }}" nonce="{{ JS_NONCE }}"></script>
-    <script type="text/javascript" src="v1/js/ff/charts.defaults.js?v={{ FF_BUILD_TIME }}" nonce="{{ JS_NONCE }}"></script>
-    <script type="text/javascript" src="v1/js/ff/charts.js?v={{ FF_BUILD_TIME }}" nonce="{{ JS_NONCE }}"></script>
-    <script type="text/javascript" src="v1/js/ff/bills/show.js?v={{ FF_BUILD_TIME }}" nonce="{{ JS_NONCE }}"></script>
+    <script type="text/javascript" src="v1/js/lib/Chart.bundle.min.js?v={{ $FF_BUILD_TIME }}" nonce="{{ $JS_NONCE }}"></script>
+    <script type="text/javascript" src="v1/js/ff/charts.defaults.js?v={{ $FF_BUILD_TIME }}" nonce="{{ $JS_NONCE }}"></script>
+    <script type="text/javascript" src="v1/js/ff/charts.js?v={{ $FF_BUILD_TIME }}" nonce="{{ $JS_NONCE }}"></script>
+    <script type="text/javascript" src="v1/js/ff/bills/show.js?v={{ $FF_BUILD_TIME }}" nonce="{{ $JS_NONCE }}"></script>
     {# required for groups.twig #}
-    <script type="text/javascript" src="v1/js/ff/list/groups.js?v={{ FF_BUILD_TIME }}" nonce="{{ JS_NONCE }}"></script>
+    <script type="text/javascript" src="v1/js/ff/list/groups.js?v={{ $FF_BUILD_TIME }}" nonce="{{ $JS_NONCE }}"></script>
 {% endblock %}

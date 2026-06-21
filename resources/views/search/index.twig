@@ -29,9 +29,9 @@
                                 <button type="submit" class="btn btn-info"><span class="fa fa-search"></span> {{ 'search'|_ }}</button>
                                 {% if ruleId > 0 and ruleChanged %}
                                     <a href="{{ route('rules.edit', [ruleId]) }}?from_query={{ fullQuery }}"
-                                       class="btn btn-default">{{ trans('firefly.update_rule_from_query', {rule: rule.title}) }}</a>
+                                       class="btn btn-outline-secondary">{{ trans('firefly.update_rule_from_query', {rule: rule.title}) }}</a>
                                 {% endif %}
-                                <a href="{{ route('rules.create') }}?from_query={{ fullQuery }}" class="btn btn-default">{{ 'create_rule_from_query'|_ }}</a>
+                                <a href="{{ route('rules.create') }}?from_query={{ fullQuery }}" class="btn btn-outline-secondary">{{ 'create_rule_from_query'|_ }}</a>
                             </div>
                         </div>
                         {% if 0 != ruleId %}
@@ -105,8 +105,8 @@
                         <div class="row mass_edit_all hidden-xs hidden">
                             <div class="col-lg-6 col-md-12 col-sm-12 col-xs-12">
                                 <div class="mass_button_options btn-group btn-group hidden">
-                                    <a href="#" class="btn btn-default mass_edit"><span class="bi bi-pencil"></span> <span>{{ 'edit_selected'|_ }}</span></a>
-                                    <a href="#" class="btn btn-default bulk_edit"><span>{{ 'bulk_edit'|_ }}</span></a>
+                                    <a href="#" class="btn btn-outline-secondary mass_edit"><span class="bi bi-pencil"></span> <span>{{ 'edit_selected'|_ }}</span></a>
+                                    <a href="#" class="btn btn-outline-secondary bulk_edit"><span>{{ 'bulk_edit'|_ }}</span></a>
                                     <a href="#" class="btn btn-danger mass_delete"><span class="bi bi-trash"></span>
                                         <span>{{ 'delete_selected'|_ }}</span></a>
                                 </div>
@@ -114,9 +114,9 @@
                             <div class="col-lg-6 col-md-12 col-sm-12 col-xs-12 hidden-xs">
 
                                 <div class="mass_buttons btn-group btn-group pull-right">
-                                    <a href="#" class="btn btn-default mass_select"><span
+                                    <a href="#" class="btn btn-outline-secondary mass_select"><span
                                             class="bi bi-check-square-o"></span> {{ 'select_transactions'|_ }}</a>
-                                    <a href="#" class="btn btn-default mass_stop_select hidden"><span class="fa faw-fw fa-square-o"
+                                    <a href="#" class="btn btn-outline-secondary mass_stop_select hidden"><span class="fa faw-fw fa-square-o"
                                         ></span> {{ 'stop_selection'|_ }}</a>
                                 </div>
                             </div>
@@ -157,7 +157,7 @@
     {% endif %}
 {% endblock %}
 {% block scripts %}
-    <script type="text/javascript" nonce="{{ JS_NONCE }}">
+    <script type="text/javascript" nonce="{{ $JS_NONCE }}">
         var edit_selected_txt = "{{ trans('firefly.edit')|escape('js') }}";
         var delete_selected_txt = "{{ trans('firefly.delete')|escape('js') }}";
         var edit_bulk_selected_txt = "{{ trans('firefly.bulk_edit')|escape('js') }}";
@@ -169,7 +169,7 @@
         var cloneAndEditUrl = '{{ route('transactions.clone') }}?redirect=edit';
     </script>
     {# required for groups.twig #}
-    <script type="text/javascript" src="v1/js/ff/list/groups.js?v={{ FF_BUILD_TIME }}" nonce="{{ JS_NONCE }}"></script>
-    <script type="text/javascript" src="v1/js/ff/search/index.js?v={{ FF_BUILD_TIME }}" nonce="{{ JS_NONCE }}"></script>
+    <script type="text/javascript" src="v1/js/ff/list/groups.js?v={{ $FF_BUILD_TIME }}" nonce="{{ $JS_NONCE }}"></script>
+    <script type="text/javascript" src="v1/js/ff/search/index.js?v={{ $FF_BUILD_TIME }}" nonce="{{ $JS_NONCE }}"></script>
 
 {% endblock %}

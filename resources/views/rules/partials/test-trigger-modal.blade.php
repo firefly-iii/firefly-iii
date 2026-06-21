@@ -14,7 +14,7 @@
                 </div>
             </div>
             <div class="modal-footer">
-                <button type="button" class="btn btn-default" data-dismiss="modal">{{ __('firefly.close') }}</button>
+                <button type="button" class="btn btn-outline-secondary" data-dismiss="modal">{{ __('firefly.close') }}</button>
             </div>
         </div>
     </div>

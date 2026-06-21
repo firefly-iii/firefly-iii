@@ -68,8 +68,8 @@
 
 {% endblock %}
 {% block scripts %}
-    <script type="text/javascript" nonce="{{ JS_NONCE }}">
+    <script type="text/javascript" nonce="{{ $JS_NONCE }}">
         var updateCheckUrl = '{{ route('settings.update-check.manual') }}';
     </script>
-    <script type="text/javascript" src="v1/js/ff/admin/update/index.js?v={{ FF_BUILD_TIME }}" nonce="{{ JS_NONCE }}"></script>
+    <script type="text/javascript" src="v1/js/ff/admin/update/index.js?v={{ $FF_BUILD_TIME }}" nonce="{{ $JS_NONCE }}"></script>
 {% endblock %}

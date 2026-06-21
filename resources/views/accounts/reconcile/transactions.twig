@@ -27,7 +27,7 @@
                     <input type="checkbox" class="check_all_btn">
                 </td>
                 <td colspan="3">
-                    <span class="label label-default">
+                    <span class="badge text-bg-primary">
                         {{ trans('firefly.start_of_reconcile_period', {period: start.isoFormat(monthAndDayFormat) }) }}
                     </span>
                 </td>
@@ -48,7 +48,7 @@
                     <input type="checkbox" class="check_all_btn">
                 </td>
                 <td colspan="3">
-                    <span class="label label-default">
+                    <span class="badge text-bg-primary">
                         {{ trans('firefly.end_of_reconcile_period', {period: end.isoFormat(monthAndDayFormat) }) }}
                     </span>
                 </td>
@@ -61,7 +61,7 @@
         <tr data-date="{{ journal.date.format('Y-m-d') }}" data-id="{{ journal.transaction_journal_id }}">
             <td class="hidden-xs">
                 <div class="btn-group btn-group-sm">
-                    <a href="{{ route('transactions.edit', [journal.transaction_group_id]) }}" class="btn btn-xs btn-default"><span
+                    <a href="{{ route('transactions.edit', [journal.transaction_group_id]) }}" class="btn btn-xs btn-outline-secondary"><span
                                 class="bi bi-pencil"></span></a>
                     <a href="{{ route('transactions.delete', [journal.transaction_group_id]) }}" class="btn btn-danger"><span
                                 class="bi bi-trash"></span></a>
@@ -166,7 +166,7 @@
                 &nbsp;
             </td>
             <td colspan="3">
-                <span class="label label-default">
+                <span class="badge text-bg-primary">
                     {{ trans('firefly.start_of_reconcile_period', {period: start.isoFormat(monthAndDayFormat) }) }}
                 </span>
             </td>

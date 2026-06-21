@@ -80,8 +80,8 @@
                                 </div>
                             </td>
                             <td>
-                                <a href="#" class="btn btn-default start_reconcile">{{ 'start_reconcile'|_ }}</a>
-                                <a href="#" class="btn btn-default change_date_button hidden">{{ 'update_selection'|_ }}</a>
+                                <a href="#" class="btn btn-outline-secondary start_reconcile">{{ 'start_reconcile'|_ }}</a>
+                                <a href="#" class="btn btn-outline-secondary change_date_button hidden">{{ 'update_selection'|_ }}</a>
                             </td>
                         </tr>
                         </tfoot>
@@ -98,7 +98,7 @@
                     <p class="lead" id="difference"></p>
 
                     <div class="btn-group">
-                        <button class="btn btn-default store_reconcile" disabled><span class="bi bi-check"></span> {{ 'store_reconcile'|_ }}</button>
+                        <button class="btn btn-outline-secondary store_reconcile" disabled><span class="bi bi-check"></span> {{ 'store_reconcile'|_ }}</button>
                     </div>
                 </div>
             </div>
@@ -123,7 +123,7 @@
 {% endblock %}
 
 {% block scripts %}
-    <script type="text/javascript" nonce="{{ JS_NONCE }}">
+    <script type="text/javascript" nonce="{{ $JS_NONCE }}">
         currencySymbol = "{{ currency.symbol }}";
         var accountID = {{ account.id }};
         var startBalance = {{ startBalance }};
@@ -133,5 +133,5 @@
         var indexUrl = '{{ indexUrl }}';
         var selectRangeAndBalance = '{{ 'select_range_and_balance'|_|escape('js') }}';
     </script>
-    <script src="v1/js/ff/accounts/reconcile.js?v={{ FF_BUILD_TIME }}" type="text/javascript" nonce="{{ JS_NONCE }}"></script>
+    <script src="v1/js/ff/accounts/reconcile.js?v={{ $FF_BUILD_TIME }}" type="text/javascript" nonce="{{ $JS_NONCE }}"></script>
 {% endblock %}

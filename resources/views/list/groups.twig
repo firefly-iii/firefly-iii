@@ -9,7 +9,7 @@
         <td colspan="1" class="hidden-xs">
             <!-- Single button -->
             <div class="btn-group btn-group-sm action-menu pull-right hidden">
-                <button type="button" class="btn btn-default btn-sm dropdown-toggle" data-toggle="dropdown"
+                <button type="button" class="btn btn-outline-secondary btn-sm dropdown-toggle" data-toggle="dropdown"
                         aria-haspopup="true" aria-expanded="false">
                     {{ 'actions'|_ }}<span class="caret"></span>
                 </button>
@@ -93,7 +93,7 @@
                 {% endif %}
                 <td class="top-light-border hidden-xs" colspan="2">
                     <div class="btn-group btn-group-sm pull-right">
-                        <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown"
+                        <button type="button" class="btn btn-outline-secondary dropdown-toggle" data-toggle="dropdown"
                                 aria-haspopup="true" aria-expanded="false">
                             {{ 'actions'|_ }} <span class="caret"></span></button>
                         <ul class="dropdown-menu dropdown-menu-right" role="menu">
@@ -382,7 +382,7 @@
                 {% if group.count == 1 %}
                     <td class="hidden-xs {{ className }}">
                         <div class="btn-group btn-group-sm pull-right">
-                            <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown"
+                            <button type="button" class="btn btn-outline-secondary dropdown-toggle" data-toggle="dropdown"
                                     aria-haspopup="true" aria-expanded="false">
                                 {{ 'actions'|_ }} <span class="caret"></span></button>
                             <ul class="dropdown-menu dropdown-menu-right" role="menu">
@@ -433,7 +433,7 @@
             <div class="pull-right">
                 <!-- Single button -->
                 <div class="btn-group action-menu btn-group-sm pull-right hidden">
-                    <button type="button" class="btn btn-default btn-sm dropdown-toggle" data-toggle="dropdown"
+                    <button type="button" class="btn btn-outline-secondary btn-sm dropdown-toggle" data-toggle="dropdown"
                             aria-haspopup="true" aria-expanded="false">
                         {{ 'actions'|_ }} <span class="caret"></span>
                     </button>
@@ -458,7 +458,7 @@
     </tr>
     </tfoot>
 </table>
-<script type="text/javascript" nonce="{{ JS_NONCE }}">
+<script type="text/javascript" nonce="{{ $JS_NONCE }}">
     var cloneGroupUrl = '{{ route('transactions.clone') }}';
     var cloneAndEditUrl = '{{ route('transactions.clone') }}?redirect=edit';
 </script>

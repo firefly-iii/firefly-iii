@@ -55,7 +55,7 @@
 {% endblock %}
 {% block scripts %}
     <!-- just a bit of inline code -->
-    <script type="text/javascript" nonce="{{ JS_NONCE }}">
+    <script type="text/javascript" nonce="{{ $JS_NONCE }}">
         var confirmText= '{{ 'are_you_sure'|_|escape('js') }}';
         $(function () {
             "use strict";

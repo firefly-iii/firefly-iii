@@ -72,7 +72,7 @@
                         <div class="btn-group">
                             {% for name,info in channels %}
                                 {% if true == info.enabled and true == forcedAvailability[name] %}
-                                    <button type="submit" name="test_submit" value="{{ name }}" class="btn btn-default">
+                                    <button type="submit" name="test_submit" value="{{ name }}" class="btn btn-outline-secondary">
                                         {{ trans('firefly.test_notification_channel_name_'~name) }}
                                     </button>
                                 {% endif %}

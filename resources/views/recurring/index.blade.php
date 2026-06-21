@@ -33,7 +33,7 @@
                                 <tr>
                                     <td class="hidden-sm hidden-xs">
                                         <div class="btn-group btn-group-sm edit_tr_buttons">
-                                            <a class="btn btn-default btn-xs" title="{{ __('firefly.edit') }}" href="{{ route('recurring.edit',$rt['id']) }}"><span
+                                            <a class="btn btn-outline-secondary btn-xs" title="{{ __('firefly.edit') }}" href="{{ route('recurring.edit',$rt['id']) }}"><span
                                                     class="bi bi-pencil"></span></a><a class="btn btn-danger btn-xs" title="{{ __('firefly.delete') }}"
                                                                                              href="{{ route('recurring.delete',$rt['id']) }}"><span
                                                     class="bi bi-trash"></span></a>

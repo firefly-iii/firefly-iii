@@ -77,7 +77,7 @@
                                             <td>
                                                 {% for tag in journal.tags %}
                                                     {% if 0 != tag.id %}
-                                                        <span class="inline"><a class="label label-success" href="{{ route('tags.show', [tag.id]) }}">
+                                                        <span class="inline"><a class="badge text-bg-success" href="{{ route('tags.show', [tag.id]) }}">
                                                         <span class="bi bi-tag"></span>
                                                         {{ tag.name }}</a>
                                                 </span>
@@ -170,7 +170,7 @@
                         <div class="row">
                             <div class="col-lg-8">
                                 <input type="submit" name="submit" value="{{ trans('form.update_all_journals') }}" class="btn btn-success pull-right"/>
-                                <a href="{{ route('index') }}" class="btn-default btn">{{ trans('form.cancel') }}</a>
+                                <a href="{{ route('index') }}" class="btn-outline-secondary btn">{{ trans('form.cancel') }}</a>
                             </div>
                         </div>
 
@@ -186,14 +186,14 @@
     </form>
 {% endblock %}
 {% block scripts %}
-    <script type="text/javascript" nonce="{{ JS_NONCE }}">
+    <script type="text/javascript" nonce="{{ $JS_NONCE }}">
         var what = "";
     </script>
-    <script type="text/javascript" src="v1/js/lib/typeahead/typeahead.bundle.min.js?v={{ FF_BUILD_TIME }}" nonce="{{ JS_NONCE }}"></script>
-    <script type="text/javascript" src="v1/js/ff/common/autocomplete.js?v={{ FF_BUILD_TIME }}" nonce="{{ JS_NONCE }}"></script>
-    <script type="text/javascript" src="v1/js/lib/bootstrap-tagsinput.min.js?v={{ FF_BUILD_TIME }}" nonce="{{ JS_NONCE }}"></script>
-    <script type="text/javascript" src="v1/js/ff/transactions/mass/edit-bulk.js?v={{ FF_BUILD_TIME }}" nonce="{{ JS_NONCE }}"></script>
+    <script type="text/javascript" src="v1/js/lib/typeahead/typeahead.bundle.min.js?v={{ $FF_BUILD_TIME }}" nonce="{{ $JS_NONCE }}"></script>
+    <script type="text/javascript" src="v1/js/ff/common/autocomplete.js?v={{ $FF_BUILD_TIME }}" nonce="{{ $JS_NONCE }}"></script>
+    <script type="text/javascript" src="v1/js/lib/bootstrap-tagsinput.min.js?v={{ $FF_BUILD_TIME }}" nonce="{{ $JS_NONCE }}"></script>
+    <script type="text/javascript" src="v1/js/ff/transactions/mass/edit-bulk.js?v={{ $FF_BUILD_TIME }}" nonce="{{ $JS_NONCE }}"></script>
 {% endblock %}
 {% block styles %}
-    <link href="v1/css/bootstrap-tagsinput.css?v={{ FF_BUILD_TIME }}" type="text/css" rel="stylesheet" media="all" nonce="{{ JS_NONCE }}">
+    <link href="v1/css/bootstrap-tagsinput.css?v={{ $FF_BUILD_TIME }}" type="text/css" rel="stylesheet" media="all" nonce="{{ $JS_NONCE }}">
 {% endblock %}

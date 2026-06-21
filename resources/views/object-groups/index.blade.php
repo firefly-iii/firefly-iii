@@ -37,7 +37,7 @@
                                     </td>
                                     <td>
                                         <div class="btn-group btn-group-sm">
-                                            <a class="btn btn-default" href="{{ route('object-groups.edit', [$objectGroup['id']]) }}">
+                                            <a class="btn btn-outline-secondary" href="{{ route('object-groups.edit', [$objectGroup['id']]) }}">
                                                 <span class="bi bi-pencil"></span>
                                             </a>
                                             <a class="btn btn-danger" href="{{ route('object-groups.delete', [$objectGroup['id']]) }}">
