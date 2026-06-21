@@ -8,7 +8,7 @@
 <div class="row">
     <!-- basic info -->
     <div class="col-lg-8 col-md-12 col-sm-12">
-        <div class="box">
+        <div class="card">
             <div class="box-header with-border">
                 <h3 class="box-title">
                     {{ array.title }}
@@ -20,7 +20,7 @@
                     {% endif %}
                 </h3>
             </div>
-            <div class="box-body">
+            <div class="card-body">
                 <h4>{{ 'transaction_journal_meta'|_ }}</h4>
                 {% if array.nr_of_repetitions > 0 %}
                 <p>
@@ -61,13 +61,13 @@
     </div>
     <!-- next and previous repetitions -->
     <div class="col-lg-4 col-md-12 col-sm-12">
-        <div class="box">
+        <div class="card">
             <div class="box-header with-border">
                 <h3 class="box-title">
                     {{ ('expected_'~array.type~'s')|_ }}
                 </h3>
             </div>
-            <div class="box-body">
+            <div class="card-body">
                 {% if null != array.repeat_until and today > array.repeat_until %}
                     <span class="text-danger">
                                             {{ trans('firefly.repeat_until_in_past', {date: array.repeat_until.isoFormat(monthAndDayFormat) }) }}
@@ -118,7 +118,7 @@
 <div class="row">
     <!-- transactions -->
     <div class="col-lg-12 col-md-12 col-sm-12">
-        <div class="box">
+        <div class="card">
             <div class="box-header with-border">
                 <h3 class="box-title">
                     {{ 'transaction_data'|_ }}
@@ -198,13 +198,13 @@
     <div class="row">
         <!-- meta data -->
         <div class="col-lg-12 col-md-12 col-sm-12">
-            <div class="box">
+            <div class="card">
                 <div class="box-header with-border">
                     <h3 class="box-title">
                         {{ ('created_'~array.type~'s')|_ }}
                     </h3>
                 </div>
-                <div class="box-body">
+                <div class="card-body">
                     {% include 'list.groups' %}
                 </div>
             </div>

@@ -25,7 +25,7 @@
                     <div class="box-header with-border">
                         <h3 class="box-title">{{ 'mandatoryFields'|_ }}</h3>
                     </div>
-                    <div class="box-body">
+                    <div class="card-body">
                         {{ ExpandedForm.text('name', account.name) }}
                         {% if canEditCurrency and (account.accountType.type == 'Default account' or account.accountType.type == 'Asset account' or objectType == 'liabilities') %}
                             {{ CurrencyForm.currencyList('currency_id', null, {helpText:'account_default_currency'|_}) }}
@@ -48,11 +48,11 @@
 
             </div>
             <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
-                <div class="box">
+                <div class="card">
                     <div class="box-header with-border">
                         <h3 class="box-title">{{ 'optionalFields'|_ }}</h3>
                     </div>
-                    <div class="box-body">
+                    <div class="card-body">
                         {{ ExpandedForm.text('iban', account.iban) }}
                         {{ ExpandedForm.text('BIC', null, {maxlength: 11}) }}
                         {% if preFilled.account_role == 'ccAsset' %}
@@ -85,11 +85,11 @@
 
                 {# panel for credit card options #}
                 {% if preFilled.account_role == 'ccAsset' %}
-                    <div class="box">
+                    <div class="card">
                         <div class="box-header with-border">
                             <h3 class="box-title">{{ 'credit_card_options'|_ }}</h3>
                         </div>
-                        <div class="box-body">
+                        <div class="card-body">
                             {{ ExpandedForm.select('cc_type',Config.get('firefly.ccTypes')) }}
                             {{ ExpandedForm.date('cc_monthly_payment_date',null,{'helpText' : trans('firefly.cc_monthly_payment_date_help')}) }}
                         </div>
@@ -100,11 +100,11 @@
         <div class="row">
             <div class="col-lg-6 col-md-6 col-sm-12">
                 {# panel for options  #}
-                <div class="box">
+                <div class="card">
                     <div class="box-header with-border">
                         <h3 class="box-title">{{ 'options'|_ }}</h3>
                     </div>
-                    <div class="box-body">
+                    <div class="card-body">
                         {{ ExpandedForm.optionsList('update','account') }}
                     </div>
                     <div class="box-footer">

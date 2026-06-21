@@ -3,6 +3,7 @@
         <div class="col">
             <h3 class="card-title">{{ $cardTitle }}</h3>
         </div>
+        @if('' !== $route)
         <div class="col text-end">
             <div class="dropdown">
                 <button class="btn btn-sm btn-secondary-outline dropdown-toggle" type="button" id="card_header_menu" data-bs-toggle="dropdown" aria-expanded="false">
@@ -15,5 +16,6 @@
                 </ul>
             </div>
         </div>
+        @endif
     </div>
 </div>

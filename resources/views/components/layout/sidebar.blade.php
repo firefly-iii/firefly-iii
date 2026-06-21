@@ -176,19 +176,19 @@
         </a>
         <ul class="nav nav-treeview">
             <li class="nav-item">
-                <a href="{{ route('categories.index') }}" class="nav-link">
+                <a href="{{ route('categories.index') }}" class="nav-link {{ menu_item_active_partial('categories.') }}">
                     <em class="nav-icon bi bi-bookmark"></em>
                     <p>{{trans('firefly.categories')}}</p>
                 </a>
             </li>
             <li class="nav-item">
-                <a href="{{ route('tags.index') }}" class="nav-link">
+                <a href="{{ route('tags.index') }}" class="nav-link {{ menu_item_active_partial('tags.') }}">
                     <em class="nav-icon bi bi-tag"></em>
                     <p>{{trans('firefly.tags')}}</p>
                 </a>
             </li>
             <li class="nav-item">
-                <a href="{{ route('object-groups.index') }}" class="nav-link">
+                <a href="{{ route('object-groups.index') }}" class="nav-link {{ menu_item_active_partial('object-groups.') }}">
                     <em class="nav-icon bi bi-envelope"></em>
                     <p>{{trans('firefly.object_groups_menu_bar')}}</p>
                 </a>

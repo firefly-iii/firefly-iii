@@ -50,8 +50,14 @@ export default defineConfig(({command, mode, isSsrBuild, isPreview}) => {
                     // accounts
                     'js/pages/accounts/index.js',
 
+                    // categories
+                    'js/pages/categories/index.js',
+
                     // budgets
                     'js/pages/budgets/index.js',
+
+                    // object groups
+                    'js/pages/object-groups/index.js',
 
                     // rules
                     'js/pages/rules/index.js',
@@ -66,6 +72,9 @@ export default defineConfig(({command, mode, isSsrBuild, isPreview}) => {
                     'js/pages/transactions/index.js',
                     'js/pages/transactions/create.js',
                     'js/pages/transactions/edit.js',
+
+                    // tags
+                    'js/pages/tags/index.js',
 
                     // webhooks
                     'js/pages/webhooks/index.js',

@@ -7,7 +7,7 @@
 {% block content %}
     <div class="row">
         <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
-            <div class="box">
+            <div class="card">
                 <div class="box-header with-border">
                     <h3 class="box-title">{{ 'meta_data'|_ }}</h3>
 
@@ -175,7 +175,7 @@
             </div>
         </div>
         <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
-            <div class="box">
+            <div class="card">
                 <div class="box-header with-border">
                     <h3 class="box-title">{{ 'location'|_ }}</h3>
                     <div class="box-tools pull-right">
@@ -193,7 +193,7 @@
                         </div>
                     </div>
                 </div>
-                <div class="box-body">
+                <div class="card-body">
                     {% if(location) %}
                         <div id="location_map" class="map-size"></div>
                     {% else %}
@@ -206,7 +206,7 @@
     {% if attachments.count() > 0 %}
         <div class="row">
             <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
-                <div class="box">
+                <div class="card">
                     <div class="box-header with-border">
                         <h3 class="box-title">
                             {{ 'attachments'|_ }}
@@ -230,7 +230,7 @@
     {% endif %}
     <div class="row">
         <div class="{% if periods|length > 0 %}col-lg-10 col-md-10 col-sm-12 col-xs-12{% else %}col-lg-12 col-md-12 col-sm-12 col-xs-12{% endif %}">
-            <div class="box">
+            <div class="card">
                 <div class="box-header with-border">
                     <h3 class="box-title">{{ 'transactions'|_ }}</h3>
 
@@ -250,7 +250,7 @@
                         </div>
                     </div>
                 </div>
-                <div class="box-body">
+                <div class="card-body">
                     {% include 'list.groups' with {showBudget:true, showCategory: true} %}
 
                     {% if periods|length > 0 %}

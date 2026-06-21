@@ -15,7 +15,7 @@
                     <div class="box-header with-border">
                         <h3 class="box-title">{{ 'mandatoryFields'|_ }}</h3>
                     </div>
-                    <div class="box-body">
+                    <div class="card-body">
                         {# only correct way to do active checkbox #}
                         {{ ExpandedForm.checkbox('active', 1) }}
                         {{ ExpandedForm.text('name', budget.name) }}
@@ -25,11 +25,11 @@
             </div>
             <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
                 {# panel for auto-budget #}
-                <div class="box">
+                <div class="card">
                     <div class="box-header with-border">
                         <h3 class="box-title">{{ 'optionalFields'|_ }}</h3>
                     </div>
-                    <div class="box-body">
+                    <div class="card-body">
                         {{ ExpandedForm.select('auto_budget_type', autoBudgetTypes, autoBudget.auto_budget_type) }}
                         {{ CurrencyForm.currencyList('auto_budget_currency_id', autoBudget.transaction_currency_id) }}
                         {{ ExpandedForm.amountNoCurrency('auto_budget_amount', preFilled.auto_budget_amount) }}
@@ -43,11 +43,11 @@
         <div class="row">
             <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
                 {# panel for options #}
-                <div class="box">
+                <div class="card">
                     <div class="box-header with-border">
                         <h3 class="box-title">{{ 'options'|_ }}</h3>
                     </div>
-                    <div class="box-body">
+                    <div class="card-body">
                         {{ ExpandedForm.optionsList('update','budget') }}
                     </div>
                     <div class="box-footer">

@@ -9,25 +9,25 @@
         {% if Route.getCurrentRoute.getName == 'categories.show' %}
             {# both charts #}
             <div class="{% if attachments.count() == 0 %}col-lg-6 col-md-12 col-sm-12 col-xs-12{% else %}col-lg-4 col-md-12 col-sm-12 col-xs-12{% endif %}">
-                <div class="box">
+                <div class="card">
                     <div class="box-header with-border">
                         <h3 class="box-title">
                             {{ trans('firefly.chart_category_in_period', {name: category.name, start: start.isoFormat(monthAndDayFormat), end: end.isoFormat(monthAndDayFormat) }) }}
                         </h3>
                     </div>
-                    <div class="box-body">
+                    <div class="card-body">
                         <canvas id="specific-period" class="wide-chart" height="400" width="100%"></canvas>
                     </div>
                 </div>
             </div>
             <div class="{% if attachments.count() == 0 %}col-lg-6 col-md-12 col-sm-12 col-xs-12{% else %}col-lg-4 col-md-12 col-sm-12 col-xs-12{% endif %}">
-                <div class="box">
+                <div class="card">
                     <div class="box-header with-border">
                         <h3 class="box-title">
                             {{ trans('firefly.chart_category_all', {name: category.name }) }}
                         </h3>
                     </div>
-                    <div class="box-body">
+                    <div class="card-body">
                         <canvas id="category-everything" class="wide-chart" height="400" width="100%"></canvas>
                     </div>
                 </div>
@@ -36,13 +36,13 @@
         {% if Route.getCurrentRoute.getName == 'categories.show.all' %}
             {# all chart #}
             <div class="{% if attachments.count() == 0 %}col-lg-12 col-md-12 col-sm-12 col-xs-12{% else %}col-lg-8 col-md-12 col-sm-12 col-xs-12{% endif %}">
-                <div class="box">
+                <div class="card">
                     <div class="box-header with-border">
                         <h3 class="box-title">
                             {{ trans('firefly.chart_category_all', {name: category.name }) }}
                         </h3>
                     </div>
-                    <div class="box-body">
+                    <div class="card-body">
                         <canvas id="category-everything" class="wide-chart" height="400" width="100%"></canvas>
                     </div>
                 </div>
@@ -50,7 +50,7 @@
         {% endif %}
         {% if attachments.count() > 0 %}
             <div class="col-lg-4 col-md-12 col-sm-12 col-xs-12">
-                <div class="box">
+                <div class="card">
                     <div class="box-header with-border">
                         <h3 class="box-title">
                             {{ 'attachments'|_ }}
@@ -74,11 +74,11 @@
     <div class="row">
         <div class="{% if periods|length > 0 %}col-lg-10 col-md-8 col-sm-12 col-xs-12{% else %}col-lg-12 col-md-12 col-sm-12 col-xs-12{% endif %}">
 
-            <div class="box">
+            <div class="card">
                 <div class="box-header with-border">
                     <h3 class="box-title">{{ 'transactions'|_ }}</h3>
                 </div>
-                <div class="box-body">
+                <div class="card-body">
                     {% if periods|length > 0 %}
                         {% include 'list.groups' %}
                         <p>

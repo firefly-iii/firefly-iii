@@ -18,18 +18,18 @@
                     <div class="box-header with-border">
                         <h3 class="box-title">{{ 'mandatoryFields'|_ }}</h3>
                     </div>
-                    <div class="box-body">
+                    <div class="card-body">
                         {{ ExpandedForm.text('name', category.name) }}
                     </div>
                 </div>
             </div>
             <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
                 {# panel for optional fields #}
-                <div class="box">
+                <div class="card">
                     <div class="box-header with-border">
                         <h3 class="box-title">{{ 'optionalFields'|_ }}</h3>
                     </div>
-                    <div class="box-body">
+                    <div class="card-body">
                         {{ ExpandedForm.textarea('notes', preFilled.notes, {helpText: trans('firefly.field_supports_markdown')} ) }}
                         {{ ExpandedForm.file('attachments[]', {'multiple': 'multiple','helpText': trans('firefly.upload_max_file_size', {'size': uploadSize|filesize}) }) }}
                     </div>
@@ -41,11 +41,11 @@
 
 
                 {# panel for options #}
-                <div class="box">
+                <div class="card">
                     <div class="box-header with-border">
                         <h3 class="box-title">{{ 'options'|_ }}</h3>
                     </div>
-                    <div class="box-body">
+                    <div class="card-body">
                         {{ ExpandedForm.optionsList('update','category') }}
                     </div>
                     <div class="box-footer">

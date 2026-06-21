@@ -13,9 +13,11 @@
                     {{ __('firefly.no_'.($type ?? '').'_imperative_'.($objectType ?? 'default')) }}
 
                 </p>
+                @if('' !== $route)
                 <p class="text-center">
                     <a class="btn btn-lg btn-success" href="{{ $route }}">{{ __('firefly.no_'.($type ?? '').'_create_'.($objectType ?? 'default')) }}</a>
                 </p>
+                @endif
             </div>
 
         </div>

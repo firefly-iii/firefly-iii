@@ -18,7 +18,7 @@
                     <div class="box-header with-border">
                         <h3 class="box-title">{{ 'mandatory_for_recurring'|_ }}</h3>
                     </div>
-                    <div class="box-body">
+                    <div class="card-body">
                         <input type="hidden" name="id" value="{{ array.id }}"/>
                         {{ ExpandedForm.text('title', array.title) }}
                         {{ ExpandedForm.date('first_date',array.first_date, {helpText: trans('firefly.help_first_date_no_past')}) }}
@@ -46,11 +46,11 @@
 
             <div class="col-lg-6 col-md-6 col-sm-12">
                 {# optional recurrence stuff #}
-                <div class="box">
+                <div class="card">
                     <div class="box-header with-border">
                         <h3 class="box-title">{{ 'optional_for_recurring'|_ }}</h3>
                     </div>
-                    <div class="box-body">
+                    <div class="card-body">
                         {{ ExpandedForm.textarea('recurring_description',array.description) }}
 
                         {# only correct way to do active checkbox #}
@@ -69,7 +69,7 @@
                     <div class="box-header with-border">
                         <h3 class="box-title">{{ 'mandatory_for_transaction'|_ }}</h3>
                     </div>
-                    <div class="box-body">
+                    <div class="card-body">
                         <p><em>{{ 'mandatory_fields_for_tranaction'|_ }}</em></p>
                         {# three buttons to distinguish type of transaction #}
                         <div class="form-group" id="name_holder">
@@ -112,11 +112,11 @@
 
             <div class="col-lg-6 col-md-6 col-sm-12">
                 {# optional transaction information #}
-                <div class="box">
+                <div class="card">
                     <div class="box-header with-border">
                         <h3 class="box-title">{{ 'optional_for_transaction'|_ }}</h3>
                     </div>
-                    <div class="box-body">
+                    <div class="card-body">
                         {# transaction information (optional) #}
                         {{ CurrencyForm.currencyListEmpty('foreign_currency_id', array.transactions[0].foreign_currency_id) }}
                         {{ ExpandedForm.amountNoCurrency('foreign_amount', array.transactions[0].foreign_amount) }}
@@ -152,11 +152,11 @@
         {# row with submit stuff. #}
         <div class="row">
             <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
-                <div class="box">
+                <div class="card">
                     <div class="box-header with-border">
                         <h3 class="box-title">{{ 'options'|_ }}</h3>
                     </div>
-                    <div class="box-body">
+                    <div class="card-body">
                         {{ ExpandedForm.optionsList('update','recurrence') }}
                     </div>
                     <div class="box-footer">
@@ -173,7 +173,7 @@
                 <div class="box-header with-border">
                     <h3 class="box-title">{{ 'expected_repetitions'|_ }}</h3>
                 </div>
-                <div class="box-body">
+                <div class="card-body">
                     Here.
                 </div>
             </div>

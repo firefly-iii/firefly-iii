@@ -9,11 +9,11 @@
     <input name="_token" type="hidden" value="{{ csrf_token() }}">
         <div class="row">
             <div class="col-lg-6 col-lg-offset-3 col-md-12 col-sm-12 col-xs-12">
-                <div class="box">
+                <div class="card">
                     <div class="box-header with-border">
                         <h3 class="box-title">{{ 'mfa_backup_codes_title'|_ }}</h3>
                     </div>
-                    <div class="box-body">
+                    <div class="card-body">
                         <div class="form group">
                             <p>
                                 {{ 'mfa_backup_codes_intro'|_ }}
@@ -29,8 +29,8 @@
 
     <div class="row">
         <div class="col-lg-6 col-lg-offset-3 col-md-12 col-sm-12 col-xs-12">
-            <div class="box">
-                <div class="box-body">
+            <div class="card">
+                <div class="card-body">
                     {{ ExpandedForm.password('password', {helpText: 'current_password_confirm_mfa'|_}) }}
                     {{ ExpandedForm.text('code', code) }}
                 </div>

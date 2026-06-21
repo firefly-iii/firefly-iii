@@ -9,11 +9,11 @@
     <div class="row">
         <form class="form-horizontal nodisablebutton" id="report-form" action="{{ route('reports.index.post') }}" method="post">
             <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
-                <div class="box">
+                <div class="card">
                     <div class="box-header with-border">
                         <h3 class="box-title">{{ 'reports'|_ }}</h3>
                     </div>
-                    <div class="box-body">
+                    <div class="card-body">
                         <p class="text-info">
                             {{ 'more_info_help'|_ }}
                         </p>
@@ -108,11 +108,11 @@
                     </div>
                 </div>
 
-                <div class="box">
+                <div class="card">
                     <div class="box-header with-border">
                         <h3 class="box-title">{{ 'reports_submit'|_ }}</h3>
                     </div>
-                    <div class="box-body">
+                    <div class="card-body">
                         <div class="form-group">
                             <div class="col-sm-offset-3 col-sm-9">
                                 <button type="submit" class="btn btn-default">{{ 'submit'|_ }}</button>
@@ -125,11 +125,11 @@
 
 
         <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
-            <div class="box">
+            <div class="card">
                 <div class="box-header with-border">
                     <h3 class="box-title">{{ 'quick_link_reports'|_ }}</h3>
                 </div>
-                <div class="box-body">
+                <div class="card-body">
                     {% if '' == accountList %}
                     <p class="text-danger">
                         {{ 'quick_link_needs_accounts'|_ }}

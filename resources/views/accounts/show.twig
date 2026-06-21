@@ -8,7 +8,7 @@
 
     <div class="row">
         <div class="{% if attachments.count() == 0 %}col-lg-12 col-md-12 col-sm-12 col-xs-12{% else %}col-lg-8 col-md-6 col-sm-12 col-xs-12{% endif %}">
-            <div class="box">
+            <div class="card">
                 <div class="box-header with-border">
                     <h3 class="box-title">
                         {% if balances.balance %}
@@ -41,7 +41,7 @@
                         </div>
                     </div>
                 </div>
-                <div class="box-body">
+                <div class="card-body">
                     <div>
                         <canvas id="overview-chart" class="wide-chart" height="400" width="100%"></canvas>
                     </div>
@@ -50,7 +50,7 @@
         </div>
         {% if attachments.count() > 0 %}
             <div class="col-lg-4 col-md-6 col-sm-12 col-xs-12">
-                <div class="box">
+                <div class="card">
                     <div class="box-header with-border">
                         <h3 class="box-title">
                             {{ 'attachments'|_ }}
@@ -66,11 +66,11 @@
     {% if not showAll and isLiability %}
         <div class="row">
             <div class="col-lg-4 col-md-6 col-sm-12 col-xs-12">
-                <div class="box">
+                <div class="card">
                     <div class="box-header with-border">
                         <h3 class="box-title">pay-off by date</h3>
                     </div>
-                    <div class="box-body">
+                    <div class="card-body">
                         Content
                     </div>
                 </div>
@@ -80,11 +80,11 @@
     {% if not showAll and not isLiability %}
         <div class="row">
             <div class="col-lg-4 col-md-6 col-sm-12 col-xs-12">
-                <div class="box">
+                <div class="card">
                     <div class="box-header with-border">
                         <h3 class="box-title">{{ 'expenses_by_category'|_ }}</h3>
                     </div>
-                    <div class="box-body">
+                    <div class="card-body">
                         <div class="center-chart">
                             <canvas id="account-cat-out" class="medium-chart" height="250"></canvas>
                         </div>
@@ -92,11 +92,11 @@
                 </div>
             </div>
             <div class="col-lg-4 col-md-6 col-sm-12 col-xs-12">
-                <div class="box">
+                <div class="card">
                     <div class="box-header with-border">
                         <h3 class="box-title">{{ 'expenses_by_budget'|_ }}</h3>
                     </div>
-                    <div class="box-body">
+                    <div class="card-body">
                         <div class="center-chart">
                             <canvas id="account-budget-out" class="medium-chart" height="250"></canvas>
                         </div>
@@ -104,11 +104,11 @@
                 </div>
             </div>
             <div class="col-lg-4 col-md-6 col-sm-12 col-xs-12">
-                <div class="box">
+                <div class="card">
                     <div class="box-header with-border">
                         <h3 class="box-title">{{ 'income_by_category'|_ }}</h3>
                     </div>
-                    <div class="box-body">
+                    <div class="card-body">
                         <div class="center-chart">
                             <canvas id="account-cat-in" class="medium-chart" height="250"></canvas>
                         </div>
@@ -121,11 +121,11 @@
     <div class="row">
         {% if(location) %}
             <div class="col-lg-6">
-                <div class="box">
+                <div class="card">
                     <div class="box-header with-border">
                         <h3 class="box-title">{{ 'location'|_ }}</h3>
                     </div>
-                    <div class="box-body">
+                    <div class="card-body">
                         <div id="location_map" class="map-size"></div>
                     </div>
                 </div>
@@ -133,11 +133,11 @@
         {% endif %}
         {% if account.notes.count() == 1 %}
             <div class="col-lg-6">
-                <div class="box">
+                <div class="card">
                     <div class="box-header with-border">
                         <h3 class="box-title">{{ 'notes'|_ }}</h3>
                     </div>
-                    <div class="box-body">
+                    <div class="card-body">
                         {{ account.notes.first().text|markdown }}
                     </div>
                 </div>
@@ -147,7 +147,7 @@
 
     <div class="row">
         <div class="{% if periods|length > 0 %}col-lg-10 col-md-8 col-sm-12{% else %}col-lg-12 col-md-12 col-sm-12{% endif %}">
-            <div class="box">
+            <div class="card">
                 <div class="box-header with-border">
                     <h3 class="box-title">{{ 'transactions'|_ }}
                         {% if balances.balance %}
@@ -157,7 +157,7 @@
                         {% endif %}
                     </h3>
                 </div>
-                <div class="box-body">
+                <div class="card-body">
                     {% if account.accountType.type == 'Asset account' %}
                         {% set showReconcile = true %}
                     {% else %}
