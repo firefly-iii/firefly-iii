@@ -22,43 +22,13 @@
 import '../../boot/bootstrap.js';
 import sidebar from '../../pages/shared/sidebar.js';
 import dates from '../shared/dates.js';
-import i18next from "i18next";
 
 let index = function () {
     return {
-        currencies: [],
-        page: 1,
-        i18next: null,
+        foo2: 'bar2',
         init() {
-           this.i18next = i18next;
-            this.getCurrencies();
-        },
-        getCurrencies: function () {
-            this.currencies = [];
-            // start with page one, loop for the rest.
-            this.downloadCurrencies(1);
-        },
-        downloadCurrencies: function (page) {
-            axios.get("./api/v1/currencies?enabled=1&page=" + page).then((response) => {
-                for (let i in response.data.data) {
-                    if (response.data.data.hasOwnProperty(i)) {
-                        let current = response.data.data[i];
-                        if (current.attributes.enabled) {
-                            let currency = {
-                                id: current.id,
-                                name: current.attributes.name,
-                                code: current.attributes.code,
-                            };
-                            this.currencies.push(currency);
-                        }
-                    }
-                }
-
-                if (response.data.meta.pagination.current_page < response.data.meta.pagination.total_pages) {
-                    this.downloadCurrencies(parseInt(response.data.meta.pagination.current_page) + 1);
-                }
-            });
-        },
+            // console.log('init op index xxx');
+        }
     }
 };
 

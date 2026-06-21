@@ -59,6 +59,9 @@ export default defineConfig(({command, mode, isSsrBuild, isPreview}) => {
                     // exchange rates
                     'js/pages/exchange-rates/index.js',
 
+                    // export
+                    'js/pages/export/index.js',
+
                     // object groups
                     'js/pages/object-groups/index.js',
 
