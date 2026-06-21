@@ -23,12 +23,12 @@
             <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
                 <div class="card">
                     <div class="card-header">
-                        <h3 class="card-title">{{ 'mandatoryFields'|_ }}</h3>
+                        <h3 class="card-title">{{ __('firefly.mandatoryFields') }}</h3>
                     </div>
                     <div class="card-body">
-                        {{ ExpandedForm.text('name', account.name) }}
+                        {{ ExpandedForm::text('name', account.name) }}
                         {% if canEditCurrency and (account.accountType.type == 'Default account' or account.accountType.type == 'Asset account' or objectType == 'liabilities') %}
-                            {{ CurrencyForm.currencyList('currency_id', null, {helpText:'account_default_currency'|_}) }}
+                            {{ CurrencyForm::currencyList('currency_id', null, {helpText:'account_default_currency'|_}) }}
                         {% endif %}
                         {% if not canEditCurrency and (account.accountType.type == 'Default account' or account.accountType.type == 'Asset account' or objectType == 'liabilities') %}
                             <input type="hidden" name="currency_id" value="{{ currency.id }}"/>
@@ -36,12 +36,12 @@
                         {% endif %}
 
                         {% if objectType == 'liabilities' %}
-                            {{ ExpandedForm.select('liability_type_id', liabilityTypes) }}
-                            {{ ExpandedForm.amountNoCurrency('opening_balance', null, {label:'debt_start_amount'|_}) }}
-                            {{ ExpandedForm.select('liability_direction', liabilityDirections) }}
-                            {{ ExpandedForm.date('opening_balance_date', preFilled.opening_balance_date, {label:'debt_start_date'|_}) }}
-                            {{ ExpandedForm.percentage('interest') }}
-                            {{ ExpandedForm.select('interest_period', interestPeriods) }}
+                            {{ ExpandedForm::select('liability_type_id', liabilityTypes) }}
+                            {{ ExpandedForm::amountNoCurrency('opening_balance', null, {label:'debt_start_amount'|_}) }}
+                            {{ ExpandedForm::select('liability_direction', liabilityDirections) }}
+                            {{ ExpandedForm::date('opening_balance_date', preFilled.opening_balance_date, {label:'debt_start_date'|_}) }}
+                            {{ ExpandedForm::percentage('interest') }}
+                            {{ ExpandedForm::select('interest_period', interestPeriods) }}
                         {% endif %}
                     </div>
                 </div>
@@ -53,32 +53,32 @@
                         <h3 class="card-title">{{ 'optionalFields'|_ }}</h3>
                     </div>
                     <div class="card-body">
-                        {{ ExpandedForm.text('iban', account.iban) }}
-                        {{ ExpandedForm.text('BIC', null, {maxlength: 11}) }}
+                        {{ ExpandedForm::text('iban', account.iban) }}
+                        {{ ExpandedForm::text('BIC', null, {maxlength: 11}) }}
                         {% if preFilled.account_role == 'ccAsset' %}
-                            {{ ExpandedForm.text('account_number', null , {label:trans('form.creditCardNumber')}) }}
+                            {{ ExpandedForm::text('account_number', null , {label:trans('form.creditCardNumber')}) }}
                         {% else %}
-                            {{ ExpandedForm.text('account_number') }}
+                            {{ ExpandedForm::text('account_number') }}
                         {% endif %}
 
                         {% if account.accounttype.type == 'Default account' or account.accounttype.type == 'Asset account' %}
 
                             {# get opening balance entry for this thing! #}
-                            {{ ExpandedForm.amountNoCurrency('opening_balance',null) }}
-                            {{ ExpandedForm.date('opening_balance_date', preFilled.opening_balance_date) }}
-                            {{ ExpandedForm.select('account_role', roles) }}
-                            {{ ExpandedForm.amountNoCurrency('virtual_balance',null) }}
+                            {{ ExpandedForm::amountNoCurrency('opening_balance',null) }}
+                            {{ ExpandedForm::date('opening_balance_date', preFilled.opening_balance_date) }}
+                            {{ ExpandedForm::select('account_role', roles) }}
+                            {{ ExpandedForm::amountNoCurrency('virtual_balance',null) }}
 
                         {% endif %}
                         {% if showNetWorth %}
-                            {{ ExpandedForm.checkbox('include_net_worth', 1) }}
+                            {{ ExpandedForm::checkbox('include_net_worth', 1) }}
                         {% endif %}
-                        {{ ExpandedForm.textarea('notes',preFilled.notes,{helpText: trans('firefly.field_supports_markdown')}) }}
+                        {{ ExpandedForm::textarea('notes',preFilled.notes,{helpText: trans('firefly.field_supports_markdown')}) }}
                         {# only correct way to do active checkbox #}
-                        {{ ExpandedForm.checkbox('active', 1) }}
+                        {{ ExpandedForm::checkbox('active', 1) }}
                         {# only correct way to do active checkbox #}
 
-                        {{ ExpandedForm.file('attachments[]', {'multiple': 'multiple','helpText': trans('firefly.upload_max_file_size', {'size': uploadSize|filesize}) }) }}
+                        {{ ExpandedForm::file('attachments[]', {'multiple': 'multiple','helpText': trans('firefly.upload_max_file_size', {'size': uploadSize|filesize}) }) }}
 
                     </div>
                 </div>
@@ -90,8 +90,8 @@
                             <h3 class="card-title">{{ 'credit_card_options'|_ }}</h3>
                         </div>
                         <div class="card-body">
-                            {{ ExpandedForm.select('cc_type',Config.get('firefly.ccTypes')) }}
-                            {{ ExpandedForm.date('cc_monthly_payment_date',null,{'helpText' : trans('firefly.cc_monthly_payment_date_help')}) }}
+                            {{ ExpandedForm::select('cc_type',Config.get('firefly.ccTypes')) }}
+                            {{ ExpandedForm::date('cc_monthly_payment_date',null,{'helpText' : trans('firefly.cc_monthly_payment_date_help')}) }}
                         </div>
                     </div>
                 {% endif %}
@@ -105,7 +105,7 @@
                         <h3 class="card-title">{{ 'options'|_ }}</h3>
                     </div>
                     <div class="card-body">
-                        {{ ExpandedForm.optionsList('update','account') }}
+                        {{ ExpandedForm::optionsList('update','account') }}
                     </div>
                     <div class="box-footer">
                         <button type="submit" class="btn pull-right btn-success">

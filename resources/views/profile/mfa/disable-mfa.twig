@@ -26,7 +26,7 @@
                 <div class="card">
                     <div class="card-body">
                         {{ ExpandedForm.password('password', {helpText: 'current_password_confirm_mfa'|_}) }}
-                        {{ ExpandedForm.text('code', code) }}
+                        {{ ExpandedForm::text('code', code) }}
                     </div>
                     <div class="box-footer">
                         <button type="submit" class="btn btn-danger">{{ 'pref_disable_mfa'|_ }}</button>

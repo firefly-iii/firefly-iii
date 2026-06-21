@@ -20,13 +20,13 @@
                     </div>
                     <div class="card-body">
                         <input type="hidden" name="id" value="{{ array.id }}"/>
-                        {{ ExpandedForm.text('title', array.title) }}
-                        {{ ExpandedForm.date('first_date',array.first_date, {helpText: trans('firefly.help_first_date_no_past')}) }}
-                        {{ ExpandedForm.select('repetition_type', [], null, {helpText: trans('firefly.change_date_other_options')}) }}
+                        {{ ExpandedForm::text('title', array.title) }}
+                        {{ ExpandedForm::date('first_date',array.first_date, {helpText: trans('firefly.help_first_date_no_past')}) }}
+                        {{ ExpandedForm::select('repetition_type', [], null, {helpText: trans('firefly.change_date_other_options')}) }}
                         {{ ExpandedForm.integer('skip', array.repetitions[0].skip, {'helpText': trans('firefly.skip_help_text')}) }}
-                        {{ ExpandedForm.select('weekend', weekendResponses, array.repetitions[0].weekend, {helpText: trans('firefly.help_weekend')}) }}
-                        {{ ExpandedForm.select('repetition_end', repetitionEnds, repetitionEnd) }}
-                        {{ ExpandedForm.date('repeat_until',array.repeat_until) }}
+                        {{ ExpandedForm::select('weekend', weekendResponses, array.repetitions[0].weekend, {helpText: trans('firefly.help_weekend')}) }}
+                        {{ ExpandedForm::select('repetition_end', repetitionEnds, repetitionEnd) }}
+                        {{ ExpandedForm::date('repeat_until',array.repeat_until) }}
                         {{ ExpandedForm.integer('repetitions', array.nr_of_repetitions) }}
 
                         {# calendar in popup #}
@@ -51,12 +51,12 @@
                         <h3 class="card-title">{{ 'optional_for_recurring'|_ }}</h3>
                     </div>
                     <div class="card-body">
-                        {{ ExpandedForm.textarea('recurring_description',array.description) }}
+                        {{ ExpandedForm::textarea('recurring_description',array.description) }}
 
                         {# only correct way to do active checkbox #}
-                        {{ ExpandedForm.checkbox('active', 1, preFilled.active) }}
-                        {{ ExpandedForm.checkbox('apply_rules', 1, preFilled.apply_rules) }}
-                        {{ ExpandedForm.file('attachments[]', {'multiple': 'multiple','helpText': trans('firefly.upload_max_file_size', {'size': uploadSize|filesize}) }) }}
+                        {{ ExpandedForm::checkbox('active', 1, preFilled.active) }}
+                        {{ ExpandedForm::checkbox('apply_rules', 1, preFilled.apply_rules) }}
+                        {{ ExpandedForm::file('attachments[]', {'multiple': 'multiple','helpText': trans('firefly.upload_max_file_size', {'size': uploadSize|filesize}) }) }}
                     </div>
                 </div>
             </div>
@@ -90,10 +90,10 @@
                         </div>
                         <input type="hidden" name="transaction_type" value="">
                         {# end of three buttons #}
-                        {{ ExpandedForm.text('transaction_description', array.transactions[0].description) }}
+                        {{ ExpandedForm::text('transaction_description', array.transactions[0].description) }}
                         {# transaction information (mandatory) #}
-                        {{ CurrencyForm.currencyList('transaction_currency_id', array.transactions[0].currency_id) }}
-                        {{ ExpandedForm.amountNoCurrency('amount', array.transactions[0].amount) }}
+                        {{ CurrencyForm::currencyList('transaction_currency_id', array.transactions[0].currency_id) }}
+                        {{ ExpandedForm::amountNoCurrency('amount', array.transactions[0].amount) }}
 
                         {# source account if withdrawal, or if transfer: #}
                         {{ AccountForm.longAccountList('source_id', array.transactions[0].source_id, {label: trans('form.asset_source_account')}) }}
@@ -118,29 +118,29 @@
                     </div>
                     <div class="card-body">
                         {# transaction information (optional) #}
-                        {{ CurrencyForm.currencyListEmpty('foreign_currency_id', array.transactions[0].foreign_currency_id) }}
-                        {{ ExpandedForm.amountNoCurrency('foreign_amount', array.transactions[0].foreign_amount) }}
+                        {{ CurrencyForm::currencyListEmpty('foreign_currency_id', array.transactions[0].foreign_currency_id) }}
+                        {{ ExpandedForm::amountNoCurrency('foreign_amount', array.transactions[0].foreign_amount) }}
 
                         {# BUDGET ONLY WHEN CREATING A WITHDRAWAL #}
                         {% if budgets|length > 1 %}
-                            {{ ExpandedForm.select('budget_id', budgets, array.transactions[0].budget_id) }}
+                            {{ ExpandedForm::select('budget_id', budgets, array.transactions[0].budget_id) }}
                         {% else %}
-                            {{ ExpandedForm.select('budget_id', budgets, array.transactions[0].budget_id, {helpText: trans('firefly.no_budget_pointer', {link: route('budgets.index')})}) }}
+                            {{ ExpandedForm::select('budget_id', budgets, array.transactions[0].budget_id, {helpText: trans('firefly.no_budget_pointer', {link: route('budgets.index')})}) }}
                             {# budgets #}
                         {% endif %}
 
                         {# CATEGORY ALWAYS #}
-                        {{ ExpandedForm.text('category',array.transactions[0].category_name) }}
+                        {{ ExpandedForm::text('category',array.transactions[0].category_name) }}
 
                         {# BILL ONLY WHEN CREATING A WITHDRAWAL #}
                         {% if bills|length > 1 %}
-                            {{ ExpandedForm.select('bill_id', bills, array.transactions[0].subscription_id) }}
+                            {{ ExpandedForm::select('bill_id', bills, array.transactions[0].subscription_id) }}
                         {% else %}
-                            {{ ExpandedForm.select('bill_id', bills, array.transactions[0].subscription_id, {helpText: trans('firefly.no_bill_pointer', {link: route('subscriptions.index')})}) }}
+                            {{ ExpandedForm::select('bill_id', bills, array.transactions[0].subscription_id, {helpText: trans('firefly.no_bill_pointer', {link: route('subscriptions.index')})}) }}
                         {% endif %}
 
                         {# TAGS #}
-                        {{ ExpandedForm.text('tags', array.transactions[0].tags) }}
+                        {{ ExpandedForm::text('tags', array.transactions[0].tags) }}
 
                         {# RELATE THIS TRANSFER TO A PIGGY BANK #}
                         {{ PiggyBankForm.piggyBankList('piggy_bank_id',array.transactions[0].piggy_bank_id) }}
@@ -157,7 +157,7 @@
                         <h3 class="card-title">{{ 'options'|_ }}</h3>
                     </div>
                     <div class="card-body">
-                        {{ ExpandedForm.optionsList('update','recurrence') }}
+                        {{ ExpandedForm::optionsList('update','recurrence') }}
                     </div>
                     <div class="box-footer">
                         <button type="submit" class="btn pull-right btn-success">

@@ -13,15 +13,15 @@
             <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
                 <div class="card">
                     <div class="card-header">
-                        <h3 class="card-title">{{ 'mandatoryFields'|_ }}</h3>
+                        <h3 class="card-title">{{ __('firefly.mandatoryFields') }}</h3>
                     </div>
                     <div class="card-body">
-                        {{ ExpandedForm.text('name') }}
-                        {{ CurrencyForm.currencyList('transaction_currency_id', primaryCurrency.id) }}
-                        {{ ExpandedForm.amountNoCurrency('amount_min') }}
-                        {{ ExpandedForm.amountNoCurrency('amount_max') }}
-                        {{ ExpandedForm.date('date',phpdate('Y-m-d')) }}
-                        {{ ExpandedForm.select('repeat_freq',periods,'monthly') }}
+                        {{ ExpandedForm::text('name') }}
+                        {{ CurrencyForm::currencyList('transaction_currency_id', primaryCurrency.id) }}
+                        {{ ExpandedForm::amountNoCurrency('amount_min') }}
+                        {{ ExpandedForm::amountNoCurrency('amount_max') }}
+                        {{ ExpandedForm::date('date',phpdate('Y-m-d')) }}
+                        {{ ExpandedForm::select('repeat_freq',periods,'monthly') }}
                         {{ ExpandedForm.integer('skip',0, {'helpText': trans('firefly.skip_help_text')}) }}
                     </div>
                 </div>
@@ -33,12 +33,12 @@
                         <h3 class="card-title">{{ 'optionalFields'|_ }}</h3>
                     </div>
                     <div class="card-body">
-                        {{ ExpandedForm.date('bill_end_date',null, {'helpText': trans('firefly.bill_end_date_help')}) }}
-                        {{ ExpandedForm.date('extension_date',null,{'helpText': trans('firefly.bill_extension_date_help')} ) }}
+                        {{ ExpandedForm::date('bill_end_date',null, {'helpText': trans('firefly.bill_end_date_help')}) }}
+                        {{ ExpandedForm::date('extension_date',null,{'helpText': trans('firefly.bill_extension_date_help')} ) }}
 
 
-                        {{ ExpandedForm.textarea('notes',null,{helpText: trans('firefly.field_supports_markdown')}) }}
-                        {{ ExpandedForm.file('attachments[]', {'multiple': 'multiple','helpText': trans('firefly.upload_max_file_size', {'size': uploadSize|filesize}) }) }}
+                        {{ ExpandedForm::textarea('notes',null,{helpText: trans('firefly.field_supports_markdown')}) }}
+                        {{ ExpandedForm::file('attachments[]', {'multiple': 'multiple','helpText': trans('firefly.upload_max_file_size', {'size': uploadSize|filesize}) }) }}
                         {{ ExpandedForm.objectGroup() }}
                     </div>
                 </div>
@@ -52,7 +52,7 @@
                         <h3 class="card-title">{{ 'options'|_ }}</h3>
                     </div>
                     <div class="card-body">
-                        {{ ExpandedForm.optionsList('create','bill') }}
+                        {{ ExpandedForm::optionsList('create','bill') }}
                     </div>
                     <div class="box-footer">
                         <button type="submit" class="btn pull-right btn-success">

@@ -109,8 +109,8 @@
                                             {{ 'pref_custom_fiscal_year_help'|_ }}
                                         </p>
                                         {% set isCustomFiscalYear = customFiscalYear == 1 ? true : false %}
-                                        {{ ExpandedForm.checkbox('customFiscalYear','1',isCustomFiscalYear,{ 'label' : 'pref_custom_fiscal_year_label'|_ }) }}
-                                        {{ ExpandedForm.date('fiscalYearStart',fiscalYearStart,{ 'label' : 'pref_fiscal_year_start_label'|_ }) }}
+                                        {{ ExpandedForm::checkbox('customFiscalYear','1',isCustomFiscalYear,{ 'label' : 'pref_custom_fiscal_year_label'|_ }) }}
+                                        {{ ExpandedForm::date('fiscalYearStart',fiscalYearStart,{ 'label' : 'pref_fiscal_year_start_label'|_ }) }}
                                     </div>
 
                                     {#  conversion back to primary currency #}
@@ -120,7 +120,7 @@
                                         <p>
                                             {{ 'pref_convert_to_primary_help'|_ }}
                                         </p>
-                                        {{ ExpandedForm.checkbox('convertToPrimary','1',convertToPrimary,{ 'label' : 'pref_convert_primary_help'|_ }) }}
+                                        {{ ExpandedForm::checkbox('convertToPrimary','1',convertToPrimary,{ 'label' : 'pref_convert_primary_help'|_ }) }}
                                     </div>
                                     {% endif %}
                                     {#  conversion back to primary currency #}
@@ -129,7 +129,7 @@
                                             <p>
                                                 {{ 'pref_anonymous_help'|_ }}
                                             </p>
-                                            {{ ExpandedForm.checkbox('anonymous','1',anonymous,{ 'label' : 'pref_anonymous_label'|_ }) }}
+                                            {{ ExpandedForm::checkbox('anonymous','1',anonymous,{ 'label' : 'pref_anonymous_label'|_ }) }}
                                         </div>
                                 </div>
 
@@ -143,22 +143,22 @@
                                             {{ 'pref_optional_fields_transaction_help'|_ }}
                                         </p>
                                         <h4>{{ 'optional_tj_date_fields'|_ }}</h4>
-                                        {{ ExpandedForm.checkbox('tj[interest_date]','1', tjOptionalFields.interest_date,{ 'label' : 'pref_optional_tj_interest_date'|_ }) }}
-                                        {{ ExpandedForm.checkbox('tj[book_date]','1', tjOptionalFields.book_date,{ 'label' : 'pref_optional_tj_book_date'|_ }) }}
-                                        {{ ExpandedForm.checkbox('tj[process_date]','1', tjOptionalFields.process_date,{ 'label' : 'pref_optional_tj_process_date'|_ }) }}
-                                        {{ ExpandedForm.checkbox('tj[due_date]','1', tjOptionalFields.due_date,{ 'label' : 'pref_optional_tj_due_date'|_ }) }}
-                                        {{ ExpandedForm.checkbox('tj[payment_date]','1', tjOptionalFields.payment_date,{ 'label' : 'pref_optional_tj_payment_date'|_ }) }}
-                                        {{ ExpandedForm.checkbox('tj[invoice_date]','1', tjOptionalFields.invoice_date,{ 'label' : 'pref_optional_tj_invoice_date'|_ }) }}
+                                        {{ ExpandedForm::checkbox('tj[interest_date]','1', tjOptionalFields.interest_date,{ 'label' : 'pref_optional_tj_interest_date'|_ }) }}
+                                        {{ ExpandedForm::checkbox('tj[book_date]','1', tjOptionalFields.book_date,{ 'label' : 'pref_optional_tj_book_date'|_ }) }}
+                                        {{ ExpandedForm::checkbox('tj[process_date]','1', tjOptionalFields.process_date,{ 'label' : 'pref_optional_tj_process_date'|_ }) }}
+                                        {{ ExpandedForm::checkbox('tj[due_date]','1', tjOptionalFields.due_date,{ 'label' : 'pref_optional_tj_due_date'|_ }) }}
+                                        {{ ExpandedForm::checkbox('tj[payment_date]','1', tjOptionalFields.payment_date,{ 'label' : 'pref_optional_tj_payment_date'|_ }) }}
+                                        {{ ExpandedForm::checkbox('tj[invoice_date]','1', tjOptionalFields.invoice_date,{ 'label' : 'pref_optional_tj_invoice_date'|_ }) }}
 
                                         <h4>{{ 'optional_tj_other_fields'|_ }}</h4>
-                                        {{ ExpandedForm.checkbox('tj[internal_reference]','1', tjOptionalFields.internal_reference,{ 'label' : 'pref_optional_tj_internal_reference'|_ }) }}
-                                        {{ ExpandedForm.checkbox('tj[external_url]','1', tjOptionalFields.external_url,{ 'label' : 'pref_optional_tj_external_url'|_ }) }}
-                                        {{ ExpandedForm.checkbox('tj[notes]','1', tjOptionalFields.notes,{ 'label' : 'pref_optional_tj_notes'|_ }) }}
-                                        {{ ExpandedForm.checkbox('tj[location]','1', tjOptionalFields.location,{ 'label' : 'pref_optional_tj_location'|_ }) }}
-                                        {{ ExpandedForm.checkbox('tj[links]','1', tjOptionalFields.links,{ 'label' : 'pref_optional_tj_links'|_ }) }}
+                                        {{ ExpandedForm::checkbox('tj[internal_reference]','1', tjOptionalFields.internal_reference,{ 'label' : 'pref_optional_tj_internal_reference'|_ }) }}
+                                        {{ ExpandedForm::checkbox('tj[external_url]','1', tjOptionalFields.external_url,{ 'label' : 'pref_optional_tj_external_url'|_ }) }}
+                                        {{ ExpandedForm::checkbox('tj[notes]','1', tjOptionalFields.notes,{ 'label' : 'pref_optional_tj_notes'|_ }) }}
+                                        {{ ExpandedForm::checkbox('tj[location]','1', tjOptionalFields.location,{ 'label' : 'pref_optional_tj_location'|_ }) }}
+                                        {{ ExpandedForm::checkbox('tj[links]','1', tjOptionalFields.links,{ 'label' : 'pref_optional_tj_links'|_ }) }}
 
                                         <h4>{{ 'optional_tj_attachment_fields'|_ }}</h4>
-                                        {{ ExpandedForm.checkbox('tj[attachments]','1', tjOptionalFields.attachments,{ 'label' : 'pref_optional_tj_attachments'|_ }) }}
+                                        {{ ExpandedForm::checkbox('tj[attachments]','1', tjOptionalFields.attachments,{ 'label' : 'pref_optional_tj_attachments'|_ }) }}
                                     </div>
                                 </div>
                             </div>
@@ -378,10 +378,10 @@
                                     <div class="preferences-box">
                                         <h3>{{ 'pref_notifications_settings'|_ }}</h3>
                                         <p>{{ 'pref_notifications_settings_help'|_ }}</p>
-                                        {{ ExpandedForm.text('slack_webhook_url',slackUrl,{'label' : 'slack_url_label'|_, helpText: 'slack_discord_double'|_}) }}
+                                        {{ ExpandedForm::text('slack_webhook_url',slackUrl,{'label' : 'slack_url_label'|_, helpText: 'slack_discord_double'|_}) }}
 
-                                        {{ ExpandedForm.text('pushover_app_token', pushoverAppToken, {}) }}
-                                        {{ ExpandedForm.text('pushover_user_token', pushoverUserToken, {}) }}
+                                        {{ ExpandedForm::text('pushover_app_token', pushoverAppToken, {}) }}
+                                        {{ ExpandedForm::text('pushover_user_token', pushoverUserToken, {}) }}
 
 
                                         {{ Form.hidden('ntfy_server', ntfyServer, {}) }}

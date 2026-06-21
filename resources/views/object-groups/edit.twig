@@ -16,10 +16,10 @@
             <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
                 <div class="card">
                     <div class="card-header">
-                        <h3 class="card-title">{{ 'mandatoryFields'|_ }}</h3>
+                        <h3 class="card-title">{{ __('firefly.mandatoryFields') }}</h3>
                     </div>
                     <div class="card-body">
-                        {{ ExpandedForm.text('title', objectGroup.title) }}
+                        {{ ExpandedForm::text('title', objectGroup.title) }}
                     </div>
                 </div>
 
@@ -33,7 +33,7 @@
                         <h3 class="card-title">{{ 'options'|_ }}</h3>
                     </div>
                     <div class="card-body">
-                        {{ ExpandedForm.optionsList('update','object group') }}
+                        {{ ExpandedForm::optionsList('update','object group') }}
                     </div>
                     <div class="box-footer">
                         <button type="submit" class="btn btn-success pull-right">

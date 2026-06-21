@@ -13,12 +13,12 @@
             <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
                 <div class="card">
                     <div class="card-header">
-                        <h3 class="card-title">{{ 'mandatoryFields'|_ }}</h3>
+                        <h3 class="card-title">{{ __('firefly.mandatoryFields') }}</h3>
                     </div>
                     <div class="card-body">
                         {# only correct way to do active checkbox #}
-                        {{ ExpandedForm.checkbox('active', 1) }}
-                        {{ ExpandedForm.text('name', budget.name) }}
+                        {{ ExpandedForm::checkbox('active', 1) }}
+                        {{ ExpandedForm::text('name', budget.name) }}
                     </div>
                 </div>
 
@@ -30,12 +30,12 @@
                         <h3 class="card-title">{{ 'optionalFields'|_ }}</h3>
                     </div>
                     <div class="card-body">
-                        {{ ExpandedForm.select('auto_budget_type', autoBudgetTypes, autoBudget.auto_budget_type) }}
-                        {{ CurrencyForm.currencyList('auto_budget_currency_id', autoBudget.transaction_currency_id) }}
-                        {{ ExpandedForm.amountNoCurrency('auto_budget_amount', preFilled.auto_budget_amount) }}
-                        {{ ExpandedForm.select('auto_budget_period', autoBudgetPeriods, autoBudget.period) }}
-                        {{ ExpandedForm.textarea('notes',preFilled.notes,{helpText: trans('firefly.field_supports_markdown')}) }}
-                        {{ ExpandedForm.file('attachments[]', {'multiple': 'multiple','helpText': trans('firefly.upload_max_file_size', {'size': uploadSize|filesize}) }) }}
+                        {{ ExpandedForm::select('auto_budget_type', autoBudgetTypes, autoBudget.auto_budget_type) }}
+                        {{ CurrencyForm::currencyList('auto_budget_currency_id', autoBudget.transaction_currency_id) }}
+                        {{ ExpandedForm::amountNoCurrency('auto_budget_amount', preFilled.auto_budget_amount) }}
+                        {{ ExpandedForm::select('auto_budget_period', autoBudgetPeriods, autoBudget.period) }}
+                        {{ ExpandedForm::textarea('notes',preFilled.notes,{helpText: trans('firefly.field_supports_markdown')}) }}
+                        {{ ExpandedForm::file('attachments[]', {'multiple': 'multiple','helpText': trans('firefly.upload_max_file_size', {'size': uploadSize|filesize}) }) }}
                     </div>
                 </div>
             </div>
@@ -48,7 +48,7 @@
                         <h3 class="card-title">{{ 'options'|_ }}</h3>
                     </div>
                     <div class="card-body">
-                        {{ ExpandedForm.optionsList('update','budget') }}
+                        {{ ExpandedForm::optionsList('update','budget') }}
                     </div>
                     <div class="box-footer">
                         <button type="submit" class="btn pull-right btn-success">{{ 'update_budget'|_ }}</button>

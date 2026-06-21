@@ -19,7 +19,7 @@
                         <p class="text-info">
                             {{ 'admin_update_channel_explain'|_ }}
                         </p>
-                        {{ ExpandedForm.select('update_channel', channelOptions, channelSelected) }}
+                        {{ ExpandedForm::select('update_channel', channelOptions, channelSelected) }}
                     </div>
                 </div>
             </div>
@@ -34,7 +34,7 @@
                         <p class="text-info">
                             {{ 'admin_update_check_explain'|_ }}
                         </p>
-                        {{ ExpandedForm.select('check_for_updates',options, selected) }}
+                        {{ ExpandedForm::select('check_for_updates',options, selected) }}
                     </div>
                 </div>
             </div>

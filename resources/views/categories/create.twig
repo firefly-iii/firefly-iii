@@ -12,10 +12,10 @@
             <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
                 <div class="card">
                     <div class="card-header">
-                        <h3 class="card-title">{{ 'mandatoryFields'|_ }}</h3>
+                        <h3 class="card-title">{{ __('firefly.mandatoryFields') }}</h3>
                     </div>
                     <div class="card-body">
-                        {{ ExpandedForm.text('name') }}
+                        {{ ExpandedForm::text('name') }}
                     </div>
                 </div>
             </div>
@@ -26,8 +26,8 @@
                         <h3 class="card-title">{{ 'optionalFields'|_ }}</h3>
                     </div>
                     <div class="card-body">
-                        {{ ExpandedForm.textarea('notes', null, {helpText: trans('firefly.field_supports_markdown')} ) }}
-                        {{ ExpandedForm.file('attachments[]', {'multiple': 'multiple','helpText': trans('firefly.upload_max_file_size', {'size': uploadSize|filesize}) }) }}
+                        {{ ExpandedForm::textarea('notes', null, {helpText: trans('firefly.field_supports_markdown')} ) }}
+                        {{ ExpandedForm::file('attachments[]', {'multiple': 'multiple','helpText': trans('firefly.upload_max_file_size', {'size': uploadSize|filesize}) }) }}
                     </div>
                 </div>
             </div>
@@ -40,7 +40,7 @@
                         <h3 class="card-title">{{ 'options'|_ }}</h3>
                     </div>
                     <div class="card-body">
-                        {{ ExpandedForm.optionsList('create','category') }}
+                        {{ ExpandedForm::optionsList('create','category') }}
                     </div>
                     <div class="box-footer">
                         <button type="submit" class="btn pull-right btn-success">

@@ -17,13 +17,13 @@
             <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
                 <div class="card">
                     <div class="card-header">
-                        <h3 class="card-title">{{ 'mandatoryFields'|_ }}</h3>
+                        <h3 class="card-title">{{ __('firefly.mandatoryFields') }}</h3>
                     </div>
 
                     <div class="card-body">
-                        {{ ExpandedForm.text('name') }}
-                        {{ ExpandedForm.amountNoCurrency('target_amount') }}
-                        {{ CurrencyForm.currencyList('transaction_currency_id', preFilled.transaction_currency_id, {helpText:'piggy_default_currency'|_}) }}
+                        {{ ExpandedForm::text('name') }}
+                        {{ ExpandedForm::amountNoCurrency('target_amount') }}
+                        {{ CurrencyForm::currencyList('transaction_currency_id', preFilled.transaction_currency_id, {helpText:'piggy_default_currency'|_}) }}
                         {{ AccountForm.assetLiabilityMultiAccountList('accounts', preFilled.accounts, {label: 'saveOnAccounts'|_, helpText: 'piggy_account_currency_match'|_   }) }}
 
                     </div>
@@ -36,10 +36,10 @@
                         <h3 class="card-title">{{ 'optionalFields'|_ }}</h3>
                     </div>
                     <div class="card-body">
-                        {{ ExpandedForm.date('start_date') }}
-                        {{ ExpandedForm.date('target_date') }}
-                        {{ ExpandedForm.textarea('notes', null, {helpText: trans('firefly.field_supports_markdown')}) }}
-                        {{ ExpandedForm.file('attachments[]', {'multiple': 'multiple','helpText': trans('firefly.upload_max_file_size', {'size': uploadSize|filesize}) }) }}
+                        {{ ExpandedForm::date('start_date') }}
+                        {{ ExpandedForm::date('target_date') }}
+                        {{ ExpandedForm::textarea('notes', null, {helpText: trans('firefly.field_supports_markdown')}) }}
+                        {{ ExpandedForm::file('attachments[]', {'multiple': 'multiple','helpText': trans('firefly.upload_max_file_size', {'size': uploadSize|filesize}) }) }}
                         {{ ExpandedForm.objectGroup() }}
                     </div>
                 </div>
@@ -53,7 +53,7 @@
                         <h3 class="card-title">{{ 'options'|_ }}</h3>
                     </div>
                     <div class="card-body">
-                        {{ ExpandedForm.optionsList('update','piggy bank') }}
+                        {{ ExpandedForm::optionsList('update','piggy bank') }}
                     </div>
                     <div class="box-footer">
                         <button type="submit" class="btn btn-success pull-right">
