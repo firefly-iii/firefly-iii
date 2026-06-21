@@ -9,8 +9,8 @@
     <div class="row">
         <div class="col-lg-6 col-sm-12 col-md-12">
             <div class="box" id="billInfo">
-                <div class="box-header with-border">
-                    <h3 class="box-title">{{ object.data.name }}</h3>
+                <div class="card-header">
+                    <h3 class="card-title">{{ object.data.name }}</h3>
 
                     <div class="box-tools pull-right">
                         <div class="btn-group">
@@ -101,8 +101,8 @@
         </div>
         <div class="col-lg-6 col-sm-12 col-md-12">
             <div class="card">
-                <div class="box-header with-border">
-                    <h3 class="box-title">{{ 'bill_related_rules'|_ }}</h3>
+                <div class="card-header">
+                    <h3 class="card-title">{{ 'bill_related_rules'|_ }}</h3>
                 </div>
                 <div class="card-body">
                     {% if rules.count() > 0 %}
@@ -132,8 +132,8 @@
             </div>
             {% if object.data.notes %}
                 <div class="card">
-                    <div class="box-header with-border">
-                        <h3 class="box-title">{{ 'notes'|_ }}</h3>
+                    <div class="card-header">
+                        <h3 class="card-title">{{ 'notes'|_ }}</h3>
                     </div>
                     <div class="card-body">
                         {{ object.data.notes|default('')|markdown }}
@@ -144,8 +144,8 @@
 
             {% if attachments.count() > 0 %}
                 <div class="card">
-                    <div class="box-header with-border">
-                        <h3 class="box-title">{{ 'attachments'|_ }}</h3>
+                    <div class="card-header">
+                        <h3 class="card-title">{{ 'attachments'|_ }}</h3>
                     </div>
                     <div class="box-body no-padding">
                         {% include 'list.attachments' %}
@@ -158,8 +158,8 @@
     <div class="row">
         <div class="col-lg-12 col-sm-12 col-md-12">
             <div class="box" id="billChart">
-                <div class="box-header with-border">
-                    <h3 class="box-title">{{ 'chart'|_ }}</h3>
+                <div class="card-header">
+                    <h3 class="card-title">{{ 'chart'|_ }}</h3>
                 </div>
                 <div class="card-body">
                     <canvas id="bill-overview" class="wide-chart" height="400" width="100%"></canvas>
@@ -171,8 +171,8 @@
     <div class="row">
         <div class="col-lg-12 col-sm-12 col-md-12">
             <div class="card">
-                <div class="box-header with-border">
-                    <h3 class="box-title">{{ 'connected_journals'|_ }}</h3>
+                <div class="card-header">
+                    <h3 class="card-title">{{ 'connected_journals'|_ }}</h3>
                 </div>
                 <div class="card-body">
                     {% include 'list.groups' %}

@@ -8,9 +8,9 @@
         <div class="col-lg-6 col-md-12 col-sm-12 col-xs-12">
             <form action="{{ route('settings.notification.post') }}" method="post">
                 <input type="hidden" name="_token" value="{{ csrf_token() }}">
-                <div class="box box-default">
-                    <div class="box-header with-border">
-                        <h3 class="box-title">{{ 'notification_settings'|_ }}</h3>
+                <div class="card">
+                    <div class="card-header">
+                        <h3 class="card-title">{{ 'notification_settings'|_ }}</h3>
                     </div>
                     <div class="card-body">
                         <p>
@@ -46,9 +46,9 @@
         <form action="{{ route('settings.notification.test') }}" method="post">
             <div class="col-lg-6 col-md-12 col-sm-12 col-xs-12">
                 <input type="hidden" name="_token" value="{{ csrf_token() }}">
-                <div class="box box-default">
-                    <div class="box-header with-border">
-                        <h3 class="box-title">{{ 'available_channels_title'|_ }}</h3>
+                <div class="card">
+                    <div class="card-header">
+                        <h3 class="card-title">{{ 'available_channels_title'|_ }}</h3>
                     </div>
                     <div class="card-body">
                         <p>

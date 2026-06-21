@@ -17,8 +17,8 @@
             <div class="row">
                 <div class="col-lg-12 col-md-12 col-sm-12">
                     <div class="box box-success" id="mandatory">
-                        <div class="box-header with-border">
-                            <h3 class="box-title">{{ trans('firefly.create_rule_for_bill', {name: bill.name}) }}</h3>
+                        <div class="card-header">
+                            <h3 class="card-title">{{ trans('firefly.create_rule_for_bill', {name: bill.name}) }}</h3>
                         </div>
                         <div class="card-body">
                             <p class="text-info">
@@ -32,8 +32,8 @@
         <div class="row">
             <div class="col-lg-6 col-md-6 col-sm-12">
                 <div class="box box-primary" id="mandatory">
-                    <div class="box-header with-border">
-                        <h3 class="box-title">{{ 'mandatoryFields'|_ }}</h3>
+                    <div class="card-header">
+                        <h3 class="card-title">{{ 'mandatoryFields'|_ }}</h3>
                     </div>
                     <div class="card-body">
                         {{ ExpandedForm.text('title') }}
@@ -48,8 +48,8 @@
 
                 {# optional fields #}
                 <div class="card">
-                    <div class="box-header with-border">
-                        <h3 class="box-title">{{ 'optionalFields'|_ }}</h3>
+                    <div class="card-header">
+                        <h3 class="card-title">{{ 'optionalFields'|_ }}</h3>
                     </div>
                     <div class="card-body">
                         {{ ExpandedForm.textarea('description', null, {helpText: trans('firefly.field_supports_markdown')}) }}
@@ -61,8 +61,8 @@
         <div class="row">
             <div class="col-lg-12 col-md-12 col-sm-12">
                 <div class="card">
-                    <div class="box-header with-border">
-                        <h3 class="box-title">{{ 'rule_triggers'|_ }}</h3>
+                    <div class="card-header">
+                        <h3 class="card-title">{{ 'rule_triggers'|_ }}</h3>
                     </div>
                     <div class="box-body rule-trigger-box">
                         <table class="table table-sm table-bordered table-striped">
@@ -96,8 +96,8 @@
         <div class="row">
             <div class="col-lg-12 col-md-12 col-sm-12">
                 <div class="card">
-                    <div class="box-header with-border">
-                        <h3 class="box-title">{{ 'rule_actions'|_ }}</h3>
+                    <div class="card-header">
+                        <h3 class="card-title">{{ 'rule_actions'|_ }}</h3>
                     </div>
                     <div class="box-body rule-action-box">
                         <table class="table table-sm table-bordered table-striped">
@@ -128,8 +128,8 @@
             <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
                 {# panel for options #}
                 <div class="card">
-                    <div class="box-header with-border">
-                        <h3 class="box-title">{{ 'options'|_ }}</h3>
+                    <div class="card-header">
+                        <h3 class="card-title">{{ 'options'|_ }}</h3>
                     </div>
                     <div class="card-body">
                         {{ ExpandedForm.checkbox('run_after_form',1,null, {helpText: trans('firefly.rule_run_after_creation')}) }}

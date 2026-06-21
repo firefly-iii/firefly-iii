@@ -14,8 +14,8 @@
         <div class="row">
             <div class="col-lg-6 col-md-12 col-sm-6">
                 <div class="box box-primary">
-                    <div class="box-header with-border">
-                        <h3 class="box-title">{{ 'mandatoryFields'|_ }}</h3>
+                    <div class="card-header">
+                        <h3 class="card-title">{{ 'mandatoryFields'|_ }}</h3>
                     </div>
                     <div class="card-body">
                         {# only correct way to do active checkbox #}
@@ -30,8 +30,8 @@
 
                 {# optional fields #}
                 <div class="card">
-                    <div class="box-header with-border">
-                        <h3 class="box-title">{{ 'optionalFields'|_ }}</h3>
+                    <div class="card-header">
+                        <h3 class="card-title">{{ 'optionalFields'|_ }}</h3>
                     </div>
                     <div class="card-body">
                         {{ ExpandedForm.textarea('description', ruleGroup.description) }}
@@ -43,8 +43,8 @@
             <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
                 {# panel for options #}
                 <div class="card">
-                    <div class="box-header with-border">
-                        <h3 class="box-title">{{ 'options'|_ }}</h3>
+                    <div class="card-header">
+                        <h3 class="card-title">{{ 'options'|_ }}</h3>
                     </div>
                     <div class="card-body">
                         {{ ExpandedForm.optionsList('update','rule-group') }}

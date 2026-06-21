@@ -9,8 +9,8 @@
     <div class="row no-print">
         <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
             <div class="box" id="optionsBox">
-                <div class="box-header with-border">
-                    <h3 class="box-title">{{ 'options'|_ }}</h3>
+                <div class="card-header">
+                    <h3 class="card-title">{{ 'options'|_ }}</h3>
                 </div>
                 <div class="card-body">
                     <ul class="list-inline">
@@ -32,8 +32,8 @@
         <div class="row">
             <div class="col-lg-12 col-md-12 col-sm-12">
                 <div class="card">
-                    <div class="box-header with-border">
-                        <h3 class="box-title">{{ account.name }}</h3>
+                    <div class="card-header">
+                        <h3 class="card-title">{{ account.name }}</h3>
                     </div>
                     {% set url = route('accounts.show',account.id) %}
                     {% if not auditData[account.id].exists %}

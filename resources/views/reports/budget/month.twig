@@ -9,8 +9,8 @@
     <div class="row">
         <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
             <div class="card">
-                <div class="box-header with-border">
-                    <h3 class="box-title">{{ 'accounts'|_ }}</h3>
+                <div class="card-header">
+                    <h3 class="card-title">{{ 'accounts'|_ }}</h3>
                 </div>
                 <div class="box-body table-responsive no-padding" id="accountsHolder">
                 </div>
@@ -24,8 +24,8 @@
         </div>
         <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
             <div class="card">
-                <div class="box-header with-border">
-                    <h3 class="box-title">{{ 'budgets'|_ }}</h3>
+                <div class="card-header">
+                    <h3 class="card-title">{{ 'budgets'|_ }}</h3>
                 </div>
                 <div class="box-body table-responsive no-padding" id="budgetsHolder">
                 </div>
@@ -41,8 +41,8 @@
     <div class="row">
         <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
             <div class="card">
-                <div class="box-header with-border">
-                    <h3 class="box-title">{{ 'account_per_budget'|_ }}</h3>
+                <div class="card-header">
+                    <h3 class="card-title">{{ 'account_per_budget'|_ }}</h3>
                 </div>
                 <div class="box-body table-responsive no-padding" id="accountPerbudgetHolder">
                 </div>
@@ -58,8 +58,8 @@
     <div class="row">
         <div class="col-lg-6 col-md-6">
             <div class="card">
-                <div class="box-header with-border">
-                    <h3 class="box-title">{{ 'expense_per_budget'|_ }}</h3>
+                <div class="card-header">
+                    <h3 class="card-title">{{ 'expense_per_budget'|_ }}</h3>
                 </div>
                 <div class="card-body">
                     <div class="center-chart">
@@ -70,8 +70,8 @@
         </div>
         <div class="col-lg-6 col-md-6">
             <div class="card">
-                <div class="box-header with-border">
-                    <h3 class="box-title">{{ 'expense_per_category'|_ }}</h3>
+                <div class="card-header">
+                    <h3 class="card-title">{{ 'expense_per_category'|_ }}</h3>
                 </div>
                 <div class="card-body">
                     <div class="center-chart">
@@ -84,8 +84,8 @@
     <div class="row">
         <div class="col-lg-6 col-md-6">
             <div class="card">
-                <div class="box-header with-border">
-                    <h3 class="box-title">{{ 'expense_per_source_account'|_ }}</h3>
+                <div class="card-header">
+                    <h3 class="card-title">{{ 'expense_per_source_account'|_ }}</h3>
                 </div>
                 <div class="card-body">
                     <div class="center-chart">
@@ -96,8 +96,8 @@
         </div>
         <div class="col-lg-6 col-md-6">
             <div class="card">
-                <div class="box-header with-border">
-                    <h3 class="box-title">{{ 'expense_per_destination_account'|_ }}</h3>
+                <div class="card-header">
+                    <h3 class="card-title">{{ 'expense_per_destination_account'|_ }}</h3>
                 </div>
                 <div class="card-body">
                     <div class="center-chart">
@@ -112,8 +112,8 @@
         <div class="row">
             <div class="col-lg-12">
                 <div class="box main_budget_chart">
-                    <div class="box-header with-border">
-                        <h3 class="box-title">{{ 'expenses'|_ }} ({{ budget.name }})</h3>
+                    <div class="card-header">
+                        <h3 class="card-title">{{ 'expenses'|_ }} ({{ budget.name }})</h3>
                     </div>
                     <div class="card-body">
                         <canvas class="main_budget_canvas" data-url="{{ route('chart.budget.main', [accountIds, budget.id, start.format('Ymd'), end.format('Ymd')]) }}" id="in-out-chart-{{ budget.id }}" class="wide-chart" height="400" width="100%"></canvas>
@@ -125,8 +125,8 @@
     <div class="row">
         <div class="col-lg-6">
             <div class="card">
-                <div class="box-header with-border">
-                    <h3 class="box-title">{{ 'average_spending_per_destination'|_ }}</h3>
+                <div class="card-header">
+                    <h3 class="card-title">{{ 'average_spending_per_destination'|_ }}</h3>
                 </div>
                 <div class="box-body table-responsive no-padding" id="avgExpensesHolder">
                 </div>
@@ -141,8 +141,8 @@
         <div class="col-lg-6">
 
             <div class="card">
-                <div class="box-header with-border">
-                    <h3 class="box-title">{{ 'expenses'|_ }} ({{ trans('firefly.topX', {number: listLength}) }})</h3>
+                <div class="card-header">
+                    <h3 class="card-title">{{ 'expenses'|_ }} ({{ trans('firefly.topX', {number: listLength}) }})</h3>
                 </div>
                 <div class="box-body table-responsive no-padding" id="topExpensesHolder">
                 </div>

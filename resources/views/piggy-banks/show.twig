@@ -8,8 +8,8 @@
     <div class="row">
         <div class="col-lg-8 col-md-8 col-sm-6">
             <div class="box" id="piggyChart">
-                <div class="box-header with-border">
-                    <h3 class="box-title">{{ 'events'|_ }}</h3>
+                <div class="card-header">
+                    <h3 class="card-title">{{ 'events'|_ }}</h3>
                 </div>
                 <div class="card-body">
                     <canvas id="piggy-bank-history" class="wide-chart" height="400" width="100%"></canvas>
@@ -18,8 +18,8 @@
         </div>
         <div class="col-lg-4 col-md-4 col-sm-6">
             <div class="card">
-                <div class="box-header with-border">
-                    <h3 class="box-title">{{ 'details'|_ }}</h3>
+                <div class="card-header">
+                    <h3 class="card-title">{{ 'details'|_ }}</h3>
                     <div class="box-tools pull-right">
                         <div class="btn-group">
                             <button class="btn btn-box-tool dropdown-toggle" data-toggle="dropdown"><span class="bi bi-list"></span></button>
@@ -113,8 +113,8 @@
                 </div>
             </div>
             <div class="card">
-                <div class="box-header with-border">
-                    <h3 class="box-title">{{ 'event_history'|_ }} (<a class="confirm-history-delete reset-link" href="#">{{ 'reset_history'|_ }}</a>)</h3>
+                <div class="card-header">
+                    <h3 class="card-title">{{ 'event_history'|_ }} (<a class="confirm-history-delete reset-link" href="#">{{ 'reset_history'|_ }}</a>)</h3>
                 </div>
                 <div class="box-body no-padding" id="piggyEvents">
                     {% include 'list/piggy-bank-events' %}
@@ -128,8 +128,8 @@
             <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
 
                 <div class="card">
-                    <div class="box-header with-border">
-                        <h3 class="box-title">{{ trans('form.notes') }}</h3>
+                    <div class="card-header">
+                        <h3 class="card-title">{{ trans('form.notes') }}</h3>
                     </div>
                     <div class="box-body markdown">{{ piggy.notes|default('')|markdown }}
                     </div>
@@ -140,8 +140,8 @@
         {% if attachments.count() > 0 %}
             <div class="col-lg-4 col-md-6 col-sm-12 col-xs-12">
                 <div class="card">
-                    <div class="box-header with-border">
-                        <h3 class="box-title">
+                    <div class="card-header">
+                        <h3 class="card-title">
                             {{ 'attachments'|_ }}
                         </h3>
                     </div>

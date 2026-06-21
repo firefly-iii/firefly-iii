@@ -9,8 +9,8 @@
     <div class="row">
         <div class="{% if attachments.count() == 0 %}col-lg-12 col-md-12 col-sm-12 col-xs-12{% else %}col-lg-8 col-md-6 col-sm-12 col-xs-12{% endif %}">
             <div class="card">
-                <div class="box-header with-border">
-                    <h3 class="box-title">
+                <div class="card-header">
+                    <h3 class="card-title">
                         {% if balances.balance %}
                             <span title="balance">
                         {{ trans('firefly.chart_account_in_period', {
@@ -51,8 +51,8 @@
         {% if attachments.count() > 0 %}
             <div class="col-lg-4 col-md-6 col-sm-12 col-xs-12">
                 <div class="card">
-                    <div class="box-header with-border">
-                        <h3 class="box-title">
+                    <div class="card-header">
+                        <h3 class="card-title">
                             {{ 'attachments'|_ }}
                         </h3>
                     </div>
@@ -67,8 +67,8 @@
         <div class="row">
             <div class="col-lg-4 col-md-6 col-sm-12 col-xs-12">
                 <div class="card">
-                    <div class="box-header with-border">
-                        <h3 class="box-title">pay-off by date</h3>
+                    <div class="card-header">
+                        <h3 class="card-title">pay-off by date</h3>
                     </div>
                     <div class="card-body">
                         Content
@@ -81,8 +81,8 @@
         <div class="row">
             <div class="col-lg-4 col-md-6 col-sm-12 col-xs-12">
                 <div class="card">
-                    <div class="box-header with-border">
-                        <h3 class="box-title">{{ 'expenses_by_category'|_ }}</h3>
+                    <div class="card-header">
+                        <h3 class="card-title">{{ 'expenses_by_category'|_ }}</h3>
                     </div>
                     <div class="card-body">
                         <div class="center-chart">
@@ -93,8 +93,8 @@
             </div>
             <div class="col-lg-4 col-md-6 col-sm-12 col-xs-12">
                 <div class="card">
-                    <div class="box-header with-border">
-                        <h3 class="box-title">{{ 'expenses_by_budget'|_ }}</h3>
+                    <div class="card-header">
+                        <h3 class="card-title">{{ 'expenses_by_budget'|_ }}</h3>
                     </div>
                     <div class="card-body">
                         <div class="center-chart">
@@ -105,8 +105,8 @@
             </div>
             <div class="col-lg-4 col-md-6 col-sm-12 col-xs-12">
                 <div class="card">
-                    <div class="box-header with-border">
-                        <h3 class="box-title">{{ 'income_by_category'|_ }}</h3>
+                    <div class="card-header">
+                        <h3 class="card-title">{{ 'income_by_category'|_ }}</h3>
                     </div>
                     <div class="card-body">
                         <div class="center-chart">
@@ -122,8 +122,8 @@
         {% if(location) %}
             <div class="col-lg-6">
                 <div class="card">
-                    <div class="box-header with-border">
-                        <h3 class="box-title">{{ 'location'|_ }}</h3>
+                    <div class="card-header">
+                        <h3 class="card-title">{{ 'location'|_ }}</h3>
                     </div>
                     <div class="card-body">
                         <div id="location_map" class="map-size"></div>
@@ -134,8 +134,8 @@
         {% if account.notes.count() == 1 %}
             <div class="col-lg-6">
                 <div class="card">
-                    <div class="box-header with-border">
-                        <h3 class="box-title">{{ 'notes'|_ }}</h3>
+                    <div class="card-header">
+                        <h3 class="card-title">{{ 'notes'|_ }}</h3>
                     </div>
                     <div class="card-body">
                         {{ account.notes.first().text|markdown }}
@@ -148,8 +148,8 @@
     <div class="row">
         <div class="{% if periods|length > 0 %}col-lg-10 col-md-8 col-sm-12{% else %}col-lg-12 col-md-12 col-sm-12{% endif %}">
             <div class="card">
-                <div class="box-header with-border">
-                    <h3 class="box-title">{{ 'transactions'|_ }}
+                <div class="card-header">
+                    <h3 class="card-title">{{ 'transactions'|_ }}
                         {% if balances.balance %}
                             ({{ formatAmountBySymbol(balances.balance, currency.symbol, currency.decimal_places, true)|raw }})
                         {% elseif balances.pc_balance %}

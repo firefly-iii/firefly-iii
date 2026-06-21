@@ -14,8 +14,8 @@
         <div class="row">
             <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
                 <div class="box box-primary">
-                    <div class="box-header with-border">
-                        <h3 class="box-title">{{ 'mandatoryFields'|_ }}</h3>
+                    <div class="card-header">
+                        <h3 class="card-title">{{ 'mandatoryFields'|_ }}</h3>
                     </div>
                     <div class="card-body">
                         {% if rules.count() > 0 %}
@@ -36,8 +36,8 @@
             </div>
             <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
                 <div class="card">
-                    <div class="box-header with-border">
-                        <h3 class="box-title">{{ 'optionalFields'|_ }}</h3>
+                    <div class="card-header">
+                        <h3 class="card-title">{{ 'optionalFields'|_ }}</h3>
                     </div>
                     <div class="card-body">
                         {{ ExpandedForm.date('bill_end_date',null, {'helpText': trans('firefly.bill_end_date_help')}) }}
@@ -56,8 +56,8 @@
         <div class="row">
             <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
                 <div class="card">
-                    <div class="box-header with-border">
-                        <h3 class="box-title">{{ 'options'|_ }}</h3>
+                    <div class="card-header">
+                        <h3 class="card-title">{{ 'options'|_ }}</h3>
                     </div>
                     <div class="card-body">
                         {{ ExpandedForm.optionsList('update','bill') }}

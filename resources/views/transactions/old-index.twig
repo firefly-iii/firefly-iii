@@ -22,8 +22,8 @@
             {# for withdrawals, deposits and transfers #}
             <div class="{{ boxSize }}">
                 <div class="card">
-                    <div class="box-header with-border">
-                        <h3 class="box-title">{{ 'categories'|_ }}</h3>
+                    <div class="card-header">
+                        <h3 class="card-title">{{ 'categories'|_ }}</h3>
                     </div>
                     <div class="card-body">
                         <canvas id="category_chart" class="medium-chart" height="250"></canvas>
@@ -34,8 +34,8 @@
             {% if objectType == 'withdrawal' %}
                 <div class="{{ boxSize }}">
                     <div class="card">
-                        <div class="box-header with-border">
-                            <h3 class="box-title">{{ 'budgets'|_ }}</h3>
+                        <div class="card-header">
+                            <h3 class="card-title">{{ 'budgets'|_ }}</h3>
                         </div>
                         <div class="card-body">
                             <canvas id="budget_chart" class="medium-chart" height="250"></canvas>
@@ -46,8 +46,8 @@
             {% if objectType != 'withdrawal' %}
                 <div class="{{ boxSize }}">
                     <div class="card">
-                        <div class="box-header with-border">
-                            <h3 class="box-title">{{ 'all_source_accounts'|_ }}</h3>
+                        <div class="card-header">
+                            <h3 class="card-title">{{ 'all_source_accounts'|_ }}</h3>
                         </div>
                         <div class="card-body">
                             <canvas id="source_chart" class="medium-chart" height="250"></canvas>
@@ -58,8 +58,8 @@
             {# for all #}
             <div class="{{ boxSize }}">
                 <div class="card">
-                    <div class="box-header with-border">
-                        <h3 class="box-title">{{ 'all_destination_accounts'|_ }}</h3>
+                    <div class="card-header">
+                        <h3 class="card-title">{{ 'all_destination_accounts'|_ }}</h3>
                     </div>
                     <div class="card-body">
                         <canvas id="destination_chart" class="medium-chart" height="250"></canvas>
@@ -73,8 +73,8 @@
     <div class="row">
         <div class="{% if periods|length > 0 %}col-lg-10 col-md-10 col-sm-12{% else %}col-lg-12 col-md-12 col-sm-12{% endif %}">
             <div class="card">
-                <div class="box-header with-border">
-                    <h3 class="box-title">{{ subTitle }}</h3>
+                <div class="card-header">
+                    <h3 class="card-title">{{ subTitle }}</h3>
                 </div>
                 <div class="box-body no-padding">
                     <div class="p-2">

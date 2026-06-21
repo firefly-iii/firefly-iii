@@ -8,8 +8,8 @@
     <div class="row">
         <div class="col-lg-6">
             <div class="box box-primary">
-                <div class="box-header with-border">
-                    <h3 class="box-title">{{ 'transaction_journal_information'|_ }}</h3>
+                <div class="card-header">
+                    <h3 class="card-title">{{ 'transaction_journal_information'|_ }}</h3>
                     <div class="btn-group btn-group-sm pull-right">
                         <button type="button" class="btn btn-outline-secondary dropdown-toggle" data-toggle="dropdown"
                                 aria-haspopup="true" aria-expanded="false">
@@ -97,8 +97,8 @@
             </div>
             {% if groupLogEntries|length > 0 %}
                 <div class="card">
-                    <div class="box-header with-border">
-                        <h3 class="box-title">
+                    <div class="card-header">
+                        <h3 class="card-title">
                             {{ 'audit_log_entries'|_ }}
                         </h3>
                     </div>
@@ -111,8 +111,8 @@
         </div>
         <div class="col-lg-6">
             <div class="box box-primary">
-                <div class="box-header with-border">
-                    <h3 class="box-title">{{ 'transaction_journal_meta'|_ }}</h3>
+                <div class="card-header">
+                    <h3 class="card-title">{{ 'transaction_journal_meta'|_ }}</h3>
                 </div>
                 <div class="box-body no-padding">
                     <table class="table table-hover">
@@ -209,8 +209,8 @@
         {% for index, journal in selectedGroup.transactions %}
             <div class="col-lg-{{ boxSize }}">
                 <div class="card">
-                    <div class="box-header with-border">
-                        <h3 class="box-title">
+                    <div class="card-header">
+                        <h3 class="card-title">
                             {{ journal.description }}
                             {% if journal.reconciled %}
                                 <span class="bi bi-check"></span>
@@ -457,8 +457,8 @@
                 <!-- Transaction links -->
                 {% if links[journal.transaction_journal_id]|length > 0 %}
                     <div class="card">
-                        <div class="box-header with-border">
-                            <h3 class="box-title">
+                        <div class="card-header">
+                            <h3 class="card-title">
                                 {{ 'journal_links'|_ }}
                             </h3>
                         </div>
@@ -502,8 +502,8 @@
                 <!-- Attachments -->
                 {% if attachments[journal.transaction_journal_id]|length > 0 %}
                     <div class="card">
-                        <div class="box-header with-border">
-                            <h3 class="box-title">{{ 'attachments'|_ }}</h3>
+                        <div class="card-header">
+                            <h3 class="card-title">{{ 'attachments'|_ }}</h3>
                         </div>
                         <div class="box-body no-padding">
                             {% include 'list.attachments' with {attachments: attachments[journal.transaction_journal_id]} %}
@@ -514,8 +514,8 @@
                 <!-- Piggy bank events -->
                 {% if events[journal.transaction_journal_id]|length > 0 %}
                     <div class="card">
-                        <div class="box-header with-border">
-                            <h3 class="box-title">{{ 'piggy_events'|_ }}</h3>
+                        <div class="card-header">
+                            <h3 class="card-title">{{ 'piggy_events'|_ }}</h3>
                         </div>
                         <div class="box-body no-padding">
                             <table class="table table-hover">
@@ -534,8 +534,8 @@
                 {% endif %}
                 {% if logEntries[journal.transaction_journal_id]|length > 0 %}
                     <div class="card">
-                        <div class="box-header with-border">
-                            <h3 class="box-title">
+                        <div class="card-header">
+                            <h3 class="card-title">
                                 {{ 'audit_log_entries'|_ }}
                             </h3>
                         </div>

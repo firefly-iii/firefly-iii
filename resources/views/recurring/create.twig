@@ -13,8 +13,8 @@
             <div class="col-lg-6 col-md-6 col-sm-12">
                 {# mandatory recurrence stuff #}
                 <div class="box box-primary">
-                    <div class="box-header with-border">
-                        <h3 class="box-title">{{ 'mandatory_for_recurring'|_ }}</h3>
+                    <div class="card-header">
+                        <h3 class="card-title">{{ 'mandatory_for_recurring'|_ }}</h3>
                     </div>
                     <div class="card-body">
                         {{ ExpandedForm.text('title') }}
@@ -45,8 +45,8 @@
             <div class="col-lg-6 col-md-6 col-sm-12">
                 {# optional recurrence stuff #}
                 <div class="card">
-                    <div class="box-header with-border">
-                        <h3 class="box-title">{{ 'optional_for_recurring'|_ }}</h3>
+                    <div class="card-header">
+                        <h3 class="card-title">{{ 'optional_for_recurring'|_ }}</h3>
                     </div>
                     <div class="card-body">
                         {{ ExpandedForm.textarea('recurring_description') }}
@@ -64,8 +64,8 @@
             <div class="col-lg-6 col-md-6 col-sm-12">
                 {# mandatory transaction information #}
                 <div class="box box-primary">
-                    <div class="box-header with-border">
-                        <h3 class="box-title">{{ 'mandatory_for_transaction'|_ }}</h3>
+                    <div class="card-header">
+                        <h3 class="card-title">{{ 'mandatory_for_transaction'|_ }}</h3>
                     </div>
                     <div class="card-body">
                         <p><em>{{ 'mandatory_fields_for_tranaction'|_ }}</em></p>
@@ -115,8 +115,8 @@
             <div class="col-lg-6 col-md-6 col-sm-12">
                 {# optional transaction information #}
                 <div class="card">
-                    <div class="box-header with-border">
-                        <h3 class="box-title">{{ 'optional_for_transaction'|_ }}</h3>
+                    <div class="card-header">
+                        <h3 class="card-title">{{ 'optional_for_transaction'|_ }}</h3>
                     </div>
                     <div class="card-body">
                         {# transaction information (optional) #}
@@ -154,8 +154,8 @@
         <div class="row">
             <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
                 <div class="card">
-                    <div class="box-header with-border">
-                        <h3 class="box-title">{{ 'options'|_ }}</h3>
+                    <div class="card-header">
+                        <h3 class="card-title">{{ 'options'|_ }}</h3>
                     </div>
                     <div class="card-body">
                         {{ ExpandedForm.optionsList('create','recurrence') }}
@@ -171,8 +171,8 @@
         {#
         <div class="row">
             <div class="box box-primary">
-                <div class="box-header with-border">
-                    <h3 class="box-title">{{ 'expected_repetitions'|_ }}</h3>
+                <div class="card-header">
+                    <h3 class="card-title">{{ 'expected_repetitions'|_ }}</h3>
                 </div>
                 <div class="card-body">
                     Here.

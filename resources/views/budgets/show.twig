@@ -8,8 +8,8 @@
     <div class="row">
         <div class="{% if attachments.count() == 0 %}col-lg-12 col-md-12 col-sm-12 col-xs-12{% else %}col-lg-8 col-md-6 col-sm-12 col-xs-12{% endif %}">
             <div class="card">
-                <div class="box-header with-border">
-                    <h3 class="box-title">
+                <div class="card-header">
+                    <h3 class="card-title">
                         {% if budgetLimit %}
                             {{ trans('firefly.chart_budget_in_period', {name: budget.name, start: budgetLimit.start_date.isoFormat(monthAndDayFormat), end: budgetLimit.end_date.isoFormat(monthAndDayFormat),currency: budgetLimit.transactionCurrency.name }) }}
                         {% else %}
@@ -41,8 +41,8 @@
         {% if attachments.count() > 0 %}
             <div class="col-lg-4 col-md-6 col-sm-12 col-xs-12">
                 <div class="card">
-                    <div class="box-header with-border">
-                        <h3 class="box-title">
+                    <div class="card-header">
+                        <h3 class="card-title">
                             {{ 'attachments'|_ }}
                         </h3>
                     </div>
@@ -56,8 +56,8 @@
     <div class="row">
         <div class="col-lg-4 col-md-6 col-sm-12 col-xs-12">
             <div class="card">
-                <div class="box-header with-border">
-                    <h3 class="box-title">{{ 'expenses_by_category'|_ }}</h3>
+                <div class="card-header">
+                    <h3 class="card-title">{{ 'expenses_by_category'|_ }}</h3>
                 </div>
                 <div class="card-body">
                     <div class="center-chart">
@@ -75,8 +75,8 @@
         </div>
         <div class="col-lg-4 col-md-6 col-sm-12 col-xs-12">
             <div class="card">
-                <div class="box-header with-border">
-                    <h3 class="box-title">{{ 'expenses_by_asset_account'|_ }}</h3>
+                <div class="card-header">
+                    <h3 class="card-title">{{ 'expenses_by_asset_account'|_ }}</h3>
                 </div>
                 <div class="card-body">
                     <div class="center-chart">
@@ -94,8 +94,8 @@
         </div>
         <div class="col-lg-4 col-md-6 col-sm-12 col-xs-12">
             <div class="card">
-                <div class="box-header with-border">
-                    <h3 class="box-title">{{ 'expenses_by_expense_account'|_ }}</h3>
+                <div class="card-header">
+                    <h3 class="card-title">{{ 'expenses_by_expense_account'|_ }}</h3>
                 </div>
                 <div class="card-body">
                     <div class="center-chart">
@@ -124,8 +124,8 @@
         <div class="{% if limits|length > 0 %}col-lg-9 col-md-9 col-sm-12 col-xs-12{% else %}col-lg-12 col-md-12 col-sm-12 col-xs-12{% endif %}">
 
             <div class="card">
-                <div class="box-header with-border">
-                    <h3 class="box-title">{{ 'transactions'|_ }}</h3>
+                <div class="card-header">
+                    <h3 class="card-title">{{ 'transactions'|_ }}</h3>
                 </div>
                 <div class="card-body">
                     {% include 'list.groups' %}
@@ -144,8 +144,8 @@
             <div class="col-lg-3 col-md-3 col-sm-12 col-xs-12">
                 {% for limit in limits %}
                     <div class="box {% if limit.start_date == budgetLimit.start_date %}box-primary box-solid{% endif %}">
-                        <div class="box-header with-border">
-                            <h3 class="box-title"><a
+                        <div class="card-header">
+                            <h3 class="card-title"><a
                                     href="{{ route('budgets.show.limit',[budget.id,limit.id]) }}">
                                     {{ limit.start_date.isoFormat(monthAndDayFormat) }} &mdash;
                                     {{ limit.end_date.isoFormat(monthAndDayFormat) }}

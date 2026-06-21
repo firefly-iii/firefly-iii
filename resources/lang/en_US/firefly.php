@@ -248,6 +248,7 @@ return [
     'webhooks'                                            => 'Webhooks',
     'webhooks_breadcrumb'                                 => 'Webhooks',
     'webhooks_menu_disabled'                              => 'disabled',
+    'cer_menu_disabled'                              => 'disabled',
     'no_webhook_messages'                                 => 'There are no webhook messages',
     'webhook_trigger_ANY'                                 => 'After any event',
     'webhook_trigger_STORE_TRANSACTION'                   => 'After transaction creation',

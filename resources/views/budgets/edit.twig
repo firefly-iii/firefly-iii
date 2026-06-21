@@ -12,8 +12,8 @@
         <div class="row">
             <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
                 <div class="box box-primary">
-                    <div class="box-header with-border">
-                        <h3 class="box-title">{{ 'mandatoryFields'|_ }}</h3>
+                    <div class="card-header">
+                        <h3 class="card-title">{{ 'mandatoryFields'|_ }}</h3>
                     </div>
                     <div class="card-body">
                         {# only correct way to do active checkbox #}
@@ -26,8 +26,8 @@
             <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
                 {# panel for auto-budget #}
                 <div class="card">
-                    <div class="box-header with-border">
-                        <h3 class="box-title">{{ 'optionalFields'|_ }}</h3>
+                    <div class="card-header">
+                        <h3 class="card-title">{{ 'optionalFields'|_ }}</h3>
                     </div>
                     <div class="card-body">
                         {{ ExpandedForm.select('auto_budget_type', autoBudgetTypes, autoBudget.auto_budget_type) }}
@@ -44,8 +44,8 @@
             <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
                 {# panel for options #}
                 <div class="card">
-                    <div class="box-header with-border">
-                        <h3 class="box-title">{{ 'options'|_ }}</h3>
+                    <div class="card-header">
+                        <h3 class="card-title">{{ 'options'|_ }}</h3>
                     </div>
                     <div class="card-body">
                         {{ ExpandedForm.optionsList('update','budget') }}

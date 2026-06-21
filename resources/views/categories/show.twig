@@ -10,8 +10,8 @@
             {# both charts #}
             <div class="{% if attachments.count() == 0 %}col-lg-6 col-md-12 col-sm-12 col-xs-12{% else %}col-lg-4 col-md-12 col-sm-12 col-xs-12{% endif %}">
                 <div class="card">
-                    <div class="box-header with-border">
-                        <h3 class="box-title">
+                    <div class="card-header">
+                        <h3 class="card-title">
                             {{ trans('firefly.chart_category_in_period', {name: category.name, start: start.isoFormat(monthAndDayFormat), end: end.isoFormat(monthAndDayFormat) }) }}
                         </h3>
                     </div>
@@ -22,8 +22,8 @@
             </div>
             <div class="{% if attachments.count() == 0 %}col-lg-6 col-md-12 col-sm-12 col-xs-12{% else %}col-lg-4 col-md-12 col-sm-12 col-xs-12{% endif %}">
                 <div class="card">
-                    <div class="box-header with-border">
-                        <h3 class="box-title">
+                    <div class="card-header">
+                        <h3 class="card-title">
                             {{ trans('firefly.chart_category_all', {name: category.name }) }}
                         </h3>
                     </div>
@@ -37,8 +37,8 @@
             {# all chart #}
             <div class="{% if attachments.count() == 0 %}col-lg-12 col-md-12 col-sm-12 col-xs-12{% else %}col-lg-8 col-md-12 col-sm-12 col-xs-12{% endif %}">
                 <div class="card">
-                    <div class="box-header with-border">
-                        <h3 class="box-title">
+                    <div class="card-header">
+                        <h3 class="card-title">
                             {{ trans('firefly.chart_category_all', {name: category.name }) }}
                         </h3>
                     </div>
@@ -51,8 +51,8 @@
         {% if attachments.count() > 0 %}
             <div class="col-lg-4 col-md-12 col-sm-12 col-xs-12">
                 <div class="card">
-                    <div class="box-header with-border">
-                        <h3 class="box-title">
+                    <div class="card-header">
+                        <h3 class="card-title">
                             {{ 'attachments'|_ }}
                         </h3>
                     </div>
@@ -75,8 +75,8 @@
         <div class="{% if periods|length > 0 %}col-lg-10 col-md-8 col-sm-12 col-xs-12{% else %}col-lg-12 col-md-12 col-sm-12 col-xs-12{% endif %}">
 
             <div class="card">
-                <div class="box-header with-border">
-                    <h3 class="box-title">{{ 'transactions'|_ }}</h3>
+                <div class="card-header">
+                    <h3 class="card-title">{{ 'transactions'|_ }}</h3>
                 </div>
                 <div class="card-body">
                     {% if periods|length > 0 %}

@@ -10,8 +10,8 @@
                 <form action="{{ route('settings.users.invite') }}" method="post">
                     <input type="hidden" name="_token" value="{{ csrf_token() }}"/>
                     <div class="box box-primary">
-                        <div class="box-header with-border">
-                            <h3 class="box-title">{{ 'invite_new_user_title'|_ }}</h3>
+                        <div class="card-header">
+                            <h3 class="card-title">{{ 'invite_new_user_title'|_ }}</h3>
                         </div>
                         <div class="card-body">
                             <p>
@@ -32,8 +32,8 @@
     <div class="row">
         <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
             <div class="box box-primary">
-                <div class="box-header with-border">
-                    <h3 class="box-title">{{ 'all_users'|_ }}</h3>
+                <div class="card-header">
+                    <h3 class="card-title">{{ 'all_users'|_ }}</h3>
                 </div>
                 <div class="box-body no-padding">
                     <table class="table table-responsive table-sm sortable" aria-label="Table">
@@ -117,8 +117,8 @@
         <div class="row">
             <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
                 <div class="card">
-                    <div class="box-header with-border">
-                        <h3 class="box-title">{{ 'all_invited_users'|_ }}</h3>
+                    <div class="card-header">
+                        <h3 class="card-title">{{ 'all_invited_users'|_ }}</h3>
                     </div>
                     <div class="box-body no-padding">
                         <table class="table table-responsive table-sm sortable">

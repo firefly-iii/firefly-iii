@@ -1,0 +1,9 @@
+<div class="{{ $classes }}" id="{{ $name }}_holder">
+    <label for="{{ $options['id'] }}" class="col-sm-4 control-label">{{ $label }}</label>
+
+    <div class="col-sm-8">
+        {{ Html::input('text', $name, $value)->id($options['id'])->class('form-control')->attribute('autocomplete','off')->attribute('spellcheck','false')->attribute('placeholder',$options['placeholder']) }}
+        @include('form.help')
+        {% include 'form.feedback' %}
+    </div>
+</div>

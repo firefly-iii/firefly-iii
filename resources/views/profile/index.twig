@@ -28,7 +28,7 @@
 
                 <!-- main options -->
                 <div role="tabpanel" class="tab-pane active" id="options">
-                    <div class="box box-default">
+                    <div class="card">
                         <div class="card-body">
                             <p>
                                 {{ trans('firefly.user_id_is',{user: userId})|raw }}
@@ -75,7 +75,7 @@
 
                 <!-- command line options -->
                 <div role="tabpanel" class="tab-pane" id="cmd">
-                    <div class="box box-default">
+                    <div class="card">
                         <div class="card-body">
                             <p>
                                 {{ 'explain_command_line_token'|_ }}
@@ -101,9 +101,9 @@
 
                 <!-- purge stuff -->
                 <div role="tabpanel" class="tab-pane" id="delete">
-                    <div class="box box-default">
-                        <div class="box-header with-border">
-                            <h3 class="box-title">{{ 'purge_data_title'|_ }}</h3>
+                    <div class="card">
+                        <div class="card-header">
+                            <h3 class="card-title">{{ 'purge_data_title'|_ }}</h3>
                         </div>
                         <div class="box-body with-border">
                             <div class="col-lg-12">
@@ -122,9 +122,9 @@
                         </div>
                     </div>
                     <!-- delete stuff -->
-                    <div class="box box-default">
-                        <div class="box-header with-border">
-                            <h3 class="box-title">{{ 'delete_data_title'|_ }}</h3>
+                    <div class="card">
+                        <div class="card-header">
+                            <h3 class="card-title">{{ 'delete_data_title'|_ }}</h3>
                         </div>
                         <div class="box-body with-border">
                             <div class="col-lg-12">

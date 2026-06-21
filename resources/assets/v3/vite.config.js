@@ -56,6 +56,9 @@ export default defineConfig(({command, mode, isSsrBuild, isPreview}) => {
                     // budgets
                     'js/pages/budgets/index.js',
 
+                    // exchange rates
+                    'js/pages/exchange-rates/index.js',
+
                     // object groups
                     'js/pages/object-groups/index.js',
 
