@@ -1,10 +1,10 @@
-{% extends './layout/default' %}
+@extends('layout.v3.session')
 
 {% block breadcrumbs %}
     {{ Breadcrumbs.render(Route.getCurrentRoute.getName, bill) }}
-{% endblock %}
+@endsection
 
-{% block content %}
+@section('content')
 
     <form method="POST" action="{{ route('subscriptions.destroy',bill.id) }}" accept-charset="UTF-8" class="form-horizontal" id="destroy">
         <input name="_token" type="hidden" value="{{ csrf_token() }}">
@@ -37,4 +37,4 @@
             </div>
         </div>
     </form>
-{% endblock %}
+@endsection

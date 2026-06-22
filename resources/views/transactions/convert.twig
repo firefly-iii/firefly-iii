@@ -1,10 +1,10 @@
-{% extends './layout/default' %}
+@extends('layout.v3.session')
 
 {% block breadcrumbs %}
     {{ Breadcrumbs.render(Route.getCurrentRoute.getName, group, groupTitle) }}
-{% endblock %}
+@endsection
 
-{% block content %}
+@section('content')
     <form method="POST" action="{{ route('transactions.convert.index.post', [destinationType.type|lower, group.id]) }}"
           accept-charset="UTF-8"
           class="form-horizontal"
@@ -72,7 +72,7 @@
                                         {% if sourceType.type == 'Withdrawal' and destinationType.type == 'Deposit' %}
                                             {# NEW DESTINATION = Asset, SOURCE MUST BE [Revenue, Cash, Loan, Debt, Mortgage] #}
                                             {% if transaction.source_type == 'Asset account' %}
-                                                {{ Html.select('source_id['~transaction.transaction_journal_id~']', validDepositSources).class('form-control') }}
+                                                {{ Html::select('source_id['~transaction.transaction_journal_id~']', validDepositSources).class('form-control') }}
                                             {% endif %}
 
                                             {# NEW DESTINATION = [Loan, Debt, Mortgage], SOURCE MUST BE [Revenue] #}
@@ -117,12 +117,12 @@
                                         {% if sourceType.type == 'Deposit' and destinationType.type == 'Transfer' %}
                                             {# if new destination is asset, then asset #}
                                             {% if transaction.destination_type == 'Asset account' %}
-                                                {{ Html.select('source_id['~transaction.transaction_journal_id~']', assets).class('form-control') }}
+                                                {{ Html::select('source_id['~transaction.transaction_journal_id~']', assets).class('form-control') }}
                                             {% endif %}
                                             {% if transaction.destination_type == 'Loan' or
                                                 transaction.destination_type == 'Debt' or
                                                 transaction.destination_type == 'Mortgage' %}
-                                                {{ Html.select('source_id['~transaction.transaction_journal_id~']', liabilities).class('form-control') }}
+                                                {{ Html::select('source_id['~transaction.transaction_journal_id~']', liabilities).class('form-control') }}
                                             {% endif %}
 
                                             {# if new destination liability, then liability. #}
@@ -145,7 +145,7 @@
                                             {# NEW DESTINATION = Asset, SOURCE MUST BE [Revenue, Cash, Loan, Debt, Mortgage] #}
                                             {% if
                                                 transaction.source_type == 'Asset account' %}
-                                                {{ Html.select('source_id['~transaction.transaction_journal_id~']', validDepositSources).class('form-control') }}
+                                                {{ Html::select('source_id['~transaction.transaction_journal_id~']', validDepositSources).class('form-control') }}
                                             {% endif %}
                                             {# NEW DESTINATION = [Debt, Mortgage, Load], SOURCE MUST BE [Revenue] #}
                                             {% if
@@ -184,12 +184,12 @@
                                                 transaction.source_type == 'Loan' or
                                                 transaction.source_type == 'Debt' or
                                                 transaction.source_type == 'Mortgage' %}
-                                                {{ Html.select('destination_id['~transaction.transaction_journal_id~']', liabilities).class('form-control') }}
+                                                {{ Html::select('destination_id['~transaction.transaction_journal_id~']', liabilities).class('form-control') }}
                                             {% endif %}
 
                                             {# if the source is an asset, destination can only be an asset. #}
                                             {% if transaction.source_type == 'Asset account' %}
-                                                {{ Html.select('destination_id['~transaction.transaction_journal_id~']', assets).class('form-control') }}
+                                                {{ Html::select('destination_id['~transaction.transaction_journal_id~']', assets).class('form-control') }}
                                             {% endif %}
                                         {% endif %}
 
@@ -198,7 +198,7 @@
 
                                             {# if new source is Asset, destination must be [Expense, Loan, Debt or Mortgage] #}
                                             {% if transaction.destination_type == 'Asset account' %}
-                                                {{ Html.select('destination_id['~transaction.transaction_journal_id~']', validWithdrawalDests).class('form-control') }}
+                                                {{ Html::select('destination_id['~transaction.transaction_journal_id~']', validWithdrawalDests).class('form-control') }}
                                             {% endif %}
                                             {% if transaction.destination_type == 'Loan' or
                                                 transaction.destination_type == 'Debt' or
@@ -231,7 +231,7 @@
                                         {% if sourceType.type == 'Transfer' and destinationType.type == 'Withdrawal' %}
 
                                             {% if transaction.source_type == 'Asset account' %}
-                                                {{ Html.select('destination_id['~transaction.transaction_journal_id~']', validWithdrawalDests).class('form-control') }}
+                                                {{ Html::select('destination_id['~transaction.transaction_journal_id~']', validWithdrawalDests).class('form-control') }}
                                             {% endif %}
                                             {% if transaction.source_type == 'Loan' or
                                                 transaction.source_type == 'Debt' or
@@ -291,10 +291,10 @@
         </div>
     </form>
 
-{% endblock %}
-{% block scripts %}
+@endsection
+@section('scripts')
     <script type="text/javascript" src="v1/js/lib/typeahead/typeahead.bundle.min.js?v={{ $FF_BUILD_TIME }}"
             nonce="{{ $JS_NONCE }}"></script>
     <script type="text/javascript" src="v1/js/ff/transactions/convert.js?v={{ $FF_BUILD_TIME }}"
             nonce="{{ $JS_NONCE }}"></script>
-{% endblock %}
+@endsection

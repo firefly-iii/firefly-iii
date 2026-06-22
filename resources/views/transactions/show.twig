@@ -1,10 +1,10 @@
-{% extends './layout/default' %}
+@extends('layout.v3.session')
 
 {% block breadcrumbs %}
     {{ Breadcrumbs.render(Route.getCurrentRoute.getName, transactionGroup) }}
-{% endblock %}
+@endsection
 
-{% block content %}
+@section('content')
     <div class="row">
         <div class="col-lg-6">
             <div class="card">
@@ -550,8 +550,8 @@
     {# modal for linking journals. Will be filled by AJAX #}
     <div class="modal fade" tabindex="-1" role="dialog" id="linkJournalModal">
     </div>
-{% endblock %}
-{% block scripts %}
+@endsection
+@section('scripts')
     <script type="text/javascript" nonce="{{ $JS_NONCE }}">
         var modalDialogURL = '{{ route('transactions.link.modal', ['%JOURNAL%']) }}';
         var acURL = '{{ route('api.v1.autocomplete.transactions-with-id') }}';
@@ -599,5 +599,5 @@
             nonce="{{ $JS_NONCE }}"></script>
     <script type="text/javascript" src="v1/js/ff/transactions/show.js?v={{ $FF_BUILD_TIME }}"
             nonce="{{ $JS_NONCE }}"></script>
-{% endblock %}
+@endsection
 

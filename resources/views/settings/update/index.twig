@@ -1,9 +1,9 @@
-{% extends './layout/default' %}
+@extends('layout.v3.session')
 
 {% block breadcrumbs %}
     {{ Breadcrumbs.render }}
-{% endblock %}
-{% block content %}
+@endsection
+@section('content')
     <form action="{{ route('settings.update-check.post') }}" method="post" id="store" class="form-horizontal">
 
         <div class="row">
@@ -66,10 +66,10 @@
 
     </form>
 
-{% endblock %}
-{% block scripts %}
+@endsection
+@section('scripts')
     <script type="text/javascript" nonce="{{ $JS_NONCE }}">
         var updateCheckUrl = '{{ route('settings.update-check.manual') }}';
     </script>
     <script type="text/javascript" src="v1/js/ff/admin/update/index.js?v={{ $FF_BUILD_TIME }}" nonce="{{ $JS_NONCE }}"></script>
-{% endblock %}
+@endsection

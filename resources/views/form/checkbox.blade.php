@@ -7,10 +7,10 @@
                 {{ $label }}
             </label>
             @if(array_key_exists('small', $options) && true === $options['small'])
-                TODO SMALL!!!!!!!
+                TODO SMALL!!!!!!
             @endif
             @include('form.help')
-            {% include 'form.feedback' %}
+            @include('form.feedback')
         </div>
     </div>
 </div>

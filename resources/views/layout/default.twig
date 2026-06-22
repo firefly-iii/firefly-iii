@@ -81,7 +81,7 @@
     {% endif %}
 
     {# Any local custom CSS.  #}
-    {% block styles %}{% endblock %}
+    @section('styles')@endsection
     <!--[if lt IE 9]>
     <script src="v1/js/lib/html5shiv.min.js?v={{ $FF_BUILD_TIME }}" nonce="{{ $JS_NONCE }}"></script>
     <script src="v1/js/lib/respond.min.js?v={{ $FF_BUILD_TIME }}" nonce="{{ $JS_NONCE }}"></script>
@@ -172,7 +172,7 @@
     <div class="content-wrapper">
         <section class="content-header">
             {% include('partials.page-header') %}
-            {% block breadcrumbs %}{% endblock %}
+            {% block breadcrumbs %}@endsection
         </section>
 
         <section class="content">
@@ -188,7 +188,7 @@
 
             {% include('partials.flashes') %}
 
-            {% block content %}{% endblock %}
+            @section('content')@endsection
         </section>
     </div>
     <footer class="main-footer">
@@ -231,7 +231,7 @@
 
 {# Java libraries and stuff: #}
 
-{% block definitions %}{% endblock %}
+{% block definitions %}@endsection
 
 {# Moment JS #}
 <script src="v1/js/lib/moment.min.js?v={{ $FF_BUILD_TIME }}" type="text/javascript" nonce="{{ $JS_NONCE }}"></script>
@@ -272,7 +272,7 @@
     <script type="text/javascript" src="v1/js/ff/intro/intro.js?v={{ $FF_BUILD_TIME }}" nonce="{{ $JS_NONCE }}"></script>
 {% endif %}
 
-{% block scripts %}{% endblock %}
+@section('scripts')@endsection
 
 {% if config('firefly.tracker_site_id') != '' and config('firefly.tracker_url') != '' %}
     <!-- This tracker tag is only here because this instance of Firefly III was purposefully configured to include it -->

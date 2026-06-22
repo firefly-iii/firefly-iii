@@ -3,8 +3,8 @@
 
     <div class="col-sm-8">
         {{ Html.multiselect(name~"[]", list, selected).id(options.id).attribute('size',12).class('form-control').attribute('autocomplete','off').attribute('spellcheck','false').attribute('placeholder', options.placeholder) }}
-        {% include 'form.help' %}
-        {% include 'form.feedback' %}
+        @include('form.help')
+        @include('form.feedback')
 
     </div>
 </div>

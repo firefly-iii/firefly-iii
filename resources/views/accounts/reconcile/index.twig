@@ -1,10 +1,10 @@
-{% extends './layout/default' %}
+@extends('layout.v3.session')
 
 {% block breadcrumbs %}
     {{ Breadcrumbs.render(Route.getCurrentRoute.getName, account, start, end) }}
-{% endblock %}
+@endsection
 
-{% block content %}
+@section('content')
 
     <div class="row">
         <div class="col-lg-9 col-md-12 col-sm-12 col-xs-12">
@@ -120,9 +120,9 @@
             </div>
         </div>
     </div>
-{% endblock %}
+@endsection
 
-{% block scripts %}
+@section('scripts')
     <script type="text/javascript" nonce="{{ $JS_NONCE }}">
         currencySymbol = "{{ currency.symbol }}";
         var accountID = {{ account.id }};
@@ -134,4 +134,4 @@
         var selectRangeAndBalance = '{{ 'select_range_and_balance'|_|escape('js') }}';
     </script>
     <script src="v1/js/ff/accounts/reconcile.js?v={{ $FF_BUILD_TIME }}" type="text/javascript" nonce="{{ $JS_NONCE }}"></script>
-{% endblock %}
+@endsection

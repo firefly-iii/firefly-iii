@@ -19,17 +19,17 @@
                         <h3 class="card-title">{{ __('firefly.mandatoryFields') }}</h3>
                     </div>
                     <div class="card-body">
-                        {{ ExpandedForm::text('name') }}
+                        {!! ExpandedForm::text('name') !!}
                         @if('asset' === $objectType || 'liabilities' === $objectType)
-                            {{ CurrencyForm::currencyList('currency_id', null, ['helpText' => __('firefly.account_default_currency')]) }}
+                            {!! CurrencyForm::currencyList('currency_id', null, ['helpText' => __('firefly.account_default_currency')]) !!}
                         @endif
                         @if('liabilities' === $objectType)
-                            {{ ExpandedForm::select('liability_type_id', $liabilityTypes) }}
-                            {{ ExpandedForm::amountNoCurrency('opening_balance', null, ['label' => __('firefly.debt_start_amount')]) }}
-                            {{ ExpandedForm::select('liability_direction', $liabilityDirections) }}
-                            {{ ExpandedForm::date('opening_balance_date', null, ['label' => __('firefly.debt_start_date')]) }}
-                            {{ ExpandedForm::percentage('interest') }}
-                            {{ ExpandedForm::select('interest_period', $interestPeriods, null, ['helpText' => __('firefly.interest_period_help')]) }}
+                            {!! ExpandedForm::select('liability_type_id', $liabilityTypes)  !!}
+                            {!! ExpandedForm::amountNoCurrency('opening_balance', null, ['label' => __('firefly.debt_start_amount')]) !!}
+                            {!! ExpandedForm::select('liability_direction', $liabilityDirections) !!}
+                            {!! ExpandedForm::date('opening_balance_date', null, ['label' => __('firefly.debt_start_date')]) !!}
+                            {!! ExpandedForm::percentage('interest') !!}
+                            {!! ExpandedForm::select('interest_period', $interestPeriods, null, ['helpText' => __('firefly.interest_period_help')]) !!}
                         @endif
                     </div>
                 </div>
@@ -42,22 +42,22 @@
                     </div>
                     <div class="card-body">
 
-                        {{ ExpandedForm::text('iban') }}
-                        {{ ExpandedForm::text('BIC', null, ['maxlength' => 11]) }}
-                        {{ ExpandedForm::text('account_number') }}
+                        {!! ExpandedForm::text('iban')  !!}
+                        {!! ExpandedForm::text('BIC', null, ['maxlength' => 11])  !!}
+                        {!! ExpandedForm::text('account_number') !!}
 
                         @if('asset' === $objectType)
 
-                            {{ ExpandedForm::amountNoCurrency('opening_balance') }}
-                            {{ ExpandedForm::date('opening_balance_date') }}
-                            {{ ExpandedForm::select('account_role', $roles,null,['helpText' => __('firefly.asset_account_role_help')]) }}
-                            {{ ExpandedForm::amountNoCurrency('virtual_balance') }}
+                            {!! ExpandedForm::amountNoCurrency('opening_balance') !!}
+                            {!! ExpandedForm::date('opening_balance_date') !!}
+                            {!! ExpandedForm::select('account_role', $roles,null,['helpText' => __('firefly.asset_account_role_help')]) !!}
+                            {!! ExpandedForm::amountNoCurrency('virtual_balance') !!}
                         @endif
                         @if($showNetWorth)
-                            {{ ExpandedForm::checkbox('include_net_worth', 1) }}
+                            {!! ExpandedForm::checkbox('include_net_worth', 1) !!}
                         @endif
-                        {{ ExpandedForm::textarea('notes',null,['helpText' => trans('firefly.field_supports_markdown')]) }}
-                        {{ ExpandedForm::file('attachments[]', ['multiple' => 'multiple','helpText' => trans('firefly.upload_max_file_size', ['size' => $uploadSize ?? $filesize])]) }}
+                        {!! ExpandedForm::textarea('notes',null,['helpText' => trans('firefly.field_supports_markdown')]) !!}
+                        {!! ExpandedForm::file('attachments[]', ['multiple' => 'multiple','helpText' => trans('firefly.upload_max_file_size', ['size' => $uploadSize ?? $filesize])]) !!}
                     </div>
                 </div>
             </div>
@@ -66,10 +66,10 @@
             <div class="col-lg-6 col-md-6 col-sm-12">
                 <div class="card">
                     <div class="card-header">
-                        <h3 class="card-title">{{ 'options'|_ }}</h3>
+                        <h3 class="card-title">{{ __('firefly.options') }}</h3>
                     </div>
                     <div class="card-body">
-                        {{ ExpandedForm::optionsList('create','account') }}
+                        {!! ExpandedForm::optionsList('create','account') !!}
                     </div>
                     <div class="box-footer">
                         <button type="submit" class="btn pull-right btn-success">

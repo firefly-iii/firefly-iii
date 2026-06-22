@@ -1,12 +1,12 @@
 {% set VUE_SCRIPT_NAME = 'edit_transaction' %}
-{% extends './layout/default' %}
+@extends('layout.v3.session')
 {% block breadcrumbs %}
     {{ Breadcrumbs.render(Route.getCurrentRoute.getName, transactionGroup) }}
-{% endblock %}
+@endsection
 
-{% block content %}
+@section('content')
     <div id="edit_transaction"></div>
-{% endblock %}
+@endsection
 
 
 {% block definitions %}
@@ -19,10 +19,10 @@
         var cashAccountId = {{ cash.id }};
         var previousUrl = '{{ previousUrl }}';
     </script>
-{% endblock %}
+@endsection
 
-{% block scripts %}
+@section('scripts')
 
-{% endblock %}
-{% block styles %}
-{% endblock %}
+@endsection
+@section('styles')
+@endsection

@@ -1,11 +1,11 @@
 {% set VUE_SCRIPT_NAME = 'profile' %}
-{% extends './layout/default' %}
+@extends('layout.v3.session')
 
 {% block breadcrumbs %}
     {{ Breadcrumbs.render(Route.getCurrentRoute.getName) }}
-{% endblock %}
+@endsection
 
-{% block content %}
+@section('content')
 
     <div class="row">
         <div class="col-lg-8 offset-lg-2 col-md-12 col-sm-12">
@@ -29,8 +29,8 @@
                 </div>
         </div>
     </div>
-{% endblock %}
-{% block scripts %}
+@endsection
+@section('scripts')
     <script type="text/javascript" nonce="{{ $JS_NONCE }}">
         var deleteAPIRoute = '{{ route('api.v1.data.destroy') }}';
         var confirmText = '{{ trans('firefly.are_you_sure')|escape('js') }}';
@@ -73,4 +73,4 @@
             });
         });
     </script>
-{% endblock %}
+@endsection

@@ -1,10 +1,10 @@
-{% extends './layout/default' %}
+@extends('layout.v3.session')
 
 {% block breadcrumbs %}
     {{ Breadcrumbs.render(Route.getCurrentRoute.getName, journals) }}
-{% endblock %}
+@endsection
 
-{% block content %}
+@section('content')
     <form method="POST" action="{{ route('transactions.mass.update') }}" accept-charset="UTF-8" class="form-horizontal" id="destroy">
         <input name="_token" type="hidden" value="{{ csrf_token() }}">
 
@@ -179,12 +179,12 @@
             </div>
         </div>
     </form>
-{% endblock %}
-{% block scripts %}
+@endsection
+@section('scripts')
     <script type="text/javascript" nonce="{{ $JS_NONCE }}">
         var what = "";
     </script>
     <script type="text/javascript" src="v1/js/lib/typeahead/typeahead.bundle.min.js?v={{ $FF_BUILD_TIME }}" nonce="{{ $JS_NONCE }}"></script>
     <script type="text/javascript" src="v1/js/ff/common/autocomplete.js?v={{ $FF_BUILD_TIME }}" nonce="{{ $JS_NONCE }}"></script>
     <script type="text/javascript" src="v1/js/ff/transactions/mass/edit.js?v={{ $FF_BUILD_TIME }}" nonce="{{ $JS_NONCE }}"></script>
-{% endblock %}
+@endsection

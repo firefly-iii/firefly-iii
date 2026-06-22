@@ -1,10 +1,10 @@
-{% extends './layout/default' %}
+@extends('layout.v3.session')
 
 {% block breadcrumbs %}
     {{ Breadcrumbs.render(Route.getCurrentRoute.getName) }}
-{% endblock %}
+@endsection
 
-{% block content %}
+@section('content')
 
     <form method="POST" action="{{ route('categories.store') }}" accept-charset="UTF-8" class="form-horizontal" id="store" enctype="multipart/form-data">
         <input name="_token" type="hidden" value="{{ csrf_token() }}">
@@ -37,7 +37,7 @@
                 {# panel for options #}
                 <div class="card">
                     <div class="card-header">
-                        <h3 class="card-title">{{ 'options'|_ }}</h3>
+                        <h3 class="card-title">{{ __('firefly.options') }}</h3>
                     </div>
                     <div class="card-body">
                         {{ ExpandedForm::optionsList('create','category') }}
@@ -51,7 +51,7 @@
             </div>
         </div>
     </form>
-{% endblock %}
-{% block scripts %}
+@endsection
+@section('scripts')
     <script type="text/javascript" src="v1/js/ff/budgets/create.js?v={{ $FF_BUILD_TIME }}" nonce="{{ $JS_NONCE }}"></script>
-{% endblock %}
+@endsection

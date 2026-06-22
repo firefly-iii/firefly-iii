@@ -1,9 +1,9 @@
-{% extends './layout/default' %}
+@extends('layout.v3.session')
 
 {% block breadcrumbs %}
     {{ Breadcrumbs.render(Route.getCurrentRoute.getName, user) }}
-{% endblock %}
-{% block content %}
+@endsection
+@section('content')
 
     <form method="post" action="{{ route('settings.users.update',user.id) }}" class="form-horizontal"
           accept-charset="UTF-8"
@@ -42,7 +42,7 @@
                 {# panel for options #}
                 <div class="card">
                     <div class="card-header">
-                        <h3 class="card-title">{{ 'options'|_ }}</h3>
+                        <h3 class="card-title">{{ __('firefly.options') }}</h3>
                     </div>
                     <div class="card-body">
                         {{ ExpandedForm::optionsList('update','account') }}
@@ -56,4 +56,4 @@
             </div>
         </div>
     </form>
-{% endblock %}
+@endsection

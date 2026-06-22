@@ -1,14 +1,14 @@
 {% set VUE_SCRIPT_NAME = 'webhooks/create' %}
-{% extends './layout/default' %}
+@extends('layout.v3.session')
 {% block breadcrumbs %}
     {{ Breadcrumbs.render(Route.getCurrentRoute.getName) }}
-{% endblock %}
+@endsection
 
-{% block content %}
+@section('content')
     <div id="webhooks_create"></div>
-{% endblock %}
-{% block scripts %}
+@endsection
+@section('scripts')
     <script type="text/javascript" nonce="{{ $JS_NONCE }}">
         var previousUrl = '{{ previousUrl }}';
     </script>
-{% endblock %}
+@endsection

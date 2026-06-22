@@ -1,10 +1,10 @@
-{% extends './layout/default' %}
+@extends('layout.v3.session')
 
 {% block breadcrumbs %}
     {{ Breadcrumbs.render(Route.getCurrentRoute.getName, category, start, end) }}
-{% endblock %}
+@endsection
 
-{% block content %}
+@section('content')
     <div class="row">
         {% if Route.getCurrentRoute.getName == 'categories.show' %}
             {# both charts #}
@@ -106,8 +106,8 @@
         {% endif %}
     </div>
 
-{% endblock %}
-{% block scripts %}
+@endsection
+@section('scripts')
     <script type="text/javascript" nonce="{{ $JS_NONCE }}">
         var current = '{{ route('chart.category.current', [category.id]) }}';
         var everything = '{{ route('chart.category.all', [category.id]) }}';
@@ -119,4 +119,4 @@
     <script type="text/javascript" src="v1/js/ff/categories/show.js?v={{ $FF_BUILD_TIME }}" nonce="{{ $JS_NONCE }}"></script>
     {# required for groups.twig #}
     <script type="text/javascript" src="v1/js/ff/list/groups.js?v={{ $FF_BUILD_TIME }}" nonce="{{ $JS_NONCE }}"></script>
-{% endblock %}
+@endsection

@@ -1,16 +1,16 @@
-{% extends './layout/default' %}
+@extends('layout.v3.session')
 
 {% block breadcrumbs %}
     {{ Breadcrumbs.render(Route.getCurrentRoute.getName, accountIds, start, end) }}
-{% endblock %}
+@endsection
 
-{% block content %}
+@section('content')
 
     <div class="row no-print">
         <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
             <div class="box" id="optionsBox">
                 <div class="card-header">
-                    <h3 class="card-title">{{ 'options'|_ }}</h3>
+                    <h3 class="card-title">{{ __('firefly.options') }}</h3>
                 </div>
                 <div class="card-body">
                     <ul class="list-inline">
@@ -80,13 +80,13 @@
         </div>
     {% endfor %}
 
-{% endblock %}
-{% block styles %}
-{% endblock %}
-{% block scripts %}
+@endsection
+@section('styles')
+@endsection
+@section('scripts')
     <script type="text/javascript" nonce="{{ $JS_NONCE }}">
         var hideable = {{ hideable|json_encode|raw }};
     </script>
     <script type="text/javascript" src="v1/js/ff/reports/all.js?v={{ $FF_BUILD_TIME }}" nonce="{{ $JS_NONCE }}"></script>
     <script type="text/javascript" src="v1/js/ff/reports/audit/all.js?v={{ $FF_BUILD_TIME }}" nonce="{{ $JS_NONCE }}"></script>
-{% endblock %}
+@endsection

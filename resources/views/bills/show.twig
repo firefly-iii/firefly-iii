@@ -1,10 +1,10 @@
-{% extends './layout/default' %}
+@extends('layout.v3.session')
 
 {% block breadcrumbs %}
     {{ Breadcrumbs.render(Route.getCurrentRoute.getName, bill) }}
-{% endblock %}
+@endsection
 
-{% block content %}
+@section('content')
 
     <div class="row">
         <div class="col-lg-6 col-sm-12 col-md-12">
@@ -181,9 +181,9 @@
         </div>
     </div>
 
-{% endblock %}
+@endsection
 
-{% block scripts %}
+@section('scripts')
     <script type="text/javascript" nonce="{{ $JS_NONCE }}">
         var billCurrencySymbol = "{{ convertToPrimary ? primaryCurrency.symbol : object.data.currency.symbol }}";
         var billUrl = '{{ route('chart.bill.single', [object.data.id]) }}';
@@ -194,4 +194,4 @@
     <script type="text/javascript" src="v1/js/ff/bills/show.js?v={{ $FF_BUILD_TIME }}" nonce="{{ $JS_NONCE }}"></script>
     {# required for groups.twig #}
     <script type="text/javascript" src="v1/js/ff/list/groups.js?v={{ $FF_BUILD_TIME }}" nonce="{{ $JS_NONCE }}"></script>
-{% endblock %}
+@endsection

@@ -1,10 +1,10 @@
-{% extends './layout/default' %}
+@extends('layout.v3.session')
 
 {% block breadcrumbs %}
     {{ Breadcrumbs.render(Route.getCurrentRoute.getName, linkType) }}
-{% endblock %}
+@endsection
 
-{% block content %}
+@section('content')
 
     <form method="POST" action="{{ route('settings.links.destroy',linkType.id) }}" accept-charset="UTF-8"
           class="form-horizontal" id="destroy">
@@ -35,7 +35,7 @@
                             </p>
 
                             <p>
-                                {{ Html.select('move_link_type_before_delete', moveTo).class('form-control') }}
+                                {{ Html::select('move_link_type_before_delete', moveTo).class('form-control') }}
                             </p>
                         {% else %}
                             <input type="hidden" name="move_link_type_before_delete" value="0"/>
@@ -52,4 +52,4 @@
         </div>
 
     </form>
-{% endblock %}
+@endsection

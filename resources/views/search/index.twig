@@ -1,10 +1,10 @@
-{% extends './layout/default' %}
+@extends('layout.v3.session')
 
 {% block breadcrumbs %}
     {{ Breadcrumbs.render(Route.getCurrentRoute.getName, fullQuery) }}
-{% endblock %}
+@endsection
 
-{% block content %}
+@section('content')
     <div class="row">
         <div class="col-lg-12">
             <div class="card">
@@ -155,8 +155,8 @@
 
         </div>
     {% endif %}
-{% endblock %}
-{% block scripts %}
+@endsection
+@section('scripts')
     <script type="text/javascript" nonce="{{ $JS_NONCE }}">
         var edit_selected_txt = "{{ trans('firefly.edit')|escape('js') }}";
         var delete_selected_txt = "{{ trans('firefly.delete')|escape('js') }}";
@@ -172,4 +172,4 @@
     <script type="text/javascript" src="v1/js/ff/list/groups.js?v={{ $FF_BUILD_TIME }}" nonce="{{ $JS_NONCE }}"></script>
     <script type="text/javascript" src="v1/js/ff/search/index.js?v={{ $FF_BUILD_TIME }}" nonce="{{ $JS_NONCE }}"></script>
 
-{% endblock %}
+@endsection

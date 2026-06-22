@@ -1,10 +1,10 @@
-{% extends './layout/default' %}
+@extends('layout.v3.session')
 
 {% block breadcrumbs %}
     {{ Breadcrumbs.render(Route.getCurrentRoute.getName, bill) }}
-{% endblock %}
+@endsection
 
-{% block content %}
+@section('content')
 
     <form method="post" action="{{ route('subscriptions.update', bill.id) }}" class="form-horizontal" accept-charset="UTF-8"
           enctype="multipart/form-data">
@@ -57,7 +57,7 @@
             <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
                 <div class="card">
                     <div class="card-header">
-                        <h3 class="card-title">{{ 'options'|_ }}</h3>
+                        <h3 class="card-title">{{ __('firefly.options') }}</h3>
                     </div>
                     <div class="card-body">
                         {{ ExpandedForm::optionsList('update','bill') }}
@@ -72,16 +72,16 @@
         </div>
     </form>
 
-{% endblock %}
-{% block styles %}
+@endsection
+@section('styles')
     <link href="v1/css/bootstrap-tagsinput.css?v={{ $FF_BUILD_TIME }}" type="text/css" rel="stylesheet" media="all"
           nonce="{{ $JS_NONCE }}">
     <link href="v1/css/jquery-ui/jquery-ui.structure.min.css?v={{ $FF_BUILD_TIME }}" type="text/css" rel="stylesheet"
           media="all" nonce="{{ $JS_NONCE }}">
     <link href="v1/css/jquery-ui/jquery-ui.theme.min.css?v={{ $FF_BUILD_TIME }}" type="text/css" rel="stylesheet"
           media="all" nonce="{{ $JS_NONCE }}">
-{% endblock %}
-{% block scripts %}
+@endsection
+@section('scripts')
     <script type="text/javascript" src="v1/js/lib/bootstrap-tagsinput.min.js?v={{ $FF_BUILD_TIME }}"
             nonce="{{ $JS_NONCE }}"></script>
     <script type="text/javascript" src="v1/js/lib/modernizr-custom.js?v={{ $FF_BUILD_TIME }}"
@@ -94,4 +94,4 @@
             nonce="{{ $JS_NONCE }}"></script>
     <script type="text/javascript" src="v1/js/ff/object-groups/create-edit.js?v={{ $FF_BUILD_TIME }}"
             nonce="{{ $JS_NONCE }}"></script>
-{% endblock %}
+@endsection

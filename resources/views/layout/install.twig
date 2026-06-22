@@ -29,7 +29,7 @@
         <strong>Firefly</strong>III<br/>
         <span class="install-box-title">installation and upgrade</span>
     </div>
-    {% block content %}{% endblock %}
+    @section('content')@endsection
 </div>
 <div class="text-center text-muted">
     <small>
@@ -38,7 +38,7 @@
 </div>
 <script src="v1/js/app.js?v={{ $FF_BUILD_TIME }}" type="text/javascript" nonce="{{ $JS_NONCE }}"></script>
 <script type="text/javascript" src="v1/js/ff/guest.js?v={{ $FF_BUILD_TIME }}" nonce="{{ $JS_NONCE }}"></script>
-{% block scripts %}{% endblock %}
+@section('scripts')@endsection
 {% if config('firefly.tracker_site_id') != '' and config('firefly.tracker_url') != '' %}
     <!-- This tracker tag is only here because this instance of Firefly III was purposefully configured to include it -->
     <!-- Your own installation will NOT include it, unless you explicitly configure it to have it. -->

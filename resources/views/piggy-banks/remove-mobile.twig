@@ -1,9 +1,9 @@
-{% extends './layout/default' %}
+@extends('layout.v3.session')
 {% block breadcrumbs %}
     {{ Breadcrumbs.render(Route.getCurrentRoute.getName, piggyBank) }}
-{% endblock %}
+@endsection
 
-{% block content %}
+@section('content')
     <form id="remove" class="form-horizontal" action="{{ route('piggy-banks.remove', piggyBank.id) }}" method="POST">
         <input type="hidden" name="_token" value="{{ csrf_token() }}"/>
         <div class="row">
@@ -39,4 +39,4 @@
 
         </div>
     </form>
-{% endblock %}
+@endsection

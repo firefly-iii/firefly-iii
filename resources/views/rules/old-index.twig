@@ -1,8 +1,8 @@
-{% extends './layout/default' %}
+@extends('layout.v3.session')
 {% block breadcrumbs %}
     {{ Breadcrumbs.render(Route.getCurrentRoute.getName) }}
-{% endblock %}
-{% block content %}
+@endsection
+@section('content')
 
     <div class="row">
         <div class="col-lg-12 col-md-12 col-sm-12">
@@ -206,12 +206,12 @@
         </div>
     </div>
 
-{% endblock %}
-{% block scripts %}
+@endsection
+@section('scripts')
     <script type="text/javascript" nonce="{{ $JS_NONCE }}">
         var moveRuleGroupUrl = '{{ route('rule-groups.move') }}';
         var duplicateRuleUrl = '{{ route('rules.duplicate') }}';
     </script>
     <script type="text/javascript" src="v1/js/lib/jquery-ui.min.js?v={{ $FF_BUILD_TIME }}" nonce="{{ $JS_NONCE }}"></script>
     <script type="text/javascript" src="v1/js/ff/rules/index.js?v={{ $FF_BUILD_TIME }}" nonce="{{ $JS_NONCE }}"></script>
-{% endblock %}
+@endsection

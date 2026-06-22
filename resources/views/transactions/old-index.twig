@@ -1,10 +1,10 @@
-{% extends './layout/default' %}
+@extends('layout.v3.session')
 
 {% block breadcrumbs %}
     {{ Breadcrumbs.render(Route.getCurrentRoute.getName, objectType, start, end) }}
-{% endblock %}
+@endsection
 
-{% block content %}
+@section('content')
 
     {# upper show-all instruction #}
     {% if periods|length > 0 %}
@@ -118,8 +118,8 @@
         </div>
     {% endif %}
 
-{% endblock %}
-{% block scripts %}
+@endsection
+@section('scripts')
     {# required for groups.twig #}
     <script type="text/javascript" src="v1/js/ff/list/groups.js?v={{ $FF_BUILD_TIME }}" nonce="{{ $JS_NONCE }}"></script>
     <script type="text/javascript" nonce="{{ $JS_NONCE }}">
@@ -137,4 +137,4 @@
     <script type="text/javascript" src="v1/js/ff/charts.js?v={{ $FF_BUILD_TIME }}" nonce="{{ $JS_NONCE }}"></script>
 
     <script type="text/javascript" src="v1/js/ff/transactions/index.js?v={{ $FF_BUILD_TIME }}" nonce="{{ $JS_NONCE }}"></script>
-{% endblock %}
+@endsection

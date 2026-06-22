@@ -1,10 +1,10 @@
-{% extends './layout/default' %}
+@extends('layout.v3.session')
 
 {% block breadcrumbs %}
     {{ Breadcrumbs.render(Route.getCurrentRoute.getName) }}
-{% endblock %}
+@endsection
 
-{% block content %}
+@section('content')
 
     <div class="row">
         <div class="col-lg-8 offset-lg-2 col-md-12 col-sm-12">
@@ -45,4 +45,4 @@
             </div>
         </div>
     </div>
-{% endblock %}
+@endsection

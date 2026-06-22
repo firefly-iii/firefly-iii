@@ -1,10 +1,5 @@
-{% extends './layout/default' %}
-
-{% block breadcrumbs %}
-    {{ Breadcrumbs.render(Route.getCurrentRoute.getName, account) }}
-{% endblock %}
-
-{% block content %}
+@extends('layout.v3.session')
+@section('content')
 
     <form method="POST" action="{{ route('accounts.destroy',account.id) }}" accept-charset="UTF-8"
           class="form-horizontal" id="destroy">
@@ -40,7 +35,7 @@
                             </p>
 
                             <p>
-                                {{ Html.select('move_account_before_delete', accountList, null).class('form-control') }}
+                                {{ Html::select('move_account_before_delete', accountList, null).class('form-control') }}
                             </p>
                         {% else %}
                             <input type="hidden" name="move_account_before_delete" value="0"/>
@@ -57,4 +52,4 @@
         </div>
 
     </form>
-{% endblock %}
+@endsection

@@ -61,7 +61,7 @@
     <div class="login-logo">
         <a href="{{ route('index') }}"><strong>Firefly</strong>III</a>
     </div>
-    {% block content %}{% endblock %}
+    @section('content')@endsection
 </div>
 
 <script src="v1/js/app.js?v={{ $FF_BUILD_TIME }}" type="text/javascript" nonce="{{ $JS_NONCE }}"></script>

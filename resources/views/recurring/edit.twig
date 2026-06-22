@@ -1,8 +1,8 @@
-{% extends './layout/default' %}
+@extends('layout.v3.session')
 {% block breadcrumbs %}
     {{ Breadcrumbs.render(Route.getCurrentRoute.getName, recurrence) }}
-{% endblock %}
-{% block content %}
+@endsection
+@section('content')
 
     <form method="post" action="{{ route('recurring.update', recurrence.id) }}" class="form-horizontal"
           accept-charset="UTF-8"
@@ -154,7 +154,7 @@
             <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
                 <div class="card">
                     <div class="card-header">
-                        <h3 class="card-title">{{ 'options'|_ }}</h3>
+                        <h3 class="card-title">{{ __('firefly.options') }}</h3>
                     </div>
                     <div class="card-body">
                         {{ ExpandedForm::optionsList('update','recurrence') }}
@@ -202,8 +202,8 @@
             </div>
         </div>
     </div>
-{% endblock %}
-{% block scripts %}
+@endsection
+@section('scripts')
     <script type="text/javascript" src="v1/js/lib/modernizr-custom.js?v={{ $FF_BUILD_TIME }}"
             nonce="{{ $JS_NONCE }}"></script>
     <script type="text/javascript" src="v1/js/lib/typeahead/typeahead.bundle.min.js?v={{ $FF_BUILD_TIME }}"
@@ -222,9 +222,9 @@
         var currentRepType = "{{ currentRepType }}";
     </script>
     <script type="text/javascript" src="v1/js/ff/recurring/edit.js?v={{ $FF_BUILD_TIME }}" nonce="{{ $JS_NONCE }}"></script>
-{% endblock %}
+@endsection
 
-{% block styles %}
+@section('styles')
     <link href="v1/css/bootstrap-tagsinput.css?v={{ $FF_BUILD_TIME }}" type="text/css" rel="stylesheet" media="all"
           nonce="{{ $JS_NONCE }}">
     <link href="v1/css/jquery-ui/jquery-ui.structure.min.css?v={{ $FF_BUILD_TIME }}" type="text/css" rel="stylesheet"
@@ -233,4 +233,4 @@
           media="all" nonce="{{ $JS_NONCE }}">
     <link href="v1/lib/fc/fullcalendar.min.css?v={{ $FF_BUILD_TIME }}" type="text/css" rel="stylesheet" media="all"
           nonce="{{ $JS_NONCE }}">
-{% endblock %}
+@endsection

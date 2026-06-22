@@ -1,9 +1,9 @@
-{% extends './layout/default' %}
+@extends('layout.v3.session')
 
 {% block breadcrumbs %}
     {{ Breadcrumbs.render(Route.getCurrentRoute.getName, user) }}
-{% endblock %}
-{% block content %}
+@endsection
+@section('content')
     <div class="row">
         <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
             <div class="card">
@@ -118,4 +118,4 @@
             </div>
         </div>
     </div>
-{% endblock %}
+@endsection

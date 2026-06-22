@@ -1,9 +1,9 @@
-{% extends './layout/default' %}
+@extends('layout.v3.session')
 
 {% block breadcrumbs %}
     {{ Breadcrumbs.render }}
-{% endblock %}
-{% block content %}
+@endsection
+@section('content')
     {% if allowInvites %}
         <div class="row">
             <div class="col-lg-6">
@@ -172,12 +172,12 @@
         </div>
 
     {% endif %}
-{% endblock %}
-{% block styles %}
+@endsection
+@section('styles')
     <link rel="stylesheet" href="v1/css/bootstrap-sortable.css?v={{ $FF_BUILD_TIME }}" type="text/css" media="all"
           nonce="{{ $JS_NONCE }}">
-{% endblock %}
-{% block scripts %}
+@endsection
+@section('scripts')
     <script type="text/javascript" src="v1/js/lib/bootstrap-sortable.js?v={{ $FF_BUILD_TIME }}" nonce="{{ $JS_NONCE }}"></script>
     <script type="text/javascript" src="v1/js/ff/admin/users.js?v={{ $FF_BUILD_TIME }}" nonce="{{ $JS_NONCE }}"></script>
-{% endblock %}
+@endsection

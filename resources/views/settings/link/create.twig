@@ -1,10 +1,10 @@
-{% extends './layout/default' %}
+@extends('layout.v3.session')
 
 {% block breadcrumbs %}
     {{ Breadcrumbs.render(Route.getCurrentRoute.getName) }}
-{% endblock %}
+@endsection
 
-{% block content %}
+@section('content')
 
     <form method="POST" action="{{ route('settings.links.store') }}" accept-charset="UTF-8" class="form-horizontal">
         <input name="_token" type="hidden" value="{{ csrf_token() }}">
@@ -27,7 +27,7 @@
                 {# panel for options #}
                 <div class="card">
                     <div class="card-header">
-                        <h3 class="card-title">{{ 'options'|_ }}</h3>
+                        <h3 class="card-title">{{ __('firefly.options') }}</h3>
                     </div>
                     <div class="card-body">
                         {{ ExpandedForm::optionsList('create','link_type') }}
@@ -43,4 +43,4 @@
     </form>
 
 
-{% endblock %}
+@endsection

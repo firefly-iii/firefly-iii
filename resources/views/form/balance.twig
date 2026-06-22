@@ -23,11 +23,11 @@
                     {% endfor %}
                 </ul>
             </div>
-            {{ Html.input('number', name, value).class('form-control').attribute('step','any') }}
+            {{ Html::input('number', name, value).class('form-control').attribute('step','any') }}
 
         </div>
 
-        {% include 'form.feedback' %}
+        @include('form.feedback')
     </div>
 
     <input type="hidden" name="amount_currency_id_{{ name }}" value="{{ primaryCurrency.id }}"/>

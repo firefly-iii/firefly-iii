@@ -3,7 +3,7 @@
 
     <div class="col-sm-8">
         {{ Html.textarea(name, value).id(options.id).attribute('rows', options.rows).class('form-control').attribute('autocomplete','off').attribute('spellcheck','false').attribute('placeholder',options.placeholder) }}
-        {% include 'form.help' %}
-        {% include 'form.feedback' %}
+        @include('form.help')
+        @include('form.feedback')
     </div>
 </div>

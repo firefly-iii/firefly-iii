@@ -1,10 +1,10 @@
-{% extends './layout/default' %}
+@extends('layout.v3.session')
 
 {% block breadcrumbs %}
     {{ Breadcrumbs.render(Route.getCurrentRoute.getName, budget, budgetLimit) }}
-{% endblock %}
+@endsection
 
-{% block content %}
+@section('content')
     <div class="row">
         <div class="{% if attachments.count() == 0 %}col-lg-12 col-md-12 col-sm-12 col-xs-12{% else %}col-lg-8 col-md-6 col-sm-12 col-xs-12{% endif %}">
             <div class="card">
@@ -210,8 +210,8 @@
         {% endif %}
     </div>
 
-{% endblock %}
-{% block scripts %}
+@endsection
+@section('scripts')
     <script type="text/javascript" nonce="{{ $JS_NONCE }}">
         var budgetID = {{ budget.id }};
         var budgetLimitID = 0;
@@ -236,4 +236,4 @@
     <script type="text/javascript" src="v1/js/ff/budgets/show.js?v={{ $FF_BUILD_TIME }}" nonce="{{ $JS_NONCE }}"></script>
     {# required for groups.twig #}
     <script type="text/javascript" src="v1/js/ff/list/groups.js?v={{ $FF_BUILD_TIME }}" nonce="{{ $JS_NONCE }}"></script>
-{% endblock %}
+@endsection

@@ -1,10 +1,10 @@
-{% extends './layout/default' %}
+@extends('layout.v3.session')
 
 {% block breadcrumbs %}
     {{ Breadcrumbs.render(Route.getCurrentRoute.getName, piggyBank) }}
-{% endblock %}
+@endsection
 
-{% block content %}
+@section('content')
     <div class="row">
         <div class="col-lg-8 col-md-8 col-sm-6">
             <div class="box" id="piggyChart">
@@ -155,9 +155,9 @@
     <form id="reset-form" action="{{ route('piggy-banks.reset', [piggyBank.id]) }}" method="POST" class="hidden">
         <input type="hidden" name="_token" value="{{ csrf_token() }}"/>
     </form>
-{% endblock %}
+@endsection
 
-{% block scripts %}
+@section('scripts')
     <script type="text/javascript" nonce="{{ $JS_NONCE }}">
         var piggyBankID = {{ piggyBank.id }};
         var confirmText= '{{ 'reset_history_confirm'|_|escape('js') }}';
@@ -167,4 +167,4 @@
     <script type="text/javascript" src="v1/js/ff/charts.defaults.js?v={{ $FF_BUILD_TIME }}" nonce="{{ $JS_NONCE }}"></script>
     <script type="text/javascript" src="v1/js/ff/charts.js?v={{ $FF_BUILD_TIME }}" nonce="{{ $JS_NONCE }}"></script>
     <script type="text/javascript" src="v1/js/ff/piggy-banks/show.js?v={{ $FF_BUILD_TIME }}" nonce="{{ $JS_NONCE }}"></script>
-{% endblock %}
+@endsection

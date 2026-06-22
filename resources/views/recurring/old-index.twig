@@ -1,10 +1,10 @@
-{% extends './layout/default' %}
+@extends('layout.v3.session')
 
 {% block breadcrumbs %}
     {{ Breadcrumbs.render(Route.getCurrentRoute.getName) }}
-{% endblock %}
+@endsection
 
-{% block content %}
+@section('content')
     <!-- block with list of recurring transaction -->
     {% if total > 0 %}
         <div class="row">
@@ -155,12 +155,12 @@
     {% if total == 0 and page == 1 %}
         {% include 'partials.empty' with {objectType: 'default', type: 'recurring',route: route('recurring.create')} %}
     {% endif %}
-{% endblock %}
+@endsection
 
-{% block styles %}
+@section('styles')
     <link rel="stylesheet" href="v1/css/bootstrap-sortable.css?v={{ $FF_BUILD_TIME }}" type="text/css" media="all" nonce="{{ $JS_NONCE }}">
-{% endblock %}
+@endsection
 
-{% block scripts %}
+@section('scripts')
     <script type="text/javascript" src="v1/js/lib/bootstrap-sortable.js?v={{ $FF_BUILD_TIME }}" nonce="{{ $JS_NONCE }}"></script>
-{% endblock %}
+@endsection

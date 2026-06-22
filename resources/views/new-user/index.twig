@@ -1,10 +1,10 @@
-{% extends './layout/default' %}
+@extends('layout.v3.session')
 
 {% block breadcrumbs %}
     {{ Breadcrumbs.render(Route.getCurrentRoute.getName) }}
-{% endblock %}
+@endsection
 
-{% block content %}
+@section('content')
 
     <form action="{{ route('new-user.submit') }}" method="post" id="store" class="form-horizontal">
         <input type="hidden" name="_token" value="{{ csrf_token() }}"/>
@@ -70,4 +70,4 @@
     </form>
 
 
-{% endblock %}
+@endsection

@@ -1,13 +1,13 @@
 {% set VUE_SCRIPT_NAME = 'create_transaction' %}
-{% extends './layout/default' %}
+@extends('layout.v3.session')
 {% block breadcrumbs %}
     {{ Breadcrumbs.render(Route.getCurrentRoute.getName, objectType) }}
-{% endblock %}
+@endsection
 
-{% block content %}
+@section('content')
     <div id="create_transaction"></div>
-{% endblock %}
-{% block scripts %}
+@endsection
+@section('scripts')
     <script type="text/javascript" nonce="{{ $JS_NONCE }}">
         var allowedOpposingTypes = {{ allowedOpposingTypes|json_encode|raw }};
         var accountToTypes = {{ accountToTypes|json_encode|raw }};
@@ -17,4 +17,4 @@
         window.sourceId = {{ sourceId }};
         window.destinationId = {{ destinationId }};
     </script>
-{% endblock %}
+@endsection
