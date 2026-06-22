@@ -26,7 +26,7 @@
             <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
                 <div class="card">
                     <div class="card-header">
-                        <h3 class="card-title">{{ 'optionalFields'|_ }}</h3>
+                        <h3 class="card-title">{{ __('firefly.optionalFields') }}</h3>
                     </div>
                     <div class="card-body">
                         {{ ExpandedForm::date('target_date') }}
@@ -47,7 +47,7 @@
                     <div class="card-body">
                         {{ ExpandedForm::optionsList('create','piggy bank') }}
                     </div>
-                    <div class="box-footer">
+                    <div class="card-footer">
                         <button type="submit" class="btn btn-success pull-right">
                             {{ 'store_piggy_bank'|_ }}
                         </button>

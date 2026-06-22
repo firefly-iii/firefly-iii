@@ -49,7 +49,7 @@
                 <h4>{{ 'attachments'|_ }}</h4>
                 {% include 'list.attachments' with {attachments: array.attachments} %}
             </div>
-            <div class="box-footer">
+            <div class="card-footer">
                 <div class="btn-group">
                     <a href="{{ route('recurring.edit', [array.id]) }}" class="btn btn-sm btn-outline-secondary"><span
                             class="bi bi-pencil"></span> {{ __('firefly.edit') }}</a>
@@ -107,7 +107,7 @@
                     </table>
                 {% endfor %}
             </div>
-            <div class="box-footer">
+            <div class="card-footer">
                 <small>
                     <em>{{ 'warning_duplicates_repetitions'|_ }}</em>
                 </small>

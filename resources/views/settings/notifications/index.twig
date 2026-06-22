@@ -35,7 +35,7 @@
                         {{ ExpandedForm::text('ntfy_user', ntfyUser, {}) }}
                         {{ ExpandedForm.passwordWithValue('ntfy_pass', ntfyPass, {}) }}
                     </div>
-                    <div class="box-footer">
+                    <div class="card-footer">
                         <button type="submit" class="btn btn-success">
                             <span class="bi bi-check-circle"></span> {{ ('save_notification_settings')|_ }}
                         </button>
@@ -68,7 +68,7 @@
                             {% endfor %}
                         </ul>
                     </div>
-                    <div class="box-footer">
+                    <div class="card-footer">
                         <div class="btn-group">
                             {% for name,info in channels %}
                                 {% if true == info.enabled and true == forcedAvailability[name] %}

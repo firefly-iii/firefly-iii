@@ -15,9 +15,7 @@
         <div class="col-sm-9 offset-sm-3">
             <div class="form-check has-validation">
                 {{ Html::checkbox('create_another')->class('form-check-input')->id($name . '_return_to_edit') }}
-
-                <label for="{{ $name }}_return_to_edit" class="col-sm-4 control-label">
-                    {{ trans('form.returnHere') }}
+                <label class="form-check-label" for="{{ $name }}">
                     {{ trans('form.returnHereUpdateExplanation') }}
                 </label>
             </div>

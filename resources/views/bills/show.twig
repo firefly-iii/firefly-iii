@@ -91,7 +91,7 @@
                         </tr>
                     </table>
                 </div>
-                <div class="box-footer">
+                <div class="card-footer">
                     <div class="btn-group">
                         <a class="btn btn-outline-secondary" href="{{ route('subscriptions.edit', [object.data.id]) }}">{{ __('firefly.edit') }}</a>
                         <a class="btn btn-danger" href="{{ route('subscriptions.delete', [object.data.id]) }}">{{ __('firefly.delete') }}</a>
@@ -115,7 +115,7 @@
                         </ul>
                     {% endif %}
                 </div>
-                <div class="box-footer">
+                <div class="card-footer">
                     <form action="{{ route('subscriptions.rescan',object.data.id) }}" method="post">
                         <input type="hidden" name="_token" value="{{ csrf_token() }}"/>
                         <p>

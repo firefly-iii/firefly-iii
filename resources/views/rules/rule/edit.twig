@@ -34,7 +34,7 @@
                 {# optional fields #}
                 <div class="card">
                     <div class="card-header">
-                        <h3 class="card-title">{{ 'optionalFields'|_ }}</h3>
+                        <h3 class="card-title">{{ __('firefly.optionalFields') }}</h3>
                     </div>
                     <div class="card-body">
                         {{ ExpandedForm::textarea('description', rule.description, {helpText: trans('firefly.field_supports_markdown')}) }}
@@ -121,7 +121,7 @@
                         {{ ExpandedForm::checkbox('run_after_form',1,null, {helpText: trans('firefly.rule_run_after_edit')}) }}
                         {{ ExpandedForm::optionsList('update','rule') }}
                     </div>
-                    <div class="box-footer">
+                    <div class="card-footer">
                         <button type="submit" class="btn pull-right btn-success">{{ 'update_rule'|_ }}</button>
                     </div>
                 </div>

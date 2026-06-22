@@ -37,7 +37,7 @@
             <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
                 <div class="card">
                     <div class="card-header">
-                        <h3 class="card-title">{{ 'optionalFields'|_ }}</h3>
+                        <h3 class="card-title">{{ __('firefly.optionalFields') }}</h3>
                     </div>
                     <div class="card-body">
                         {{ ExpandedForm::date('bill_end_date',null, {'helpText': trans('firefly.bill_end_date_help')}) }}
@@ -62,7 +62,7 @@
                     <div class="card-body">
                         {{ ExpandedForm::optionsList('update','bill') }}
                     </div>
-                    <div class="box-footer">
+                    <div class="card-footer">
                         <button type="submit" class="btn pull-right btn-success">
                             {{ 'update_bill'|_ }}
                         </button>

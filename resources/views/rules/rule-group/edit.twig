@@ -31,7 +31,7 @@
                 {# optional fields #}
                 <div class="card">
                     <div class="card-header">
-                        <h3 class="card-title">{{ 'optionalFields'|_ }}</h3>
+                        <h3 class="card-title">{{ __('firefly.optionalFields') }}</h3>
                     </div>
                     <div class="card-body">
                         {{ ExpandedForm::textarea('description', ruleGroup.description) }}
@@ -49,7 +49,7 @@
                     <div class="card-body">
                         {{ ExpandedForm::optionsList('update','rule-group') }}
                     </div>
-                    <div class="box-footer">
+                    <div class="card-footer">
                         <button type="submit" class="btn pull-right btn-success">{{ 'update_rule_group'|_ }}</button>
                     </div>
                 </div>
