@@ -13484,23 +13484,23 @@
         },
         {
             "name": "thecodingmachine/phpstan-safe-rule",
-            "version": "v1.4.3",
+            "version": "v1.4.4",
             "source": {
                 "type": "git",
                 "url": "https://github.com/thecodingmachine/phpstan-safe-rule.git",
-                "reference": "5c804889253ce9498ef185e108e9f94b6023208e"
+                "reference": "93a9f4db9f77dc25d0ffa36b2131ba3fc4599516"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/thecodingmachine/phpstan-safe-rule/zipball/5c804889253ce9498ef185e108e9f94b6023208e",
-                "reference": "5c804889253ce9498ef185e108e9f94b6023208e",
+                "url": "https://api.github.com/repos/thecodingmachine/phpstan-safe-rule/zipball/93a9f4db9f77dc25d0ffa36b2131ba3fc4599516",
+                "reference": "93a9f4db9f77dc25d0ffa36b2131ba3fc4599516",
                 "shasum": ""
             },
             "require": {
                 "nikic/php-parser": "^5",
                 "php": "^8.1",
-                "phpstan/phpstan": "^2.1.11",
-                "thecodingmachine/safe": "^1.2 || ^2.0 || ^3.0"
+                "phpstan/phpstan": "^2.1.30",
+                "thecodingmachine/safe": "^3.1"
             },
             "require-dev": {
                 "php-coveralls/php-coveralls": "^2.1",
@@ -13536,9 +13536,9 @@
             "description": "A PHPStan rule to detect safety issues. Must be used in conjunction with thecodingmachine/safe",
             "support": {
                 "issues": "https://github.com/thecodingmachine/phpstan-safe-rule/issues",
-                "source": "https://github.com/thecodingmachine/phpstan-safe-rule/tree/v1.4.3"
+                "source": "https://github.com/thecodingmachine/phpstan-safe-rule/tree/v1.4.4"
             },
-            "time": "2025-11-21T09:41:49+00:00"
+            "time": "2026-06-21T07:27:08+00:00"
         },
         {
             "name": "theseer/tokenizer",
