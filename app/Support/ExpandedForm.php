@@ -66,7 +66,7 @@ class ExpandedForm
             ])->render();
         } catch (Throwable $e) {
             Log::error(sprintf('Could not render amountNoCurrency(): %s', $e->getMessage()));
-            $html = 'Could not render amountNoCurrency.';
+            $html = sprintf('Could not render amountNoCurrency: %s', $e->getMessage());
 
             throw new FireflyException($html, 0, $e);
         }
@@ -135,7 +135,7 @@ class ExpandedForm
             $html = view('form.date', ['classes' => $classes, 'name' => $name, 'label' => $label, 'value' => $value, 'options' => $options])->render();
         } catch (Throwable $e) {
             Log::debug(sprintf('Could not render date(): %s', $e->getMessage()));
-            $html = 'Could not render date.';
+            $html = sprintf('Could not render date: %s', $e->getMessage());
 
             throw new FireflyException($html, 0, $e);
         }
@@ -157,7 +157,7 @@ class ExpandedForm
             $html = view('form.file', ['classes' => $classes, 'name' => $name, 'label' => $label, 'options' => $options])->render();
         } catch (Throwable $e) {
             Log::debug(sprintf('Could not render file(): %s', $e->getMessage()));
-            $html = 'Could not render file.';
+            $html = sprintf('Could not render file-element: %s', $e->getMessage());
 
             throw new FireflyException($html, 0, $e);
         }
@@ -378,7 +378,7 @@ class ExpandedForm
             ])->render();
         } catch (Throwable $e) {
             Log::debug(sprintf('Could not render percentage(): %s', $e->getMessage()));
-            $html = 'Could not render percentage.';
+            $html = sprintf('Could not render percentage: %s', $e->getMessage());
 
             throw new FireflyException($html, 0, $e);
         }

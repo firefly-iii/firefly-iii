@@ -14,7 +14,7 @@
 
         <div class="row">
             <div class="col-lg-6 col-md-6 col-sm-12">
-                <div class="card">
+                <div class="card mb-2">
                     <div class="card-header">
                         <h3 class="card-title">{{ __('firefly.mandatoryFields') }}</h3>
                     </div>
@@ -71,9 +71,9 @@
                     <div class="card-body">
                         {!! ExpandedForm::optionsList('create','account') !!}
                     </div>
-                    <div class="box-footer">
-                        <button type="submit" class="btn pull-right btn-success">
-                            {{ __('store_new_' . $objectType . '_account') }}
+                    <div class="card-footer text-end">
+                        <button type="submit" class="btn btn-success">
+                            {{ __('firefly.store_new_' . $objectType . '_account') }}
                         </button>
                     </div>
                 </div>
@@ -83,8 +83,8 @@
 @endsection
 @section('scripts')
     <script type="text/javascript" nonce="{{ $JS_NONCE }}">
-        var iAmOwed = '{{ __('i_am_owed_amount') }}';
-        var iOwe = '{{ __('i_owe_amount') }}';
+        var iAmOwed = '{{ __('firefly.i_am_owed_amount') }}';
+        var iOwe = '{{ __('firefly.i_owe_amount') }}';
     </script>
     <script type="text/javascript" src="v1/js/lib/modernizr-custom.js?v={{ $FF_BUILD_TIME }}"
             nonce="{{ $JS_NONCE }}"></script>

@@ -1,17 +1,17 @@
-<div class="{{ $classes }}" id="{{ $name }}_holder">
-    <label for="{{ $options['id'] }}" class="col-sm-4 control-label">{{ $label }}</label>
-
-
-    <div class="col-sm-8">
+<div class="row mb-3" id="{{ $name }}_holder">
+    <div class="input-group has-validation">
+    <label for="{{ $options['id'] }}" class="col-sm-3 col-form-label">{{ $label }}</label>
+        <div class="col-sm-9">
         <div class="input-group">
-            <div class="input-group-addon">
+            <span class="input-group-text">
                 <span class="bi bi-calendar"></span>
-            </div>
+            </span>
             {{ Html::input('date', $name, $value)->id($options['id'])->class('form-control')->attribute('autocomplete','off')->attribute('spellcheck','false')
-            ->attribute('min', $options['min'] ?? null)
+            ->attribute('min', $options['min'] ?? null)->attribute('lang','nl-NL')
             }}
         </div>
         @include('form.help')
         @include('form.feedback')
     </div>
+</div>
 </div>
