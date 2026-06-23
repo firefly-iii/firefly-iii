@@ -30,13 +30,13 @@
                                 {% if ruleId > 0 and ruleChanged %}
                                     <a href="{{ route('rules.edit', [ruleId]) }}?from_query={{ fullQuery }}"
                                        class="btn btn-outline-secondary">{{ trans('firefly.update_rule_from_query', {rule: rule.title}) }}</a>
-                                {% endif %}
+                                @endif
                                 <a href="{{ route('rules.create') }}?from_query={{ fullQuery }}" class="btn btn-outline-secondary">{{ 'create_rule_from_query'|_ }}</a>
                             </div>
                         </div>
                         {% if 0 != ruleId %}
                             <input type="hidden" name="rule" value="{{ ruleId }}"/>
-                        {% endif %}
+                        @endif
                     </form>
                      <p>
                             {{ trans('firefly.search_for_overview') |raw }}
@@ -50,7 +50,7 @@
                                     |join(' ')
                             })|raw -}}
                         </li>
-                    {% endif %}
+                    @endif
                     {% if excludedWords|length > 0 %}
                         <li>
                                     {{- trans('firefly.search_for_excluded_words', {
@@ -59,15 +59,15 @@
                                             |join(' ')
                                     })|raw -}}
                         </li>
-                    {% endif %}
+                    @endif
 
                     {% for operator in operators %}
                             {% if operator.prohibited %}
                                 <li>{{- trans('firefly.search_modifier_not_'~operator.type, {value: operator.value}) -}}</li>
-                            {% endif %}
+                            @endif
                             {% if not operator.prohibited %}
                                 <li>{{- trans('firefly.search_modifier_'~operator.type, {value: operator.value}) -}}</li>
-                            {% endif %}
+                            @endif
                     {% endfor %}
                     </ul>
 
@@ -78,7 +78,7 @@
                                 <li class="text-danger">{{ operator.type }}:{{ operator.value }}</li>
                             {% endfor %}
                         </ul>
-                    {% endif %}
+                    @endif
                 </div>
             </div>
         </div>
@@ -88,7 +88,7 @@
             <div class="col-lg-12 col-md-12 col-sm-12">
                 <div class="box search_box">
                     <div class="card-header">
-                        <h3 class="card-title">{{ 'transactions'|_ }}</h3>
+                        <h3 class="card-title">{{ __('firefly.transactions') }}</h3>
                     </div>
                     <div class="card-body">
                         <p class="search_ongoing text-center">
@@ -139,7 +139,7 @@
                 </div>
             </div>
         </div>
-    {% endif %}
+    @endif
     {% if query|length == 0 and excludedWords|length == 0 and words|length == 0 and operators|length == 0 %}
         <div class="row">
             <div class="col-lg-12 col-md-12 col-sm-12">
@@ -154,7 +154,7 @@
             </div>
 
         </div>
-    {% endif %}
+    @endif
 @endsection
 @section('scripts')
     <script type="text/javascript" nonce="{{ $JS_NONCE }}">

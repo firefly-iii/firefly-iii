@@ -28,7 +28,7 @@
                             <p>
                                 {{ Lang.choice('form.also_delete_connections', count, {count: count}) }}
                             </p>
-                        {% endif %}
+                        @endif
                         {% if count > 0 %}
                             <p class="text-success">
                                 {{ 'save_connections_by_moving'|_ }}
@@ -37,15 +37,15 @@
                             <p>
                                 {{ Html::select('move_link_type_before_delete', moveTo).class('form-control') }}
                             </p>
-                        {% else %}
+                        @else
                             <input type="hidden" name="move_link_type_before_delete" value="0"/>
-                        {% endif %}
+                        @endif
 
                     </div>
                     <div class="card-footer">
                         <input type="submit" name="submit" value="{{ trans('form.deletePermanently') }}"
                                class="btn pull-right btn-danger"/>
-                        <a href="{{ URL.previous() }}" class="btn-outline-secondary btn">{{ trans('form.cancel') }}</a>
+                        <a href="{{ URL::previous() }}" class="btn-outline-secondary btn">{{ trans('form.cancel') }}</a>
                     </div>
                 </div>
             </div>

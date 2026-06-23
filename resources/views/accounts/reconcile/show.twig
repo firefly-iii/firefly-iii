@@ -84,19 +84,19 @@
                                         <h4 class="inline"><a class="badge text-bg-success" href="{{ route('tags.show',tag) }}">
                                                 {% if tag.tag_mode == 'nothing' %}
                                                     <span class="bi bi-tag"></span>
-                                                {% endif %}
+                                                @endif
                                                 {% if tag.tag_mode == 'balancingAct' %}
                                                     <span class="bi bi-arrow-repeat"></span>
-                                                {% endif %}
+                                                @endif
                                                 {% if tag.tag_mode == 'advancePayment' %}
                                                     <span class="bi bi-sort-numeric-down"></span>
-                                                {% endif %}
+                                                @endif
                                                 {{ tag.tag }}</a>
                                         </h4>
                                     {% endfor %}
                                 </td>
                             </tr>
-                        {% endif %}
+                        @endif
                         </tbody>
                     </table>
                 </div>

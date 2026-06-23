@@ -36,7 +36,7 @@
                 </td>
             </tr>
             {% set startSet = true %}
-        {% endif %}
+        @endif
 
         {# end marker #}
         {% if journal.date <= end and endSet == false %}
@@ -57,7 +57,7 @@
                 </td>
             </tr>
             {% set endSet = true %}
-        {% endif %}
+        @endif
         <tr data-date="{{ journal.date.format('Y-m-d') }}" data-id="{{ journal.transaction_journal_id }}">
             <td class="hidden-xs">
                 <div class="btn-group btn-group-sm">
@@ -73,22 +73,22 @@
             <td class="hidden-xs">
                 {% if journal.transaction_type_type == 'Withdrawal' %}
                     <span class="bi bi-arrow-left" title="{{ trans('firefly.Withdrawal') }}"></span>
-                {% endif %}
+                @endif
 
                 {% if journal.transaction_type_type == 'Deposit' %}
                     <span class="bi bi-arrow-right" title="{{ trans('firefly.Deposit') }}"></span>
-                {% endif %}
+                @endif
 
                 {% if journal.transaction_type_type == 'Transfer' %}
                     <span class="bi bi-arrow-left-right" title="{{ trans('firefly.Transfer') }}"></span>
-                {% endif %}
+                @endif
 
                 {% if journal.transaction_type_type == 'Reconciliation' %}
                     <span class="bi bi-calculator" title="{{ trans('firefly.reconciliation_transaction') }}"></span>
-                {% endif %}
+                @endif
                 {% if journal.transaction_type_type == 'Opening balance' %}
                     <span class="bi bi-star" title="{{ trans('firefly.Opening balance') }}"></span>
-                {% endif %}
+                @endif
             </td>
 
             <!-- description -->
@@ -96,16 +96,16 @@
                 <a href="{{ route('transactions.show', [journal.transaction_group_id]) }}" title="{{ journal.description }}">
                     {% if journal.group_title %}
                         <span class="text-muted"><span class="bi bi-share-fill" aria-hidden="true"></span></span> {{ journal.group_title }}:
-                    {% endif %}
+                    @endif
                     {{ journal.description }}</a>
             </td>
 
             <td class="text-right">
                 <span class="mr-1">
-                    {{ formatAmountBySymbol(journal.amount, journal.currency_symbol, journal.currency_decimal_places) }}
+                    {{ format_amount_by_symbol(journal.amount, journal.currency_symbol, journal.currency_decimal_places) }}
                 {% if null != journal.foreign_amount %}
-                    ({{ formatAmountBySymbol(journal.foreign_amount, journal.foreign_currency_symbol, journal.foreign_currency_decimal_places) }})
-                {% endif %}
+                    ({{ format_amount_by_symbol(journal.foreign_amount, journal.foreign_currency_symbol, journal.foreign_currency_decimal_places) }})
+                @endif
                 </span>
             </td>
 
@@ -113,26 +113,26 @@
                 {% if journal.date >= start and journal.date <= end  %}
                     {% if journal.reconciled %}
                         <span class="bi bi-check" aria-hidden="true"></span>
-                        <input type="hidden" name="cleared[]" data-younger="{% if journal.date < start %}true{% else %}false{% endif %}"
-                        data-inrange="{% if journal.date >= start and journal.date <= end  %}true{% else %}false"{% endif %}"
+                        <input type="hidden" name="cleared[]" data-younger="{% if journal.date < start %}true@elsefalse@endif"
+                        data-inrange="{% if journal.date >= start and journal.date <= end  %}true@elsefalse"@endif"
                         class="cleared" data-id="{{ journal.transaction_journal_id }}" value="{{ journal.amount }}">
-                    {% else %}
+                    @else
                         <input type="checkbox" name="reconciled[]"
-                               data-younger="{% if journal.date < start %}true{% else %}false{% endif %}"
-                        data-inrange="{% if journal.date >= start and journal.date <= end  %}true{% else %}false"{% endif %}"
-                        {% if currency.id == journal.currency_id %}value="{{ journal.amount }}"{% endif %}
-                        {% if currency.id == journal.foreign_currency_id %}value="{{ journal.foreign_amount }}"{% endif %}
+                               data-younger="{% if journal.date < start %}true@elsefalse@endif"
+                        data-inrange="{% if journal.date >= start and journal.date <= end  %}true@elsefalse"@endif"
+                        {% if currency.id == journal.currency_id %}value="{{ journal.amount }}"@endif
+                        {% if currency.id == journal.foreign_currency_id %}value="{{ journal.foreign_amount }}"@endif
                          data-id="{{ journal.transaction_journal_id }}" disabled class="reconcile_checkbox">
-                    {% endif %}
-                {% else %}
+                    @endif
+                @else
                     <!-- if not in range, just show reconciliation status -->
                     {% if journal.reconciled %}
                         <span class="bi bi-check" aria-hidden="true"></span>
-                    {% else %}
+                    @else
                         <!--TODO include icon -->
-                    {% endif %}
+                    @endif
 
-                {% endif %}
+                @endif
 
             </td>
 
@@ -175,6 +175,6 @@
             </td>
         </tr>
         {% set startSet = true %}
-    {% endif %}
+    @endif
     </tbody>
 </table>

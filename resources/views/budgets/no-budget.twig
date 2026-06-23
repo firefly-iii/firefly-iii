@@ -7,55 +7,55 @@
 @section('content')
 
     {# upper show-all instruction #}
-    {% if periods|length > 0 %}
+    @if(count($periods) > 0)
         <div class="row">
             <div class="col-lg-offset-9 col-lg-3 col-md-offset-9 col-md-3 col-sm-12 col-xs-12">
                 <p class="small text-center"><a href="{{ route('budgets.no-budget',['all']) }}">{{ 'showEverything'|_ }}</a></p>
             </div>
         </div>
-    {% endif %}
+    @endif
 
     <div class="row">
-        <div class="{% if periods|length > 0 %}col-lg-9 col-md-9 col-sm-12{% else %}col-lg-12 col-md-12 col-sm-12{% endif %}">
+        <div class="@if(count($periods) > 0)col-lg-9 col-md-9 col-sm-12@elsecol-lg-12 col-md-12 col-sm-12@endif">
             <div class="card">
                 <div class="card-header">
                     <h3 class="card-title">{{ subTitle }}</h3>
                 </div>
                 <div class="box-body ">
 
-                    {% if periods|length > 0 %}
+                    @if(count($periods) > 0)
                         {% include 'list.groups' %}
                         <p>
                             <span class="bi bi-calendar"></span>
-                            <a href="{{ route('budgets.no-budget-all') }}">{{ 'show_all_no_filter'|_ }}</a>
+                            <a href="{{ route('budgets.no-budget-all') }}">{{ __('firefly.show_all_no_filter') }}</a>
                         </p>
-                    {% else %}
+                    @else
                         {% include 'list.groups' %}
                         <p>
                             <span class="bi bi-calendar"></span>
-                            <a href="{{ route('budgets.no-budget') }}">{{ 'show_the_current_period_and_overview'|_ }}</a>
+                            <a href="{{ route('budgets.no-budget') }}">{{ __('firefly.show_the_current_period_and_overview') }}</a>
                         </p>
-                    {% endif %}
+                    @endif
                 </div>
             </div>
         </div>
 
-        {% if periods|length > 0 %}
+        @if(count($periods) > 0)
             <div class="col-lg-3 col-md-3 col-sm-12 col-xs-12">
                 {% include 'list.periods' %}
             </div>
-        {% endif %}
+        @endif
 
     </div>
 
     {# lower show-all instruction #}
-    {% if periods|length > 0 %}
+    @if(count($periods) > 0)
         <div class="row">
             <div class="col-lg-offset-9 col-lg-3 col-md-offset-9 col-md-3 col-sm-12 col-xs-12">
                 <p class="small text-center"><a href="{{ route('budgets.no-budget-all') }}">{{ 'showEverything'|_ }}</a></p>
             </div>
         </div>
-    {% endif %}
+    @endif
 
 @endsection
 @section('scripts')

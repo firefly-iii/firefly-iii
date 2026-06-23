@@ -64,29 +64,29 @@
                                                     <input type="hidden" name="foreign_currency_id[{{ journal.transaction_journal_id }}]"
                                                            value="{{ journal.foreign_currency_id }}">
                                                 </div>
-                                            {% endif %}
-                                        {% endif %}
+                                            @endif
+                                        @endif
                                         <span class="text-sm">
                                         {% if journal.reconciled != false %}
                                             {% if journal.transaction_type_type == 'Deposit' %}
-                                                {{ formatAmountBySymbol(journal.amount*-1, journal.currency_symbol, journal.currency_decimal_places) }}
+                                                {{ format_amount_by_symbol(journal.amount*-1, journal.currency_symbol, journal.currency_decimal_places) }}
                                                 {% if null != journal.foreign_amount %}
-                                                    ({{ formatAmountBySymbol(journal.foreign_amount*-1, journal.foreign_currency_symbol, journal.foreign_currency_decimal_places) }})
-                                                {% endif %}
+                                                    ({{ format_amount_by_symbol(journal.foreign_amount*-1, journal.foreign_currency_symbol, journal.foreign_currency_decimal_places) }})
+                                                @endif
                                             {% elseif journal.transaction_type_type == 'Transfer' %}
                                                 <span class="text-info money-transfer">
-                        {{ formatAmountBySymbol(journal.amount*-1, journal.currency_symbol, journal.currency_decimal_places, false) }}
+                        {{ format_amount_by_symbol(journal.amount*-1, journal.currency_symbol, journal.currency_decimal_places, false) }}
                                                     {% if null != journal.foreign_amount %}
-                                                        ({{ formatAmountBySymbol(journal.foreign_amount*-1, journal.foreign_currency_symbol, journal.foreign_currency_decimal_places, false) }})
-                                                    {% endif %}
+                                                        ({{ format_amount_by_symbol(journal.foreign_amount*-1, journal.foreign_currency_symbol, journal.foreign_currency_decimal_places, false) }})
+                                                    @endif
                                                 </span>
-                                            {% else %}
-                                                {{ formatAmountBySymbol(journal.amount, journal.currency_symbol, journal.currency_decimal_places) }}
+                                            @else
+                                                {{ format_amount_by_symbol(journal.amount, journal.currency_symbol, journal.currency_decimal_places) }}
                                                 {% if null != journal.foreign_amount %}
-                                                    ({{ formatAmountBySymbol(journal.foreign_amount, journal.foreign_currency_symbol, journal.foreign_currency_decimal_places) }})
-                                                {% endif %}
-                                            {% endif %}
-                                        {% endif %}
+                                                    ({{ format_amount_by_symbol(journal.foreign_amount, journal.foreign_currency_symbol, journal.foreign_currency_decimal_places) }})
+                                                @endif
+                                            @endif
+                                        @endif
                                             </span>
                                     </td>
                                     <td>
@@ -100,52 +100,52 @@
                                     <td class="position-relative">
                                         {% if journal.reconciled == true %}
                                             <a href="{{ route('accounts.show', [journal.source_account_id]) }}">{{ journal.source_account_name }}</a>
-                                        {% endif %}
+                                        @endif
                                         {% if journal.reconciled == false %}
                                         {# SOURCE ACCOUNT ID FOR TRANSFER OR WITHDRAWAL #}
                                         {% if journal.transaction_type_type == 'Transfer' or journal.transaction_type_type == 'Withdrawal' %}
                                             <select class="form-control input-sm" name="source_id[{{ journal.transaction_journal_id }}]">
                                                 {% for account in withdrawalSources %}
-                                                    <option value="{{ account.id }}"{% if account.id == journal.source_account_id %} selected{% endif %}
+                                                    <option value="{{ account.id }}"{% if account.id == journal.source_account_id %} selected@endif
                                                             label="{{ account.name }}">{{ account.name }}</option>
                                                 {% endfor %}
                                             </select>
-                                        {% endif %}
+                                        @endif
 
                                         {# SOURCE ACCOUNT NAME FOR DEPOSIT #}
                                         {% if journal.transaction_type_type == 'Deposit' %}
                                             <input class="form-control input-sm" spellcheck="false"
-                                                   placeholder="{% if journal.source_type != 'Cash account' %}{{ journal.source_account_name }}{% endif %}"
+                                                   placeholder="{% if journal.source_type != 'Cash account' %}{{ journal.source_account_name }}@endif"
                                                    autocomplete="off"
                                                    name="source_name[{{ journal.transaction_journal_id }}]" type="text"
-                                                   value="{% if journal.source_type != 'Cash account' %}{{ journal.source_account_name }}{% endif %}">
-                                        {% endif %}
-                                        {% endif %}
+                                                   value="{% if journal.source_type != 'Cash account' %}{{ journal.source_account_name }}@endif">
+                                        @endif
+                                        @endif
                                     </td>
                                     <td class="position-relative">
                                         {% if journal.reconciled == true %}
                                             <a href="{{ route('accounts.show', [journal.destination_account_id]) }}">{{ journal.destination_account_name }}</a>
-                                        {% endif %}
+                                        @endif
                                         {% if journal.reconciled == false %}
                                         {# DESTINATION ACCOUNT NAME FOR TRANSFER AND DEPOSIT #}
                                         {% if journal.transaction_type_type == 'Transfer' or journal.transaction_type_type == 'Deposit' %}
 
                                             <select class="form-control input-sm" name="destination_id[{{ journal.transaction_journal_id }}]">
                                                 {% for account in depositDestinations %}
-                                                    <option value="{{ account.id }}"{% if account.id == journal.destination_account_id %} selected="selected"{% endif %}
+                                                    <option value="{{ account.id }}"{% if account.id == journal.destination_account_id %} selected="selected"@endif
                                                             label="{{ account.name }}">{{ account.name }}</option>
                                                 {% endfor %}
                                             </select>
-                                        {% endif %}
+                                        @endif
 
                                         {# DESTINATION ACCOUNT NAME FOR WITHDRAWAL #}
                                         {% if journal.transaction_type_type == 'Withdrawal' %}
                                             <input class="form-control input-sm" spellcheck="false"
-                                                   placeholder="{% if journal.destination_type != 'Cash account' %}{{ journal.destination_account_name }}{% endif %}"
+                                                   placeholder="{% if journal.destination_type != 'Cash account' %}{{ journal.destination_account_name }}@endif"
                                                    name="destination_name[{{ journal.transaction_journal_id }}]" type="text" autocomplete="off"
-                                                   value="{% if journal.destination_type != 'Cash account' %}{{ journal.destination_account_name }}{% endif %}">
-                                        {% endif %}
-                                        {% endif %}
+                                                   value="{% if journal.destination_type != 'Cash account' %}{{ journal.destination_account_name }}@endif">
+                                        @endif
+                                        @endif
                                     </td>
                                     {# category #}
                                     <td class="position-relative">
@@ -157,15 +157,15 @@
                                         {% if journal.transaction_type_type == 'Withdrawal' %}
                                             <select class="form-control input-sm" name="budget_id[{{ journal.transaction_journal_id }}]">
                                                 <option value="0" label="({{ 'no_budget'|_ }})"
-                                                        {% if journal.budget_id == 0 %}selected="selected"{% endif %}
+                                                        {% if journal.budget_id == 0 %}selected="selected"@endif
                                                 >{{ 'no_budget'|_ }}
                                                 </option>
                                                 {% for budget in budgets %}
-                                                    <option value="{{ budget.id }}"{% if budget.id == journal.budget_id %} selected="selected"{% endif %}
+                                                    <option value="{{ budget.id }}"{% if budget.id == journal.budget_id %} selected="selected"@endif
                                                             label="{{ budget.name }}">{{ budget.name }}</option>
                                                 {% endfor %}
                                             </select>
-                                        {% endif %}
+                                        @endif
                                     </td>
                                 </tr>
                             {% endfor %}

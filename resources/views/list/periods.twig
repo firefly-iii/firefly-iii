@@ -8,21 +8,21 @@
             <table class="table table-hover">
                 {% if period.total_transactions > 0 %}
                     <tr>
-                        <td class="third">{{ 'transactions'|_ }}</td>
+                        <td class="third">{{ __('firefly.transactions') }}</td>
                         <td class="text-right">{{ period.total_transactions }}</td>
                     </tr>
-                {% endif %}
+                @endif
                 {% for entry in period.spent %}
                     {% if entry.amount != 0 %}
                         <tr>
                             <td class="third">{{ 'spent'|_ }}</td>
                             <td class="text-right">
                                 <span title="{{ entry.count }}">
-                                    {{ formatAmountBySymbol(entry.amount, entry.currency_symbol, entry.currency_decimal_places) }}
+                                    {{ format_amount_by_symbol(entry.amount, entry.currency_symbol, entry.currency_decimal_places) }}
                                 </span>
                             </td>
                         </tr>
-                    {% endif %}
+                    @endif
                 {% endfor %}
 
                 {% for entry in period.earned %}
@@ -32,14 +32,14 @@
                             <td class="text-right">
                                 <span title="{{ entry.count }}">
                                     {% if entry.amount < 0 %}
-                                        {{ formatAmountBySymbol(entry.amount*-1, entry.currency_symbol, entry.currency_decimal_places) }}
-                                    {% else %}
-                                        {{ formatAmountBySymbol(entry.amount, entry.currency_symbol, entry.currency_decimal_places) }}
-                                    {% endif %}
+                                        {{ format_amount_by_symbol(entry.amount*-1, entry.currency_symbol, entry.currency_decimal_places) }}
+                                    @else
+                                        {{ format_amount_by_symbol(entry.amount, entry.currency_symbol, entry.currency_decimal_places) }}
+                                    @endif
                                 </span>
                             </td>
                         </tr>
-                    {% endif %}
+                    @endif
                 {% endfor %}
 
                 {% for entry in period.transferred %}
@@ -48,11 +48,11 @@
                             <td class="third">{{ 'transferred'|_ }}</td>
                             <td class="text-right">
                                 <span title="{{ entry.count }}">
-                                    {{ formatAmountBySymbol(entry.amount*-1, entry.currency_symbol, entry.currency_decimal_places) }}
+                                    {{ format_amount_by_symbol(entry.amount*-1, entry.currency_symbol, entry.currency_decimal_places) }}
                                 </span>
                             </td>
                         </tr>
-                    {% endif %}
+                    @endif
                 {% endfor %}
 
                 {% for entry in period.transferred_away %}
@@ -62,14 +62,14 @@
                             <td class="text-right">
                                 <span title="{{ entry.count }}">
                                     {% if entry.amount < 0 %}
-                                        {{ formatAmountBySymbol(entry.amount, entry.currency_symbol, entry.currency_decimal_places) }}
-                                    {% else %}
-                                        {{ formatAmountBySymbol(entry.amount*-1, entry.currency_symbol, entry.currency_decimal_places) }}
-                                    {% endif %}
+                                        {{ format_amount_by_symbol(entry.amount, entry.currency_symbol, entry.currency_decimal_places) }}
+                                    @else
+                                        {{ format_amount_by_symbol(entry.amount*-1, entry.currency_symbol, entry.currency_decimal_places) }}
+                                    @endif
                                 </span>
                             </td>
                         </tr>
-                    {% endif %}
+                    @endif
                 {% endfor %}
 
                 {% for entry in period.transferred_in %}
@@ -79,14 +79,14 @@
                             <td class="text-right">
                                 <span title="{{ entry.count }}">
                                     {% if entry.amount < 0 %}
-                                        {{ formatAmountBySymbol(entry.amount*-1, entry.currency_symbol, entry.currency_decimal_places) }}
-                                    {% else %}
-                                        {{ formatAmountBySymbol(entry.amount, entry.currency_symbol, entry.currency_decimal_places) }}
-                                    {% endif %}
+                                        {{ format_amount_by_symbol(entry.amount*-1, entry.currency_symbol, entry.currency_decimal_places) }}
+                                    @else
+                                        {{ format_amount_by_symbol(entry.amount, entry.currency_symbol, entry.currency_decimal_places) }}
+                                    @endif
                                 </span>
                             </td>
                         </tr>
-                    {% endif %}
+                    @endif
                 {% endfor %}
             </table>
         </div>

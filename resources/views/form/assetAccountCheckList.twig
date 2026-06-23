@@ -9,9 +9,9 @@
                     <label>
                         {% if account in selected or (selected|length == 0 and options.select_all == true) %}
                             {{ Html::checkbox(name~'[]',true, id).id(id) }}
-                        {% else %}
+                        @else
                             {{ Html::checkbox(name~'[]',false, id).id(id) }}
-                        {% endif %}
+                        @endif
                         {{ account|escape }}
                     </label>
                 </div>

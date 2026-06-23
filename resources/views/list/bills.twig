@@ -18,7 +18,7 @@
         {% if objectGroup.bills|length > 0 %}
             <tbody class="bill-connected-list"
                    {% if objectGroupOrder != 0 %}data-title="{{ objectGroup.object_group_title }}"
-                   {% else %}data-title=""{% endif %}>
+                   @elsedata-title=""@endif>
             <tr>
                 <td class="hidden-sm hidden-xs">&nbsp;</td>
                 <td class="hidden-sm hidden-xs">&nbsp;</td>
@@ -40,12 +40,12 @@
                     <td>
                         {% if not entry.active %}
                             <span class="bi  bi-ban"></span>
-                        {% endif %}
+                        @endif
                         <a href="{{ route('subscriptions.show',entry.id) }}" title="{{ entry.name }}">{{ entry.name }}</a>
                         {# count attachments #}
                         {% if entry.attachments.count() > 0 %}
                             <span class="bi bi-paperclip"></span>
-                        {% endif %}
+                        @endif
 
                     </td>
                     <td class="hidden-sm hidden-md hidden-xs rules">
@@ -56,19 +56,19 @@
                                         <a href="{{ route('rules.edit', [rule.id]) }}">
                                             {{ rule.title }}
                                         </a>
-                                        {% if not rule.active %}({{ 'list_inactive_rule'|_|lower }}){% endif %}
+                                        {% if not rule.active %}({{ 'list_inactive_rule'|_|lower }})@endif
                                     </li>
                                 {% endfor %}
                             </ul>
-                        {% endif %}
+                        @endif
                     </td>
                     <td class="text-right">
-                <span class="mr-2" title="{{ formatAmountBySymbol(entry.amount_min, entry.currency_symbol, entry.currency_decimal_places, false)|escape }} -- {{ formatAmountBySymbol(entry.amount_max, entry.currency_symbol, entry.currency_decimal_places, false)|escape }}">
-                    ~ {{ formatAmountBySymbol((entry.amount_max + entry.amount_min)/2, entry.currency_symbol, entry.currency_decimal_places) }}
+                <span class="mr-2" title="{{ format_amount_by_symbol(entry.amount_min, entry.currency_symbol, entry.currency_decimal_places, false)|escape }} -- {{ format_amount_by_symbol(entry.amount_max, entry.currency_symbol, entry.currency_decimal_places, false)|escape }}">
+                    ~ {{ format_amount_by_symbol((entry.amount_max + entry.amount_min)/2, entry.currency_symbol, entry.currency_decimal_places) }}
 
                     {% if '0' != entry.pc_amount_max and null != entry.pc_amount_max %}
-                        (~ {{ formatAmountBySymbol((entry.pc_amount_max + entry.pc_amount_min)/2, primaryCurrency.symbol, primaryCurrency.decimal_places) }})
-                    {% endif %}
+                        (~ {{ format_amount_by_symbol((entry.pc_amount_max + entry.pc_amount_min)/2, primaryCurrency.symbol, primaryCurrency.decimal_places) }})
+                    @endif
                 </span>
                     </td>
 
@@ -84,9 +84,9 @@
                         <td class="expected_in_period hidden-sm hidden-xs">
                             {% if entry.next_expected_match %}
                                 {{ formatDate(entry.next_expected_match, monthAndDayFormat) }}
-                            {% endif %}
+                            @endif
                         </td>
-                    {% endif %}
+                    @endif
 
                     {#
                     paid_dates = 0 (bill not paid in period)
@@ -99,12 +99,12 @@
                             <td class="paid_in_period text-muted">
                                 {{ entry.next_expected_match_diff }}
                             </td>
-                        {% else %}
+                        @else
                             <td class="paid_in_period text-warning">
                                 {{ entry.next_expected_match_diff }}
                                 <!-- {{ trans('firefly.bill_expected_date', {date: entry.next_expected_match_diff }) }} -->
                             </td>
-                        {% endif %}
+                        @endif
                         <td class="expected_in_period hidden-sm hidden-xs">
 
                             {% for date in entry.pay_dates %}
@@ -112,7 +112,7 @@
                             {% endfor %}
 
                         </td>
-                    {% endif %}
+                    @endif
 
                     {#
                     paid_dates >= 0 (bill is paid X times).
@@ -131,43 +131,43 @@
                         <td class="expected_in_period hidden-sm hidden-xs">
                             {% if entry.next_expected_match %}
                                     {{ formatDate(entry.next_expected_match, monthAndDayFormat) }}
-                                {% else %}
+                                @else
                                     <span class="text-muted">{{ entry.next_expected_match_diff }}</span>
-                            {% endif %}
+                            @endif
                         </td>
-                    {% endif %}
+                    @endif
                     {# bill is not active #}
                     {% if not entry.active %}
                         <td class="paid_in_period text-muted">
                             ~
                         </td>
                         <td class="expected_in_period text-muted hidden-sm hidden-xs">~</td>
-                    {% endif %}
+                    @endif
                     <td class="hidden-sm hidden-xs">
                         {{ ('repeat_freq_'~entry.repeat_freq)|_ }}
                         {% if entry.skip > 0 %}
                             {{ 'skips_over'|_ }} {{ entry.skip }}
-                        {% endif %}
+                        @endif
                         {% if entry.end_date %}
                             <br>
                             {% if carbonize(entry.end_date).lte(today) %}
                                 <span class="text-danger">
                                     {{ trans('firefly.bill_end_index_line', {date: carbonize(entry.end_date).isoFormat(monthAndDayFormat)  })  }}
                                     </span>
-                            {% else %}
+                            @else
                                 {{ trans('firefly.bill_end_index_line', {date: carbonize(entry.end_date).isoFormat(monthAndDayFormat)  })  }}
-                            {% endif %}
-                        {% endif %}
+                            @endif
+                        @endif
                         {% if entry.extension_date %}
                             <br>
                             {% if carbonize(entry.extension_date).lte(today) %}
                                 <span class="text-danger">
                                     {{ trans('firefly.bill_extension_index_line', {date: carbonize(entry.extension_date).isoFormat(monthAndDayFormat)  })  }}
                                     </span>
-                            {% else %}
+                            @else
                                 {{ trans('firefly.bill_extension_index_line', {date: carbonize(entry.extension_date).isoFormat(monthAndDayFormat)  })  }}
-                            {% endif %}
-                        {% endif %}
+                            @endif
+                        @endif
                     </td>
                 </tr>
             {% endfor %}
@@ -180,13 +180,13 @@
                             <small>{{ 'sum'|_ }} ({{ sum.currency_name }}) ({{ 'active_exp_bills_only'|_ }})</small>
                         </td>
                         <td class="text-right"> <!-- amount -->
-                            {{ formatAmountBySymbol(sum.avg, sum.currency_symbol, sum.currency_decimal_places) }}
+                            {{ format_amount_by_symbol(sum.avg, sum.currency_symbol, sum.currency_decimal_places) }}
                         </td>
                         <td>&nbsp;</td> <!-- paid in period -->
                         <td class="hidden-sm hidden-xs">&nbsp;</td> <!-- next expected match -->
                         <td class="hidden-sm hidden-xs">&nbsp;</td><!-- repeats -->
                     </tr>
-                {% endif %}
+                @endif
                 {% if '0' != sum.total_left_to_pay %}
                     <tr>
                         <td class="hidden-sm hidden-xs">&nbsp;</td> <!-- handle -->
@@ -195,13 +195,13 @@
                             <small>{{ 'sum'|_ }} ({{ sum.currency_name }}) ({{ 'left_to_pay_active_bills'|_ }})</small>
                         </td>
                         <td class="text-right"> <!-- amount -->
-                            {{ formatAmountBySymbol(sum.total_left_to_pay, sum.currency_symbol, sum.currency_decimal_places) }}
+                            {{ format_amount_by_symbol(sum.total_left_to_pay, sum.currency_symbol, sum.currency_decimal_places) }}
                         </td>
                         <td>&nbsp;</td> <!-- paid in period -->
                         <td class="hidden-sm hidden-xs">&nbsp;</td> <!-- next expected match -->
                         <td class="hidden-sm hidden-xs">&nbsp;</td><!-- repeats -->
                     </tr>
-                {% endif %}
+                @endif
                 {% if '0' != sum.per_period %}
                     <tr>
                         <td class="hidden-sm hidden-xs">&nbsp;</td> <!-- handle -->
@@ -211,16 +211,16 @@
                                 ({{ 'active_bills_only'|_ }})</small>
                         </td>
                         <td class="text-right"> <!-- amount -->
-                            {{ formatAmountBySymbol(sum.per_period, sum.currency_symbol, sum.currency_decimal_places) }}
+                            {{ format_amount_by_symbol(sum.per_period, sum.currency_symbol, sum.currency_decimal_places) }}
                         </td>
                         <td>&nbsp;</td> <!-- paid in period -->
                         <td class="hidden-sm hidden-xs">&nbsp;</td> <!-- next expected match -->
                         <td class="hidden-sm hidden-xs">&nbsp;</td><!-- repeats -->
                     </tr>
-                {% endif %}
+                @endif
             {% endfor %}
             </tbody>
-        {% endif %}
+        @endif
     {% endfor %}
     {% if totals|length > 0 %}
         <tfoot>
@@ -236,13 +236,13 @@
                         <small>{{ 'sum'|_ }} ({{ sum.currency_name }}) ({{ 'active_exp_bills_only_total'|_ }})</small>
                     </td>
                     <td class="text-right"> <!-- amount -->
-                        {{ formatAmountBySymbol(sum.avg, sum.currency_symbol, sum.currency_decimal_places) }}
+                        {{ format_amount_by_symbol(sum.avg, sum.currency_symbol, sum.currency_decimal_places) }}
                     </td>
                     <td>&nbsp;</td> <!-- paid in period -->
                     <td class="hidden-sm hidden-xs">&nbsp;</td> <!-- next expected match -->
                     <td class="hidden-sm hidden-xs">&nbsp;</td><!-- repeats -->
                 </tr>
-            {% endif %}
+            @endif
             {% if '0' != sum.per_period %}
                 <tr>
                     <td class="hidden-sm hidden-xs">&nbsp;</td> <!-- handle -->
@@ -252,16 +252,16 @@
                             ({{ 'active_bills_only_total'|_ }})</small>
                     </td>
                     <td class="text-right"> <!-- amount -->
-                        {{ formatAmountBySymbol(sum.per_period, sum.currency_symbol, sum.currency_decimal_places) }}
+                        {{ format_amount_by_symbol(sum.per_period, sum.currency_symbol, sum.currency_decimal_places) }}
                     </td>
                     <td>&nbsp;</td> <!-- paid in period -->
                     <td class="hidden-sm hidden-xs">&nbsp;</td> <!-- next expected match -->
                     <td class="hidden-sm hidden-xs">&nbsp;</td><!-- repeats -->
                 </tr>
-            {% endif %}
+            @endif
         {% endfor %}
         </tfoot>
-    {% endif %}
+    @endif
 
 </table>
 <div class="pl-2">

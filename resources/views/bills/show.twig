@@ -31,10 +31,10 @@
                                 {% set highAmount = formatAmountByCurrency(object.data.currency,object.data.amount_max) %}
                                 {% if(0 != object.data.pc_amount_min) %}
                                     {% set lowAmount = lowAmount ~ ' (' ~ formatAmountByCode(object.data.pc_amount_min, primaryCurrency.code) ~ ')'  %}
-                                {% endif %}
+                                @endif
                                 {% if(0 != object.data.pc_amount_max) %}
                                     {% set highAmount = highAmount ~ ' (' ~ formatAmountByCode(object.data.pc_amount_max, primaryCurrency.code) ~ ')'  %}
-                                {% endif %}
+                                @endif
                                 {{ trans('firefly.match_between_amounts', {low: lowAmount, high: highAmount })|raw }}
                                 {{ 'repeats'|_ }}
                                 {{ trans('firefly.repeat_freq_' ~object.data.repeat_freq) }}.
@@ -46,9 +46,9 @@
                             <td>
                                 {% if object.data.active %}
                                     <span class="bi bi-check" title="{{ 'active'|_ }}"></span> {{ 'yes'|_ }}
-                                {% else %}
+                                @else
                                     <span class="bi bi-x" title="{{ 'inactive'|_ }}"></span> {{ 'no'|_ }}
-                                {% endif %}
+                                @endif
                             </td>
                         </tr>
                         <tr>
@@ -57,20 +57,20 @@
 
                                 {% if object.data.pay_dates|length > 0 %}
                                     {{ formatDate(object.data.pay_dates[0], monthAndDayFormat) }}
-                                {% else %}
+                                @else
                                     {{ 'unknown'|_ }}
-                                {% endif %}
+                                @endif
                             </td>
                         </tr>
                         <tr>
                             <td>{{ trans('firefly.average_bill_amount_year', {year: year}) }}</td>
                             <td>
                                 {% for avg in yearAverage %}
-                                    {{ formatAmountBySymbol(avg.avg, avg.currency_symbol, avg.currency_decimal_places, true) }}
+                                    {{ format_amount_by_symbol(avg.avg, avg.currency_symbol, avg.currency_decimal_places, true) }}
                                     {% if convertToPrimary and 0 != avg.pc_avg %}
-                                    ({{ formatAmountBySymbol(avg.pc_avg,
+                                    ({{ format_amount_by_symbol(avg.pc_avg,
                                         primaryCurrency.symbol, primaryCurrency.decimal_places, true) }})
-                                    {% endif %}
+                                    @endif
                                     <br>
 
                                 {% endfor %}
@@ -80,11 +80,11 @@
                             <td>{{ 'average_bill_amount_overall'|_ }}</td>
                             <td>
                                 {% for avg in overallAverage %}
-                                    {{ formatAmountBySymbol(avg.avg, avg.currency_symbol, avg.currency_decimal_places, true) }}
+                                    {{ format_amount_by_symbol(avg.avg, avg.currency_symbol, avg.currency_decimal_places, true) }}
                                     {% if convertToPrimary and 0 != avg.pc_avg %}
-                                        ({{ formatAmountBySymbol(avg.pc_avg,
+                                        ({{ format_amount_by_symbol(avg.pc_avg,
                                         primaryCurrency.symbol, primaryCurrency.decimal_places, true) }})
-                                    {% endif %}
+                                    @endif
                                     <br>
                                 {% endfor %}
                             </td>
@@ -109,11 +109,11 @@
                         <ul>
                             {% for rule in rules %}
                                 <li><a href="{{ route('rules.edit', [rule.id]) }}">{{ rule.title }}</a>
-                                    {% if not rule.active %}({{ 'list_inactive_rule'|_|lower }}){% endif %}
+                                    {% if not rule.active %}({{ 'list_inactive_rule'|_|lower }})@endif
                                 </li>
                             {% endfor %}
                         </ul>
-                    {% endif %}
+                    @endif
                 </div>
                 <div class="card-footer">
                     <form action="{{ route('subscriptions.rescan',object.data.id) }}" method="post">
@@ -133,13 +133,13 @@
             {% if object.data.notes %}
                 <div class="card">
                     <div class="card-header">
-                        <h3 class="card-title">{{ 'notes'|_ }}</h3>
+                        <h3 class="card-title">{{ __('firefly.notes') }}</h3>
                     </div>
                     <div class="card-body">
                         {{ object.data.notes|default('')|markdown }}
                     </div>
                 </div>
-            {% endif %}
+            @endif
 
 
             {% if attachments.count() > 0 %}
@@ -151,7 +151,7 @@
                         {% include 'list.attachments' %}
                     </div>
                 </div>
-            {% endif %}
+            @endif
         </div>
     </div>
 

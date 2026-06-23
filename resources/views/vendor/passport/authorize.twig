@@ -65,14 +65,14 @@
                         <p>
                             {{ trans('firefly.authorization_request_site', {url: client.redirect|phphost})|raw }}
                         </p>
-                    {% endif %}
+                    @endif
 
                     {% if client.user.id != user.id %}
                         <p class="text-danger">
                             {{ 'authorization_request_invalid'|_ }}
 
                         </p>
-                    {% endif %}
+                    @endif
                     <!-- Scope List -->
                     {% if scopes|length > 0 %}
                         <div class="scopes">
@@ -84,7 +84,7 @@
                                 {% endfor %}
                             </ul>
                         </div>
-                    {% endif %}
+                    @endif
 
                     <div class="buttons">
                         <!-- Authorize Button -->
@@ -97,7 +97,7 @@
                                 <button type="submit"
                                         class="btn btn-success btn-approve">{{ 'button_authorize'|_ }}</button>
                             </form>
-                        {% endif %}
+                        @endif
 
                         <!-- Cancel Button -->
                         <form method="post" action="{{ route('index') }}/oauth/authorize">

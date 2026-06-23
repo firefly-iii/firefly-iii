@@ -22,7 +22,7 @@
                             {% if groupArray.transactions[0].type != 'reconciliation' and groupArray.transactions[0].type != 'opening balance' and groupArray.transactions[0].type != 'liability credit' %}
                             <li><a href="{{ route('transactions.delete', [transactionGroup.id]) }}"><span
                                         class="bi bi-trash"></span> {{ __('firefly.delete') }}</a></li>
-                            {% endif %}
+                            @endif
                             {% if groupArray.transactions[0].type != 'reconciliation' and groupArray.transactions[0].type != 'opening balance' and groupArray.transactions[0].type != 'liability credit' %}
                             <li role="separator" class="divider"></li>
 
@@ -31,19 +31,19 @@
                                 <li>
                                     <a href="{{ route('transactions.convert.index', ['withdrawal', transactionGroup.id]) }}"><span
                                             class="bi bi-arrow-left-right"></span> {{ 'convert_to_withdrawal'|_ }}</a></li>
-                            {% endif %}
+                            @endif
 
                             {% if groupArray.transactions[0].type != 'deposit' %}
                                 <li>
                                     <a href="{{ route('transactions.convert.index', ['deposit', transactionGroup.id]) }}"><span
                                             class="bi bi-arrow-left-right"></span> {{ 'convert_to_deposit'|_ }}</a></li>
-                            {% endif %}
+                            @endif
 
                             {% if groupArray.transactions[0].type != 'transfer' %}
                                 <li>
                                     <a href="{{ route('transactions.convert.index', ['transfer', transactionGroup.id]) }}"><span
                                             class="bi bi-arrow-left-right"></span> {{ 'convert_to_transfer'|_ }}</a></li>
-                            {% endif %}
+                            @endif
 
 
                             {#  clone #}
@@ -53,8 +53,8 @@
                                             class="bi bi-copy"></span> {{ 'clone'|_ }}</a></li>
                                 <li><a href="#" class="clone-transaction-and-edit" data-id="{{ transactionGroup.id }}"><span
                                             class="bi bi-copy"></span> {{ 'clone_and_edit'|_ }}</a></li>
-                            {% endif %}
-                            {% endif %}
+                            @endif
+                            @endif
 
                         </ul>
                     </div>
@@ -75,19 +75,19 @@
                             <td>
                                 {% if splits == 1 %}
                                     {{ first.description }}
-                                {% else %}
+                                @else
                                     {{ transactionGroup.title }}
-                                {% endif %}
+                                @endif
                             </td>
                         </tr>
                         <tr>
                             <td class="thirty">{{ trans('list.date') }}</td>
                             <td>
-                                <span class="date-time" data-date="{{ first.date.toIso8601ZuluString() }}" title="{{ first.date.isoFormat(dateTimeFormat) }}{% if(first.date_tz != '') %} ({{ trans('firefly.stored_in_tz', {timezone: first.date_tz }) }}, {{ trans('firefly.displayed_in_tz', {timezone: config('app.timezone') }) }}){% endif %}">
+                                <span class="date-time" data-date="{{ first.date.toIso8601ZuluString() }}" title="{{ first.date.isoFormat(dateTimeFormat) }}{% if(first.date_tz != '') %} ({{ trans('firefly.stored_in_tz', {timezone: first.date_tz }) }}, {{ trans('firefly.displayed_in_tz', {timezone: config('app.timezone') }) }})@endif">
                                 {{ first.date.isoFormat(dateTimeFormat) }}
                                 {% if(first.date_tz != '') %}
                                     ({{ trans('firefly.stored_in_tz', {timezone: first.date_tz }) }})
-                                {% endif %}
+                                @endif
                                 </span>
                             </td>
                         </tr>
@@ -106,7 +106,7 @@
                         {% include 'list.ale' with {logEntries: groupLogEntries} %}
                     </div>
                 </div>
-            {% endif %}
+            @endif
 
         </div>
         <div class="col-lg-6">
@@ -126,17 +126,17 @@
                                     {% for account in accounts['source'] %}
                                         {% if 'Cash account' == account.type %}
                                             <span class="text-success">({{ 'cash'|_ }})</span>
-                                        {% else %}
+                                        @else
                                             <a href="{{ route('accounts.show',account.id) }}"
                                                title="{{ account.iban|default(account.name) }}">
                                                 {{ account.name }}
                                             </a>
-                                        {% endif %}
-                                        {% if loop.index0 != accounts['source']|length -1 %}, {% endif %}
+                                        @endif
+                                        {% if loop.index0 != accounts['source']|length -1 %}, @endif
                                     {% endfor %}
                                 </td>
                             </tr>
-                        {% endif %}
+                        @endif
 
                         {% if first.transaction_type_type != 'Deposit' or splits == 1 %}
                             <tr>
@@ -148,37 +148,37 @@
                                     {% for account in accounts['destination'] %}
                                         {% if 'Cash account' == account.type %}
                                             <span class="text-success">({{ 'cash'|_ }})</span>
-                                        {% else %}
+                                        @else
                                             <a href="{{ route('accounts.show',account.id) }}"
                                                title="{{ account.iban|default(account.name) }}">
                                                 {{ account.name }}
                                             </a>
-                                        {% endif %}
-                                        {% if loop.index0 != accounts['destination']|length -1 %}, {% endif %}
+                                        @endif
+                                        {% if loop.index0 != accounts['destination']|length -1 %}, @endif
                                     {% endfor %}
                                 </td>
                             </tr>
-                        {% endif %}
+                        @endif
                         <tr>
                             <td class="thirty">{{ 'total_amount'|_ }}</td>
                             <td>
                                 {% for amount in amounts %}
                                     {% if first.transaction_type_type == 'Withdrawal' %}
-                                        {% if amount.approximate %}~ {% endif %}{{ formatAmountBySymbol(amount.amount,amount.symbol, amount.decimal_places) }}{% if loop.index0 != amounts|length -1 %}, {% endif %}
+                                        {% if amount.approximate %}~ @endif{{ format_amount_by_symbol(amount.amount,amount.symbol, amount.decimal_places) }}{% if loop.index0 != amounts|length -1 %}, @endif
                                     {% elseif first.transaction_type_type == 'Deposit' %}
-                                        {% if amount.approximate %}~ {% endif %}{{ formatAmountBySymbol(amount.amount*-1,amount.symbol, amount.decimal_places) }}{% if loop.index0 != amounts|length -1 %}, {% endif %}
+                                        {% if amount.approximate %}~ @endif{{ format_amount_by_symbol(amount.amount*-1,amount.symbol, amount.decimal_places) }}{% if loop.index0 != amounts|length -1 %}, @endif
                                     {% elseif first.transaction_type_type == 'Transfer' %}
                                         <span class="text-info money-transfer">
-                                        {% if amount.approximate %}~ {% endif %}{{ formatAmountBySymbol(amount.amount*-1, amount.symbol, amount.decimal_places, false) }}{% if loop.index0 != amounts|length -1 %}, {% endif %}
+                                        {% if amount.approximate %}~ @endif{{ format_amount_by_symbol(amount.amount*-1, amount.symbol, amount.decimal_places, false) }}{% if loop.index0 != amounts|length -1 %}, @endif
                                     </span>
                                     {% elseif first.transaction_type_type == 'Opening balance' %}
                                         {# Opening balance stored amount is always negative: find out which way the money goes #}
                                         {% if groupArray.transactions[0].source_account_type == 'Initial balance account' %}
-                                            {{ formatAmountBySymbol(amount.amount*-1,amount.symbol, amount.decimal_places) }}
-                                        {% else %}
-                                            {{ formatAmountBySymbol(amount.amount,amount.symbol, amount.decimal_places) }}
-                                        {% endif %}
-                                    {% endif %}
+                                            {{ format_amount_by_symbol(amount.amount*-1,amount.symbol, amount.decimal_places) }}
+                                        @else
+                                            {{ format_amount_by_symbol(amount.amount,amount.symbol, amount.decimal_places) }}
+                                        @endif
+                                    @endif
                                 {% endfor %}
                             </td>
                         </tr>
@@ -197,14 +197,14 @@
                 <h3>{{ 'splits'|_ }}</h3>
             </div>
         </div>
-    {% endif %}
+    @endif
     {% set boxSize=6 %}
     {% if(splits == 2) %}
         {% set boxSize=6 %}
-    {% endif %}
+    @endif
     {% if (splits > 2) %}
         {% set boxSize = 4 %}
-    {% endif %}
+    @endif
     <div class="row">
         {% for index, journal in selectedGroup.transactions %}
             <div class="col-lg-{{ boxSize }}">
@@ -214,12 +214,12 @@
                             {{ journal.description }}
                             {% if journal.reconciled %}
                                 <span class="bi bi-check"></span>
-                            {% endif %}
+                            @endif
                             {% if splits > 1 %}
                                 <small>
                                     {{ index+1 }} / {{ splits }}
                                 </small>
-                            {% endif %}
+                            @endif
                         </h3>
 
 
@@ -235,11 +235,11 @@
                                 {% if groupArray.transactions[0].type != 'reconciliation' and groupArray.transactions[0].type != 'opening balance' and groupArray.transactions[0].type != 'liability credit' %}
                                 <li><a href="{{ route('transactions.delete', [transactionGroup.id]) }}"><span
                                             class="bi bi-trash"></span> {{ __('firefly.delete') }}</a></li>
-                                {% endif %}
+                                @endif
                                 {% if journal.reconciled %}
                                 <li><a class="reconcile-button" href="{{ route('transactions.unreconcile', [journal.transaction_journal_id]) }}"><span
                                             class="fa fa-history"></span> {{ 'unreconcile'|_ }}</a></li>
-                                {% endif %}
+                                @endif
                                 {% if groupArray.transactions[0].type != 'reconciliation' and groupArray.transactions[0].type != 'opening balance' and groupArray.transactions[0].type != 'liability credit' %}
                                 <li role="separator" class="divider"></li>
 
@@ -249,20 +249,20 @@
                                         <a href="{{ route('transactions.convert.index', ['withdrawal', transactionGroup.id]) }}"><span
                                                 class="bi bi-arrow-left-right"></span> {{ 'convert_to_withdrawal'|_ }}</a>
                                     </li>
-                                {% endif %}
+                                @endif
 
                                 {% if groupArray.transactions[0].type != 'deposit' %}
                                     <li>
                                         <a href="{{ route('transactions.convert.index', ['deposit', transactionGroup.id]) }}"><span
                                                 class="bi bi-arrow-left-right"></span> {{ 'convert_to_deposit'|_ }}</a></li>
-                                {% endif %}
+                                @endif
 
                                 {% if groupArray.transactions[0].type != 'transfer' %}
                                     <li>
                                         <a href="{{ route('transactions.convert.index', ['transfer', transactionGroup.id]) }}"><span
                                                 class="bi bi-arrow-left-right"></span> {{ 'convert_to_transfer'|_ }}</a>
                                     </li>
-                                {% endif %}
+                                @endif
 
                                 {#  clone #}
                                 {% if groupArray.transactions[0].type != 'opening balance' and groupArray.transactions[0].type != 'reconciliation' %}
@@ -271,7 +271,7 @@
                                                 class="bi bi-copy"></span> {{ 'clone'|_ }}</a></li>
                                     <li><a href="#" data-id="{{ transactionGroup.id }}" class="clone-transaction-and-edit"><span
                                                 class="bi bi-copy"></span> {{ 'clone_and_edit'|_ }}</a></li>
-                                {% endif %}
+                                @endif
 
                                 <li><a href="#" class="link-modal"
                                        data-journal="{{ journal.transaction_journal_id }}"><span
@@ -285,7 +285,7 @@
                                     <a href="{{ route('recurring.create-from-journal', [journal.transaction_journal_id]) }}"><span
                                             class="fa fa-paint-brush"></span>{{ 'create_recurring_from_transaction'|_ }}
                                     </a></li>
-                                {% endif %}
+                                @endif
                             </ul>
                         </div>
                     </div>
@@ -295,72 +295,72 @@
                                 <td colspan="2">
                                     {% if 'Cash account' == journal.source_account_type %}
                                         <span class="text-success">({{ 'cash'|_ }})</span>
-                                    {% else %}
+                                    @else
                                         <a href="{{ route('accounts.show', journal.source_account_id) }}"
                                            title="{{ journal.source_iban|default(journal.source_account_name) }}">{{ journal.source_account_name }}</a> &rarr;
-                                    {% endif %}
+                                    @endif
 
                                     {% if first.transaction_type_type == 'Withdrawal' %}
-                                        {{ formatAmountBySymbol(journal.amount, journal.currency_symbol, journal.currency_decimal_places) }}
+                                        {{ format_amount_by_symbol(journal.amount, journal.currency_symbol, journal.currency_decimal_places) }}
                                     {% elseif first.transaction_type_type == 'Deposit' %}
-                                        {{ formatAmountBySymbol(journal.amount*-1, journal.currency_symbol, journal.currency_decimal_places) }}
+                                        {{ format_amount_by_symbol(journal.amount*-1, journal.currency_symbol, journal.currency_decimal_places) }}
                                     {% elseif first.transaction_type_type == 'Transfer' or first.transaction_type_type == 'Opening balance' %}
                                         <span class="text-info money-transfer">
-                                        {{ formatAmountBySymbol(journal.amount*-1, journal.currency_symbol, journal.currency_decimal_places, false) }}
+                                        {{ format_amount_by_symbol(journal.amount*-1, journal.currency_symbol, journal.currency_decimal_places, false) }}
                                     </span>
                                     {% elseif first.transaction_type_type == 'Liability credit' %}
                                         <span class="text-info money-transfer">
-                                        {{ formatAmountBySymbol(journal.amount*-1, journal.currency_symbol, journal.currency_decimal_places, false) }}
+                                        {{ format_amount_by_symbol(journal.amount*-1, journal.currency_symbol, journal.currency_decimal_places, false) }}
                                     </span>
-                                    {% endif %}
+                                    @endif
 
                                     <!-- do primary currency amount, if foreign amount is not the same. -->
                                     {% if null != journal.pc_amount and primaryCurrency.id != journal.currency_id and primaryCurrency.id != journal.foreign_currency_id %}
                                         {% if first.transaction_type_type == 'Withdrawal' %}
-                                            (~ {{ formatAmountBySymbol(journal.pc_amount, primaryCurrency.symbol, primaryCurrency.decimal_places) }})
+                                            (~ {{ format_amount_by_symbol(journal.pc_amount, primaryCurrency.symbol, primaryCurrency.decimal_places) }})
                                         {% elseif first.transaction_type_type == 'Deposit' %}
-                                            (~ {{ formatAmountBySymbol(journal.pc_amount*-1, primaryCurrency.symbol, primaryCurrency.decimal_places) }})
+                                            (~ {{ format_amount_by_symbol(journal.pc_amount*-1, primaryCurrency.symbol, primaryCurrency.decimal_places) }})
                                         {% elseif first.transaction_type_type == 'Transfer' %}
                                             <span class="text-info money-transfer">
-                                        (~ {{ formatAmountBySymbol(journal.pc_amount*-1, primaryCurrency.symbol, primaryCurrency.decimal_places, false) }})
+                                        (~ {{ format_amount_by_symbol(journal.pc_amount*-1, primaryCurrency.symbol, primaryCurrency.decimal_places, false) }})
                                     </span>
-                                        {% endif %}
-                                    {% endif %}
+                                        @endif
+                                    @endif
 
                                     <!-- do foreign amount -->
                                     {% if null != journal.foreign_amount %}
                                         {% if first.transaction_type_type == 'Withdrawal' %}
-                                            ({{ formatAmountBySymbol(journal.foreign_amount, journal.foreign_currency_symbol, journal.foreign_currency_decimal_places) }})
+                                            ({{ format_amount_by_symbol(journal.foreign_amount, journal.foreign_currency_symbol, journal.foreign_currency_decimal_places) }})
                                         {% elseif first.transaction_type_type == 'Deposit' %}
-                                            ({{ formatAmountBySymbol(journal.foreign_amount*-1, journal.foreign_currency_symbol, journal.foreign_currency_decimal_places) }})
+                                            ({{ format_amount_by_symbol(journal.foreign_amount*-1, journal.foreign_currency_symbol, journal.foreign_currency_decimal_places) }})
                                         {% elseif first.transaction_type_type == 'Transfer' %}
                                             <span class="text-info money-transfer">
-                                        ({{ formatAmountBySymbol(journal.foreign_amount*-1, journal.foreign_currency_symbol, journal.foreign_currency_decimal_places, false) }})
+                                        ({{ format_amount_by_symbol(journal.foreign_amount*-1, journal.foreign_currency_symbol, journal.foreign_currency_decimal_places, false) }})
                                     </span>
-                                        {% endif %}
-                                    {% endif %}
+                                        @endif
+                                    @endif
 
                                     <!-- do foreign PC amount -->
                                     {% if null != journal.pc_foreign_amount %}
                                         {% if first.transaction_type_type == 'Withdrawal' %}
-                                            ({{ formatAmountBySymbol(journal.pc_foreign_amount, primaryCurrency.symbol, primaryCurrency.decimal_places) }})
+                                            ({{ format_amount_by_symbol(journal.pc_foreign_amount, primaryCurrency.symbol, primaryCurrency.decimal_places) }})
                                         {% elseif first.transaction_type_type == 'Deposit' %}
-                                            ({{ formatAmountBySymbol(journal.pc_foreign_amount*-1, primaryCurrency.symbol, primaryCurrency.decimal_places) }})
+                                            ({{ format_amount_by_symbol(journal.pc_foreign_amount*-1, primaryCurrency.symbol, primaryCurrency.decimal_places) }})
                                         {% elseif first.transaction_type_type == 'Transfer' %}
                                             <span class="text-info money-transfer">
-                                        ({{ formatAmountBySymbol(journal.pc_foreign_amount*-1, primaryCurrency.symbol, primaryCurrency.decimal_places, false) }})
+                                        ({{ format_amount_by_symbol(journal.pc_foreign_amount*-1, primaryCurrency.symbol, primaryCurrency.decimal_places, false) }})
                                     </span>
-                                        {% endif %}
-                                    {% endif %}
+                                        @endif
+                                    @endif
 
 
                                     &rarr;
                                     {% if 'Cash account' == journal.destination_account_type %}
                                         <span class="text-success">({{ 'cash'|_ }})</span>
-                                    {% else %}
+                                    @else
                                         <a href="{{ route('accounts.show', journal.destination_account_id) }}"
                                            title="{{ journal.destination_iban|default(journal.destination_account_name) }}">{{ journal.destination_account_name }}</a>
-                                    {% endif %}
+                                    @endif
                                 </td>
                             </tr>
                             <tr>
@@ -374,7 +374,7 @@
                                         <a href="{{ route('categories.show', [journal.category_id]) }}">{{ journal.category_name }}</a>
                                     </td>
                                 </tr>
-                            {% endif %}
+                            @endif
                             {% if null != journal.budget_id and first.transaction_type_type == 'Withdrawal' %}
                                 <tr>
                                     <td class="forty">{{ 'budget'|_ }}</td>
@@ -382,7 +382,7 @@
                                         <a href="{{ route('budgets.show', [journal.budget_id]) }}">{{ journal.budget_name }}</a>
                                     </td>
                                 </tr>
-                            {% endif %}
+                            @endif
                             {% if null != journal.bill_id and first.transaction_type_type == 'Withdrawal' %}
                                 <tr>
                                     <td class="forty">{{ 'bill'|_ }}</td>
@@ -390,7 +390,7 @@
                                         <a href="{{ route('subscriptions.show', [journal.bill_id]) }}">{{ journal.bill_name }}</a>
                                     </td>
                                 </tr>
-                            {% endif %}
+                            @endif
                             <!-- other fields -->
                             {% for dateField in ['interest_date','book_date','process_date','due_date','payment_date','invoice_date'] %}
                                 {% if journalHasMeta(journal.transaction_journal_id, dateField) %}
@@ -398,7 +398,7 @@
                                         <td class="forty">{{ trans('list.'~dateField) }}</td>
                                         <td>{{ journalGetMetaDate(journal.transaction_journal_id, dateField).isoFormat(monthAndDayFormat) }}</td>
                                     </tr>
-                                {% endif %}
+                                @endif
                             {% endfor %}
                             {% for metaField in ['external_id','bunq_payment_id','internal_reference','sepa_batch_id','sepa_ct_id','sepa_ct_op','sepa_db','sepa_country','sepa_cc','sepa_ep','sepa_ci','external_url'] %}
                                 {% if journalHasMeta(journal.transaction_journal_id, metaField) %}
@@ -410,34 +410,34 @@
                                                 <a href="{{ url }}" rel="noopener noreferrer nofollow" target="_blank">
                                                     {% if url|length > 60 %}
                                                         {{ url|slice(0, 60) ~ '...' }}
-                                                    {% else %}
+                                                    @else
                                                         {{ url }}
-                                                    {% endif %}
+                                                    @endif
                                                 </a>
-                                            {% endif %}
+                                            @endif
                                             {% if 'external_url' != metaField %}
                                                 {{ journalGetMetaField(journal.transaction_journal_id, metaField) }}
-                                            {% endif %}
+                                            @endif
                                         </td>
                                     </tr>
-                                {% endif %}
+                                @endif
                             {% endfor %}
                             {% if null != journal.notes and '' != journal.notes %}
                                 <tr>
                                     <td class="forty">{{ trans('list.notes') }}</td>
                                     <td class="markdown">{{ journal.notes|default('')|markdown }}</td>
                                 </tr>
-                            {% endif %}
+                            @endif
                             {% if journalHasMeta(journal.transaction_journal_id, 'recurring_total') and journalHasMeta(journal.transaction_journal_id, 'recurring_count') %}
                                 {% set recurringTotal = journalGetMetaField(journal.transaction_journal_id, 'recurring_total') %}
                                 {% if 0 == recurringTotal %}
                                     {% set recurringTotal = '∞' %}
-                                {% endif %}
+                                @endif
                                 <tr>
                                     <td class="forty">{{ trans('list.recurring_transaction') }}</td>
                                     <td>{{ trans('firefly.recurring_info', {total: recurringTotal, count: journalGetMetaField(journal.transaction_journal_id, 'recurring_count') }) }}</td>
                                 </tr>
-                            {% endif %}
+                            @endif
                             {% if journal.tags|length > 0 %}
                                 <tr>
                                     <td class="forty">{{ 'tags'|_ }}</td>
@@ -445,11 +445,11 @@
                                         {% for tag in journal.tags %}
                                             {% if null != tag.id and '' != tag.id %}
                                                 <h4 class="inline"><a class="badge text-bg-success" href="{{ route('tags.show', [tag.id]) }}"><span class="bi bi-tag"></span>{{ tag.tag }}</a></h4>
-                                            {% endif %}
+                                            @endif
                                         {% endfor %}
                                     </td>
                                 </tr>
-                            {% endif %}
+                            @endif
                         </table>
                     </div>
                 </div>
@@ -477,19 +477,19 @@
                                         <td>
                                             {% if link.editable %}
                                                 {{ link.link }}
-                                            {% else %}
+                                            @else
                                                 {{ trans('firefly.'~link.link) }}
-                                            {% endif %}
+                                            @endif
                                             "<a href="{{ route('transactions.show', link.group) }}"
                                                 title="{{ link.description }}">{{ link.description }}</a>"
 
                                             ({{ link.amount|raw }})
                                             {% if '' != link.foreign_amount %}
                                                 ({{ link.foreign_amount|raw }})
-                                            {% endif %}
+                                            @endif
                                             {% if link.notes != "" %}
                                                 ({{ link.notes }})
-                                            {% endif %}
+                                            @endif
                                         </td>
                                     </tr>
                                 {% endfor %}
@@ -497,7 +497,7 @@
                             </table>
                         </div>
                     </div>
-                {% endif %}
+                @endif
 
                 <!-- Attachments -->
                 {% if attachments[journal.transaction_journal_id]|length > 0 %}
@@ -509,7 +509,7 @@
                             {% include 'list.attachments' with {attachments: attachments[journal.transaction_journal_id]} %}
                         </div>
                     </div>
-                {% endif %}
+                @endif
 
                 <!-- Piggy bank events -->
                 {% if events[journal.transaction_journal_id]|length > 0 %}
@@ -531,7 +531,7 @@
                             </table>
                         </div>
                     </div>
-                {% endif %}
+                @endif
                 {% if logEntries[journal.transaction_journal_id]|length > 0 %}
                     <div class="card">
                         <div class="card-header">
@@ -543,7 +543,7 @@
                             {% include 'list.ale' with {logEntries: logEntries[journal.transaction_journal_id]} %}
                         </div>
                     </div>
-                {% endif %}
+                @endif
             </div>
         {% endfor %}
     </div>

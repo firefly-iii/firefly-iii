@@ -47,13 +47,13 @@
                                             <li>
                                                 <a href="{{ route('profile.mfa.index') }}">{{ 'manage_mfa_settings'|_ }}</a>
                                             </li>
-                                            {% endif %}
+                                            @endif
                                             {% if enabled2FA == false %}
                                                 <li>
                                                     <a href="{{ route('profile.mfa.index') }}">{{ 'enable_mfa'|_ }}</a>
                                                 </li>
-                                            {% endif %}
-                                        {% endif %}
+                                            @endif
+                                        @endif
 
                                         <li><a href="{{ route('logout') }}" class="logout-link">{{ 'logout'|_ }}</a>
                                         </li>
@@ -65,7 +65,7 @@
                                             <li><a class="text-danger"
                                                    href="{{ route('profile.delete-account') }}">{{ 'delete_account'|_ }}</a>
                                             </li>
-                                        {% endif %}
+                                        @endif
                                     </ul>
                                 </div>
                             </div>
@@ -227,7 +227,7 @@
                                 </div>
 
 
-                                <h4> {{ 'transactions'|_ }}</h4>
+                                <h4> {{ __('firefly.transactions') }}</h4>
                                 <div class="btn-group">
                                     <button type="button"
                                             data-success="{{ trans('firefly.deleted_all_transactions')|escape('html') }}"

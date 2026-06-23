@@ -19,7 +19,7 @@
                         {% for notification, value in notifications %}
                             <div class="checkbox">
                                 <label>
-                                    <input value="1" {% if true == value %}checked{% endif %} type="checkbox" name="notification_{{ notification }}"> {{ trans('firefly.owner_notification_check_'~notification) }}
+                                    <input value="1" {% if true == value %}checked@endif type="checkbox" name="notification_{{ notification }}"> {{ trans('firefly.owner_notification_check_'~notification) }}
                                 </label>
                             </div>
                         {% endfor %}
@@ -59,11 +59,11 @@
                                 <li>
                                     {% if true == info.enabled and true == forcedAvailability[name] %}
                                         ☑️ {{ trans('firefly.notification_channel_name_'~name) }}
-                                        {% if 0 == info.ui_configurable %}({{ 'configure_channel_in_env'|_ }}) {% endif %}
-                                    {% endif %}
+                                        {% if 0 == info.ui_configurable %}({{ 'configure_channel_in_env'|_ }}) @endif
+                                    @endif
                                     {% if false == info.enabled or false == forcedAvailability[name] %}
                                         ⚠️ {{ trans('firefly.notification_channel_name_'~name) }} ({{ 'channel_not_available'|_ }})
-                                    {% endif %}
+                                    @endif
                                 </li>
                             {% endfor %}
                         </ul>
@@ -75,7 +75,7 @@
                                     <button type="submit" name="test_submit" value="{{ name }}" class="btn btn-outline-secondary">
                                         {{ trans('firefly.test_notification_channel_name_'~name) }}
                                     </button>
-                                {% endif %}
+                                @endif
                             {% endfor %}
                         </div>
                     </div>

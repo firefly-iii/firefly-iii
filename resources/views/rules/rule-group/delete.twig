@@ -36,14 +36,14 @@
                             <p>
                                 {{ RuleForm.ruleGroupListWithEmpty('move_rules_before_delete',null, {'hidden': ruleGroup.id}) }}
                             </p>
-                        {% else %}
+                        @else
                             <input type="hidden" name="move_rules_before_delete" value="0"/>
-                        {% endif %}
+                        @endif
 
                     </div>
                     <div class="card-footer">
                         <input type="submit" name="submit" value="{{ trans('form.deletePermanently') }}" class="btn btn-danger pull-right"/>
-                        <a href="{{ URL.previous() }}" class="btn-outline-secondary btn">{{ trans('form.cancel') }}</a>
+                        <a href="{{ URL::previous() }}" class="btn-outline-secondary btn">{{ trans('form.cancel') }}</a>
                     </div>
 
 

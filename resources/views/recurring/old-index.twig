@@ -58,14 +58,14 @@
                                     <td data-value="{{ rt.title }}">
                                         {% if rt.attachments > 0 %}
                                             <span class="bi bi-paperclip"></span>
-                                        {% endif %}
-                                        {% if rt.active == false %}<s>{% endif %}
+                                        @endif
+                                        {% if rt.active == false %}<s>@endif
                                             {{ rt.type|_ }}:
                                             <a href="{{ route('recurring.show',rt.id) }}">{{ rt.title }}</a>
-                                            {% if rt.active == false %}</s> ({{ 'inactive'|_|lower }}){% endif %}
+                                            {% if rt.active == false %}</s> ({{ 'inactive'|_|lower }})@endif
                                         {% if rt.description|length > 0 %}
                                             <small><br>{{ rt.description }}</small>
-                                        {% endif %}
+                                        @endif
 
 
                                     </td>
@@ -74,12 +74,12 @@
                                             {% for rtt in rt.transactions %}
                                                 <li>
                                                     {# normal amount + comma #}
-                                                    {{ formatAmountBySymbol(rtt['amount'],rtt['currency_symbol'],rtt['currency_decimal_places']) }}{% if rtt['foreign_amount'] == null %},{% endif %}
+                                                    {{ format_amount_by_symbol(rtt['amount'],rtt['currency_symbol'],rtt['currency_decimal_places']) }}{% if rtt['foreign_amount'] == null %},@endif
 
                                                     {# foreign amount + comma #}
                                                     {% if null != rtt['foreign_amount'] %}
-                                                        ({{ formatAmountBySymbol(rtt['foreign_amount'],rtt['foreign_currency_symbol'],rtt['foreign_currency_decimal_places']) }}),
-                                                    {% endif %}
+                                                        ({{ format_amount_by_symbol(rtt['foreign_amount'],rtt['foreign_currency_symbol'],rtt['foreign_currency_decimal_places']) }}),
+                                                    @endif
                                                     <a href="{{ route('accounts.show', rtt['source_id']) }}">{{ rtt['source_name'] }}</a>
                                                     &rarr;
                                                     <a href="{{ route('accounts.show', rtt['destination_id']) }}">{{ rtt['destination_name'] }}</a>
@@ -92,38 +92,38 @@
                                             <span class="text-danger">
                                             {{ trans('firefly.repeat_until_in_past', {date: rt.repeat_until.isoFormat(monthAndDayFormat) }) }}
                                         </span>
-                                        {% endif %}
+                                        @endif
                                         <ul>
                                             {% for rep in rt.repetitions %}
                                                 <li>{{ rep.description }}
                                                     {% if rep.repetition_skip == 1 %}
                                                         ({{ trans('firefly.recurring_skips_one')|lower }}).
-                                                    {% endif %}
+                                                    @endif
                                                     {% if rep.repetition_skip > 1 %}
                                                         ({{ trans('firefly.recurring_skips_more', {count: rep.repetition_skip})|lower }}).
-                                                    {% endif %}
+                                                    @endif
                                                     {% if rep.weekend == 3 %}
                                                         <br>{{ 'will_jump_friday'|_ }}
-                                                    {% endif %}
+                                                    @endif
                                                     {% if rep.weekend == 4 %}
                                                         <br>{{ 'will_jump_monday'|_ }}
-                                                    {% endif %}
+                                                    @endif
                                                     {% if rep.weekend == 2 %}
                                                         <br>{{ 'except_weekends'|_ }}
-                                                    {% endif %}
+                                                    @endif
                                                 </li>
                                             {% endfor %}
                                         </ul>
                                         <p>
                                             {% if null == rt.repeat_until and rt.repetitions == 0 %}
                                                 {{ 'recurring_repeats_forever'|_ }}.
-                                            {% endif %}
+                                            @endif
                                             {% if null != rt.repeat_until and rt.repetitions == 0 %}
                                                 {{ trans('firefly.recurring_repeats_until', {date: rt.repeat_until.isoFormat(monthAndDayFormat)}) }}.
-                                            {% endif %}
+                                            @endif
                                             {% if null == rt.repeat_until and rt.nr_of_repetitions != 0 %}
                                                 {{ trans_choice('firefly.recurring_repeats_x_times', rt.nr_of_repetitions) }}.
-                                            {% endif %}
+                                            @endif
                                         </p>
                                     </td>
                                     <td>
@@ -132,7 +132,7 @@
                                                 {% for occ in rep.occurrences %}
                                                     {% if loop.index0 < 2 %}
                                                         <li>{{ occ.isoFormat(monthAndDayFormat) }}</li>
-                                                    {% endif %}
+                                                    @endif
                                                 {% endfor %}
                                             {% endfor %}
                                         </ul>
@@ -151,10 +151,10 @@
                 </div>
             </div>
         </div>
-    {% endif %}
+    @endif
     {% if total == 0 and page == 1 %}
         {% include 'partials.empty' with {objectType: 'default', type: 'recurring',route: route('recurring.create')} %}
-    {% endif %}
+    @endif
 @endsection
 
 @section('styles')

@@ -6,14 +6,14 @@
         </button>
         <strong>{{ 'invalid_server_configuration'|_ }}:</strong> <span class="bi bi-cash"></span> {{ 'invalid_locale_settings'|_ }}
     </div>
-{% endif %}
+@endif
 
 {# MANDATORY UPDATE MESSAGE #}
 {% if upgrade_security_message and upgrade_security_level %}
     <div class="alert alert-{{ upgrade_security_level }} alert-dismissible" role="alert">
         <strong>{{ ('flash_'~upgrade_security_level)|_ }}</strong> <span class="fa fa-exclamation-triangle"></span> {{ upgrade_security_message }}
     </div>
-{% endif %}
+@endif
 
 {# SUCCESS MESSAGE (ALWAYS SINGULAR) #}
 {% if session_has('success') %}
@@ -24,14 +24,14 @@
         <strong>{{ 'flash_success'|_ }}</strong>
         {% if session_has('success_url') %}
             <a href="{{ session('success_url') }}">
-        {% endif %}
+        @endif
                 {{ session('success') }}
         {% if session_has('success_url') %}
             </a>
-        {% endif %}
+        @endif
 
     </div>
-{% endif %}
+@endif
 
 {# INFO MESSAGE (CAN BE MULTIPLE) #}
 {% if session_has('info') %}
@@ -49,25 +49,25 @@
                     <li>{{ inf|raw }}</li>
                 {% endfor %}
             </ul>
-        {% endif %}
+        @endif
         {# SET OF MULTIPLE INFO MESSAGES, BUT THERE IS JUST ONE #}
         {% if session('info') is iterable and session('info')|length == 1 %}
             <strong>{{ 'flash_info'|_ }}:</strong> {{ session('info')[0]|raw }}
-        {% endif %}
+        @endif
         {# SINGLE INFO MESSAGE #}
         {% if session('info') is not iterable %}
             {% if session_has('info_url') %}
                 <a href="{{ session('info_url') }}">
-            {% endif %}
+            @endif
             <strong>{{ 'flash_info'|_ }}:</strong> {{ session('info')|raw }}
             {% if session_has('info_url') %}
                 </a>
-            {% endif %}
-        {% endif %}
+            @endif
+        @endif
 
     </div>
 
-{% endif %}
+@endif
 
 {# WARNING MESSAGE (ALWAYS SINGULAR) #}
 {% if session_has('warning') %}
@@ -77,7 +77,7 @@
         </button>
         <strong>{{ 'flash_warning'|_ }}</strong> {{ session('warning') }}
     </div>
-{% endif %}
+@endif
 
 {# ERROR MESSAGE (CAN BE MULTIPLE) #}
 {% if session_has('error') %}
@@ -96,19 +96,19 @@
                     <li>{{ err }}</li>
                 {% endfor %}
             </ul>
-        {% endif %}
+        @endif
 
         {# SET OF MULTIPLE ERRORS, BUT THERE IS JUST ONE #}
         {% if session('error') is iterable and session('error')|length == 1 %}
             <strong>{{ 'flash_error'|_ }}</strong>
             {{ session('error')[0]|raw }}
-        {% endif %}
+        @endif
 
         {# SINGLE ERROR #}
         {% if session('error') is not iterable %}
             <strong>{{ 'flash_error'|_ }}</strong> {{ session('error')|raw }}
-        {% endif %}
+        @endif
 
     </div>
-{% endif %}
+@endif
 

@@ -17,10 +17,10 @@
                 {% for budget in budgets %}
                     <td class="text-right">
                         {% if currency.budgets[budget.id] %}
-                            {{ formatAmountBySymbol(currency.budgets[budget.id], currency.currency_symbol, currency.currency_decimal_places) }}
-                        {% else %}
+                            {{ format_amount_by_symbol(currency.budgets[budget.id], currency.currency_symbol, currency.currency_decimal_places) }}
+                        @else
                             &mdash;
-                        {% endif %}
+                        @endif
                     </td>
                 {% endfor %}
             </tr>

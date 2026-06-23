@@ -47,7 +47,7 @@
                                     {% for key, lang in Config.get('firefly.languages') %}
                                         <option {% if language == key %}
                                             selected
-                                        {% endif %} value="{{ key }}">{{ lang.name_locale }} ({{ lang.name_english }})
+                                        @endif value="{{ key }}">{{ lang.name_locale }} ({{ lang.name_english }})
                                         </option>
 
                                     {% endfor %}

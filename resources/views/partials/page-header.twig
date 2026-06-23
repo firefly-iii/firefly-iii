@@ -1,14 +1,14 @@
 <h1>
     {% if mainTitleIcon %}
         <span class="hidden-xs fa {{ mainTitleIcon }}"></span>
-    {% endif %}
+    @endif
     {{ title }}
     {% if subTitle %}
         <small id="subTitle">
             {% if subTitleIcon %}
                 <span class="hidden-xs fa {{ subTitleIcon }}"></span>
-            {% endif %}
+            @endif
             {{ subTitle }}
         </small>
-    {% endif %}
+    @endif
 </h1>

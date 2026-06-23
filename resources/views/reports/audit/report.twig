@@ -16,7 +16,7 @@
                     <ul class="list-inline">
                         {% for hide in hideable %}
                             <li><input
-                                    {% if hide in defaultShow %}checked{% endif %}
+                                    {% if hide in defaultShow %}checked@endif
                                     type="checkbox" class="fw-normal audit-option-checkbox" name="option[]" value="{{ hide }}" id="option_{{ hide }}"/> <label
                                     for="option_{{ hide }}">{{ trans('list.'~hide) }}</label></li>
                         {% endfor %}
@@ -36,7 +36,7 @@
                         <h3 class="card-title">{{ account.name }}</h3>
                     </div>
                     {% set url = route('accounts.show',account.id) %}
-                    {% if not auditData[account.id].exists %}
+                    {% if not auditData[$account->id].exists %}
                         <div class="card-body">
 
                             <em>
@@ -50,18 +50,18 @@
 
                             </em>
                         </div>
-                    {% else %}
+                    @else
                         <div class="box-body no-padding">
                             <p class="p-4">
                                 {{ trans('firefly.audit_end_balance',
                                     {
                                         account_name: account.name|escape,
                                         url: url,
-                                        end: auditData[account.id].dayBefore,
-                                        balance: formatAmountByAccount(account, auditData[account.id].dayBeforeBalance.balance)
+                                        end: auditData[$account->id].dayBefore,
+                                        balance: formatAmountByAccount(account, auditData[$account->id].dayBeforeBalance.balance)
                                     })|raw }}
                             </p>
-                            {% include 'reports.partials.journals-audit'  with {'journals': auditData[account.id].journals,'account':account} %}
+                            {% include 'reports.partials.journals-audit'  with {'journals': auditData[$account->id].journals,'account':account} %}
 
                             <p class="p-4">
 
@@ -69,12 +69,12 @@
                                     {
                                         account_name: account.name|escape,
                                         url: url,
-                                        end: auditData[account.id].end,
-                                        balance: formatAmountByAccount(account,auditData[account.id].endBalance)
+                                        end: auditData[$account->id].end,
+                                        balance: formatAmountByAccount(account,auditData[$account->id].endBalance)
                                     })|raw }}
                             </p>
                         </div>
-                    {% endif %}
+                    @endif
                 </div>
             </div>
         </div>

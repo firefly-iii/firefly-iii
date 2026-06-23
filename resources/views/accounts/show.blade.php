@@ -2,35 +2,39 @@
 @section('content')
 
     <div class="row">
-        <div class="{% if attachments.count() == 0 %}col-lg-12 col-md-12 col-sm-12 col-xs-12{% else %}col-lg-8 col-md-6 col-sm-12 col-xs-12{% endif %}">
+        <div class="@if(0 === $attachments->count())col-lg-12 col-md-12 col-sm-12 col-xs-12@else col-lg-8 col-md-6 col-sm-12 col-xs-12@endif">
             <div class="card">
                 <div class="card-header">
                     <h3 class="card-title">
-                        {% if balances.balance %}
+                        @if($balances['balance'])
                             <span title="balance">
-                        {{ trans('firefly.chart_account_in_period', {
-                            balance: formatAmountBySymbol(balances.balance, currency.symbol, currency.decimal_places, true),
-                            name: account.name|escape, start: start.isoFormat(monthAndDayFormat), end: end.isoFormat(monthAndDayFormat) })|raw }}
+                        {{ trans('firefly.chart_account_in_period', [
+                                'balance' => format_amount_by_symbol($balances['balance'], $currency->symbol, $currency->decimal_places, true),
+                                'name' => e($account->name),
+                                'start' => $start->isoFormat($monthAndDayFormat),
+                                'end' => $end->isoFormat($monthAndDayFormat)]) }}
                                 </span>
-                        {% elseif balances.pc_balance %}
+                        @elseif($balances['pc_balance'])
                             <span title="pc_balance">
-                            {{ trans('firefly.chart_account_in_period', {
-                                balance: formatAmountBySymbol(balances.pc_balance, primaryCurrency.symbol, primaryCurrency.decimal_places, true),
-                                name: account.name|escape, start: start.isoFormat(monthAndDayFormat), end: end.isoFormat(monthAndDayFormat) })|raw }}
+                            {{ trans('firefly.chart_account_in_period', [
+                                'balance' => format_amount_by_symbol($balances['pc_balance'], $primaryCurrency->symbol, $primaryCurrency->decimal_places, true),
+                                'name' => e($account->name),
+                                'start' => $start->isoFormat($monthAndDayFormat),
+                                'end' => $end->isoFormat($monthAndDayFormat)]) }}
                                 </span>
-                        {% endif %}
+                        @endif
                     </h3>
                     <div class="box-tools pull-right">
                         <div class="btn-group">
                             <button class="btn btn-box-tool dropdown-toggle" data-toggle="dropdown"><span
                                     class="bi bi-list"></span></button>
                             <ul class="dropdown-menu" role="menu">
-                                <li><a href="{{ route('accounts.edit', account.id) }}"><span
+                                <li><a href="{{ route('accounts.edit', [$account->id]) }}"><span
                                             class="bi bi-pencil"></span> {{ __('firefly.edit') }}</a></li>
-                                <li><a href="{{ route('accounts.delete', account.id) }}"><span
+                                <li><a href="{{ route('accounts.delete', [$account->id]) }}"><span
                                             class="bi bi-trash"></span> {{ __('firefly.delete') }}</a></li>
                                 <li>
-                                    <a href="{{ route('accounts.reconcile',account.id) }}"><span class="bi bi-check"></span> {{ 'reconcile_this_account'|_ }}</a>
+                                    <a href="{{ route('accounts.reconcile', [$account->id]) }}"><span class="bi bi-check"></span> {{ __('firefly.reconcile_this_account') }}</a>
                                 </li>
                             </ul>
                         </div>
@@ -43,12 +47,12 @@
                 </div>
             </div>
         </div>
-        {% if attachments.count() > 0 %}
+        @if($attachments->count() > 0)
             <div class="col-lg-4 col-md-6 col-sm-12 col-xs-12">
                 <div class="card">
                     <div class="card-header">
                         <h3 class="card-title">
-                            {{ 'attachments'|_ }}
+                            {{ __('firefly.attachments') }}
                         </h3>
                     </div>
                     <div class="box-body no-padding">
@@ -56,9 +60,9 @@
                     </div>
                 </div>
             </div>
-        {% endif %}
+        @endif
     </div>
-    {% if not showAll and isLiability %}
+    @if(!$showAll && $isLiability)
         <div class="row">
             <div class="col-lg-4 col-md-6 col-sm-12 col-xs-12">
                 <div class="card">
@@ -71,13 +75,13 @@
                 </div>
             </div>
         </div>
-    {% endif %}
-    {% if not showAll and not isLiability %}
+    @endif
+    @if(!$showAll && !$isLiability)
         <div class="row">
             <div class="col-lg-4 col-md-6 col-sm-12 col-xs-12">
                 <div class="card">
                     <div class="card-header">
-                        <h3 class="card-title">{{ 'expenses_by_category'|_ }}</h3>
+                        <h3 class="card-title">{{ __('firefly.expenses_by_category' }}</h3>
                     </div>
                     <div class="card-body">
                         <div class="center-chart">
@@ -89,7 +93,7 @@
             <div class="col-lg-4 col-md-6 col-sm-12 col-xs-12">
                 <div class="card">
                     <div class="card-header">
-                        <h3 class="card-title">{{ 'expenses_by_budget'|_ }}</h3>
+                        <h3 class="card-title">{{ __('firefly.expenses_by_budget') }}</h3>
                     </div>
                     <div class="card-body">
                         <div class="center-chart">
@@ -101,7 +105,7 @@
             <div class="col-lg-4 col-md-6 col-sm-12 col-xs-12">
                 <div class="card">
                     <div class="card-header">
-                        <h3 class="card-title">{{ 'income_by_category'|_ }}</h3>
+                        <h3 class="card-title">{{ __('firefly.income_by_category') }}</h3>
                     </div>
                     <div class="card-body">
                         <div class="center-chart">
@@ -111,115 +115,117 @@
                 </div>
             </div>
         </div>
-    {% endif %}
+    @endif
 
     <div class="row">
-        {% if(location) %}
+        @if($location)
             <div class="col-lg-6">
                 <div class="card">
                     <div class="card-header">
-                        <h3 class="card-title">{{ 'location'|_ }}</h3>
+                        <h3 class="card-title">{{ __('firefly.location') }}</h3>
                     </div>
                     <div class="card-body">
                         <div id="location_map" class="map-size"></div>
                     </div>
                 </div>
             </div>
-        {% endif %}
-        {% if account.notes.count() == 1 %}
+        @endif
+        @if(1 === $account->notes->count())
             <div class="col-lg-6">
                 <div class="card">
                     <div class="card-header">
-                        <h3 class="card-title">{{ 'notes'|_ }}</h3>
+                        <h3 class="card-title">{{ __('firefly.notes') }}</h3>
                     </div>
                     <div class="card-body">
-                        {{ account.notes.first().text|markdown }}
+                        {{ parse_markdown($account->notes->first()->text) }}
                     </div>
                 </div>
             </div>
-        {% endif %}
+        @endif
     </div>
 
     <div class="row">
-        <div class="{% if periods|length > 0 %}col-lg-10 col-md-8 col-sm-12{% else %}col-lg-12 col-md-12 col-sm-12{% endif %}">
+        <div class="@if(count($periods) > 0)col-lg-10 col-md-8 col-sm-12 @else col-lg-12 col-md-12 col-sm-12@endif">
             <div class="card">
                 <div class="card-header">
-                    <h3 class="card-title">{{ 'transactions'|_ }}
-                        {% if balances.balance %}
-                            ({{ formatAmountBySymbol(balances.balance, currency.symbol, currency.decimal_places, true)|raw }})
-                        {% elseif balances.pc_balance %}
-                            ({{ formatAmountBySymbol(balances.pc_balance, primaryCurrency.symbol, primaryCurrency.decimal_places, true)|raw }})
-                        {% endif %}
+                    <h3 class="card-title">{{ __('firefly.transactions') }}
+                        @if($balances['balance'])
+                            ({{ format_amount_by_symbol($balances['balance'], $currency->symbol, $currency->decimal_places, true) }})
+                        @elseif($balances['pc_balance'])
+                            ({{ format_amount_by_symbol($balances['pc_balance'], $primaryCurrency->symbol, $primaryCurrency->decimal_places, true) }} )
+                        @endif
                     </h3>
                 </div>
                 <div class="card-body">
-                    {% if account.accountType.type == 'Asset account' %}
-                        {% set showReconcile = true %}
-                    {% else %}
-                        {% set showReconcile = false %}
-                    {% endif %}
-
+                    @php
+                        $showReconcile = false;
+                    @endphp
+                    @if('Asset account' === $account->accountType->type)
+                        @php
+                        $showReconcile = true;
+                        @endphp
+                    @endif
                     {% include 'list.groups' %}
                     <p>
                         <span class="bi bi-calendar"></span>
-                        {% if periods|length > 0 %}
-                            <a href="{{ route('accounts.show.all', [account.id]) }}">
-                                {{ 'show_all_no_filter'|_ }}
+                        @if(count($periods) > 0)
+                            <a href="{{ route('accounts.show.all', [$account->id]) }}">
+                                {{ __('firefly.show_all_no_filter') }}
                             </a>
-                        {% else %}
-                            <a href="{{ route('accounts.show', [account.id]) }}">
-                                {{ 'show_the_current_period_and_overview'|_ }}
+                        @else
+                            <a href="{{ route('accounts.show', [$account->id]) }}">
+                                {{ __('firefly.show_the_current_period_and_overview') }}
                             </a>
-                        {% endif %}
+                        @endif
                     </p>
                 </div>
             </div>
         </div>
-        {% if periods|length > 0 %}
+        @if(count($periods) > 0)
             <div class="col-lg-2 col-md-4 col-sm-12 col-xs-12">
                 {% include 'list.periods' %}
             </div>
-        {% endif %}
+        @endif
     </div>
 @endsection
 
 @section('scripts')
     <script type="text/javascript" nonce="{{ $JS_NONCE }}">
         // location stuff
-        {% if location %}
-        var latitude = {{ location.latitude|default("52.3167") }};
-        var longitude = {{ location.longitude|default("5.5500") }};
-        var zoomLevel = {{ location.zoom_level|default("6") }};
-        {% endif %}
+        @if($location)
+            var latitude = {{ $location['latitude'] ?? '52.3167' }};
+            var longitude = {{ $location['longitude'] ?? '5.5500' }};
+            var zoomLevel = {{ $location['zoom_level'] ?? '6' }};
+        @endif
 
         var showAll = true;
-        currencySymbol = "{{ currency.symbol }}";
-        var accountID = {{ account.id }};
-        var chartUrl = '{{ chartUrl }}';
-        {% if not showAll %}
-        showAll = false;
-        // url's for charts:
+        currencySymbol = "{{ $currency->symbol }}";
+        var accountID = {{ $account->id }};
+        var chartUrl = '{{ $chartUrl }}';
+        if(!$showAll)
+            showAll = false;
+            // url's for charts:
 
-        var incomeCategoryUrl = '{{ route('chart.account.income-category', [account.id, start.format('Ymd'), end.format('Ymd')]) }}';
-        var expenseCategoryUrl = '{{ route('chart.account.expense-category', [account.id, start.format('Ymd'), end.format('Ymd')]) }}';
-        var expenseBudgetUrl = '{{ route('chart.account.expense-budget', [account.id, start.format('Ymd'), end.format('Ymd')]) }}';
-        var drawVerticalLine = '';
-        var lineColor = 'red';
-        var lineTextColor = '#000';
-        if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) {
-            lineColor = '#a00';
-            lineTextColor = '#bec5cb';
-        }
-        {# render vertical line with text "today"  #}
-        {% if start.lte(today) and end.gte(today) %}
-        drawVerticalLine = '{{ today.isoFormat(monthAndDayFormat) }}';
-        {% endif %}
-        {% endif %}
+            var incomeCategoryUrl = '{{ route('chart.account.income-category', [$account->id, $start->format('Ymd'), $end->format('Ymd')]) }}';
+            var expenseCategoryUrl = '{{ route('chart.account.expense-category', [$account->id, $start->format('Ymd'), $end->format('Ymd')]) }}';
+            var expenseBudgetUrl = '{{ route('chart.account.expense-budget', [$account->id, $start->format('Ymd'), $end->format('Ymd')]) }}';
+            var drawVerticalLine = '';
+            var lineColor = 'red';
+            var lineTextColor = '#000';
+            if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) {
+                lineColor = '#a00';
+                lineTextColor = '#bec5cb';
+            }
+            {{-- render vertical line with text "today" --}}
+            @if($start->lte($today) && $end->gte($today))
+                drawVerticalLine = '{{ $today->isoFormat($monthAndDayFormat) }}';
+            @endif
+        @endif
 
     </script>
-    {% if location %}
+    @if($location)
         <script src="v1/lib/leaflet/leaflet.js?v={{ $FF_BUILD_TIME }}" nonce="{{ $JS_NONCE }}"></script>
-    {% endif %}
+    @endif
     <script type="text/javascript" src="v1/js/lib/Chart.bundle.min.js?v={{ $FF_BUILD_TIME }}"
             nonce="{{ $JS_NONCE }}"></script>
     <script type="text/javascript" src="v1/js/lib/chartjs-plugin-annotation.min.js?v={{ $FF_BUILD_TIME }}"
@@ -236,7 +242,7 @@
 @endsection
 
 @section('styles')
-    {% if location %}
+    @if($location)
         <link rel="stylesheet" href="v1/lib/leaflet/leaflet.css?v={{ $FF_BUILD_TIME }}" nonce="{{ $JS_NONCE }}">
-    {% endif %}
+    @endif
 @endsection

@@ -53,17 +53,17 @@
                 <p>
                     {% if diffCompare > 0 %}
                         {{ 'reconcile_has_more'|_ }}
-                    {% endif %}
+                    @endif
                     {% if diffCompare < 0 %}
                         {{ 'reconcile_has_less'|_ }}
-                    {% endif %}
+                    @endif
                 </p>
                 {% if diffCompare == 0 %}
                     <p>
                         {{ 'reconcile_is_equal'|_ }}
                     </p>
                     <input type="hidden" name="reconcile" value="nothing">
-                {% endif %}
+                @endif
                 {% if diffCompare != 0 %}
                     <div class="form-group">
                         <div class="col-lg-12">
@@ -73,10 +73,10 @@
                                     <input type="radio" name="reconcile" value="create">
                                     {% if diffCompare > 0 %}
                                         {{ trans('firefly.create_neg_reconcile_transaction', {amount: formatAmountByAccount(account, (difference*-1))})|raw }}
-                                    {% endif %}
+                                    @endif
                                     {% if diffCompare < 0 %}
                                         {{ trans('firefly.create_pos_reconcile_transaction', {amount: formatAmountByAccount(account, (difference*-1))})|raw }}
-                                    {% endif %}
+                                    @endif
                                 </label>
                             </div>
                         </div>
@@ -95,7 +95,7 @@
                     <p>
                         {{ 'reconcile_go_back'|_ }}
                     </p>
-                {% endif %}
+                @endif
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-outline-secondary" data-dismiss="modal">{{ 'close'|_ }}</button>

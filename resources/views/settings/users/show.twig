@@ -33,9 +33,9 @@
                             <td>
                                 {% if information.is_admin %}
                                     <small class="text-success"><span class="bi bi-check"></span></small> {{ 'yes'|_ }}
-                                {% else %}
+                                @else
                                     <small class="text-danger"><span class="bi bi-x"></span></small> {{ 'no'|_ }}
-                                {% endif %}
+                                @endif
                             </td>
                         </tr>
                         <tr>
@@ -43,9 +43,9 @@
                             <td>
                                 {% if information.has_2fa %}
                                     <small class="text-success"><span class="bi bi-check"></span></small> {{ 'yes'|_ }}
-                                {% else %}
+                                @else
                                     <small class="text-danger"><span class="bi bi-x"></span></small> {{ 'no'|_ }}
-                                {% endif %}
+                                @endif
                             </td>
                         </tr>
                         <tr>
@@ -56,13 +56,13 @@
 
                                     {% if information.blocked_code == "" %}
                                         <em>~</em>
-                                    {% else %}
+                                    @else
                                         {{ information.blocked_code }}
-                                    {% endif %}
+                                    @endif
 
-                                {% else %}
+                                @else
                                     <small class="text-success"><span class="bi bi-x" title="{{ 'no'|_ }}"></span></small> {{ 'no'|_ }}
-                                {% endif %}
+                                @endif
                             </td>
                         </tr>
                         </tbody>

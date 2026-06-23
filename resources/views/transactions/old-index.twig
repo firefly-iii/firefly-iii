@@ -7,15 +7,15 @@
 @section('content')
 
     {# upper show-all instruction #}
-    {% if periods|length > 0 %}
+    @if(count($periods) > 0)
         <div class="row">
             <div class="col-lg-offset-10 col-lg-2 col-md-offset-10 col-md-2 col-sm-12 col-xs-12">
                 <p class="small text-center"><a href="{{ route('transactions.index.all',[objectType]) }}">{{ 'showEverything'|_ }}</a></p>
             </div>
         </div>
-    {% endif %}
+    @endif
 
-    {% if periods|length > 0 %}
+    @if(count($periods) > 0)
 
         {% set boxSize = 'col-lg-4 col-md-6 col-sm-12 col-xs-12' %}
         <div class="row">
@@ -42,7 +42,7 @@
                         </div>
                     </div>
                 </div>
-            {% endif %}
+            @endif
             {% if objectType != 'withdrawal' %}
                 <div class="{{ boxSize }}">
                     <div class="card">
@@ -54,7 +54,7 @@
                         </div>
                     </div>
                 </div>
-            {% endif %}
+            @endif
             {# for all #}
             <div class="{{ boxSize }}">
                 <div class="card">
@@ -67,11 +67,11 @@
                 </div>
             </div>
         </div>
-    {% endif %}
+    @endif
 
     {# list with journals #}
     <div class="row">
-        <div class="{% if periods|length > 0 %}col-lg-10 col-md-10 col-sm-12{% else %}col-lg-12 col-md-12 col-sm-12{% endif %}">
+        <div class="@if(count($periods) > 0)col-lg-10 col-md-10 col-sm-12@elsecol-lg-12 col-md-12 col-sm-12@endif">
             <div class="card">
                 <div class="card-header">
                     <h3 class="card-title">{{ subTitle }}</h3>
@@ -85,45 +85,45 @@
                 </div>
                 <div class="card-footer">
                     {# links for other views #}
-                    {% if periods|length > 0 %}
+                    @if(count($periods) > 0)
                         <p>
                             <span class="bi bi-calendar"></span>
-                            <a href="{{ route('transactions.index.all', [objectType]) }}">{{ 'show_all_no_filter'|_ }}</a>
+                            <a href="{{ route('transactions.index.all', [objectType]) }}">{{ __('firefly.show_all_no_filter') }}</a>
                         </p>
-                    {% else %}
+                    @else
                         <p>
                             <span class="bi bi-calendar"></span>
-                            <a href="{{ route('transactions.index', [objectType]) }}">{{ 'show_the_current_period_and_overview'|_ }}</a>
+                            <a href="{{ route('transactions.index', [objectType]) }}">{{ __('firefly.show_the_current_period_and_overview') }}</a>
                         </p>
-                    {% endif %}
+                    @endif
                 </div>
             </div>
         </div>
 
         {# boxes with info #}
-        {% if periods|length > 0 %}
+        @if(count($periods) > 0)
             <div class="col-lg-2 col-md-2 col-sm-12 col-xs-12">
                 {% include 'list.periods' %}
             </div>
-        {% endif %}
+        @endif
 
     </div>
 
     {# lower show-all instruction #}
-    {% if periods|length > 0 %}
+    @if(count($periods) > 0)
         <div class="row">
             <div class="col-lg-offset-10 col-lg-2 col-md-offset-10 col-md-2 col-sm-12 col-xs-12">
                 <p class="small text-center"><a href="{{ route('transactions.index.all', [objectType]) }}">{{ 'showEverything'|_ }}</a></p>
             </div>
         </div>
-    {% endif %}
+    @endif
 
 @endsection
 @section('scripts')
     {# required for groups.twig #}
     <script type="text/javascript" src="v1/js/ff/list/groups.js?v={{ $FF_BUILD_TIME }}" nonce="{{ $JS_NONCE }}"></script>
     <script type="text/javascript" nonce="{{ $JS_NONCE }}">
-        var showAll = {% if periods|length > 0 %}false{% else %}true{% endif %};
+        var showAll = @if(count($periods) > 0)false@elsetrue@endif;
 
         var categoryChartUrl = '{{ route('chart.transactions.categories', [objectType, start.format('Y-m-d'), end.format('Y-m-d')]) }}';
         var budgetChartUrl = '{{ route('chart.transactions.budgets', [start.format('Y-m-d'), end.format('Y-m-d')]) }}';

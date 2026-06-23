@@ -5,9 +5,9 @@
     {% for breadcrumb in breadcrumbs %}
         {% if breadcrumb.url and not loop.last %}
             <li><a href="{{ breadcrumb.url }}">{{ breadcrumb.title }}</a></li>
-        {% else %}
+        @else
             <li class="active">{{ breadcrumb.title }}</li>
-        {% endif %}
+        @endif
     {% endfor %}
 </ol>
-{% endif %}
+@endif

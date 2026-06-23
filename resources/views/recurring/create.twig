@@ -126,9 +126,9 @@
                         {# BUDGET ONLY WHEN CREATING A WITHDRAWAL #}
                         {% if budgets|length > 1 %}
                             {{ ExpandedForm::select('budget_id', budgets, null) }}
-                        {% else %}
+                        @else
                             {{ ExpandedForm::select('budget_id', budgets, null, {helpText: trans('firefly.no_budget_pointer', {link: route('budgets.index')})}) }}
-                        {% endif %}
+                        @endif
 
                         {# CATEGORY ALWAYS #}
                         {{ ExpandedForm::text('category') }}
@@ -136,9 +136,9 @@
                         {# BILL / SUBSCRIPTION ONLY FOR WITHDRAWALS #}
                         {% if bills|length > 1 %}
                             {{ ExpandedForm::select('bill_id', bills, null) }}
-                        {% else %}
+                        @else
                             {{ ExpandedForm::select('bill_id', bills, null, {helpText: trans('firefly.no_bill_pointer', {link: route('subscriptions.index')})}) }}
-                        {% endif %}
+                        @endif
 
                         {# TAGS #}
                         {{ ExpandedForm::text('tags') }}

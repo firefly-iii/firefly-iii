@@ -36,7 +36,7 @@
                                 </td>
                                 <td>{{ tag.description }}</td>
                             </tr>
-                        {% endif %}
+                        @endif
                         {% if tag.date %}
                             <tr>
                                 <td>
@@ -46,7 +46,7 @@
                                     {{ tag.date.isoFormat(monthAndDayFormat) }}
                                 </td>
                             </tr>
-                        {% endif %}
+                        @endif
 
                         {# total amount #}
                         {% set currentSum = 0 %}
@@ -59,11 +59,11 @@
                                 <td class="forty">{{ trans('list.sum') }}</td>
                                 <td>
                                     {% for set in sums %}
-                                        {{ formatAmountBySymbol(set.Withdrawal + set.Transfer + set.Deposit, set.currency_symbol, set.currency_decimal_places, true) }}{% if loop.index != sums|length %},{% endif %}
+                                        {{ format_amount_by_symbol(set.Withdrawal + set.Transfer + set.Deposit, set.currency_symbol, set.currency_decimal_places, true) }}{% if loop.index != sums|length %},@endif
                                     {% endfor %}
                                 </td>
                             </tr>
-                        {% endif %}
+                        @endif
 
                         {# total expense excl. transfer #}
                         {% set currentSum = 0 %}
@@ -75,11 +75,11 @@
                                 <td class="forty">{{ trans('list.sum_excluding_transfers') }}</td>
                                 <td>
                                     {% for set in sums %}
-                                        {{ formatAmountBySymbol(set.Withdrawal + set.Deposit, set.currency_symbol, set.currency_decimal_places, true) }}{% if loop.index != sums|length %},{% endif %}
+                                        {{ format_amount_by_symbol(set.Withdrawal + set.Deposit, set.currency_symbol, set.currency_decimal_places, true) }}{% if loop.index != sums|length %},@endif
                                     {% endfor %}
                                 </td>
                             </tr>
-                        {% endif %}
+                        @endif
 
                         {# withdrawals #}
                         {% set currentSum = 0 %}
@@ -91,11 +91,11 @@
                                 <td class="forty">{{ trans('list.sum_withdrawals') }}</td>
                                 <td>
                                     {% for set in sums %}
-                                        {{ formatAmountBySymbol(set.Withdrawal, set.currency_symbol, set.currency_decimal_places, true) }}{% if loop.index != sums|length %},{% endif %}
+                                        {{ format_amount_by_symbol(set.Withdrawal, set.currency_symbol, set.currency_decimal_places, true) }}{% if loop.index != sums|length %},@endif
                                     {% endfor %}
                                 </td>
                             </tr>
-                        {% endif %}
+                        @endif
 
                         {# deposits #}
                         {% set currentSum = 0 %}
@@ -107,11 +107,11 @@
                                 <td class="forty">{{ trans('list.sum_deposits') }}</td>
                                 <td>
                                     {% for set in sums %}
-                                        {{ formatAmountBySymbol(set.Deposit, set.currency_symbol, set.currency_decimal_places, true) }}{% if loop.index != sums|length %},{% endif %}
+                                        {{ format_amount_by_symbol(set.Deposit, set.currency_symbol, set.currency_decimal_places, true) }}{% if loop.index != sums|length %},@endif
                                     {% endfor %}
                                 </td>
                             </tr>
-                        {% endif %}
+                        @endif
 
                         {# transfers #}
                         {% set currentSum = 0 %}
@@ -123,11 +123,11 @@
                                 <td class="forty">{{ trans('list.sum_transfers') }}</td>
                                 <td>
                                     {% for set in sums %}
-                                        {{ formatAmountBySymbol(set.Transfer, set.currency_symbol, set.currency_decimal_places, true) }}{% if loop.index != sums|length %},{% endif %}
+                                        {{ format_amount_by_symbol(set.Transfer, set.currency_symbol, set.currency_decimal_places, true) }}{% if loop.index != sums|length %},@endif
                                     {% endfor %}
                                 </td>
                             </tr>
-                        {% endif %}
+                        @endif
 
                         {# reconciliation #}
                         {% set currentSum = 0 %}
@@ -139,11 +139,11 @@
                                 <td class="forty">{{ trans('list.sum_reconciliations') }}</td>
                                 <td>
                                     {% for set in sums %}
-                                        {{ formatAmountBySymbol(set.Reconciliation, set.currency_symbol, set.currency_decimal_places, true) }}{% if loop.index != sums|length %},{% endif %}
+                                        {{ format_amount_by_symbol(set.Reconciliation, set.currency_symbol, set.currency_decimal_places, true) }}{% if loop.index != sums|length %},@endif
                                     {% endfor %}
                                 </td>
                             </tr>
-                        {% endif %}
+                        @endif
 
                         {#
                         {% if sums.Transfer != 0 %}
@@ -151,13 +151,13 @@
                                 <td>{{ trans('list.sum_transfers') }}</td>
                                 <td> {{ sums.Transfer|formatAmount }}</td>
                             </tr>
-                        {% endif %}
+                        @endif
                         {% if sums.Reconciliation != 0 %}
                             <tr>
                                 <td>{{ trans('list.sum_reconciliations') }}</td>
                                 <td> {{ sums.Reconciliation|formatAmount }}</td>
                             </tr>
-                        {% endif %}
+                        @endif
                         #}
                     </table>
                 </div>
@@ -177,7 +177,7 @@
         <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
             <div class="card">
                 <div class="card-header">
-                    <h3 class="card-title">{{ 'location'|_ }}</h3>
+                    <h3 class="card-title">{{ __('firefly.location') }}</h3>
                     <div class="box-tools pull-right">
                         <div class="btn-group">
                             <button class="btn btn-box-tool dropdown-toggle" data-toggle="dropdown"><span
@@ -194,11 +194,11 @@
                     </div>
                 </div>
                 <div class="card-body">
-                    {% if(location) %}
+                    @if($location)
                         <div id="location_map" class="map-size"></div>
-                    {% else %}
+                    @else
                         <p>{{ 'no_location_set'|_ }}</p>
-                    {% endif %}
+                    @endif
                 </div>
             </div>
         </div>
@@ -218,21 +218,21 @@
                 </div>
             </div>
         </div>
-    {% endif %}
+    @endif
 
-    {% if periods|length > 0 %}
+    @if(count($periods) > 0)
         <div class="row">
             <div class="col-lg-offset-10 col-lg-2 col-md-offset-10 col-md-2 col-sm-12 col-xs-12">
                 <p class="small text-center"><a
                         href="{{ route('tags.show',[tag.id,'all']) }}">{{ 'showEverything'|_ }}</a></p>
             </div>
         </div>
-    {% endif %}
+    @endif
     <div class="row">
-        <div class="{% if periods|length > 0 %}col-lg-10 col-md-10 col-sm-12 col-xs-12{% else %}col-lg-12 col-md-12 col-sm-12 col-xs-12{% endif %}">
+        <div class="@if(count($periods) > 0)col-lg-10 col-md-10 col-sm-12 col-xs-12@elsecol-lg-12 col-md-12 col-sm-12 col-xs-12@endif">
             <div class="card">
                 <div class="card-header">
-                    <h3 class="card-title">{{ 'transactions'|_ }}</h3>
+                    <h3 class="card-title">{{ __('firefly.transactions') }}</h3>
 
 
                     <div class="box-tools pull-right">
@@ -253,38 +253,38 @@
                 <div class="card-body">
                     {% include 'list.groups' with {showBudget:true, showCategory: true} %}
 
-                    {% if periods|length > 0 %}
+                    @if(count($periods) > 0)
                         <p>
                             <span class="bi bi-calendar"></span>
                             <a href="{{ route('tags.show', [tag.id,'all']) }}">
-                                {{ 'show_all_no_filter'|_ }}
+                                {{ __('firefly.show_all_no_filter') }}
                             </a>
                         </p>
-                    {% else %}
+                    @else
                         <p>
                             <span class="bi bi-calendar"></span>
                             <a href="{{ route('tags.show', [tag.id]) }}">
-                                {{ 'show_the_current_period_and_overview'|_ }}
+                                {{ __('firefly.show_the_current_period_and_overview') }}
                             </a>
                         </p>
-                    {% endif %}
+                    @endif
                 </div>
             </div>
         </div>
-        {% if periods|length > 0 %}
+        @if(count($periods) > 0)
             <div class="col-lg-2 col-md-2 col-sm-12 col-xs-12">
                 {% include 'list.periods' %}
             </div>
-        {% endif %}
+        @endif
     </div>
-    {% if periods|length > 0 %}
+    @if(count($periods) > 0)
         <div class="row">
             <div class="col-lg-offset-10 col-lg-2 col-md-offset-10 col-md-2 col-sm-12 col-xs-12">
                 <p class="small text-center"><a href="{{ route('tags.show',[tag.id]) }}">{{ 'showEverything'|_ }}</a>
                 </p>
             </div>
         </div>
-    {% endif %}
+    @endif
 
 @endsection
 @section('styles')
@@ -297,7 +297,7 @@
         var latitude = {{ location.latitude|default("52.3167") }};
         var longitude = {{ location.longitude|default("5.5500") }};
         var zoomLevel = {{ location.zoom_level|default("6") }};
-        {% endif %}
+        @endif
     </script>
     <script src="v1/lib/leaflet/leaflet.js?v={{ $FF_BUILD_TIME }}" nonce="{{ $JS_NONCE }}"></script>
     <script src="v1/js/ff/tags/show.js?v={{ $FF_BUILD_TIME }}" nonce="{{ $JS_NONCE }}"></script>

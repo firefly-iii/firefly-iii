@@ -14,7 +14,7 @@
                 <input type="hidden" name="redirect" value="true"/>
                 <input type="hidden" name="amount" value="{{ budgetLimit.amount }}"/>
                 <div class="form-group">
-                    <textarea name="notes" class="form-control" rows="3" placeholder="{{ 'notes'|_ }}">{{ notes }}</textarea>
+                    <textarea name="notes" class="form-control" rows="3" placeholder="{{ __('firefly.notes') }}">{{ notes }}</textarea>
                     <span class="help-block">{{ trans('firefly.field_supports_markdown')|raw }}</span>
                 </div>
             </div>

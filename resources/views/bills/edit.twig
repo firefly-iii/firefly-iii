@@ -20,9 +20,9 @@
                     <div class="card-body">
                         {% if rules.count() > 0 %}
                             {{ ExpandedForm::text('name', bill.name, {helpText: trans_choice('firefly.bill_edit_rules', rules.count())}) }}
-                        {% else %}
+                        @else
                             {{ ExpandedForm::text('name', bill.name) }}
-                        {% endif %}
+                        @endif
                         {{ CurrencyForm::currencyList('transaction_currency_id') }}
                         {{ ExpandedForm::amountNoCurrency('amount_min', bill.amount_min) }}
                         {{ ExpandedForm::amountNoCurrency('amount_max',  bill.amount_max) }}

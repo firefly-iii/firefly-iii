@@ -10,10 +10,10 @@
                     {% if attachment.file_exists %}
                         <a href="{{ route('attachments.download', attachment.id) }}" class="btn btn-outline-secondary"><span
                                     class="bi bi-download"></span></a>
-                    {% endif %}
+                    @endif
                     {% if not attachment.file_exists %}
                         <a href="#" class="btn btn-danger"><span class="bi bi-exclamation-triangle"></span></a>
-                    {% endif %}
+                    @endif
                 </div>
             </td>
             <td>
@@ -22,25 +22,25 @@
                     <a href="{{ route('attachments.view', attachment.id) }}" title="{{ attachment.filename }}">
                         {% if attachment.title %}
                             {{ attachment.title }}
-                        {% else %}
+                        @else
                             {{ attachment.filename }}
-                        {% endif %}
+                        @endif
                     </a>
                     ({{ attachment.size|filesize }})
                     {% if null != attachment.notes_text  and '' != attachment.notes_text %}
                         {{ attachment.notes_text|default('')|markdown }}
-                    {% endif %}
-                {% endif %}
+                    @endif
+                @endif
                 {% if not attachment.file_exists %}
                     <span class="bi bi-exclamation-triangle"></span>
                     {% if attachment.title %}
                         {{ attachment.title }}
-                    {% else %}
+                    @else
                         {{ attachment.filename }}
-                    {% endif %}
+                    @endif
                     <br>
                     <span class="text-danger">{{ 'attachment_not_found'|_ }}</span>
-                {% endif %}
+                @endif
             </td>
         </tr>
     {% endfor %}

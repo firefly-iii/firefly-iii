@@ -47,16 +47,16 @@
                                         <a href="{{ route('transactions.show', [att.attachable_id]) }}">
                                             {{ att.attachable.description }}
                                         </a>
-                                    {% else %}
+                                    @else
                                         {{ att.attachable_type }}
-                                    {% endif %}
+                                    @endif
                                 </td>
-                                <td data-value="{% if att.file_exists %}1{% else %}0{% endif %}">
+                                <td data-value="{% if att.file_exists %}1@else0@endif">
                                     {% if att.file_exists %}
                                         <span class="bi bi-check text-success"></span>
-                                    {% else %}
+                                    @else
                                         <span class="bi bi-exclamation-triangle text-danger"></span>
-                                    {% endif %}
+                                    @endif
                                 </td>
                             </tr>
                         {% endfor %}

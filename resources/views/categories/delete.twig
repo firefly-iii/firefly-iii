@@ -26,12 +26,12 @@
                         <p>
                             {% if category.transactionjournals.count() > 0 %}
                                 {{ Lang.choice('form.category_keep_transactions', category.transactionjournals.count(), {count: category.transactionjournals.count() }) }}
-                            {% endif %}
+                            @endif
                         </p>
                     </div>
                     <div class="card-footer">
                         <input type="submit" name="submit" value="{{ trans('form.deletePermanently') }}" class="btn btn-danger pull-right"/>
-                        <a href="{{ URL.previous() }}" class="btn-outline-secondary btn">{{ trans('form.cancel') }}</a>
+                        <a href="{{ URL::previous() }}" class="btn-outline-secondary btn">{{ trans('form.cancel') }}</a>
                     </div>
                 </div>
             </div>

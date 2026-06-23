@@ -12,15 +12,15 @@
     {% for category in report.categories %}
         {% if loop.index > listLength %}
             <tr class="overListLength">
-        {% else %}
+        @else
             <tr>
-        {% endif %}
+        @endif
         <td data-value="{{ category.title }}">
             <a href="{{ route('categories.show', category.id) }}">{{ category.title }}</a>
         </td>
-        <td data-value="{{ category.spent }}" class="text-right">{{ formatAmountBySymbol(category.spent, category.currency_symbol, category.currency_decimal_places, true) }}</td>
-        <td data-value="{{ category.earned }}" class="text-right">{{ formatAmountBySymbol(category.earned, category.currency_symbol, category.currency_decimal_places, true) }}</td>
-        <td data-value="{{ category.sum }}" class="text-right">{{ formatAmountBySymbol(category.sum, category.currency_symbol, category.currency_decimal_places, true) }}</td>
+        <td data-value="{{ category.spent }}" class="text-right">{{ format_amount_by_symbol(category.spent, category.currency_symbol, category.currency_decimal_places, true) }}</td>
+        <td data-value="{{ category.earned }}" class="text-right">{{ format_amount_by_symbol(category.earned, category.currency_symbol, category.currency_decimal_places, true) }}</td>
+        <td data-value="{{ category.sum }}" class="text-right">{{ format_amount_by_symbol(category.sum, category.currency_symbol, category.currency_decimal_places, true) }}</td>
         <td class="twenty-px">
             <span class="fa fa-info-circle text-muted firefly-info-button" data-location="category-entry" data-category-id="{{ category.id }}" data-currency-id="{{ category.currency_id }}"
             ></span>
@@ -35,18 +35,18 @@
                 <a href="#" class="listLengthTrigger">{{ trans('firefly.show_full_list',{number:incomeTopLength}) }}</a>
             </td>
         </tr>
-    {% endif %}
+    @endif
     {% for sum in report.sums %}
     <tr>
         <td><em>{{ 'sum'|_ }} ({{ sum.currency_name }})</em></td>
         <td class="text-right">
-            {{ formatAmountBySymbol(sum.spent, sum.currency_symbol, sum.currency_decimal_places) }}
+            {{ format_amount_by_symbol(sum.spent, sum.currency_symbol, sum.currency_decimal_places) }}
         </td>
         <td class="text-right">
-            {{ formatAmountBySymbol(sum.earned, sum.currency_symbol, sum.currency_decimal_places) }}
+            {{ format_amount_by_symbol(sum.earned, sum.currency_symbol, sum.currency_decimal_places) }}
         </td>
         <td class="text-right">
-            {{ formatAmountBySymbol(sum.sum, sum.currency_symbol, sum.currency_decimal_places) }}
+            {{ format_amount_by_symbol(sum.sum, sum.currency_symbol, sum.currency_decimal_places) }}
         </td>
     </tr>
     {% endfor %}

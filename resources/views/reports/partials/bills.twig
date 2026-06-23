@@ -16,10 +16,10 @@
                     <a href="{{ route('subscriptions.show',bill.id) }}">{{ bill.name }}</a>
                 </td>
                 <td class="hidden-xs text-right">
-                    {{ formatAmountBySymbol(bill.amount_min, bill.currency_symbol, bill.currency_decimal_places) }}
+                    {{ format_amount_by_symbol(bill.amount_min, bill.currency_symbol, bill.currency_decimal_places) }}
                 </td>
                 <td class="hidden-xs text-right">
-                    {{ formatAmountBySymbol(bill.amount_max, bill.currency_symbol, bill.currency_decimal_places) }}
+                    {{ format_amount_by_symbol(bill.amount_max, bill.currency_symbol, bill.currency_decimal_places) }}
                 </td>
                 <td data-value="{{ bill.expected_dates[0].format('Y-m-d')|default('0000-00-00') }}">
                     {% for date in bill.expected_dates %}
@@ -33,16 +33,16 @@
                             {% set hitCount = hitCount+1 %}
                             <a title="{{ journal.date.isoFormat(monthAndDayFormat) }}"
                                href="{{ route('transactions.show', [journal.transaction_group_id]) }}">{{ journal.description }}</a>,
-                            {{ formatAmountBySymbol(journal.amount, journal.currency_symbol, journal.currency_decimal_places) }}
+                            {{ format_amount_by_symbol(journal.amount, journal.currency_symbol, journal.currency_decimal_places) }}
                             <br/>
                         {% endfor %}
                     {% endfor %}
                     {% if hitCount == 0 %}
                         <em>{{ 'notCharged'|_ }}</em>
-                    {% endif %}
+                    @endif
                 </td>
             </tr>
-        {% endif %}
+        @endif
     {% endfor %}
 
 
@@ -64,18 +64,18 @@
                         {{ formatAmountByCurrency(line.getCurrency, line.getAmount) }}
                     </a>
                 </td>
-            {% endif %}
+            @endif
             {# if not but is active, show "not yet charged #}
             {% if not line.isHit and line.isActive %}
                 <td data-value="0" class="bg-success">{{ 'notCharged'|_ }}</td>
-            {% endif %}
+            @endif
             {% if not line.isActive and not line.isHit %}
                 <td data-value="-1">&nbsp;</td>
-            {% endif %}
+            @endif
             <td data-value="{{ (line.getMax - line.getAmount) }}" class="text-right hidden-xs">
                 {% if line.isHit %}
                     {{ formatAmountByCurrency(line.getCurrency, (line.getMax + line.getAmount)) }}
-                {% endif %}
+                @endif
             </td>
         </tr>
 

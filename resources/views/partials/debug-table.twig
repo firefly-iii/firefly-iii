@@ -12,7 +12,7 @@
     {# Firefly III version #}
     <tr>
         <td>Firefly III</td>
-        <td>{% if FF_IS_DEVELOP %}<!-- .Z9JBCmw64Zkx1pQw -->{% endif %}{% if not FF_IS_DEVELOP %}v{% endif %}{{ FF_VERSION }}</td>
+        <td>{% if FF_IS_DEVELOP %}<!-- .Z9JBCmw64Zkx1pQw -->@endif{% if not FF_IS_DEVELOP %}v@endif{{ FF_VERSION }}</td>
     </tr>
     <tr>
         <td>Build time</td>
@@ -38,7 +38,7 @@
     <tr>
         <td>Database drivers</td>
         <td>
-            {% for driver in system.all_drivers %}{% if system.current_driver == driver %}<strong>*{{ driver }}*</strong>{% else %}{{ driver }}{% endif %}, {% endfor %}
+            {% for driver in system.all_drivers %}{% if system.current_driver == driver %}<strong>*{{ driver }}*</strong>@else{{ driver }}@endif, {% endfor %}
         </td>
     </tr>
     {# Docker information #}
@@ -51,7 +51,7 @@
                 <span>#</span>{{ docker.build }}, base <span>#</span>{{ docker.base_build }}
             </td>
         </tr>
-    {% endif %}
+    @endif
     </tbody>
 </table>
 <table>
@@ -78,7 +78,7 @@
         <td>{{ config('view.layout') }}
             {% if 'v2' == config('view.layout') %}
                 <!-- .eOxNZAmyGz6CXMyf -->
-            {% endif %}
+            @endif
         </td>
     </tr>
     <tr>
@@ -119,11 +119,11 @@
     </tr>
     <tr>
         <td>Exchange rates</td>
-        <td>{% if fireflyiiiconfig('enable_exchange_rates', true) %}Enabled{% else %}Disabled{% endif %}, downloads {% if FireflyConfig.get('enable_external_rates', config('cer.download_enabled')) %}enabled{% else %}disabled{% endif %}</td>
+        <td>{% if fireflyiiiconfig('enable_exchange_rates', true) %}Enabled@elseDisabled@endif, downloads {% if FireflyConfig.get('enable_external_rates', config('cer.download_enabled')) %}enabled@elsedisabled@endif</td>
     </tr>
     <tr>
         <td>RB-column</td>
-        <td>{% if fireflyiiiconfig('use_running_balance', true) %}Enabled{% else %}Disabled{% endif %}</td>
+        <td>{% if fireflyiiiconfig('use_running_balance', true) %}Enabled@elseDisabled@endif</td>
     </tr>
     </tbody>
 </table>
@@ -153,7 +153,7 @@
     </tr>
     <tr>
         <td>Convert to primary currency?</td>
-        <td>{% if user.convert_to_primary %}Enabled{% else %}Disabled{% endif %}</td>
+        <td>{% if user.convert_to_primary %}Enabled@elseDisabled@endif</td>
     </tr>
     <tr>
         <td>Session start</td>
@@ -179,7 +179,7 @@
         <td>Locale(s) supported</td>
         <td>
             {% for key, attempt in user.locale_attempts %}
-                {{ key }}: {% if attempt %}:white_check_mark:{% else %}:x:{% endif %}<br>
+                {{ key }}: {% if attempt %}:white_check_mark:@else:x:@endif<br>
             {% endfor %}
         </td>
     </tr>

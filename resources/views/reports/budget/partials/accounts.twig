@@ -13,7 +13,7 @@
                     <a href="{{ route('accounts.show', account.id) }}" title="{{ account.iban }}">{{ account.name }} ({{ currency.currency_name }})</a>
                 </td>
                 <td data-value="{{ currency.sum }}" class="text-right">
-                    {{ formatAmountBySymbol(currency.sum, currency.currency_symbol, currency.currency_decimal_places) }}
+                    {{ format_amount_by_symbol(currency.sum, currency.currency_symbol, currency.currency_decimal_places) }}
                 </td>
             </tr>
         {% endfor %}
@@ -24,7 +24,7 @@
         <tr>
             <td>{{ 'sum'|_ }} ({{ sum.currency_name }})</td>
             <td class="text-right">
-                {{ formatAmountBySymbol(sum.sum, sum.currency_symbol, sum.currency_decimal_places) }}
+                {{ format_amount_by_symbol(sum.sum, sum.currency_symbol, sum.currency_decimal_places) }}
             </td>
         </tr>
     {% endfor %}

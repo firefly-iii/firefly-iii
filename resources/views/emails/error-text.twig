@@ -9,9 +9,9 @@
 
 {% if loggedIn %}
 {{     trans('email.error_user', { id: user.id, email: user.email })|striptags|raw }}
-{% else %}
+@else
 {{     trans('email.error_no_user')|raw }}
-{% endif %}
+@endif
 
 {{ trans('email.error_ip', { ip: ip }) }}
 {{ method }} {{ trans('email.error_url', {url :url}) }}
@@ -30,13 +30,13 @@
 {% for key, header in headers %}
 {% if (key != 'cookie') and header[0] != '' and key != 'x-xsrf-token'  %}
 - {{ key }}: {{ header[0] }}
-{% endif %}
+@endif
 {% endfor %}
 
 {% if ('' != post) %}
 {{ trans('email.error_post') }}
 
 {{ post }}
-{% endif %}
+@endif
 
 {% include 'emails.footer-text' %}

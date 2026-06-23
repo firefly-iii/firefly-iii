@@ -8,26 +8,26 @@
         <th>{{ trans('list.name') }}</th>
         {% if objectType == 'asset' %}
             <th class="hidden-sm hidden-xs hidden-md">{{ trans('list.role') }}</th>
-        {% endif %}
+        @endif
         {% if objectType == 'liabilities' %}
             <th>{{ trans('list.liability_type') }}</th>
             <th>{{ trans('form.liability_direction') }}</th>
             <th>{{ trans('list.interest') }} ({{ trans('list.interest_period') }})</th>
-        {% endif %}
+        @endif
         <th class="hidden-sm hidden-xs">{{ trans('form.account_number') }}</th>
         {% if objectType != 'liabilities' %}
             <th class="text-right">{{ trans('list.currentBalance') }}</th>
-        {% endif %}
+        @endif
         {% if objectType == 'liabilities' %}
             <th class="text-right">
                 {{ trans('firefly.left_in_debt') }}
             </th>
-        {% endif %}
+        @endif
         <th class="hidden-sm hidden-xs">{{ trans('list.active') }}</th>
         {# hide last activity to make room for other stuff #}
         {% if objectType != 'liabilities' %}
             <th class="hidden-sm hidden-xs hidden-md">{{ trans('list.lastActivity') }}</th>
-        {% endif %}
+        @endif
         <th
             class="fifteen hidden-sm hidden-xs hidden-md">{{ trans('list.balanceDiff') }}</th>
         <th class="hidden-sm hidden-xs">&nbsp;</th>
@@ -43,26 +43,26 @@
                 <a href="{{ route('accounts.show',account.id) }}">{{ account.name }}</a>
                 {% if account.location %}
                     <span class="fa fa-map-marker"></span>
-                {% endif %}
+                @endif
                 {% if account.attachments.count() > 0 %}
                     <span class="bi bi-paperclip"></span>
-                {% endif %}
+                @endif
             </td>
             {% if objectType == "asset" %}
                 <td class="hidden-sm hidden-xs hidden-md">
                     {% for entry in account.accountmeta %}
                         {% if entry.name == 'account_role' %}
                             {{ ('account_role_'~entry.data)|_ }}
-                        {% endif %}
+                        @endif
                     {% endfor %}
                 </td>
-            {% endif %}
+            @endif
             {% if objectType == 'liabilities' %}
             <td>{{ account.accountTypeString }}</td>
             <td>{{ trans('firefly.liability_direction_'~account.liability_direction~'_short')  }}</td>
             <td>{{ account.interest }}% ({{ account.interestPeriod|lower }})</td>
-            {% endif %}
-            <td class="hidden-sm hidden-xs">{{ account.iban }}{% if account.iban == '' %}{{ accountGetMetaField(account, 'account_number') }}{% endif %}</td>
+            @endif
+            <td class="hidden-sm hidden-xs">{{ account.iban }}{% if account.iban == '' %}{{ accountGetMetaField(account, 'account_number') }}@endif</td>
             {% if objectType != 'liabilities' %}
             <td class="text-right">
                 <span class="mr-2">
@@ -70,35 +70,35 @@
                         <span title="{{ key }}">
                         {% if 'balance' == key %}
                             {% if not convertToPrimary %}
-                                {{ formatAmountBySymbol(balance, account.currency.symbol, account.currency.decimal_places)  }}
-                            {% endif %}
+                                {{ format_amount_by_symbol(balance, account.currency.symbol, account.currency.decimal_places)  }}
+                            @endif
                         {% elseif 'pc_balance' == key %}
                             {% if convertToPrimary %}
-                                {{ formatAmountBySymbol(balance, primaryCurrency.symbol, primaryCurrency.decimal_places)  }}
-                            {% endif %}
-                        {% else %}
+                                {{ format_amount_by_symbol(balance, primaryCurrency.symbol, primaryCurrency.decimal_places)  }}
+                            @endif
+                        @else
                             ({{ formatAmountByCode(balance, key)  }})
-                        {% endif %}
+                        @endif
                         </span>
                     {% endfor %}
                 </span>
             </td>
-            {% endif %}
+            @endif
             {% if objectType == 'liabilities' %}
             <td class="text-right">
                 {% if '-' != account.current_debt %}
                     <span class="text-info money-transfer">
-                        {{ formatAmountBySymbol(account.current_debt, account.currency.symbol, account.currency.decimal_places, false) }}
+                        {{ format_amount_by_symbol(account.current_debt, account.currency.symbol, account.currency.decimal_places, false) }}
                     </span>
-                {% endif %}
+                @endif
             </td>
-            {% endif %}
+            @endif
             <td class="hidden-sm hidden-xs">
                 {% if account.active %}
                     <span class="bi bi-check"></span>
-                {% else %}
+                @else
                     <span class="fa fa-ban"></span>
-                {% endif %}
+                @endif
             </td>
             {# hide last activity to make room for other stuff #}
             {% if objectType != 'liabilities' %}
@@ -107,27 +107,27 @@
                         <!-- {{ account.lastActivityDate }} -->
                         {{ account.lastActivityDate.isoFormat(monthAndDayFormat) }}
                     </td>
-                {% else %}
+                @else
                     <td class="hidden-sm hidden-xs hidden-md">
                         <em>{{ 'never'|_ }}</em>
                     </td>
-                {% endif %}
-            {% endif %}
+                @endif
+            @endif
             <td class="text-right hidden-sm hidden-xs hidden-md">
                 <span class="mr-1">
                     {% for key, balance in account.differences %}
                         <span title="{{ key }}">
                               {% if 'balance' == key %}
                                   {% if not convertToPrimary %}
-                                      {{ formatAmountBySymbol(balance, account.currency.symbol, account.currency.decimal_places)  }}
-                                  {% endif %}
+                                      {{ format_amount_by_symbol(balance, account.currency.symbol, account.currency.decimal_places)  }}
+                                  @endif
                               {% elseif 'pc_balance' == key %}
                                   {% if convertToPrimary %}
-                                      {{ formatAmountBySymbol(balance, primaryCurrency.symbol, primaryCurrency.decimal_places)  }}
-                                  {% endif %}
-                              {% else %}
+                                      {{ format_amount_by_symbol(balance, primaryCurrency.symbol, primaryCurrency.decimal_places)  }}
+                                  @endif
+                              @else
                                   ({{ formatAmountByCode(balance, key)  }})
-                              {% endif %}
+                              @endif
                             </span>
                     {% endfor %}
                 </span>
@@ -141,7 +141,7 @@
                         <li><a href="{{ route('accounts.delete',account.id) }}"><span class="bi bi-trash"></span> {{ __('firefly.delete') }}</a></li>
                         {% if objectType == 'asset' %}
                         <li><a href="{{ route('accounts.reconcile',account.id) }}"><span class="bi bi-check"></span> {{ 'reconcile_this_account'|_ }}</a></li>
-                        {% endif %}
+                        @endif
                     </ul>
                 </div>
             </td>

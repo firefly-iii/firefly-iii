@@ -15,13 +15,13 @@
     <title>
         {% if pageTitle %}
             {{ pageTitle }} »
-        {% endif %}
+        @endif
         {% if subTitle and not pageTitle %}
             {{ subTitle }} »
-        {% endif %}
+        @endif
         {% if title != "Firefly III" %}
             {{ title }} »
-        {% endif %}
+        @endif
 
         Firefly III
 
@@ -56,21 +56,21 @@
               nonce="{{ $JS_NONCE }}" media="(prefers-color-scheme: dark)">
         <link href="v1/lib/adminlte/css/skins/skin-light.min.css?v={{ $FF_BUILD_TIME }}" rel="stylesheet" type="text/css"
               nonce="{{ $JS_NONCE }}" media="(prefers-color-scheme: light)">
-    {% endif %}
+    @endif
     {% if 'dark' == darkMode %}
         <meta name="color-scheme" content="dark">
         <link href="v1/css/daterangepicker-dark.css?v={{ $FF_BUILD_TIME }}" rel="stylesheet" type="text/css"
               nonce="{{ $JS_NONCE }}">
         <link href="v1/lib/adminlte/css/skins/skin-dark.min.css?v={{ $FF_BUILD_TIME }}" rel="stylesheet" type="text/css"
               nonce="{{ $JS_NONCE }}">
-    {% endif %}
+    @endif
     {% if 'light' == darkMode %}
         <meta name="color-scheme" content="light">
         <link href="v1/css/daterangepicker-light.css?v={{ $FF_BUILD_TIME }}" rel="stylesheet" type="text/css"
               nonce="{{ $JS_NONCE }}">
         <link href="v1/lib/adminlte/css/skins/skin-light.min.css?v={{ $FF_BUILD_TIME }}" rel="stylesheet" type="text/css"
               nonce="{{ $JS_NONCE }}">
-    {% endif %}
+    @endif
     {# Firefly III customisations #}
     <link href="v1/css/firefly.css?v={{ $FF_BUILD_TIME }}" rel="stylesheet" type="text/css" nonce="{{ $JS_NONCE }}">
 
@@ -78,7 +78,7 @@
     {% if not shownDemo %}
         <link href="v1/lib/intro/introjs.min.css?v={{ $FF_BUILD_TIME }}" rel="stylesheet" type="text/css"
               nonce="{{ $JS_NONCE }}">
-    {% endif %}
+    @endif
 
     {# Any local custom CSS.  #}
     @section('styles')@endsection
@@ -121,10 +121,10 @@
                         <a href="#" id="anonymous">
                             {% if anonymous %}
                                 <span class="text-danger bi bi-eye-slash"></span>
-                            {% endif %}
+                            @endif
                             {% if not anonymous %}
                                 <span class="text-success bi bi-eye"></span>
-                            {% endif %}
+                            @endif
                         </a>
                     </li>
                     <li class="hidden-sm hidden-xs">
@@ -184,7 +184,7 @@
                         </p>
                     </div>
                 </div>
-            {% endif %}
+            @endif
 
             {% include('partials.flashes') %}
 
@@ -198,8 +198,8 @@
         </div>
         <strong><a href="https://github.com/firefly-iii/firefly-iii">Firefly III</a></strong>
         <small class="text-muted">&copy; James Cole, <a href="https://www.gnu.org/licenses/agpl-3.0.html">AGPL-3.0-or-later</a>.</small>
-        {% if FF_IS_ALPHA %}<small class="text-danger hidden-xs"><br>{{ 'is_alpha_warning'|_ }}</small>{% endif %}
-        {% if FF_IS_BETA %}<small class="text-warning hidden-xs"><br>{{ 'is_beta_warning'|_ }}</small>{% endif %}
+        {% if FF_IS_ALPHA %}<small class="text-danger hidden-xs"><br>{{ 'is_alpha_warning'|_ }}</small>@endif
+        {% if FF_IS_BETA %}<small class="text-warning hidden-xs"><br>{{ 'is_beta_warning'|_ }}</small>@endif
     </footer>
 
     {% include('partials.control-bar') %}
@@ -240,7 +240,7 @@
 
 {# All kinds of variables. #}
 <script
-    src="{{ route('javascript.variables') }}?ext=.js&amp;v={{ FF_VERSION }}{% if account %}&amp;account={{ account.id }}{% endif %}"
+    src="{{ route('javascript.variables') }}?ext=.js&amp;v={{ FF_VERSION }}{% if account %}&amp;account={{ account.id }}@endif"
     type="text/javascript" nonce="{{ $JS_NONCE }}"></script>
 
 {# Base script: jquery and bootstrap #}
@@ -251,7 +251,7 @@
     <script src="v1/js/app_vue.js?v={{ $FF_BUILD_TIME }}" type="text/javascript" nonce="{{ $JS_NONCE }}"></script>
     <script src="v1/js/{{ VUE_SCRIPT_NAME }}.js?v={{ $FF_BUILD_TIME }}" type="text/javascript"
             nonce="{{ $JS_NONCE }}"></script>
-{% endif %}
+@endif
 
 {# date range picker, current template, etc. #}
 <script src="v1/js/lib/daterangepicker.js?v={{ $FF_BUILD_TIME }}" type="text/javascript" nonce="{{ $JS_NONCE }}"></script>
@@ -270,7 +270,7 @@
     </script>
     <script type="text/javascript" src="v1/lib/intro/intro.min.js?v={{ $FF_BUILD_TIME }}" nonce="{{ $JS_NONCE }}"></script>
     <script type="text/javascript" src="v1/js/ff/intro/intro.js?v={{ $FF_BUILD_TIME }}" nonce="{{ $JS_NONCE }}"></script>
-{% endif %}
+@endif
 
 @section('scripts')@endsection
 
@@ -296,7 +296,7 @@
     <noscript><p><img
                 src="//{{ config('firefly.tracker_url') }}/matomo.php?idsite={{ config('firefly.tracker_site_id') }}&amp;rec=1"
                 class="no-border" alt=""/></p></noscript>
-{% endif %}
+@endif
 
 <form id="logout-form" action="{{ route('logout') }}" method="POST" class="hidden">
     <input type="hidden" name="_token" value="{{ csrf_token() }}"/>

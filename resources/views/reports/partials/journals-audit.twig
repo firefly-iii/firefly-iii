@@ -48,23 +48,23 @@
             <td class="hide-icon">
                 {% if journal.transaction_type_type == 'Withdrawal' %}
                     <span class="bi bi-arrow-left" title="{{ trans('firefly.Withdrawal') }}"></span>
-                {% endif %}
+                @endif
 
                 {% if journal.transaction_type_type == 'Deposit' %}
                     <span class="bi bi-arrow-right" title="{{ trans('firefly.Deposit') }}"></span>
-                {% endif %}
+                @endif
 
                 {% if journal.transaction_type_type == 'Transfer' %}
                     <span class="bi bi-arrow-left-right" title="{{ trans('firefly.Deposit') }}"></span>
-                {% endif %}
+                @endif
 
                 {% if journal.transaction_type_type == 'Reconciliation' %}
                     <span class="bi bi-calculator" title="{{ trans('firefly.reconciliation_transaction') }}"></span>
-                {% endif %}
+                @endif
 
                 {% if journal.transaction_type_type == 'Opening balance' %}
                     <span class="bi bi-star" title="{{ trans('firefly.Opening balance') }}"></span>
-                {% endif %}
+                @endif
 
             </td>
 
@@ -72,45 +72,45 @@
                 <a href="{{ route('transactions.show',journal.transaction_group_id) }}">
                     {% if journal.group_title|length > 0 %}
                         {{ journal.group_title }} ({{ journal.description }})
-                    {% else %}
+                    @else
                         {{ journal.description }}
-                    {% endif %}
+                    @endif
                 </a>
             </td>
 
             <td class="text-right hide-balance_before">
-                {{ formatAmountBySymbol(journal.balance_before, auditData[account.id].currency.symbol, auditData[account.id].currency.decimal_places) }}
+                {{ format_amount_by_symbol(journal.balance_before, auditData[$account->id].currency.symbol, auditData[$account->id].currency.decimal_places) }}
             </td>
             <td class="text-right hide-amount">
 
-                {% if auditData[account.id].currency.id == journal.currency_id %}
+                {% if auditData[$account->id].currency.id == journal.currency_id %}
                     {% if account.id == journal.destination_account_id and journal.transaction_type_type == 'Opening balance' %}
-                        {{ formatAmountBySymbol(journal.amount*-1, journal.currency_symbol, journal.currency_decimal_places) }}
+                        {{ format_amount_by_symbol(journal.amount*-1, journal.currency_symbol, journal.currency_decimal_places) }}
                     {% elseif account.id == journal.destination_account_id and journal.transaction_type_type == 'Deposit' %}
-                        {{ formatAmountBySymbol(journal.amount*-1, journal.currency_symbol, journal.currency_decimal_places) }}
+                        {{ format_amount_by_symbol(journal.amount*-1, journal.currency_symbol, journal.currency_decimal_places) }}
                     {% elseif account.id == journal.destination_account_id and journal.transaction_type_type == 'Transfer' %}
-                        {{ formatAmountBySymbol(journal.amount*-1, journal.currency_symbol, journal.currency_decimal_places) }}
-                    {% else %}
-                        {{ formatAmountBySymbol(journal.amount, journal.currency_symbol, journal.currency_decimal_places) }}
-                    {% endif %}
-                {% endif %}
+                        {{ format_amount_by_symbol(journal.amount*-1, journal.currency_symbol, journal.currency_decimal_places) }}
+                    @else
+                        {{ format_amount_by_symbol(journal.amount, journal.currency_symbol, journal.currency_decimal_places) }}
+                    @endif
+                @endif
 
-                {% if auditData[account.id].currency.id == journal.foreign_currency_id %}
+                {% if auditData[$account->id].currency.id == journal.foreign_currency_id %}
                     {% if account.id == journal.destination_account_id and journal.transaction_type_type == 'Opening balance' %}
-                        {{ formatAmountBySymbol(journal.foreign_amount*-1, journal.foreign_currency_symbol, journal.foreign_currency_decimal_places) }}
+                        {{ format_amount_by_symbol(journal.foreign_amount*-1, journal.foreign_currency_symbol, journal.foreign_currency_decimal_places) }}
                     {% elseif account.id == journal.destination_account_id and journal.transaction_type_type == 'Deposit' %}
-                        {{ formatAmountBySymbol(journal.foreign_amount*-1, journal.foreign_currency_symbol, journal.foreign_currency_decimal_places) }}
+                        {{ format_amount_by_symbol(journal.foreign_amount*-1, journal.foreign_currency_symbol, journal.foreign_currency_decimal_places) }}
                     {% elseif account.id == journal.destination_account_id and journal.transaction_type_type == 'Transfer' %}
-                        {{ formatAmountBySymbol(journal.foreign_amount*-1, journal.foreign_currency_symbol, journal.foreign_currency_decimal_places) }}
-                    {% else %}
-                        {{ formatAmountBySymbol(journal.foreign_amount, journal.foreign_currency_symbol, journal.foreign_currency_decimal_places) }}
-                    {% endif %}
-                {% endif %}
+                        {{ format_amount_by_symbol(journal.foreign_amount*-1, journal.foreign_currency_symbol, journal.foreign_currency_decimal_places) }}
+                    @else
+                        {{ format_amount_by_symbol(journal.foreign_amount, journal.foreign_currency_symbol, journal.foreign_currency_decimal_places) }}
+                    @endif
+                @endif
 
             </td>
 
             <td class="text-right hide-balance_after">
-                {{ formatAmountBySymbol(journal.balance_after, auditData[account.id].currency.symbol, auditData[account.id].currency.decimal_places) }}
+                {{ format_amount_by_symbol(journal.balance_after, auditData[$account->id].currency.symbol, auditData[$account->id].currency.decimal_places) }}
             </td>
 
             <td class="hide-date">{{ journal.date.isoFormat(monthAndDayFormat) }}</td>
@@ -125,17 +125,17 @@
             <td class="hide-budget">
                 {% if journal.budget_id %}
                     <a href="{{ route('budgets.show', [journal.budget_id]) }}" title="{{ journal.budget_name }}">{{ journal.budget_name }}</a>
-                {% endif %}
+                @endif
             </td>
             <td class="hide-category">
                 {% if journal.category_id %}
                     <a href="{{ route('categories.show', [journal.category_id]) }}" title="{{ journal.category_name }}">{{ journal.category_name }}</a>
-                {% endif %}
+                @endif
             </td>
             <td class="hide-bill">
                 {% if journal.bill_id %}
                     <a href="{{ route('subscriptions.show', [journal.bill_id]) }}" title="{{ journal.bill_name }}">{{ journal.bill_name }}</a>
-                {% endif %}
+                @endif
             </td>
 
             <!-- new optional fields (2x) -->
@@ -154,32 +154,32 @@
             <td class="hide-interest_date">
                 {% if null != journal.interest_date %}
                     {{ journal.interest_date.isoFormat(monthAndDayFormat) }}
-                {% endif %}
+                @endif
             </td>
             <td class="hide-book_date">
                 {% if null != journal.book_date %}
                     {{ journal.book_date.isoFormat(monthAndDayFormat) }}
-                {% endif %}
+                @endif
             </td>
             <td class="hide-process_date">
                 {% if null != journal.process_date %}
                     {{ journal.process_date.isoFormat(monthAndDayFormat) }}
-                {% endif %}
+                @endif
             </td>
             <td class="hide-due_date">
                 {% if null != journal.due_date %}
                     {{ journal.due_date.isoFormat(monthAndDayFormat) }}
-                {% endif %}
+                @endif
             </td>
             <td class="hide-payment_date">
                 {% if null != journal.payment_date %}
                     {{ journal.payment_date.isoFormat(monthAndDayFormat) }}
-                {% endif %}
+                @endif
             </td>
             <td class="hide-invoice_date">
                 {% if null != journal.invoice_date %}
                     {{ journal.invoice_date.isoFormat(monthAndDayFormat) }}
-                {% endif %}
+                @endif
             </td>
         </tr>
 

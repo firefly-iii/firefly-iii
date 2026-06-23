@@ -18,20 +18,20 @@
                 <td class="text-right">&mdash;</td>
                 <td class="text-right">&mdash;</td>
             </tr>
-        {% endif %}
+        @endif
         {% for currency in tag.currencies %}
             <tr>
                 <td data-value="{{ tag.name }} ({{ currency.currency_name }})">
                     <a href="{{ route('tags.show', [tag.id]) }}" title="{{ tag.name }}">{{ tag.name }} ({{ currency.currency_name }})</a>
                 </td>
                 <td data-value="{{ currency.spent }}" class="text-right">
-                    {{ formatAmountBySymbol(currency.spent, currency.currency_symbol, currency.currency_decimal_places) }}
+                    {{ format_amount_by_symbol(currency.spent, currency.currency_symbol, currency.currency_decimal_places) }}
                 </td>
                 <td data-value="{{ currency.earned }}" class="text-right">
-                    {{ formatAmountBySymbol(currency.earned, currency.currency_symbol, currency.currency_decimal_places) }}
+                    {{ format_amount_by_symbol(currency.earned, currency.currency_symbol, currency.currency_decimal_places) }}
                 </td>
                 <td data-value="{{ currency.sum }}" class="text-right">
-                    {{ formatAmountBySymbol(currency.sum, currency.currency_symbol, currency.currency_decimal_places) }}
+                    {{ format_amount_by_symbol(currency.sum, currency.currency_symbol, currency.currency_decimal_places) }}
                 </td>
             </tr>
         {% endfor %}
@@ -42,13 +42,13 @@
         <tr>
             <td>{{ 'sum'|_ }} ({{ sum.currency_name }})</td>
             <td class="text-right">
-                {{ formatAmountBySymbol(sum.spent_sum, sum.currency_symbol, sum.currency_decimal_places) }}
+                {{ format_amount_by_symbol(sum.spent_sum, sum.currency_symbol, sum.currency_decimal_places) }}
             </td>
             <td class="text-right">
-                {{ formatAmountBySymbol(sum.earned_sum, sum.currency_symbol, sum.currency_decimal_places) }}
+                {{ format_amount_by_symbol(sum.earned_sum, sum.currency_symbol, sum.currency_decimal_places) }}
             </td>
             <td class="text-right">
-                {{ formatAmountBySymbol(sum.total_sum, sum.currency_symbol, sum.currency_decimal_places) }}
+                {{ format_amount_by_symbol(sum.total_sum, sum.currency_symbol, sum.currency_decimal_places) }}
             </td>
         </tr>
     {% endfor %}

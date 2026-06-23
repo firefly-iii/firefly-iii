@@ -45,15 +45,15 @@
                                 <td class="forty">{{ 'object_group'|_ }}</td>
                                 <td>{{ piggy.object_group_title }}</a></td>
                             </tr>
-                        {% endif %}
+                        @endif
                         {% if null != piggy.target_amount %}
                             <tr>
                                 <td>{{ 'target_amount'|_ }}</td>
                                 <td>
-                                    {{ formatAmountBySymbol(piggy.target_amount, piggy.currency_symbol, piggy.currency_decimal_places) }}
+                                    {{ format_amount_by_symbol(piggy.target_amount, piggy.currency_symbol, piggy.currency_decimal_places) }}
                                 </td>
                             </tr>
-                        {% endif %}
+                        @endif
                         {% for account in piggy.accounts %}
                             <tr>
                                 <td>
@@ -61,7 +61,7 @@
                                     (<a href="{{ route('accounts.show', account.account_id) }}">{{ account.name }}</a>)
                                 </td>
                                 <td>
-                                    {{ formatAmountBySymbol(account.current_amount, piggy.currency_symbol, piggy.currency_decimal_places) }}
+                                    {{ format_amount_by_symbol(account.current_amount, piggy.currency_symbol, piggy.currency_decimal_places) }}
                                 </td>
                             </tr>
 
@@ -69,25 +69,25 @@
                         <tr>
                             <td>{{ 'saved_so_far_total'|_ }}</td>
                             <td>
-                                {{ formatAmountBySymbol(piggy.current_amount, piggy.currency_symbol, piggy.currency_decimal_places) }}
+                                {{ format_amount_by_symbol(piggy.current_amount, piggy.currency_symbol, piggy.currency_decimal_places) }}
                             </td>
                         </tr>
                         {% if null != piggy.left_to_save %}
                             <tr>
                                 <td>{{ 'left_to_save'|_ }}</td>
                                 <td>
-                                    {{ formatAmountBySymbol(piggy.left_to_save, piggy.currency_symbol, piggy.currency_decimal_places) }}
+                                    {{ format_amount_by_symbol(piggy.left_to_save, piggy.currency_symbol, piggy.currency_decimal_places) }}
                                 </td>
                             </tr>
-                        {% endif %}
+                        @endif
                         <tr>
                             <td>{{ 'start_date'|_ }}</td>
                             <td>
                                 {% if piggyBank.start_date %}
                                     {{ piggyBank.start_date.isoFormat(monthAndDayFormat) }}
-                                {% else %}
+                                @else
                                     <em>{{ 'no_start_date'|_ }}</em>
-                                {% endif %}
+                                @endif
                             </td>
                         </tr>
                         <tr>
@@ -95,20 +95,20 @@
                             <td>
                                 {% if piggyBank.target_date %}
                                     {{ piggyBank.target_date.isoFormat(monthAndDayFormat) }}
-                                {% else %}
+                                @else
                                     <em>{{ 'no_target_date'|_ }}</em>
-                                {% endif %}
+                                @endif
                             </td>
                         </tr>
                         {% if piggyBank.target_date and piggy.save_per_month %}
                             <tr>
                                 <td>{{ 'suggested_amount'|_ }}</td>
                                 <td>
-                                    {{ formatAmountBySymbol(piggy.save_per_month, piggy.currency_symbol, piggy.currency_decimal_places) }}
+                                    {{ format_amount_by_symbol(piggy.save_per_month, piggy.currency_symbol, piggy.currency_decimal_places) }}
 
                                 </td>
                             </tr>
-                        {% endif %}
+                        @endif
                     </table>
                 </div>
             </div>
@@ -136,7 +136,7 @@
                 </div>
 
             </div>
-        {% endif %}
+        @endif
         {% if attachments.count() > 0 %}
             <div class="col-lg-4 col-md-6 col-sm-12 col-xs-12">
                 <div class="card">
@@ -150,7 +150,7 @@
                     </div>
                 </div>
             </div>
-        {% endif %}
+        @endif
     </div>
     <form id="reset-form" action="{{ route('piggy-banks.reset', [piggyBank.id]) }}" method="POST" class="hidden">
         <input type="hidden" name="_token" value="{{ csrf_token() }}"/>

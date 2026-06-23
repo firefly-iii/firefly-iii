@@ -7,29 +7,29 @@
         <li class="page-item disabled" aria-disabled="true" aria-label="{{ 'pagination.previous'|_  }}">
             <span class="page-link" aria-hidden="true">&lsaquo;</span>
         </li>
-        {% else %}
+        @else
         <li class="page-item">
             <a class="page-link" href="{{ paginator.previousPageUrl }}" rel="prev" aria-label="{{ 'pagination.previous'|_ }}">&lsaquo;</a>
         </li>
-        {% endif %}
+        @endif
 
         {# Pagination Elements #}
         {% for element in elements %}
             {# "Three Dots" Separator #}
             {% if not element is iterable  %}
                 <li class="page-item disabled" aria-disabled="true"><span class="page-link">{{ element }}</span></li>
-            {% endif %}
+            @endif
 
             {# Array Of Links #}
             {% if element is iterable  %}
                 {% for page, url in element %}
                     {% if page == paginator.currentPage %}
                         <li class="page-item active" aria-current="page"><span class="page-link">{{ page }}</span></li>
-                    {% else %}
+                    @else
                         <li class="page-item"><a class="page-link" href="{{ url }}">{{ page }}</a></li>
-                    {% endif %}
+                    @endif
                 {% endfor %}
-            {% endif %}
+            @endif
         {% endfor %}
 
         {# Next Page Link #}
@@ -37,11 +37,11 @@
         <li class="page-item">
             <a class="page-link" href="{{ paginator.nextPageUrl }}" rel="next" aria-label="{{ 'pagination.next' }})">&rsaquo;</a>
         </li>
-        {% else %}
+        @else
         <li class="page-item disabled" aria-disabled="true" aria-label="{{ 'pagination.next'|_ }})">
             <span class="page-link" aria-hidden="true">&rsaquo;</span>
         </li>
-        {% endif %}
+        @endif
     </ul>
 </nav>
-{% endif %}
+@endif

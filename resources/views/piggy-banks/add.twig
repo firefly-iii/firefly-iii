@@ -22,14 +22,14 @@
                     <button type="submit" class="btn btn-primary">{{ 'add'|_ }}</button>
                 </div>
             </form>
-        {% else %}
+        @else
             <div class="modal-body">
                 <p class="text-danger">{{ 'no_money_for_piggy'|_ }}</p>
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-outline-secondary" data-dismiss="modal">{{ 'close'|_ }}</button>
             </div>
-        {% endif %}
+        @endif
     </div>
 </div>
 

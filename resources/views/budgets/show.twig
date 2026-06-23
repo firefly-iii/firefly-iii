@@ -6,15 +6,15 @@
 
 @section('content')
     <div class="row">
-        <div class="{% if attachments.count() == 0 %}col-lg-12 col-md-12 col-sm-12 col-xs-12{% else %}col-lg-8 col-md-6 col-sm-12 col-xs-12{% endif %}">
+        <div class="{% if attachments.count() == 0 %}col-lg-12 col-md-12 col-sm-12 col-xs-12@elsecol-lg-8 col-md-6 col-sm-12 col-xs-12@endif">
             <div class="card">
                 <div class="card-header">
                     <h3 class="card-title">
                         {% if budgetLimit %}
                             {{ trans('firefly.chart_budget_in_period', {name: budget.name, start: budgetLimit.start_date.isoFormat(monthAndDayFormat), end: budgetLimit.end_date.isoFormat(monthAndDayFormat),currency: budgetLimit.transactionCurrency.name }) }}
-                        {% else %}
+                        @else
                             {{ trans('firefly.chart_all_journals_for_budget', {name:budget.name}) }}
-                        {% endif %}
+                        @endif
                     </h3>
                     <div class="box-tools pull-right">
                         <div class="btn-group">
@@ -35,7 +35,7 @@
                             {{ trans('firefly.chart_budget_in_period_only_currency', {currency: budgetLimit.transactionCurrency.name}) }}
                         </p>
                     </div>
-                {% endif %}
+                @endif
             </div>
         </div>
         {% if attachments.count() > 0 %}
@@ -51,7 +51,7 @@
                     </div>
                 </div>
             </div>
-        {% endif %}
+        @endif
     </div>
     <div class="row">
         <div class="col-lg-4 col-md-6 col-sm-12 col-xs-12">
@@ -70,7 +70,7 @@
                             {{ trans('firefly.chart_budget_in_period_only_currency', {currency: budgetLimit.transactionCurrency.name}) }}
                         </p>
                     </div>
-                {% endif %}
+                @endif
             </div>
         </div>
         <div class="col-lg-4 col-md-6 col-sm-12 col-xs-12">
@@ -89,7 +89,7 @@
                             {{ trans('firefly.chart_budget_in_period_only_currency', {currency: budgetLimit.transactionCurrency.name}) }}
                         </p>
                     </div>
-                {% endif %}
+                @endif
             </div>
         </div>
         <div class="col-lg-4 col-md-6 col-sm-12 col-xs-12">
@@ -108,7 +108,7 @@
                             {{ trans('firefly.chart_budget_in_period_only_currency', {currency: budgetLimit.transactionCurrency.name}) }}
                         </p>
                     </div>
-                {% endif %}
+                @endif
             </div>
         </div>
     </div>
@@ -118,14 +118,14 @@
                 <p class="small text-center"><a href="{{ route('budgets.show',budget.id) }}">{{ 'showEverything'|_ }}</a></p>
             </div>
         </div>
-    {% endif %}
+    @endif
 
     <div class="row">
-        <div class="{% if limits|length > 0 %}col-lg-9 col-md-9 col-sm-12 col-xs-12{% else %}col-lg-12 col-md-12 col-sm-12 col-xs-12{% endif %}">
+        <div class="{% if limits|length > 0 %}col-lg-9 col-md-9 col-sm-12 col-xs-12@elsecol-lg-12 col-md-12 col-sm-12 col-xs-12@endif">
 
             <div class="card">
                 <div class="card-header">
-                    <h3 class="card-title">{{ 'transactions'|_ }}</h3>
+                    <h3 class="card-title">{{ __('firefly.transactions') }}</h3>
                 </div>
                 <div class="card-body">
                     {% include 'list.groups' %}
@@ -133,17 +133,17 @@
                         <p>
                             <span class="bi bi-calendar"></span>
                             <a href="{{ route('budgets.show', [budget.id]) }}">
-                                {{ 'show_all_no_filter'|_ }}
+                                {{ __('firefly.show_all_no_filter') }}
                             </a>
                         </p>
-                    {% endif %}
+                    @endif
                 </div>
             </div>
         </div>
         {% if limits|length > 0 %}
             <div class="col-lg-3 col-md-3 col-sm-12 col-xs-12">
                 {% for limit in limits %}
-                    <div class="box {% if limit.start_date == budgetLimit.start_date %}box-primary box-solid{% endif %}">
+                    <div class="box {% if limit.start_date == budgetLimit.start_date %}box-primary box-solid@endif">
                         <div class="card-header">
                             <h3 class="card-title"><a
                                     href="{{ route('budgets.show.limit',[budget.id,limit.id]) }}">
@@ -157,23 +157,23 @@
                                 <tr>
                                     <td class="third">{{ 'amount'|_ }}</td>
                                     <td>
-                                        {{ formatAmountBySymbol(limit.amount, limit.transactionCurrency.symbol, limit.transactionCurrency.decimal_places) }}
+                                        {{ format_amount_by_symbol(limit.amount, limit.transactionCurrency.symbol, limit.transactionCurrency.decimal_places) }}
                                         {% if convertToPrimary and null != limit.native_amount %}
-                                            ({{ formatAmountBySymbol(limit.native_amount, primaryCurrency.symbol, primaryCurrency.decimal_places) }})
-                                        {% endif %}
+                                            ({{ format_amount_by_symbol(limit.native_amount, primaryCurrency.symbol, primaryCurrency.decimal_places) }})
+                                        @endif
                                     </td>
                                 </tr>
                                 <tr>
                                     <td class="third">{{ 'spent'|_ }}</td>
                                     <td>
                                         {% if convertToPrimary %}
-                                            {{ formatAmountBySymbol(limit.spent, limit.transactionCurrency.symbol, limit.transactionCurrency.decimal_places) }}
+                                            {{ format_amount_by_symbol(limit.spent, limit.transactionCurrency.symbol, limit.transactionCurrency.decimal_places) }}
                                             {% if limit.pc_spent %}
-                                                ({{ formatAmountBySymbol(limit.pc_spent, primaryCurrency.symbol, primaryCurrency.decimal_places) }})
-                                            {% endif %}
-                                        {% else %}
-                                            {{ formatAmountBySymbol(limit.spent, limit.transactionCurrency.symbol, limit.transactionCurrency.decimal_places) }}
-                                        {% endif %}
+                                                ({{ format_amount_by_symbol(limit.pc_spent, primaryCurrency.symbol, primaryCurrency.decimal_places) }})
+                                            @endif
+                                        @else
+                                            {{ format_amount_by_symbol(limit.spent, limit.transactionCurrency.symbol, limit.transactionCurrency.decimal_places) }}
+                                        @endif
                                     </td>
                                 </tr>
                                 {% if 0 != bccomp('0', limit.spent) %}
@@ -190,24 +190,24 @@
                                                     <div class="progress-bar progress-bar-danger width-{{ 100-pct|round }}" role="progressbar" aria-valuenow="{{ (100-pct)|round }}"
                                                          aria-valuemin="0" aria-valuemax="100"></div>
                                                 </div>
-                                            {% else %}
+                                            @else
                                                 {% set pct = (limit.amount != 0 ? (((limit.spent*-1) / limit.amount)*100) : 0) %} {# must have -1 here #}
                                                 <div class="progress progress-striped">
                                                     <div class="progress-bar progress-bar-success width-{{ pct|round }}" role="progressbar" aria-valuenow="{{ pct|round }}"
                                                          aria-valuemin="0"
                                                          aria-valuemax="100"></div>
                                                 </div>
-                                            {% endif %}
+                                            @endif
                                         </td>
                                     </tr>
-                                {% endif %}
+                                @endif
                             </table>
                         </div>
                     </div>
                 {% endfor %}
                 <p class="small text-center"><a href="{{ route('budgets.show',budget.id) }}">{{ 'showEverything'|_ }}</a></p>
             </div>
-        {% endif %}
+        @endif
     </div>
 
 @endsection
@@ -222,12 +222,12 @@
         var expenseCategoryUrl = '{{ route('chart.budget.expense-category', [budget.id, budgetLimit.id]) }}';
         var expenseAssetUrl = '{{ route('chart.budget.expense-asset', [budget.id, budgetLimit.id]) }}';
         var expenseExpenseUrl = '{{ route('chart.budget.expense-expense', [budget.id, budgetLimit.id]) }}';
-        {% else %}
+        @else
         var budgetChartUrl = '{{ route('chart.budget.budget', [budget.id] ) }}';
         var expenseCategoryUrl = '{{ route('chart.budget.expense-category', [budget.id]) }}';
         var expenseAssetUrl = '{{ route('chart.budget.expense-asset', [budget.id]) }}';
         var expenseExpenseUrl = '{{ route('chart.budget.expense-expense', [budget.id]) }}';
-        {% endif %}
+        @endif
     </script>
 
     <script type="text/javascript" src="v1/js/lib/Chart.bundle.min.js?v={{ $FF_BUILD_TIME }}" nonce="{{ $JS_NONCE }}"></script>

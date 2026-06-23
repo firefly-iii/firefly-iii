@@ -23,16 +23,16 @@
                             {{ ExpandedForm::text('email',user.email,{'helpText': trans('firefly.admin_update_email')}) }}
                             {{ ExpandedForm.password('password') }}
                             {{ ExpandedForm.password('password_confirmation') }}
-                        {% else %}
+                        @else
                             <input type="hidden" name="email" value="{{ user.email }}"/>
                             <input type="hidden" name="password" value=""/>
                             <input type="hidden" name="password_confirmation" value=""/>
-                        {% endif %}
+                        @endif
                         {{ ExpandedForm::checkbox('blocked') }}
                         {{ ExpandedForm::select('blocked_code', codes, user.blocked_code) }}
                         {% if user.id != currentUser.id %}
                             {{ ExpandedForm::checkbox('is_owner',1,isAdmin) }}
-                        {% endif %}
+                        @endif
                     </div>
                 </div>
             </div>

@@ -7,24 +7,24 @@
         <th class="hidden-sm hidden-xs">{{ trans('list.date') }}</th>
         {% if not hideSource %}
             <th class="hidden-xs">{{ trans('list.from') }}</th>
-        {% endif %}
+        @endif
         {% if not hideDestination %}
             <th class="hidden-xs">{{ trans('list.to') }}</th>
-        {% endif %}
+        @endif
 
         {# Hide budgets? #}
         {% if not hideBudget %}
             <th class="hidden-xs">
                 <span class="bi bi-pie-chart" title="{{ trans('list.budget') }}"></span>
             </th>
-        {% endif %}
+        @endif
 
         {# Hide categories? #}
         {% if not hideCategory %}
             <th class="hidden-xs">
                 <span class="bi bi-bookmark" title="{{ trans('list.category') }}"></span>
             </th>
-        {% endif %}
+        @endif
     </tr>
     </thead>
     <tbody>
@@ -40,57 +40,57 @@
             <td class="hidden-xs">
                 {% if transaction.transaction_type_type == 'Withdrawal' %}
                     <span class="bi bi-arrow-left" title="{{ trans('firefly.Withdrawal') }}"></span>
-                {% endif %}
+                @endif
 
                 {% if transaction.transaction_type_type == 'Deposit' %}
                     <span class="bi bi-arrow-right" title="{{ trans('firefly.Deposit') }}"></span>
-                {% endif %}
+                @endif
 
                 {% if transaction.transaction_type_type == 'Transfer' %}
                     <span class="bi bi-arrow-left-right" title="{{ trans('firefly.Transfer') }}"></span>
-                {% endif %}
+                @endif
 
                 {% if transaction.transaction_type_type == 'Reconciliation' %}
                     XX
-                {% endif %}
+                @endif
 
                 {% if transaction.transaction_type_type == 'Opening balance' %}
                     XX
-                {% endif %}
+                @endif
             </td>
 
             <td>
                 <a href="{{ route('transactions.show',transaction.transaction_group_id) }}">
                     {% if transaction.group_title|length > 0 %}
                         {{ transaction.group_title }} ({{ transaction.description }})
-                    {% else %}
+                    @else
                         {{ transaction.description }}
-                    {% endif %}
+                    @endif
                 </a>
             </td>
 
             <td>
                 {% if transaction.transaction_type_type == 'Deposit' %}
-                    {{ formatAmountBySymbol(transaction.amount*-1, transaction.currency_symbol, transaction.currency_decimal_places) }}
+                    {{ format_amount_by_symbol(transaction.amount*-1, transaction.currency_symbol, transaction.currency_decimal_places) }}
                     {% if null != transaction.foreign_amount %}
-                        ({{ formatAmountBySymbol(transaction.foreign_amount*-1, transaction.foreign_currency_symbol, transaction.foreign_currency_decimal_places) }})
-                    {% endif %}
+                        ({{ format_amount_by_symbol(transaction.foreign_amount*-1, transaction.foreign_currency_symbol, transaction.foreign_currency_decimal_places) }})
+                    @endif
                     {% set sum = (sum + (transaction.amount*-1)) %}
                 {% elseif transaction.transaction_type_type == 'Transfer' %}
                     <span class="text-info money-transfer">
-                        {{ formatAmountBySymbol(transaction.amount*-1, transaction.currency_symbol, transaction.currency_decimal_places, false) }}
+                        {{ format_amount_by_symbol(transaction.amount*-1, transaction.currency_symbol, transaction.currency_decimal_places, false) }}
                         {% if null != transaction.foreign_amount %}
-                            ({{ formatAmountBySymbol(transaction.foreign_amount*-1, transaction.foreign_currency_symbol, transaction.foreign_currency_decimal_places, false) }})
-                        {% endif %}
+                            ({{ format_amount_by_symbol(transaction.foreign_amount*-1, transaction.foreign_currency_symbol, transaction.foreign_currency_decimal_places, false) }})
+                        @endif
                             </span>
                     {% set sum = (sum + transaction.amount*-1) %}
-                {% else %}
-                    {{ formatAmountBySymbol(transaction.amount, transaction.currency_symbol, transaction.currency_decimal_places) }}
+                @else
+                    {{ format_amount_by_symbol(transaction.amount, transaction.currency_symbol, transaction.currency_decimal_places) }}
                     {% if null != transaction.foreign_amount %}
-                        ({{ formatAmountBySymbol(transaction.foreign_amount, transaction.foreign_currency_symbol, transaction.foreign_currency_decimal_places) }})
-                    {% endif %}
+                        ({{ format_amount_by_symbol(transaction.foreign_amount, transaction.foreign_currency_symbol, transaction.foreign_currency_decimal_places) }})
+                    @endif
                     {% set sum = (sum + transaction.amount) %}
-                {% endif %}
+                @endif
 
             </td>
 
@@ -104,7 +104,7 @@
                         {{ transaction.source_account_name }}
                     </a>
                 </td>
-            {% endif %}
+            @endif
 
             {% if not hideDestination %}
                 <td class="hidden-xs">
@@ -112,7 +112,7 @@
                         {{ transaction.destination_account_name }}
                     </a>
                 </td>
-            {% endif %}
+            @endif
 
             <!-- Do NOT hide the budget? -->
             {% if not hideBudget %}
@@ -121,9 +121,9 @@
                         <a href="{{ route('budgets.show', [transaction.budget_id]) }}">
                             {{ transaction.budget_name }}
                         </a>
-                    {% endif %}
+                    @endif
                 </td>
-            {% endif %}
+            @endif
 
             <!-- Do NOT hide the category? -->
             {% if not hideCategory %}
@@ -132,9 +132,9 @@
                         <a href="{{ route('categories.show', [transaction.category_id]) }}">
                             {{ transaction.category_name }}
                         </a>
-                    {% endif %}
+                    @endif
                 </td>
-            {% endif %}
+            @endif
         </tr>
     {% endfor %}
     </tbody>
@@ -143,8 +143,8 @@
         <td colspan="2" class="text-right"><em>{{ 'sum'|_ }}:</em></td>
         <td>
             {% if sum != 0 %}
-                {{ formatAmountBySymbol(sum, symbol, decimal_places) }}
-            {% endif %}
+                {{ format_amount_by_symbol(sum, symbol, decimal_places) }}
+            @endif
         </td>
     </tr>
     </tfoot>

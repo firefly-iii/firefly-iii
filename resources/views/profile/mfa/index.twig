@@ -18,10 +18,10 @@
                     <p>
                         {% if enabledMFA == true %}
                             {{ 'mfa_index_enabled'|_ }}
-                        {% endif %}
+                        @endif
                         {% if enabledMFA == false %}
                             {{ 'mfa_index_disabled'|_ }}
-                        {% endif %}
+                        @endif
 
                     </p>
                     <p>
@@ -35,12 +35,12 @@
                             <a href="{{ route('profile.mfa.disableMFA') }}" class="btn btn-danger"><em class="fa fa-unlock-alt"></em> {{ 'pref_two_factor_auth_disable_2fa'|_ }}</a>
                             <a href="{{ route('profile.mfa.backup-codes') }}" class="btn btn-outline-secondary"><em class="bi bi-calculator"></em> {{ 'pref_two_factor_new_backup_codes'|_ }}</a>
                         </div>
-                    {% endif %}
+                    @endif
                     {% if enabledMFA == false %}
                         <p>
                             <a class="btn btn-info" href="{{ route('profile.mfa.enableMFA') }}"><em class="bi bi-calculator"></em> {{ 'pref_enable_two_factor_auth'|_ }}</a>
                         </p>
-                    {% endif %}
+                    @endif
                 </div>
             </div>
         </div>

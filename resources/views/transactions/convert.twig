@@ -22,37 +22,37 @@
                             {% if sourceType.type == 'Withdrawal' and destinationType.type == 'Deposit' %}
                                 {{ trans_choice('firefly.convert_expl_w_d', groupArray.transactions|length) }}
                                 {{ trans_choice('firefly.convert_select_sources', groupArray.transactions|length) }}
-                            {% endif %}
+                            @endif
 
                             {# TWO: WITHDRAWAL TO TRANSFER #}
                             {% if sourceType.type == 'Withdrawal' and destinationType.type == 'Transfer' %}
                                 {{ trans_choice('firefly.convert_expl_w_t', groupArray.transactions|length) }}
                                 {{ trans_choice('firefly.convert_select_destinations', groupArray.transactions|length) }}
-                            {% endif %}
+                            @endif
 
                             {# THREE: DEPOSIT TO WITHDRAWAL #}
                             {% if sourceType.type == 'Deposit' and destinationType.type == 'Withdrawal' %}
                                 {{ trans_choice('firefly.convert_expl_d_w', groupArray.transactions|length) }}
                                 {{ trans_choice('firefly.convert_select_destinations', groupArray.transactions|length) }}
-                            {% endif %}
+                            @endif
 
                             {# FOUR: DEPOSIT TO TRANSFER #}
                             {% if sourceType.type == 'Deposit' and destinationType.type == 'Transfer' %}
                                 {{ trans_choice('firefly.convert_expl_d_t', groupArray.transactions|length) }}
                                 {{ trans_choice('firefly.convert_select_sources', groupArray.transactions|length) }}
-                            {% endif %}
+                            @endif
 
                             {# FIVE: TRANSFER TO WITHDRAWAL #}
                             {% if sourceType.type == 'Transfer' and destinationType.type == 'Withdrawal' %}
                                 {{ trans_choice('firefly.convert_expl_t_w', groupArray.transactions|length) }}
                                 {{ trans_choice('firefly.convert_select_destinations', groupArray.transactions|length) }}
-                            {% endif %}
+                            @endif
 
                             {# SIX: TRANSFER TO DEPOSIT #}
                             {% if sourceType.type == 'Transfer' and destinationType.type == 'Deposit' %}
                                 {{ trans_choice('firefly.convert_expl_t_d', groupArray.transactions|length) }}
                                 {{ trans_choice('firefly.convert_select_sources', groupArray.transactions|length) }}
-                            {% endif %}
+                            @endif
                         </p>
 
                         <table class="table">
@@ -73,7 +73,7 @@
                                             {# NEW DESTINATION = Asset, SOURCE MUST BE [Revenue, Cash, Loan, Debt, Mortgage] #}
                                             {% if transaction.source_type == 'Asset account' %}
                                                 {{ Html::select('source_id['~transaction.transaction_journal_id~']', validDepositSources).class('form-control') }}
-                                            {% endif %}
+                                            @endif
 
                                             {# NEW DESTINATION = [Loan, Debt, Mortgage], SOURCE MUST BE [Revenue] #}
                                             {% if
@@ -85,11 +85,11 @@
                                                     placeholder="Source account"
                                                     name="source_name[{{ transaction.transaction_journal_id }}]"
                                                     type="text"
-                                                    value="{% if transaction.destination_type != "Cash account" %}{{ preFilled.source_name[transaction.transaction_journal_id]|default(transaction.destination_name) }}{% endif %}"
+                                                    value="{% if transaction.destination_type != "Cash account" %}{{ preFilled.source_name[transaction.transaction_journal_id]|default(transaction.destination_name) }}@endif"
                                                     class="form-control tt-input input-revenue"
                                                     spellcheck="false" dir="auto">
-                                            {% endif %}
-                                        {% endif %}
+                                            @endif
+                                        @endif
 
                                         {# TWO: WITHDRAWAL TO TRANSFER #}
                                         {% if sourceType.type == 'Withdrawal' and destinationType.type == 'Transfer' %}
@@ -100,7 +100,7 @@
                                             <input type="hidden"
                                                    name="source_id[{{ transaction.transaction_journal_id }}]"
                                                    value="{{ transaction.source_id }}">
-                                        {% endif %}
+                                        @endif
 
                                         {# THREE: DEPOSIT TO WITHDRAWAL #}
                                         {% if sourceType.type == 'Deposit' and destinationType.type == 'Withdrawal' %}
@@ -111,23 +111,23 @@
                                             <input type="hidden"
                                                    name="source_id[{{ transaction.transaction_journal_id }}]"
                                                    value="{{ transaction.destination_id }}">
-                                        {% endif %}
+                                        @endif
 
                                         {# FOUR: DEPOSIT TO TRANSFER #}
                                         {% if sourceType.type == 'Deposit' and destinationType.type == 'Transfer' %}
                                             {# if new destination is asset, then asset #}
                                             {% if transaction.destination_type == 'Asset account' %}
                                                 {{ Html::select('source_id['~transaction.transaction_journal_id~']', assets).class('form-control') }}
-                                            {% endif %}
+                                            @endif
                                             {% if transaction.destination_type == 'Loan' or
                                                 transaction.destination_type == 'Debt' or
                                                 transaction.destination_type == 'Mortgage' %}
                                                 {{ Html::select('source_id['~transaction.transaction_journal_id~']', liabilities).class('form-control') }}
-                                            {% endif %}
+                                            @endif
 
                                             {# if new destination liability, then liability. #}
 
-                                        {% endif %}
+                                        @endif
 
                                         {# FIVE: TRANSFER TO WITHDRAWAL #}
                                         {% if sourceType.type == 'Transfer' and destinationType.type == 'Withdrawal' %}
@@ -138,7 +138,7 @@
                                             <input type="hidden"
                                                    name="source_id[{{ transaction.transaction_journal_id }}]"
                                                    value="{{ transaction.source_id }}">
-                                        {% endif %}
+                                        @endif
 
                                         {# SIX: TRANSFER TO DEPOSIT #}
                                         {% if sourceType.type == 'Transfer' and destinationType.type == 'Deposit' %}
@@ -146,7 +146,7 @@
                                             {% if
                                                 transaction.source_type == 'Asset account' %}
                                                 {{ Html::select('source_id['~transaction.transaction_journal_id~']', validDepositSources).class('form-control') }}
-                                            {% endif %}
+                                            @endif
                                             {# NEW DESTINATION = [Debt, Mortgage, Load], SOURCE MUST BE [Revenue] #}
                                             {% if
                                                 transaction.source_type == 'Loan' or
@@ -157,12 +157,12 @@
                                                     placeholder="Source account"
                                                     name="source_name[{{ transaction.transaction_journal_id }}]"
                                                     type="text"
-                                                    value="{% if transaction.destination_type != "Cash account" %}{{ transaction.source_name }}{% endif %}"
+                                                    value="{% if transaction.destination_type != "Cash account" %}{{ transaction.source_name }}@endif"
                                                     class="form-control tt-input"
                                                     spellcheck="false" dir="auto">
-                                            {% endif %}
+                                            @endif
 
-                                        {% endif %}
+                                        @endif
 
                                     </td>
                                     <td>
@@ -175,7 +175,7 @@
                                             <input type="hidden"
                                                    name="destination_id[{{ transaction.transaction_journal_id }}]"
                                                    value="{{ transaction.source_id }}">
-                                        {% endif %}
+                                        @endif
 
                                         {# TWO: WITHDRAWAL TO TRANSFER #}
                                         {% if sourceType.type == 'Withdrawal' and destinationType.type == 'Transfer' %}
@@ -185,13 +185,13 @@
                                                 transaction.source_type == 'Debt' or
                                                 transaction.source_type == 'Mortgage' %}
                                                 {{ Html::select('destination_id['~transaction.transaction_journal_id~']', liabilities).class('form-control') }}
-                                            {% endif %}
+                                            @endif
 
                                             {# if the source is an asset, destination can only be an asset. #}
                                             {% if transaction.source_type == 'Asset account' %}
                                                 {{ Html::select('destination_id['~transaction.transaction_journal_id~']', assets).class('form-control') }}
-                                            {% endif %}
-                                        {% endif %}
+                                            @endif
+                                        @endif
 
                                         {# THREE: DEPOSIT TO WITHDRAWAL #}
                                         {% if sourceType.type == 'Deposit' and destinationType.type == 'Withdrawal' %}
@@ -199,7 +199,7 @@
                                             {# if new source is Asset, destination must be [Expense, Loan, Debt or Mortgage] #}
                                             {% if transaction.destination_type == 'Asset account' %}
                                                 {{ Html::select('destination_id['~transaction.transaction_journal_id~']', validWithdrawalDests).class('form-control') }}
-                                            {% endif %}
+                                            @endif
                                             {% if transaction.destination_type == 'Loan' or
                                                 transaction.destination_type == 'Debt' or
                                                 transaction.destination_type == 'Mortgage' %}
@@ -210,11 +210,11 @@
                                                     placeholder="Destination account"
                                                     name="destination_name[{{ transaction.transaction_journal_id }}]"
                                                     type="text"
-                                                    value="{% if transaction.source_type != "Cash account" %}{{ transaction.source_name }}{% endif %}"
+                                                    value="{% if transaction.source_type != "Cash account" %}{{ transaction.source_name }}@endif"
                                                     class="form-control tt-input"
                                                     spellcheck="false" dir="auto">
-                                            {% endif %}
-                                        {% endif %}
+                                            @endif
+                                        @endif
 
                                         {# FOUR: DEPOSIT TO TRANSFER #}
                                         {% if sourceType.type == 'Deposit' and destinationType.type == 'Transfer' %}
@@ -225,14 +225,14 @@
                                             <input type="hidden"
                                                    name="destination_id[{{ transaction.transaction_journal_id }}]"
                                                    value="{{ transaction.destination_id }}">
-                                        {% endif %}
+                                        @endif
 
                                         {# FIVE: TRANSFER TO WITHDRAWAL #}
                                         {% if sourceType.type == 'Transfer' and destinationType.type == 'Withdrawal' %}
 
                                             {% if transaction.source_type == 'Asset account' %}
                                                 {{ Html::select('destination_id['~transaction.transaction_journal_id~']', validWithdrawalDests).class('form-control') }}
-                                            {% endif %}
+                                            @endif
                                             {% if transaction.source_type == 'Loan' or
                                                 transaction.source_type == 'Debt' or
                                                 transaction.source_type == 'Mortgage' %}
@@ -241,11 +241,11 @@
                                                     placeholder="Destination account"
                                                     name="destination_name[{{ transaction.transaction_journal_id }}]"
                                                     type="text"
-                                                    value="{% if transaction.source_type != "Cash account" %}{{ transaction.destination_name }}{% endif %}"
+                                                    value="{% if transaction.source_type != "Cash account" %}{{ transaction.destination_name }}@endif"
                                                     class="form-control tt-input"
                                                     spellcheck="false" dir="auto">
-                                            {% endif %}
-                                        {% endif %}
+                                            @endif
+                                        @endif
 
                                         {# SIX: TRANSFER TO DEPOSIT #}
                                         {% if sourceType.type == 'Transfer' and destinationType.type == 'Deposit' %}
@@ -256,25 +256,25 @@
                                             <input type="hidden"
                                                    name="destination_id[{{ transaction.transaction_journal_id }}]"
                                                    value="{{ transaction.destination_id }}">
-                                        {% endif %}
+                                        @endif
                                     </td>
                                     <td>
                                         {% if transaction.transaction_type_type == 'Deposit' %}
-                                            {{ formatAmountBySymbol(transaction.amount*-1, transaction.currency_symbol, transaction.currency_decimal_places) }}
+                                            {{ format_amount_by_symbol(transaction.amount*-1, transaction.currency_symbol, transaction.currency_decimal_places) }}
                                             {% if null != transaction.foreign_amount %}
-                                                ({{ formatAmountBySymbol(transaction.foreign_amount*-1, transaction.foreign_currency_symbol, transaction.foreign_currency_decimal_places) }})
-                                            {% endif %}
+                                                ({{ format_amount_by_symbol(transaction.foreign_amount*-1, transaction.foreign_currency_symbol, transaction.foreign_currency_decimal_places) }})
+                                            @endif
                                         {% elseif transaction.transaction_type_type == 'Transfer' %}
-                                            <span class="text-info money-transfer">{{ formatAmountBySymbol(transaction.amount*-1, transaction.currency_symbol, transaction.currency_decimal_places, false) }}
+                                            <span class="text-info money-transfer">{{ format_amount_by_symbol(transaction.amount*-1, transaction.currency_symbol, transaction.currency_decimal_places, false) }}
                                                 {% if null != transaction.foreign_amount %}
-                                                    ({{ formatAmountBySymbol(transaction.foreign_amount*-1, transaction.foreign_currency_symbol, transaction.foreign_currency_decimal_places, false) }})
-                                                {% endif %}</span>
-                                        {% else %}
-                                            {{ formatAmountBySymbol(transaction.amount, transaction.currency_symbol, transaction.currency_decimal_places) }}
+                                                    ({{ format_amount_by_symbol(transaction.foreign_amount*-1, transaction.foreign_currency_symbol, transaction.foreign_currency_decimal_places, false) }})
+                                                @endif</span>
+                                        @else
+                                            {{ format_amount_by_symbol(transaction.amount, transaction.currency_symbol, transaction.currency_decimal_places) }}
                                             {% if null != transaction.foreign_amount %}
-                                                ({{ formatAmountBySymbol(transaction.foreign_amount, transaction.foreign_currency_symbol, transaction.foreign_currency_decimal_places) }})
-                                            {% endif %}
-                                        {% endif %}
+                                                ({{ format_amount_by_symbol(transaction.foreign_amount, transaction.foreign_currency_symbol, transaction.foreign_currency_decimal_places) }})
+                                            @endif
+                                        @endif
                                     </td>
                                 </tr>
                             {% endfor %}

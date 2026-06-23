@@ -27,17 +27,17 @@
                 <a href="{{ route('categories.show', category.id) }}" title="{{ category.name }}">{{ category.name }}</a>
                 {% if category.attachments.count() > 0 %}
                     <span class="bi bi-paperclip"></span>
-                {% endif %}
+                @endif
             </td>
             {% if category.lastActivity %}
                 <td class="hidden-sm hidden-xs" data-value="{{ category.lastActivity.format('Y-m-d H-i-s') }}">
                     {{ category.lastActivity.isoFormat(monthAndDayFormat) }}
                 </td>
-            {% else %}
+            @else
                 <td class="hidden-sm hidden-xs" data-value="0000-00-00 00-00-00">
                     <em>{{ 'never'|_ }}</em>
                 </td>
-            {% endif %}
+            @endif
         </tr>
     {% endfor %}
     </tbody>

@@ -34,15 +34,15 @@
         </script>
         <link href="v1/lib/adminlte/css/skins/skin-dark.min.css?v={{ $FF_BUILD_TIME }}" rel="stylesheet" type="text/css" nonce="{{ $JS_NONCE }}" media="(prefers-color-scheme: dark)">
         <link href="v1/lib/adminlte/css/skins/skin-light.min.css?v={{ $FF_BUILD_TIME }}" rel="stylesheet" type="text/css" nonce="{{ $JS_NONCE }}" media="(prefers-color-scheme: light)">
-    {% endif %}
+    @endif
     {% if 'dark' == darkMode %}
         <meta name="color-scheme" content="dark">
         <link href="v1/lib/adminlte/css/skins/skin-dark.min.css?v={{ $FF_BUILD_TIME }}" rel="stylesheet" type="text/css" nonce="{{ $JS_NONCE }}">
-    {% endif %}
+    @endif
     {% if 'light' == darkMode %}
         <meta name="color-scheme" content="light">
         <link href="v1/lib/adminlte/css/skins/skin-light.min.css?v={{ $FF_BUILD_TIME }}" rel="stylesheet" type="text/css" nonce="{{ $JS_NONCE }}">
-    {% endif %}
+    @endif
 
     {# Firefly III customisations #}
     <link href="v1/css/firefly.css?v={{ $FF_BUILD_TIME }}" rel="stylesheet" type="text/css" nonce="{{ $JS_NONCE }}">
@@ -86,7 +86,7 @@
         })();
     </script>
     <noscript><p><img src="//{{ config('firefly.tracker_url') }}/matomo.php?idsite={{ config('firefly.tracker_site_id') }}&amp;rec=1" class="no-border" alt=""/></p></noscript>
-{% endif %}
+@endif
 
 </body>
 </html>

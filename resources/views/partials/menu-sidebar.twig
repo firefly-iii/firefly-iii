@@ -41,7 +41,7 @@
     <li class="{{ activeRoutePartial('transactions') }} treeview" id="transaction-menu">
         <a href="#">
             <em class="bi bi-arrow-left-right"></em>
-            <span>{{ 'transactions'|_ }}</span>
+            <span>{{ __('firefly.transactions') }}</span>
             <span class="pull-right-container">
         <span class="fa fa-angle-left pull-right"></span>
       </span>
@@ -98,14 +98,14 @@
                         <span>{{ 'webhooks'|_ }}</span>
                     </a>
                 </li>
-            {% else %}
+            @else
                 <li class="">
                     <a href="#">
                         <span class="bi bi-caret-right"></span>
                         <span>{{ 'webhooks'|_ }} ({{ 'webhooks_menu_disabled'|_ }})</span>
                     </a>
                 </li>
-            {% endif %}
+            @endif
         </ul>
     </li>
 
@@ -194,7 +194,7 @@
                 <span>{{ 'export_data_menu'|_ }}</span>
             </a>
         </li>
-    {% endif %}
+    @endif
 
     <li class="{{ activeRoutePartial('administrations') }} {{ activeRoutePartial('setting') }} {{ activeRoutePartial('oauth') }} {{ activeRoutePartial('profile') }} {{ activeRoutePartial('preferences') }} {{ activeRoutePartial('currencies') }} {{ activeRoutePartial('exchange-rates') }} treeview"
         id="option-menu">
@@ -239,7 +239,7 @@
                     <span>{{ 'menu_exchange_rates_index'|_ }}</span>
                 </a>
             </li>
-            {% endif %}
+            @endif
             <li class="{{ activeRoutePartial('administrations') }}">
                 <a class="{{ activeRoutePartial('administration') }}" href="{{ route('administrations.index') }}">
                     <span class="bi bi-caret-right"></span>
@@ -253,7 +253,7 @@
                         <span>{{ 'system_settings'|_ }}</span>
                     </a>
                 </li>
-            {% endif %}
+            @endif
         </ul>
     </li>
 
@@ -265,7 +265,7 @@
                 </span>
             </a>
         </li>
-    {% endif %}
+    @endif
     {% if 'remote_user_guard' == authGuard and '' != logoutUrl %}
         <li>
             <a href="{{ logoutUrl }}">
@@ -273,5 +273,5 @@
                 <span>{{ 'logout'|_ }}</span>
             </a>
         </li>
-    {% endif %}
+    @endif
 </ul>

@@ -11,10 +11,10 @@
                 {# link to object: #}
                 {% if 'FireflyIII\\Models\\Rule' == logEntry.changer_type %}
                     <a href="{{ route('rules.edit', [logEntry.changer_id] ) }}">
-                {% endif %}
+                @endif
                     {% if 'FireflyIII\\User' == logEntry.changer_type %}
                     <a href="{{ route('profile.index') }}">
-                        {% endif %}
+                        @endif
                         {{ logEntry.changer_type|replace({"FireflyIII\\Models\\": ""})|replace({"FireflyIII\\": ""}) }} #{{ logEntry.changer_id }}
                     </a>
             </th>
@@ -25,90 +25,90 @@
                 {# display depends on action #}
                 {% if 'add_tag' == logEntry.action %}
                     <code>{{ logEntry.after }}</code>
-                {% endif %}
+                @endif
 
                 {% if 'update_amount' == logEntry.action %}
-                    {{ formatAmountBySymbol(logEntry.before.amount, logEntry.before.currency_symbol, logEntry.before.decimal_places, true) }}
+                    {{ format_amount_by_symbol(logEntry.before.amount, logEntry.before.currency_symbol, logEntry.before.decimal_places, true) }}
                     &rarr;
-                    {{ formatAmountBySymbol(logEntry.after.amount, logEntry.after.currency_symbol, logEntry.after.decimal_places, true) }}
-                {% endif %}
+                    {{ format_amount_by_symbol(logEntry.after.amount, logEntry.after.currency_symbol, logEntry.after.decimal_places, true) }}
+                @endif
                 {% if 'update_foreign_amount' == logEntry.action %}
-                    {{ formatAmountBySymbol(logEntry.before.amount, logEntry.before.currency_symbol, logEntry.before.decimal_places, true) }}
+                    {{ format_amount_by_symbol(logEntry.before.amount, logEntry.before.currency_symbol, logEntry.before.decimal_places, true) }}
                     &rarr;
-                    {{ formatAmountBySymbol(logEntry.after.amount, logEntry.after.currency_symbol, logEntry.after.decimal_places, true) }}
-                {% endif %}
+                    {{ format_amount_by_symbol(logEntry.after.amount, logEntry.after.currency_symbol, logEntry.after.decimal_places, true) }}
+                @endif
 
 
                 {% if 'update_group_title' == logEntry.action %}
                     <code><s>{{ logEntry.before }}</s></code>
                     &rarr;
                     <code>{{ logEntry.after }}</code>
-                {% endif %}
+                @endif
                 {% if 'clear_category' == logEntry.action %}
                     <code><s>{{ logEntry.before }}</s></code>
-                {% endif %}
+                @endif
                 {% if 'clear_tag' == logEntry.action %}
                     <code><s>{{ logEntry.before }}</s></code>
-                {% endif %}
+                @endif
 
                 {% if 'clear_notes' == logEntry.action %}
                     {% if logEntry.before|length > 25 %}
                         <code><s>{{ logEntry.before|slice(0,25) }}...</s></code>
-                    {% else %}
+                    @else
                         <code><s>{{ logEntry.before }}</s></code>
-                    {% endif %}
-                {% endif %}
+                    @endif
+                @endif
 
                 {% if 'set_bill' == logEntry.action %}
                     <code>{{ logEntry.after }}</code>
-                {% endif %}
+                @endif
                 {% if 'set_budget' == logEntry.action %}
                     <code>{{ logEntry.after }}</code>
-                {% endif %}
+                @endif
                 {% if 'set_category' == logEntry.action %}
                     <code>{{ logEntry.after }}</code>
-                {% endif %}
+                @endif
                 {% if 'set_source' == logEntry.action %}
                     <code>{{ logEntry.after }}</code>
-                {% endif %}
+                @endif
                 {% if 'set_destination' == logEntry.action %}
                     <code>{{ logEntry.after }}</code>
-                {% endif %}
+                @endif
                 {% if 'update_date' == logEntry.action %}
                     <code><s>{{ carbonize(logEntry.before).isoFormat(dateTimeFormat) }}</s></code>
                     &rarr;
                     <code>{{ carbonize(logEntry.after).isoFormat(dateTimeFormat) }}</code>
-                {% endif %}
+                @endif
                 {% if 'update_transaction_type' == logEntry.action %}
                     {{ trans('firefly.'~logEntry.before) }} &rarr; {{ trans('firefly.'~logEntry.after) }}
-                {% endif %}
+                @endif
 
                 {% if 'update_notes' == logEntry.action %}
                     {% if logEntry.before|length > 25 %}
                         <code><s>{{ logEntry.before|slice(0,25) }}...</s></code>
-                    {% else %}
+                    @else
                         <code><s>{{ logEntry.before }}</s></code>
-                    {% endif %}
+                    @endif
 
                     &rarr;
                     {% if logEntry.after|length > 25 %}
                         <code>{{ logEntry.after|slice(0,25) }}...</code>
-                    {% else %}
+                    @else
                         <code>{{ logEntry.after }}</code>
-                    {% endif %}
-                {% endif %}
+                    @endif
+                @endif
 
                 {% if 'update_description' == logEntry.action %}
                     <code><s>{{ logEntry.before }}</s></code>
                     &rarr;
                     <code>{{ logEntry.after }}</code>
-                {% endif %}
+                @endif
                 {% if 'add_to_piggy' == logEntry.action %}
-                    {{ trans('firefly.ale_action_log_add', {amount: formatAmountBySymbol(logEntry.after.amount, logEntry.after.currency_symbol, logEntry.after.decimal_places, true), name: logEntry.after.piggy|e})|raw }}
-                {% endif %}
+                    {{ trans('firefly.ale_action_log_add', {amount: format_amount_by_symbol(logEntry.after.amount, logEntry.after.currency_symbol, logEntry.after.decimal_places, true), name: logEntry.after.piggy|e})|raw }}
+                @endif
                 {% if 'remove_from_piggy' == logEntry.action %}
-                    {{ trans('firefly.ale_action_log_remove', {amount: formatAmountBySymbol(logEntry.after.amount, logEntry.after.currency_symbol, logEntry.after.decimal_places, true), name: logEntry.after.piggy|e})|raw }}
-                {% endif %}
+                    {{ trans('firefly.ale_action_log_remove', {amount: format_amount_by_symbol(logEntry.after.amount, logEntry.after.currency_symbol, logEntry.after.decimal_places, true), name: logEntry.after.piggy|e})|raw }}
+                @endif
             </td>
 
 

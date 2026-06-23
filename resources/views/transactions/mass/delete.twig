@@ -42,22 +42,22 @@
                                     <td>
                                         {% if journal.transaction_type_type == 'Withdrawal' %}
                                             <span class="bi bi-arrow-left" title="{{ trans('firefly.Withdrawal') }}"></span>
-                                        {% endif %}
+                                        @endif
 
                                         {% if journal.transaction_type_type == 'Deposit' %}
                                             <span class="bi bi-arrow-right" title="{{ trans('firefly.Deposit') }}"></span>
-                                        {% endif %}
+                                        @endif
 
                                         {% if journal.transaction_type_type == 'Transfer' %}
                                             <span class="bi bi-arrow-left-right" title="{{ trans('firefly.Deposit') }}"></span>
-                                        {% endif %}
+                                        @endif
 
                                         {% if journal.transaction_type_type == 'Reconciliation' %}
                                             <span class="bi bi-calculator" title="{{ trans('firefly.reconciliation_transaction') }}"></span>
-                                        {% endif %}
+                                        @endif
                                         {% if journal.transaction_type_type == 'Opening balance' %}
                                             <span class="bi bi-star" title="{{ trans('firefly.Opening balance') }}"></span>
-                                        {% endif %}
+                                        @endif
                                     </td>
                                     <td>
                                         <a href="{{ route('transactions.show',journal.transaction_group_id) }}"
@@ -65,22 +65,22 @@
                                     </td>
                                     <td>
                                         {% if journal.transaction_type_type == 'Deposit' %}
-                                            {{ formatAmountBySymbol(journal.amount*-1, journal.currency_symbol, journal.currency_decimal_places) }}
+                                            {{ format_amount_by_symbol(journal.amount*-1, journal.currency_symbol, journal.currency_decimal_places) }}
                                             {% if null != journal.foreign_amount %}
-                                                ({{ formatAmountBySymbol(journal.foreign_amount*-1, journal.foreign_currency_symbol, journal.foreign_currency_decimal_places) }})
-                                            {% endif %}
+                                                ({{ format_amount_by_symbol(journal.foreign_amount*-1, journal.foreign_currency_symbol, journal.foreign_currency_decimal_places) }})
+                                            @endif
                                         {% elseif journal.transaction_type_type == 'Transfer' %}
-                                            <span class="text-info money-transfer">{{ formatAmountBySymbol(journal.amount*-1, journal.currency_symbol, journal.currency_decimal_places, false) }}
+                                            <span class="text-info money-transfer">{{ format_amount_by_symbol(journal.amount*-1, journal.currency_symbol, journal.currency_decimal_places, false) }}
                                                 {% if null != journal.foreign_amount %}
-                                                    ({{ formatAmountBySymbol(journal.foreign_amount*-1, journal.foreign_currency_symbol, journal.foreign_currency_decimal_places, false) }})
-                                                {% endif %}
+                                                    ({{ format_amount_by_symbol(journal.foreign_amount*-1, journal.foreign_currency_symbol, journal.foreign_currency_decimal_places, false) }})
+                                                @endif
                                             </span>
-                                        {% else %}
-                                            {{ formatAmountBySymbol(journal.amount, journal.currency_symbol, journal.currency_decimal_places) }}
+                                        @else
+                                            {{ format_amount_by_symbol(journal.amount, journal.currency_symbol, journal.currency_decimal_places) }}
                                             {% if null != journal.foreign_amount %}
-                                                ({{ formatAmountBySymbol(journal.foreign_amount, journal.foreign_currency_symbol, journal.foreign_currency_decimal_places) }})
-                                            {% endif %}
-                                        {% endif %}
+                                                ({{ format_amount_by_symbol(journal.foreign_amount, journal.foreign_currency_symbol, journal.foreign_currency_decimal_places) }})
+                                            @endif
+                                        @endif
                                     </td>
                                     <td>
                                         {{ journal.date.isoFormat(monthAndDayFormat) }}

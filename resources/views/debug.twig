@@ -18,7 +18,7 @@
 </p>
 <label for="debug_info"></label>
 <textarea rows="30" cols="100" name="debug_info" id="debug_info">
-Debug information generated at {{ now }} for Firefly III version **{% if not FF_IS_DEVELOP %}v{% endif %}{{ FF_VERSION }}**.
+Debug information generated at {{ now }} for Firefly III version **{% if not FF_IS_DEVELOP %}v@endif{{ FF_VERSION }}**.
 
 {{ table|escape('html') }}
 </textarea>

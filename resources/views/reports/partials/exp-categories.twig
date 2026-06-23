@@ -9,31 +9,31 @@
     <tbody>
     {% for categoryId, entry in together %}
         <tr>
-            <td data-value="{% if entry.category == null %}zzzzzzzzzzz{% else %}{{ entry.category }}{% endif %}">
+            <td data-value="{% if entry.category == null %}zzzzzzzzzzz@else{{ entry.category }}@endif">
                 {% if entry.category == null %}
                     <a href="{{ route('categories.no-category') }}">{{ 'noCategory'|_ }}</a>
-                {% else %}
+                @else
                     <a href="{{ route('categories.show', categoryId) }}">{{ entry.category }}</a>
 
-                {% endif %}
+                @endif
             </td>
             <td data-value="{{ entry.spent.grand_total }}">
                 {% if entry.spent.per_currency|length ==0 %}
                     {{ '0'|formatAmount }}
-                {% else %}
+                @else
                     {% for expense in entry.spent.per_currency %}
-                        {{ formatAmountBySymbol(expense.sum, expense.currency.symbol, expense.currency.dp) }}<br/>
+                        {{ format_amount_by_symbol(expense.sum, expense.currency.symbol, expense.currency.dp) }}<br/>
                     {% endfor %}
-                {% endif %}
+                @endif
             </td>
             <td data-value="{{ entry.earned.grand_total }}">
                 {% if entry.earned.per_currency|length ==0 %}
                     {{ '0'|formatAmount }}
-                {% else %}
+                @else
                     {% for income in entry.earned.per_currency %}
-                        {{ formatAmountBySymbol(income.sum * -1, income.currency.symbol, income.currency.dp) }}<br/>
+                        {{ format_amount_by_symbol(income.sum * -1, income.currency.symbol, income.currency.dp) }}<br/>
                     {% endfor %}
-                {% endif %}
+                @endif
             </td>
         </tr>
     {% endfor %}

@@ -86,7 +86,7 @@ $shownDemo = true
                                         <td>
                                             <div class="btn-group btn-group-sm test_buttons">
                                                 {{-- show which transactions would match --}}
-                                                <a href="{{ route('rules.search',$rule->id) }}" class="btn btn-outline-secondary {% if false == rule.strict %}test_rule_triggers{% endif %}" data-id="{{ $rule->id }}" title="{{ __('firefly.test_rule_triggers') }}"><span data-id="{{ $rule->id }}" class="bi bi-flask"></span></a>
+                                                <a href="{{ route('rules.search',$rule->id) }}" class="btn btn-outline-secondary {% if false == rule.strict %}test_rule_triggers@endif" data-id="{{ $rule->id }}" title="{{ __('firefly.test_rule_triggers') }}"><span data-id="{{ $rule->id }}" class="bi bi-flask"></span></a>
                                                 @if($rule->active)
                                                     {{-- actually execute rule --}}
                                                     <a href="{{ route('rules.select-transactions',$rule->id) }}" class="btn btn-outline-secondary" title=" {{ trans('firefly.apply_rule_selection', ['title' => $rule->title]) }}"><span class="bi bi-power "></span></a>

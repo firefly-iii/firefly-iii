@@ -12,9 +12,9 @@
     {% for row in result %}
         {% if loop.index > listLength %}
             <tr class="overListLength">
-        {% else %}
+        @else
             <tr>
-        {% endif %}
+        @endif
         <td data-sortable="false">
             <a href="{{ route('transactions.show', row.transaction_group_id) }}">
                 {{ row.description }}
@@ -37,7 +37,7 @@
 
 
         <td data-value="{{ row.amount }}" class="text-right">
-            {{ formatAmountBySymbol(row.amount, row.currency_symbol, row.currency_decimal_places) }}
+            {{ format_amount_by_symbol(row.amount, row.currency_symbol, row.currency_decimal_places) }}
         </td>
 
         </tr>
@@ -50,6 +50,6 @@
                 <a href="#" class="listLengthTrigger">{{ trans('firefly.show_full_list',{number:incomeTopLength}) }}</a>
             </td>
         </tr>
-    {% endif %}
+    @endif
     </tfoot>
 </table>

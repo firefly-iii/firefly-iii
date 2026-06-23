@@ -19,7 +19,7 @@
         {% include 'partials.empty' with {objectType: 'default', type: 'rules',route: route('rules.create')} %}
         {# make FF ignore demo for now. #}
         {% set shownDemo = true %}
-    {% endif %}
+    @endif
 
     {% for ruleGroup in ruleGroups %}
         <div class="row">
@@ -29,9 +29,9 @@
                         <h3 class="card-title">
                             {% if ruleGroup.active %}
                                 {{ ruleGroup.title }}
-                            {% else %}
+                            @else
                                 <s>{{ ruleGroup.title }}</s> ({{ 'inactive'|_|lower }})
-                            {% endif %}
+                            @endif
                         </h3>
 
 
@@ -50,12 +50,12 @@
                                     {% if ruleGroup.order > 1 %}
                                         <li><a href="#" class="move-group" data-direction="up" data-id="{{ ruleGroup.id }}"><span
                                                     class="fa fa-arrow-up"></span> {{ 'move_rule_group_up'|_ }}</a></li>
-                                    {% endif %}
+                                    @endif
                                     {% if ruleGroup.order < ruleGroups|length %}
                                         <li><a href="#" class="move-group" data-direction="down" data-id="{{ ruleGroup.id }}"><span
                                                     class="fa fa-arrow-down"></span> {{ 'move_rule_group_down'|_ }}
                                             </a></li>
-                                    {% endif %}
+                                    @endif
                                 </ul>
                             </div>
                         </div>
@@ -104,11 +104,11 @@
                                         <td>
                                             <div class="btn-group btn-group-sm test_buttons">
                                                 {# show which transactions would match #}
-                                                <a href="{{ route('rules.search',rule.id) }}" class="btn btn-outline-secondary {% if false == rule.strict %}test_rule_triggers{% endif %}" data-id="{{ rule.id }}" title="{{ 'test_rule_triggers'|_ }}"><span data-id="{{ rule.id }}" class="fa fa-flask"></span></a>
+                                                <a href="{{ route('rules.search',rule.id) }}" class="btn btn-outline-secondary {% if false == rule.strict %}test_rule_triggers@endif" data-id="{{ rule.id }}" title="{{ 'test_rule_triggers'|_ }}"><span data-id="{{ rule.id }}" class="fa fa-flask"></span></a>
                                                 {% if rule.active %}
                                                     {# actually execute rule #}
                                                     <a href="{{ route('rules.select-transactions',rule.id) }}" class="btn btn-outline-secondary" title=" {{ trans('firefly.apply_rule_selection', {title: rule.title}) }}"><span class="fa fa-power-off "></span></a>
-                                                {% endif %}
+                                                @endif
 
                                                 {# duplicate rule #}
                                                 <a href="#" class="btn btn-outline-secondary duplicate-rule" data-id="{{ rule.id }}" title=" {{ trans('firefly.duplicate_rule', {title: rule.title}) }}"><span class="bi bi-copy"></span></a>
@@ -117,21 +117,21 @@
                                         <td class="markdown">
                                             {% if rule.active %}
                                                 {{ rule.title }}
-                                            {% else %}
+                                            @else
                                                 <s>{{ rule.title }}</s> ({{ 'inactive'|_|lower }})
-                                            {% endif %}
+                                            @endif
                                             {% if rule.stop_processing %}
                                                 <span class="fa fa-stop-circle-o"></span>
-                                            {% endif %}
+                                            @endif
 
                                             {% if rule.description != "" %}
                                                 <small class="hidden-xs"
                                                     {% if not rule.active %}
                                                         class="text-muted"
-                                                    {% endif %}
+                                                    @endif
                                                 ><br/>{{ rule.description|default('')|markdown }}</small>
-                                            {% endif %}
-                                            <small>({% if rule.strict %}<span class="text-danger">{{ 'rule_is_strict'|_ }}</span>{% else %}<span class="text-success">{{ 'rule_is_not_strict'|_ }}</span>{% endif %})</small>
+                                            @endif
+                                            <small>({% if rule.strict %}<span class="text-danger">{{ 'rule_is_strict'|_ }}</span>@else<span class="text-success">{{ 'rule_is_not_strict'|_ }}</span>@endif)</small>
                                         </td>
                                         <td class="hidden-xs">
                                             {% if rule.ruleTriggers.count() > 0 %}
@@ -141,21 +141,21 @@
                                                             <li
                                                                 {% if not rule.active %}
                                                                     class="text-muted"
-                                                                {% endif %}
+                                                                @endif
                                                                 data-id="{{ trigger.id }}">
                                                                 {{ trans(('firefly.rule_trigger_' ~ get_root_search_operator(trigger.trigger_type)), {trigger_value: trigger.trigger_value}) }}
 
                                                                 {% if trigger.stop_processing %}
                                                                     <span class="fa fa-stop-circle-o"></span>
-                                                                {% endif %}
+                                                                @endif
                                                             </li>
-                                                        {% endif %}
+                                                        @endif
                                                     {% endfor %}
                                                 </ul>
                                                 <ul class="small rule-triggers-show hidden pointer" data-id="{{ rule.id }}">
                                                     <li data-id="{{ rule.id }}">{{ 'show_triggers'|_ }}</li>
                                                 </ul>
-                                            {% endif %}
+                                            @endif
                                         </td>
                                         <td class="hidden-xs">
                                             {% if rule.ruleActions.count() > 0 %}
@@ -164,11 +164,11 @@
                                                         <li
                                                             {% if not rule.active %}
                                                                 class="text-muted"
-                                                            {% endif %}
+                                                            @endif
                                                             data-id="{{ action.id }}">{{ trans(('firefly.rule_action_' ~ action.action_type), {action_value: action.action_value}) }}
                                                             {% if action.stop_processing %}
                                                                 <span class="fa fa-stop-circle-o"></span>
-                                                            {% endif %}
+                                                            @endif
                                                         </li>
                                                     {% endfor %}
                                                 </ul>
@@ -176,17 +176,17 @@
                                                     <li>{{ 'show_actions'|_ }}</li>
                                                 </ul>
 
-                                            {% endif %}
+                                            @endif
                                         </td>
                                     </tr>
                                 {% endfor %}
                                 </tbody>
                             </table>
-                        {% else %}
+                        @else
                             <p>
                                 <em>{{ 'no_rules_in_group'|_ }}</em>
                             </p>
-                        {% endif %}
+                        @endif
                         <p>
                             <br/>
                             <a href="{{ route('rules.create', ruleGroup.id) }}"

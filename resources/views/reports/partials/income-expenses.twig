@@ -11,9 +11,9 @@
     {% for account in report.accounts %}
         {% if loop.index > listLength %}
             <tr class="overListLength">
-        {% else %}
+        @else
             <tr>
-        {% endif %}
+        @endif
         <td data-value="{{ account.name }}">
             <a href="{{ route('accounts.show',account.id) }}">{{ account.name }}</a>
             {% if account.count > 1 %}
@@ -21,17 +21,17 @@
                 <small>
                     {{ account.count }} {{ 'transactions'|_|lower }}
                 </small>
-            {% endif %}
+            @endif
         </td>
         <td data-value="{{ account.sum }}" class="text-right">
-            {{ formatAmountBySymbol(account.sum, account.currency_symbol, account.currency_decimal_places) }}
+            {{ format_amount_by_symbol(account.sum, account.currency_symbol, account.currency_decimal_places) }}
         </td>
         <td class="text-right hidden-xs" data-value="{{ account.average }}">
             {% if account.count > 1 %}
-                {{ formatAmountBySymbol(account.average, account.currency_symbol, account.currency_decimal_places) }}
-            {% else %}
+                {{ format_amount_by_symbol(account.average, account.currency_symbol, account.currency_decimal_places) }}
+            @else
                 &mdash;
-            {% endif %}
+            @endif
         </td>
         <td>
             <span class="fa text-muted fa-info-circle firefly-info-button" data-location="{{ type }}"
@@ -48,12 +48,12 @@
                 <a href="#" class="listLengthTrigger">{{ trans('firefly.show_full_list', {number:incomeTopLength}) }}</a>
             </td>
         </tr>
-    {% endif %}
+    @endif
     {% for sum in report.sums %}
         <tr>
             <td><em>{{ 'sum'|_ }} ({{ sum.currency_name }})</em></td>
             <td class="text-right">
-                {{ formatAmountBySymbol(sum.sum, sum.currency_symbol, sum.currency_decimal_places) }}
+                {{ format_amount_by_symbol(sum.sum, sum.currency_symbol, sum.currency_decimal_places) }}
             </td>
             <td>&nbsp;</td>
         </tr>

@@ -8,7 +8,7 @@
     <div class="row">
         {% if Route.getCurrentRoute.getName == 'categories.show' %}
             {# both charts #}
-            <div class="{% if attachments.count() == 0 %}col-lg-6 col-md-12 col-sm-12 col-xs-12{% else %}col-lg-4 col-md-12 col-sm-12 col-xs-12{% endif %}">
+            <div class="{% if attachments.count() == 0 %}col-lg-6 col-md-12 col-sm-12 col-xs-12@elsecol-lg-4 col-md-12 col-sm-12 col-xs-12@endif">
                 <div class="card">
                     <div class="card-header">
                         <h3 class="card-title">
@@ -20,7 +20,7 @@
                     </div>
                 </div>
             </div>
-            <div class="{% if attachments.count() == 0 %}col-lg-6 col-md-12 col-sm-12 col-xs-12{% else %}col-lg-4 col-md-12 col-sm-12 col-xs-12{% endif %}">
+            <div class="{% if attachments.count() == 0 %}col-lg-6 col-md-12 col-sm-12 col-xs-12@elsecol-lg-4 col-md-12 col-sm-12 col-xs-12@endif">
                 <div class="card">
                     <div class="card-header">
                         <h3 class="card-title">
@@ -32,10 +32,10 @@
                     </div>
                 </div>
             </div>
-        {% endif %}
+        @endif
         {% if Route.getCurrentRoute.getName == 'categories.show.all' %}
             {# all chart #}
-            <div class="{% if attachments.count() == 0 %}col-lg-12 col-md-12 col-sm-12 col-xs-12{% else %}col-lg-8 col-md-12 col-sm-12 col-xs-12{% endif %}">
+            <div class="{% if attachments.count() == 0 %}col-lg-12 col-md-12 col-sm-12 col-xs-12@elsecol-lg-8 col-md-12 col-sm-12 col-xs-12@endif">
                 <div class="card">
                     <div class="card-header">
                         <h3 class="card-title">
@@ -47,7 +47,7 @@
                     </div>
                 </div>
             </div>
-        {% endif %}
+        @endif
         {% if attachments.count() > 0 %}
             <div class="col-lg-4 col-md-12 col-sm-12 col-xs-12">
                 <div class="card">
@@ -61,49 +61,49 @@
                     </div>
                 </div>
             </div>
-        {% endif %}
+        @endif
     </div>
-    {% if periods|length > 0 %}
+    @if(count($periods) > 0)
         <div class="row">
             <div class="col-lg-offset-10 col-lg-2 col-md-offset-10 col-md-2 col-sm-12 col-xs-12">
                 <p class="small text-center"><a href="{{ route('categories.show.all',[category.id]) }}">{{ 'showEverything'|_ }}</a></p>
             </div>
         </div>
-    {% endif %}
+    @endif
 
     <div class="row">
-        <div class="{% if periods|length > 0 %}col-lg-10 col-md-8 col-sm-12 col-xs-12{% else %}col-lg-12 col-md-12 col-sm-12 col-xs-12{% endif %}">
+        <div class="@if(count($periods) > 0)col-lg-10 col-md-8 col-sm-12 col-xs-12@elsecol-lg-12 col-md-12 col-sm-12 col-xs-12@endif">
 
             <div class="card">
                 <div class="card-header">
-                    <h3 class="card-title">{{ 'transactions'|_ }}</h3>
+                    <h3 class="card-title">{{ __('firefly.transactions') }}</h3>
                 </div>
                 <div class="card-body">
-                    {% if periods|length > 0 %}
+                    @if(count($periods) > 0)
                         {% include 'list.groups' %}
                         <p>
                             <span class="bi bi-calendar"></span>
                             <a href="{{ route('categories.show.all', [category.id]) }}">
-                                {{ 'show_all_no_filter'|_ }}
+                                {{ __('firefly.show_all_no_filter') }}
                             </a>
                         </p>
-                    {% else %}
+                    @else
                         {% include 'list.groups' %}
                         <p>
                             <span class="bi bi-calendar"></span>
                             <a href="{{ route('categories.show', [category.id]) }}">
-                                {{ 'show_the_current_period_and_overview'|_ }}
+                                {{ __('firefly.show_the_current_period_and_overview') }}
                             </a>
                         </p>
-                    {% endif %}
+                    @endif
                 </div>
             </div>
         </div>
-        {% if periods|length > 0 %}
+        @if(count($periods) > 0)
             <div class="col-lg-2 col-md-4 col-sm-12 col-xs-12">
                 {% include 'list.periods' %}
             </div>
-        {% endif %}
+        @endif
     </div>
 
 @endsection

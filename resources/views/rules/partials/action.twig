@@ -6,7 +6,7 @@
         {# TODO error when invalid name #}
         <select name="actions[{{ count }}][type]" class="form-control">
             {% for key,type in allRuleActions() %}
-                <option value="{{ key }}" label="{{ type }}" {% if key == oldAction %} selected{% endif %}>{{ type }}</option>
+                <option value="{{ key }}" label="{{ type }}" {% if key == oldAction %} selected@endif>{{ type }}</option>
             {% endfor %}
         </select>
     </td>
@@ -18,13 +18,13 @@
             <p class="text-danger">
                 {{ errors.first('actions.'~count~'.value') }}
             </p>
-        {% endif %}
+        @endif
     </td>
     <td class="twenty">
         <div class="checkbox">
             <label>
                 <input type="checkbox" name="actions[{{ count }}][stop_processing]" value="1"
-                       {% if oldChecked %}checked{% endif %}
+                       {% if oldChecked %}checked@endif
                 />
             </label>
         </div>

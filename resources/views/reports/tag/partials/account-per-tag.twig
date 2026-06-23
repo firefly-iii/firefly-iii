@@ -17,11 +17,11 @@
                 {% for tag in tags %}
                     <td class="text-right">
                         {% if currency.tags[tag.id] %}
-                            <span title="{{ 'earned'|_ }}: {{ formatAmountBySymbol(currency.tags[tag.id].earned, currency.currency_symbol, currency.currency_decimal_places, false) }}, {{ 'spent'|_ }}: {{ formatAmountBySymbol(currency.tags[tag.id].spent, currency.currency_symbol, currency.currency_decimal_places, false) }}"
-                            {{ formatAmountBySymbol(currency.tags[tag.id].sum, currency.currency_symbol, currency.currency_decimal_places) }}
-                        {% else %}
+                            <span title="{{ 'earned'|_ }}: {{ format_amount_by_symbol(currency.tags[tag.id].earned, currency.currency_symbol, currency.currency_decimal_places, false) }}, {{ 'spent'|_ }}: {{ format_amount_by_symbol(currency.tags[tag.id].spent, currency.currency_symbol, currency.currency_decimal_places, false) }}"
+                            {{ format_amount_by_symbol(currency.tags[tag.id].sum, currency.currency_symbol, currency.currency_decimal_places) }}
+                        @else
                             &mdash;
-                        {% endif %}
+                        @endif
                     </td>
                 {% endfor %}
             </tr>

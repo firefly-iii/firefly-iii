@@ -8,7 +8,7 @@
                 <option value="{{ key }}" label="{{ type }}"
                         {% if key == oldTrigger %}
                             selected
-                        {% endif %}
+                        @endif
                 >{{ type }}</option>
             {% endfor %}
         </select>
@@ -17,7 +17,7 @@
         <div class="checkbox">
             <label>
                 <input type="checkbox" name="triggers[{{ count }}][prohibited]" value="1"
-                       {% if oldProhibited %}checked{% endif %}
+                       {% if oldProhibited %}checked@endif
                 />
             </label>
         </div>
@@ -29,13 +29,13 @@
             <p class="text-danger">
                 {{ errors.first('triggers.'~count~'.value') }}
             </p>
-        {% endif %}
+        @endif
     </td>
     <td class="twenty">
         <div class="checkbox">
             <label>
                 <input type="checkbox" class="trigger-stop-processing" name="triggers[{{ count }}][stop_processing]" value="1"
-                       {% if oldChecked %}checked{% endif %}
+                       {% if oldChecked %}checked@endif
                 />
             </label>
         </div>
