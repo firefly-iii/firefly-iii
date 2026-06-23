@@ -59,7 +59,7 @@
                         </ul>
                     </div>
                 </div>
-                <div class="box-body no-padding">
+                <div class="card-body p-0">
                     <table class="table table-hover">
                         <tbody>
                         <tr>
@@ -102,7 +102,7 @@
                             {{ 'audit_log_entries'|_ }}
                         </h3>
                     </div>
-                    <div class="box-body no-padding">
+                    <div class="card-body p-0">
                         {% include 'list.ale' with {logEntries: groupLogEntries} %}
                     </div>
                 </div>
@@ -114,7 +114,7 @@
                 <div class="card-header">
                     <h3 class="card-title">{{ 'transaction_journal_meta'|_ }}</h3>
                 </div>
-                <div class="box-body no-padding">
+                <div class="card-body p-0">
                     <table class="table table-hover">
                         <tbody>
                         {% if first.transaction_type_type != 'Withdrawal' or splits == 1 %}
@@ -133,7 +133,7 @@
                                             </a>
                                         @endif
                                         {% if loop.index0 != accounts['source']|length -1 %}, @endif
-                                    {% endfor %}
+                                    @endforeach
                                 </td>
                             </tr>
                         @endif
@@ -155,7 +155,7 @@
                                             </a>
                                         @endif
                                         {% if loop.index0 != accounts['destination']|length -1 %}, @endif
-                                    {% endfor %}
+                                    @endforeach
                                 </td>
                             </tr>
                         @endif
@@ -179,7 +179,7 @@
                                             {{ format_amount_by_symbol(amount.amount,amount.symbol, amount.decimal_places) }}
                                         @endif
                                     @endif
-                                {% endfor %}
+                                @endforeach
                             </td>
                         </tr>
                         </tbody>
@@ -289,7 +289,7 @@
                             </ul>
                         </div>
                     </div>
-                    <div class="box-body no-padding">
+                    <div class="card-body p-0">
                         <table class="table">
                             <tr>
                                 <td colspan="2">
@@ -396,10 +396,10 @@
                                 {% if journalHasMeta(journal.transaction_journal_id, dateField) %}
                                     <tr>
                                         <td class="forty">{{ trans('list.'~dateField) }}</td>
-                                        <td>{{ journalGetMetaDate(journal.transaction_journal_id, dateField).isoFormat(monthAndDayFormat) }}</td>
+                                        <td>{{ journalGetMetaDate(journal.transaction_journal_id, dateField).isoFormat($monthAndDayFormat) }}</td>
                                     </tr>
                                 @endif
-                            {% endfor %}
+                            @endforeach
                             {% for metaField in ['external_id','bunq_payment_id','internal_reference','sepa_batch_id','sepa_ct_id','sepa_ct_op','sepa_db','sepa_country','sepa_cc','sepa_ep','sepa_ci','external_url'] %}
                                 {% if journalHasMeta(journal.transaction_journal_id, metaField) %}
                                     <tr>
@@ -421,7 +421,7 @@
                                         </td>
                                     </tr>
                                 @endif
-                            {% endfor %}
+                            @endforeach
                             {% if null != journal.notes and '' != journal.notes %}
                                 <tr>
                                     <td class="forty">{{ trans('list.notes') }}</td>
@@ -446,7 +446,7 @@
                                             {% if null != tag.id and '' != tag.id %}
                                                 <h4 class="inline"><a class="badge text-bg-success" href="{{ route('tags.show', [tag.id]) }}"><span class="bi bi-tag"></span>{{ tag.tag }}</a></h4>
                                             @endif
-                                        {% endfor %}
+                                        @endforeach
                                     </td>
                                 </tr>
                             @endif
@@ -462,7 +462,7 @@
                                 {{ 'journal_links'|_ }}
                             </h3>
                         </div>
-                        <div class="box-body no-padding">
+                        <div class="card-body p-0">
                             <table class="table">
                                 {% for link in links[journal.transaction_journal_id] %}
                                     <tr>
@@ -492,7 +492,7 @@
                                             @endif
                                         </td>
                                     </tr>
-                                {% endfor %}
+                                @endforeach
 
                             </table>
                         </div>
@@ -505,7 +505,7 @@
                         <div class="card-header">
                             <h3 class="card-title">{{ 'attachments'|_ }}</h3>
                         </div>
-                        <div class="box-body no-padding">
+                        <div class="card-body p-0">
                             {% include 'list.attachments' with {attachments: attachments[journal.transaction_journal_id]} %}
                         </div>
                     </div>
@@ -517,7 +517,7 @@
                         <div class="card-header">
                             <h3 class="card-title">{{ 'piggy_events'|_ }}</h3>
                         </div>
-                        <div class="box-body no-padding">
+                        <div class="card-body p-0">
                             <table class="table table-hover">
                                 {% for event in events[journal.transaction_journal_id] %}
                                     <tr>
@@ -527,7 +527,7 @@
                                         </td>
 
                                     </tr>
-                                {% endfor %}
+                                @endforeach
                             </table>
                         </div>
                     </div>
@@ -539,13 +539,13 @@
                                 {{ 'audit_log_entries'|_ }}
                             </h3>
                         </div>
-                        <div class="box-body no-padding">
+                        <div class="card-body p-0">
                             {% include 'list.ale' with {logEntries: logEntries[journal.transaction_journal_id]} %}
                         </div>
                     </div>
                 @endif
             </div>
-        {% endfor %}
+        @endforeach
     </div>
     {# modal for linking journals. Will be filled by AJAX #}
     <div class="modal fade" tabindex="-1" role="dialog" id="linkJournalModal">

@@ -4,7 +4,7 @@
         <select id="inputCategories" name="category[]" multiple="multiple" class="form-control">
             {% for category in categories %}
                 <option value="{{ category.id }}" label="{{ category.name }}">{{ category.name }}</option>
-            {% endfor %}
+            @endforeach
         </select>
 
     </div>

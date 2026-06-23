@@ -31,7 +31,7 @@
 {% if (key != 'cookie') and header[0] != '' and key != 'x-xsrf-token'  %}
 - {{ key }}: {{ header[0] }}
 @endif
-{% endfor %}
+@endforeach
 
 {% if ('' != post) %}
 {{ trans('email.error_post') }}

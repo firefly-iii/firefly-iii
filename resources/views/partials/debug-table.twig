@@ -38,7 +38,7 @@
     <tr>
         <td>Database drivers</td>
         <td>
-            {% for driver in system.all_drivers %}{% if system.current_driver == driver %}<strong>*{{ driver }}*</strong>@else{{ driver }}@endif, {% endfor %}
+            {% for driver in system.all_drivers %}{% if system.current_driver == driver %}<strong>*{{ driver }}*</strong>@else{{ driver }}@endif, @endforeach
         </td>
     </tr>
     {# Docker information #}
@@ -180,7 +180,7 @@
         <td>
             {% for key, attempt in user.locale_attempts %}
                 {{ key }}: {% if attempt %}:white_check_mark:@else:x:@endif<br>
-            {% endfor %}
+            @endforeach
         </td>
     </tr>
     <tr>

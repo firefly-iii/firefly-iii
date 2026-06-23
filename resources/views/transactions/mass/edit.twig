@@ -108,7 +108,7 @@
                                                 {% for account in withdrawalSources %}
                                                     <option value="{{ account.id }}"{% if account.id == journal.source_account_id %} selected@endif
                                                             label="{{ account.name }}">{{ account.name }}</option>
-                                                {% endfor %}
+                                                @endforeach
                                             </select>
                                         @endif
 
@@ -134,7 +134,7 @@
                                                 {% for account in depositDestinations %}
                                                     <option value="{{ account.id }}"{% if account.id == journal.destination_account_id %} selected="selected"@endif
                                                             label="{{ account.name }}">{{ account.name }}</option>
-                                                {% endfor %}
+                                                @endforeach
                                             </select>
                                         @endif
 
@@ -163,12 +163,12 @@
                                                 {% for budget in budgets %}
                                                     <option value="{{ budget.id }}"{% if budget.id == journal.budget_id %} selected="selected"@endif
                                                             label="{{ budget.name }}">{{ budget.name }}</option>
-                                                {% endfor %}
+                                                @endforeach
                                             </select>
                                         @endif
                                     </td>
                                 </tr>
-                            {% endfor %}
+                            @endforeach
                         </table>
                     </div>
                     <div class="card-footer">

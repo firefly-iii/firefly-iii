@@ -7,7 +7,7 @@
         <span title="{{ trans('firefly.spent_this_period_per_day', {days: budgetLimit.active_days_passed}) }}">({{ format_amount_by_symbol(budgetLimit.spent / budgetLimit.active_days_passed, budgetLimit.currency_symbol, budgetLimit.currency_decimal_places) }})</span>
     @endif
 <br />
-{% endfor %}
+@endforeach
 
 {# this is spent NOT in budget limits: #}
 {% for spent in budget.spent %}
@@ -20,7 +20,7 @@
             @endif
         <br />
     @endif
-{% endfor %}
+@endforeach
 
 {#
 
@@ -33,10 +33,10 @@
         ({{ format_amount_by_symbol(spentInfo.spent / activeDaysPassed, spentInfo.currency_symbol, spentInfo.currency_decimal_places) }})
     @endif
     <br/>
-{% endfor %}
+@endforeach
 {% for budgetLimit in budget.budgeted %}
     {% if null == budget.spent[budgetLimit.currency_id] %}
         {{ format_amount_by_symbol(0, budgetLimit.currency_symbol, budgetLimit.currency_decimal_places) }}<br/>
     @endif
-{% endfor %}
+@endforeach
 #}

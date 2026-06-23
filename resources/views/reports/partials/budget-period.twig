@@ -4,7 +4,7 @@
         <th data-defaultsign="az" colspan="2">{{ 'budget'|_ }}</th>
         {% for period in periods %}
             <th data-defaultsign="_19" class="text-right">{{ period }}</th>
-        {% endfor %}
+        @endforeach
         <th data-defaultsign="_19" class="text-right">{{ 'average'|_ }}</th>
         <th data-defaultsign="_19" class="text-right">{{ 'sum'|_ }}</th>
     </tr>
@@ -33,7 +33,7 @@
                     </td>
                 @endif
 
-            {% endfor %}
+            @endforeach
             <td data-value="{{ info.avg }}" class="text-right">
                 {{ format_amount_by_symbol(info.avg, info.currency_symbol, info.currency_decimal_places) }}
             </td>
@@ -41,6 +41,6 @@
                 {{ format_amount_by_symbol(info.sum, info.currency_symbol, info.currency_decimal_places) }}
             </td>
         </tr>
-    {% endfor %}
+    @endforeach
     </tbody>
 </table>

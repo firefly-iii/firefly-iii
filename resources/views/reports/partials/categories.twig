@@ -26,7 +26,7 @@
             ></span>
         </td>
     </tr>
-    {% endfor %}
+    @endforeach
     </tbody>
     <tfoot>
     {% if report.categories|length > listLength %}
@@ -49,6 +49,6 @@
             {{ format_amount_by_symbol(sum.sum, sum.currency_symbol, sum.currency_decimal_places) }}
         </td>
     </tr>
-    {% endfor %}
+    @endforeach
     </tfoot>
 </table>

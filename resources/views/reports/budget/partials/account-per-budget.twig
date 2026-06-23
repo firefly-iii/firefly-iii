@@ -4,7 +4,7 @@
         <th data-defaultsign="az">{{ 'name'|_ }}</th>
         {% for budget in budgets %}
             <th data-defaultsign="_19" class="text-right">{{ budget.name }}</th>
-        {% endfor %}
+        @endforeach
     </tr>
     </thead>
     <tbody>
@@ -22,9 +22,9 @@
                             &mdash;
                         @endif
                     </td>
-                {% endfor %}
+                @endforeach
             </tr>
-        {% endfor %}
-    {% endfor %}
+        @endforeach
+    @endforeach
     </tbody>
 </table>

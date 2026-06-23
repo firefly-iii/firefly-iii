@@ -23,7 +23,7 @@
                 {{ format_amount_by_symbol(account.sum, account.currency_symbol, account.currency_decimal_places) }}
             </td>
         </tr>
-    {% endfor %}
+    @endforeach
     </tbody>
     <tfoot>
     {% for sum in sums %}
@@ -39,6 +39,6 @@
                 {{ format_amount_by_symbol(sum.sum, sum.currency_symbol, sum.currency_decimal_places) }}
             </td>
         </tr>
-    {% endfor %}
+    @endforeach
     </tfoot>
 </table>

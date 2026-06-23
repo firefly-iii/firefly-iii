@@ -53,13 +53,13 @@ $(function () {
         if (reconcileStarted) {
             //console.log('Reconcile has started.');
             // hide original instructions.
-            $('.select_transactions_instruction').addClass('hidden');
+            $('.select_transactions_instruction').addClass('d-none');
 
             // show date-change warning
-            $('.date_change_warning').removeClass('hidden');
+            $('.date_change_warning').removeClass('d-none');
 
             // show update button
-            $('.change_date_button').removeClass('hidden');
+            $('.change_date_button').removeClass('d-none');
         }
     });
 

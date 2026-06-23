@@ -50,7 +50,7 @@
 {% if (key != 'cookie') and header[0] != '' and key != 'x-xsrf-token' %}
 - {{ key }}: {{ header[0] }}<br>
 @endif
-{% endfor %}
+@endforeach
 </p>
 {% if ('' != post) %}
 <p style="font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;font-size:13px;">

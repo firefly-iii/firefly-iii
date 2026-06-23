@@ -63,7 +63,7 @@
 
 
                                             </td>
-                                            <td>{{ journal.date.isoFormat(monthAndDayFormat) }}</td>
+                                            <td>{{ journal.date.isoFormat($monthAndDayFormat) }}</td>
                                             <td>
                                                 {% if journal.category_id != null %}
                                                     <a href="{{ route('categories.show', [journal.category_id]) }}" title="{{ journal.category_name }}">{{ journal.category_name }}</a>
@@ -82,7 +82,7 @@
                                                         {{ tag.name }}</a>
                                                 </span>
                                                     @endif
-                                                {% endfor %}
+                                                @endforeach
                                             </td>
                                             <td>
                                                 {% if journal.journals_in_group > 1 %}
@@ -90,7 +90,7 @@
                                                 @endif
                                             </td>
                                         </tr>
-                                    {% endfor %}
+                                    @endforeach
                                     </tbody>
                                 </table>
                             </div>
@@ -121,7 +121,7 @@
                                             <select class="form-control" name="budget_id">
                                                 {% for id, budget in budgetList %}
                                                     <option value="{{ id }}" label="{{ budget }}">{{ budget }}</option>
-                                                {% endfor %}
+                                                @endforeach
                                             </select>
                                         </td>
                                         <td>

@@ -6,8 +6,8 @@
             <optgroup label="{{ year.year }}">
                 {% for tag in year.tags %}
                     <option value="{{ tag.id }}" label="{{ tag.tag|e('html') }}">{{ tag.tag|e('html') }}</option>
-                {% endfor %}
-            {% endfor %}
+                @endforeach
+            @endforeach
 
         </select>
     </div>

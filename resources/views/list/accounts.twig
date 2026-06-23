@@ -54,7 +54,7 @@
                         {% if entry.name == 'account_role' %}
                             {{ ('account_role_'~entry.data)|_ }}
                         @endif
-                    {% endfor %}
+                    @endforeach
                 </td>
             @endif
             {% if objectType == 'liabilities' %}
@@ -80,7 +80,7 @@
                             ({{ formatAmountByCode(balance, key)  }})
                         @endif
                         </span>
-                    {% endfor %}
+                    @endforeach
                 </span>
             </td>
             @endif
@@ -105,7 +105,7 @@
                 {% if account.lastActivityDate %}
                     <td class="hidden-sm hidden-xs hidden-md">
                         <!-- {{ account.lastActivityDate }} -->
-                        {{ account.lastActivityDate.isoFormat(monthAndDayFormat) }}
+                        {{ account.lastActivityDate.isoFormat($monthAndDayFormat) }}
                     </td>
                 @else
                     <td class="hidden-sm hidden-xs hidden-md">
@@ -129,7 +129,7 @@
                                   ({{ formatAmountByCode(balance, key)  }})
                               @endif
                             </span>
-                    {% endfor %}
+                    @endforeach
                 </span>
             </td>
             <td class="hidden-sm hidden-xs">
@@ -147,7 +147,7 @@
             </td>
         </tr>
 
-    {% endfor %}
+    @endforeach
     </tbody>
 </table>
 <div class="pl-3">

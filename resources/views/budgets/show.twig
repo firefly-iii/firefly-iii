@@ -11,7 +11,7 @@
                 <div class="card-header">
                     <h3 class="card-title">
                         {% if budgetLimit %}
-                            {{ trans('firefly.chart_budget_in_period', {name: budget.name, start: budgetLimit.start_date.isoFormat(monthAndDayFormat), end: budgetLimit.end_date.isoFormat(monthAndDayFormat),currency: budgetLimit.transactionCurrency.name }) }}
+                            {{ trans('firefly.chart_budget_in_period', {name: budget.name, start: budgetLimit.start_date.isoFormat($monthAndDayFormat), end: budgetLimit.end_date.isoFormat($monthAndDayFormat),currency: budgetLimit.transactionCurrency.name }) }}
                         @else
                             {{ trans('firefly.chart_all_journals_for_budget', {name:budget.name}) }}
                         @endif
@@ -46,7 +46,7 @@
                             {{ 'attachments'|_ }}
                         </h3>
                     </div>
-                    <div class="box-body no-padding">
+                    <div class="card-body p-0">
                         {% include 'list.attachments' %}
                     </div>
                 </div>
@@ -147,12 +147,12 @@
                         <div class="card-header">
                             <h3 class="card-title"><a
                                     href="{{ route('budgets.show.limit',[budget.id,limit.id]) }}">
-                                    {{ limit.start_date.isoFormat(monthAndDayFormat) }} &mdash;
-                                    {{ limit.end_date.isoFormat(monthAndDayFormat) }}
+                                    {{ limit.start_date.isoFormat($monthAndDayFormat) }} &mdash;
+                                    {{ limit.end_date.isoFormat($monthAndDayFormat) }}
                                 </a>
                             </h3>
                         </div>
-                        <div class="box-body no-padding">
+                        <div class="card-body p-0">
                             <table class="table table-hover">
                                 <tr>
                                     <td class="third">{{ 'amount'|_ }}</td>
@@ -204,7 +204,7 @@
                             </table>
                         </div>
                     </div>
-                {% endfor %}
+                @endforeach
                 <p class="small text-center"><a href="{{ route('budgets.show',budget.id) }}">{{ 'showEverything'|_ }}</a></p>
             </div>
         @endif

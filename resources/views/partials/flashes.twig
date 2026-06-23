@@ -47,7 +47,7 @@
             <ul class="list-unstyled">
                 {% for inf in session('info') %}
                     <li>{{ inf|raw }}</li>
-                {% endfor %}
+                @endforeach
             </ul>
         @endif
         {# SET OF MULTIPLE INFO MESSAGES, BUT THERE IS JUST ONE #}
@@ -94,7 +94,7 @@
             <ul class="list-unstyled">
                 {% for err in session('error') %}
                     <li>{{ err }}</li>
-                {% endfor %}
+                @endforeach
             </ul>
         @endif
 

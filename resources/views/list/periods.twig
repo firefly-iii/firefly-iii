@@ -4,7 +4,7 @@
             <h3 class="card-title"><a href="{{ period.route }}">{{ period.title }}</a>
             </h3>
         </div>
-        <div class="box-body no-padding">
+        <div class="card-body p-0">
             <table class="table table-hover">
                 {% if period.total_transactions > 0 %}
                     <tr>
@@ -23,7 +23,7 @@
                             </td>
                         </tr>
                     @endif
-                {% endfor %}
+                @endforeach
 
                 {% for entry in period.earned %}
                     {% if entry.amount != 0 %}
@@ -40,7 +40,7 @@
                             </td>
                         </tr>
                     @endif
-                {% endfor %}
+                @endforeach
 
                 {% for entry in period.transferred %}
                     {% if entry.amount != 0 %}
@@ -53,7 +53,7 @@
                             </td>
                         </tr>
                     @endif
-                {% endfor %}
+                @endforeach
 
                 {% for entry in period.transferred_away %}
                     {% if entry.amount != 0 %}
@@ -70,7 +70,7 @@
                             </td>
                         </tr>
                     @endif
-                {% endfor %}
+                @endforeach
 
                 {% for entry in period.transferred_in %}
                     {% if entry.amount != 0 %}
@@ -87,9 +87,9 @@
                             </td>
                         </tr>
                     @endif
-                {% endfor %}
+                @endforeach
             </table>
         </div>
     </div>
 
-{% endfor %}
+@endforeach

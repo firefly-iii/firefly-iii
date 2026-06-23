@@ -49,6 +49,8 @@ export default defineConfig(({command, mode, isSsrBuild, isPreview}) => {
 
                     // accounts
                     'js/pages/accounts/index.js',
+                    'js/pages/accounts/show.js',
+                    'js/pages/accounts/reconcile/index.js',
 
                     // categories
                     'js/pages/categories/index.js',

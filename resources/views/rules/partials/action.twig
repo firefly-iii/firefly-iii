@@ -7,7 +7,7 @@
         <select name="actions[{{ count }}][type]" class="form-control">
             {% for key,type in allRuleActions() %}
                 <option value="{{ key }}" label="{{ type }}" {% if key == oldAction %} selected@endif>{{ type }}</option>
-            {% endfor %}
+            @endforeach
         </select>
     </td>
     <td class="position-relative">

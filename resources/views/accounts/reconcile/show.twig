@@ -23,7 +23,7 @@
                     </div>
 
                 </div>
-                <div class="box-body no-padding">
+                <div class="card-body p-0">
                     <table class="table table-hover">
                         <tbody>
                         <tr>
@@ -44,7 +44,7 @@
                         </tr>
                         <tr>
                             <td class="thirty">{{ trans('list.date') }}</td>
-                            <td>{{ journal.date.isoFormat(monthAndDayFormat) }}</td>
+                            <td>{{ journal.date.isoFormat($monthAndDayFormat) }}</td>
                         </tr>
                         </tbody>
                     </table>
@@ -66,7 +66,7 @@
                 <div class="card-header">
                     <h3 class="card-title">{{ 'transaction_journal_meta'|_ }}</h3>
                 </div>
-                <div class="box-body no-padding">
+                <div class="card-body p-0">
                     <table class="table table-responsive table-hover">
                         <tbody>
                         {#
@@ -93,7 +93,7 @@
                                                 @endif
                                                 {{ tag.tag }}</a>
                                         </h4>
-                                    {% endfor %}
+                                    @endforeach
                                 </td>
                             </tr>
                         @endif

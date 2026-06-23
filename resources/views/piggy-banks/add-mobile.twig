@@ -23,7 +23,7 @@
                                     <div class="input-group-addon">{{ piggyBank.transactionCurrency.symbol|raw }}</div>
                                     <input step="any" min="0" class="form-control" id="amount_{{ account.account.id }}" autocomplete="off" name="amount[{{ account.account.id }}]" max="{{ account.max_amount|round(piggyBank.transactionCurrency.decimal_places) }}" type="number"/>
                                 </div>
-                            {% endfor %}
+                            @endforeach
                             <p>
                                 &nbsp;
                             </p>

@@ -16,7 +16,7 @@
                 @endif
                 {% for expense in amounts.spent.per_currency %}
                     {{ format_amount_by_symbol(expense.sum, expense.currency.symbol, expense.currency.dp) }}<br/>
-                {% endfor %}
+                @endforeach
             </td>
             <td data-value="{{ amounts.earned.grand_sum }}">
                 {% if amounts.earned.per_currency|length == 0 %}
@@ -24,9 +24,9 @@
                 @endif
                 {% for income in amounts.earned.per_currency %}
                     {{ format_amount_by_symbol(income.sum * -1, income.currency.symbol, income.currency.dp) }}<br/>
-                {% endfor %}
+                @endforeach
             </td>
         </tr>
-    {% endfor %}
+    @endforeach
     </tbody>
 </table>

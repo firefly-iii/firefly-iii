@@ -134,7 +134,7 @@
         <td class=" {{ $className }} text-end">
             <x-elements.transaction-running-balance
                 :balance-dirty="$transaction['balance_dirty'] ?? false"
-                :currency="[]"
+                :currency="['symbol' => $transaction['currency_symbol'],'decimal_places' => $transaction['currency_decimal_places']]"
                 :foreign="[]"
                 :type="$transaction['transaction_type_type']"
                 :account="$account ?? null"

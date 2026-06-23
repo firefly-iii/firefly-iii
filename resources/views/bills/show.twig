@@ -73,7 +73,7 @@
                                     @endif
                                     <br>
 
-                                {% endfor %}
+                                @endforeach
                             </td>
                         </tr>
                         <tr>
@@ -86,7 +86,7 @@
                                         primaryCurrency.symbol, primaryCurrency.decimal_places, true) }})
                                     @endif
                                     <br>
-                                {% endfor %}
+                                @endforeach
                             </td>
                         </tr>
                     </table>
@@ -111,7 +111,7 @@
                                 <li><a href="{{ route('rules.edit', [rule.id]) }}">{{ rule.title }}</a>
                                     {% if not rule.active %}({{ 'list_inactive_rule'|_|lower }})@endif
                                 </li>
-                            {% endfor %}
+                            @endforeach
                         </ul>
                     @endif
                 </div>
@@ -147,7 +147,7 @@
                     <div class="card-header">
                         <h3 class="card-title">{{ 'attachments'|_ }}</h3>
                     </div>
-                    <div class="box-body no-padding">
+                    <div class="card-body p-0">
                         {% include 'list.attachments' %}
                     </div>
                 </div>

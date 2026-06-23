@@ -20,7 +20,7 @@
                                data-name="{{ name }}"
                                data-currency="{{ currency.code }}"
                                data-symbol="{{ currency.symbol|raw }}">{{ currency.name }}</a></li>
-                    {% endfor %}
+                    @endforeach
                 </ul>
             </div>
             {{ Html::input('number', name, value).class('form-control').attribute('step','any') }}

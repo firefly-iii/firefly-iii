@@ -27,8 +27,8 @@
                 </td>
                 <td data-value="{{ currency.sum_pct }}">{{ currency.sum_pct }}%</td>
             </tr>
-        {% endfor %}
-    {% endfor %}
+        @endforeach
+    @endforeach
     </tbody>
     <tfoot>
     {% for sum in sums %}
@@ -39,6 +39,6 @@
             </td>
             <td>&nbsp;</td>
         </tr>
-    {% endfor %}
+    @endforeach
     </tfoot>
 </table>

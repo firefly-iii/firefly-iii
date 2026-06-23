@@ -83,7 +83,7 @@
                             @endif
                             {% if loop.index != group.sums|length %},@endif
                         @endif
-                    {% endfor %}
+                    @endforeach
                 </td>
                 <!-- column to span accounts + extra fields -->
                 {% if showCategory or showBudget %}
@@ -344,7 +344,7 @@
                 </td>
                 @endif
                 <td class="{{ className }}">
-                    {{ transaction.date.isoFormat(monthAndDayFormat) }}
+                    {{ transaction.date.isoFormat($monthAndDayFormat) }}
                 </td>
                 <td class="{{ className }}">
                     {% if 'Cash account' == transaction.source_account_type %}
@@ -424,8 +424,8 @@
                     </div>
                 </td>
             </tr>
-        {% endfor %}
-    {% endfor %}
+        @endforeach
+    @endforeach
     </tbody>
     <tfoot>
     <tr>

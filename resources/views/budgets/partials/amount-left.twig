@@ -19,7 +19,7 @@
             <span title="{{ 'nothing_left_in_budget'|_ }}">({{ format_amount_by_symbol('0', budgetLimit.currency_symbol, budgetLimit.currency_decimal_places) }})</span>
         @endif
 </span><br />
-{% endfor %}
+@endforeach
 
 
 {#
@@ -65,13 +65,13 @@
             ({{ format_amount_by_symbol((spentInfo.spent + budgetLimit.amount) / budgetLimit.total_days, spentInfo.currency_symbol, spentInfo.currency_decimal_places) }})
         @endif
 
-    {% endfor %}
+    @endforeach
 
     {% if countLimit == 0 %}
         <!--  display nothing -->
     @endif
     -->
-{% endfor %}
+@endforeach
                                         {% for budgetLimit in budget.budgeted %}
                                             {% if null == budget.spent[budgetLimit.currency_id] %}
                                                 <span class="left_span" data-currency="{{ spentInfo.currency_id }}" data-limit="{{ budgetLimit.id }}"
@@ -92,5 +92,5 @@
                                                 <br/>
                                             @endif
 
-{% endfor %}
+@endforeach
 #}

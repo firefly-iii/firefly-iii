@@ -19,7 +19,7 @@
                     <input step="any" class="form-control" id="amount_{{ account.account.id }}" autocomplete="off" name="amount[{{ account.account.id }}]" max="{{ account.saved_so_far }}"
                            type="number">
                 </div>
-                {% endfor %}
+                @endforeach
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-outline-secondary" data-dismiss="modal">{{ 'close'|_ }}</button>

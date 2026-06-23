@@ -35,7 +35,7 @@
                 <div class="card-header">
                     <h3 class="card-title">{{ 'all_users'|_ }}</h3>
                 </div>
-                <div class="box-body no-padding">
+                <div class="card-body p-0">
                     <table class="table table-responsive table-sm sortable" aria-label="Table">
                         <thead>
                         <tr>
@@ -64,11 +64,11 @@
                                 <td data-value="{{ user.email }}">
                                     <a href="{{ route('settings.users.show',user.id) }}">{{ user.email }}</a></td>
                                 <td class="hidden-xs" data-value="{{ user.created_at.format('Y-m-d H-i-s') }}">
-                                    {{ user.created_at.isoFormat(monthAndDayFormat) }}
+                                    {{ user.created_at.isoFormat($monthAndDayFormat) }}
                                     {{ user.created_at.format('H:i') }}
                                 </td>
                                 <td class="hidden-xs" data-value="{{ user.updated_at.format('Y-m-d H-i-s') }}">
-                                    {{ user.updated_at.isoFormat(monthAndDayFormat) }}
+                                    {{ user.updated_at.isoFormat($monthAndDayFormat) }}
                                     {{ user.updated_at.format('H:i') }}
                                 </td>
                                 <td class="hidden-xs" data-value="{% if user.isAdmin %}1@else0@endif">
@@ -106,7 +106,7 @@
                                     </small>
                                 </td>
                             </tr>
-                        {% endfor %}
+                        @endforeach
                         </tbody>
                     </table>
                 </div>
@@ -120,7 +120,7 @@
                     <div class="card-header">
                         <h3 class="card-title">{{ 'all_invited_users'|_ }}</h3>
                     </div>
-                    <div class="box-body no-padding">
+                    <div class="card-body p-0">
                         <table class="table table-responsive table-sm sortable">
                             <thead>
                             <tr>
@@ -145,11 +145,11 @@
                                         {{ invitee.email }}
                                     </td>
                                     <td class="hidden-xs">
-                                        {{ invitee.created_at.isoFormat(monthAndDayFormat) }}
+                                        {{ invitee.created_at.isoFormat($monthAndDayFormat) }}
                                         {{ invitee.created_at.format('H:i') }}
                                     </td>
                                     <td>
-                                        {{ invitee.expires.isoFormat(monthAndDayFormat) }}
+                                        {{ invitee.expires.isoFormat($monthAndDayFormat) }}
                                         {{ invitee.expires.format('H:i') }}
                                     </td>
                                     <td>
@@ -163,7 +163,7 @@
                                         @endif
                                     </td>
                                 </tr>
-                            {% endfor %}
+                            @endforeach
                             </tbody>
                         </table>
                     </div>

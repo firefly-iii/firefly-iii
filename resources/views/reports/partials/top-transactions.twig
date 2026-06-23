@@ -15,7 +15,7 @@
             </td>
             <td data-value="{{ transaction.description }}">{{ transaction.description }}</td>
             <td data-value="{{ transaction.date.format('Y-m-d') }}">
-                {{ transaction.date.isoFormat(monthAndDayFormat) }}
+                {{ transaction.date.isoFormat($monthAndDayFormat) }}
             </td>
             <!-- TODO i dont think transactionAmount will work. -->
             <td class="text-right" data-value="{{ transaction.amount}}"><span
@@ -27,6 +27,6 @@
                     @endif
                 </span></td>
         </tr>
-    {% endfor %}
+    @endforeach
     </tbody>
 </table>

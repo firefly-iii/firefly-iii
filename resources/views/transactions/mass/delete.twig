@@ -83,7 +83,7 @@
                                         @endif
                                     </td>
                                     <td>
-                                        {{ journal.date.isoFormat(monthAndDayFormat) }}
+                                        {{ journal.date.isoFormat($monthAndDayFormat) }}
                                     </td>
                                     <td>
                                         <a href="{{ route('accounts.show', [journal.source_account_id]) }}"
@@ -94,7 +94,7 @@
                                            title="{{ journal.destination_account_iban|default(journal.destination_account_name) }}">{{ journal.destination_account_name }}</a>
                                     </td>
                                 </tr>
-                            {% endfor %}
+                            @endforeach
                         </table>
 
                     </div>

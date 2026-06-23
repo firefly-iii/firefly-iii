@@ -58,7 +58,7 @@
                                         </a>
                                         {% if not rule.active %}({{ 'list_inactive_rule'|_|lower }})@endif
                                     </li>
-                                {% endfor %}
+                                @endforeach
                             </ul>
                         @endif
                     </td>
@@ -109,7 +109,7 @@
 
                             {% for date in entry.pay_dates %}
                                 {{ formatDate(date, monthAndDayFormat) }}<br>
-                            {% endfor %}
+                            @endforeach
 
                         </td>
                     @endif
@@ -126,7 +126,7 @@
                                     {{ formatDate(currentPaid.date, monthAndDayFormat) }}
                                 </a>
                                 <br/>
-                            {% endfor %}
+                            @endforeach
                         </td>
                         <td class="expected_in_period hidden-sm hidden-xs">
                             {% if entry.next_expected_match %}
@@ -152,25 +152,25 @@
                             <br>
                             {% if carbonize(entry.end_date).lte(today) %}
                                 <span class="text-danger">
-                                    {{ trans('firefly.bill_end_index_line', {date: carbonize(entry.end_date).isoFormat(monthAndDayFormat)  })  }}
+                                    {{ trans('firefly.bill_end_index_line', {date: carbonize(entry.end_date).isoFormat($monthAndDayFormat)  })  }}
                                     </span>
                             @else
-                                {{ trans('firefly.bill_end_index_line', {date: carbonize(entry.end_date).isoFormat(monthAndDayFormat)  })  }}
+                                {{ trans('firefly.bill_end_index_line', {date: carbonize(entry.end_date).isoFormat($monthAndDayFormat)  })  }}
                             @endif
                         @endif
                         {% if entry.extension_date %}
                             <br>
                             {% if carbonize(entry.extension_date).lte(today) %}
                                 <span class="text-danger">
-                                    {{ trans('firefly.bill_extension_index_line', {date: carbonize(entry.extension_date).isoFormat(monthAndDayFormat)  })  }}
+                                    {{ trans('firefly.bill_extension_index_line', {date: carbonize(entry.extension_date).isoFormat($monthAndDayFormat)  })  }}
                                     </span>
                             @else
-                                {{ trans('firefly.bill_extension_index_line', {date: carbonize(entry.extension_date).isoFormat(monthAndDayFormat)  })  }}
+                                {{ trans('firefly.bill_extension_index_line', {date: carbonize(entry.extension_date).isoFormat($monthAndDayFormat)  })  }}
                             @endif
                         @endif
                     </td>
                 </tr>
-            {% endfor %}
+            @endforeach
             {% for sum in sums[objectGroupOrder] %}
                 {% if '0' != sum.avg %}
                     <tr>
@@ -218,10 +218,10 @@
                         <td class="hidden-sm hidden-xs">&nbsp;</td><!-- repeats -->
                     </tr>
                 @endif
-            {% endfor %}
+            @endforeach
             </tbody>
         @endif
-    {% endfor %}
+    @endforeach
     {% if totals|length > 0 %}
         <tfoot>
         <tr>
@@ -259,7 +259,7 @@
                     <td class="hidden-sm hidden-xs">&nbsp;</td><!-- repeats -->
                 </tr>
             @endif
-        {% endfor %}
+        @endforeach
         </tfoot>
     @endif
 

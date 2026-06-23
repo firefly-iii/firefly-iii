@@ -27,7 +27,7 @@
                         </div>
                     </div>
                 </div>
-                <div class="box-body no-padding">
+                <div class="card-body p-0">
                     <table class="table table-bordered">
                         {% if tag.description %}
                             <tr>
@@ -43,7 +43,7 @@
                                     {{ trans('list.date') }}
                                 </td>
                                 <td>
-                                    {{ tag.date.isoFormat(monthAndDayFormat) }}
+                                    {{ tag.date.isoFormat($monthAndDayFormat) }}
                                 </td>
                             </tr>
                         @endif
@@ -52,7 +52,7 @@
                         {% set currentSum = 0 %}
                         {% for set in sums %}
                             {% set currentSum = currentSum + set.Withdrawal + set.Transfer + set.Deposit %}
-                        {% endfor %}
+                        @endforeach
 
                         {% if currentSum != 0 %}
                             <tr>
@@ -60,7 +60,7 @@
                                 <td>
                                     {% for set in sums %}
                                         {{ format_amount_by_symbol(set.Withdrawal + set.Transfer + set.Deposit, set.currency_symbol, set.currency_decimal_places, true) }}{% if loop.index != sums|length %},@endif
-                                    {% endfor %}
+                                    @endforeach
                                 </td>
                             </tr>
                         @endif
@@ -69,14 +69,14 @@
                         {% set currentSum = 0 %}
                         {% for set in sums %}
                             {% set currentSum = currentSum + set.Withdrawal + set.Deposit %}
-                        {% endfor %}
+                        @endforeach
                         {% if currentSum != 0 %}
                             <tr>
                                 <td class="forty">{{ trans('list.sum_excluding_transfers') }}</td>
                                 <td>
                                     {% for set in sums %}
                                         {{ format_amount_by_symbol(set.Withdrawal + set.Deposit, set.currency_symbol, set.currency_decimal_places, true) }}{% if loop.index != sums|length %},@endif
-                                    {% endfor %}
+                                    @endforeach
                                 </td>
                             </tr>
                         @endif
@@ -85,14 +85,14 @@
                         {% set currentSum = 0 %}
                         {% for set in sums %}
                             {% set currentSum = currentSum + set.Withdrawal %}
-                        {% endfor %}
+                        @endforeach
                         {% if currentSum != 0 %}
                             <tr>
                                 <td class="forty">{{ trans('list.sum_withdrawals') }}</td>
                                 <td>
                                     {% for set in sums %}
                                         {{ format_amount_by_symbol(set.Withdrawal, set.currency_symbol, set.currency_decimal_places, true) }}{% if loop.index != sums|length %},@endif
-                                    {% endfor %}
+                                    @endforeach
                                 </td>
                             </tr>
                         @endif
@@ -101,14 +101,14 @@
                         {% set currentSum = 0 %}
                         {% for set in sums %}
                             {% set currentSum = currentSum + set.Deposit %}
-                        {% endfor %}
+                        @endforeach
                         {% if currentSum != 0 %}
                             <tr>
                                 <td class="forty">{{ trans('list.sum_deposits') }}</td>
                                 <td>
                                     {% for set in sums %}
                                         {{ format_amount_by_symbol(set.Deposit, set.currency_symbol, set.currency_decimal_places, true) }}{% if loop.index != sums|length %},@endif
-                                    {% endfor %}
+                                    @endforeach
                                 </td>
                             </tr>
                         @endif
@@ -117,14 +117,14 @@
                         {% set currentSum = 0 %}
                         {% for set in sums %}
                             {% set currentSum = currentSum + set.Transfer %}
-                        {% endfor %}
+                        @endforeach
                         {% if currentSum != 0 %}
                             <tr>
                                 <td class="forty">{{ trans('list.sum_transfers') }}</td>
                                 <td>
                                     {% for set in sums %}
                                         {{ format_amount_by_symbol(set.Transfer, set.currency_symbol, set.currency_decimal_places, true) }}{% if loop.index != sums|length %},@endif
-                                    {% endfor %}
+                                    @endforeach
                                 </td>
                             </tr>
                         @endif
@@ -133,14 +133,14 @@
                         {% set currentSum = 0 %}
                         {% for set in sums %}
                             {% set currentSum = currentSum + set.Reconciliation %}
-                        {% endfor %}
+                        @endforeach
                         {% if currentSum != 0 %}
                             <tr>
                                 <td class="forty">{{ trans('list.sum_reconciliations') }}</td>
                                 <td>
                                     {% for set in sums %}
                                         {{ format_amount_by_symbol(set.Reconciliation, set.currency_symbol, set.currency_decimal_places, true) }}{% if loop.index != sums|length %},@endif
-                                    {% endfor %}
+                                    @endforeach
                                 </td>
                             </tr>
                         @endif
@@ -212,7 +212,7 @@
                             {{ 'attachments'|_ }}
                         </h3>
                     </div>
-                    <div class="box-body no-padding">
+                    <div class="card-body p-0">
                         {% include 'list.attachments' %}
                     </div>
                 </div>

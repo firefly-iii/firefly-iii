@@ -30,14 +30,14 @@
                         </div>
                     </div>
                 </div>
-                <div class="box-body no-padding">
+                <div class="card-body p-0">
                     <table class="table table-responsive table-hover" id="piggyDetails">
                         <tr>
                             <td class="forty">{{ 'saveOnAccounts'|_ }}</td>
                             <td>
                                 {% for account in piggy.accounts %}
                                     <a href="{{ route('accounts.show', [account.account_id]) }}">{{ account.name }}</a><br>
-                                {% endfor %}
+                                @endforeach
                             </td>
                         </tr>
                         {% if piggy.object_group_title %}
@@ -65,7 +65,7 @@
                                 </td>
                             </tr>
 
-                        {% endfor %}
+                        @endforeach
                         <tr>
                             <td>{{ 'saved_so_far_total'|_ }}</td>
                             <td>
@@ -84,7 +84,7 @@
                             <td>{{ 'start_date'|_ }}</td>
                             <td>
                                 {% if piggyBank.start_date %}
-                                    {{ piggyBank.start_date.isoFormat(monthAndDayFormat) }}
+                                    {{ piggyBank.start_date.isoFormat($monthAndDayFormat) }}
                                 @else
                                     <em>{{ 'no_start_date'|_ }}</em>
                                 @endif
@@ -94,7 +94,7 @@
                             <td>{{ 'target_date'|_ }}</td>
                             <td>
                                 {% if piggyBank.target_date %}
-                                    {{ piggyBank.target_date.isoFormat(monthAndDayFormat) }}
+                                    {{ piggyBank.target_date.isoFormat($monthAndDayFormat) }}
                                 @else
                                     <em>{{ 'no_target_date'|_ }}</em>
                                 @endif
@@ -145,7 +145,7 @@
                             {{ 'attachments'|_ }}
                         </h3>
                     </div>
-                    <div class="box-body no-padding">
+                    <div class="card-body p-0">
                         {% include 'list.attachments' %}
                     </div>
                 </div>

@@ -2,43 +2,49 @@
 @section('content')
 
     <div class="row">
-        <div class="@if(0 === $attachments->count())col-lg-12 col-md-12 col-sm-12 col-xs-12@else col-lg-8 col-md-6 col-sm-12 col-xs-12@endif">
-            <div class="card">
+        <div class="@if(0 === $attachments->count())col-lg-12 col-md-12 col-sm-12 col-xs-12@else col-lg-8 col-md-6 col-sm-12 col-xs-12 @endif ">
+            <div class="card mb-2">
                 <div class="card-header">
-                    <h3 class="card-title">
-                        @if($balances['balance'])
-                            <span title="balance">
-                        {{ trans('firefly.chart_account_in_period', [
+                    <div class="row">
+                        <div class="col">
+                            <h3 class="card-title">
+                                @if($balances['balance'])
+                                    <span title="balance">
+                        {!! trans('firefly.chart_account_in_period', [
                                 'balance' => format_amount_by_symbol($balances['balance'], $currency->symbol, $currency->decimal_places, true),
                                 'name' => e($account->name),
                                 'start' => $start->isoFormat($monthAndDayFormat),
-                                'end' => $end->isoFormat($monthAndDayFormat)]) }}
+                                'end' => $end->isoFormat($monthAndDayFormat)])  !!}
                                 </span>
-                        @elseif($balances['pc_balance'])
-                            <span title="pc_balance">
-                            {{ trans('firefly.chart_account_in_period', [
+                                @elseif($balances['pc_balance'])
+                                    <span title="pc_balance">
+                            {!!  trans('firefly.chart_account_in_period', [
                                 'balance' => format_amount_by_symbol($balances['pc_balance'], $primaryCurrency->symbol, $primaryCurrency->decimal_places, true),
                                 'name' => e($account->name),
                                 'start' => $start->isoFormat($monthAndDayFormat),
-                                'end' => $end->isoFormat($monthAndDayFormat)]) }}
+                                'end' => $end->isoFormat($monthAndDayFormat)])  !!}
                                 </span>
-                        @endif
-                    </h3>
-                    <div class="box-tools pull-right">
-                        <div class="btn-group">
-                            <button class="btn btn-box-tool dropdown-toggle" data-toggle="dropdown"><span
-                                    class="bi bi-list"></span></button>
-                            <ul class="dropdown-menu" role="menu">
-                                <li><a href="{{ route('accounts.edit', [$account->id]) }}"><span
-                                            class="bi bi-pencil"></span> {{ __('firefly.edit') }}</a></li>
-                                <li><a href="{{ route('accounts.delete', [$account->id]) }}"><span
-                                            class="bi bi-trash"></span> {{ __('firefly.delete') }}</a></li>
-                                <li>
-                                    <a href="{{ route('accounts.reconcile', [$account->id]) }}"><span class="bi bi-check"></span> {{ __('firefly.reconcile_this_account') }}</a>
-                                </li>
-                            </ul>
+                                @endif
+                            </h3>
+                        </div>
+                        <div class="col text-end">
+                            <div class="dropdown">
+                                <button class="btn btn-sm btn-secondary-outline dropdown-toggle" type="button" id="card_header_menu" data-bs-toggle="dropdown" aria-expanded="false">
+                                    <span class="bi bi-list"></span>
+                                </button>
+                                <ul class="dropdown-menu" aria-labelledby="card_header_menu">
+                                        <li><a class="dropdown-item" href="{{ route('accounts.edit', [$account->id]) }}"><span
+                                                    class="bi bi-pencil"></span> {{ __('firefly.edit') }}</a></li>
+                                        <li><a class="dropdown-item" href="{{ route('accounts.delete', [$account->id]) }}"><span
+                                                    class="bi bi-trash"></span> {{ __('firefly.delete') }}</a></li>
+                                        <li>
+                                            <a class="dropdown-item" href="{{ route('accounts.reconcile', [$account->id]) }}"><span class="bi bi-check"></span> {{ __('firefly.reconcile_this_account') }}</a>
+                                        </li>
+                                    </ul>
+                                </div>
                         </div>
                     </div>
+
                 </div>
                 <div class="card-body">
                     <div>
@@ -49,13 +55,13 @@
         </div>
         @if($attachments->count() > 0)
             <div class="col-lg-4 col-md-6 col-sm-12 col-xs-12">
-                <div class="card">
+                <div class="card mb-2">
                     <div class="card-header">
                         <h3 class="card-title">
                             {{ __('firefly.attachments') }}
                         </h3>
                     </div>
-                    <div class="box-body no-padding">
+                    <div class="card-body p-0">
                         {% include 'list.attachments' %}
                     </div>
                 </div>
@@ -65,7 +71,7 @@
     @if(!$showAll && $isLiability)
         <div class="row">
             <div class="col-lg-4 col-md-6 col-sm-12 col-xs-12">
-                <div class="card">
+                <div class="card mb-2">
                     <div class="card-header">
                         <h3 class="card-title">pay-off by date</h3>
                     </div>
@@ -79,9 +85,9 @@
     @if(!$showAll && !$isLiability)
         <div class="row">
             <div class="col-lg-4 col-md-6 col-sm-12 col-xs-12">
-                <div class="card">
+                <div class="card mb-2">
                     <div class="card-header">
-                        <h3 class="card-title">{{ __('firefly.expenses_by_category' }}</h3>
+                        <h3 class="card-title">{{ __('firefly.expenses_by_category') }}</h3>
                     </div>
                     <div class="card-body">
                         <div class="center-chart">
@@ -91,7 +97,7 @@
                 </div>
             </div>
             <div class="col-lg-4 col-md-6 col-sm-12 col-xs-12">
-                <div class="card">
+                <div class="card mb-2">
                     <div class="card-header">
                         <h3 class="card-title">{{ __('firefly.expenses_by_budget') }}</h3>
                     </div>
@@ -103,7 +109,7 @@
                 </div>
             </div>
             <div class="col-lg-4 col-md-6 col-sm-12 col-xs-12">
-                <div class="card">
+                <div class="card mb-2">
                     <div class="card-header">
                         <h3 class="card-title">{{ __('firefly.income_by_category') }}</h3>
                     </div>
@@ -120,7 +126,7 @@
     <div class="row">
         @if($location)
             <div class="col-lg-6">
-                <div class="card">
+                <div class="card mb-2">
                     <div class="card-header">
                         <h3 class="card-title">{{ __('firefly.location') }}</h3>
                     </div>
@@ -132,7 +138,7 @@
         @endif
         @if(1 === $account->notes->count())
             <div class="col-lg-6">
-                <div class="card">
+                <div class="card mb-2">
                     <div class="card-header">
                         <h3 class="card-title">{{ __('firefly.notes') }}</h3>
                     </div>
@@ -145,14 +151,14 @@
     </div>
 
     <div class="row">
-        <div class="@if(count($periods) > 0)col-lg-10 col-md-8 col-sm-12 @else col-lg-12 col-md-12 col-sm-12@endif">
-            <div class="card">
+        <div class="@if(count($periods) > 0)col-lg-10 col-md-8 col-sm-12 @else col-lg-12 col-md-12 col-sm-12 @endif ">
+            <div class="card mb-2">
                 <div class="card-header">
                     <h3 class="card-title">{{ __('firefly.transactions') }}
                         @if($balances['balance'])
-                            ({{ format_amount_by_symbol($balances['balance'], $currency->symbol, $currency->decimal_places, true) }})
+                            ({!! format_amount_by_symbol($balances['balance'], $currency->symbol, $currency->decimal_places, true)  !!})
                         @elseif($balances['pc_balance'])
-                            ({{ format_amount_by_symbol($balances['pc_balance'], $primaryCurrency->symbol, $primaryCurrency->decimal_places, true) }} )
+                            ({!! format_amount_by_symbol($balances['pc_balance'], $primaryCurrency->symbol, $primaryCurrency->decimal_places, true)  !!})
                         @endif
                     </h3>
                 </div>
@@ -160,12 +166,15 @@
                     @php
                         $showReconcile = false;
                     @endphp
+
                     @if('Asset account' === $account->accountType->type)
                         @php
-                        $showReconcile = true;
+                            $showReconcile = true;
                         @endphp
                     @endif
-                    {% include 'list.groups' %}
+
+                    <x-lists.groups-large :groups="$groups" :account="$account" />
+
                     <p>
                         <span class="bi bi-calendar"></span>
                         @if(count($periods) > 0)
@@ -183,13 +192,14 @@
         </div>
         @if(count($periods) > 0)
             <div class="col-lg-2 col-md-4 col-sm-12 col-xs-12">
-                {% include 'list.periods' %}
+                <x-lists.periods :periods="$periods" />
             </div>
         @endif
     </div>
 @endsection
 
 @section('scripts')
+    @vite(['js/pages/accounts/show.js'])
     <script type="text/javascript" nonce="{{ $JS_NONCE }}">
         // location stuff
         @if($location)
@@ -202,7 +212,7 @@
         currencySymbol = "{{ $currency->symbol }}";
         var accountID = {{ $account->id }};
         var chartUrl = '{{ $chartUrl }}';
-        if(!$showAll)
+        @if(!$showAll)
             showAll = false;
             // url's for charts:
 
@@ -237,7 +247,7 @@
     <script src="v1/js/lib/jquery.color-2.1.2.min.js?v={{ $FF_BUILD_TIME }}" type="text/javascript"
             nonce="{{ $JS_NONCE }}"></script>
     <script src="v1/js/ff/accounts/show.js?v={{ $FF_BUILD_TIME }}" type="text/javascript" nonce="{{ $JS_NONCE }}"></script>
-    {# required for groups.twig #}
+    {{--  required for groups.twig --}}
     <script type="text/javascript" src="v1/js/ff/list/groups.js?v={{ $FF_BUILD_TIME }}" nonce="{{ $JS_NONCE }}"></script>
 @endsection
 

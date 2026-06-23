@@ -150,7 +150,7 @@
                                                                 @endif
                                                             </li>
                                                         @endif
-                                                    {% endfor %}
+                                                    @endforeach
                                                 </ul>
                                                 <ul class="small rule-triggers-show hidden pointer" data-id="{{ rule.id }}">
                                                     <li data-id="{{ rule.id }}">{{ 'show_triggers'|_ }}</li>
@@ -170,7 +170,7 @@
                                                                 <span class="fa fa-stop-circle-o"></span>
                                                             @endif
                                                         </li>
-                                                    {% endfor %}
+                                                    @endforeach
                                                 </ul>
                                                 <ul class="small rule-actions-show hidden pointer" data-id="{{ rule.id }}">
                                                     <li>{{ 'show_actions'|_ }}</li>
@@ -179,7 +179,7 @@
                                             @endif
                                         </td>
                                     </tr>
-                                {% endfor %}
+                                @endforeach
                                 </tbody>
                             </table>
                         @else
@@ -196,7 +196,7 @@
                 </div>
             </div>
         </div>
-    {% endfor %}
+    @endforeach
 
     {% include 'rules.partials.test-trigger-modal' %}
 

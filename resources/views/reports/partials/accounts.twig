@@ -24,7 +24,7 @@
                 {{ format_amount_by_symbol(account.end_balance - account.start_balance, account.currency_symbol, account.currency_decimal_places) }}
             </td>
         </tr>
-    {% endfor %}
+    @endforeach
     <tr>
         <td colspan="4"><em>{{ 'sumOfSums'|_ }}</em></td>
     </tr>
@@ -43,6 +43,6 @@
             {{ format_amount_by_symbol(sum.difference, sum.currency_symbol, sum.currency_decimal_places) }}
         </td>
     </tr>
-    {% endfor %}
+    @endforeach
     </tbody>
 </table>

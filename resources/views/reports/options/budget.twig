@@ -4,7 +4,7 @@
         <select id="inputBudgets" name="budget[]" multiple="multiple" class="form-control">
             {% for budget in budgets %}
                 <option value="{{ budget.id }}" label="{{ budget.name }}">{{ budget.name }}</option>
-            {% endfor %}
+            @endforeach
         </select>
     </div>
 </div>

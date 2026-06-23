@@ -24,7 +24,7 @@
                         </div>
                     </div>
 
-                    <div class="box-body no-padding">
+                    <div class="card-body p-0">
                         <div class="p-2">
                             <a href="{{ route('recurring.create') }}" class="btn btn-success"><span class="bi bi-plus-circle"></span> {{ ('make_new_recurring')|_ }}
                             </a>
@@ -84,13 +84,13 @@
                                                     &rarr;
                                                     <a href="{{ route('accounts.show', rtt['destination_id']) }}">{{ rtt['destination_name'] }}</a>
                                                 </li>
-                                            {% endfor %}
+                                            @endforeach
                                         </ol>
                                     </td>
                                     <td>
                                         {% if null != rt.repeat_until and today > rt.repeat_until %}
                                             <span class="text-danger">
-                                            {{ trans('firefly.repeat_until_in_past', {date: rt.repeat_until.isoFormat(monthAndDayFormat) }) }}
+                                            {{ trans('firefly.repeat_until_in_past', {date: rt.repeat_until.isoFormat($monthAndDayFormat) }) }}
                                         </span>
                                         @endif
                                         <ul>
@@ -112,14 +112,14 @@
                                                         <br>{{ 'except_weekends'|_ }}
                                                     @endif
                                                 </li>
-                                            {% endfor %}
+                                            @endforeach
                                         </ul>
                                         <p>
                                             {% if null == rt.repeat_until and rt.repetitions == 0 %}
                                                 {{ 'recurring_repeats_forever'|_ }}.
                                             @endif
                                             {% if null != rt.repeat_until and rt.repetitions == 0 %}
-                                                {{ trans('firefly.recurring_repeats_until', {date: rt.repeat_until.isoFormat(monthAndDayFormat)}) }}.
+                                                {{ trans('firefly.recurring_repeats_until', {date: rt.repeat_until.isoFormat($monthAndDayFormat)}) }}.
                                             @endif
                                             {% if null == rt.repeat_until and rt.nr_of_repetitions != 0 %}
                                                 {{ trans_choice('firefly.recurring_repeats_x_times', rt.nr_of_repetitions) }}.
@@ -131,14 +131,14 @@
                                             {% for rep in rt.repetitions %}
                                                 {% for occ in rep.occurrences %}
                                                     {% if loop.index0 < 2 %}
-                                                        <li>{{ occ.isoFormat(monthAndDayFormat) }}</li>
+                                                        <li>{{ occ.isoFormat($monthAndDayFormat) }}</li>
                                                     @endif
-                                                {% endfor %}
-                                            {% endfor %}
+                                                @endforeach
+                                            @endforeach
                                         </ul>
                                     </td>
                                 </tr>
-                            {% endfor %}
+                            @endforeach
                             </tbody>
                         </table>
                         <div class="pl-2">

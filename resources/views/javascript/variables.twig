@@ -2,7 +2,7 @@
 var ranges = {};
 {% for title, range in dateRangeConfig.ranges %}
     ranges["{{ title|escape('js') }}"] = [moment("{{ range[0].format('Y-m-d') }}"), moment("{{ range[1].format('Y-m-d') }}")];
-{% endfor %}
+@endforeach
 
 // date range meta configuration
 var dateRangeMeta = {

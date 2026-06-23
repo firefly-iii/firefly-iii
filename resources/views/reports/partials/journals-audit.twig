@@ -113,7 +113,7 @@
                 {{ format_amount_by_symbol(journal.balance_after, auditData[$account->id].currency.symbol, auditData[$account->id].currency.decimal_places) }}
             </td>
 
-            <td class="hide-date">{{ journal.date.isoFormat(monthAndDayFormat) }}</td>
+            <td class="hide-date">{{ journal.date.isoFormat($monthAndDayFormat) }}</td>
 
             <td class="hide-from">
                 <a href="{{ route('accounts.show', [journal.source_account_id]) }}" title="{{ journal.source_account_iban|default(journal.source_account_name) }}">{{ journal.source_account_name }}</a>
@@ -153,37 +153,37 @@
             <!-- more new dates -->
             <td class="hide-interest_date">
                 {% if null != journal.interest_date %}
-                    {{ journal.interest_date.isoFormat(monthAndDayFormat) }}
+                    {{ journal.interest_date.isoFormat($monthAndDayFormat) }}
                 @endif
             </td>
             <td class="hide-book_date">
                 {% if null != journal.book_date %}
-                    {{ journal.book_date.isoFormat(monthAndDayFormat) }}
+                    {{ journal.book_date.isoFormat($monthAndDayFormat) }}
                 @endif
             </td>
             <td class="hide-process_date">
                 {% if null != journal.process_date %}
-                    {{ journal.process_date.isoFormat(monthAndDayFormat) }}
+                    {{ journal.process_date.isoFormat($monthAndDayFormat) }}
                 @endif
             </td>
             <td class="hide-due_date">
                 {% if null != journal.due_date %}
-                    {{ journal.due_date.isoFormat(monthAndDayFormat) }}
+                    {{ journal.due_date.isoFormat($monthAndDayFormat) }}
                 @endif
             </td>
             <td class="hide-payment_date">
                 {% if null != journal.payment_date %}
-                    {{ journal.payment_date.isoFormat(monthAndDayFormat) }}
+                    {{ journal.payment_date.isoFormat($monthAndDayFormat) }}
                 @endif
             </td>
             <td class="hide-invoice_date">
                 {% if null != journal.invoice_date %}
-                    {{ journal.invoice_date.isoFormat(monthAndDayFormat) }}
+                    {{ journal.invoice_date.isoFormat($monthAndDayFormat) }}
                 @endif
             </td>
         </tr>
 
-    {% endfor %}
+    @endforeach
 
     </tbody>
 </table>

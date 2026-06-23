@@ -30,8 +30,8 @@
                                 {% for bag in errors.getBags %}
                                     {% for error in bag.all %}
                                     <li>{{  error }}</li>
-                                {% endfor %}
-                                {% endfor %}
+                                @endforeach
+                                @endforeach
                             </ul>
                         </div>
                         @endif
@@ -55,7 +55,7 @@
                                                             ({{ lang.name_english }})
                                                         </option>
 
-                                                    {% endfor %}
+                                                    @endforeach
                                                 </select>
 
 
@@ -88,7 +88,7 @@
                                                                     {{ loc }}
                                                                 @endif</option>
 
-                                                        {% endfor %}
+                                                        @endforeach
                                                     </select>
                                                 </div>
                                             </div>
@@ -190,8 +190,8 @@
                                                         </div>
                                                     </div>
                                                 </div>
-                                            {% endfor %}
-                                        {% endfor %}
+                                            @endforeach
+                                        @endforeach
                                     </div>
                                 </div>
                                 {# frontpage settings column b #}
@@ -326,7 +326,7 @@
                                                     {{ ('dark_mode_option_'~mode)|_ }}
                                                 </label>
                                             </div>
-                                        {% endfor %}
+                                        @endforeach
                                     </div>
                                 </div>
                             </div>
@@ -353,7 +353,7 @@
                                                         ⚠️ {{ trans('firefly.notification_channel_name_'~name) }} ({{ 'channel_not_available'|_ }})
                                                     @endif
                                                 </li>
-                                            {% endfor %}
+                                            @endforeach
                                         </ul>
                                         <p>{{ 'pref_notifications_help'|_ }}</p>
                                         {% for id, info in notifications %}
@@ -371,7 +371,7 @@
                                                     </div>
                                                 </div>
                                             </div>
-                                        {% endfor %}
+                                        @endforeach
                                     </div>
                                 </div>
                                 <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
@@ -399,7 +399,7 @@
                                                             {{ trans('firefly.test_notification_channel_name_'~name) }}
                                                         </a>
                                                     @endif
-                                                {% endfor %}
+                                                @endforeach
                                             </div>
                                     </div>
                                 </div>

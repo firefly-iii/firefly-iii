@@ -4,7 +4,7 @@
         <th data-defaultsign="az" colspan="2">{{ 'category'|_ }}</th>
         {% for period in periods %}
             <th data-defaultsign="_19" class="text-right">{{ period }}</th>
-        {% endfor %}
+        @endforeach
         <th data-defaultsign="_19" class="text-right">{{ 'sum'|_ }}</th>
     </tr>
     </thead>
@@ -32,7 +32,7 @@
                         {{ format_amount_by_symbol(0, info.currency_symbol, info.currency_decimal_places) }}
                     </td>
                 @endif
-            {% endfor %}
+            @endforeach
 
             {# if sum of income, display: #}
             {% if info.sum %}
@@ -45,6 +45,6 @@
                 </td>
             @endif
         </tr>
-    {% endfor %}
+    @endforeach
     </tbody>
 </table>

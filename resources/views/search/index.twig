@@ -68,7 +68,7 @@
                             {% if not operator.prohibited %}
                                 <li>{{- trans('firefly.search_modifier_'~operator.type, {value: operator.value}) -}}</li>
                             @endif
-                    {% endfor %}
+                    @endforeach
                     </ul>
 
                     {% if invalidOperators|length > 0 %}
@@ -76,7 +76,7 @@
                         <ul>
                             {% for operator in invalidOperators %}
                                 <li class="text-danger">{{ operator.type }}:{{ operator.value }}</li>
-                            {% endfor %}
+                            @endforeach
                         </ul>
                     @endif
                 </div>

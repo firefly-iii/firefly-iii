@@ -1,4 +1,5 @@
 {{-- RUNNING BALANCE --}}
+
 @if(false === $balanceDirty && '' !== $destination['balance_after'] && '' !== $source['balance_after'])
     @if('Deposit' === $type)
         @if($source['id'] === $account?->id)
@@ -16,9 +17,9 @@
         {{-- withdrawal into a liability --}}
         @if(in_array($destination['type'], ['Mortgage','Debt','Loan'], true))
                 @if($account?->id === $source['id'])
-                    <span title="Withdrawal, liab, source">{!! format_amount_by_symbol($source['balance_after'], $currency['symbol'], $currency['decimal_places']) !!}</span>
+                    A <span title="Withdrawal, liab, source">{!! format_amount_by_symbol($source['balance_after'], $currency['symbol'], $currency['decimal_places']) !!}</span>
                 @elseif($account?->id === $destination['id'])
-                    <span title="Withdrawal, liab, dest">{!! format_amount_by_symbol($destination['balance_after'], $currency['symbol'], $currency['decimal_places']) !!}</span>
+                    B <span title="Withdrawal, liab, dest">{!! format_amount_by_symbol($destination['balance_after'], $currency['symbol'], $currency['decimal_places']) !!}</span>
                 @else
                     -
                 @endif
