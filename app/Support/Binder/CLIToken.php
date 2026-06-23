@@ -26,6 +26,7 @@ namespace FireflyIII\Support\Binder;
 
 use FireflyIII\Repositories\User\UserRepositoryInterface;
 use FireflyIII\Support\Facades\Preferences;
+use Illuminate\Auth\AuthenticationException;
 use Illuminate\Routing\Route;
 use Illuminate\Support\Facades\Log;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
@@ -56,6 +57,6 @@ class CLIToken implements BinderInterface
         }
         Log::error(sprintf('Recognized no users by access token "%s"', $value));
 
-        throw new NotFoundHttpException();
+        throw new AuthenticationException();
     }
 }
