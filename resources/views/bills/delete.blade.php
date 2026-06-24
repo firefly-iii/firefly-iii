@@ -1,18 +1,14 @@
 @extends('layout.v3.session')
-
-{% block breadcrumbs %}
-    {{ Breadcrumbs.render(Route.getCurrentRoute.getName, bill) }}
-@endsection
-
 @section('content')
 
-    <form method="POST" action="{{ route('subscriptions.destroy',bill.id) }}" accept-charset="UTF-8" class="form-horizontal" id="destroy">
+    <form method="POST" action="{{ route('subscriptions.destroy',$bill->id) }}" accept-charset="UTF-8" class="form-horizontal" id="destroy">
         <input name="_token" type="hidden" value="{{ csrf_token() }}">
         <div class="row">
             <div class="col-lg-6 offset-lg-3 col-md-12 col-sm-12">
-                <div class="box box-danger">
+                <div class="card card-danger card-outline">
+
                     <div class="card-header">
-                        <h3 class="card-title">{{ trans('form.delete_bill', {'name': bill.name}) }}</h3>
+                        <h3 class="card-title">{{ trans('form.delete_bill', ['name' => $bill->name]) }}</h3>
                     </div>
                     <div class="card-body">
                         <p class="text-danger">
@@ -20,12 +16,12 @@
                         </p>
 
                         <p>
-                            {{ trans('form.bill_areYouSure', {'name': bill.name}) }}
+                            {{ trans('form.bill_areYouSure', ['name' => $bill->name]) }}
                         </p>
 
                         <p>
-                            {% if bill.transactionjournals.count() > 0 %}
-                                {{ Lang.choice('form.bill_keep_transactions', bill.transactionjournals.count(),{count: bill.transactionjournals.count()}) }}
+                            @if($bill->transactionjournals->count() > 0)
+                                {{ Lang::choice('form.bill_keep_transactions', $bill->transactionjournals->count(),['count' => $bill->transactionjournals->count()]) }}
                             @endif
                         </p>
                     </div>
@@ -37,4 +33,7 @@
             </div>
         </div>
     </form>
+@endsection
+@section('scripts')
+    @vite(['js/pages/subscriptions/delete.js'])
 @endsection

@@ -1,6 +1,6 @@
 @extends('layout.v3.session')
 
-{% block breadcrumbs %}
+
     {{ Breadcrumbs.render(Route.getCurrentRoute.getName, accountIds, start, end) }}
 @endsection
 
@@ -8,7 +8,7 @@
 
     <div class="row no-print">
         <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
-            <div class="box" id="optionsBox">
+            <div class="card" id="optionsBox">
                 <div class="card-header">
                     <h3 class="card-title">{{ __('firefly.options') }}</h3>
                 </div>

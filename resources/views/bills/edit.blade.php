@@ -1,15 +1,10 @@
 @extends('layout.v3.session')
-
-{% block breadcrumbs %}
-    {{ Breadcrumbs.render(Route.getCurrentRoute.getName, bill) }}
-@endsection
-
 @section('content')
 
-    <form method="post" action="{{ route('subscriptions.update', bill.id) }}" class="form-horizontal" accept-charset="UTF-8"
+    <form method="post" action="{{ route('subscriptions.update', $bill->id) }}" class="form-horizontal" accept-charset="UTF-8"
           enctype="multipart/form-data">
         <input type="hidden" name="_token" value="{{ csrf_token() }}"/>
-        <input type="hidden" name="id" value="{{ bill.id }}"/>
+        <input type="hidden" name="id" value="{{ $bill->id }}"/>
 
         <div class="row">
             <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
@@ -18,17 +13,17 @@
                         <h3 class="card-title">{{ __('firefly.mandatoryFields') }}</h3>
                     </div>
                     <div class="card-body">
-                        {% if rules.count() > 0 %}
-                            {{ ExpandedForm::text('name', bill.name, {helpText: trans_choice('firefly.bill_edit_rules', rules.count())}) }}
+                        @if($rules->count() > 0)
+                            {!! ExpandedForm::text('name', $bill->name, ['helpText' => trans_choice('firefly.bill_edit_rules', $rules->count())]) !!}
                         @else
-                            {{ ExpandedForm::text('name', bill.name) }}
+                            {!! ExpandedForm::text('name', $bill->name) !!}
                         @endif
-                        {{ CurrencyForm::currencyList('transaction_currency_id') }}
-                        {{ ExpandedForm::amountNoCurrency('amount_min', bill.amount_min) }}
-                        {{ ExpandedForm::amountNoCurrency('amount_max',  bill.amount_max) }}
-                        {{ ExpandedForm::date('date',bill.date.format('Y-m-d')) }}
-                        {{ ExpandedForm::select('repeat_freq', periods, bill.repeat_freq) }}
-                        {{ ExpandedForm.integer('skip', bill.skip, {'helpText': trans('firefly.skip_help_text')}) }}
+                        {!! CurrencyForm::currencyList('transaction_currency_id') !!}
+                        {!! ExpandedForm::amountNoCurrency('amount_min', $bill->amount_min) !!}
+                        {!! ExpandedForm::amountNoCurrency('amount_max',  $bill->amount_max) !!}
+                        {!! ExpandedForm::date('date',$bill->date->format('Y-m-d')) !!}
+                        {!! ExpandedForm::select('repeat_freq', $periods, $bill->repeat_freq) !!}
+                        {!! ExpandedForm::integer('skip', $bill->skip, ['helpText' => trans('firefly.skip_help_text')])  !!}
                     </div>
                 </div>
 
@@ -40,14 +35,13 @@
                         <h3 class="card-title">{{ __('firefly.optionalFields') }}</h3>
                     </div>
                     <div class="card-body">
-                        {{ ExpandedForm::date('bill_end_date',null, {'helpText': trans('firefly.bill_end_date_help')}) }}
-                        {{ ExpandedForm::date('extension_date',null,{'helpText': trans('firefly.bill_extension_date_help')} ) }}
+                        {!! ExpandedForm::date('bill_end_date',null, ['helpText' => trans('firefly.bill_end_date_help')])  !!}
+                        {!! ExpandedForm::date('extension_date',null,['helpText' => trans('firefly.bill_extension_date_help')] )  !!}
 
-                        {{ ExpandedForm::textarea('notes',null,{helpText: trans('firefly.field_supports_markdown')}) }}
-                        {{ ExpandedForm::file('attachments[]', {'multiple': 'multiple','helpText': trans('firefly.upload_max_file_size', {'size': uploadSize|filesize}) }) }}
-                        {{ ExpandedForm.objectGroup() }}
-                        {{-- only correct way to do active checkbox --}}
-                        {{ ExpandedForm::checkbox('active', 1) }}
+                        {!! ExpandedForm::textarea('notes',null,['helpText' => trans('firefly.field_supports_markdown')])  !!}
+                        {!! ExpandedForm::file('attachments[]', ['multiple' => 'multiple','helpText' => trans('firefly.upload_max_file_size', ['size' => print_nice_filesize($uploadSize)])]) !!}
+                        {!! ExpandedForm::objectGroup()  !!}
+                        {!! ExpandedForm::checkbox('active', 1) !!}
 
                     </div>
                 </div>
@@ -60,11 +54,11 @@
                         <h3 class="card-title">{{ __('firefly.options') }}</h3>
                     </div>
                     <div class="card-body">
-                        {{ ExpandedForm::optionsList('update','bill') }}
+                        {!! ExpandedForm::optionsList('update','bill') !!}
                     </div>
-                    <div class="card-footer">
-                        <button type="submit" class="btn text-end btn-success">
-                            {{ 'update_bill'|_ }}
+                    <div class="card-footer text-end">
+                        <button type="submit" class="btn btn-success">
+                            {{ __('firefly.update_bill') }}
                         </button>
                     </div>
                 </div>
@@ -82,6 +76,7 @@
           media="all" nonce="{{ $JS_NONCE }}">
 @endsection
 @section('scripts')
+    @vite(['js/pages/subscriptions/edit.js'])
     <script type="text/javascript" src="v1/js/lib/bootstrap-tagsinput.min.js?v={{ $FF_BUILD_TIME }}"
             nonce="{{ $JS_NONCE }}"></script>
     <script type="text/javascript" src="v1/js/lib/modernizr-custom.js?v={{ $FF_BUILD_TIME }}"

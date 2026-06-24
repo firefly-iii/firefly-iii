@@ -74,7 +74,7 @@
                             @endif
                         {% elseif 'pc_balance' == key %}
                             {% if convertToPrimary %}
-                                {{ format_amount_by_symbol(balance, primaryCurrency.symbol, primaryCurrency.decimal_places)  }}
+                                {{ format_amount_by_symbol(balance, $primaryCurrency->symbol, $primaryCurrency->decimal_places)  }}
                             @endif
                         @else
                             ({{ formatAmountByCode(balance, key)  }})
@@ -123,7 +123,7 @@
                                   @endif
                               {% elseif 'pc_balance' == key %}
                                   {% if convertToPrimary %}
-                                      {{ format_amount_by_symbol(balance, primaryCurrency.symbol, primaryCurrency.decimal_places)  }}
+                                      {{ format_amount_by_symbol(balance, $primaryCurrency->symbol, $primaryCurrency->decimal_places)  }}
                                   @endif
                               @else
                                   ({{ formatAmountByCode(balance, key)  }})

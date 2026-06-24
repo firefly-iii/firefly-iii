@@ -1,6 +1,6 @@
 @extends('layout.v3.session')
 
-{% block breadcrumbs %}
+
     {{ Breadcrumbs.render(Route.getCurrentRoute.getName, user) }}
 @endsection
 @section('content')
@@ -20,18 +20,18 @@
                     </div>
                     <div class="card-body">
                         {% if canEditDetails %}
-                            {{ ExpandedForm::text('email',user.email,{'helpText': trans('firefly.admin_update_email')}) }}
-                            {{ ExpandedForm.password('password') }}
-                            {{ ExpandedForm.password('password_confirmation') }}
+                            {!! ExpandedForm::text('email',user.email,{'helpText': trans('firefly.admin_update_email')}) }}
+                            {!! ExpandedForm.password('password') }}
+                            {!! ExpandedForm.password('password_confirmation') }}
                         @else
                             <input type="hidden" name="email" value="{{ user.email }}"/>
                             <input type="hidden" name="password" value=""/>
                             <input type="hidden" name="password_confirmation" value=""/>
                         @endif
-                        {{ ExpandedForm::checkbox('blocked') }}
-                        {{ ExpandedForm::select('blocked_code', codes, user.blocked_code) }}
+                        {!! ExpandedForm::checkbox('blocked') }}
+                        {!! ExpandedForm::select('blocked_code', codes, user.blocked_code) }}
                         {% if user.id != currentUser.id %}
-                            {{ ExpandedForm::checkbox('is_owner',1,isAdmin) }}
+                            {!! ExpandedForm::checkbox('is_owner',1,isAdmin) }}
                         @endif
                     </div>
                 </div>
@@ -45,7 +45,7 @@
                         <h3 class="card-title">{{ __('firefly.options') }}</h3>
                     </div>
                     <div class="card-body">
-                        {{ ExpandedForm::optionsList('update','account') }}
+                        {!! ExpandedForm::optionsList('update','account') }}
                     </div>
                     <div class="card-footer">
                         <button type="submit" class="btn text-end btn-success">

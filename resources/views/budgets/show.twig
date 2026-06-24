@@ -1,6 +1,6 @@
 @extends('layout.v3.session')
 
-{% block breadcrumbs %}
+
     {{ Breadcrumbs.render(Route.getCurrentRoute.getName, budget, budgetLimit) }}
 @endsection
 
@@ -159,7 +159,7 @@
                                     <td>
                                         {{ format_amount_by_symbol(limit.amount, limit.transactionCurrency.symbol, limit.transactionCurrency.decimal_places) }}
                                         {% if convertToPrimary and null != limit.native_amount %}
-                                            ({{ format_amount_by_symbol(limit.native_amount, primaryCurrency.symbol, primaryCurrency.decimal_places) }})
+                                            ({{ format_amount_by_symbol(limit.native_amount, $primaryCurrency->symbol, $primaryCurrency->decimal_places) }})
                                         @endif
                                     </td>
                                 </tr>
@@ -169,7 +169,7 @@
                                         {% if convertToPrimary %}
                                             {{ format_amount_by_symbol(limit.spent, limit.transactionCurrency.symbol, limit.transactionCurrency.decimal_places) }}
                                             {% if limit.pc_spent %}
-                                                ({{ format_amount_by_symbol(limit.pc_spent, primaryCurrency.symbol, primaryCurrency.decimal_places) }})
+                                                ({{ format_amount_by_symbol(limit.pc_spent, $primaryCurrency->symbol, $primaryCurrency->decimal_places) }})
                                             @endif
                                         @else
                                             {{ format_amount_by_symbol(limit.spent, limit.transactionCurrency.symbol, limit.transactionCurrency.decimal_places) }}

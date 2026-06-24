@@ -1,6 +1,6 @@
 @extends('layout.v3.session')
 
-{% block breadcrumbs %}
+
     {{ Breadcrumbs.render }}
 @endsection
 @section('content')
@@ -24,16 +24,16 @@
                             </div>
                         @endforeach
                         <p class="mt-5">{{ 'channel_settings'|_ }}</p>
-                        {{ ExpandedForm::text('slack_webhook_url', slackUrl, {'label' : 'slack_url_label'|_, helpText: trans('firefly.slack_discord_double')}) }}
+                        {!! ExpandedForm::text('slack_webhook_url', slackUrl, {'label' : 'slack_url_label'|_, helpText: trans('firefly.slack_discord_double')}) }}
 
-                        {{ ExpandedForm::text('pushover_app_token', pushoverAppToken, {}) }}
-                        {{ ExpandedForm::text('pushover_user_token', pushoverUserToken, {}) }}
+                        {!! ExpandedForm::text('pushover_app_token', pushoverAppToken, {}) }}
+                        {!! ExpandedForm::text('pushover_user_token', pushoverUserToken, {}) }}
 
-                        {{ ExpandedForm::text('ntfy_server', ntfyServer, {}) }}
-                        {{ ExpandedForm::text('ntfy_topic', ntfyTopic, {}) }}
-                        {{ ExpandedForm::checkbox('ntfy_auth','1', ntfyAuth, {}) }}
-                        {{ ExpandedForm::text('ntfy_user', ntfyUser, {}) }}
-                        {{ ExpandedForm.passwordWithValue('ntfy_pass', ntfyPass, {}) }}
+                        {!! ExpandedForm::text('ntfy_server', ntfyServer, {}) }}
+                        {!! ExpandedForm::text('ntfy_topic', ntfyTopic, {}) }}
+                        {!! ExpandedForm::checkbox('ntfy_auth','1', ntfyAuth, {}) }}
+                        {!! ExpandedForm::text('ntfy_user', ntfyUser, {}) }}
+                        {!! ExpandedForm.passwordWithValue('ntfy_pass', ntfyPass, {}) }}
                     </div>
                     <div class="card-footer">
                         <button type="submit" class="btn btn-success">

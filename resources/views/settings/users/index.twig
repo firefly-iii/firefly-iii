@@ -1,6 +1,6 @@
 @extends('layout.v3.session')
 
-{% block breadcrumbs %}
+
     {{ Breadcrumbs.render }}
 @endsection
 @section('content')
@@ -17,7 +17,7 @@
                             <p>
                                 {{ 'invite_new_user_text'|_ }}
                             </p>
-                            {{ ExpandedForm::text('invited_user',null, {'type': 'email', 'label' : 'invited_user_mail'|_}) }}
+                            {!! ExpandedForm::text('invited_user',null, {'type': 'email', 'label' : 'invited_user_mail'|_}) }}
                         </div>
                         <div class="card-footer">
                             <button type="submit" class="btn text-end btn-success">

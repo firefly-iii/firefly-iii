@@ -64,7 +64,7 @@
                         {% if group.transaction_type == 'Deposit' %}
                             {{ format_amount_by_symbol(sum.amount*-1, sum.currency_symbol, sum.currency_decimal_places) }}
                             {% if convertToPrimary and 0 != sum.pc_amount %}
-                                (~ {{ format_amount_by_symbol(sum.pc_amount*-1, primaryCurrency.symbol, primaryCurrency.decimal_places) }})
+                                (~ {{ format_amount_by_symbol(sum.pc_amount*-1, $primaryCurrency->symbol, $primaryCurrency->decimal_places) }})
                             @endif
                             {% if loop.index != group.sums|length %},@endif
 
@@ -72,14 +72,14 @@
                             <span class="text-info money-transfer">
                             {{ format_amount_by_symbol(sum.amount*-1, sum.currency_symbol, sum.currency_decimal_places, false) }}
                                 {% if convertToPrimary and 0 != sum.pc_amount %}
-                                    (~ {{ format_amount_by_symbol(sum.pc_amount*-1, primaryCurrency.symbol, primaryCurrency.decimal_places) }})
+                                    (~ {{ format_amount_by_symbol(sum.pc_amount*-1, $primaryCurrency->symbol, $primaryCurrency->decimal_places) }})
                                 @endif
                                 {% if loop.index != group.sums|length %},@endif
                             </span>
                         @else
                             {{ format_amount_by_symbol(sum.amount, sum.currency_symbol, sum.currency_decimal_places) }}
                             {% if convertToPrimary and 0 != sum.pc_amount %}
-                                (~ {{ format_amount_by_symbol(sum.pc_amount*-1, primaryCurrency.symbol, primaryCurrency.decimal_places) }})
+                                (~ {{ format_amount_by_symbol(sum.pc_amount*-1, $primaryCurrency->symbol, $primaryCurrency->decimal_places) }})
                             @endif
                             {% if loop.index != group.sums|length %},@endif
                         @endif
@@ -174,7 +174,7 @@
                         @endif
                         {{-- primary currency amount of deposit --}}
                         {% if convertToPrimary and 0 != transaction.pc_amount %}
-                            (~ {{ format_amount_by_symbol(transaction.pc_amount*-1, primaryCurrency.symbol, primaryCurrency.decimal_places) }})
+                            (~ {{ format_amount_by_symbol(transaction.pc_amount*-1, $primaryCurrency->symbol, $primaryCurrency->decimal_places) }})
                         @endif
                         {{-- transfer --}}
                     {% elseif transaction.transaction_type_type == 'Transfer' %}
@@ -197,7 +197,7 @@
 
                             {{-- primary currency amount of transfer --}}
                             {% if convertToPrimary and 0 != transaction.pc_amount %}
-                                (~ {{ format_amount_by_symbol(transaction.pc_amount*-1, primaryCurrency.symbol, primaryCurrency.decimal_places) }})
+                                (~ {{ format_amount_by_symbol(transaction.pc_amount*-1, $primaryCurrency->symbol, $primaryCurrency->decimal_places) }})
                             @endif
                             </span>
                         {{-- opening balance --}}
@@ -208,7 +208,7 @@
                                 ({{ format_amount_by_symbol(transaction.foreign_amount*-1, transaction.foreign_currency_symbol, transaction.foreign_currency_decimal_places) }})
                             @endif
                             {% if convertToPrimary and 0 != transaction.pc_amount %}
-                                (~ {{ format_amount_by_symbol(transaction.pc_amount*-1, primaryCurrency.symbol, primaryCurrency.decimal_places) }})
+                                (~ {{ format_amount_by_symbol(transaction.pc_amount*-1, $primaryCurrency->symbol, $primaryCurrency->decimal_places) }})
                             @endif
                         @else
                             {{ format_amount_by_symbol(transaction.amount, transaction.currency_symbol, transaction.currency_decimal_places) }}
@@ -216,7 +216,7 @@
                                 ({{ format_amount_by_symbol(transaction.foreign_amount, transaction.foreign_currency_symbol, transaction.foreign_currency_decimal_places) }})
                             @endif
                             {% if convertToPrimary and 0 != transaction.pc_amount %}
-                                (~ {{ format_amount_by_symbol(transaction.pc_amount, primaryCurrency.symbol, primaryCurrency.decimal_places) }})
+                                (~ {{ format_amount_by_symbol(transaction.pc_amount, $primaryCurrency->symbol, $primaryCurrency->decimal_places) }})
                             @endif
                         @endif
                         {{-- reconciliation --}}
@@ -227,7 +227,7 @@
                                 ({{ format_amount_by_symbol(transaction.foreign_amount*-1, transaction.foreign_currency_symbol, transaction.foreign_currency_decimal_places) }})
                             @endif
                             {% if convertToPrimary and 0 != transaction.pc_amount %}
-                                (~ {{ format_amount_by_symbol(transaction.pc_amount*-1, primaryCurrency.symbol, primaryCurrency.decimal_places) }})
+                                (~ {{ format_amount_by_symbol(transaction.pc_amount*-1, $primaryCurrency->symbol, $primaryCurrency->decimal_places) }})
                             @endif
                         @else
                             {{ format_amount_by_symbol(transaction.amount, transaction.currency_symbol, transaction.currency_decimal_places) }}
@@ -235,7 +235,7 @@
                                 ({{ format_amount_by_symbol(transaction.foreign_amount, transaction.foreign_currency_symbol, transaction.foreign_currency_decimal_places) }})
                             @endif
                             {% if convertToPrimary and 0 != transaction.pc_amount %}
-                                (~ {{ format_amount_by_symbol(transaction.pc_amount, primaryCurrency.symbol, primaryCurrency.decimal_places) }})
+                                (~ {{ format_amount_by_symbol(transaction.pc_amount, $primaryCurrency->symbol, $primaryCurrency->decimal_places) }})
                             @endif
                         @endif
                         {{-- liability credit --}}
@@ -246,7 +246,7 @@
                                 ({{ format_amount_by_symbol(transaction.foreign_amount, transaction.foreign_currency_symbol, transaction.foreign_currency_decimal_places) }})
                             @endif
                             {% if convertToPrimary and 0 != transaction.pc_amount %}
-                                (~ {{ format_amount_by_symbol(transaction.pc_amount, primaryCurrency.symbol, primaryCurrency.decimal_places) }})
+                                (~ {{ format_amount_by_symbol(transaction.pc_amount, $primaryCurrency->symbol, $primaryCurrency->decimal_places) }})
                             @endif
                         @else
                             {{ format_amount_by_symbol(transaction.amount*-1, transaction.currency_symbol, transaction.currency_decimal_places) }}
@@ -254,7 +254,7 @@
                                 ({{ format_amount_by_symbol(transaction.foreign_amount*-1, transaction.foreign_currency_symbol, transaction.foreign_currency_decimal_places) }})
                             @endif
                             {% if convertToPrimary and 0 != transaction.pc_amount %}
-                                (~ {{ format_amount_by_symbol(transaction.pc_amount*-1, primaryCurrency.symbol, primaryCurrency.decimal_places) }})
+                                (~ {{ format_amount_by_symbol(transaction.pc_amount*-1, $primaryCurrency->symbol, $primaryCurrency->decimal_places) }})
                             @endif
                         @endif
 
@@ -269,8 +269,8 @@
                             ({{ format_amount_by_symbol(transaction.foreign_amount, transaction.foreign_currency_symbol, transaction.foreign_currency_decimal_places) }})
                         @endif
                         {{-- primary currency amount of withdrawal, if not in foreign currency --}}
-                        {% if convertToPrimary and 0 != transaction.pc_amount and primaryCurrency.id != transaction.foreign_currency_id %}
-                            (~ {{ format_amount_by_symbol(transaction.pc_amount, primaryCurrency.symbol, primaryCurrency.decimal_places) }})
+                        {% if convertToPrimary and 0 != transaction.pc_amount and $primaryCurrency->id != transaction.foreign_currency_id %}
+                            (~ {{ format_amount_by_symbol(transaction.pc_amount, $primaryCurrency->symbol, $primaryCurrency->decimal_places) }})
                         @endif
                     @endif
                 </td>

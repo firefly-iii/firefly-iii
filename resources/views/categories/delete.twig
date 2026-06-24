@@ -1,6 +1,6 @@
 @extends('layout.v3.session')
 
-{% block breadcrumbs %}
+
     {{ Breadcrumbs.render(Route.getCurrentRoute.getName, category) }}
 @endsection
 
@@ -10,7 +10,7 @@
         <input name="_token" type="hidden" value="{{ csrf_token() }}">
         <div class="row">
             <div class="col-lg-6 offset-lg-3 col-md-12 col-sm-12">
-                <div class="box box-danger">
+                <div class="card card-danger card-outline">
                     <div class="card-header">
                         <h3 class="card-title">{{ trans('form.delete_category', {'name': category.name}) }}</h3>
                     </div>
@@ -25,7 +25,7 @@
 
                         <p>
                             {% if category.transactionjournals.count() > 0 %}
-                                {{ Lang.choice('form.category_keep_transactions', category.transactionjournals.count(), {count: category.transactionjournals.count() }) }}
+                                {{ Lang::choice('form.category_keep_transactions', category.transactionjournals.count(), {count: category.transactionjournals.count() }) }}
                             @endif
                         </p>
                     </div>

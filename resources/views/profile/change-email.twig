@@ -1,6 +1,6 @@
 @extends('layout.v3.session')
 
-{% block breadcrumbs %}
+
     {{ Breadcrumbs.render(Route.getCurrentRoute.getName) }}
 @endsection
 
@@ -34,7 +34,7 @@
                                        name="email">
                             </div>
                         </div>
-                        {{ ExpandedForm::staticText('verification',trans('firefly.email_verification')) }}
+                        {!! ExpandedForm::staticText('verification',trans('firefly.email_verification')) }}
 
                     </div>
                     <div class="card-footer">

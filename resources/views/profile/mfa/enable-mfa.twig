@@ -1,6 +1,6 @@
 @extends('layout.v3.session')
 
-{% block breadcrumbs %}
+
     {{ Breadcrumbs.render(Route.getCurrentRoute.getName) }}
 @endsection
 
@@ -36,8 +36,8 @@
             <div class="col-lg-6 offset-lg-3 col-md-12 col-sm-12 col-xs-12">
                 <div class="card">
                     <div class="card-body">
-                        {{ ExpandedForm.password('password', {helpText: 'current_password_confirm_mfa'|_}) }}
-                        {{ ExpandedForm::text('code', code) }}
+                        {!! ExpandedForm.password('password', {helpText: 'current_password_confirm_mfa'|_}) }}
+                        {!! ExpandedForm::text('code', code) }}
                     </div>
                     <div class="card-footer">
                         <button type="submit" class="btn btn-success btn-lg">{{ 'pref_save_settings'|_ }}</button>

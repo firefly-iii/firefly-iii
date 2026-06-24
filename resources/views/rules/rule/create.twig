@@ -1,6 +1,6 @@
 @extends('layout.v3.session')
 
-{% block breadcrumbs %}
+
     {{ Breadcrumbs.render(Route.getCurrentRoute.getName, ruleGroup) }}
 @endsection
 
@@ -36,11 +36,11 @@
                         <h3 class="card-title">{{ __('firefly.mandatoryFields') }}</h3>
                     </div>
                     <div class="card-body">
-                        {{ ExpandedForm::text('title') }}
-                        {{ ExpandedForm::select('trigger',allJournalTriggers()) }}
+                        {!! ExpandedForm::text('title') }}
+                        {!! ExpandedForm::select('trigger',allJournalTriggers()) }}
                         {{ RuleForm.ruleGroupList('rule_group_id', ruleGroup.id) }}
-                        {{ ExpandedForm::checkbox('stop_processing',1,null, {helpText: trans('firefly.rule_help_stop_processing')}) }}
-                        {{ ExpandedForm::checkbox('strict',1, null,{helpText: trans('firefly.rule_help_strict')}) }}
+                        {!! ExpandedForm::checkbox('stop_processing',1,null, {helpText: trans('firefly.rule_help_stop_processing')}) }}
+                        {!! ExpandedForm::checkbox('strict',1, null,{helpText: trans('firefly.rule_help_strict')}) }}
                     </div>
                 </div>
             </div>
@@ -52,7 +52,7 @@
                         <h3 class="card-title">{{ __('firefly.optionalFields') }}</h3>
                     </div>
                     <div class="card-body">
-                        {{ ExpandedForm::textarea('description', null, {helpText: trans('firefly.field_supports_markdown')}) }}
+                        {!! ExpandedForm::textarea('description', null, {helpText: trans('firefly.field_supports_markdown')}) }}
                     </div>
                 </div>
             </div>
@@ -132,8 +132,8 @@
                         <h3 class="card-title">{{ __('firefly.options') }}</h3>
                     </div>
                     <div class="card-body">
-                        {{ ExpandedForm::checkbox('run_after_form',1,null, {helpText: trans('firefly.rule_run_after_creation')}) }}
-                        {{ ExpandedForm::optionsList('create','rule') }}
+                        {!! ExpandedForm::checkbox('run_after_form',1,null, {helpText: trans('firefly.rule_run_after_creation')}) }}
+                        {!! ExpandedForm::optionsList('create','rule') }}
                     </div>
                     <div class="card-footer">
                         <button type="submit" class="btn text-end btn-success">{{ 'store_new_rule'|_ }}</button>

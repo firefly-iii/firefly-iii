@@ -1,13 +1,13 @@
 @extends('layout.v3.session')
 
-{% block breadcrumbs %}
+
     {{ Breadcrumbs.render(Route.getCurrentRoute.getName, piggyBank) }}
 @endsection
 
 @section('content')
     <div class="row">
         <div class="col-lg-8 col-md-8 col-sm-6">
-            <div class="box" id="piggyChart">
+            <div class="card" id="piggyChart">
                 <div class="card-header">
                     <h3 class="card-title">{{ 'events'|_ }}</h3>
                 </div>

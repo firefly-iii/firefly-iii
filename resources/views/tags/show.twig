@@ -1,6 +1,6 @@
 @extends('layout.v3.session')
 
-{% block breadcrumbs %}
+
     {{ Breadcrumbs.render(Route.getCurrentRoute.getName, tag, start, end) }}
 @endsection
 
@@ -158,7 +158,7 @@
                                 <td> {{ sums.Reconciliation|formatAmount }}</td>
                             </tr>
                         @endif
-                        #}
+                        --}}
                     </table>
                 </div>
                 <div class="card-footer">

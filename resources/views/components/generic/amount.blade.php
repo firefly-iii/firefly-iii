@@ -109,7 +109,7 @@
       ({{ format_amount_by_symbol(transaction.foreign_amount, transaction.foreign_currency_symbol, transaction.foreign_currency_decimal_places) }})
   @endif
   {% if convertToPrimary and null != transaction.pc_amount %}
-      ({{ format_amount_by_symbol(transaction.pc_amount, primaryCurrency.symbol, foreign_currency_.decimal_places) }})
+      ({{ format_amount_by_symbol(transaction.pc_amount, $primaryCurrency->symbol, foreign_currency_.decimal_places) }})
   @endif
 @endif
     </span>

@@ -1,6 +1,6 @@
 @extends('layout.v3.session')
 
-{% block breadcrumbs %}
+
     {{ Breadcrumbs.render(Route.getCurrentRoute.getName) }}
 @endsection
 
@@ -23,8 +23,8 @@
                         <p>
                             {{ 'to_get_started'|_ }}
                         </p>
-                        {{ ExpandedForm::text('bank_name') }}
-                        {{ CurrencyForm.balanceAll('bank_balance') }}
+                        {!! ExpandedForm::text('bank_name') }}
+                        {!! CurrencyForm.balanceAll('bank_balance') }}
 
                         <p class="text-success">
                             {{ 'currency_not_present'|_ }}
@@ -34,7 +34,7 @@
                             {{ 'savings_balance_text'|_ }}
                         </p>
 
-                        {{ ExpandedForm.integer('savings_balance',0, {"step": "any"}) }}
+                        {!! ExpandedForm::integer('savings_balance',0, {"step": "any"}) }}
 
                         <p>
                             {{ 'set_preferred_language'|_ }}

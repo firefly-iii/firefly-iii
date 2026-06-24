@@ -43,7 +43,7 @@
         {{-- MULTIPLE INFO MESSAGE --}}
         {% if session('info') is iterable and session('info')|length > 1 %}
             <strong>
-                {{ Lang.choice('firefly.flash_info_multiple', session('info')|length, {count: session('info')|length}) }}:</strong>
+                {{ Lang::choice('firefly.flash_info_multiple', session('info')|length, {count: session('info')|length}) }}:</strong>
             <ul class="list-unstyled">
                 {% for inf in session('info') %}
                     <li>{{ inf|raw }}</li>
@@ -89,7 +89,7 @@
         {{-- MULTIPLE ERRORS (BAD) --}}
         {% if session('error') is iterable and session('error')|length > 1 %}
             <strong>
-                {{ Lang.choice('firefly.flash_error_multiple', session('error')|length, {count: session('error')|length}) }}:
+                {{ Lang::choice('firefly.flash_error_multiple', session('error')|length, {count: session('error')|length}) }}:
             </strong>
             <ul class="list-unstyled">
                 {% for err in session('error') %}
