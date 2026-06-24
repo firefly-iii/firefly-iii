@@ -1,22 +1,17 @@
 @extends('layout.v3.session')
-
-
-    {{ Breadcrumbs.render(Route.getCurrentRoute.getName, start, end) }}
-@endsection
-
 @section('content')
 
     {{-- upper show-all instruction --}}
     @if(count($periods) > 0)
         <div class="row">
-            <div class="col-lg-offset-10 col-lg-2 offset-md-9 col-md-3 col-sm-12 col-xs-12">
+            <div class="offset-lg-10 col-lg-2 offset-md-9 col-md-3 col-sm-12 col-xs-12">
                 <p class="small text-center"><a href="{{ route('categories.no-category.all') }}">{{ __('firefly.showEverything') }}</a></p>
             </div>
         </div>
     @endif
 
     <div class="row">
-        <div class="@if(count($periods) > 0)col-lg-10 col-md-9 col-sm-12 col-xs-12@elsecol-lg-12 col-md-12 col-sm-12 col-xs-12@endif">
+        <div class="@if(count($periods) > 0) col-lg-10 col-md-9 col-sm-12 col-xs-12 @else col-lg-12 col-md-12 col-sm-12 col-xs-12 @endif">
             <div class="card">
                 <div class="card-header">
                     <h3 class="card-title">{{ $subTitle }}</h3>
@@ -51,7 +46,7 @@
     {{-- lower show-all instruction --}}
     @if(count($periods) > 0)
         <div class="row">
-            <div class="col-lg-offset-10 col-lg-2 offset-md-9 col-md-3 col-sm-12 col-xs-12">
+            <div class="offset-lg-10 col-lg-2 offset-md-9 col-md-3 col-sm-12 col-xs-12">
                 <p class="small text-center"><a href="{{ route('categories.no-category',['all']) }}">{{ __('firefly.showEverything') }}</a></p>
             </div>
         </div>
@@ -59,6 +54,7 @@
 
 @endsection
 @section('scripts')
+    @vite(['js/pages/generic.js'])
     {{-- required for groups.twig --}}
     <script type="text/javascript" src="v1/js/ff/list/groups.js?v={{ $FF_BUILD_TIME }}" nonce="{{ $JS_NONCE }}"></script>
 @endsection

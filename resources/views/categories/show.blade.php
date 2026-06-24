@@ -1,18 +1,13 @@
 @extends('layout.v3.session')
-
-
-    {{ Breadcrumbs.render(Route.getCurrentRoute.getName, category, start, end) }}
-@endsection
-
 @section('content')
     <div class="row">
-        {% if Route.getCurrentRoute.getName == 'categories.show' %}
+        @if(Route::getCurrentRoute()->getName() == 'categories.show')
             {{-- both charts --}}
-            <div class="{% if attachments.count() == 0 %}col-lg-6 col-md-12 col-sm-12 col-xs-12@elsecol-lg-4 col-md-12 col-sm-12 col-xs-12@endif">
-                <div class="card">
+            <div class="@if($attachments->count() == 0) col-lg-6 col-md-12 col-sm-12 col-xs-12 @else col-lg-4 col-md-12 col-sm-12 col-xs-12 @endif ">
+                <div class="card mb-2">
                     <div class="card-header">
                         <h3 class="card-title">
-                            {{ trans('firefly.chart_category_in_period', {name: category.name, start: $start->isoFormat($monthAndDayFormat), end: $end->isoFormat($monthAndDayFormat) }) }}
+                            {{ trans('firefly.chart_category_in_period', ['name' => $category->name, 'start' => $start->isoFormat($monthAndDayFormat), 'end' => $end->isoFormat($monthAndDayFormat)]) }}
                         </h3>
                     </div>
                     <div class="card-body">
@@ -20,11 +15,11 @@
                     </div>
                 </div>
             </div>
-            <div class="{% if attachments.count() == 0 %}col-lg-6 col-md-12 col-sm-12 col-xs-12@elsecol-lg-4 col-md-12 col-sm-12 col-xs-12@endif">
-                <div class="card">
+            <div class="@if(0 === $attachments->count()) col-lg-6 col-md-12 col-sm-12 col-xs-12 @else col-lg-4 col-md-12 col-sm-12 col-xs-12 @endif ">
+                <div class="card mb-2">
                     <div class="card-header">
                         <h3 class="card-title">
-                            {{ trans('firefly.chart_category_all', {name: category.name }) }}
+                            {{ trans('firefly.chart_category_all', ['name' => $category->name]) }}
                         </h3>
                     </div>
                     <div class="card-body">
@@ -33,13 +28,13 @@
                 </div>
             </div>
         @endif
-        {% if Route.getCurrentRoute.getName == 'categories.show.all' %}
+        @if(Route::getCurrentRoute()->getName() == 'categories.show.all')
             {{-- all chart --}}
-            <div class="{% if attachments.count() == 0 %}col-lg-12 col-md-12 col-sm-12 col-xs-12@elsecol-lg-8 col-md-12 col-sm-12 col-xs-12@endif">
-                <div class="card">
+            <div class="@if(0 === $attachments->count()) col-lg-12 col-md-12 col-sm-12 col-xs-12 @else col-lg-8 col-md-12 col-sm-12 col-xs-12 @endif ">
+                <div class="card mb-2">
                     <div class="card-header">
                         <h3 class="card-title">
-                            {{ trans('firefly.chart_category_all', {name: category.name }) }}
+                            {{ trans('firefly.chart_category_all', ['name' => $category->name ]) }}
                         </h3>
                     </div>
                     <div class="card-body">
@@ -50,7 +45,7 @@
         @endif
         @if($attachments->count() > 0)
             <div class="col-lg-4 col-md-12 col-sm-12 col-xs-12">
-                <div class="card">
+                <div class="card mb-2">
                     <div class="card-header">
                         <h3 class="card-title">
                             {{ __('firefly.attachments') }}
@@ -65,16 +60,16 @@
     </div>
     @if(count($periods) > 0)
         <div class="row">
-            <div class="col-lg-offset-10 col-lg-2 col-md-offset-10 col-md-2 col-sm-12 col-xs-12">
-                <p class="small text-center"><a href="{{ route('categories.show.all',[category.id]) }}">{{ __('firefly.showEverything') }}</a></p>
+            <div class="offset-lg-10 offset-lg-10 col-lg-2 offset-md-10 col-md-2 col-sm-12 col-xs-12">
+                <p class="small text-center"><a href="{{ route('categories.show.all',[$category->id]) }}">{{ __('firefly.showEverything') }}</a></p>
             </div>
         </div>
     @endif
 
     <div class="row">
-        <div class="@if(count($periods) > 0)col-lg-10 col-md-8 col-sm-12 col-xs-12@elsecol-lg-12 col-md-12 col-sm-12 col-xs-12@endif">
+        <div class="@if(count($periods) > 0)col-lg-10 col-md-8 col-sm-12 col-xs-12 @else col-lg-12 col-md-12 col-sm-12 col-xs-12 @endif ">
 
-            <div class="card">
+            <div class="card mb-2">
                 <div class="card-header">
                     <h3 class="card-title">{{ __('firefly.transactions') }}</h3>
                 </div>
@@ -83,7 +78,7 @@
                         <x-lists.groups-large :groups="$groups" />
                         <p>
                             <span class="bi bi-calendar"></span>
-                            <a href="{{ route('categories.show.all', [category.id]) }}">
+                            <a href="{{ route('categories.show.all', [$category->id]) }}">
                                 {{ __('firefly.show_all_no_filter') }}
                             </a>
                         </p>
@@ -91,7 +86,7 @@
                         <x-lists.groups-large :groups="$groups" />
                         <p>
                             <span class="bi bi-calendar"></span>
-                            <a href="{{ route('categories.show', [category.id]) }}">
+                            <a href="{{ route('categories.show', [$category->id]) }}">
                                 {{ __('firefly.show_the_current_period_and_overview') }}
                             </a>
                         </p>
@@ -108,10 +103,11 @@
 
 @endsection
 @section('scripts')
+    @vite(['js/pages/generic.js'])
     <script type="text/javascript" nonce="{{ $JS_NONCE }}">
-        var current = '{{ route('chart.category.current', [category.id]) }}';
-        var everything = '{{ route('chart.category.all', [category.id]) }}';
-        var specific = '{{ route('chart.category.specific', [category.id, $start->format('Ymd')]) }}';
+        var current = '{{ route('chart.category.current', [$category->id]) }}';
+        var everything = '{{ route('chart.category.all', [$category->id]) }}';
+        var specific = '{{ route('chart.category.specific', [$category->id, $start->format('Ymd')]) }}';
     </script>
     <script type="text/javascript" src="v1/js/lib/Chart.bundle.min.js?v={{ $FF_BUILD_TIME }}" nonce="{{ $JS_NONCE }}"></script>
     <script type="text/javascript" src="v1/js/ff/charts.defaults.js?v={{ $FF_BUILD_TIME }}" nonce="{{ $JS_NONCE }}"></script>
