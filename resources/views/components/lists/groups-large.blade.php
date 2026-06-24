@@ -128,12 +128,13 @@
                 :foreign="['amount' => $transaction['foreign_amount'],'currency_id' => $transaction['foreign_currency_id'], 'currency_symbol' => $transaction['foreign_currency_symbol'], 'currency_decimal_places' => $transaction['foreign_currency_decimal_places']]"
                 :account="$account ?? null"
                 :pc-amount="$transaction['pc_amount']"
+                :source-account-type="$transaction['source_account_type']"
             />
         </td>
         @if(get_app_configuration('use_running_balance', true))
         <td class=" {{ $className }} text-end">
             <x-elements.transaction-running-balance
-                :balance-dirty="$transaction['balance_dirty'] ?? false"
+                :balance-dirty="($transaction['source_balance_dirty'] ?? false) || ($transaction['destination_balance_dirty'] ?? false)"
                 :currency="['symbol' => $transaction['currency_symbol'],'decimal_places' => $transaction['currency_decimal_places']]"
                 :foreign="[]"
                 :type="$transaction['transaction_type_type']"

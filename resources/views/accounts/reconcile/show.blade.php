@@ -1,23 +1,18 @@
 @extends('layout.v3.session')
-
-{% block breadcrumbs %}
-    {{ Breadcrumbs.render(Route.getCurrentRoute.getName, account, journal) }}
-@endsection
-
 @section('content')
     <div class="row">
         <div class="col-lg-6 col-md-6 col-sm-12">
             <div class="card">
                 <div class="card-header">
-                    <h3 class="card-title">{{ 'transaction_journal_information'|_ }}</h3>
+                    <h3 class="card-title">{{ __('firefly.transaction_journal_information') }}</h3>
 
                     <div class="box-tools pull-right">
                         <div class="btn-group">
                             <button id="transaction_menu" class="btn btn-box-tool dropdown-toggle" data-toggle="dropdown"><span class="bi bi-list"></span>
                             </button>
                             <ul class="dropdown-menu" role="menu">
-                                <li><a href="{{ route('transactions.edit',journal.id) }}"><span class="bi bi-pencil"></span> {{ __('firefly.edit') }}</a></li>
-                                <li><a href="{{ route('transactions.delete',journal.id) }}"><span class="bi bi-trash"></span> {{ __('firefly.delete') }}</a></li>
+                                <li><a href="{{ route('transactions.edit',[$journal->id]) }}"><span class="bi bi-pencil"></span> {{ __('firefly.edit') }}</a></li>
+                                <li><a href="{{ route('transactions.delete',[$journal->id]) }}"><span class="bi bi-trash"></span> {{ __('firefly.delete') }}</a></li>
                             </ul>
                         </div>
                     </div>
@@ -28,23 +23,23 @@
                         <tbody>
                         <tr>
                             <td>{{ trans('list.type') }}</td>
-                            <td>{{ journal.transactiontype.type|_ }}</td>
+                            <td>{{ __('firefly.'.$journal->transactiontype->type) }}</td>
                         </tr>
                         <tr>
                             <td>{{ trans('list.description') }}</td>
-                            <td>{{ journal.description }}</td>
+                            <td>{{ $journal->description }}</td>
                         </tr>
-                        {# total amount #}
+                        {{-- total amount --}}
                         <tr>
-                            <td>{{ 'total_amount'|_ }}</td>
+                            <td>{{ __('firefly.total_amount') }}</td>
                             <td>
-                                {{ formatAmountByAccount(transaction.account, transaction.amount) }}
+                                {!! format_amount_by_account(transaction.account, transaction.amount) !!}
 
                             </td>
                         </tr>
                         <tr>
                             <td class="thirty">{{ trans('list.date') }}</td>
-                            <td>{{ journal.date.isoFormat($monthAndDayFormat) }}</td>
+                            <td>{{ $journal->date->isoFormat($monthAndDayFormat) }}</td>
                         </tr>
                         </tbody>
                     </table>
@@ -52,8 +47,8 @@
                 <div class="card-footer">
                     <div class="pull-right">
                         <div class="btn-group">
-                            <a class="btn btn-outline-secondary" href="{{ route('transactions.edit',journal.id) }}"><span class="bi bi-pencil"></span> {{ __('firefly.edit') }}</a>
-                            <a href="{{ route('transactions.delete',journal.id) }}" class="btn btn-danger"><span class="bi bi-trash"></span> {{ __('firefly.delete') }}
+                            <a class="btn btn-outline-secondary" href="{{ route('transactions.edit',[$journal->id]) }}"><span class="bi bi-pencil"></span> {{ __('firefly.edit') }}</a>
+                            <a href="{{ route('transactions.delete',[$journal->id]) }}" class="btn btn-danger"><span class="bi bi-trash"></span> {{ __('firefly.delete') }}
                             </a>
                         </div>
                     </div>
@@ -64,34 +59,24 @@
 
             <div class="card">
                 <div class="card-header">
-                    <h3 class="card-title">{{ 'transaction_journal_meta'|_ }}</h3>
+                    <h3 class="card-title">{{ __('firefly.transaction_journal_meta') }}</h3>
                 </div>
                 <div class="card-body p-0">
                     <table class="table table-responsive table-hover">
                         <tbody>
-                        {#
+                        {{--
                         <tr>
                             <td>{{ 'categories'|_ }}</td>
                             <td>{{ journalCategories(journal)|raw }}</td>
                         </tr>
-                        #}
-                        {% if journal.tags|length > 0 %}
+                        --}}
+                        @if($journal->tags->count() > 0)
                             <tr>
-                                <td>{{ 'tags'|_ }}</td>
+                                <td>{{ __('firefly.tags') }}</td>
                                 <td>
-                                    {% for tag in journal.tags %}
-
-                                        <h4 class="inline"><a class="badge text-bg-success" href="{{ route('tags.show',tag) }}">
-                                                {% if tag.tag_mode == 'nothing' %}
-                                                    <span class="bi bi-tag"></span>
-                                                @endif
-                                                {% if tag.tag_mode == 'balancingAct' %}
-                                                    <span class="bi bi-arrow-repeat"></span>
-                                                @endif
-                                                {% if tag.tag_mode == 'advancePayment' %}
-                                                    <span class="bi bi-sort-numeric-down"></span>
-                                                @endif
-                                                {{ tag.tag }}</a>
+                                    @foreach($journal->tags as $tag)
+                                        <h4 class="inline"><a class="label text-bg-success" href="{{ route('tags.show',[$tag->id]) }}">
+                                                {{ $tag->tag }}</a>
                                         </h4>
                                     @endforeach
                                 </td>

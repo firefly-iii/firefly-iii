@@ -61,7 +61,7 @@
     @endif
 @elseif('Reconciliation' === $type)
     {{-- Reconciliation positive--}}
-    @if('Reconciliation account' === $transaction['source_account_type'])
+    @if('Reconciliation account' === $sourceAccountType)
         {{-- amount, also foreign and converted. --}}
         {!! format_amount_by_symbol($amount['amount']*-1, $amount['currency_symbol'], $amount['currency_decimal_places']) !!}
         @if(null !== $foreign['amount'])
@@ -82,7 +82,7 @@
     @endif
 @elseif('Liability credit' === $type)
     {{-- liability credit positive--}}
-    @if('Liability credit' === $transaction['source_account_type'])
+    @if('Liability credit' === $sourceAccountType)
         {!! format_amount_by_symbol($amount['amount'], $amount['currency_symbol'], $amount['currency_decimal_places']) !!}
         @if(null !== $foreign['amount'])
             ({!! format_amount_by_symbol($foreign['amount'], $foreign['currency_symbol'], $foreign['currency_decimal_places']) !!})

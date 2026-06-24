@@ -201,6 +201,18 @@ if (!function_exists('string_is_equal')) {
     }
 }
 
+if(!function_exists('format_amount_by_account')) {
+    function format_amount_by_account (Account $account, string $amount, ?bool $coloured = null): string {
+        $coloured ??= true;
+
+        /** @var AccountRepositoryInterface $accountRepos */
+        $accountRepos = app(AccountRepositoryInterface::class);
+        $currency     = $accountRepos->getAccountCurrency($account) ?? Amount::getPrimaryCurrency();
+
+        return Amount::formatAnything($currency, $amount, $coloured);
+    }
+}
+
 if (!function_exists('blade_escape_js')) {
     function blade_escape_js(string $string): string
     {

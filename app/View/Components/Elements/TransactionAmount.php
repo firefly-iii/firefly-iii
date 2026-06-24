@@ -16,17 +16,19 @@ class TransactionAmount extends Component
     public array $foreign;
     public ?string $pcAmount;
     public ?Account $account;
+    public string $sourceAccountType;
 
     /**
      * Create a new component instance.
      */
-    public function __construct(string $type, array $amount, array $foreign, ?string $pcAmount, ?Account $account)
+    public function __construct(string $type, array $amount, array $foreign, string $sourceAccountType, ?string $pcAmount, ?Account $account)
     {
         $this->type     = $type;
         $this->amount   = $amount;
         $this->foreign  = $foreign;
         $this->account  = $account;
         $this->pcAmount = $pcAmount;
+        $this->sourceAccountType = $sourceAccountType;
     }
 
     /**

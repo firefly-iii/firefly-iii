@@ -41,6 +41,15 @@
         @else
             -
         @endif
+    @elseif('Reconciliation' === $type)
+        @if($account?->id == $source['id'])
+            {{-- $source['balance_after'] --}}
+            <span title="Opening balance, src">{!! format_amount_by_symbol('0', $currency['symbol'], $currency['decimal_places']) !!}</span>
+        @elseif($account?->id == $destination['id'])
+            <span title="Opening balance, dest">{!! format_amount_by_symbol($destination['balance_after'], $currency['symbol'], $currency['decimal_places']) !!}</span>
+        @else
+            -
+        @endif
     @elseif('Transfer' === $type)
         @if($account?->id == $source['id'])
             <span title="Transfer, source">{!! format_amount_by_symbol($source['balance_after'], $currency['symbol'], $currency['decimal_places']) !!}</span>

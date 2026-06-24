@@ -1,15 +1,10 @@
 @extends('layout.v3.session')
-
-{% block breadcrumbs %}
-    {{ Breadcrumbs.render(Route.getCurrentRoute.getName, transactionGroup) }}
-@endsection
-
 @section('content')
     <div class="row">
         <div class="col-lg-6">
             <div class="card">
                 <div class="card-header">
-                    <h3 class="card-title">{{ 'transaction_journal_information'|_ }}</h3>
+                    <h3 class="card-title">{{ __('firefly.transaction_journal_information') }}</h3>
                     <div class="btn-group btn-group-sm pull-right">
                         <button type="button" class="btn btn-outline-secondary dropdown-toggle" data-toggle="dropdown"
                                 aria-haspopup="true" aria-expanded="false">
@@ -17,10 +12,10 @@
                         </button>
                         <ul class="dropdown-menu">
                             {# edit + delete #}
-                            <li><a href="{{ route('transactions.edit', [transactionGroup.id]) }}"><span
+                            <li><a href="{{ route('transactions.edit', [$transactionGroup->id]) }}"><span
                                         class="bi bi-pencil"></span> {{ __('firefly.edit') }}</a></li>
                             {% if groupArray.transactions[0].type != 'reconciliation' and groupArray.transactions[0].type != 'opening balance' and groupArray.transactions[0].type != 'liability credit' %}
-                            <li><a href="{{ route('transactions.delete', [transactionGroup.id]) }}"><span
+                            <li><a href="{{ route('transactions.delete', [$transactionGroup->id]) }}"><span
                                         class="bi bi-trash"></span> {{ __('firefly.delete') }}</a></li>
                             @endif
                             {% if groupArray.transactions[0].type != 'reconciliation' and groupArray.transactions[0].type != 'opening balance' and groupArray.transactions[0].type != 'liability credit' %}
@@ -29,19 +24,19 @@
                             {# convert to different type #}
                             {% if groupArray.transactions[0].type != 'withdrawal' %}
                                 <li>
-                                    <a href="{{ route('transactions.convert.index', ['withdrawal', transactionGroup.id]) }}"><span
+                                    <a href="{{ route('transactions.convert.index', ['withdrawal', $transactionGroup->id]) }}"><span
                                             class="bi bi-arrow-left-right"></span> {{ 'convert_to_withdrawal'|_ }}</a></li>
                             @endif
 
                             {% if groupArray.transactions[0].type != 'deposit' %}
                                 <li>
-                                    <a href="{{ route('transactions.convert.index', ['deposit', transactionGroup.id]) }}"><span
+                                    <a href="{{ route('transactions.convert.index', ['deposit', $transactionGroup->id]) }}"><span
                                             class="bi bi-arrow-left-right"></span> {{ 'convert_to_deposit'|_ }}</a></li>
                             @endif
 
                             {% if groupArray.transactions[0].type != 'transfer' %}
                                 <li>
-                                    <a href="{{ route('transactions.convert.index', ['transfer', transactionGroup.id]) }}"><span
+                                    <a href="{{ route('transactions.convert.index', ['transfer', $transactionGroup->id]) }}"><span
                                             class="bi bi-arrow-left-right"></span> {{ 'convert_to_transfer'|_ }}</a></li>
                             @endif
 
@@ -112,7 +107,7 @@
         <div class="col-lg-6">
             <div class="card">
                 <div class="card-header">
-                    <h3 class="card-title">{{ 'transaction_journal_meta'|_ }}</h3>
+                    <h3 class="card-title">{{ __('firefly.transaction_journal_meta') }}</h3>
                 </div>
                 <div class="card-body p-0">
                     <table class="table table-hover">
@@ -230,10 +225,10 @@
                             </button>
                             <ul class="dropdown-menu">
                                 {# edit + delete #}
-                                <li><a href="{{ route('transactions.edit', [transactionGroup.id]) }}"><span
+                                <li><a href="{{ route('transactions.edit', [$transactionGroup->id]) }}"><span
                                             class="bi bi-pencil"></span> {{ __('firefly.edit') }}</a></li>
                                 {% if groupArray.transactions[0].type != 'reconciliation' and groupArray.transactions[0].type != 'opening balance' and groupArray.transactions[0].type != 'liability credit' %}
-                                <li><a href="{{ route('transactions.delete', [transactionGroup.id]) }}"><span
+                                <li><a href="{{ route('transactions.delete', [$transactionGroup->id]) }}"><span
                                             class="bi bi-trash"></span> {{ __('firefly.delete') }}</a></li>
                                 @endif
                                 {% if journal.reconciled %}
@@ -246,20 +241,20 @@
                                 {# convert to different type #}
                                 {% if groupArray.transactions[0].type != 'withdrawal' %}
                                     <li>
-                                        <a href="{{ route('transactions.convert.index', ['withdrawal', transactionGroup.id]) }}"><span
+                                        <a href="{{ route('transactions.convert.index', ['withdrawal', $transactionGroup->id]) }}"><span
                                                 class="bi bi-arrow-left-right"></span> {{ 'convert_to_withdrawal'|_ }}</a>
                                     </li>
                                 @endif
 
                                 {% if groupArray.transactions[0].type != 'deposit' %}
                                     <li>
-                                        <a href="{{ route('transactions.convert.index', ['deposit', transactionGroup.id]) }}"><span
+                                        <a href="{{ route('transactions.convert.index', ['deposit', $transactionGroup->id]) }}"><span
                                                 class="bi bi-arrow-left-right"></span> {{ 'convert_to_deposit'|_ }}</a></li>
                                 @endif
 
                                 {% if groupArray.transactions[0].type != 'transfer' %}
                                     <li>
-                                        <a href="{{ route('transactions.convert.index', ['transfer', transactionGroup.id]) }}"><span
+                                        <a href="{{ route('transactions.convert.index', ['transfer', $transactionGroup->id]) }}"><span
                                                 class="bi bi-arrow-left-right"></span> {{ 'convert_to_transfer'|_ }}</a>
                                     </li>
                                 @endif
