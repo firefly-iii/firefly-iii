@@ -172,7 +172,7 @@
                     <h3 class="card-title">{{ __('firefly.connected_journals') }}</h3>
                 </div>
                 <div class="card-body">
-                    {% include 'list.groups' %}
+                    <x-lists.groups-large :groups="$groups" />
                 </div>
             </div>
         </div>

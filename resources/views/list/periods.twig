@@ -15,7 +15,7 @@
                 {% for entry in period.spent %}
                     {% if entry.amount != 0 %}
                         <tr>
-                            <td class="third">{{ 'spent'|_ }}</td>
+                            <td class="third">{{ __('firefly.spent') }}</td>
                             <td class="text-right">
                                 <span title="{{ entry.count }}">
                                     {{ format_amount_by_symbol(entry.amount, entry.currency_symbol, entry.currency_decimal_places) }}

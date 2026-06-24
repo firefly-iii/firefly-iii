@@ -10,7 +10,7 @@
     @if(count($periods) > 0)
         <div class="row">
             <div class="col-lg-offset-10 col-lg-2 col-md-offset-10 col-md-2 col-sm-12 col-xs-12">
-                <p class="small text-center"><a href="{{ route('transactions.index.all',[objectType]) }}">{{ 'showEverything'|_ }}</a></p>
+                <p class="small text-center"><a href="{{ route('transactions.index.all',[objectType]) }}">{{ __('firefly.showEverything') }}</a></p>
             </div>
         </div>
     @endif
@@ -74,14 +74,14 @@
         <div class="@if(count($periods) > 0)col-lg-10 col-md-10 col-sm-12@elsecol-lg-12 col-md-12 col-sm-12@endif">
             <div class="card">
                 <div class="card-header">
-                    <h3 class="card-title">{{ subTitle }}</h3>
+                    <h3 class="card-title">{{ $subTitle }}</h3>
                 </div>
                 <div class="card-body p-0">
                     <div class="p-2">
                         <a href="{{ route('transactions.create', [objectType]) }}" class="btn btn-success"><span class="bi bi-plus-circle"></span> {{ 'create_new_transaction'|_ }}</a>
                     </div>
                     {{-- actual list --}}
-                    {% include 'list.groups' %}
+                    <x-lists.groups-large :groups="$groups" />
                 </div>
                 <div class="card-footer">
                     {{-- links for other views --}}
@@ -103,7 +103,7 @@
         {{-- boxes with info --}}
         @if(count($periods) > 0)
             <div class="col-lg-2 col-md-2 col-sm-12 col-xs-12">
-                {% include 'list.periods' %}
+                <x-lists.periods :periods="$periods" />
             </div>
         @endif
 
@@ -113,7 +113,7 @@
     @if(count($periods) > 0)
         <div class="row">
             <div class="col-lg-offset-10 col-lg-2 col-md-offset-10 col-md-2 col-sm-12 col-xs-12">
-                <p class="small text-center"><a href="{{ route('transactions.index.all', [objectType]) }}">{{ 'showEverything'|_ }}</a></p>
+                <p class="small text-center"><a href="{{ route('transactions.index.all', [objectType]) }}">{{ __('firefly.showEverything') }}</a></p>
             </div>
         </div>
     @endif

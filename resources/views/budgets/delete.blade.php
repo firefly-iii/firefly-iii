@@ -1,19 +1,12 @@
 @extends('layout.v3.session')
-
-
-    {{ Breadcrumbs.render(Route.getCurrentRoute.getName, budget) }}
-@endsection
-
 @section('content')
-
-    <form method="POST" action="{{ route('budgets.destroy',budget.id) }}" accept-charset="UTF-8" class="form-horizontal" id="destroy">
+    <form method="POST" action="{{ route('budgets.destroy',$budget->id) }}" accept-charset="UTF-8" class="form-horizontal" id="destroy">
         <input name="_token" type="hidden" value="{{ csrf_token() }}">
-
         <div class="row">
             <div class="col-lg-6 offset-lg-3 col-md-12 col-sm-12">
                 <div class="card card-danger card-outline">
                     <div class="card-header">
-                        <h3 class="card-title">{{ trans('form.delete_budget', {'name': budget.name}) }}</h3>
+                        <h3 class="card-title">{{ trans('form.delete_budget', ['name' => $budget->name]) }}</h3>
                     </div>
                     <div class="card-body">
                         <p class="text-danger">
@@ -21,12 +14,12 @@
                         </p>
 
                         <p>
-                            {{ trans('form.budget_areYouSure', {'name': budget.name}) }}
+                            {{ trans('form.budget_areYouSure', ['name' => $budget->name]) }}
                         </p>
 
                         <p>
-                            {% if budget.transactionjournals.count() > 0 %}
-                                {{ Lang::choice('form.budget_keep_transactions', budget.transactionjournals.count(), {count: budget.transactionjournals.count() }) }}
+                            @if($budget->transactionjournals->count() > 0)
+                                {{ Lang::choice('form.budget_keep_transactions', $budget->transactionjournals->count(), ['count' => $budget->transactionjournals->count()]) }}
                             @endif
                         </p>
 

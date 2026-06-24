@@ -1,36 +1,31 @@
 @extends('layout.v3.session')
-
-
-    {{ Breadcrumbs.render(Route.getCurrentRoute.getName, start, end) }}
-@endsection
-
 @section('content')
 
     {{-- upper show-all instruction --}}
-    @if(count($periods) > 0)
+    @if(null !== ($periods ?? null) && count($periods) > 0)
         <div class="row">
-            <div class="col-lg-offset-9 col-lg-3 col-md-offset-9 col-md-3 col-sm-12 col-xs-12">
-                <p class="small text-center"><a href="{{ route('budgets.no-budget',['all']) }}">{{ 'showEverything'|_ }}</a></p>
+            <div class="offset-lg-9 offset-lg-9 col-lg-3 offset-md-9 col-md-3 col-sm-12 col-xs-12">
+                <p class="small text-center"><a href="{{ route('budgets.no-budget',['all']) }}">{{ __('firefly.showEverything') }}</a></p>
             </div>
         </div>
     @endif
 
     <div class="row">
-        <div class="@if(count($periods) > 0)col-lg-9 col-md-9 col-sm-12@elsecol-lg-12 col-md-12 col-sm-12@endif">
+        <div class="@if(null !== ($periods ?? null) && count($periods) > 0)col-lg-9 col-md-9 col-sm-12 @else col-lg-12 col-md-12 col-sm-12 @endif ">
             <div class="card">
                 <div class="card-header">
-                    <h3 class="card-title">{{ subTitle }}</h3>
+                    <h3 class="card-title">{{ $subTitle }}</h3>
                 </div>
                 <div class="box-body ">
 
-                    @if(count($periods) > 0)
-                        {% include 'list.groups' %}
+                    @if(null !== ($periods ?? null) && count($periods) > 0)
+                        <x-lists.groups-large :groups="$groups" />
                         <p>
                             <span class="bi bi-calendar"></span>
                             <a href="{{ route('budgets.no-budget-all') }}">{{ __('firefly.show_all_no_filter') }}</a>
                         </p>
                     @else
-                        {% include 'list.groups' %}
+                        <x-lists.groups-large :groups="$groups" />
                         <p>
                             <span class="bi bi-calendar"></span>
                             <a href="{{ route('budgets.no-budget') }}">{{ __('firefly.show_the_current_period_and_overview') }}</a>
@@ -40,25 +35,26 @@
             </div>
         </div>
 
-        @if(count($periods) > 0)
+        @if(null !== ($periods ?? null) && count($periods) > 0)
             <div class="col-lg-3 col-md-3 col-sm-12 col-xs-12">
-                {% include 'list.periods' %}
+                <x-lists.periods :periods="$periods" />
             </div>
         @endif
 
     </div>
 
     {{-- lower show-all instruction --}}
-    @if(count($periods) > 0)
+    @if(null !== ($periods ?? null) && count($periods) > 0)
         <div class="row">
-            <div class="col-lg-offset-9 col-lg-3 col-md-offset-9 col-md-3 col-sm-12 col-xs-12">
-                <p class="small text-center"><a href="{{ route('budgets.no-budget-all') }}">{{ 'showEverything'|_ }}</a></p>
+            <div class="offset-lg-9 col-lg-3 offset-md-9 col-md-3 col-sm-12 col-xs-12">
+                <p class="small text-center"><a href="{{ route('budgets.no-budget-all') }}">{{ __('firefly.showEverything') }}</a></p>
             </div>
         </div>
     @endif
 
 @endsection
 @section('scripts')
+    @vite(['js/pages/generic.js'])
     {{-- required for groups.twig --}}
     <script type="text/javascript" src="v1/js/ff/list/groups.js?v={{ $FF_BUILD_TIME }}" nonce="{{ $JS_NONCE }}"></script>
 @endsection

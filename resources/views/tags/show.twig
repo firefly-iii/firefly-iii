@@ -203,7 +203,7 @@
             </div>
         </div>
     </div>
-    {% if attachments.count() > 0 %}
+    @if($attachments->count() > 0)
         <div class="row">
             <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
                 <div class="card">
@@ -224,7 +224,7 @@
         <div class="row">
             <div class="col-lg-offset-10 col-lg-2 col-md-offset-10 col-md-2 col-sm-12 col-xs-12">
                 <p class="small text-center"><a
-                        href="{{ route('tags.show',[tag.id,'all']) }}">{{ 'showEverything'|_ }}</a></p>
+                        href="{{ route('tags.show',[tag.id,'all']) }}">{{ __('firefly.showEverything') }}</a></p>
             </div>
         </div>
     @endif
@@ -273,14 +273,14 @@
         </div>
         @if(count($periods) > 0)
             <div class="col-lg-2 col-md-2 col-sm-12 col-xs-12">
-                {% include 'list.periods' %}
+                <x-lists.periods :periods="$periods" />
             </div>
         @endif
     </div>
     @if(count($periods) > 0)
         <div class="row">
             <div class="col-lg-offset-10 col-lg-2 col-md-offset-10 col-md-2 col-sm-12 col-xs-12">
-                <p class="small text-center"><a href="{{ route('tags.show',[tag.id]) }}">{{ 'showEverything'|_ }}</a>
+                <p class="small text-center"><a href="{{ route('tags.show',[tag.id]) }}">{{ __('firefly.showEverything') }}</a>
                 </p>
             </div>
         </div>
