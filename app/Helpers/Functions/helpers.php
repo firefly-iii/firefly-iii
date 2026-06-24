@@ -23,18 +23,22 @@
 declare(strict_types=1);
 
 use Carbon\Carbon;
+use Carbon\CarbonInterface;
 use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Models\Account;
+use FireflyIII\Models\TransactionJournalMeta;
 use FireflyIII\Repositories\Account\AccountRepositoryInterface;
 use FireflyIII\Support\Facades\Amount;
 use FireflyIII\Support\Facades\AppConfiguration;
 use FireflyIII\Support\Facades\Steam;
 use FireflyIII\Support\Search\OperatorQuerySearch;
 use Illuminate\Support\Collection;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Route;
 use League\CommonMark\GithubFlavoredMarkdownConverter;
 
+use function Safe\json_decode;
 use function Safe\mb_ord;
 use function Safe\preg_match;
 use function Safe\preg_replace_callback;
@@ -198,6 +202,36 @@ if (!function_exists('string_is_equal')) {
     function string_is_equal(string $left, string $right): bool
     {
         return $left === $right;
+    }
+}
+
+if(!function_exists('journal_has_meta')) {
+    function journal_has_meta(int $journalId, string $metaField): bool {
+        $count = DB::table('journal_meta')->where('name', $metaField)->where('transaction_journal_id', $journalId)->whereNull('deleted_at')->count();
+
+        return 1 === $count;
+    }
+}
+if(!function_exists('journal_get_meta_field')) {
+    function journal_get_meta_field (int $journalId, string $metaField) {
+        /** @var null|TransactionJournalMeta $entry */
+        $entry = DB::table('journal_meta')->where('name', $metaField)->where('transaction_journal_id', $journalId)->whereNull('deleted_at')->first();
+        if (null === $entry) {
+            return '';
+        }
+
+        return json_decode((string) $entry->data, true);
+    }
+}
+if(!function_exists('journal_get_meta_date')) {
+    function journal_get_meta_date (int $journalId, string $metaField): Carbon|CarbonInterface {
+        /** @var null|TransactionJournalMeta $entry */
+        $entry = DB::table('journal_meta')->where('name', $metaField)->where('transaction_journal_id', $journalId)->whereNull('deleted_at')->first();
+        if (null === $entry) {
+            return today(config('app.timezone'));
+        }
+
+        return new Carbon(json_decode((string) $entry->data, false));
     }
 }
 

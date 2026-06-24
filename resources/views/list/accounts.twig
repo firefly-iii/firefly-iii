@@ -24,7 +24,7 @@
             </th>
         @endif
         <th class="hidden-sm hidden-xs">{{ trans('list.active') }}</th>
-        {# hide last activity to make room for other stuff #}
+        {{-- hide last activity to make room for other stuff --}}
         {% if objectType != 'liabilities' %}
             <th class="hidden-sm hidden-xs hidden-md">{{ trans('list.lastActivity') }}</th>
         @endif
@@ -100,7 +100,7 @@
                     <span class="fa fa-ban"></span>
                 @endif
             </td>
-            {# hide last activity to make room for other stuff #}
+            {{-- hide last activity to make room for other stuff --}}
             {% if objectType != 'liabilities' %}
                 {% if account.lastActivityDate %}
                     <td class="hidden-sm hidden-xs hidden-md">
@@ -135,7 +135,7 @@
             <td class="hidden-sm hidden-xs">
                 <div class="btn-group btn-group-sm pull-right">
                     <button type="button" class="btn btn-outline-secondary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                        {{ 'actions'|_ }} <span class="caret"></span></button>
+                        {{ __('firefly.actions') }} <span class="caret"></span></button>
                     <ul class="dropdown-menu dropdown-menu-right" role="menu">
                         <li><a href="{{ route('accounts.edit',account.id) }}"><span class="bi bi-pencil"></span> {{ __('firefly.edit') }}</a></li>
                         <li><a href="{{ route('accounts.delete',account.id) }}"><span class="bi bi-trash"></span> {{ __('firefly.delete') }}</a></li>

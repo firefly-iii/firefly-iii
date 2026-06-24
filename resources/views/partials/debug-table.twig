@@ -9,7 +9,7 @@
     </tr>
     </thead>
     <tbody>
-    {# Firefly III version #}
+    {{-- Firefly III version --}}
     <tr>
         <td>Firefly III</td>
         <td>{% if FF_IS_DEVELOP %}<!-- .Z9JBCmw64Zkx1pQw -->@endif{% if not FF_IS_DEVELOP %}v@endif{{ FF_VERSION }}</td>
@@ -18,7 +18,7 @@
         <td>Build time</td>
         <td>{{ system.build_time_nice }} ({{ system.build_time }})</td>
     </tr>
-    {# PHP version + settings #}
+    {{-- PHP version + settings --}}
     <tr>
         <td>PHP version</td>
         <td>{{ system.php_version|escape }} ({{ system.bits }}bits) / {{ system.interface }} / {{ system.php_os }} {{ system.uname }}</td>
@@ -41,7 +41,7 @@
             {% for driver in system.all_drivers %}{% if system.current_driver == driver %}<strong>*{{ driver }}*</strong>@else{{ driver }}@endif, @endforeach
         </td>
     </tr>
-    {# Docker information #}
+    {{-- Docker information --}}
     {% if docker.is_docker %}
         <tr>
             <td>

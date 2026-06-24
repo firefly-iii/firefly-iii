@@ -11,13 +11,13 @@
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="mobile-web-app-capable" content="yes">
 
-    {# CSS things #}
+    {{-- CSS things --}}
 
-    {# libraries #}
+    {{-- libraries --}}
     <link href="v1/lib/bs/css/bootstrap.min.css?v={{ $FF_BUILD_TIME }}" rel="stylesheet" type="text/css" nonce="{{ $JS_NONCE }}">
     <link href="v1/lib/fa/css/font-awesome.min.css?v={{ $FF_BUILD_TIME }}" rel="stylesheet" type="text/css" nonce="{{ $JS_NONCE }}">
 
-    {# the theme #}
+    {{-- the theme --}}
     <link href="v1/lib/adminlte/css/AdminLTE.min.css?v={{ $FF_BUILD_TIME }}" rel="stylesheet" type="text/css" nonce="{{ $JS_NONCE }}">
     {% if 'browser' == darkMode %}
         <meta name="color-scheme" content="light dark">
@@ -44,7 +44,7 @@
         <link href="v1/lib/adminlte/css/skins/skin-light.min.css?v={{ $FF_BUILD_TIME }}" rel="stylesheet" type="text/css" nonce="{{ $JS_NONCE }}">
     @endif
 
-    {# Firefly III customisations #}
+    {{-- Firefly III customisations --}}
     <link href="v1/css/firefly.css?v={{ $FF_BUILD_TIME }}" rel="stylesheet" type="text/css" nonce="{{ $JS_NONCE }}">
 
     <!--[if lt IE 9]>
@@ -52,7 +52,7 @@
     <script src="v1/js/lib/respond.min.js?v={{ $FF_BUILD_TIME }}" nonce="{{ $JS_NONCE }}"></script>
     <![endif]-->
 
-    {# favicons #}
+    {{-- favicons --}}
     {% include('partials.favicons') %}
 
 </head>

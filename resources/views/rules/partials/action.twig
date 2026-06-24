@@ -3,7 +3,7 @@
         <a href="#" class="btn btn-danger btn-sm remove-action"><span class="bi bi-trash"></span></a>
     </td>
     <td class="thirty">
-        {# TODO error when invalid name #}
+        {{-- TODO error when invalid name --}}
         <select name="actions[{{ count }}][type]" class="form-control">
             {% for key,type in allRuleActions() %}
                 <option value="{{ key }}" label="{{ type }}" {% if key == oldAction %} selected@endif>{{ type }}</option>

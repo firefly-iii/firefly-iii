@@ -48,7 +48,7 @@
                             </tr>
                         @endif
 
-                        {# total amount #}
+                        {{-- total amount --}}
                         {% set currentSum = 0 %}
                         {% for set in sums %}
                             {% set currentSum = currentSum + set.Withdrawal + set.Transfer + set.Deposit %}
@@ -65,7 +65,7 @@
                             </tr>
                         @endif
 
-                        {# total expense excl. transfer #}
+                        {{-- total expense excl. transfer --}}
                         {% set currentSum = 0 %}
                         {% for set in sums %}
                             {% set currentSum = currentSum + set.Withdrawal + set.Deposit %}
@@ -81,7 +81,7 @@
                             </tr>
                         @endif
 
-                        {# withdrawals #}
+                        {{-- withdrawals --}}
                         {% set currentSum = 0 %}
                         {% for set in sums %}
                             {% set currentSum = currentSum + set.Withdrawal %}
@@ -97,7 +97,7 @@
                             </tr>
                         @endif
 
-                        {# deposits #}
+                        {{-- deposits --}}
                         {% set currentSum = 0 %}
                         {% for set in sums %}
                             {% set currentSum = currentSum + set.Deposit %}
@@ -113,7 +113,7 @@
                             </tr>
                         @endif
 
-                        {# transfers #}
+                        {{-- transfers --}}
                         {% set currentSum = 0 %}
                         {% for set in sums %}
                             {% set currentSum = currentSum + set.Transfer %}
@@ -129,7 +129,7 @@
                             </tr>
                         @endif
 
-                        {# reconciliation #}
+                        {{-- reconciliation --}}
                         {% set currentSum = 0 %}
                         {% for set in sums %}
                             {% set currentSum = currentSum + set.Reconciliation %}
@@ -145,7 +145,7 @@
                             </tr>
                         @endif
 
-                        {#
+                        {{--
                         {% if sums.Transfer != 0 %}
                             <tr>
                                 <td>{{ trans('list.sum_transfers') }}</td>
@@ -209,7 +209,7 @@
                 <div class="card">
                     <div class="card-header">
                         <h3 class="card-title">
-                            {{ 'attachments'|_ }}
+                            {{ __('firefly.attachments') }}
                         </h3>
                     </div>
                     <div class="card-body p-0">

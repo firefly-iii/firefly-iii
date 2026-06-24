@@ -6,7 +6,7 @@
 
 @section('content')
 
-    {# upper show-all instruction #}
+    {{-- upper show-all instruction --}}
     @if(count($periods) > 0)
         <div class="row">
             <div class="col-lg-offset-9 col-lg-3 col-md-offset-9 col-md-3 col-sm-12 col-xs-12">
@@ -48,7 +48,7 @@
 
     </div>
 
-    {# lower show-all instruction #}
+    {{-- lower show-all instruction --}}
     @if(count($periods) > 0)
         <div class="row">
             <div class="col-lg-offset-9 col-lg-3 col-md-offset-9 col-md-3 col-sm-12 col-xs-12">
@@ -59,6 +59,6 @@
 
 @endsection
 @section('scripts')
-    {# required for groups.twig #}
+    {{-- required for groups.twig --}}
     <script type="text/javascript" src="v1/js/ff/list/groups.js?v={{ $FF_BUILD_TIME }}" nonce="{{ $JS_NONCE }}"></script>
 @endsection

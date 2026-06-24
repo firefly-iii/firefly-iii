@@ -8,7 +8,7 @@
     {% for logEntry in logEntries %}
         <tr>
             <th class="twenty" scope="row">
-                {# link to object: #}
+                {{-- link to object: --}}
                 {% if 'FireflyIII\\Models\\Rule' == logEntry.changer_type %}
                     <a href="{{ route('rules.edit', [logEntry.changer_id] ) }}">
                 @endif
@@ -18,11 +18,11 @@
                         {{ logEntry.changer_type|replace({"FireflyIII\\Models\\": ""})|replace({"FireflyIII\\": ""}) }} #{{ logEntry.changer_id }}
                     </a>
             </th>
-            <td class="thirty" title="{{ logEntry.created_at.isoFormat(dateTimeFormat) }}">
+            <td class="thirty" title="{{ logEntry.created_at.isoFormat($dateTimeFormat) }}">
                 {{ trans('firefly.ale_action_'~logEntry.action) }}
             </td>
             <td>
-                {# display depends on action #}
+                {{-- display depends on action --}}
                 {% if 'add_tag' == logEntry.action %}
                     <code>{{ logEntry.after }}</code>
                 @endif
@@ -75,9 +75,9 @@
                     <code>{{ logEntry.after }}</code>
                 @endif
                 {% if 'update_date' == logEntry.action %}
-                    <code><s>{{ carbonize(logEntry.before).isoFormat(dateTimeFormat) }}</s></code>
+                    <code><s>{{ carbonize(logEntry.before).isoFormat($dateTimeFormat) }}</s></code>
                     &rarr;
-                    <code>{{ carbonize(logEntry.after).isoFormat(dateTimeFormat) }}</code>
+                    <code>{{ carbonize(logEntry.after).isoFormat($dateTimeFormat) }}</code>
                 @endif
                 {% if 'update_transaction_type' == logEntry.action %}
                     {{ trans('firefly.'~logEntry.before) }} &rarr; {{ trans('firefly.'~logEntry.after) }}

@@ -46,7 +46,7 @@
                         <li>{{ rep.description }}</li>
                     @endforeach
                 </ul>
-                <h4>{{ 'attachments'|_ }}</h4>
+                <h4>{{ __('firefly.attachments') }}</h4>
                 {% include 'list.attachments' with {attachments: array.attachments} %}
             </div>
             <div class="card-footer">
@@ -220,6 +220,6 @@
     @section('scripts')
         <script type="text/javascript" src="v1/js/lib/bootstrap-sortable.js?v={{ $FF_BUILD_TIME }}"
                 nonce="{{ $JS_NONCE }}"></script>
-        {# required for groups.twig #}
+        {{-- required for groups.twig --}}
         <script type="text/javascript" src="v1/js/ff/list/groups.js?v={{ $FF_BUILD_TIME }}" nonce="{{ $JS_NONCE }}"></script>
     @endsection

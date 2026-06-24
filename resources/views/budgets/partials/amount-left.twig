@@ -1,11 +1,11 @@
-{# The amount left can only be shown for actual budget limits. #}
+{{-- The amount left can only be shown for actual budget limits. --}}
 {% for budgetLimit in budget.budgeted %}
     <span class="left_span" data-currency="{{ budgetLimit.currency_id }}" data-limit="{{ budgetLimit.id }}" data-value="{{ budgetLimit.left }}" class="amount_left">
-        {# the amount left #}
+        {{-- the amount left --}}
         <span title="{{ 'left_in_budget_limit_overview'|_ }}">{{ format_amount_by_symbol(budgetLimit.left, budgetLimit.currency_symbol, budgetLimit.currency_decimal_places) }}</span>
 
-        {# if the budget limit is in the past, this is not interesting. #}
-        {# if there is nothing left, this is not interesting. #}
+        {{-- if the budget limit is in the past, this is not interesting. --}}
+        {{-- if there is nothing left, this is not interesting. --}}
         {% if not budgetLimit.in_past and -1 == bccomp('0',budgetLimit.left) %}
             {% if 0 == budgetLimit.active_days_left %}
                 <span title="{{ trans('firefly.left_in_budget_limit_per_day', {days: 0}) }}">({{ format_amount_by_symbol(budgetLimit.left, budgetLimit.currency_symbol, budgetLimit.currency_decimal_places) }})
@@ -14,7 +14,7 @@
             @endif
         @endif
 
-        {# if there is nothing left, just format 0.00 #}
+        {{-- if there is nothing left, just format 0.00 --}}
         {% if not budgetLimit.in_past and -1 != bccomp('0',budgetLimit.left) %}
             <span title="{{ 'nothing_left_in_budget'|_ }}">({{ format_amount_by_symbol('0', budgetLimit.currency_symbol, budgetLimit.currency_decimal_places) }})</span>
         @endif
@@ -22,7 +22,7 @@
 @endforeach
 
 
-{#
+{{--
 {% for spentInfo in budget.spent %}
     {% set countLimit = 0 %}
     <!--   loop each budget limit collected for this budget in this period. -->
@@ -93,4 +93,4 @@
                                             @endif
 
 @endforeach
-#}
+--}}

@@ -9,11 +9,11 @@
           enctype="multipart/form-data">
         <input type="hidden" name="_token" value="{{ csrf_token() }}"/>
 
-        {# row with recurrence information #}
+        {{-- row with recurrence information --}}
         <div class="row">
 
             <div class="col-lg-6 col-md-6 col-sm-12">
-                {# mandatory recurrence stuff #}
+                {{-- mandatory recurrence stuff --}}
                 <div class="card">
                     <div class="card-header">
                         <h3 class="card-title">{{ 'mandatory_for_recurring'|_ }}</h3>
@@ -29,7 +29,7 @@
                         {{ ExpandedForm::date('repeat_until',array.repeat_until) }}
                         {{ ExpandedForm.integer('repetitions', array.nr_of_repetitions) }}
 
-                        {# calendar in popup #}
+                        {{-- calendar in popup --}}
                         <div class="form-group" id="calendar_holder">
                             <label for="ffInput_calendar"
                                    class="col-sm-4 control-label">{{ trans('form.calendar') }}</label>
@@ -45,7 +45,7 @@
             </div>
 
             <div class="col-lg-6 col-md-6 col-sm-12">
-                {# optional recurrence stuff #}
+                {{-- optional recurrence stuff --}}
                 <div class="card">
                     <div class="card-header">
                         <h3 class="card-title">{{ 'optional_for_recurring'|_ }}</h3>
@@ -53,7 +53,7 @@
                     <div class="card-body">
                         {{ ExpandedForm::textarea('recurring_description',array.description) }}
 
-                        {# only correct way to do active checkbox #}
+                        {{-- only correct way to do active checkbox --}}
                         {{ ExpandedForm::checkbox('active', 1, preFilled.active) }}
                         {{ ExpandedForm::checkbox('apply_rules', 1, preFilled.apply_rules) }}
                         {{ ExpandedForm::file('attachments[]', {'multiple': 'multiple','helpText': trans('firefly.upload_max_file_size', {'size': uploadSize|filesize}) }) }}
@@ -64,14 +64,14 @@
 
         <div class="row">
             <div class="col-lg-6 col-md-6 col-sm-12">
-                {# mandatory transaction information #}
+                {{-- mandatory transaction information --}}
                 <div class="card">
                     <div class="card-header">
                         <h3 class="card-title">{{ 'mandatory_for_transaction'|_ }}</h3>
                     </div>
                     <div class="card-body">
                         <p><em>{{ 'mandatory_fields_for_tranaction'|_ }}</em></p>
-                        {# three buttons to distinguish type of transaction #}
+                        {{-- three buttons to distinguish type of transaction --}}
                         <div class="form-group" id="name_holder">
                             <label for="ffInput_type" class="col-sm-4 control-label">
                                 {{ trans('form.transaction_type') }}
@@ -89,67 +89,67 @@
                             </div>
                         </div>
                         <input type="hidden" name="transaction_type" value="">
-                        {# end of three buttons #}
+                        {{-- end of three buttons --}}
                         {{ ExpandedForm::text('transaction_description', array.transactions[0].description) }}
-                        {# transaction information (mandatory) #}
+                        {{-- transaction information (mandatory) --}}
                         {{ CurrencyForm::currencyList('transaction_currency_id', array.transactions[0].currency_id) }}
                         {{ ExpandedForm::amountNoCurrency('amount', array.transactions[0].amount) }}
 
-                        {# source account if withdrawal, or if transfer: #}
+                        {{-- source account if withdrawal, or if transfer: --}}
                         {{ AccountForm.longAccountList('source_id', array.transactions[0].source_id, {label: trans('form.asset_source_account')}) }}
 
-                        {# NEW for deposits, a drop down with revenue accounts, loan debt cash and mortgage #}
+                        {{-- NEW for deposits, a drop down with revenue accounts, loan debt cash and mortgage --}}
                         {{ AccountForm.activeDepositDestinations('deposit_source_id', preFilled.deposit_source_id, {label: trans('form.deposit_source_id')}) }}
 
-                        {# destination if deposit or transfer: #}
+                        {{-- destination if deposit or transfer: --}}
                         {{ AccountForm.longAccountList('destination_id', array.transactions[0].destination_id, {label: trans('form.asset_destination_account')} ) }}
 
-                        {# NEW for withdrawals, also a drop down with expense accounts, loans, debts, mortgages or (cash). #}
+                        {{-- NEW for withdrawals, also a drop down with expense accounts, loans, debts, mortgages or (cash). --}}
                         {{ AccountForm.activeWithdrawalDestinations('withdrawal_destination_id', preFilled.withdrawal_destination_id, {label: trans('form.withdrawal_destination_id')}) }}
                     </div>
                 </div>
             </div>
 
             <div class="col-lg-6 col-md-6 col-sm-12">
-                {# optional transaction information #}
+                {{-- optional transaction information --}}
                 <div class="card">
                     <div class="card-header">
                         <h3 class="card-title">{{ 'optional_for_transaction'|_ }}</h3>
                     </div>
                     <div class="card-body">
-                        {# transaction information (optional) #}
+                        {{-- transaction information (optional) --}}
                         {{ CurrencyForm::currencyListEmpty('foreign_currency_id', array.transactions[0].foreign_currency_id) }}
                         {{ ExpandedForm::amountNoCurrency('foreign_amount', array.transactions[0].foreign_amount) }}
 
-                        {# BUDGET ONLY WHEN CREATING A WITHDRAWAL #}
+                        {{-- BUDGET ONLY WHEN CREATING A WITHDRAWAL --}}
                         {% if budgets|length > 1 %}
                             {{ ExpandedForm::select('budget_id', budgets, array.transactions[0].budget_id) }}
                         @else
                             {{ ExpandedForm::select('budget_id', budgets, array.transactions[0].budget_id, {helpText: trans('firefly.no_budget_pointer', {link: route('budgets.index')})}) }}
-                            {# budgets #}
+                            {{-- budgets --}}
                         @endif
 
-                        {# CATEGORY ALWAYS #}
+                        {# CATEGORY ALWAYS --}}
                         {{ ExpandedForm::text('category',array.transactions[0].category_name) }}
 
-                        {# BILL ONLY WHEN CREATING A WITHDRAWAL #}
+                        {# BILL ONLY WHEN CREATING A WITHDRAWAL --}}
                         {% if bills|length > 1 %}
                             {{ ExpandedForm::select('bill_id', bills, array.transactions[0].subscription_id) }}
                         @else
                             {{ ExpandedForm::select('bill_id', bills, array.transactions[0].subscription_id, {helpText: trans('firefly.no_bill_pointer', {link: route('subscriptions.index')})}) }}
                         @endif
 
-                        {# TAGS #}
+                        {# TAGS --}}
                         {{ ExpandedForm::text('tags', array.transactions[0].tags) }}
 
-                        {# RELATE THIS TRANSFER TO A PIGGY BANK #}
+                        {# RELATE THIS TRANSFER TO A PIGGY BANK --}}
                         {{ PiggyBankForm.piggyBankList('piggy_bank_id',array.transactions[0].piggy_bank_id) }}
                     </div>
                 </div>
             </div>
         </div>
 
-        {# row with submit stuff. #}
+        {# row with submit stuff. --}}
         <div class="row">
             <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
                 <div class="card">
@@ -180,10 +180,10 @@
         </div>
     </div>
     </div>
-        #}
+        --}}
     </form>
 
-    {# calendar modal #}
+    {# calendar modal --}}
     <div class="modal fade" id="calendarModal" tabindex="-1" role="dialog">
         <div class="modal-dialog modal-lg">
             <div class="modal-content">

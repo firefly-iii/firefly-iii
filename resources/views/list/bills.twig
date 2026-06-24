@@ -42,7 +42,7 @@
                             <span class="bi  bi-ban"></span>
                         @endif
                         <a href="{{ route('subscriptions.show',entry.id) }}" title="{{ entry.name }}">{{ entry.name }}</a>
-                        {# count attachments #}
+                        {{-- count attachments --}}
                         {% if entry.attachments.count() > 0 %}
                             <span class="bi bi-paperclip"></span>
                         @endif
@@ -72,11 +72,11 @@
                 </span>
                     </td>
 
-                    {#
+                    {{--
                     paidDates = 0 (bill not paid in period)
                     pay_dates  = 0 (bill not expected to be paid in this period)
                     bill is active.
-                    #}
+                    --}}
                     {% if entry.paid_dates|length == 0 and entry.pay_dates|length == 0 and entry.active %}
                         <td class="paid_in_period text-muted">
                             {{ trans('firefly.not_expected_period') }}
@@ -88,14 +88,14 @@
                         </td>
                     @endif
 
-                    {#
+                    {{--
                     paid_dates = 0 (bill not paid in period)
                     pay_dates  > 0 (bill IS expected to be paid in this period)
                     bill is active
                     first pay date is in the past.
-                    #}
+                    --}}
                     {% if entry.paid_dates|length == 0 and entry.pay_dates|length > 0 and entry.active %}
-                        {% if entry.next_expected_match_diff == trans('firefly.not_expected_period') %} {# terrible code, you should sue me for this. #}
+                        {% if entry.next_expected_match_diff == trans('firefly.not_expected_period') %} {{-- terrible code, you should sue me for this. --}}
                             <td class="paid_in_period text-muted">
                                 {{ entry.next_expected_match_diff }}
                             </td>
@@ -114,10 +114,10 @@
                         </td>
                     @endif
 
-                    {#
+                    {{--
                     paid_dates >= 0 (bill is paid X times).
                     Don't care about pay_dates.
-                    #}
+                    --}}
                     {% if entry.paid_dates|length > 0 and entry.active %}
                         <td class="paid_in_period text-success">
 
@@ -136,7 +136,7 @@
                             @endif
                         </td>
                     @endif
-                    {# bill is not active #}
+                    {{-- bill is not active --}}
                     {% if not entry.active %}
                         <td class="paid_in_period text-muted">
                             ~

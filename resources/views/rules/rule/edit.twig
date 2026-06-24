@@ -21,7 +21,7 @@
                         {{ RuleForm.ruleGroupList('rule_group_id', rule.rule_group_id) }}
                         {{ ExpandedForm::select('trigger',allJournalTriggers(), primaryTrigger) }}
 
-                        {# only correct way to do active checkbox #}
+                        {{-- only correct way to do active checkbox --}}
                         {{ ExpandedForm::checkbox('active', 1, null, {helpText: trans('firefly.rule_help_active')}) }}
 
                         {{ ExpandedForm::checkbox('stop_processing',1,rule.stop_processing, {helpText: trans('firefly.rule_help_stop_processing')}) }}
@@ -31,7 +31,7 @@
             </div>
             <div class="col-lg-6 col-md-6 col-sm-12">
 
-                {# optional fields #}
+                {{-- optional fields --}}
                 <div class="card">
                     <div class="card-header">
                         <h3 class="card-title">{{ __('firefly.optionalFields') }}</h3>
@@ -112,7 +112,7 @@
 
         <div class="row">
             <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
-                {# panel for options #}
+                {{-- panel for options --}}
                 <div class="card">
                     <div class="card-header">
                         <h3 class="card-title">{{ __('firefly.options') }}</h3>

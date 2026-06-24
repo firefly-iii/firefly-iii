@@ -10,7 +10,7 @@
         <th class="text-right hide-balance_after">{{ trans('list.balance_after') }}</th>
 
         <th class="hide-date">{{ trans('list.date') }}</th>
-        {# new optional fields (3x) #}
+        {{-- new optional fields (3x) --}}
         <th class="hide-from">{{ trans('list.from') }}</th>
         <th class="hide-to">{{ trans('list.to') }}</th>
 
@@ -18,13 +18,13 @@
         <th class="hide-category"><span class="bi bi-bookmark" title="{{ trans('list.category') }}"></span></th>
         <th class="hide-bill">{{ trans('list.bill') }}</th>
 
-        {# more optional fields (2x) #}
+        {{-- more optional fields (2x) --}}
         <th class="hide-create_date">{{ trans('list.create_date') }}</th>
         <th class="hide-update_date">{{ trans('list.update_date') }}</th>
 
         <th class="hide-notes">{{ trans('list.notes') }}</th>
 
-        {# even more optional fields #}
+        {{-- even more optional fields --}}
         <th class="hide-interest_date">{{ trans('list.interest_date') }}</th>
         <th class="hide-book_date">{{ trans('list.book_date') }}</th>
         <th class="hide-process_date">{{ trans('list.process_date') }}</th>
@@ -129,7 +129,7 @@
             </td>
             <td class="hide-category">
                 {% if journal.category_id %}
-                    <a href="{{ route('categories.show', [journal.category_id]) }}" title="{{ journal.category_name }}">{{ journal.category_name }}</a>
+                    <a href="{{ route('categories.show', [$journal['category_id']]) }}" title="{{ journal['category_name'] }}">{{ journal['category_name'] }}</a>
                 @endif
             </td>
             <td class="hide-bill">
@@ -140,11 +140,11 @@
 
             <!-- new optional fields (2x) -->
             <td class="hide-create_date">
-                {{ journal.created_at.isoFormat(dateTimeFormat) }}
+                {{ journal.created_at.isoFormat($dateTimeFormat) }}
             </td>
 
             <td class="hide-update_date">
-                {{ journal.updated_at.isoFormat(dateTimeFormat) }}
+                {{ journal.updated_at.isoFormat($dateTimeFormat) }}
             </td>
             <td class="hide-notes">
                 {{ journal.notes|default('')|markdown }}

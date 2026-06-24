@@ -115,17 +115,17 @@
             <tr>
                 <td class="visible-xs visible-sm hidden-md hidden-lg">&nbsp;</td>
                 <td class="visible-xs visible-sm hidden-md hidden-lg">&nbsp;</td>
-                <td class="hidden-sm hidden-xs">&nbsp;</td> {# handle #}
-                <td class="hidden-sm hidden-xs">&nbsp;</td> {# buttons #}
+                <td class="hidden-sm hidden-xs">&nbsp;</td> {{-- handle --}}
+                <td class="hidden-sm hidden-xs">&nbsp;</td> {{-- buttons --}}
                 <td>&nbsp;</td>
                 <td class="text-right">
                     {% for sum in objectGroup.sums %}
                         {{ format_amount_by_symbol(sum.saved, sum.currency_symbol, sum.currency_decimal_places) }}<br />
                     @endforeach
                     </td>
-                <td class="hidden-sm hidden-xs">&nbsp;</td> {# remove money #}
-                <td class="hidden-sm hidden-xs">&nbsp;</td> {# progress#}
-                <td class="hidden-sm hidden-xs">&nbsp;</td> {# add money #}
+                <td class="hidden-sm hidden-xs">&nbsp;</td> {{-- remove money --}}
+                <td class="hidden-sm hidden-xs">&nbsp;</td> {{-- progress--}}
+                <td class="hidden-sm hidden-xs">&nbsp;</td> {{-- add money --}}
                 <td class="text-right hidden-sm hidden-xs">
                     {% for sum in objectGroup.sums %}
                         {{ format_amount_by_symbol(sum.target, sum.currency_symbol, sum.currency_decimal_places) }}<br />

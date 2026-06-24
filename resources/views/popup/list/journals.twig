@@ -12,14 +12,14 @@
             <th class="hidden-xs">{{ trans('list.to') }}</th>
         @endif
 
-        {# Hide budgets? #}
+        {{-- Hide budgets? --}}
         {% if not hideBudget %}
             <th class="hidden-xs">
                 <span class="bi bi-pie-chart" title="{{ trans('list.budget') }}"></span>
             </th>
         @endif
 
-        {# Hide categories? #}
+        {{-- Hide categories? --}}
         {% if not hideCategory %}
             <th class="hidden-xs">
                 <span class="bi bi-bookmark" title="{{ trans('list.category') }}"></span>
@@ -28,12 +28,12 @@
     </tr>
     </thead>
     <tbody>
-    {# Make sum: #}
+    {{-- Make sum: --}}
     {% set sum = 0 %}
     {% set symbol = '' %}
     {% set decimal_places =2 %}
     {% for transaction in journals %}
-        {# add to sum #}
+        {{-- add to sum --}}
         {% set symbol = transaction.currency_symbol %}
         {% set decimal_places = transaction.currency_decimal_places %}
         <tr class="drag" data-date="{{ transaction.date.format('Y-m-d') }}" data-id="{{ transaction.journal_id }}">

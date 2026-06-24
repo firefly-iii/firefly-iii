@@ -16,7 +16,7 @@
                         <h3 class="card-title">{{ __('firefly.mandatoryFields') }}</h3>
                     </div>
                     <div class="card-body">
-                        {# only correct way to do active checkbox #}
+                        {{-- only correct way to do active checkbox --}}
                         {{ ExpandedForm::checkbox('active', 1) }}
                         {{ ExpandedForm::text('name', budget.name) }}
                     </div>
@@ -24,7 +24,7 @@
 
             </div>
             <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
-                {# panel for auto-budget #}
+                {{-- panel for auto-budget --}}
                 <div class="card">
                     <div class="card-header">
                         <h3 class="card-title">{{ __('firefly.optionalFields') }}</h3>
@@ -42,7 +42,7 @@
         </div>
         <div class="row">
             <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
-                {# panel for options #}
+                {{-- panel for options --}}
                 <div class="card">
                     <div class="card-header">
                         <h3 class="card-title">{{ __('firefly.options') }}</h3>

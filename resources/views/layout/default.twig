@@ -27,14 +27,14 @@
 
     </title>
     <meta content='width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no' name='viewport'>
-    {# CSS things #}
+    {{-- CSS things --}}
     <link href="v1/lib/bs/css/bootstrap.min.css?v={{ $FF_BUILD_TIME }}" rel="stylesheet" type="text/css"
           nonce="{{ $JS_NONCE }}">
     <link href="v1/lib/fa/css/font-awesome.min.css?v={{ $FF_BUILD_TIME }}" rel="stylesheet" type="text/css"
           nonce="{{ $JS_NONCE }}">
 
 
-    {# the theme #}
+    {{-- the theme --}}
     <link href="v1/lib/adminlte/css/AdminLTE.min.css?v={{ $FF_BUILD_TIME }}" rel="stylesheet" type="text/css"
           nonce="{{ $JS_NONCE }}">
     {% if 'browser' == darkMode %}
@@ -71,28 +71,28 @@
         <link href="v1/lib/adminlte/css/skins/skin-light.min.css?v={{ $FF_BUILD_TIME }}" rel="stylesheet" type="text/css"
               nonce="{{ $JS_NONCE }}">
     @endif
-    {# Firefly III customisations #}
+    {{-- Firefly III customisations --}}
     <link href="v1/css/firefly.css?v={{ $FF_BUILD_TIME }}" rel="stylesheet" type="text/css" nonce="{{ $JS_NONCE }}">
 
-    {# Extra CSS for the demo: #}
+    {{-- Extra CSS for the demo: --}}
     {% if not shownDemo %}
         <link href="v1/lib/intro/introjs.min.css?v={{ $FF_BUILD_TIME }}" rel="stylesheet" type="text/css"
               nonce="{{ $JS_NONCE }}">
     @endif
 
-    {# Any local custom CSS.  #}
+    {{-- Any local custom CSS.  --}}
     @section('styles')@endsection
     <!--[if lt IE 9]>
     <script src="v1/js/lib/html5shiv.min.js?v={{ $FF_BUILD_TIME }}" nonce="{{ $JS_NONCE }}"></script>
     <script src="v1/js/lib/respond.min.js?v={{ $FF_BUILD_TIME }}" nonce="{{ $JS_NONCE }}"></script>
     <![endif]-->
 
-    {# favicons #}
+    {{-- favicons --}}
     {% include 'partials.favicons' %}
 
 </head>
 <body class="skin-firefly-iii sidebar-mini hold-transition">
-{# this entry is in the header so it's loaded early #}
+{{-- this entry is in the header so it's loaded early --}}
 <script type="text/javascript" nonce="{{ $JS_NONCE }}">
     var forceDemoOff = false;
     if ('true' === localStorage.getItem('ff3_sidebar_collapsed')) {
@@ -103,11 +103,11 @@
 
     <header class="main-header">
 
-        {# Logo #}
+        {{-- Logo --}}
         <a href="{{ route('index') }}" class="logo">
-            {# mini logo for sidebar mini 50x50 pixels #}
+            {{-- mini logo for sidebar mini 50x50 pixels --}}
             <span class="logo-mini">FF</span>
-            {# logo for regular state and mobile devices #}
+            {{-- logo for regular state and mobile devices --}}
             <span class="logo-lg"><strong>Firefly</strong>III</span>
         </a>
 
@@ -229,37 +229,37 @@
     </div>
 </div>
 
-{# Java libraries and stuff: #}
+{{-- Java libraries and stuff: --}}
 
 {% block definitions %}@endsection
 
-{# Moment JS #}
+{{-- Moment JS --}}
 <script src="v1/js/lib/moment.min.js?v={{ $FF_BUILD_TIME }}" type="text/javascript" nonce="{{ $JS_NONCE }}"></script>
 <script src="v1/js/lib/moment/{{ language|replace({'-':'_'}) }}.js?v={{ $FF_BUILD_TIME }}" type="text/javascript"
         nonce="{{ $JS_NONCE }}"></script>
 
-{# All kinds of variables. #}
+{{-- All kinds of variables. --}}
 <script
     src="{{ route('javascript.variables') }}?ext=.js&amp;v={{ FF_VERSION }}{% if account %}&amp;account={{ account.id }}@endif"
     type="text/javascript" nonce="{{ $JS_NONCE }}"></script>
 
-{# Base script: jquery and bootstrap #}
+{{-- Base script: jquery and bootstrap --}}
 <script src="v1/js/app.js?v={{ $FF_BUILD_TIME }}" type="text/javascript" nonce="{{ $JS_NONCE }}"></script>
 
-{# Vue scripts and components. Only loaded when needed #}
+{{-- Vue scripts and components. Only loaded when needed --}}
 {% if VUE_SCRIPT_NAME %}
     <script src="v1/js/app_vue.js?v={{ $FF_BUILD_TIME }}" type="text/javascript" nonce="{{ $JS_NONCE }}"></script>
     <script src="v1/js/{{ VUE_SCRIPT_NAME }}.js?v={{ $FF_BUILD_TIME }}" type="text/javascript"
             nonce="{{ $JS_NONCE }}"></script>
 @endif
 
-{# date range picker, current template, etc. #}
+{{-- date range picker, current template, etc. --}}
 <script src="v1/js/lib/daterangepicker.js?v={{ $FF_BUILD_TIME }}" type="text/javascript" nonce="{{ $JS_NONCE }}"></script>
 <script src="v1/lib/adminlte/js/adminlte.min.js?v={{ $FF_BUILD_TIME }}" type="text/javascript"
         nonce="{{ $JS_NONCE }}"></script>
 <script type="text/javascript" src="v1/js/lib/accounting.min.js?v={{ $FF_BUILD_TIME }}" nonce="{{ $JS_NONCE }}"></script>
 
-{# Firefly III code #}
+{{-- Firefly III code --}}
 <script type="text/javascript" src="v1/js/ff/firefly.js?v={{ $FF_BUILD_TIME }}" nonce="{{ $JS_NONCE }}"></script>
 <script type="text/javascript" src="v1/js/ff/help.js?v={{ $FF_BUILD_TIME }}" nonce="{{ $JS_NONCE }}"></script>
 {% if not shownDemo %}

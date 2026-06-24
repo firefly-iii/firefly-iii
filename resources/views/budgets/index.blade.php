@@ -201,7 +201,7 @@
                             </tr>
                             </thead>
                             <tbody>
-                            {{-- {# START OF BUDGET ROW #} --}}
+                            {{-- {{-- START OF BUDGET ROW --}} --}}
 
                             @foreach($budgets as $budget)
                                 <tr data-id="{{ $budget['id'] }}">

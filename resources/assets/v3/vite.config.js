@@ -83,6 +83,7 @@ export default defineConfig(({command, mode, isSsrBuild, isPreview}) => {
                     'js/pages/transactions/index.js',
                     'js/pages/transactions/create.js',
                     'js/pages/transactions/edit.js',
+                    'js/pages/transactions/show.js',
 
                     // tags
                     'js/pages/tags/index.js',

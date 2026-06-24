@@ -18,37 +18,37 @@
                     </div>
                     <div class="card-body">
                         <p>
-                            {# ONE: WITHDRAWAL TO DEPOSIT #}
+                            {{-- ONE: WITHDRAWAL TO DEPOSIT --}}
                             {% if sourceType.type == 'Withdrawal' and destinationType.type == 'Deposit' %}
                                 {{ trans_choice('firefly.convert_expl_w_d', groupArray.transactions|length) }}
                                 {{ trans_choice('firefly.convert_select_sources', groupArray.transactions|length) }}
                             @endif
 
-                            {# TWO: WITHDRAWAL TO TRANSFER #}
+                            {{-- TWO: WITHDRAWAL TO TRANSFER --}}
                             {% if sourceType.type == 'Withdrawal' and destinationType.type == 'Transfer' %}
                                 {{ trans_choice('firefly.convert_expl_w_t', groupArray.transactions|length) }}
                                 {{ trans_choice('firefly.convert_select_destinations', groupArray.transactions|length) }}
                             @endif
 
-                            {# THREE: DEPOSIT TO WITHDRAWAL #}
+                            {{-- THREE: DEPOSIT TO WITHDRAWAL --}}
                             {% if sourceType.type == 'Deposit' and destinationType.type == 'Withdrawal' %}
                                 {{ trans_choice('firefly.convert_expl_d_w', groupArray.transactions|length) }}
                                 {{ trans_choice('firefly.convert_select_destinations', groupArray.transactions|length) }}
                             @endif
 
-                            {# FOUR: DEPOSIT TO TRANSFER #}
+                            {{-- FOUR: DEPOSIT TO TRANSFER --}}
                             {% if sourceType.type == 'Deposit' and destinationType.type == 'Transfer' %}
                                 {{ trans_choice('firefly.convert_expl_d_t', groupArray.transactions|length) }}
                                 {{ trans_choice('firefly.convert_select_sources', groupArray.transactions|length) }}
                             @endif
 
-                            {# FIVE: TRANSFER TO WITHDRAWAL #}
+                            {{-- FIVE: TRANSFER TO WITHDRAWAL --}}
                             {% if sourceType.type == 'Transfer' and destinationType.type == 'Withdrawal' %}
                                 {{ trans_choice('firefly.convert_expl_t_w', groupArray.transactions|length) }}
                                 {{ trans_choice('firefly.convert_select_destinations', groupArray.transactions|length) }}
                             @endif
 
-                            {# SIX: TRANSFER TO DEPOSIT #}
+                            {{-- SIX: TRANSFER TO DEPOSIT --}}
                             {% if sourceType.type == 'Transfer' and destinationType.type == 'Deposit' %}
                                 {{ trans_choice('firefly.convert_expl_t_d', groupArray.transactions|length) }}
                                 {{ trans_choice('firefly.convert_select_sources', groupArray.transactions|length) }}
@@ -68,14 +68,14 @@
                                     <td>#{{ transaction.transaction_journal_id }}</td>
                                     <td>{{ transaction.description }}</td>
                                     <td>
-                                        {# ONE: WITHDRAWAL TO DEPOSIT #}
+                                        {{-- ONE: WITHDRAWAL TO DEPOSIT --}}
                                         {% if sourceType.type == 'Withdrawal' and destinationType.type == 'Deposit' %}
-                                            {# NEW DESTINATION = Asset, SOURCE MUST BE [Revenue, Cash, Loan, Debt, Mortgage] #}
+                                            {{-- NEW DESTINATION = Asset, SOURCE MUST BE [Revenue, Cash, Loan, Debt, Mortgage] --}}
                                             {% if transaction.source_type == 'Asset account' %}
                                                 {{ Html::select('source_id['~transaction.transaction_journal_id~']', validDepositSources).class('form-control') }}
                                             @endif
 
-                                            {# NEW DESTINATION = [Loan, Debt, Mortgage], SOURCE MUST BE [Revenue] #}
+                                            {{-- NEW DESTINATION = [Loan, Debt, Mortgage], SOURCE MUST BE [Revenue] --}}
                                             {% if
                                                 transaction.source_type == 'Loan' or
                                                 transaction.source_type == 'Debt' or
@@ -91,31 +91,31 @@
                                             @endif
                                         @endif
 
-                                        {# TWO: WITHDRAWAL TO TRANSFER #}
+                                        {{-- TWO: WITHDRAWAL TO TRANSFER --}}
                                         {% if sourceType.type == 'Withdrawal' and destinationType.type == 'Transfer' %}
 
                                             <a href="{{ route('accounts.show', [transaction.source_id]) }}"
                                                title="{{ transaction.source_iban|default(transaction.source_name) }}">{{ transaction.source_name }}</a>
-                                            {# hide source in hidden input #}
+                                            {{-- hide source in hidden input --}}
                                             <input type="hidden"
                                                    name="source_id[{{ transaction.transaction_journal_id }}]"
                                                    value="{{ transaction.source_id }}">
                                         @endif
 
-                                        {# THREE: DEPOSIT TO WITHDRAWAL #}
+                                        {{-- THREE: DEPOSIT TO WITHDRAWAL --}}
                                         {% if sourceType.type == 'Deposit' and destinationType.type == 'Withdrawal' %}
                                             <a href="{{ route('accounts.show', [transaction.destination_id]) }}"
                                                title="{{ transaction.destination_iban|default(transaction.destination_name) }}">{{ transaction.destination_name }}</a>
 
-                                            {# hide new source in hidden input #}
+                                            {{-- hide new source in hidden input --}}
                                             <input type="hidden"
                                                    name="source_id[{{ transaction.transaction_journal_id }}]"
                                                    value="{{ transaction.destination_id }}">
                                         @endif
 
-                                        {# FOUR: DEPOSIT TO TRANSFER #}
+                                        {{-- FOUR: DEPOSIT TO TRANSFER --}}
                                         {% if sourceType.type == 'Deposit' and destinationType.type == 'Transfer' %}
-                                            {# if new destination is asset, then asset #}
+                                            {{-- if new destination is asset, then asset --}}
                                             {% if transaction.destination_type == 'Asset account' %}
                                                 {{ Html::select('source_id['~transaction.transaction_journal_id~']', assets).class('form-control') }}
                                             @endif
@@ -125,29 +125,29 @@
                                                 {{ Html::select('source_id['~transaction.transaction_journal_id~']', liabilities).class('form-control') }}
                                             @endif
 
-                                            {# if new destination liability, then liability. #}
+                                            {{-- if new destination liability, then liability. --}}
 
                                         @endif
 
-                                        {# FIVE: TRANSFER TO WITHDRAWAL #}
+                                        {{-- FIVE: TRANSFER TO WITHDRAWAL --}}
                                         {% if sourceType.type == 'Transfer' and destinationType.type == 'Withdrawal' %}
                                             <a href="{{ route('accounts.show', [transaction.source_id]) }}"
                                                title="{{ transaction.source_iban|default(transaction.source_name) }}">{{ transaction.source_name }}</a>
 
-                                            {# hide source in hidden input #}
+                                            {{-- hide source in hidden input --}}
                                             <input type="hidden"
                                                    name="source_id[{{ transaction.transaction_journal_id }}]"
                                                    value="{{ transaction.source_id }}">
                                         @endif
 
-                                        {# SIX: TRANSFER TO DEPOSIT #}
+                                        {{-- SIX: TRANSFER TO DEPOSIT --}}
                                         {% if sourceType.type == 'Transfer' and destinationType.type == 'Deposit' %}
-                                            {# NEW DESTINATION = Asset, SOURCE MUST BE [Revenue, Cash, Loan, Debt, Mortgage] #}
+                                            {{-- NEW DESTINATION = Asset, SOURCE MUST BE [Revenue, Cash, Loan, Debt, Mortgage] --}}
                                             {% if
                                                 transaction.source_type == 'Asset account' %}
                                                 {{ Html::select('source_id['~transaction.transaction_journal_id~']', validDepositSources).class('form-control') }}
                                             @endif
-                                            {# NEW DESTINATION = [Debt, Mortgage, Load], SOURCE MUST BE [Revenue] #}
+                                            {{-- NEW DESTINATION = [Debt, Mortgage, Load], SOURCE MUST BE [Revenue] --}}
                                             {% if
                                                 transaction.source_type == 'Loan' or
                                                 transaction.source_type == 'Debt' or
@@ -166,20 +166,20 @@
 
                                     </td>
                                     <td>
-                                        {# ONE: WITHDRAWAL TO DEPOSIT #}
+                                        {{-- ONE: WITHDRAWAL TO DEPOSIT --}}
                                         {% if sourceType.type == 'Withdrawal' and destinationType.type == 'Deposit' %}
                                             <a href="{{ route('accounts.show', [transaction.source_id]) }}"
                                                title="{{ transaction.source_iban|default(transaction.source_name) }}">{{ transaction.source_name }}</a>
 
-                                            {# hide destination in hidden input #}
+                                            {{-- hide destination in hidden input --}}
                                             <input type="hidden"
                                                    name="destination_id[{{ transaction.transaction_journal_id }}]"
                                                    value="{{ transaction.source_id }}">
                                         @endif
 
-                                        {# TWO: WITHDRAWAL TO TRANSFER #}
+                                        {{-- TWO: WITHDRAWAL TO TRANSFER --}}
                                         {% if sourceType.type == 'Withdrawal' and destinationType.type == 'Transfer' %}
-                                            {# if the source is a liability, destination must also be a liability. #}
+                                            {{-- if the source is a liability, destination must also be a liability. --}}
                                             {% if
                                                 transaction.source_type == 'Loan' or
                                                 transaction.source_type == 'Debt' or
@@ -187,23 +187,23 @@
                                                 {{ Html::select('destination_id['~transaction.transaction_journal_id~']', liabilities).class('form-control') }}
                                             @endif
 
-                                            {# if the source is an asset, destination can only be an asset. #}
+                                            {{-- if the source is an asset, destination can only be an asset. --}}
                                             {% if transaction.source_type == 'Asset account' %}
                                                 {{ Html::select('destination_id['~transaction.transaction_journal_id~']', assets).class('form-control') }}
                                             @endif
                                         @endif
 
-                                        {# THREE: DEPOSIT TO WITHDRAWAL #}
+                                        {{-- THREE: DEPOSIT TO WITHDRAWAL --}}
                                         {% if sourceType.type == 'Deposit' and destinationType.type == 'Withdrawal' %}
 
-                                            {# if new source is Asset, destination must be [Expense, Loan, Debt or Mortgage] #}
+                                            {{-- if new source is Asset, destination must be [Expense, Loan, Debt or Mortgage] --}}
                                             {% if transaction.destination_type == 'Asset account' %}
                                                 {{ Html::select('destination_id['~transaction.transaction_journal_id~']', validWithdrawalDests).class('form-control') }}
                                             @endif
                                             {% if transaction.destination_type == 'Loan' or
                                                 transaction.destination_type == 'Debt' or
                                                 transaction.destination_type == 'Mortgage' %}
-                                                {# if new source is Liability, destination must be expense account. #}
+                                                {{-- if new source is Liability, destination must be expense account. --}}
 
                                                 <input
                                                     autocomplete="off"
@@ -216,18 +216,18 @@
                                             @endif
                                         @endif
 
-                                        {# FOUR: DEPOSIT TO TRANSFER #}
+                                        {{-- FOUR: DEPOSIT TO TRANSFER --}}
                                         {% if sourceType.type == 'Deposit' and destinationType.type == 'Transfer' %}
                                             <a href="{{ route('accounts.show', [transaction.destination_id]) }}"
                                                title="{{ transaction.destination_iban|default(transaction.destination_name) }}">{{ transaction.destination_name }}</a>
 
-                                            {# hide destination in hidden input #}
+                                            {{-- hide destination in hidden input --}}
                                             <input type="hidden"
                                                    name="destination_id[{{ transaction.transaction_journal_id }}]"
                                                    value="{{ transaction.destination_id }}">
                                         @endif
 
-                                        {# FIVE: TRANSFER TO WITHDRAWAL #}
+                                        {{-- FIVE: TRANSFER TO WITHDRAWAL --}}
                                         {% if sourceType.type == 'Transfer' and destinationType.type == 'Withdrawal' %}
 
                                             {% if transaction.source_type == 'Asset account' %}
@@ -247,12 +247,12 @@
                                             @endif
                                         @endif
 
-                                        {# SIX: TRANSFER TO DEPOSIT #}
+                                        {{-- SIX: TRANSFER TO DEPOSIT --}}
                                         {% if sourceType.type == 'Transfer' and destinationType.type == 'Deposit' %}
                                             <a href="{{ route('accounts.show', [transaction.destination_id]) }}"
                                                title="{{ transaction.destination_iban|default(transaction.destination_name) }}">{{ transaction.destination_name }}</a>
 
-                                            {# hide destination in hidden input #}
+                                            {{-- hide destination in hidden input --}}
                                             <input type="hidden"
                                                    name="destination_id[{{ transaction.transaction_journal_id }}]"
                                                    value="{{ transaction.destination_id }}">

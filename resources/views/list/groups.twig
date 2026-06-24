@@ -11,7 +11,7 @@
             <div class="btn-group btn-group-sm action-menu pull-right hidden">
                 <button type="button" class="btn btn-outline-secondary btn-sm dropdown-toggle" data-toggle="dropdown"
                         aria-haspopup="true" aria-expanded="false">
-                    {{ 'actions'|_ }}<span class="caret"></span>
+                    {{ __('firefly.actions') }}<span class="caret"></span>
                 </button>
                 <ul class="dropdown-menu dropdown-menu-right">
                     <li><a href="#" class="mass-edit"><span class="bi bi-pencil"></span>
@@ -95,16 +95,16 @@
                     <div class="btn-group btn-group-sm pull-right">
                         <button type="button" class="btn btn-outline-secondary dropdown-toggle" data-toggle="dropdown"
                                 aria-haspopup="true" aria-expanded="false">
-                            {{ 'actions'|_ }} <span class="caret"></span></button>
+                            {{ __('firefly.actions') }} <span class="caret"></span></button>
                         <ul class="dropdown-menu dropdown-menu-right" role="menu">
                             <li><a href="{{ route('transactions.edit', [group.id]) }}"><span
                                         class="bi bi-pencil"></span> {{ __('firefly.edit') }}</a></li>
                             <li><a href="{{ route('transactions.delete', [group.id]) }}"><span
                                         class="bi bi-trash"></span> {{ __('firefly.delete') }}</a></li>
                             <li><a href="#" data-id="{{ group.id }}" class="clone-transaction"><span
-                                        class="bi bi-copy"></span> {{ 'clone'|_ }}</a></li>
+                                        class="bi bi-copy"></span> {{ __('firefly.clone') }}</a></li>
                             <li><a href="#" data-id="{{ group.id }}" class="clone-transaction-and-edit"><span
-                                        class="bi bi-copy"></span> {{ 'clone_and_edit'|_ }}</a></li>
+                                        class="bi bi-copy"></span> {{ __('firefly.clone_and_edit') }}</a></li>
                         </ul>
                     </div>
                 </td>
@@ -164,22 +164,22 @@
                 </td>
                 <td class="{{ className }} text-right">
 
-                    {#  deposit #}
+                    {{--  deposit --}}
                     {% if transaction.transaction_type_type == 'Deposit' %}
-                        {# amount of deposit #}
+                        {{-- amount of deposit --}}
                         {{ format_amount_by_symbol(transaction.amount*-1, transaction.currency_symbol, transaction.currency_decimal_places) }}
-                        {# foreign amount of deposit #}
+                        {{-- foreign amount of deposit --}}
                         {% if null != transaction.foreign_amount %}
                             ({{ format_amount_by_symbol(transaction.foreign_amount*-1, transaction.foreign_currency_symbol, transaction.foreign_currency_decimal_places) }})
                         @endif
-                        {# primary currency amount of deposit #}
+                        {{-- primary currency amount of deposit --}}
                         {% if convertToPrimary and 0 != transaction.pc_amount %}
                             (~ {{ format_amount_by_symbol(transaction.pc_amount*-1, primaryCurrency.symbol, primaryCurrency.decimal_places) }})
                         @endif
-                        {# transfer #}
+                        {{-- transfer --}}
                     {% elseif transaction.transaction_type_type == 'Transfer' %}
                         <span class="text-info money-transfer">
-                            {# amount of transfer #}
+                            {{-- amount of transfer --}}
                             {% if transaction.source_account_id == account.id %}
                                 {{ format_amount_by_symbol(transaction.amount, transaction.currency_symbol, transaction.currency_decimal_places, false) }}
                             @endif
@@ -187,7 +187,7 @@
                                 {{ format_amount_by_symbol(transaction.amount*-1, transaction.currency_symbol, transaction.currency_decimal_places, false) }}
                             @endif
 
-                            {# foreign amount of transfer #}
+                            {{-- foreign amount of transfer --}}
                             {% if null != transaction.foreign_amount and transaction.source_account_id == account.id %}
                                 ({{ format_amount_by_symbol(transaction.foreign_amount, transaction.foreign_currency_symbol, transaction.foreign_currency_decimal_places, false) }})
                             @endif
@@ -195,12 +195,12 @@
                                 ({{ format_amount_by_symbol(transaction.foreign_amount*-1, transaction.foreign_currency_symbol, transaction.foreign_currency_decimal_places, false) }})
                             @endif
 
-                            {# primary currency amount of transfer #}
+                            {{-- primary currency amount of transfer --}}
                             {% if convertToPrimary and 0 != transaction.pc_amount %}
                                 (~ {{ format_amount_by_symbol(transaction.pc_amount*-1, primaryCurrency.symbol, primaryCurrency.decimal_places) }})
                             @endif
                             </span>
-                        {# opening balance #}
+                        {{-- opening balance --}}
                     {% elseif transaction.transaction_type_type == 'Opening balance' %}
                         {% if transaction.source_account_type == 'Initial balance account' %}
                             {{ format_amount_by_symbol(transaction.amount*-1, transaction.currency_symbol, transaction.currency_decimal_places) }}
@@ -219,7 +219,7 @@
                                 (~ {{ format_amount_by_symbol(transaction.pc_amount, primaryCurrency.symbol, primaryCurrency.decimal_places) }})
                             @endif
                         @endif
-                        {# reconciliation #}
+                        {{-- reconciliation --}}
                     {% elseif transaction.transaction_type_type == 'Reconciliation' %}
                         {% if transaction.source_account_type == 'Reconciliation account' %}
                             {{ format_amount_by_symbol(transaction.amount*-1, transaction.currency_symbol, transaction.currency_decimal_places) }}
@@ -238,7 +238,7 @@
                                 (~ {{ format_amount_by_symbol(transaction.pc_amount, primaryCurrency.symbol, primaryCurrency.decimal_places) }})
                             @endif
                         @endif
-                        {# liability credit #}
+                        {{-- liability credit --}}
                     {% elseif transaction.transaction_type_type == 'Liability credit' %}
                         {% if transaction.source_account_type == 'Liability credit' %}
                             {{ format_amount_by_symbol(transaction.amount, transaction.currency_symbol, transaction.currency_decimal_places) }}
@@ -259,16 +259,16 @@
                         @endif
 
 
-                        {# THE REST #}
+                        {{-- THE REST --}}
                     @else
-                        {# amount of withdrawal #}
+                        {{-- amount of withdrawal --}}
                         {{ format_amount_by_symbol(transaction.amount, transaction.currency_symbol, transaction.currency_decimal_places) }}
 
-                        {# foreign amount of withdrawal #}
+                        {{-- foreign amount of withdrawal --}}
                         {% if null != transaction.foreign_amount %}
                             ({{ format_amount_by_symbol(transaction.foreign_amount, transaction.foreign_currency_symbol, transaction.foreign_currency_decimal_places) }})
                         @endif
-                        {# primary currency amount of withdrawal, if not in foreign currency #}
+                        {{-- primary currency amount of withdrawal, if not in foreign currency --}}
                         {% if convertToPrimary and 0 != transaction.pc_amount and primaryCurrency.id != transaction.foreign_currency_id %}
                             (~ {{ format_amount_by_symbol(transaction.pc_amount, primaryCurrency.symbol, primaryCurrency.decimal_places) }})
                         @endif
@@ -276,7 +276,7 @@
                 </td>
                 {% if (fireflyiiiconfig('use_running_balance', true)) %}
                 <td class=" {{ className }} text-right">
-                    {# RUNNING BALANCE #}
+                    {{-- RUNNING BALANCE --}}
                     {% if (null == transaction.balance_dirty or false == transaction.balance_dirty) and null != transaction.destination_balance_after and null != transaction.source_balance_after %}
                         {% if transaction.transaction_type_type == 'Deposit' %}
                             {% if transaction.source_account_id == account.id %}
@@ -287,14 +287,14 @@
                                 @else
                                     <span title="Deposit from liab">{{ format_amount_by_symbol(transaction.destination_balance_after, transaction.foreign_currency_symbol, transaction.foreign_currency_decimal_places) }}</span>
                                 @endif
-                                {# if this is a deposit from revenue account, use the destination account currency? For #12043 and #12169 #}
-                                {# otherwise, keep at source account #}
-                                {# changed from normal currency_symbol to foreign_currency_symbol for #12043 #}
+                                {{-- if this is a deposit from revenue account, use the destination account currency? For #12043 and #12169 --}}
+                                {{-- otherwise, keep at source account --}}
+                                {{-- changed from normal currency_symbol to foreign_currency_symbol for #12043 --}}
 
                             {%  endif %}
 
                         {% elseif transaction.transaction_type_type == 'Withdrawal' %}
-                            {# withdrawal into a liability #}
+                            {{-- withdrawal into a liability --}}
                             {% if 'Loan' == transaction.destination_account_type or 'Mortgage' == transaction.destination_account_type or 'Debt' == transaction.destination_account_type %}
                                 {% if currency.id == transaction.currency_id %}
                                     {% if account.id == transaction.source_account_id %}
@@ -308,7 +308,7 @@
                                 {% if currency.id == transaction.foreign_currency_id and null != transaction.destination_balance_after and null != transaction.destination_balance_after %}
                                     <span title="Withdrawal, liab, dest 2">{{ format_amount_by_symbol(transaction.destination_balance_after, transaction.foreign_currency_symbol ?? transaction.currency_symbol, transaction.foreign_currency_decimal_places ?? transaction.currency_decimal_places) }}</span>
                                 @endif
-                            {# withdrawal into an expense account #}
+                            {{-- withdrawal into an expense account --}}
                             @else
                                 {% if account.id == transaction.source_account_id %}
                                     <span title="Withdrawal, source">{{ format_amount_by_symbol(transaction.source_balance_after, transaction.currency_symbol, transaction.currency_decimal_places) }}</span>
@@ -348,7 +348,7 @@
                 </td>
                 <td class="{{ className }}">
                     {% if 'Cash account' == transaction.source_account_type %}
-                        <span class="text-success">({{ 'cash'|_ }})</span>
+                        <span class="text-success">({{ __('firefly.cash') }})</span>
                     @else
                         <a href="{{ route('accounts.show', [transaction.source_account_id|default(1)]) }}"
                            title="{{ transaction.source_account_iban|default(transaction.source_account_name) }}">{{ transaction.source_account_name }}</a>
@@ -356,7 +356,7 @@
                 </td>
                 <td class="{{ className }}">
                     {% if 'Cash account' == transaction.destination_account_type %}
-                        <span class="text-success">({{ 'cash'|_ }})</span>
+                        <span class="text-success">({{ __('firefly.cash') }})</span>
                     @else
                         <a href="{{ route('accounts.show', [transaction.destination_account_id|default(1)]) }}"
                            title="{{ transaction.destination_account_iban|default(transaction.destination_account_name) }}">{{ transaction.destination_account_name }}</a>
@@ -384,7 +384,7 @@
                         <div class="btn-group btn-group-sm pull-right">
                             <button type="button" class="btn btn-outline-secondary dropdown-toggle" data-toggle="dropdown"
                                     aria-haspopup="true" aria-expanded="false">
-                                {{ 'actions'|_ }} <span class="caret"></span></button>
+                                {{ __('firefly.actions') }} <span class="caret"></span></button>
                             <ul class="dropdown-menu dropdown-menu-right" role="menu">
                                 <li><a href="{{ route('transactions.edit', [group.id]) }}"><span
                                             class="bi bi-pencil"></span> {{ __('firefly.edit') }}</a></li>
@@ -394,9 +394,9 @@
                                 @endif
                                 {% if transaction.transaction_type_type != 'Reconciliation' and transaction.transaction_type_type != 'Opening balance' and transaction.transaction_type_type != 'Liability credit' %}
                                 <li><a href="#" data-id="{{ group.id }}" class="clone-transaction"><span
-                                            class="bi bi-copy"></span> {{ 'clone'|_ }}</a></li>
+                                            class="bi bi-copy"></span> {{ __('firefly.clone') }}</a></li>
                                 <li><a href="#" data-id="{{ group.id }}" class="clone-transaction-and-edit"><span
-                                            class="bi bi-copy"></span> {{ 'clone_and_edit'|_ }}</a></li>
+                                            class="bi bi-copy"></span> {{ __('firefly.clone_and_edit') }}</a></li>
                                 <li>
                                     <a href="{{ route('rules.create-from-journal', [transaction.transaction_journal_id]) }}"><span
                                             class="bi bi-shuffle"></span> {{ 'create_rule_from_transaction'|_ }}
@@ -435,7 +435,7 @@
                 <div class="btn-group action-menu btn-group-sm pull-right hidden">
                     <button type="button" class="btn btn-outline-secondary btn-sm dropdown-toggle" data-toggle="dropdown"
                             aria-haspopup="true" aria-expanded="false">
-                        {{ 'actions'|_ }} <span class="caret"></span>
+                        {{ __('firefly.actions') }} <span class="caret"></span>
                     </button>
                     <ul class="dropdown-menu btn-group-sm dropdown-menu-right">
                         <li><a href="#" class="mass-edit"><span class="bi bi-pencil"></span>

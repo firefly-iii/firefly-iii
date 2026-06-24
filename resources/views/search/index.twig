@@ -15,7 +15,7 @@
                     <p>
                         {{ 'search_box_intro'|_ }}
                     </p>
-                    {# search form #}
+                    {{-- search form --}}
                     <form class="form-horizontal" action="{{ route('search.index') }}" method="get">
                         <div class="form-group">
                             <label for="query" class="col-sm-1 control-label">{{ 'search_query'|_ }}</label>
@@ -95,7 +95,7 @@
                             {{ 'search_searching'|_ }}
                         </p>
                         <div class="search_results hidden"></div>
-                        {# loading indicator #}
+                        {{-- loading indicator --}}
                         <div class="overlay">
                             <div class="spinner-border spinner-border-sm" role="status">
   <span class="visually-hidden">Loading...</span>
@@ -168,7 +168,7 @@
         var cloneGroupUrl = '{{ route('transactions.clone') }}';
         var cloneAndEditUrl = '{{ route('transactions.clone') }}?redirect=edit';
     </script>
-    {# required for groups.twig #}
+    {{-- required for groups.twig --}}
     <script type="text/javascript" src="v1/js/ff/list/groups.js?v={{ $FF_BUILD_TIME }}" nonce="{{ $JS_NONCE }}"></script>
     <script type="text/javascript" src="v1/js/ff/search/index.js?v={{ $FF_BUILD_TIME }}" nonce="{{ $JS_NONCE }}"></script>
 

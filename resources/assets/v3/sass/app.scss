@@ -77,6 +77,18 @@ body.waiting * {
 
 /* some info for tables */
 td.quarter th.quarter {width:25%;}
+td.forty th.forty {width:40%;}
+td.thirty th.thirty {width:30%;}
+
+/* markdown stuff*/
+.markdown blockquote p {
+    font-size: 14px;
+}
+
+.markdown h1 {
+    font-size: 24px;
+}
+
 
 // @import "admin-lte/dist/css/adminlte.min.css";
 

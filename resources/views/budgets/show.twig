@@ -43,7 +43,7 @@
                 <div class="card">
                     <div class="card-header">
                         <h3 class="card-title">
-                            {{ 'attachments'|_ }}
+                            {{ __('firefly.attachments') }}
                         </h3>
                     </div>
                     <div class="card-body p-0">
@@ -182,7 +182,7 @@
                                             {% set overspent = limit.amount + limit.spent < 0 %}
 
                                             {% if overspent %}
-                                                {% set pct = (limit.spent != 0 ? (limit.amount / (limit.spent*-1))*100 : 0) %} {# must have -1 here #}
+                                                {% set pct = (limit.spent != 0 ? (limit.amount / (limit.spent*-1))*100 : 0) %} {{-- must have -1 here --}}
                                                 <div class="progress progress-striped">
                                                     <div class="progress-bar progress-bar-warning width-{{ pct|round }}" role="progressbar" aria-valuenow="{{ pct|round }}"
                                                          aria-valuemin="0"
@@ -191,7 +191,7 @@
                                                          aria-valuemin="0" aria-valuemax="100"></div>
                                                 </div>
                                             @else
-                                                {% set pct = (limit.amount != 0 ? (((limit.spent*-1) / limit.amount)*100) : 0) %} {# must have -1 here #}
+                                                {% set pct = (limit.amount != 0 ? (((limit.spent*-1) / limit.amount)*100) : 0) %} {{-- must have -1 here --}}
                                                 <div class="progress progress-striped">
                                                     <div class="progress-bar progress-bar-success width-{{ pct|round }}" role="progressbar" aria-valuenow="{{ pct|round }}"
                                                          aria-valuemin="0"
@@ -234,6 +234,6 @@
     <script type="text/javascript" src="v1/js/ff/charts.defaults.js?v={{ $FF_BUILD_TIME }}" nonce="{{ $JS_NONCE }}"></script>
     <script type="text/javascript" src="v1/js/ff/charts.js?v={{ $FF_BUILD_TIME }}" nonce="{{ $JS_NONCE }}"></script>
     <script type="text/javascript" src="v1/js/ff/budgets/show.js?v={{ $FF_BUILD_TIME }}" nonce="{{ $JS_NONCE }}"></script>
-    {# required for groups.twig #}
+    {{-- required for groups.twig --}}
     <script type="text/javascript" src="v1/js/ff/list/groups.js?v={{ $FF_BUILD_TIME }}" nonce="{{ $JS_NONCE }}"></script>
 @endsection

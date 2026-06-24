@@ -1,4 +1,4 @@
-{# this is spent in budget limits: #}
+{{-- this is spent in budget limits: --}}
 {% for budgetLimit in budget.budgeted %}
     <span title="{{ 'spent_this_period'|_ }}">{{ format_amount_by_symbol(budgetLimit.spent, budgetLimit.currency_symbol, budgetLimit.currency_decimal_places) }}</span>
     {% if 0 == budgetLimit.active_days_passed %}
@@ -9,7 +9,7 @@
 <br />
 @endforeach
 
-{# this is spent NOT in budget limits: #}
+{{-- this is spent NOT in budget limits: --}}
 {% for spent in budget.spent %}
     {% if 0 != bccomp('0', spent.spent_outside)  %}
         <span title="{{ 'spent_in_budget_limit_outside_period'|_ }}">{{ format_amount_by_symbol(spent.spent_outside, spent.currency_symbol, spent.currency_decimal_places) }}</span>
@@ -22,7 +22,7 @@
     @endif
 @endforeach
 
-{#
+{{--
 
 
 {% for spentInfo in budget.spent %}
@@ -39,4 +39,4 @@
         {{ format_amount_by_symbol(0, budgetLimit.currency_symbol, budgetLimit.currency_decimal_places) }}<br/>
     @endif
 @endforeach
-#}
+--}}
