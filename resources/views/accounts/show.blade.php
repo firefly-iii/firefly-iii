@@ -199,7 +199,7 @@
 @endsection
 
 @section('scripts')
-    @vite(['js/pages/accounts/show.js'])
+    @vite(['js/pages/generic.js'])
     <script type="text/javascript" nonce="{{ $JS_NONCE }}">
         // location stuff
         @if($location)

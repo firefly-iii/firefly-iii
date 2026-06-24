@@ -178,7 +178,7 @@
 @endsection
 
 @section('scripts')
-    @vite(['js/pages/object-groups/index.js'])
+    @vite(['js/pages/generic.js'])
     <script type="text/javascript" nonce="{{ $JS_NONCE }}">
         var minDate = "{{ $start->format('Y-m-d') }}";
         var picker;

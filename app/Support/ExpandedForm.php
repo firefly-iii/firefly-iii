@@ -270,7 +270,7 @@ class ExpandedForm
         }
 
         try {
-            $html = view('form.object_group', [
+            $html = view('form.object-group', [
                 'classes' => $classes,
                 'name'    => $name,
                 'label'   => $label,

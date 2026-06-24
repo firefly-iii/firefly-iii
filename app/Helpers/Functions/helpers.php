@@ -26,6 +26,7 @@ use Carbon\Carbon;
 use Carbon\CarbonInterface;
 use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Models\Account;
+use FireflyIII\Models\TransactionCurrency;
 use FireflyIII\Models\TransactionJournalMeta;
 use FireflyIII\Repositories\Account\AccountRepositoryInterface;
 use FireflyIII\Support\Facades\Amount;
@@ -202,6 +203,46 @@ if (!function_exists('string_is_equal')) {
     function string_is_equal(string $left, string $right): bool
     {
         return $left === $right;
+    }
+}
+
+if(!function_exists('format_amount_by_code')) {
+    function format_amount_by_code(string $amount, string $code, ?bool $coloured = null): string {
+        $coloured ??= true;
+
+        try {
+            $currency = Amount::getTransactionCurrencyByCode($code);
+        } catch (FireflyException) {
+            Log::error(sprintf('Could not find currency with code "%s". Fallback to primary currency.', $code));
+            $currency = Amount::getPrimaryCurrency();
+            Log::error(sprintf('Fallback currency is "%s".', $currency->code));
+        }
+
+        return Amount::formatAnything($currency, $amount, $coloured);
+    }
+}
+
+if(!function_exists('format_amount_by_currency')) {
+    function format_amount_by_currency(TransactionCurrency $currency, string $amount, ?bool $coloured = null): string {
+        $coloured ??= true;
+
+        return Amount::formatAnything($currency, $amount, $coloured);
+    }
+}
+
+if(!function_exists('print_nice_filesize')) {
+    function print_nice_filesize (int $size): string {
+        // less than one GB, more than one MB
+        if ($size < (1024 * 1024 * 2014) && $size >= (1024 * 1024)) {
+            return round($size / (1024 * 1024), 2).' MB';
+        }
+
+        // less than one MB
+        if ($size < (1024 * 1024)) {
+            return round($size / 1024, 2).' KB';
+        }
+
+        return $size.' bytes';
     }
 }
 

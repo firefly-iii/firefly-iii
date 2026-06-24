@@ -35,5 +35,5 @@
     </form>
 @endsection
 @section('scripts')
-    @vite(['js/pages/subscriptions/delete.js'])
+    @vite(['js/pages/generic.js'])
 @endsection

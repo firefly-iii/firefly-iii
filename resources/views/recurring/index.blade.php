@@ -138,6 +138,6 @@
 @endsection
 
 @section('scripts')
-    @vite(['js/pages/recurring/index.js'])
+    @vite(['js/pages/generic.js'])
     <script type="text/javascript" src="v1/js/lib/bootstrap-sortable.js?v={{ $FF_BUILD_TIME }}" nonce="{{ $JS_NONCE }}"></script>
 @endsection

@@ -181,7 +181,7 @@
 @endsection
 
 @section('scripts')
-    @vite(['js/pages/subscriptions/show.js'])
+    @vite(['js/pages/generic.js'])
     <script type="text/javascript" nonce="{{ $JS_NONCE }}">
         var billCurrencySymbol = "{{ $convertToPrimary ? $primaryCurrency->symbol : $object['data']['currency']['symbol'] }}";
         var billUrl = '{{ route('chart.bill.single', [$object['data']['id']]) }}';

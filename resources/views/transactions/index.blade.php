@@ -105,7 +105,7 @@
 
 @endsection
 @section('scripts')
-    @vite(['js/pages/transactions/index.js'])
+    @vite(['js/pages/generic.js'])
     {{--  required for groups.twig --}}
     <script type="text/javascript" nonce="{{ $JS_NONCE }}">
         var showAll = @if(count($periods) > 0) false @else true @endif;

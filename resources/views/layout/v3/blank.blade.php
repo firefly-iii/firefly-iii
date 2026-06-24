@@ -42,7 +42,7 @@
         </div>
     </div>
 </main>
-@vite(['js/pages/auth/auth.js'])
+@vite(['js/pages/generic.js'])
 
 </body>
 </html>

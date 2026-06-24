@@ -46,7 +46,7 @@
 
 @endsection
 @section('scripts')
-    @vite(['js/pages/tags/index.js'])
+    @vite(['js/pages/generic.js'])
     <script nonce="{{ $JS_NONCE }}">
         var confirmText = '{{ e(__('firefly.are_you_sure')) }}';
     </script>

@@ -178,7 +178,7 @@ $shownDemo = true
 
 @endsection
 @section('scripts')
-    @vite(['js/pages/rules/index.js'])
+    @vite(['js/pages/generic.js'])
     <script type="text/javascript" nonce="{{ $JS_NONCE }}">
         var moveRuleGroupUrl = '{{ route('rule-groups.move') }}';
         var duplicateRuleUrl = '{{ route('rules.duplicate') }}';

@@ -40,67 +40,48 @@ export default defineConfig(({command, mode, isSsrBuild, isPreview}) => {
                     // CSS for entire app
                     'sass/app.scss',
 
-                    // auth pages (login etc)
-                    'js/pages/auth/auth.js',
-
                     // dashboard
                     'js/pages/dashboard/boxes.js',
                     'js/pages/dashboard/dashboard.js',
 
+                    // generic
+                    'js/pages/generic.js',
+
                     // accounts
-                    'js/pages/accounts/index.js',
-                    'js/pages/accounts/show.js',
-                    'js/pages/accounts/reconcile/index.js',
 
                     // administrations
                     'js/pages/administrations/index.js',
                     'js/pages/administrations/edit.js',
 
                     // categories
-                    'js/pages/categories/index.js',
 
                     // budgets
-                    'js/pages/budgets/index.js',
 
                     // exchange rates
                     'js/pages/exchange-rates/index.js',
 
                     // export
-                    'js/pages/export/index.js',
 
                     // object groups
-                    'js/pages/object-groups/index.js',
 
                     // rules
-                    'js/pages/rules/index.js',
 
                     // recurring transactions
-                    'js/pages/recurring/index.js',
 
                     // subscriptions
-                    'js/pages/subscriptions/index.js',
-                    'js/pages/subscriptions/create.js',
-                    'js/pages/subscriptions/edit.js',
-                    'js/pages/subscriptions/show.js',
-                    'js/pages/subscriptions/delete.js',
 
                     // transaction currencies
-                    'js/pages/currencies/index.js',
 
                     // transactions
-                    'js/pages/transactions/index.js',
                     'js/pages/transactions/create.js',
                     'js/pages/transactions/edit.js',
-                    'js/pages/transactions/show.js',
 
                     // tags
-                    'js/pages/tags/index.js',
 
                     // webhooks
                     'js/pages/webhooks/index.js',
 
                     // piggy banks
-                    'js/pages/piggy-banks/index.js',
                 ],
                 buildDirectory: '../../../../public/build',
                 // publicDirectory: '../../../public',

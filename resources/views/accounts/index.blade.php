@@ -54,7 +54,7 @@
 
 @endsection
 @section('scripts')
-    @vite(['js/pages/accounts/index.js'])
+    @vite(['js/pages/generic.js'])
     <script type="text/javascript" nonce="{{ $JS_NONCE }}">
         var objectType = '{{ e($objectType) }}';
     </script>

@@ -76,7 +76,7 @@
     </div>
 @endsection
 @section('scripts')
-    @vite(['js/pages/currencies/index.js'])
+    @vite(['js/pages/generic.js'])
     <script type="text/javascript" nonce="{{ $JS_NONCE }}">
         var redirectUrl = "{{ route('currencies.index') }}";
         var updateCurrencyUrl = "{{ route('api.v1.currencies.update', ['']) }}";

@@ -35,7 +35,7 @@
     </div>
     @yield('content')
 </div>
-@vite(['js/pages/auth/auth.js'])
+@vite(['js/pages/generic.js'])
 @yield('scripts')
 
 </body>

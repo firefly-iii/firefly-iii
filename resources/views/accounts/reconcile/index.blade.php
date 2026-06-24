@@ -117,7 +117,7 @@
 @endsection
 
 @section('scripts')
-    @vite(['js/pages/accounts/reconcile/index.js'])
+    @vite(['js/pages/generic.js'])
 
     <script type="text/javascript" nonce="{{ $JS_NONCE }}">
         currencySymbol = "{{ $currency->symbol }}";

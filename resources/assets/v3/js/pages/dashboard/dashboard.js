@@ -27,9 +27,8 @@ import boxes from './boxes.js';
 
 let index = function () {
     return {
-        foo2: 'bar2',
         init() {
-            //console.log('init op index xxx');
+            console.log('Dashboard');
         }
     }
 };

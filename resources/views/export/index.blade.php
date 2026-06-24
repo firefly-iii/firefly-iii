@@ -30,5 +30,5 @@
 
 @endsection
 @section('scripts')
-    @vite(['js/pages/export/index.js'])
+    @vite(['js/pages/generic.js'])
 @endsection
