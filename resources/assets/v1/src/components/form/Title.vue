@@ -19,36 +19,7 @@
   -->
 
 <template>
-  <div class="form-group" v-bind:class="{ 'has-error': hasError()}">
-    <label class="col-sm-4 control-label">
-      {{ $t('form.title') }}
-    </label>
-    <div class="col-sm-8">
-      <div class="input-group">
-        <input
-            ref="title"
-            :title="$t('form.title')"
-            v-model=title
-            autocomplete="off"
-            class="form-control"
-            name="title"
-            type="text"
-            @input="handleInput"
-            v-bind:placeholder="$t('form.title')"
-        >
-        <span class="input-group-btn">
-            <button
-                class="btn btn-default"
-                tabIndex="-1"
-                type="button"
-                v-on:click="clearTitle"><i class="fa fa-trash-o"></i></button>
-        </span>
-      </div>
-      <ul v-for="error in this.error" class="list-unstyled">
-        <li class="text-danger">{{ error }}</li>
-      </ul>
-    </div>
-  </div>
+
 </template>
 
 <script>

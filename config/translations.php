@@ -61,6 +61,7 @@ return [
                 'interest_calc_yearly',
                 'loading',
                 'exchange_rates_from_to',
+                'administrations_page_edit_sub_title_js',
                 'errors_upload',
                 'updated_journal_js',
                 'upload_too_large',
