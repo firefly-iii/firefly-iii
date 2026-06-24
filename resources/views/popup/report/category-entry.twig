@@ -1,16 +1,16 @@
 <div class="modal-dialog modal-lg" role="document">
     <div class="modal-content">
         <div class="modal-header">
-            <button type="button" class="close" data-dismiss="modal" aria-label="{{ 'close'|_ }}"><span>&times;</span></button>
+            <button type="button" class="close" data-dismiss="modal" aria-label="{{ __('firefly.close') }}"><span>&times;</span></button>
             <h4 class="modal-title"
-                id="expenseEntryTitle">{{ trans('firefly.category_entry', {name: category.name, start: start.isoFormat($monthAndDayFormat), end: end.isoFormat($monthAndDayFormat)}) }}</h4>
+                id="expenseEntryTitle">{{ trans('firefly.category_entry', {name: category.name, start: $start->isoFormat($monthAndDayFormat), end: $end->isoFormat($monthAndDayFormat)}) }}</h4>
         </div>
         <div class="modal-body">
             {% set hideCategory = true %}
             {% include 'popup.list.journals' %}
         </div>
         <div class="modal-footer">
-            <button type="button" class="btn btn-outline-secondary" data-dismiss="modal">{{ 'close'|_ }}</button>
+            <button type="button" class="btn btn-outline-secondary" data-dismiss="modal">{{ __('firefly.close') }}</button>
         </div>
     </div>
 </div>

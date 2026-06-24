@@ -201,7 +201,7 @@
                             </tr>
                             </thead>
                             <tbody>
-                            {{-- {{-- START OF BUDGET ROW --}} --}}
+                            {{-- START OF BUDGET ROW --}}
 
                             @foreach($budgets as $budget)
                                 <tr data-id="{{ $budget['id'] }}">
@@ -440,7 +440,6 @@
 
     <script src="v1/js/lib/jquery-ui.min.js?v={{ $FF_BUILD_TIME }}" type="text/javascript" nonce="{{ $JS_NONCE }}"></script>
     <script type="text/javascript" nonce="{{ $JS_NONCE }}">
-
         // index route.
         var budgetIndexUrl = "{{ route('budgets.index',['START','END']) }}";
 

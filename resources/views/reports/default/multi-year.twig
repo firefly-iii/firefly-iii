@@ -208,25 +208,25 @@
     <script type="text/javascript" src="v1/js/ff/charts.defaults.js?v={{ $FF_BUILD_TIME }}" nonce="{{ $JS_NONCE }}"></script>
     <script type="text/javascript" src="v1/js/ff/charts.js?v={{ $FF_BUILD_TIME }}" nonce="{{ $JS_NONCE }}"></script>
     <script type="text/javascript" nonce="{{ $JS_NONCE }}">
-        var year = {{ start.year }};
-        var month = {{ start.month }};
+        var year = {{ $start->year }};
+        var month = {{ $start->month }};
 
         // to report another URL:
-        var startDate = '{{ start.format('Ymd') }}';
-        var endDate = '{{ end.format('Ymd') }}';
+        var startDate = '{{ $start->format('Ymd') }}';
+        var endDate = '{{ $end->format('Ymd') }}';
         var accountIds = '{{ accountIds }}';
 
-        var opChartUrl = '{{ route('chart.report.operations', [accountIds, start.format('Ymd'), end.format('Ymd')]) }}';
-        var netWorthUrl = '{{ route('chart.report.net-worth', [accountIds, start.format('Ymd'), end.format('Ymd')]) }}';
+        var opChartUrl = '{{ route('chart.report.operations', [accountIds, $start->format('Ymd'), $end->format('Ymd')]) }}';
+        var netWorthUrl = '{{ route('chart.report.net-worth', [accountIds, $start->format('Ymd'), $end->format('Ymd')]) }}';
 
-        var accountReportUrl = '{{ route('report-data.account.general', [accountIds, start.format('Ymd'), end.format('Ymd')]) }}';
-        var incomeReportUrl = '{{ route('report-data.operations.income', [accountIds, start.format('Ymd'), end.format('Ymd')]) }}';
-        var expenseReportUrl = '{{ route('report-data.operations.expenses', [accountIds, start.format('Ymd'), end.format('Ymd')]) }}';
-        var incExpReportUrl = '{{ route('report-data.operations.operations', [accountIds, start.format('Ymd'), end.format('Ymd')]) }}';
+        var accountReportUrl = '{{ route('report-data.account.general', [accountIds, $start->format('Ymd'), $end->format('Ymd')]) }}';
+        var incomeReportUrl = '{{ route('report-data.operations.income', [accountIds, $start->format('Ymd'), $end->format('Ymd')]) }}';
+        var expenseReportUrl = '{{ route('report-data.operations.expenses', [accountIds, $start->format('Ymd'), $end->format('Ymd')]) }}';
+        var incExpReportUrl = '{{ route('report-data.operations.operations', [accountIds, $start->format('Ymd'), $end->format('Ymd')]) }}';
 
-        var budgetPeriodReportUrl = '{{ route('report-data.budget.period', [accountIds, start.format('Ymd'), end.format('Ymd')]) }}';
-        var categoryExpenseUrl = '{{ route('report-data.category.expenses', [accountIds, start.format('Ymd'), end.format('Ymd')]) }}';
-        var categoryIncomeUrl = '{{ route('report-data.category.income', [accountIds, start.format('Ymd'), end.format('Ymd')]) }}';
+        var budgetPeriodReportUrl = '{{ route('report-data.budget.period', [accountIds, $start->format('Ymd'), $end->format('Ymd')]) }}';
+        var categoryExpenseUrl = '{{ route('report-data.category.expenses', [accountIds, $start->format('Ymd'), $end->format('Ymd')]) }}';
+        var categoryIncomeUrl = '{{ route('report-data.category.income', [accountIds, $start->format('Ymd'), $end->format('Ymd')]) }}';
         var billReportUrl = '';
 
     </script>

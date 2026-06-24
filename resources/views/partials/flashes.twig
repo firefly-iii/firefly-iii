@@ -2,7 +2,7 @@
 {% if invalidMonetaryLocale %}
     <div class="alert alert-info alert-dismissible" role="alert">
         <button type="button" class="close" data-dismiss="alert">
-            <span>&times;</span><span class="sr-only">{{ 'close'|_ }}</span>
+            <span>&times;</span><span class="sr-only">{{ __('firefly.close') }}</span>
         </button>
         <strong>{{ 'invalid_server_configuration'|_ }}:</strong> <span class="bi bi-cash"></span> {{ 'invalid_locale_settings'|_ }}
     </div>
@@ -19,7 +19,7 @@
 {% if session_has('success') %}
     <div class="alert alert-success alert-dismissible" role="alert">
         <button type="button" class="close" data-dismiss="alert">
-            <span>&times;</span><span class="sr-only">{{ 'close'|_ }}</span>
+            <span>&times;</span><span class="sr-only">{{ __('firefly.close') }}</span>
         </button>
         <strong>{{ 'flash_success'|_ }}</strong>
         {% if session_has('success_url') %}
@@ -37,7 +37,7 @@
 {% if session_has('info') %}
     <div class="alert alert-info alert-dismissible" role="alert">
         <button type="button" class="close" data-dismiss="alert">
-            <span>&times;</span><span class="sr-only">{{ 'close'|_ }}</span>
+            <span>&times;</span><span class="sr-only">{{ __('firefly.close') }}</span>
         </button>
 
         {{-- MULTIPLE INFO MESSAGE --}}
@@ -73,7 +73,7 @@
 {% if session_has('warning') %}
     <div class="alert alert-warning alert-dismissible" role="alert">
         <button type="button" class="close" data-dismiss="alert">
-            <span>&times;</span><span class="sr-only">{{ 'close'|_ }}</span>
+            <span>&times;</span><span class="sr-only">{{ __('firefly.close') }}</span>
         </button>
         <strong>{{ 'flash_warning'|_ }}</strong> {{ session('warning') }}
     </div>
@@ -83,7 +83,7 @@
 {% if session_has('error') %}
     <div class="alert alert-danger alert-dismissible" role="alert">
         <button type="button" class="close" data-dismiss="alert">
-            <span>&times;</span><span class="sr-only">{{ 'close'|_ }}</span>
+            <span>&times;</span><span class="sr-only">{{ __('firefly.close') }}</span>
         </button>
 
         {{-- MULTIPLE ERRORS (BAD) --}}

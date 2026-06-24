@@ -126,7 +126,7 @@
                     </div>
                     <div class="card-body">
                         <canvas class="main_double_canvas"
-                                data-url="{{ route('chart.double.main', [accountIds, account.id, start.format('Ymd'), end.format('Ymd')]) }}"
+                                data-url="{{ route('chart.double.main', [accountIds, account.id, $start->format('Ymd'), $end->format('Ymd')]) }}"
                                 id="in-out-chart-{{ account.id }}" class="wide-chart" height="400" width="100%"></canvas>
                     </div>
                 </div>
@@ -211,27 +211,27 @@
 
     <script type="text/javascript" nonce="{{ $JS_NONCE }}">
         // to report another URL:
-        var startDate = '{{ start.format('Ymd') }}';
-        var endDate = '{{ end.format('Ymd') }}';
+        var startDate = '{{ $start->format('Ymd') }}';
+        var endDate = '{{ $end->format('Ymd') }}';
         var accountIds = '{{ accountIds }}';
         var doubleIds = '{{ doubleIds }}';
 
 
         // html blocks.
-        var opsAccountsUrl = '{{ route('report-data.double.operations', [accountIds, doubleIds, start.format('Ymd'), end.format('Ymd')]) }}';
-        var opsAccountsAssetUrl = '{{ route('report-data.double.ops-asset', [accountIds, doubleIds, start.format('Ymd'), end.format('Ymd')]) }}';
+        var opsAccountsUrl = '{{ route('report-data.double.operations', [accountIds, doubleIds, $start->format('Ymd'), $end->format('Ymd')]) }}';
+        var opsAccountsAssetUrl = '{{ route('report-data.double.ops-asset', [accountIds, doubleIds, $start->format('Ymd'), $end->format('Ymd')]) }}';
 
         // pie charts:
-        var categoryOutUrl = '{{ route('chart.double.category-expense', [accountIds, doubleIds, start.format('Ymd'), end.format('Ymd')]) }}';
-        var categoryInUrl = '{{ route('chart.double.category-income', [accountIds, doubleIds, start.format('Ymd'), end.format('Ymd')]) }}';
-        var budgetsOutUrl = '{{ route('chart.double.budget-expense', [accountIds, doubleIds, start.format('Ymd'), end.format('Ymd')]) }}';
-        var tagOutUrl = '{{ route('chart.double.tag-expense', [accountIds, doubleIds, start.format('Ymd'), end.format('Ymd')]) }}';
-        var tagInUrl = '{{ route('chart.double.tag-income', [accountIds, doubleIds, start.format('Ymd'), end.format('Ymd')]) }}';
+        var categoryOutUrl = '{{ route('chart.double.category-expense', [accountIds, doubleIds, $start->format('Ymd'), $end->format('Ymd')]) }}';
+        var categoryInUrl = '{{ route('chart.double.category-income', [accountIds, doubleIds, $start->format('Ymd'), $end->format('Ymd')]) }}';
+        var budgetsOutUrl = '{{ route('chart.double.budget-expense', [accountIds, doubleIds, $start->format('Ymd'), $end->format('Ymd')]) }}';
+        var tagOutUrl = '{{ route('chart.double.tag-expense', [accountIds, doubleIds, $start->format('Ymd'), $end->format('Ymd')]) }}';
+        var tagInUrl = '{{ route('chart.double.tag-income', [accountIds, doubleIds, $start->format('Ymd'), $end->format('Ymd')]) }}';
 
-        var avgExpensesUrl = '{{ route('report-data.double.avg-expenses', [accountIds, doubleIds, start.format('Ymd'), end.format('Ymd')]) }}';
-        var topExpensesUrl = '{{ route('report-data.double.top-expenses', [accountIds, doubleIds, start.format('Ymd'), end.format('Ymd')]) }}';
-        var avgIncomeUrl = '{{ route('report-data.double.avg-income', [accountIds, doubleIds, start.format('Ymd'), end.format('Ymd')]) }}';
-        var topIncomeUrl = '{{ route('report-data.double.top-income', [accountIds, doubleIds, start.format('Ymd'), end.format('Ymd')]) }}';
+        var avgExpensesUrl = '{{ route('report-data.double.avg-expenses', [accountIds, doubleIds, $start->format('Ymd'), $end->format('Ymd')]) }}';
+        var topExpensesUrl = '{{ route('report-data.double.top-expenses', [accountIds, doubleIds, $start->format('Ymd'), $end->format('Ymd')]) }}';
+        var avgIncomeUrl = '{{ route('report-data.double.avg-income', [accountIds, doubleIds, $start->format('Ymd'), $end->format('Ymd')]) }}';
+        var topIncomeUrl = '{{ route('report-data.double.top-income', [accountIds, doubleIds, $start->format('Ymd'), $end->format('Ymd')]) }}';
 
     </script>
     <script type="text/javascript" src="v1/js/ff/reports/all.js?v={{ $FF_BUILD_TIME }}" nonce="{{ $JS_NONCE }}"></script>

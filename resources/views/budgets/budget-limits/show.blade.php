@@ -1,19 +1,19 @@
 <div class="modal-dialog">
     <div class="modal-content">
         <div class="modal-header">
-            <button type="button" class="close" data-dismiss="modal"><span>&times;</span><span class="sr-only">{{ 'close'|_ }}</span>
             </button>
-            <h4 class="modal-title">
+            <h5 class="modal-title">
                 {{ trans('firefly.set_budget_limit_notes') }}
-            </h4>
+            </h5>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="{{ __('firefly.close') }}"></button>
         </div>
             <div class="modal-body">
                 <div>
-                    {{ notes|markdown }}
+                    {!! parse_markdown($notes) !!}
                 </div>
             </div>
         <div class="modal-footer">
-            <button type="button" class="btn btn-outline-secondary" data-dismiss="modal">{{ 'close'|_ }}</button>
+            <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">{{ __('firefly.close') }}</button>
         </div>
     </div>
 </div>

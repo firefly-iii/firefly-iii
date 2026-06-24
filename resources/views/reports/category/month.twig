@@ -154,7 +154,7 @@
                         <h3 class="card-title">{{ 'income_and_expenses'|_ }} ({{ category.name }})</h3>
                     </div>
                     <div class="card-body">
-                        <canvas class="main_category_canvas" data-url="{{ route('chart.category.main', [accountIds, category.id, start.format('Ymd'), end.format('Ymd')]) }}" id="in-out-chart-{{ category.id }}" class="wide-chart" height="400" width="100%"></canvas>
+                        <canvas class="main_category_canvas" data-url="{{ route('chart.category.main', [accountIds, category.id, $start->format('Ymd'), $end->format('Ymd')]) }}" id="in-out-chart-{{ category.id }}" class="wide-chart" height="400" width="100%"></canvas>
                     </div>
                 </div>
             </div>
@@ -236,29 +236,29 @@
     <script type="text/javascript" src="v1/js/ff/reports/all.js?v={{ $FF_BUILD_TIME }}" nonce="{{ $JS_NONCE }}"></script>
     <script type="text/javascript" nonce="{{ $JS_NONCE }}">
         // to report another URL:
-        var startDate = '{{ start.format('Ymd') }}';
-        var endDate = '{{ end.format('Ymd') }}';
+        var startDate = '{{ $start->format('Ymd') }}';
+        var endDate = '{{ $end->format('Ymd') }}';
         var accountIds = '{{ accountIds }}';
         var categoryIds = '{{ categoryIds }}';
 
 
-        var accountsUrl = '{{ route('report-data.category.accounts', [accountIds, categoryIds, start.format('Ymd'), end.format('Ymd')]) }}';
-        var categoriesUrl = '{{ route('report-data.category.categories', [accountIds, categoryIds, start.format('Ymd'), end.format('Ymd')]) }}';
-        var accountPerCategoryUrl = '{{ route('report-data.category.account-per-category', [accountIds, categoryIds, start.format('Ymd'), end.format('Ymd')]) }}';
+        var accountsUrl = '{{ route('report-data.category.accounts', [accountIds, categoryIds, $start->format('Ymd'), $end->format('Ymd')]) }}';
+        var categoriesUrl = '{{ route('report-data.category.categories', [accountIds, categoryIds, $start->format('Ymd'), $end->format('Ymd')]) }}';
+        var accountPerCategoryUrl = '{{ route('report-data.category.account-per-category', [accountIds, categoryIds, $start->format('Ymd'), $end->format('Ymd')]) }}';
 
         // pie charts:
-        var categoryOutUrl = '{{ route('chart.category.category-expense', [accountIds, categoryIds, start.format('Ymd'), end.format('Ymd')]) }}';
-        var categoryInUrl = '{{ route('chart.category.category-income', [accountIds, categoryIds, start.format('Ymd'), end.format('Ymd')]) }}';
-        var budgetsOutUrl = '{{ route('chart.category.budget-expense', [accountIds, categoryIds, start.format('Ymd'), end.format('Ymd')]) }}';
-        var sourceOutUrl = '{{ route('chart.category.source-expense', [accountIds, categoryIds, start.format('Ymd'), end.format('Ymd')]) }}';
-        var sourceInUrl = '{{ route('chart.category.source-income', [accountIds, categoryIds, start.format('Ymd'), end.format('Ymd')]) }}';
-        var destOutUrl = '{{ route('chart.category.dest-expense', [accountIds, categoryIds, start.format('Ymd'), end.format('Ymd')]) }}';
-        var destInUrl = '{{ route('chart.category.dest-income', [accountIds, categoryIds, start.format('Ymd'), end.format('Ymd')]) }}';
+        var categoryOutUrl = '{{ route('chart.category.category-expense', [accountIds, categoryIds, $start->format('Ymd'), $end->format('Ymd')]) }}';
+        var categoryInUrl = '{{ route('chart.category.category-income', [accountIds, categoryIds, $start->format('Ymd'), $end->format('Ymd')]) }}';
+        var budgetsOutUrl = '{{ route('chart.category.budget-expense', [accountIds, categoryIds, $start->format('Ymd'), $end->format('Ymd')]) }}';
+        var sourceOutUrl = '{{ route('chart.category.source-expense', [accountIds, categoryIds, $start->format('Ymd'), $end->format('Ymd')]) }}';
+        var sourceInUrl = '{{ route('chart.category.source-income', [accountIds, categoryIds, $start->format('Ymd'), $end->format('Ymd')]) }}';
+        var destOutUrl = '{{ route('chart.category.dest-expense', [accountIds, categoryIds, $start->format('Ymd'), $end->format('Ymd')]) }}';
+        var destInUrl = '{{ route('chart.category.dest-income', [accountIds, categoryIds, $start->format('Ymd'), $end->format('Ymd')]) }}';
 
-        var avgExpensesUrl = '{{ route('report-data.category.avg-expenses', [accountIds, categoryIds, start.format('Ymd'), end.format('Ymd')]) }}';
-        var topExpensesUrl = '{{ route('report-data.category.top-expenses', [accountIds, categoryIds, start.format('Ymd'), end.format('Ymd')]) }}';
-        var avgIncomeUrl = '{{ route('report-data.category.avg-income', [accountIds, categoryIds, start.format('Ymd'), end.format('Ymd')]) }}';
-        var topIncomeUrl = '{{ route('report-data.category.top-income', [accountIds, categoryIds, start.format('Ymd'), end.format('Ymd')]) }}';
+        var avgExpensesUrl = '{{ route('report-data.category.avg-expenses', [accountIds, categoryIds, $start->format('Ymd'), $end->format('Ymd')]) }}';
+        var topExpensesUrl = '{{ route('report-data.category.top-expenses', [accountIds, categoryIds, $start->format('Ymd'), $end->format('Ymd')]) }}';
+        var avgIncomeUrl = '{{ route('report-data.category.avg-income', [accountIds, categoryIds, $start->format('Ymd'), $end->format('Ymd')]) }}';
+        var topIncomeUrl = '{{ route('report-data.category.top-income', [accountIds, categoryIds, $start->format('Ymd'), $end->format('Ymd')]) }}';
 
     </script>
     <script type="text/javascript" src="v1/js/ff/reports/category/month.js?v={{ $FF_BUILD_TIME }}" nonce="{{ $JS_NONCE }}"></script>
