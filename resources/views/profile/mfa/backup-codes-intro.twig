@@ -8,7 +8,7 @@
 <form method="POST" action="{{ route('profile.mfa.backup-codes.post') }}" accept-charset="UTF-8" class="form-horizontal" id="preferences_code">
     <input name="_token" type="hidden" value="{{ csrf_token() }}">
         <div class="row">
-            <div class="col-lg-6 col-lg-offset-3 col-md-12 col-sm-12 col-xs-12">
+            <div class="col-lg-6 offset-lg-3 col-md-12 col-sm-12 col-xs-12">
                 <div class="card">
                     <div class="card-header">
                         <h3 class="card-title">{{ 'mfa_backup_codes_title'|_ }}</h3>
@@ -28,7 +28,7 @@
         </div>
 
     <div class="row">
-        <div class="col-lg-6 col-lg-offset-3 col-md-12 col-sm-12 col-xs-12">
+        <div class="col-lg-6 offset-lg-3 col-md-12 col-sm-12 col-xs-12">
             <div class="card">
                 <div class="card-body">
                     {{ ExpandedForm.password('password', {helpText: 'current_password_confirm_mfa'|_}) }}

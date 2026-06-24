@@ -3,7 +3,7 @@
         {% for transaction in group.transactions %}
             <a class="list-group-item" href="{{ route('transactions.show', [transaction.transaction_group_id]) }}">
                 {{ transaction.description }}
-                <span class="pull-right small">
+                <span class="text-end small">
                     X
                 </span>
             </a>

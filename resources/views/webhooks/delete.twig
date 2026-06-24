@@ -6,7 +6,7 @@
 
 @section('content')
     <div class="row">
-        <div class="col-lg-6 col-lg-offset-3 col-md-12 col-sm-12">
+        <div class="col-lg-6 offset-lg-3 col-md-12 col-sm-12">
             <div class="box box-danger">
                 <div class="card-header">
                     <h3 class="card-title">{{ trans('form.delete_webhook', {'title': webhook.title}) }}</h3>
@@ -22,7 +22,7 @@
                 </div>
                 <div class="card-footer">
                     <input type="submit" id="button" name="submit" value="{{ trans('form.deletePermanently') }}"
-                           class="btn pull-right btn-danger"/>
+                           class="btn text-end btn-danger"/>
                     <a href="{{ URL::previous() }}" class="btn-outline-secondary btn">{{ trans('form.cancel') }}</a>
                 </div>
             </div>

@@ -282,7 +282,7 @@
                     </div>
                     <div class="card-footer">
                         <a href="{{ route('transactions.show', group.id) }}" class="btn btn-danger">{{ 'cancel'|_ }}</a>
-                        <button type="submit" id="transaction-btn" class="btn btn-success pull-right">
+                        <button type="submit" id="transaction-btn" class="btn btn-success text-end">
                             {{ trans('form.convert_'~sourceType.type) }}
                         </button>
                     </div>

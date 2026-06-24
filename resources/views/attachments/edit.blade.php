@@ -1,15 +1,10 @@
 @extends('layout.v3.session')
-
-{% block breadcrumbs %}
-    {{ Breadcrumbs.render(Route.getCurrentRoute().getName(), attachment) }}
-@endsection
-
 @section('content')
-    <form method="POST" action="{{ route('attachments.update', attachment.id) }}" accept-charset="UTF-8"
+    <form method="POST" action="{{ route('attachments.update', $attachment->id) }}" accept-charset="UTF-8"
           class="form-horizontal" id="update">
 
         <input type="hidden" name="_token" value="{{ csrf_token() }}"/>
-        <input type="hidden" name="id" value="{{ attachment.id }}"/>
+        <input type="hidden" name="id" value="{{ $attachment->id }}"/>
 
 
         <div class="row">
@@ -19,9 +14,9 @@
                         <h3 class="card-title">{{ __('firefly.mandatoryFields') }}</h3>
                     </div>
                     <div class="card-body">
-                        {{ ExpandedForm::staticText('filename',attachment.filename|escape) }}
-                        {{ ExpandedForm::staticText('mime',attachment.mime|escape) }}
-                        {{ ExpandedForm::staticText('size',attachment.size|filesize) }}
+                        {!! ExpandedForm::staticText('filename',$attachment->filename) !!}
+                        {!! ExpandedForm::staticText('mime',$attachment->mime) !!}
+                        {!! ExpandedForm::staticText('size',$attachment->size) !!}
                     </div>
                 </div>
 
@@ -32,8 +27,8 @@
                         <h3 class="card-title">{{ __('firefly.optionalFields') }}</h3>
                     </div>
                     <div class="card-body">
-                        {{ ExpandedForm::text('title', attachment.title) }}
-                        {{ ExpandedForm::textarea('notes',null,{helpText: trans('firefly.field_supports_markdown')}) }}
+                        {!! ExpandedForm::text('title', $attachment->title) !!}
+                        {!! ExpandedForm::textarea('notes',null,['helpText' => trans('firefly.field_supports_markdown')]) !!}
                     </div>
                 </div>
             </div>
@@ -47,11 +42,11 @@
                         <h3 class="card-title">{{ __('firefly.options') }}</h3>
                     </div>
                     <div class="card-body">
-                        {{ ExpandedForm::optionsList('update','attachment') }}
+                        {!! ExpandedForm::optionsList('update','attachment') !!}
                     </div>
-                    <div class="card-footer">
-                        <button type="submit" class="btn pull-right btn-success">
-                            {{ 'update_attachment'|_ }}
+                    <div class="card-footer text-end">
+                        <button type="submit" class="btn  btn-success">
+                            {{ __('firefly.update_attachment') }}
                         </button>
                     </div>
                 </div>

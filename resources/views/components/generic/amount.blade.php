@@ -99,7 +99,7 @@
 
 
 {{--
-<span class="pull-right small">
+<span class="text-end small">
 
 
 {% elseif transaction.transaction_type_type == 'Reconciliation' %}

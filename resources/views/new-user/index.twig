@@ -10,7 +10,7 @@
         <input type="hidden" name="_token" value="{{ csrf_token() }}"/>
 
         <div class="row">
-            <div class="col-lg-6 col-lg-offset-3 col-md-12 col-xs-12">
+            <div class="col-lg-6 offset-lg-3 col-md-12 col-xs-12">
 
                 <div class="card">
                     <div class="card-header">
@@ -62,7 +62,7 @@
 
                     </div>
                     <div class="card-footer">
-                        <input type="submit" name="submit" value="{{ 'submit'|_ }}" class="btn btn-success pull-right"/>
+                        <input type="submit" name="submit" value="{{ 'submit'|_ }}" class="btn btn-success text-end"/>
                     </div>
                 </div>
             </div>

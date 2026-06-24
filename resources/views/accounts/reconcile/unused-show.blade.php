@@ -6,7 +6,7 @@
                 <div class="card-header">
                     <h3 class="card-title">{{ __('firefly.transaction_journal_information') }}</h3>
 
-                    <div class="box-tools pull-right">
+                    <div class="box-tools text-end">
                         <div class="btn-group">
                             <button id="transaction_menu" class="btn btn-box-tool dropdown-toggle" data-toggle="dropdown"><span class="bi bi-list"></span>
                             </button>
@@ -45,7 +45,7 @@
                     </table>
                 </div>
                 <div class="card-footer">
-                    <div class="pull-right">
+                    <div class="text-end">
                         <div class="btn-group">
                             <a class="btn btn-outline-secondary" href="{{ route('transactions.edit',[$journal->id]) }}"><span class="bi bi-pencil"></span> {{ __('firefly.edit') }}</a>
                             <a href="{{ route('transactions.delete',[$journal->id]) }}" class="btn btn-danger"><span class="bi bi-trash"></span> {{ __('firefly.delete') }}

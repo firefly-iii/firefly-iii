@@ -9,7 +9,7 @@
         <input name="_token" type="hidden" value="{{ csrf_token() }}">
 
         <div class="row">
-            <div class="col-lg-6 col-lg-offset-3 col-md-6 col-sm-12">
+            <div class="col-lg-6 offset-lg-3 col-md-6 col-sm-12">
                 <div class="box box-danger">
                     <div class="card-header">
                         <h3 class="card-title">{{ trans('form.delete_journal', {'description': group.title|default(journal.description)}) }}</h3>
@@ -24,7 +24,7 @@
                         </p>
                     </div>
                     <div class="card-footer">
-                        <input type="submit" name="submit" value="{{ trans('form.deletePermanently') }}" class="btn btn-danger pull-right"/>
+                        <input type="submit" name="submit" value="{{ trans('form.deletePermanently') }}" class="btn btn-danger text-end"/>
                         <a href="{{ previous }}" class="btn-outline-secondary btn">{{ trans('form.cancel') }}</a>
                     </div>
                 </div>

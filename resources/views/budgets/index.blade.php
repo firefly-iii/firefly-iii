@@ -403,7 +403,7 @@
                             <h3 class="card-title">{{ __('firefly.createBudget') }}</h3>
                         </div>
                         <div class="card-body">
-                            <a href="{{ route('budgets.create') }}" class="btn btn-success pull-right">{{ __('firefly.createBudget') }}</a>
+                            <a href="{{ route('budgets.create') }}" class="btn btn-success text-end">{{ __('firefly.createBudget') }}</a>
                         </div>
                     </div>
                 </div>
