@@ -1,16 +1,11 @@
 @extends('layout.v3.session')
-
-
-    {{ Breadcrumbs.render(Route.getCurrentRoute.getName, currency) }}
-@endsection
-
 @section('content')
-    <form method="post" action="{{ route('currencies.update',currency.id) }}" class="form-horizontal"
+    <form method="post" action="{{ route('currencies.update',$currency->id) }}" class="form-horizontal"
           accept-charset="UTF-8"
           enctype="multipart/form-data">
         <input type="hidden" name="_token" value="{{ csrf_token() }}"/>
 
-        <input type="hidden" name="id" value="{{ currency.id }}"/>
+        <input type="hidden" name="id" value="{{ $currency->id }}"/>
         <div class="row">
             <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
                 <div class="card">
@@ -18,11 +13,11 @@
                         <h3 class="card-title">{{ __('firefly.mandatoryFields') }}</h3>
                     </div>
                     <div class="card-body">
-                        {!! ExpandedForm::text('name', currency.name,{'maxlength' : 48}) }}
-                        {!! ExpandedForm::text('symbol', currency.symbol,{'maxlength' : 51}) }}
-                        {!! ExpandedForm::text('code', currency.code,{'maxlength' : 51}) }}
-                        {!! ExpandedForm::integer('decimal_places', currency.decimal_places,{'maxlength' : 2,'min': 0,'max': 12}) }}
-                        {!! ExpandedForm::checkbox('enabled', null, currency.enabled) }}
+                        {!! ExpandedForm::text('name', $currency->name,['maxlength' =>  48]) !!}
+                        {!! ExpandedForm::text('symbol', $currency->symbol,['maxlength' =>  51]) !!}
+                        {!! ExpandedForm::text('code', $currency->code,['maxlength' =>  51]) !!}
+                        {!! ExpandedForm::integer('decimal_places', $currency->decimal_places,['maxlength' =>  2,'min' => 0,'max' => 12]) !!}
+                        {!! ExpandedForm::checkbox('enabled', null, $currency->enabled) !!}
                     </div>
                 </div>
             </div>
@@ -36,11 +31,11 @@
                         <h3 class="card-title">{{ __('firefly.options') }}</h3>
                     </div>
                     <div class="card-body">
-                        {!! ExpandedForm::optionsList('update','currency') }}
+                        {!! ExpandedForm::optionsList('update','currency') !!}
                     </div>
                     <div class="card-footer">
                         <button type="submit" class="btn btn-success text-end">
-                            {{ 'update_currency'|_ }}
+                            {{ __('firefly.update_currency') }}
                         </button>
                     </div>
                 </div>

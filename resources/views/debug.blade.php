@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="{{ trans('config.html_language') }}">
+<head>
+    <title>{{ trans('firefly.debug_page') }}</title>
+</head>
+<style nonce="{{ $JS_NONCE }}">
+    p.default-text {font-family:Arial, Arial, Helvetica, sans-serif;font-size:12pt;width:600px;}
+    p.warn-text {font-family:Arial, Arial, Helvetica, sans-serif;font-size:12pt;width:600px;color:#a00;}
+    textarea {font-family:Menlo, Monaco, Consolas, monospace;font-size:8pt;}
+</style>
+<body>
+
+<p class="default-text">
+    {{ trans('firefly.debug_submit_instructions')|raw }}
+</p>
+<p class="default-text">
+    <strong>{{ trans('firefly.debug_pretty_table') }}</strong>
+</p>
+<label for="debug_info"></label>
+<textarea rows="30" cols="100" name="debug_info" id="debug_info">
+Debug information generated at {{ now }} for Firefly III version **{% if not FF_IS_DEVELOP %}v@endif{{ FF_VERSION }}**.
+
+{{ table|escape('html') }}
+</textarea>
+<script type="text/javascript" nonce="{{ $JS_NONCE }}">
+    var textArea = document.getElementById('debug_info');
+    var text = textArea.value;
+    var timeZone = Intl.DateTimeFormat().resolvedOptions().timeZone;
+    text = text.replace('[BrowserTZ]', timeZone);
+    textArea.value = text;
+</script>
+
+<p class=default-text">
+    <a href="{{ route('index') }}">{{ trans('firefly.back_to_index') }}</a>
+</p>
+
+<p class="warn-text">
+    {{ trans('firefly.debug_additional_data')|raw }}
+</p>
+
+<textarea rows="30" cols="100" name="log_info">
+```
+{{ logContent }}
+```
+</textarea>
+
+<p class=default-text">
+    <a href="{{ route('index') }}">{{ trans('firefly.back_to_index') }}</a>
+</p>
+
+</body>
+</html>
