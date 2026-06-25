@@ -23,21 +23,21 @@ jobs:
           # validate argument
           if  [[ $version != develo* ]] && [[ $version != v* ]] && [[ $version != branch* ]] ;
           then
-            echo "Argument '$version' does not start with a d or with a v or a b"
+            echo "Argument '$version' does not start with a d or with a v or 'branch'"
             exit 1
           fi
         env:
           version: ${{ github.event_name == 'schedule' && 'develop' || inputs.version }}
       - name: Checkout
-        uses: actions/checkout@v6
+        uses: actions/checkout@v7
         with:
           fetch-depth: 0
       - name: Switch and pull
         run: |
           # validate argument
-          if  [[ $version != d* ]] && [[ $version != v* ]] ;
+          if  [[ $version != develo* ]] && [[ $version != v* ]] && [[ $version != branch* ]] ;
           then
-            echo 'Argument does not start with a d or with a v'
+            echo "Argument '$version' does not start with a d or with a v or 'branch'"
             exit 1
           fi
 
@@ -46,10 +46,11 @@ jobs:
           #
           BRANCH_TO_PULL=origin/develop
           if [[ "$version" == branch* ]]; then
-            BRANCH_TO_PULL=origin/$version
+            SHORT=${version:7}
+            BRANCH_TO_PULL="origin/$SHORT"
           fi
 
-          echo "Version is '$version', check out '$BRANCH_TO_PULL'-branch"
+          echo "Version is '$version', check out '$BRANCH_TO_PULL' branch"
 
           git checkout --track $BRANCH_TO_PULL
           git pull
@@ -150,11 +151,20 @@ jobs:
         env:
           FIREFLY_III_ROOT: /github/workspace
           GH_TOKEN: ''
+      - name: Generate JSON v3
+        id: json-v3
+        uses: JC5/firefly-iii-dev@main
+        with:
+          action: 'ff3:json-translations v3'
+          output: ''
+        env:
+          FIREFLY_III_ROOT: /github/workspace
+          GH_TOKEN: ''
       - name: Build JS
         run: |
           npm install
           npm run prod  --workspace=v1 --verbose
-          npm run build --workspace=v2 --verbose
+          npm run build --workspace=v3 --verbose || true
           npm update
       - name: Cleanup changelog
         id: cleanup-changelog
@@ -271,6 +281,7 @@ jobs:
           GH_TOKEN: ""
       - name: Merge all into working branch
         run: |
+          git status
           MERGE_INTO=develop
             if [[ "$version" == branch* ]]; then
                 MERGE_INTO=$version
