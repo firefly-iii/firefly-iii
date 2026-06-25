@@ -22,8 +22,7 @@
 
 declare(strict_types=1);
 
-use FireflyIII\Http\Middleware\AcceptHeaders;
-use FireflyIII\Http\Middleware\Binder;
+use FireflyIII\Api\V1\Controllers\System\CronController;
 use Illuminate\Support\Facades\Route;
 
 use function Safe\define;
@@ -47,10 +46,14 @@ Route::group(
         'namespace'  => 'FireflyIII\Api\V1\Controllers\System',
         'prefix'     => 'v1',
         'as'         => 'api.v1.cron.',
-        'middleware' => [Binder::class, AcceptHeaders::class],
     ],
     static function (): void {
-        Route::get('cron/{cliToken}', ['uses' => 'CronController@cron', 'as' => 'index'])->withoutMiddleware(['api']);
+        Route::get('cron/{cliToken}', ['uses' => 'CronController@cron', 'as' => 'index'])
+            ->withoutMiddleware(['api']);
+                Route::get('cron/{cliToken}',
+                    [CronController::class, 'cron']
+                )->name('index')
+                    ->withoutMiddleware(['api']);
     }
 );
 
