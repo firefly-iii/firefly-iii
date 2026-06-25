@@ -9,7 +9,7 @@
     {{-- upper show-all instruction --}}
     @if(count($periods) > 0)
         <div class="row">
-            <div class="col-lg-offset-10 col-lg-2 col-md-offset-10 col-md-2 col-sm-12 col-xs-12">
+            <div class="offset-lg-10 col-lg-2 offset-md-10 col-md-2 col-sm-12 col-xs-12">
                 <p class="small text-center"><a href="{{ route('transactions.index.all',[objectType]) }}">{{ __('firefly.showEverything') }}</a></p>
             </div>
         </div>
@@ -112,7 +112,7 @@
     {{-- lower show-all instruction --}}
     @if(count($periods) > 0)
         <div class="row">
-            <div class="col-lg-offset-10 col-lg-2 col-md-offset-10 col-md-2 col-sm-12 col-xs-12">
+            <div class="offset-lg-10 col-lg-2 offset-md-10 col-md-2 col-sm-12 col-xs-12">
                 <p class="small text-center"><a href="{{ route('transactions.index.all', [objectType]) }}">{{ __('firefly.showEverything') }}</a></p>
             </div>
         </div>

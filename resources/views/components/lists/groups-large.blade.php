@@ -33,7 +33,7 @@
         <th>{{ trans('list.date') }}</th>
         <th>{{ trans('list.source_account') }}</th>
         <th>{{ trans('list.destination_account') }}</th>
-        @if($showCategory)
+        @if(($showCategory ?? false))
             <th class="d-xs-none">{{ trans('list.category') }}</th>
         @endif
         @if($showBudget ?? false)
@@ -77,7 +77,7 @@
                 @endforeach
             </td>
             <!-- column to span accounts + extra fields -->
-            @if($showCategory ?? false || $showBudget ?? false)
+            @if(($showCategory ?? false) || $showBudget ?? false)
                 <td colspan="5" class="top-light-border">&nbsp;</td>
             @else
                 <td colspan="4" class="top-light-border">&nbsp;b</td>
@@ -233,7 +233,7 @@
 
     </tr>
     <tr>
-        @if($showCategory || $showBudget ?? false)
+        @if(($showCategory ?? false) || $showBudget ?? false)
         <td colspan="9" class="no-margin-pagination">{{ $groups->links('pagination.bootstrap-4') }}</td>
         @else
         <td colspan="8" class="no-margin-pagination">{{ $groups->links('pagination.bootstrap-4') }}</td>

@@ -3,11 +3,11 @@
         <div class="modal-content">
             <div class="modal-header">
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span>&times;</span></button>
-                <h4 class="modal-title" id="testTriggerLabel">{{ __('firefly.test_rule_triggers') }}</h4>
+                <h4 class="modal-title" id="testTriggerLabel">{{ 'test_rule_triggers'|_ }}</h4>
             </div>
             <div class="modal-body">
                 <div class="transaction-warning alert alert-warning">
-                    <h4><span class="icon bi bi-exclamation-triangle"></span> {{ __('firefly.flash_warning') }}</h4>
+                    <h4><span class="icon bi bi-exclamation-triangle"></span> {{ 'flash_warning'|_ }}</h4>
                     <span class="warning-contents"></span>
                 </div>
                 <div class="transactions-list">

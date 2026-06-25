@@ -54,7 +54,7 @@
                         {# only correct way to do active checkbox --}}
                         {!! ExpandedForm::checkbox('active', 1) }}
                         {!! ExpandedForm::checkbox('apply_rules',1) }}
-                        {!! ExpandedForm::file('attachments[]', {'multiple': 'multiple','helpText': trans('firefly.upload_max_file_size', {'size': uploadSize|filesize}) }) }}
+                        {!! ExpandedForm::file('attachments[]', ['multiple' => 'multiple','helpText' => trans('firefly.upload_max_file_size', ['size' => print_nice_filesize($uploadSize)])]) }}
                     </div>
                 </div>
             </div>

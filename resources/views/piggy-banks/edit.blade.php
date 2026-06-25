@@ -1,19 +1,25 @@
 @extends('layout.v3.session')
 
 
-    {{ Breadcrumbs.render(Route.getCurrentRoute.getName) }}
+    {{ Breadcrumbs.render(Route.getCurrentRoute.getName, piggyBank) }}
 @endsection
 
 @section('content')
+    <form method="post" action="{{ route('piggy-banks.update', piggyBank.id) }}" class="form-horizontal"
+          accept-charset="UTF-8"
+          enctype="multipart/form-data">
+        <input type="hidden" name="_token" value="{{ csrf_token() }}"/>
 
-    <form method="POST" action="{{ route('piggy-banks.store') }}" accept-charset="UTF-8" class="form-horizontal" id="store" enctype="multipart/form-data">
-        <input name="_token" type="hidden" value="{{ csrf_token() }}">
+        <input type="hidden" name="repeats" value="0"/>
+        <input type="hidden" name="id" value="{{ piggyBank.id }}"/>
+
         <div class="row">
             <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
                 <div class="card">
                     <div class="card-header">
                         <h3 class="card-title">{{ __('firefly.mandatoryFields') }}</h3>
                     </div>
+
                     <div class="card-body">
                         {!! ExpandedForm::text('name') }}
                         {!! ExpandedForm::amountNoCurrency('target_amount') }}
@@ -22,6 +28,7 @@
 
                     </div>
                 </div>
+
             </div>
             <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
                 <div class="card">
@@ -29,9 +36,10 @@
                         <h3 class="card-title">{{ __('firefly.optionalFields') }}</h3>
                     </div>
                     <div class="card-body">
+                        {!! ExpandedForm::date('start_date') }}
                         {!! ExpandedForm::date('target_date') }}
-                        {!! ExpandedForm::textarea('notes', null, {helpText: trans('firefly.field_supports_markdown')} ) }}
-                        {!! ExpandedForm::file('attachments[]', {'multiple': 'multiple','helpText': trans('firefly.upload_max_file_size', {'size': uploadSize|filesize}) }) }}
+                        {!! ExpandedForm::textarea('notes', null, {helpText: trans('firefly.field_supports_markdown')}) }}
+                        {!! ExpandedForm::file('attachments[]', ['multiple' => 'multiple','helpText' => trans('firefly.upload_max_file_size', ['size' => print_nice_filesize($uploadSize)])]) }}
                         {!! ExpandedForm::objectGroup() }}
                     </div>
                 </div>
@@ -45,11 +53,11 @@
                         <h3 class="card-title">{{ __('firefly.options') }}</h3>
                     </div>
                     <div class="card-body">
-                        {!! ExpandedForm::optionsList('create','piggy bank') }}
+                        {!! ExpandedForm::optionsList('update','piggy bank') }}
                     </div>
                     <div class="card-footer">
                         <button type="submit" class="btn btn-success text-end">
-                            {{ 'store_piggy_bank'|_ }}
+                            {{ 'update_piggy_button'|_ }}
                         </button>
                     </div>
                 </div>
@@ -59,16 +67,21 @@
     </form>
 @endsection
 @section('scripts')
-    <script type="text/javascript" src="v1/js/lib/modernizr-custom.js?v={{ $FF_BUILD_TIME }}" nonce="{{ $JS_NONCE }}"></script>
+    <script type="text/javascript" src="v1/js/lib/modernizr-custom.js?v={{ $FF_BUILD_TIME }}"
+            nonce="{{ $JS_NONCE }}"></script>
     <script type="text/javascript" src="v1/js/lib/jquery-ui.min.js?v={{ $FF_BUILD_TIME }}" nonce="{{ $JS_NONCE }}"></script>
-    <script type="text/javascript" src="v1/js/ff/piggy-banks/create.js?v={{ $FF_BUILD_TIME }}" nonce="{{ $JS_NONCE }}"></script>
-
+    <script type="text/javascript" src="v1/js/ff/piggy-banks/create.js?v={{ $FF_BUILD_TIME }}"
+            nonce="{{ $JS_NONCE }}"></script>
     {{-- auto complete for object groups --}}
-    <script type="text/javascript" src="v1/js/lib/typeahead/typeahead.bundle.min.js?v={{ $FF_BUILD_TIME }}" nonce="{{ $JS_NONCE }}"></script>
-    <script type="text/javascript" src="v1/js/ff/object-groups/create-edit.js?v={{ $FF_BUILD_TIME }}" nonce="{{ $JS_NONCE }}"></script>
+    <script type="text/javascript" src="v1/js/lib/typeahead/typeahead.bundle.min.js?v={{ $FF_BUILD_TIME }}"
+            nonce="{{ $JS_NONCE }}"></script>
+    <script type="text/javascript" src="v1/js/ff/object-groups/create-edit.js?v={{ $FF_BUILD_TIME }}"
+            nonce="{{ $JS_NONCE }}"></script>
 @endsection
 
 @section('styles')
-    <link href="v1/css/jquery-ui/jquery-ui.structure.min.css?v={{ $FF_BUILD_TIME }}" type="text/css" rel="stylesheet" media="all" nonce="{{ $JS_NONCE }}">
-    <link href="v1/css/jquery-ui/jquery-ui.theme.min.css?v={{ $FF_BUILD_TIME }}" type="text/css" rel="stylesheet" media="all" nonce="{{ $JS_NONCE }}">
+    <link href="v1/css/jquery-ui/jquery-ui.structure.min.css?v={{ $FF_BUILD_TIME }}" type="text/css" rel="stylesheet"
+          media="all" nonce="{{ $JS_NONCE }}">
+    <link href="v1/css/jquery-ui/jquery-ui.theme.min.css?v={{ $FF_BUILD_TIME }}" type="text/css" rel="stylesheet"
+          media="all" nonce="{{ $JS_NONCE }}">
 @endsection
