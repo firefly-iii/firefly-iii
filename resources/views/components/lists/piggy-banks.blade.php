@@ -26,8 +26,8 @@
         </td>
         <td class="d-table-cell d-md-none">
             <div class="btn-group btn-group-sm">
-                <a href="{{ route('piggy-banks.remove-money-mobile', $piggy['id']) }}" class="btn btn-secondary btn-sm"><span class="bi bi-plus"></span></a>
-                <a href="{{ route('piggy-banks.add-money-mobile', $piggy['id']) }}" class="btn btn-secondary btn-sm"><span class="bi bi-dash"></span></a>
+                <a href="{{ route('piggy-banks.remove-money-mobile', $piggy['id']) }}" class="btn btn-secondary btn-sm"><span class="bi bi-dash"></span></a>
+                <a href="{{ route('piggy-banks.add-money-mobile', $piggy['id']) }}" class="btn btn-secondary btn-sm"><span class="bi bi-plus"></span></a>
             </div>
         </td>
         <td style="width:100px;">

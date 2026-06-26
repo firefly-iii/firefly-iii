@@ -1490,7 +1490,7 @@ return [
     'header_exchange_rates_rates'                         => 'Exchange rates',
     'exchange_rates_intro_rates'                          => 'Firefly III uses the following exchange rates. The inverse is automatically calculated when it is not provided. If no exchange rate exists for the date of the transaction, Firefly III will go back in time to find one. If none are present, the rate "1" will be used.',
     'header_exchange_rates_table'                         => 'Table with exchange rates',
-    'help_rate_form'                                      => 'On this day, how many {to} will you get for one {from}?',
+    'help_rate_form'                                      => 'On this day, how many {{to}} will you get for one {{from}}?',
     'save_new_rate'                                       => 'Save new rate',
     'add_new_rate'                                        => 'Add a new exchange rate',
     'not_enough_currencies'                               => 'Not enough currencies',

@@ -34,6 +34,11 @@ return [
             ],
             'form'       => [
                 'title',
+                'from_currency_to_currency',
+                'to_currency_from_currency',
+                'date',
+                'rate',
+                'help_rate_form'
             ],
             'list'       => [
                 'drag_and_drop',
@@ -58,6 +63,8 @@ return [
                 'liability_direction_debit_short',
                 'liability_direction_credit_short',
                 'liability_direction_null_short',
+                'help_rate_form',
+                'save_new_rate',
                 'interest_calc_yearly',
                 'loading',
                 'exchange_rates_from_to',

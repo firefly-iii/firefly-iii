@@ -330,7 +330,7 @@
 
 {{-- All kinds of variables. --}}
 <script
-    src="{{ route('javascript.variables') }}?ext=.js&amp;v={{ $FF_VERSION }}@if(isset($account) && is_object($account))&amp;account={{ $account->id }}@elseif(isset($account) && is_array($account))&amp;account={{ $account['id'] }}@endif"
+    src="{{ route('javascript.variables') }}?ext=.js&amp;v={{ $FF_VERSION }}@if(isset($account) && is_object($account))&amp;account={{ $account->id }}@elseif(isset($account) && is_array($account))&amp;account={{ $account['id'] ?? '' }}@endif"
     type="text/javascript" nonce="{{ $JS_NONCE }}"></script>
 
 {{-- Base script: jquery and bootstrap --}}

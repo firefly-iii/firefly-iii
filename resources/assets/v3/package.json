@@ -16,12 +16,16 @@
         "i18next": "^26.0.3",
         "i18next-chained-backend": "^5.0.0",
         "i18next-http-backend": "^4.0.0",
-        "i18next-localstorage-backend": "^4.2.0"
+        "i18next-localstorage-backend": "^4.2.0",
+        "patch-package": "^8.0.1",
+        "date-fns": "4.4.0",
+        "axios": "^1.18"
     },
     "type": "module",
     "scripts": {
         "build": "vite build",
-        "dev": "vite"
+        "dev": "vite",
+        "postinstall": "patch-package --error-on-fail"
     },
     "devDependencies": {
         "concurrently": "^9.0.1",
@@ -29,6 +33,7 @@
         "tailwindcss": "^4.0.0",
         "vite": "^8.0.0",
         "sass": "^1",
-        "vite-plugin-manifest-sri": "^0.2.0"
+        "vite-plugin-manifest-sri": "^0.2.0",
+        "postcss": "^8.5.14"
     }
 }

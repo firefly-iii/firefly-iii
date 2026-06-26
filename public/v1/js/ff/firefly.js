@@ -70,8 +70,8 @@ $(function () {
 
 
     // when you click on a currency, this happens:
-    // $('.currency-option').on('click', currencySelect);
-
+    $('.currency-option').on('click', currencySelect);
+    console.log('Form thing done');
     // build the data range:
     // $('#daterange').text(dateRangeMeta.title).daterangepicker(
     //     {

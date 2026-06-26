@@ -54,5 +54,7 @@
     </form>
 @endsection
 @section('scripts')
+    @vite(['js/pages/generic.js'])
+
     <script type="text/javascript" src="v1/js/ff/categories/edit.js?v={{ $FF_BUILD_TIME }}" nonce="{{ $JS_NONCE }}"></script>
 @endsection

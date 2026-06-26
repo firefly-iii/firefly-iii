@@ -1,29 +1,28 @@
 <div class="modal-dialog">
     <div class="modal-content">
-        <form class="inline" id="remove" action="{{ route('piggy-banks.remove', piggyBank.id) }}" method="POST">
+        <form class="inline" id="remove" action="{{ route('piggy-banks.remove', $piggyBank->id) }}" method="POST">
             <input type="hidden" name="_token" value="{{ csrf_token() }}"/>
 
             <div class="modal-header">
-                <button type="button" class="close" data-dismiss="modal"><span>&times;</span><span class="sr-only">{{ __('firefly.close') }}</span>
-                </button>
-                <h4 class="modal-title">{{ trans('firefly.remove_money_from_piggy_title', {name: piggyBank.name}) }}</h4>
+                <h5 class="modal-title">{{ trans('firefly.remove_money_from_piggy_title', ['name' => $piggyBank->name]) }}</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="{{ __('firefly.close') }}"></button>
             </div>
 
             <div class="modal-body">
-                {% for account in accounts %}
-                <p>
-                    {{  account.account.name }}: {{ 'max_amount_remove'|_ }}: {{ formatAmountByCurrency(piggyBank.transactionCurrency, account.saved_so_far) }}.
-                </p>
-                <div class="input-group">
-                    <div class="input-group-addon">{{ piggyBank.transactionCurrency.symbol|raw }}</div>
-                    <input step="any" class="form-control" id="amount_{{ account.account.id }}" autocomplete="off" name="amount[{{ account.account.id }}]" max="{{ account.saved_so_far }}"
-                           type="number">
-                </div>
+                @foreach($accounts as $account)
+
+                    <div class="mb-3">
+                        <label for="basic-url" class="form-label">{{ $account['account']->name }} ({{ __('firefly.max_amount_remove') }}: {!! format_amount_by_currency($piggyBank->transactionCurrency, $account['saved_so_far']) !!})</label>
+                        <div class="input-group">
+                            <span class="input-group-text" id="basic-addon3">{{ $piggyBank->transactionCurrency->symbol }}</span>
+                            <input step="any" class="form-control" id="amount_{{ $account['account']->id }}" autocomplete="off" name="amount[{{ $account['account']->id }}]" max="{{ $account['saved_so_far'] }}" type="number">
+                        </div>
+                    </div>
                 @endforeach
             </div>
             <div class="modal-footer">
-                <button type="button" class="btn btn-outline-secondary" data-dismiss="modal">{{ __('firefly.close') }}</button>
-                <button type="submit" class="btn btn-primary">{{ 'remove'|_ }}</button>
+                <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">{{ __('firefly.close') }}</button>
+                <button type="submit" class="btn btn-primary">{{__( 'firefly.remove') }}</button>
             </div>
         </form>
     </div>

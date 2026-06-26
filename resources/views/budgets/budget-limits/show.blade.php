@@ -1,7 +1,6 @@
 <div class="modal-dialog">
     <div class="modal-content">
         <div class="modal-header">
-            </button>
             <h5 class="modal-title">
                 {{ trans('firefly.set_budget_limit_notes') }}
             </h5>

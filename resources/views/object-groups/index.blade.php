@@ -32,7 +32,7 @@
                                             - {{ __('firefly.piggy_bank') }}: <a href="{{ route('piggy-banks.show', [$piggyBank['id']]) }}">{{ $piggyBank['name'] }}</a><br>
                                         @endforeach
                                         @foreach($objectGroup['bills'] as $subscription)
-                                            - {{ __('firefly.bill') }}: <a href="{{ route('subscriptions.show', [$bill['id']]) }}">{{ $bill['name'] }}</a><br>
+                                            - {{ __('firefly.bill') }}: <a href="{{ route('subscriptions.show', [$subscription['id']]) }}">{{ $subscription['name'] }}</a><br>
                                         @endforeach
                                     </td>
                                     <td>

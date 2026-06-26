@@ -130,7 +130,6 @@ final class HomeController extends Controller
         $types = config('firefly.accountTypesByIdentifier.asset');
         $count = $repository->count($types);
         Log::channel('audit')->info('User visits homepage.');
-
         if (0 === $count) {
             return redirect(route('new-user.index'));
         }

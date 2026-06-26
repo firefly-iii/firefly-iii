@@ -1,43 +1,38 @@
 @extends('layout.v3.session')
-
-
-    {{ Breadcrumbs.render(Route.getCurrentRoute.getName, objectGroup) }}
-@endsection
-
 @section('content')
-    <form method="post" action="{{ route('object-groups.update',objectGroup.id) }}" class="form-horizontal"
+    <form method="post" action="{{ route('object-groups.update',$objectGroup->id) }}" class="form-horizontal"
           accept-charset="UTF-8"
           enctype="multipart/form-data">
         <input type="hidden" name="_token" value="{{ csrf_token() }}"/>
 
-        <input type="hidden" name="id" value="{{ objectGroup.id }}"/>
+        <input type="hidden" name="id" value="{{ $objectGroup->id }}"/>
 
         <div class="row">
-            <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
-                <div class="card">
+            <div class="offset-lg-3 offset-md-3  col-lg-6 col-md-6 col-sm-12 col-xs-12">
+                <div class="card mb-2">
                     <div class="card-header">
                         <h3 class="card-title">{{ __('firefly.mandatoryFields') }}</h3>
                     </div>
                     <div class="card-body">
-                        {!! ExpandedForm::text('title', objectGroup.title) }}
+                        {!! ExpandedForm::text('title', $objectGroup->title) !!}
                     </div>
                 </div>
 
             </div>
         </div>
         <div class="row">
-            <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
+            <div class="offset-lg-3 offset-md-3 col-lg-6 col-md-6 col-sm-12 col-xs-12">
                 {{-- panel for options --}}
-                <div class="card">
+                <div class="card mb-2">
                     <div class="card-header">
                         <h3 class="card-title">{{ __('firefly.options') }}</h3>
                     </div>
                     <div class="card-body">
-                        {!! ExpandedForm::optionsList('update','object group') }}
+                        {!! ExpandedForm::optionsList('update','object group') !!}
                     </div>
-                    <div class="card-footer">
-                        <button type="submit" class="btn btn-success text-end">
-                            {{ 'update_object_group'|_ }}
+                    <div class="card-footer text-end">
+                        <button type="submit" class="btn btn-success">
+                            {{ __('firefly.update_object_group') }}
                         </button>
                     </div>
                 </div>
@@ -47,6 +42,7 @@
     </form>
 @endsection
 @section('scripts')
+    @vite(['js/pages/generic.js'])
     <script type="text/javascript" src="v1/js/lib/modernizr-custom.js?v={{ $FF_BUILD_TIME }}"
             nonce="{{ $JS_NONCE }}"></script>
     <script type="text/javascript" src="v1/js/lib/jquery-ui.min.js?v={{ $FF_BUILD_TIME }}" nonce="{{ $JS_NONCE }}"></script>

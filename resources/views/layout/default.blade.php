@@ -223,7 +223,7 @@
                 <small class="pull-left">
                     {{ trans('firefly.reenable_intro_text')|raw }}
                 </small>
-                <button type="button" class="btn btn-outline-secondary" data-dismiss="modal">{{ __('firefly.close') }}</button>
+                <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">{{ __('firefly.close') }}</button>
             </div>
         </div>
     </div>

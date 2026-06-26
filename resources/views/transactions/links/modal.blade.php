@@ -4,7 +4,7 @@
     <div class="modal-dialog modal-lg">
         <div class="modal-content">
             <div class="modal-header">
-                <h4 class="modal-title">{{ 'link_to_other_transaction'|_ }}</h4>
+                <h5 class="modal-title">{{ 'link_to_other_transaction'|_ }}</h5>
             </div>
             <div class="modal-body" id="helpBody">
                 <p>{{ 'select_transaction_to_link'|_ }}</p>
@@ -44,7 +44,7 @@
 
             </div>
             <div class="modal-footer">
-                <button type="button" class="btn btn-outline-secondary" data-dismiss="modal">{{ __('firefly.close') }}</button>
+                <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">{{ __('firefly.close') }}</button>
                 <button type="submit" class="btn btn-primary">{{ 'submit'|_ }}</button>
             </div>
         </div>
