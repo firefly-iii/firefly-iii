@@ -15,7 +15,7 @@
                 <div class="card-body p-0" id="accountsHolder">
                 </div>
                 {{-- loading indicator --}}
-                <div class="overlay">
+                <div class="overlay text-center m-2">
                     <div class="spinner-border spinner-border-sm" role="status">
   <span class="visually-hidden">Loading...</span>
 </div>
@@ -30,7 +30,7 @@
                 <div class="card-body p-0" id="tagsHolder">
                 </div>
                 {{-- loading indicator --}}
-                <div class="overlay">
+                <div class="overlay text-center m-2">
                     <div class="spinner-border spinner-border-sm" role="status">
   <span class="visually-hidden">Loading...</span>
 </div>
@@ -47,7 +47,7 @@
                 <div class="card-body p-0" id="accountPerTagHolder">
                 </div>
                 {{-- loading indicator --}}
-                <div class="overlay">
+                <div class="overlay text-center m-2">
                     <div class="spinner-border spinner-border-sm" role="status">
   <span class="visually-hidden">Loading...</span>
 </div>
@@ -97,7 +97,7 @@
         <div class="col-lg-4 col-md-6">
             <div class="card">
                 <div class="card-header">
-                    <h3 class="card-title">{{ 'income_per_category'|_ }}</h3>
+                    <h3 class="card-title">{{ __('firefly.income_per_category') }}</h3>
                 </div>
                 <div class="card-body">
                     <div class="center-chart">
@@ -109,7 +109,7 @@
         <div class="col-lg-4 col-md-6">
             <div class="card">
                 <div class="card-header">
-                    <h3 class="card-title">{{ 'expense_per_budget'|_ }}</h3>
+                    <h3 class="card-title">{{ __('firefly.expense_per_budget') }}</h3>
                 </div>
                 <div class="card-body">
                     <div class="center-chart">
@@ -135,7 +135,7 @@
         <div class="col-lg-6 col-md-6">
             <div class="card">
                 <div class="card-header">
-                    <h3 class="card-title">{{ 'income_per_source_account'|_ }}</h3>
+                    <h3 class="card-title">{{ __('firefly.income_per_source_account') }}</h3>
                 </div>
                 <div class="card-body">
                     <div class="center-chart">
@@ -161,7 +161,7 @@
         <div class="col-lg-6 col-md-6">
             <div class="card">
                 <div class="card-header">
-                    <h3 class="card-title">{{ 'income_per_destination_account'|_ }}</h3>
+                    <h3 class="card-title">{{ __('firefly.income_per_destination_account') }}</h3>
                 </div>
                 <div class="card-body">
                     <div class="center-chart">
@@ -177,7 +177,7 @@
             <div class="col-lg-12">
                 <div class="box main_budget_chart">
                     <div class="card-header">
-                        <h3 class="card-title">{{ 'income_and_expenses'|_ }} ({{ tag.tag }})</h3>
+                        <h3 class="card-title">{{ __('firefly.income_and_expenses') }} ({{ tag.tag }})</h3>
                     </div>
                     <div class="card-body">
                         <canvas class="main_tag_canvas"
@@ -195,12 +195,12 @@
         <div class="col-lg-6">
             <div class="card">
                 <div class="card-header">
-                    <h3 class="card-title">{{ 'average_spending_per_destination'|_ }}</h3>
+                    <h3 class="card-title">{{ __('firefly.average_spending_per_destination') }}</h3>
                 </div>
                 <div class="card-body p-0" id="avgExpensesHolder">
                 </div>
                 {{-- loading indicator --}}
-                <div class="overlay">
+                <div class="overlay text-center m-2">
                     <div class="spinner-border spinner-border-sm" role="status">
   <span class="visually-hidden">Loading...</span>
 </div>
@@ -210,12 +210,12 @@
         <div class="col-lg-6">
             <div class="card">
                 <div class="card-header">
-                    <h3 class="card-title">{{ 'average_earning_per_source'|_ }}</h3>
+                    <h3 class="card-title">{{ __('firefly.average_earning_per_source') }}</h3>
                 </div>
                 <div class="card-body p-0" id="avgIncomeHolder">
                 </div>
                 {{-- loading indicator --}}
-                <div class="overlay">
+                <div class="overlay text-center m-2">
                     <div class="spinner-border spinner-border-sm" role="status">
   <span class="visually-hidden">Loading...</span>
 </div>
@@ -227,12 +227,12 @@
         <div class="col-lg-6">
             <div class="card">
                 <div class="card-header">
-                    <h3 class="card-title">{{ __('firefly.expenses') }} ({{ trans('firefly.topX', {number: listLength}) }})</h3>
+                    <h3 class="card-title">{{ __('firefly.expenses') }} ({{ trans('firefly.topX', ['number' => $listLength]) }})</h3>
                 </div>
                 <div class="card-body p-0" id="topExpensesHolder">
                 </div>
                 {{-- loading indicator --}}
-                <div class="overlay">
+                <div class="overlay text-center m-2">
                     <div class="spinner-border spinner-border-sm" role="status">
   <span class="visually-hidden">Loading...</span>
 </div>
@@ -242,12 +242,12 @@
         <div class="col-lg-6">
             <div class="card">
                 <div class="card-header">
-                    <h3 class="card-title">{{ 'income'|_ }} ({{ trans('firefly.topX', {number: listLength}) }})</h3>
+                    <h3 class="card-title">{{ __('firefly.income') }} ({{ trans('firefly.topX', ['number' => $listLength]) }})</h3>
                 </div>
                 <div class="card-body p-0" id="topIncomeHolder">
                 </div>
                 {{-- loading indicator --}}
-                <div class="overlay">
+                <div class="overlay text-center m-2">
                     <div class="spinner-border spinner-border-sm" role="status">
   <span class="visually-hidden">Loading...</span>
 </div>

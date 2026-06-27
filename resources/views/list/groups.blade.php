@@ -62,24 +62,24 @@
                 <td colspan="1" class="text-right top-light-border">
                     {% for sum in group.sums %}
                         {% if group.transaction_type == 'Deposit' %}
-                            {{ format_amount_by_symbol(sum.amount*-1, sum.currency_symbol, sum.currency_decimal_places) }}
+                            {!! format_amount_by_symbol(sum.amount*-1, sum.currency_symbol, sum.currency_decimal_places) }}
                             {% if convertToPrimary and 0 != sum.pc_amount %}
-                                (~ {{ format_amount_by_symbol(sum.pc_amount*-1, $primaryCurrency->symbol, $primaryCurrency->decimal_places) }})
+                                (~ {!! format_amount_by_symbol(sum.pc_amount*-1, $primaryCurrency->symbol, $primaryCurrency->decimal_places) }})
                             @endif
                             {% if loop.index != group.sums|length %},@endif
 
                         {% elseif group.transaction_type == 'Transfer' %}
                             <span class="text-info money-transfer">
-                            {{ format_amount_by_symbol(sum.amount*-1, sum.currency_symbol, sum.currency_decimal_places, false) }}
+                            {!! format_amount_by_symbol(sum.amount*-1, sum.currency_symbol, sum.currency_decimal_places, false) }}
                                 {% if convertToPrimary and 0 != sum.pc_amount %}
-                                    (~ {{ format_amount_by_symbol(sum.pc_amount*-1, $primaryCurrency->symbol, $primaryCurrency->decimal_places) }})
+                                    (~ {!! format_amount_by_symbol(sum.pc_amount*-1, $primaryCurrency->symbol, $primaryCurrency->decimal_places) }})
                                 @endif
                                 {% if loop.index != group.sums|length %},@endif
                             </span>
                         @else
-                            {{ format_amount_by_symbol(sum.amount, sum.currency_symbol, sum.currency_decimal_places) }}
+                            {!! format_amount_by_symbol(sum.amount, sum.currency_symbol, sum.currency_decimal_places) }}
                             {% if convertToPrimary and 0 != sum.pc_amount %}
-                                (~ {{ format_amount_by_symbol(sum.pc_amount*-1, $primaryCurrency->symbol, $primaryCurrency->decimal_places) }})
+                                (~ {!! format_amount_by_symbol(sum.pc_amount*-1, $primaryCurrency->symbol, $primaryCurrency->decimal_places) }})
                             @endif
                             {% if loop.index != group.sums|length %},@endif
                         @endif
@@ -167,94 +167,94 @@
                     {{--  deposit --}}
                     {% if transaction.transaction_type_type == 'Deposit' %}
                         {{-- amount of deposit --}}
-                        {{ format_amount_by_symbol(transaction.amount*-1, transaction.currency_symbol, transaction.currency_decimal_places) }}
+                        {!! format_amount_by_symbol(transaction.amount*-1, transaction.currency_symbol, transaction.currency_decimal_places) }}
                         {{-- foreign amount of deposit --}}
                         {% if null != transaction.foreign_amount %}
-                            ({{ format_amount_by_symbol(transaction.foreign_amount*-1, transaction.foreign_currency_symbol, transaction.foreign_currency_decimal_places) }})
+                            ({!! format_amount_by_symbol(transaction.foreign_amount*-1, transaction.foreign_currency_symbol, transaction.foreign_currency_decimal_places) }})
                         @endif
                         {{-- primary currency amount of deposit --}}
                         {% if convertToPrimary and 0 != transaction.pc_amount %}
-                            (~ {{ format_amount_by_symbol(transaction.pc_amount*-1, $primaryCurrency->symbol, $primaryCurrency->decimal_places) }})
+                            (~ {!! format_amount_by_symbol(transaction.pc_amount*-1, $primaryCurrency->symbol, $primaryCurrency->decimal_places) }})
                         @endif
                         {{-- transfer --}}
                     {% elseif transaction.transaction_type_type == 'Transfer' %}
                         <span class="text-info money-transfer">
                             {{-- amount of transfer --}}
                             {% if transaction.source_account_id == account.id %}
-                                {{ format_amount_by_symbol(transaction.amount, transaction.currency_symbol, transaction.currency_decimal_places, false) }}
+                                {!! format_amount_by_symbol(transaction.amount, transaction.currency_symbol, transaction.currency_decimal_places, false) }}
                             @endif
                             {% if transaction.source_account_id != account.id %}
-                                {{ format_amount_by_symbol(transaction.amount*-1, transaction.currency_symbol, transaction.currency_decimal_places, false) }}
+                                {!! format_amount_by_symbol(transaction.amount*-1, transaction.currency_symbol, transaction.currency_decimal_places, false) }}
                             @endif
 
                             {{-- foreign amount of transfer --}}
                             {% if null != transaction.foreign_amount and transaction.source_account_id == account.id %}
-                                ({{ format_amount_by_symbol(transaction.foreign_amount, transaction.foreign_currency_symbol, transaction.foreign_currency_decimal_places, false) }})
+                                ({!! format_amount_by_symbol(transaction.foreign_amount, transaction.foreign_currency_symbol, transaction.foreign_currency_decimal_places, false) }})
                             @endif
                             {% if null != transaction.foreign_amount and transaction.source_account_id != account.id %}
-                                ({{ format_amount_by_symbol(transaction.foreign_amount*-1, transaction.foreign_currency_symbol, transaction.foreign_currency_decimal_places, false) }})
+                                ({!! format_amount_by_symbol(transaction.foreign_amount*-1, transaction.foreign_currency_symbol, transaction.foreign_currency_decimal_places, false) }})
                             @endif
 
                             {{-- primary currency amount of transfer --}}
                             {% if convertToPrimary and 0 != transaction.pc_amount %}
-                                (~ {{ format_amount_by_symbol(transaction.pc_amount*-1, $primaryCurrency->symbol, $primaryCurrency->decimal_places) }})
+                                (~ {!! format_amount_by_symbol(transaction.pc_amount*-1, $primaryCurrency->symbol, $primaryCurrency->decimal_places) }})
                             @endif
                             </span>
                         {{-- opening balance --}}
                     {% elseif transaction.transaction_type_type == 'Opening balance' %}
                         {% if transaction.source_account_type == 'Initial balance account' %}
-                            {{ format_amount_by_symbol(transaction.amount*-1, transaction.currency_symbol, transaction.currency_decimal_places) }}
+                            {!! format_amount_by_symbol(transaction.amount*-1, transaction.currency_symbol, transaction.currency_decimal_places) }}
                             {% if null != transaction.foreign_amount %}
-                                ({{ format_amount_by_symbol(transaction.foreign_amount*-1, transaction.foreign_currency_symbol, transaction.foreign_currency_decimal_places) }})
+                                ({!! format_amount_by_symbol(transaction.foreign_amount*-1, transaction.foreign_currency_symbol, transaction.foreign_currency_decimal_places) }})
                             @endif
                             {% if convertToPrimary and 0 != transaction.pc_amount %}
-                                (~ {{ format_amount_by_symbol(transaction.pc_amount*-1, $primaryCurrency->symbol, $primaryCurrency->decimal_places) }})
+                                (~ {!! format_amount_by_symbol(transaction.pc_amount*-1, $primaryCurrency->symbol, $primaryCurrency->decimal_places) }})
                             @endif
                         @else
-                            {{ format_amount_by_symbol(transaction.amount, transaction.currency_symbol, transaction.currency_decimal_places) }}
+                            {!! format_amount_by_symbol(transaction.amount, transaction.currency_symbol, transaction.currency_decimal_places) }}
                             {% if null != transaction.foreign_amount %}
-                                ({{ format_amount_by_symbol(transaction.foreign_amount, transaction.foreign_currency_symbol, transaction.foreign_currency_decimal_places) }})
+                                ({!! format_amount_by_symbol(transaction.foreign_amount, transaction.foreign_currency_symbol, transaction.foreign_currency_decimal_places) }})
                             @endif
                             {% if convertToPrimary and 0 != transaction.pc_amount %}
-                                (~ {{ format_amount_by_symbol(transaction.pc_amount, $primaryCurrency->symbol, $primaryCurrency->decimal_places) }})
+                                (~ {!! format_amount_by_symbol(transaction.pc_amount, $primaryCurrency->symbol, $primaryCurrency->decimal_places) }})
                             @endif
                         @endif
                         {{-- reconciliation --}}
                     {% elseif transaction.transaction_type_type == 'Reconciliation' %}
                         {% if transaction.source_account_type == 'Reconciliation account' %}
-                            {{ format_amount_by_symbol(transaction.amount*-1, transaction.currency_symbol, transaction.currency_decimal_places) }}
+                            {!! format_amount_by_symbol(transaction.amount*-1, transaction.currency_symbol, transaction.currency_decimal_places) }}
                             {% if null != transaction.foreign_amount %}
-                                ({{ format_amount_by_symbol(transaction.foreign_amount*-1, transaction.foreign_currency_symbol, transaction.foreign_currency_decimal_places) }})
+                                ({!! format_amount_by_symbol(transaction.foreign_amount*-1, transaction.foreign_currency_symbol, transaction.foreign_currency_decimal_places) }})
                             @endif
                             {% if convertToPrimary and 0 != transaction.pc_amount %}
-                                (~ {{ format_amount_by_symbol(transaction.pc_amount*-1, $primaryCurrency->symbol, $primaryCurrency->decimal_places) }})
+                                (~ {!! format_amount_by_symbol(transaction.pc_amount*-1, $primaryCurrency->symbol, $primaryCurrency->decimal_places) }})
                             @endif
                         @else
-                            {{ format_amount_by_symbol(transaction.amount, transaction.currency_symbol, transaction.currency_decimal_places) }}
+                            {!! format_amount_by_symbol(transaction.amount, transaction.currency_symbol, transaction.currency_decimal_places) }}
                             {% if null != transaction.foreign_amount %}
-                                ({{ format_amount_by_symbol(transaction.foreign_amount, transaction.foreign_currency_symbol, transaction.foreign_currency_decimal_places) }})
+                                ({!! format_amount_by_symbol(transaction.foreign_amount, transaction.foreign_currency_symbol, transaction.foreign_currency_decimal_places) }})
                             @endif
                             {% if convertToPrimary and 0 != transaction.pc_amount %}
-                                (~ {{ format_amount_by_symbol(transaction.pc_amount, $primaryCurrency->symbol, $primaryCurrency->decimal_places) }})
+                                (~ {!! format_amount_by_symbol(transaction.pc_amount, $primaryCurrency->symbol, $primaryCurrency->decimal_places) }})
                             @endif
                         @endif
                         {{-- liability credit --}}
                     {% elseif transaction.transaction_type_type == 'Liability credit' %}
                         {% if transaction.source_account_type == 'Liability credit' %}
-                            {{ format_amount_by_symbol(transaction.amount, transaction.currency_symbol, transaction.currency_decimal_places) }}
+                            {!! format_amount_by_symbol(transaction.amount, transaction.currency_symbol, transaction.currency_decimal_places) }}
                             {% if null != transaction.foreign_amount %}
-                                ({{ format_amount_by_symbol(transaction.foreign_amount, transaction.foreign_currency_symbol, transaction.foreign_currency_decimal_places) }})
+                                ({!! format_amount_by_symbol(transaction.foreign_amount, transaction.foreign_currency_symbol, transaction.foreign_currency_decimal_places) }})
                             @endif
                             {% if convertToPrimary and 0 != transaction.pc_amount %}
-                                (~ {{ format_amount_by_symbol(transaction.pc_amount, $primaryCurrency->symbol, $primaryCurrency->decimal_places) }})
+                                (~ {!! format_amount_by_symbol(transaction.pc_amount, $primaryCurrency->symbol, $primaryCurrency->decimal_places) }})
                             @endif
                         @else
-                            {{ format_amount_by_symbol(transaction.amount*-1, transaction.currency_symbol, transaction.currency_decimal_places) }}
+                            {!! format_amount_by_symbol(transaction.amount*-1, transaction.currency_symbol, transaction.currency_decimal_places) }}
                             {% if null != transaction.foreign_amount %}
-                                ({{ format_amount_by_symbol(transaction.foreign_amount*-1, transaction.foreign_currency_symbol, transaction.foreign_currency_decimal_places) }})
+                                ({!! format_amount_by_symbol(transaction.foreign_amount*-1, transaction.foreign_currency_symbol, transaction.foreign_currency_decimal_places) }})
                             @endif
                             {% if convertToPrimary and 0 != transaction.pc_amount %}
-                                (~ {{ format_amount_by_symbol(transaction.pc_amount*-1, $primaryCurrency->symbol, $primaryCurrency->decimal_places) }})
+                                (~ {!! format_amount_by_symbol(transaction.pc_amount*-1, $primaryCurrency->symbol, $primaryCurrency->decimal_places) }})
                             @endif
                         @endif
 
@@ -262,15 +262,15 @@
                         {{-- THE REST --}}
                     @else
                         {{-- amount of withdrawal --}}
-                        {{ format_amount_by_symbol(transaction.amount, transaction.currency_symbol, transaction.currency_decimal_places) }}
+                        {!! format_amount_by_symbol(transaction.amount, transaction.currency_symbol, transaction.currency_decimal_places) }}
 
                         {{-- foreign amount of withdrawal --}}
                         {% if null != transaction.foreign_amount %}
-                            ({{ format_amount_by_symbol(transaction.foreign_amount, transaction.foreign_currency_symbol, transaction.foreign_currency_decimal_places) }})
+                            ({!! format_amount_by_symbol(transaction.foreign_amount, transaction.foreign_currency_symbol, transaction.foreign_currency_decimal_places) }})
                         @endif
                         {{-- primary currency amount of withdrawal, if not in foreign currency --}}
                         {% if convertToPrimary and 0 != transaction.pc_amount and $primaryCurrency->id != transaction.foreign_currency_id %}
-                            (~ {{ format_amount_by_symbol(transaction.pc_amount, $primaryCurrency->symbol, $primaryCurrency->decimal_places) }})
+                            (~ {!! format_amount_by_symbol(transaction.pc_amount, $primaryCurrency->symbol, $primaryCurrency->decimal_places) }})
                         @endif
                     @endif
                 </td>
@@ -280,12 +280,12 @@
                     {% if (null == transaction.balance_dirty or false == transaction.balance_dirty) and null != transaction.destination_balance_after and null != transaction.source_balance_after %}
                         {% if transaction.transaction_type_type == 'Deposit' %}
                             {% if transaction.source_account_id == account.id %}
-                                <span title="Deposit, source">{{ format_amount_by_symbol(transaction.source_balance_after, transaction.currency_symbol, transaction.currency_decimal_places) }}</span>
+                                <span title="Deposit, source">{!! format_amount_by_symbol(transaction.source_balance_after, transaction.currency_symbol, transaction.currency_decimal_places) }}</span>
                             @else
                                 {% if transaction.source_account_type == 'Revenue account' %}
-                                    <span title="Deposit from revenue">{{ format_amount_by_symbol(transaction.destination_balance_after, transaction.currency_symbol, transaction.currency_decimal_places) }}</span>
+                                    <span title="Deposit from revenue">{!! format_amount_by_symbol(transaction.destination_balance_after, transaction.currency_symbol, transaction.currency_decimal_places) }}</span>
                                 @else
-                                    <span title="Deposit from liab">{{ format_amount_by_symbol(transaction.destination_balance_after, transaction.foreign_currency_symbol, transaction.foreign_currency_decimal_places) }}</span>
+                                    <span title="Deposit from liab">{!! format_amount_by_symbol(transaction.destination_balance_after, transaction.foreign_currency_symbol, transaction.foreign_currency_decimal_places) }}</span>
                                 @endif
                                 {{-- if this is a deposit from revenue account, use the destination account currency? For #12043 and #12169 --}}
                                 {{-- otherwise, keep at source account --}}
@@ -298,43 +298,43 @@
                             {% if 'Loan' == transaction.destination_account_type or 'Mortgage' == transaction.destination_account_type or 'Debt' == transaction.destination_account_type %}
                                 {% if currency.id == transaction.currency_id %}
                                     {% if account.id == transaction.source_account_id %}
-                                        <span title="Withdrawal, liab, source">{{ format_amount_by_symbol(transaction.source_balance_after, transaction.currency_symbol, transaction.currency_decimal_places) }}</span>
+                                        <span title="Withdrawal, liab, source">{!! format_amount_by_symbol(transaction.source_balance_after, transaction.currency_symbol, transaction.currency_decimal_places) }}</span>
                                     {% elseif account.id == transaction.destination_account_id %}
-                                        <span title="Withdrawal, liab, dest">{{ format_amount_by_symbol(transaction.destination_balance_after, transaction.currency_symbol, transaction.currency_decimal_places) }}</span>
+                                        <span title="Withdrawal, liab, dest">{!! format_amount_by_symbol(transaction.destination_balance_after, transaction.currency_symbol, transaction.currency_decimal_places) }}</span>
                                     @else
                                         -
                                     @endif
                                 @endif
                                 {% if currency.id == transaction.foreign_currency_id and null != transaction.destination_balance_after and null != transaction.destination_balance_after %}
-                                    <span title="Withdrawal, liab, dest 2">{{ format_amount_by_symbol(transaction.destination_balance_after, transaction.foreign_currency_symbol ?? transaction.currency_symbol, transaction.foreign_currency_decimal_places ?? transaction.currency_decimal_places) }}</span>
+                                    <span title="Withdrawal, liab, dest 2">{!! format_amount_by_symbol(transaction.destination_balance_after, transaction.foreign_currency_symbol ?? transaction.currency_symbol, transaction.foreign_currency_decimal_places ?? transaction.currency_decimal_places) }}</span>
                                 @endif
                             {{-- withdrawal into an expense account --}}
                             @else
                                 {% if account.id == transaction.source_account_id %}
-                                    <span title="Withdrawal, source">{{ format_amount_by_symbol(transaction.source_balance_after, transaction.currency_symbol, transaction.currency_decimal_places) }}</span>
+                                    <span title="Withdrawal, source">{!! format_amount_by_symbol(transaction.source_balance_after, transaction.currency_symbol, transaction.currency_decimal_places) }}</span>
                                 {% elseif account.id == transaction.destination_account_id %}
-                                    <span title="Withdrawal, dest">{{ format_amount_by_symbol(transaction.destination_balance_after, transaction.currency_symbol, transaction.currency_decimal_places) }}</span>
+                                    <span title="Withdrawal, dest">{!! format_amount_by_symbol(transaction.destination_balance_after, transaction.currency_symbol, transaction.currency_decimal_places) }}</span>
                                 @else
                                     -
                                 @endif
                             @endif
                         {% elseif transaction.transaction_type_type == 'Opening balance' %}
                             {% if account.id == transaction.source_account_id %}
-                                <span title="Opening balance, src">{{ format_amount_by_symbol(transaction.source_balance_after, transaction.currency_symbol, transaction.currency_decimal_places) }}</span>
+                                <span title="Opening balance, src">{!! format_amount_by_symbol(transaction.source_balance_after, transaction.currency_symbol, transaction.currency_decimal_places) }}</span>
                             {% elseif account.id == transaction.destination_account_id %}
-                                <span title="Opening balance, dest">{{ format_amount_by_symbol(transaction.destination_balance_after, transaction.currency_symbol, transaction.currency_decimal_places) }}</span>
+                                <span title="Opening balance, dest">{!! format_amount_by_symbol(transaction.destination_balance_after, transaction.currency_symbol, transaction.currency_decimal_places) }}</span>
                             @else
                                 -
                             @endif
                         {% elseif transaction.transaction_type_type == 'Transfer' %}
                             {% if account.id == transaction.source_account_id %}
-                                <span title="Transfer, source">{{ format_amount_by_symbol(transaction.source_balance_after, transaction.currency_symbol, transaction.currency_decimal_places) }}</span>
+                                <span title="Transfer, source">{!! format_amount_by_symbol(transaction.source_balance_after, transaction.currency_symbol, transaction.currency_decimal_places) }}</span>
                             @else
                                 {% if null == transaction.foreign_currency_id %}
-                                    <span title="Transfer, dest, normal currency">{{ format_amount_by_symbol(transaction.destination_balance_after, transaction.currency_symbol, transaction.currency_decimal_places) }}</span>
+                                    <span title="Transfer, dest, normal currency">{!! format_amount_by_symbol(transaction.destination_balance_after, transaction.currency_symbol, transaction.currency_decimal_places) }}</span>
                                 @endif
                                 {% if null != transaction.foreign_currency_id %}
-                                    <span title="Transfer, dest, foreign currency">{{ format_amount_by_symbol(transaction.destination_balance_after, transaction.foreign_currency_symbol, transaction.foreign_currency_decimal_places) }}</span>
+                                    <span title="Transfer, dest, foreign currency">{!! format_amount_by_symbol(transaction.destination_balance_after, transaction.foreign_currency_symbol, transaction.foreign_currency_decimal_places) }}</span>
                                 @endif
                             @endif
                         @else

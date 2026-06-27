@@ -150,9 +150,9 @@
                                 <a href="{{ route('accounts.show', [transaction.destination_id]) }}">{{ transaction.destination_name }}</a>
                             </td>
                             <td>
-                                {{ format_amount_by_symbol(transaction.amount,transaction.currency_symbol,transaction.currency_decimal_places) }}
+                                {!! format_amount_by_symbol(transaction.amount,transaction.currency_symbol,transaction.currency_decimal_places) }}
                                 {% if null != transaction.foreign_amount %}
-                                    ({{ format_amount_by_symbol(transaction.foreign_amount,transaction.foreign_currency_symbol,transaction.foreign_currency_decimal_places) }})
+                                    ({!! format_amount_by_symbol(transaction.foreign_amount,transaction.foreign_currency_symbol,transaction.foreign_currency_decimal_places) }})
                                 @endif
                             </td>
                             <td data-value="{{ transaction.category_id|default(0) }}">

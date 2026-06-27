@@ -8,17 +8,17 @@
     </tr>
     </thead>
     <tbody>
-    {% for account in report %}
-        {% for currency in account.currencies %}
+    @foreach($report as $account)
+        @foreach($account['currencies'] as $currency)
             <tr>
-                <td data-value="{{ account.name }} ({{ currency.currency_name }})">
-                    <a href="{{ route('accounts.show', account.id) }}" title="{{ account.iban }}">{{ account.name }} ({{ currency.currency_name }})</a>
+                <td data-value="{{ $account['name'] }} ({{ $currency['currency_name'] }})">
+                    <a href="{{ route('accounts.show', account.id) }}" title="{{ $account['iban'] }}">{{ $account['name'] }} ({{ $currency['currency_name'] }})</a>
                 </td>
                 {% for tag in tags %}
                     <td class="text-end">
                         {% if currency.tags[tag.id] %}
-                            <span title="{{ 'earned'|_ }}: {{ format_amount_by_symbol(currency.tags[tag.id].earned, currency.currency_symbol, currency.currency_decimal_places, false) }}, {{ __('firefly.spent') }}: {{ format_amount_by_symbol(currency.tags[tag.id].spent, currency.currency_symbol, currency.currency_decimal_places, false) }}"
-                            {{ format_amount_by_symbol(currency.tags[tag.id].sum, currency.currency_symbol, currency.currency_decimal_places) }}
+                            <span title="{{ __('firefly.earned') }}: {!! format_amount_by_symbol(currency.tags[tag.id].earned, currency.currency_symbol, currency.currency_decimal_places, false) }}, {{ __('firefly.spent') }}: {!! format_amount_by_symbol(currency.tags[tag.id].spent, currency.currency_symbol, currency.currency_decimal_places, false) }}"
+                            {!! format_amount_by_symbol(currency.tags[tag.id].sum, currency.currency_symbol, currency.currency_decimal_places) }}
                         @else
                             &mdash;
                         @endif

@@ -25,11 +25,11 @@
                 {{-- income first --}}
                 {% if(info.entries[key]) %}
                     <td data-value="{{ info.entries[key] }}" class="text-end">
-                        {{ format_amount_by_symbol(info.entries[key], info.currency_symbol, info.currency_decimal_places) }}
+                        {!! format_amount_by_symbol(info.entries[key], info.currency_symbol, info.currency_decimal_places) }}
                     </td>
                 @else
                     <td data-value="0" class="text-end">
-                        {{ format_amount_by_symbol(0, info.currency_symbol, info.currency_decimal_places) }}
+                        {!! format_amount_by_symbol(0, info.currency_symbol, info.currency_decimal_places) }}
                     </td>
                 @endif
             @endforeach
@@ -37,11 +37,11 @@
             {{-- if sum of income, display: --}}
             {% if info.sum %}
                 <td data-value="{{ info.sum }}" class="text-end">
-                    {{ format_amount_by_symbol(info.sum, info.currency_symbol, info.currency_decimal_places) }}
+                    {!! format_amount_by_symbol(info.sum, info.currency_symbol, info.currency_decimal_places) }}
                 </td>
             @else
                 <td data-value="0" class="text-end">
-                    {{ format_amount_by_symbol(0, info.currency_symbol, info.currency_decimal_places) }}
+                    {!! format_amount_by_symbol(0, info.currency_symbol, info.currency_decimal_places) }}
                 </td>
             @endif
         </tr>

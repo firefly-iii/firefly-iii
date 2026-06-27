@@ -11,7 +11,7 @@
         <div class="col-lg-12 col-md-12 col-sm-12">
             <div class="card" id="year-inc-exp">
                 <div class="card-header">
-                    <h3 class="card-title">{{ 'incomeVsExpenses'|_ }}</h3>
+                    <h3 class="card-title">{{ __('firefly.incomeVsExpenses') }}</h3>
                 </div>
                 <div class="card-body">
                     <canvas id="income-expenses-chart" class="wide-chart" height="400" width="100%"></canvas>
@@ -25,12 +25,12 @@
         <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
             <div class="card">
                 <div class="card-header">
-                    <h3 class="card-title">{{ 'accountBalances'|_ }}</h3>
+                    <h3 class="card-title">{{ __('firefly.accountBalances') }}</h3>
                 </div>
                 <div class="card-body p-0" id="accountReport">
                 </div>
                 {{-- loading indicator --}}
-                <div class="overlay">
+                <div class="overlay text-center m-2">
                     <div class="spinner-border spinner-border-sm" role="status">
   <span class="visually-hidden">Loading...</span>
 </div>
@@ -40,12 +40,12 @@
         <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
             <div class="card">
                 <div class="card-header">
-                    <h3 class="card-title">{{ 'incomeVsExpenses'|_ }}</h3>
+                    <h3 class="card-title">{{ __('firefly.incomeVsExpenses') }}</h3>
                 </div>
                 <div class="card-body p-0" id="incomeVsExpenseReport">
                 </div>
                 {{-- loading indicator --}}
-                <div class="overlay">
+                <div class="overlay text-center m-2">
                     <div class="spinner-border spinner-border-sm" role="status">
   <span class="visually-hidden">Loading...</span>
 </div>
@@ -59,12 +59,12 @@
         <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
             <div class="card">
                 <div class="card-header">
-                    <h3 class="card-title">{{ 'income'|_ }}</h3>
+                    <h3 class="card-title">{{ __('firefly.income') }}</h3>
                 </div>
                 <div class="card-body p-0" id="incomeReport">
                 </div>
                 {{-- loading indicator --}}
-                <div class="overlay">
+                <div class="overlay text-center m-2">
                     <div class="spinner-border spinner-border-sm" role="status">
   <span class="visually-hidden">Loading...</span>
 </div>
@@ -79,7 +79,7 @@
                 <div class="card-body p-0" id="expenseReport">
                 </div>
                 {{-- loading indicator --}}
-                <div class="overlay">
+                <div class="overlay text-center m-2">
                     <div class="spinner-border spinner-border-sm" role="status">
   <span class="visually-hidden">Loading...</span>
 </div>
@@ -117,7 +117,7 @@
                 <div class="box-body no-padding table-responsive" id="budgetPeriodReport">
                 </div>
                 {{-- loading indicator --}}
-                <div class="overlay">
+                <div class="overlay text-center m-2">
                     <div class="spinner-border spinner-border-sm" role="status">
   <span class="visually-hidden">Loading...</span>
 </div>
@@ -147,12 +147,12 @@
         <div class="col-lg-12 col-md-12 col-sm-12">
             <div class="card">
                 <div class="card-header">
-                    <h3 class="card-title">{{ 'categories'|_ }} ({{ __('firefly.expenses') }})</h3>
+                    <h3 class="card-title">{{ __('firefly.categories') }} ({{ __('firefly.expenses') }})</h3>
                 </div>
                 <div class="box-body no-padding table-responsive" id="categoryExpense">
                 </div>
                 {{-- loading indicator --}}
-                <div class="overlay">
+                <div class="overlay text-center m-2">
                     <div class="spinner-border spinner-border-sm" role="status">
   <span class="visually-hidden">Loading...</span>
 </div>
@@ -166,12 +166,12 @@
         <div class="col-lg-12 col-md-12 col-sm-12">
             <div class="card">
                 <div class="card-header">
-                    <h3 class="card-title">{{ 'categories'|_ }} ({{ 'income'|_ }})</h3>
+                    <h3 class="card-title">{{ __('firefly.categories') }} ({{ __('firefly.income') }})</h3>
                 </div>
                 <div class="box-body no-padding table-responsive" id="categoryIncome">
                 </div>
                 {{-- loading indicator --}}
-                <div class="overlay">
+                <div class="overlay text-center m-2">
                     <div class="spinner-border spinner-border-sm" role="status">
   <span class="visually-hidden">Loading...</span>
 </div>

@@ -75,13 +75,14 @@ final class OperationsController extends Controller
         }
         $report = $this->tasker->getExpenseReport($start, $end, $accounts);
         $type   = 'expense-entry';
+        $incomeTopLength= count($report['accounts']);
 
         try {
-            $result = view('reports.partials.income-expenses', ['report' => $report, 'type' => $type])->render();
+            $result = view('reports.partials.income-expenses', ['report' => $report, 'type' => $type, 'incomeTopLength' => $incomeTopLength])->render();
         } catch (Throwable $e) {
             Log::error(sprintf('Could not render reports.partials.income-expense: %s', $e->getMessage()));
             Log::error($e->getTraceAsString());
-            $result = 'Could not render view.';
+            $result = sprintf('Could not render view: %s', $e->getMessage());
 
             throw new FireflyException($result, 0, $e);
         }
@@ -115,7 +116,7 @@ final class OperationsController extends Controller
         } catch (Throwable $e) {
             Log::error(sprintf('Could not render reports.partials.income-expenses: %s', $e->getMessage()));
             Log::error($e->getTraceAsString());
-            $result = 'Could not render view.';
+            $result = sprintf('Could not render view: %s', $e->getMessage());
 
             throw new FireflyException($result, 0, $e);
         }
@@ -170,7 +171,7 @@ final class OperationsController extends Controller
         } catch (Throwable $e) {
             Log::error(sprintf('Could not render reports.partials.operations: %s', $e->getMessage()));
             Log::error($e->getTraceAsString());
-            $result = 'Could not render view.';
+            $result = sprintf('Could not render view: %s', $e->getMessage());
 
             throw new FireflyException($result, 0, $e);
         }

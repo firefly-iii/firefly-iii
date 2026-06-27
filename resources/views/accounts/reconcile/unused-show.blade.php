@@ -66,7 +66,7 @@
                         <tbody>
                         {{--
                         <tr>
-                            <td>{{ 'categories'|_ }}</td>
+                            <td>{{ __('firefly.categories') }}</td>
                             <td>{{ journalCategories(journal)|raw }}</td>
                         </tr>
                         --}}

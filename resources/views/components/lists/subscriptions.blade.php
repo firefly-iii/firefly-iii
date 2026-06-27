@@ -58,7 +58,7 @@
                     ~ {!! format_amount_by_symbol(($entry['amount_max'] + $entry['amount_min'])/2, $entry['currency_symbol'], $entry['currency_decimal_places'])  !!}
 
                     @if('0' !== $entry['pc_amount_max'] && null !== $entry['pc_amount_max'])
-                        (~ {{ format_amount_by_symbol(($entry['pc_amount_max'] + $entry['pc_amount_min'])/2, $primaryCurrency->symbol, $primaryCurrency->decimal_places) }})
+                        (~ {!! format_amount_by_symbol(($entry['pc_amount_max'] + $entry['pc_amount_min'])/2, $primaryCurrency->symbol, $primaryCurrency->decimal_places) }})
                     @endif
                 </span>
         </td>

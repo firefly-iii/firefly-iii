@@ -62,7 +62,7 @@
             <td>{{ trans('firefly.liability_direction_'~account.liability_direction~'_short')  }}</td>
             <td>{{ account.interest }}% ({{ account.interestPeriod|lower }})</td>
             @endif
-            <td class="hidden-sm hidden-xs">{{ account.iban }}{% if account.iban == '' %}{{ accountGetMetaField(account, 'account_number') }}@endif</td>
+            <td class="hidden-sm hidden-xs">{{ $account['iban'] }}{% if $account['iban'] == '' %}{{ accountGetMetaField(account, 'account_number') }}@endif</td>
             {% if objectType != 'liabilities' %}
             <td class="text-end">
                 <span class="mr-2">
@@ -70,11 +70,11 @@
                         <span title="{{ key }}">
                         {% if 'balance' == key %}
                             {% if not convertToPrimary %}
-                                {{ format_amount_by_symbol(balance, account.currency.symbol, account.currency.decimal_places)  }}
+                                {!! format_amount_by_symbol(balance, account.currency.symbol, account.currency.decimal_places)  }}
                             @endif
                         {% elseif 'pc_balance' == key %}
                             {% if convertToPrimary %}
-                                {{ format_amount_by_symbol(balance, $primaryCurrency->symbol, $primaryCurrency->decimal_places)  }}
+                                {!! format_amount_by_symbol(balance, $primaryCurrency->symbol, $primaryCurrency->decimal_places)  }}
                             @endif
                         @else
                             ({{ formatAmountByCode(balance, key)  }})
@@ -88,7 +88,7 @@
             <td class="text-end">
                 {% if '-' != account.current_debt %}
                     <span class="text-info money-transfer">
-                        {{ format_amount_by_symbol(account.current_debt, account.currency.symbol, account.currency.decimal_places, false) }}
+                        {!! format_amount_by_symbol(account.current_debt, account.currency.symbol, account.currency.decimal_places, false) }}
                     </span>
                 @endif
             </td>
@@ -119,11 +119,11 @@
                         <span title="{{ key }}">
                               {% if 'balance' == key %}
                                   {% if not convertToPrimary %}
-                                      {{ format_amount_by_symbol(balance, account.currency.symbol, account.currency.decimal_places)  }}
+                                      {!! format_amount_by_symbol(balance, account.currency.symbol, account.currency.decimal_places)  }}
                                   @endif
                               {% elseif 'pc_balance' == key %}
                                   {% if convertToPrimary %}
-                                      {{ format_amount_by_symbol(balance, $primaryCurrency->symbol, $primaryCurrency->decimal_places)  }}
+                                      {!! format_amount_by_symbol(balance, $primaryCurrency->symbol, $primaryCurrency->decimal_places)  }}
                                   @endif
                               @else
                                   ({{ formatAmountByCode(balance, key)  }})

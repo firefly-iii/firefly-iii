@@ -2,10 +2,10 @@
     <thead>
     <tr>
         <th>{{ __('firefly.budgets') }}</th>
-        {% for account in report.accounts %}
+        @foreach($report['accounts'] as $account)
             {% if account.sum != 0 %}
-                <th class="text-right hidden-xs"><a href="{{ route('accounts.show',account.id) }}"
-                                                                    title="{{ account.iban|default(account.name) }}">{{ account.name }}</a></th>
+                <th class="text-right hidden-xs"><a href="{{ route('accounts.show',$account['id']) }}"
+                                                                    title="{{ $account['iban']|default($account['name']) }}">{{ $account['name'] }}</a></th>
             @endif
         @endforeach
         <th class="text-end">{{ __('firefly.sum') }}</th>
@@ -19,13 +19,13 @@
                 <td>
                     <a href="{{ route('budgets.show', [budget.budget_id]) }}">{{ budget.budget_name }}</a>
                 </td>
-                {% for account in report.accounts %}
+                @foreach($report['accounts'] as $account)
                     {% if budget.spent[$account->id] %}
                         <td class="text-end">
-                            {{ format_amount_by_symbol(budget.spent[$account->id].spent, budget.spent[$account->id].currency_symbol, budget.spent[$account->id].currency_decimal_places) }}
+                            {!! format_amount_by_symbol(budget.spent[$account->id].spent, budget.spent[$account->id].currency_symbol, budget.spent[$account->id].currency_decimal_places) }}
                             <span data-location="budget-entry"
                                data-budget-id="{{ budget.budget_id }}"
-                               data-account-id="{{ account.id }}"
+                               data-account-id="{{ $account['id'] }}"
                                data-currency-id="{{ budget.spent[$account->id].currency_id }}"
                                class="fa fa-info-circle text-muted firefly-info-button"></span>
                         </td>
@@ -38,7 +38,7 @@
                 @endforeach
                 <td class="text-end">
                     {% for sum in report.sums[budget.budget_id] %}
-                        {{ format_amount_by_symbol(sum.sum, sum.currency_symbol, sum.currency_decimal_places) }}
+                        {!! format_amount_by_symbol(sum.sum, sum.currency_symbol, sum.currency_decimal_places) }}
                         <br/>
                     @endforeach
                 </td>
@@ -49,10 +49,10 @@
     <tfoot>
     <tr>
         <td><em>{{ __('firefly.sum') }}</em></td>
-        {% for account in report.accounts %}
+        @foreach($report['accounts'] as $account)
             {% if account.sum != 0 %}
                 <td class="text-end">
-                    {{ format_amount_by_symbol(account.sum, account.currency_symbol, account.currency_decimal_places) }}
+                    {!! format_amount_by_symbol(account.sum, account.currency_symbol, account.currency_decimal_places) }}
                 </td>
             @endif
         @endforeach

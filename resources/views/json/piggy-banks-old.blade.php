@@ -10,20 +10,20 @@
                 <div class="progress-bar width-{{ entry.percentage|round }}" role="progressbar" aria-valuenow="{{ entry.percentage }}" aria-valuemin="0" aria-valuemax="100">
                     {% if entry.percentage >=20 %}
                         {% if convertToPrimary and 0 != avg.pc_amount %}
-                            {{ format_amount_by_symbol(entry.pc_amount, entry.primary_currency_symbol, entry.primary_currency_decimal_places, false) }}
-                            ({{ format_amount_by_symbol(entry.amount, entry.currency_symbol, entry.currency_decimal_places, false) }})
+                            {!! format_amount_by_symbol(entry.pc_amount, entry.primary_currency_symbol, entry.primary_currency_decimal_places, false) }}
+                            ({!! format_amount_by_symbol(entry.amount, entry.currency_symbol, entry.currency_decimal_places, false) }})
                         @else
-                            {{ format_amount_by_symbol(entry.amount, entry.currency_symbol, entry.currency_decimal_places, false) }}
+                            {!! format_amount_by_symbol(entry.amount, entry.currency_symbol, entry.currency_decimal_places, false) }}
                         @endif
                     @endif
                 </div>
                 {% if entry.percentage < 20 %}
                     &nbsp;
                     {% if convertToPrimary and 0 != avg.pc_amount %}
-                        {{ format_amount_by_symbol(entry.pc_amount, entry.primary_currency_symbol, entry.primary_currency_decimal_places, false) }}
-                        ({{ format_amount_by_symbol(entry.amount, entry.currency_symbol, entry.currency_decimal_places, false) }})
+                        {!! format_amount_by_symbol(entry.pc_amount, entry.primary_currency_symbol, entry.primary_currency_decimal_places, false) }}
+                        ({!! format_amount_by_symbol(entry.amount, entry.currency_symbol, entry.currency_decimal_places, false) }})
                     @else
-                        {{ format_amount_by_symbol(entry.amount, entry.currency_symbol, entry.currency_decimal_places, false) }}
+                        {!! format_amount_by_symbol(entry.amount, entry.currency_symbol, entry.currency_decimal_places, false) }}
                     @endif
                 @endif
             </div>

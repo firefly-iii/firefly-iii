@@ -5,7 +5,7 @@
         {% for period in periods %}
             <th data-defaultsign="_19" class="text-end">{{ period }}</th>
         @endforeach
-        <th data-defaultsign="_19" class="text-end">{{ 'average'|_ }}</th>
+        <th data-defaultsign="_19" class="text-end">{{ __('firefly.average') }}</th>
         <th data-defaultsign="_19" class="text-end">{{ __('firefly.sum') }}</th>
     </tr>
     </thead>
@@ -25,20 +25,20 @@
             {% for key, period in periods %}
                 {% if(info.entries[key]) %}
                     <td data-value="{{ info.entries[key] }}" class="text-end">
-                        {{ format_amount_by_symbol(info.entries[key], info.currency_symbol, info.currency_decimal_places) }}
+                        {!! format_amount_by_symbol(info.entries[key], info.currency_symbol, info.currency_decimal_places) }}
                     </td>
                 @else
                     <td data-value="0" class="text-end">
-                        {{ format_amount_by_symbol(0, info.currency_symbol, info.currency_decimal_places) }}
+                        {!! format_amount_by_symbol(0, info.currency_symbol, info.currency_decimal_places) }}
                     </td>
                 @endif
 
             @endforeach
             <td data-value="{{ info.avg }}" class="text-end">
-                {{ format_amount_by_symbol(info.avg, info.currency_symbol, info.currency_decimal_places) }}
+                {!! format_amount_by_symbol(info.avg, info.currency_symbol, info.currency_decimal_places) }}
             </td>
             <td data-value="{{ info.sum }}" class="text-end">
-                {{ format_amount_by_symbol(info.sum, info.currency_symbol, info.currency_decimal_places) }}
+                {!! format_amount_by_symbol(info.sum, info.currency_symbol, info.currency_decimal_places) }}
             </td>
         </tr>
     @endforeach

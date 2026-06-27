@@ -63,11 +63,11 @@
                         @endif
                     </td>
                     <td class="text-end">
-                <span class="mr-2" title="{{ format_amount_by_symbol(entry.amount_min, entry.currency_symbol, entry.currency_decimal_places, false)|escape }} -- {{ format_amount_by_symbol(entry.amount_max, entry.currency_symbol, entry.currency_decimal_places, false)|escape }}">
-                    ~ {{ format_amount_by_symbol((entry.amount_max + entry.amount_min)/2, entry.currency_symbol, entry.currency_decimal_places) }}
+                <span class="mr-2" title="{!! format_amount_by_symbol(entry.amount_min, entry.currency_symbol, entry.currency_decimal_places, false)|escape }} -- {!! format_amount_by_symbol(entry.amount_max, entry.currency_symbol, entry.currency_decimal_places, false)|escape }}">
+                    ~ {!! format_amount_by_symbol((entry.amount_max + entry.amount_min)/2, entry.currency_symbol, entry.currency_decimal_places) }}
 
                     {% if '0' != entry.pc_amount_max and null != entry.pc_amount_max %}
-                        (~ {{ format_amount_by_symbol((entry.pc_amount_max + entry.pc_amount_min)/2, $primaryCurrency->symbol, $primaryCurrency->decimal_places) }})
+                        (~ {!! format_amount_by_symbol((entry.pc_amount_max + entry.pc_amount_min)/2, $primaryCurrency->symbol, $primaryCurrency->decimal_places) }})
                     @endif
                 </span>
                     </td>
@@ -180,7 +180,7 @@
                             <small>{{ __('firefly.sum') }} ({{ sum.currency_name }}) ({{ 'active_exp_bills_only'|_ }})</small>
                         </td>
                         <td class="text-end"> <!-- amount -->
-                            {{ format_amount_by_symbol(sum.avg, sum.currency_symbol, sum.currency_decimal_places) }}
+                            {!! format_amount_by_symbol(sum.avg, sum.currency_symbol, sum.currency_decimal_places) }}
                         </td>
                         <td>&nbsp;</td> <!-- paid in period -->
                         <td class="hidden-sm hidden-xs">&nbsp;</td> <!-- next expected match -->
@@ -195,7 +195,7 @@
                             <small>{{ __('firefly.sum') }} ({{ sum.currency_name }}) ({{ 'left_to_pay_active_bills'|_ }})</small>
                         </td>
                         <td class="text-end"> <!-- amount -->
-                            {{ format_amount_by_symbol(sum.total_left_to_pay, sum.currency_symbol, sum.currency_decimal_places) }}
+                            {!! format_amount_by_symbol(sum.total_left_to_pay, sum.currency_symbol, sum.currency_decimal_places) }}
                         </td>
                         <td>&nbsp;</td> <!-- paid in period -->
                         <td class="hidden-sm hidden-xs">&nbsp;</td> <!-- next expected match -->
@@ -211,7 +211,7 @@
                                 ({{ 'active_bills_only'|_ }})</small>
                         </td>
                         <td class="text-end"> <!-- amount -->
-                            {{ format_amount_by_symbol(sum.per_period, sum.currency_symbol, sum.currency_decimal_places) }}
+                            {!! format_amount_by_symbol(sum.per_period, sum.currency_symbol, sum.currency_decimal_places) }}
                         </td>
                         <td>&nbsp;</td> <!-- paid in period -->
                         <td class="hidden-sm hidden-xs">&nbsp;</td> <!-- next expected match -->
@@ -236,7 +236,7 @@
                         <small>{{ __('firefly.sum') }} ({{ sum.currency_name }}) ({{ 'active_exp_bills_only_total'|_ }})</small>
                     </td>
                     <td class="text-end"> <!-- amount -->
-                        {{ format_amount_by_symbol(sum.avg, sum.currency_symbol, sum.currency_decimal_places) }}
+                        {!! format_amount_by_symbol(sum.avg, sum.currency_symbol, sum.currency_decimal_places) }}
                     </td>
                     <td>&nbsp;</td> <!-- paid in period -->
                     <td class="hidden-sm hidden-xs">&nbsp;</td> <!-- next expected match -->
@@ -252,7 +252,7 @@
                             ({{ 'active_bills_only_total'|_ }})</small>
                     </td>
                     <td class="text-end"> <!-- amount -->
-                        {{ format_amount_by_symbol(sum.per_period, sum.currency_symbol, sum.currency_decimal_places) }}
+                        {!! format_amount_by_symbol(sum.per_period, sum.currency_symbol, sum.currency_decimal_places) }}
                     </td>
                     <td>&nbsp;</td> <!-- paid in period -->
                     <td class="hidden-sm hidden-xs">&nbsp;</td> <!-- next expected match -->

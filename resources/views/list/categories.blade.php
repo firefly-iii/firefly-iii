@@ -15,7 +15,7 @@
         <td><a href="{{ route('categories.no-category') }}"><em>{{ 'without_category'|_ }}</em></a></td>
         <td class="hidden-sm hidden-xs">&nbsp;</td>
     </tr>
-    {% for category in categories %}
+    @foreach($categories as $category)
         <tr>
             <td>
                 <div class="btn-group btn-group-sm">

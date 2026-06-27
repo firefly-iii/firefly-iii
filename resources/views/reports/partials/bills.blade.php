@@ -9,72 +9,76 @@
     </tr>
     </thead>
     <tbody>
-    {% for bill in report.bills %}
-        {% if (bill.expected_dates|length > 0 or bill.paid_moments|length > 0) and bill.active %}
+    @foreach($report['bills'] as $bill)
+        @if((count($bill['expected_dates']) > 0 || count($bill['paid_moments'])) > 0 && $bill['active'])
             <tr>
                 <td>
-                    <a href="{{ route('subscriptions.show',bill.id) }}">{{ bill.name }}</a>
+                    <a href="{{ route('subscriptions.show', [$bill['id']]) }}">{{ $bill['name'] }}</a>
                 </td>
                 <td class="hidden-xs text-right">
-                    {{ format_amount_by_symbol(bill.amount_min, bill.currency_symbol, bill.currency_decimal_places) }}
+                    {!! format_amount_by_symbol($bill['amount_min'], $bill['currency_symbol'], $bill['currency_decimal_places']) !!}
                 </td>
                 <td class="hidden-xs text-right">
-                    {{ format_amount_by_symbol(bill.amount_max, bill.currency_symbol, bill.currency_decimal_places) }}
+                    {!! format_amount_by_symbol($bill['amount_max'], $bill['currency_symbol'], $bill['currency_decimal_places']) !!}
                 </td>
-                <td data-value="{{ bill.expected_dates[0].format('Y-m-d')|default('0000-00-00') }}">
-                    {% for date in bill.expected_dates %}
-                        {{ date.isoFormat($monthAndDayFormat) }}<br/>
+                <td data-value="{{ $bill['expected_dates'][0]?->format('Y-m-d') }}">
+                    @foreach($bill['expected_dates'] as $date)
+                        {{ $date->isoFormat($monthAndDayFormat) }}<br/>
                     @endforeach
                 </td>
                 <td class="text-end">
-                    {% set hitCount = 0 %}
-                    {% for journals in bill.paid_moments %}
-                        {% for journal in journals %}
-                            {% set hitCount = hitCount+1 %}
-                            <a title="{{ journal.date.isoFormat($monthAndDayFormat) }}"
-                               href="{{ route('transactions.show', [journal.transaction_group_id]) }}">{{ journal.description }}</a>,
-                            {{ format_amount_by_symbol(journal.amount, journal.currency_symbol, journal.currency_decimal_places) }}
+                    @php
+                        $hitCount = 0;
+                    @endphp
+                    @foreach($bill['paid_moments'] as $journals)
+                        @foreach($journals as $journal)
+                            @php
+                                $hitCount++;
+                            @endphp
+                            <a title="{{ $journal['date']->isoFormat($monthAndDayFormat) }}"
+                               href="{{ route('transactions.show', [$journal['transaction_group_id']]) }}">{{ $journal['description'] }}</a>,
+                            {!! format_amount_by_symbol($journal['amount'], $journal['currency_symbol'], $journal['currency_decimal_places']) !!}
                             <br/>
                         @endforeach
                     @endforeach
-                    {% if hitCount == 0 %}
-                        <em>{{ 'notCharged'|_ }}</em>
+                    @if(0 === $hitCount)
+                        <em>{{ __('firefly.notCharged') }}</em>
                     @endif
                 </td>
             </tr>
         @endif
     @endforeach
 
-
-    {% for line in bills.getBills %}
+    
+    @foreach($bills->getBills() as $line)
         <tr>
-            <td data-value="{{ line.getBill.name }}">
-                <a href="{{ route('subscriptions.show',line.getBill.id) }}">{{ line.getBill.name }}</a>
+            <td data-value="{{ $line->getBill()->name }}">
+                <a href="{{ route('subscriptions.show',$line->getBill()->id) }}">{{ $line->getBill()->name }}</a>
                 <small class="text-muted"><br/>
-                    {{ trans('firefly.bill_expected_between', {start: line.getPayDate.isoFormat($monthAndDayFormat), end: line.getEndOfPayDate.isoFormat($monthAndDayFormat) }) }}
+                    {{ trans('firefly.bill_expected_between', ['start' => $line->getPayDate()->isoFormat($monthAndDayFormat), 'end' => $line->getEndOfPayDate()->isoFormat($monthAndDayFormat)]) }}
                 </small>
             </td>
-            <td class="text-right hidden-xs" data-value="{{ line.getMin }}">{{ formatAmountByCurrency(line.getCurrency, line.getMin) }}</td>
-            <td class="text-right hidden-xs" data-value="{{ line.getMax }}">{{ formatAmountByCurrency(line.getCurrency, line.getMax) }}</td>
+            <td class="text-right hidden-xs" data-value="{{ $line->getMin() }}">{!! format_amount_by_currency($line->getCurrency(), $line->getMin())  !!}</td>
+            <td class="text-right hidden-xs" data-value="{{ $line->getMax() }}">{!! format_amount_by_currency($line->getCurrency(), $line->getMax())  !!}</td>
 
             {{-- if bill is hit, show hit amount --}}
-            {% if line.isHit %}
-                <td data-value="{{ line.getAmount }}" class="text-end">
-                    <a href="{{ route('transactions.show', line.getTransactionJournalId) }}">
-                        {{ formatAmountByCurrency(line.getCurrency, line.getAmount) }}
+            @if($line->isHit())
+                <td data-value="{{ $line->getAmount() }}" class="text-end">
+                    <a href="{{ route('transactions.show', $line->getTransactionJournalId()) }}">
+                        {!! format_amount_by_currency($line->getCurrency(), $line->getAmount())  !!}
                     </a>
                 </td>
             @endif
             {{-- if not but is active, show "not yet charged --}}
-            {% if not line.isHit and line.isActive %}
-                <td data-value="0" class="bg-success">{{ 'notCharged'|_ }}</td>
+            @if(!$line->isHit() && $line->isActive())
+                <td data-value="0" class="bg-success">{{ __('firefly.notCharged') }}</td>
             @endif
-            {% if not line.isActive and not line.isHit %}
+            @if(!$line->isActive() && !$line->isHit())
                 <td data-value="-1">&nbsp;</td>
             @endif
-            <td data-value="{{ (line.getMax - line.getAmount) }}" class="text-right hidden-xs">
-                {% if line.isHit %}
-                    {{ formatAmountByCurrency(line.getCurrency, (line.getMax + line.getAmount)) }}
+            <td data-value="{{ ($line->getMax() - $line->getAmount()) }}" class="text-right hidden-xs">
+                @if($line->isHit())
+                    {!! format_amount_by_currency($line->getCurrency(), ($line->getMax() + $line->getAmount())) !!}
                 @endif
             </td>
         </tr>

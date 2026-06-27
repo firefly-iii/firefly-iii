@@ -57,7 +57,7 @@
             <li class="{{ activeRoutePartialObjectType('transactions', 'deposit') }}">
                 <a href="{{ route('transactions.index', ['deposit']) }}">
                     <span class="bi bi-caret-right"></span>
-                    <span>{{ 'income'|_ }}</span>
+                    <span>{{ __('firefly.income') }}</span>
                 </a>
             </li>
             <li class="{{ activeRoutePartialObjectType('transactions', 'transfers') }}">
@@ -161,7 +161,7 @@
             <li class="{{ activeRoutePartial('categories') }}">
                 <a href="{{ route('categories.index') }}">
                     <span class="bi bi-caret-right"></span>
-                    <span>{{ 'categories'|_ }}</span>
+                    <span>{{ __('firefly.categories') }}</span>
                 </a>
             </li>
             <li class="{{ activeRoutePartial('tags') }}">

@@ -23,7 +23,7 @@
             <div class="{{ boxSize }}">
                 <div class="card">
                     <div class="card-header">
-                        <h3 class="card-title">{{ 'categories'|_ }}</h3>
+                        <h3 class="card-title">{{ __('firefly.categories') }}</h3>
                     </div>
                     <div class="card-body">
                         <canvas id="category_chart" class="medium-chart" height="250"></canvas>

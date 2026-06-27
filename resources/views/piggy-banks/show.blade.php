@@ -105,7 +105,7 @@
                             <tr>
                                 <td>{{ __('firefly.suggested_amount') }}</td>
                                 <td>
-                                    {{ format_amount_by_symbol($piggy['save_per_month'], $piggy['currency_symbol'], $piggy['currency_decimal_places']) }}
+                                    {!! format_amount_by_symbol($piggy['save_per_month'], $piggy['currency_symbol'], $piggy['currency_decimal_places']) }}
                                 </td>
                             </tr>
                         @endif

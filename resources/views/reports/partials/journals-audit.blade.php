@@ -79,38 +79,38 @@
             </td>
 
             <td class="text-right hide-balance_before">
-                {{ format_amount_by_symbol(journal.balance_before, auditData[$account->id].currency.symbol, auditData[$account->id].currency.decimal_places) }}
+                {!! format_amount_by_symbol(journal.balance_before, auditData[$account->id].currency.symbol, auditData[$account->id].currency.decimal_places) }}
             </td>
             <td class="text-right hide-amount">
 
                 {% if auditData[$account->id].currency.id == journal.currency_id %}
-                    {% if account.id == journal.destination_account_id and journal.transaction_type_type == 'Opening balance' %}
-                        {{ format_amount_by_symbol(journal.amount*-1, journal.currency_symbol, journal.currency_decimal_places) }}
-                    {% elseif account.id == journal.destination_account_id and journal.transaction_type_type == 'Deposit' %}
-                        {{ format_amount_by_symbol(journal.amount*-1, journal.currency_symbol, journal.currency_decimal_places) }}
-                    {% elseif account.id == journal.destination_account_id and journal.transaction_type_type == 'Transfer' %}
-                        {{ format_amount_by_symbol(journal.amount*-1, journal.currency_symbol, journal.currency_decimal_places) }}
+                    {% if $account['id'] == journal.destination_account_id and journal.transaction_type_type == 'Opening balance' %}
+                        {!! format_amount_by_symbol(journal.amount*-1, journal.currency_symbol, journal.currency_decimal_places) }}
+                    {% elseif $account['id'] == journal.destination_account_id and journal.transaction_type_type == 'Deposit' %}
+                        {!! format_amount_by_symbol(journal.amount*-1, journal.currency_symbol, journal.currency_decimal_places) }}
+                    {% elseif $account['id'] == journal.destination_account_id and journal.transaction_type_type == 'Transfer' %}
+                        {!! format_amount_by_symbol(journal.amount*-1, journal.currency_symbol, journal.currency_decimal_places) }}
                     @else
-                        {{ format_amount_by_symbol(journal.amount, journal.currency_symbol, journal.currency_decimal_places) }}
+                        {!! format_amount_by_symbol(journal.amount, journal.currency_symbol, journal.currency_decimal_places) }}
                     @endif
                 @endif
 
                 {% if auditData[$account->id].currency.id == journal.foreign_currency_id %}
-                    {% if account.id == journal.destination_account_id and journal.transaction_type_type == 'Opening balance' %}
-                        {{ format_amount_by_symbol(journal.foreign_amount*-1, journal.foreign_currency_symbol, journal.foreign_currency_decimal_places) }}
-                    {% elseif account.id == journal.destination_account_id and journal.transaction_type_type == 'Deposit' %}
-                        {{ format_amount_by_symbol(journal.foreign_amount*-1, journal.foreign_currency_symbol, journal.foreign_currency_decimal_places) }}
-                    {% elseif account.id == journal.destination_account_id and journal.transaction_type_type == 'Transfer' %}
-                        {{ format_amount_by_symbol(journal.foreign_amount*-1, journal.foreign_currency_symbol, journal.foreign_currency_decimal_places) }}
+                    {% if $account['id'] == journal.destination_account_id and journal.transaction_type_type == 'Opening balance' %}
+                        {!! format_amount_by_symbol(journal.foreign_amount*-1, journal.foreign_currency_symbol, journal.foreign_currency_decimal_places) }}
+                    {% elseif $account['id'] == journal.destination_account_id and journal.transaction_type_type == 'Deposit' %}
+                        {!! format_amount_by_symbol(journal.foreign_amount*-1, journal.foreign_currency_symbol, journal.foreign_currency_decimal_places) }}
+                    {% elseif $account['id'] == journal.destination_account_id and journal.transaction_type_type == 'Transfer' %}
+                        {!! format_amount_by_symbol(journal.foreign_amount*-1, journal.foreign_currency_symbol, journal.foreign_currency_decimal_places) }}
                     @else
-                        {{ format_amount_by_symbol(journal.foreign_amount, journal.foreign_currency_symbol, journal.foreign_currency_decimal_places) }}
+                        {!! format_amount_by_symbol(journal.foreign_amount, journal.foreign_currency_symbol, journal.foreign_currency_decimal_places) }}
                     @endif
                 @endif
 
             </td>
 
             <td class="text-right hide-balance_after">
-                {{ format_amount_by_symbol(journal.balance_after, auditData[$account->id].currency.symbol, auditData[$account->id].currency.decimal_places) }}
+                {!! format_amount_by_symbol(journal.balance_after, auditData[$account->id].currency.symbol, auditData[$account->id].currency.decimal_places) }}
             </td>
 
             <td class="hide-date">{{ journal.date.isoFormat($monthAndDayFormat) }}</td>

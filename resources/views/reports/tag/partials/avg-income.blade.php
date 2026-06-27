@@ -8,37 +8,37 @@
     </tr>
     </thead>
     <tbody>
-    {% for row in result %}
-        {% if loop.index > listLength %}
+    @foreach($result as $row)
+        @if($loop->index > $listLength)
             <tr class="overListLength">
         @else
             <tr>
         @endif
         <td data-sortable="false">
-            <a href="{{ route('accounts.show', row.source_account_id) }}">
-                {{ row.source_account_name }}
+            <a href="{{ route('accounts.show', $row['source_account_id']) }}">
+                {{ row['source_account_name'] }}
             </a>
         </td>
-        <td data-value="{{ row.avg }}" class="text-end">
-            {{ format_amount_by_symbol(row.avg, row.currency_symbol, row.currency_decimal_places) }}
+        <td data-value="{{ $row['avg'] }}" class="text-end">
+            {!! format_amount_by_symbol($row['avg'], $row['currency_symbol'], $row['currency_decimal_places']) }}
         </td>
 
-        <td data-value="{{ row.sum }}" class="text-end">
-            {{ format_amount_by_symbol(row.sum, row.currency_symbol, row.currency_decimal_places) }}
+        <td data-value="{{ $row['sum'] }}" class="text-end">
+            {!! format_amount_by_symbol($row['sum'], $row['currency_symbol'], $row['currency_decimal_places']) }}
         </td>
 
-        <td data-value="{{ row.transactions }}">
-            {{ row.transactions }}
+        <td data-value="{{ $row['transactions'] }}">
+            {{ $row['transactions'] }}
         </td>
 
         </tr>
     @endforeach
     </tbody>
     <tfoot>
-    {% if result|length > listLength %}
+    @if(count($result) > $listLength)
         <tr>
             <td colspan="5" class="active">
-                <a href="#" class="listLengthTrigger">{{ trans('firefly.show_full_list',{number:incomeTopLength}) }}</a>
+                <a href="#" class="listLengthTrigger">{{ trans('firefly.show_full_list',['number' => $incomeTopLength]) }}</a>
             </td>
         </tr>
     @endif

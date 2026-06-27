@@ -28,14 +28,14 @@
                 @endif
 
                 {% if 'update_amount' == logEntry.action %}
-                    {{ format_amount_by_symbol(logEntry.before.amount, logEntry.before.currency_symbol, logEntry.before.decimal_places, true) }}
+                    {!! format_amount_by_symbol(logEntry.before.amount, logEntry.before.currency_symbol, logEntry.before.decimal_places, true) }}
                     &rarr;
-                    {{ format_amount_by_symbol(logEntry.after.amount, logEntry.after.currency_symbol, logEntry.after.decimal_places, true) }}
+                    {!! format_amount_by_symbol(logEntry.after.amount, logEntry.after.currency_symbol, logEntry.after.decimal_places, true) }}
                 @endif
                 {% if 'update_foreign_amount' == logEntry.action %}
-                    {{ format_amount_by_symbol(logEntry.before.amount, logEntry.before.currency_symbol, logEntry.before.decimal_places, true) }}
+                    {!! format_amount_by_symbol(logEntry.before.amount, logEntry.before.currency_symbol, logEntry.before.decimal_places, true) }}
                     &rarr;
-                    {{ format_amount_by_symbol(logEntry.after.amount, logEntry.after.currency_symbol, logEntry.after.decimal_places, true) }}
+                    {!! format_amount_by_symbol(logEntry.after.amount, logEntry.after.currency_symbol, logEntry.after.decimal_places, true) }}
                 @endif
 
 

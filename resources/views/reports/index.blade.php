@@ -87,7 +87,7 @@
                     <div class="card-body" id="extra-options">
                     </div>
                     {{-- extra options loading indicator. --}}
-                    <div class="overlay">
+                    <div class="overlay text-center m-2">
                         <div class="spinner-border spinner-border-sm" role="status">
                             <span class="visually-hidden">Loading...</span>
                         </div>

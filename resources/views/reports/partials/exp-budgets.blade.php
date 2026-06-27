@@ -20,7 +20,7 @@
                     {{ '0'|formatAmount }}
                 @else
                     {% for expense in entry.spent.per_currency %}
-                        {{ format_amount_by_symbol(expense.sum, expense.currency.symbol, expense.currency.dp) }}<br/>
+                        {!! format_amount_by_symbol(expense.sum, expense.currency.symbol, expense.currency.dp) }}<br/>
                     @endforeach
                 @endif
             </td>

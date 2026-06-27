@@ -59,7 +59,7 @@
                                 <td class="forty">{{ trans('list.sum') }}</td>
                                 <td>
                                     {% for set in sums %}
-                                        {{ format_amount_by_symbol(set.Withdrawal + set.Transfer + set.Deposit, set.currency_symbol, set.currency_decimal_places, true) }}{% if loop.index != sums|length %},@endif
+                                        {!! format_amount_by_symbol(set.Withdrawal + set.Transfer + set.Deposit, set.currency_symbol, set.currency_decimal_places, true) }}{% if loop.index != sums|length %},@endif
                                     @endforeach
                                 </td>
                             </tr>
@@ -75,7 +75,7 @@
                                 <td class="forty">{{ trans('list.sum_excluding_transfers') }}</td>
                                 <td>
                                     {% for set in sums %}
-                                        {{ format_amount_by_symbol(set.Withdrawal + set.Deposit, set.currency_symbol, set.currency_decimal_places, true) }}{% if loop.index != sums|length %},@endif
+                                        {!! format_amount_by_symbol(set.Withdrawal + set.Deposit, set.currency_symbol, set.currency_decimal_places, true) }}{% if loop.index != sums|length %},@endif
                                     @endforeach
                                 </td>
                             </tr>
@@ -91,7 +91,7 @@
                                 <td class="forty">{{ trans('list.sum_withdrawals') }}</td>
                                 <td>
                                     {% for set in sums %}
-                                        {{ format_amount_by_symbol(set.Withdrawal, set.currency_symbol, set.currency_decimal_places, true) }}{% if loop.index != sums|length %},@endif
+                                        {!! format_amount_by_symbol(set.Withdrawal, set.currency_symbol, set.currency_decimal_places, true) }}{% if loop.index != sums|length %},@endif
                                     @endforeach
                                 </td>
                             </tr>
@@ -107,7 +107,7 @@
                                 <td class="forty">{{ trans('list.sum_deposits') }}</td>
                                 <td>
                                     {% for set in sums %}
-                                        {{ format_amount_by_symbol(set.Deposit, set.currency_symbol, set.currency_decimal_places, true) }}{% if loop.index != sums|length %},@endif
+                                        {!! format_amount_by_symbol(set.Deposit, set.currency_symbol, set.currency_decimal_places, true) }}{% if loop.index != sums|length %},@endif
                                     @endforeach
                                 </td>
                             </tr>
@@ -123,7 +123,7 @@
                                 <td class="forty">{{ trans('list.sum_transfers') }}</td>
                                 <td>
                                     {% for set in sums %}
-                                        {{ format_amount_by_symbol(set.Transfer, set.currency_symbol, set.currency_decimal_places, true) }}{% if loop.index != sums|length %},@endif
+                                        {!! format_amount_by_symbol(set.Transfer, set.currency_symbol, set.currency_decimal_places, true) }}{% if loop.index != sums|length %},@endif
                                     @endforeach
                                 </td>
                             </tr>
@@ -139,7 +139,7 @@
                                 <td class="forty">{{ trans('list.sum_reconciliations') }}</td>
                                 <td>
                                     {% for set in sums %}
-                                        {{ format_amount_by_symbol(set.Reconciliation, set.currency_symbol, set.currency_decimal_places, true) }}{% if loop.index != sums|length %},@endif
+                                        {!! format_amount_by_symbol(set.Reconciliation, set.currency_symbol, set.currency_decimal_places, true) }}{% if loop.index != sums|length %},@endif
                                     @endforeach
                                 </td>
                             </tr>

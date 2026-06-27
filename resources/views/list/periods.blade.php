@@ -18,7 +18,7 @@
                             <td class="third">{{ __('firefly.spent') }}</td>
                             <td class="text-end">
                                 <span title="{{ entry.count }}">
-                                    {{ format_amount_by_symbol(entry.amount, entry.currency_symbol, entry.currency_decimal_places) }}
+                                    {!! format_amount_by_symbol(entry.amount, entry.currency_symbol, entry.currency_decimal_places) }}
                                 </span>
                             </td>
                         </tr>
@@ -28,13 +28,13 @@
                 {% for entry in period.earned %}
                     {% if entry.amount != 0 %}
                         <tr>
-                            <td class="third">{{ 'earned'|_ }}</td>
+                            <td class="third">{{ __('firefly.earned') }}</td>
                             <td class="text-end">
                                 <span title="{{ entry.count }}">
                                     {% if entry.amount < 0 %}
-                                        {{ format_amount_by_symbol(entry.amount*-1, entry.currency_symbol, entry.currency_decimal_places) }}
+                                        {!! format_amount_by_symbol(entry.amount*-1, entry.currency_symbol, entry.currency_decimal_places) }}
                                     @else
-                                        {{ format_amount_by_symbol(entry.amount, entry.currency_symbol, entry.currency_decimal_places) }}
+                                        {!! format_amount_by_symbol(entry.amount, entry.currency_symbol, entry.currency_decimal_places) }}
                                     @endif
                                 </span>
                             </td>
@@ -48,7 +48,7 @@
                             <td class="third">{{ 'transferred'|_ }}</td>
                             <td class="text-end">
                                 <span title="{{ entry.count }}">
-                                    {{ format_amount_by_symbol(entry.amount*-1, entry.currency_symbol, entry.currency_decimal_places) }}
+                                    {!! format_amount_by_symbol(entry.amount*-1, entry.currency_symbol, entry.currency_decimal_places) }}
                                 </span>
                             </td>
                         </tr>
@@ -62,9 +62,9 @@
                             <td class="text-end">
                                 <span title="{{ entry.count }}">
                                     {% if entry.amount < 0 %}
-                                        {{ format_amount_by_symbol(entry.amount, entry.currency_symbol, entry.currency_decimal_places) }}
+                                        {!! format_amount_by_symbol(entry.amount, entry.currency_symbol, entry.currency_decimal_places) }}
                                     @else
-                                        {{ format_amount_by_symbol(entry.amount*-1, entry.currency_symbol, entry.currency_decimal_places) }}
+                                        {!! format_amount_by_symbol(entry.amount*-1, entry.currency_symbol, entry.currency_decimal_places) }}
                                     @endif
                                 </span>
                             </td>
@@ -79,9 +79,9 @@
                             <td class="text-end">
                                 <span title="{{ entry.count }}">
                                     {% if entry.amount < 0 %}
-                                        {{ format_amount_by_symbol(entry.amount*-1, entry.currency_symbol, entry.currency_decimal_places) }}
+                                        {!! format_amount_by_symbol(entry.amount*-1, entry.currency_symbol, entry.currency_decimal_places) }}
                                     @else
-                                        {{ format_amount_by_symbol(entry.amount, entry.currency_symbol, entry.currency_decimal_places) }}
+                                        {!! format_amount_by_symbol(entry.amount, entry.currency_symbol, entry.currency_decimal_places) }}
                                     @endif
                                 </span>
                             </td>

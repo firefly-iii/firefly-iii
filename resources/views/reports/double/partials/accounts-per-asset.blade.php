@@ -3,24 +3,24 @@
     <tr>
         <th data-defaultsign="az">{{ __('firefly.name') }}</th>
         <th data-defaultsign="_19" class="text-end">{{ __('firefly.spent') }}</th>
-        <th data-defaultsign="_19" class="text-end">{{ 'earned'|_ }}</th>
+        <th data-defaultsign="_19" class="text-end">{{ __('firefly.earned') }}</th>
         <th data-defaultsign="_19" class="text-end">{{ __('firefly.sum') }}</th>
     </tr>
     </thead>
     <tbody>
-    {% for account in report %}
+    @foreach($report as $account)
         <tr>
             <td>
                 <a href="{{ route('accounts.show', [account.account_id]) }}" title="{{ account.account_name }}">{{ account.account_name }}</a>
             </td>
             <td class="text-end">
-                {{ format_amount_by_symbol(account.spent, account.currency_symbol, account.currency_decimal_places) }}
+                {!! format_amount_by_symbol(account.spent, account.currency_symbol, account.currency_decimal_places) }}
             </td>
             <td class="text-end">
-                {{ format_amount_by_symbol(account.earned, account.currency_symbol, account.currency_decimal_places) }}
+                {!! format_amount_by_symbol(account.earned, account.currency_symbol, account.currency_decimal_places) }}
             </td>
             <td class="text-end">
-                {{ format_amount_by_symbol(account.sum, account.currency_symbol, account.currency_decimal_places) }}
+                {!! format_amount_by_symbol(account.sum, account.currency_symbol, account.currency_decimal_places) }}
             </td>
         </tr>
     @endforeach
@@ -30,13 +30,13 @@
         <tr>
             <td>{{ __('firefly.sum') }} ({{ sum.currency_name }})</td>
             <td class="text-end">
-                {{ format_amount_by_symbol(sum.spent, sum.currency_symbol, sum.currency_decimal_places) }}
+                {!! format_amount_by_symbol(sum.spent, sum.currency_symbol, sum.currency_decimal_places) }}
             </td>
             <td class="text-end">
-                {{ format_amount_by_symbol(sum.earned, sum.currency_symbol, sum.currency_decimal_places) }}
+                {!! format_amount_by_symbol(sum.earned, sum.currency_symbol, sum.currency_decimal_places) }}
             </td>
             <td class="text-end">
-                {{ format_amount_by_symbol(sum.sum, sum.currency_symbol, sum.currency_decimal_places) }}
+                {!! format_amount_by_symbol(sum.sum, sum.currency_symbol, sum.currency_decimal_places) }}
             </td>
         </tr>
     @endforeach
