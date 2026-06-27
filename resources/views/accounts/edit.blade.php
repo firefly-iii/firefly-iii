@@ -94,7 +94,7 @@
                     <div class="card-body">
                         {!! ExpandedForm::optionsList('update','account') !!}
                     </div>
-                    <div class="card-footer text-right">
+                    <div class="card-footer text-end">
                         <button type="submit" class="btn btn-success">
                             {{ __('firefly.update_' . $objectType . '_account') }}
                         </button>

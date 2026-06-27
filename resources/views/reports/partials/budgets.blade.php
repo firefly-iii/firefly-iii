@@ -3,12 +3,12 @@
     <tr>
         <th data-defaultsign="az">{{ __('firefly.budget') }}</th>
         <th data-defaultsign="month" class="hidden-xs">{{ __('firefly.date') }}</th>
-        <th data-defaultsign="_19"  class="text-right hidden-xs">{{ __('firefly.budgeted') }}</th>
+        <th data-defaultsign="_19"  class="text-end hidden-xs">{{ __('firefly.budgeted') }}</th>
         <th data-defaultsign="_19" class="hidden-xs">{{ trans('list.percentage') }}</th>
         <th data-defaultsign="_19" class="text-end">{{ __('firefly.spent') }}</th>
         <th data-defaultsign="_19" class="hidden-xs">{{ trans('list.percentage') }}</th>
         <th data-defaultsort="disabled" class="hidden-xs">&nbsp;</th>
-        <th data-defaultsign="_19" class="text-right hidden-xs">{{ __('firefly.left') }}</th>
+        <th data-defaultsign="_19" class="text-end hidden-xs">{{ __('firefly.left') }}</th>
         <th data-defaultsign="_19" class="text-end">{{ __('firefly.overspent') }}</th>
     </tr>
     </thead>
@@ -37,7 +37,7 @@
                 </td>
 
                 <!-- budgeted, hidden on mobile -->
-                <td data-value="{{ $budgetLimit['budgeted'] }}" class="text-right hidden-xs">
+                <td data-value="{{ $budgetLimit['budgeted'] }}" class="text-end hidden-xs">
                     @if(null !== $budgetLimit['budgeted'])
                         {!! format_amount_by_symbol($budgetLimit['budgeted'], $budgetLimit['currency_symbol'], $budgetLimit['currency_decimal_places']) !!}
                     @endif
@@ -67,7 +67,7 @@
 
 
                 <!-- left, hidden on mobile  -->
-                <td data-value="{{ $budgetLimit['left'] }}" class="text-right hidden-xs">
+                <td data-value="{{ $budgetLimit['left'] }}" class="text-end hidden-xs">
                     @if(null !== $budgetLimit['left'])
                         {!! format_amount_by_symbol($budgetLimit['left'], $budgetLimit['currency_symbol'], $budgetLimit['currency_decimal_places']) !!}
                     @endif

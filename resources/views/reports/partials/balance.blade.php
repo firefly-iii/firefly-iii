@@ -4,7 +4,7 @@
         <th>{{ __('firefly.budgets') }}</th>
         @foreach($report['accounts'] as $account)
             @if($account['sum'] !== 0)
-                <th class="text-right hidden-xs"><a href="{{ route('accounts.show',$account['id']) }}" title="{{ $account['iban'] }}">{{ $account['name'] }}</a></th>
+                <th class="text-end hidden-xs"><a href="{{ route('accounts.show',$account['id']) }}" title="{{ $account['iban'] }}">{{ $account['name'] }}</a></th>
             @endif
         @endforeach
         <th class="text-end">{{ __('firefly.sum') }}</th>

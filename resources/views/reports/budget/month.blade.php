@@ -166,8 +166,8 @@
         // to report another URL:
         var startDate = '{{ $start->format('Ymd') }}';
         var endDate = '{{ $end->format('Ymd') }}';
-        var $accountIds = '{{ $accountIds }}';
-        var $budgetIds = '{{ $budgetIds }}';
+        var accountIds = '{{ $accountIds }}';
+        var budgetIds = '{{ $budgetIds }}';
 
         // html block URL's:
         var accountsUrl = '{{ route('report-data.budget.accounts', [$accountIds, $budgetIds, $start->format('Ymd'), $end->format('Ymd')]) }}';

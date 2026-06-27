@@ -173,7 +173,7 @@
         var startDate = '{{ $start->format('Ymd') }}';
         var endDate = '{{ $end->format('Ymd') }}';
         var reportType = '{{ $reportType }}';
-        var $accountIds = '{{ $accountIds }}';
+        var accountIds = '{{ $accountIds }}';
 
         var accountReportUrl = '{{ route('report-data.account.general', [$accountIds, $start->format('Ymd'), $end->format('Ymd')]) }}';
         var categoryReportUrl = '{{ route('report-data.category.operations', [$accountIds, $start->format('Ymd'), $end->format('Ymd')]) }}';

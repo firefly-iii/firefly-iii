@@ -2,8 +2,8 @@
     <thead>
     <tr>
         <th data-defaultsign="az">{{ trans('form.name') }}</th>
-        <th data-defaultsign="_19" class="text-right hidden-xs">{{ trans('form.amount_min') }}</th>
-        <th data-defaultsign="_19" class="text-right hidden-xs">{{ trans('form.amount_max') }}</th>
+        <th data-defaultsign="_19" class="text-end hidden-xs">{{ trans('form.amount_min') }}</th>
+        <th data-defaultsign="_19" class="text-end hidden-xs">{{ trans('form.amount_max') }}</th>
         <th data-defaultsign="_19">{{ trans('form.expected_on') }}</th>
         <th data-defaultsign="_19" class="text-end">{{ trans('form.paid') }}</th>
     </tr>
@@ -15,10 +15,10 @@
                 <td>
                     <a href="{{ route('subscriptions.show', [$bill['id']]) }}">{{ $bill['name'] }}</a>
                 </td>
-                <td class="hidden-xs text-right">
+                <td class="hidden-xs text-end">
                     {!! format_amount_by_symbol($bill['amount_min'], $bill['currency_symbol'], $bill['currency_decimal_places']) !!}
                 </td>
-                <td class="hidden-xs text-right">
+                <td class="hidden-xs text-end">
                     {!! format_amount_by_symbol($bill['amount_max'], $bill['currency_symbol'], $bill['currency_decimal_places']) !!}
                 </td>
                 <td data-value="{{ $bill['expected_dates'][0]?->format('Y-m-d') }}">

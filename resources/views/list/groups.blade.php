@@ -59,7 +59,7 @@
                                title="{{ group.title }}">{{ group.title }}</a>
                         </strong></small>
                 </td>
-                <td colspan="1" class="text-right top-light-border">
+                <td colspan="1" class="text-end top-light-border">
                     {% for sum in group.sums %}
                         {% if group.transaction_type == 'Deposit' %}
                             {!! format_amount_by_symbol(sum.amount*-1, sum.currency_symbol, sum.currency_decimal_places) }}
@@ -162,7 +162,7 @@
                     </a>
                     @endif
                 </td>
-                <td class="{{ className }} text-right">
+                <td class="{{ className }} text-end">
 
                     {{--  deposit --}}
                     {% if transaction.transaction_type_type == 'Deposit' %}
@@ -275,7 +275,7 @@
                     @endif
                 </td>
                 {% if (fireflyiiiconfig('use_running_balance', true)) %}
-                <td class=" {{ className }} text-right">
+                <td class=" {{ className }} text-end">
                     {{-- RUNNING BALANCE --}}
                     {% if (null == transaction.balance_dirty or false == transaction.balance_dirty) and null != transaction.destination_balance_after and null != transaction.source_balance_after %}
                         {% if transaction.transaction_type_type == 'Deposit' %}

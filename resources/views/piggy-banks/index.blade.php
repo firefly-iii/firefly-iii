@@ -27,30 +27,30 @@
                             <thead>
                             <tr>
                                 <th>{{ __('firefly.account') }}</th>
-                                <th class="text-right hidden-sm hidden-xs">{{ __('firefly.balance') }}</th>
+                                <th class="text-end hidden-sm hidden-xs">{{ __('firefly.balance') }}</th>
                                 <th class="text-end">{{ __('firefly.left_for_piggy_banks') }}</th>
-                                <th class="text-right hidden-sm hidden-xs">{{ __('firefly.sum_of_piggy_banks') }}</th>
-                                <th class="text-right hidden-sm hidden-xs">{{ __('firefly.saved_so_far') }}</th>
-                                <th class="text-right hidden-sm hidden-xs">{{ __('firefly.left_to_save') }}</th>
+                                <th class="text-end hidden-sm hidden-xs">{{ __('firefly.sum_of_piggy_banks') }}</th>
+                                <th class="text-end hidden-sm hidden-xs">{{ __('firefly.saved_so_far') }}</th>
+                                <th class="text-end hidden-sm hidden-xs">{{ __('firefly.left_to_save') }}</th>
                             </tr>
                             </thead>
                             <tbody>
                             @foreach($accounts as $id => $info)
                                 <tr>
                                     <td><a href="{{ route('accounts.show', $id) }}" title="{{ $info['name'] }}">{{ $info['name'] }}</a></td>
-                                    <td class="text-right hidden-sm hidden-xs">
+                                    <td class="text-end hidden-sm hidden-xs">
                                         {!! format_amount_by_symbol($info['current_balance'],$info['currency_symbol'],$info['currency_decimal_places']) !!}
                                     </td>
                                     <td class="text-end">
                                         {!! format_amount_by_symbol($info['left'],$info['currency_symbol'],$info['currency_decimal_places']) !!}
                                     </td>
-                                    <td class="text-right hidden-sm hidden-xs">
+                                    <td class="text-end hidden-sm hidden-xs">
                                         {!! format_amount_by_symbol($info['target'],$info['currency_symbol'],$info['currency_decimal_places']) !!}
                                     </td>
-                                    <td class="text-right hidden-sm hidden-xs">
+                                    <td class="text-end hidden-sm hidden-xs">
                                         {!! format_amount_by_symbol($info['saved'],$info['currency_symbol'],$info['currency_decimal_places']) !!}
                                     </td>
-                                    <td class="text-right hidden-sm hidden-xs">
+                                    <td class="text-end hidden-sm hidden-xs">
                                         {!! format_amount_by_symbol($info['to_save'],$info['currency_symbol'],$info['currency_decimal_places']) !!}
                                     </td>
                                 </tr>

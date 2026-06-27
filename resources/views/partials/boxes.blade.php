@@ -65,7 +65,7 @@
 
             <div class="info-box-content">
                 <span class="info-box-text">
-                    <a href="{{ route('reports.report.default', ['allAssetAccounts','currentYearStart','currentYearEnd']) }}">{{ 'net_worth'|_ }}</a></span>
+                    <a href="{{ route('reports.report.default', ['allAssetAccounts','currentYearStart','currentYearEnd']) }}">{{ __('firefly.net_worth') }}</a></span>
                 <span class="info-box-number" id="box-net-worth"></span>
 
                 <div class="progress">

@@ -3,7 +3,7 @@
     <tr>
         <th data-defaultsign="az">{{ __('firefly.name') }}</th>
         <th data-defaultsign="_19" class="text-end">{{ __('firefly.total') }}</th>
-        <th data-defaultsign="_19" class="text-right hidden-xs">{{ __('firefly.average') }}</th>
+        <th data-defaultsign="_19" class="text-end hidden-xs">{{ __('firefly.average') }}</th>
         <th data-defaultsort="disabled"></th>
     </tr>
     </thead>
@@ -26,7 +26,7 @@
         <td data-value="{{ $account['sum'] }}" class="text-end">
             {!! format_amount_by_symbol($account['sum'], $account['currency_symbol'], $account['currency_decimal_places']) !!}
         </td>
-        <td class="text-right hidden-xs" data-value="{{ $account['average'] }}">
+        <td class="text-end hidden-xs" data-value="{{ $account['average'] }}">
             @if($account['count'] > 1)
                 {!! format_amount_by_symbol($account['average'], $account['currency_symbol'], $account['currency_decimal_places']) !!}
             @else

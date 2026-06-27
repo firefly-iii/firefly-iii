@@ -238,7 +238,7 @@
         // to report another URL:
         var startDate = '{{ $start->format('Ymd') }}';
         var endDate = '{{ $end->format('Ymd') }}';
-        var $accountIds = '{{ $accountIds }}';
+        var accountIds = '{{ $accountIds }}';
         var categoryIds = '{{ $categoryIds }}';
 
 

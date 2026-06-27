@@ -5,9 +5,9 @@
         <th class="hide-icon">&nbsp;</th>
 
         <th class="hide-description">{{ trans('list.description') }}</th>
-        <th class="text-right hide-balance_before">{{ trans('list.balance_before') }}</th>
-        <th class="text-right hide-amount">{{ trans('list.amount') }}</th>
-        <th class="text-right hide-balance_after">{{ trans('list.balance_after') }}</th>
+        <th class="text-end hide-balance_before">{{ trans('list.balance_before') }}</th>
+        <th class="text-end hide-amount">{{ trans('list.amount') }}</th>
+        <th class="text-end hide-balance_after">{{ trans('list.balance_after') }}</th>
 
         <th class="hide-date">{{ trans('list.date') }}</th>
         {{-- new optional fields (3x) --}}
@@ -78,10 +78,10 @@
                 </a>
             </td>
 
-            <td class="text-right hide-balance_before">
+            <td class="text-end hide-balance_before">
                 {!! format_amount_by_symbol(journal.balance_before, auditData[$account->id].currency.symbol, auditData[$account->id].currency.decimal_places) }}
             </td>
-            <td class="text-right hide-amount">
+            <td class="text-end hide-amount">
 
                 {% if auditData[$account->id].currency.id == journal.currency_id %}
                     {% if $account['id'] == journal.destination_account_id and journal.transaction_type_type == 'Opening balance' %}
@@ -109,7 +109,7 @@
 
             </td>
 
-            <td class="text-right hide-balance_after">
+            <td class="text-end hide-balance_after">
                 {!! format_amount_by_symbol(journal.balance_after, auditData[$account->id].currency.symbol, auditData[$account->id].currency.decimal_places) }}
             </td>
 

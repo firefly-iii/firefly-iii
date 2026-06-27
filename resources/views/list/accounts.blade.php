@@ -113,7 +113,7 @@
                     </td>
                 @endif
             @endif
-            <td class="text-right hidden-sm hidden-xs hidden-md">
+            <td class="text-end hidden-sm hidden-xs hidden-md">
                 <span class="mr-1">
                     {% for key, balance in account.differences %}
                         <span title="{{ key }}">
