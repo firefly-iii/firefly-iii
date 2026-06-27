@@ -65,7 +65,7 @@ class YearReportGenerator implements ReportGeneratorInterface
         } catch (Throwable $e) {
             Log::error(sprintf('Cannot render reports.account.report: %s', $e->getMessage()));
             Log::error($e->getTraceAsString());
-            $result = 'Could not render report view.';
+            $result = sprintf('Could not render report view: %s', $e->getMessage());
 
             throw new FireflyException($result, 0, $e);
         }

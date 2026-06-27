@@ -1,52 +1,42 @@
 @extends('layout.v3.session')
-
-
-    {{ Breadcrumbs.render(Route.getCurrentRoute.getName, accountIds, start, end) }}
-@endsection
-
 @section('content')
-
     <div class="row no-print">
         <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
-            <div class="card" id="optionsBox">
+            <div class="card mb-2" id="optionsBox">
                 <div class="card-header">
                     <h3 class="card-title">{{ __('firefly.options') }}</h3>
                 </div>
                 <div class="card-body">
                     <ul class="list-inline">
-                        {% for hide in hideable %}
+                        @foreach($hidable as $hide)
                             <li><input
-                                    {% if hide in defaultShow %}checked@endif
-                                    type="checkbox" class="fw-normal audit-option-checkbox" name="option[]" value="{{ hide }}" id="option_{{ hide }}"/> <label
-                                    for="option_{{ hide }}">{{ trans('list.'~hide) }}</label></li>
+                                    @if(in_array($hide, $defaultShow, true)) checked @endif
+                                    type="checkbox" class="fw-normal audit-option-checkbox" name="option[]" value="{{ $hide }}" id="option_{{ $hide }}"/> <label
+                                    for="option_{{ $hide }}">{{ trans('list.' . $hide) }}</label></li>
                         @endforeach
-
                     </ul>
                 </div>
             </div>
         </div>
     </div>
 
-
-    {% for account in accounts %}
+@foreach($accounts as $account)
         <div class="row">
             <div class="col-lg-12 col-md-12 col-sm-12">
                 <div class="card">
                     <div class="card-header">
-                        <h3 class="card-title">{{ account.name }}</h3>
+                        <h3 class="card-title">{{ $account->name }}</h3>
                     </div>
-                    {% set url = route('accounts.show',account.id) %}
-                    {% if not auditData[$account->id].exists %}
+                    @if(!$auditData[$account->id]['exists'])
                         <div class="card-body">
-
                             <em>
                                 {{ trans('firefly.no_audit_activity',
-                                    {
-                                        account_name: account.name|escape,
-                                        url: url,
-                                        start: $start->isoFormat($monthAndDayFormat),
-                                        end: $end->isoFormat($monthAndDayFormat),
-                                    })|raw }}
+                                    [
+                                        'account_name'=> e($account->name),
+                                        'url' => route('accounts.show',$account->id),
+                                        'start'=> $start->isoFormat($monthAndDayFormat),
+                                        'end' => $end->isoFormat($monthAndDayFormat),
+                                    ]) }}
 
                             </em>
                         </div>
@@ -54,24 +44,24 @@
                         <div class="card-body p-0">
                             <p class="p-4">
                                 {{ trans('firefly.audit_end_balance',
-                                    {
-                                        account_name: account.name|escape,
-                                        url: url,
-                                        end: auditData[$account->id].dayBefore,
-                                        balance: formatAmountByAccount(account, auditData[$account->id].dayBeforeBalance.balance)
-                                    })|raw }}
+                                    [
+                                        'account_name' => e($account->name),
+                                        'url' => route('accounts.show',$account->id),
+                                        'end' => $auditData[$account->id]->dayBefore,
+                                        'balance' => format_amount_by_account($account, $auditData[$account->id]->dayBeforeBalance['balance'])
+                                    ]) }}
                             </p>
                             {% include 'reports.partials.journals-audit'  with {'journals': auditData[$account->id].journals,'account':account} %}
 
                             <p class="p-4">
 
                                 {{ trans('firefly.audit_end_balance',
-                                    {
-                                        account_name: account.name|escape,
-                                        url: url,
-                                        end: auditData[$account->id].end,
-                                        balance: formatAmountByAccount(account,auditData[$account->id].endBalance)
-                                    })|raw }}
+                                    [
+                                        'account_name' => e($account->name),
+                                        'url' => route('accounts.show',$account->id),
+                                        'end' => $auditData[$account->id]->end,
+                                        'balance' => format_amount_by_account($account, $auditData[$account->id]->endBalance)
+                                    ]) }}
                             </p>
                         </div>
                     @endif
@@ -84,8 +74,9 @@
 @section('styles')
 @endsection
 @section('scripts')
+    @vite(['js/pages/generic.js'])
     <script type="text/javascript" nonce="{{ $JS_NONCE }}">
-        var hideable = {{ hideable|json_encode|raw }};
+        var hideable = {!! json_encode($hideable) !!};
     </script>
     <script type="text/javascript" src="v1/js/ff/reports/all.js?v={{ $FF_BUILD_TIME }}" nonce="{{ $JS_NONCE }}"></script>
     <script type="text/javascript" src="v1/js/ff/reports/audit/all.js?v={{ $FF_BUILD_TIME }}" nonce="{{ $JS_NONCE }}"></script>

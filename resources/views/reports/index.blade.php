@@ -68,7 +68,7 @@
                                     @endif
                                     <ul class="list-inline">
                                         @foreach($data['months'] as $month)
-                                            <li>
+                                            <li class="list-inline-item">
                                                 <a data-start="{{ $month['start'] }}" data-end="{{ $month['end'] }}" class="date-select"
                                                    href="#">{{ $month['formatted'] }}</a>
                                             </li>
