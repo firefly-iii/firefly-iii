@@ -73,8 +73,8 @@ class BillUpdateRequest extends FormRequest
 
         return [
             'name'                    => sprintf('required|min:1|max:255|uniqueObjectForUser:bills,name,%d', $bill->id),
-            'amount_min'              => ['required', new IsValidPositiveAmount()],
-            'amount_max'              => ['required', new IsValidPositiveAmount()],
+            'amount_min'              => ['required', new IsValidPositiveAmount(),'lte:amount_max'],
+            'amount_max'              => ['required', new IsValidPositiveAmount(), 'gte:amount_min'],
             'transaction_currency_id' => ['required', 'exists:transaction_currencies,id'],
             'date'                    => ['required', 'date'],
             'bill_end_date'           => ['nullable', 'date'],
