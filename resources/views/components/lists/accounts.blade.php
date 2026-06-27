@@ -17,10 +17,10 @@
         @endif
         <th class="hidden-sm hidden-xs">{{ trans('form.account_number') }}</th>
         @if('liabilities' !== $objectType)
-        <th class="text-right">{{ trans('list.currentBalance') }}</th>
+        <th class="text-end">{{ trans('list.currentBalance') }}</th>
         @endif
         @if('liabilities' === $objectType)
-        <th class="text-right">
+        <th class="text-end">
             {{ trans('firefly.left_in_debt') }}
         </th>
         @endif
@@ -65,7 +65,7 @@
         @endif
         <td class="hidden-sm hidden-xs">{{ $account->iban }} @if('' === $account->iban) {{ account_get_meta_field($account, 'account_number') }}@endif</td>
         @if('liabilities' !== $objectType)
-        <td class="text-right">
+        <td class="text-end">
                 <span class="mr-2">
                     @foreach($account->endBalances as $key => $balance)
                         <span title="{{ $key }}">
@@ -86,7 +86,7 @@
         </td>
         @endif
         @if('liabilities' === $objectType)
-        <td class="text-right">
+        <td class="text-end">
             @if('' !== $account->current_debt)
             <span class="text-info money-transfer">
                         {!!  format_amount_by_symbol($account->current_debt, $account->currency->symbol, $account->currency->decimal_places, false)  !!}

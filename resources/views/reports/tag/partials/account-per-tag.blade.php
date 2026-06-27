@@ -1,9 +1,9 @@
 <table class="table table-hover sortable">
     <thead>
     <tr>
-        <th data-defaultsign="az">{{ 'name'|_ }}</th>
+        <th data-defaultsign="az">{{ __('firefly.name') }}</th>
         {% for tag in tags %}
-            <th data-defaultsign="_19" class="text-right">{{ tag.tag }}</th>
+            <th data-defaultsign="_19" class="text-end">{{ tag.tag }}</th>
         @endforeach
     </tr>
     </thead>
@@ -15,7 +15,7 @@
                     <a href="{{ route('accounts.show', account.id) }}" title="{{ account.iban }}">{{ account.name }} ({{ currency.currency_name }})</a>
                 </td>
                 {% for tag in tags %}
-                    <td class="text-right">
+                    <td class="text-end">
                         {% if currency.tags[tag.id] %}
                             <span title="{{ 'earned'|_ }}: {{ format_amount_by_symbol(currency.tags[tag.id].earned, currency.currency_symbol, currency.currency_decimal_places, false) }}, {{ __('firefly.spent') }}: {{ format_amount_by_symbol(currency.tags[tag.id].spent, currency.currency_symbol, currency.currency_decimal_places, false) }}"
                             {{ format_amount_by_symbol(currency.tags[tag.id].sum, currency.currency_symbol, currency.currency_decimal_places) }}

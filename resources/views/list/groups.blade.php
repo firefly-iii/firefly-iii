@@ -32,9 +32,9 @@
     <tr>
         <th class="hidden-xs">&nbsp;</th>
         <th>{{ trans('list.description') }}</th>
-        <th class="text-right">{{ trans('list.amount') }}</th>
+        <th class="text-end">{{ trans('list.amount') }}</th>
         {% if fireflyiiiconfig('use_running_balance', true) %}
-        <th class="text-right">{{ trans('list.running_balance') }}</th>
+        <th class="text-end">{{ trans('list.running_balance') }}</th>
         @endif
         <th>{{ trans('list.date') }}</th>
         <th>{{ trans('list.source_account') }}</th>

@@ -1,11 +1,11 @@
 <table class="table table-hover sortable">
     <thead>
     <tr>
-        <th data-defaultsort="disabled">{{ 'description'|_ }}</th>
-        <th data-defaultsign="month">{{ 'date'|_ }}</th>
-        <th data-defaultsign="az">{{ 'account'|_ }}</th>
+        <th data-defaultsort="disabled">{{ __('firefly.description') }}</th>
+        <th data-defaultsign="month">{{ __('firefly.date') }}</th>
+        <th data-defaultsign="az">{{ __('firefly.account') }}</th>
         <th data-defaultsign="az">{{ 'tag'|_ }}</th>
-        <th data-defaultsign="_19" class="text-right">{{ __('firefly.amount') }}</th>
+        <th data-defaultsign="_19" class="text-end">{{ __('firefly.amount') }}</th>
     </tr>
     </thead>
     <tbody>
@@ -35,7 +35,7 @@
             </a>
         </td>
 
-        <td data-value="{{ row.amount }}" class="text-right">
+        <td data-value="{{ row.amount }}" class="text-end">
             {{ format_amount_by_symbol(row.amount, row.currency_symbol, row.currency_decimal_places) }}
         </td>
 

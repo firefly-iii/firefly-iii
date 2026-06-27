@@ -1,14 +1,14 @@
 <table class="table table-hover">
     <thead>
     <tr>
-        <th>{{ 'budgets'|_ }}</th>
+        <th>{{ __('firefly.budgets') }}</th>
         {% for account in report.accounts %}
             {% if account.sum != 0 %}
                 <th class="text-right hidden-xs"><a href="{{ route('accounts.show',account.id) }}"
                                                                     title="{{ account.iban|default(account.name) }}">{{ account.name }}</a></th>
             @endif
         @endforeach
-        <th class="text-right">{{ 'sum'|_ }}</th>
+        <th class="text-end">{{ __('firefly.sum') }}</th>
     </tr>
     </thead>
     <tbody>
@@ -21,7 +21,7 @@
                 </td>
                 {% for account in report.accounts %}
                     {% if budget.spent[$account->id] %}
-                        <td class="text-right">
+                        <td class="text-end">
                             {{ format_amount_by_symbol(budget.spent[$account->id].spent, budget.spent[$account->id].currency_symbol, budget.spent[$account->id].currency_decimal_places) }}
                             <span data-location="budget-entry"
                                data-budget-id="{{ budget.budget_id }}"
@@ -36,7 +36,7 @@
                     @endif
 
                 @endforeach
-                <td class="text-right">
+                <td class="text-end">
                     {% for sum in report.sums[budget.budget_id] %}
                         {{ format_amount_by_symbol(sum.sum, sum.currency_symbol, sum.currency_decimal_places) }}
                         <br/>
@@ -48,10 +48,10 @@
     </tbody>
     <tfoot>
     <tr>
-        <td><em>{{ 'sum'|_ }}</em></td>
+        <td><em>{{ __('firefly.sum') }}</em></td>
         {% for account in report.accounts %}
             {% if account.sum != 0 %}
-                <td class="text-right">
+                <td class="text-end">
                     {{ format_amount_by_symbol(account.sum, account.currency_symbol, account.currency_decimal_places) }}
                 </td>
             @endif

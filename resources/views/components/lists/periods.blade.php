@@ -9,7 +9,7 @@
             @if($period['total_transactions'] > 0)
                 <tr>
                     <td class="third">{{ __('firefly.transactions') }}</td>
-                    <td class="text-right">{{ $period['total_transactions'] }}</td>
+                    <td class="text-end">{{ $period['total_transactions'] }}</td>
                 </tr>
             @endif
             @if(array_key_exists('spent', $period))
@@ -17,7 +17,7 @@
                 @if(is_array($spent) && $spent['amount'] !== 0)
                     <tr>
                         <td class="third">{{ __('firefly.spent') }}</td>
-                        <td class="text-right">
+                        <td class="text-end">
                             <span title="Count: {{ $spent['count'] }}">
                                 {!! format_amount_by_symbol($spent['amount'], $spent['currency_symbol'], $spent['currency_decimal_places']) !!}
                             </span>
@@ -31,7 +31,7 @@
                         @if(is_array($entry) && $entry['amount'] !== 0)
                             <tr>
                                 <td class="third">{{ __('firefly.earned') }}</td>
-                                <td class="text-right">
+                                <td class="text-end">
                                     <span title="Count: {{ $entry['count'] }}">
                                         @if($entry['amount'] < 0)
                                             {!! format_amount_by_symbol($entry['amount']*-1, $entry['currency_symbol'], $entry['currency_decimal_places']) !!}
@@ -48,7 +48,7 @@
                         @if(is_array($entry) && $entry['amount'] !== 0)
             <tr>
                 <td class="third">{{ __('firefly.transferred') }}</td>
-                <td class="text-right">
+                <td class="text-end">
                                 <span title="Count: {{ $entry['count'] }}">
                                     {!! format_amount_by_symbol($entry['amount']*-1, $entry['currency_symbol'], $entry['currency_decimal_places']) !!}
                                 </span>
@@ -61,7 +61,7 @@
                             @if(is_array($entry) && $entry['amount'] !== 0)
             <tr>
                 <td class="third">{{ __('firefly.transferred_away') }}</td>
-                <td class="text-right">
+                <td class="text-end">
                                 <span title="Count: {{ $entry['count'] }}">
                                     @if($entry['amount'] < 0)
                                         {!! format_amount_by_symbol($entry['amount'], $entry['currency_symbol'], $entry['currency_decimal_places']) !!}
@@ -78,7 +78,7 @@
                                 @if($entry['amount'] !== 0)
             <tr>
                 <td class="third">{{ __('firefly.transferred_in') }}</td>
-                <td class="text-right">
+                <td class="text-end">
                                 <span title="Count: {{ $entry['count'] }}">
                                     @if($entry['amount'] < 0)
                                         {!! format_amount_by_symbol($entry['amount']*-1, $entry['currency_symbol'], $entry['currency_decimal_places']) !!}

@@ -354,6 +354,7 @@ final class BudgetController extends Controller
     public function topExpenses(Collection $accounts, Collection $budgets, Carbon $start, Carbon $end)
     {
         $spent   = $this->opsRepository->listExpenses($start, $end, $accounts, $budgets);
+        $incomeTopLength = 0;
         $result  = [];
         foreach ($spent as $currency) {
             foreach ($currency['budgets'] as $budget) {
@@ -375,6 +376,7 @@ final class BudgetController extends Controller
                         'budget_name'              => $budget['name'],
                     ];
                 }
+                $incomeTopLength++;
             }
         }
         // sort by amount_float
@@ -383,7 +385,7 @@ final class BudgetController extends Controller
         array_multisort($amounts, SORT_ASC, $result);
 
         try {
-            $result = view('reports.budget.partials.top-expenses', ['result' => $result])->render();
+            $result = view('reports.budget.partials.top-expenses', ['result' => $result, 'incomeTopLength'=>$incomeTopLength])->render();
         } catch (Throwable $e) {
             Log::error(sprintf('Could not render reports.partials.budget-period: %s', $e->getMessage()));
             $result = sprintf('Could not render view: %s', $e->getMessage());

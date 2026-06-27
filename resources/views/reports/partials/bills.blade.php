@@ -5,7 +5,7 @@
         <th data-defaultsign="_19" class="text-right hidden-xs">{{ trans('form.amount_min') }}</th>
         <th data-defaultsign="_19" class="text-right hidden-xs">{{ trans('form.amount_max') }}</th>
         <th data-defaultsign="_19">{{ trans('form.expected_on') }}</th>
-        <th data-defaultsign="_19" class="text-right">{{ trans('form.paid') }}</th>
+        <th data-defaultsign="_19" class="text-end">{{ trans('form.paid') }}</th>
     </tr>
     </thead>
     <tbody>
@@ -26,7 +26,7 @@
                         {{ date.isoFormat($monthAndDayFormat) }}<br/>
                     @endforeach
                 </td>
-                <td class="text-right">
+                <td class="text-end">
                     {% set hitCount = 0 %}
                     {% for journals in bill.paid_moments %}
                         {% for journal in journals %}
@@ -59,7 +59,7 @@
 
             {{-- if bill is hit, show hit amount --}}
             {% if line.isHit %}
-                <td data-value="{{ line.getAmount }}" class="text-right">
+                <td data-value="{{ line.getAmount }}" class="text-end">
                     <a href="{{ route('transactions.show', line.getTransactionJournalId) }}">
                         {{ formatAmountByCurrency(line.getCurrency, line.getAmount) }}
                     </a>

@@ -140,7 +140,7 @@
     </tbody>
     <tfoot>
     <tr>
-        <td colspan="2" class="text-right"><em>{{ 'sum'|_ }}:</em></td>
+        <td colspan="2" class="text-end"><em>{{ __('firefly.sum') }}:</em></td>
         <td>
             {% if sum != 0 %}
                 {{ format_amount_by_symbol(sum, symbol, decimal_places) }}

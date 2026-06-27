@@ -16,10 +16,10 @@
         @endif
         <th class="hidden-sm hidden-xs">{{ trans('form.account_number') }}</th>
         {% if objectType != 'liabilities' %}
-            <th class="text-right">{{ trans('list.currentBalance') }}</th>
+            <th class="text-end">{{ trans('list.currentBalance') }}</th>
         @endif
         {% if objectType == 'liabilities' %}
-            <th class="text-right">
+            <th class="text-end">
                 {{ trans('firefly.left_in_debt') }}
             </th>
         @endif
@@ -64,7 +64,7 @@
             @endif
             <td class="hidden-sm hidden-xs">{{ account.iban }}{% if account.iban == '' %}{{ accountGetMetaField(account, 'account_number') }}@endif</td>
             {% if objectType != 'liabilities' %}
-            <td class="text-right">
+            <td class="text-end">
                 <span class="mr-2">
                     {% for key, balance in account.endBalances %}
                         <span title="{{ key }}">
@@ -85,7 +85,7 @@
             </td>
             @endif
             {% if objectType == 'liabilities' %}
-            <td class="text-right">
+            <td class="text-end">
                 {% if '-' != account.current_debt %}
                     <span class="text-info money-transfer">
                         {{ format_amount_by_symbol(account.current_debt, account.currency.symbol, account.currency.decimal_places, false) }}

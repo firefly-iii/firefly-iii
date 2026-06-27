@@ -27,7 +27,7 @@
                 <div class="card-header">
                     <h3 class="card-title">{{ 'accountBalances'|_ }}</h3>
                 </div>
-                <div class="box-body table-responsive no-padding" id="accountReport">
+                <div class="card-body p-0" id="accountReport">
                 </div>
                 {{-- loading indicator --}}
                 <div class="overlay">
@@ -42,7 +42,7 @@
                 <div class="card-header">
                     <h3 class="card-title">{{ 'incomeVsExpenses'|_ }}</h3>
                 </div>
-                <div class="box-body table-responsive no-padding" id="incomeVsExpenseReport">
+                <div class="card-body p-0" id="incomeVsExpenseReport">
                 </div>
                 {{-- loading indicator --}}
                 <div class="overlay">
@@ -61,7 +61,7 @@
                 <div class="card-header">
                     <h3 class="card-title">{{ 'income'|_ }}</h3>
                 </div>
-                <div class="box-body table-responsive no-padding" id="incomeReport">
+                <div class="card-body p-0" id="incomeReport">
                 </div>
                 {{-- loading indicator --}}
                 <div class="overlay">
@@ -75,9 +75,9 @@
         <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
             <div class="card">
                 <div class="card-header">
-                    <h3 class="card-title">{{ 'expenses'|_ }}</h3>
+                    <h3 class="card-title">{{ __('firefly.expenses') }}</h3>
                 </div>
-                <div class="box-body table-responsive no-padding" id="expenseReport">
+                <div class="card-body p-0" id="expenseReport">
                 </div>
                 {{-- loading indicator --}}
                 <div class="overlay">
@@ -114,7 +114,7 @@
         <div class="col-lg-12 col-md-12 col-sm-12">
             <div class="card">
                 <div class="card-header">
-                    <h3 class="card-title">{{ 'budgets'|_ }}</h3>
+                    <h3 class="card-title">{{ __('firefly.budgets') }}</h3>
                 </div>
                 <div class="box-body no-padding table-responsive" id="budgetPeriodReport">
                 </div>
@@ -149,7 +149,7 @@
         <div class="col-lg-12 col-md-12 col-sm-12">
             <div class="card">
                 <div class="card-header">
-                    <h3 class="card-title">{{ 'categories'|_ }} ({{ 'expenses'|_ }})</h3>
+                    <h3 class="card-title">{{ 'categories'|_ }} ({{ __('firefly.expenses') }})</h3>
                 </div>
                 <div class="box-body no-padding table-responsive" id="categoryExpense">
                 </div>

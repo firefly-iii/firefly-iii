@@ -1,7 +1,7 @@
 <table class="table table-hover sortable">
     <thead>
     <tr>
-        <th class="half" data-defaultsign="az">{{ 'name'|_ }}</th>
+        <th class="half" data-defaultsign="az">{{ __('firefly.name') }}</th>
         <th class="quarter" class="hidden-xs" data-defaultsign="_19">{{ __('firefly.spent') }}</th>
         <th class="quarter" class="hidden-xs" data-defaultsign="_19">{{ 'earned'|_ }}</th>
     </tr>

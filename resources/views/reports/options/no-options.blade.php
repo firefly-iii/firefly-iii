@@ -1,3 +1,3 @@
 <p id="no_extra_options">
-    <em>{{ 'report_has_no_extra_options'|_ }}</em>
+    <em>{{ __('firefly.report_has_no_extra_options') }}</em>
 </p>

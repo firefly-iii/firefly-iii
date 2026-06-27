@@ -1,4 +1,8 @@
 @extends('layout.v3.session')
+@section('breadcrumbs')
+    {{ Breadcrumbs::render(Route::getCurrentRoute()->getName(), $accountIds, $start, $end) }}
+
+@endsection
 @section('content')
     <div class="row no-print">
         <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
@@ -8,8 +12,8 @@
                 </div>
                 <div class="card-body">
                     <ul class="list-inline">
-                        @foreach($hidable as $hide)
-                            <li><input
+                        @foreach($hideable as $hide)
+                            <li class="list-inline-item"><input
                                     @if(in_array($hide, $defaultShow, true)) checked @endif
                                     type="checkbox" class="fw-normal audit-option-checkbox" name="option[]" value="{{ $hide }}" id="option_{{ $hide }}"/> <label
                                     for="option_{{ $hide }}">{{ trans('list.' . $hide) }}</label></li>
@@ -30,39 +34,39 @@
                     @if(!$auditData[$account->id]['exists'])
                         <div class="card-body">
                             <em>
-                                {{ trans('firefly.no_audit_activity',
+                                {!! trans('firefly.no_audit_activity',
                                     [
                                         'account_name'=> e($account->name),
-                                        'url' => route('accounts.show',$account->id),
+                                        'url' => route('accounts.show', [$account->id]),
                                         'start'=> $start->isoFormat($monthAndDayFormat),
                                         'end' => $end->isoFormat($monthAndDayFormat),
-                                    ]) }}
+                                    ]) !!}
 
                             </em>
                         </div>
                     @else
                         <div class="card-body p-0">
-                            <p class="p-4">
-                                {{ trans('firefly.audit_end_balance',
+                            <div class="alert alert-info m-2" role="alert">
+                                {!! trans('firefly.audit_end_balance',
+                                    [
+                                        'account_name' => e($account->name),
+                                        'url' => route('accounts.show', [$account->id]),
+                                        'end' => $auditData[$account->id]['dayBefore'],
+                                        'balance' => format_amount_by_account($account, $auditData[$account->id]['dayBeforeBalance']['balance'])
+                                    ]) !!}
+                            </div>
+                            <x-report.partial.journals-audit :audit-data="$auditData" :journals="$auditData[$account->id]['journals']" :account="$account" />
+
+                            <div class="alert alert-info m-2" role="alert">
+
+                                {!! trans('firefly.audit_end_balance',
                                     [
                                         'account_name' => e($account->name),
                                         'url' => route('accounts.show',$account->id),
-                                        'end' => $auditData[$account->id]->dayBefore,
-                                        'balance' => format_amount_by_account($account, $auditData[$account->id]->dayBeforeBalance['balance'])
-                                    ]) }}
-                            </p>
-                            {% include 'reports.partials.journals-audit'  with {'journals': auditData[$account->id].journals,'account':account} %}
-
-                            <p class="p-4">
-
-                                {{ trans('firefly.audit_end_balance',
-                                    [
-                                        'account_name' => e($account->name),
-                                        'url' => route('accounts.show',$account->id),
-                                        'end' => $auditData[$account->id]->end,
-                                        'balance' => format_amount_by_account($account, $auditData[$account->id]->endBalance)
-                                    ]) }}
-                            </p>
+                                        'end' => $auditData[$account->id]['end'],
+                                        'balance' => format_amount_by_account($account, $auditData[$account->id]['endBalance'])
+                                    ]) !!}
+                            </div>
                         </div>
                     @endif
                 </div>

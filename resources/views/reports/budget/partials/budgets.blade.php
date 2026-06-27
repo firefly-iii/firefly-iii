@@ -1,41 +1,41 @@
 <table class="table table-hover sortable">
     <thead>
     <tr>
-        <th data-defaultsign="az">{{ 'name'|_ }}</th>
-        <th data-defaultsign="_19" class="text-right">{{ __('firefly.spent') }}</th>
+        <th data-defaultsign="az">{{ __('firefly.name') }}</th>
+        <th data-defaultsign="_19" class="text-end">{{ __('firefly.spent') }}</th>
         <th data-defaultsign="_19">{{ trans('list.percentage') }}</th>
     </tr>
     </thead>
     <tbody>
-    {% for budget in report %}
-        {% if budget.currencies|length == 0 %}
+    @foreach($report as $budget)
+    @if(count($budget['currencies']) === 0)
             <tr>
-                <td data-value="{{ budget.name }}">
-                    <a href="{{ route('budgets.show', budget.id) }}" title="{{ budget.name }}">{{ budget.name }}</a>
+                <td data-value="{{ $budget['name'] }}">
+                    <a href="{{ route('budgets.show', $budget['id']) }}" title="{{ $budget['name'] }}">{{ $budget['name'] }}</a>
                 </td>
-                <td class="text-right">&mdash;</td>
+                <td class="text-end">&mdash;</td>
                 <td>&nbsp;</td>
             </tr>
         @endif
-        {% for currency in budget.currencies %}
+    @foreach($budget['currencies'] as $currency)
             <tr>
-                <td data-value="{{ budget.name }} ({{ currency.currency_name }})">
-                    <a href="{{ route('budgets.show', budget.id) }}" title="{{ budget.name }}">{{ budget.name }} ({{ currency.currency_name }})</a>
+                <td data-value="{{ $budget['name'] }} ({{ $currency['currency_name'] }})">
+                    <a href="{{ route('budgets.show', $budget['id']) }}" title="{{ $budget['name'] }}">{{ $budget['name'] }} ({{ $currency['currency_name'] }})</a>
                 </td>
-                <td data-value="{{ currency.sum }}" class="text-right">
-                    {{ format_amount_by_symbol(currency.sum, currency.currency_symbol, currency.currency_decimal_places) }}
+                <td data-value="{{ $currency['sum'] }}" class="text-end">
+                    {!! format_amount_by_symbol($currency['sum'], $currency['currency_symbol'], $currency['currency_decimal_places']) !!}
                 </td>
-                <td data-value="{{ currency.sum_pct }}">{{ currency.sum_pct }}%</td>
+                <td data-value="{{ $currency['sum_pct'] }}">{{ $currency['sum_pct'] }}%</td>
             </tr>
         @endforeach
     @endforeach
     </tbody>
     <tfoot>
-    {% for sum in sums %}
+    @foreach($sums as $sum)
         <tr>
-            <td>{{ 'sum'|_ }} ({{ sum.currency_name }})</td>
-            <td class="text-right">
-                {{ format_amount_by_symbol(sum.sum, sum.currency_symbol, sum.currency_decimal_places) }}
+            <td>{{ __('firefly.sum') }} ({{ $sum['currency_name'] }})</td>
+            <td class="text-end">
+                {!! format_amount_by_symbol($sum['sum'], $sum['currency_symbol'], $sum['currency_decimal_places']) !!}
             </td>
             <td>&nbsp;</td>
         </tr>

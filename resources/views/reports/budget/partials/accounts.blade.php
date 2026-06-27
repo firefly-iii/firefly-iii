@@ -1,30 +1,30 @@
 <table class="table table-hover sortable">
     <thead>
     <tr>
-        <th data-defaultsign="az">{{ 'name'|_ }}</th>
-        <th data-defaultsign="_19" class="text-right">{{ __('firefly.spent') }}</th>
+        <th data-defaultsign="az">{{ __('firefly.name') }}</th>
+        <th data-defaultsign="_19" class="text-end">{{ __('firefly.spent') }}</th>
     </tr>
     </thead>
     <tbody>
-    {% for account in report %}
-        {% for currency in account.currencies %}
+    @foreach($report as $account)
+        @foreach($account['currencies'] as $currency)
             <tr>
-                <td data-value="{{ account.name }} ({{ currency.currency_name }})">
-                    <a href="{{ route('accounts.show', account.id) }}" title="{{ account.iban }}">{{ account.name }} ({{ currency.currency_name }})</a>
+                <td data-value="{{ $account['name'] }} ({{ $currency['currency_name'] }})">
+                    <a href="{{ route('accounts.show', $account['id']) }}" title="{{ $account['iban'] }}">{{ $account['name'] }} ({{ $currency['currency_name'] }})</a>
                 </td>
-                <td data-value="{{ currency.sum }}" class="text-right">
-                    {{ format_amount_by_symbol(currency.sum, currency.currency_symbol, currency.currency_decimal_places) }}
+                <td data-value="{{ $currency['sum'] }}" class="text-end">
+                    {!! format_amount_by_symbol($currency['sum'], $currency['currency_symbol'], $currency['currency_decimal_places']) !!}
                 </td>
             </tr>
         @endforeach
     @endforeach
     </tbody>
     <tfoot>
-    {% for sum in sums %}
+    @foreach($sums as $sum)
         <tr>
-            <td>{{ 'sum'|_ }} ({{ sum.currency_name }})</td>
-            <td class="text-right">
-                {{ format_amount_by_symbol(sum.sum, sum.currency_symbol, sum.currency_decimal_places) }}
+            <td>{{ __('firefly.sum') }} ({{ $sum['currency_name'] }})</td>
+            <td class="text-end">
+                {!! format_amount_by_symbol($sum['sum'], $sum['currency_symbol'], $sum['currency_decimal_places']) !!}
             </td>
         </tr>
     @endforeach

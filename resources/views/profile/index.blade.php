@@ -181,7 +181,7 @@
                                     </button>
                                 </div>
 
-                                <h4>{{ 'accounts'|_ }}</h4>
+                                <h4>{{ __('firefly.accounts') }}</h4>
                                 <p>
                                     <em class="text-danger">{{ 'also_delete_transactions'|_ }}</em>
                                 </p>
@@ -212,7 +212,7 @@
                                             data-type="liabilities" class="confirm btn btn-danger btn-sm"><span
                                                 class="fa fa-ticket"></span> {{ 'delete_all_liabilities'|_ }}</button>
                                 </div>
-                                <h4>{{ 'accounts'|_ }}</h4>
+                                <h4>{{ __('firefly.accounts') }}</h4>
                                 <p>
                                     <em class="text-info">
                                         {{ 'delete_unused_accounts'|_ }}

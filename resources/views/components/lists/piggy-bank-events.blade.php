@@ -21,7 +21,7 @@
             @endif
         </td>
 
-        <td class="text-right">
+        <td class="text-end">
             @if($event->amount < 0)
                 <span class="text-danger money-negative">{{ trans('firefly.removed_amount', ['amount' => format_amount_by_symbol($event->amount,$event->piggyBank->transactionCurrency->symbol, $event->piggyBank->transactionCurrency->decimal_places, false)]) }}</span>
             @else

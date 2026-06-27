@@ -1,23 +1,23 @@
 <table class="table table-hover sortable">
     <thead>
     <tr>
-        <th data-defaultsign="az">{{ 'name'|_ }}</th>
-        {% for budget in budgets %}
-            <th data-defaultsign="_19" class="text-right">{{ budget.name }}</th>
+        <th data-defaultsign="az">{{ __('firefly.name') }}</th>
+        @foreach($budgets as $budget)
+            <th data-defaultsign="_19" class="text-end">{{ $budget->name }}</th>
         @endforeach
     </tr>
     </thead>
     <tbody>
-    {% for account in report %}
-        {% for currency in account.currencies %}
+    @foreach($report as $account)
+        @foreach($account['currencies'] as $currency)
             <tr>
-                <td data-value="{{ account.name }} ({{ currency.currency_name }})">
-                    <a href="{{ route('accounts.show', account.id) }}" title="{{ account.iban }}">{{ account.name }} ({{ currency.currency_name }})</a>
+                <td data-value="{{ $account['name'] }} ({{ $currency['currency_name'] }})">
+                    <a href="{{ route('accounts.show', [$account['id']]) }}" title="{{ $account['iban'] }}">{{ $account['name'] }} ({{ $currency['currency_name'] }})</a>
                 </td>
-                {% for budget in budgets %}
-                    <td class="text-right">
-                        {% if currency.budgets[budget.id] %}
-                            {{ format_amount_by_symbol(currency.budgets[budget.id], currency.currency_symbol, currency.currency_decimal_places) }}
+                @foreach($budgets as $budget)
+                    <td class="text-end">
+                        @if(array_key_exists($budget->id, $currency['budgets']))
+                            {!! format_amount_by_symbol($currency['budgets'][$budget->id], $currency['currency_symbol'], $currency['currency_decimal_places']) !!}
                         @else
                             &mdash;
                         @endif

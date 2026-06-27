@@ -3,9 +3,9 @@
     <tr>
         <th data-defaultsign="az" colspan="2">{{ __('firefly.category') }}</th>
         {% for period in periods %}
-            <th data-defaultsign="_19" class="text-right">{{ period }}</th>
+            <th data-defaultsign="_19" class="text-end">{{ period }}</th>
         @endforeach
-        <th data-defaultsign="_19" class="text-right">{{ 'sum'|_ }}</th>
+        <th data-defaultsign="_19" class="text-end">{{ __('firefly.sum') }}</th>
     </tr>
     </thead>
     <tbody>
@@ -24,11 +24,11 @@
             {% for key, period in periods %}
                 {{-- income first --}}
                 {% if(info.entries[key]) %}
-                    <td data-value="{{ info.entries[key] }}" class="text-right">
+                    <td data-value="{{ info.entries[key] }}" class="text-end">
                         {{ format_amount_by_symbol(info.entries[key], info.currency_symbol, info.currency_decimal_places) }}
                     </td>
                 @else
-                    <td data-value="0" class="text-right">
+                    <td data-value="0" class="text-end">
                         {{ format_amount_by_symbol(0, info.currency_symbol, info.currency_decimal_places) }}
                     </td>
                 @endif
@@ -36,11 +36,11 @@
 
             {{-- if sum of income, display: --}}
             {% if info.sum %}
-                <td data-value="{{ info.sum }}" class="text-right">
+                <td data-value="{{ info.sum }}" class="text-end">
                     {{ format_amount_by_symbol(info.sum, info.currency_symbol, info.currency_decimal_places) }}
                 </td>
             @else
-                <td data-value="0" class="text-right">
+                <td data-value="0" class="text-end">
                     {{ format_amount_by_symbol(0, info.currency_symbol, info.currency_decimal_places) }}
                 </td>
             @endif

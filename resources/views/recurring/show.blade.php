@@ -33,7 +33,7 @@
                 </p>
                 @endif
 
-                <p>{{ 'description'|_ }}: <em>{{ array.description }}</em></p>
+                <p>{{ __('firefly.description') }}: <em>{{ array.description }}</em></p>
 
                 {% if array.active == false %}
                     <p>

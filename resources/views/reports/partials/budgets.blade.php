@@ -2,14 +2,14 @@
     <thead>
     <tr>
         <th data-defaultsign="az">{{ __('firefly.budget') }}</th>
-        <th data-defaultsign="month" class="hidden-xs">{{ 'date'|_ }}</th>
+        <th data-defaultsign="month" class="hidden-xs">{{ __('firefly.date') }}</th>
         <th data-defaultsign="_19"  class="text-right hidden-xs">{{ 'budgeted'|_ }}</th>
         <th data-defaultsign="_19" class="hidden-xs">{{ trans('list.percentage') }}</th>
-        <th data-defaultsign="_19" class="text-right">{{ __('firefly.spent') }}</th>
+        <th data-defaultsign="_19" class="text-end">{{ __('firefly.spent') }}</th>
         <th data-defaultsign="_19" class="hidden-xs">{{ trans('list.percentage') }}</th>
         <th data-defaultsort="disabled" class="hidden-xs">&nbsp;</th>
         <th data-defaultsign="_19" class="text-right hidden-xs">{{ 'left'|_ }}</th>
-        <th data-defaultsign="_19" class="text-right">{{ 'overspent'|_ }}</th>
+        <th data-defaultsign="_19" class="text-end">{{ 'overspent'|_ }}</th>
     </tr>
     </thead>
     <tbody>
@@ -49,7 +49,7 @@
 
 
                 <!-- spent, visible on mobile -->
-                <td data-value="{{ budget_limit.spent|default(0) }}" class="text-right">
+                <td data-value="{{ budget_limit.spent|default(0) }}" class="text-end">
                     {{ format_amount_by_symbol(budget_limit.spent, budget_limit.currency_symbol, budget_limit.currency_decimal_places) }}
                 </td>
                 <!-- percentage, hidden -->
@@ -73,7 +73,7 @@
                     @endif
                 </td>
                 <!-- overspent, visible. -->
-                <td data-value="{{ budget_limit.overspent|default(0) }}" class="text-right">
+                <td data-value="{{ budget_limit.overspent|default(0) }}" class="text-end">
                     {% if null != budget_limit.overspent %}
                         {{ format_amount_by_symbol(budget_limit.overspent, budget_limit.currency_symbol, budget_limit.currency_decimal_places) }}
                     @endif
@@ -85,14 +85,14 @@
     <tfoot>
     {% for sum in report.sums %}
         <tr>
-            <td colspan="2"><em>{{ 'sum'|_ }} ({{ sum.currency_name }})</em></td>
-            <td class="text-right">{{ format_amount_by_symbol(sum.budgeted, sum.currency_symbol, sum.currency_decimal_places) }}</td>
+            <td colspan="2"><em>{{ __('firefly.sum') }} ({{ sum.currency_name }})</em></td>
+            <td class="text-end">{{ format_amount_by_symbol(sum.budgeted, sum.currency_symbol, sum.currency_decimal_places) }}</td>
             <td>&nbsp;</td>
-            <td class="text-right">{{ format_amount_by_symbol(sum.spent, sum.currency_symbol, sum.currency_decimal_places) }}</td>
+            <td class="text-end">{{ format_amount_by_symbol(sum.spent, sum.currency_symbol, sum.currency_decimal_places) }}</td>
             <td>&nbsp;</td>
             <td>&nbsp;</td>
-            <td class="text-right">{{ format_amount_by_symbol(sum.left, sum.currency_symbol, sum.currency_decimal_places) }}</td>
-            <td class="text-right">{{ format_amount_by_symbol(sum.overspent, sum.currency_symbol, sum.currency_decimal_places) }}</td>
+            <td class="text-end">{{ format_amount_by_symbol(sum.left, sum.currency_symbol, sum.currency_decimal_places) }}</td>
+            <td class="text-end">{{ format_amount_by_symbol(sum.overspent, sum.currency_symbol, sum.currency_decimal_places) }}</td>
 
         </tr>
         @endforeach

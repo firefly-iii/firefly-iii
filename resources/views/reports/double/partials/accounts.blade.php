@@ -1,10 +1,10 @@
 <table class="table table-hover sortable">
     <thead>
     <tr>
-        <th data-defaultsign="az">{{ 'name'|_ }}</th>
-        <th data-defaultsign="_19" class="text-right">{{ __('firefly.spent') }}</th>
-        <th data-defaultsign="_19" class="text-right">{{ 'earned'|_ }}</th>
-        <th data-defaultsign="_19" class="text-right">{{ 'sum'|_ }}</th>
+        <th data-defaultsign="az">{{ __('firefly.name') }}</th>
+        <th data-defaultsign="_19" class="text-end">{{ __('firefly.spent') }}</th>
+        <th data-defaultsign="_19" class="text-end">{{ 'earned'|_ }}</th>
+        <th data-defaultsign="_19" class="text-end">{{ __('firefly.sum') }}</th>
     </tr>
     </thead>
     <tbody>
@@ -24,13 +24,13 @@
                     @endif
                 @endif
             </td>
-            <td class="text-right">
+            <td class="text-end">
                 {{ format_amount_by_symbol(account.spent, account.currency_symbol, account.currency_decimal_places) }}
             </td>
-            <td class="text-right">
+            <td class="text-end">
                 {{ format_amount_by_symbol(account.earned, account.currency_symbol, account.currency_decimal_places) }}
             </td>
-            <td class="text-right">
+            <td class="text-end">
                 {{ format_amount_by_symbol(account.sum, account.currency_symbol, account.currency_decimal_places) }}
             </td>
         </tr>
@@ -39,14 +39,14 @@
     <tfoot>
     {% for sum in sums %}
         <tr>
-            <td>{{ 'sum'|_ }} ({{ sum.currency_name }})</td>
-            <td class="text-right">
+            <td>{{ __('firefly.sum') }} ({{ sum.currency_name }})</td>
+            <td class="text-end">
                 {{ format_amount_by_symbol(sum.spent, sum.currency_symbol, sum.currency_decimal_places) }}
             </td>
-            <td class="text-right">
+            <td class="text-end">
                 {{ format_amount_by_symbol(sum.earned, sum.currency_symbol, sum.currency_decimal_places) }}
             </td>
-            <td class="text-right">
+            <td class="text-end">
                 {{ format_amount_by_symbol(sum.sum, sum.currency_symbol, sum.currency_decimal_places) }}
             </td>
         </tr>

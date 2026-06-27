@@ -28,7 +28,7 @@
                             <tr>
                                 <th>{{ __('firefly.account') }}</th>
                                 <th class="text-right hidden-sm hidden-xs">{{ __('firefly.balance') }}</th>
-                                <th class="text-right">{{ __('firefly.left_for_piggy_banks') }}</th>
+                                <th class="text-end">{{ __('firefly.left_for_piggy_banks') }}</th>
                                 <th class="text-right hidden-sm hidden-xs">{{ __('firefly.sum_of_piggy_banks') }}</th>
                                 <th class="text-right hidden-sm hidden-xs">{{ __('firefly.saved_so_far') }}</th>
                                 <th class="text-right hidden-sm hidden-xs">{{ __('firefly.left_to_save') }}</th>
@@ -41,7 +41,7 @@
                                     <td class="text-right hidden-sm hidden-xs">
                                         {!! format_amount_by_symbol($info['current_balance'],$info['currency_symbol'],$info['currency_decimal_places']) !!}
                                     </td>
-                                    <td class="text-right">
+                                    <td class="text-end">
                                         {!! format_amount_by_symbol($info['left'],$info['currency_symbol'],$info['currency_decimal_places']) !!}
                                     </td>
                                     <td class="text-right hidden-sm hidden-xs">

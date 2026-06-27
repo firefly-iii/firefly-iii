@@ -18,7 +18,7 @@
     <li class="{{ activeRoutePartial('budgets') }}" id="budget-menu">
         <a href="{{ route('budgets.index') }}">
             <em class="bi bi-pie-chart"></em>
-            <span>{{ 'budgets'|_ }}</span>
+            <span>{{ __('firefly.budgets') }}</span>
         </a>
     </li>
 
@@ -51,7 +51,7 @@
             <li class="{{ activeRoutePartialObjectType('transactions', 'withdrawal') }}">
                 <a href="{{ route('transactions.index', ['withdrawal']) }}">
                     <span class="bi bi-caret-right"></span>
-                    <span>{{ 'expenses'|_ }}</span>
+                    <span>{{ __('firefly.expenses') }}</span>
                 </a>
             </li>
             <li class="{{ activeRoutePartialObjectType('transactions', 'deposit') }}">
@@ -114,7 +114,7 @@
     <li class="{{ activeRoutePartial('accounts') }} treeview" id="account-menu">
         <a href="#">
             <em class="fa fa-credit-card"></em>
-            <span>{{ 'accounts'|_ }}</span>
+            <span>{{ __('firefly.accounts') }}</span>
             <span class="text-end-container">
         <span class="fa fa-angle-left text-end"></span>
       </span>

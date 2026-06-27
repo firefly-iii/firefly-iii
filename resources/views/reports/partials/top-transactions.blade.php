@@ -1,9 +1,9 @@
 <table class="table table-hover sortable">
     <thead>
     <tr>
-        <th data-defaultsign="az">{{ 'account'|_ }}</th>
-        <th data-defaultsign="az">{{ 'description'|_ }}</th>
-        <th data-defaultsign="month">{{ 'date'|_ }}</th>
+        <th data-defaultsign="az">{{ __('firefly.account') }}</th>
+        <th data-defaultsign="az">{{ __('firefly.description') }}</th>
+        <th data-defaultsign="month">{{ __('firefly.date') }}</th>
         <th class="quarter" class="hidden-xs" data-defaultsign="_19">{{ __('firefly.amount') }}</th>
     </tr>
     </thead>
@@ -18,7 +18,7 @@
                 {{ transaction.date.isoFormat($monthAndDayFormat) }}
             </td>
             <!-- TODO i dont think transactionAmount will work. -->
-            <td class="text-right" data-value="{{ transaction.amount}}"><span
+            <td class="text-end" data-value="{{ transaction.amount}}"><span
                         class="mr-2">
 
                     {{ format_amount_by_symbol(transaction.amount, transaction.currency_symbol, transaction.currency_decimal_places) }}

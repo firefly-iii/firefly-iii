@@ -10,9 +10,9 @@
         <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
             <div class="card">
                 <div class="card-header">
-                    <h3 class="card-title">{{ 'accounts'|_ }}</h3>
+                    <h3 class="card-title">{{ __('firefly.accounts') }}</h3>
                 </div>
-                <div class="box-body table-responsive no-padding" id="accountsHolder">
+                <div class="card-body p-0" id="accountsHolder">
                 </div>
                 {{-- loading indicator --}}
                 <div class="overlay">
@@ -27,7 +27,7 @@
                 <div class="card-header">
                     <h3 class="card-title">{{ 'categories'|_ }}</h3>
                 </div>
-                <div class="box-body table-responsive no-padding" id="categoriesHolder">
+                <div class="card-body p-0" id="categoriesHolder">
                 </div>
                 {{-- loading indicator --}}
                 <div class="overlay">
@@ -44,7 +44,7 @@
                 <div class="card-header">
                     <h3 class="card-title">{{ 'account_per_category'|_ }}</h3>
                 </div>
-                <div class="box-body table-responsive no-padding" id="accountPerCategoryHolder">
+                <div class="card-body p-0" id="accountPerCategoryHolder">
                 </div>
                 {{-- loading indicator --}}
                 <div class="overlay">
@@ -59,7 +59,7 @@
         <div class="col-lg-4 col-md-6">
             <div class="card">
                 <div class="card-header">
-                    <h3 class="card-title">{{ 'expense_per_category'|_ }}</h3>
+                    <h3 class="card-title">{{ __('firefly.expense_per_category') }}</h3>
                 </div>
                 <div class="card-body">
                     <div class="center-chart">
@@ -97,7 +97,7 @@
         <div class="col-lg-6 col-md-6">
             <div class="card">
                 <div class="card-header">
-                    <h3 class="card-title">{{ 'expense_per_source_account'|_ }}</h3>
+                    <h3 class="card-title">{{ __('firefly.expense_per_source_account') }}</h3>
                 </div>
                 <div class="card-body">
                     <div class="center-chart">
@@ -123,7 +123,7 @@
         <div class="col-lg-6 col-md-6">
             <div class="card">
                 <div class="card-header">
-                    <h3 class="card-title">{{ 'expense_per_destination_account'|_ }}</h3>
+                    <h3 class="card-title">{{ __('firefly.expense_per_destination_account') }}</h3>
                 </div>
                 <div class="card-body">
                     <div class="center-chart">
@@ -166,7 +166,7 @@
                 <div class="card-header">
                     <h3 class="card-title">{{ 'average_spending_per_destination'|_ }}</h3>
                 </div>
-                <div class="box-body table-responsive no-padding" id="avgExpensesHolder">
+                <div class="card-body p-0" id="avgExpensesHolder">
                 </div>
                 {{-- loading indicator --}}
                 <div class="overlay">
@@ -181,7 +181,7 @@
                 <div class="card-header">
                     <h3 class="card-title">{{ 'average_earning_per_source'|_ }}</h3>
                 </div>
-                <div class="box-body table-responsive no-padding" id="avgIncomeHolder">
+                <div class="card-body p-0" id="avgIncomeHolder">
                 </div>
                 {{-- loading indicator --}}
                 <div class="overlay">
@@ -196,9 +196,9 @@
         <div class="col-lg-6">
             <div class="card">
                 <div class="card-header">
-                    <h3 class="card-title">{{ 'expenses'|_ }} ({{ trans('firefly.topX', {number: listLength}) }})</h3>
+                    <h3 class="card-title">{{ __('firefly.expenses') }} ({{ trans('firefly.topX', {number: listLength}) }})</h3>
                 </div>
-                <div class="box-body table-responsive no-padding" id="topExpensesHolder">
+                <div class="card-body p-0" id="topExpensesHolder">
                 </div>
                 {{-- loading indicator --}}
                 <div class="overlay">
@@ -213,7 +213,7 @@
                 <div class="card-header">
                     <h3 class="card-title">{{ 'income'|_ }} ({{ trans('firefly.topX', {number: listLength}) }})</h3>
                 </div>
-                <div class="box-body table-responsive no-padding" id="topIncomeHolder">
+                <div class="card-body p-0" id="topIncomeHolder">
                 </div>
                 {{-- loading indicator --}}
                 <div class="overlay">

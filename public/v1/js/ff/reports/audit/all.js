@@ -48,6 +48,7 @@ $(function () {
 
 function clickColumnOption() {
     "use strict";
+    console.log('clickColumnOption');
     var newArr = readCheckboxes();
     showOnlyColumns(newArr);
     storeCheckboxes(newArr);

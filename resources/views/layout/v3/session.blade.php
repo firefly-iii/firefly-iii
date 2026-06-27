@@ -25,7 +25,6 @@
         @endif
         Firefly III
     </title>
-
     <!--begin::Theme Init (prevents flash of incorrect theme on load, #6043)-->
     <script nonce="{{ $JS_NONCE }}">
         (() => {
@@ -69,6 +68,7 @@
     <x-layout.fav-icons/>
     <!--end::Accessibility Features-->
 
+
 </head>
 <!--end::Head-->
 <!--begin::Body-->
@@ -80,6 +80,8 @@
         document.body.classList.add('sidebar-collapse');
     }
 </script>
+<!-- tussen -->
+
 <!--begin::App Wrapper-->
 <div class="app-wrapper">
     <!--begin::Header-->
@@ -134,7 +136,6 @@
                     </a>
                 </li>
                 <!-- end anonymous -->
-
                 <!-- help button -->
                 <li class="nav-item hidden-sm hidden-xs">
                     <a href="#" class="nav-link" id="help" data-extra="{{ $objectType ?? '' }}"
@@ -143,6 +144,8 @@
                     </a>
                 </li>
                 <!-- end help button -->
+
+                <!-- hierboven -->
 
 
                 <!--begin::Color Mode Toggle (#6010)-->
@@ -232,6 +235,9 @@
             </a>
             <!--end::Brand Link-->
         </div>
+
+                <!-- einde tussen -->
+
         <!--end::Sidebar Brand-->
         <!--begin::Sidebar Wrapper-->
         <div class="sidebar-wrapper">
@@ -271,15 +277,19 @@
                             {{ $pageTitle ?? $title ?? '(no title)' }}
 
                             @if($subTitle ?? false)
-                            <small class="text-xs text-muted">@if(isset($subTitleIcon))
-                                    <em class="bi {{ $subTitleIcon }}"></em>
-                                @endif{{$subTitle}}</small>
+                                <small class="text-xs text-muted">@if(isset($subTitleIcon))
+                                        <em class="bi {{ $subTitleIcon }}"></em>
+                                    @endif{{$subTitle}}</small>
                             @endif
                         </h3>
                     </div>
 
                     <div class="col-sm-6">
-                        {{ Breadcrumbs::render() }}
+                        @sectionMissing('breadcrumbs')
+                            {{ Breadcrumbs::render() }}
+                        @endif
+                        @yield('breadcrumbs')
+
                     </div>
                 </div>
                 <!--end::Row-->
@@ -292,13 +302,13 @@
             <!--begin::Container-->
             <div class="container-fluid">
                 @if($IS_DEMO_SITE)
-                <div class="row no-print">
-                    <div class="col-lg-12">
-                        <div class="alert alert-info" role="alert">
-                            @includeFirst(['demo.' . Route::getCurrentRoute()->getName(), 'demo.no-demo-text'])
+                    <div class="row no-print">
+                        <div class="col-lg-12">
+                            <div class="alert alert-info" role="alert">
+                                @includeFirst(['demo.' . Route::getCurrentRoute()->getName(), 'demo.no-demo-text'])
+                            </div>
                         </div>
                     </div>
-                </div>
                 @endif
                 <x-layout.flash
                     :invalid-monetary-locale="$invalidMonetaryLocale ?? false"
@@ -307,7 +317,7 @@
                 />
 
                 @yield('content')
-            </div>
+        </div>
         </div>
     </main>
     <footer class="app-footer">

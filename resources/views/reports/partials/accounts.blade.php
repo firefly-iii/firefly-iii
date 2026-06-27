@@ -1,10 +1,10 @@
 <table class="table table-hover sortable">
     <thead>
     <tr>
-        <th data-defaultsign="az">{{ 'name'|_ }}</th>
+        <th data-defaultsign="az">{{ __('firefly.name') }}</th>
         <th data-defaultsign="_19" class="text-right hidden-xs">{{ 'balanceStart'|_ }}</th>
         <th data-defaultsign="_19" class="text-right hidden-xs">{{ 'balanceEnd'|_ }}</th>
-        <th data-defaultsign="_19" class="text-right">{{ 'difference'|_ }}</th>
+        <th data-defaultsign="_19" class="text-end">{{ 'difference'|_ }}</th>
     </tr>
     </thead>
     <tbody>
@@ -19,7 +19,7 @@
             <td class="text-right hidden-xs" data-value="{{ account.end_balance }}">
                 {{ format_amount_by_symbol(account.end_balance, account.currency_symbol, account.currency_decimal_places) }}
             </td>
-            <td class="text-right"
+            <td class="text-end"
                 data-value="{{ (account.end_balance - account.start_balance) }}">
                 {{ format_amount_by_symbol(account.end_balance - account.start_balance, account.currency_symbol, account.currency_decimal_places) }}
             </td>
@@ -33,13 +33,13 @@
         <td>
             &nbsp;
         </td>
-        <td class="text-right">
+        <td class="text-end">
             {{ format_amount_by_symbol(sum.start, sum.currency_symbol, sum.currency_decimal_places) }}
         </td>
-        <td class="text-right">
+        <td class="text-end">
             {{ format_amount_by_symbol(sum.end, sum.currency_symbol, sum.currency_decimal_places) }}
         </td>
-        <td class="text-right">
+        <td class="text-end">
             {{ format_amount_by_symbol(sum.difference, sum.currency_symbol, sum.currency_decimal_places) }}
         </td>
     </tr>

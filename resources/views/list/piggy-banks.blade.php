@@ -3,7 +3,7 @@
     <tr>
         <th colspan="2">&nbsp;</th>
         <th>{{ 'piggy_bank'|_ }}</th>
-        <th class="text-right">{{ 'saved_so_far'|_ }}</th>
+        <th class="text-end">{{ 'saved_so_far'|_ }}</th>
         <th colspan="3" class="hidden-sm hidden-xs">&nbsp;</th>
         <th class="text-right hidden-sm hidden-xs">{{ 'target_amount'|_ }}</th>
         <th class="text-right hidden-sm hidden-xs">{{ 'left_to_save'|_ }}</th>
@@ -46,7 +46,7 @@
                         @endif
                     </td>
                     <td class="text-right piggySaved">
-                    <span title="Saved so far" class="text-right">
+                    <span title="Saved so far" class="text-end">
                         {{ format_amount_by_symbol(piggy.current_amount,piggy.currency_symbol,piggy.currency_decimal_places) }}
                         {% if convertToPrimary and piggy.currency_id != $primaryCurrency->id and null != piggy.pc_current_amount %}
                             ({{ format_amount_by_symbol(piggy.pc_current_amount,$primaryCurrency->symbol,$primaryCurrency->decimal_places) }})
@@ -118,7 +118,7 @@
                 <td class="hidden-sm hidden-xs">&nbsp;</td> {{-- handle --}}
                 <td class="hidden-sm hidden-xs">&nbsp;</td> {{-- buttons --}}
                 <td>&nbsp;</td>
-                <td class="text-right">
+                <td class="text-end">
                     {% for sum in objectGroup.sums %}
                         {{ format_amount_by_symbol(sum.saved, sum.currency_symbol, sum.currency_decimal_places) }}<br />
                     @endforeach

@@ -1,8 +1,8 @@
 <table class="table table-hover sortable">
     <thead>
     <tr>
-        <th data-defaultsign="az">{{ 'name'|_ }}</th>
-        <th data-defaultsign="_19" class="text-right">{{ 'total'|_ }}</th>
+        <th data-defaultsign="az">{{ __('firefly.name') }}</th>
+        <th data-defaultsign="_19" class="text-end">{{ __('firefly.total') }}</th>
         <th data-defaultsign="_19" class="text-right hidden-xs">{{ 'average'|_ }}</th>
         <th data-defaultsort="disabled"></th>
     </tr>
@@ -23,7 +23,7 @@
                 </small>
             @endif
         </td>
-        <td data-value="{{ account.sum }}" class="text-right">
+        <td data-value="{{ account.sum }}" class="text-end">
             {{ format_amount_by_symbol(account.sum, account.currency_symbol, account.currency_decimal_places) }}
         </td>
         <td class="text-right hidden-xs" data-value="{{ account.average }}">
@@ -51,8 +51,8 @@
     @endif
     {% for sum in report.sums %}
         <tr>
-            <td><em>{{ 'sum'|_ }} ({{ sum.currency_name }})</em></td>
-            <td class="text-right">
+            <td><em>{{ __('firefly.sum') }} ({{ sum.currency_name }})</em></td>
+            <td class="text-end">
                 {{ format_amount_by_symbol(sum.sum, sum.currency_symbol, sum.currency_decimal_places) }}
             </td>
             <td>&nbsp;</td>
