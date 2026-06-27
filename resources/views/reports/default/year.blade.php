@@ -1,6 +1,5 @@
 @extends('layout.v3.session')
-
-
+@section('breadcrumbs')
     {{ Breadcrumbs.render(Route.getCurrentRoute.getName, accountIds, start, end) }}
 @endsection
 
