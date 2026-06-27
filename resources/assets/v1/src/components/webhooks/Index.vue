@@ -27,7 +27,7 @@
                         {{ $t('firefly.webhooks') }}
                     </h3>
                 </div>
-                <div class="box-body no-padding">
+                <div class="card-body p-0">
                     <div style="padding:8px;">
                         <a href="webhooks/create" class="btn btn-success"><span
                             class="fa fa-plus fa-fw"></span>{{ $t('firefly.create_new_webhook') }}</a>

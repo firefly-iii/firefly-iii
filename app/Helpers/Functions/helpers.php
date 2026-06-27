@@ -38,7 +38,6 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Route;
 use League\CommonMark\GithubFlavoredMarkdownConverter;
-
 use function Safe\json_decode;
 use function Safe\mb_ord;
 use function Safe\preg_match;
@@ -48,7 +47,7 @@ if (!function_exists('env_default_when_empty')) {
     /**
      * @return null|mixed
      */
-    function env_default_when_empty(mixed $value, bool|int|string|null $default = null): mixed
+    function env_default_when_empty(mixed $value, bool | int | string | null $default = null): mixed
     {
         if (null === $value) {
             return $default;
@@ -61,12 +60,69 @@ if (!function_exists('env_default_when_empty')) {
     }
 }
 
+if (!function_exists('mime_icon')) {
+    function mime_icon(string $file): string
+    {
+        return match ($file) {
+            'application/pdf'                                          => 'bi-file-earmark-pdf',
+            'image/webp',
+            'image/png',
+            'image/jpeg',
+            'image/svg+xml',
+            'image/heic',
+            'image/heic-sequence',
+            'application/vnd.oasis.opendocument.image'                 => 'bi-file-earmark-image',
+            'application/msword',
+            'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
+            'application/vnd.openxmlformats-officedocument.wordprocessingml.template',
+            'application/x-iwork-pages-sffpages',
+            'application/vnd.sun.xml.writer',
+            'application/vnd.sun.xml.writer.template',
+            'application/vnd.sun.xml.writer.global',
+            'application/vnd.stardivision.writer',
+            'application/vnd.stardivision.writer-global',
+            'application/vnd.oasis.opendocument.text',
+            'application/vnd.oasis.opendocument.text-template',
+            'application/vnd.oasis.opendocument.text-web',
+            'application/vnd.oasis.opendocument.text-master'           => 'bi-file-earmark-word',
+            'application/vnd.ms-excel',
+            'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
+            'application/vnd.openxmlformats-officedocument.spreadsheetml.template',
+            'application/vnd.sun.xml.calc',
+            'application/vnd.sun.xml.calc.template',
+            'application/vnd.stardivision.calc',
+            'application/vnd.oasis.opendocument.spreadsheet',
+            'application/vnd.oasis.opendocument.spreadsheet-template'  => 'bi-file-earmark-excel',
+            'application/vnd.ms-powerpoint',
+            'application/vnd.openxmlformats-officedocument.presentationml.presentation',
+            'application/vnd.openxmlformats-officedocument.presentationml.template',
+            'application/vnd.openxmlformats-officedocument.presentationml.slideshow',
+            'application/vnd.sun.xml.impress',
+            'application/vnd.sun.xml.impress.template',
+            'application/vnd.stardivision.impress',
+            'application/vnd.oasis.opendocument.presentation',
+            'application/vnd.oasis.opendocument.presentation-template' => 'bi-file-earmark-slides',
+            'application/vnd.sun.xml.draw',
+            'application/vnd.sun.xml.draw.template',
+            'application/vnd.stardivision.draw',
+            'application/vnd.oasis.opendocument.chart'                 => 'bi-file-earmark-easel',
+            'application/vnd.oasis.opendocument.graphics',
+            'application/vnd.oasis.opendocument.graphics-template',
+            'application/vnd.sun.xml.math',
+            'application/vnd.stardivision.math',
+            'application/vnd.oasis.opendocument.formula',
+            'application/vnd.oasis.opendocument.database'              => 'bi-file-earmark-rules',
+            default                                                    => 'bi-file-earmark'
+        };
+    }
+}
+
 if (!function_exists('parse_markdown')) {
     function parse_markdown(string $string): string
     {
         $converter = new GithubFlavoredMarkdownConverter(['allow_unsafe_links' => false, 'max_nesting_level' => 5, 'html_input' => 'escape']);
 
-        return (string) $converter->convert($string);
+        return (string)$converter->convert($string);
     }
 }
 
@@ -110,7 +166,7 @@ if (!function_exists('account_get_meta_field')) {
         return $result;
     }
 }
-if(!function_exists('menu_sub_item_active')) {
+if (!function_exists('menu_sub_item_active')) {
     function menu_sub_item_active(string $route, string $objectType): string
     {
         $name = Route::getCurrentRoute()->getName() ?? '';
@@ -123,7 +179,7 @@ if(!function_exists('menu_sub_item_active')) {
     }
 }
 
-if(!function_exists('menu_item_active_partial')) {
+if (!function_exists('menu_item_active_partial')) {
     function menu_item_active_partial(string $route): string
     {
         $name = Route::getCurrentRoute()->getName() ?? '';
@@ -136,8 +192,9 @@ if(!function_exists('menu_item_active_partial')) {
     }
 }
 
-if(!function_exists('menu_open_partial')) {
-    function menu_open_partial(string $route): string {
+if (!function_exists('menu_open_partial')) {
+    function menu_open_partial(string $route): string
+    {
         $name = Route::getCurrentRoute()->getName() ?? '';
         Log::debug(sprintf('menuOpenPartial("%s" starts with "%s")', $name, $route));
         if (str_starts_with($name, $route)) {
@@ -152,11 +209,11 @@ if (!function_exists('account_balance')) {
     function account_balance(Account $account): string
     {
         /** @var Carbon $date */
-        $date             = now();
+        $date = now();
 
         // get the date from the current session. If it's in the future, keep `now()`.
         /** @var Carbon $session */
-        $session          = clone session('end', today(config('app.timezone'))->endOfMonth());
+        $session = clone session('end', today(config('app.timezone'))->endOfMonth());
         if ($session->lt($date)) {
             $date = $session->copy();
             $date->endOfDay();
@@ -164,13 +221,13 @@ if (!function_exists('account_balance')) {
         Log::debug(sprintf('twig balance: Call finalAccountBalance with date/time "%s"', $date->toIso8601String()));
 
         // 2025-10-08 replace finalAccountBalance with accountsBalancesOptimized.
-        $info             = Steam::accountsBalancesOptimized(new Collection()->push($account), $date)[$account->id];
+        $info = Steam::accountsBalancesOptimized(new Collection()->push($account), $date)[$account->id];
         // $info             = Steam::finalAccountBalance($account, $date);
         $currency         = Steam::getAccountCurrency($account);
         $primary          = Amount::getPrimaryCurrency();
         $convertToPrimary = Amount::convertToPrimary();
         $usePrimary       = $convertToPrimary && $primary->id !== $currency->id;
-        $currency ??= $primary;
+        $currency         ??= $primary;
         $strings          = [];
         foreach ($info as $key => $balance) {
             if ('balance' === $key) {
@@ -206,8 +263,9 @@ if (!function_exists('string_is_equal')) {
     }
 }
 
-if(!function_exists('format_amount_by_code')) {
-    function format_amount_by_code(string $amount, string $code, ?bool $coloured = null): string {
+if (!function_exists('format_amount_by_code')) {
+    function format_amount_by_code(string $amount, string $code, ?bool $coloured = null): string
+    {
         $coloured ??= true;
 
         try {
@@ -222,62 +280,68 @@ if(!function_exists('format_amount_by_code')) {
     }
 }
 
-if(!function_exists('format_amount_by_currency')) {
-    function format_amount_by_currency(TransactionCurrency $currency, string $amount, ?bool $coloured = null): string {
+if (!function_exists('format_amount_by_currency')) {
+    function format_amount_by_currency(TransactionCurrency $currency, string $amount, ?bool $coloured = null): string
+    {
         $coloured ??= true;
 
         return Amount::formatAnything($currency, $amount, $coloured);
     }
 }
 
-if(!function_exists('print_nice_filesize')) {
-    function print_nice_filesize (int $size): string {
+if (!function_exists('print_nice_filesize')) {
+    function print_nice_filesize(int $size): string
+    {
         // less than one GB, more than one MB
         if ($size < (1024 * 1024 * 2014) && $size >= (1024 * 1024)) {
-            return round($size / (1024 * 1024), 2).' MB';
+            return round($size / (1024 * 1024), 2) . ' MB';
         }
 
         // less than one MB
         if ($size < (1024 * 1024)) {
-            return round($size / 1024, 2).' KB';
+            return round($size / 1024, 2) . ' KB';
         }
 
-        return $size.' bytes';
+        return $size . ' bytes';
     }
 }
 
-if(!function_exists('journal_has_meta')) {
-    function journal_has_meta(int $journalId, string $metaField): bool {
+if (!function_exists('journal_has_meta')) {
+    function journal_has_meta(int $journalId, string $metaField): bool
+    {
         $count = DB::table('journal_meta')->where('name', $metaField)->where('transaction_journal_id', $journalId)->whereNull('deleted_at')->count();
 
         return 1 === $count;
     }
 }
-if(!function_exists('journal_get_meta_field')) {
-    function journal_get_meta_field (int $journalId, string $metaField) {
+if (!function_exists('journal_get_meta_field')) {
+    function journal_get_meta_field(int $journalId, string $metaField)
+    {
         /** @var null|TransactionJournalMeta $entry */
         $entry = DB::table('journal_meta')->where('name', $metaField)->where('transaction_journal_id', $journalId)->whereNull('deleted_at')->first();
         if (null === $entry) {
             return '';
         }
 
-        return json_decode((string) $entry->data, true);
+        return json_decode((string)$entry->data, true);
     }
 }
-if(!function_exists('journal_get_meta_date')) {
-    function journal_get_meta_date (int $journalId, string $metaField): Carbon|CarbonInterface {
+if (!function_exists('journal_get_meta_date')) {
+    function journal_get_meta_date(int $journalId, string $metaField): Carbon | CarbonInterface
+    {
         /** @var null|TransactionJournalMeta $entry */
         $entry = DB::table('journal_meta')->where('name', $metaField)->where('transaction_journal_id', $journalId)->whereNull('deleted_at')->first();
         if (null === $entry) {
             return today(config('app.timezone'));
         }
 
-        return new Carbon(json_decode((string) $entry->data, false));
+        return new Carbon(json_decode((string)$entry->data, false));
     }
 }
 
-if(!function_exists('format_amount_by_account')) {
-    function format_amount_by_account (Account $account, string $amount, ?bool $coloured = null): string {
+if (!function_exists('format_amount_by_account')) {
+    function format_amount_by_account(Account $account, string $amount, ?bool $coloured = null): string
+    {
         $coloured ??= true;
 
         /** @var AccountRepositoryInterface $accountRepos */
@@ -300,14 +364,14 @@ if (!function_exists('blade_escape_js')) {
         return preg_replace_callback(
             '#[^a-zA-Z0-9,\._]#Su',
             static function ($matches) {
-                $char      = $matches[0];
+                $char = $matches[0];
 
                 /*
                  * A few characters have short escape sequences in JSON and JavaScript.
                  * Escape sequences supported only by JavaScript, not JSON, are omitted.
                  * \" is also supported but omitted, because the resulting string is not HTML safe.
                  */
-                $short     = match ($char) {
+                $short = match ($char) {
                     '\\'    => '\\\\',
                     '/'     => '\/',
                     "\x08"  => '\b',
@@ -329,9 +393,9 @@ if (!function_exists('blade_escape_js')) {
 
                 // Split characters outside the BMP into surrogate pairs
                 // https://tools.ietf.org/html/rfc2781.html#section-2.1
-                $u         = $codepoint - 0x10_000;
-                $high      = 0xD800 | ($u >> 10);
-                $low       = 0xDC00 | ($u & 0x3FF);
+                $u    = $codepoint - 0x10_000;
+                $high = 0xD800 | ($u >> 10);
+                $low  = 0xDC00 | ($u & 0x3FF);
 
                 return \sprintf('\u%04X\u%04X', $high, $low);
             },

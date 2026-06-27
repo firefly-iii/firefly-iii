@@ -30,12 +30,12 @@
 @endif
 
 {{-- INFO MESSAGE (CAN BE MULTIPLE) --}}
-@if(\Illuminate\Support\Facades\Session::has('info'))
+@if(session()->has('info'))
 <div class="alert alert-info alert-dismissible fade show" role="alert">
     {{-- MULTIPLE INFO MESSAGE --}}
-    @if(!is_string(session('info')) && is_iterable(session('info') && count(session('info')) > 1))
+    @if(!is_string(session('info')) && is_iterable(session('info')) && count(session('info')) > 1)
     <strong>
-        {{ \Illuminate\Support\Facades\Lang::choice('firefly.flash_info_multiple', count(session('info')), ['count' => count(session('info'))]) }}
+        {{ trans_choice('firefly.flash_info_multiple', count(session('info')), ['count' => count(session('info'))]) }}
         :</strong>
     <ul class="list-unstyled">
         @foreach(session('info') as $item)
@@ -44,11 +44,11 @@
     </ul>
     @endif
     {{-- SET OF MULTIPLE INFO MESSAGES, BUT THERE IS JUST ONE --}}
-    @if(!is_string(session('info')) && is_iterable(session('info') && 1 === count(session('info'))))
+    @if(!is_string(session('info')) && is_iterable(session('info')) && 1 === count(session('info')))
         <strong>{{ __('firefly.flash_info') }}:</strong> {{ session('info')[0] }}
     @endif
     {{-- SINGLE INFO MESSAGE --}}
-    @if(is_string(session('info')) && !is_iterable(session('info')))
+    @if(is_string(session('info')))
         @if(\Illuminate\Support\Facades\Session::has('info_url'))
     <a href="{{ session('info_url') }}">
         @endif
@@ -74,7 +74,7 @@
 @if(\Illuminate\Support\Facades\Session::has('error'))
 <div class="alert alert-danger alert-dismissible fade show" role="alert">
     {{-- MULTIPLE ERRORS (BAD) --}}
-    @if(!is_string(session('error')) && is_iterable(session('error') && count(session('error')) > 1))
+    @if(!is_string(session('error')) && is_iterable(session('error')) && count(session('error')) > 1)
     <strong>
         {{ \Illuminate\Support\Facades\Lang::choice('firefly.flash_error_multiple', count(session('error')), ['count' => session('error')]) }}:
     </strong>
@@ -86,7 +86,7 @@
     @endif
 
     {{-- SET OF MULTIPLE ERRORS, BUT THERE IS JUST ONE --}}
-    @if(!is_string(session('error')) && is_iterable(session('error') && 1 === count(session('error'))))
+    @if(!is_string(session('error')) && is_iterable(session('error')) && 1 === count(session('error')))
     <strong>{{ __('firefly.flash_error') }}</strong>
     {{ session('error')[0] }}
     @endif

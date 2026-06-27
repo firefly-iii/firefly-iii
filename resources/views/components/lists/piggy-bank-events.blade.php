@@ -1,0 +1,33 @@
+<table class="table table-hover table-responsive">
+    <tr>
+        @if($showPiggyBank)
+           <th>{{ trans('list.piggy_bank') }}</th>
+        @endif
+        <th>{{ trans('list.date') }}</th>
+        <th>{{ trans('list.amount') }}</th>
+    </tr>
+    @foreach($events as $event)
+    <tr>
+        @if($showPiggyBank)
+        <td>
+            <a href="{{ route('piggy-banks.show',$event->piggyBank->id) }}">{{ $event->piggyBank->name }}</a>
+        </td>
+        @endif
+        <td>
+            @if($event->transaction_journal_id)
+                <a href="{{ route('transactions.show',$event->transactionJournal->transaction_group_id) }}" title="{{ $event->transactionJournal->description }}">{{ $event->date->isoFormat($monthAndDayFormat) }}</a>
+            @else
+                {{ $event->date->isoFormat($monthAndDayFormat) }}
+            @endif
+        </td>
+
+        <td class="text-right">
+            @if($event->amount < 0)
+                <span class="text-danger money-negative">{{ trans('firefly.removed_amount', ['amount' => format_amount_by_symbol($event->amount,$event->piggyBank->transactionCurrency->symbol, $event->piggyBank->transactionCurrency->decimal_places, false)]) }}</span>
+            @else
+                <span class="text-success money-positive">{{ trans('firefly.added_amount', ['amount' => format_amount_by_symbol($event->amount,$event->piggyBank->transactionCurrency->symbol, $event->piggyBank->transactionCurrency->decimal_places, false)]) }}</span>
+            @endif
+        </td>
+    </tr>
+    @endforeach
+</table>

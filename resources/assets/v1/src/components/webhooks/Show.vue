@@ -36,7 +36,7 @@
           <div class="box-header with-border">
             <h3 class="box-title">{{ title }}</h3>
           </div>
-          <div class="box-body no-padding">
+          <div class="card-body p-0">
             <table class="table table-hover" aria-label="A table">
               <tbody>
               <tr>
@@ -94,7 +94,7 @@
           <div class="box-header with-border">
             <h3 class="box-title">{{ $t('firefly.meta_data') }}</h3>
           </div>
-          <div class="box-body no-padding">
+          <div class="card-body p-0">
             <table class="table table-hover" aria-label="A table">
               <tbody>
               <tr>
@@ -147,7 +147,7 @@
             <em class="fa fa-spin fa-spinner"></em>
           </p>
         </div>
-        <div class="box-body no-padding" v-if="messages.length > 0 && !loading">
+        <div class="card-body p-0" v-if="messages.length > 0 && !loading">
           <table class="table table-hover" aria-label="A table">
             <thead>
             <tr>

@@ -2,7 +2,7 @@
 @section('content')
     <div class="row">
         <div class="col-lg-8 col-md-8 col-sm-6">
-            <div class="card" id="piggyChart">
+            <div class="card mb-2" id="piggyChart">
                 <div class="card-header">
                     <h3 class="card-title">{{ __('firefly.events') }}</h3>
                 </div>
@@ -12,7 +12,7 @@
             </div>
         </div>
         <div class="col-lg-4 col-md-4 col-sm-6">
-            <div class="card">
+            <div class="card mb-2">
                 <div class="card-header">
                     <div class="row">
                         <div class="col">
@@ -112,12 +112,12 @@
                     </table>
                 </div>
             </div>
-            <div class="card">
+            <div class="card mb-2">
                 <div class="card-header">
                     <h3 class="card-title">{{ __('firefly.event_history') }} (<a class="confirm-history-delete reset-link" href="#">{{ __('firefly.reset_history') }}</a>)</h3>
                 </div>
-                <div class="box-body no-padding" id="piggyEvents">
-                    @include('list.piggy-bank-events')
+                <div class="card-body p-0" id="piggyEvents">
+                    <x-lists.piggy-bank-events :events="$events" :show-piggy-bank="false"/>
                 </div>
             </div>
         </div>
@@ -125,7 +125,7 @@
     <div class="row">
 
         @if('' !== (string) $piggy['notes'])
-            <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
+            <div class="col-lg-8 col-md-8 col-sm-12 col-xs-12">
 
                 <div class="card">
                     <div class="card-header">
@@ -138,15 +138,15 @@
             </div>
         @endif
         @if($attachments->count() > 0)
-            <div class="col-lg-4 col-md-6 col-sm-12 col-xs-12">
-                <div class="card">
+            <div class="col-lg-8 col-md-8 col-sm-12 col-xs-12">
+                <div class="card mb-2">
                     <div class="card-header">
                         <h3 class="card-title">
                             {{ __('firefly.attachments') }}
                         </h3>
                     </div>
                     <div class="card-body p-0">
-                        {% include 'list.attachments' %}
+                        <x-lists.attachments :attachments="$attachments" />
                     </div>
                 </div>
             </div>
