@@ -156,9 +156,9 @@
                                     <td>
                                         {% if journal.transaction_type_type == 'Withdrawal' %}
                                             <select class="form-control input-sm" name="budget_id[{{ journal.transaction_journal_id }}]">
-                                                <option value="0" label="({{ 'no_budget'|_ }})"
+                                                <option value="0" label="({{ __('firefly.no_budget') }})"
                                                         {% if journal.budget_id == 0 %}selected="selected"@endif
-                                                >{{ 'no_budget'|_ }}
+                                                >{{ __('firefly.no_budget') }}
                                                 </option>
                                                 {% for budget in budgets %}
                                                     <option value="{{ budget.id }}"{% if budget.id == journal.budget_id %} selected="selected"@endif

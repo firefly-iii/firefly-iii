@@ -3,79 +3,79 @@
     <tr>
         <th data-defaultsign="az">{{ __('firefly.budget') }}</th>
         <th data-defaultsign="month" class="hidden-xs">{{ __('firefly.date') }}</th>
-        <th data-defaultsign="_19"  class="text-right hidden-xs">{{ 'budgeted'|_ }}</th>
+        <th data-defaultsign="_19"  class="text-right hidden-xs">{{ __('firefly.budgeted') }}</th>
         <th data-defaultsign="_19" class="hidden-xs">{{ trans('list.percentage') }}</th>
         <th data-defaultsign="_19" class="text-end">{{ __('firefly.spent') }}</th>
         <th data-defaultsign="_19" class="hidden-xs">{{ trans('list.percentage') }}</th>
         <th data-defaultsort="disabled" class="hidden-xs">&nbsp;</th>
-        <th data-defaultsign="_19" class="text-right hidden-xs">{{ 'left'|_ }}</th>
-        <th data-defaultsign="_19" class="text-end">{{ 'overspent'|_ }}</th>
+        <th data-defaultsign="_19" class="text-right hidden-xs">{{ __('firefly.left') }}</th>
+        <th data-defaultsign="_19" class="text-end">{{ __('firefly.overspent') }}</th>
     </tr>
     </thead>
     <tbody>
-    {% for budget in report.budgets %}
-        {% for budget_limit in budget.budget_limits %}
+    @foreach($report['budgets'] as $budget)
+        @foreach($budget['budget_limits'] as $budgetLimit)
             <tr>
-                {% if budget.no_budget %}
+                @if($budget['no_budget'])
                     <td data-value="zzz">
-                        <em>{{ 'no_budget'|_ }} ({{ budget_limit.currency_name }})</em>
+                        <em>{{ __('firefly.no_budget') }} ({{ $budgetLimit['currency_name'] }})</em>
                     </td>
                 @else
-                    <td data-value="{{ budget.budget_name }}">
-                        <a href="{{ route('budgets.show', [budget.budget_id]) }}">{{ budget.budget_name }}</a>
+                    <td data-value="{{ $budget['budget_name'] }}">
+                        <a href="{{ route('budgets.show', [$budget['budget_id']]) }}">{{ $budget['budget_name'] }}</a>
                     </td>
                 @endif
                 <!-- date, hidden on mobile  -->
-                <td class="hidden-xs" data-value="{{ budget_limit.start_date.format('Y-m-d')|default('0000-00-00') }}">
-                    {% if null != budget_limit.budget_limit_id %}
-                        <a href="{{ route('budgets.show.limit', [budget.budget_id, budget_limit.budget_limit_id]) }}">
-                            {{ budget_limit.start_date.isoFormat($monthAndDayFormat) }}
+                <td class="hidden-xs" data-value="{{ $budgetLimit['start_date']->format('Y-m-d') }}">
+                    @if(null !== $budgetLimit['budget_limit_id'])
+                        <a href="{{ route('budgets.show.limit', [$budget['budget_id'], $budgetLimit['budget_limit_id']]) }}">
+                            {{ $budgetLimit['start_date']->isoFormat($monthAndDayFormat) }}
                             &mdash;
-                            {{ budget_limit.end_date.isoFormat($monthAndDayFormat) }}
+                            {{ $budgetLimit['end_date']->isoFormat($monthAndDayFormat) }}
                         </a>
                     @endif
                 </td>
 
                 <!-- budgeted, hidden on mobile -->
-                <td data-value="{{ budget_limit.budgeted|default(0) }}" class="text-right hidden-xs">
-                    {% if null != budget_limit.budgeted %}
-                        {!! format_amount_by_symbol(budget_limit.budgeted, budget_limit.currency_symbol, budget_limit.currency_decimal_places) }}
+                <td data-value="{{ $budgetLimit['budgeted'] }}" class="text-right hidden-xs">
+                    @if(null !== $budgetLimit['budgeted'])
+                        {!! format_amount_by_symbol($budgetLimit['budgeted'], $budgetLimit['currency_symbol'], $budgetLimit['currency_decimal_places']) !!}
                     @endif
                 </td>
                 <!-- percentage, hidden -->
-                <td data-value="{{ budget_limit.budgeted_pct|default(0) }}" class="hidden-xs">
-                    {{ budget_limit.budgeted_pct }}%
+                <td data-value="{{ $budgetLimit['budgeted_pct'] }}" class="hidden-xs">
+                    {{ $budgetLimit['budgeted_pct'] }}%
                 </td>
 
 
                 <!-- spent, visible on mobile -->
-                <td data-value="{{ budget_limit.spent|default(0) }}" class="text-end">
-                    {!! format_amount_by_symbol(budget_limit.spent, budget_limit.currency_symbol, budget_limit.currency_decimal_places) }}
+                <td data-value="{{ $budgetLimit['spent'] }}" class="text-end">
+                    {!! format_amount_by_symbol($budgetLimit['spent'], $budgetLimit['currency_symbol'], $budgetLimit['currency_decimal_places']) !!}
                 </td>
                 <!-- percentage, hidden -->
-                <td data-value="{{ budget_limit.spent_pct|default(0) }}" class="hidden-xs">
-                    {{ budget_limit.spent_pct }}%
+                <td data-value="{{ $budgetLimit['spent_pct'] }}" class="hidden-xs">
+                    {{ $budgetLimit['spent_pct'] }}%
                 </td>
 
                 <!-- info button, not visible on mobile -->
                 <td class="hidden-xs">
-                    {% if budget_limit.spent != 0 %}
-                        <span class="fa text-muted fa-info-circle firefly-info-button"
-                           data-location="budget-spent-amount" data-currency-id="{{ budget_limit.currency_id }}" data-budget-id="{% if '' == budget.budget_id %}0@else{{ budget.budget_id }}@endif"></span>
+                    @if($budgetLimit['spent'] != 0)
+                        <span class="bi bi-info-circle text-muted firefly-info-button"
+                           data-location="budget-spent-amount" data-currency-id="{{ $budgetLimit['currency_id'] }}" data-budget-id=" @if('' === $budget['budget_id'])@else{{ $budget['budget_id'] }}@endif"></span>
                     @endif
                 </td>
 
 
                 <!-- left, hidden on mobile  -->
-                <td data-value="{{ budget_limit.left|default(0) }}" class="text-right hidden-xs">
-                    {% if null != budget_limit.left %}
-                        {!! format_amount_by_symbol(budget_limit.left, budget_limit.currency_symbol, budget_limit.currency_decimal_places) }}
+                <td data-value="{{ $budgetLimit['left'] }}" class="text-right hidden-xs">
+                    @if(null !== $budgetLimit['left'])
+                        {!! format_amount_by_symbol($budgetLimit['left'], $budgetLimit['currency_symbol'], $budgetLimit['currency_decimal_places']) !!}
                     @endif
                 </td>
                 <!-- overspent, visible. -->
-                <td data-value="{{ budget_limit.overspent|default(0) }}" class="text-end">
-                    {% if null != budget_limit.overspent %}
-                        {!! format_amount_by_symbol(budget_limit.overspent, budget_limit.currency_symbol, budget_limit.currency_decimal_places) }}
+                <td data-value="{{ $budgetLimit['overspent'] }}" class="text-end">
+                    @if(null !== $budgetLimit['overspent'])
+                        {!! format_amount_by_symbol($budgetLimit['overspent'], $budgetLimit['currency_symbol'], $budgetLimit['currency_decimal_places']) !!}
                     @endif
                 </td>
             </tr>
@@ -83,17 +83,16 @@
     @endforeach
     </tbody>
     <tfoot>
-    {% for sum in report.sums %}
+    @foreach($report['sums'] as $sum)
         <tr>
-            <td colspan="2"><em>{{ __('firefly.sum') }} ({{ sum.currency_name }})</em></td>
-            <td class="text-end">{!! format_amount_by_symbol(sum.budgeted, sum.currency_symbol, sum.currency_decimal_places) }}</td>
+            <td colspan="2"><em>{{ __('firefly.sum') }} ({{ $sum['currency_name'] }})</em></td>
+            <td class="text-end">{!! format_amount_by_symbol($sum['budgeted'], $sum['currency_symbol'], $sum['currency_decimal_places']) !!}</td>
             <td>&nbsp;</td>
-            <td class="text-end">{!! format_amount_by_symbol(sum.spent, sum.currency_symbol, sum.currency_decimal_places) }}</td>
+            <td class="text-end">{!! format_amount_by_symbol($sum['spent'], $sum['currency_symbol'], $sum['currency_decimal_places']) !!}</td>
             <td>&nbsp;</td>
             <td>&nbsp;</td>
-            <td class="text-end">{!! format_amount_by_symbol(sum.left, sum.currency_symbol, sum.currency_decimal_places) }}</td>
-            <td class="text-end">{!! format_amount_by_symbol(sum.overspent, sum.currency_symbol, sum.currency_decimal_places) }}</td>
-
+            <td class="text-end">{!! format_amount_by_symbol($sum['left'], $sum['currency_symbol'], $sum['currency_decimal_places']) !!}</td>
+            <td class="text-end">{!! format_amount_by_symbol($sum['overspent'], $sum['currency_symbol'], $sum['currency_decimal_places']) !!}</td>
         </tr>
         @endforeach
     </tfoot>

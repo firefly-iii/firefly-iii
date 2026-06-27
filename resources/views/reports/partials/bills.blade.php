@@ -48,41 +48,5 @@
             </tr>
         @endif
     @endforeach
-
-    
-    @foreach($bills->getBills() as $line)
-        <tr>
-            <td data-value="{{ $line->getBill()->name }}">
-                <a href="{{ route('subscriptions.show',$line->getBill()->id) }}">{{ $line->getBill()->name }}</a>
-                <small class="text-muted"><br/>
-                    {{ trans('firefly.bill_expected_between', ['start' => $line->getPayDate()->isoFormat($monthAndDayFormat), 'end' => $line->getEndOfPayDate()->isoFormat($monthAndDayFormat)]) }}
-                </small>
-            </td>
-            <td class="text-right hidden-xs" data-value="{{ $line->getMin() }}">{!! format_amount_by_currency($line->getCurrency(), $line->getMin())  !!}</td>
-            <td class="text-right hidden-xs" data-value="{{ $line->getMax() }}">{!! format_amount_by_currency($line->getCurrency(), $line->getMax())  !!}</td>
-
-            {{-- if bill is hit, show hit amount --}}
-            @if($line->isHit())
-                <td data-value="{{ $line->getAmount() }}" class="text-end">
-                    <a href="{{ route('transactions.show', $line->getTransactionJournalId()) }}">
-                        {!! format_amount_by_currency($line->getCurrency(), $line->getAmount())  !!}
-                    </a>
-                </td>
-            @endif
-            {{-- if not but is active, show "not yet charged --}}
-            @if(!$line->isHit() && $line->isActive())
-                <td data-value="0" class="bg-success">{{ __('firefly.notCharged') }}</td>
-            @endif
-            @if(!$line->isActive() && !$line->isHit())
-                <td data-value="-1">&nbsp;</td>
-            @endif
-            <td data-value="{{ ($line->getMax() - $line->getAmount()) }}" class="text-right hidden-xs">
-                @if($line->isHit())
-                    {!! format_amount_by_currency($line->getCurrency(), ($line->getMax() + $line->getAmount())) !!}
-                @endif
-            </td>
-        </tr>
-
-    @endforeach
     </tbody>
 </table>
