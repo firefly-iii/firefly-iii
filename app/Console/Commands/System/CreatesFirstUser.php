@@ -25,9 +25,12 @@ declare(strict_types=1);
 namespace FireflyIII\Console\Commands\System;
 
 use FireflyIII\Console\Commands\ShowsFriendlyMessages;
+use FireflyIII\Events\Security\System\NewUserRegistered;
+use FireflyIII\Notifications\Notifiables\OwnerNotifiable;
 use FireflyIII\Repositories\User\UserRepositoryInterface;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Str;
 
 class CreatesFirstUser extends Command
@@ -62,6 +65,10 @@ class CreatesFirstUser extends Command
         $user->password = Hash::make($password);
         $user->save();
         $user->setRememberToken(Str::random(60));
+
+        Log::info(sprintf('Registered new user %s', $user->email));
+        $owner             = new OwnerNotifiable();
+        event(new NewUserRegistered($owner, $user));
 
         $this->friendlyInfo(sprintf('Created new admin user (ID #%d) with email address "%s" and password "%s".', $user->id, $user->email, $password));
         $this->friendlyWarning('Change this password.');
