@@ -27,7 +27,9 @@ namespace FireflyIII\Api\V1\Controllers\System;
 use FireflyIII\Api\V1\Controllers\Controller;
 use FireflyIII\Api\V1\Requests\System\UserStoreRequest;
 use FireflyIII\Api\V1\Requests\System\UserUpdateRequest;
+use FireflyIII\Events\Security\System\NewUserRegistered;
 use FireflyIII\Exceptions\FireflyException;
+use FireflyIII\Notifications\Notifiables\OwnerNotifiable;
 use FireflyIII\Repositories\User\UserRepositoryInterface;
 use FireflyIII\Transformers\UserTransformer;
 use FireflyIII\User;
@@ -142,13 +144,17 @@ final class UserController extends Controller
     {
         $data        = $request->getAll();
         $user        = $this->repository->store($data);
+
+        Log::info(sprintf('Registered new user %s', $user->email));
+        $owner             = new OwnerNotifiable();
+        event(new NewUserRegistered($owner, $user));
+
         $manager     = $this->getManager();
 
         // make resource
 
         /** @var UserTransformer $transformer */
         $transformer = app(UserTransformer::class);
-        $transformer->setParameters($this->parameters);
 
         $resource    = new Item($user, $transformer, 'users');
 
