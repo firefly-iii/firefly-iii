@@ -8,54 +8,54 @@
     </tr>
     </thead>
     <tbody>
-    {% for tag in report %}
-        {% if tag.currencies|length == 0 %}
+    @foreach($report as $tag)
+        @if(0 === count($tag['currencies']))
             <tr>
-                <td data-value="{{ tag.name }}">
-                    <a href="{{ route('tags.show', [tag.id]) }}" title="{{ tag.name }}">{{ tag.name }}</a>
+                <td data-value="{{ $tag['name'] }}">
+                    <a href="{{ route('tags.show', [$tag['id']]) }}" title="{{ $tag['name'] }}">{{ $tag['name'] }}</a>
                 </td>
                 <td class="text-end">&mdash;</td>
                 <td class="text-end">&mdash;</td>
                 <td class="text-end">&mdash;</td>
             </tr>
         @endif
-        {% for currency in tag.currencies %}
+        @foreach($tag['currencies'] as $currency)
             <tr>
-                <td data-value="{{ tag.name }} ({{ $currency['currency_name'] }})">
-                    <a href="{{ route('tags.show', [tag.id]) }}" title="{{ tag.name }}">{{ tag.name }} ({{ $currency['currency_name'] }})</a>
+                <td data-value="{{ $tag['name'] }} ({{ $currency['currency_name'] }})">
+                    <a href="{{ route('tags.show', [$tag['id']]) }}" title="{{ $tag['name'] }}">{{ $tag['name'] }} ({{ $currency['currency_name'] }})</a>
                 </td>
-                <td data-value="{{ currency.spent }}" class="text-end">
-                    {!! format_amount_by_symbol(currency.spent, currency.currency_symbol, currency.currency_decimal_places) }}
+                <td data-value="{{ $currency['spent'] }}" class="text-end">
+                    {!! format_amount_by_symbol($currency['spent'], $currency['currency_symbol'], $currency['currency_decimal_places']) !!}
                 </td>
-                <td data-value="{{ currency.earned }}" class="text-end">
-                    {!! format_amount_by_symbol(currency.earned, currency.currency_symbol, currency.currency_decimal_places) }}
+                <td data-value="{{ $currency['earned'] }}" class="text-end">
+                    {!! format_amount_by_symbol($currency['earned'], $currency['currency_symbol'], $currency['currency_decimal_places']) !!}
                 </td>
-                <td data-value="{{ currency.sum }}" class="text-end">
-                    {!! format_amount_by_symbol(currency.sum, currency.currency_symbol, currency.currency_decimal_places) }}
+                <td data-value="{{ $currency['sum'] }}" class="text-end">
+                    {!! format_amount_by_symbol($currency['sum'], $currency['currency_symbol'], $currency['currency_decimal_places']) !!}
                 </td>
             </tr>
         @endforeach
     @endforeach
     </tbody>
     <tfoot>
-    {% for sum in sums %}
+    @foreach($sums as $sum)
         <tr>
-            <td>{{ __('firefly.sum') }} ({{ sum.currency_name }})</td>
+            <td>{{ __('firefly.sum') }} ({{ $sum['currency_name'] }})</td>
             <td class="text-end">
-                {!! format_amount_by_symbol(sum.spent_sum, sum.currency_symbol, sum.currency_decimal_places) }}
+                {!! format_amount_by_symbol($sum['spent_sum'], $sum['currency_symbol'], $sum['currency_decimal_places']) !!}
             </td>
             <td class="text-end">
-                {!! format_amount_by_symbol(sum.earned_sum, sum.currency_symbol, sum.currency_decimal_places) }}
+                {!! format_amount_by_symbol($sum['earned_sum'], $sum['currency_symbol'], $sum['currency_decimal_places']) !!}
             </td>
             <td class="text-end">
-                {!! format_amount_by_symbol(sum.total_sum, sum.currency_symbol, sum.currency_decimal_places) }}
+                {!! format_amount_by_symbol($sum['total_sum'], $sum['currency_symbol'], $sum['currency_decimal_places']) !!}
             </td>
         </tr>
     @endforeach
     <tr>
         <td colspan="4">
             <p class="text-info">
-                <em>{{ 'tag_report_expenses_listed_once'|_ }}</em>
+                <em>{{ __('firefly.tag_report_expenses_listed_once') }}</em>
             </p>
         </td>
     </tr>

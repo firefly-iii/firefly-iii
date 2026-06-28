@@ -3,8 +3,8 @@
     <tr>
         <th data-defaultsort="disabled">{{ __('firefly.description') }}</th>
         <th data-defaultsign="month">{{ __('firefly.date') }}</th>
-        <th data-defaultsign="az">{{ 'source_account'|_ }}</th>
-        <th data-defaultsign="az">{{ 'destination_account'|_ }}</th>
+        <th data-defaultsign="az">{{ __('firefly.source_account') }}</th>
+        <th data-defaultsign="az">{{ __('firefly.destination_account') }}</th>
         <th data-defaultsign="_19" class="text-end">{{ __('firefly.amount') }}</th>
     </tr>
     </thead>
@@ -37,7 +37,7 @@
 
 
         <td data-value="{{ $row['amount'] }}" class="text-end">
-            {!! format_amount_by_symbol($row['amount'], $row['currency_symbol'], $row['currency_decimal_places']) }}
+            {!! format_amount_by_symbol($row['amount'], $row['currency_symbol'], $row['currency_decimal_places']) !!}
         </td>
 
         </tr>

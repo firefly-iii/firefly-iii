@@ -26,7 +26,7 @@
 
         <td data-sortable="false">
             <a href="{{ route('accounts.show', $row['source_account_id']) }}">
-                {{ row['source_account_name'] }}
+                {{ $row['source_account_name'] }}
             </a>
         </td>
         <td data-sortable="false">
@@ -36,7 +36,7 @@
         </td>
 
         <td data-value="{{ $row['amount'] }}" class="text-end">
-            {!! format_amount_by_symbol($row['amount'], $row['currency_symbol'], $row['currency_decimal_places']) }}
+            {!! format_amount_by_symbol($row['amount'], $row['currency_symbol'], $row['currency_decimal_places']) !!}
         </td>
 
         </tr>

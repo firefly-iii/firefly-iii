@@ -167,7 +167,7 @@
             <li class="{{ activeRoutePartial('tags') }}">
                 <a href="{{ route('tags.index') }}">
                     <span class="bi bi-caret-right"></span>
-                    <span>{{ 'tags'|_ }}</span>
+                    <span>{{ __('firefly.tags') }}</span>
                 </a>
             </li>
             <li class="{{ activeRoutePartial('object-groups') }}">

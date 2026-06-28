@@ -4,7 +4,7 @@
         <th data-defaultsort="disabled">{{ __('firefly.description') }}</th>
         <th data-defaultsign="month">{{ __('firefly.date') }}</th>
         <th data-defaultsign="az">{{ __('firefly.account') }}</th>
-        <th data-defaultsign="az">{{ 'tag'|_ }}</th>
+        <th data-defaultsign="az">{{ __('firefly.tag') }}</th>
         <th data-defaultsign="_19" class="text-end">{{ __('firefly.amount') }}</th>
     </tr>
     </thead>
@@ -26,17 +26,17 @@
 
         <td data-sortable="false">
             <a href="{{ route('accounts.show', $row['source_account_id']) }}">
-                {{ row['source_account_name'] }}
+                {{ $row['source_account_name'] }}
             </a>
         </td>
         <td data-sortable="false">
-            <a href="{{ route('tags.show', row.tag_id) }}">
-                {{ row.tag_name }}
+            <a href="{{ route('tags.show', $row['tag_id']) }}">
+                {{ $row['tag_name'] }}
             </a>
         </td>
 
         <td data-value="{{ $row['amount'] }}" class="text-end">
-            {!! format_amount_by_symbol($row['amount'], $row['currency_symbol'], $row['currency_decimal_places']) }}
+            {!! format_amount_by_symbol($row['amount'], $row['currency_symbol'], $row['currency_decimal_places']) !!}
         </td>
 
         </tr>

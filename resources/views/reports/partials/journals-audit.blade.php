@@ -27,7 +27,7 @@
         {{-- even more optional fields --}}
         <th class="hide-interest_date">{{ trans('list.interest_date') }}</th>
         <th class="hide-book_date">{{ trans('list.book_date') }}</th>
-        <th class="hide-process_date">{{ trans('list.process_date') }}</th>
+        <th class="hide-process_date">  {{ trans('list.process_date') }}</th>
         <th class="hide-due_date">{{ trans('list.due_date') }}</th>
         <th class="hide-payment_date">{{ trans('list.payment_date') }}</th>
         <th class="hide-invoice_date">{{ trans('list.invoice_date') }}</th>

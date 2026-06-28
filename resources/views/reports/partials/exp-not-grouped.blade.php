@@ -16,7 +16,8 @@
                 @endif
                 {% for expense in amounts.spent.per_currency %}
                     {!! format_amount_by_symbol(expense.sum, expense.currency.symbol, expense.currency.dp) }}<br/>
-                @endforeach
+                @endforeachkvr
+
             </td>
             <td data-value="{{ amounts.earned.grand_sum }}">
                 {% if amounts.earned.per_currency|length == 0 %}

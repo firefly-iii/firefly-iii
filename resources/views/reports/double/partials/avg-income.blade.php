@@ -20,11 +20,11 @@
             </a>
         </td>
         <td data-value="{{ $row['avg'] }}" class="text-end">
-            {!! format_amount_by_symbol($row['avg'], $row['currency_symbol'], $row['currency_decimal_places']) }}
+            {!! format_amount_by_symbol($row['avg'], $row['currency_symbol'], $row['currency_decimal_places']) !!}
         </td>
 
         <td data-value="{{ $row['sum'] }}" class="text-end">
-            {!! format_amount_by_symbol($row['sum'], $row['currency_symbol'], $row['currency_decimal_places']) }}
+            {!! format_amount_by_symbol($row['sum'], $row['currency_symbol'], $row['currency_decimal_places']) !!}
         </td>
 
         <td data-value="{{ $row['transactions'] }}">

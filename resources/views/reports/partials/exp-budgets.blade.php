@@ -6,21 +6,21 @@
     </tr>
     </thead>
     <tbody>
-    {% for budgetId, entry in together %}
+    @foreach($together as $budgetId => $entry)
         <tr>
-            <td data-value="{% if entry.budget == null %}zzzzzzzzzzz@else{{ entry.budget }}@endif">
-                {% if entry.budget == null %}
-                    <a href="{{ route('budgets.no-budget') }}">{{ 'no_budget_squared'|_ }}</a>
+            <td data-value="@if(null === $entry['budget'])zzzzzzzzzzz@else{{ $entry['budget'] }}@endif">
+                @if(null === $entry['budget'])
+                    <a href="{{ route('budgets.no-budget') }}">{{ __('firefly.no_budget_squared') }}</a>
                 @else
-                    <a href="{{ route('budgets.show', budgetId) }}">{{ entry.budget }}</a>
+                    <a href="{{ route('budgets.show', [$budgetId]) }}">{{ $entry['budget'] }}</a>
                 @endif
             </td>
-            <td data-value="{{ entry.spent.grand_total }}">
-                {% if entry.spent.per_currency|length ==0 %}
-                    {{ '0'|formatAmount }}
+            <td data-value="{{ $entry['spent']['grand_total'] }}">
+                @if(count($entry['spent']['per_currency']) === 0)
+                    {{ format_amount_by_currency($primaryCurrency, '0', true) }}
                 @else
-                    {% for expense in entry.spent.per_currency %}
-                        {!! format_amount_by_symbol(expense.sum, expense.currency.symbol, expense.currency.dp) }}<br/>
+                    @foreach($entry['spent']['per_currency'] as $expense)
+                        {!! format_amount_by_symbol($expense['sum'], $expense['currency']['symbol'], $expense['currency']['dp']) !!}<br/>
                     @endforeach
                 @endif
             </td>

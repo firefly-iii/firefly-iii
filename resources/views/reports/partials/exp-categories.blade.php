@@ -7,31 +7,30 @@
     </tr>
     </thead>
     <tbody>
-    {% for categoryId, entry in together %}
+    @foreach($together as $categoryId => $entry)
         <tr>
-            <td data-value="{% if entry.category == null %}zzzzzzzzzzz@else{{ entry.category }}@endif">
-                {% if entry.category == null %}
-                    <a href="{{ route('categories.no-category') }}">{{ 'noCategory'|_ }}</a>
+            <td data-value="@if(null === $entry['category'])zzzzzzzzzzz@else{{ $entry['category'] }}@endif">
+                @if(null === $entry['category'])
+                    <a href="{{ route('categories.no-category') }}">{{ __('firefly.noCategory') }}</a>
                 @else
-                    <a href="{{ route('categories.show', categoryId) }}">{{ entry.category }}</a>
-
+                    <a href="{{ route('categories.show', [$categoryId]) }}">{{ $entry['category'] }}</a>
                 @endif
             </td>
-            <td data-value="{{ entry.spent.grand_total }}">
-                {% if entry.spent.per_currency|length ==0 %}
-                    {{ '0'|formatAmount }}
+            <td data-value="{{ $entry['spent']['grand_total'] }}">
+                @if(0 === count($entry['spent']['per_currency']))
+                    {!! format_amount_by_currency($primaryCurrency,'0',true) !!}
                 @else
-                    {% for expense in entry.spent.per_currency %}
-                        {!! format_amount_by_symbol(expense.sum, expense.currency.symbol, expense.currency.dp) }}<br/>
+                    @foreach($entry['spent']['per_currency'] as $expense)
+                        {!! format_amount_by_symbol($expense['sum'], $expense['currency']['symbol'], $expense['currency']['dp']) !!}<br/>
                     @endforeach
                 @endif
             </td>
-            <td data-value="{{ entry.earned.grand_total }}">
-                {% if entry.earned.per_currency|length ==0 %}
-                    {{ '0'|formatAmount }}
+            <td data-value="{{ $entry['earned']['grand_total'] }}">
+                @if(0 === count($entry['earned']['per_currency']))
+                    {!! format_amount_by_currency($primaryCurrency,'0',true) !!}
                 @else
-                    {% for income in entry.earned.per_currency %}
-                        {!! format_amount_by_symbol(income.sum * -1, income.currency.symbol, income.currency.dp) }}<br/>
+                    @foreach($entry['earned']['per_currency'] as $income)
+                        {!! format_amount_by_symbol($income['sum'] * -1, $income['currency']['symbol'], $income['currency']['dp']) !!}<br/>
                     @endforeach
                 @endif
             </td>
