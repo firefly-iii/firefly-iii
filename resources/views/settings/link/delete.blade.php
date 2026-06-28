@@ -1,19 +1,14 @@
 @extends('layout.v3.session')
-
-
-    {{ Breadcrumbs.render(Route.getCurrentRoute.getName, linkType) }}
-@endsection
-
 @section('content')
 
-    <form method="POST" action="{{ route('settings.links.destroy',linkType.id) }}" accept-charset="UTF-8"
+    <form method="POST" action="{{ route('settings.links.destroy',$linkType->id) }}" accept-charset="UTF-8"
           class="form-horizontal" id="destroy">
         <input name="_token" type="hidden" value="{{ csrf_token() }}">
         <div class="row">
             <div class="col-lg-6 offset-lg-3 col-md-12 col-sm-12">
                 <div class="card card-danger card-outline">
                     <div class="card-header">
-                        <h3 class="card-title">{{ trans('form.delete_link_type', {'name': linkType.name}) }}</h3>
+                        <h3 class="card-title">{{ trans('form.delete_link_type', ['name' => $linkType->name]) }}</h3>
                     </div>
                     <div class="card-body">
                         <p class="text-danger">
@@ -21,21 +16,21 @@
                         </p>
 
                         <p>
-                            {{ trans('form.linkType_areYouSure', {'name': linkType.name,'inward': linkType.inward,'outward': linkType.outward}) }}
+                            {{ trans('form.linkType_areYouSure', ['name' => $linkType->name, 'inward' => $linkType->inward, 'outward' => $linkType->outward]) }}
                         </p>
 
-                        {% if count > 0 %}
+                        @if($count > 0)
                             <p>
-                                {{ Lang::choice('form.also_delete_connections', count, {count: count}) }}
+                                {{ trans_choice('form.also_delete_connections', $count, ['count' => $count]) }}
                             </p>
                         @endif
-                        {% if count > 0 %}
+                        @if($count > 0)
                             <p class="text-success">
-                                {{ 'save_connections_by_moving'|_ }}
+                                {{ __('firefly.save_connections_by_moving') }}
                             </p>
 
                             <p>
-                                {{ Html::select('move_link_type_before_delete', moveTo).class('form-control') }}
+                                {!! Html::select('move_link_type_before_delete', $moveTo)->class('form-control') !!}
                             </p>
                         @else
                             <input type="hidden" name="move_link_type_before_delete" value="0"/>
@@ -52,4 +47,7 @@
         </div>
 
     </form>
+@endsection
+@section('scripts')
+    @vite(['js/pages/generic.js'])
 @endsection

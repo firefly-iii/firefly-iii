@@ -67,7 +67,7 @@
             <td class="text-end">
                 <span class="mr-2">
                     {% for key, balance in account.endBalances %}
-                        <span title="{{ key }}">
+                        <span title="{{ $key }}">
                         {% if 'balance' == key %}
                             {% if not convertToPrimary %}
                                 {!! format_amount_by_symbol(balance, account.currency.symbol, account.currency.decimal_places)  }}
@@ -116,7 +116,7 @@
             <td class="text-end hidden-sm hidden-xs hidden-md">
                 <span class="mr-1">
                     {% for key, balance in account.differences %}
-                        <span title="{{ key }}">
+                        <span title="{{ $key }}">
                               {% if 'balance' == key %}
                                   {% if not convertToPrimary %}
                                       {!! format_amount_by_symbol(balance, account.currency.symbol, account.currency.decimal_places)  }}

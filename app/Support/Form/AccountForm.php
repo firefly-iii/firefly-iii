@@ -122,7 +122,7 @@ class AccountForm
             ])->render();
         } catch (Throwable $e) {
             Log::debug(sprintf('Could not render assetAccountCheckList(): %s', $e->getMessage()));
-            $html = 'Could not render assetAccountCheckList.';
+            $html = sprintf('Could not render assetAccountCheckList: %s', $e->getMessage());
 
             throw new FireflyException($html, 0, $e);
         }

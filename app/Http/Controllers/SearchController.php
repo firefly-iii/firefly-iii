@@ -61,13 +61,13 @@ final class SearchController extends Controller
     public function index(Request $request, SearchInterface $searcher): Factory|\Illuminate\Contracts\View\View
     {
         // search params:
-        $fullQuery        = $request->get('search');
-        if (is_array($request->get('search'))) {
+        $fullQuery        = $request->input('search');
+        if (is_array($request->input('search'))) {
             $fullQuery = '';
         }
         $fullQuery        = (string) $fullQuery;
-        $page             = 0 === (int) $request->get('page') ? 1 : (int) $request->get('page');
-        $ruleId           = (int) $request->get('rule');
+        $page             = 0 === (int) $request->input('page') ? 1 : (int) $request->get('page');
+        $ruleId           = (int) $request->input('rule');
         $ruleChanged      = false;
 
         // find rule, check if query is different, offer to update.
@@ -132,7 +132,7 @@ final class SearchController extends Controller
         } catch (Throwable $e) {
             Log::error(sprintf('Cannot render search.search: %s', $e->getMessage()));
             Log::error($e->getTraceAsString());
-            $html = 'Could not render view.';
+            $html = sprintf('Could not render view: %s', $e->getMessage());
 
             throw new FireflyException($html, 0, $e);
         }

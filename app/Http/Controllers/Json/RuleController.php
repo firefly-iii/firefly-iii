@@ -43,7 +43,7 @@ final class RuleController extends Controller
      */
     public function action(Request $request): JsonResponse
     {
-        $count   = (int) $request->get('count') > 0 ? (int) $request->get('count') : 1;
+        $count   = (int) $request->input('count') > 0 ? (int) $request->input('count') : 1;
         $keys    = array_keys(config('firefly.rule-actions'));
         $actions = [];
         foreach ($keys as $key) {
@@ -51,11 +51,11 @@ final class RuleController extends Controller
         }
 
         try {
-            $view = view('rules.partials.action', ['actions' => $actions, 'count' => $count])->render();
+            $view = view('rules.partials.action', ['actions' => $actions, 'count' => $count,'oldAction' => null, 'oldValue' => null,'oldChecked' => null])->render();
         } catch (Throwable $e) {
             Log::error(sprintf('Cannot render rules.partials.action: %s', $e->getMessage()));
             Log::error($e->getTraceAsString());
-            $view = 'Could not render view.';
+            $view = sprintf('Could not render view: %s', $e->getMessage());
 
             throw new FireflyException($view, 0, $e);
         }
@@ -70,7 +70,7 @@ final class RuleController extends Controller
      */
     public function trigger(Request $request): JsonResponse
     {
-        $count     = (int) $request->get('count') > 0 ? (int) $request->get('count') : 1;
+        $count     = (int) $request->input('count') > 0 ? (int) $request->input('count') : 1;
         $operators = config('search.operators');
         $triggers  = [];
         foreach ($operators as $key => $operator) {
@@ -81,11 +81,11 @@ final class RuleController extends Controller
         asort($triggers);
 
         try {
-            $view = view('rules.partials.trigger', ['triggers' => $triggers, 'count' => $count])->render();
+            $view = view('rules.partials.trigger', ['triggers' => $triggers, 'count' => $count,'oldTrigger' => null, 'oldProhibited' => null,'oldValue' => null,'oldChecked' =>null])->render();
         } catch (Throwable $e) {
             Log::error(sprintf('Cannot render rules.partials.trigger: %s', $e->getMessage()));
             Log::error($e->getTraceAsString());
-            $view = 'Could not render view.';
+            $view = sprintf('Could not render view: %s', $e->getMessage());
 
             throw new FireflyException($view, 0, $e);
         }

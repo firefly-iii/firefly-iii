@@ -179,7 +179,7 @@
         <td>Locale(s) supported</td>
         <td>
             {% for key, attempt in user.locale_attempts %}
-                {{ key }}: {% if attempt %}:white_check_mark:@else:x:@endif<br>
+                {{ $key }}: {% if attempt %}:white_check_mark:@else:x:@endif<br>
             @endforeach
         </td>
     </tr>

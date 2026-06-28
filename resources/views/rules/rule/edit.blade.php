@@ -1,15 +1,10 @@
 @extends('layout.v3.session')
-
-
-    {{ Breadcrumbs.render(Route.getCurrentRoute.getName, rule) }}
-@endsection
-
 @section('content')
 
-    <form method="post" action="{{ route('rules.update', rule.id) }}" class="form-horizontal" accept-charset="UTF-8"
+    <form method="post" action="{{ route('rules.update', $rule->id) }}" class="form-horizontal" accept-charset="UTF-8"
           enctype="multipart/form-data">
         <input type="hidden" name="_token" value="{{ csrf_token() }}"/>
-        <input type="hidden" name="id" value="{{ rule.id }}"/>
+        <input type="hidden" name="id" value="{{ $rule->id }}"/>
         <div class="row">
             <div class="col-lg-6 col-md-6 col-sm-12">
                 <div class="card">
@@ -17,15 +12,13 @@
                         <h3 class="card-title">{{ __('firefly.mandatoryFields') }}</h3>
                     </div>
                     <div class="card-body">
-                        {!! ExpandedForm::text('title', rule.title) }}
-                        {{ RuleForm.ruleGroupList('rule_group_id', rule.rule_group_id) }}
-                        {!! ExpandedForm::select('trigger',allJournalTriggers(), primaryTrigger) }}
+                        {!! ExpandedForm::text('title', $rule->title) !!}
+                        {!! RuleForm::ruleGroupList('rule_group_id', $rule->rule_group_id) !!}
+                        {!! ExpandedForm::select('trigger',all_journal_triggers(), $primaryTrigger) !!}
+                        {!! ExpandedForm::checkbox('active', 1, null, ['helpText' => trans('firefly.rule_help_active')]) !!}
 
-                        {{-- only correct way to do active checkbox --}}
-                        {!! ExpandedForm::checkbox('active', 1, null, {helpText: trans('firefly.rule_help_active')}) }}
-
-                        {!! ExpandedForm::checkbox('stop_processing',1,rule.stop_processing, {helpText: trans('firefly.rule_help_stop_processing')}) }}
-                        {!! ExpandedForm::checkbox('strict',1,rule.strict, {helpText: trans('firefly.rule_help_strict')}) }}
+                        {!! ExpandedForm::checkbox('stop_processing',1,$rule->stop_processing, ['helpText' => trans('firefly.rule_help_stop_processing')]) !!}
+                        {!! ExpandedForm::checkbox('strict',1,$rule->strict, ['helpText' => trans('firefly.rule_help_strict')]) !!}
                     </div>
                 </div>
             </div>
@@ -37,7 +30,7 @@
                         <h3 class="card-title">{{ __('firefly.optionalFields') }}</h3>
                     </div>
                     <div class="card-body">
-                        {!! ExpandedForm::textarea('description', rule.description, {helpText: trans('firefly.field_supports_markdown')}) }}
+                        {!! ExpandedForm::textarea('description', $rule->description, ['helpText' => trans('firefly.field_supports_markdown')]) !!}
                     </div>
                 </div>
             </div>
@@ -47,63 +40,63 @@
             <div class="col-lg-12 col-md-12 col-sm-12">
                 <div class="card">
                     <div class="card-header">
-                        <h3 class="card-title">{{ 'rule_triggers'|_ }}</h3>
+                        <h3 class="card-title">{{ __('firefly.rule_triggers') }}</h3>
                     </div>
                     <div class="box-body rule-trigger-box">
                         <table class="table table-sm table-bordered table-striped">
                             <thead>
                             <tr>
-                                <th colspan="2">{{ 'trigger'|_ }}</th>
-                                <th>{{ 'is_not_rule_trigger'|_ }}</th>
-                                <th>{{ 'trigger_value'|_ }}</th>
-                                <th>{{ 'stop_processing_other_triggers'|_ }}</th>
+                                <th colspan="2">{{ __('firefly.trigger') }}</th>
+                                <th>{{ __('firefly.is_not_rule_trigger') }}</th>
+                                <th>{{ __('firefly.trigger_value') }}</th>
+                                <th>{{ __('firefly.stop_processing_other_triggers') }}</th>
                             </tr>
                             </thead>
                             <tbody class="rule-trigger-tbody">
-                            {% for trigger in oldTriggers %}
-                                {{ trigger|raw }}
+                            @foreach($oldTriggers as $trigger)
+                                {!! $trigger !!}
                             @endforeach
                             </tbody>
 
                         </table>
                         <p>
                             <br/>
-                            <a href="#" class="btn btn-outline-secondary add_rule_trigger">{{ 'add_rule_trigger'|_ }}</a>
+                            <a href="#" class="btn btn-outline-secondary add_rule_trigger">{{ __('firefly.add_rule_trigger') }}</a>
                             <a href="#" class="btn btn-outline-secondary test_rule_triggers"><span
-                                    class="fa fa-flask"></span> {{ 'test_rule_triggers'|_ }}</a>
+                                    class="fa fa-flask"></span> {{ __('firefly.test_rule_triggers') }}</a>
                         </p>
                     </div>
                 </div>
             </div>
         </div>
 
-        {% include 'rules.partials.test-trigger-modal' %}
+        @include('rules.partials.test-trigger-modal')
 
         <div class="row">
             <div class="col-lg-12 col-md-12 col-sm-12">
                 <div class="card">
                     <div class="card-header">
-                        <h3 class="card-title">{{ 'rule_actions'|_ }}</h3>
+                        <h3 class="card-title">{{ __('firefly.rule_actions') }}</h3>
                     </div>
                     <div class="card-body">
                         <table class="table table-sm table-bordered table-striped">
                             <thead>
                             <tr>
-                                <th colspan="2">{{ 'action'|_ }}</th>
-                                <th>{{ 'action_value'|_ }}</th>
-                                <th>{{ 'stop_executing_other_actions'|_ }}</th>
+                                <th colspan="2">{{ __('firefly.action') }}</th>
+                                <th>{{ __('firefly.action_value') }}</th>
+                                <th>{{ __('firefly.stop_executing_other_actions') }}</th>
                             </tr>
                             </thead>
                             <tbody class="rule-action-tbody">
-                            {% for action in oldActions %}
-                                {{ action|raw }}
+                            @foreach($oldActions as $action)
+                                {!! $action !!}
                             @endforeach
                             </tbody>
 
                         </table>
                         <p>
                             <br/>
-                            <a href="#" class="btn btn-outline-secondary add_rule_action">{{ 'add_rule_action'|_ }}</a>
+                            <a href="#" class="btn btn-outline-secondary add_rule_action">{{ __('firefly.add_rule_action') }}</a>
                         </p>
                     </div>
                 </div>
@@ -118,11 +111,11 @@
                         <h3 class="card-title">{{ __('firefly.options') }}</h3>
                     </div>
                     <div class="card-body">
-                        {!! ExpandedForm::checkbox('run_after_form',1,null, {helpText: trans('firefly.rule_run_after_edit')}) }}
-                        {!! ExpandedForm::optionsList('update','rule') }}
+                        {!! ExpandedForm::checkbox('run_after_form',1,null, ['helpText' => trans('firefly.rule_run_after_edit')]) !!}
+                        {!! ExpandedForm::optionsList('update','rule') !!}
                     </div>
                     <div class="card-footer">
-                        <button type="submit" class="btn text-end btn-success">{{ 'update_rule'|_ }}</button>
+                        <button type="submit" class="btn text-end btn-success">{{ __('firefly.update_rule') }}</button>
                     </div>
                 </div>
 
@@ -134,12 +127,13 @@
 
 @endsection
 @section('scripts')
+    @vite(['js/pages/generic.js'])
     <script type="text/javascript" src="v1/js/lib/typeahead/typeahead.bundle.min.js?v={{ $FF_BUILD_TIME }}"
             nonce="{{ $JS_NONCE }}"></script>
     <script type="text/javascript" nonce="{{ $JS_NONCE }}">
-        var triggerCount = {{ triggerCount }};
-        var actionCount = {{ actionCount }};
-        var testRuleTriggersText = '{{ 'test_rule_triggers'|_|escape('js') }}';
+        var triggerCount = {{ $triggerCount }};
+        var actionCount = {{ $actionCount }};
+        var testRuleTriggersText = '{{ __('firefly.test_rule_triggers') }}';
     </script>
     <script type="text/javascript" src="v1/js/ff/rules/create-edit.js?v={{ $FF_BUILD_TIME }}"
             nonce="{{ $JS_NONCE }}"></script>

@@ -1,16 +1,11 @@
 @extends('layout.v3.session')
-
-
-    {{ Breadcrumbs.render(Route.getCurrentRoute.getName, ruleGroup) }}
-@endsection
-
 @section('content')
-    <form method="post" action="{{ route('rule-groups.update',ruleGroup.id) }}" class="form-horizontal"
+    <form method="post" action="{{ route('rule-groups.update',$ruleGroup->id) }}" class="form-horizontal"
           accept-charset="UTF-8"
           enctype="multipart/form-data">
         <input type="hidden" name="_token" value="{{ csrf_token() }}"/>
 
-        <input type="hidden" name="id" value="{{ ruleGroup.id }}"/>
+        <input type="hidden" name="id" value="{{ $ruleGroup->id }}"/>
         <div class="row">
             <div class="col-lg-6 col-md-12 col-sm-6">
                 <div class="card">
@@ -19,9 +14,9 @@
                     </div>
                     <div class="card-body">
                         {{-- only correct way to do active checkbox --}}
-                        {!! ExpandedForm::checkbox('active', 1) }}
+                        {!! ExpandedForm::checkbox('active', 1) !!}
 
-                        {!! ExpandedForm::text('title', ruleGroup.title) }}
+                        {!! ExpandedForm::text('title', $ruleGroup->title) !!}
                     </div>
                 </div>
 
@@ -34,7 +29,7 @@
                         <h3 class="card-title">{{ __('firefly.optionalFields') }}</h3>
                     </div>
                     <div class="card-body">
-                        {!! ExpandedForm::textarea('description', ruleGroup.description) }}
+                        {!! ExpandedForm::textarea('description', $ruleGroup->description) !!}
                     </div>
                 </div>
             </div>
@@ -47,10 +42,10 @@
                         <h3 class="card-title">{{ __('firefly.options') }}</h3>
                     </div>
                     <div class="card-body">
-                        {!! ExpandedForm::optionsList('update','rule-group') }}
+                        {!! ExpandedForm::optionsList('update','rule-group') !!}
                     </div>
                     <div class="card-footer">
-                        <button type="submit" class="btn text-end btn-success">{{ 'update_rule_group'|_ }}</button>
+                        <button type="submit" class="btn text-end btn-success">{{ __('firefly.update_rule_group') }}</button>
                     </div>
                 </div>
             </div>

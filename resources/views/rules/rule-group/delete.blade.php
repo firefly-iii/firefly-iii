@@ -1,18 +1,12 @@
 @extends('layout.v3.session')
-
-
-    {{ Breadcrumbs.render(Route.getCurrentRoute.getName, ruleGroup) }}
-@endsection
-
 @section('content')
-
-    <form method="POST" action="{{ route('rule-groups.destroy',ruleGroup.id) }}" accept-charset="UTF-8" class="form-horizontal" id="destroy">
+    <form method="POST" action="{{ route('rule-groups.destroy',$ruleGroup->id) }}" accept-charset="UTF-8" class="form-horizontal" id="destroy">
         <input name="_token" type="hidden" value="{{ csrf_token() }}">
         <div class="row">
             <div class="col-lg-6 offset-lg-3 col-md-12 col-sm-12">
                 <div class="card card-danger card-outline">
                     <div class="card-header">
-                        <h3 class="card-title">{{ trans('form.delete_rule_group', {'title': ruleGroup.title}) }}</h3>
+                        <h3 class="card-title">{{ trans('form.delete_rule_group', ['title'=> $ruleGroup->title]) }}</h3>
                     </div>
                     <div class="card-body">
                         <p class="text-danger">
@@ -20,21 +14,21 @@
                         </p>
 
                         <p>
-                            {{ trans('form.ruleGroup_areYouSure', {'title': ruleGroup.title}) }}
+                            {{ trans('form.ruleGroup_areYouSure', ['title' => $ruleGroup->title]) }}
                         </p>
 
 
-                        {% if ruleGroup.rules|length > 0 %}
+                        @if(count($ruleGroup->rules) > 0)
                             <p class="text-danger">
-                                {{ trans_choice('form.also_delete_rules', ruleGroup.rules|length) }}
+                                {{ trans_choice('form.also_delete_rules', count($ruleGroup->rules)) }}
                             </p>
 
                             <p class="text-success">
-                                {{ trans_choice('firefly.save_rules_by_moving', ruleGroup.rules|length) }}
+                                {{ trans_choice('firefly.save_rules_by_moving', count($ruleGroup->rules)) }}
                             </p>
 
                             <p>
-                                {{ RuleForm.ruleGroupListWithEmpty('move_rules_before_delete',null, {'hidden': ruleGroup.id}) }}
+                                {!! RuleForm::ruleGroupListWithEmpty('move_rules_before_delete',null, ['hidden' => $ruleGroup->id]) !!}
                             </p>
                         @else
                             <input type="hidden" name="move_rules_before_delete" value="0"/>

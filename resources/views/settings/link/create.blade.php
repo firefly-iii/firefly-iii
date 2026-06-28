@@ -1,11 +1,5 @@
 @extends('layout.v3.session')
-
-
-    {{ Breadcrumbs.render(Route.getCurrentRoute.getName) }}
-@endsection
-
 @section('content')
-
     <form method="POST" action="{{ route('settings.links.store') }}" accept-charset="UTF-8" class="form-horizontal">
         <input name="_token" type="hidden" value="{{ csrf_token() }}">
         <div class="row">
@@ -15,9 +9,9 @@
                         <h3 class="card-title">{{ __('firefly.mandatoryFields') }}</h3>
                     </div>
                     <div class="card-body">
-                        {!! ExpandedForm::text('name', null, {helpText: trans('firefly.link_type_help_name')}) }}
-                        {!! ExpandedForm::text('inward', null, {helpText: trans('firefly.link_type_help_inward')}) }}
-                        {!! ExpandedForm::text('outward', null, {helpText: trans('firefly.link_type_help_outward')}) }}
+                        {!! ExpandedForm::text('name', null, ['helpText' =>  trans('firefly.link_type_help_name')]) !!}
+                        {!! ExpandedForm::text('inward', null, ['helpText' =>  trans('firefly.link_type_help_inward')]) !!}
+                        {!! ExpandedForm::text('outward', null, ['helpText' =>  trans('firefly.link_type_help_outward')]) !!}
                     </div>
                 </div>
             </div>
@@ -30,10 +24,10 @@
                         <h3 class="card-title">{{ __('firefly.options') }}</h3>
                     </div>
                     <div class="card-body">
-                        {!! ExpandedForm::optionsList('create','link_type') }}
+                        {!! ExpandedForm::optionsList('create','link_type') !!}
                     </div>
                     <div class="card-footer">
-                        <button type="submit" class="btn text-end btn-success">{{ 'store_new_link_type'|_ }}</button>
+                        <button type="submit" class="btn text-end btn-success">{{ __('firefly.store_new_link_type') }}</button>
                     </div>
                 </div>
 
@@ -43,4 +37,7 @@
     </form>
 
 
+@endsection
+@section('scripts')
+    @vite(['js/pages/generic.js'])
 @endsection

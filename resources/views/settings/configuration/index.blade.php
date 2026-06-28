@@ -148,3 +148,6 @@ Technical stuff
     </form>
 
 @endsection
+@section('scripts')
+    @vite(['js/pages/generic.js'])
+@endsection

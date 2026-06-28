@@ -1,15 +1,9 @@
 @extends('layout.v3.session')
-
-
-    {{ Breadcrumbs.render(Route.getCurrentRoute.getName, linkType) }}
-@endsection
-
 @section('content')
-
-    <form method="post" action="{{ route('settings.links.update', linkType.id) }}" class="form-horizontal"
+    <form method="post" action="{{ route('settings.links.update', $linkType->id) }}" class="form-horizontal"
           accept-charset="UTF-8"
           enctype="multipart/form-data">
-        <input type="hidden" name="id" value="{{ linkType.id }}"/>
+        <input type="hidden" name="id" value="{{ $linkType->id }}"/>
         <input name="_token" type="hidden" value="{{ csrf_token() }}">
         <div class="row">
             <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
@@ -18,9 +12,9 @@
                         <h3 class="card-title">{{ __('firefly.mandatoryFields') }}</h3>
                     </div>
                     <div class="card-body">
-                        {!! ExpandedForm::text('name', linkType.name, {helpText: trans('firefly.link_type_help_name')}) }}
-                        {!! ExpandedForm::text('inward', linkType.inward, {helpText: trans('firefly.link_type_help_inward')}) }}
-                        {!! ExpandedForm::text('outward', linkType.outward, {helpText: trans('firefly.link_type_help_outward')}) }}
+                        {!! ExpandedForm::text('name', $linkType->name, ['helpText' => trans('firefly.link_type_help_name')]) !!}
+                        {!! ExpandedForm::text('inward', $linkType->inward, ['helpText' => trans('firefly.link_type_help_inward')]) !!}
+                        {!! ExpandedForm::text('outward', $linkType->outward, ['helpText' => trans('firefly.link_type_help_outward')]) !!}
                     </div>
                 </div>
             </div>
@@ -34,11 +28,11 @@
                         <h3 class="card-title">{{ __('firefly.options') }}</h3>
                     </div>
                     <div class="card-body">
-                        {!! ExpandedForm::optionsList('update','link_type') }}
+                        {!! ExpandedForm::optionsList('update','link_type') !!}
                     </div>
                     <div class="card-footer">
                         <button type="submit" class="btn text-end btn-success">
-                            {{ ('update_link_type')|_ }}
+                            {{ __('firefly.update_link_type') }}
                         </button>
                     </div>
                 </div>
@@ -49,4 +43,7 @@
     </form>
 
 
+@endsection
+@section('scripts')
+    @vite(['js/pages/generic.js'])
 @endsection

@@ -96,7 +96,7 @@ trait RenderPartialViews
             $result = view('reports.options.budget', ['budgets' => $budgets])->render();
         } catch (Throwable $e) {
             Log::error(sprintf('Cannot render reports.options.tag: %s', $e->getMessage()));
-            $result = 'Could not render view.';
+            $result = sprintf('Could not render view: %s', $e->getMessage());
 
             throw new FireflyException($result, 0, $e);
         }
@@ -178,7 +178,7 @@ trait RenderPartialViews
             $result = view('reports.options.category', ['categories' => $categories])->render();
         } catch (Throwable $e) {
             Log::error(sprintf('Cannot render reports.options.category: %s', $e->getMessage()));
-            $result = 'Could not render view.';
+            $result = sprintf('Could not render view: %s', $e->getMessage());
 
             throw new FireflyException($result, 0, $e);
         }
@@ -232,7 +232,7 @@ trait RenderPartialViews
             $result = view('reports.options.double', ['set' => $set])->render();
         } catch (Throwable $e) {
             Log::error(sprintf('Cannot render reports.options.tag: %s', $e->getMessage()));
-            $result = 'Could not render view.';
+            $result = sprintf('Could not render view: %s', $e->getMessage());
 
             throw new FireflyException($result, 0, $e);
         }
@@ -404,7 +404,7 @@ trait RenderPartialViews
             $result = view('reports.options.no-options')->render();
         } catch (Throwable $e) {
             Log::error(sprintf('Cannot render reports.options.no-options: %s', $e->getMessage()));
-            $result = 'Could not render view.';
+            $result = sprintf('Could not render view: %s', $e->getMessage());
 
             throw new FireflyException($result, 0, $e);
         }
@@ -437,7 +437,7 @@ trait RenderPartialViews
             $result = view('reports.options.tag', ['tags' => $grouped])->render();
         } catch (Throwable $e) {
             Log::error(sprintf('Cannot render reports.options.tag: %s', $e->getMessage()));
-            $result = 'Could not render view.';
+            $result = sprintf('Could not render view: %s', $e->getMessage());
 
             throw new FireflyException($result, 0, $e);
         }

@@ -24,9 +24,13 @@ declare(strict_types=1);
 
 use Carbon\Carbon;
 use Carbon\CarbonInterface;
+use FireflyIII\Enums\AccountTypeEnum;
+use FireflyIII\Enums\TransactionTypeEnum;
 use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Models\Account;
+use FireflyIII\Models\Transaction;
 use FireflyIII\Models\TransactionCurrency;
+use FireflyIII\Models\TransactionJournal;
 use FireflyIII\Models\TransactionJournalMeta;
 use FireflyIII\Repositories\Account\AccountRepositoryInterface;
 use FireflyIII\Support\Facades\Amount;
@@ -57,6 +61,155 @@ if (!function_exists('env_default_when_empty')) {
         }
 
         return $value;
+    }
+}
+
+if (!function_exists('sign_amount')) {
+
+    function sign_amount(string $amount, string $transactionType, string $sourceType): string
+    {
+        // withdrawals stay negative
+        if (TransactionTypeEnum::WITHDRAWAL->value !== $transactionType) {
+            $amount = bcmul($amount, '-1');
+        }
+
+        // opening balance and it comes from initial balance? its expense.
+        if (TransactionTypeEnum::OPENING_BALANCE->value === $transactionType && AccountTypeEnum::INITIAL_BALANCE->value !== $sourceType) {
+            $amount = bcmul($amount, '-1');
+        }
+
+        // reconciliation and it comes from reconciliation?
+        if (TransactionTypeEnum::RECONCILIATION->value === $transactionType && AccountTypeEnum::RECONCILIATION->value !== $sourceType) {
+            return bcmul($amount, '-1');
+        }
+
+        return $amount;
+    }
+}
+if (!function_exists('normal_journal_object_amount')) {
+    function normal_journal_object_amount(TransactionJournal $journal): string
+    {
+        $type = $journal->transactionType->type;
+
+        /** @var Transaction $first */
+        $first      = $journal->transactions()->where('amount', '<', 0)->first();
+        $currency   = $journal->transactionCurrency;
+        $amount     = $first->amount ?? '0';
+        $colored    = true;
+        $sourceType = $first->account->accountType()->first()->type;
+
+        $amount = sign_amount($amount, $type, $sourceType);
+
+        if (TransactionTypeEnum::TRANSFER->value === $type) {
+            $colored = false;
+        }
+        $result = Amount::formatFlat($currency->symbol, $currency->decimal_places, $amount, $colored);
+        if (TransactionTypeEnum::TRANSFER->value === $type) {
+            return sprintf('<span class="text-info money-transfer">%s</span>', $result);
+        }
+
+        return $result;
+    }
+}
+
+if (!function_exists('journal_object_has_foreign')) {
+    function journal_object_has_foreign(TransactionJournal $journal): bool
+    {
+        /** @var Transaction $first */
+        $first = $journal->transactions()->where('amount', '<', 0)->first();
+
+        return '' !== $first->foreign_amount;
+    }
+}
+
+if (function_exists('foreign_journal_object_amount')) {
+
+    function foreign_journal_object_amount(TransactionJournal $journal): string
+    {
+        $type = $journal->transactionType->type;
+
+        /** @var Transaction $first */
+        $first      = $journal->transactions()->where('amount', '<', 0)->first();
+        $currency   = $first->foreignCurrency;
+        $amount     = '' === $first->foreign_amount ? '0' : $first->foreign_amount;
+        $colored    = true;
+        $sourceType = $first->account->accountType()->first()->type;
+
+        $amount = sign_amount($amount, $type, $sourceType);
+
+        if (TransactionTypeEnum::TRANSFER->value === $type) {
+            $colored = false;
+        }
+        $result = Amount::formatFlat($currency->symbol, $currency->decimal_places, $amount, $colored);
+        if (TransactionTypeEnum::TRANSFER->value === $type) {
+            return sprintf('<span class="text-info money-transfer">%s</span>', $result);
+        }
+
+        return $result;
+    }
+}
+
+if (!function_exists('journal_object_amount')) {
+    function journal_object_amount(TransactionJournal $journal): string
+    {
+        $result = normal_journal_object_amount($journal);
+
+        // now append foreign amount, if any.
+        if (journal_object_has_foreign($journal)) {
+            $foreign = foreign_journal_object_amount($journal);
+            $result  = sprintf('%s (%s)', $result, $foreign);
+        }
+
+        return $result;
+    }
+}
+
+if (!function_exists('journal_link_translation')) {
+    function journal_link_translation(string $direction, string $original): string
+    {
+        $key         = sprintf('firefly.%s_%s', $original, $direction);
+        $translation = (string)trans($key);
+        if ($key === $translation) {
+            return $original;
+        }
+        return $translation;
+    }
+}
+
+if (!function_exists('all_journal_triggers')) {
+    function all_journal_triggers(): array
+    {
+        return [
+            'store-journal'     => (string)trans('firefly.rule_trigger_store_journal'),
+            'update-journal'    => (string)trans('firefly.rule_trigger_update_journal'),
+            'manual-activation' => (string)trans('firefly.rule_trigger_manual'),
+        ];
+    }
+}
+
+if (!function_exists('all_rule_actions')) {
+    function all_rule_actions(): array
+    {
+        // array of valid values for actions
+        $ruleActions     = array_keys(config('firefly.rule-actions'));
+        $possibleActions = [];
+        foreach ($ruleActions as $key) {
+            $possibleActions[$key] = (string)trans('firefly.rule_action_' . $key . '_choice');
+        }
+        unset($ruleActions);
+        asort($possibleActions);
+        return $possibleActions;
+    }
+}
+
+if (!function_exists('all_journal_triggers')) {
+    function all_journal_triggers(): array
+    {
+        return [
+            'store-journal'     => (string)trans('firefly.rule_trigger_store_journal'),
+            'update-journal'    => (string)trans('firefly.rule_trigger_update_journal'),
+            'manual-activation' => (string)trans('firefly.rule_trigger_manual'),
+        ];
     }
 }
 

@@ -90,7 +90,7 @@
             </li>
         </ul>
     </li>
-    <li class="nav-item {{ menu_open_partial('rules.') }} {{ menu_open_partial('webhooks.') }}  {{ menu_open_partial('recurring.') }}">
+    <li class="nav-item {{ menu_open_partial('rules.') }} {{ menu_open_partial('rule-groups.') }} {{ menu_open_partial('webhooks.') }}  {{ menu_open_partial('recurring.') }}">
         <a href="#" class="nav-link">
             <em class="nav-icon bi bi-cpu"></em>
             <p>
@@ -100,7 +100,7 @@
         </a>
         <ul class="nav nav-treeview">
             <li class="nav-item">
-                <a href="{{ route('rules.index') }}" class="nav-link {{ menu_item_active_partial('rules.') }}">
+                <a href="{{ route('rules.index') }}" class="nav-link {{ menu_item_active_partial('rules.') }} {{ menu_item_active_partial('rule-groups.') }}">
                     <em class="nav-icon bi bi-shuffle"></em>
                     <p>{{__('firefly.rules')}}</p>
                 </a>

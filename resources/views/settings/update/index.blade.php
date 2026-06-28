@@ -1,8 +1,4 @@
 @extends('layout.v3.session')
-
-
-    {{ Breadcrumbs.render }}
-@endsection
 @section('content')
     <form action="{{ route('settings.update-check.post') }}" method="post" id="store" class="form-horizontal">
 
@@ -11,46 +7,46 @@
             <input type="hidden" name="_token" value="{{ csrf_token() }}"/>
 
             <div class="col-lg-6 col-md-8 col-sm-12 col-xs-12">
-                <div class="card">
+                <div class="card mb-2">
                     <div class="card-header">
-                        <h3 class="card-title">{{ 'admin_update_channel_title'|_ }}</h3>
+                        <h3 class="card-title">{{ __('firefly.admin_update_channel_title') }}</h3>
                     </div>
                     <div class="card-body">
                         <p class="text-info">
-                            {{ 'admin_update_channel_explain'|_ }}
+                            {{ __('firefly.admin_update_channel_explain') }}
                         </p>
-                        {!! ExpandedForm::select('update_channel', channelOptions, channelSelected) }}
+                        {!! ExpandedForm::select('update_channel', $channelOptions, $channelSelected) !!}
                     </div>
                 </div>
             </div>
 
             {{-- do update check. --}}
             <div class="col-lg-6 col-md-8 col-sm-12 col-xs-12">
-                <div class="card">
+                <div class="card mb-2">
                     <div class="card-header">
-                        <h3 class="card-title">{{ 'admin_update_check_title'|_ }}</h3>
+                        <h3 class="card-title">{{ __('firefly.admin_update_check_title') }}</h3>
                     </div>
                     <div class="card-body">
                         <p class="text-info">
-                            {{ 'admin_update_check_explain'|_ }}
+                            {{ __('firefly.admin_update_check_explain') }}
                         </p>
-                        {!! ExpandedForm::select('check_for_updates',options, selected) }}
+                        {!! ExpandedForm::select('check_for_updates',$options, $selected) !!}
                     </div>
                 </div>
             </div>
 
             {{-- check now button --}}
             <div class="col-lg-4 col-md-4 col-sm-12 col-xs-12">
-                <div class="card">
+                <div class="card mb-2">
                     <div class="card-header">
-                        <h3 class="card-title">{{ 'admin_update_check_now_title'|_ }}</h3>
+                        <h3 class="card-title">{{ __('firefly.admin_update_check_now_title') }}</h3>
                     </div>
                     <div class="card-body">
                         <p class="text-info">
-                            {{ 'admin_update_check_now_explain'|_ }}
+                            {{ __('firefly.admin_update_check_now_explain') }}
                         </p>
                         <p>
-                            <a href="{{ route('settings.update-check.manual') }}" class="btn btn-info">{{ 'check_for_updates_button'|_ }}</a>
+                            <a href="{{ route('settings.update-check.manual') }}" class="btn btn-info">{{ _('firefly.check_for_updates_button') }}</a>
                         </p>
                     </div>
                 </div>
@@ -59,7 +55,7 @@
         <div class="row">
             <div class="col-lg-4 col-md-6 col-sm-12 col-xs-12">
                 <button type="submit" class="btn btn-success">
-                    {{ ('store_configuration')|_ }}
+                    {{ __('firefly.store_configuration') }}
                 </button>
             </div>
         </div>
@@ -68,6 +64,7 @@
 
 @endsection
 @section('scripts')
+    @vite(['js/pages/generic.js'])
     <script type="text/javascript" nonce="{{ $JS_NONCE }}">
         var updateCheckUrl = '{{ route('settings.update-check.manual') }}';
     </script>

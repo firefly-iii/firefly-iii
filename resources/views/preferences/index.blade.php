@@ -51,7 +51,7 @@
                                                     {% for key, lang in languages %}
                                                         <option {% if language == key %}
                                                             selected
-                                                        @endif value="{{ key }}">{{ lang.name_locale }}
+                                                        @endif value="{{ $key }}">{{ lang.name_locale }}
                                                             ({{ lang.name_english }})
                                                         </option>
 
@@ -81,7 +81,7 @@
                                                         {% for key, loc in locales %}
                                                             <option {% if locale == key %}
                                                                 selected
-                                                            @endif value="{{ key }}">
+                                                            @endif value="{{ $key }}">
                                                                 {% if key == 'equal' %}
                                                                     {{ 'equal_to_language'|_ }}
                                                                 @else
@@ -172,7 +172,7 @@
                                         <h3>{{ 'pref_home_screen_accounts'|_ }}</h3>
                                         <p>{{ 'pref_home_screen_accounts_help'|_ }}</p>
                                         {% for type, accounts in groupedAccounts %}
-                                            <strong>{{ type }}</strong>
+                                            <strong>{{ $type }}</strong>
                                             {% for id, name in accounts %}
                                                 <div class="form-group">
                                                     <div class="col-sm-10">

@@ -1,30 +1,30 @@
-<tr data-count="{{ count }}" class="rule-action-holder">
+<tr data-count="{{ $count }}" class="rule-action-holder">
     <td class="forty-px">
         <a href="#" class="btn btn-danger btn-sm remove-action"><span class="bi bi-trash"></span></a>
     </td>
     <td class="thirty">
         {{-- TODO error when invalid name --}}
-        <select name="actions[{{ count }}][type]" class="form-control">
-            {% for key,type in allRuleActions() %}
-                <option value="{{ key }}" label="{{ type }}" {% if key == oldAction %} selected@endif>{{ type }}</option>
+        <select name="actions[{{ $count }}][type]" class="form-control">
+            @foreach(all_rule_actions() as $key => $type)
+                <option value="{{ $key }}" label="{{ $type }}" @if($key === $oldAction) selected @endif>{{ $type }}</option>
             @endforeach
         </select>
     </td>
     <td class="position-relative">
 
-        <input autocomplete="off" type="text" value="{{ oldValue }}" name="actions[{{ count }}][value]"
+        <input autocomplete="off" type="text" value="{{ $oldValue }}" name="actions[{{ $count }}][value]"
                class="form-control">
-        {% if errors.has('actions.'~count~'.value') %}
+        @if($errors->has('actions.' . $count . '.value'))
             <p class="text-danger">
-                {{ errors.first('actions.'~count~'.value') }}
+                {{ $errors->first('actions.' . $count . '.value') }}
             </p>
         @endif
     </td>
     <td class="twenty">
         <div class="checkbox">
             <label>
-                <input type="checkbox" name="actions[{{ count }}][stop_processing]" value="1"
-                       {% if oldChecked %}checked@endif
+                <input type="checkbox" name="actions[{{ $count }}][stop_processing]" value="1"
+                       @if($oldChecked) checked @endif
                 />
             </label>
         </div>
