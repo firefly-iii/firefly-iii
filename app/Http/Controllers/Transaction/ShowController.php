@@ -37,7 +37,7 @@ use FireflyIII\User;
 use Illuminate\Contracts\View\Factory;
 use Illuminate\Http\JsonResponse;
 use Illuminate\View\View;
-use Symfony\Component\HttpFoundation\ParameterBag;
+
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 /**
