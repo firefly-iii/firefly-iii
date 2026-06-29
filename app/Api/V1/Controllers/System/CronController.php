@@ -26,8 +26,8 @@ namespace FireflyIII\Api\V1\Controllers\System;
 
 use FireflyIII\Api\V1\Controllers\Controller;
 use FireflyIII\Api\V1\Requests\System\CronRequest;
-use FireflyIII\Http\Middleware\Binder;
-use FireflyIII\Http\Middleware\Installer;
+
+
 use FireflyIII\Support\Binder\CLIToken;
 use FireflyIII\Support\Facades\AppConfiguration;
 use FireflyIII\Support\Http\Controllers\CronRunner;
@@ -41,11 +41,7 @@ final class CronController extends Controller
 {
     use CronRunner;
 
-    /**
-     * This endpoint is documented at:
-     * https://api-docs.firefly-iii.org/?urls.primaryName=2.0.0%20(v1)#/about/getCron
-     */
-    public function cron(CronRequest $request, string $cliToken): JsonResponse
+    public function cron(CronRequest $request, #[\SensitiveParameter] string $cliToken): JsonResponse
     {
         CLIToken::routeBinder($cliToken, $request->route());
         $config                           = $request->getAll();

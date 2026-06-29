@@ -29,7 +29,7 @@ use FireflyIII\Support\Facades\Preferences;
 use Illuminate\Auth\AuthenticationException;
 use Illuminate\Routing\Route;
 use Illuminate\Support\Facades\Log;
-use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
+
 
 /**
  * Class CLIToken
