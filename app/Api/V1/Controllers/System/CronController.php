@@ -26,13 +26,12 @@ namespace FireflyIII\Api\V1\Controllers\System;
 
 use FireflyIII\Api\V1\Controllers\Controller;
 use FireflyIII\Api\V1\Requests\System\CronRequest;
-
-
 use FireflyIII\Support\Binder\CLIToken;
 use FireflyIII\Support\Facades\AppConfiguration;
 use FireflyIII\Support\Http\Controllers\CronRunner;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Facades\Log;
+use SensitiveParameter;
 
 /**
  * Class CronController
@@ -41,7 +40,7 @@ final class CronController extends Controller
 {
     use CronRunner;
 
-    public function cron(CronRequest $request, #[\SensitiveParameter] string $cliToken): JsonResponse
+    public function cron(CronRequest $request, #[SensitiveParameter] string $cliToken): JsonResponse
     {
         CLIToken::routeBinder($cliToken, $request->route());
         $config                           = $request->getAll();

@@ -69,7 +69,7 @@ class BillStoreRequest extends FormRequest
     {
         return [
             'name'                    => ['required', 'min:1', 'max:255', 'uniqueObjectForUser:bills,name'],
-            'amount_min'              => ['required', new IsValidPositiveAmount(),'lte:amount_max'],
+            'amount_min'              => ['required', new IsValidPositiveAmount(), 'lte:amount_max'],
             'amount_max'              => ['required', new IsValidPositiveAmount(), 'gte:amount_min'],
             'transaction_currency_id' => ['required', 'exists:transaction_currencies,id'],
             'date'                    => ['required', 'date'],

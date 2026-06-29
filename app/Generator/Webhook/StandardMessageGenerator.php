@@ -35,7 +35,6 @@ use FireflyIII\Models\TransactionGroup;
 use FireflyIII\Models\TransactionJournal;
 use FireflyIII\Models\Webhook;
 use FireflyIII\Models\WebhookResponse as WebhookResponseModel;
-
 use FireflyIII\Support\JsonApi\Enrichments\AccountEnrichment;
 use FireflyIII\Support\JsonApi\Enrichments\BudgetEnrichment;
 use FireflyIII\Support\JsonApi\Enrichments\BudgetLimitEnrichment;

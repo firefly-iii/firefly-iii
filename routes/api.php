@@ -49,11 +49,14 @@ Route::group(
     ],
     static function (): void {
         Route::get('cron/{cliToken}', ['uses' => 'CronController@cron', 'as' => 'index'])
-            ->withoutMiddleware(['api']);
-                Route::get('cron/{cliToken}',
-                    [CronController::class, 'cron']
-                )->name('index')
-                    ->withoutMiddleware(['api']);
+            ->withoutMiddleware(['api'])
+        ;
+        Route::get(
+            'cron/{cliToken}',
+            [CronController::class, 'cron']
+        )->name('index')
+            ->withoutMiddleware(['api'])
+        ;
     }
 );
 
