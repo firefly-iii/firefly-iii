@@ -22,8 +22,8 @@
                             {{ trans('form.journal_link_areYouSure', {source: link.source.description|escape, destination: link.destination.description|escape, source_link: route('transactions.show', [link.source_id]) , destination_link: route('transactions.show',link.destination_id)})|raw }}
                         </p>
                     </div>
-                    <div class="card-footer">
-                        <input type="submit" name="submit" value="{{ trans('form.deletePermanently') }}" class="btn text-end btn-danger"/>
+                    <div class="card-footer text-end">
+                        <input type="submit" name="submit" value="{{ trans('form.deletePermanently') }}" class="btn btn-danger"/>
                         <a href="{{ URL::previous() }}" class="btn-outline-secondary btn">{{ trans('form.cancel') }}</a>
                     </div>
                 </div>

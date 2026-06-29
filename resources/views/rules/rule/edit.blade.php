@@ -42,7 +42,7 @@
                     <div class="card-header">
                         <h3 class="card-title">{{ __('firefly.rule_triggers') }}</h3>
                     </div>
-                    <div class="box-body rule-trigger-box">
+                    <div class="card    -body rule-trigger-box">
                         <table class="table table-sm table-bordered table-striped">
                             <thead>
                             <tr>
@@ -114,8 +114,8 @@
                         {!! ExpandedForm::checkbox('run_after_form',1,null, ['helpText' => trans('firefly.rule_run_after_edit')]) !!}
                         {!! ExpandedForm::optionsList('update','rule') !!}
                     </div>
-                    <div class="card-footer">
-                        <button type="submit" class="btn text-end btn-success">{{ __('firefly.update_rule') }}</button>
+                    <div class="card-footer text-end">
+                        <button type="submit" class="btn btn-success">{{ __('firefly.update_rule') }}</button>
                     </div>
                 </div>
 

@@ -44,8 +44,8 @@
                     <div class="card-body">
                         {!! ExpandedForm::optionsList('update','rule-group') !!}
                     </div>
-                    <div class="card-footer">
-                        <button type="submit" class="btn text-end btn-success">{{ __('firefly.update_rule_group') }}</button>
+                    <div class="card-footer text-end">
+                        <button type="submit" class="btn btn-success">{{ __('firefly.update_rule_group') }}</button>
                     </div>
                 </div>
             </div>

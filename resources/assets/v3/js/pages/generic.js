@@ -18,7 +18,6 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-// CSS
 import '../boot/bootstrap.js';
 import sidebar from '../pages/shared/sidebar.js';
 import dates from './shared/dates.js';

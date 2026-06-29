@@ -54,6 +54,7 @@
 
 @endsection
 @section('scripts')
+    @vite(['js/pages/generic.js'])
     <!-- just a bit of inline code -->
     <script type="text/javascript" nonce="{{ $JS_NONCE }}">
         var confirmText= '{{ 'are_you_sure'|_|escape('js') }}';

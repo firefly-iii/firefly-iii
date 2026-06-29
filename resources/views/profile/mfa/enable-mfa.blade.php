@@ -1,9 +1,4 @@
 @extends('layout.v3.session')
-
-
-    {{ Breadcrumbs.render(Route.getCurrentRoute.getName) }}
-@endsection
-
 @section('content')
     <form method="POST" action="{{ route('profile.mfa.enableMFA.post') }}" accept-charset="UTF-8" class="form-horizontal" id="preferences_code">
         <input name="_token" type="hidden" value="{{ csrf_token() }}">
@@ -11,21 +6,21 @@
             <div class="col-lg-6 offset-lg-3 col-md-12 col-sm-12 col-xs-12">
                 <div class="card mb-2">
                     <div class="card-header">
-                        <h3 class="card-title">{{ 'pref_two_factor_auth_code'|_ }}</h3>
+                        <h3 class="card-title">{{ __('firefly.pref_two_factor_auth_code') }}</h3>
                     </div>
                     <div class="card-body">
                         <p class="hidden-print">
-                            {{ 'pref_two_factor_auth_code_help'|_ }}
+                            {{ __('firefly.pref_two_factor_auth_code_help') }}
                         </p>
                         <div class="form group">
                             <div class="col-sm-8 col-md-offset-4 hidden-print">
-                                <img src="{{ image }}" alt="{{ 'pref_two_factor_qr_code'|_ }}">
+                                <img src="{{ $image }}" alt="{{ __('firefly.pref_two_factor_qr_code') }}">
                             </div>
                             <p class="hidden-print">
-                                {{ trans('firefly.2fa_use_secret_instead', {secret: secret|escape})|raw }}
+                                {!! trans('firefly.2fa_use_secret_instead', ['secret' => $secret]) !!}
                             </p>
                             <p class="hidden-print text-danger">
-                                {{ 'mfa_warning_code_changes'|_ }}
+                                {{ __('firefly.mfa_warning_code_changes') }}
                             </p>
                         </div>
                     </div>
@@ -36,11 +31,11 @@
             <div class="col-lg-6 offset-lg-3 col-md-12 col-sm-12 col-xs-12">
                 <div class="card mb-2">
                     <div class="card-body">
-                        {!! ExpandedForm::password('password', {helpText: 'current_password_confirm_mfa'|_}) }}
-                        {!! ExpandedForm::text('code', code) }}
+                        {!! ExpandedForm::password('password', ['helpText' => __('firefly.current_password_confirm_mfa')]) !!}
+                        {!! ExpandedForm::text('code', $code ?? '') !!}
                     </div>
-                    <div class="card-footer">
-                        <button type="submit" class="btn btn-success btn-lg">{{ 'pref_save_settings'|_ }}</button>
+                    <div class="card-footer text-end">
+                        <button type="submit" class="btn btn-success btn-lg">{{ __('firefly.pref_save_settings') }}</button>
                     </div>
                 </div>
             </div>
@@ -48,6 +43,8 @@
     </form>
 @endsection
 @section('scripts')
+    @vite(['js/pages/generic.js'])
+
     <script type="text/javascript" nonce="{{ $JS_NONCE }}">
         $(function () {
             "use strict";

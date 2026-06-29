@@ -171,8 +171,8 @@
                             @endforeach
                         </table>
                     </div>
-                    <div class="card-footer">
-                        <input type="submit" name="submit" value="{{ trans('form.update_all_journals') }}" class="btn btn-success text-end"/>
+                    <div class="card-footer text-end">
+                        <input type="submit" name="submit" value="{{ trans('form.update_all_journals') }}" class="btn btn-success "/>
                         <a href="{{ route('index') }}" class="btn-outline-secondary btn">{{ trans('form.cancel') }}</a>
                     </div>
                 </div>

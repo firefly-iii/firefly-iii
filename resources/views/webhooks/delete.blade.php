@@ -20,9 +20,9 @@
                         {{ trans('form.webhook_areYouSure', {'title': webhook.title}) }}
                     </p>
                 </div>
-                <div class="card-footer">
+                <div class="card-footer text-end">
                     <input type="submit" id="button" name="submit" value="{{ trans('form.deletePermanently') }}"
-                           class="btn text-end btn-danger"/>
+                           class="btn btn-danger"/>
                     <a href="{{ URL::previous() }}" class="btn-outline-secondary btn">{{ trans('form.cancel') }}</a>
                 </div>
             </div>

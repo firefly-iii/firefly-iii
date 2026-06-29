@@ -65,6 +65,9 @@ export default defineConfig(({command, mode, isSsrBuild, isPreview}) => {
 
                     // object groups
 
+                    // profile
+                    'js/pages/profile/oauth.js',
+
                     // rules
 
                     // recurring transactions

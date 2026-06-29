@@ -26,9 +26,9 @@
                             </div>
                         </div>
                     </div>
-                    <div class="card-footer">
+                    <div class="card-footer text-end">
                         <input type="submit" name="submit" value="{{ __('firefly.execute') }}" id="do-execute-button"
-                               class="btn btn-success text-end"/>
+                               class="btn btn-success "/>
                     </div>
                 </div>
             </div>

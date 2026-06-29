@@ -1,9 +1,4 @@
 @extends('layout.v3.session')
-
-
-    {{ Breadcrumbs.render(Route.getCurrentRoute.getName) }}
-@endsection
-
 @section('content')
     <form method="POST" action="{{ route('profile.mfa.disableMFA.post') }}" accept-charset="UTF-8" class="form-horizontal">
         <input name="_token" type="hidden" value="{{ csrf_token() }}">
@@ -11,11 +6,11 @@
             <div class="col-lg-6 offset-lg-3 col-md-12 col-sm-12 col-xs-12">
                 <div class="card mb-2">
                     <div class="card-header">
-                        <h3 class="card-title">{{ 'disable_mfa_page'|_ }}</h3>
+                        <h3 class="card-title">{{ __('firefly.disable_mfa_page') }}</h3>
                     </div>
                     <div class="card-body">
                         <p class="hidden-print">
-                            {{ 'disable_mfa_intro'|_ }}
+                            {!! __('firefly.disable_mfa_intro')  !!}
                         </p>
                     </div>
                 </div>
@@ -25,11 +20,11 @@
             <div class="col-lg-6 offset-lg-3 col-md-12 col-sm-12 col-xs-12">
                 <div class="card mb-2">
                     <div class="card-body">
-                        {!! ExpandedForm::password('password', {helpText: 'current_password_confirm_mfa'|_}) }}
-                        {!! ExpandedForm::text('code', code) }}
+                        {!! ExpandedForm::password('password', ['helpText' => __('firefly.current_password_confirm_mfa')]) !!}
+                        {!! ExpandedForm::text('code', $code ?? '') !!}
                     </div>
                     <div class="card-footer">
-                        <button type="submit" class="btn btn-danger">{{ 'pref_disable_mfa'|_ }}</button>
+                        <button type="submit" class="btn btn-danger">{{__('firefly.pref_disable_mfa') }}</button>
                     </div>
                 </div>
             </div>
@@ -37,6 +32,7 @@
     </form>
 @endsection
 @section('scripts')
+    @vite(['js/pages/generic.js'])
     <script type="text/javascript" nonce="{{ $JS_NONCE }}">
         $(function () {
             "use strict";

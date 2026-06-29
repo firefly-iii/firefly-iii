@@ -54,7 +54,7 @@
 
                     </div>
                     <div class="card-footer text-end">
-                        <input type="submit" name="submit" value="{{ __('firefly.submit') }}" class="btn btn-success text-end"/>
+                        <input type="submit" name="submit" value="{{ __('firefly.submit') }}" class="btn btn-success"/>
                     </div>
                 </div>
             </div>

@@ -35,8 +35,8 @@
         @endforeach
         <div class="row">
             <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
-                <p>
-                    <button type="submit" class="btn text-end btn-danger confirm-tag-delete">
+                <p class="text-end">
+                    <button type="submit" class="btn btn-danger confirm-tag-delete">
                         <span class="bi bi-trash"></span> {{ __('firefly.delete_all_selected_tags') }}
                     </button>
                 </p>

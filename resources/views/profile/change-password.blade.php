@@ -1,9 +1,4 @@
 @extends('layout.v3.session')
-
-
-    {{ Breadcrumbs.render(Route.getCurrentRoute.getName) }}
-@endsection
-
 @section('content')
     <form method="POST" action="{{ route('profile.change-password.post') }}" accept-charset="UTF-8" class="form-horizontal" id="change-password">
         <input name="_token" type="hidden" value="{{ csrf_token() }}">
@@ -12,58 +7,59 @@
             <div class="col-lg-6 col-md-12 col-sm-12">
                 <div class="card mb-2">
                     <div class="card-header">
-                        <h3 class="card-title">{{ 'change_your_password'|_ }}</h3>
+                        <h3 class="card-title">{{ __('firefly.change_your_password') }}</h3>
                     </div>
                     <div class="card-body">
-
-                        {% if errors|length > 0 %}
+                        @if(count($errors) > 0)
                             <ul>
-                                {% for error in errors.all %}
-                                    <li class="text-danger">{{ error }}</li>
+                                @foreach($errors->all() as $error)
+                                    <li class="text-danger">{{ $error }}</li>
                                 @endforeach
                             </ul>
-
                         @endif
 
 
                         <div class="form-group">
-                            <label for="inputOldPassword" class="col-sm-4 control-label">{{ 'current_password'|_ }}</label>
+                            <label for="inputOldPassword" class="col-sm-4 control-label">{{ __('firefly.current_password') }}</label>
 
                             <div class="col-sm-8">
-                                <input type="password" class="form-control" id="inputOldPassword" placeholder="{{ 'current_password'|_ }}" spellcheck="false"
+                                <input type="password" class="form-control" id="inputOldPassword" placeholder="{{ __('firefly.current_password') }}" spellcheck="false"
                                        name="current_password">
                             </div>
                         </div>
 
                         <div class="form-group">
-                            <label for="inputNewPassword1" class="col-sm-4 control-label">{{ 'new_password'|_ }}</label>
+                            <label for="inputNewPassword1" class="col-sm-4 control-label">{{ __('firefly.new_password') }}</label>
 
                             <div class="col-sm-8">
-                                <input type="password" class="form-control" id="inputNewPassword1" placeholder="{{ 'new_password'|_ }}" name="new_password" spellcheck="false">
+                                <input type="password" class="form-control" id="inputNewPassword1" placeholder="{{ __('firefly.new_password') }}" name="new_password" spellcheck="false">
                             </div>
                         </div>
 
                         <div class="form-group">
-                            <label for="inputNewPassword2" class="col-sm-4 control-label">{{ 'new_password_again'|_ }}</label>
+                            <label for="inputNewPassword2" class="col-sm-4 control-label">{{ __('firefly.new_password_again') }}</label>
 
                             <div class="col-sm-8">
-                                <input type="password" class="form-control" id="inputNewPassword2" placeholder="{{ 'new_password_again'|_ }}" spellcheck="false"
+                                <input type="password" class="form-control" id="inputNewPassword2" placeholder="{{ __('firefly.new_password_again') }}" spellcheck="false"
                                        name="new_password_confirmation">
                             </div>
                         </div>
 
-                        {!! ExpandedForm::checkbox('verify_password','1', true) }}
+                        {!! ExpandedForm::checkbox('verify_password','1', true) !!}
                         <p>
-                            <a data-toggle="modal" data-target="#passwordModal" href="#passwordModal">{{ 'what_is_pw_security'|_ }}</a>
+                            <a data-bs-toggle="modal" data-target="#passwordModal" href="#passwordModal">{{ __('firefly.what_is_pw_security') }}</a>
                         </p>
 
                     </div>
-                    <div class="card-footer">
-                        <button type="submit" class="btn btn-success text-end">{{ 'change_your_password'|_ }}</button>
+                    <div class="card-footer text-end">
+                        <button type="submit" class="btn btn-success">{{ __('firefly.change_your_password') }}</button>
                     </div>
                 </div>
             </div>
         </div>
     </form>
-    {% include 'partials.password-modal-twig' %}
+    @include('partials.password-modal')
+@endsection
+@section('scripts')
+    @vite(['js/pages/generic.js'])
 @endsection

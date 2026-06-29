@@ -157,8 +157,8 @@
                     <div class="card-body">
                         {!! ExpandedForm::optionsList('create','recurrence') }}
                     </div>
-                    <div class="card-footer">
-                        <button type="submit" class="btn text-end btn-success">
+                    <div class="card-footer text-end">
+                        <button type="submit" class="btn btn-success">
                             {{ ('store_new_recurrence')|_ }}
                         </button>
                     </div>

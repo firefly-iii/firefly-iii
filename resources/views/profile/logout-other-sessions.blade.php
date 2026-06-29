@@ -24,12 +24,15 @@
                             </div>
                         </div>
                     </div>
-                    <div class="card-footer">
-                        <button type="submit" class="btn btn-success text-end">{{ 'logout_other_sessions'|_ }}</button>
+                    <div class="card-footer text-end    ">
+                        <button type="submit" class="btn btn-success ">{{ 'logout_other_sessions'|_ }}</button>
                     </div>
                 </div>
             </div>
         </div>
     </form>
     {% include 'partials.password-modal' %}
+@endsection
+@section('scripts')
+    @vite(['js/pages/generic.js'])
 @endsection

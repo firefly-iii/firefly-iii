@@ -16,7 +16,7 @@
                 <div class="card-header">
                     <h3 class="card-title">{{ $subTitle }}</h3>
                 </div>
-                <div class="box-body ">
+                <div class="card-body">
 
                     @if(count($periods) > 0)
                         <x-lists.groups-large :groups="$groups" />

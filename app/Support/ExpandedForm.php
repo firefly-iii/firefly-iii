@@ -328,6 +328,23 @@ class ExpandedForm
     /**
      * @throws FireflyException
      */
+    public function hidden(string $name, mixed $value): string
+    {
+        try {
+            $html = view('form.hidden', ['name' => $name, 'value' => $value])->render();
+        } catch (Throwable $e) {
+            Log::debug(sprintf('Could not render hidden(): %s', $e->getMessage()));
+            $html = sprintf('Could not render hidden: %s', $e->getMessage());
+
+            throw new FireflyException($html, 0, $e);
+        }
+
+        return $html;
+    }
+
+    /**
+     * @throws FireflyException
+     */
     public function passwordWithValue(string $name, string $value, ?array $options = null): string
     {
         $label   = $this->label($name, $options);

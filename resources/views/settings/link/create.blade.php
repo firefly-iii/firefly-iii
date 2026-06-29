@@ -26,8 +26,8 @@
                     <div class="card-body">
                         {!! ExpandedForm::optionsList('create','link_type') !!}
                     </div>
-                    <div class="card-footer">
-                        <button type="submit" class="btn text-end btn-success">{{ __('firefly.store_new_link_type') }}</button>
+                    <div class="card-footer text-end">
+                        <button type="submit" class="btn btn-success">{{ __('firefly.store_new_link_type') }}</button>
                     </div>
                 </div>
 

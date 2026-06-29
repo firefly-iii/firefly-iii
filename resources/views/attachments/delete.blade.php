@@ -17,8 +17,8 @@
                             {{ trans('form.attachment_areYouSure', ['name' => $attachment->filename]) }}
                         </p>
                     </div>
-                    <div class="card-footer">
-                        <input type="submit" name="submit" value="{{ trans('form.deletePermanently') }}" class="btn text-end btn-danger"/>
+                    <div class="card-footer text-end">
+                        <input type="submit" name="submit" value="{{ trans('form.deletePermanently') }}" class="btn btn-danger"/>
                         <a href="{{ URL::previous() }}" class="btn-outline-secondary btn">{{ trans('form.cancel') }}</a>
                     </div>
                 </div>

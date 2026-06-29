@@ -15,8 +15,8 @@
                             </p>
                             {!! ExpandedForm::text('invited_user',null, ['type' => 'email', 'label' => __('firefly.invited_user_mail')]) !!}
                         </div>
-                        <div class="card-footer">
-                            <button type="submit" class="btn text-end btn-success">
+                        <div class="card-footer text-end">
+                            <button type="submit" class="btn btn-success">
                                 {{ __('firefly.invite_user') }}
                             </button>
                         </div>

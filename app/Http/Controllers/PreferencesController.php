@@ -125,6 +125,13 @@ final class PreferencesController extends Controller
         }
         $fiscalYearStart                = sprintf('%s-%s', Carbon::now()->format('Y'), (string) $fiscalYearStartStr);
         $tjOptionalFields               = Preferences::get('transaction_journal_optional_fields', [])->data;
+
+        // missing fields will give an error unless set, so:
+        $tjOptionalFields['external_url'] = $tjOptionalFields['external_url'] ?? false;
+        $tjOptionalFields['location'] = $tjOptionalFields['location'] ?? false;
+        $tjOptionalFields['links'] = $tjOptionalFields['links'] ?? false;
+
+
         $availableDarkModes             = config('firefly.available_dark_modes');
 
         // notifications settings

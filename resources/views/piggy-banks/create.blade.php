@@ -41,8 +41,8 @@
                     <div class="card-body">
                         {!! ExpandedForm::optionsList('create','piggy bank') !!}
                     </div>
-                    <div class="card-footer">
-                        <button type="submit" class="btn btn-success text-end">
+                    <div class="card-footer text-end">
+                        <button type="submit" class="btn btn-success">
                             {{ __('firefly.store_piggy_bank') }}
                         </button>
                     </div>

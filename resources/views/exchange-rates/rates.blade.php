@@ -21,7 +21,7 @@
                     <div class="card-header">
                         <h3 class="box-title">{{ __('firefly.header_exchange_rates_table') }}</h3>
                     </div>
-                    <div class="box-body p-0">
+                    <div class="card-body p-0">
                         <template x-if="totalPages > 1">
                         <nav>
                             <ul class="pagination">

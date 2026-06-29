@@ -293,6 +293,7 @@
     <link rel="stylesheet" href="v1/lib/leaflet/leaflet.css?v={{ $FF_BUILD_TIME }}"/>
 @endsection
 @section('scripts')
+    @vite(['js/pages/generic.js'])
     <script type="text/javascript" nonce="{{ $JS_NONCE }}">
         // location stuff
         @if($location)

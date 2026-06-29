@@ -280,9 +280,9 @@
                             @endforeach
                         </table>
                     </div>
-                    <div class="card-footer">
+                    <div class="card-footer text-end">
                         <a href="{{ route('transactions.show', group.id) }}" class="btn btn-danger">{{ 'cancel'|_ }}</a>
-                        <button type="submit" id="transaction-btn" class="btn btn-success text-end">
+                        <button type="submit" id="transaction-btn" class="btn btn-success ">
                             {{ trans('form.convert_'~sourceType.type) }}
                         </button>
                     </div>

@@ -43,8 +43,8 @@
                     <div class="card-body">
                         {!! ExpandedForm::optionsList('update','user') !!}
                     </div>
-                    <div class="card-footer">
-                        <button type="submit" class="btn text-end btn-success">
+                    <div class="card-footer text-end">
+                        <button type="submit" class="btn btn-success">
                             {{ __('firefly.update_user') }}
                         </button>
                     </div>

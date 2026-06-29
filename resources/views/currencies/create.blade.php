@@ -29,8 +29,8 @@
                     <div class="card-body">
                         {!! ExpandedForm::optionsList('create','currency') !!}
                     </div>
-                    <div class="card-footer">
-                        <button type="submit" class="btn text-end btn-success">
+                    <div class="card-footer text-end">
+                        <button type="submit" class="btn btn-success">
                             {{ __('firefly.store_currency') }}
                         </button>
                     </div>

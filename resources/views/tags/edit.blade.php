@@ -1,21 +1,16 @@
 @extends('layout.v3.session')
-
-
-    {{ Breadcrumbs.render(Route.getCurrentRoute.getName, tag) }}
-@endsection
-
 @section('content')
     <!-- set location data high up -->
     <script type="text/javascript" nonce="{{ $JS_NONCE }}">
-        var locations = {{ locations|json_encode|raw }};
+        var locations = {{ json_encode($locations) }};
         var mapboxToken = "{{ config('firefly.mapbox_api_key') }}";
     </script>
 
 
-    <form method="post" action="{{ route('tags.update',tag.id) }}" class="form-horizontal" accept-charset="UTF-8"
+    <form method="post" action="{{ route('tags.update',$tag->id) }}" class="form-horizontal" accept-charset="UTF-8"
           enctype="multipart/form-data">
         <input type="hidden" name="_token" value="{{ csrf_token() }}"/>
-        <input type="hidden" name="id" value="{{ tag.id }}"/>
+        <input type="hidden" name="id" value="{{ $tag->id }}"/>
 
         <div class="row">
             <div class="col-lg-5 col-md-5 col-sm-12">
@@ -24,7 +19,7 @@
                         <h3 class="card-title">{{ __('firefly.mandatoryFields') }}</h3>
                     </div>
                     <div class="card-body">
-                        {!! ExpandedForm::text('tag', tag.tag) }}
+                        {!! ExpandedForm::text('tag', $tag->tag) !!}
                     </div>
                 </div>
             </div>
@@ -36,9 +31,9 @@
                         <h3 class="card-title">{{ __('firefly.optionalFields') }}</h3>
                     </div>
                     <div class="card-body">
-                        {!! ExpandedForm::date('date', tag.date.format('Y-m-d')) }}
-                        {!! ExpandedForm::textarea('description', tag.description) }}
-                        {!! ExpandedForm::file('attachments[]', ['multiple' => 'multiple','helpText' => trans('firefly.upload_max_file_size', ['size' => print_nice_filesize($uploadSize)])]) }}
+                        {!! ExpandedForm::date('date', $tag->date->format('Y-m-d')) !!}
+                        {!! ExpandedForm::textarea('description', $tag->description) !!}
+                        {!! ExpandedForm::file('attachments[]', ['multiple' => 'multiple','helpText' => trans('firefly.upload_max_file_size', ['size' => print_nice_filesize($uploadSize)])]) !!}
                     </div>
                 </div>
             </div>
@@ -51,11 +46,11 @@
                         <h3 class="card-title">{{ __('firefly.options') }}</h3>
                     </div>
                     <div class="card-body">
-                        {!! ExpandedForm::optionsList('update','tag') }}
+                        {!! ExpandedForm::optionsList('update','tag') !!}
                     </div>
-                    <div class="card-footer">
-                        <button type="submit" class="btn text-end btn-success">
-                            {{ 'update_tag'|_ }}
+                    <div class="card-footer text-end">
+                        <button type="submit" class="btn btn-success">
+                            {{ __('firefly.update_tag') }}
                         </button>
                     </div>
                 </div>
@@ -67,6 +62,7 @@
 
 @endsection
 @section('scripts')
+    @vite(['js/pages/generic.js'])
     <script type="text/javascript" src="v1/js/lib/modernizr-custom.js?v={{ $FF_BUILD_TIME }}"
             nonce="{{ $JS_NONCE }}"></script>
     <script type="text/javascript" src="v1/js/lib/jquery-ui.min.js?v={{ $FF_BUILD_TIME }}" nonce="{{ $JS_NONCE }}"></script>

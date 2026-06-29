@@ -1,9 +1,4 @@
 @extends('layout.v3.session')
-
-
-    {{ Breadcrumbs.render(Route.getCurrentRoute.getName) }}
-@endsection
-
 @section('content')
 <form method="POST" action="{{ route('profile.mfa.backup-codes.post') }}" accept-charset="UTF-8" class="form-horizontal" id="preferences_code">
     <input name="_token" type="hidden" value="{{ csrf_token() }}">
@@ -11,15 +6,15 @@
             <div class="col-lg-6 offset-lg-3 col-md-12 col-sm-12 col-xs-12">
                 <div class="card mb-2">
                     <div class="card-header">
-                        <h3 class="card-title">{{ 'mfa_backup_codes_title'|_ }}</h3>
+                        <h3 class="card-title">{{ __('firefly.mfa_backup_codes_title') }}</h3>
                     </div>
                     <div class="card-body">
                         <div class="form group">
                             <p>
-                                {{ 'mfa_backup_codes_intro'|_ }}
+                                {{ __('firefly.mfa_backup_codes_intro') }}
                             </p>
                             <p class="text-danger">
-                                {{ 'mfa_backup_codes_quick'|_ }}
+                                {{ __('firefly.mfa_backup_codes_quick') }}
                             </p>
                         </div>
                     </div>
@@ -31,11 +26,11 @@
         <div class="col-lg-6 offset-lg-3 col-md-12 col-sm-12 col-xs-12">
             <div class="card mb-2">
                 <div class="card-body">
-                    {!! ExpandedForm::password('password', {helpText: 'current_password_confirm_mfa'|_}) }}
-                    {!! ExpandedForm::text('code', code) }}
+                    {!! ExpandedForm::password('password', ['helpText' => __('firefly.current_password_confirm_mfa')]) !!}
+                    {!! ExpandedForm::text('code', $code ?? '') !!}
                 </div>
                 <div class="card-footer">
-                    <button type="submit" class="btn btn-success">{{ 'pref_save_settings'|_ }}</button>
+                    <button type="submit" class="btn btn-success">{{ __('firefly.pref_save_settings') }}</button>
                 </div>
             </div>
         </div>
@@ -43,4 +38,7 @@
 
 
 </form>
+@endsection
+@section('scripts')
+    @vite(['js/pages/generic.js'])
 @endsection
