@@ -146,7 +146,7 @@ final class UserController extends Controller
         $user        = $this->repository->store($data);
 
         Log::info(sprintf('Registered new user %s', $user->email));
-        $owner             = new OwnerNotifiable();
+        $owner       = new OwnerNotifiable();
         event(new NewUserRegistered($owner, $user));
 
         $manager     = $this->getManager();
