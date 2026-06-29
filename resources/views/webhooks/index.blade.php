@@ -2,7 +2,7 @@
 @section('content')
         <div class="row" x-data="index">
             <div class="col-lg-12 col-md-12 col-sm-12">
-                <div class="card">
+                <div class="card mb-2">
                     <x-elements.card-header-with-menu :cardTitle="trans('firefly.webhooks')" :route="route('webhooks.create')" :linkTitle="__('firefly.create_new_webhook')"/>
                     <div class="card-body p-0">
                         <template x-if="0 === webhooks.length && loading">

@@ -233,10 +233,10 @@
 
     </tr>
     <tr>
-        @if(($showCategory ?? false) || $showBudget ?? false)
-        <td colspan="9" class="no-margin-pagination">{{ $groups->links('pagination.bootstrap-4') }}</td>
+        @if(($showCategory ?? false) || ($showBudget ?? false))
+            <td colspan="9" class="no-margin-pagination">{{ $groups->links('pagination.bootstrap-4') }}</td>
         @else
-        <td colspan="8" class="no-margin-pagination">{{ $groups->links('pagination.bootstrap-4') }}</td>
+            <td colspan="8" class="no-margin-pagination">{{ $groups->links('pagination.bootstrap-4') }}</td>
         @endif
     </tr>
     </tfoot>

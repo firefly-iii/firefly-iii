@@ -4,7 +4,7 @@
         <input type="hidden" name="_token" value="{{ csrf_token() }}"/>
         <div class="row">
             <div class="col-lg-12 col-md-12 col-sm-12">
-                <div class="card">
+                <div class="card mb-2">
                     <div class="card-header">
                         <h3 class="card-title">{{ trans('firefly.remove_money_from_piggy_title', ['name' => $piggyBank->name]) }}</h3>
                     </div>

@@ -19,7 +19,7 @@
         </div>
     @endif
 
-    <div class="card">
+    <div class="card mb-2">
         <div class="card-body login-card-body">
             <p class="login-box-msg">{{ trans('firefly.reset_password') }}</p>
 

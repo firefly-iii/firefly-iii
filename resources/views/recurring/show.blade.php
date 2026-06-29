@@ -8,7 +8,7 @@
 <div class="row">
     <!-- basic info -->
     <div class="col-lg-8 col-md-12 col-sm-12">
-        <div class="card">
+        <div class="card mb-2">
             <div class="card-header">
                 <h3 class="card-title">
                     {{ array.title }}
@@ -61,7 +61,7 @@
     </div>
     <!-- next and previous repetitions -->
     <div class="col-lg-4 col-md-12 col-sm-12">
-        <div class="card">
+        <div class="card mb-2">
             <div class="card-header">
                 <h3 class="card-title">
                     {{ ('expected_'~array.type~'s')|_ }}
@@ -118,7 +118,7 @@
 <div class="row">
     <!-- transactions -->
     <div class="col-lg-12 col-md-12 col-sm-12">
-        <div class="card">
+        <div class="card mb-2">
             <div class="card-header">
                 <h3 class="card-title">
                     {{ 'transaction_data'|_ }}
@@ -198,7 +198,7 @@
     <div class="row">
         <!-- meta data -->
         <div class="col-lg-12 col-md-12 col-sm-12">
-            <div class="card">
+            <div class="card mb-2">
                 <div class="card-header">
                     <h3 class="card-title">
                         {{ ('created_'~array.type~'s')|_ }}

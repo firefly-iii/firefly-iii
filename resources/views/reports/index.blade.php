@@ -109,7 +109,7 @@
             </div>
 
         <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
-            <div class="card">
+            <div class="card mb-2">
                 <div class="card-header">
                     <h3 class="card-title">{{ __('firefly.quick_link_reports') }}</h3>
                 </div>

@@ -9,7 +9,7 @@
 
             <div class="col-lg-6 col-md-6 col-sm-12">
                 {{-- mandatory recurrence stuff --}}
-                <div class="card">
+                <div class="card mb-2">
                     <div class="card-header">
                         <h3 class="card-title">{{ 'mandatory_for_recurring'|_ }}</h3>
                     </div>
@@ -41,7 +41,7 @@
 
             <div class="col-lg-6 col-md-6 col-sm-12">
                 {{-- optional recurrence stuff --}}
-                <div class="card">
+                <div class="card mb-2">
                     <div class="card-header">
                         <h3 class="card-title">{{ 'optional_for_recurring'|_ }}</h3>
                     </div>
@@ -60,7 +60,7 @@
         <div class="row">
             <div class="col-lg-6 col-md-6 col-sm-12">
                 {{-- mandatory transaction information --}}
-                <div class="card">
+                <div class="card mb-2">
                     <div class="card-header">
                         <h3 class="card-title">{{ 'mandatory_for_transaction'|_ }}</h3>
                     </div>
@@ -111,7 +111,7 @@
 
             <div class="col-lg-6 col-md-6 col-sm-12">
                 {{-- optional transaction information --}}
-                <div class="card">
+                <div class="card mb-2">
                     <div class="card-header">
                         <h3 class="card-title">{{ 'optional_for_transaction'|_ }}</h3>
                     </div>
@@ -150,7 +150,7 @@
         {{-- row with submit stuff. --}}
         <div class="row">
             <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
-                <div class="card">
+                <div class="card mb-2">
                     <div class="card-header">
                         <h3 class="card-title">{{ __('firefly.options') }}</h3>
                     </div>
@@ -167,7 +167,7 @@
         </div>
         {#
         <div class="row">
-            <div class="card">
+            <div class="card mb-2">
                 <div class="card-header">
                     <h3 class="card-title">{{ 'expected_repetitions'|_ }}</h3>
                 </div>

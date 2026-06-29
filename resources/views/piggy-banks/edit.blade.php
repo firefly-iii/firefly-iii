@@ -42,7 +42,7 @@
         <div class="row">
             <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
                 {{-- panel for options --}}
-                <div class="card">
+                <div class="card mb-2">
                     <div class="card-header">
                         <h3 class="card-title">{{ __('firefly.options') }}</h3>
                     </div>

@@ -28,7 +28,7 @@
 
                 <!-- main options -->
                 <div role="tabpanel" class="tab-pane active" id="options">
-                    <div class="card">
+                    <div class="card mb-2">
                         <div class="card-body">
                             <p>
                                 {{ trans('firefly.user_id_is',{user: userId})|raw }}
@@ -75,7 +75,7 @@
 
                 <!-- command line options -->
                 <div role="tabpanel" class="tab-pane" id="cmd">
-                    <div class="card">
+                    <div class="card mb-2">
                         <div class="card-body">
                             <p>
                                 {{ 'explain_command_line_token'|_ }}
@@ -101,7 +101,7 @@
 
                 <!-- purge stuff -->
                 <div role="tabpanel" class="tab-pane" id="delete">
-                    <div class="card">
+                    <div class="card mb-2">
                         <div class="card-header">
                             <h3 class="card-title">{{ 'purge_data_title'|_ }}</h3>
                         </div>
@@ -122,7 +122,7 @@
                         </div>
                     </div>
                     <!-- delete stuff -->
-                    <div class="card">
+                    <div class="card mb-2">
                         <div class="card-header">
                             <h3 class="card-title">{{ 'delete_data_title'|_ }}</h3>
                         </div>

@@ -9,7 +9,7 @@
     <input name="_token" type="hidden" value="{{ csrf_token() }}">
         <div class="row">
             <div class="col-lg-6 offset-lg-3 col-md-12 col-sm-12 col-xs-12">
-                <div class="card">
+                <div class="card mb-2">
                     <div class="card-header">
                         <h3 class="card-title">{{ 'mfa_backup_codes_title'|_ }}</h3>
                     </div>
@@ -29,9 +29,9 @@
 
     <div class="row">
         <div class="col-lg-6 offset-lg-3 col-md-12 col-sm-12 col-xs-12">
-            <div class="card">
+            <div class="card mb-2">
                 <div class="card-body">
-                    {!! ExpandedForm.password('password', {helpText: 'current_password_confirm_mfa'|_}) }}
+                    {!! ExpandedForm::password('password', {helpText: 'current_password_confirm_mfa'|_}) }}
                     {!! ExpandedForm::text('code', code) }}
                 </div>
                 <div class="card-footer">

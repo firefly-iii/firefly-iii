@@ -317,7 +317,7 @@ class ExpandedForm
             $html = view('form.password', ['classes' => $classes, 'name' => $name, 'label' => $label, 'options' => $options])->render();
         } catch (Throwable $e) {
             Log::debug(sprintf('Could not render password(): %s', $e->getMessage()));
-            $html = 'Could not render password.';
+            $html = sprintf('Could not render password: %s', $e->getMessage());
 
             throw new FireflyException($html, 0, $e);
         }

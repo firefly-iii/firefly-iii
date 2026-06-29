@@ -1,5 +1,5 @@
 {% for period in periods %}
-    <div class="card">
+    <div class="card mb-2">
         <div class="card-header">
             <h3 class="card-title"><a href="{{ period.route }}">{{ period.title }}</a>
             </h3>

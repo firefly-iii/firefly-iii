@@ -10,7 +10,7 @@
 
         <div class="row">
             <div class="col-lg-6 col-md-12 col-sm-12">
-                <div class="card">
+                <div class="card mb-2">
                     <div class="card-header">
                         <h3 class="card-title">{{ 'change_your_password'|_ }}</h3>
                     </div>

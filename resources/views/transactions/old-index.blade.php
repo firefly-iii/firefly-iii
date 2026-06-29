@@ -21,7 +21,7 @@
         <div class="row">
             {{-- for withdrawals, deposits and transfers --}}
             <div class="{{ boxSize }}">
-                <div class="card">
+                <div class="card mb-2">
                     <div class="card-header">
                         <h3 class="card-title">{{ __('firefly.categories') }}</h3>
                     </div>
@@ -33,7 +33,7 @@
             {{-- only for withdrawals --}}
             {% if objectType == 'withdrawal' %}
                 <div class="{{ boxSize }}">
-                    <div class="card">
+                    <div class="card mb-2">
                         <div class="card-header">
                             <h3 class="card-title">{{ __('firefly.budgets') }}</h3>
                         </div>
@@ -45,7 +45,7 @@
             @endif
             {% if objectType != 'withdrawal' %}
                 <div class="{{ boxSize }}">
-                    <div class="card">
+                    <div class="card mb-2">
                         <div class="card-header">
                             <h3 class="card-title">{{ 'all_source_accounts'|_ }}</h3>
                         </div>
@@ -57,7 +57,7 @@
             @endif
             {{-- for all --}}
             <div class="{{ boxSize }}">
-                <div class="card">
+                <div class="card mb-2">
                     <div class="card-header">
                         <h3 class="card-title">{{ 'all_destination_accounts'|_ }}</h3>
                     </div>
@@ -72,7 +72,7 @@
     {{-- list with journals --}}
     <div class="row">
         <div class="@if(count($periods) > 0)col-lg-10 col-md-10 col-sm-12@elsecol-lg-12 col-md-12 col-sm-12@endif">
-            <div class="card">
+            <div class="card mb-2">
                 <div class="card-header">
                     <h3 class="card-title">{{ $subTitle }}</h3>
                 </div>

@@ -9,7 +9,7 @@
     @if($categories->count() > 0)
         <div class="row">
             <div class="col-lg-12 col-md-12 col-sm-12">
-                <div class="card">
+                <div class="card mb-2">
                     <x-elements.card-header-with-menu :cardTitle="trans('firefly.categories')" :route="route('categories.create')" :linkTitle="__('firefly.new_category')"/>
 
                     <div class="card-body p-0">

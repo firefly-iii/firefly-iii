@@ -127,7 +127,7 @@
         @if('' !== (string) $piggy['notes'])
             <div class="col-lg-8 col-md-8 col-sm-12 col-xs-12">
 
-                <div class="card">
+                <div class="card mb-2">
                     <div class="card-header">
                         <h3 class="card-title">{{ trans('form.notes') }}</h3>
                     </div>

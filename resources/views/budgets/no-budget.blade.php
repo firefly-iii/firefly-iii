@@ -12,7 +12,7 @@
 
     <div class="row">
         <div class="@if(null !== ($periods ?? null) && count($periods) > 0)col-lg-9 col-md-9 col-sm-12 @else col-lg-12 col-md-12 col-sm-12 @endif ">
-            <div class="card">
+            <div class="card mb-2">
                 <div class="card-header">
                     <h3 class="card-title">{{ $subTitle }}</h3>
                 </div>

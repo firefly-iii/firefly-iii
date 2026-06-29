@@ -8,7 +8,7 @@
         <input type="hidden" name="id" value="{{ $ruleGroup->id }}"/>
         <div class="row">
             <div class="col-lg-6 col-md-12 col-sm-6">
-                <div class="card">
+                <div class="card mb-2">
                     <div class="card-header">
                         <h3 class="card-title">{{ __('firefly.mandatoryFields') }}</h3>
                     </div>
@@ -24,7 +24,7 @@
             <div class="col-lg-6 col-md-12 col-sm-6">
 
                 {{-- optional fields --}}
-                <div class="card">
+                <div class="card mb-2">
                     <div class="card-header">
                         <h3 class="card-title">{{ __('firefly.optionalFields') }}</h3>
                     </div>
@@ -37,7 +37,7 @@
         <div class="row">
             <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
                 {{-- panel for options --}}
-                <div class="card">
+                <div class="card mb-2">
                     <div class="card-header">
                         <h3 class="card-title">{{ __('firefly.options') }}</h3>
                     </div>

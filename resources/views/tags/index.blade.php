@@ -12,7 +12,7 @@
             @if(count($entries) > 0)
                 <div class="row mb-2">
                     <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
-                        <div class="card">
+                        <div class="card mb-2">
                             <x-elements.card-header-with-menu :cardTitle="'no-date' === $period ? __('firefly.without_date') : $period" :route="route('tags.create')" :linkTitle="__('firefly.no_tags_create_default')"/>
                             <div class="card-body">
                                 <div class="row">

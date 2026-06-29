@@ -2,7 +2,7 @@
     <div class="row mb-2">
         <div class="col-xl-6 col-lg-6 col-md-12 col-xs-12 mb-2">
             <!-- BASIC TRANSACTION INFORMATION -->
-            <div class="card">
+            <div class="card mb-2">
                 <div class="card-header">
                     <h3 class="card-title">{{ __('firefly.basic_journal_information') }}</h3>
                 </div>
@@ -24,7 +24,7 @@
         <div class="col-xl-6 col-lg-6 col-md-12 col-xs-12 mb-2">
 
             <!-- AMOUNTS -->
-            <div class="card">
+            <div class="card mb-2">
                 <div class="card-header">
                     <h3 class="card-title">
                         {{ __('firefly.transaction_journal_amount') }}
@@ -41,7 +41,7 @@
         </div>
         <!-- META DATA -->
         <div class="col-xl-4 col-lg-6 col-md-12 col-xs-12 mb-2">
-            <div class="card">
+            <div class="card mb-2">
                 <div class="card-header">
                     <h3 class="card-title">
                         {{ __('firefly.transaction_journal_meta') }}
@@ -71,7 +71,7 @@
         </div>
         <!-- EXTRA THINGS -->
         <div class="col-xl-4 col-lg-6 col-md-12 col-xs-12 mb-2">
-            <div class="card">
+            <div class="card mb-2">
                 <div class="card-header">
                     <h3 class="card-title">
                         {{ __('firefly.transaction_journal_extra') }}
@@ -96,7 +96,7 @@
             </div>
         </div>
         <div class="col-xl-4 col-lg-6 col-md-12 col-xs-12 mb-2">
-            <div class="card">
+            <div class="card mb-2">
                 <div class="card-header">
                     <h3 class="card-title">
                         {{ __('firefly.submission_options') }}

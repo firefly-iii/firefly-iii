@@ -410,7 +410,7 @@
             @endif
             @if(count($inactive) > 0)
                 <div class="col-lg-3 col-sm-4 col-md-6">
-                    <div class="card">
+                    <div class="card mb-2">
                         <div class="card-header with-border">
                             <h3 class="card-title">{{ __('firefly.inactiveBudgets') }}</h3>
                         </div>

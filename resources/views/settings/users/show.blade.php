@@ -1,67 +1,61 @@
 @extends('layout.v3.session')
-
-
-    {{ Breadcrumbs.render(Route.getCurrentRoute.getName, user) }}
-@endsection
 @section('content')
     <div class="row">
         <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
-            <div class="card">
+            <div class="card mb-2">
                 <div class="card-header">
-                    <h3 class="card-title">{{ 'user_information'|_ }}</h3>
+                    <h3 class="card-title">{{ __('firefly.user_information') }}</h3>
                 </div>
-                <div class="card-body">
+                <div class="card-body p-0">
                     <table class="table table-striped table-bordered table-responsive">
                         <tbody>
                         <tr>
                             <td>{{ trans('list.id') }}</td>
-                            <td>#{{ user.id }}</td>
+                            <td>#{{ $user->id }}</td>
                         </tr>
                         <tr>
                             <td>{{ trans('list.email') }}</td>
-                            <td><a href="mailto:{{ user.email }}">{{ user.email }}</a>
-                            <td>
+                            <td><a href="mailto:{{ $user->email }}">{{ $user->email }}</a></td>
                         </tr>
                         <tr>
                             <td>{{ trans('list.created_at') }}</td>
                             <td>
-                                {{ user.created_at.isoFormat($monthAndDayFormat) }}
-                                {{ user.created_at.format('H:i') }}</td>
+                                {{ $user->created_at->isoFormat($monthAndDayFormat) }}
+                                {{ $user->created_at->format('H:i') }}</td>
                         </tr>
                         <tr>
                             <td>{{ trans('list.is_admin') }}</td>
                             <td>
-                                {% if information.is_admin %}
-                                    <small class="text-success"><span class="bi bi-check"></span></small> {{ 'yes'|_ }}
+                                @if($information['is_admin'])
+                                    <small class="text-success"><span class="bi bi-check"></span></small> {{ __('firefly.yes') }}
                                 @else
-                                    <small class="text-danger"><span class="bi bi-x"></span></small> {{ 'no'|_ }}
+                                    <small class="text-danger"><span class="bi bi-x"></span></small> {{ __('firefly.no') }}
                                 @endif
                             </td>
                         </tr>
                         <tr>
                             <td>{{ trans('list.has_two_factor') }}</td>
                             <td>
-                                {% if information.has_2fa %}
-                                    <small class="text-success"><span class="bi bi-check"></span></small> {{ 'yes'|_ }}
+                                @if($information['has_2fa'])
+                                    <small class="text-success"><span class="bi bi-check"></span></small> {{ __('firefly.yes') }}
                                 @else
-                                    <small class="text-danger"><span class="bi bi-x"></span></small> {{ 'no'|_ }}
+                                    <small class="text-danger"><span class="bi bi-x"></span></small> {{ __('firefly.no') }}
                                 @endif
                             </td>
                         </tr>
                         <tr>
                             <td>{{ trans('list.is_blocked') }}</td>
                             <td>
-                                {% if information.blocked %}
-                                    <small class="text-danger"><span class="bi bi-check" title="{{ 'yes'|_ }}"></span></small> {{ 'yes'|_ }}:
-
-                                    {% if information.blocked_code == "" %}
+                                @if($information['blocked'])
+                                    <small class="text-danger"><span class="bi bi-check" title="{{ __('firefly.yes') }}"></span></small> {{ __('firefly.yes') }}:
+                                @if('' === $information['blocked_code'])
                                         <em>~</em>
                                     @else
-                                        {{ information.blocked_code }}
+                                        {{ $information['blocked_code'] }}
                                     @endif
 
                                 @else
-                                    <small class="text-success"><span class="bi bi-x" title="{{ 'no'|_ }}"></span></small> {{ 'no'|_ }}
+                                    <small class="text-success"><span class="bi bi-x" title="{{ __('firefly.no') }}"></span></small> {{ __('firefly.no') }}
                                 @endif
                             </td>
                         </tr>
@@ -71,46 +65,46 @@
             </div>
         </div>
         <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
-            <div class="card">
+            <div class="card mb-2">
                 <div class="card-header">
-                    <h3 class="card-title">{{ 'user_data_information'|_ }}</h3>
+                    <h3 class="card-title">{{ __('firefly.user_data_information') }}</h3>
                 </div>
-                <div class="card-body">
+                <div class="card-body p-0">
                     <table class="table table-striped table-bordered table-responsive">
                         <tr>
                             <td>{{ trans('list.accounts_count') }}</td>
-                            <td>{{ information.accounts }}</td>
+                            <td>{{ $information['accounts'] }}</td>
                         </tr>
                         <tr>
                             <td>{{ trans('list.journals_count') }}</td>
-                            <td>{{ information.journals }} ({{ information.transactions }} {{ trans('firefly.transactions') }})</td>
+                            <td>{{ $information['journals'] }} ({{ $information['transactions'] }} {{ trans('firefly.transactions') }})</td>
                         </tr>
                         <tr>
                             <td>{{ trans('list.attachments_count') }}</td>
-                            <td>{{ information.attachments }} ({{ trans('firefly.total_size') }}: {{ information.attachments_size|filesize }})</td>
+                            <td>{{ $information['attachments'] }} ({{ trans('firefly.total_size') }}: {{ print_nice_filesize($information['attachments_size']) }})</td>
                         </tr>
                         <tr>
                             <td>{{ trans('list.bills_count') }}</td>
-                            <td>{{ information.bills }}</td>
+                            <td>{{ $information['bills'] }}</td>
                         </tr>
                         <tr>
                             <td>{{ trans('list.categories_count') }}</td>
-                            <td>{{ information.categories }}</td>
+                            <td>{{ $information['categories'] }}</td>
                         </tr>
                         <tr>
                             <td>{{ trans('list.budget_count') }}</td>
-                            <td>{{ trans_choice('firefly.budget_or_budgets', information.budgets ) }},
-                                {{ trans_choice('firefly.budgets_with_limits', information.budgets_with_limits ) }}</td>
+                            <td>{{ trans_choice('firefly.budget_or_budgets', $information['budgets'] ) }},
+                                {{ trans_choice('firefly.budgets_with_limits', $information['budgets_with_limits'] ) }}</td>
                         </tr>
                         <tr>
                             <td>{{ trans('list.rule_and_groups_count') }}</td>
                             <td>
-                                {{ trans('firefly.nr_of_rules_in_total_groups', {count_rules: information.rules, count_groups: information.rule_groups}) }}
+                                {{ trans('firefly.nr_of_rules_in_total_groups', ['count_rules' => $information['rules'], 'count_groups' => $information['rule_groups']]) }}
                             </td>
                         </tr>
                         <tr>
                             <td>{{ trans('list.tags_count') }}</td>
-                            <td>{{ trans_choice('firefly.tag_or_tags', information.tags ) }}</td>
+                            <td>{{ trans_choice('firefly.tag_or_tags', $information['tags']) }}</td>
                         </tr>
 
                     </table>
@@ -118,4 +112,7 @@
             </div>
         </div>
     </div>
+@endsection
+@section('scripts')
+    @vite(['js/pages/generic.js'])
 @endsection

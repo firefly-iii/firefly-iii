@@ -1,6 +1,6 @@
 <div class="row">
     <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12 offset-lg-3 offset-md-3">
-        <div class="card">
+        <div class="card mb-2">
             <div class="card-header">
                 <h3 class="card-title">{{ __('firefly.no_' . ($type ?? '') . '_title_' . ($objectType ?? 'default')) }}</h3>
             </div>

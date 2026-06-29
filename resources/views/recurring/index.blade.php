@@ -10,7 +10,7 @@
     <!-- block with list of recurring transaction -->
         <div class="row">
             <div class="col-lg-12 col-md-12 col-sm-12">
-                <div class="card">
+                <div class="card mb-2">
                     <x-elements.card-header-with-menu :cardTitle="trans('firefly.recurrences')" :route="route('recurring.create')" :linkTitle="__('firefly.make_new_recurring')"/>
 
                     <div class="card-body p-0">

@@ -20,7 +20,7 @@
     @endif
 
 
-    <div class="card">
+    <div class="card mb-2">
         <div class="card-body login-card-body">
             <p class="login-box-msg">{{ trans('firefly.two_factor_welcome', ['user' => auth()->user()->email]) }}</p>
             <p class="login-box-msg">{{ __('firefly.two_factor_enter_code') }}</p>

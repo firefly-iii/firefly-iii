@@ -2,7 +2,7 @@
     <div class="input-group has-validation">
         <label for="{{ $options['id'] }}" class="col-sm-3 col-form-label has-validation">{{ $label }}</label>
         <div class="col-sm-9">
-        {{ Html::input('password', $name, $value)->id($options['id'])->class($errors->has($name) ? 'is-invalid form-control' : 'form-control')->attribute('autocomplete','off')->attribute('spellcheck','false')->attribute('placeholder',$options['placeholder']) }}
+        {{ Html::input('password', $name, '')->id($options['id'])->class($errors->has($name) ? 'is-invalid form-control' : 'form-control')->attribute('autocomplete','off')->attribute('spellcheck','false')->attribute('placeholder',$options['placeholder']) }}
         @include('form.feedback')
         @include('form.help')
     </div>

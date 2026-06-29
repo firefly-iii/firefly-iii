@@ -25,7 +25,7 @@
         <ul id="client-errors-list"></ul>
     </div>
 
-    <div class="card">
+    <div class="card mb-2">
         <div class="card-body register-card-body">
             <p class="login-box-msg">{{ trans('firefly.register_new_account') }}</p>
 

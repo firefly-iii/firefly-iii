@@ -1,4 +1,4 @@
-<div class="card">
+<div class="card mb-2">
     <div class="card-header">
         <h3 class="card-title"><a href="{{ route('piggy-banks.index') }}" title="{{ 'piggyBanks'|_ }}">{{ 'piggyBanks'|_ }}</a></h3>
 

@@ -22,7 +22,7 @@
 
 
 
-    <div class="card">
+    <div class="card mb-2">
         <div class="card-body login-card-body">
             @if(session('status'))
             <p class="login-box-msg text-success">

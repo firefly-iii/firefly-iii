@@ -13,21 +13,25 @@ use Illuminate\View\Component;
 class GroupsLarge extends Component
 {
     public LengthAwarePaginator $groups;
-    public ?Account $account;
+    public ?Account             $account;
+    public bool                 $showCategory;
+    public bool                 $showBudget;
 
     /**
      * Create a new component instance.
      */
-    public function __construct(LengthAwarePaginator $groups, ?Account $account = null)
+    public function __construct(LengthAwarePaginator $groups, ?bool $showCategory, ?bool $showBudget, ?Account $account = null)
     {
-        $this->groups  = $groups;
-        $this->account = $account;
+        $this->groups       = $groups;
+        $this->account      = $account;
+        $this->showCategory = $showCategory ??false;
+        $this->showBudget   = $showBudget ?? false;
     }
 
     /**
      * Get the view / contents that represent the component.
      */
-    public function render(): Closure|string|View
+    public function render(): Closure | string | View
     {
         return view('components.lists.groups-large');
     }

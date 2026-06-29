@@ -1,15 +1,10 @@
 @extends('layout.v3.session')
-
-
-    {{ Breadcrumbs.render(Route.getCurrentRoute.getName, tag, start, end) }}
-@endsection
-
 @section('content')
     <div class="row">
         <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
-            <div class="card">
+            <div class="card mb-2">
                 <div class="card-header">
-                    <h3 class="card-title">{{ 'meta_data'|_ }}</h3>
+                    <h3 class="card-title">{{ __('firefly.meta_data') }}</h3>
 
 
                     <div class="box-tools text-end">
@@ -17,11 +12,11 @@
                             <button class="btn btn-box-tool dropdown-toggle" data-toggle="dropdown"><span
                                     class="bi bi-list"></span></button>
                             <ul class="dropdown-menu" role="menu">
-                                <li><a href="{{ route('tags.edit',tag.id) }}"><span
-                                            class="bi bi-pencil"></span> {{ trans('firefly.edit_tag',{tag: tag.tag}) }}
+                                <li><a href="{{ route('tags.edit',$tag->id) }}"><span
+                                            class="bi bi-pencil"></span> {{ trans('firefly.edit_tag',['tag' => $tag->tag]) }}
                                     </a></li>
-                                <li><a href="{{ route('tags.delete',tag.id) }}"><span
-                                            class="bi bi-trash"></span> {{ trans('firefly.delete_tag',{tag: tag.tag}) }}
+                                <li><a href="{{ route('tags.delete',$tag->id) }}"><span
+                                            class="bi bi-trash"></span> {{ trans('firefly.delete_tag',['tag' => $tag->tag]) }}
                                     </a></li>
                             </ul>
                         </div>
@@ -29,153 +24,161 @@
                 </div>
                 <div class="card-body p-0">
                     <table class="table table-bordered">
-                        {% if tag.description %}
+                        @if(null !==$tag->description)
                             <tr>
                                 <td>
                                     {{ trans('list.description') }}
                                 </td>
-                                <td>{{ tag.description }}</td>
+                                <td>{{ $tag->description }}</td>
                             </tr>
                         @endif
-                        {% if tag.date %}
+                        @if(null !== $tag->date)
                             <tr>
                                 <td>
                                     {{ trans('list.date') }}
                                 </td>
                                 <td>
-                                    {{ tag.date.isoFormat($monthAndDayFormat) }}
+                                    {{ $tag->date->isoFormat($monthAndDayFormat) }}
                                 </td>
                             </tr>
                         @endif
 
                         {{-- total amount --}}
-                        {% set currentSum = 0 %}
-                        {% for set in sums %}
-                            {% set currentSum = currentSum + set.Withdrawal + set.Transfer + set.Deposit %}
+                        @php
+                            $currentSum = '0';
+                        @endphp
+                        @foreach($sums as $set)
+                            @php
+                                $currentSum = bcadd($currentSum, bcadd(bcadd($set['Withdrawal'], $set['Transfer']), $set['Deposit']));
+                            @endphp
                         @endforeach
-
-                        {% if currentSum != 0 %}
+                        @if(0 !== bccomp($currentSum, '0'))
                             <tr>
                                 <td class="forty">{{ trans('list.sum') }}</td>
                                 <td>
-                                    {% for set in sums %}
-                                        {!! format_amount_by_symbol(set.Withdrawal + set.Transfer + set.Deposit, set.currency_symbol, set.currency_decimal_places, true) }}{% if loop.index != sums|length %},@endif
+                                    @foreach($sums as $set)
+                                        {!! format_amount_by_symbol(bcadd(bcadd($set['Withdrawal'], $set['Transfer']), $set['Deposit']), $set['currency_symbol'], $set['currency_decimal_places'], true) !!}{{ $loop->index !== count($sums) ? ',':'' }}
                                     @endforeach
                                 </td>
                             </tr>
                         @endif
 
                         {{-- total expense excl. transfer --}}
-                        {% set currentSum = 0 %}
-                        {% for set in sums %}
-                            {% set currentSum = currentSum + set.Withdrawal + set.Deposit %}
+                        @php
+                            $currentSum = '0';
+                        @endphp
+                        @foreach($sums as $set)
+                            @php
+                                $currentSum = bcadd($currentSum, bcadd($set['Withdrawal'], $set['Deposit']));
+                            @endphp
                         @endforeach
-                        {% if currentSum != 0 %}
+                        @if(0 !== bccomp($currentSum, '0'))
                             <tr>
                                 <td class="forty">{{ trans('list.sum_excluding_transfers') }}</td>
                                 <td>
-                                    {% for set in sums %}
-                                        {!! format_amount_by_symbol(set.Withdrawal + set.Deposit, set.currency_symbol, set.currency_decimal_places, true) }}{% if loop.index != sums|length %},@endif
+                                    @foreach($sums as $set)
+                                        {!! format_amount_by_symbol(bcadd($set['Withdrawal'], $set['Deposit']), $set['currency_symbol'], $set['currency_decimal_places'], true) !!}{{ $loop->index !== count($sums) ? ',':'' }}
                                     @endforeach
                                 </td>
                             </tr>
                         @endif
 
                         {{-- withdrawals --}}
-                        {% set currentSum = 0 %}
-                        {% for set in sums %}
-                            {% set currentSum = currentSum + set.Withdrawal %}
+                        @php
+                            $currentSum = '0';
+                        @endphp
+                        @foreach($sums as $set)
+                            @php
+                                $currentSum = bcadd($currentSum, $set['Withdrawal']);
+                            @endphp
                         @endforeach
-                        {% if currentSum != 0 %}
+                        @if(0 !== bccomp($currentSum, '0'))
                             <tr>
                                 <td class="forty">{{ trans('list.sum_withdrawals') }}</td>
                                 <td>
-                                    {% for set in sums %}
-                                        {!! format_amount_by_symbol(set.Withdrawal, set.currency_symbol, set.currency_decimal_places, true) }}{% if loop.index != sums|length %},@endif
+                                    @foreach($sums as $set)
+                                        {!! format_amount_by_symbol($set['Withdrawal'], $set['currency_symbol'], $set['currency_decimal_places'], true) !!}{{ $loop->index !== count($sums) ? ',':'' }}
                                     @endforeach
                                 </td>
                             </tr>
                         @endif
 
                         {{-- deposits --}}
-                        {% set currentSum = 0 %}
-                        {% for set in sums %}
-                            {% set currentSum = currentSum + set.Deposit %}
+                        @php
+                            $currentSum = '0';
+                        @endphp
+                        @foreach($sums as $set)
+                            @php
+                                $currentSum = bcadd($currentSum, $set['Deposit']);
+                            @endphp
                         @endforeach
-                        {% if currentSum != 0 %}
+                        @if(0 !== bccomp($currentSum, '0'))
                             <tr>
                                 <td class="forty">{{ trans('list.sum_deposits') }}</td>
                                 <td>
-                                    {% for set in sums %}
-                                        {!! format_amount_by_symbol(set.Deposit, set.currency_symbol, set.currency_decimal_places, true) }}{% if loop.index != sums|length %},@endif
+                                    @foreach($sums as $set)
+                                        {!! format_amount_by_symbol($set['Deposit'], $set['currency_symbol'], $set['currency_decimal_places'], true) !!}{{ $loop->index !== count($sums) ? ',':'' }}
                                     @endforeach
                                 </td>
                             </tr>
                         @endif
 
                         {{-- transfers --}}
-                        {% set currentSum = 0 %}
-                        {% for set in sums %}
-                            {% set currentSum = currentSum + set.Transfer %}
+                        @php
+                            $currentSum = '0';
+                        @endphp
+                        @foreach($sums as $set)
+                            @php
+                                $currentSum = bcadd($currentSum, $set['Transfer']);
+                            @endphp
                         @endforeach
-                        {% if currentSum != 0 %}
+                        @if(0 !== bccomp($currentSum, '0'))
                             <tr>
                                 <td class="forty">{{ trans('list.sum_transfers') }}</td>
                                 <td>
-                                    {% for set in sums %}
-                                        {!! format_amount_by_symbol(set.Transfer, set.currency_symbol, set.currency_decimal_places, true) }}{% if loop.index != sums|length %},@endif
+                                    @foreach($sums as $set)
+                                        {!! format_amount_by_symbol($set['Transfer'], $set['currency_symbol'], $set['currency_decimal_places'], true) !!}{{ $loop->index !== count($sums) ? ',':'' }}
                                     @endforeach
                                 </td>
                             </tr>
                         @endif
 
                         {{-- reconciliation --}}
-                        {% set currentSum = 0 %}
-                        {% for set in sums %}
-                            {% set currentSum = currentSum + set.Reconciliation %}
+                        @php
+                            $currentSum = '0';
+                        @endphp
+                        @foreach($sums as $set)
+                            @php
+                                $currentSum = bcadd($currentSum, $set['Reconciliation']);
+                            @endphp
                         @endforeach
-                        {% if currentSum != 0 %}
+                        @if(0 !== bccomp($currentSum, '0'))
                             <tr>
                                 <td class="forty">{{ trans('list.sum_reconciliations') }}</td>
                                 <td>
-                                    {% for set in sums %}
-                                        {!! format_amount_by_symbol(set.Reconciliation, set.currency_symbol, set.currency_decimal_places, true) }}{% if loop.index != sums|length %},@endif
+                                    @foreach($sums as $set)
+                                        {!! format_amount_by_symbol($set['Reconciliation'], $set['currency_symbol'], $set['currency_decimal_places'], true) !!}{{ $loop->index !== count($sums) ? ',':'' }}
                                     @endforeach
                                 </td>
                             </tr>
                         @endif
-
-                        {{--
-                        {% if sums.Transfer != 0 %}
-                            <tr>
-                                <td>{{ trans('list.sum_transfers') }}</td>
-                                <td> {{ sums.Transfer|formatAmount }}</td>
-                            </tr>
-                        @endif
-                        {% if sums.Reconciliation != 0 %}
-                            <tr>
-                                <td>{{ trans('list.sum_reconciliations') }}</td>
-                                <td> {{ sums.Reconciliation|formatAmount }}</td>
-                            </tr>
-                        @endif
-                        --}}
                     </table>
                 </div>
                 <div class="card-footer">
                     <div class="btn-group btn-group-sm">
-                        <a href="{{ route('tags.edit',tag.id) }}" class="btn btn-outline-secondary"><span
+                        <a href="{{ route('tags.edit',$tag->id) }}" class="btn btn-outline-secondary"><span
                                 class="bi bi-pencil"></span></a>
-                        <a href="{{ route('tags.delete',tag.id) }}" class="btn btn-danger"><span
+                        <a href="{{ route('tags.delete',$tag->id) }}" class="btn btn-danger"><span
                                 class="bi bi-trash"></span></a>
                     </div>
                     <p class="text-muted">
-                        <small>{{ 'sums_apply_to_range'|_ }}</small>
+                        <small>{{ __('firefly.sums_apply_to_range') }}</small>
                     </p>
                 </div>
             </div>
         </div>
         <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
-            <div class="card">
+            <div class="card mb-2">
                 <div class="card-header">
                     <h3 class="card-title">{{ __('firefly.location') }}</h3>
                     <div class="box-tools text-end">
@@ -183,11 +186,11 @@
                             <button class="btn btn-box-tool dropdown-toggle" data-toggle="dropdown"><span
                                     class="bi bi-list"></span></button>
                             <ul class="dropdown-menu" role="menu">
-                                <li><a href="{{ route('tags.edit',tag.id) }}"><span
-                                            class="bi bi-pencil"></span> {{ trans('firefly.edit_tag',{tag: tag.tag}) }}
+                                <li><a href="{{ route('tags.edit',$tag->id) }}"><span
+                                            class="bi bi-pencil"></span> {{ trans('firefly.edit_tag',['tag' => $tag->tag]) }}
                                     </a></li>
-                                <li><a href="{{ route('tags.delete',tag.id) }}"><span
-                                            class="bi bi-trash"></span> {{ trans('firefly.delete_tag',{tag: tag.tag}) }}
+                                <li><a href="{{ route('tags.delete',$tag->id) }}"><span
+                                            class="bi bi-trash"></span> {{ trans('firefly.delete_tag',['tag' => $tag->tag]) }}
                                     </a></li>
                             </ul>
                         </div>
@@ -197,7 +200,7 @@
                     @if($location)
                         <div id="location_map" class="map-size"></div>
                     @else
-                        <p>{{ 'no_location_set'|_ }}</p>
+                        <p>{{ __('firefly.no_location_set') }}</p>
                     @endif
                 </div>
             </div>
@@ -206,14 +209,14 @@
     @if($attachments->count() > 0)
         <div class="row">
             <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
-                <div class="card">
+                <div class="card mb-2">
                     <div class="card-header">
                         <h3 class="card-title">
                             {{ __('firefly.attachments') }}
                         </h3>
                     </div>
                     <div class="card-body p-0">
-                        {% include 'list.attachments' %}
+                        <x-lists.attachments :attachments="$attachments" />
                     </div>
                 </div>
             </div>
@@ -224,13 +227,13 @@
         <div class="row">
             <div class="offset-lg-10 col-lg-2 offset-md-10 col-md-2 col-sm-12 col-xs-12">
                 <p class="small text-center"><a
-                        href="{{ route('tags.show',[tag.id,'all']) }}">{{ __('firefly.showEverything') }}</a></p>
+                        href="{{ route('tags.show',[$tag->id,'all']) }}">{{ __('firefly.showEverything') }}</a></p>
             </div>
         </div>
     @endif
     <div class="row">
-        <div class="@if(count($periods) > 0)col-lg-10 col-md-10 col-sm-12 col-xs-12@elsecol-lg-12 col-md-12 col-sm-12 col-xs-12@endif">
-            <div class="card">
+        <div class="@if(count($periods) > 0) col-lg-10 col-md-10 col-sm-12 col-xs-12 @else col-lg-12 col-md-12 col-sm-12 col-xs-12 @endif">
+            <div class="card mb-2">
                 <div class="card-header">
                     <h3 class="card-title">{{ __('firefly.transactions') }}</h3>
 
@@ -240,30 +243,29 @@
                             <button class="btn btn-box-tool dropdown-toggle" data-toggle="dropdown"><span
                                     class="bi bi-list"></span></button>
                             <ul class="dropdown-menu" role="menu">
-                                <li><a href="{{ route('tags.edit',tag.id) }}"><span
-                                            class="bi bi-pencil"></span> {{ trans('firefly.edit_tag',{tag: tag.tag}) }}
+                                <li><a href="{{ route('tags.edit',$tag->id) }}"><span
+                                            class="bi bi-pencil"></span> {{ trans('firefly.edit_tag',['tag' => $tag->tag]) }}
                                     </a></li>
-                                <li><a href="{{ route('tags.delete',tag.id) }}"><span
-                                            class="bi bi-trash"></span> {{ trans('firefly.delete_tag',{tag: tag.tag}) }}
+                                <li><a href="{{ route('tags.delete',$tag->id) }}"><span
+                                            class="bi bi-trash"></span> {{ trans('firefly.delete_tag',['tag' => $tag->tag]) }}
                                     </a></li>
                             </ul>
                         </div>
                     </div>
                 </div>
                 <div class="card-body">
-                    {% include 'list.groups' with {showBudget:true, showCategory: true} %}
-
+                    <x-lists.groups-large :groups="$groups" :show-budget="true" :show-category="true" />
                     @if(count($periods) > 0)
                         <p>
                             <span class="bi bi-calendar"></span>
-                            <a href="{{ route('tags.show', [tag.id,'all']) }}">
+                            <a href="{{ route('tags.show', [$tag->id,'all']) }}">
                                 {{ __('firefly.show_all_no_filter') }}
                             </a>
                         </p>
                     @else
                         <p>
                             <span class="bi bi-calendar"></span>
-                            <a href="{{ route('tags.show', [tag.id]) }}">
+                            <a href="{{ route('tags.show', [$tag->id]) }}">
                                 {{ __('firefly.show_the_current_period_and_overview') }}
                             </a>
                         </p>
@@ -280,7 +282,7 @@
     @if(count($periods) > 0)
         <div class="row">
             <div class="offset-lg-10 col-lg-2 offset-md-10 col-md-2 col-sm-12 col-xs-12">
-                <p class="small text-center"><a href="{{ route('tags.show',[tag.id]) }}">{{ __('firefly.showEverything') }}</a>
+                <p class="small text-center"><a href="{{ route('tags.show',[$tag->id]) }}">{{ __('firefly.showEverything') }}</a>
                 </p>
             </div>
         </div>
@@ -293,10 +295,10 @@
 @section('scripts')
     <script type="text/javascript" nonce="{{ $JS_NONCE }}">
         // location stuff
-        {% if location %}
-        var latitude = {{ location.latitude|default("52.3167") }};
-        var longitude = {{ location.longitude|default("5.5500") }};
-        var zoomLevel = {{ location.zoom_level|default("6") }};
+        @if($location)
+            var latitude = {{ $location->latitude ?? "52.3167" }};
+            var longitude = {{ $location->longitude ??"5.5500" }};
+            var zoomLevel = {{ $location->zoom_level ?? "6" }};
         @endif
     </script>
     <script src="v1/lib/leaflet/leaflet.js?v={{ $FF_BUILD_TIME }}" nonce="{{ $JS_NONCE }}"></script>

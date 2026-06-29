@@ -12,7 +12,7 @@
         <input name="_token" type="hidden" value="{{ csrf_token() }}">
         <div class="row">
             <div class="col-lg-8 offset-lg-2 col-md-12 col-sm-12">
-                <div class="card">
+                <div class="card mb-2">
                     <div class="card-header">
                         <h3 class="card-title">{{ ('convert_options_'~sourceType.type~destinationType.type)|_ }}</h3>
                     </div>

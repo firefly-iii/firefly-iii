@@ -11,7 +11,7 @@
         <div class="col-lg-8 offset-lg-2 col-md-12 col-sm-12">
             <div class="row">
                 <div class="col-lg-12">
-                    <div class="card">
+                    <div class="card mb-2">
                         <div class="box-header">
                             <h3 class="card-title">{{ 'oauth_tokens'|_ }}</h3>
                         </div>

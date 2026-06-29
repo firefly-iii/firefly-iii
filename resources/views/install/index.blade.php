@@ -79,7 +79,7 @@
 </div>
 <div class="row">
     <div class="col-xl-4 col-lg-4 col-md-6 col-sm-12">
-        <div class="card">
+        <div class="card mb-2">
             <div class="card-body">
                 <p>The upgrade and installation is ongoing. Please track its progress through the box below.</p>
                 <div class="row">

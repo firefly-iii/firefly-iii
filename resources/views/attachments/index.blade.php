@@ -2,7 +2,7 @@
 @section('content')
     <div class="row">
         <div class="col-lg-12 col-md-12 col-sm-12">
-            <div class="card">
+            <div class="card mb-2">
                 <div class="card-header">
                     <h3 class="card-title">
                         {{ __('firefly.list_all_attachments') }}

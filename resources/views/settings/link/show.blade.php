@@ -2,7 +2,7 @@
 @section('content')
     <div class="row">
         <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
-            <div class="card">
+            <div class="card mb-2">
                 <div class="card-header">
                     <h3 class="card-title">{{ trans('firefly.overview_for_link', ['name' => journal_link_translation('name', $linkType->name)]) }}</h3>
                 </div>

@@ -7,7 +7,7 @@
     @if(count($objectGroups) > 0)
     <div class="row">
         <div class="col-lg-12 col-md-12 col-sm-12">
-            <div class="card">
+            <div class="card mb-2">
                 <x-elements.card-header-with-menu :cardTitle="__('firefly.object_groups')" :route="''" :linkTitle="''"/>
                     <div class="card-body p-0">
                         <table class="table table-sm" id="sortable">
