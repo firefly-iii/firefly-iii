@@ -67,7 +67,7 @@ class CreatesFirstUser extends Command
         $user->setRememberToken(Str::random(60));
 
         Log::info(sprintf('Registered new user %s', $user->email));
-        $owner             = new OwnerNotifiable();
+        $owner          = new OwnerNotifiable();
         event(new NewUserRegistered($owner, $user));
 
         $this->friendlyInfo(sprintf('Created new admin user (ID #%d) with email address "%s" and password "%s".', $user->id, $user->email, $password));
