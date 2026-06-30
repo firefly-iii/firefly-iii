@@ -3,7 +3,7 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
-## v6.4.5 - 2026-06-30
+## v6.6.5 - 2026-06-30
 
 <!-- summary: This release fixes some security issues and many other ones. -->
 
@@ -31,7 +31,7 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 - Fix issue with cron API call not recognizing cron tokens, found by Rajib Mahmud
 - Fix issue with installer, found by Rajib Mahmud and others
 
-## v6.4.4 - 2026-06-30
+## v6.6.4 - 2026-06-30
 
 <!-- summary: This release fixes some security issues and many other ones. -->
 
