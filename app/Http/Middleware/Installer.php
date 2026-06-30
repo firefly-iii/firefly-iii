@@ -28,9 +28,7 @@ use Closure;
 use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Support\System\IsOldVersion;
 use FireflyIII\Support\System\OAuthKeys;
-use Illuminate\Database\QueryException;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 
 /**
@@ -85,6 +83,4 @@ class Installer
     {
         return false !== stripos($message, 'Access denied');
     }
-
-
 }
