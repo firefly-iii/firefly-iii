@@ -68,6 +68,9 @@ class CronRequest extends FormRequest
      */
     public function rules(): array
     {
-        return ['force' => 'in:true,false', 'date' => ['nullable', 'date', 'after:1970-01-02', 'before:2038-01-17']];
+        return [
+            'force' => 'in:true,false',
+            'date'  => ['nullable', 'date', 'after:1970-01-02', 'before:2038-01-17'],
+        ];
     }
 }

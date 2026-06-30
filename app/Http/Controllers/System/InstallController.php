@@ -27,9 +27,11 @@ namespace FireflyIII\Http\Controllers\System;
 use Exception;
 use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Http\Controllers\Controller;
-use FireflyIII\Support\Facades\FireflyConfig;
+use FireflyIII\Support\Facades\AppConfiguration;
 use FireflyIII\Support\Facades\Preferences;
 use FireflyIII\Support\Http\Controllers\GetConfigurationData;
+use FireflyIII\Support\System\IsOldVersion;
+use Illuminate\Auth\Access\AuthorizationException;
 use Illuminate\Contracts\View\Factory;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
@@ -48,6 +50,7 @@ use function Safe\file_put_contents;
 final class InstallController extends Controller
 {
     use GetConfigurationData;
+    use IsOldVersion;
 
     public const string BASEDIR_ERROR   = 'Firefly III cannot execute the upgrade commands. It is not allowed to because of an open_basedir restriction.';
     public const string FORBIDDEN_ERROR = 'Internal PHP function "proc_close" is disabled for your installation. Auto-migration is not possible.';
@@ -73,13 +76,17 @@ final class InstallController extends Controller
      */
     public function index(): Factory|\Illuminate\Contracts\View\View
     {
-        app('view')->share('FF_VERSION', config('firefly.version'));
+        if ($this->hasNoTables() || $this->isOldVersionInstalled()) {
+            app('view')->share('FF_VERSION', config('firefly.version'));
 
-        // index will set FF3 version.
-        FireflyConfig::set('ff3_version', (string) config('firefly.version'));
-        FireflyConfig::set('ff3_build_time', (int) config('firefly.build_time'));
+            // index will set FF3 version.
+            AppConfiguration::set('ff3_version', (string) config('firefly.version'));
+            AppConfiguration::set('ff3_build_time', (int) config('firefly.build_time'));
 
-        return view('install.index');
+            return view('install.index');
+        }
+
+        throw new AuthorizationException('No access to this page.');
     }
 
     /**
@@ -87,52 +94,58 @@ final class InstallController extends Controller
      */
     public function keys(): void
     {
-        $key                      = RSA::createKey(4096);
+        if (!$this->hasNoTables() && !$this->isOldVersionInstalled()) {
+            $key                      = RSA::createKey(4096);
 
-        [$publicKey, $privateKey] = [Passport::keyPath('oauth-public.key'), Passport::keyPath('oauth-private.key')];
+            [$publicKey, $privateKey] = [Passport::keyPath('oauth-public.key'), Passport::keyPath('oauth-private.key')];
 
-        if (file_exists($publicKey) || file_exists($privateKey)) {
-            return;
+            if (file_exists($publicKey) || file_exists($privateKey)) {
+                return;
+            }
+
+            file_put_contents($publicKey, (string) $key->getPublicKey());
+            file_put_contents($privateKey, $key->toString('PKCS1'));
         }
-
-        file_put_contents($publicKey, (string) $key->getPublicKey());
-        file_put_contents($privateKey, $key->toString('PKCS1'));
     }
 
     public function runCommand(Request $request): JsonResponse
     {
-        $requestIndex = (int) $request->get('index');
-        $response     = ['hasNextCommand' => false, 'done' => true, 'previous' => null, 'error' => false, 'errorMessage' => null];
+        if (!$this->hasNoTables() && !$this->isOldVersionInstalled()) {
+            $requestIndex = (int) $request->input('index');
+            $response     = ['hasNextCommand' => false, 'done' => true, 'previous' => null, 'error' => false, 'errorMessage' => null];
 
-        Log::debug(sprintf('Will now run commands. Request index is %d', $requestIndex));
-        $indexes      = array_keys($this->upgradeCommands);
-        if (array_key_exists($requestIndex, $indexes)) {
-            $command                    = $indexes[$requestIndex];
-            $parameters                 = $this->upgradeCommands[$command];
-            Log::debug(sprintf('Will now execute command "%s" with parameters', $command), $parameters);
+            Log::debug(sprintf('Will now run commands. Request index is %d', $requestIndex));
+            $indexes      = array_keys($this->upgradeCommands);
+            if (array_key_exists($requestIndex, $indexes)) {
+                $command                    = $indexes[$requestIndex];
+                $parameters                 = $this->upgradeCommands[$command];
+                Log::debug(sprintf('Will now execute command "%s" with parameters', $command), $parameters);
 
-            try {
-                $result = $this->executeCommand($command, $parameters);
-            } catch (FireflyException $e) {
-                Log::error($e->getMessage());
-                Log::error($e->getTraceAsString());
-                if (str_contains($e->getMessage(), 'open_basedir restriction in effect')) {
-                    $this->lastError = self::BASEDIR_ERROR;
+                try {
+                    $result = $this->executeCommand($command, $parameters);
+                } catch (FireflyException $e) {
+                    Log::error($e->getMessage());
+                    Log::error($e->getTraceAsString());
+                    if (str_contains($e->getMessage(), 'open_basedir restriction in effect')) {
+                        $this->lastError = self::BASEDIR_ERROR;
+                    }
+                    $result          = false;
+                    $this->lastError = sprintf('%s %s', self::OTHER_ERROR, $e->getMessage());
                 }
-                $result          = false;
-                $this->lastError = sprintf('%s %s', self::OTHER_ERROR, $e->getMessage());
-            }
-            if (false === $result) {
-                $response['errorMessage'] = $this->lastError;
-                $response['error']        = true;
+                if (false === $result) {
+                    $response['errorMessage'] = $this->lastError;
+                    $response['error']        = true;
 
-                return response()->json($response);
+                    return response()->json($response);
+                }
+                $response['hasNextCommand'] = array_key_exists($requestIndex + 1, $indexes);
+                $response['previous']       = $command;
             }
-            $response['hasNextCommand'] = array_key_exists($requestIndex + 1, $indexes);
-            $response['previous']       = $command;
+
+            return response()->json($response);
         }
 
-        return response()->json($response);
+        return response()->json([], 403);
     }
 
     /**

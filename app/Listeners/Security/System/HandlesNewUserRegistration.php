@@ -36,7 +36,7 @@ use FireflyIII\Notifications\Notifiables\OwnerNotifiable;
 use FireflyIII\Notifications\NotificationSender;
 use FireflyIII\Notifications\User\UserRegistration as UserRegistrationNotification;
 use FireflyIII\Repositories\User\UserRepositoryInterface;
-use FireflyIII\Support\Facades\FireflyConfig;
+use FireflyIII\Support\Facades\AppConfiguration;
 use FireflyIII\User;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Support\Facades\Log;
@@ -112,7 +112,7 @@ class HandlesNewUserRegistration implements ShouldQueue
 
     private function sendAdminRegistrationNotification(User $user, OwnerNotifiable $owner): void
     {
-        $sendMail = (bool) FireflyConfig::get('notification_admin_new_reg', true)->data;
+        $sendMail = (bool) AppConfiguration::get('notification_admin_new_reg', true)->data;
         if (!$sendMail) {
             return;
         }
@@ -121,7 +121,7 @@ class HandlesNewUserRegistration implements ShouldQueue
 
     private function sendRegistrationMail(User $user): void
     {
-        $sendMail = (bool) FireflyConfig::get('notification_user_new_reg', true)->data;
+        $sendMail = (bool) AppConfiguration::get('notification_user_new_reg', true)->data;
         if (!$sendMail) {
             return;
         }

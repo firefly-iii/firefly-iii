@@ -145,8 +145,7 @@ class AccountUpdateService
         }
 
         if ($newOrder > $oldOrder) {
-            $this->user
-                ->accounts()
+            $this->user->accounts()
                 ->where('accounts.order', '<=', $newOrder)
                 ->where('accounts.order', '>', $oldOrder)
                 ->where('accounts.id', '!=', $account->id)
@@ -160,8 +159,7 @@ class AccountUpdateService
             return $account;
         }
 
-        $this->user
-            ->accounts()
+        $this->user->accounts()
             ->where('accounts.order', '>=', $newOrder)
             ->where('accounts.order', '<', $oldOrder)
             ->where('accounts.id', '!=', $account->id)

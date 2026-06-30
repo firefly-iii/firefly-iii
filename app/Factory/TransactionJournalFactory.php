@@ -49,7 +49,7 @@ use FireflyIII\Repositories\TransactionType\TransactionTypeRepositoryInterface;
 use FireflyIII\Services\Internal\Destroy\JournalDestroyService;
 use FireflyIII\Services\Internal\Support\JournalServiceTrait;
 use FireflyIII\Support\Facades\Amount;
-use FireflyIII\Support\Facades\FireflyConfig;
+use FireflyIII\Support\Facades\AppConfiguration;
 use FireflyIII\Support\NullArrayObject;
 use FireflyIII\User;
 use FireflyIII\Validation\AccountValidator;
@@ -252,7 +252,7 @@ class TransactionJournalFactory
         $carbon->setTimezone(config('app.timezone'));
 
         // 2024-11-19, overrule timezone with UTC and store it as UTC.
-        if (true === FireflyConfig::get('utc', false)->data) {
+        if (true === AppConfiguration::get('utc', false)->data) {
             $carbon->setTimezone('UTC');
         }
 

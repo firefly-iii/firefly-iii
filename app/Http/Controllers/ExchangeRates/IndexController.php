@@ -26,7 +26,7 @@ namespace FireflyIII\Http\Controllers\ExchangeRates;
 
 use FireflyIII\Http\Controllers\Controller;
 use FireflyIII\Models\TransactionCurrency;
-use FireflyIII\Support\Facades\FireflyConfig;
+use FireflyIII\Support\Facades\AppConfiguration;
 use Illuminate\View\View;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
@@ -46,7 +46,7 @@ final class IndexController extends Controller
 
             return $next($request);
         });
-        if (false === FireflyConfig::get('enable_exchange_rates', config('cer.enabled'))->data) {
+        if (false === AppConfiguration::get('enable_exchange_rates', config('cer.enabled'))->data) {
             throw new NotFoundHttpException();
         }
     }

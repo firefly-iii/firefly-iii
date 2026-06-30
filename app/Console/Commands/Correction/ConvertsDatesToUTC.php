@@ -26,7 +26,7 @@ namespace FireflyIII\Console\Commands\Correction;
 
 use Carbon\Carbon;
 use FireflyIII\Console\Commands\ShowsFriendlyMessages;
-use FireflyIII\Support\Facades\FireflyConfig;
+use FireflyIII\Support\Facades\AppConfiguration;
 use Illuminate\Console\Command;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\QueryException;
@@ -58,7 +58,7 @@ class ConvertsDatesToUTC extends Command
             $this->ConvertModeltoUTC($model, $fields);
         }
         // tell the system we are now in UTC mode.
-        FireflyConfig::set('utc', true);
+        AppConfiguration::set('utc', true);
 
         return Command::SUCCESS;
     }

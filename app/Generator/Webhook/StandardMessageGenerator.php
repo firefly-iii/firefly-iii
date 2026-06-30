@@ -35,7 +35,6 @@ use FireflyIII\Models\TransactionGroup;
 use FireflyIII\Models\TransactionJournal;
 use FireflyIII\Models\Webhook;
 use FireflyIII\Models\WebhookResponse as WebhookResponseModel;
-use FireflyIII\Models\WebhookTrigger as WebhookTriggerModel;
 use FireflyIII\Support\JsonApi\Enrichments\AccountEnrichment;
 use FireflyIII\Support\JsonApi\Enrichments\BudgetEnrichment;
 use FireflyIII\Support\JsonApi\Enrichments\BudgetLimitEnrichment;
@@ -136,7 +135,7 @@ class StandardMessageGenerator implements MessageGeneratorInterface
 
         /** @var WebhookResponseModel $response */
         $response      = $webhook->webhookResponses()->first();
-        $this->getTriggerTitles($webhook->webhookTriggers()->get());
+        // $this->getTriggerTitles($webhook->webhookTriggers()->get());
         $basicMessage  = [
             'uuid'          => $uuid->toString(),
             'user_id'       => 0,
@@ -299,22 +298,21 @@ class StandardMessageGenerator implements MessageGeneratorInterface
         return $response->title;
     }
 
-    private function getTriggerTitles(Collection $collection): array
-    {
-        $return = [];
-
-        /** @var WebhookTriggerModel $item */
-        foreach ($collection as $item) {
-            $return[] = $item->title;
-        }
-
-        return array_unique($return);
-    }
+    //    private function getTriggerTitles(Collection $collection): array
+    //    {
+    //        $return = [];
+    //
+    //        /** @var WebhookTriggerModel $item */
+    //        foreach ($collection as $item) {
+    //            $return[] = $item->title;
+    //        }
+    //
+    //        return array_unique($return);
+    //    }
 
     private function getWebhooks(): Collection
     {
-        return $this->user
-            ->webhooks()
+        return $this->user->webhooks()
             ->leftJoin('webhook_webhook_trigger', 'webhook_webhook_trigger.webhook_id', 'webhooks.id')
             ->leftJoin('webhook_triggers', 'webhook_webhook_trigger.webhook_trigger_id', 'webhook_triggers.id')
             ->where('active', true)

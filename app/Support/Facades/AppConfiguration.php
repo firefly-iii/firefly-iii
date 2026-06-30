@@ -1,7 +1,7 @@
 <?php
 
 /**
- * FireflyConfig.php
+ * AppConfiguration.php
  * Copyright (c) 2019 james@firefly-iii.org
  *
  * This file is part of Firefly III (https://github.com/firefly-iii).
@@ -25,13 +25,13 @@ namespace FireflyIII\Support\Facades;
 
 use Illuminate\Support\Facades\Facade;
 
-class FireflyConfig extends Facade
+class AppConfiguration extends Facade
 {
     /**
      * Get the registered name of the component.
      */
     protected static function getFacadeAccessor(): string
     {
-        return 'fireflyconfig';
+        return 'appconfiguration';
     }
 }

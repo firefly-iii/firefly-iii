@@ -83,7 +83,7 @@
         "bacon/bacon-qr-code": "^3.0",
         "diglactic/laravel-breadcrumbs": "^10",
         "gdbots/query-parser": "^3.0",
-        "guzzlehttp/guzzle": "^7.9",
+        "guzzlehttp/guzzle": "^7.11",
         "jc5/google2fa-laravel": "^2.0",
         "jc5/recovery": "^2",
         "laravel-notification-channels/pushover": "^5.0",
@@ -125,7 +125,7 @@
         "phpstan/phpstan-deprecation-rules": "^2",
         "phpstan/phpstan-strict-rules": "^2",
         "phpunit/phpunit": "^13",
-        "rector/rector": "^2.3",
+        "rector/rector": "^2.5",
         "thecodingmachine/phpstan-safe-rule": "^1.4"
     },
     "replace": {

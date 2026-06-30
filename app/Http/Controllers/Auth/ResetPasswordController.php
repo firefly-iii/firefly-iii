@@ -25,7 +25,7 @@ namespace FireflyIII\Http\Controllers\Auth;
 
 use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Http\Controllers\Controller;
-use FireflyIII\Support\Facades\FireflyConfig;
+use FireflyIII\Support\Facades\AppConfiguration;
 use FireflyIII\User;
 use Illuminate\Contracts\View\Factory;
 use Illuminate\Foundation\Auth\ResetsPasswords;
@@ -124,7 +124,7 @@ final class ResetPasswordController extends Controller
         }
 
         // is allowed to register?
-        $singleUserMode    = FireflyConfig::get('single_user_mode', config('firefly.configuration.single_user_mode'))->data;
+        $singleUserMode    = AppConfiguration::get('single_user_mode', config('firefly.configuration.single_user_mode'))->data;
         $userCount         = User::count();
         $allowRegistration = true;
         $pageTitle         = (string) trans('firefly.reset_pw_page_title');

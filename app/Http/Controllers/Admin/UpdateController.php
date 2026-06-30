@@ -27,7 +27,7 @@ use Carbon\Carbon;
 use FireflyIII\Helpers\Update\UpdateTrait;
 use FireflyIII\Http\Controllers\Controller;
 use FireflyIII\Http\Middleware\IsDemoUser;
-use FireflyIII\Support\Facades\FireflyConfig;
+use FireflyIII\Support\Facades\AppConfiguration;
 use Illuminate\Contracts\View\Factory;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
@@ -64,8 +64,8 @@ final class UpdateController extends Controller
     {
         $subTitle        = (string) trans('firefly.update_check_title');
         $subTitleIcon    = 'fa-star';
-        $permission      = FireflyConfig::get('permission_update_check', -1);
-        $channel         = FireflyConfig::get('update_channel', 'stable');
+        $permission      = AppConfiguration::get('permission_update_check', -1);
+        $channel         = AppConfiguration::get('update_channel', 'stable');
         $selected        = $permission->data;
         $channelSelected = $channel->data;
         $options         = [
@@ -99,9 +99,9 @@ final class UpdateController extends Controller
         $channel         = $request->get('update_channel');
         $channel         = in_array($channel, ['stable', 'beta', 'alpha'], true) ? $channel : 'stable';
 
-        FireflyConfig::set('permission_update_check', $checkForUpdates);
-        FireflyConfig::set('last_update_check', Carbon::now()->getTimestamp());
-        FireflyConfig::set('update_channel', $channel);
+        AppConfiguration::set('permission_update_check', $checkForUpdates);
+        AppConfiguration::set('last_update_check', Carbon::now()->getTimestamp());
+        AppConfiguration::set('update_channel', $channel);
         session()->flash('success', (string) trans('firefly.configuration_updated'));
 
         return redirect(route('settings.update-check'));

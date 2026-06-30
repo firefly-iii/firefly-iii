@@ -260,8 +260,7 @@ class SubscriptionEnrichment implements EnrichmentInterface
         Log::debug(sprintf('Search parameters are: start: %s, end: %s', $searchStart->format('Y-m-d H:i:s'), $searchEnd->format('Y-m-d H:i:s')));
 
         // Get from database when bills were paid.
-        $set             = $this->user
-            ->transactionJournals()
+        $set             = $this->user->transactionJournals()
             ->whereIn('bill_id', $this->subscriptionIds)
             ->leftJoin('transactions', 'transactions.transaction_journal_id', '=', 'transaction_journals.id')
             ->leftJoin('transaction_currencies AS currency', 'currency.id', '=', 'transactions.transaction_currency_id')

@@ -58,8 +58,7 @@ class ExchangeRateRepository implements ExchangeRateRepositoryInterface, UserGro
     public function getRates(TransactionCurrency $from, TransactionCurrency $to): Collection
     {
         // orderBy('date', 'DESC')->toRawSql();
-        return $this->userGroup
-            ->currencyExchangeRates()
+        return $this->userGroup->currencyExchangeRates()
             ->where(static function (Builder $q1) use ($from, $to): void {
                 $q1->where(static function (Builder $q) use ($from, $to): void {
                     $q->where('from_currency_id', $from->id)->where('to_currency_id', $to->id);
@@ -76,8 +75,7 @@ class ExchangeRateRepository implements ExchangeRateRepositoryInterface, UserGro
     public function getSpecificRateOnDate(TransactionCurrency $from, TransactionCurrency $to, Carbon $date): ?CurrencyExchangeRate
     {
         /** @var null|CurrencyExchangeRate */
-        return $this->userGroup
-            ->currencyExchangeRates()
+        return $this->userGroup->currencyExchangeRates()
             ->where('from_currency_id', $from->id)
             ->where('to_currency_id', $to->id)
             ->where('date', $date->format('Y-m-d'))

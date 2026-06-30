@@ -27,7 +27,7 @@ namespace FireflyIII\Api\V1\Controllers\Webhook;
 use FireflyIII\Api\V1\Controllers\Controller;
 use FireflyIII\Api\V1\Requests\Models\Webhook\CreateRequest;
 use FireflyIII\Repositories\Webhook\WebhookRepositoryInterface;
-use FireflyIII\Support\Facades\FireflyConfig;
+use FireflyIII\Support\Facades\AppConfiguration;
 use FireflyIII\Support\JsonApi\Enrichments\WebhookEnrichment;
 use FireflyIII\Transformers\WebhookTransformer;
 use FireflyIII\User;
@@ -63,7 +63,7 @@ final class StoreController extends Controller
     public function store(CreateRequest $request): JsonResponse
     {
         $data        = $request->getData();
-        if (false === FireflyConfig::get('allow_webhooks', config('firefly.allow_webhooks'))->data) {
+        if (false === AppConfiguration::get('allow_webhooks', config('firefly.allow_webhooks'))->data) {
             Log::channel('audit')->info('User tries to store new webhook, but webhooks are DISABLED.', $data);
 
             throw new NotFoundHttpException('Webhooks are not enabled.');

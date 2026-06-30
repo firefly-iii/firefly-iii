@@ -26,11 +26,13 @@ namespace FireflyIII\Models;
 use FireflyIII\Support\Facades\Amount;
 use FireflyIII\Support\Models\ReturnsIntegerIdTrait;
 use FireflyIII\User;
+use Illuminate\Auth\AuthenticationException;
 use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use Illuminate\Support\Facades\Log;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 class TransactionCurrency extends Model
@@ -63,7 +65,7 @@ class TransactionCurrency extends Model
             }
         }
 
-        throw new NotFoundHttpException();
+        throw new AuthenticationException();
     }
 
     public function budgetLimits(): HasMany
@@ -73,8 +75,13 @@ class TransactionCurrency extends Model
 
     public function refreshForUser(User $user): void
     {
+        Log::debug(sprintf('refreshForUser(#%d, "%s")', $user->id, $this->code));
         $current                = $user->userGroup->currencies()->where('transaction_currencies.id', $this->id)->first();
         $native                 = Amount::getPrimaryCurrencyByUserGroup($user->userGroup);
+
+        Log::debug(sprintf('Current is "%s"', $current?->code));
+        Log::debug(sprintf('Native  is %s', $native->code));
+
         $this->userGroupNative  = $native->id === $this->id;
         $this->userGroupEnabled = null !== $current;
     }

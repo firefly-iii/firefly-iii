@@ -26,10 +26,12 @@ namespace FireflyIII\Api\V1\Controllers\System;
 
 use FireflyIII\Api\V1\Controllers\Controller;
 use FireflyIII\Api\V1\Requests\System\CronRequest;
-use FireflyIII\Support\Facades\FireflyConfig;
+use FireflyIII\Support\Binder\CLIToken;
+use FireflyIII\Support\Facades\AppConfiguration;
 use FireflyIII\Support\Http\Controllers\CronRunner;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Facades\Log;
+use SensitiveParameter;
 
 /**
  * Class CronController
@@ -38,12 +40,9 @@ final class CronController extends Controller
 {
     use CronRunner;
 
-    /**
-     * This endpoint is documented at:
-     * https://api-docs.firefly-iii.org/?urls.primaryName=2.0.0%20(v1)#/about/getCron
-     */
-    public function cron(CronRequest $request): JsonResponse
+    public function cron(CronRequest $request, #[SensitiveParameter] string $cliToken): JsonResponse
     {
+        CLIToken::routeBinder($cliToken, $request->route());
         $config                           = $request->getAll();
 
         Log::debug(sprintf('Now in %s', __METHOD__));
@@ -51,7 +50,7 @@ final class CronController extends Controller
         $return                           = [];
         $return['recurring_transactions'] = $this->runRecurring($config['force'], $config['date']);
         $return['auto_budgets']           = $this->runAutoBudget($config['force'], $config['date']);
-        if (true === FireflyConfig::get('enable_external_rates', config('cer.download_enabled'))->data) {
+        if (true === AppConfiguration::get('enable_external_rates', config('cer.download_enabled'))->data) {
             $return['exchange_rates'] = $this->exchangeRatesCronJob($config['force'], $config['date']);
         }
         $return['bill_notifications']     = $this->billWarningCronJob($config['force'], $config['date']);

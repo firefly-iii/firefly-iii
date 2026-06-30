@@ -25,7 +25,7 @@ declare(strict_types=1);
 namespace FireflyIII\Notifications\Security;
 
 use FireflyIII\Notifications\ReturnsAvailableChannels;
-use FireflyIII\Support\Facades\FireflyConfig;
+use FireflyIII\Support\Facades\AppConfiguration;
 use FireflyIII\Support\Facades\Steam;
 use FireflyIII\User;
 use Illuminate\Bus\Queueable;
@@ -114,7 +114,7 @@ class UserFailedLoginAttempt extends Notification
     public function via(User $notifiable): array
     {
         $channels   = ReturnsAvailableChannels::returnChannels('user', $notifiable);
-        $isDemoSite = FireflyConfig::get('is_demo_site', false)->data;
+        $isDemoSite = AppConfiguration::get('is_demo_site', false)->data;
         if (true === $isDemoSite) {
             return array_diff($channels, ['mail']);
         }

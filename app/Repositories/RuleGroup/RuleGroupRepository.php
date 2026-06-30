@@ -43,8 +43,7 @@ class RuleGroupRepository implements RuleGroupRepositoryInterface, UserGroupInte
 
     public function correctRuleGroupOrder(): void
     {
-        $set   = $this->user
-            ->ruleGroups()
+        $set   = $this->user->ruleGroups()
             ->orderBy('order', 'ASC')
             ->orderBy('active', 'DESC')
             ->orderBy('title', 'ASC')
@@ -125,8 +124,7 @@ class RuleGroupRepository implements RuleGroupRepositoryInterface, UserGroupInte
 
     public function getActiveGroups(): Collection
     {
-        return $this->user
-            ->ruleGroups()
+        return $this->user->ruleGroups()
             ->with(['rules'])
             ->where('rule_groups.active', true)
             ->orderBy('order', 'ASC')
@@ -166,8 +164,7 @@ class RuleGroupRepository implements RuleGroupRepositoryInterface, UserGroupInte
 
     public function getAllRuleGroupsWithRules(?string $filter): Collection
     {
-        $groups = $this->user
-            ->ruleGroups()
+        $groups = $this->user->ruleGroups()
             ->orderBy('order', 'ASC')
             ->with([
                 'rules'              => static function (HasMany $query): void {
@@ -219,8 +216,7 @@ class RuleGroupRepository implements RuleGroupRepositoryInterface, UserGroupInte
 
     public function getRuleGroupsWithRules(?string $filter): Collection
     {
-        $groups = $this->user
-            ->ruleGroups()
+        $groups = $this->user->ruleGroups()
             ->orderBy('order', 'ASC')
             ->where('active', true)
             ->with([
@@ -275,8 +271,7 @@ class RuleGroupRepository implements RuleGroupRepositoryInterface, UserGroupInte
 
     public function resetOrder(): bool
     {
-        $set   = $this->user
-            ->ruleGroups()
+        $set   = $this->user->ruleGroups()
             ->whereNull('deleted_at')
             ->orderBy('order', 'ASC')
             ->orderBy('title', 'DESC')
@@ -337,8 +332,7 @@ class RuleGroupRepository implements RuleGroupRepositoryInterface, UserGroupInte
         $oldOrder         = $ruleGroup->order;
 
         if ($newOrder > $oldOrder) {
-            $this->user
-                ->ruleGroups()
+            $this->user->ruleGroups()
                 ->where('rule_groups.order', '<=', $newOrder)
                 ->where('rule_groups.order', '>', $oldOrder)
                 ->where('rule_groups.id', '!=', $ruleGroup->id)
@@ -351,8 +345,7 @@ class RuleGroupRepository implements RuleGroupRepositoryInterface, UserGroupInte
             return;
         }
 
-        $this->user
-            ->ruleGroups()
+        $this->user->ruleGroups()
             ->where('rule_groups.order', '>=', $newOrder)
             ->where('rule_groups.order', '<', $oldOrder)
             ->where('rule_groups.id', '!=', $ruleGroup->id)

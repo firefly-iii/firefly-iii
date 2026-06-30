@@ -100,6 +100,8 @@ interface CurrencyRepositoryInterface
      */
     public function getExchangeRate(TransactionCurrency $fromCurrency, TransactionCurrency $toCurrency, Carbon $date): ?CurrencyExchangeRate;
 
+    public function isEnabled(TransactionCurrency $currency): bool;
+
     public function isFallbackCurrency(TransactionCurrency $currency): bool;
 
     public function makePrimary(TransactionCurrency $currency): void;

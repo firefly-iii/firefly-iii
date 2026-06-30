@@ -25,7 +25,7 @@ declare(strict_types=1);
 namespace FireflyIII\Console\Commands\System;
 
 use FireflyIII\Console\Commands\ShowsFriendlyMessages;
-use FireflyIII\Support\Facades\FireflyConfig;
+use FireflyIII\Support\Facades\AppConfiguration;
 use Illuminate\Console\Command;
 use Illuminate\Database\QueryException;
 use Illuminate\Support\Facades\Log;
@@ -108,8 +108,8 @@ class VerifySecurityAlerts extends Command
     private function removeOldAdvisory(): void
     {
         try {
-            FireflyConfig::delete('upgrade_security_message');
-            FireflyConfig::delete('upgrade_security_level');
+            AppConfiguration::delete('upgrade_security_message');
+            AppConfiguration::delete('upgrade_security_level');
         } catch (QueryException $e) {
             Log::debug(sprintf('Could not delete old security advisory, but thats OK: %s', $e->getMessage()));
         }
@@ -118,8 +118,8 @@ class VerifySecurityAlerts extends Command
     private function saveSecurityAdvisory(array $array): void
     {
         try {
-            FireflyConfig::set('upgrade_security_message', $array['message']);
-            FireflyConfig::set('upgrade_security_level', $array['level']);
+            AppConfiguration::set('upgrade_security_message', $array['message']);
+            AppConfiguration::set('upgrade_security_level', $array['level']);
         } catch (QueryException $e) {
             Log::debug(sprintf('Could not save new security advisory, but thats OK: %s', $e->getMessage()));
         }

@@ -27,6 +27,7 @@ use FireflyIII\Handlers\Observer\DeletedTransactionGroupObserver;
 use FireflyIII\Support\Models\ReturnsIntegerIdTrait;
 use FireflyIII\Support\Models\ReturnsIntegerUserIdTrait;
 use FireflyIII\User;
+use Illuminate\Auth\AuthenticationException;
 use Illuminate\Database\Eloquent\Attributes\ObservedBy;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -83,7 +84,7 @@ class TransactionGroup extends Model
         }
         Log::debug('Found no group.');
 
-        throw new NotFoundHttpException();
+        throw new AuthenticationException();
     }
 
     public function transactionJournals(): HasMany

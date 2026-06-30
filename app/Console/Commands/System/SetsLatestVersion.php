@@ -25,7 +25,7 @@ declare(strict_types=1);
 namespace FireflyIII\Console\Commands\System;
 
 use FireflyIII\Console\Commands\ShowsFriendlyMessages;
-use FireflyIII\Support\Facades\FireflyConfig;
+use FireflyIII\Support\Facades\AppConfiguration;
 use Illuminate\Console\Command;
 
 class SetsLatestVersion extends Command
@@ -46,7 +46,7 @@ class SetsLatestVersion extends Command
 
             return 0;
         }
-        FireflyConfig::set('ff3_build_time', (int) config('firefly.build_time'));
+        AppConfiguration::set('ff3_build_time', (int) config('firefly.build_time'));
         $this->friendlyInfo('Updated version.');
 
         return 0;

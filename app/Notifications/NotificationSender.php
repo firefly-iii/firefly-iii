@@ -45,6 +45,18 @@ class NotificationSender
             Log::debug(sprintf('Notification send language set to "%s"', $lang));
         }
 
+        if ((in_array('email', $notification->broadcastOn(), true) || 0 === count($notification->broadcastOn())) && 'smtp' === config('mail.default')) {
+            Log::debug(sprintf(
+                'Trying to send notification %s via "%s:%s" using encryption "%s" with username "%s" to "%s".',
+                get_class($notification),
+                config('mail.mailers.smtp.host'),
+                config('mail.mailers.smtp.port'),
+                config('mail.mailers.smtp.encryption'),
+                config('mail.mailers.smtp.username'),
+                $user instanceof OwnerNotifiable ? config('firefly.site_owner') : $user->email
+            ));
+        }
+
         try {
             NotificationFacade::locale($lang)->send($user, $notification);
         } catch (ClientException $e) {

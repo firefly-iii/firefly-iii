@@ -27,7 +27,7 @@ namespace FireflyIII\Support\Models;
 use Carbon\Carbon;
 use FireflyIII\Models\Transaction;
 use FireflyIII\Models\TransactionJournal;
-use FireflyIII\Support\Facades\FireflyConfig;
+use FireflyIII\Support\Facades\AppConfiguration;
 use FireflyIII\Support\Facades\Steam;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Log;
@@ -139,7 +139,14 @@ class AccountBalanceCalculator
 
         /** @var Transaction $entry */
         foreach ($set as $entry) {
-            // Log::debug(sprintf('Processing transaction #%d with currency #%d and amount %s', $entry->id, $entry->transaction_currency_id, Steam::bcround($entry->amount, 2)));
+            Log::debug(sprintf(
+                '[%s] Processing transaction #%d on acount #%d with currency #%d and amount %s',
+                $entry->date,
+                $entry->id,
+                $entry->account_id,
+                $entry->transaction_currency_id,
+                Steam::bcround($entry->amount, 2)
+            ));
             // start with empty array:
             $entry->account_id                                             = (int) $entry->account_id;
             $entry->transaction_currency_id                                = (int) $entry->transaction_currency_id;
@@ -192,7 +199,7 @@ class AccountBalanceCalculator
 
     public static function recalculateForJournal(TransactionJournal $transactionJournal): void
     {
-        if (false === FireflyConfig::get('use_running_balance', config('firefly.feature_flags.running_balance_column'))->data) {
+        if (false === AppConfiguration::get('use_running_balance', config('firefly.feature_flags.running_balance_column'))->data) {
             return;
         }
         Log::debug(__METHOD__);

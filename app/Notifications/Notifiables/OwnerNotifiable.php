@@ -24,7 +24,7 @@ declare(strict_types=1);
 
 namespace FireflyIII\Notifications\Notifiables;
 
-use FireflyIII\Support\Facades\FireflyConfig;
+use FireflyIII\Support\Facades\AppConfiguration;
 use Illuminate\Notifications\Notification;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Str;
@@ -59,15 +59,15 @@ class OwnerNotifiable
     public function routeNotificationForPushover(): PushoverReceiver
     {
         Log::debug('Return settings for routeNotificationForPushover');
-        $pushoverAppToken  = (string) FireflyConfig::getEncrypted('pushover_app_token', '')->data;
-        $pushoverUserToken = (string) FireflyConfig::getEncrypted('pushover_user_token', '')->data;
+        $pushoverAppToken  = (string) AppConfiguration::getEncrypted('pushover_app_token', '')->data;
+        $pushoverUserToken = (string) AppConfiguration::getEncrypted('pushover_user_token', '')->data;
 
         return PushoverReceiver::withUserKey($pushoverUserToken)->withApplicationToken($pushoverAppToken);
     }
 
     public function routeNotificationForSlack(): string
     {
-        $res = FireflyConfig::getEncrypted('slack_webhook_url', '')->data;
+        $res = AppConfiguration::getEncrypted('slack_webhook_url', '')->data;
         if (is_array($res)) {
             $res = '';
         }

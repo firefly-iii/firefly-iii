@@ -33,7 +33,7 @@ use FireflyIII\Support\Cronjobs\ExchangeRatesCronjob;
 use FireflyIII\Support\Cronjobs\RecurringCronjob;
 use FireflyIII\Support\Cronjobs\UpdateCheckCronjob;
 use FireflyIII\Support\Cronjobs\WebhookCronjob;
-use FireflyIII\Support\Facades\FireflyConfig;
+use FireflyIII\Support\Facades\AppConfiguration;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\Log;
 use InvalidArgumentException;
@@ -74,7 +74,7 @@ class Cron extends Command
         $force = (bool) $this->option('force');
 
         // Fire exchange rates cron job.
-        if (true === FireflyConfig::get('enable_external_rates', config('cer.download_enabled'))->data && ($doAll || $this->option('download-cer'))) {
+        if (true === AppConfiguration::get('enable_external_rates', config('cer.download_enabled'))->data && ($doAll || $this->option('download-cer'))) {
             try {
                 $this->exchangeRatesCronJob($force, $date);
             } catch (FireflyException $e) {

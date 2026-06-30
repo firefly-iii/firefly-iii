@@ -42,7 +42,7 @@ use FireflyIII\Repositories\Budget\BudgetRepositoryInterface;
 use FireflyIII\Repositories\PiggyBank\PiggyBankRepositoryInterface;
 use FireflyIII\Repositories\UserGroup\UserGroupRepositoryInterface;
 use FireflyIII\Support\Facades\Amount;
-use FireflyIII\Support\Facades\FireflyConfig;
+use FireflyIII\Support\Facades\AppConfiguration;
 use FireflyIII\Support\Http\Api\ExchangeRateConverter;
 use Illuminate\Database\Eloquent\Builder as EloquentBuilder;
 use Illuminate\Database\Query\Builder;
@@ -62,7 +62,7 @@ class PrimaryAmountRecalculationService
 
     public function recalculate(): void
     {
-        if (false === FireflyConfig::get('enable_exchange_rates', config('cer.enabled'))->data) {
+        if (false === AppConfiguration::get('enable_exchange_rates', config('cer.enabled'))->data) {
             return;
         }
 

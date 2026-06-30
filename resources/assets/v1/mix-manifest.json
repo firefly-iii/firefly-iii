@@ -22,6 +22,8 @@
     "/public/v1/js/app_vue.js.LICENSE.txt": "/public/v1/js/app_vue.js.LICENSE.txt",
     "/public/v1/js/create_transaction.js": "/public/v1/js/create_transaction.js",
     "/public/v1/js/create_transaction.js.LICENSE.txt": "/public/v1/js/create_transaction.js.LICENSE.txt",
+    "/public/v1/js/css/app.css": "/public/v1/js/css/app.css",
+    "/public/v1/js/css/layout.css": "/public/v1/js/css/layout.css",
     "/public/v1/js/edit_transaction.js": "/public/v1/js/edit_transaction.js",
     "/public/v1/js/edit_transaction.js.LICENSE.txt": "/public/v1/js/edit_transaction.js.LICENSE.txt",
     "/public/v1/js/exchange-rates/index.js": "/public/v1/js/exchange-rates/index.js",

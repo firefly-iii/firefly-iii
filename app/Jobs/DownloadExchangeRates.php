@@ -154,12 +154,12 @@ class DownloadExchangeRates implements ShouldQueue
 
             return null;
         }
-        if (false === $currency->enabled) {
-            Log::debug(sprintf('Currency %s is not enabled.', $code));
-            $this->active[$code] = null;
-
-            return null;
-        }
+        //        if (false === $currency->enabled) {
+        //            Log::debug(sprintf('Currency %s is not enabled.', $code));
+        //            $this->active[$code] = null;
+        //
+        //            return null;
+        //        }
         Log::debug(sprintf('Currency %s is enabled.', $code));
         $this->active[$code] = $currency;
 
@@ -170,10 +170,13 @@ class DownloadExchangeRates implements ShouldQueue
     {
         foreach ($this->users as $user) {
             $this->repository->setUser($user);
-            $existing = $this->repository->getExchangeRate($from, $to, $date);
-            if (!$existing instanceof CurrencyExchangeRate) {
-                Log::debug(sprintf('Saved rate from %s to %s for user #%d.', $from->code, $to->code, $user->id));
-                $this->repository->setExchangeRate($from, $to, $date, $rate);
+            $this->repository->setUserGroup($user->userGroup);
+            if ($this->repository->isEnabled($from) && $this->repository->isEnabled($to)) {
+                $existing = $this->repository->getExchangeRate($from, $to, $date);
+                if (!$existing instanceof CurrencyExchangeRate) {
+                    Log::debug(sprintf('Saved rate from %s to %s for user #%d.', $from->code, $to->code, $user->id));
+                    $this->repository->setExchangeRate($from, $to, $date, $rate);
+                }
             }
         }
     }

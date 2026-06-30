@@ -28,7 +28,7 @@ use FireflyIII\Models\Transaction;
 use FireflyIII\Models\TransactionCurrency;
 use FireflyIII\Models\TransactionJournal;
 use FireflyIII\Models\UserGroup;
-use FireflyIII\Support\Facades\FireflyConfig;
+use FireflyIII\Support\Facades\AppConfiguration;
 use FireflyIII\Support\Facades\Preferences;
 use FireflyIII\Support\Facades\Steam;
 use FireflyIII\Support\Singleton\PreferencesSingleton;
@@ -120,7 +120,7 @@ class Amount
             if (null === $pref) {
                 $res
                     = true === Preferences::get('convert_to_primary', false)->data
-                    && true === FireflyConfig::get('enable_exchange_rates', config('cer.enabled'))->data;
+                    && true === AppConfiguration::get('enable_exchange_rates', config('cer.enabled'))->data;
                 $instance->setPreference('convert_to_primary_no_user', $res);
 
                 return $res;
@@ -133,7 +133,7 @@ class Amount
         if (null === $pref) {
             $res
                 = true === Preferences::getForUser($user, 'convert_to_primary', false)->data
-                && true === FireflyConfig::get('enable_exchange_rates', config('cer.enabled'))->data;
+                && true === AppConfiguration::get('enable_exchange_rates', config('cer.enabled'))->data;
             $instance->setPreference($key, $res);
 
             return $res;
@@ -297,12 +297,15 @@ class Amount
         $cache->addProperty('getPrimaryCurrencyByGroup');
         $cache->addProperty($userGroup->id);
         if ($cache->has()) {
+            Log::debug(sprintf('getPrimaryCurrencyByUserGroup(#%d, "%s") = %s', $userGroup->id, $userGroup->title, $cache->get()->code));
+
             return $cache->get();
         }
 
         /** @var null|TransactionCurrency $primary */
         $primary = $userGroup->currencies()->where('group_default', true)->first();
         if (null === $primary) {
+            Log::debug(sprintf('User group #%d ("%s") has no default currency, will use system default.', $userGroup->id, $userGroup->name));
             $primary = $this->getSystemCurrency();
             // could be the user group has no default right now.
             $userGroup->currencies()->sync([$primary->id => ['group_default' => true]]);

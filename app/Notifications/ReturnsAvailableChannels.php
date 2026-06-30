@@ -24,7 +24,7 @@ declare(strict_types=1);
 
 namespace FireflyIII\Notifications;
 
-use FireflyIII\Support\Facades\FireflyConfig;
+use FireflyIII\Support\Facades\AppConfiguration;
 use FireflyIII\Support\Facades\Preferences;
 use FireflyIII\Support\Notifications\UrlValidator;
 use FireflyIII\User;
@@ -53,7 +53,7 @@ class ReturnsAvailableChannels
     {
         $channels = ['mail'];
         if (true === config('notifications.channels.slack.enabled', false)) {
-            $slackUrl = FireflyConfig::getEncrypted('slack_webhook_url', '')->data;
+            $slackUrl = AppConfiguration::getEncrypted('slack_webhook_url', '')->data;
             if (UrlValidator::isValidWebhookURL($slackUrl)) {
                 $channels[] = 'slack';
             }
@@ -72,8 +72,8 @@ class ReturnsAvailableChannels
 
         // pushover
         if (true === config('notifications.channels.pushover.enabled', false)) {
-            $pushoverAppToken  = (string) FireflyConfig::getEncrypted('pushover_app_token', '')->data;
-            $pushoverUserToken = (string) FireflyConfig::getEncrypted('pushover_user_token', '')->data;
+            $pushoverAppToken  = (string) AppConfiguration::getEncrypted('pushover_app_token', '')->data;
+            $pushoverUserToken = (string) AppConfiguration::getEncrypted('pushover_user_token', '')->data;
             if ('' === $pushoverAppToken || '' === $pushoverUserToken) {
                 Log::warning('[b] No Pushover token, channel is disabled.');
             }

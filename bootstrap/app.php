@@ -160,8 +160,6 @@ $app = Application::configure(basePath: dirname(__DIR__))
                                              AddQueuedCookiesToResponse::class,
                                              Binder::class,
                                          ]);
-
-                      // $middleware->priority([StartFireflyIIISession::class, ShareErrorsFromSession::class, Authenticate::class, Binder::class, Authorize::class]);
                   })
                   ->withEvents(discover: [
                                              __DIR__ . '/../app/Listeners',

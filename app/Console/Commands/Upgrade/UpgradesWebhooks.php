@@ -32,7 +32,7 @@ use FireflyIII\Models\Webhook;
 use FireflyIII\Models\WebhookDelivery as WebhookDeliveryModel;
 use FireflyIII\Models\WebhookResponse as WebhookResponseModel;
 use FireflyIII\Models\WebhookTrigger as WebhookTriggerModel;
-use FireflyIII\Support\Facades\FireflyConfig;
+use FireflyIII\Support\Facades\AppConfiguration;
 use Illuminate\Console\Command;
 
 class UpgradesWebhooks extends Command
@@ -64,14 +64,14 @@ class UpgradesWebhooks extends Command
 
     private function isExecuted(): bool
     {
-        $configVar = FireflyConfig::get(self::CONFIG_NAME, false);
+        $configVar = AppConfiguration::get(self::CONFIG_NAME, false);
 
         return (bool) $configVar?->data;
     }
 
     private function markAsExecuted(): void
     {
-        FireflyConfig::set(self::CONFIG_NAME, true);
+        AppConfiguration::set(self::CONFIG_NAME, true);
     }
 
     private function upgradeWebhook(Webhook $webhook): void

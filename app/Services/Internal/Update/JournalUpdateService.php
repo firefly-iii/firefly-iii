@@ -45,7 +45,7 @@ use FireflyIII\Repositories\Category\CategoryRepositoryInterface;
 use FireflyIII\Repositories\Currency\CurrencyRepositoryInterface;
 use FireflyIII\Repositories\TransactionGroup\TransactionGroupRepositoryInterface;
 use FireflyIII\Services\Internal\Support\JournalServiceTrait;
-use FireflyIII\Support\Facades\FireflyConfig;
+use FireflyIII\Support\Facades\AppConfiguration;
 use FireflyIII\Support\Facades\Preferences;
 use FireflyIII\Support\Facades\Steam;
 use FireflyIII\Support\NullArrayObject;
@@ -634,7 +634,7 @@ class JournalUpdateService
 
                 $value->setTimezone(config('app.timezone'));
                 // 2024-11-22, overrule timezone with UTC and store it as UTC.
-                if (true === FireflyConfig::get('utc', false)->data) {
+                if (true === AppConfiguration::get('utc', false)->data) {
                     $value->setTimezone('UTC');
                 }
 
@@ -700,7 +700,7 @@ class JournalUpdateService
 
         // add foreign currency info to source and destination if possible.
         if (null !== $foreignCurrency && null !== $foreignAmount) {
-            $source->foreign_currency_id = $foreignCurrency->id;
+            $source->foreign_currency_id = (int) $foreignCurrency->id;
             $source->foreign_amount      = Steam::negative($foreignAmount);
             $source->save();
 
@@ -713,13 +713,13 @@ class JournalUpdateService
 
             if ($isTransfer || $isBetween) {
                 Log::debug('Switch amounts, store in amount and not foreign_amount');
-                $dest->transaction_currency_id = $foreignCurrency->id;
+                $dest->transaction_currency_id = (int) $foreignCurrency->id;
                 $dest->amount                  = Steam::positive($foreignAmount);
                 $dest->foreign_amount          = Steam::positive($source->amount);
                 $dest->foreign_currency_id     = $source->transaction_currency_id;
             }
             if (!$isTransfer && !$isBetween) {
-                $dest->foreign_currency_id = $foreignCurrency->id;
+                $dest->foreign_currency_id = (int) $foreignCurrency->id;
                 $dest->foreign_amount      = Steam::positive($foreignAmount);
             }
 

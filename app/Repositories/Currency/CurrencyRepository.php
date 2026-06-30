@@ -250,10 +250,11 @@ class CurrencyRepository implements CurrencyRepositoryInterface, UserGroupInterf
         }
 
         Log::debug(sprintf('Final result: %s', $result->code));
-        if (false === $result->enabled) {
-            Log::debug(sprintf('Also enabled currency %s', $result->code));
-            $this->enable($result);
-        }
+        // code below is no longer relevant.
+        //        if (false === $result->enabled) {
+        //            Log::debug(sprintf('Also enabled currency %s', $result->code));
+        //            $this->enable($result);
+        //        }
 
         return $result;
     }
@@ -274,14 +275,13 @@ class CurrencyRepository implements CurrencyRepositoryInterface, UserGroupInterf
         }
         if (null !== $currencyCode && '' !== $currencyCode) {
             Log::debug(sprintf('Searching for currency with code "%s"...', $currencyCode));
-            $result = $this->findByCode($currencyCode);
 
-            if ($result instanceof TransactionCurrency && false === $result->enabled) {
-                Log::debug(sprintf('Also enabled currency %s', $result->code));
-                $this->enable($result);
-            }
+            return $this->findByCode($currencyCode);
 
-            return $result;
+            //            if ($result instanceof TransactionCurrency && false === $result->enabled) {
+            //                Log::debug(sprintf('Also enabled currency %s', $result->code));
+            //                $this->enable($result);
+            //            }
         }
         Log::debug('Found no currency, returning NULL.');
 
@@ -345,8 +345,7 @@ class CurrencyRepository implements CurrencyRepositoryInterface, UserGroupInterf
         }
 
         /** @var null|CurrencyExchangeRate $rate */
-        $rate = $this->user
-            ->currencyExchangeRates()
+        $rate = $this->user->currencyExchangeRates()
             ->where('from_currency_id', $fromCurrency->id)
             ->where('to_currency_id', $toCurrency->id)
             ->where('date', $date->format('Y-m-d'))
@@ -359,6 +358,21 @@ class CurrencyRepository implements CurrencyRepositoryInterface, UserGroupInterf
         }
 
         return null;
+    }
+
+    #[Override]
+    public function isEnabled(TransactionCurrency $currency): bool
+    {
+        if (null === $this->user && null === $this->userGroup) {
+            throw new FireflyException(sprintf('Cannot check enabled status for currency "%s" in stateless currency repository', $currency->code));
+        }
+        $userGroup = $this->userGroup;
+        if (null === $this->userGroup) {
+            $userGroup = $this->user->userGroup;
+        }
+        $currency  = $userGroup->currencies()->find($currency->id);
+
+        return null !== $currency;
     }
 
     public function isFallbackCurrency(TransactionCurrency $currency): bool
@@ -428,17 +442,21 @@ class CurrencyRepository implements CurrencyRepositoryInterface, UserGroupInterf
     {
         Log::debug('Now in update()');
         // can be true, false, null
-        $enabled = $data['enabled'] ?? null;
+        $enabled                = $data['enabled'] ?? null;
         // can be true, false, but method only responds to "true".
-        $default = array_key_exists('default', $data) ? $data['default'] : false;
+        $default                = array_key_exists('default', $data) ? $data['default'] : false;
 
         // remove illegal combo's:
         if (false === $enabled && true === $default) {
             $enabled = true;
+            Log::debug('Enabled is now forced to be TRUE.');
         }
 
         // update currency with current user specific settings
         $currency->refreshForUser($this->user);
+
+        // get current default for this group.
+        $currentDefaultCurrency = Amount::getPrimaryCurrencyByUserGroup($this->userGroup);
 
         // currency is enabled, must be disabled.
         if (false === $enabled) {
@@ -449,16 +467,17 @@ class CurrencyRepository implements CurrencyRepositoryInterface, UserGroupInterf
         if (true === $enabled) {
             Log::debug(sprintf('Enabled currency %s for user #%d', $currency->code, $this->userGroup->id));
             $this->userGroup->currencies()->detach($currency->id);
-            $this->userGroup->currencies()->syncWithoutDetaching([$currency->id => ['group_default' => false]]);
+            $this->userGroup->currencies()->syncWithoutDetaching([$currency->id => ['group_default' => $currentDefaultCurrency->id === $currency->id]]);
         }
 
         // currency must be made default.
         if (true === $default) {
+            Log::debug('Will now be default.');
             $this->makePrimary($currency);
         }
 
         /** @var CurrencyUpdateService $service */
-        $service = app(CurrencyUpdateService::class);
+        $service                = app(CurrencyUpdateService::class);
 
         return $service->update($currency, $data);
     }

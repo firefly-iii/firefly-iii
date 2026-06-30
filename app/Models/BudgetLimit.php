@@ -27,6 +27,7 @@ use Carbon\Carbon;
 use FireflyIII\Casts\SeparateTimezoneCaster;
 use FireflyIII\Handlers\Observer\BudgetLimitObserver;
 use FireflyIII\Support\Models\ReturnsIntegerIdTrait;
+use Illuminate\Auth\AuthenticationException;
 use Illuminate\Database\Eloquent\Attributes\ObservedBy;
 use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Model;
@@ -70,7 +71,7 @@ class BudgetLimit extends Model
             }
         }
 
-        throw new NotFoundHttpException();
+        throw new AuthenticationException();
     }
 
     public function budget(): BelongsTo

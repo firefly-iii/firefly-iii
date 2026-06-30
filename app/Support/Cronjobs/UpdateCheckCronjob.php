@@ -27,7 +27,7 @@ namespace FireflyIII\Support\Cronjobs;
 use Carbon\Carbon;
 use FireflyIII\Helpers\Update\UpdateTrait;
 use FireflyIII\Models\Configuration;
-use FireflyIII\Support\Facades\FireflyConfig;
+use FireflyIII\Support\Facades\AppConfiguration;
 use Illuminate\Support\Facades\Log;
 use Override;
 
@@ -41,7 +41,7 @@ class UpdateCheckCronjob extends AbstractCronjob
         Log::debug('Now in checkForUpdates()');
 
         // should not check for updates:
-        $permission         = FireflyConfig::get('permission_update_check', -1);
+        $permission         = AppConfiguration::get('permission_update_check', -1);
         $value              = (int) $permission->data;
         if (1 !== $value) {
             Log::debug('Update check is not enabled.');
@@ -56,7 +56,7 @@ class UpdateCheckCronjob extends AbstractCronjob
 
         // TODO this is duplicate.
         /** @var Configuration $lastCheckTime */
-        $lastCheckTime      = FireflyConfig::get('last_update_check', Carbon::now()->getTimestamp());
+        $lastCheckTime      = AppConfiguration::get('last_update_check', Carbon::now()->getTimestamp());
         $now                = Carbon::now()->getTimestamp();
         $diff               = $now - $lastCheckTime->data;
         Log::debug(sprintf('Last check time is %d, current time is %d, difference is %d', $lastCheckTime->data, $now, $diff));

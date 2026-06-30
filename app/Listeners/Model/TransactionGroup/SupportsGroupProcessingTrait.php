@@ -18,7 +18,7 @@ use FireflyIII\Models\TransactionJournalMeta;
 use FireflyIII\Repositories\PeriodStatistic\PeriodStatisticRepositoryInterface;
 use FireflyIII\Repositories\RuleGroup\RuleGroupRepositoryInterface;
 use FireflyIII\Services\Internal\Support\CreditRecalculateService;
-use FireflyIII\Support\Facades\FireflyConfig;
+use FireflyIII\Support\Facades\AppConfiguration;
 use FireflyIII\Support\Models\AccountBalanceCalculator;
 use FireflyIII\TransactionRules\Engine\RuleEngineInterface;
 use Illuminate\Support\Collection;
@@ -68,7 +68,7 @@ trait SupportsGroupProcessingTrait
     protected function recalculateRunningBalance(TransactionGroupEventObjects $objects): void
     {
         Log::debug('Now in recalculateRunningBalance');
-        if (false === FireflyConfig::get('use_running_balance', config('firefly.feature_flags.running_balance_column'))->data) {
+        if (false === AppConfiguration::get('use_running_balance', config('firefly.feature_flags.running_balance_column'))->data) {
             Log::debug('Running balance is disabled.');
 
             return;
