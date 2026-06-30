@@ -13,7 +13,6 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 
 ### Fixed
 
-- [Issue 12235](https://github.com/firefly-iii/firefly-iii/issues/12235) (Duplicate entries created by the CSV importer) reported by @galactic-spaceship
 - [Issue 12296](https://github.com/firefly-iii/firefly-iii/issues/12296) (Limit on the number of repetition of a recurring operation is inconsistent between API & web form) reported by @AlexRNL
 - [Issue 12297](https://github.com/firefly-iii/firefly-iii/issues/12297) (CurrencyRepository::enable() sets enabled = false (copy/paste from disable())) reported by @abhibalu
 - [Issue 12305](https://github.com/firefly-iii/firefly-iii/issues/12305) (2FA QR code not rendered: enable-mfa.twig outputs google2fa-qrcode v4 data-URI as text, not an image) reported by @Pioszym
