@@ -30,6 +30,8 @@ use FireflyIII\Http\Controllers\Controller;
 use FireflyIII\Support\Facades\AppConfiguration;
 use FireflyIII\Support\Facades\Preferences;
 use FireflyIII\Support\Http\Controllers\GetConfigurationData;
+use FireflyIII\Support\System\IsOldVersion;
+use Illuminate\Auth\Access\AuthorizationException;
 use Illuminate\Contracts\View\Factory;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
@@ -48,6 +50,7 @@ use function Safe\file_put_contents;
 final class InstallController extends Controller
 {
     use GetConfigurationData;
+    use IsOldVersion;
 
     public const string BASEDIR_ERROR   = 'Firefly III cannot execute the upgrade commands. It is not allowed to because of an open_basedir restriction.';
     public const string FORBIDDEN_ERROR = 'Internal PHP function "proc_close" is disabled for your installation. Auto-migration is not possible.';
@@ -73,13 +76,16 @@ final class InstallController extends Controller
      */
     public function index(): Factory|\Illuminate\Contracts\View\View
     {
-        app('view')->share('FF_VERSION', config('firefly.version'));
+        if ($this->hasNoTables() || $this->isOldVersionInstalled()) {
+            app('view')->share('FF_VERSION', config('firefly.version'));
 
-        // index will set FF3 version.
-        AppConfiguration::set('ff3_version', (string) config('firefly.version'));
-        AppConfiguration::set('ff3_build_time', (int) config('firefly.build_time'));
+            // index will set FF3 version.
+            AppConfiguration::set('ff3_version', (string)config('firefly.version'));
+            AppConfiguration::set('ff3_build_time', (int)config('firefly.build_time'));
 
-        return view('install.index');
+            return view('install.index');
+        }
+        throw new AuthorizationException('No access to this page.');
     }
 
     /**

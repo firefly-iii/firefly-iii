@@ -25,11 +25,59 @@ declare(strict_types=1);
 namespace FireflyIII\Support\System;
 
 use Carbon\Carbon;
+use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Support\Facades\AppConfiguration;
+use Illuminate\Database\QueryException;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 
 trait IsOldVersion
 {
+
+    /**
+     * Check if the tables are created and accounted for.
+     *
+     * @throws FireflyException
+     */
+    private function hasNoTables(): bool
+    {
+        // Log::debug('Now in routine hasNoTables()');
+
+        try {
+            DB::table('users')->count();
+        } catch (QueryException $e) {
+            $message = $e->getMessage();
+            Log::error(sprintf('Error message trying to access users-table: %s', $message));
+            if ($this->isAccessDenied($message)) {
+                throw new FireflyException(
+                    'It seems your database configuration is not correct. Please verify the username and password in your .env file.',
+                    0,
+                    $e
+                );
+            }
+            if ($this->noTablesExist($message)) {
+                // redirect to UpdateController
+                Log::warning('There are no Firefly III tables present. Redirect to migrate routine.');
+
+                return true;
+            }
+
+            throw new FireflyException(sprintf('Could not access the database: %s', $message), 0, $e);
+        }
+
+        // Log::debug('Everything seems OK with the tables.');
+
+        return false;
+    }
+    /**
+     * Is no tables exist error.
+     */
+    protected function noTablesExist(string $message): bool
+    {
+        return false !== stripos($message, 'Base table or view not found');
+    }
+
+
     /**
      * By default, version_compare() returns -1 if the first version is lower than the second, 0 if they are equal, and
      * 1 if the second is lower.
