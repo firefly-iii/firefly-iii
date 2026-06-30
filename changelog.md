@@ -3,6 +3,35 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
+## 6.4.4 - 2026-06-30
+
+<!-- summary: This release fixes some security issues and many other ones. -->
+
+### Changed
+
+- Expanded AI disclosure rules and security issue disclosure rules.
+
+### Fixed
+
+- #12235
+- #12296
+- #12297
+- #12305
+- #12306
+- #12309
+- #12339
+- #12354
+- #12353
+- #12356
+- #12370
+- #12396
+- #12401
+
+### Security
+
+- Fix issue with cron API call not recognizing cron tokens, found by Rajib Mahmud
+- Fix issue with installer, found by Rajib Mahmud and others
+
 ## v6.6.3 - 2026-05-21
 
 <!-- summary: This release fixes an XSS issue and some minor other bugs -->
