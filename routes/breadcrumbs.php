@@ -1104,7 +1104,7 @@ Breadcrumbs::for(
     static function (Generator $breadcrumbs, Tag $tag, ?Carbon $start = null, ?Carbon $end = null): void {
         $breadcrumbs->parent('tags.index');
 
-        $breadcrumbs->push($tag->tag, route('tags.show', [$tag->id, $start, $end]));
+        $breadcrumbs->push($tag->tag, route('tags.show', [$tag->id]));
         if ($start instanceof Carbon && $end instanceof Carbon) {
             $title = trans(
                 'firefly.between_dates_breadcrumb',
