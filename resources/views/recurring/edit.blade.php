@@ -96,16 +96,16 @@
                         {!! ExpandedForm::amountNoCurrency('amount', array.transactions[0].amount) }}
 
                         {{-- source account if withdrawal, or if transfer: --}}
-                        {{ AccountForm.longAccountList('source_id', array.transactions[0].source_id, {label: trans('form.asset_source_account')}) }}
+                        {{ AccountForm::longAccountList('source_id', array.transactions[0].source_id, {label: trans('form.asset_source_account')}) }}
 
                         {{-- NEW for deposits, a drop down with revenue accounts, loan debt cash and mortgage --}}
-                        {{ AccountForm.activeDepositDestinations('deposit_source_id', preFilled.deposit_source_id, {label: trans('form.deposit_source_id')}) }}
+                        {{ AccountForm::activeDepositDestinations('deposit_source_id', preFilled.deposit_source_id, {label: trans('form.deposit_source_id')}) }}
 
                         {{-- destination if deposit or transfer: --}}
-                        {{ AccountForm.longAccountList('destination_id', array.transactions[0].destination_id, {label: trans('form.asset_destination_account')} ) }}
+                        {{ AccountForm::longAccountList('destination_id', array.transactions[0].destination_id, {label: trans('form.asset_destination_account')} ) }}
 
                         {{-- NEW for withdrawals, also a drop down with expense accounts, loans, debts, mortgages or (cash). --}}
-                        {{ AccountForm.activeWithdrawalDestinations('withdrawal_destination_id', preFilled.withdrawal_destination_id, {label: trans('form.withdrawal_destination_id')}) }}
+                        {{ AccountForm::activeWithdrawalDestinations('withdrawal_destination_id', preFilled.withdrawal_destination_id, {label: trans('form.withdrawal_destination_id')}) }}
                     </div>
                 </div>
             </div>
@@ -143,7 +143,7 @@
                         {!! ExpandedForm::text('tags', array.transactions[0].tags) }}
 
                         {# RELATE THIS TRANSFER TO A PIGGY BANK --}}
-                        {{ PiggyBankForm.piggyBankList('piggy_bank_id',array.transactions[0].piggy_bank_id) }}
+                        {{ PiggyBankForm::piggyBankList('piggy_bank_id',array.transactions[0].piggy_bank_id) }}
                     </div>
                 </div>
             </div>

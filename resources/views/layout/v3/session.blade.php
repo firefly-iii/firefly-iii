@@ -109,14 +109,6 @@
                         <span class="d-none d-xxl-inline">xxl</span>
                     </span>
                 </li>
-                <!--begin::Fullscreen Toggle-->
-                <li class="nav-item">
-                    <a class="nav-link" href="#" data-lte-toggle="fullscreen">
-                        <i data-lte-icon="maximize" class="bi bi-arrows-fullscreen"></i>
-                        <i data-lte-icon="minimize" class="bi bi-fullscreen-exit d-none"></i>
-                    </a>
-                </li>
-                <!--end::Fullscreen Toggle-->
 
                 <!-- start: date range selector -->
                 <x-layout.range/>
