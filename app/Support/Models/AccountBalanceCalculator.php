@@ -139,7 +139,7 @@ class AccountBalanceCalculator
 
         /** @var Transaction $entry */
         foreach ($set as $entry) {
-            // Log::debug(sprintf('Processing transaction #%d with currency #%d and amount %s', $entry->id, $entry->transaction_currency_id, Steam::bcround($entry->amount, 2)));
+            Log::debug(sprintf('[%s] Processing transaction #%d on acount #%d with currency #%d and amount %s',$entry->date, $entry->id, $entry->account_id, $entry->transaction_currency_id, Steam::bcround($entry->amount, 2)));
             // start with empty array:
             $entry->account_id                                             = (int) $entry->account_id;
             $entry->transaction_currency_id                                = (int) $entry->transaction_currency_id;
