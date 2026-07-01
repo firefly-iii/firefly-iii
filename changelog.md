@@ -8,7 +8,7 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 <!-- summary: This release fixes a bug in v6.6.5 that will remove foreign currency information from deposits. -->
 ### Fixed
 
-- #12426
+- [Issue 12426](https://github.com/firefly-iii/firefly-iii/issues/12426) (Important: The latest version removed all references to foreign currency in income) reported by @jgmm81
 
 ## v6.6.5 - 2026-06-30
 
