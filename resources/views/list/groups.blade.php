@@ -1,30 +1,30 @@
-<table class="table table-sm table-hover table-responsive">
+<table class="table table-condensed table-hover table-responsive">
     <thead>
     <tr>
         {% if showCategory or showBudget %}
             <td colspan="7" class="no-margin-pagination">{{ groups.links('pagination.bootstrap-4')|raw }}</td>
-        @else
+        {% else %}
             <td colspan="6" class="no-margin-pagination">{{ groups.links('pagination.bootstrap-4')|raw }}</td>
-        @endif
+        {% endif %}
         <td colspan="1" class="hidden-xs">
             <!-- Single button -->
-            <div class="btn-group btn-group-sm action-menu text-end hidden">
-                <button type="button" class="btn btn-outline-secondary btn-sm dropdown-toggle" data-toggle="dropdown"
+            <div class="btn-group btn-group-xs action-menu pull-right hidden">
+                <button type="button" class="btn btn-default btn-sm dropdown-toggle" data-toggle="dropdown"
                         aria-haspopup="true" aria-expanded="false">
-                    {{ __('firefly.actions') }}<span class="caret"></span>
+                    {{ 'actions'|_ }}<span class="caret"></span>
                 </button>
                 <ul class="dropdown-menu dropdown-menu-right">
-                    <li><a href="#" class="mass-edit"><span class="bi bi-pencil"></span>
+                    <li><a href="#" class="mass-edit"><span class="fa fa-fw fa-pencil"></span>
                             <span class="txt">{{ 'mass_edit'|_ }}</span></a></li>
-                    <li><a href="#" class="bulk-edit"><span class="bi bi-pencil-square-o"></span>
+                    <li><a href="#" class="bulk-edit"><span class="fa fa-fw fa-pencil-square-o"></span>
                             <span class="txt">{{ 'bulk_edit'|_ }}</span></a></li>
-                    <li><a href="#" class="mass-delete"><span class="bi bi-trash"></span>
+                    <li><a href="#" class="mass-delete"><span class="fa fa-fw fa-trash"></span>
                             <span class="txt">{{ 'mass_delete'|_ }}</span></a></li>
                 </ul>
             </div>
         </td>
         <td colspan="1" class="hidden-xs">
-            <div class="text-end">
+            <div class="pull-right">
                 <input id="list_ALL" value="1" name="select-all" type="checkbox" class="select-all form-check-inline"/>
             </div>
         </td>
@@ -32,19 +32,19 @@
     <tr>
         <th class="hidden-xs">&nbsp;</th>
         <th>{{ trans('list.description') }}</th>
-        <th class="text-end">{{ trans('list.amount') }}</th>
+        <th class="text-right">{{ trans('list.amount') }}</th>
         {% if fireflyiiiconfig('use_running_balance', true) %}
-        <th class="text-end">{{ trans('list.running_balance') }}</th>
-        @endif
+        <th class="text-right">{{ trans('list.running_balance') }}</th>
+        {% endif %}
         <th>{{ trans('list.date') }}</th>
         <th>{{ trans('list.source_account') }}</th>
         <th>{{ trans('list.destination_account') }}</th>
         {% if showCategory %}
             <th class="hidden-xs">{{ trans('list.category') }}</th>
-        @endif
+        {% endif %}
         {% if showBudget %}
             <th class="hidden-xs">{{ trans('list.budget') }}</th>
-        @endif
+        {% endif %}
         <th class="hidden-xs">&nbsp;</th><!-- actions -->
         <th class="hidden-xs">&nbsp;</th><!-- checkbox -->
     </tr>
@@ -59,390 +59,391 @@
                                title="{{ group.title }}">{{ group.title }}</a>
                         </strong></small>
                 </td>
-                <td colspan="1" class="text-end top-light-border">
+                <td colspan="1" class="text-right top-light-border">
                     {% for sum in group.sums %}
                         {% if group.transaction_type == 'Deposit' %}
-                            {!! format_amount_by_symbol(sum.amount*-1, sum.currency_symbol, sum.currency_decimal_places) }}
+                            {{ formatAmountBySymbol(sum.amount*-1, sum.currency_symbol, sum.currency_decimal_places) }}
                             {% if convertToPrimary and 0 != sum.pc_amount %}
-                                (~ {!! format_amount_by_symbol(sum.pc_amount*-1, $primaryCurrency->symbol, $primaryCurrency->decimal_places) }})
-                            @endif
-                            {% if loop.index != group.sums|length %},@endif
+                                (~ {{ formatAmountBySymbol(sum.pc_amount*-1, primaryCurrency.symbol, primaryCurrency.decimal_places) }})
+                            {% endif %}
+                            {% if loop.index != group.sums|length %},{% endif %}
 
                         {% elseif group.transaction_type == 'Transfer' %}
                             <span class="text-info money-transfer">
-                            {!! format_amount_by_symbol(sum.amount*-1, sum.currency_symbol, sum.currency_decimal_places, false) }}
+                            {{ formatAmountBySymbol(sum.amount*-1, sum.currency_symbol, sum.currency_decimal_places, false) }}
                                 {% if convertToPrimary and 0 != sum.pc_amount %}
-                                    (~ {!! format_amount_by_symbol(sum.pc_amount*-1, $primaryCurrency->symbol, $primaryCurrency->decimal_places) }})
-                                @endif
-                                {% if loop.index != group.sums|length %},@endif
+                                    (~ {{ formatAmountBySymbol(sum.pc_amount*-1, primaryCurrency.symbol, primaryCurrency.decimal_places) }})
+                                {% endif %}
+                                {% if loop.index != group.sums|length %},{% endif %}
                             </span>
-                        @else
-                            {!! format_amount_by_symbol(sum.amount, sum.currency_symbol, sum.currency_decimal_places) }}
+                        {% else %}
+                            {{ formatAmountBySymbol(sum.amount, sum.currency_symbol, sum.currency_decimal_places) }}
                             {% if convertToPrimary and 0 != sum.pc_amount %}
-                                (~ {!! format_amount_by_symbol(sum.pc_amount*-1, $primaryCurrency->symbol, $primaryCurrency->decimal_places) }})
-                            @endif
-                            {% if loop.index != group.sums|length %},@endif
-                        @endif
-                    @endforeach
+                                (~ {{ formatAmountBySymbol(sum.pc_amount*-1, primaryCurrency.symbol, primaryCurrency.decimal_places) }})
+                            {% endif %}
+                            {% if loop.index != group.sums|length %},{% endif %}
+                        {% endif %}
+                    {% endfor %}
                 </td>
                 <!-- column to span accounts + extra fields -->
                 {% if showCategory or showBudget %}
                     <td class="top-light-border" colspan="3">&nbsp;</td>
-                @else
+                {% else %}
                     <td class="top-light-border" colspan="2">&nbsp;</td>
-                @endif
+                {% endif %}
                 <td class="top-light-border hidden-xs" colspan="2">
-                    <div class="btn-group btn-group-sm text-end">
-                        <button type="button" class="btn btn-outline-secondary dropdown-toggle" data-toggle="dropdown"
+                    <div class="btn-group btn-group-xs pull-right">
+                        <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown"
                                 aria-haspopup="true" aria-expanded="false">
-                            {{ __('firefly.actions') }} <span class="caret"></span></button>
+                            {{ 'actions'|_ }} <span class="caret"></span></button>
                         <ul class="dropdown-menu dropdown-menu-right" role="menu">
                             <li><a href="{{ route('transactions.edit', [group.id]) }}"><span
-                                        class="bi bi-pencil"></span> {{ __('firefly.edit') }}</a></li>
+                                        class="fa fa-fw fa-pencil"></span> {{ 'edit'|_ }}</a></li>
                             <li><a href="{{ route('transactions.delete', [group.id]) }}"><span
-                                        class="bi bi-trash"></span> {{ __('firefly.delete') }}</a></li>
+                                        class="fa fa-fw fa-trash"></span> {{ 'delete'|_ }}</a></li>
                             <li><a href="#" data-id="{{ group.id }}" class="clone-transaction"><span
-                                        class="bi bi-copy"></span> {{ __('firefly.clone') }}</a></li>
+                                        class="fa fa-copy fa-fw"></span> {{ 'clone'|_ }}</a></li>
                             <li><a href="#" data-id="{{ group.id }}" class="clone-transaction-and-edit"><span
-                                        class="bi bi-copy"></span> {{ __('firefly.clone_and_edit') }}</a></li>
+                                        class="fa fa-copy fa-fw"></span> {{ 'clone_and_edit'|_ }}</a></li>
                         </ul>
                     </div>
                 </td>
                 <td class="top-light-border hidden-xs">&nbsp;</td>
             </tr>
-        @endif
+        {% endif %}
         {% for index, transaction in group.transactions %}
             {% set className="" %}
             {% if group.transactions|length == loop.index and group.count > 1 %}
                 {% set className="bottom-light-border" %}
-            @endif
+            {% endif %}
             <tr data-date="{{ transaction.date.format('Y-m-d') }}" data-count="{{ group.count }}"
                 data-id="{{ group.id }}">
                 <td class="hidden-xs {{ className }}">
                     {% if transaction.transaction_type_type == 'Withdrawal' %}
-                        <span class="bi bi-arrow-left"
+                        <span class="fa fa-long-arrow-left fa-fw"
                               title="{{ trans('firefly.Withdrawal') }}"></span>
-                    @endif
+                    {% endif %}
 
                     {% if transaction.transaction_type_type == 'Deposit' %}
-                        <span class="bi bi-arrow-right"
+                        <span class="fa fa-long-arrow-right fa-fw"
                               title="{{ trans('firefly.Deposit') }}"></span>
-                    @endif
+                    {% endif %}
 
                     {% if transaction.transaction_type_type == 'Transfer' %}
-                        <span class="bi bi-arrow-left-right" title="{{ trans('firefly.Transfer') }}"></span>
-                    @endif
+                        <span class="fa fa-exchange fa-fw" title="{{ trans('firefly.Transfer') }}"></span>
+                    {% endif %}
 
                     {% if transaction.transaction_type_type == 'Reconciliation' %}
-                        <span class="bi bi-calculator"
+                        <span class="fa-fw fa fa-calculator"
                               title="{{ trans('firefly.reconciliation_transaction') }}"></span>
-                    @endif
+                    {% endif %}
                     {% if transaction.transaction_type_type == 'Opening balance' %}
-                        <span class="bi bi-star"
+                        <span class="fa-fw fa fa-star-o"
                               title="{{ trans('firefly.Opening balance') }}"></span>
-                    @endif
+                    {% endif %}
                     {% if transaction.transaction_type_type == 'Liability credit' %}
-                        <span class="bi bi-star"
+                        <span class="fa-fw fa fa-star-o"
                               title="{{ trans('firefly.Liability credit') }}"></span>
-                    @endif
+                    {% endif %}
 
                 </td>
                 <td class="{{ className }}">
                     {% if transaction.reconciled %}
-                        <span class="bi bi-check"></span>
-                    @endif
+                        <span class="fa fa-check"></span>
+                    {% endif %}
                     {% if transaction.attachments|length > 0 %}
-                        <span class="bi bi-paperclip"></span>
-                    @endif
+                        <span class="fa fa-paperclip"></span>
+                    {% endif %}
                     {% if group.count == 1 %}
                     <a href="{{ route('transactions.show', [group.id]) }}" title="{{ transaction.description }}">
-                        @endif
+                        {% endif %}
                         {{ transaction.description }}
                         {% if group.count == 1 %}
                     </a>
-                    @endif
+                    {% endif %}
                 </td>
-                <td class="{{ className }} text-end">
+                <td class="{{ className }} text-right">
 
-                    {{--  deposit --}}
+                    {#  deposit #}
                     {% if transaction.transaction_type_type == 'Deposit' %}
-                        {{-- amount of deposit --}}
-                        {!! format_amount_by_symbol(transaction.amount*-1, transaction.currency_symbol, transaction.currency_decimal_places) }}
-                        {{-- foreign amount of deposit --}}
+                        {# amount of deposit #}
+                        {{ formatAmountBySymbol(transaction.amount*-1, transaction.currency_symbol, transaction.currency_decimal_places) }}
+                        {# foreign amount of deposit #}
                         {% if null != transaction.foreign_amount %}
-                            ({!! format_amount_by_symbol(transaction.foreign_amount*-1, transaction.foreign_currency_symbol, transaction.foreign_currency_decimal_places) }})
-                        @endif
-                        {{-- primary currency amount of deposit --}}
+                            ({{ formatAmountBySymbol(transaction.foreign_amount*-1, transaction.foreign_currency_symbol, transaction.foreign_currency_decimal_places) }})
+                        {% endif %}
+                        {# primary currency amount of deposit #}
                         {% if convertToPrimary and 0 != transaction.pc_amount %}
-                            (~ {!! format_amount_by_symbol(transaction.pc_amount*-1, $primaryCurrency->symbol, $primaryCurrency->decimal_places) }})
-                        @endif
-                        {{-- transfer --}}
+                            (~ {{ formatAmountBySymbol(transaction.pc_amount*-1, primaryCurrency.symbol, primaryCurrency.decimal_places) }})
+                        {% endif %}
+                        {# transfer #}
                     {% elseif transaction.transaction_type_type == 'Transfer' %}
                         <span class="text-info money-transfer">
-                            {{-- amount of transfer --}}
+                            {# amount of transfer #}
                             {% if transaction.source_account_id == account.id %}
-                                {!! format_amount_by_symbol(transaction.amount, transaction.currency_symbol, transaction.currency_decimal_places, false) }}
-                            @endif
+                                {{ formatAmountBySymbol(transaction.amount, transaction.currency_symbol, transaction.currency_decimal_places, false) }}
+                            {% endif %}
                             {% if transaction.source_account_id != account.id %}
-                                {!! format_amount_by_symbol(transaction.amount*-1, transaction.currency_symbol, transaction.currency_decimal_places, false) }}
-                            @endif
+                                {{ formatAmountBySymbol(transaction.amount*-1, transaction.currency_symbol, transaction.currency_decimal_places, false) }}
+                            {% endif %}
 
-                            {{-- foreign amount of transfer --}}
+                            {# foreign amount of transfer #}
                             {% if null != transaction.foreign_amount and transaction.source_account_id == account.id %}
-                                ({!! format_amount_by_symbol(transaction.foreign_amount, transaction.foreign_currency_symbol, transaction.foreign_currency_decimal_places, false) }})
-                            @endif
+                                ({{ formatAmountBySymbol(transaction.foreign_amount, transaction.foreign_currency_symbol, transaction.foreign_currency_decimal_places, false) }})
+                            {% endif %}
                             {% if null != transaction.foreign_amount and transaction.source_account_id != account.id %}
-                                ({!! format_amount_by_symbol(transaction.foreign_amount*-1, transaction.foreign_currency_symbol, transaction.foreign_currency_decimal_places, false) }})
-                            @endif
+                                ({{ formatAmountBySymbol(transaction.foreign_amount*-1, transaction.foreign_currency_symbol, transaction.foreign_currency_decimal_places, false) }})
+                            {% endif %}
 
-                            {{-- primary currency amount of transfer --}}
+                            {# primary currency amount of transfer #}
                             {% if convertToPrimary and 0 != transaction.pc_amount %}
-                                (~ {!! format_amount_by_symbol(transaction.pc_amount*-1, $primaryCurrency->symbol, $primaryCurrency->decimal_places) }})
-                            @endif
+                                (~ {{ formatAmountBySymbol(transaction.pc_amount*-1, primaryCurrency.symbol, primaryCurrency.decimal_places) }})
+                            {% endif %}
                             </span>
-                        {{-- opening balance --}}
+                        {# opening balance #}
                     {% elseif transaction.transaction_type_type == 'Opening balance' %}
                         {% if transaction.source_account_type == 'Initial balance account' %}
-                            {!! format_amount_by_symbol(transaction.amount*-1, transaction.currency_symbol, transaction.currency_decimal_places) }}
+                            {{ formatAmountBySymbol(transaction.amount*-1, transaction.currency_symbol, transaction.currency_decimal_places) }}
                             {% if null != transaction.foreign_amount %}
-                                ({!! format_amount_by_symbol(transaction.foreign_amount*-1, transaction.foreign_currency_symbol, transaction.foreign_currency_decimal_places) }})
-                            @endif
+                                ({{ formatAmountBySymbol(transaction.foreign_amount*-1, transaction.foreign_currency_symbol, transaction.foreign_currency_decimal_places) }})
+                            {% endif %}
                             {% if convertToPrimary and 0 != transaction.pc_amount %}
-                                (~ {!! format_amount_by_symbol(transaction.pc_amount*-1, $primaryCurrency->symbol, $primaryCurrency->decimal_places) }})
-                            @endif
-                        @else
-                            {!! format_amount_by_symbol(transaction.amount, transaction.currency_symbol, transaction.currency_decimal_places) }}
+                                (~ {{ formatAmountBySymbol(transaction.pc_amount*-1, primaryCurrency.symbol, primaryCurrency.decimal_places) }})
+                            {% endif %}
+                        {% else %}
+                            {{ formatAmountBySymbol(transaction.amount, transaction.currency_symbol, transaction.currency_decimal_places) }}
                             {% if null != transaction.foreign_amount %}
-                                ({!! format_amount_by_symbol(transaction.foreign_amount, transaction.foreign_currency_symbol, transaction.foreign_currency_decimal_places) }})
-                            @endif
+                                ({{ formatAmountBySymbol(transaction.foreign_amount, transaction.foreign_currency_symbol, transaction.foreign_currency_decimal_places) }})
+                            {% endif %}
                             {% if convertToPrimary and 0 != transaction.pc_amount %}
-                                (~ {!! format_amount_by_symbol(transaction.pc_amount, $primaryCurrency->symbol, $primaryCurrency->decimal_places) }})
-                            @endif
-                        @endif
-                        {{-- reconciliation --}}
+                                (~ {{ formatAmountBySymbol(transaction.pc_amount, primaryCurrency.symbol, primaryCurrency.decimal_places) }})
+                            {% endif %}
+                        {% endif %}
+                        {# reconciliation #}
                     {% elseif transaction.transaction_type_type == 'Reconciliation' %}
                         {% if transaction.source_account_type == 'Reconciliation account' %}
-                            {!! format_amount_by_symbol(transaction.amount*-1, transaction.currency_symbol, transaction.currency_decimal_places) }}
+                            {{ formatAmountBySymbol(transaction.amount*-1, transaction.currency_symbol, transaction.currency_decimal_places) }}
                             {% if null != transaction.foreign_amount %}
-                                ({!! format_amount_by_symbol(transaction.foreign_amount*-1, transaction.foreign_currency_symbol, transaction.foreign_currency_decimal_places) }})
-                            @endif
+                                ({{ formatAmountBySymbol(transaction.foreign_amount*-1, transaction.foreign_currency_symbol, transaction.foreign_currency_decimal_places) }})
+                            {% endif %}
                             {% if convertToPrimary and 0 != transaction.pc_amount %}
-                                (~ {!! format_amount_by_symbol(transaction.pc_amount*-1, $primaryCurrency->symbol, $primaryCurrency->decimal_places) }})
-                            @endif
-                        @else
-                            {!! format_amount_by_symbol(transaction.amount, transaction.currency_symbol, transaction.currency_decimal_places) }}
+                                (~ {{ formatAmountBySymbol(transaction.pc_amount*-1, primaryCurrency.symbol, primaryCurrency.decimal_places) }})
+                            {% endif %}
+                        {% else %}
+                            {{ formatAmountBySymbol(transaction.amount, transaction.currency_symbol, transaction.currency_decimal_places) }}
                             {% if null != transaction.foreign_amount %}
-                                ({!! format_amount_by_symbol(transaction.foreign_amount, transaction.foreign_currency_symbol, transaction.foreign_currency_decimal_places) }})
-                            @endif
+                                ({{ formatAmountBySymbol(transaction.foreign_amount, transaction.foreign_currency_symbol, transaction.foreign_currency_decimal_places) }})
+                            {% endif %}
                             {% if convertToPrimary and 0 != transaction.pc_amount %}
-                                (~ {!! format_amount_by_symbol(transaction.pc_amount, $primaryCurrency->symbol, $primaryCurrency->decimal_places) }})
-                            @endif
-                        @endif
-                        {{-- liability credit --}}
+                                (~ {{ formatAmountBySymbol(transaction.pc_amount, primaryCurrency.symbol, primaryCurrency.decimal_places) }})
+                            {% endif %}
+                        {% endif %}
+                        {# liability credit #}
                     {% elseif transaction.transaction_type_type == 'Liability credit' %}
                         {% if transaction.source_account_type == 'Liability credit' %}
-                            {!! format_amount_by_symbol(transaction.amount, transaction.currency_symbol, transaction.currency_decimal_places) }}
+                            {{ formatAmountBySymbol(transaction.amount, transaction.currency_symbol, transaction.currency_decimal_places) }}
                             {% if null != transaction.foreign_amount %}
-                                ({!! format_amount_by_symbol(transaction.foreign_amount, transaction.foreign_currency_symbol, transaction.foreign_currency_decimal_places) }})
-                            @endif
+                                ({{ formatAmountBySymbol(transaction.foreign_amount, transaction.foreign_currency_symbol, transaction.foreign_currency_decimal_places) }})
+                            {% endif %}
                             {% if convertToPrimary and 0 != transaction.pc_amount %}
-                                (~ {!! format_amount_by_symbol(transaction.pc_amount, $primaryCurrency->symbol, $primaryCurrency->decimal_places) }})
-                            @endif
-                        @else
-                            {!! format_amount_by_symbol(transaction.amount*-1, transaction.currency_symbol, transaction.currency_decimal_places) }}
+                                (~ {{ formatAmountBySymbol(transaction.pc_amount, primaryCurrency.symbol, primaryCurrency.decimal_places) }})
+                            {% endif %}
+                        {% else %}
+                            {{ formatAmountBySymbol(transaction.amount*-1, transaction.currency_symbol, transaction.currency_decimal_places) }}
                             {% if null != transaction.foreign_amount %}
-                                ({!! format_amount_by_symbol(transaction.foreign_amount*-1, transaction.foreign_currency_symbol, transaction.foreign_currency_decimal_places) }})
-                            @endif
+                                ({{ formatAmountBySymbol(transaction.foreign_amount*-1, transaction.foreign_currency_symbol, transaction.foreign_currency_decimal_places) }})
+                            {% endif %}
                             {% if convertToPrimary and 0 != transaction.pc_amount %}
-                                (~ {!! format_amount_by_symbol(transaction.pc_amount*-1, $primaryCurrency->symbol, $primaryCurrency->decimal_places) }})
-                            @endif
-                        @endif
+                                (~ {{ formatAmountBySymbol(transaction.pc_amount*-1, primaryCurrency.symbol, primaryCurrency.decimal_places) }})
+                            {% endif %}
+                        {% endif %}
 
 
-                        {{-- THE REST --}}
-                    @else
-                        {{-- amount of withdrawal --}}
-                        {!! format_amount_by_symbol(transaction.amount, transaction.currency_symbol, transaction.currency_decimal_places) }}
+                        {# THE REST #}
+                    {% else %}
+                        {# amount of withdrawal #}
+                        {{ formatAmountBySymbol(transaction.amount, transaction.currency_symbol, transaction.currency_decimal_places) }}
 
-                        {{-- foreign amount of withdrawal --}}
+                        {# foreign amount of withdrawal #}
                         {% if null != transaction.foreign_amount %}
-                            ({!! format_amount_by_symbol(transaction.foreign_amount, transaction.foreign_currency_symbol, transaction.foreign_currency_decimal_places) }})
-                        @endif
-                        {{-- primary currency amount of withdrawal, if not in foreign currency --}}
-                        {% if convertToPrimary and 0 != transaction.pc_amount and $primaryCurrency->id != transaction.foreign_currency_id %}
-                            (~ {!! format_amount_by_symbol(transaction.pc_amount, $primaryCurrency->symbol, $primaryCurrency->decimal_places) }})
-                        @endif
-                    @endif
+                            ({{ formatAmountBySymbol(transaction.foreign_amount, transaction.foreign_currency_symbol, transaction.foreign_currency_decimal_places) }})
+                        {% endif %}
+                        {# primary currency amount of withdrawal, if not in foreign currency #}
+                        {% if convertToPrimary and 0 != transaction.pc_amount and primaryCurrency.id != transaction.foreign_currency_id %}
+                            (~ {{ formatAmountBySymbol(transaction.pc_amount, primaryCurrency.symbol, primaryCurrency.decimal_places) }})
+                        {% endif %}
+                    {% endif %}
                 </td>
                 {% if (fireflyiiiconfig('use_running_balance', true)) %}
-                <td class=" {{ className }} text-end">
-                    {{-- RUNNING BALANCE --}}
+                <td class=" {{ className }} text-right">
+                    {# RUNNING BALANCE #}
                     {% if (null == transaction.balance_dirty or false == transaction.balance_dirty) and null != transaction.destination_balance_after and null != transaction.source_balance_after %}
                         {% if transaction.transaction_type_type == 'Deposit' %}
                             {% if transaction.source_account_id == account.id %}
-                                <span title="Deposit, source">{!! format_amount_by_symbol(transaction.source_balance_after, transaction.currency_symbol, transaction.currency_decimal_places) }}</span>
-                            @else
+                                <span title="Deposit, source">{{ formatAmountBySymbol(transaction.source_balance_after, transaction.currency_symbol, transaction.currency_decimal_places) }}</span>
+                            {% else %}
                                 {% if transaction.source_account_type == 'Revenue account' %}
-                                    <span title="Deposit from revenue">{!! format_amount_by_symbol(transaction.destination_balance_after, transaction.currency_symbol, transaction.currency_decimal_places) }}</span>
-                                @else
-                                    <span title="Deposit from liab">{!! format_amount_by_symbol(transaction.destination_balance_after, transaction.foreign_currency_symbol, transaction.foreign_currency_decimal_places) }}</span>
-                                @endif
-                                {{-- if this is a deposit from revenue account, use the destination account currency? For #12043 and #12169 --}}
-                                {{-- otherwise, keep at source account --}}
-                                {{-- changed from normal currency_symbol to foreign_currency_symbol for #12043 --}}
+                                    <span title="Deposit from revenue">{{ formatAmountBySymbol(transaction.destination_balance_after, transaction.currency_symbol, transaction.currency_decimal_places) }}</span>
+                                {% else %}
+                                    {#  #}
+                                    <span title="Deposit from liab">{{ formatAmountBySymbol(transaction.destination_balance_after, transaction.currency_symbol, transaction.currency_decimal_places) }}</span>
+                                {% endif %}
+                                {# if this is a deposit from revenue account, use the destination account currency? For #12043 and #12169 #}
+                                {# otherwise, keep at source account #}
+                                {# changed from normal currency_symbol to foreign_currency_symbol for #12043 #}
 
                             {%  endif %}
 
                         {% elseif transaction.transaction_type_type == 'Withdrawal' %}
-                            {{-- withdrawal into a liability --}}
+                            {# withdrawal into a liability #}
                             {% if 'Loan' == transaction.destination_account_type or 'Mortgage' == transaction.destination_account_type or 'Debt' == transaction.destination_account_type %}
                                 {% if currency.id == transaction.currency_id %}
                                     {% if account.id == transaction.source_account_id %}
-                                        <span title="Withdrawal, liab, source">{!! format_amount_by_symbol(transaction.source_balance_after, transaction.currency_symbol, transaction.currency_decimal_places) }}</span>
+                                        <span title="Withdrawal, liab, source">{{ formatAmountBySymbol(transaction.source_balance_after, transaction.currency_symbol, transaction.currency_decimal_places) }}</span>
                                     {% elseif account.id == transaction.destination_account_id %}
-                                        <span title="Withdrawal, liab, dest">{!! format_amount_by_symbol(transaction.destination_balance_after, transaction.currency_symbol, transaction.currency_decimal_places) }}</span>
-                                    @else
+                                        <span title="Withdrawal, liab, dest">{{ formatAmountBySymbol(transaction.destination_balance_after, transaction.currency_symbol, transaction.currency_decimal_places) }}</span>
+                                    {% else %}
                                         -
-                                    @endif
-                                @endif
+                                    {% endif %}
+                                {% endif %}
                                 {% if currency.id == transaction.foreign_currency_id and null != transaction.destination_balance_after and null != transaction.destination_balance_after %}
-                                    <span title="Withdrawal, liab, dest 2">{!! format_amount_by_symbol(transaction.destination_balance_after, transaction.foreign_currency_symbol ?? transaction.currency_symbol, transaction.foreign_currency_decimal_places ?? transaction.currency_decimal_places) }}</span>
-                                @endif
-                            {{-- withdrawal into an expense account --}}
-                            @else
+                                    <span title="Withdrawal, liab, dest 2">{{ formatAmountBySymbol(transaction.destination_balance_after, transaction.foreign_currency_symbol ?? transaction.currency_symbol, transaction.foreign_currency_decimal_places ?? transaction.currency_decimal_places) }}</span>
+                                {% endif %}
+                            {# withdrawal into an expense account #}
+                            {% else %}
                                 {% if account.id == transaction.source_account_id %}
-                                    <span title="Withdrawal, source">{!! format_amount_by_symbol(transaction.source_balance_after, transaction.currency_symbol, transaction.currency_decimal_places) }}</span>
+                                    <span title="Withdrawal, source">{{ formatAmountBySymbol(transaction.source_balance_after, transaction.currency_symbol, transaction.currency_decimal_places) }}</span>
                                 {% elseif account.id == transaction.destination_account_id %}
-                                    <span title="Withdrawal, dest">{!! format_amount_by_symbol(transaction.destination_balance_after, transaction.currency_symbol, transaction.currency_decimal_places) }}</span>
-                                @else
+                                    <span title="Withdrawal, dest">{{ formatAmountBySymbol(transaction.destination_balance_after, transaction.currency_symbol, transaction.currency_decimal_places) }}</span>
+                                {% else %}
                                     -
-                                @endif
-                            @endif
+                                {% endif %}
+                            {% endif %}
                         {% elseif transaction.transaction_type_type == 'Opening balance' %}
                             {% if account.id == transaction.source_account_id %}
-                                <span title="Opening balance, src">{!! format_amount_by_symbol(transaction.source_balance_after, transaction.currency_symbol, transaction.currency_decimal_places) }}</span>
+                                <span title="Opening balance, src">{{ formatAmountBySymbol(transaction.source_balance_after, transaction.currency_symbol, transaction.currency_decimal_places) }}</span>
                             {% elseif account.id == transaction.destination_account_id %}
-                                <span title="Opening balance, dest">{!! format_amount_by_symbol(transaction.destination_balance_after, transaction.currency_symbol, transaction.currency_decimal_places) }}</span>
-                            @else
+                                <span title="Opening balance, dest">{{ formatAmountBySymbol(transaction.destination_balance_after, transaction.currency_symbol, transaction.currency_decimal_places) }}</span>
+                            {% else %}
                                 -
-                            @endif
+                            {% endif %}
                         {% elseif transaction.transaction_type_type == 'Transfer' %}
                             {% if account.id == transaction.source_account_id %}
-                                <span title="Transfer, source">{!! format_amount_by_symbol(transaction.source_balance_after, transaction.currency_symbol, transaction.currency_decimal_places) }}</span>
-                            @else
+                                <span title="Transfer, source">{{ formatAmountBySymbol(transaction.source_balance_after, transaction.currency_symbol, transaction.currency_decimal_places) }}</span>
+                            {% else %}
                                 {% if null == transaction.foreign_currency_id %}
-                                    <span title="Transfer, dest, normal currency">{!! format_amount_by_symbol(transaction.destination_balance_after, transaction.currency_symbol, transaction.currency_decimal_places) }}</span>
-                                @endif
+                                    <span title="Transfer, dest, normal currency">{{ formatAmountBySymbol(transaction.destination_balance_after, transaction.currency_symbol, transaction.currency_decimal_places) }}</span>
+                                {% endif %}
                                 {% if null != transaction.foreign_currency_id %}
-                                    <span title="Transfer, dest, foreign currency">{!! format_amount_by_symbol(transaction.destination_balance_after, transaction.foreign_currency_symbol, transaction.foreign_currency_decimal_places) }}</span>
-                                @endif
-                            @endif
-                        @else
+                                    <span title="Transfer, dest, foreign currency">{{ formatAmountBySymbol(transaction.destination_balance_after, transaction.foreign_currency_symbol, transaction.foreign_currency_decimal_places) }}</span>
+                                {% endif %}
+                            {% endif %}
+                        {% else %}
                             &nbsp;
-                        @endif
-                    @endif
+                        {% endif %}
+                    {% endif %}
                 </td>
-                @endif
+                {% endif %}
                 <td class="{{ className }}">
-                    {{ transaction.date.isoFormat($monthAndDayFormat) }}
+                    {{ transaction.date.isoFormat(monthAndDayFormat) }}
                 </td>
                 <td class="{{ className }}">
                     {% if 'Cash account' == transaction.source_account_type %}
-                        <span class="text-success">({{ __('firefly.cash') }})</span>
-                    @else
+                        <span class="text-success">({{ 'cash'|_ }})</span>
+                    {% else %}
                         <a href="{{ route('accounts.show', [transaction.source_account_id|default(1)]) }}"
                            title="{{ transaction.source_account_iban|default(transaction.source_account_name) }}">{{ transaction.source_account_name }}</a>
-                    @endif
+                    {% endif %}
                 </td>
                 <td class="{{ className }}">
                     {% if 'Cash account' == transaction.destination_account_type %}
-                        <span class="text-success">({{ __('firefly.cash') }})</span>
-                    @else
+                        <span class="text-success">({{ 'cash'|_ }})</span>
+                    {% else %}
                         <a href="{{ route('accounts.show', [transaction.destination_account_id|default(1)]) }}"
                            title="{{ transaction.destination_account_iban|default(transaction.destination_account_name) }}">{{ transaction.destination_account_name }}</a>
-                    @endif
+                    {% endif %}
                 </td>
                 {% if showCategory %}
                     <td class="hidden-xs {{ className }}">
                         {% if transaction.category_id %}
                             <a href="{{ route('categories.show', [transaction.category_id]) }}"
                                title="{{ transaction.category_name }}">{{ transaction.category_name }}</a>
-                        @endif
+                        {% endif %}
                     </td>
-                @endif
+                {% endif %}
                 {% if showBudget %}
                     <td class="hidden-xs {{ className }}">
                         {% if transaction.budget_id %}
                             <a href="{{ route('budgets.show', [transaction.budget_id]) }}"
                                title="{{ transaction.budget_name }}">{{ transaction.budget_name }}</a>
-                        @endif
+                        {% endif %}
                     </td>
-                @endif
+                {% endif %}
 
                 {% if group.count == 1 %}
                     <td class="hidden-xs {{ className }}">
-                        <div class="btn-group btn-group-sm text-end">
-                            <button type="button" class="btn btn-outline-secondary dropdown-toggle" data-toggle="dropdown"
+                        <div class="btn-group btn-group-xs pull-right">
+                            <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown"
                                     aria-haspopup="true" aria-expanded="false">
-                                {{ __('firefly.actions') }} <span class="caret"></span></button>
+                                {{ 'actions'|_ }} <span class="caret"></span></button>
                             <ul class="dropdown-menu dropdown-menu-right" role="menu">
                                 <li><a href="{{ route('transactions.edit', [group.id]) }}"><span
-                                            class="bi bi-pencil"></span> {{ __('firefly.edit') }}</a></li>
+                                            class="fa fa-fw fa-pencil"></span> {{ 'edit'|_ }}</a></li>
                                 {% if transaction.transaction_type_type != 'Opening balance' and transaction.transaction_type_type != 'Liability credit' %}
                                 <li><a href="{{ route('transactions.delete', [group.id]) }}"><span
-                                            class="bi bi-trash"></span> {{ __('firefly.delete') }}</a></li>
-                                @endif
+                                            class="fa fa-fw fa-trash"></span> {{ 'delete'|_ }}</a></li>
+                                {% endif %}
                                 {% if transaction.transaction_type_type != 'Reconciliation' and transaction.transaction_type_type != 'Opening balance' and transaction.transaction_type_type != 'Liability credit' %}
                                 <li><a href="#" data-id="{{ group.id }}" class="clone-transaction"><span
-                                            class="bi bi-copy"></span> {{ __('firefly.clone') }}</a></li>
+                                            class="fa fa-copy fa-fw"></span> {{ 'clone'|_ }}</a></li>
                                 <li><a href="#" data-id="{{ group.id }}" class="clone-transaction-and-edit"><span
-                                            class="bi bi-copy"></span> {{ __('firefly.clone_and_edit') }}</a></li>
+                                            class="fa fa-copy fa-fw"></span> {{ 'clone_and_edit'|_ }}</a></li>
                                 <li>
                                     <a href="{{ route('rules.create-from-journal', [transaction.transaction_journal_id]) }}"><span
-                                            class="bi bi-shuffle"></span> {{ 'create_rule_from_transaction'|_ }}
+                                            class="fa fa-fw fa-random"></span> {{ 'create_rule_from_transaction'|_ }}
                                     </a></li>
-                                @endif
+                                {% endif %}
                             </ul>
                         </div>
                     </td>
 
-                @endif
+                {% endif %}
                 {% if group.count != 1 %}
                     <td class="hidden-xs {{ className }}">
                         &nbsp;
                     </td>
-                @endif
+                {% endif %}
                 <td class="hidden-xs {{ className }}">
                     {% if transaction.transaction_type_type != 'Reconciliation' and transaction.transaction_type_type != 'Opening balance' and transaction.transaction_type_type != 'Liability credit' %}
-                    <div class="text-end">
+                    <div class="pull-right">
                         <input id="list_{{ transaction.transaction_journal_id }}"
                                value="{{ transaction.transaction_journal_id }}"
                                name="journals[{{ transaction.transaction_journal_id }}]"
                                type="checkbox" class="mass-select form-check-inline"
                                data-value="{{ transaction.transaction_journal_id }}"/>
-                        @endif
+                        {% endif %}
                     </div>
                 </td>
             </tr>
-        @endforeach
-    @endforeach
+        {% endfor %}
+    {% endfor %}
     </tbody>
     <tfoot>
     <tr>
         <td colspan="8">
-            <div class="text-end">
+            <div class="pull-right">
                 <!-- Single button -->
-                <div class="btn-group action-menu btn-group-sm text-end hidden">
-                    <button type="button" class="btn btn-outline-secondary btn-sm dropdown-toggle" data-toggle="dropdown"
+                <div class="btn-group action-menu btn-group-xs pull-right hidden">
+                    <button type="button" class="btn btn-default btn-sm dropdown-toggle" data-toggle="dropdown"
                             aria-haspopup="true" aria-expanded="false">
-                        {{ __('firefly.actions') }} <span class="caret"></span>
+                        {{ 'actions'|_ }} <span class="caret"></span>
                     </button>
-                    <ul class="dropdown-menu btn-group-sm dropdown-menu-right">
-                        <li><a href="#" class="mass-edit"><span class="bi bi-pencil"></span>
+                    <ul class="dropdown-menu btn-group-xs dropdown-menu-right">
+                        <li><a href="#" class="mass-edit"><span class="fa fa-fw fa-pencil"></span>
                                 <span>{{ 'mass_edit'|_ }}</span></a></li>
-                        <li><a href="#" class="bulk-edit"><span class="bi bi-pencil-square-o"></span>
+                        <li><a href="#" class="bulk-edit"><span class="fa fa-fw fa-pencil-square-o"></span>
                                 <span>{{ 'bulk_edit'|_ }}</span></a></li>
-                        <li><a href="#" class="mass-delete"><span class="bi bi-trash"></span>
+                        <li><a href="#" class="mass-delete"><span class="fa fa-fw fa-trash"></span>
                                 <span>{{ 'mass_delete'|_ }}</span></a></li>
                     </ul>
                 </div>
@@ -452,13 +453,13 @@
     <tr>
         {% if showCategory or showBudget %}
             <td colspan="9" class="no-margin-pagination">{{ groups.links('pagination.bootstrap-4')|raw }}</td>
-        @else
+        {% else %}
             <td colspan="8" class="no-margin-pagination">{{ groups.links('pagination.bootstrap-4')|raw }}</td>
-        @endif
+        {% endif %}
     </tr>
     </tfoot>
 </table>
-<script type="text/javascript" nonce="{{ $JS_NONCE }}">
+<script type="text/javascript" nonce="{{ JS_NONCE }}">
     var cloneGroupUrl = '{{ route('transactions.clone') }}';
     var cloneAndEditUrl = '{{ route('transactions.clone') }}?redirect=edit';
 </script>

@@ -8,7 +8,7 @@ disclosure and response policy to ensure that critical issues are responsibly ha
 > [!WARNING]  
 > Due to a large number of irrelevant, noisy and uninformed AI-generated security advisories coming my way, reporting any the following security issues may result in a permanent ban from the Firefly III organization on GitHub.
 
-1. Any SSRF in any user provided URL field (webhooks, ntfy, SimpleFIN, Slack). It's by design that users may set-up any URL they want, be it internal, private or non-existing.
+1. Any SSRF or DNS/hostname issues in any user provided URL field (webhooks, ntfy, SimpleFIN, Slack). It's by design that users may set-up any URL they want, be it internal, private or non-existing.
 2. Any XSS issue without a viable attack tree. If you can find a spot where Firefly III or the associated tools render unescaped data, it's not a security issue unless you can show me an actual attack that gets that data into the system.
 3. Any issue that is not true. AI models have already *hallucinated* security issues in Firefly III. They've referred to **non-existing** functions, templates and files. Including line numbers and code excerpts. Validate your findings before you report them to me.
 

@@ -3,6 +3,62 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
+## v6.6.5 - 2026-06-30
+
+<!-- summary: This release fixes some security issues and many other ones. -->
+
+### Changed
+
+- Expanded AI disclosure rules and security issue disclosure rules.
+
+### Fixed
+
+- [Issue 12296](https://github.com/firefly-iii/firefly-iii/issues/12296) (Limit on the number of repetition of a recurring operation is inconsistent between API & web form) reported by @AlexRNL
+- [Issue 12297](https://github.com/firefly-iii/firefly-iii/issues/12297) (CurrencyRepository::enable() sets enabled = false (copy/paste from disable())) reported by @abhibalu
+- [Issue 12305](https://github.com/firefly-iii/firefly-iii/issues/12305) (2FA QR code not rendered: enable-mfa.twig outputs google2fa-qrcode v4 data-URI as text, not an image) reported by @Pioszym
+- [Issue 12306](https://github.com/firefly-iii/firefly-iii/issues/12306) (Deprecated apple-mobile-web-app-capable meta tag - add standard mobile-web-app-capable) reported by @Pioszym
+- [Issue 12309](https://github.com/firefly-iii/firefly-iii/issues/12309) (Incorrect account total on account overview page) reported by @halilim
+- [Issue 12339](https://github.com/firefly-iii/firefly-iii/issues/12339) (Default currency resets / coult not find transaction currency with code) reported by @rarosalion
+- [Issue 12354](https://github.com/firefly-iii/firefly-iii/issues/12354) (Redirect after session expiry on mobile leads to 404 /transactions/:tag) reported by @boosnie
+- [Issue 12353](https://github.com/firefly-iii/firefly-iii/issues/12353) ([UI] add margin or padding to tags) reported by @zhiiwg
+- [Issue 12356](https://github.com/firefly-iii/firefly-iii/issues/12356) (Tags page all transaction link invalid) reported by @ppslim
+- [Issue 12370](https://github.com/firefly-iii/firefly-iii/issues/12370) (Running balance uses an incorrect currency indicator when dealing with cash accounts) reported by @jgmm81
+- [Issue 12396](https://github.com/firefly-iii/firefly-iii/issues/12396) (User creation using API error - user has no user group.) reported by @gesdomuscom
+- [Issue 12401](https://github.com/firefly-iii/firefly-iii/issues/12401) (Minimal amount of subscription can be above max amount) reported by @bastantoine
+
+### Security
+
+- Fix issue with cron API call not recognizing cron tokens, found by Rajib Mahmud
+- Fix issue with installer, found by Rajib Mahmud and others
+
+## v6.6.4 - 2026-06-30
+
+<!-- summary: This release fixes some security issues and many other ones. -->
+
+### Changed
+
+- Expanded AI disclosure rules and security issue disclosure rules.
+
+### Fixed
+
+- [Issue 12296](https://github.com/firefly-iii/firefly-iii/issues/12296) (Limit on the number of repetition of a recurring operation is inconsistent between API & web form) reported by @AlexRNL
+- [Issue 12297](https://github.com/firefly-iii/firefly-iii/issues/12297) (CurrencyRepository::enable() sets enabled = false (copy/paste from disable())) reported by @abhibalu
+- [Issue 12305](https://github.com/firefly-iii/firefly-iii/issues/12305) (2FA QR code not rendered: enable-mfa.twig outputs google2fa-qrcode v4 data-URI as text, not an image) reported by @Pioszym
+- [Issue 12306](https://github.com/firefly-iii/firefly-iii/issues/12306) (Deprecated apple-mobile-web-app-capable meta tag - add standard mobile-web-app-capable) reported by @Pioszym
+- [Issue 12309](https://github.com/firefly-iii/firefly-iii/issues/12309) (Incorrect account total on account overview page) reported by @halilim
+- [Issue 12339](https://github.com/firefly-iii/firefly-iii/issues/12339) (Default currency resets / coult not find transaction currency with code) reported by @rarosalion
+- [Issue 12354](https://github.com/firefly-iii/firefly-iii/issues/12354) (Redirect after session expiry on mobile leads to 404 /transactions/:tag) reported by @boosnie
+- [Issue 12353](https://github.com/firefly-iii/firefly-iii/issues/12353) ([UI] add margin or padding to tags) reported by @zhiiwg
+- [Issue 12356](https://github.com/firefly-iii/firefly-iii/issues/12356) (Tags page all transaction link invalid) reported by @ppslim
+- [Issue 12370](https://github.com/firefly-iii/firefly-iii/issues/12370) (Running balance uses an incorrect currency indicator when dealing with cash accounts) reported by @jgmm81
+- [Issue 12396](https://github.com/firefly-iii/firefly-iii/issues/12396) (User creation using API error - user has no user group.) reported by @gesdomuscom
+- [Issue 12401](https://github.com/firefly-iii/firefly-iii/issues/12401) (Minimal amount of subscription can be above max amount) reported by @bastantoine
+
+### Security
+
+- Fix issue with cron API call not recognizing cron tokens, found by Rajib Mahmud
+- Fix issue with installer, found by Rajib Mahmud and others
+
 ## v6.6.3 - 2026-05-21
 
 <!-- summary: This release fixes an XSS issue and some minor other bugs -->

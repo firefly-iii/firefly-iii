@@ -164,6 +164,7 @@ jobs:
         run: |
           npm install
           npm run prod  --workspace=v1 --verbose
+          npm run build --workspace=v2 --verbose || true
           npm run build --workspace=v3 --verbose || true
           npm update
       - name: Cleanup changelog
