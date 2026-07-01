@@ -289,7 +289,7 @@ class Navigation
             'last30'  => $currentEnd->addDays(30)->startOfDay(),
             'last90'  => $currentEnd->addDays(90)->startOfDay(),
             'last365' => $currentEnd->addDays(365)->startOfDay(),
-            // 'MTD'     => $currentEnd->startOfMonth()->startOfDay(),
+            'MTD'     => $currentEnd->startOfMonth()->startOfDay(),
             'QTD'     => $currentEnd->firstOfQuarter()->startOfDay(),
             'YTD'     => $currentEnd->startOfYear()->startOfDay(),
             default   => null
