@@ -1,4 +1,5 @@
 <?php
+
 /*
  * LockedOutException.php
  * Copyright (c) 2026 james@firefly-iii.org
@@ -23,7 +24,4 @@ declare(strict_types=1);
 
 namespace FireflyIII\Exceptions;
 
-class LockedOutException extends FireflyException
-{
-
-}
+class LockedOutException extends FireflyException {}
