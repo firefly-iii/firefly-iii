@@ -260,9 +260,9 @@
                                                             class="bi bi-copy"></span> {{ __('firefly.clone_and_edit') }}</a></li>
                                             @endif
 
-                                            <li><a class="dropdown-item" href="#" class="link-modal"
+                                            <li><a class="dropdown-item link-modal" href="#"
                                                    data-journal="{{ $journal['transaction_journal_id'] }}"><span
-                                                        class="fa fa-link"></span>{{ __('firefly.link_transaction') }}</a></li>
+                                                        class="bi bi-link"></span>{{ __('firefly.link_transaction') }}</a></li>
                                             <li role="separator" class="divider"></li>
                                             <li>
                                                 <a class="dropdown-item" href="{{ route('rules.create-from-journal', [$journal['transaction_journal_id']]) }}"><span
@@ -460,7 +460,7 @@
                                         <td class="onetwenty">
                                             <div class="btn-group btn-group-sm">
                                                 <a href="#" class="btn btn-outline-secondary switch-link" data-id="{{ $link['id'] }}"><span
-                                                        class="fa fa-arrows-h"></span></a>
+                                                        class="bi bi-arrow-left-right"></span></a>
                                                 <a href="{{ route('transactions.link.delete', [$link['id']]) }}"
                                                    class="btn btn-danger"><span class="bi bi-trash"></span></a>
                                             </div>
@@ -474,9 +474,9 @@
                                             "<a href="{{ route('transactions.show', $link['group']) }}"
                                                 title="{{ $link['description'] }}">{{ $link['description'] }}</a>"
 
-                                            ({{ $link['amount'] }})
+                                            ({!! $link['amount'] !!})
                                             @if('' !== $link['foreign_amount'])
-                                                ({{ $link['foreign_amount'] }})
+                                                ({!! $link['foreign_amount'] !!})
                                             @endif
                                             @if($link['notes'] !== "")
                                                 ({{ $link['notes'] }})
@@ -541,7 +541,7 @@
     </div>
 @endsection
 @section('scripts')
-    @vite(['js/pages/transactions/show.js'])
+    @vite(['js/pages/generic.js'])
     <script type="text/javascript" nonce="{{ $JS_NONCE }}">
         var modalDialogURL = '{{ route('transactions.link.modal', ['%JOURNAL%']) }}';
         var acURL = '{{ route('api.v1.autocomplete.transactions-with-id') }}';

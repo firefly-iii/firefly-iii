@@ -1,9 +1,4 @@
 @extends('layout.v3.session')
-
-
-    {{ Breadcrumbs.render(Route.getCurrentRoute.getName, journals) }}
-@endsection
-
 @section('content')
     <form method="POST" action="{{ route('transactions.bulk.update') }}" accept-charset="UTF-8" class="form-horizontal" id="update">
         <input name="_token" type="hidden" value="{{ csrf_token() }}">
@@ -12,12 +7,12 @@
             <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
                 <div class="card mb-2">
                     <div class="card-header">
-                        <h3 class="card-title">{{ 'mass_bulk_journals'|_ }}</h3>
+                        <h3 class="card-title">{{ __('firefly.mass_bulk_journals') }}</h3>
                     </div>
 
                     <div class="card-body">
                         <p>
-                            {{ 'mass_bulk_journals_explain'|_ }}
+                            {{ __('firefly.mass_bulk_journals_explain') }}
                         </p>
 
                         <div class="row">
@@ -35,58 +30,56 @@
                                     </tr>
                                     </thead>
                                     <tbody>
-                                    {% for journal in journals %}
-                                        <input type="hidden" name="journals[]" value="{{ journal.transaction_journal_id }}"/>
+                                    @foreach($journals as $journal)
+                                        <input type="hidden" name="journals[]" value="{{ $journal['transaction_journal_id'] }}"/>
                                         <tr>
                                             <td>
-                                                <a href="{{ route('transactions.show', [journal.transaction_group_id]) }}">
-                                                    {{ journal.description }}</a></td>
+                                                <a href="{{ route('transactions.show', [$journal['transaction_group_id']]) }}">
+                                                    {{ $journal['description'] }}</a></td>
                                             <td>
-                                                {% if journal.transaction_type_type == 'Deposit' %}
-                                                    {!! format_amount_by_symbol(journal.amount*-1, journal.currency_symbol, journal.currency_decimal_places) }}
-                                                    {% if null != journal.foreign_amount %}
-                                                        ({!! format_amount_by_symbol(journal.foreign_amount*-1, journal.foreign_currency_symbol, journal.foreign_currency_decimal_places) }})
+                                                @if($journal['transaction_type_type'] == 'Deposit')
+                                                    {!! format_amount_by_symbol($journal['amount']*-1, $journal['currency_symbol'], $journal['currency_decimal_places']) !!}
+                                                    @if(null != $journal['foreign_amount'])
+                                                        ({!! format_amount_by_symbol($journal['foreign_amount']*-1, $journal['foreign_currency_symbol'], $journal['foreign_currency_decimal_places']) !!})
                                                     @endif
-                                                {% elseif journal.transaction_type_type == 'Transfer' %}
+                                                @elseif($journal['transaction_type_type'] == 'Transfer')
                                                     <span class="text-info money-transfer">
-                                                        {!! format_amount_by_symbol(journal.amount*-1, journal.currency_symbol, journal.currency_decimal_places, false) }}
-                                                        {% if null != journal.foreign_amount %}
-                                                            ({!! format_amount_by_symbol(journal.foreign_amount*-1, journal.foreign_currency_symbol, journal.foreign_currency_decimal_places, false) }})
+                                                        {!! format_amount_by_symbol($journal['amount']*-1, $journal['currency_symbol'], $journal['currency_decimal_places'], false) !!}
+                                                        @if(null != $journal['foreign_amount'])
+                                                            ({!! format_amount_by_symbol($journal['foreign_amount']*-1, $journal['foreign_currency_symbol'], $journal['foreign_currency_decimal_places'], false) !!})
                                                         @endif
                                                     </span>
                                                 @else
-                                                    {!! format_amount_by_symbol(journal.amount, journal.currency_symbol, journal.currency_decimal_places) }}
-                                                    {% if null != journal.foreign_amount %}
-                                                        ({!! format_amount_by_symbol(journal.foreign_amount, journal.foreign_currency_symbol, journal.foreign_currency_decimal_places) }})
+                                                    {!! format_amount_by_symbol($journal['amount'], $journal['currency_symbol'], $journal['currency_decimal_places']) !!}
+                                                    @if(null != $journal['foreign_amount'])
+                                                        ({!! format_amount_by_symbol($journal['foreign_amount'], $journal['foreign_currency_symbol'], $journal['foreign_currency_decimal_places']) !!})
                                                     @endif
                                                 @endif
 
 
                                             </td>
-                                            <td>{{ journal.date.isoFormat($monthAndDayFormat) }}</td>
+                                            <td>{{ $journal['date']->isoFormat($monthAndDayFormat) }}</td>
                                             <td>
-                                                {% if journal.category_id != null %}
-                                                    <a href="{{ route('categories.show', [$journal['category_id']]) }}" title="{{ journal['category_name'] }}">{{ journal['category_name'] }}</a>
+                                                @if($journal['category_id'] != null)
+                                                    <a href="{{ route('categories.show', [$journal['category_id']]) }}" title="{{ $journal['category_name'] }}">{{ $journal['category_name'] }}</a>
                                                 @endif
                                             </td>
                                             <td>
-                                                {% if journal.budget_id != null %}
-                                                    <a href="{{ route('budgets.show', [journal.budget_id]) }}" title="{{ journal.budget_name }}">{{ journal.budget_name }}</a>
+                                                @if($journal['budget_id'] != null)
+                                                    <a href="{{ route('budgets.show', [$journal['budget_id']]) }}" title="{{ $journal['budget_name'] }}">{{ $journal['budget_name'] }}</a>
                                                 @endif
                                             </td>
                                             <td>
-                                                {% for tag in journal.tags %}
-                                                    {% if 0 != tag.id %}
-                                                        <span class="inline"><a class="badge text-bg-success" href="{{ route('tags.show', [tag.id]) }}">
-                                                        <span class="bi bi-tag"></span>
-                                                        {{ tag.name }}</a>
-                                                </span>
+                                                @foreach($journal['tags'] as $tag)
+                                                    @if(0 !== $tag['id'])
+                                                        <span class="inline"><a class="badge text-bg-success" href="{{ route('tags.show', [$tag['id']]) }}">
+                                                        <span class="bi bi-tag"></span>{{ $tag['name'] }}</a></span>
                                                     @endif
                                                 @endforeach
                                             </td>
                                             <td>
-                                                {% if journal.journals_in_group > 1 %}
-                                                    <span title="{{ 'part_of_split'|_ }}" class="text-danger fa fa-exclamation-triangle"></span>
+                                                @if($journal['journals_in_group'] > 1)
+                                                    <span title="{{ __('firefly.part_of_split') }}" class="text-danger fa fa-exclamation-triangle"></span>
                                                 @endif
                                             </td>
                                         </tr>
@@ -96,7 +89,7 @@
                             </div>
                         </div>
                         <p>
-                            {{ 'bulk_set_new_values'|_ }}
+                            {{__('firefly.bulk_set_new_values') }}
                         </p>
                         <div class="row">
                             <div class="col-lg-8 col-md-12 col-sm-12 col-xs-12">
@@ -110,7 +103,7 @@
                                             <div class="checkbox">
                                                 <label>
                                                     <input name="ignore_category" type="checkbox" value="1" checked>
-                                                    {{ 'no_bulk_category'|_ }}
+                                                    {{ __('firefly.no_bulk_category') }}
                                                 </label>
                                             </div>
                                         </td>
@@ -119,8 +112,8 @@
                                         <th>{{ trans('list.budget') }}</th>
                                         <td>
                                             <select class="form-control" name="budget_id">
-                                                {% for id, budget in budgetList %}
-                                                    <option value="{{ id }}" label="{{ budget }}">{{ budget }}</option>
+                                                @foreach($budgetList as $id => $budget)
+                                                    <option value="{{ $id }}" label="{{ $budget }}">{{ $budget }}</option>
                                                 @endforeach
                                             </select>
                                         </td>
@@ -128,7 +121,7 @@
                                             <div class="checkbox">
                                                 <label>
                                                     <input name="ignore_budget" type="checkbox" value="1" checked>
-                                                    {{ 'no_bulk_budget'|_ }}
+                                                    {{ __('firefly.no_bulk_budget') }}
                                                 </label>
                                             </div>
                                         </td>
@@ -142,19 +135,19 @@
                                             <div class="radio">
                                                 <label>
                                                     <input type="radio" name="tags_action" id="tags_action_do_nothing" value="no_nothing" checked/>
-                                                    {{ 'no_bulk_tags'|_ }}
+                                                    {{ __('firefly.no_bulk_tags') }}
                                                 </label>
                                             </div>
                                             <div class="radio">
                                                 <label>
                                                     <input type="radio" name="tags_action" id="tags_action_do_replace" value="do_replace"/>
-                                                    {{ 'replace_with_these_tags'|_ }}
+                                                    {{ __('firefly.replace_with_these_tags') }}
                                                 </label>
                                             </div>
                                             <div class="radio">
                                                 <label>
                                                     <input type="radio" name="tags_action" id="tags_action_do_append" value="do_append"/>
-                                                    {{ 'append_these_tags'|_ }}
+                                                    {{ __('firefly.append_these_tags') }}
                                                 </label>
                                             </div>
                                         </td>
@@ -166,15 +159,9 @@
 
                     </div>
 
-                    <div class="card-footer">
-                        <div class="row">
-                            <div class="col-lg-8 text-end">
-                                <input type="submit" name="submit" value="{{ trans('form.update_all_journals') }}" class="btn btn-success "/>
-                                <a href="{{ route('index') }}" class="btn-outline-secondary btn">{{ trans('form.cancel') }}</a>
-                            </div>
-                        </div>
-
-
+                    <div class="card-footer text-end">
+                        <input type="submit" name="submit" value="{{ trans('form.update_all_journals') }}" class="btn btn-success "/>
+                        <a href="{{ route('index') }}" class="btn-outline-secondary btn">{{ trans('form.cancel') }}</a>
                     </div>
 
                 </div>
@@ -186,6 +173,7 @@
     </form>
 @endsection
 @section('scripts')
+    @vite(['js/pages/generic.js'])
     <script type="text/javascript" nonce="{{ $JS_NONCE }}">
         var what = "";
     </script>

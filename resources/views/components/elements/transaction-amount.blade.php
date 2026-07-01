@@ -16,19 +16,19 @@
     {{-- amount of transfer --}}
     <span class="text-info money-transfer">
                     {{-- present as negative. --}}
-        @if($transaction['source_account_id'] === $account?->id)
+        @if($sourceAccount['id'] === $account?->id)
             neg {!! format_amount_by_symbol($amount['amount'], $amount['currency_symbol'], $amount['currency_decimal_places'], false) !!}
         @endif
         {{-- present as positive --}}
-        @if($transaction['source_account_id'] !== $account?->id)
+        @if($sourceAccount['id'] !== $account?->id)
             {!! format_amount_by_symbol($amount['amount']*-1, $amount['currency_symbol'], $amount['currency_decimal_places'], false) !!}
         @endif
         {{-- foreign amount of transfer (negative) --}}
-        @if(null !== $foreign['amount'] && $transaction['source_account_id'] === $account?->id)
+        @if(null !== $foreign['amount'] && $sourceAccount['id'] === $account?->id)
             neg ({!! format_amount_by_symbol($foreign['amount'], $foreign['currency_symbol'], $foreign['currency_decimal_places'], false) !!})
         @endif
         {{-- foreign amount of transfer (positive) --}}
-        @if(null !== $foreign['amount'] && $transaction['source_account_id'] !== $account?->id)
+        @if(null !== $foreign['amount'] && $sourceAccount['id'] !== $account?->id)
             ({!! format_amount_by_symbol($foreign['amount']*-1, $foreign['currency_symbol'], $foreign['currency_decimal_places'], false) !!})
         @endif
         {{-- transfer in primary currency. Does not care about direction. --}}
@@ -61,7 +61,7 @@
     @endif
 @elseif('Reconciliation' === $type)
     {{-- Reconciliation positive--}}
-    @if('Reconciliation account' === $sourceAccountType)
+    @if('Reconciliation account' === $sourceAccount['type'])
         {{-- amount, also foreign and converted. --}}
         {!! format_amount_by_symbol($amount['amount']*-1, $amount['currency_symbol'], $amount['currency_decimal_places']) !!}
         @if(null !== $foreign['amount'])
@@ -82,7 +82,7 @@
     @endif
 @elseif('Liability credit' === $type)
     {{-- liability credit positive--}}
-    @if('Liability credit' === $sourceAccountType)
+    @if('Liability credit' === $sourceAccount['type'])
         {!! format_amount_by_symbol($amount['amount'], $amount['currency_symbol'], $amount['currency_decimal_places']) !!}
         @if(null !== $foreign['amount'])
             ({!! format_amount_by_symbol($foreign['amount'], $foreign['currency_symbol'], $foreign['currency_decimal_places']) !!})

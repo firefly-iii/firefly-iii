@@ -1,41 +1,41 @@
-<form action="{{ route('transactions.link.store', [journal.id]) }}" method="post" class="form-horizontal">
+<form action="{{ route('transactions.link.store', [$journal->id]) }}" method="post" class="form-horizontal">
     <input type="hidden" name="_token" value="{{ csrf_token() }}">
     <input type="hidden" name="opposing" value="">
     <div class="modal-dialog modal-lg">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title">{{ 'link_to_other_transaction'|_ }}</h5>
+                <h5 class="modal-title">{{ __('firefly.link_to_other_transaction') }}</h5>
             </div>
             <div class="modal-body" id="helpBody">
-                <p>{{ 'select_transaction_to_link'|_ }}</p>
+                <p>{{ __('firefly.select_transaction_to_link') }}</p>
                 <div class="form-group">
-                    <label for="link_type" class="col-sm-4 control-label">{{ 'this_transaction'|_ }}</label>
+                    <label for="link_type" class="col-sm-4 control-label">{{ __('firefly.this_transaction') }}</label>
                     <div class="col-sm-8">
                         <select id="link_type" class="form-control" name="link_type">
-                            {% for linkType in linkTypes %}
-                                <option label="{{ journalLinkTranslation('inward', linkType.inward) }}"
-                                        value="{{ linkType.id }}_inward">{{ journalLinkTranslation('inward', linkType.inward) }}</option>
-                                <option label="{{ journalLinkTranslation('outward', linkType.outward) }}"
-                                        value="{{ linkType.id }}_outward">{{ journalLinkTranslation('outward', linkType.outward) }}</option>
+                            @foreach($linkTypes as $linkType)
+                                <option label="{{ journal_link_translation('inward', $linkType->inward) }}"
+                                        value="{{ $linkType->id }}_inward">{{ journal_link_translation('inward', $linkType->inward) }}</option>
+                                <option label="{{ journal_link_translation('outward', $linkType->outward) }}"
+                                        value="{{ $linkType->id }}_outward">{{ journal_link_translation('outward', $linkType->outward) }}</option>
                             @endforeach
                         </select>
                     </div>
                 </div>
                 <div class="form-group" id="journal-selection">
-                    <label for="selected" class="col-sm-4 control-label">{{ 'selected_transaction'|_ }}</label>
+                    <label for="selected" class="col-sm-4 control-label">{{ __('firefly.selected_transaction') }}</label>
                     <div class="col-sm-8">
                         <p class="form-control-static" id="selected-journal">
                         </p>
                     </div>
                 </div>
                 <div class="form-group" id="journal-selector">
-                    <label for="link_other" class="col-sm-4 control-label">{{ 'transaction'|_ }}</label>
+                    <label for="link_other" class="col-sm-4 control-label">{{ __('firefly.transaction') }}</label>
                     <div class="col-sm-8">
                         <input type="text" name="link_other" autocomplete="off" id="link_other" value="" class="form-control link-journal">
                     </div>
                 </div>
                 <div class="form-group">
-                    <label for="notes" class="col-sm-4 control-label">{{ 'link_notes'|_ }}</label>
+                    <label for="notes" class="col-sm-4 control-label">{{ __('firefly.link_notes') }}</label>
                     <div class="col-sm-8">
                         <textarea id="notes" name="notes" class="form-control"></textarea>
                     </div>
@@ -45,7 +45,7 @@
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">{{ __('firefly.close') }}</button>
-                <button type="submit" class="btn btn-primary">{{ 'submit'|_ }}</button>
+                <button type="submit" class="btn btn-primary">{{ __('firefly.submit') }}</button>
             </div>
         </div>
     </div>

@@ -1,9 +1,4 @@
 @extends('layout.v3.session')
-
-
-    {{ Breadcrumbs.render(Route.getCurrentRoute.getName, journals) }}
-@endsection
-
 @section('content')
     <form method="POST" action="{{ route('transactions.mass.update') }}" accept-charset="UTF-8" class="form-horizontal" id="destroy">
         <input name="_token" type="hidden" value="{{ csrf_token() }}">

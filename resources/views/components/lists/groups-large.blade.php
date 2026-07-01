@@ -128,7 +128,7 @@
                 :foreign="['amount' => $transaction['foreign_amount'],'currency_id' => $transaction['foreign_currency_id'], 'currency_symbol' => $transaction['foreign_currency_symbol'], 'currency_decimal_places' => $transaction['foreign_currency_decimal_places']]"
                 :account="$account ?? null"
                 :pc-amount="$transaction['pc_amount']"
-                :source-account-type="$transaction['source_account_type']"
+                :source-account="['type' => $transaction['source_account_type'], 'id' => $transaction['source_account_id']]"
             />
         </td>
         @if(get_app_configuration('use_running_balance', true))

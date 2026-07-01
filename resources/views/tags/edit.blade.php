@@ -31,7 +31,7 @@
                         <h3 class="card-title">{{ __('firefly.optionalFields') }}</h3>
                     </div>
                     <div class="card-body">
-                        {!! ExpandedForm::date('date', $tag->date->format('Y-m-d')) !!}
+                        {!! ExpandedForm::date('date', $tag->date?->format('Y-m-d')) !!}
                         {!! ExpandedForm::textarea('description', $tag->description) !!}
                         {!! ExpandedForm::file('attachments[]', ['multiple' => 'multiple','helpText' => trans('firefly.upload_max_file_size', ['size' => print_nice_filesize($uploadSize)])]) !!}
                     </div>
