@@ -64,7 +64,7 @@ class CorrectsAmounts extends Command
         // transfers must not have foreign currency info if both accounts have the same currency.
         $this->correctTransfers();
         // deposits between assets and liabilities must not have foreign currency info if both accounts have the same currency.
-        $this->correctDeposits();
+        // $this->correctDeposits();
         // auto budgets must be positive
         $this->fixAutoBudgets();
         // available budgets must be positive
