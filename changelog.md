@@ -3,6 +3,13 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
+## v6.6.6 - 2026-07-01
+
+<!-- summary: This release fixes a bug in v6.6.5 that will remove foreign currency information from deposits. -->
+### Fixed
+
+- #12426
+
 ## v6.6.5 - 2026-06-30
 
 <!-- summary: This release fixes some security issues and many other ones. -->
