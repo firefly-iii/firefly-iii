@@ -206,14 +206,12 @@ class Handler extends ExceptionHandler
             return response()->view('errors.FireflyException', ['exception' => $e, 'debug' => $isDebug], 429);
         }
 
-
         if ($e instanceof FireflyException || $e instanceof ErrorException || $e instanceof OAuthServerException) {
             Log::debug('Return Firefly III error view.');
             $isDebug = config('app.debug');
 
             return response()->view('errors.FireflyException', ['exception' => $e, 'debug' => $isDebug], 500);
         }
-
 
         Log::debug(sprintf('Error "%s" has no Firefly III treatment, parent will handle.', $e::class));
         Log::error($e->getMessage());

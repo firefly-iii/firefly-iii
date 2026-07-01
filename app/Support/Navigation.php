@@ -347,9 +347,9 @@ class Navigation
         if (array_key_exists($repeatFreq, $modifierMap)) {
             $currentEnd->{$function}($modifierMap[$repeatFreq])->milli(0);
             // php stan: always do subDay.
-            //if (in_array($repeatFreq, $subDay, true)) {
-                $currentEnd->subDay();
-            //}
+            // if (in_array($repeatFreq, $subDay, true)) {
+            $currentEnd->subDay();
+            // }
             $currentEnd->endOfDay()->milli(0);
 
             // add sanity check.

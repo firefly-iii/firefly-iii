@@ -27,7 +27,6 @@ use Carbon\Carbon;
 use FireflyIII\Events\Security\System\UnknownUserTriedLogin;
 use FireflyIII\Events\Security\User\UserFailedLoginAttempt;
 use FireflyIII\Events\Security\User\UserSuccessfullyLoggedIn;
-use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Exceptions\LockedOutException;
 use FireflyIII\Http\Controllers\Controller;
 use FireflyIII\Providers\RouteServiceProvider;
@@ -102,9 +101,10 @@ final class LoginController extends Controller
             Log::error(sprintf('Login for user "%s" was locked out.', $request->get($this->username())));
             $this->fireLockoutEvent($request);
             $seconds = $this->limiter()->availableIn($this->throttleKey($request));
-            $message = (string) trans('auth.throttle', ['seconds' => $seconds, 'minutes' => ceil($seconds / 60),]);
+            $message = (string) trans('auth.throttle', ['seconds' => $seconds, 'minutes' => ceil($seconds / 60)]);
             Log::error(sprintf('Will SLEEP for %d second(s).', $seconds));
             sleep($seconds);
+
             throw new LockedOutException($message);
         }
 
