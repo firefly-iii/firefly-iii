@@ -199,6 +199,12 @@ class Handler extends ExceptionHandler
 
             return response()->view('errors.DatabaseException', ['exception' => $e, 'debug' => $isDebug], 500);
         }
+        if ($e instanceof LockedOutException) {
+            Log::debug('Return Firefly III error view.');
+            $isDebug = config('app.debug');
+
+            return response()->view('errors.FireflyException', ['exception' => $e, 'debug' => $isDebug], 429);
+        }
 
         if ($e instanceof FireflyException || $e instanceof ErrorException || $e instanceof OAuthServerException) {
             Log::debug('Return Firefly III error view.');

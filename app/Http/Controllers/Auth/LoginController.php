@@ -27,6 +27,7 @@ use Carbon\Carbon;
 use FireflyIII\Events\Security\System\UnknownUserTriedLogin;
 use FireflyIII\Events\Security\User\UserFailedLoginAttempt;
 use FireflyIII\Events\Security\User\UserSuccessfullyLoggedIn;
+use FireflyIII\Exceptions\LockedOutException;
 use FireflyIII\Http\Controllers\Controller;
 use FireflyIII\Providers\RouteServiceProvider;
 use FireflyIII\Repositories\User\UserRepositoryInterface;
@@ -85,9 +86,27 @@ final class LoginController extends Controller
      */
     public function login(Request $request): JsonResponse|RedirectResponse
     {
-        $username = $request->get($this->username());
-        Log::channel('audit')->info(sprintf('User is trying to login using "%s"', $username));
+        Log::channel('audit')->info(sprintf('User is trying to login using "%s"', $request->input($this->username())));
         Log::debug('User is trying to login.');
+
+        // first, check for too many login attempts:
+        $this->incrementLoginAttempts($request);
+
+        // Copied directly from AuthenticatesUsers, but with logging added:
+        // If the class is using the ThrottlesLogins trait, we can automatically throttle
+        // the login attempts for this application. We'll key this by the username and
+        // the IP address of the client making these requests into this application.
+        if ($this->hasTooManyLoginAttempts($request)) {
+            Log::channel('audit')->warning(sprintf('Login for user "%s" was locked out.', $request->get($this->username())));
+            Log::error(sprintf('Login for user "%s" was locked out.', $request->get($this->username())));
+            $this->fireLockoutEvent($request);
+            $seconds = $this->limiter()->availableIn($this->throttleKey($request));
+            $message = (string) trans('auth.throttle', ['seconds' => $seconds, 'minutes' => ceil($seconds / 60)]);
+            Log::error(sprintf('Will SLEEP for %d second(s).', $seconds));
+            sleep($seconds);
+
+            throw new LockedOutException($message);
+        }
 
         try {
             $this->validateLogin($request);
@@ -99,16 +118,6 @@ final class LoginController extends Controller
         }
         Log::debug('Login data is present.');
 
-        // Copied directly from AuthenticatesUsers, but with logging added:
-        // If the class is using the ThrottlesLogins trait, we can automatically throttle
-        // the login attempts for this application. We'll key this by the username and
-        // the IP address of the client making these requests into this application.
-        if ($this->hasTooManyLoginAttempts($request)) {
-            Log::channel('audit')->warning(sprintf('Login for user "%s" was locked out.', $request->get($this->username())));
-            Log::error(sprintf('Login for user "%s" was locked out.', $request->get($this->username())));
-            $this->fireLockoutEvent($request);
-            $this->sendLockoutResponse($request);
-        }
         // Copied directly from AuthenticatesUsers, but with logging added:
         if ($this->attemptLogin($request)) {
             Log::channel('audit')->info(sprintf('User "%s" has been logged in.', $request->get($this->username())));
