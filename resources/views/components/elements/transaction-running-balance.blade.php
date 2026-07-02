@@ -8,7 +8,7 @@
             @if('Revenue account' === $source['type'])
                 <span title="Deposit from revenue">{!! format_amount_by_symbol($destination['balance_after'], $currency['symbol'], $currency['decimal_places']) !!}</span>
             @else
-                <span title="Deposit from liab">{!! format_amount_by_symbol($destination['balance_after'], $foreign['currency_symbol'], $foreign['decimal_places']) !!}</span>
+                <span title="Deposit from liab">{!! format_amount_by_symbol($destination['balance_after'], $foreign['symbol'], $foreign['decimal_places']) !!}</span>
             @endif
             {{-- if this is a deposit from revenue account, use the destination account currency? For #12043 and #12169. Otherwise, keep at source account -}}
             {{-- changed from normal currency_symbol to foreign_currency_symbol for #12043 --}}
@@ -58,7 +58,7 @@
                 <span title="Transfer, dest, normal currency">{!! format_amount_by_symbol($destination['balance_after'], $currency['symbol'], $currency['decimal_places']) !!}</span>
             @endif
             @if(null !== $foreign['id'])
-                <span title="Transfer, dest, foreign currency">{!! format_amount_by_symbol($destination['balance_after'], $foreign['currency_symbol'], $foreign['decimal_places']) !!}</span>
+                <span title="Transfer, dest, foreign currency">{!! format_amount_by_symbol($destination['balance_after'], $foreign['symbol'], $foreign['decimal_places']) !!}</span>
             @endif
         @endif
     @else

@@ -136,7 +136,7 @@
             <x-elements.transaction-running-balance
                 :balance-dirty="($transaction['source_balance_dirty'] ?? false) || ($transaction['destination_balance_dirty'] ?? false)"
                 :currency="['symbol' => $transaction['currency_symbol'],'decimal_places' => $transaction['currency_decimal_places']]"
-                :foreign="[]"
+                :foreign="['symbol' => $transaction['foreign_currency_symbol'], 'decimal_places' => $transaction['foreign_currency_decimal_places']]"
                 :type="$transaction['transaction_type_type']"
                 :account="$account ?? null"
                 :source="['id' => $transaction['source_account_id'], 'balance_after' => $transaction['source_balance_after'], 'type' => $transaction['source_account_type']]"
