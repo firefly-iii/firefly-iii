@@ -64,7 +64,7 @@ class CorrectsAmounts extends Command
         // transfers must not have foreign currency info if both accounts have the same currency.
         $this->correctTransfers();
         // deposits between assets and liabilities must not have foreign currency info if both accounts have the same currency.
-        $this->correctDeposits();
+        // $this->correctDeposits();
         // auto budgets must be positive
         $this->fixAutoBudgets();
         // available budgets must be positive
@@ -85,105 +85,105 @@ class CorrectsAmounts extends Command
         return 0;
     }
 
-    private function correctDeposits(): void
-    {
-        Log::debug('Will now correct deposits.');
-
-        /** @var AccountRepositoryInterface $repository */
-        $repository = app(AccountRepositoryInterface::class);
-        $type       = TransactionType::query()->where('type', TransactionTypeEnum::DEPOSIT->value)->first();
-        $journals   = TransactionJournal::leftJoin('transactions', 'transactions.transaction_journal_id', '=', 'transaction_journals.id')
-            ->whereNotNull('transactions.foreign_amount')
-            ->where('transaction_journals.transaction_type_id', $type->id)
-            ->distinct()
-            ->get(['transaction_journals.*'])
-        ;
-
-        /** @var TransactionJournal $journal */
-        foreach ($journals as $journal) {
-            $repository->setUser($journal->user);
-            $primary        = Amount::getPrimaryCurrencyByUserGroup($journal->userGroup);
-
-            $valid          = $this->validateJournal($journal);
-            if (false === $valid) {
-                // Log::debug(sprintf('Journal #%d does not need to be fixed or is invalid (see previous messages)', $journal->id));
-
-                continue;
-            }
-            Log::debug(sprintf('Journal #%d is ready to be corrected (if necessary).', $journal->id));
-            $source         = $journal->transactions()->where('amount', '<', '0')->first();
-            $destination    = $journal->transactions()->where('amount', '>', '0')->first();
-            $sourceAccount  = $source->account;
-            $destAccount    = $destination->account;
-            $sourceCurrency = $repository->getAccountCurrency($sourceAccount) ?? $primary;
-            $destCurrency   = $repository->getAccountCurrency($destAccount) ?? $primary;
-            Log::debug(sprintf('Currency of source account      #%d "%s" is %s', $sourceAccount->id, $sourceAccount->name, $sourceCurrency->code));
-            Log::debug(sprintf('Currency of destination account #%d "%s" is %s', $destAccount->id, $destAccount->name, $destCurrency->code));
-            if ($sourceCurrency->id === $destCurrency->id) {
-                Log::debug('Both accounts have the same currency. Removing foreign currency info.');
-                $source->foreign_currency_id      = null;
-                $source->foreign_amount           = null;
-                $source->save();
-                $destination->foreign_currency_id = null;
-                $destination->foreign_amount      = null;
-                // also make sure that both transactions use the same amounts and currencies, since the currency is the same anyway.
-                $destination->amount              = bcmul($source->amount, '-1');
-                $destination->save();
-
-                continue;
-            }
-
-            // validate source transaction
-            if ($destCurrency->id !== $source->foreign_currency_id) {
-                Log::debug(sprintf(
-                    '[a] Journal #%d: transaction #%d refers to foreign currency "%s" but should refer to "%s".',
-                    $journal->id,
-                    $source->id,
-                    $source->foreignCurrency->code,
-                    $destCurrency->code
-                ));
-                $source->foreign_currency_id = $destCurrency->id;
-                $source->save();
-            }
-            if ($sourceCurrency->id !== $source->transaction_currency_id) {
-                Log::debug(sprintf(
-                    '[b] Journal #%d: transaction #%d refers to currency "%s" but should refer to "%s".',
-                    $journal->id,
-                    $source->id,
-                    $source->transactionCurrency->code,
-                    $sourceCurrency->code
-                ));
-                $source->transaction_currency_id = $sourceCurrency->id;
-                $source->save();
-            }
-
-            // validate destination:
-            if ($sourceCurrency->id !== $destination->foreign_currency_id) {
-                Log::debug(sprintf(
-                    '[c] Journal #%d: transaction #%d refers to foreign currency "%s" but should refer to "%s".',
-                    $journal->id,
-                    $destination->id,
-                    $destination->foreignCurrency->code,
-                    $sourceCurrency->code
-                ));
-                $destination->foreign_currency_id = $sourceCurrency->id;
-                $destination->save();
-            }
-
-            if ($destCurrency->id !== $destination->transaction_currency_id) {
-                Log::debug(sprintf(
-                    '[d] Journal #%d: transaction #%d refers to currency "%s" but should refer to "%s".',
-                    $journal->id,
-                    $destination->id,
-                    $destination->transactionCurrency->code,
-                    $destCurrency->code
-                ));
-                $destination->transaction_currency_id = $destCurrency->id;
-                $destination->save();
-            }
-            Log::debug(sprintf('Done with journal #%d.', $journal->id));
-        }
-    }
+    //    private function correctDeposits(): void
+    //    {
+    //        Log::debug('Will now correct deposits.');
+    //
+    //        /** @var AccountRepositoryInterface $repository */
+    //        $repository = app(AccountRepositoryInterface::class);
+    //        $type       = TransactionType::query()->where('type', TransactionTypeEnum::DEPOSIT->value)->first();
+    //        $journals   = TransactionJournal::leftJoin('transactions', 'transactions.transaction_journal_id', '=', 'transaction_journals.id')
+    //            ->whereNotNull('transactions.foreign_amount')
+    //            ->where('transaction_journals.transaction_type_id', $type->id)
+    //            ->distinct()
+    //            ->get(['transaction_journals.*'])
+    //        ;
+    //
+    //        /** @var TransactionJournal $journal */
+    //        foreach ($journals as $journal) {
+    //            $repository->setUser($journal->user);
+    //            $primary        = Amount::getPrimaryCurrencyByUserGroup($journal->userGroup);
+    //
+    //            $valid          = $this->validateJournal($journal);
+    //            if (false === $valid) {
+    //                // Log::debug(sprintf('Journal #%d does not need to be fixed or is invalid (see previous messages)', $journal->id));
+    //
+    //                continue;
+    //            }
+    //            Log::debug(sprintf('Journal #%d is ready to be corrected (if necessary).', $journal->id));
+    //            $source         = $journal->transactions()->where('amount', '<', '0')->first();
+    //            $destination    = $journal->transactions()->where('amount', '>', '0')->first();
+    //            $sourceAccount  = $source->account;
+    //            $destAccount    = $destination->account;
+    //            $sourceCurrency = $repository->getAccountCurrency($sourceAccount) ?? $primary;
+    //            $destCurrency   = $repository->getAccountCurrency($destAccount) ?? $primary;
+    //            Log::debug(sprintf('Currency of source account      #%d "%s" is %s', $sourceAccount->id, $sourceAccount->name, $sourceCurrency->code));
+    //            Log::debug(sprintf('Currency of destination account #%d "%s" is %s', $destAccount->id, $destAccount->name, $destCurrency->code));
+    //            if ($sourceCurrency->id === $destCurrency->id) {
+    //                Log::debug('Both accounts have the same currency. Removing foreign currency info.');
+    //                $source->foreign_currency_id      = null;
+    //                $source->foreign_amount           = null;
+    //                $source->save();
+    //                $destination->foreign_currency_id = null;
+    //                $destination->foreign_amount      = null;
+    //                // also make sure that both transactions use the same amounts and currencies, since the currency is the same anyway.
+    //                $destination->amount              = bcmul($source->amount, '-1');
+    //                $destination->save();
+    //
+    //                continue;
+    //            }
+    //
+    //            // validate source transaction
+    //            if ($destCurrency->id !== $source->foreign_currency_id) {
+    //                Log::debug(sprintf(
+    //                    '[a] Journal #%d: transaction #%d refers to foreign currency "%s" but should refer to "%s".',
+    //                    $journal->id,
+    //                    $source->id,
+    //                    $source->foreignCurrency->code,
+    //                    $destCurrency->code
+    //                ));
+    //                $source->foreign_currency_id = $destCurrency->id;
+    //                $source->save();
+    //            }
+    //            if ($sourceCurrency->id !== $source->transaction_currency_id) {
+    //                Log::debug(sprintf(
+    //                    '[b] Journal #%d: transaction #%d refers to currency "%s" but should refer to "%s".',
+    //                    $journal->id,
+    //                    $source->id,
+    //                    $source->transactionCurrency->code,
+    //                    $sourceCurrency->code
+    //                ));
+    //                $source->transaction_currency_id = $sourceCurrency->id;
+    //                $source->save();
+    //            }
+    //
+    //            // validate destination:
+    //            if ($sourceCurrency->id !== $destination->foreign_currency_id) {
+    //                Log::debug(sprintf(
+    //                    '[c] Journal #%d: transaction #%d refers to foreign currency "%s" but should refer to "%s".',
+    //                    $journal->id,
+    //                    $destination->id,
+    //                    $destination->foreignCurrency->code,
+    //                    $sourceCurrency->code
+    //                ));
+    //                $destination->foreign_currency_id = $sourceCurrency->id;
+    //                $destination->save();
+    //            }
+    //
+    //            if ($destCurrency->id !== $destination->transaction_currency_id) {
+    //                Log::debug(sprintf(
+    //                    '[d] Journal #%d: transaction #%d refers to currency "%s" but should refer to "%s".',
+    //                    $journal->id,
+    //                    $destination->id,
+    //                    $destination->transactionCurrency->code,
+    //                    $destCurrency->code
+    //                ));
+    //                $destination->transaction_currency_id = $destCurrency->id;
+    //                $destination->save();
+    //            }
+    //            Log::debug(sprintf('Done with journal #%d.', $journal->id));
+    //        }
+    //    }
 
     private function correctTransfers(): void
     {
