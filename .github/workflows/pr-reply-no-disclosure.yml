@@ -7,7 +7,7 @@ on:
 
 # permissions needed for reacting to IssueOps commands on issues and PRs
 permissions:
-  contents: read
+  contents: write
   pull-requests: write
   issues: write
   checks: read
@@ -25,7 +25,12 @@ jobs:
             exit 0
           fi
 
-          echo "Not dependabot!"
+          if [[ $AUTHOR == *"github-actions"* ]]; then
+            echo "Is github-actions, stop"
+            exit 0
+          fi
+
+          echo "Not dependabot: $AUTHOR"
 
           # $BODY must contain one of these four uses.
           if [[ $BODY != *"Code generation"* &&
@@ -33,6 +38,7 @@ jobs:
                 $BODY != *"Documentation"* &&
                 $BODY != *"Research and understanding"* &&
                 $BODY != *"I used AI assistance for"* ]]; then
+            echo 'PR contains no AI disclosure.'
             MESSAGE="Hi there!
 
           This is an automated reply. \`Share and enjoy\`
@@ -49,7 +55,8 @@ jobs:
           There cannot be interaction with your PR without this disclosure.
 
           If the disclosure is present but the bot did not pick up on it, please accept my apologies for the intrusion. Contrary to other bots, this one is just a simple \`bash\` script and it may be wrong."
-
+            
+            echo 'Will now leave comment.'
             gh pr comment "$NUMBER" --body "$MESSAGE"
             echo "Triggered on AI disclosure missing."
             exit 0
