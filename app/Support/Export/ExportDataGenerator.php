@@ -60,6 +60,7 @@ use FireflyIII\User;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Log;
 use League\Csv\CannotInsertRecord;
+use League\Csv\EscapeFormula;
 use League\Csv\Exception;
 use League\Csv\Writer;
 use Psr\Container\ContainerExceptionInterface;
@@ -285,6 +286,8 @@ class ExportDataGenerator
 
         // load the CSV document from a string
         $csv         = Writer::fromString();
+        $escaper = new EscapeFormula();
+        $csv->addFormatter($escaper->escapeRecord(...));
 
         // insert the header
         try {
@@ -354,6 +357,8 @@ class ExportDataGenerator
 
         // load the CSV document from a string
         $csv        = Writer::fromString();
+        $escaper = new EscapeFormula();
+        $csv->addFormatter($escaper->escapeRecord(...));
 
         // insert the header
         try {
@@ -413,6 +418,8 @@ class ExportDataGenerator
 
         // load the CSV document from a string
         $csv         = Writer::fromString();
+        $escaper = new EscapeFormula();
+        $csv->addFormatter($escaper->escapeRecord(...));
 
         // insert the header
         try {
@@ -458,6 +465,8 @@ class ExportDataGenerator
 
         // load the CSV document from a string
         $csv        = Writer::fromString();
+        $escaper = new EscapeFormula();
+        $csv->addFormatter($escaper->escapeRecord(...));
 
         // insert the header
         try {
@@ -538,6 +547,8 @@ class ExportDataGenerator
 
         // load the CSV document from a string
         $csv          = Writer::fromString();
+        $escaper = new EscapeFormula();
+        $csv->addFormatter($escaper->escapeRecord(...));
 
         // insert the header
         try {
@@ -705,6 +716,8 @@ class ExportDataGenerator
         }
         // load the CSV document from a string
         $csv            = Writer::fromString();
+        $escaper = new EscapeFormula();
+        $csv->addFormatter($escaper->escapeRecord(...));
 
         // insert the header
         try {
@@ -852,6 +865,8 @@ class ExportDataGenerator
 
         // load the CSV document from a string
         $csv       = Writer::fromString();
+        $escaper = new EscapeFormula();
+        $csv->addFormatter($escaper->escapeRecord(...));
 
         // insert the header
         try {
@@ -908,6 +923,8 @@ class ExportDataGenerator
 
         // load the CSV document from a string
         $csv      = Writer::fromString();
+        $escaper = new EscapeFormula();
+        $csv->addFormatter($escaper->escapeRecord(...));
 
         // insert the header
         try {
@@ -1104,6 +1121,8 @@ class ExportDataGenerator
 
         // load the CSV document from a string
         $csv        = Writer::fromString();
+        $escaper = new EscapeFormula();
+        $csv->addFormatter($escaper->escapeRecord(...));
 
         // insert the header
         try {
