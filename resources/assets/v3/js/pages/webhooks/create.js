@@ -18,45 +18,39 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-// CSS
 import '../../boot/bootstrap.js';
 import sidebar from '../../pages/shared/sidebar.js';
 import dates from '../shared/dates.js';
-import i18next from "i18next";
 
-let edit = function () {
+let create = function () {
     return {
-        i18next: null,
-        pageTitle: '',
-        administration: {
-            title: '',
-            currency_id: 0,
-        },
-        errors: {
-            title: [],
-            currency_id: [],
-        },
         error_message: '',
         success_message: '',
-
-        init() {
-            this.i18next = i18next;
-            const page = window.location.href.split('/');
-            const administrationId = parseInt(page[page.length - 1]);
-            this.downloadAdministration(administrationId);
+        title: '',
+        triggers: ["STORE_TRANSACTION"],
+        responses: "RELEVANT",
+        deliveries: "JSON",
+        active: true,
+        url: '',
+        errors: {
+            title: [],
+            triggers: [],
+            responses: [],
+            deliveries: [],
+            url: [],
+            active: []
         },
-        downloadAdministration: function (id) {
-            axios.get("./api/v1/user-groups/" + id).then((response) => {
-                let current = response.data.data;
-                this.administration = {
-                    id: current.id,
-                    title: current.attributes.title,
-                    currency_id: parseInt(current.attributes.primary_currency_id),
-                    currency_code: current.attributes.primary_currency_code,
-                    currency_name: current.attributes.primary_currency_name,
-                };
-                this.pageTitle = this.administration.title;
-            });
+        hasError: function (field) {
+            return this.errors[field].length > 0;
+        },
+        clearTitle: function () {
+            this.title = '';
+        },
+        handleInput() {
+            // this.$emit('input', this.administration.title);
+        },
+        init() {
+            console.log('Create webhook page.');
         },
         submit: function (e) {
             // reset messages
@@ -64,51 +58,55 @@ let edit = function () {
             this.success_message = '';
             this.errors = {
                 title: [],
-                currency_id: [],
+                triggers: [],
+                responses: [],
+                deliveries: [],
+                url: [],
+                active: [],
             };
 
             // disable button
-            $('#submitButton').prop("disabled", true);
+            document.getElementById('submitButton').disabled = true;
 
             // collect data
             let data = {
-                title: this.administration.title,
-                primary_currency_id: parseInt(this.administration.currency_id),
+                title: this.title,
+                triggers: this.triggers,
+                responses: [this.responses],
+                deliveries: [this.deliveries],
+                url: this.url,
+                active: this.active,
             };
 
             // post!
-            axios.put('./api/v1/user-groups/' + this.administration.id, data).then((response) => {
-                let administrationId = parseInt(response.data.data.id);
-                window.location.href = './administrations?user_group_id=' + administrationId + '&message=updated';
+            axios.post('./api/v1/webhooks', data).then((response) => {
+                //this.success_message = $.text(response.data.message);
+                // console.log('Will now go to redirectUser()');
+                let webhookId = response.data.data.id;
+                window.location.href = window.previousUrl + '?webhook_id=' + webhookId + '&message=created';
             }).catch((error) => {
-
+                //console.log(error.response.data);
                 this.error_message = error.response.data.message;
                 this.errors.title = error.response.data.errors.title;
-                this.errors.primary_currency_id = error.response.data.errors.primary_currency_id;
+                this.errors.triggers = error.response.data.errors.triggers;
+                this.errors.responses = error.response.data.errors.responses;
+                this.errors.deliveries = error.response.data.errors.deliveries;
+                this.errors.url = error.response.data.errors.url;
 
                 // enable button again
-                $('#submitButton').prop("disabled", false);
+                document.getElementById('submitButton').disabled = false;
 
             });
             if (e) {
                 e.preventDefault();
             }
-        },
-        hasError: function (field) {
-            return this.errors[field].length > 0;
-        },
-        clearTitle: function () {
-            this.administration.title = '';
-        },
-        handleInput() {
-            // this.$emit('input', this.administration.title);
-        },
+        }
     }
 };
 
 
 const comps = {
-    edit,
+    create,
     sidebar,
     dates
 };

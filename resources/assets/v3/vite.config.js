@@ -83,6 +83,7 @@ export default defineConfig(({command, mode, isSsrBuild, isPreview}) => {
                     // tags
 
                     // webhooks
+                    'js/pages/webhooks/create.js',
                     'js/pages/webhooks/index.js',
 
                     // piggy banks

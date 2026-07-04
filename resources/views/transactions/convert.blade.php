@@ -1,11 +1,9 @@
 @extends('layout.v3.session')
-
-
-    {{ Breadcrumbs.render(Route.getCurrentRoute.getName, group, groupTitle) }}
+@section('breadcrumbs')
+    {{ Breadcrumbs::render(Route::getCurrentRoute()->getName(), $group, $groupTitle) }}
 @endsection
-
 @section('content')
-    <form method="POST" action="{{ route('transactions.convert.index.post', [destinationType.type|lower, group.id]) }}"
+    <form method="POST" action="{{ route('transactions.convert.index.post', [strtolower($destinationType->type), $group->id]) }}"
           accept-charset="UTF-8"
           class="form-horizontal"
           enctype="multipart/form-data">
@@ -14,44 +12,44 @@
             <div class="col-lg-8 offset-lg-2 col-md-12 col-sm-12">
                 <div class="card mb-2">
                     <div class="card-header">
-                        <h3 class="card-title">{{ ('convert_options_'~sourceType.type~destinationType.type)|_ }}</h3>
+                        <h3 class="card-title">{{ __('firefly.convert_options_'. $sourceType->type . $destinationType->type) }}</h3>
                     </div>
                     <div class="card-body">
                         <p>
                             {{-- ONE: WITHDRAWAL TO DEPOSIT --}}
-                            {% if sourceType.type == 'Withdrawal' and destinationType.type == 'Deposit' %}
-                                {{ trans_choice('firefly.convert_expl_w_d', groupArray.transactions|length) }}
-                                {{ trans_choice('firefly.convert_select_sources', groupArray.transactions|length) }}
+                            @if($sourceType->type == 'Withdrawal' and $destinationType->type == 'Deposit')
+                                {{ trans_choice('firefly.convert_expl_w_d', count($groupArray['transactions'])) }}
+                                {{ trans_choice('firefly.convert_select_sources', count($groupArray['transactions'])) }}
                             @endif
 
                             {{-- TWO: WITHDRAWAL TO TRANSFER --}}
-                            {% if sourceType.type == 'Withdrawal' and destinationType.type == 'Transfer' %}
-                                {{ trans_choice('firefly.convert_expl_w_t', groupArray.transactions|length) }}
-                                {{ trans_choice('firefly.convert_select_destinations', groupArray.transactions|length) }}
+                            @if($sourceType->type == 'Withdrawal' and $destinationType->type == 'Transfer')
+                                {{ trans_choice('firefly.convert_expl_w_t', count($groupArray['transactions'])) }}
+                                {{ trans_choice('firefly.convert_select_destinations', count($groupArray['transactions'])) }}
                             @endif
 
                             {{-- THREE: DEPOSIT TO WITHDRAWAL --}}
-                            {% if sourceType.type == 'Deposit' and destinationType.type == 'Withdrawal' %}
-                                {{ trans_choice('firefly.convert_expl_d_w', groupArray.transactions|length) }}
-                                {{ trans_choice('firefly.convert_select_destinations', groupArray.transactions|length) }}
+                            @if($sourceType->type == 'Deposit' and $destinationType->type == 'Withdrawal')
+                                {{ trans_choice('firefly.convert_expl_d_w', count($groupArray['transactions'])) }}
+                                {{ trans_choice('firefly.convert_select_destinations', count($groupArray['transactions'])) }}
                             @endif
 
                             {{-- FOUR: DEPOSIT TO TRANSFER --}}
-                            {% if sourceType.type == 'Deposit' and destinationType.type == 'Transfer' %}
-                                {{ trans_choice('firefly.convert_expl_d_t', groupArray.transactions|length) }}
-                                {{ trans_choice('firefly.convert_select_sources', groupArray.transactions|length) }}
+                            @if($sourceType->type == 'Deposit' and $destinationType->type == 'Transfer')
+                                {{ trans_choice('firefly.convert_expl_d_t', count($groupArray['transactions'])) }}
+                                {{ trans_choice('firefly.convert_select_sources', count($groupArray['transactions'])) }}
                             @endif
 
                             {{-- FIVE: TRANSFER TO WITHDRAWAL --}}
-                            {% if sourceType.type == 'Transfer' and destinationType.type == 'Withdrawal' %}
-                                {{ trans_choice('firefly.convert_expl_t_w', groupArray.transactions|length) }}
-                                {{ trans_choice('firefly.convert_select_destinations', groupArray.transactions|length) }}
+                            @if($sourceType->type == 'Transfer' and $destinationType->type == 'Withdrawal')
+                                {{ trans_choice('firefly.convert_expl_t_w', count($groupArray['transactions'])) }}
+                                {{ trans_choice('firefly.convert_select_destinations', count($groupArray['transactions'])) }}
                             @endif
 
                             {{-- SIX: TRANSFER TO DEPOSIT --}}
-                            {% if sourceType.type == 'Transfer' and destinationType.type == 'Deposit' %}
-                                {{ trans_choice('firefly.convert_expl_t_d', groupArray.transactions|length) }}
-                                {{ trans_choice('firefly.convert_select_sources', groupArray.transactions|length) }}
+                            @if($sourceType->type == 'Transfer' and $destinationType->type == 'Deposit')
+                                {{ trans_choice('firefly.convert_expl_t_d', count($groupArray['transactions'])) }}
+                                {{ trans_choice('firefly.convert_select_sources', count($groupArray['transactions'])) }}
                             @endif
                         </p>
 
@@ -63,66 +61,66 @@
                                 <th class="quarter">Destination account</th>
                                 <th class="fifteen">Amount</th>
                             </tr>
-                            {% for transaction in groupArray.transactions %}
+                            @foreach($groupArray['transactions'] as $transaction)
                                 <tr>
-                                    <td>#{{ transaction.transaction_journal_id }}</td>
-                                    <td>{{ transaction.description }}</td>
+                                    <td>#{{ $transaction['transaction_journal_id'] }}</td>
+                                    <td>{{ $transaction['description'] }}</td>
                                     <td>
                                         {{-- ONE: WITHDRAWAL TO DEPOSIT --}}
-                                        {% if sourceType.type == 'Withdrawal' and destinationType.type == 'Deposit' %}
+                                        @if($sourceType->type == 'Withdrawal' and $destinationType->type == 'Deposit')
                                             {{-- NEW DESTINATION = Asset, SOURCE MUST BE [Revenue, Cash, Loan, Debt, Mortgage] --}}
-                                            {% if transaction.source_type == 'Asset account' %}
-                                                {{ Html::select('source_id['~transaction.transaction_journal_id~']', validDepositSources).class('form-control') }}
+                                            @if($transaction['source_type'] == 'Asset account')
+                                                {!! Html::select('source_id['.$transaction['transaction_journal_id'].']', $validDepositSources)->class('form-control') !!}
                                             @endif
 
                                             {{-- NEW DESTINATION = [Loan, Debt, Mortgage], SOURCE MUST BE [Revenue] --}}
-                                            {% if
-                                                transaction.source_type == 'Loan' or
-                                                transaction.source_type == 'Debt' or
-                                                transaction.source_type == 'Mortgage' %}
+                                            @if(
+                                                $transaction['source_type'] == 'Loan' or
+                                                $transaction['source_type'] == 'Debt' or
+                                                $transaction['source_type'] == 'Mortgage')
                                                 <input
                                                     autocomplete="off"
                                                     placeholder="Source account"
-                                                    name="source_name[{{ transaction.transaction_journal_id }}]"
+                                                    name="source_name[{{ $transaction['transaction_journal_id'] }}]"
                                                     type="text"
-                                                    value="{% if transaction.destination_type != "Cash account" %}{{ preFilled.source_name[transaction.transaction_journal_id]|default(transaction.destination_name) }}@endif"
+                                                    value="@if($transaction['destination_type'] != "Cash account"){{ $preFilled['source_name'][$transaction['transaction_journal_id']] ?? $transaction['destination_name'] }}@endif"
                                                     class="form-control tt-input input-revenue"
                                                     spellcheck="false" dir="auto">
                                             @endif
                                         @endif
 
                                         {{-- TWO: WITHDRAWAL TO TRANSFER --}}
-                                        {% if sourceType.type == 'Withdrawal' and destinationType.type == 'Transfer' %}
+                                        @if($sourceType->type == 'Withdrawal' and $destinationType->type == 'Transfer')
 
-                                            <a href="{{ route('accounts.show', [transaction.source_id]) }}"
-                                               title="{{ transaction.source_iban|default(transaction.source_name) }}">{{ transaction.source_name }}</a>
+                                            <a href="{{ route('accounts.show', [$transaction['source_id']]) }}"
+                                               title="{{ $transaction['source_iban'] ?? $transaction['source_name'] }}">{{ $transaction['source_name'] }}</a>
                                             {{-- hide source in hidden input --}}
                                             <input type="hidden"
-                                                   name="source_id[{{ transaction.transaction_journal_id }}]"
-                                                   value="{{ transaction.source_id }}">
+                                                   name="source_id[{{ $transaction['transaction_journal_id'] }}]"
+                                                   value="{{ $transaction['source_id'] }}">
                                         @endif
 
                                         {{-- THREE: DEPOSIT TO WITHDRAWAL --}}
-                                        {% if sourceType.type == 'Deposit' and destinationType.type == 'Withdrawal' %}
-                                            <a href="{{ route('accounts.show', [transaction.destination_id]) }}"
-                                               title="{{ transaction.destination_iban|default(transaction.destination_name) }}">{{ transaction.destination_name }}</a>
+                                        @if($sourceType->type == 'Deposit' and $destinationType->type == 'Withdrawal')
+                                            <a href="{{ route('accounts.show', [$transaction['destination_id']]) }}"
+                                               title="{{ $transaction['destination_iban'] ?? $transaction['destination_name'] }}">{{ $transaction['destination_name'] }}</a>
 
                                             {{-- hide new source in hidden input --}}
                                             <input type="hidden"
-                                                   name="source_id[{{ transaction.transaction_journal_id }}]"
-                                                   value="{{ transaction.destination_id }}">
+                                                   name="source_id[{{ $transaction['transaction_journal_id'] }}]"
+                                                   value="{{ $transaction['destination_id'] }}">
                                         @endif
 
                                         {{-- FOUR: DEPOSIT TO TRANSFER --}}
-                                        {% if sourceType.type == 'Deposit' and destinationType.type == 'Transfer' %}
+                                        @if($sourceType->type == 'Deposit' and $destinationType->type == 'Transfer')
                                             {{-- if new destination is asset, then asset --}}
-                                            {% if transaction.destination_type == 'Asset account' %}
-                                                {{ Html::select('source_id['~transaction.transaction_journal_id~']', assets).class('form-control') }}
+                                            @if($transaction['destination_type'] == 'Asset account')
+                                                {{ Html::select('source_id['.$transaction['transaction_journal_id'].']', $assets)->class('form-control') }}
                                             @endif
-                                            {% if transaction.destination_type == 'Loan' or
-                                                transaction.destination_type == 'Debt' or
-                                                transaction.destination_type == 'Mortgage' %}
-                                                {{ Html::select('source_id['~transaction.transaction_journal_id~']', liabilities).class('form-control') }}
+                                            @if($transaction['destination_type'] == 'Loan' or
+                                                $transaction['destination_type'] == 'Debt' or
+                                                $transaction['destination_type'] == 'Mortgage')
+                                                {{ Html::select('source_id['.$transaction['transaction_journal_id'].']', $liabilities)->class('form-control') }}
                                             @endif
 
                                             {{-- if new destination liability, then liability. --}}
@@ -130,34 +128,34 @@
                                         @endif
 
                                         {{-- FIVE: TRANSFER TO WITHDRAWAL --}}
-                                        {% if sourceType.type == 'Transfer' and destinationType.type == 'Withdrawal' %}
-                                            <a href="{{ route('accounts.show', [transaction.source_id]) }}"
-                                               title="{{ transaction.source_iban|default(transaction.source_name) }}">{{ transaction.source_name }}</a>
+                                        @if($sourceType->type == 'Transfer' and $destinationType->type == 'Withdrawal')
+                                            <a href="{{ route('accounts.show', [$transaction['source_id']]) }}"
+                                               title="{{ $transaction['source_iban'] ?? $transaction['source_name'] }}">{{ $transaction['source_name'] }}</a>
 
                                             {{-- hide source in hidden input --}}
                                             <input type="hidden"
-                                                   name="source_id[{{ transaction.transaction_journal_id }}]"
-                                                   value="{{ transaction.source_id }}">
+                                                   name="source_id[{{ $transaction['transaction_journal_id'] }}]"
+                                                   value="{{ $transaction['source_id'] }}">
                                         @endif
 
                                         {{-- SIX: TRANSFER TO DEPOSIT --}}
-                                        {% if sourceType.type == 'Transfer' and destinationType.type == 'Deposit' %}
+                                        @if($sourceType->type == 'Transfer' and $destinationType->type == 'Deposit')
                                             {{-- NEW DESTINATION = Asset, SOURCE MUST BE [Revenue, Cash, Loan, Debt, Mortgage] --}}
-                                            {% if
-                                                transaction.source_type == 'Asset account' %}
-                                                {{ Html::select('source_id['~transaction.transaction_journal_id~']', validDepositSources).class('form-control') }}
+                                            @if(
+                                                $transaction['source_type'] == 'Asset account')
+                                                {{ Html::select('source_id['.$transaction['transaction_journal_id'].']', $validDepositSources)->class('form-control') }}
                                             @endif
                                             {{-- NEW DESTINATION = [Debt, Mortgage, Load], SOURCE MUST BE [Revenue] --}}
-                                            {% if
-                                                transaction.source_type == 'Loan' or
-                                                transaction.source_type == 'Debt' or
-                                                transaction.source_type == 'Mortgage' %}
+                                            @if(
+                                                $transaction['source_type'] == 'Loan' or
+                                                $transaction['source_type'] == 'Debt' or
+                                                $transaction['source_type'] == 'Mortgage')
                                                 <input
                                                     autocomplete="off"
                                                     placeholder="Source account"
-                                                    name="source_name[{{ transaction.transaction_journal_id }}]"
+                                                    name="source_name[{{ $transaction['transaction_journal_id'] }}]"
                                                     type="text"
-                                                    value="{% if transaction.destination_type != "Cash account" %}{{ transaction.source_name }}@endif"
+                                                    value="@if($transaction['destination_type'] != "Cash account"){{ $transaction['source_name'] }}@endif"
                                                     class="form-control tt-input"
                                                     spellcheck="false" dir="auto">
                                             @endif
@@ -167,112 +165,112 @@
                                     </td>
                                     <td>
                                         {{-- ONE: WITHDRAWAL TO DEPOSIT --}}
-                                        {% if sourceType.type == 'Withdrawal' and destinationType.type == 'Deposit' %}
-                                            <a href="{{ route('accounts.show', [transaction.source_id]) }}"
-                                               title="{{ transaction.source_iban|default(transaction.source_name) }}">{{ transaction.source_name }}</a>
+                                        @if($sourceType->type == 'Withdrawal' and $destinationType->type == 'Deposit')
+                                            <a href="{{ route('accounts.show', [$transaction['source_id']]) }}"
+                                               title="{{ $transaction['source_iban'] ?? $transaction['source_name'] }}">{{ $transaction['source_name'] }}</a>
 
                                             {{-- hide destination in hidden input --}}
                                             <input type="hidden"
-                                                   name="destination_id[{{ transaction.transaction_journal_id }}]"
-                                                   value="{{ transaction.source_id }}">
+                                                   name="destination_id[{{ $transaction['transaction_journal_id'] }}]"
+                                                   value="{{ $transaction['source_id'] }}">
                                         @endif
 
                                         {{-- TWO: WITHDRAWAL TO TRANSFER --}}
-                                        {% if sourceType.type == 'Withdrawal' and destinationType.type == 'Transfer' %}
+                                        @if($sourceType->type == 'Withdrawal' and $destinationType->type == 'Transfer')
                                             {{-- if the source is a liability, destination must also be a liability. --}}
-                                            {% if
-                                                transaction.source_type == 'Loan' or
-                                                transaction.source_type == 'Debt' or
-                                                transaction.source_type == 'Mortgage' %}
-                                                {{ Html::select('destination_id['~transaction.transaction_journal_id~']', liabilities).class('form-control') }}
+                                            @if(
+                                                $transaction['source_type'] == 'Loan' or
+                                                $transaction['source_type'] == 'Debt' or
+                                                $transaction['source_type'] == 'Mortgage')
+                                                {{ Html::select('destination_id['.$transaction['transaction_journal_id'].']', $liabilities)->class('form-control') }}
                                             @endif
 
                                             {{-- if the source is an asset, destination can only be an asset. --}}
-                                            {% if transaction.source_type == 'Asset account' %}
-                                                {{ Html::select('destination_id['~transaction.transaction_journal_id~']', assets).class('form-control') }}
+                                            @if($transaction['source_type'] == 'Asset account')
+                                                {{ Html::select('destination_id['.$transaction['transaction_journal_id'].']', $assets)->class('form-control') }}
                                             @endif
                                         @endif
 
                                         {{-- THREE: DEPOSIT TO WITHDRAWAL --}}
-                                        {% if sourceType.type == 'Deposit' and destinationType.type == 'Withdrawal' %}
+                                        @if($sourceType->type == 'Deposit' and $destinationType->type == 'Withdrawal')
 
                                             {{-- if new source is Asset, destination must be [Expense, Loan, Debt or Mortgage] --}}
-                                            {% if transaction.destination_type == 'Asset account' %}
-                                                {{ Html::select('destination_id['~transaction.transaction_journal_id~']', validWithdrawalDests).class('form-control') }}
+                                            @if($transaction['destination_type'] == 'Asset account')
+                                                {{ Html::select('destination_id['.$transaction['transaction_journal_id'].']', $validWithdrawalDests)->class('form-control') }}
                                             @endif
-                                            {% if transaction.destination_type == 'Loan' or
-                                                transaction.destination_type == 'Debt' or
-                                                transaction.destination_type == 'Mortgage' %}
+                                            @if($transaction['destination_type'] == 'Loan' or
+                                                $transaction['destination_type'] == 'Debt' or
+                                                $transaction['destination_type'] == 'Mortgage')
                                                 {{-- if new source is Liability, destination must be expense account. --}}
 
                                                 <input
                                                     autocomplete="off"
                                                     placeholder="Destination account"
-                                                    name="destination_name[{{ transaction.transaction_journal_id }}]"
+                                                    name="destination_name[{{ $transaction['transaction_journal_id'] }}]"
                                                     type="text"
-                                                    value="{% if transaction.source_type != "Cash account" %}{{ transaction.source_name }}@endif"
+                                                    value="@if($transaction['source_type'] != "Cash account"){{ $transaction['source_name'] }}@endif"
                                                     class="form-control tt-input"
                                                     spellcheck="false" dir="auto">
                                             @endif
                                         @endif
 
                                         {{-- FOUR: DEPOSIT TO TRANSFER --}}
-                                        {% if sourceType.type == 'Deposit' and destinationType.type == 'Transfer' %}
-                                            <a href="{{ route('accounts.show', [transaction.destination_id]) }}"
-                                               title="{{ transaction.destination_iban|default(transaction.destination_name) }}">{{ transaction.destination_name }}</a>
+                                        @if($sourceType->type == 'Deposit' and $destinationType->type == 'Transfer')
+                                            <a href="{{ route('accounts.show', [$transaction['destination_id']]) }}"
+                                               title="{{ $transaction['destination_iban'] ?? $transaction['destination_name'] }}">{{ $transaction['destination_name'] }}</a>
 
                                             {{-- hide destination in hidden input --}}
                                             <input type="hidden"
-                                                   name="destination_id[{{ transaction.transaction_journal_id }}]"
-                                                   value="{{ transaction.destination_id }}">
+                                                   name="destination_id[{{ $transaction['transaction_journal_id'] }}]"
+                                                   value="{{ $transaction['destination_id'] }}">
                                         @endif
 
                                         {{-- FIVE: TRANSFER TO WITHDRAWAL --}}
-                                        {% if sourceType.type == 'Transfer' and destinationType.type == 'Withdrawal' %}
+                                        @if($sourceType->type == 'Transfer' and $destinationType->type == 'Withdrawal')
 
-                                            {% if transaction.source_type == 'Asset account' %}
-                                                {{ Html::select('destination_id['~transaction.transaction_journal_id~']', validWithdrawalDests).class('form-control') }}
+                                            @if($transaction['source_type'] == 'Asset account')
+                                                {{ Html::select('destination_id['.$transaction['transaction_journal_id'].']', $validWithdrawalDests)->class('form-control') }}
                                             @endif
-                                            {% if transaction.source_type == 'Loan' or
-                                                transaction.source_type == 'Debt' or
-                                                transaction.source_type == 'Mortgage' %}
+                                            @if($transaction['source_type'] == 'Loan' or
+                                                $transaction['source_type'] == 'Debt' or
+                                                $transaction['source_type'] == 'Mortgage')
                                                 <input
                                                     autocomplete="off"
                                                     placeholder="Destination account"
-                                                    name="destination_name[{{ transaction.transaction_journal_id }}]"
+                                                    name="destination_name[{{ $transaction['transaction_journal_id'] }}]"
                                                     type="text"
-                                                    value="{% if transaction.source_type != "Cash account" %}{{ transaction.destination_name }}@endif"
+                                                    value="@if($transaction['source_type'] != "Cash account"){{ $transaction['destination_name'] }}@endif"
                                                     class="form-control tt-input"
                                                     spellcheck="false" dir="auto">
                                             @endif
                                         @endif
 
                                         {{-- SIX: TRANSFER TO DEPOSIT --}}
-                                        {% if sourceType.type == 'Transfer' and destinationType.type == 'Deposit' %}
-                                            <a href="{{ route('accounts.show', [transaction.destination_id]) }}"
-                                               title="{{ transaction.destination_iban|default(transaction.destination_name) }}">{{ transaction.destination_name }}</a>
+                                        @if($sourceType->type == 'Transfer' and $destinationType->type == 'Deposit')
+                                            <a href="{{ route('accounts.show', [$transaction['destination_id']]) }}"
+                                               title="{{ $transaction['destination_iban'] ?? $transaction['destination_name'] }}">{{ $transaction['destination_name'] }}</a>
 
                                             {{-- hide destination in hidden input --}}
                                             <input type="hidden"
-                                                   name="destination_id[{{ transaction.transaction_journal_id }}]"
-                                                   value="{{ transaction.destination_id }}">
+                                                   name="destination_id[{{ $transaction['transaction_journal_id'] }}]"
+                                                   value="{{ $transaction['destination_id'] }}">
                                         @endif
                                     </td>
                                     <td>
-                                        {% if transaction.transaction_type_type == 'Deposit' %}
-                                            {!! format_amount_by_symbol(transaction.amount*-1, transaction.currency_symbol, transaction.currency_decimal_places) }}
-                                            {% if null != transaction.foreign_amount %}
-                                                ({!! format_amount_by_symbol(transaction.foreign_amount*-1, transaction.foreign_currency_symbol, transaction.foreign_currency_decimal_places) }})
+                                        @if($transaction['type'] == 'Deposit')
+                                            {!! format_amount_by_symbol($transaction['amount']*-1, $transaction['currency_symbol'], $transaction['currency_decimal_places']) !!}
+                                            @if(null != $transaction['foreign_amount'])
+                                                ({!! format_amount_by_symbol($transaction['foreign_amount']*-1, $transaction['foreign_currency_symbol'], $transaction['foreign_currency_decimal_places']) !!})
                                             @endif
-                                        {% elseif transaction.transaction_type_type == 'Transfer' %}
-                                            <span class="text-info money-transfer">{!! format_amount_by_symbol(transaction.amount*-1, transaction.currency_symbol, transaction.currency_decimal_places, false) }}
-                                                {% if null != transaction.foreign_amount %}
-                                                    ({!! format_amount_by_symbol(transaction.foreign_amount*-1, transaction.foreign_currency_symbol, transaction.foreign_currency_decimal_places, false) }})
+                                        @elseif($transaction['type'] == 'Transfer')
+                                            <span class="text-info money-transfer">{!! format_amount_by_symbol($transaction['amount']*-1, $transaction['currency_symbol'], $transaction['currency_decimal_places'], false) !!}
+                                                @if(null != $transaction['foreign_amount'])
+                                                    ({!! format_amount_by_symbol($transaction['foreign_amount']*-1, $transaction['foreign_currency_symbol'], $transaction['foreign_currency_decimal_places'], false) !!})
                                                 @endif</span>
                                         @else
-                                            {!! format_amount_by_symbol(transaction.amount, transaction.currency_symbol, transaction.currency_decimal_places) }}
-                                            {% if null != transaction.foreign_amount %}
-                                                ({!! format_amount_by_symbol(transaction.foreign_amount, transaction.foreign_currency_symbol, transaction.foreign_currency_decimal_places) }})
+                                            {!! format_amount_by_symbol($transaction['amount'], $transaction['currency_symbol'], $transaction['currency_decimal_places']) !!}
+                                            @if(null != $transaction['foreign_amount'])
+                                                ({!! format_amount_by_symbol($transaction['foreign_amount'], $transaction['foreign_currency_symbol'], $transaction['foreign_currency_decimal_places']) !!})
                                             @endif
                                         @endif
                                     </td>
@@ -281,9 +279,9 @@
                         </table>
                     </div>
                     <div class="card-footer text-end">
-                        <a href="{{ route('transactions.show', group.id) }}" class="btn btn-danger">{{ 'cancel'|_ }}</a>
+                        <a href="{{ route('transactions.show', $group->id) }}" class="btn btn-danger">{{ __('firefly.cancel') }}</a>
                         <button type="submit" id="transaction-btn" class="btn btn-success ">
-                            {{ trans('form.convert_'~sourceType.type) }}
+                            {{ trans('form.convert_'.$sourceType->type) }}
                         </button>
                     </div>
                 </div>
@@ -293,6 +291,7 @@
 
 @endsection
 @section('scripts')
+@vite(['js/pages/generic.js'])
     <script type="text/javascript" src="v1/js/lib/typeahead/typeahead.bundle.min.js?v={{ $FF_BUILD_TIME }}"
             nonce="{{ $JS_NONCE }}"></script>
     <script type="text/javascript" src="v1/js/ff/transactions/convert.js?v={{ $FF_BUILD_TIME }}"

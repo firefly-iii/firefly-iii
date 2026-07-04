@@ -1,4 +1,4 @@
-<div class="form-group" x-bind:class="{ 'has-error': hasError()}">
+<div class="form-group" x-bind:class="{ 'has-error': hasError('title')}">
     <label class="col-sm-4 control-label">
         {{ __('form.title') }}
     </label>
