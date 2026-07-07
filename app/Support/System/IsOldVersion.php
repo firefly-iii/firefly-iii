@@ -47,8 +47,8 @@ trait IsOldVersion
             return 0;
         }
 
-        $currentDate  = Carbon::createFromFormat('!Y-m-d', $currentParts[1]);
-        $latestDate   = Carbon::createFromFormat('!Y-m-d', $latestParts[1]);
+        $currentDate = Carbon::createFromFormat('!Y-m-d', $currentParts[1]);
+        $latestDate  = Carbon::createFromFormat('!Y-m-d', $latestParts[1]);
 
         if ($currentDate->lt($latestDate)) {
             Log::debug(sprintf('This current version is older, current = %s, latest version %s.', $current, $latest));
@@ -71,16 +71,16 @@ trait IsOldVersion
     protected function isOldVersionInstalled(): bool
     {
         // version compare thing.
-        $configBuildTime = (int) config('firefly.build_time');
-        $dbBuildTime     = (int) AppConfiguration::getFresh('ff3_build_time', 123)->data;
+        $configBuildTime = (int)config('firefly.build_time');
+        $dbBuildTime     = (int)AppConfiguration::getFresh('ff3_build_time', 123)->data;
         $configTime      = Carbon::createFromTimestamp($configBuildTime, config('app.timezone'));
         $dbTime          = Carbon::createFromTimestamp($dbBuildTime, config('app.timezone'));
         if ($dbBuildTime < $configBuildTime) {
             Log::warning(sprintf(
-                'Your database was last managed by an older version of Firefly III (I see %s, I expect %s). Redirect to migrate routine.',
-                $dbTime->format('Y-m-d H:i:s'),
-                $configTime->format('Y-m-d H:i:s')
-            ));
+                             'Your database was last managed by an older version of Firefly III (I see %s, I expect %s). Redirect to migrate routine.',
+                             $dbTime->format('Y-m-d H:i:s'),
+                             $configTime->format('Y-m-d H:i:s')
+                         ));
 
             return true;
         }
@@ -104,7 +104,7 @@ trait IsOldVersion
      */
     private function hasNoTables(): bool
     {
-        // Log::debug('Now in routine hasNoTables()');
+        Log::debug('Now in routine hasNoTables()');
 
         try {
             DB::table('users')->count();
@@ -128,8 +128,16 @@ trait IsOldVersion
             throw new FireflyException(sprintf('Could not access the database: %s', $message), 0, $e);
         }
 
-        // Log::debug('Everything seems OK with the tables.');
+        Log::debug('Everything seems OK with the tables.');
 
         return false;
+    }
+
+    /**
+     * Is access denied error.
+     */
+    private function isAccessDenied(string $message): bool
+    {
+        return false !== stripos($message, 'Access denied');
     }
 }

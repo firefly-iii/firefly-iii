@@ -24,6 +24,7 @@ declare(strict_types=1);
 namespace FireflyIII\Http\Controllers;
 
 use FireflyIII\Events\Model\Webhook\WebhookMessagesRequestSending;
+use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Models\TransactionCurrency;
 use FireflyIII\Support\Facades\Amount;
 use FireflyIII\Support\Facades\AppConfiguration;
@@ -72,7 +73,13 @@ abstract class Controller extends BaseController
     public function __construct()
     {
         // is site a demo site?
+        try {
         $isDemoSiteConfig = AppConfiguration::get('is_demo_site', config('firefly.configuration.is_demo_site', false));
+        } catch(FireflyException $e) {
+            // if this breaks, just stop right here.
+            Log::error($e->getMessage());
+            return;
+        }
         $isDemoSite       = (bool) $isDemoSiteConfig->data;
         View::share('IS_DEMO_SITE', $isDemoSite);
         View::share('DEMO_USERNAME', config('firefly.demo_username'));

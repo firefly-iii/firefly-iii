@@ -61,7 +61,7 @@ class AppConfiguration
         try {
             /** @var null|Configuration $config */
             $config = Configuration::query()->where('name', $name)->first(['id', 'name', 'data']);
-        } catch (Exception|QueryException $e) {
+        } catch (Exception|QueryException|FireflyException $e) {
             throw new FireflyException(sprintf('Could not poll the database: %s', $e->getMessage()), 0, $e);
         }
 
@@ -128,6 +128,9 @@ class AppConfiguration
         return $this->set($name, $value);
     }
 
+    /**
+     * @throws FireflyException
+     */
     public function set(string $name, mixed $value): Configuration
     {
         try {

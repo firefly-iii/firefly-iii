@@ -75,11 +75,5 @@ class Installer
         return $next($request);
     }
 
-    /**
-     * Is access denied error.
-     */
-    protected function isAccessDenied(string $message): bool
-    {
-        return false !== stripos($message, 'Access denied');
-    }
+
 }
