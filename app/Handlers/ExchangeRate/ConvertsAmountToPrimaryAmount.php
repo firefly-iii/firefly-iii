@@ -86,7 +86,7 @@ class ConvertsAmountToPrimaryAmount
         $converter                            = new ExchangeRateConverter();
         $converter->setUserGroup($params->user->userGroup);
         $converter->setIgnoreSettings(true);
-        $newAmount                            = $converter->convert($params->originalCurrency, $primaryCurrency, now(), $amount);
+        $newAmount                            = $converter->convert($params->originalCurrency, $primaryCurrency, $params->date, $amount);
         $params->model->{$primaryAmountField} = $newAmount;
         $params->model->saveQuietly();
         Log::debug(sprintf(
