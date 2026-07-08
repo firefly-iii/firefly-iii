@@ -17,15 +17,15 @@
             </template>
 
             <template x-if="success_message !== ''">
-            <div class="row">
-                <div class="col-lg-12">
-                    <div class="alert alert-success alert-dismissible" role="alert">
-                        <button class="close" data-dismiss="alert" type="button" aria-label="{{ __('firefly.close') }}"><span
-                                aria-hidden="true">&times;</span></button>
-                        <strong>{{ __("firefly.flash_success") }}</strong> <span x-html="success_message"></span>
+                <div class="row">
+                    <div class="col-lg-12">
+                        <div class="alert alert-success alert-dismissible" role="alert">
+                            <button class="close" data-dismiss="alert" type="button" aria-label="{{ __('firefly.close') }}"><span
+                                    aria-hidden="true">&times;</span></button>
+                            <strong>{{ __("firefly.flash_success") }}</strong> <span x-html="success_message"></span>
+                        </div>
                     </div>
                 </div>
-            </div>
             </template>
 
             <div class="row">
@@ -39,30 +39,12 @@
                         <div class="card-body">
                             <div class="row">
                                 <div class="col-lg-12">
-                                    <x-form.alpine.title value="this.title" />
-                                    TITLE
-
-                                    TRIGGER
-
-                                    RESPONSE
-
-                                    DELIVERY
-
-                                    URL
-
-                                    CHECKBOX
-
-                                    {{--
-                                    <Title :value=this.title :error="errors.title" v-on:input="title = $event"></Title>
-                                    <WebhookTrigger :value=this.triggers :error="errors.trigger"
-                                                    v-on:input="triggers = $event"></WebhookTrigger>
-                                    <WebhookResponse :value=this.responses :error="errors.response"
-                                                     v-on:input="responses = $event"></WebhookResponse>
-                                    <WebhookDelivery :value=this.deliveries :error="errors.delivery"
-                                                     v-on:input="deliveries = $event"></WebhookDelivery>
-                                    <URL :value=this.url :error="errors.url" v-on:input="url = $event"></URL>
-                                    <Checkbox :value=this.active :error="errors.active" help="ACTIVE HELP TODO" :title="__('form.active')" v-on:input="active = $event"></Checkbox>
-                                    --}}
+                                    <x-form.alpine.title value="title" />
+                                    <x-form.alpine.triggers value="triggers" multiple="multiple" />
+                                    <x-form.alpine.responses value="responses" />
+                                    <x-form.alpine.deliveries value="deliveries" />
+                                    <x-form.alpine.url value="url" />
+                                    <x-form.alpine.checkbox value="active" title="{{ __('form.active') }}" id="active" />
                                 </div>
                             </div>
                         </div>

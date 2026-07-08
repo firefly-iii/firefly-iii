@@ -22,16 +22,40 @@ import '../../boot/bootstrap.js';
 import sidebar from '../../pages/shared/sidebar.js';
 import dates from '../shared/dates.js';
 import i18next from "i18next";
-import {loadDeliveries} from "./shared/load-deliveries.js";
-import {loadResponses} from "./shared/load-responses.js";
 import {loadTriggers} from "./shared/load-triggers.js";
+import {loadResponses} from "./shared/load-responses.js";
+import {loadDeliveries} from "./shared/load-deliveries.js";
 
-let create = function () {
+let edit = function () {
     return {
+        init() {
+            this.i18next = i18next;
+
+            loadTriggers().then((result) => {
+                this.options.triggers = result;
+                this.form.triggers.loading = false;
+            });
+            loadResponses().then((result) => {
+                this.options.responses = result;
+                this.form.responses.loading = false;
+            });
+            loadDeliveries().then((result) => {
+                this.options.deliveries = result;
+                this.form.deliveries.loading = false;
+            });
+
+            this.getWebhook();
+        },
         error_message: '',
         success_message: '',
         title: '',
         i18next: null,
+        triggers: ["STORE_TRANSACTION"],
+        responses: "RELEVANT",
+        deliveries: "JSON",
+        id: 0,
+        active: false,
+        url: '',
         options: {
             triggers: [],
             responses: [],
@@ -48,17 +72,6 @@ let create = function () {
                 loading: true
             },
         },
-        triggers: [
-            "ANY"
-        ],
-        responses: [
-            "RELEVANT"
-        ],
-        deliveries: [
-            "JSON"
-        ],
-        active: true,
-        url: '',
         errors: {
             title: [],
             triggers: [],
@@ -67,35 +80,25 @@ let create = function () {
             url: [],
             active: []
         },
-        hasError: function (field) {
-            return this.errors[field].length > 0;
+        getWebhook: function () {
+            const page = window.location.href.split('/');
+            const webhookId = parseInt(page[page.length - 1]);
+            this.downloadWebhook(webhookId);
         },
-        clearTitle: function () {
-            this.title = '';
-        },
-        clearUrl: function () {
-            this.url = '';
-        },
-        handleInput() {
-            // this.$emit('input', this.administration.title);
-        },
-        init() {
-            this.i18next = i18next;
-            loadTriggers().then((result) => {
-                this.options.triggers = result;
-                this.form.triggers.loading = false;
+        downloadWebhook: function (id) {
+            axios.get('./api/v1/webhooks/' + id).then(response => {
+                // console.log(response.data.data.attributes);
+                this.title = response.data.data.attributes.title;
+                this.id = parseInt(response.data.data.id);
+                this.triggers = response.data.data.attributes.triggers;
+                this.responses = response.data.data.attributes.responses[0];
+                this.deliveries = response.data.data.attributes.deliveries[0];
+                this.active = response.data.data.attributes.active;
+                this.url = response.data.data.attributes.url;
+            }).catch(error => {
+                this.error_message = error.response.data.message;
             });
-            loadResponses().then((result) => {
-                this.options.responses = result;
-                this.form.responses.loading = false;
-            });
-            loadDeliveries().then((result) => {
-                this.options.deliveries = result;
-                this.form.deliveries.loading = false;
-            });
-            console.log('Create webhook page.');
         },
-
         submit: function (e) {
             // reset messages
             this.error_message = '';
@@ -110,57 +113,49 @@ let create = function () {
             };
 
             // disable button
-            document.getElementById('submitButton').disabled = true;
+            $('#submitButton').prop("disabled", true);
 
             // collect data
             let data = {
                 title: this.title,
                 triggers: this.triggers,
-                responses: this.responses,
-                deliveries: this.deliveries,
+                responses: [this.responses],
+                deliveries: [this.deliveries],
                 url: this.url,
                 active: this.active,
             };
 
             // post!
-            axios.post('./api/v1/webhooks', data).then((response) => {
-                //this.success_message = $.text(response.data.message);
-                // console.log('Will now go to redirectUser()');
-                let webhookId = response.data.data.id;
-                window.location.href = window.previousUrl + '?webhook_id=' + webhookId + '&message=created';
+            axios.put('./api/v1/webhooks/' + this.id, data).then((response) => {
+                let webhookId = parseInt(response.data.data.id);
+                window.location.href = window.previousUrl + '?webhook_id=' + webhookId + '&message=updated';
             }).catch((error) => {
-                //console.log(error.response.data);
+
                 this.error_message = error.response.data.message;
-                this.errors.title = error.response.data.errors.title ?? [];
-                this.errors.triggers = error.response.data.errors.triggers ?? [];
-                this.errors.responses = error.response.data.errors.responses ?? [];
-                this.errors.deliveries = error.response.data.errors.deliveries ?? [];
-                this.errors.url = error.response.data.errors.url ?? [];
-
-                // if there is a key that ends with a dot and a number, include it in the array:
-                for (let key in error.response.data.errors) {
-                    if(key.includes('.')) {
-                        let newKey = key.replace(/\.\d+$/, '');
-                        this.errors[newKey] = this.errors[newKey].concat(error.response.data.errors[key]);
-                    }
-                }
-
-                console.log(this.errors);
+                this.errors.title = error.response.data.errors.title;
+                this.errors.triggers = error.response.data.errors.trigger;
+                this.errors.responses = error.response.data.errors.response;
+                this.errors.deliveries = error.response.data.errors.deliveries;
+                this.errors.url = error.response.data.errors.url;
 
                 // enable button again
-                document.getElementById('submitButton').disabled = false;
+                $('#submitButton').prop("disabled", false);
 
             });
             if (e) {
                 e.preventDefault();
             }
         }
+
+
+
+
     }
 };
 
 
 const comps = {
-    create,
+    edit,
     sidebar,
     dates
 };

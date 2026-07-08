@@ -38,6 +38,7 @@ return [
                 'to_currency_from_currency',
                 'date',
                 'rate',
+                'triggers',
                 'help_rate_form'
             ],
             'list'       => [
@@ -138,6 +139,7 @@ return [
                 'account_role_savingAsset',
                 'account_role_ccAsset',
                 'account_role_cashWalletAsset',
+                'webhook_trigger_ANY',
                 'webhook_trigger_STORE_TRANSACTION',
                 'webhook_trigger_UPDATE_TRANSACTION',
                 'webhook_response_RELEVANT',

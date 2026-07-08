@@ -53,7 +53,6 @@
                                     <template  x-if="!webhook.active">
                                     <span class="text-muted">
                                     <ul class="list-unstyled">
-                                        Y
                                         <template x-for="trigger in webhook.triggers" :key="trigger">
                                         <li x-for="trigger in webhook.triggers" :key="trigger">
                                             <s x-text="triggers[trigger]"></s> ({{ __('firefly.inactive') }})

@@ -1,15 +1,10 @@
 @extends('layout.v3.session')
-
-
-    {{ Breadcrumbs.render(Route.getCurrentRoute.getName, webhook) }}
-@endsection
-
 @section('content')
     <div class="row">
         <div class="col-lg-6 offset-lg-3 col-md-12 col-sm-12">
             <div class="card card-danger card-outline">
                 <div class="card-header">
-                    <h3 class="card-title">{{ trans('form.delete_webhook', {'title': webhook.title}) }}</h3>
+                    <h3 class="card-title">{{ trans('form.delete_webhook', ['title' => $webhook->title]) }}</h3>
                 </div>
                 <div class="card-body">
                     <p class="text-danger">
@@ -17,7 +12,7 @@
                     </p>
 
                     <p>
-                        {{ trans('form.webhook_areYouSure', {'title': webhook.title}) }}
+                        {{ trans('form.webhook_areYouSure', ['title' => $webhook->title]) }}
                     </p>
                 </div>
                 <div class="card-footer text-end">
@@ -34,9 +29,9 @@
         $(function () {
             "use strict";
             $('#button').click(function() {
-                var url = "{{ route('index') }}/api/v1/webhooks/{{ webhook.id }}";
+                var url = "{{ route('index') }}/api/v1/webhooks/{{ $webhook->id }}";
                 $.ajax({url: url, type: 'DELETE'}).done(function() {
-                    window.location = "{{ URL::previous() }}?webhook_id={{ webhook.id }}&message=deleted";
+                    window.location = "{{ URL::previous() }}?webhook_id={{ $webhook->id }}&message=deleted";
                 });
             });
         });

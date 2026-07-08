@@ -1,22 +1,22 @@
 @extends('layout.v3.session')
 @section('content')
-    <div>
+    <div x-data="show">
         <template x-if="success_message !== ''">
-        <div class="row">
-            <div class="col-lg-12">
-                <div class="alert alert-success alert-dismissible" role="alert">
-                    <button class="close" data-dismiss="alert" type="button" aria-label="{{ __('firefly.close') }}"><span aria-hidden="true">&times;</span></button>
-                    <strong>{{ __("firefly.flash_success") }}</strong> <span x-html="success_message"></span>
+            <div class="row">
+                <div class="col-lg-12">
+                    <div class="alert alert-success alert-dismissible" role="alert">
+                        <button class="close" data-dismiss="alert" type="button" aria-label="{{ __('firefly.close') }}"><span aria-hidden="true">&times;</span></button>
+                        <strong>{{ __("firefly.flash_success") }}</strong> <span x-html="success_message"></span>
+                    </div>
                 </div>
             </div>
-        </div>
         </template>
 
         <div class="row">
             <div class="col-lg-6">
-                <div class="card">
+                <div class="card mb-2">
                     <div class="card-header">
-                        <h3 class="box-title"><span x-text="title"></span></h3>
+                        <h3 class="card-title"><span x-text="title"></span></h3>
                     </div>
                     <div class="card-body p-0">
                         <table class="table table-hover" aria-label="A table">
@@ -28,84 +28,99 @@
                             <tr>
                                 <td style="width:40%;"><strong>{{ __('list.active') }}</strong></td>
                                 <td>
-                                    <em class="fa fa-check text-success" v-if="active"></em>
-                                    <em class="fa fa-times text-danger" v-if="!active"></em>
+                                    <template x-if="active">
+                                        <em class="bi bi-check text-success"></em>
+                                    </template>
+                                    <template x-if="!active">
+                                        <em class="bi bi-x text-danger"></em>
+                                    </template>
                                 </td>
                             </tr>
                             <tr>
                                 <td style="width:40%;"><strong>{{ __('list.trigger') }}</strong></td>
                                 <td>
-                    <span v-for="trigger in triggers" :key="trigger">
-                        {{ __('firefly.webhook_trigger_' + trigger) }}<br>
-                    </span>
+                                    <template x-for="item in triggers" :key="item">
+                                        <span>
+                                            <span x-text="i18next.t('firefly.webhook_trigger_' + item)"></span><br>
+                                        </span>
+                                    </template>
                                 </td>
                             </tr>
                             <tr>
                                 <td style="width:40%;"><strong>{{ __('list.response') }}</strong></td>
                                 <td>
-                        <span v-for="response in responses" :key="response">
-                            {{ __('firefly.webhook_response_' + response) }}
-                        </span>
+                                    <template x-for="item in responses" :key="item">
+                                        <span>
+                                            <span x-text="i18next.t('firefly.webhook_response_' + item)"></span><br>
+                                        </span>
+                                    </template>
                                 </td>
                             </tr>
                             <tr>
                                 <td style="width:40%;"><strong>{{ __('list.delivery') }}</strong></td>
                                 <td>
-                        <span v-for="delivery in deliveries" :key="delivery">
-                            {{ __('firefly.webhook_delivery_' + delivery) }}
-                        </span>
+                                    <template x-for="item in deliveries" :key="item">
+                                        <span>
+                                            <span x-text="i18next.t('firefly.webhook_delivery_' + item)"></span><br>
+                                        </span>
+                                    </template>
+
                                 </td>
                             </tr>
                             </tbody>
                         </table>
                     </div>
-                    <div class="box-footer">
+                    <div class="card-footer">
                         <div class="btn-group pull-right">
-                            <a :href=edit_url class="btn btn-default"><em class="fa fa-pencil"></em> {{ __('firefly.edit') }}</a>
-                            <a id="triggerButton" v-if="active" href="#" @click="submitTest" :class="disabledTrigger ? 'btn btn-default disabled ' : 'btn btn-default'"><em
-                                    class="fa fa-bolt"></em>
-                                {{ __('list.trigger') }}
-                            </a>
-                            <a :href=delete_url class="btn btn-danger"><em class="fa fa-trash"></em> {{ __('firefly.delete') }}</a>
+                            <a :href=edit_url class="btn btn-default"><em class="bi bi-pencil"></em> {{ __('firefly.edit') }}</a>
+                            <template x-if="active">
+                                <a id="triggerButton" href="#" @click="submitTest" :class="disabledTrigger ? 'btn btn-default disabled ' : 'btn btn-default'"><em class="bi bi-lightning"></em>{{ __('list.trigger') }}</a>
+                            </template>
+                            <a :href=delete_url class="btn btn-danger"><em class="bi bi-trash"></em> {{ __('firefly.delete') }}</a>
                         </div>
                     </div>
                 </div>
             </div>
             <div class="col-lg-6">
-                <div class="box">
-                    <div class="box-header with-border">
-                        <h3 class="box-title">{{ __('firefly.meta_data') }}</h3>
+                <div class="card mb-2">
+                    <div class="card-header with-border">
+                        <h3 class="card-title">{{ __('firefly.meta_data') }}</h3>
                     </div>
                     <div class="card-body p-0">
-                        <table class="table table-hover" aria-label="A table">
+                        <table class="table table-hover">
                             <tbody>
-                            <tr>
-                                <td style="width:40%;"><strong>{{ __('list.url') }}</strong></td>
-                                <td><input type="text" readonly class="form-control" :value=url></td>
-                            </tr>
-                            <tr>
-                                <td style="width:40%;"><strong>
-                                        {{ __('list.secret') }}
-                                    </strong>
-                                </td>
-                                <td>
-                                    <em style="cursor:pointer"
-                                        v-if="show_secret" class="fa fa-eye" @click="toggleSecret"></em>
-                                    <em style="cursor:pointer"
-                                        v-if="!show_secret" class="fa fa-eye-slash" @click="toggleSecret"></em>
-                                    <code v-if="show_secret">{{ secret }}</code>
-                                    <code v-if="!show_secret">********</code>
-                                </td>
-                            </tr>
+                                <tr>
+                                    <td style="width:40%;"><strong>{{ __('list.url') }}</strong></td>
+                                    <td><input type="text" readonly class="form-control" :value=url></td>
+                                </tr>
+                                <tr>
+                                    <td style="width:40%;">
+                                        <strong>{{ __('list.secret') }}</strong>
+                                    </td>
+                                    <td>
+                                        <template x-if="show_secret">
+                                            <div>
+                                                <em style="cursor:pointer" class="bi bi-eye" @click="toggleSecret"></em>
+                                                <code x-text="secret"></code>
+                                            </div>
+                                        </template>
+                                        <template x-if="!show_secret">
+                                            <div>
+                                                <em style="cursor:pointer" class="bi bi-eye-slash" @click="toggleSecret"></em>
+                                                <code>********</code>
+                                            </div>
+                                        </template>
+                                    </td>
+                                </tr>
                             </tbody>
                         </table>
                     </div>
-                    <div class="box-footer">
-                        <a :href=url class="btn btn-default">
-                            <em class="fa fa-globe-europe"></em> {{ __('firefly.visit_webhook_url') }}
+                    <div class="card-footer">
+                        <a :href=url class="btn btn-outline-secondary">
+                            <em class="bi bi-globe-europe-africa"></em> {{ __('firefly.visit_webhook_url') }}
                         </a>
-                        <a @click="resetSecret" class="btn btn-default">
-                            <em class="fa fa-lock"></em> {{ __('firefly.reset_webhook_secret') }}
+                        <a @click="resetSecret" class="btn btn-outline-secondary">
+                            <em class="bi bi-lock"></em> {{ __('firefly.reset_webhook_secret') }}
                         </a>
 
                     </div>
@@ -115,22 +130,27 @@
 
         <div class="row">
             <div class="col-lg-12">
-                <div class="box">
-                    <div class="box-header with-border">
-                        <h3 class="box-title">{{ __('firefly.webhook_messages') }}</h3>
+                <div class="card mb-2">
+                    <div class="card-header with-border">
+                        <h3 class="card-title">{{ __('firefly.webhook_messages') }}</h3>
                     </div>
-                    <div class="box-body" v-if="messages.length === 0 && !loading">
+                    <div class="card-body">
+                        <template x-if="messages.length === 0 && !loading">
                         <p>
                             {{ __('firefly.no_webhook_messages') }}
                         </p>
+                        </template>
                     </div>
-                    <div class="box-body" v-if="loading">
+                    <template x-if="loading">
+                    <div class="card-body">
                         <p class="text-center">
                             <em class="fa fa-spin fa-spinner"></em>
                         </p>
                     </div>
-                    <div class="card-body p-0" v-if="messages.length > 0 && !loading">
-                        <table class="table table-hover" aria-label="A table">
+                    </template>
+                    <template x-if="messages.length > 0 && !loading">
+                    <div class="card-body p-0">
+                        <table class="table table-hover">
                             <thead>
                             <tr>
                                 <th>
@@ -148,16 +168,17 @@
                             </tr>
                             </thead>
                             <tbody>
-                            <tr v-for="message in messages">
+                            <template x-for="message in messages">
+                            <tr>
                                 <td>
-                                    {{ message.created_at }}
+                                    <span x-text="message.created_at"></span>
                                 </td>
                                 <td>
-                                    {{ message.uuid }}
+                                    <span x-text="message.uuid"></span>
                                 </td>
                                 <td>
-                                    <em class="fa fa-check text-success" v-if="message.success"></em>
-                                    <em class="fa fa-times text-danger" v-if="!message.success"></em>
+                                    <em class="fa fa-check text-success" x-show="message.success"></em>
+                                    <em class="fa fa-times text-danger" x-show="!message.success"></em>
                                 </td>
                                 <td>
                                     <a @click="showWebhookMessage(message.id)" class="btn btn-default">
@@ -170,10 +191,11 @@
                                     </a>
                                 </td>
                             </tr>
+                            </template>
                             </tbody>
-
                         </table>
                     </div>
+                    </template>
                 </div>
             </div>
         </div>
@@ -188,7 +210,7 @@
                         <p>
                             {{ __('firefly.message_content_help') }}
                         </p>
-                        <textarea class="form-control" rows="10" readonly>{{ message_content }}</textarea>
+                        <textarea class="form-control" rows="10" readonly x-model="message_content"></textarea>
                     </div>
                     <div class="modal-footer">
                         <button type="button" class="btn btn-default" data-dismiss="modal">{{ __('firefly.close') }}</button>
@@ -208,25 +230,27 @@
                         <p>
                             {{ __('firefly.attempt_content_help') }}
                         </p>
-                        <p v-if="0===message_attempts.length">
+                        <p x-show="0===message_attempts.length">
                             <em>
                                 {{ __('firefly.no_attempts') }}
                             </em>
                         </p>
-                        <div v-for="message in message_attempts" style="border:1px #eee solid;margin-bottom:0.5em;">
+                        <template x-for="message in message_attempts">
+                        <div style="border:1px #eee solid;margin-bottom:0.5em;">
                             <strong>
-                                {{ __('firefly.webhook_attempt_at', {moment: message.created_at}) }}
-                                <span class="text-danger">({{ message.status_code }})</span>
+                                <span x-text="i18next.t('firefly.webhook_attempt_at', {moment: message.created_at})"
+                                <span class="text-danger">(<span x-text="message.status_code"></span>)</span>
                             </strong>
                             <p>
                                 {{ __('firefly.logs') }}: <br/>
-                                <textarea class="form-control" rows="5" readonly>{{ message.logs }}</textarea>
+                                <textarea class="form-control" rows="5" readonly x-model="message.logs"></textarea>
                             </p>
                             <p v-if="null !== message.response">
                                 {{ __('firefly.response') }}: <br/>
-                                <textarea class="form-control" rows="5" readonly>{{ message.response }}</textarea>
+                                <textarea class="form-control" rows="5" readonly x-model="message.response"></textarea>
                             </p>
                         </div>
+                        </template>
 
                     </div>
                     <div class="modal-footer">
@@ -241,4 +265,5 @@
     <script type="text/javascript" nonce="{{ $JS_NONCE }}">
         var previousUrl = '{{ $previousUrl ?? '' }}';
     </script>
+    @vite(['js/pages/webhooks/show.js'])
 @endsection
