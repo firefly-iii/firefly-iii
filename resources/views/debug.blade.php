@@ -4,23 +4,23 @@
     <title>{{ trans('firefly.debug_page') }}</title>
 </head>
 <style nonce="{{ $JS_NONCE }}">
-    p.default-text {font-family:Arial, Arial, Helvetica, sans-serif;font-size:12pt;width:600px;}
+    p.default-text {font-family:Arial, Arial, Helvetica, sans-serif;font-size:12@pt;width:600px;}
     p.warn-text {font-family:Arial, Arial, Helvetica, sans-serif;font-size:12pt;width:600px;color:#a00;}
     textarea {font-family:Menlo, Monaco, Consolas, monospace;font-size:8pt;}
 </style>
 <body>
 
 <p class="default-text">
-    {{ trans('firefly.debug_submit_instructions')|raw }}
+    {!! trans('firefly.debug_submit_instructions') !!}
 </p>
 <p class="default-text">
     <strong>{{ trans('firefly.debug_pretty_table') }}</strong>
 </p>
 <label for="debug_info"></label>
 <textarea rows="30" cols="100" name="debug_info" id="debug_info">
-Debug information generated at {{ now }} for Firefly III version **{% if not FF_IS_DEVELOP %}v@endif{{ FF_VERSION }}**.
+Debug information generated at {{ $now }} for Firefly III version **{{ !$FF_IS_DEVELOP ? 'v' : '' }}{{ $FF_VERSION }}**.
 
-{{ table|escape('html') }}
+{{ $table }}
 </textarea>
 <script type="text/javascript" nonce="{{ $JS_NONCE }}">
     var textArea = document.getElementById('debug_info');
@@ -35,12 +35,12 @@ Debug information generated at {{ now }} for Firefly III version **{% if not FF_
 </p>
 
 <p class="warn-text">
-    {{ trans('firefly.debug_additional_data')|raw }}
+    {!! trans('firefly.debug_additional_data') !!}
 </p>
 
 <textarea rows="30" cols="100" name="log_info">
 ```
-{{ logContent }}
+{{ $logContent }}
 ```
 </textarea>
 

@@ -12,43 +12,49 @@
     {{-- Firefly III version --}}
     <tr>
         <td>Firefly III</td>
-        <td>{% if FF_IS_DEVELOP %}<!-- .Z9JBCmw64Zkx1pQw -->@endif{% if not FF_IS_DEVELOP %}v@endif{{ FF_VERSION }}</td>
+        <td>{!! $FF_IS_DEVELOP ? '<!-- .Z9JBCmw64Zkx1pQw -->' : 'v' !!}{{ $FF_VERSION }}</td>
     </tr>
     <tr>
         <td>Build time</td>
-        <td>{{ system.build_time_nice }} ({{ system.build_time }})</td>
+        <td>{{ $system['build_time_nice'] }} ({{ $system['build_time'] }})</td>
     </tr>
     {{-- PHP version + settings --}}
     <tr>
         <td>PHP version</td>
-        <td>{{ system.php_version|escape }} ({{ system.bits }}bits) / {{ system.interface }} / {{ system.php_os }} {{ system.uname }}</td>
+        <td>{{ $system['php_version'] }} ({{ $system['bits'] }}bits) / {{ $system['interface'] }} / {{ $system['php_os'] }} {{ $system['uname'] }}</td>
     </tr>
     <tr>
         <td>BCscale</td>
-        <td>{{ system.bcscale }}</td>
+        <td>{{ $system['bcscale'] }}</td>
     </tr>
     <tr>
         <td>Error reporting</td>
-        <td>Display: {{ system.display_errors }}, reporting: {{ system.error_reporting }}</td>
+        <td>Display: {{ $system['display_errors'] }}, reporting: {{ $system['error_reporting'] }}</td>
     </tr>
     <tr>
         <td>Max upload</td>
-        <td>{{ system.upload_size }} ({{ system.upload_size|filesize }})</td>
+        <td>{{ $system['upload_size'] }} ({{ $system['upload_size'] }})</td>
     </tr>
     <tr>
         <td>Database drivers</td>
         <td>
-            {% for driver in system.all_drivers %}{% if system.current_driver == driver %}<strong>*{{ driver }}*</strong>@else{{ driver }}@endif, @endforeach
+            @foreach($system['all_drivers'] as $driver)
+                @if($driver === $system['current_driver'])
+                    <strong>*{{ $driver }}*</strong>{{ !$loop->last ? ', ' : '' }}
+                @else
+                    {{ $driver }}{{ !$loop->last ? ', ' : '' }}
+                @endif
+            @endforeach
         </td>
     </tr>
     {{-- Docker information --}}
-    {% if docker.is_docker %}
+    @if($docker['is_docker'])
         <tr>
             <td>
                 Docker build
             </td>
             <td>
-                <span>#</span>{{ docker.build }}, base <span>#</span>{{ docker.base_build }}
+                <span>#</span>{{ $docker['build'] }}, base <span>#</span>{{ $docker['base_build'] }}
             </td>
         </tr>
     @endif
@@ -71,19 +77,15 @@
     </tr>
     <tr>
         <td>App environment</td>
-        <td>{{ config('app.env') }}, debug: {{ app.debug }}</td>
+        <td>{{ config('app.env') }}, debug: {{ $app['debug'] }}</td>
     </tr>
     <tr>
         <td>Layout</td>
-        <td>{{ config('view.layout') }}
-            {% if 'v2' == config('view.layout') %}
-                <!-- .eOxNZAmyGz6CXMyf -->
-            @endif
-        </td>
+        <td>{{ config('view.layout') }}</td>
     </tr>
     <tr>
         <td>Logging</td>
-        <td>{{ config('logging.level') }}, {{ config('logging.default') }} / {{ app.audit_log_channel }}</td>
+        <td>{{ config('logging.level') }}, {{ config('logging.default') }} / {{ $app['audit_log_channel'] }}</td>
     </tr>
     <tr>
         <td>Cache driver, session driver</td>
@@ -91,11 +93,11 @@
     </tr>
     <tr>
         <td>Default language and locale</td>
-        <td>{{ app.default_language }} + {{ app.default_locale }}</td>
+        <td>{{ $app['default_language']}} + {{ $app['default_locale'] }}</td>
     </tr>
     <tr>
         <td>Trusted proxies</td>
-        <td><code>{{ config('firefly.trusted_proxies')|escape }}</code></td>
+        <td><code>{{ config('firefly.trusted_proxies') }}</code></td>
     </tr>
     <tr>
         <td>Login provider & user guard</td>
@@ -103,15 +105,17 @@
     </tr>
     <tr>
         <td>Login headers</td>
-        <td>{{ app.remote_header }} + {{ app.remote_mail_header }}</td>
+        <td>{{ $app['remote_header'] }} + {{ $app['remote_mail_header'] }}</td>
     </tr>
+    {{--
     <tr>
         <td>Stateful domains</td>
-        <td>{{ app.stateful_domains }}</td>
+        <td>{{ $app['stateful_domains'] }}</td>
     </tr>
+    --}}
     <tr>
         <td>Last cron job</td>
-        <td>{{ app.last_cronjob }} ({{ app.last_cronjob_ago }})</td>
+        <td>{{ $app['last_cronjob'] }} ({{ $app['last_cronjob_ago'] }})</td>
     </tr>
     <tr>
         <td>Mailer</td>
@@ -119,11 +123,13 @@
     </tr>
     <tr>
         <td>Exchange rates</td>
-        <td>{% if fireflyiiiconfig('enable_exchange_rates', true) %}Enabled@elseDisabled@endif, downloads {% if FireflyConfig.get('enable_external_rates', config('cer.download_enabled')) %}enabled@elsedisabled@endif</td>
+        <td>
+            {{ get_app_configuration('enable_exchange_rates', true) ? 'Enabled' : 'Disabled' }}, downloads {{ get_app_configuration('enable_external_rates')  ? 'enabled' : 'disabled' }}
+        </td>
     </tr>
     <tr>
         <td>RB-column</td>
-        <td>{% if fireflyiiiconfig('use_running_balance', true) %}Enabled@elseDisabled@endif</td>
+        <td>{{ get_app_configuration('use_running_balance', true) ? 'Enabled' : 'Disabled' }}</td>
     </tr>
     </tbody>
 </table>
@@ -141,19 +147,19 @@
     <tbody>
     <tr>
         <td>User</td>
-        <td><span>#</span>{{ user.user_id }} of {{ user.user_count }}</td>
+        <td><span>#</span>{{ $user['user_id'] }} of {{ $user['user_count'] }}</td>
     </tr>
     <tr>
         <td>User flags</td>
-        <td>{{ user.user_flags | raw }}</td>
+        <td>{!! $user['user_flags'] !!}</td>
     </tr>
     <tr>
         <td>Primary currency</td>
-        <td>{{ user.primary.code }}</td>
+        <td>{{ $user['primary']['code'] }}</td>
     </tr>
     <tr>
         <td>Convert to primary currency?</td>
-        <td>{% if user.convert_to_primary %}Enabled@elseDisabled@endif</td>
+        <td>{{ $user['convert_to_primary'] ? 'Enabled' : 'Disabled' }}</td>
     </tr>
     <tr>
         <td>Session start</td>
@@ -165,27 +171,27 @@
     </tr>
     <tr>
         <td>View range</td>
-        <td>{{ user.view_range }}</td>
+        <td>{{ $user['view_range'] }}</td>
     </tr>
     <tr>
         <td>User language</td>
-        <td>{{ user.language }}</td>
+        <td>{{ $user['language'] }}</td>
     </tr>
     <tr>
         <td>User locale</td>
-        <td>{{ user.locale }}</td>
+        <td>{{ $user['locale'] }}</td>
     </tr>
     <tr>
         <td>Locale(s) supported</td>
         <td>
-            {% for key, attempt in user.locale_attempts %}
-                {{ $key }}: {% if attempt %}:white_check_mark:@else:x:@endif<br>
+            @foreach($user['locale_attempts'] as $key => $attempt)
+                {{ $key }}: {{ $attempt ? ':white_check_mark:' : ':x:' }}<br>
             @endforeach
         </td>
     </tr>
     <tr>
         <td>User agent</td>
-        <td>{{ user.user_agent }}</td>
+        <td>{{ $user['user_agent'] }}</td>
     </tr>
     </tbody>
 </table>
