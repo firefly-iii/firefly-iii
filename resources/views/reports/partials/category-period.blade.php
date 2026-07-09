@@ -13,9 +13,9 @@
         <tr>
             <td data-value="{{ $info['title'] }}">
                 @if($info['id'] !== 0)
-                    <a class="btn btn-outline-secondary btn-xs" href="{{ route('categories.show', [$info['id']]) }}"><span class="fa fa-external-link"></span></a>
+                    <a class="btn btn-outline-secondary btn-xs" href="{{ route('categories.show', [$info['id']]) }}"><span class="bi bi-box-arrow-up-right"></span></a>
                 @else
-                    <a class="btn btn-outline-secondary btn-xs" href="{{ route('categories.no-category') }}"><span class="fa fa-external-link"></span></a>
+                    <a class="btn btn-outline-secondary btn-xs" href="{{ route('categories.no-category') }}"><span class="bi bi-box-arrow-up-right"></span></a>
                 @endif
             </td>
             <td data-value="{{ $info['title'] }}">

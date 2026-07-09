@@ -63,7 +63,7 @@
                             <br/>
                             <a href="#" class="btn btn-outline-secondary add_rule_trigger">{{ __('firefly.add_rule_trigger') }}</a>
                             <a href="#" class="btn btn-outline-secondary test_rule_triggers"><span
-                                    class="fa fa-flask"></span> {{ __('firefly.test_rule_triggers') }}</a>
+                                    class="bi bi-flask"></span> {{ __('firefly.test_rule_triggers') }}</a>
                         </p>
                     </div>
                 </div>

@@ -66,7 +66,7 @@ final class NewUserController extends Controller
     public function index(): Factory|\Illuminate\Contracts\View\View|Redirector|RedirectResponse
     {
         app('view')->share('title', (string) trans('firefly.welcome'));
-        app('view')->share('mainTitleIcon', 'fa-fire');
+        app('view')->share('mainTitleIcon', 'bi-fire');
 
         $types     = config('firefly.accountTypesByIdentifier.asset');
         $count     = $this->repository->count($types);

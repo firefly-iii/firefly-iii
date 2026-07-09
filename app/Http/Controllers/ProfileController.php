@@ -73,7 +73,7 @@ final class ProfileController extends Controller
 
         $this->middleware(static function ($request, $next) {
             app('view')->share('title', (string) trans('firefly.profile'));
-            app('view')->share('mainTitleIcon', 'fa-user');
+            app('view')->share('mainTitleIcon', 'bi-person');
 
             return $next($request);
         });
@@ -98,7 +98,7 @@ final class ProfileController extends Controller
         $title        = auth()->user()->email;
         $email        = auth()->user()->email;
         $subTitle     = (string) trans('firefly.change_your_email');
-        $subTitleIcon = 'fa-envelope';
+        $subTitleIcon = 'bi-envelope';
 
         return view('profile.change-email', ['title' => $title, 'subTitle' => $subTitle, 'subTitleIcon' => $subTitleIcon, 'email' => $email]);
     }
@@ -118,7 +118,7 @@ final class ProfileController extends Controller
 
         $title        = auth()->user()->email;
         $subTitle     = (string) trans('firefly.change_your_password');
-        $subTitleIcon = 'fa-key';
+        $subTitleIcon = 'bi-key';
 
         return view('profile.change-password', ['title' => $title, 'subTitle' => $subTitle, 'subTitleIcon' => $subTitleIcon]);
     }
@@ -171,7 +171,7 @@ final class ProfileController extends Controller
         }
         $title        = auth()->user()->email;
         $subTitle     = (string) trans('firefly.delete_account');
-        $subTitleIcon = 'fa-trash';
+        $subTitleIcon = 'bi-trash';
 
         return view('profile.delete-account', ['title' => $title, 'subTitle' => $subTitle, 'subTitleIcon' => $subTitleIcon]);
     }

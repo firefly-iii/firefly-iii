@@ -62,7 +62,7 @@ final class PreferencesController extends Controller
 
         $this->middleware(static function ($request, $next) {
             app('view')->share('title', (string) trans('firefly.preferences'));
-            app('view')->share('mainTitleIcon', 'fa-gear');
+            app('view')->share('mainTitleIcon', 'bi-gear-wide-connected');
 
             return $next($request);
         });

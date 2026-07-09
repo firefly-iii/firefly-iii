@@ -25,7 +25,7 @@
                             <tbody>
                             @foreach($objectGroups as $objectGroup)
                                 <tr class="group-sortable" data-id="{{ $objectGroup['id'] }}" data-name="{{ e($objectGroup['title']) }}" data-order="{{ $objectGroup['order'] }}">
-                                    <td><span class="fa fa-bars group-handle"></span></td>
+                                    <td><span class="bi bi-list group-handle"></span></td>
                                     <td>
                                         <strong>{{ $objectGroup['title'] }}</strong><br/>
                                         @foreach($objectGroup['piggyBanks'] as $piggyBank)

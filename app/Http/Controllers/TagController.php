@@ -61,7 +61,7 @@ final class TagController extends Controller
 
         $this->middleware(function ($request, $next) {
             app('view')->share('title', (string) trans('firefly.tags'));
-            app('view')->share('mainTitleIcon', 'fa-tag');
+            app('view')->share('mainTitleIcon', 'bi-tags');
 
             $this->attachmentsHelper = app(AttachmentHelperInterface::class);
             $this->repository        = app(TagRepositoryInterface::class);
@@ -78,7 +78,7 @@ final class TagController extends Controller
     public function create(Request $request): Factory|\Illuminate\Contracts\View\View
     {
         $subTitle     = (string) trans('firefly.new_tag');
-        $subTitleIcon = 'fa-tag';
+        $subTitleIcon = 'bi-tag';
 
         // location info:
         $hasOldInput  = null !== $request->old('_token');
@@ -137,7 +137,7 @@ final class TagController extends Controller
     public function edit(Tag $tag): Factory|\Illuminate\Contracts\View\View
     {
         $subTitle     = (string) trans('firefly.edit_tag', ['tag' => $tag->tag]);
-        $subTitleIcon = 'fa-tag';
+        $subTitleIcon = 'bi-tag';
 
         $location     = $this->repository->getLocation($tag);
         $latitude     = $location instanceof Location ? $location->latitude : config('firefly.default_location.latitude');
@@ -228,7 +228,7 @@ final class TagController extends Controller
     public function show(Request $request, Tag $tag, ?Carbon $start = null, ?Carbon $end = null): Factory|\Illuminate\Contracts\View\View
     {
         // default values:
-        $subTitleIcon = 'fa-tag';
+        $subTitleIcon = 'bi-tag';
         $page         = (int) $request->input('page');
         $pageSize     = (int) Preferences::get('listPageSize', 50)->data;
         $start       ??= session('start');
@@ -296,7 +296,7 @@ final class TagController extends Controller
     public function showAll(Request $request, Tag $tag): Factory|\Illuminate\Contracts\View\View
     {
         // default values:
-        $subTitleIcon = 'fa-tag';
+        $subTitleIcon = 'bi-tag';
         $page         = (int) $request->input('page');
         $page   = min(max(1, $page), 2 ** 16);
         $pageSize     = (int) Preferences::get('listPageSize', 50)->data;

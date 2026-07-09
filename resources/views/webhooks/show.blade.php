@@ -142,10 +142,14 @@
                         </template>
                     </div>
                     <template x-if="loading">
-                    <div class="card-body">
-                        <p class="text-center">
-                            <em class="fa fa-spin fa-spinner"></em>
-                        </p>
+                        <div class="card-body">
+                            <div class="text-center">
+                                <span class="form-control-plaintext">
+                    <div class="spinner-border spinner-border-sm text-primary" role="status">
+                        <span class="visually-hidden">Loading...</span>
+                    </div>
+                </span>
+                        </div>
                     </div>
                     </template>
                     <template x-if="messages.length > 0 && !loading">
@@ -177,16 +181,16 @@
                                     <span x-text="message.uuid"></span>
                                 </td>
                                 <td>
-                                    <em class="fa fa-check text-success" x-show="message.success"></em>
-                                    <em class="fa fa-times text-danger" x-show="!message.success"></em>
+                                    <em class="bi bi-check text-success" x-show="message.success"></em>
+                                    <em class="bi bi-x text-danger" x-show="!message.success"></em>
                                 </td>
                                 <td>
                                     <a @click="showWebhookMessage(message.id)" class="btn btn-default">
-                                        <em class="fa fa-envelope"></em>
+                                        <em class="bi bi-envelope"></em>
                                         {{ __('firefly.view_message') }}
                                     </a>
                                     <a @click="showWebhookAttempts(message.id)" class="btn btn-default">
-                                        <em class="fa fa-cloud-upload"></em>
+                                        <em class="bi bi-cloud-arrow-up"></em>
                                         {{ __('firefly.view_attempts') }}
                                     </a>
                                 </td>

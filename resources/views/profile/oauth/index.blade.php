@@ -84,7 +84,7 @@
                                                                    class="btn btn-default btn-sm"
                                                                    @click="regenerateSecret(client)">
                                                                     <em :title="i18next.t('firefly.regenerate_secret')"
-                                                                        class="fa fa-retweet"></em>
+                                                                        class="bi bi-arrow-clockwise"></em>
                                                                     {{ __('firefly.regenerate_secret') }}
                                                                 </a>
                                                             </template>
@@ -92,13 +92,13 @@
                                                                :title="i18next.t('firefly.edit')" tabindex="-1"
                                                                @click="edit(client)">
                                                                 <em :title="i18next.t('firefly.edit')"
-                                                                    class="fa fa-pencil"></em>
+                                                                    class="bi bi-pencil"></em>
                                                                 {{ __('firefly.edit') }}
                                                             </a>
                                                             <a :title="i18next.t('firefly.delete')"
                                                                class="btn btn-sm btn-danger" @click="destroy(client)">
                                                                 <em :title="i18next.t('firefly.delete')"
-                                                                    class="fa fa-trash"></em>
+                                                                    class="bi bi-trash"></em>
                                                                 {{ __('firefly.delete') }}
                                                             </a>
                                                         </div>

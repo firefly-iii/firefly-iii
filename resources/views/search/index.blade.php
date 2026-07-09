@@ -25,7 +25,7 @@
                         </div>
                         <div class="form-group">
                             <div class="col-sm-offset-1 col-sm-10">
-                                <button type="submit" class="btn btn-info"><span class="fa fa-search"></span> {{ __('firefly.search') }}</button>
+                                <button type="submit" class="btn btn-info"><span class="bi bi-search"></span> {{ __('firefly.search') }}</button>
                                 @if($ruleId > 0 && $ruleChanged)
                                     <a href="{{ route('rules.edit', [$ruleId]) }}?from_query={{ $fullQuery }}"
                                        class="btn btn-outline-secondary">{{ trans('firefly.update_rule_from_query', ['rule' => $rule->title]) }}</a>
@@ -112,7 +112,7 @@
                                 <div class="mass_buttons btn-group btn-group text-end">
                                     <a href="#" class="btn btn-outline-secondary mass_select"><span
                                             class="bi bi-check-square-o"></span> {{ __('firefly.select_transactions') }}</a>
-                                    <a href="#" class="btn btn-outline-secondary mass_stop_select hidden"><span class="fa faw-fw fa-square-o"
+                                    <a href="#" class="btn btn-outline-secondary mass_stop_select hidden"><span class="bi bi-app"
                                         ></span> {{ __('firefly.stop_selection') }}</a>
                                 </div>
                             </div>

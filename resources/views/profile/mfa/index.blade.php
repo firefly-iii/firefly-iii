@@ -26,7 +26,7 @@
                     </p>
                     @if(true === $enabledMFA)
                         <div class="btn-group">
-                            <a href="{{ route('profile.mfa.disableMFA') }}" class="btn btn-danger"><em class="fa fa-unlock-alt"></em> {{ __('firefly.pref_two_factor_auth_disable_2fa') }}</a>
+                            <a href="{{ route('profile.mfa.disableMFA') }}" class="btn btn-danger"><em class="bi bi-unlock"></em> {{ __('firefly.pref_two_factor_auth_disable_2fa') }}</a>
                             <a href="{{ route('profile.mfa.backup-codes') }}" class="btn btn-outline-secondary"><em class="bi bi-calculator"></em> {{ __('firefly.pref_two_factor_new_backup_codes') }}</a>
                         </div>
                     @endif

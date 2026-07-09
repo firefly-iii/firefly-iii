@@ -225,7 +225,7 @@
                                         @endif
                                         @if($journal['reconciled'])
                                             <li><a class="dropdown-item" class="reconcile-button" href="{{ route('transactions.unreconcile', [$journal['transaction_journal_id']]) }}"><span
-                                                        class="fa fa-history"></span> {{ __('firefly.unreconcile') }}</a></li>
+                                                        class="bi bi-clock-history"></span> {{ __('firefly.unreconcile') }}</a></li>
                                         @endif
                                         @if($groupArray['transactions'][0]['type'] !== 'reconciliation' && $groupArray['transactions'][0]['type'] !== 'opening balance' && $groupArray['transactions'][0]['type'] !== 'liability credit')
                                             <li role="separator" class="divider"></li>
@@ -266,11 +266,11 @@
                                             <li role="separator" class="divider"></li>
                                             <li>
                                                 <a class="dropdown-item" href="{{ route('rules.create-from-journal', [$journal['transaction_journal_id']]) }}"><span
-                                                        class="fa fa-random"></span>{{ __('firefly.create_rule_from_transaction') }}
+                                                        class="bi bi-shuffle"></span>{{ __('firefly.create_rule_from_transaction') }}
                                                 </a></li>
                                             <li>
                                                 <a class="dropdown-item" href="{{ route('recurring.create-from-journal', [$journal['transaction_journal_id']]) }}"><span
-                                                        class="fa fa-paint-brush"></span>{{ __('firefly.create_recurring_from_transaction') }}
+                                                        class="bi bi-paint-bucket"></span>{{ __('firefly.create_recurring_from_transaction') }}
                                                 </a></li>
                                         @endif
                                     </ul>

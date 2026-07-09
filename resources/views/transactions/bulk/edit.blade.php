@@ -79,7 +79,7 @@
                                             </td>
                                             <td>
                                                 @if($journal['journals_in_group'] > 1)
-                                                    <span title="{{ __('firefly.part_of_split') }}" class="text-danger fa fa-exclamation-triangle"></span>
+                                                    <span title="{{ __('firefly.part_of_split') }}" class="text-danger bi bi-exclamation-triangle"></span>
                                                 @endif
                                             </td>
                                         </tr>
