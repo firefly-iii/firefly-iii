@@ -40,7 +40,7 @@ final class NotificationController extends Controller
     {
         Log::channel('audit')->info('User visits notifications index.');
         $title                          = (string) trans('firefly.system_settings');
-        $mainTitleIcon                  = 'fa-hand-spock-o';
+        $mainTitleIcon                  = 'bi-cpu';
         $subTitle                       = (string) trans('firefly.title_owner_notifications');
         $subTitleIcon                   = 'envelope-o';
 

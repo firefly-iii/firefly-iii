@@ -357,7 +357,7 @@ class General extends AbstractExtension
                 'application/vnd.sun.xml.draw',
                 'application/vnd.sun.xml.draw.template',
                 'application/vnd.stardivision.draw',
-                'application/vnd.oasis.opendocument.chart'                 => 'fa-paint-brush',
+                'application/vnd.oasis.opendocument.chart'                 => 'bi-paint-bucket',
                 'application/vnd.oasis.opendocument.graphics',
                 'application/vnd.oasis.opendocument.graphics-template',
                 'application/vnd.sun.xml.math',

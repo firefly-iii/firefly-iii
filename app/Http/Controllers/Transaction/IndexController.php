@@ -56,7 +56,7 @@ final class IndexController extends Controller
         app('view')->share('showCategory', true);
         // translations:
         $this->middleware(function ($request, $next) {
-            app('view')->share('mainTitleIcon', 'fa-exchange');
+            app('view')->share('mainTitleIcon', 'bi-shuffle');
             app('view')->share('title', (string) trans('firefly.transactions'));
 
             $this->repository = app(JournalRepositoryInterface::class);

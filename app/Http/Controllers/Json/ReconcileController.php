@@ -55,7 +55,7 @@ final class ReconcileController extends Controller
 
         // translations:
         $this->middleware(function ($request, $next) {
-            app('view')->share('mainTitleIcon', 'fa-credit-card');
+            app('view')->share('mainTitleIcon', 'bi-credit-card');
             app('view')->share('title', (string) trans('firefly.accounts'));
             $this->accountRepos = app(AccountRepositoryInterface::class);
 

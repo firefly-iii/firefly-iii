@@ -50,7 +50,7 @@ final class DeleteController extends Controller
 
         $this->middleware(function ($request, $next) {
             app('view')->share('title', (string) trans('firefly.categories'));
-            app('view')->share('mainTitleIcon', 'fa-bookmark');
+            app('view')->share('mainTitleIcon', 'bi-bookmark');
             $this->repository = app(CategoryRepositoryInterface::class);
 
             return $next($request);

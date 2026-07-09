@@ -42,8 +42,8 @@ final class CreateController extends Controller
 
         // translations:
         $this->middleware(static function ($request, $next) {
-            app('view')->share('mainTitleIcon', 'fa-bolt');
-            app('view')->share('subTitleIcon', 'fa-plus');
+            app('view')->share('mainTitleIcon', 'bi-lightning');
+            app('view')->share('subTitleIcon', 'bi-plus');
             app('view')->share('title', (string) trans('firefly.webhooks'));
             app('view')->share('subTitle', (string) trans('firefly.create_new_webhook'));
 

@@ -57,7 +57,7 @@ final class CreateController extends Controller
 
         $this->middleware(function ($request, $next) {
             app('view')->share('title', (string) trans('firefly.transactions'));
-            app('view')->share('mainTitleIcon', 'fa-exchange');
+            app('view')->share('mainTitleIcon', 'bi-shuffle');
             $this->repository = app(TransactionGroupRepositoryInterface::class);
 
             return $next($request);
@@ -111,7 +111,7 @@ final class CreateController extends Controller
         $cash                       = $accountRepository->getCashAccount();
         $preFilled                  = session()->has('preFilled') ? session('preFilled') : [];
         $subTitle                   = (string) trans(sprintf('breadcrumbs.create_%s', strtolower((string) $objectType)));
-        $subTitleIcon               = 'fa-plus';
+        $subTitleIcon               = 'bi-plus';
 
         /** @var null|array $optionalFields */
         $optionalFields             = Preferences::get('transaction_journal_optional_fields', [])->data;

@@ -59,7 +59,7 @@ final class IndexController extends Controller
 
         $this->middleware(function ($request, $next) {
             app('view')->share('title', (string) trans('firefly.bills'));
-            app('view')->share('mainTitleIcon', 'fa-calendar-o');
+            app('view')->share('mainTitleIcon', 'bi-calendar');
             $this->repository = app(BillRepositoryInterface::class);
 
             return $next($request);

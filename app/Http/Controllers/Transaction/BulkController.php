@@ -57,7 +57,7 @@ final class BulkController extends Controller
         $this->middleware(function ($request, $next) {
             $this->repository = app(JournalRepositoryInterface::class);
             app('view')->share('title', (string) trans('firefly.transactions'));
-            app('view')->share('mainTitleIcon', 'fa-exchange');
+            app('view')->share('mainTitleIcon', 'bi-shuffle');
 
             return $next($request);
         });

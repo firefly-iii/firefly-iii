@@ -60,7 +60,7 @@ final class EditController extends Controller
 
         $this->middleware(function ($request, $next) {
             app('view')->share('title', (string) trans('firefly.rules'));
-            app('view')->share('mainTitleIcon', 'fa-random');
+            app('view')->share('mainTitleIcon', 'bi-shuffle');
 
             $this->ruleRepos = app(RuleRepositoryInterface::class);
 

@@ -70,7 +70,7 @@ final class MfaController extends Controller
 
         $this->middleware(static function ($request, $next) {
             app('view')->share('title', (string) trans('firefly.profile'));
-            app('view')->share('mainTitleIcon', 'fa-user');
+            app('view')->share('mainTitleIcon', 'bi-person');
 
             return $next($request);
         });
@@ -141,7 +141,7 @@ final class MfaController extends Controller
             return redirect(route('profile.index'));
         }
         $subTitle     = (string) trans('firefly.mfa_index_title');
-        $subTitleIcon = 'fa-calculator';
+        $subTitleIcon = 'bi-calculator';
 
         return view('profile.mfa.disable-mfa')->with(['subTitle' => $subTitle, 'subTitleIcon' => $subTitleIcon, 'enabledMFA' => $enabledMFA]);
     }
@@ -282,7 +282,7 @@ final class MfaController extends Controller
         }
 
         $subTitle     = (string) trans('firefly.mfa_index_title');
-        $subTitleIcon = 'fa-calculator';
+        $subTitleIcon = 'bi-calculator';
         $enabledMFA   = null !== auth()->user()->mfa_secret;
 
         return view('profile.mfa.index')->with(['subTitle' => $subTitle, 'subTitleIcon' => $subTitleIcon, 'enabledMFA' => $enabledMFA]);

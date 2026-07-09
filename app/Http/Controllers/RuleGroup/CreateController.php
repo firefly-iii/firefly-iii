@@ -49,7 +49,7 @@ final class CreateController extends Controller
 
         $this->middleware(function ($request, $next) {
             app('view')->share('title', (string) trans('firefly.rules'));
-            app('view')->share('mainTitleIcon', 'fa-random');
+            app('view')->share('mainTitleIcon', 'bi-shuffle');
 
             $this->repository = app(RuleGroupRepositoryInterface::class);
 
@@ -64,7 +64,7 @@ final class CreateController extends Controller
      */
     public function create(): Factory|\Illuminate\Contracts\View\View
     {
-        $subTitleIcon = 'fa-clone';
+        $subTitleIcon = 'bi-copy';
         $subTitle     = (string) trans('firefly.make_new_rule_group');
 
         // put previous url in session if not redirect from store (not "create another").

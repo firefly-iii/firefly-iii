@@ -49,7 +49,7 @@ final class DeleteController extends Controller
 
         // translations:
         $this->middleware(function ($request, $next) {
-            app('view')->share('mainTitleIcon', 'fa-paint-brush');
+            app('view')->share('mainTitleIcon', 'bi-paint-bucket');
             app('view')->share('title', (string) trans('firefly.recurrences'));
 
             $this->repository = app(RecurringRepositoryInterface::class);

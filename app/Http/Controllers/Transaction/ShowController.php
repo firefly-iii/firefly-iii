@@ -61,7 +61,7 @@ final class ShowController extends Controller
             $this->aleRepository = app(ALERepositoryInterface::class);
 
             app('view')->share('title', (string) trans('firefly.transactions'));
-            app('view')->share('mainTitleIcon', 'fa-exchange');
+            app('view')->share('mainTitleIcon', 'bi-shuffle');
 
             return $next($request);
         });

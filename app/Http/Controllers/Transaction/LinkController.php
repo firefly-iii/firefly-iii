@@ -54,7 +54,7 @@ final class LinkController extends Controller
         // some useful repositories:
         $this->middleware(function ($request, $next) {
             app('view')->share('title', (string) trans('firefly.transactions'));
-            app('view')->share('mainTitleIcon', 'fa-exchange');
+            app('view')->share('mainTitleIcon', 'bi-shuffle');
 
             $this->journalRepository = app(JournalRepositoryInterface::class);
             $this->repository        = app(LinkTypeRepositoryInterface::class);
@@ -70,7 +70,7 @@ final class LinkController extends Controller
      */
     public function delete(TransactionJournalLink $link): Factory|\Illuminate\Contracts\View\View
     {
-        $subTitleIcon = 'fa-link';
+        $subTitleIcon = 'bi-link';
         $subTitle     = (string) trans('breadcrumbs.delete_journal_link');
         $this->rememberPreviousUrl('journal_links.delete.url');
 

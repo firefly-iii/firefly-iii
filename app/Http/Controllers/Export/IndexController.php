@@ -53,7 +53,7 @@ final class IndexController extends Controller
 
         // translations:
         $this->middleware(function ($request, $next) {
-            app('view')->share('mainTitleIcon', 'fa-life-bouy');
+            app('view')->share('mainTitleIcon', 'bi-upload');
             app('view')->share('title', (string) trans('firefly.export_data_title'));
             $this->journalRepository = app(JournalRepositoryInterface::class);
             $this->middleware(IsDemoUser::class)->except(['index']);

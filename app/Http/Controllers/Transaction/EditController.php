@@ -59,7 +59,7 @@ final class EditController extends Controller
         // translations:
         $this->middleware(function ($request, $next) {
             app('view')->share('title', (string) trans('firefly.transactions'));
-            app('view')->share('mainTitleIcon', 'fa-exchange');
+            app('view')->share('mainTitleIcon', 'bi-shuffle');
 
             $this->repository = app(JournalRepositoryInterface::class);
 
@@ -92,7 +92,7 @@ final class EditController extends Controller
             ? $transactionGroup->title
             : $transactionGroup->transactionJournals()->first()->description;
         $subTitle                   = (string) trans('firefly.edit_transaction_title', ['description' => $title]);
-        $subTitleIcon               = 'fa-plus';
+        $subTitleIcon               = 'bi-plus';
         $cash                       = $repository->getCashAccount();
         $previousUrl                = $this->rememberPreviousUrl('transactions.edit.url');
         $parts                      = parse_url((string) $previousUrl);
