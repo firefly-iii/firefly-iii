@@ -12,11 +12,11 @@ use Illuminate\View\Component;
 
 class Attachments extends Component
 {
-    public Collection $attachments;
+    public Collection|array $attachments;
     /**
      * Create a new component instance.
      */
-    public function __construct(Collection $attachments)
+    public function __construct(Collection|array $attachments)
     {
         $this->attachments = $attachments;
     }

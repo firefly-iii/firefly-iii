@@ -1,18 +1,13 @@
 @extends('layout.v3.session')
-
-
-    {{ Breadcrumbs.render(Route.getCurrentRoute.getName, recurrence) }}
-@endsection
-
 @section('content')
 
-    <form method="POST" action="{{ route('recurring.destroy',recurrence.id) }}" accept-charset="UTF-8" class="form-horizontal" id="destroy">
+    <form method="POST" action="{{ route('recurring.destroy',$recurrence->id) }}" accept-charset="UTF-8" class="form-horizontal" id="destroy">
         <input name="_token" type="hidden" value="{{ csrf_token() }}">
         <div class="row">
             <div class="col-lg-6 offset-lg-3 col-md-12 col-sm-12">
                 <div class="card card-danger card-outline">
                     <div class="card-header">
-                        <h3 class="card-title">{{ trans('form.delete_recurring', {'title': recurrence.title}) }}</h3>
+                        <h3 class="card-title">{{ trans('form.delete_recurring', ['title' => $recurrence->title]) }}</h3>
                     </div>
                     <div class="card-body">
                         <p class="text-danger">
@@ -20,12 +15,12 @@
                         </p>
 
                         <p>
-                            {{ trans('form.recurring_areYouSure', {'title': recurrence.title}) }}
+                            {{ trans('form.recurring_areYouSure',  ['title' => $recurrence->title]) }}
                         </p>
 
                         <p>
-                            {% if journalsCreated > 0 %}
-                                {{ Lang::choice('form.recurring_keep_transactions', journalsCreated, {count: journalsCreated }) }}
+                            @if($journalsCreated > 0)
+                                {{ Lang::choice('form.recurring_keep_transactions', $journalsCreated, ['count' => $journalsCreated]) }}
                             @endif
                         </p>
                     </div>
@@ -38,4 +33,7 @@
         </div>
 
     </form>
+@endsection
+@section('scripts')
+    @vite(['js/pages/generic.js'])
 @endsection

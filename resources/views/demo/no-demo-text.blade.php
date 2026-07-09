@@ -1,3 +1,3 @@
-{{ trans('demo.no_demo_text', {route: Route.getCurrentRoute.getName})|raw }}
+{{ trans('demo.no_demo_text', ['route' => Route::getCurrentRoute()->getName()]) }}
 
-{{ trans('demo.see_help_icon')|raw }}
+{{ trans('demo.see_help_icon') }}

@@ -1,4 +1,4 @@
 var accountInfo = [];
-{% for id, account in accounts %}
-    accountInfo[{{ id }}] = {preferredCurrency: {{ account.preferredCurrency }}, name: "{{ account.name }}"};
+@foreach($accounts as $id => $account)
+    accountInfo[{{ $id }}] = {preferredCurrency: "{{ $account->preferredCurrency }}", name: "{{ $account->name }}"};
 @endforeach

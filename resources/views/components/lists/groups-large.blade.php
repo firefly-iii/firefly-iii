@@ -2,10 +2,18 @@
     <thead>
     <tr>
         @if(($showCategory ?? false) || ($showBudget ?? false))
-            <td colspan="8">{{ $groups->links('pagination.bootstrap-4') }}</td>
+            <td colspan="8">
+                @if(method_exists($groups, 'links'))
+                    {{ $groups->links('pagination.bootstrap-4') }}
+                @endif
+            </td>
         @else
-            <td colspan="7">{{ $groups->links('pagination.bootstrap-4') }}</td>
-        @endif
+            <td colspan="7">
+                @if(method_exists($groups, 'links'))
+                {{ $groups->links('pagination.bootstrap-4') }}
+                    @endif
+            </td>
+       @endif
         <td class="d-xs-none text-end">
             <!-- Single button -->
             <div class="action-menu d-none"> <!-- d-none -->
@@ -234,9 +242,17 @@
     </tr>
     <tr>
         @if(($showCategory ?? false) || ($showBudget ?? false))
-            <td colspan="9" class="no-margin-pagination">{{ $groups->links('pagination.bootstrap-4') }}</td>
+            <td colspan="8">
+                @if(method_exists($groups, 'links'))
+                    {{ $groups->links('pagination.bootstrap-4') }}
+                @endif
+            </td>
         @else
-            <td colspan="8" class="no-margin-pagination">{{ $groups->links('pagination.bootstrap-4') }}</td>
+            <td colspan="7">
+                @if(method_exists($groups, 'links'))
+                    {{ $groups->links('pagination.bootstrap-4') }}
+                @endif
+            </td>
         @endif
     </tr>
     </tfoot>

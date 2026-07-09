@@ -119,7 +119,7 @@
         "fruitcake/laravel-debugbar": "^4.0",
         "larastan/larastan": "^3",
         "laravel-json-api/testing": "^3.0",
-        "magentron/laravel-blade-lint": "*",
+        "magentron/laravel-blade-lint": "^2.0",
         "mockery/mockery": "1.*",
         "phpstan/extension-installer": "^1.4",
         "phpstan/phpstan": "^2",

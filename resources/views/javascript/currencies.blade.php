@@ -1,4 +1,4 @@
 var currencyInfo = [];
-{% for id, currency in currencies %}
-    currencyInfo[{{ id }}] = {name: "{{ currency.name }}", symbol: "{{ currency.symbol }}", code: "{{ currency.code }}"};
+@foreach($currencies as $id => $currency)
+    currencyInfo[{{ $id }}] = {name: "{{ $currency->name }}", symbol: "{{ $currency->symbol }}", code: "{{ $currency->code }}"};
 @endforeach

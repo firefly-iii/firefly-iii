@@ -8,11 +8,12 @@ use Closure;
 use FireflyIII\Models\Account;
 use Illuminate\Contracts\View\View;
 use Illuminate\Pagination\LengthAwarePaginator;
+use Illuminate\Support\Collection;
 use Illuminate\View\Component;
 
 class GroupsLarge extends Component
 {
-    public LengthAwarePaginator $groups;
+    public LengthAwarePaginator|Collection $groups;
     public ?Account             $account;
     public bool                 $showCategory;
     public bool                 $showBudget;
@@ -20,7 +21,7 @@ class GroupsLarge extends Component
     /**
      * Create a new component instance.
      */
-    public function __construct(LengthAwarePaginator $groups, ?bool $showCategory, ?bool $showBudget, ?Account $account = null)
+    public function __construct(LengthAwarePaginator| Collection $groups, ?bool $showCategory, ?bool $showBudget, ?Account $account = null)
     {
         $this->groups       = $groups;
         $this->account      = $account;

@@ -1,9 +1,4 @@
 @extends('layout.v3.session')
-
-
-    {{ Breadcrumbs.render(Route.getCurrentRoute.getName, recurrence) }}
-@endsection
-
 @section('content')
 <div class="row">
     <!-- basic info -->
@@ -11,49 +6,50 @@
         <div class="card mb-2">
             <div class="card-header">
                 <h3 class="card-title">
-                    {{ array.title }}
+                    {{ $array['title'] }}
 
-                    ({{ array.type }})
+                    ({{ $array['type'] }})
 
-                    {% if array.active == false %}
-                        ({{ 'inactive'|_|lower }})
+                    @if(false === $array['active'])
+                        ({{ strtolower(__('firefly.inactive')) }})
                     @endif
                 </h3>
             </div>
             <div class="card-body">
                 <h4>{{ __('firefly.transaction_journal_meta') }}</h4>
-                {% if array.nr_of_repetitions > 0 %}
+                @if($array['nr_of_repetitions'] > 0)
                 <p>
-                    {% if array.journal_count >= array.nr_of_repetitions %}
-                        <span class="text-danger">{{ trans('firefly.recurrence_max_count', {count: array.journal_count, max: array.nr_of_repetitions}) }}</span>
+                    @if($array['journal_count'] >= $array['nr_of_repetitions'])
+                        <span class="text-danger">{{ trans('firefly.recurrence_max_count', ['count' => $array['journal_count'], 'max' => $array['nr_of_repetitions']]) }}</span>
                     @endif
-                    {% if array.journal_count < array.nr_of_repetitions %}
-                        {{ trans('firefly.recurrence_max_count', {count: array.journal_count, max: array.nr_of_repetitions}) }}
+                    @if($array['journal_count'] < $array['nr_of_repetitions'])
+                        {{ trans('firefly.recurrence_max_count', ['count' => $array['journal_count'], 'max' => $array['nr_of_repetitions']]) }}
                     @endif
                 </p>
                 @endif
 
-                <p>{{ __('firefly.description') }}: <em>{{ array.description }}</em></p>
+                <p>{{ __('firefly.description') }}: <em>{{ $array['description'] }}</em></p>
 
-                {% if array.active == false %}
+                @if(false === $array['active'])
                     <p>
-                        {{ 'recurrence_is_inactive'|_ }}
+                        {{ __('firefly.recurrence_is_inactive') }}
+
                     </p>
                 @endif
 
                 <ul>
-                    {% for rep in array.repetitions %}
-                        <li>{{ rep.description }}</li>
+                    @foreach($array['repetitions'] as $rep)
+                        <li>{{ $rep['description'] }}</li>
                     @endforeach
                 </ul>
                 <h4>{{ __('firefly.attachments') }}</h4>
-                {% include 'list.attachments' with {attachments: array.attachments} %}
+                <x-lists.attachments :attachments="$array['attachments']" />
             </div>
             <div class="card-footer">
                 <div class="btn-group">
-                    <a href="{{ route('recurring.edit', [array.id]) }}" class="btn btn-sm btn-outline-secondary"><span
+                    <a href="{{ route('recurring.edit', [$array['id']]) }}" class="btn btn-sm btn-outline-secondary"><span
                             class="bi bi-pencil"></span> {{ __('firefly.edit') }}</a>
-                    <a href="{{ route('recurring.delete', [array.id]) }}" class="btn btn-sm btn-danger">{{ __('firefly.delete') }}
+                    <a href="{{ route('recurring.delete', [$array['id']]) }}" class="btn btn-sm btn-danger">{{ __('firefly.delete') }}
                         <span class="bi bi-trash"></span></a>
                 </div>
             </div>
@@ -64,39 +60,40 @@
         <div class="card mb-2">
             <div class="card-header">
                 <h3 class="card-title">
-                    {{ ('expected_'~array.type~'s')|_ }}
+                    {{ __('firefly.expected_' . $array['type'] . 's') }}
                 </h3>
             </div>
             <div class="card-body">
-                {% if null != array.repeat_until and today > array.repeat_until %}
+                @if(null !== $array['repeat_until'] && now() > $array['repeat_until'])
+
                     <span class="text-danger">
-                                            {{ trans('firefly.repeat_until_in_past', {date: array.repeat_until.isoFormat($monthAndDayFormat) }) }}
+                                            {{ trans('firefly.repeat_until_in_past', ['date' => $array['repeat_until']->isoFormat($monthAndDayFormat)]) }}
                                         </span>
                 @endif
-                {% for rep in array.repetitions %}
+                @foreach($array['repetitions'] as $rep)
                     <p>
-                        <strong>{{ rep.description }}
-                            {% if rep.repetition_skip == 1 %}
-                                ({{ trans('firefly.recurring_skips_one')|lower }})
+                        <strong>{{ $rep['description'] }}
+                            @if($rep['skip'] == 1)
+                                ({{ strtolower(trans('firefly.recurring_skips_one')) }})
                             @endif
-                            {% if rep.repetition_skip > 1 %}
-                                ({{ trans('firefly.recurring_skips_more', {count: rep.repetition_skip})|lower }})
+                            @if($rep['skip'] > 1)
+                                ({{ strtolower(trans('firefly.recurring_skips_more', ['count' => $rep['skip']])) }})
                             @endif
                         </strong>
                     </p>
                     <table class="table" aria-label="Table">
                         <tbody>
-                        {% for occ in rep.occurrences %}
+                        @foreach($rep['occurrences'] as $occ)
                             <tr>
-                                <th scope="row">{{ occ.date.isoFormat(trans('config.month_and_date_day_js')) }}</th>
+                                <th scope="row">{{ $occ['date']->isoFormat(trans('config.month_and_date_day_js')) }}</th>
                                 <td>
-                                    {% if not occ.fired %}
-                                        <form action="{{ route('recurring.trigger', [recurrence.id]) }}" method="post"
+                                    @if(!$occ['fired'])
+                                        <form action="{{ route('recurring.trigger', [$recurrence['id']]) }}" method="post"
                                               class="inline">
                                             <input type="hidden" name="_token" value="{{ csrf_token() }}">
                                             <input type="hidden" name="date"
-                                                   value="{{ occ.date.isoFormat('YYYY-MM-DD') }}">
-                                            <input type="submit" name="submit" value="{{ 'create_right_now'|_ }}"
+                                                   value="{{ $occ['date']->isoFormat('YYYY-MM-DD') }}">
+                                            <input type="submit" name="submit" value="{{ __('firefly.create_right_now') }}"
                                                    class="btn btn-sm btn-outline-secondary">
                                         </form>
                                     @endif
@@ -109,7 +106,7 @@
             </div>
             <div class="card-footer">
                 <small>
-                    <em>{{ 'warning_duplicates_repetitions'|_ }}</em>
+                    <em>{{ __('firefly.warning_duplicates_repetitions') }}</em>
                 </small>
             </div>
         </div>
@@ -121,7 +118,7 @@
         <div class="card mb-2">
             <div class="card-header">
                 <h3 class="card-title">
-                    {{ 'transaction_data'|_ }}
+                    {{ __('firefly.transaction_data') }}
                 </h3>
             </div>
             <div class="card-body p-0">
@@ -138,53 +135,53 @@
                     </tr>
                     </thead>
                     <tbody>
-                    {% for transaction in array.transactions %}
+                    @foreach($array['transactions'] as $transaction)
                         <tr>
-                            <td data-value="{{ transaction.description }}">
-                                {{ transaction.description }}
+                            <td data-value="{{ $transaction['description'] }}">
+                                {{ $transaction['description'] }}
                             </td>
-                            <td data-value="{{ transaction.source_name }}">
-                                <a href="{{ route('accounts.show', [transaction.source_id]) }}">{{ transaction.source_name }}</a>
+                            <td data-value="{{ $transaction['source_name'] }}">
+                                <a href="{{ route('accounts.show', [$transaction['source_id']]) }}">{{ $transaction['source_name'] }}</a>
                             </td>
-                            <td data-value="{{ transaction.destination_name }}">
-                                <a href="{{ route('accounts.show', [transaction.destination_id]) }}">{{ transaction.destination_name }}</a>
+                            <td data-value="{{ $transaction['destination_name'] }}">
+                                <a href="{{ route('accounts.show', [$transaction['destination_id']]) }}">{{ $transaction['destination_name'] }}</a>
                             </td>
                             <td>
-                                {!! format_amount_by_symbol(transaction.amount,transaction.currency_symbol,transaction.currency_decimal_places) }}
-                                {% if null != transaction.foreign_amount %}
-                                    ({!! format_amount_by_symbol(transaction.foreign_amount,transaction.foreign_currency_symbol,transaction.foreign_currency_decimal_places) }})
+                                {!! format_amount_by_symbol($transaction['amount'],$transaction['currency_symbol'],$transaction['currency_decimal_places']) !!}
+                                @if(null != $transaction['foreign_amount'])
+                                    ({!! format_amount_by_symbol($transaction['foreign_amount'],$transaction['foreign_currency_symbol'],$transaction['foreign_currency_decimal_places']) !!})
                                 @endif
                             </td>
-                            <td data-value="{{ transaction.category_id|default(0) }}">
-                                {% if '' != transaction.category_name %}
-                                    <a href="{{ route('categories.show', [transaction.category_id]) }}">
-                                        {{ transaction.category_name }}
+                            <td data-value="{{ $transaction['category_id'] ?? 0 }}">
+                                @if('' != $transaction['category_name'])
+                                    <a href="{{ route('categories.show', [$transaction['category_id']]) }}">
+                                        {{ $transaction['category_name'] }}
                                     </a>
                                 @endif
                             </td>
-                            <td data-value="{{ transaction.budget_id|default(0) }}">
-                                {% if '' != transaction.budget_name %}
-                                    <a href="{{ route('budgets.show', [transaction.budget_id]) }}">
-                                        {{ transaction.budget_name }}
+                            <td data-value="{{ $transaction['budget_id'] ?? 0 }}">
+                                @if('' != $transaction['budget_name'])
+                                    <a href="{{ route('budgets.show', [$transaction['budget_id']]) }}">
+                                        {{ $transaction['budget_name'] }}
                                     </a>
                                 @endif
                             </td>
                             <td>
-                                {% if transaction.tags|length > 0 %}
+                                @if(count($transaction['tags']) > 0)
                                     <p>
-                                        {% for tag in transaction.tags %}
-                                            <span class="badge text-bg-success">{{ tag }}</span>
+                                        @foreach($transaction['tags'] as $tag)
+                                            <span class="badge text-bg-success">{{ $tag }}</span>
                                         @endforeach
                                     </p>
                                 @endif
-                                {% if 0 != transaction.piggy_bank_id %}
+                                @if(0 != $transaction['piggy_bank_id'])
                                     <p>
-                                        <a href="{{ route('piggy-banks.show', [transaction.piggy_bank_id]) }}">{{ transaction.piggy_bank_name }}</a>
+                                        <a href="{{ route('piggy-banks.show', [$transaction['piggy_bank_id']]) }}">{{ $transaction['piggy_bank_name'] }}</a>
                                     </p>
                                 @endif
-                                {% if 0 != transaction.bill_id %}
+                                @if(0 != $transaction['subscription_id'])
                                     <p>
-                                        <a href="{{ route('subscriptions.show', [transaction.bill_id]) }}">{{ transaction.bill_name }}</a>
+                                        <a href="{{ route('subscriptions.show', [$transaction['subscription_id']]) }}">{{ $transaction['subscription_name'] }}</a>
                                     </p>
                                 @endif
                             </td>
@@ -201,7 +198,7 @@
             <div class="card mb-2">
                 <div class="card-header">
                     <h3 class="card-title">
-                        {{ ('created_'~array.type~'s')|_ }}
+                        {{ __('firefly.created_' . $array['type'] . 's') }}
                     </h3>
                 </div>
                 <div class="card-body">
