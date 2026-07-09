@@ -145,7 +145,7 @@
                         <h3 class="card-title">{{ __('firefly.attachments') }}</h3>
                     </div>
                     <div class="card-body p-0">
-                        {% include 'list.attachments' %}
+                        <x-lists.attachments attachments="$attachments" />
                     </div>
                 </div>
             @endif

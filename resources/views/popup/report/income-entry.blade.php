@@ -6,11 +6,13 @@
             <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="{{ __('firefly.close') }}"></button>
         </div>
         <div class="modal-body">
-            {% set hideBudget = true %}
-            {% set hideSource = true %}
-            {% set accountPerspective = account %}
-            {% set inverseAmount = true %}
-            {% include 'popup.list.journals' %}
+            @php
+                $hideSource = true;
+                $hideBudget = true;
+                $accountPerspective = $account;
+                $inverseAmount = true;
+            @endphp
+            @include('popup.list.journals')
         </div>
         <div class="modal-footer">
             <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">{{ __('firefly.close') }}</button>

@@ -602,6 +602,7 @@ final class CategoryController extends Controller
      */
     public function operations(Collection $accounts, Carbon $start, Carbon $end): string
     {
+        $incomeTopLength = 0;
         // chart properties for cache:
         $cache     = new CacheProperties();
         $cache->addProperty($start);
@@ -621,7 +622,7 @@ final class CategoryController extends Controller
         $report    = $generator->getReport();
 
         try {
-            $result = view('reports.partials.categories', ['report' => $report])->render();
+            $result = view('reports.partials.categories', ['report' => $report,'incomeTopLength' => $incomeTopLength])->render();
             $cache->store($result);
         } catch (Throwable $e) {
             Log::error(sprintf('Could not render category::expenses: %s', $e->getMessage()));

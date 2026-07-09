@@ -1,3 +1,10 @@
+@php
+$hideDestination = $hideDestination ?? false;
+$hideSource = $hideSource ?? false;
+$hideBudget = $hideBudget ?? false;
+$hideCategory = $hideCategory ?? false;
+@endphp
+
     <table class="table table-hover table-sm">
     <thead>
     <tr>
@@ -40,7 +47,7 @@
         $symbol = $transaction['currency_symbol'];
         $decimal_places = $transaction['currency_decimal_places'];
         @endphp
-        <tr class="drag" data-date="{{ $transaction['date']->format('Y-m-d') }}" data-id="{{ $transaction['journal_id'] }}">
+        <tr class="drag" data-date="{{ $transaction['date']->format('Y-m-d') }}" data-id="{{ $transaction['journal_id'] ?? 0 }}">
             <td class="hidden-xs">
                 <x-elements.transaction-type-icon type="$transaction['transaction_type_type']" />
             </td>

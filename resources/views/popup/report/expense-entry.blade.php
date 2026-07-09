@@ -6,8 +6,10 @@
             <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="{{ __('firefly.close') }}"></button>
         </div>
         <div class="modal-body">
-            {% set hideDestination = true %}
-            {% include 'popup.list.journals' %}
+            @php
+                $hideDestination = true;
+            @endphp
+            @include('popup.list.journals')
         </div>
         <div class="modal-footer">
             <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">{{ __('firefly.close') }}</button>
