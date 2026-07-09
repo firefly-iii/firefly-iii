@@ -92,10 +92,6 @@ jobs:
               exit 1
           fi
 
-          echo 'Lint blade'
-          php artisan blade:lint
-
-
       - name: Code cleanup
         id: code-cleanup
         uses: JC5/firefly-iii-dev@main
@@ -127,6 +123,10 @@ jobs:
           rm .env
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      - name: Lint Blade templates
+        run: |
+          echo "Will now run Blade linter"
+          php artisan blade:lint
       - name: Crowdin action
         uses: crowdin/github-action@v2
         with:
