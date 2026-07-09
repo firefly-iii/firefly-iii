@@ -269,7 +269,6 @@ function columnChart(URL, container) {
 }
 
 
-
 /**
  *
  * @param URL
@@ -292,7 +291,7 @@ function columnChartCustomColours(URL, container) {
  */
 function stackedColumnChart(URL, container) {
     "use strict";
-    console.log('stackedColumnChart('+URL+', '+container+')');
+    console.log('stackedColumnChart(' + URL + ', ' + container + ')');
 
     var colorData = true;
     var options = $.extend(true, {}, defaultChartOptions);
@@ -347,12 +346,16 @@ function multiCurrencyPieChart(URL, container) {
  * @param today
  */
 function drawAChart(URL, container, chartType, options, colorData) {
+    console.log('drawAChart(' + URL + ', ' + container + ')');
     var containerObj = document.getElementById(container);
-    if (containerObj.length === 0) {
-        //console.log('Return because 0');
+    if (null === containerObj) {
+        console.log('Return because NULL');
         return;
     }
-    //console.log('drawAChart('+URL+', '+container+')');
+    if (containerObj.length === 0) {
+        console.log('Return because 0');
+        return;
+    }
     window.axios.get(URL).then(function (response) {
         //console.log('GET drawAChart('+URL+', '+container+')');
         containerObj.classList.remove('general-chart-error');
@@ -386,7 +389,7 @@ function drawAChart(URL, container, chartType, options, colorData) {
                 }
                 // console.log('found box body', boxBody);
                 // boxBody.innerHtml = '<p><em>'+noDataForChart+'</em></p>';
-                boxBody.innerHTML = '<p><em>'+noDataForChart+'</em></p>';
+                boxBody.innerHTML = '<p><em>' + noDataForChart + '</em></p>';
                 //boxBody.empty().append($('<p>').append($('<em>').text(noDataForChart)));
             }
             // console.log('return');

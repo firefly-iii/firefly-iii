@@ -186,6 +186,7 @@ return [
     'all_withdrawal'                                      => 'All expenses',
     'all_transactions'                                    => 'All transactions',
     'title_withdrawal_between'                            => 'All expenses between :start and :end',
+    'title_all_between'                            => 'All transactions between :start and :end',
     'all_deposit'                                         => 'All revenue',
     'title_deposit_between'                               => 'All revenue between :start and :end',
     'all_transfers'                                       => 'All transfers',

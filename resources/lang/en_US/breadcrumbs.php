@@ -49,6 +49,7 @@ return [
     'reports'                => 'Reports',
     'search_result'          => 'Search results for ":query"',
     'withdrawal_list'        => 'Expenses',
+    'all_list'        => 'All transactions',
     'Withdrawal_list'        => 'Expenses',
     'deposit_list'           => 'Revenue, income and deposits',
     'transfer_list'          => 'Transfers',
