@@ -99,7 +99,7 @@
                         </h3>
                     </div>
                     <div class="card-body p-0">
-                        {% include 'list.ale' with {logEntries: groupLogEntries} %}
+                        <x-lists.ale :log-entries="$groupLogEntries" />
                     </div>
                 </div>
             @endif
@@ -496,7 +496,7 @@
                             <h3 class="card-title">{{ __('firefly.attachments') }}</h3>
                         </div>
                         <div class="card-body p-0">
-                            {% include 'list.attachments' with {attachments: attachments[$journal['transaction_journal_id']]} %}
+                            <x-lists.attachments :attachments="$attachments[$journal['transaction_journal_id']]" />
                         </div>
                     </div>
                 @endif
@@ -529,7 +529,7 @@
                             </h3>
                         </div>
                         <div class="card-body p-0">
-                            {% include 'list.ale' with {logEntries: logEntries[$journal['transaction_journal_id']]} %}
+                            <x-lists.ale :log-entries="$logEntries[$journal['transaction_journal_id']]" />
                         </div>
                     </div>
                 @endif

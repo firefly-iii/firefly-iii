@@ -358,6 +358,13 @@ if (!function_exists('menu_open_partial')) {
     }
 }
 
+if (!function_exists('carbonize')) {
+    function carbonize(string $date): Carbon
+    {
+        return new Carbon($date, config('app.timezone'));
+    }
+}
+
 if (!function_exists('account_balance')) {
     function account_balance(Account $account): string
     {

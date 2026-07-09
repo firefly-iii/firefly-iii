@@ -31,7 +31,7 @@
             </div>
         </div>
     </form>
-    {% include 'partials.password-modal' %}
+    @include('partials.password-modal')
 @endsection
 @section('scripts')
     @vite(['js/pages/generic.js'])

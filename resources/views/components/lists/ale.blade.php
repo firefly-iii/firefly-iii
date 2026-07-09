@@ -1,0 +1,121 @@
+<table class="table" aria-label="Table">
+    <thead>
+    <tr>
+        <td colspan="3"><em>{{ __('firefly.incomplete_ale') }}</em></td>
+    </tr>
+    </thead>
+    <tbody>
+    @foreach($logEntries as $logEntry)
+        <tr>
+            <th class="twenty" scope="row">
+                {{-- link to object: --}}
+                @if ('FireflyIII\\Models\\Rule' == $logEntry->changer_type)
+                    <a href="{{ route('rules.edit', [$logEntry->changer_id] ) }}">
+                        @endif
+                        @if ('FireflyIII\\User' == $logEntry->changer_type)
+                            <a href="{{ route('profile.index') }}">
+                                @endif
+                                {{ str_replace(['FireflyIII\\Models\\', 'FireflyIII\\'], '', $logEntry->changer_type) }}
+                                #{{ $logEntry->changer_id }}
+                            </a>
+            </th>
+            <td class="thirty" title="{{ $logEntry->created_at->isoFormat($dateTimeFormat) }}">
+                {{ __('firefly.ale_action_' . $logEntry->action) }}
+            </td>
+            <td>
+                {{-- this tag was added --}}
+                @if ('add_tag' == $logEntry->action)
+                    <code>{{ $logEntry->after }}</code>
+                    @endif
+
+                    {{-- amount before and after --}}
+                    @if ('update_amount' == $logEntry->action)
+                        {!! format_amount_by_symbol($logEntry->before['amount'], $logEntry->before['currency_symbol'], $logEntry->before['decimal_places'], true) !!}
+                        &rarr;
+                    {!! format_amount_by_symbol($logEntry->after['amount'], $logEntry->after['currency_symbol'], $logEntry->after['decimal_places'], true) !!}
+                    @endif
+
+                    {{-- foreign amount before and after --}}
+                    @if ('update_foreign_amount' == $logEntry->action)
+                        {!! format_amount_by_symbol($logEntry->before['amount'], $logEntry->before['currency_symbol'], $logEntry->before['decimal_places'], true) !!}
+                        &rarr;
+                    {!! format_amount_by_symbol($logEntry->after['amount'], $logEntry->after['currency_symbol'], $logEntry->after['decimal_places'], true) !!}
+                @endif
+
+                {{-- group title before and after, if not null. --}}
+                @if ('update_group_title' == $logEntry->action)
+                    <code><s>{{ $logEntry->before }}</s></code>
+                    &rarr;
+                    <code>{{ $logEntry->after }}</code>
+                @endif
+                @if ('clear_category' == $logEntry->action)
+                    <code><s>{{ $logEntry->before }}</s></code>
+                @endif
+                @if ('clear_tag' == $logEntry->action)
+                    <code><s>{{ $logEntry->before }}</s></code>
+                @endif
+
+                @if ('clear_notes' == $logEntry->action)
+                    @if (strlen($logEntry->before) > 25)
+                        <code><s>{{ substr($logEntry->before, 0, 25) }}...</s></code>
+                    @else
+                        <code><s>{{ $logEntry->before }}</s></code>
+                    @endif
+                @endif
+
+                @if ('set_bill' == $logEntry->action)
+                    <code>{{ $logEntry->after }}</code>
+                @endif
+                @if ('set_budget' == $logEntry->action)
+                    <code>{{ $logEntry->after }}</code>
+                @endif
+                @if ('set_category' == $logEntry->action)
+                    <code>{{ $logEntry->after }}</code>
+                @endif
+                @if ('set_source' == $logEntry->action)
+                    <code>{{ $logEntry->after }}</code>
+                @endif
+                @if ('set_destination' == $logEntry->action)
+                    <code>{{ $logEntry->after }}</code>
+                @endif
+                @if ('update_date' == $logEntry->action)
+                    <code><s>{{ carbonize($logEntry->before)->isoFormat($dateTimeFormat) }}</s></code>
+                    &rarr;
+                    <code>{{ carbonize($logEntry->after)->isoFormat($dateTimeFormat) }}</code>
+                    @endif
+                    @if ('update_transaction_type' == $logEntry->action)
+                        {{ trans('firefly.' . $logEntry->before) }} &rarr; {{ trans('firefly.' . $logEntry->after) }}
+                @endif
+
+                @if ('update_notes' == $logEntry->action)
+                    @if (strlen($logEntry->before) > 25)
+                        <code><s>{{ substr($logEntry->before, 0, 25) }}...</s></code>
+                    @else
+                        <code><s>{{ $logEntry->before }}</s></code>
+                        @endif
+
+                        &rarr;
+                        @if (strlen($logEntry->after) > 25)
+                            <code>{{ substr($logEntry->after, 0, 25) }}...</code>
+                        @else
+                            <code>{{ $logEntry->after }}</code>
+                        @endif
+                    @endif
+
+                    @if ('update_description' == $logEntry->action)
+                        <code><s>{{ $logEntry->before }}</s></code>
+                        &rarr;
+                        <code>{{ $logEntry->after }}</code>
+                    @endif
+                    @if ('add_to_piggy' == $logEntry->action)
+                        {{ trans('firefly.ale_action_log_add', ['amount' => format_amount_by_symbol($logEntry->after['amount'], $logEntry->after['currency_symbol'], $logEntry->after['decimal_places'], true), 'name' => $logEntry->after['piggy']]) }}
+                    @endif
+                    @if ('remove_from_piggy' == $logEntry->action)
+                        {{ trans('firefly.ale_action_log_remove', ['amount' => format_amount_by_symbol($logEntry->after['amount'], $logEntry->after['currency_symbol'], $logEntry->after['decimal_places'], true), 'name' => $logEntry->after['piggy']]) }}
+                    @endif
+            </td>
+
+        </tr>
+    @endforeach
+</tbody>
+</table>

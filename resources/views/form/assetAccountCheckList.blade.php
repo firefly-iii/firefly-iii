@@ -5,7 +5,6 @@
             <div class="col-sm-9">
                 @foreach($accounts as $id => $account)
                     <div class="form-check has-validation">
-                        {{-- {% if account in selected or (selected|length == 0 and options.select_all == true) %} --}}
                         @if(in_array($id, $selected) || (count($selected) == 0 && $options['select_all'] === true))
                             {{ Html::checkbox($name . '[]', true, $id)->class('form-check-input')->id($id) }}
                         @else
