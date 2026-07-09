@@ -152,6 +152,7 @@ jobs:
       - name: Build JS
         run: |
           npm install
+          npm run prod --workspace=v1 --verbose
           npm run build --workspace=v3 --verbose
           npm update
       - name: Cleanup changelog
