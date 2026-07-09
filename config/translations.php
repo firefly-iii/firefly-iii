@@ -39,7 +39,7 @@ return [
                 'date',
                 'rate',
                 'triggers',
-                'help_rate_form'
+                'help_rate_form',
             ],
             'list'       => [
                 'drag_and_drop',
@@ -143,7 +143,7 @@ return [
                 'webhook_trigger_STORE_TRANSACTION',
                 'webhook_trigger_UPDATE_TRANSACTION',
                 'webhook_response_RELEVANT',
-                'webhook_delivery_JSON'
+                'webhook_delivery_JSON',
                 //                'account_column_opt_drag_and_drop',
                 //                'account_column_opt_active',
                 //                'account_column_opt_name',

@@ -97,7 +97,7 @@ final class ShowController extends Controller
         $firstDate = $first instanceof TransactionJournal ? $first->date : $start;
         $periods   = $this->getNoModelPeriodOverview('budget', $firstDate, $end);
         $page      = (int) $request->input('page');
-        $page   = min(max(1, $page), 2 ** 16);
+        $page      = min(max(1, $page), 2 ** 16);
         $pageSize  = (int) Preferences::get('listPageSize', 50)->data;
 
         /** @var GroupCollectorInterface $collector */
@@ -132,7 +132,7 @@ final class ShowController extends Controller
         $start     = $first instanceof TransactionJournal ? $first->date : new Carbon();
         $end       = today(config('app.timezone'));
         $page      = (int) $request->input('page');
-        $page   = min(max(1, $page), 2 ** 16);
+        $page      = min(max(1, $page), 2 ** 16);
         $pageSize  = (int) Preferences::get('listPageSize', 50)->data;
 
         /** @var GroupCollectorInterface $collector */
@@ -166,7 +166,7 @@ final class ShowController extends Controller
         $allStart    = session('first', today(config('app.timezone'))->startOfYear());
         $allEnd      = today();
         $page        = (int) $request->input('page');
-        $page   = min(max(1, $page), 2 ** 16);
+        $page        = min(max(1, $page), 2 ** 16);
         $pageSize    = (int) Preferences::get('listPageSize', 50)->data;
         $limits      = $this->getLimits($budget, $allStart, $allEnd);
         $repetition  = null;
@@ -216,7 +216,7 @@ final class ShowController extends Controller
 
         $currencySymbol = $budgetLimit->transactionCurrency->symbol;
         $page           = (int) $request->input('page');
-        $page   = min(max(1, $page), 2 ** 16);
+        $page           = min(max(1, $page), 2 ** 16);
         $pageSize       = (int) Preferences::get('listPageSize', 50)->data;
         $subTitle       = trans('firefly.budget_in_period', [
             'name'     => $budget->name,

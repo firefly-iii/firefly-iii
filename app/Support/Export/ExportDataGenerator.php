@@ -286,7 +286,7 @@ class ExportDataGenerator
 
         // load the CSV document from a string
         $csv         = Writer::fromString();
-        $escaper = new EscapeFormula();
+        $escaper     = new EscapeFormula();
         $csv->addFormatter($escaper->escapeRecord(...));
 
         // insert the header
@@ -357,7 +357,7 @@ class ExportDataGenerator
 
         // load the CSV document from a string
         $csv        = Writer::fromString();
-        $escaper = new EscapeFormula();
+        $escaper    = new EscapeFormula();
         $csv->addFormatter($escaper->escapeRecord(...));
 
         // insert the header
@@ -418,7 +418,7 @@ class ExportDataGenerator
 
         // load the CSV document from a string
         $csv         = Writer::fromString();
-        $escaper = new EscapeFormula();
+        $escaper     = new EscapeFormula();
         $csv->addFormatter($escaper->escapeRecord(...));
 
         // insert the header
@@ -465,7 +465,7 @@ class ExportDataGenerator
 
         // load the CSV document from a string
         $csv        = Writer::fromString();
-        $escaper = new EscapeFormula();
+        $escaper    = new EscapeFormula();
         $csv->addFormatter($escaper->escapeRecord(...));
 
         // insert the header
@@ -547,7 +547,7 @@ class ExportDataGenerator
 
         // load the CSV document from a string
         $csv          = Writer::fromString();
-        $escaper = new EscapeFormula();
+        $escaper      = new EscapeFormula();
         $csv->addFormatter($escaper->escapeRecord(...));
 
         // insert the header
@@ -716,7 +716,7 @@ class ExportDataGenerator
         }
         // load the CSV document from a string
         $csv            = Writer::fromString();
-        $escaper = new EscapeFormula();
+        $escaper        = new EscapeFormula();
         $csv->addFormatter($escaper->escapeRecord(...));
 
         // insert the header
@@ -865,7 +865,7 @@ class ExportDataGenerator
 
         // load the CSV document from a string
         $csv       = Writer::fromString();
-        $escaper = new EscapeFormula();
+        $escaper   = new EscapeFormula();
         $csv->addFormatter($escaper->escapeRecord(...));
 
         // insert the header
@@ -923,7 +923,7 @@ class ExportDataGenerator
 
         // load the CSV document from a string
         $csv      = Writer::fromString();
-        $escaper = new EscapeFormula();
+        $escaper  = new EscapeFormula();
         $csv->addFormatter($escaper->escapeRecord(...));
 
         // insert the header
@@ -1121,7 +1121,7 @@ class ExportDataGenerator
 
         // load the CSV document from a string
         $csv        = Writer::fromString();
-        $escaper = new EscapeFormula();
+        $escaper    = new EscapeFormula();
         $csv->addFormatter($escaper->escapeRecord(...));
 
         // insert the header

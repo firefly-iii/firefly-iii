@@ -100,15 +100,14 @@ class ExpandedForm
 
         try {
             $html = view('form.checkbox', [
-                'classes' => $classes,
-                'name'    => $name,
-                'label'   => $label,
-                'value'   => $value,
-                'options' => $options,
+                'classes'      => $classes,
+                'name'         => $name,
+                'label'        => $label,
+                'value'        => $value,
+                'options'      => $options,
                 'inputClasses' => $inputClasses,
             ])->render();
         } catch (Throwable $e) {
-
             Log::debug(sprintf('Could not render checkbox(): %s', $e->getMessage()));
             $html = 'Could not render checkbox.';
 
@@ -158,6 +157,23 @@ class ExpandedForm
         } catch (Throwable $e) {
             Log::debug(sprintf('Could not render file(): %s', $e->getMessage()));
             $html = sprintf('Could not render file-element: %s', $e->getMessage());
+
+            throw new FireflyException($html, 0, $e);
+        }
+
+        return $html;
+    }
+
+    /**
+     * @throws FireflyException
+     */
+    public function hidden(string $name, mixed $value): string
+    {
+        try {
+            $html = view('form.hidden', ['name' => $name, 'value' => $value])->render();
+        } catch (Throwable $e) {
+            Log::debug(sprintf('Could not render hidden(): %s', $e->getMessage()));
+            $html = sprintf('Could not render hidden: %s', $e->getMessage());
 
             throw new FireflyException($html, 0, $e);
         }
@@ -318,23 +334,6 @@ class ExpandedForm
         } catch (Throwable $e) {
             Log::debug(sprintf('Could not render password(): %s', $e->getMessage()));
             $html = sprintf('Could not render password: %s', $e->getMessage());
-
-            throw new FireflyException($html, 0, $e);
-        }
-
-        return $html;
-    }
-
-    /**
-     * @throws FireflyException
-     */
-    public function hidden(string $name, mixed $value): string
-    {
-        try {
-            $html = view('form.hidden', ['name' => $name, 'value' => $value])->render();
-        } catch (Throwable $e) {
-            Log::debug(sprintf('Could not render hidden(): %s', $e->getMessage()));
-            $html = sprintf('Could not render hidden: %s', $e->getMessage());
 
             throw new FireflyException($html, 0, $e);
         }

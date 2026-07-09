@@ -128,9 +128,8 @@ final class PreferencesController extends Controller
 
         // missing fields will give an error unless set, so:
         $tjOptionalFields['external_url'] ??= false;
-        $tjOptionalFields['location'] ??= false;
-        $tjOptionalFields['links'] ??= false;
-
+        $tjOptionalFields['location']     ??= false;
+        $tjOptionalFields['links']        ??= false;
 
         $availableDarkModes             = config('firefly.available_dark_modes');
 

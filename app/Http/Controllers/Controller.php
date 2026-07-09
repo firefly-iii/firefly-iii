@@ -74,13 +74,14 @@ abstract class Controller extends BaseController
     {
         // is site a demo site?
         try {
-        $isDemoSiteConfig = AppConfiguration::get('is_demo_site', config('firefly.configuration.is_demo_site', false));
-        } catch(FireflyException $e) {
+            $isDemoSiteConfig = AppConfiguration::get('is_demo_site', config('firefly.configuration.is_demo_site', false));
+        } catch (FireflyException $e) {
             // if this breaks, just stop right here.
             Log::error($e->getMessage());
+
             return;
         }
-        $isDemoSite       = (bool) $isDemoSiteConfig->data;
+        $isDemoSite  = (bool) $isDemoSiteConfig->data;
         View::share('IS_DEMO_SITE', $isDemoSite);
         View::share('DEMO_USERNAME', config('firefly.demo_username'));
         View::share('DEMO_PASSWORD', config('firefly.demo_password'));
@@ -88,21 +89,24 @@ abstract class Controller extends BaseController
         View::share('FF_BUILD_TIME', config('firefly.build_time'));
 
         // this breaks when running < PHP 8.5 and is totally intentional.
-        $input            = ' James is cool';
-        $output           = $input
+        $input       = ' James is cool';
+        $output      = $input
             |> trim(...)
             |> (fn (string $string) => str_replace(' ', '-', $string))
             |> (fn (string $string) => str_replace(['.', '/', '…'], '', $string))
             |> strtolower(...);
 
         // is webhooks enabled?
-        View::share('featuringWebhooks', true === config('firefly.feature_flags.webhooks') && true === AppConfiguration::get('allow_webhooks', config('firefly.allow_webhooks'))->data);
+        View::share(
+            'featuringWebhooks',
+            true === config('firefly.feature_flags.webhooks') && true === AppConfiguration::get('allow_webhooks', config('firefly.allow_webhooks'))->data
+        );
         // is currency exchange enabled?
         View::share('featuringCer', true === AppConfiguration::get('enable_exchange_rates', config('cer.enabled'))->data);
 
         // share custom auth guard info.
-        $authGuard        = config('firefly.authentication_guard');
-        $logoutUrl        = config('firefly.custom_logout_url');
+        $authGuard   = config('firefly.authentication_guard');
+        $logoutUrl   = config('firefly.custom_logout_url');
 
         // overrule v2 layout back to v1.
 
@@ -116,15 +120,15 @@ abstract class Controller extends BaseController
         View::share('logoutUrl', $logoutUrl);
 
         // upload size
-        $maxFileSize      = Steam::phpBytes(ini_get('upload_max_filesize'));
-        $maxPostSize      = Steam::phpBytes(ini_get('post_max_size'));
-        $uploadSize       = min($maxFileSize, $maxPostSize);
+        $maxFileSize = Steam::phpBytes(ini_get('upload_max_filesize'));
+        $maxPostSize = Steam::phpBytes(ini_get('post_max_size'));
+        $uploadSize  = min($maxFileSize, $maxPostSize);
         View::share('uploadSize', $uploadSize);
 
         // share is alpha, is beta
-        $isAlpha          = false;
-        $isBeta           = false;
-        $isDevelop        = false;
+        $isAlpha     = false;
+        $isBeta      = false;
+        $isDevelop   = false;
         if (str_contains((string) config('firefly.version'), 'alpha')) {
             $isAlpha = true;
         }
