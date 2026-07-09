@@ -292,16 +292,18 @@ function drawBudgetedBars() {
         var budgetedTooMuch = budgeted > available;
         var pct;
         if (budgetedTooMuch) {
+            console.log('Budgeted too much');
             // budgeted too much.
             pct = (available / budgeted) * 100;
-            bar.find('.progress-bar-danger').css('width', pct + '%');
-            bar.find('.progress-bar-warning').css('width', (100 - pct) + '%');
-            bar.find('.progress-bar-info').css('width', 0);
+            bar.find('.progress-red').css('width', pct + '%');
+            bar.find('.progress-orange').css('width', (100 - pct) + '%');
+            bar.find('.progress-blue').css('width', 0);
         } else {
+            console.log('Budgeted not too much');
             pct = (budgeted / available) * 100;
-            bar.find('.progress-bar-danger').css('width', 0);
-            bar.find('.progress-bar-warning').css('width', 0);
-            bar.find('.progress-bar-info').css('width', pct + '%');
+            bar.find('.progress-red').css('width', 0);
+            bar.find('.progress-orange').css('width', 0);
+            bar.find('.progress-blue').css('width', pct + '%');
         }
         //$('#budgetedAmount').html(currencySymbol + ' ' + budgeted.toFixed(2));
     });
@@ -319,12 +321,12 @@ function drawSpentBars() {
         if (overspent) {
             // draw overspent bar
             pct = (budgeted / spent) * 100;
-            bar.find('.progress-bar-warning').css('width', pct + '%');
-            bar.find('.progress-bar-danger').css('width', (100 - pct) + '%');
+            bar.find('.progress-orange').css('width', pct + '%');
+            bar.find('.progress-red').css('width', (100 - pct) + '%');
         } else {
             // draw normal bar:
             pct = (spent / budgeted) * 100;
-            bar.find('.progress-bar-info').css('width', pct + '%');
+            bar.find('.progress-blue').css('width', pct + '%');
         }
     });
 }

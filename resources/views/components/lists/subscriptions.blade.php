@@ -1,8 +1,11 @@
 @foreach($bills as $objectGroupOrder => $objectGroup)
-<h5 class="m-3">{{ $objectGroup['object_group_title'] }}</h5>
-
-<table class="table table-hover table-sm table-bordered" id="bill-sortable">
-    <thead class="table-secondary">
+    <div class="row">
+        <div class="col-lg-12 col-sm-12 col-md-12">
+            <div class="card mb-2">
+                <x-elements.card-header-with-menu :cardTitle="$objectGroup['object_group_title']" :route="route('subscriptions.create')" :linkTitle="__('firefly.create_new_bill')" />
+                <div class="card-body p-0">
+<table class="table table-hover table-sm" id="bill-sortable">
+    <thead>
     <tr>
         <th class="hidden-sm hidden-xs">&nbsp;</th>
         <th class="hidden-sm hidden-xs">&nbsp;</th>
@@ -200,6 +203,11 @@
     @endif
 
 </table>
+                </div>
+                <x-elements.card-footer-with-menu :route="route('subscriptions.create')" :linkTitle="__('firefly.create_new_bill')" />
+            </div>
+        </div>
+    </div>
 @endforeach
 
 @if(count($totals) > 0)

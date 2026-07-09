@@ -7,17 +7,10 @@
         <x-empty-page :route="route('subscriptions.create')" type="bills" object-type="default" />
     @endif
     @if($total > 0)
-        <div class="row">
-            <div class="col-lg-12 col-sm-12 col-md-12">
-                <div class="card mb-2">
-                    <x-elements.card-header-with-menu :cardTitle="$title" :route="route('subscriptions.create')" :linkTitle="__('firefly.create_new_bill')" />
-                    <div class="card-body p-0">
+
+
                         <x-lists.subscriptions :bills="$bills" :sums="$sums" :totals="$totals" />
-                    </div>
-                    <x-elements.card-footer-with-menu :route="route('subscriptions.create')" :linkTitle="__('firefly.create_new_bill')" />
-                </div>
-            </div>
-        </div>
+
 @endif
 @endsection
 @section('scripts')

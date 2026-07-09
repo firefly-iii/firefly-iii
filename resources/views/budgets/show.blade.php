@@ -183,24 +183,21 @@
                                                     // must have -1 here
                                                     $pct = ($limit->spent != 0 ? ($limit->amount / ($limit->spent*-1))*100 : 0);
                                                 @endphp
-
-                                                <div class="progress progress-striped">
-                                                    <div class="progress-bar progress-bar-warning w-{{ round($pct) }}" role="progressbar" aria-valuenow="{{ round($pct) }}"
-                                                         aria-valuemin="0"
-                                                         aria-valuemax="100"></div>
-                                                    <div class="progress-bar progress-bar-danger w-{{ round(100-$pct) }}" role="progressbar" aria-valuenow="{{ round(100-$pct) }}"
-                                                         aria-valuemin="0" aria-valuemax="100"></div>
+                                                <div class="progress-stacked">
+                                                <div style="height:21px;" class="progress w-{{ round($pct) }}" role="progressbar" aria-valuenow="{{ round($pct) }}" aria-valuemin="0" aria-valuemax="100">
+                                                    <div class="progress-bar bg-warning progress-bar-striped"></div>
+                                                </div>
+                                                <div style="height:21px;" class="progress w-{{ 100- round($pct) }}" role="progressbar" aria-valuenow="{{ 100-round($pct) }}" aria-valuemin="0" aria-valuemax="100">
+                                                    <div class="progress-bar bg-danger progress-bar-striped"></div>
+                                                </div>
                                                 </div>
                                             @else
                                                 @php
                                                 // must have -1 here
                                                 $pct = ($limit->amount != 0 ? ((($limit->spent*-1) / $limit->amount)*100) : 0);
                                                 @endphp
-
-                                                <div class="progress progress-striped">
-                                                    <div class="progress-bar progress-bar-success w-{{ round($pct) }}" role="progressbar" aria-valuenow="{{ round($pct) }}"
-                                                         aria-valuemin="0"
-                                                         aria-valuemax="100"></div>
+                                                <div class="progress" role="progressbar" aria-valuenow="{{ round($pct) }}" aria-valuemin="0" aria-valuemax="100">
+                                                    <div class="progress-bar bg-success progress-bar-striped w-{{ round($pct) }}"></div>
                                                 </div>
                                             @endif
                                         </td>

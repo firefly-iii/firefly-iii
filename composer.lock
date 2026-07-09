@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "7dabe0f05a3cd8e24077085ea9acc7bb",
+    "content-hash": "7a1b2b684b07b5dfae58bd42e60398d2",
     "packages": [
         {
             "name": "bacon/bacon-qr-code",
@@ -11024,6 +11024,78 @@
                 "source": "https://github.com/laravel-json-api/testing/tree/v3.2.0"
             },
             "time": "2026-03-28T18:06:47+00:00"
+        },
+        {
+            "name": "magentron/laravel-blade-lint",
+            "version": "2.0.3",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/Magentron/laravel-blade-lint.git",
+                "reference": "5bec2d1f7536d39b482ac6c087db3207629e8c89"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/Magentron/laravel-blade-lint/zipball/5bec2d1f7536d39b482ac6c087db3207629e8c89",
+                "reference": "5bec2d1f7536d39b482ac6c087db3207629e8c89",
+                "shasum": ""
+            },
+            "require": {
+                "laravel/framework": "*"
+            },
+            "require-dev": {
+                "barryvdh/laravel-ide-helper": "*",
+                "friendsofphp/php-cs-fixer": "*",
+                "mockery/mockery": "*",
+                "orchestra/testbench": "*",
+                "php": "^8",
+                "phpmd/phpmd": "*",
+                "phpstan/phpstan": "*",
+                "phpunit/phpunit": "*",
+                "systemsdk/phpcpd": "^8.0",
+                "vimeo/psalm": "*"
+            },
+            "suggest": {
+                "ext-pcntl": "Required for multi-process support",
+                "ext-posix": "Required for multi-process support"
+            },
+            "type": "library",
+            "extra": {
+                "laravel": {
+                    "providers": [
+                        "Magentron\\BladeLint\\Providers\\ServiceProvider"
+                    ]
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "Magentron\\BladeLint\\": "src/Magentron/BladeLint"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "GPL-3.0-or-later"
+            ],
+            "authors": [
+                {
+                    "name": "Jeroen Derks",
+                    "email": "jeroen@derks.it",
+                    "homepage": "https://www.derks.it/",
+                    "role": "Developer"
+                }
+            ],
+            "description": "Laravel Blade Lint console command",
+            "homepage": "https://github.com/Magentron/laravel-blade-lint",
+            "keywords": [
+                "blade",
+                "console",
+                "laravel",
+                "lint"
+            ],
+            "support": {
+                "issues": "https://github.com/Magentron/laravel-blade-lint/issues",
+                "source": "https://github.com/Magentron/laravel-blade-lint/tree/2.0.3"
+            },
+            "time": "2018-11-28T14:07:44+00:00"
         },
         {
             "name": "mockery/mockery",

@@ -129,22 +129,19 @@
                             {{-- progress bar to visualise available vs budgeted. --}}
                             <div class="row">
                                 <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
-                                    <div class="progress budgeted_bar" data-id="{{ $budget['id'] }}" data-budgeted="{{ $budget['budgeted'] }}"
-                                         data-available="{{ $budget['amount'] }}" data-currency="{{ $budget['transaction_currency']['id'] }}">
-                                        {{-- red: the exact amount of the available budget, if more has budgeted. --}}
-                                        <div class="progress-bar progress-bar-danger" data-id="{{ $budget['id'] }}" role="progressbar" aria-valuenow="10"
-                                             aria-valuemin="0"
-                                             aria-valuemax="100"></div>
-
+                                    <div class="progress-stacked budgeted_bar" data-id="{{ $budget['id'] }}" data-budgeted="{{ $budget['budgeted'] }}" data-available="{{ $budget['amount'] }}" data-currency="{{ $budget['transaction_currency']['id'] }}">
+                                        {{-- red: the exact amount of the available budget, if more than budgeted. --}}
+                                        <div class="progress progress-red" role="progressbar" data-id="{{ $budget['id'] }}"  aria-valuenow="15" aria-valuemin="0" aria-valuemax="100" style="width: 15%">
+                                            <div class="progress-bar bg-danger"></div>
+                                        </div>
                                         {{-- orange: overbudgeted amount --}}
-                                        <div class="progress-bar progress-bar-warning" data-id="{{ $budget['id'] }}" role="progressbar" aria-valuenow="0"
-                                             aria-valuemin="0"
-                                             aria-valuemax="100"></div>
-
+                                        <div class="progress progress-orange" role="progressbar" data-id="{{ $budget['id'] }}" aria-valuenow="30" aria-valuemin="0" aria-valuemax="100" style="width: 30%">
+                                            <div class="progress-bar bg-warning"></div>
+                                        </div>
                                         {{-- budgeted amount if enough or les --}}
-                                        <div class="progress-bar progress-bar-info" data-id="{{ $budget['id'] }}" role="progressbar" aria-valuenow="0"
-                                             aria-valuemin="0"
-                                             aria-valuemax="100"></div>
+                                        <div class="progress progress-blue" role="progressbar" data-id="{{ $budget['id'] }}" aria-label="Segment three" aria-valuenow="20" aria-valuemin="0" aria-valuemax="100" style="width: 20%">
+                                            <div class="progress-bar bg-info"></div>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
@@ -164,12 +161,16 @@
                             {{-- bar to visualise spending in budget. --}}
                             <div class="row">
                                 <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
-                                    <div class="progress spent_bar" data-id="{{ $budget['id'] }}" data-budgeted="{{ $budget['budgeted'] }}"
-                                         data-spent="{{ $budget['spent'] }}">
-                                        <div class="progress-bar progress-bar-warning" role="progressbar" aria-valuenow="0" aria-valuemin="0"
-                                             aria-valuemax="100"></div>
-                                        <div class="progress-bar progress-bar-danger" role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100"></div>
-                                        <div class="progress-bar progress-bar-info" role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100"></div>
+                                    <div class="progress-stacked spent_bar" data-id="{{ $budget['id'] }}" data-budgeted="{{ $budget['budgeted'] }}" data-spent="{{ $budget['spent'] }}">
+                                        <div class="progress progress-red" role="progressbar"  aria-valuenow="0" aria-valuemin="0" aria-valuemax="100" style="width: 0%">
+                                            <div class="progress-bar bg-warning"></div>
+                                        </div>
+                                        <div class="progress progress-orange" role="progressbar"  aria-valuenow="0" aria-valuemin="0" aria-valuemax="100" style="width: 0%">
+                                            <div class="progress-bar bg-danger"></div>
+                                        </div>
+                                        <div class="progress progress-blue" role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100" style="width: 0%">
+                                            <div class="progress-bar bg-info"></div>
+                                        </div>
                                     </div>
                                 </div>
                             </div>

@@ -59,20 +59,22 @@
 
         <td class="piggyBar d-none d-md-table-cell">
             @if(null !== $piggy['percentage'])
-            <div class="progress progress mb-0">
-                <div
-                    @if(100 === $piggy['percentage'])
-                        class="progress-bar progress-bar-success w-{{ round(max(30, $piggy['percentage'])) }}"
-                    @elseif(0 === $piggy['percentage'])
-                        class="progress-bar progress-bar-warning w-{{ round(max(30, $piggy['percentage'])) }}"
-                    @else
-                        class="progress-bar progress-bar-info w-{{ round(max(30, $piggy['percentage'])) }}"
-                    @endif
-                    role="progressbar" aria-valuenow="{{ $piggy['percentage'] }}" aria-valuemin="0" aria-valuemax="100">
-                    {{ $piggy['percentage'] }}%
+                <div class="progress"
+                    style="height: 21px" role="progressbar" aria-valuenow="{{ round(max(30, $piggy['percentage'])) }}" aria-valuemin="0" aria-valuemax="100">
+                    <div
+                        @if(100 === $piggy['percentage'])
+                            class="progress-bar progress-bar-striped bg-success w-{{ round(max(30, $piggy['percentage'])) }}"
+                        @elseif(0 === $piggy['percentage'])
+                            class="progress-bar progress-bar-striped bg-warning w-{{ round(max(30, $piggy['percentage'])) }}"
+                        @else
+                            class="progress-bar progress-bar-striped bg-info w-{{ round(max(30, $piggy['percentage'])) }}"
+                        @endif
+                        ></div>
                 </div>
-            </div>
             @endif
+
+
+
         </td>
 
 
