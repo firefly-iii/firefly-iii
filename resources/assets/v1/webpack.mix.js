@@ -35,7 +35,7 @@ mix.webpackConfig({
     }
 });
 
-mix.js('src/app.js', 'build');
+mix.js('src/app.js', 'build').copy('build','../../../public/v1/js');
 // mix.js('src/app_vue.js', 'build').vue({version: 2});
 // mix.js('src/create_transaction.js', 'build').vue({version: 2});
 // mix.js('src/edit_transaction.js', 'build').vue({version: 2});
