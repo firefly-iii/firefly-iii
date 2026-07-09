@@ -10,24 +10,11 @@
         "prod": "mix --production"
     },
     "dependencies": {
-        "date-fns": "4.4.0",
-        "stream-browserify": "^3.0.0"
     },
     "devDependencies": {
-        "@johmun/vue-tags-input": "^2",
-        "@vue/compiler-sfc": "^3.5.35",
-        "axios": "^1.15",
         "bootstrap-sass": "^3",
-        "cross-env": "^10.0",
-        "font-awesome": "^4.7.0",
-        "jquery": "^3",
+        "jquery": "^4",
         "laravel-mix": "^6.0",
-        "postcss": "^8.5.14",
-        "uiv": "^1.4",
-        "vue": "^2.7",
-        "vue-i18n": "^8",
-        "vue-loader": "^15",
-        "vue-template-compiler": "^2.7",
         "webpack": "~5.105.4"
     }
 }

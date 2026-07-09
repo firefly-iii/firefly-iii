@@ -28,7 +28,7 @@
         "postinstall": "patch-package --error-on-fail"
     },
     "devDependencies": {
-        "concurrently": "^9.0.1",
+        "concurrently": "^10",
         "laravel-vite-plugin": "^3.1",
         "tailwindcss": "^4.0.0",
         "vite": "^8.0.0",
