@@ -1,5 +1,8 @@
 <?php
 
+declare(strict_types=1);
+
+
 namespace FireflyIII\View\Components\Lists;
 
 use Closure;

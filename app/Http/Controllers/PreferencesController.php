@@ -127,9 +127,9 @@ final class PreferencesController extends Controller
         $tjOptionalFields               = Preferences::get('transaction_journal_optional_fields', [])->data;
 
         // missing fields will give an error unless set, so:
-        $tjOptionalFields['external_url'] = $tjOptionalFields['external_url'] ?? false;
-        $tjOptionalFields['location'] = $tjOptionalFields['location'] ?? false;
-        $tjOptionalFields['links'] = $tjOptionalFields['links'] ?? false;
+        $tjOptionalFields['external_url'] ??= false;
+        $tjOptionalFields['location'] ??= false;
+        $tjOptionalFields['links'] ??= false;
 
 
         $availableDarkModes             = config('firefly.available_dark_modes');
