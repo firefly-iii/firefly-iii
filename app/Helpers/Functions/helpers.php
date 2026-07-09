@@ -475,7 +475,7 @@ if (!function_exists('journal_has_meta')) {
     }
 }
 if (!function_exists('journal_get_meta_field')) {
-    function journal_get_meta_field(int $journalId, string $metaField)
+    function journal_get_meta_field(int $journalId, string $metaField): mixed
     {
         /** @var null|TransactionJournalMeta $entry */
         $entry = DB::table('journal_meta')->where('name', $metaField)->where('transaction_journal_id', $journalId)->whereNull('deleted_at')->first();
