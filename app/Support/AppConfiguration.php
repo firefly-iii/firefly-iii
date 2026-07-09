@@ -61,7 +61,7 @@ class AppConfiguration
         try {
             /** @var null|Configuration $config */
             $config = Configuration::query()->where('name', $name)->first(['id', 'name', 'data']);
-        } catch (Exception|QueryException|FireflyException $e) {
+        } catch (Exception|FireflyException|QueryException $e) {
             throw new FireflyException(sprintf('Could not poll the database: %s', $e->getMessage()), 0, $e);
         }
 

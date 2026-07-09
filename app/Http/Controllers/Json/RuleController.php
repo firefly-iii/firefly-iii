@@ -51,7 +51,13 @@ final class RuleController extends Controller
         }
 
         try {
-            $view = view('rules.partials.action', ['actions' => $actions, 'count' => $count,'oldAction' => null, 'oldValue' => null,'oldChecked' => null])->render();
+            $view = view('rules.partials.action', [
+                'actions'    => $actions,
+                'count'      => $count,
+                'oldAction'  => null,
+                'oldValue'   => null,
+                'oldChecked' => null,
+            ])->render();
         } catch (Throwable $e) {
             Log::error(sprintf('Cannot render rules.partials.action: %s', $e->getMessage()));
             Log::error($e->getTraceAsString());
@@ -81,7 +87,14 @@ final class RuleController extends Controller
         asort($triggers);
 
         try {
-            $view = view('rules.partials.trigger', ['triggers' => $triggers, 'count' => $count,'oldTrigger' => null, 'oldProhibited' => null,'oldValue' => null,'oldChecked' =>null])->render();
+            $view = view('rules.partials.trigger', [
+                'triggers'      => $triggers,
+                'count'         => $count,
+                'oldTrigger'    => null,
+                'oldProhibited' => null,
+                'oldValue'      => null,
+                'oldChecked'    => null,
+            ])->render();
         } catch (Throwable $e) {
             Log::error(sprintf('Cannot render rules.partials.trigger: %s', $e->getMessage()));
             Log::error($e->getTraceAsString());

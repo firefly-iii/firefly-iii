@@ -298,7 +298,7 @@ final class TagController extends Controller
         // default values:
         $subTitleIcon = 'bi-tag';
         $page         = (int) $request->input('page');
-        $page   = min(max(1, $page), 2 ** 16);
+        $page         = min(max(1, $page), 2 ** 16);
         $pageSize     = (int) Preferences::get('listPageSize', 50)->data;
         $periods      = [];
         $subTitle     = (string) trans('firefly.all_journals_for_tag', ['tag' => $tag->tag]);

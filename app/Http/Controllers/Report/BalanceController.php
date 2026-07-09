@@ -134,8 +134,9 @@ final class BalanceController extends Controller
 
             // get transactions in budget
         }
-//        echo '<pre>';
-//        print_r($report);exit;
+
+        //        echo '<pre>';
+        //        print_r($report);exit;
         try {
             $result = view('reports.partials.balance', ['report' => $report])->render();
         } catch (Throwable $e) {

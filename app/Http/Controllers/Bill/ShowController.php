@@ -130,7 +130,7 @@ final class ShowController extends Controller
         $end                        = session('end');
         $year                       = $start->year;
         $page                       = (int) $request->input('page');
-        $page   = min(max(1, $page), 2 ** 16);
+        $page                       = min(max(1, $page), 2 ** 16);
         $pageSize                   = (int) Preferences::get('listPageSize', 50)->data;
         $yearAverage                = $this->repository->getYearAverage($bill, $start);
         $overallAverage             = $this->repository->getOverallAverage($bill);

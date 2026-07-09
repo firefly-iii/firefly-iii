@@ -74,6 +74,4 @@ class Installer
         // update firefly version
         return $next($request);
     }
-
-
 }
