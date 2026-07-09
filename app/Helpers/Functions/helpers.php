@@ -42,6 +42,7 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Route;
 use League\CommonMark\GithubFlavoredMarkdownConverter;
+
 use function Safe\json_decode;
 use function Safe\mb_ord;
 use function Safe\preg_match;
@@ -51,7 +52,7 @@ if (!function_exists('env_default_when_empty')) {
     /**
      * @return null|mixed
      */
-    function env_default_when_empty(mixed $value, bool | int | string | null $default = null): mixed
+    function env_default_when_empty(mixed $value, bool|int|string|null $default = null): mixed
     {
         if (null === $value) {
             return $default;
@@ -65,7 +66,6 @@ if (!function_exists('env_default_when_empty')) {
 }
 
 if (!function_exists('sign_amount')) {
-
     function sign_amount(string $amount, string $transactionType, string $sourceType): string
     {
         // withdrawals stay negative
@@ -89,7 +89,7 @@ if (!function_exists('sign_amount')) {
 if (!function_exists('normal_journal_object_amount')) {
     function normal_journal_object_amount(TransactionJournal $journal): string
     {
-        $type = $journal->transactionType->type;
+        $type       = $journal->transactionType->type;
 
         /** @var Transaction $first */
         $first      = $journal->transactions()->where('amount', '<', 0)->first();
@@ -98,12 +98,12 @@ if (!function_exists('normal_journal_object_amount')) {
         $colored    = true;
         $sourceType = $first->account->accountType()->first()->type;
 
-        $amount = sign_amount($amount, $type, $sourceType);
+        $amount     = sign_amount($amount, $type, $sourceType);
 
         if (TransactionTypeEnum::TRANSFER->value === $type) {
             $colored = false;
         }
-        $result = Amount::formatFlat($currency->symbol, $currency->decimal_places, $amount, $colored);
+        $result     = Amount::formatFlat($currency->symbol, $currency->decimal_places, $amount, $colored);
         if (TransactionTypeEnum::TRANSFER->value === $type) {
             return sprintf('<span class="text-info money-transfer">%s</span>', $result);
         }
@@ -123,10 +123,9 @@ if (!function_exists('journal_object_has_foreign')) {
 }
 
 if (function_exists('foreign_journal_object_amount')) {
-
     function foreign_journal_object_amount(TransactionJournal $journal): string
     {
-        $type = $journal->transactionType->type;
+        $type       = $journal->transactionType->type;
 
         /** @var Transaction $first */
         $first      = $journal->transactions()->where('amount', '<', 0)->first();
@@ -135,12 +134,12 @@ if (function_exists('foreign_journal_object_amount')) {
         $colored    = true;
         $sourceType = $first->account->accountType()->first()->type;
 
-        $amount = sign_amount($amount, $type, $sourceType);
+        $amount     = sign_amount($amount, $type, $sourceType);
 
         if (TransactionTypeEnum::TRANSFER->value === $type) {
             $colored = false;
         }
-        $result = Amount::formatFlat($currency->symbol, $currency->decimal_places, $amount, $colored);
+        $result     = Amount::formatFlat($currency->symbol, $currency->decimal_places, $amount, $colored);
         if (TransactionTypeEnum::TRANSFER->value === $type) {
             return sprintf('<span class="text-info money-transfer">%s</span>', $result);
         }
@@ -168,10 +167,11 @@ if (!function_exists('journal_link_translation')) {
     function journal_link_translation(string $direction, string $original): string
     {
         $key         = sprintf('firefly.%s_%s', $original, $direction);
-        $translation = (string)trans($key);
+        $translation = (string) trans($key);
         if ($key === $translation) {
             return $original;
         }
+
         return $translation;
     }
 }
@@ -180,9 +180,9 @@ if (!function_exists('all_journal_triggers')) {
     function all_journal_triggers(): array
     {
         return [
-            'store-journal'     => (string)trans('firefly.rule_trigger_store_journal'),
-            'update-journal'    => (string)trans('firefly.rule_trigger_update_journal'),
-            'manual-activation' => (string)trans('firefly.rule_trigger_manual'),
+            'store-journal'     => (string) trans('firefly.rule_trigger_store_journal'),
+            'update-journal'    => (string) trans('firefly.rule_trigger_update_journal'),
+            'manual-activation' => (string) trans('firefly.rule_trigger_manual'),
         ];
     }
 }
@@ -194,10 +194,11 @@ if (!function_exists('all_rule_actions')) {
         $ruleActions     = array_keys(config('firefly.rule-actions'));
         $possibleActions = [];
         foreach ($ruleActions as $key) {
-            $possibleActions[$key] = (string)trans('firefly.rule_action_' . $key . '_choice');
+            $possibleActions[$key] = (string) trans('firefly.rule_action_'.$key.'_choice');
         }
         unset($ruleActions);
         asort($possibleActions);
+
         return $possibleActions;
     }
 }
@@ -206,9 +207,9 @@ if (!function_exists('all_journal_triggers')) {
     function all_journal_triggers(): array
     {
         return [
-            'store-journal'     => (string)trans('firefly.rule_trigger_store_journal'),
-            'update-journal'    => (string)trans('firefly.rule_trigger_update_journal'),
-            'manual-activation' => (string)trans('firefly.rule_trigger_manual'),
+            'store-journal'     => (string) trans('firefly.rule_trigger_store_journal'),
+            'update-journal'    => (string) trans('firefly.rule_trigger_update_journal'),
+            'manual-activation' => (string) trans('firefly.rule_trigger_manual'),
         ];
     }
 }
@@ -217,14 +218,14 @@ if (!function_exists('mime_icon')) {
     function mime_icon(string $file): string
     {
         return match ($file) {
-            'application/pdf'                                          => 'bi-file-earmark-pdf',
+            'application/pdf'                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                           => 'bi-file-earmark-pdf',
             'image/webp',
             'image/png',
             'image/jpeg',
             'image/svg+xml',
             'image/heic',
             'image/heic-sequence',
-            'application/vnd.oasis.opendocument.image'                 => 'bi-file-earmark-image',
+            'application/vnd.oasis.opendocument.image'                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                  => 'bi-file-earmark-image',
             'application/msword',
             'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
             'application/vnd.openxmlformats-officedocument.wordprocessingml.template',
@@ -237,7 +238,7 @@ if (!function_exists('mime_icon')) {
             'application/vnd.oasis.opendocument.text',
             'application/vnd.oasis.opendocument.text-template',
             'application/vnd.oasis.opendocument.text-web',
-            'application/vnd.oasis.opendocument.text-master'           => 'bi-file-earmark-word',
+            'application/vnd.oasis.opendocument.text-master'                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            => 'bi-file-earmark-word',
             'application/vnd.ms-excel',
             'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
             'application/vnd.openxmlformats-officedocument.spreadsheetml.template',
@@ -245,7 +246,7 @@ if (!function_exists('mime_icon')) {
             'application/vnd.sun.xml.calc.template',
             'application/vnd.stardivision.calc',
             'application/vnd.oasis.opendocument.spreadsheet',
-            'application/vnd.oasis.opendocument.spreadsheet-template'  => 'bi-file-earmark-excel',
+            'application/vnd.oasis.opendocument.spreadsheet-template'                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                   => 'bi-file-earmark-excel',
             'application/vnd.ms-powerpoint',
             'application/vnd.openxmlformats-officedocument.presentationml.presentation',
             'application/vnd.openxmlformats-officedocument.presentationml.template',
@@ -254,18 +255,18 @@ if (!function_exists('mime_icon')) {
             'application/vnd.sun.xml.impress.template',
             'application/vnd.stardivision.impress',
             'application/vnd.oasis.opendocument.presentation',
-            'application/vnd.oasis.opendocument.presentation-template' => 'bi-file-earmark-slides',
+            'application/vnd.oasis.opendocument.presentation-template'                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                  => 'bi-file-earmark-slides',
             'application/vnd.sun.xml.draw',
             'application/vnd.sun.xml.draw.template',
             'application/vnd.stardivision.draw',
-            'application/vnd.oasis.opendocument.chart'                 => 'bi-file-earmark-easel',
+            'application/vnd.oasis.opendocument.chart'                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                  => 'bi-file-earmark-easel',
             'application/vnd.oasis.opendocument.graphics',
             'application/vnd.oasis.opendocument.graphics-template',
             'application/vnd.sun.xml.math',
             'application/vnd.stardivision.math',
             'application/vnd.oasis.opendocument.formula',
-            'application/vnd.oasis.opendocument.database'              => 'bi-file-earmark-rules',
-            default                                                    => 'bi-file-earmark'
+            'application/vnd.oasis.opendocument.database'                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                               => 'bi-file-earmark-rules',
+            default                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                     => 'bi-file-earmark'
         };
     }
 }
@@ -275,7 +276,7 @@ if (!function_exists('parse_markdown')) {
     {
         $converter = new GithubFlavoredMarkdownConverter(['allow_unsafe_links' => false, 'max_nesting_level' => 5, 'html_input' => 'escape']);
 
-        return (string)$converter->convert($string);
+        return (string) $converter->convert($string);
     }
 }
 
@@ -369,11 +370,11 @@ if (!function_exists('account_balance')) {
     function account_balance(Account $account): string
     {
         /** @var Carbon $date */
-        $date = now();
+        $date             = now();
 
         // get the date from the current session. If it's in the future, keep `now()`.
         /** @var Carbon $session */
-        $session = clone session('end', today(config('app.timezone'))->endOfMonth());
+        $session          = clone session('end', today(config('app.timezone'))->endOfMonth());
         if ($session->lt($date)) {
             $date = $session->copy();
             $date->endOfDay();
@@ -381,13 +382,13 @@ if (!function_exists('account_balance')) {
         Log::debug(sprintf('twig balance: Call finalAccountBalance with date/time "%s"', $date->toIso8601String()));
 
         // 2025-10-08 replace finalAccountBalance with accountsBalancesOptimized.
-        $info = Steam::accountsBalancesOptimized(new Collection()->push($account), $date)[$account->id];
+        $info             = Steam::accountsBalancesOptimized(new Collection()->push($account), $date)[$account->id];
         // $info             = Steam::finalAccountBalance($account, $date);
         $currency         = Steam::getAccountCurrency($account);
         $primary          = Amount::getPrimaryCurrency();
         $convertToPrimary = Amount::convertToPrimary();
         $usePrimary       = $convertToPrimary && $primary->id !== $currency->id;
-        $currency         ??= $primary;
+        $currency ??= $primary;
         $strings          = [];
         foreach ($info as $key => $balance) {
             if ('balance' === $key) {
@@ -454,15 +455,15 @@ if (!function_exists('print_nice_filesize')) {
     {
         // less than one GB, more than one MB
         if ($size < (1024 * 1024 * 2014) && $size >= (1024 * 1024)) {
-            return round($size / (1024 * 1024), 2) . ' MB';
+            return round($size / (1024 * 1024), 2).' MB';
         }
 
         // less than one MB
         if ($size < (1024 * 1024)) {
-            return round($size / 1024, 2) . ' KB';
+            return round($size / 1024, 2).' KB';
         }
 
-        return $size . ' bytes';
+        return $size.' bytes';
     }
 }
 
@@ -483,11 +484,11 @@ if (!function_exists('journal_get_meta_field')) {
             return '';
         }
 
-        return json_decode((string)$entry->data, true);
+        return json_decode((string) $entry->data, true);
     }
 }
 if (!function_exists('journal_get_meta_date')) {
-    function journal_get_meta_date(int $journalId, string $metaField): Carbon | CarbonInterface
+    function journal_get_meta_date(int $journalId, string $metaField): Carbon|CarbonInterface
     {
         /** @var null|TransactionJournalMeta $entry */
         $entry = DB::table('journal_meta')->where('name', $metaField)->where('transaction_journal_id', $journalId)->whereNull('deleted_at')->first();
@@ -495,7 +496,7 @@ if (!function_exists('journal_get_meta_date')) {
             return today(config('app.timezone'));
         }
 
-        return new Carbon(json_decode((string)$entry->data, false));
+        return new Carbon(json_decode((string) $entry->data, false));
     }
 }
 
@@ -524,14 +525,14 @@ if (!function_exists('blade_escape_js')) {
         return preg_replace_callback(
             '#[^a-zA-Z0-9,\._]#Su',
             static function ($matches) {
-                $char = $matches[0];
+                $char      = $matches[0];
 
                 /*
                  * A few characters have short escape sequences in JSON and JavaScript.
                  * Escape sequences supported only by JavaScript, not JSON, are omitted.
                  * \" is also supported but omitted, because the resulting string is not HTML safe.
                  */
-                $short = match ($char) {
+                $short     = match ($char) {
                     '\\'    => '\\\\',
                     '/'     => '\/',
                     "\x08"  => '\b',
@@ -553,9 +554,9 @@ if (!function_exists('blade_escape_js')) {
 
                 // Split characters outside the BMP into surrogate pairs
                 // https://tools.ietf.org/html/rfc2781.html#section-2.1
-                $u    = $codepoint - 0x10_000;
-                $high = 0xD800 | ($u >> 10);
-                $low  = 0xDC00 | ($u & 0x3FF);
+                $u         = $codepoint - 0x10_000;
+                $high      = 0xD800 | ($u >> 10);
+                $low       = 0xDC00 | ($u & 0x3FF);
 
                 return \sprintf('\u%04X\u%04X', $high, $low);
             },

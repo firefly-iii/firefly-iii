@@ -23,11 +23,11 @@ class TransactionAmount extends Component
      */
     public function __construct(string $type, array $amount, array $foreign, array $sourceAccount, ?string $pcAmount, ?Account $account)
     {
-        $this->type     = $type;
-        $this->amount   = $amount;
-        $this->foreign  = $foreign;
-        $this->account  = $account;
-        $this->pcAmount = $pcAmount;
+        $this->type          = $type;
+        $this->amount        = $amount;
+        $this->foreign       = $foreign;
+        $this->account       = $account;
+        $this->pcAmount      = $pcAmount;
         $this->sourceAccount = $sourceAccount;
     }
 

@@ -121,7 +121,7 @@ final class ShowController extends Controller
         $currency         = $accountCurrency ?? $this->primaryCurrency;
         $fStart           = $start->isoFormat($this->monthAndDayFormat);
         $fEnd             = $end->isoFormat($this->monthAndDayFormat);
-        $isLiability  = $this->repository->isLiability($account);
+        $isLiability      = $this->repository->isLiability($account);
         $subTitle         = (string) trans('firefly.journals_in_period_for_account', ['name' => $account->name, 'start' => $fStart, 'end' => $fEnd]);
         $chartUrl         = route('chart.account.period', [$account->id, $start->format('Y-m-d'), $end->format('Y-m-d')]);
         $firstTransaction = $this->repository->oldestJournalDate($account) ?? $start;
@@ -179,7 +179,7 @@ final class ShowController extends Controller
             'currency'     => $currency,
             'today'        => $today,
             'periods'      => $periods,
-            'isLiability' => $isLiability,
+            'isLiability'  => $isLiability,
             'subTitleIcon' => $subTitleIcon,
             'groups'       => $groups,
             'attachments'  => $attachments,
@@ -215,7 +215,7 @@ final class ShowController extends Controller
         $start        = $this->repository->oldestJournalDate($account) ?? today(config('app.timezone'))->startOfMonth();
         $subTitleIcon = config('firefly.subIconsByIdentifier.'.$account->accountType->type);
         $page         = (int) $request->input('page');
-        $page   = min(max(1, $page), 2 ** 16);
+        $page         = min(max(1, $page), 2 ** 16);
         $pageSize     = (int) Preferences::get('listPageSize', 50)->data;
         $currency     = $this->repository->getAccountCurrency($account) ?? $this->primaryCurrency;
         $subTitle     = (string) trans('firefly.all_journals_for_account', ['name' => $account->name]);

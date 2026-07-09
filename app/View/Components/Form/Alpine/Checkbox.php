@@ -2,7 +2,6 @@
 
 declare(strict_types=1);
 
-
 namespace FireflyIII\View\Components\Form\Alpine;
 
 use Closure;
@@ -14,20 +13,21 @@ class Checkbox extends Component
     public string $id;
     public string $value;
     public string $title;
+
     /**
      * Create a new component instance.
      */
     public function __construct(string $id, string $value, string $title)
     {
-        $this->id = $id;
-        $this->value= $value;
+        $this->id    = $id;
+        $this->value = $value;
         $this->title = $title;
     }
 
     /**
      * Get the view / contents that represent the component.
      */
-    public function render(): View|Closure|string
+    public function render(): Closure|string|View
     {
         return view('components.form.alpine.checkbox');
     }

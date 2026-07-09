@@ -2,7 +2,6 @@
 
 declare(strict_types=1);
 
-
 namespace FireflyIII\View\Components\Lists;
 
 use Closure;
@@ -12,11 +11,12 @@ use Illuminate\View\Component;
 
 class Attachments extends Component
 {
-    public Collection|array $attachments;
+    public array|Collection $attachments;
+
     /**
      * Create a new component instance.
      */
-    public function __construct(Collection|array $attachments)
+    public function __construct(array|Collection $attachments)
     {
         $this->attachments = $attachments;
     }
@@ -24,7 +24,7 @@ class Attachments extends Component
     /**
      * Get the view / contents that represent the component.
      */
-    public function render(): View|Closure|string
+    public function render(): Closure|string|View
     {
         return view('components.lists.attachments');
     }

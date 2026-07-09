@@ -604,7 +604,7 @@ final class CategoryController extends Controller
     {
         $incomeTopLength = 0;
         // chart properties for cache:
-        $cache     = new CacheProperties();
+        $cache           = new CacheProperties();
         $cache->addProperty($start);
         $cache->addProperty($end);
         $cache->addProperty('category-report');
@@ -614,15 +614,15 @@ final class CategoryController extends Controller
         }
 
         /** @var CategoryReportGenerator $generator */
-        $generator = app(CategoryReportGenerator::class);
+        $generator       = app(CategoryReportGenerator::class);
         $generator->setAccounts($accounts);
         $generator->setStart($start);
         $generator->setEnd($end);
         $generator->operations();
-        $report    = $generator->getReport();
+        $report          = $generator->getReport();
 
         try {
-            $result = view('reports.partials.categories', ['report' => $report,'incomeTopLength' => $incomeTopLength])->render();
+            $result = view('reports.partials.categories', ['report' => $report, 'incomeTopLength' => $incomeTopLength])->render();
             $cache->store($result);
         } catch (Throwable $e) {
             Log::error(sprintf('Could not render category::expenses: %s', $e->getMessage()));
@@ -641,12 +641,12 @@ final class CategoryController extends Controller
      */
     public function topExpenses(Collection $accounts, Collection $categories, Carbon $start, Carbon $end)
     {
-        $spent   = $this->opsRepository->listExpenses($start, $end, $accounts, $categories);
+        $spent           = $this->opsRepository->listExpenses($start, $end, $accounts, $categories);
         $incomeTopLength = 0;
-        $result  = [];
+        $result          = [];
         foreach ($spent as $currency) {
             foreach ($currency['categories'] as $category) {
-                $incomeTopLength++;
+                ++$incomeTopLength;
                 foreach ($category['transaction_journals'] as $journal) {
                     $result[] = [
                         'description'              => $journal['description'],
@@ -669,7 +669,7 @@ final class CategoryController extends Controller
         }
         // sort by amount_float
         // sort temp array by amount.
-        $amounts = array_column($result, 'amount_float');
+        $amounts         = array_column($result, 'amount_float');
         array_multisort($amounts, SORT_ASC, $result);
 
         try {

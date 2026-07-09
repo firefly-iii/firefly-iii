@@ -152,7 +152,7 @@ final class IndexController extends Controller
         $subTitleIcon = config('firefly.transactionIconsByType.'.$objectType);
         $types        = config('firefly.transactionTypesByType.'.$objectType);
         $page         = (int) $request->input('page');
-        $page   = min(max(1, $page), 2 ** 16);
+        $page         = min(max(1, $page), 2 ** 16);
         $pageSize     = (int) Preferences::get('listPageSize', 50)->data;
         $path         = route('transactions.index.all', [$objectType]);
         $first        = $this->repository->firstNull();

@@ -65,7 +65,7 @@ final class OperationsController extends Controller
     public function expenses(Collection $accounts, Carbon $start, Carbon $end)
     {
         // chart properties for cache:
-        $cache  = new CacheProperties();
+        $cache           = new CacheProperties();
         $cache->addProperty($start);
         $cache->addProperty($end);
         $cache->addProperty('expense-report');
@@ -73,9 +73,9 @@ final class OperationsController extends Controller
         if ($cache->has()) {
             return $cache->get();
         }
-        $report = $this->tasker->getExpenseReport($start, $end, $accounts);
-        $type   = 'expense-entry';
-        $incomeTopLength= count($report['accounts']);
+        $report          = $this->tasker->getExpenseReport($start, $end, $accounts);
+        $type            = 'expense-entry';
+        $incomeTopLength = count($report['accounts']);
 
         try {
             $result = view('reports.partials.income-expenses', ['report' => $report, 'type' => $type, 'incomeTopLength' => $incomeTopLength])->render();
