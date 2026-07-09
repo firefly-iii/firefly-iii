@@ -72,7 +72,7 @@ final class ShowController extends Controller
         // create some objects:
         $manager      = $this->getManager();
         // read type from URL
-        $name         = $request->get('name');
+        $name         = $request->input('name');
 
         // types to get, page size:
         $pageSize     = $this->parameters->get('limit');

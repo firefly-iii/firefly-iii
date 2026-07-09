@@ -95,8 +95,8 @@ final class UpdateController extends Controller
      */
     public function post(Request $request): RedirectResponse
     {
-        $checkForUpdates = (int) $request->get('check_for_updates');
-        $channel         = $request->get('update_channel');
+        $checkForUpdates = (int) $request->input('check_for_updates');
+        $channel         = $request->input('update_channel');
         $channel         = in_array($channel, ['stable', 'beta', 'alpha'], true) ? $channel : 'stable';
 
         AppConfiguration::set('permission_update_check', $checkForUpdates);

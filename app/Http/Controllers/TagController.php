@@ -196,7 +196,7 @@ final class TagController extends Controller
 
     public function massDestroy(Request $request): RedirectResponse
     {
-        $tags  = $request->get('tags');
+        $tags  = $request->input('tags');
         if (null === $tags || !is_array($tags)) {
             session()->flash('info', (string) trans('firefly.select_tags_to_delete'));
 
@@ -297,7 +297,8 @@ final class TagController extends Controller
     {
         // default values:
         $subTitleIcon = 'fa-tag';
-        $page         = (int) $request->get('page');
+        $page         = (int) $request->input('page');
+        $page   = min(max(1, $page), 2 ** 16);
         $pageSize     = (int) Preferences::get('listPageSize', 50)->data;
         $periods      = [];
         $subTitle     = (string) trans('firefly.all_journals_for_tag', ['tag' => $tag->tag]);
@@ -376,7 +377,7 @@ final class TagController extends Controller
             $request->session()->flash('error', $this->attachmentsHelper->getErrors()->get('attachments'));
         }
         $redirect = redirect($this->getPreviousUrl('tags.create.url'));
-        if (1 === (int) $request->get('create_another')) {
+        if (1 === (int) $request->input('create_another')) {
             session()->put('tags.create.fromStore', true);
 
             $redirect = redirect(route('tags.create'))->withInput();
@@ -414,7 +415,7 @@ final class TagController extends Controller
             $request->session()->flash('error', $this->attachmentsHelper->getErrors()->get('attachments'));
         }
         $redirect = redirect($this->getPreviousUrl('tags.edit.url'));
-        if (1 === (int) $request->get('return_to_edit')) {
+        if (1 === (int) $request->input('return_to_edit')) {
             session()->put('tags.edit.fromUpdate', true);
 
             $redirect = redirect(route('tags.edit', [$tag->id]))->withInput(['return_to_edit' => 1]);

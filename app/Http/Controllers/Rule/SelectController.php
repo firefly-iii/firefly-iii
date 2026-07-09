@@ -72,18 +72,18 @@ final class SelectController extends Controller
         // Get parameters specified by the user
         /** @var User $user */
         $user          = auth()->user();
-        $accounts      = implode(',', $request->get('accounts'));
+        $accounts      = implode(',', $request->input('accounts'));
         // create new rule engine:
         $newRuleEngine = app(RuleEngineInterface::class);
         $newRuleEngine->setUser($user);
 
         // add date operators.
-        if (null !== $request->get('start')) {
-            $startDate = new Carbon($request->get('start'));
+        if (null !== $request->input('start')) {
+            $startDate = new Carbon($request->input('start'));
             $newRuleEngine->addOperator(['type' => 'date_after', 'value' => $startDate->format('Y-m-d')]);
         }
-        if (null !== $request->get('end')) {
-            $endDate = new Carbon($request->get('end'));
+        if (null !== $request->input('end')) {
+            $endDate = new Carbon($request->input('end'));
             $newRuleEngine->addOperator(['type' => 'date_before', 'value' => $endDate->format('Y-m-d')]);
         }
 
@@ -129,7 +129,7 @@ final class SelectController extends Controller
 
         /** @var \Illuminate\Database\Eloquent\Collection<int, RuleTrigger> $triggers */
         $triggers           = new Collection();
-        $rule->strict       = '1' === $request->get('strict');
+        $rule->strict       = '1' === $request->input('strict');
 
         // build trigger array from response
         $textTriggers       = $this->getValidTriggerList($request);

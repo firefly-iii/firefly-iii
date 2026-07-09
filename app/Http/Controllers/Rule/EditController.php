@@ -83,7 +83,7 @@ final class EditController extends Controller
         $oldTriggers    = [];
 
         // build triggers from query, if present.
-        $query          = (string) $request->get('from_query');
+        $query          = (string) $request->input('from_query');
         if ('' !== $query) {
             $search        = app(SearchInterface::class);
             $search->parseQuery($query);
@@ -169,7 +169,7 @@ final class EditController extends Controller
             return redirect(route('rules.select-transactions', [$rule->id]));
         }
 
-        if (1 === (int) $request->get('return_to_edit')) {
+        if (1 === (int) $request->input('return_to_edit')) {
             session()->put('rules.edit.fromUpdate', true);
 
             $redirect = redirect(route('rules.edit', [$rule->id]))->withInput(['return_to_edit' => 1]);

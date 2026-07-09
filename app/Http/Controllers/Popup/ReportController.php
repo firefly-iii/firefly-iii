@@ -43,7 +43,7 @@ final class ReportController extends Controller
      */
     public function general(Request $request): JsonResponse
     {
-        $attributes = $request->get('attributes') ?? [];
+        $attributes = $request->input('attributes') ?? [];
         $attributes = $this->parseAttributes($attributes);
 
         app('view')->share('start', $attributes['startDate']);

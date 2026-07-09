@@ -66,7 +66,7 @@ final class CreateController extends Controller
 
     public function cloneGroup(Request $request): JsonResponse
     {
-        $groupId = (int) $request->get('id');
+        $groupId = (int) $request->input('id');
         if (0 !== $groupId) {
             $group = $this->repository->find($groupId);
             if ($group instanceof TransactionGroup) {
@@ -81,7 +81,7 @@ final class CreateController extends Controller
                 session()->flash('success', trans('firefly.stored_journal', ['description' => $title]));
                 session()->flash('success_url', $link);
 
-                if ('edit' === $request->get('redirect')) {
+                if ('edit' === $request->input('redirect')) {
                     return response()->json(['redirect' => route('transactions.edit', [$newGroup->id])]);
                 }
 

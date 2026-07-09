@@ -152,8 +152,8 @@ final class IndexController extends Controller
      */
     public function setOrder(Request $request, Bill $bill): JsonResponse
     {
-        $objectGroupTitle = (string) $request->get('objectGroupTitle');
-        $newOrder         = (int) $request->get('order');
+        $objectGroupTitle = (string) $request->input('objectGroupTitle');
+        $newOrder         = (int) $request->input('order');
         $this->repository->setOrder($bill, $newOrder);
         if ('' !== $objectGroupTitle) {
             $this->repository->setObjectGroup($bill, $objectGroupTitle);

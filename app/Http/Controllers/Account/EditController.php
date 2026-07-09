@@ -213,7 +213,7 @@ final class EditController extends Controller
 
         // redirect
         $redirect = redirect($this->getPreviousUrl('accounts.edit.url'));
-        if (1 === (int) $request->get('return_to_edit')) {
+        if (1 === (int) $request->input('return_to_edit')) {
             // set value so edit routine will not overwrite URL:
             $request->session()->put('accounts.edit.fromUpdate', true);
 

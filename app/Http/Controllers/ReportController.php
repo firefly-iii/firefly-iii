@@ -291,7 +291,7 @@ final class ReportController extends Controller
     public function postIndex(ReportFormRequest $request): RedirectResponse|View
     {
         // report type:
-        $reportType = $request->get('report_type');
+        $reportType = $request->input('report_type');
         $start      = $request->getStartDate()->format('Ymd');
         $end        = $request->getEndDate()->format('Ymd');
         $accounts   = implode(',', $request->getAccountList()->pluck('id')->toArray());

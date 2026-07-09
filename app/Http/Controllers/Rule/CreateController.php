@@ -84,7 +84,7 @@ final class CreateController extends Controller
         $oldActions   = [];
 
         // build triggers from query, if present.
-        $query        = (string) $request->get('from_query');
+        $query        = (string) $request->input('from_query');
         if ('' !== $query) {
             $search        = app(SearchInterface::class);
             $search->parseQuery($query);
@@ -255,7 +255,7 @@ final class CreateController extends Controller
 
     public function duplicate(Request $request): JsonResponse
     {
-        $ruleId = (int) $request->get('id');
+        $ruleId = (int) $request->input('id');
         $rule   = $this->ruleRepos->find($ruleId);
         if ($rule instanceof Rule) {
             $this->ruleRepos->duplicate($rule);
@@ -278,12 +278,12 @@ final class CreateController extends Controller
         Preferences::mark();
 
         // redirect to show bill.
-        if ('true' === $request->get('return_to_bill') && (int) $request->get('bill_id') > 0) {
-            return redirect(route('bills.show', [(int) $request->get('bill_id')]));
+        if ('true' === $request->input('return_to_bill') && (int) $request->input('bill_id') > 0) {
+            return redirect(route('bills.show', [(int) $request->input('bill_id')]));
         }
 
         // redirect to new bill creation.
-        if ((int) $request->get('bill_id') > 0) {
+        if ((int) $request->input('bill_id') > 0) {
             return redirect($this->getPreviousUrl('bills.create.url'));
         }
         if (true === $data['run_after_form']) {
@@ -292,7 +292,7 @@ final class CreateController extends Controller
 
         $redirect = redirect($this->getPreviousUrl('rules.create.url'));
 
-        if (1 === (int) $request->get('create_another')) {
+        if (1 === (int) $request->input('create_another')) {
             session()->put('rules.create.fromStore', true);
             $redirect = redirect(route('rules.create', [$data['rule_group_id']]))->withInput();
         }

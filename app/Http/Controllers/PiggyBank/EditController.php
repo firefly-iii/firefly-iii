@@ -143,7 +143,7 @@ final class EditController extends Controller
         }
         $redirect  = redirect($this->getPreviousUrl('piggy-banks.edit.url'));
 
-        if (1 === (int) $request->get('return_to_edit')) {
+        if (1 === (int) $request->input('return_to_edit')) {
             session()->put('piggy-banks.edit.fromUpdate', true);
 
             $redirect = redirect(route('piggy-banks.edit', [$piggyBank->id]));

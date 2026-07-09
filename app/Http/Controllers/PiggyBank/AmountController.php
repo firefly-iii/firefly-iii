@@ -194,7 +194,7 @@ final class AmountController extends Controller
      */
     public function postRemove(Request $request, PiggyBank $piggyBank): RedirectResponse
     {
-        $amounts = $request->get('amount') ?? [];
+        $amounts = $request->input('amount') ?? [];
         if (!is_array($amounts)) {
             $amounts = [];
         }

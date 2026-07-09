@@ -120,7 +120,7 @@ final class LinkController extends Controller
     {
         Log::channel('audit')->info(sprintf('User destroyed link type #%d', $linkType->id));
         $name   = $linkType->name;
-        $moveTo = $this->repository->find((int) $request->get('move_link_type_before_delete'));
+        $moveTo = $this->repository->find((int) $request->input('move_link_type_before_delete'));
         $this->repository->destroy($linkType, $moveTo);
 
         $request->session()->flash('success', (string) trans('firefly.deleted_link_type', ['name' => $name]));
@@ -213,7 +213,7 @@ final class LinkController extends Controller
 
         $request->session()->flash('success', (string) trans('firefly.stored_new_link_type', ['name' => $linkType->name]));
         $redirect = redirect($this->getPreviousUrl('link-types.create.url'));
-        if (1 === (int) $request->get('create_another')) {
+        if (1 === (int) $request->input('create_another')) {
             // set value so create routine will not overwrite URL:
             $request->session()->put('link-types.create.fromStore', true);
 
@@ -245,7 +245,7 @@ final class LinkController extends Controller
         $request->session()->flash('success', (string) trans('firefly.updated_link_type', ['name' => $linkType->name]));
         Preferences::mark();
         $redirect = redirect($this->getPreviousUrl('link-types.edit.url'));
-        if (1 === (int) $request->get('return_to_edit')) {
+        if (1 === (int) $request->input('return_to_edit')) {
             // set value so edit routine will not overwrite URL:
             $request->session()->put('link-types.edit.fromUpdate', true);
 

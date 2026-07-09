@@ -85,10 +85,10 @@ final class EditController extends Controller
      */
     public function moveGroup(Request $request): JsonResponse
     {
-        $groupId   = (int) $request->get('id');
+        $groupId   = (int) $request->input('id');
         $ruleGroup = $this->repository->find($groupId);
         if ($ruleGroup instanceof RuleGroup) {
-            $direction = $request->get('direction');
+            $direction = $request->input('direction');
             if ('down' === $direction) {
                 $maxOrder = $this->repository->maxOrder();
                 $order    = $ruleGroup->order;
@@ -127,7 +127,7 @@ final class EditController extends Controller
         session()->flash('success', (string) trans('firefly.updated_rule_group', ['title' => $ruleGroup->title]));
         Preferences::mark();
         $redirect = redirect($this->getPreviousUrl('rule-groups.edit.url'));
-        if (1 === (int) $request->get('return_to_edit')) {
+        if (1 === (int) $request->input('return_to_edit')) {
             session()->put('rule-groups.edit.fromUpdate', true);
 
             $redirect = redirect(route('rule-groups.edit', [$ruleGroup->id]))->withInput(['return_to_edit' => 1]);

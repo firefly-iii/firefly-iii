@@ -66,7 +66,8 @@ final class SearchController extends Controller
             $fullQuery = '';
         }
         $fullQuery        = (string) $fullQuery;
-        $page             = 0 === (int) $request->input('page') ? 1 : (int) $request->get('page');
+        $page             = 0 === (int) $request->input('page') ? 1 : (int) $request->input('page');
+        $page   = min(max(1, $page), 2 ** 16);
         $ruleId           = (int) $request->input('rule');
         $ruleChanged      = false;
 
@@ -110,12 +111,13 @@ final class SearchController extends Controller
      */
     public function search(Request $request, SearchInterface $searcher): JsonResponse
     {
-        $entry      = $request->get('query');
+        $entry      = $request->input('query');
         if (!is_scalar($entry)) {
             $entry = '';
         }
         $fullQuery  = (string) $entry;
-        $page       = 0 === (int) $request->get('page') ? 1 : (int) $request->get('page');
+        $page       = 0 === (int) $request->input('page') ? 1 : (int) $request->input('page');
+        $page   = min(max(1, $page), 2 ** 16);
 
         $searcher->parseQuery($fullQuery);
 

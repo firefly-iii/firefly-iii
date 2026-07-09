@@ -176,7 +176,7 @@ final class DebugController extends Controller
         /** @var iterable $routes */
         $routes = Route::getRoutes();
 
-        if ('true' === $request->get('api')) {
+        if ('true' === $request->input('api')) {
             $collection = [];
             $i          = 0;
 

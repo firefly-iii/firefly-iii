@@ -289,8 +289,8 @@ final class ProfileController extends Controller
         }
 
         // the request has already validated both new passwords must be equal.
-        $current = $request->get('current_password');
-        $new     = $request->get('new_password');
+        $current = $request->input('current_password');
+        $new     = $request->input('new_password');
 
         /** @var User $user */
         $user    = auth()->user();
@@ -303,7 +303,7 @@ final class ProfileController extends Controller
             return redirect(route('profile.change-password'));
         }
 
-        $repository->changePassword($user, $request->get('new_password'));
+        $repository->changePassword($user, $request->input('new_password'));
         session()->flash('success', (string) trans('firefly.password_changed'));
 
         return redirect(route('profile.index'));
@@ -320,7 +320,7 @@ final class ProfileController extends Controller
             return redirect(route('profile.index'));
         }
 
-        if (!Hash::check($request->get('password'), auth()->user()->password)) {
+        if (!Hash::check($request->input('password'), auth()->user()->password)) {
             session()->flash('error', (string) trans('firefly.invalid_password'));
 
             return redirect(route('profile.delete-account'));
@@ -347,9 +347,9 @@ final class ProfileController extends Controller
 
             return redirect(route('profile.index'));
         }
-        $creds = ['email' => auth()->user()->email, 'password' => $request->get('password')];
+        $creds = ['email' => auth()->user()->email, 'password' => $request->input('password')];
         if (Auth::once($creds)) {
-            Auth::logoutOtherDevices($request->get('password'));
+            Auth::logoutOtherDevices($request->input('password'));
             session()->flash('info', (string) trans('firefly.other_sessions_logged_out'));
 
             return redirect(route('profile.index'));

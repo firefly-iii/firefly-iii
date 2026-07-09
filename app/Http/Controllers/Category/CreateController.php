@@ -108,7 +108,7 @@ final class CreateController extends Controller
         }
 
         $redirect = redirect(route('categories.index'));
-        if (1 === (int) $request->get('create_another')) {
+        if (1 === (int) $request->input('create_another')) {
             $request->session()->put('categories.create.fromStore', true);
 
             $redirect = redirect(route('categories.create'))->withInput();

@@ -257,7 +257,7 @@ final class CreateController extends Controller
         }
 
         $redirect = redirect($this->getPreviousUrl('recurring.create.url'));
-        if (1 === (int) $request->get('create_another')) {
+        if (1 === (int) $request->input('create_another')) {
             // set value so create routine will not overwrite URL:
             $request->session()->put('recurring.create.fromStore', true);
 

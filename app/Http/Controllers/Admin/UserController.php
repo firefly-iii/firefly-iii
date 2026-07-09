@@ -193,7 +193,7 @@ final class UserController extends Controller
 
     public function invite(InviteUserFormRequest $request): RedirectResponse
     {
-        $address = (string) $request->get('invited_user');
+        $address = (string) $request->input('invited_user');
         $invitee = $this->repository->inviteUser(auth()->user(), $address);
         session()->flash('info', trans('firefly.user_is_invited', ['address' => $address]));
 
@@ -256,7 +256,7 @@ final class UserController extends Controller
         session()->flash('success', (string) trans('firefly.updated_user', ['email' => $user->email]));
         Preferences::mark();
         $redirect = redirect($this->getPreviousUrl('users.edit.url'));
-        if (1 === (int) $request->get('return_to_edit')) {
+        if (1 === (int) $request->input('return_to_edit')) {
             session()->put('users.edit.fromUpdate', true);
 
             $redirect = redirect(route('settings.users.edit', [$user->id]))->withInput(['return_to_edit' => 1]);

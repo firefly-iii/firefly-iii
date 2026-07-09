@@ -172,7 +172,7 @@ final class AttachmentController extends Controller
         Preferences::mark();
 
         $redirect = redirect($this->getPreviousUrl('attachments.edit.url'));
-        if (1 === (int) $request->get('return_to_edit')) {
+        if (1 === (int) $request->input('return_to_edit')) {
             $request->session()->put('attachments.edit.fromUpdate', true);
 
             $redirect = redirect(route('attachments.edit', [$attachment->id]))->withInput(['return_to_edit' => 1]);

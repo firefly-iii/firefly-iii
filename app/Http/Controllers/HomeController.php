@@ -93,7 +93,7 @@ final class HomeController extends Controller
         $label         = $request->input('label');
         $isCustomRange = false;
 
-        Log::debug('dateRange: Received dateRange', ['start' => $stringStart, 'end' => $stringEnd, 'label' => $request->get('label')]);
+        Log::debug('dateRange: Received dateRange', ['start' => $stringStart, 'end' => $stringEnd, 'label' => $request->input('label')]);
         // check if the label is "everything" or "Custom range" which will betray
         // a possible problem with the budgets.
         if ($label === (string) trans('firefly.everything') || $label === (string) trans('firefly.customRange')) {

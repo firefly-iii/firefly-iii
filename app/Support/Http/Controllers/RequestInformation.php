@@ -77,7 +77,7 @@ trait RequestInformation
     final protected function getValidTriggerList(TestRuleFormRequest $request): array // process input
     {
         $triggers = [];
-        $data     = $request->get('triggers');
+        $data     = $request->input('triggers');
         if (is_array($data)) {
             foreach ($data as $triggerInfo) {
                 $current    = [

@@ -69,16 +69,16 @@ final class RecurrenceController extends Controller
     {
         $occurrences                   = [];
         $return                        = [];
-        $start                         = Carbon::createFromFormat('Y-m-d', $request->get('start'));
-        $end                           = Carbon::createFromFormat('Y-m-d', $request->get('end'));
-        $firstDate                     = Carbon::createFromFormat('Y-m-d', $request->get('first_date'));
-        $endDate                       = '' !== (string) $request->get('end_date') ? Carbon::createFromFormat('Y-m-d', $request->get('end_date')) : null;
-        $endsAt                        = (string) $request->get('ends');
-        $repetitionType                = explode(',', (string) $request->get('type'))[0];
-        $repetitions                   = (int) $request->get('reps');
-        $weekend                       = (int) $request->get('weekend');
+        $start                         = Carbon::createFromFormat('Y-m-d', $request->input('start'));
+        $end                           = Carbon::createFromFormat('Y-m-d', $request->input('end'));
+        $firstDate                     = Carbon::createFromFormat('Y-m-d', $request->input('first_date'));
+        $endDate                       = '' !== (string) $request->input('end_date') ? Carbon::createFromFormat('Y-m-d', $request->input('end_date')) : null;
+        $endsAt                        = (string) $request->input('ends');
+        $repetitionType                = explode(',', (string) $request->input('type'))[0];
+        $repetitions                   = (int) $request->input('reps');
+        $weekend                       = (int) $request->input('weekend');
         $repetitionMoment              = '';
-        $skip                          = (int) $request->get('skip');
+        $skip                          = (int) $request->input('skip');
         $skip                          = $skip < 0 || $skip > 31 ? 0 : $skip;
         $weekend                       = $weekend < 1 || $weekend > 4 ? 1 : $weekend;
 
@@ -101,13 +101,13 @@ final class RecurrenceController extends Controller
         $actualStart                   = clone $firstDate;
 
         if ('weekly' === $repetitionType || 'monthly' === $repetitionType) {
-            $repetitionMoment = explode(',', (string) $request->get('type'))[1] ?? '1';
+            $repetitionMoment = explode(',', (string) $request->input('type'))[1] ?? '1';
         }
         if ('ndom' === $repetitionType) {
-            $repetitionMoment = str_ireplace('ndom,', '', $request->get('type'));
+            $repetitionMoment = str_ireplace('ndom,', '', $request->input('type'));
         }
         if ('yearly' === $repetitionType) {
-            $repetitionMoment = explode(',', (string) $request->get('type'))[1] ?? '2025-01-01';
+            $repetitionMoment = explode(',', (string) $request->input('type'))[1] ?? '2025-01-01';
         }
         $actualStart->startOfDay();
         $repetition                    = new RecurrenceRepetition();
@@ -153,7 +153,7 @@ final class RecurrenceController extends Controller
      */
     public function suggest(Request $request): JsonResponse
     {
-        $string      = '' === (string) $request->get('date') ? Carbon::now()->format('Y-m-d') : (string) $request->get('date');
+        $string      = '' === (string) $request->input('date') ? Carbon::now()->format('Y-m-d') : (string) $request->input('date');
         $today       = today(config('app.timezone'))->startOfDay();
 
         try {
@@ -165,14 +165,14 @@ final class RecurrenceController extends Controller
             return response()->json();
         }
         $date->startOfDay();
-        $preSelected = (string) $request->get('pre_select');
+        $preSelected = (string) $request->input('pre_select');
         $locale      = Steam::getLocale();
 
         Log::debug(sprintf('date = %s, today = %s. date > today? %s', $date->toAtomString(), $today->toAtomString(), var_export($date > $today, true)));
-        Log::debug(sprintf('past = true? %s', var_export('true' === (string) $request->get('past'), true)));
+        Log::debug(sprintf('past = true? %s', var_export('true' === (string) $request->input('past'), true)));
 
         $result      = [];
-        if ($date > $today || 'true' === (string) $request->get('past')) {
+        if ($date > $today || 'true' === (string) $request->input('past')) {
             Log::debug('Will fill dropdown.');
             $weekly     = sprintf('weekly,%s', $date->dayOfWeekIso);
             $monthly    = sprintf('monthly,%s', $date->day);

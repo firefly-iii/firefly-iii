@@ -198,7 +198,7 @@ final class MassController extends Controller
 
     private function getDateFromRequest(MassEditJournalRequest $request, int $journalId, string $key): ?Carbon
     {
-        $value = $request->get($key);
+        $value = $request->input($key);
         if (!is_array($value)) {
             return null;
         }
@@ -220,7 +220,7 @@ final class MassController extends Controller
 
     private function getIntFromRequest(MassEditJournalRequest $request, int $journalId, string $string): ?int
     {
-        $value = $request->get($string);
+        $value = $request->input($string);
         if (!is_array($value)) {
             return null;
         }
@@ -233,7 +233,7 @@ final class MassController extends Controller
 
     private function getStringFromRequest(MassEditJournalRequest $request, int $journalId, string $string): ?string
     {
-        $value = $request->get($string);
+        $value = $request->input($string);
         if (!is_array($value)) {
             return null;
         }

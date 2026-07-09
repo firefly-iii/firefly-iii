@@ -85,8 +85,8 @@ class InterestingMessage
     private function accountMessage(Request $request): bool
     {
         // get parameters from request.
-        $accountId = $request->get('account_id');
-        $message   = $request->get('message');
+        $accountId = $request->input('account_id');
+        $message   = $request->input('message');
 
         return null !== $accountId && null !== $message;
     }
@@ -94,8 +94,8 @@ class InterestingMessage
     private function billMessage(Request $request): bool
     {
         // get parameters from request.
-        $billId  = $request->get('bill_id');
-        $message = $request->get('message');
+        $billId  = $request->input('bill_id');
+        $message = $request->input('message');
 
         return null !== $billId && null !== $message;
     }
@@ -103,8 +103,8 @@ class InterestingMessage
     private function currencyMessage(Request $request): bool
     {
         // get parameters from request.
-        $code    = $request->get('code');
-        $message = $request->get('message');
+        $code    = $request->input('code');
+        $message = $request->input('message');
 
         return null !== $code && null !== $message;
     }
@@ -112,8 +112,8 @@ class InterestingMessage
     private function groupMessage(Request $request): bool
     {
         // get parameters from request.
-        $transactionGroupId = $request->get('transaction_group_id');
-        $message            = $request->get('message');
+        $transactionGroupId = $request->input('transaction_group_id');
+        $message            = $request->input('message');
 
         return null !== $transactionGroupId && null !== $message;
     }
@@ -121,8 +121,8 @@ class InterestingMessage
     private function handleAccountMessage(Request $request): void
     {
         // get parameters from request.
-        $accountId = $request->get('account_id');
-        $message   = $request->get('message');
+        $accountId = $request->input('account_id');
+        $message   = $request->input('message');
 
         /** @var User $user */
         $user      = auth()->user();
@@ -147,8 +147,8 @@ class InterestingMessage
     private function handleBillMessage(Request $request): void
     {
         // get parameters from request.
-        $billId  = $request->get('bill_id');
-        $message = $request->get('message');
+        $billId  = $request->input('bill_id');
+        $message = $request->input('message');
 
         /** @var null|Bill $bill */
         $bill    = auth()->user()->bills()->withTrashed()->find($billId);
@@ -168,8 +168,8 @@ class InterestingMessage
     {
         // params:
         // get parameters from request.
-        $code    = (string) $request->get('code');
-        $message = (string) $request->get('message');
+        $code    = (string) $request->input('code');
+        $message = (string) $request->input('message');
 
         try {
             $currency = Amount::getTransactionCurrencyByCode($code);
@@ -200,8 +200,8 @@ class InterestingMessage
     private function handleGroupMessage(Request $request): void
     {
         // get parameters from request.
-        $transactionGroupId = $request->get('transaction_group_id');
-        $message            = $request->get('message');
+        $transactionGroupId = $request->input('transaction_group_id');
+        $message            = $request->input('message');
 
         // send message about newly created transaction group.
         /** @var null|TransactionGroup $group */
@@ -243,8 +243,8 @@ class InterestingMessage
     private function handleUserGroupMessage(Request $request): void
     {
         // get parameters from request.
-        $userGroupId = $request->get('user_group_id');
-        $message     = $request->get('message');
+        $userGroupId = $request->input('user_group_id');
+        $message     = $request->input('message');
 
         /** @var User $user */
         $user        = auth()->user();
@@ -280,8 +280,8 @@ class InterestingMessage
     private function handleWebhookMessage(Request $request): void
     {
         // get parameters from request.
-        $webhookId = $request->get('webhook_id');
-        $message   = $request->get('message');
+        $webhookId = $request->input('webhook_id');
+        $message   = $request->input('message');
 
         /** @var null|Webhook $webhook */
         $webhook   = auth()->user()->webhooks()->withTrashed()->find($webhookId);
@@ -309,8 +309,8 @@ class InterestingMessage
     private function userGroupMessage(Request $request): bool
     {
         // get parameters from request.
-        $transactionGroupId = $request->get('user_group_id');
-        $message            = $request->get('message');
+        $transactionGroupId = $request->input('user_group_id');
+        $message            = $request->input('message');
 
         return null !== $transactionGroupId && null !== $message;
     }
@@ -318,8 +318,8 @@ class InterestingMessage
     private function webhookMessage(Request $request): bool
     {
         // get parameters from request.
-        $webhookId = $request->get('webhook_id');
-        $message   = $request->get('message');
+        $webhookId = $request->input('webhook_id');
+        $message   = $request->input('message');
 
         return null !== $webhookId && null !== $message;
     }

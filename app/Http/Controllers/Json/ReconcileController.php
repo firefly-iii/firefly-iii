@@ -70,8 +70,8 @@ final class ReconcileController extends Controller
      */
     public function overview(Request $request, ?Account $account = null, ?Carbon $start = null, ?Carbon $end = null): JsonResponse
     {
-        $startBalance    = $request->get('startBalance');
-        $endBalance      = $request->get('endBalance');
+        $startBalance    = $request->input('startBalance');
+        $endBalance      = $request->input('endBalance');
         $accountCurrency = $this->accountRepos->getAccountCurrency($account) ?? $this->primaryCurrency;
         $amount          = '0';
         $clearedAmount   = '0';
@@ -92,9 +92,9 @@ final class ReconcileController extends Controller
         $start->startOfDay();
 
         $route           = route('accounts.reconcile.submit', [$account->id, $start->format('Ymd'), $end->format('Ymd')]);
-        $selectedIds     = $request->get('journals') ?? [];
+        $selectedIds     = $request->input('journals') ?? [];
         $clearedJournals = [];
-        $clearedIds      = $request->get('cleared') ?? [];
+        $clearedIds      = $request->input('cleared') ?? [];
         $journals        = [];
         // Collect all submitted journals
         if (count($selectedIds) > 0) {

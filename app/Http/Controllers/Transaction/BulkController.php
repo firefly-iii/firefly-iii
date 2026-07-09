@@ -91,11 +91,11 @@ final class BulkController extends Controller
      */
     public function update(BulkEditJournalRequest $request): RedirectResponse
     {
-        $journalIds     = $request->get('journals');
+        $journalIds     = $request->input('journals');
         $journalIds     = is_array($journalIds) ? $journalIds : [];
-        $ignoreCategory = 1 === (int) $request->get('ignore_category');
-        $ignoreBudget   = 1 === (int) $request->get('ignore_budget');
-        $tagsAction     = $request->get('tags_action');
+        $ignoreCategory = 1 === (int) $request->input('ignore_category');
+        $ignoreBudget   = 1 === (int) $request->input('ignore_budget');
+        $tagsAction     = $request->input('tags_action');
         $collection     = new Collection();
         $count          = 0;
 

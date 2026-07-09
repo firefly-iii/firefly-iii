@@ -66,7 +66,7 @@ trait ValidatesUserGroupTrait
             Log::debug(sprintf('validateUserGroup: no user group submitted, use default group #%d.', $groupId));
         }
         if ($request->has('user_group_id')) {
-            $groupId = (int) $request->get('user_group_id');
+            $groupId = (int) $request->input('user_group_id');
             Log::debug(sprintf('validateUserGroup: user group submitted, search for memberships in group #%d.', $groupId));
         }
 

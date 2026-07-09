@@ -124,7 +124,7 @@ final class CreateController extends Controller
         if ($currency instanceof TransactionCurrency) {
             $request->session()->flash('success', (string) trans('firefly.created_currency', ['name' => $currency->name]));
             Log::channel('audit')->info('Created (POST) currency.', $data);
-            if (1 === (int) $request->get('create_another')) {
+            if (1 === (int) $request->input('create_another')) {
                 $request->session()->put('currencies.create.fromStore', true);
 
                 $redirect = redirect(route('currencies.create'))->withInput();

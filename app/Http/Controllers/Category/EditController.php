@@ -108,7 +108,7 @@ final class EditController extends Controller
         }
         $redirect = redirect($this->getPreviousUrl('categories.edit.url'));
 
-        if (1 === (int) $request->get('return_to_edit')) {
+        if (1 === (int) $request->input('return_to_edit')) {
             $request->session()->put('categories.edit.fromUpdate', true);
 
             $redirect = redirect(route('categories.edit', [$category->id]));

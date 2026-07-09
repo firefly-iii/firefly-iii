@@ -165,7 +165,7 @@ final class IndexController extends Controller
     public function reorder(Request $request, BudgetRepositoryInterface $repository): JsonResponse
     {
         $this->abRepository->cleanup();
-        $budgetIds = $request->get('budgetIds');
+        $budgetIds = $request->input('budgetIds');
 
         foreach ($budgetIds as $index => $budgetId) {
             $budgetId = (int) $budgetId;

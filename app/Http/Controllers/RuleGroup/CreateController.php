@@ -90,7 +90,7 @@ final class CreateController extends Controller
         Preferences::mark();
 
         $redirect  = redirect($this->getPreviousUrl('rule-groups.create.url'));
-        if (1 === (int) $request->get('create_another')) {
+        if (1 === (int) $request->input('create_another')) {
             session()->put('rule-groups.create.fromStore', true);
 
             $redirect = redirect(route('rule-groups.create'))->withInput();

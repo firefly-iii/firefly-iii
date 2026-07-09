@@ -73,7 +73,7 @@ final class IndexController extends Controller
     public function setOrder(Request $request, ObjectGroup $objectGroup)
     {
         Log::debug(sprintf('Found object group #%d "%s"', $objectGroup->id, $objectGroup->title));
-        $newOrder = (int) $request->get('order');
+        $newOrder = (int) $request->input('order');
         $this->repository->setOrder($objectGroup, $newOrder);
 
         return response()->json();

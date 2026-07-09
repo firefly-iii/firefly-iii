@@ -140,7 +140,7 @@ final class LinkController extends Controller
      */
     public function switchLink(Request $request): RedirectResponse
     {
-        $linkId = (int) $request->get('id');
+        $linkId = (int) $request->input('id');
         $this->repository->switchLinkById($linkId);
 
         return redirect(Steam::getSafePreviousUrl());

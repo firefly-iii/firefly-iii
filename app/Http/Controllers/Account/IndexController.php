@@ -79,7 +79,8 @@ final class IndexController extends Controller
         $types                         = config(sprintf('firefly.accountTypesByIdentifier.%s', $objectType));
         $collection                    = $this->repository->getInactiveAccountsByType($types);
         $total                         = $collection->count();
-        $page                          = 0 === (int) $request->get('page') ? 1 : (int) $request->get('page');
+        $page                          = 0 === (int) $request->input('page') ? 1 : (int) $request->input('page');
+        $page   = min(max(1, $page), 2 ** 16);
         $pageSize                      = (int) Preferences::get('listPageSize', 50)->data;
         $accounts                      = $collection->slice(($page - 1) * $pageSize, $pageSize);
         $inactiveCount                 = $this->repository->getInactiveAccountsByType($types)->count();
@@ -145,7 +146,8 @@ final class IndexController extends Controller
 
         $collection                    = $this->repository->getActiveAccountsByType($types);
         $total                         = $collection->count();
-        $page                          = 0 === (int) $request->get('page') ? 1 : (int) $request->get('page');
+        $page                          = 0 === (int) $request->input('page') ? 1 : (int) $request->input('page');
+        $page   = min(max(1, $page), 2 ** 16);
         $pageSize                      = (int) Preferences::get('listPageSize', 50)->data;
         $accounts                      = $collection->slice(($page - 1) * $pageSize, $pageSize);
         $inactiveCount                 = $this->repository->getInactiveAccountsByType($types)->count();

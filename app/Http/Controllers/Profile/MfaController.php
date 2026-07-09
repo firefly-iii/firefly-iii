@@ -232,7 +232,7 @@ final class MfaController extends Controller
         $user       = auth()->user();
 
         // verify password.
-        $password   = $request->get('password');
+        $password   = $request->input('password');
         if (!auth()->validate(['email' => $user->email, 'password' => $password])) {
             session()->flash('error', 'Bad user pw, no MFA for you!');
 
@@ -255,7 +255,7 @@ final class MfaController extends Controller
         Preferences::mark();
 
         // also save the code so replay attack is prevented.
-        $mfaCode    = $request->get('code');
+        $mfaCode    = $request->input('code');
         $this->addToMFAHistory($mfaCode);
 
         // make sure MFA is logged out.

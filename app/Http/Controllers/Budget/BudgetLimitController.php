@@ -151,7 +151,7 @@ final class BudgetLimitController extends Controller
             return response()->json();
         }
 
-        $amount   = (string) $request->get('amount');
+        $amount   = (string) $request->input('amount');
         $start->startOfDay();
         $end->startOfDay();
 
@@ -184,15 +184,15 @@ final class BudgetLimitController extends Controller
         }
         if (!$limit instanceof BudgetLimit) {
             $limit = $this->blRepository->store([
-                'budget_id'   => $request->get('budget_id'),
-                'currency_id' => (int) $request->get('transaction_currency_id'),
+                'budget_id'   => $request->input('budget_id'),
+                'currency_id' => (int) $request->input('transaction_currency_id'),
                 'start_date'  => $start,
                 'end_date'    => $end,
                 'amount'      => $amount,
             ]);
         }
         // parse notes, if any.
-        $notes    = (string) $request->get('notes');
+        $notes    = (string) $request->input('notes');
         $this->blRepository->setNoteText($limit, $notes);
 
         if ($request->expectsJson()) {
@@ -222,7 +222,7 @@ final class BudgetLimitController extends Controller
 
     public function update(Request $request, BudgetLimit $budgetLimit): JsonResponse|RedirectResponse
     {
-        $amount                          = (string) $request->get('amount');
+        $amount                          = (string) $request->input('amount');
         if ('' === $amount) {
             $amount = '0';
         }
@@ -247,7 +247,7 @@ final class BudgetLimitController extends Controller
         if (-1 === bccomp($amount, '0')) {
             $amount = bcmul($amount, '-1');
         }
-        $notes                           = (string) $request->get('notes');
+        $notes                           = (string) $request->input('notes');
         if (strlen($notes) > 32_768) {
             $notes = substr($notes, 0, 32_768);
         }
@@ -281,7 +281,7 @@ final class BudgetLimitController extends Controller
         // left per day formatted.
         $array['amount']                 = Steam::bcround($limit['amount'], $limit->transactionCurrency->decimal_places);
         $array['left_per_day_formatted'] = Amount::formatAnything($limit->transactionCurrency, $array['left_per_day']);
-        if ('true' === $request->get('redirect')) {
+        if ('true' === $request->input('redirect')) {
             return redirect(route('budgets.index'));
         }
 
