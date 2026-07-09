@@ -126,7 +126,9 @@ jobs:
       - name: Lint Blade templates
         run: |
           echo "Will now run Blade linter"
+          cp .env.example .env
           php artisan blade:lint
+          rm .env
       - name: Crowdin action
         uses: crowdin/github-action@v2
         with:
