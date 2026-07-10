@@ -29,6 +29,7 @@ use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Support\System\IsOldVersion;
 use FireflyIII\Support\System\OAuthKeys;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Log;
 
 /**
  * Class Installer
@@ -66,6 +67,7 @@ class Installer
         // or when old scheme version
         // or when old firefly version
         if ($this->hasNoTables() || $this->isOldVersionInstalled()) {
+            Log::debug('Will redirect to installer.');
             return response()->redirectTo(route('installer.index'));
         }
         OAuthKeys::verifyKeysRoutine();

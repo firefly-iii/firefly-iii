@@ -34,6 +34,7 @@ use FireflyIII\Support\System\IsOldVersion;
 use Illuminate\Auth\Access\AuthorizationException;
 use Illuminate\Contracts\View\Factory;
 use Illuminate\Http\JsonResponse;
+use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Artisan;
 use Illuminate\Support\Facades\Cache;
@@ -74,23 +75,15 @@ final class InstallController extends Controller
      *
      * @return Factory|View
      */
-    public function index(): Factory|\Illuminate\Contracts\View\View
+    public function index(): Factory|\Illuminate\Contracts\View\View|RedirectResponse
     {
+        Log::debug('Now in installer index.');
         if ($this->hasNoTables() || $this->isOldVersionInstalled()) {
             app('view')->share('FF_VERSION', config('firefly.version'));
 
-            // index will set FF3 version.
-            try {
-                AppConfiguration::set('ff3_version', (string) config('firefly.version'));
-                AppConfiguration::set('ff3_build_time', (int) config('firefly.build_time'));
-            } catch (FireflyException $e) {
-                Log::warning($e->getMessage());
-            }
-
             return view('install.index');
         }
-
-        throw new AuthorizationException('No access to this page.');
+        return response()->redirectToRoute('home');
     }
 
     /**
@@ -144,6 +137,16 @@ final class InstallController extends Controller
                 }
                 $response['hasNextCommand'] = array_key_exists($requestIndex + 1, $indexes);
                 $response['previous']       = $command;
+
+                if(false === $response['hasNextCommand']) {
+                    // if no next command, set the things
+                    try {
+                        AppConfiguration::set('ff3_version', (string) config('firefly.version'));
+                        AppConfiguration::set('ff3_build_time', (int) config('firefly.build_time'));
+                    } catch (FireflyException $e) {
+                        Log::warning($e->getMessage());
+                    }
+                }
             }
 
             return response()->json($response);

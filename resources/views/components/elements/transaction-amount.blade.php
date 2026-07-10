@@ -15,9 +15,9 @@
 @elseif('Transfer' === $type)
     {{-- amount of transfer --}}
     <span class="text-info money-transfer">
-                    {{-- present as negative. --}}
+        {{-- present as negative. --}}
         @if($sourceAccount['id'] === $account?->id)
-            neg {!! format_amount_by_symbol($amount['amount'], $amount['currency_symbol'], $amount['currency_decimal_places'], false) !!}
+            {!! format_amount_by_symbol($amount['amount'], $amount['currency_symbol'], $amount['currency_decimal_places'], false) !!}
         @endif
         {{-- present as positive --}}
         @if($sourceAccount['id'] !== $account?->id)
@@ -25,7 +25,7 @@
         @endif
         {{-- foreign amount of transfer (negative) --}}
         @if(null !== $foreign['amount'] && $sourceAccount['id'] === $account?->id)
-            neg ({!! format_amount_by_symbol($foreign['amount'], $foreign['currency_symbol'], $foreign['currency_decimal_places'], false) !!})
+            ({!! format_amount_by_symbol($foreign['amount'], $foreign['currency_symbol'], $foreign['currency_decimal_places'], false) !!})
         @endif
         {{-- foreign amount of transfer (positive) --}}
         @if(null !== $foreign['amount'] && $sourceAccount['id'] !== $account?->id)

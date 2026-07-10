@@ -77,7 +77,7 @@ trait IsOldVersion
         $dbTime          = Carbon::createFromTimestamp($dbBuildTime, config('app.timezone'));
         if ($dbBuildTime < $configBuildTime) {
             Log::warning(sprintf(
-                'Your database was last managed by an older version of Firefly III (I see %s, I expect %s). Redirect to migrate routine.',
+                'Your database was last managed by an older version of Firefly III (I see %s, I expect %s).',
                 $dbTime->format('Y-m-d H:i:s'),
                 $configTime->format('Y-m-d H:i:s')
             ));
