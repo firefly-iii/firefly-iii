@@ -256,7 +256,7 @@ final class IndexController extends Controller
                         // #12468 the count does not need to subtract paid_dates, that is already accounted for.
                         //$count = count($bill['pay_dates']) - count($bill['paid_dates']);
                         $count = count($bill['pay_dates']);
-                        if ($count > 0) {
+//                        if ($count > 0) {
                             $avg                                                 = bcdiv(bcadd((string) $bill['amount_min'], (string) $bill['amount_max']), '2');
                             $avg                                                 = bcmul($avg, (string) $count);
                             $sums[$groupOrder][$currencyId]['total_left_to_pay'] = bcadd($sums[$groupOrder][$currencyId]['total_left_to_pay'], $avg);
@@ -268,7 +268,7 @@ final class IndexController extends Controller
                                 ),
                                 $bill['pay_dates']
                             );
-                        }
+//                        }
                     }
                 }
 
