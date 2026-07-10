@@ -40,6 +40,7 @@ use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Log;
 use Laravel\Passport\Passport;
 use phpseclib3\Crypt\RSA;
+use Illuminate\Contracts\View\View;
 
 use function Safe\file_put_contents;
 
@@ -68,7 +69,7 @@ final class InstallController extends Controller
         'firefly-iii:verify-security-alerts' => [],
     ];
 
-    public function index(): Factory|\Illuminate\Contracts\View\View|RedirectResponse
+    public function index(): Factory|RedirectResponse|View
     {
         Log::debug('Now in installer index.');
         if ($this->hasNoTables() || $this->isOldVersionInstalled()) {
