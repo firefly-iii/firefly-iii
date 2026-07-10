@@ -84,7 +84,7 @@ class MailError extends Job implements ShouldQueue
 
         if ($this->attempts() < 3 && '' !== $email) {
             try {
-                Mail::send(['emails.errors.error-html', 'emails.errors.error-text'], $args, static function (Message $message) use ($email): void {
+                Mail::send(['emails.error.error-html', 'emails.error.error-text'], $args, static function (Message $message) use ($email): void {
                     if ('mail@example.com' !== $email) {
                         $message->to($email, $email)->subject((string) trans('email.error_subject'));
                     }
