@@ -62,6 +62,10 @@ getFreshVariable('lastActivity').then((serverValue) => {
             store.set('start', range.start);
             store.set('end', range.end);
         }
+        //
+        if('equal' === values.locale) {
+            values.locale = values.language;
+        }
 
         // save local in window.__ something
         window.__localeId__ = values.locale;

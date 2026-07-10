@@ -116,7 +116,7 @@ final class InstallController extends Controller
                 try {
                     $result = $this->executeCommand($command, $parameters);
                 } catch (FireflyException $e) {
-                    Log::error($e->getMessage());
+                    Log::error(sprintf('%s when trying %s',$e->getMessage(), $command));
                     Log::error($e->getTraceAsString());
                     if (str_contains($e->getMessage(), 'open_basedir restriction in effect')) {
                         $this->lastError = self::BASEDIR_ERROR;
