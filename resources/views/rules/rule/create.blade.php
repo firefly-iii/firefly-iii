@@ -3,7 +3,7 @@
 
     <form method="POST" action="{{ route('rules.store') }}" accept-charset="UTF-8" class="form-horizontal" id="store">
         <input name="_token" type="hidden" value="{{ csrf_token() }}">
-        <input type="hidden" name="rule_group_id" value="{{ $ruleGroup->id }}"/>
+        <input type="hidden" name="rule_group_id" value="{{ $ruleGroup?->id }}"/>
         <input type="hidden" name="return_to_bill" value="@if($returnToBill??false)true @else false @endif"/>
         <input type="hidden" name="bill_id" value="@if(null !== ($bill??null)){{ $bill->id }} @else 0 @endif"/>
 
@@ -11,7 +11,7 @@
         @if(null !== ($bill??null))
             <div class="row">
                 <div class="col-lg-12 col-md-12 col-sm-12">
-                    <div class="box box-success" id="mandatory">
+                    <div class="card mb-2" id="mandatory">
                         <div class="card-header">
                             <h3 class="card-title">{{ trans('firefly.create_rule_for_bill', ['name' => $bill->name]) }}</h3>
                         </div>
@@ -26,14 +26,14 @@
         @endif
         <div class="row">
             <div class="col-lg-6 col-md-6 col-sm-12">
-                <div class="box box-primary" id="mandatory">
+                <div class="card mb-2" id="mandatory">
                     <div class="card-header">
                         <h3 class="card-title">{{ __('firefly.mandatoryFields') }}</h3>
                     </div>
                     <div class="card-body">
                         {!! ExpandedForm::text('title') !!}
                         {!! ExpandedForm::select('trigger', all_journal_triggers()) !!}
-                        {!! RuleForm::ruleGroupList('rule_group_id', $ruleGroup->id) !!}
+                        {!! RuleForm::ruleGroupList('rule_group_id', $ruleGroup?->id) !!}
                         {!! ExpandedForm::checkbox('stop_processing',1, null, ['helpText' => trans('firefly.rule_help_stop_processing')]) !!}
                         {!! ExpandedForm::checkbox('strict',1, null,['helpText' => trans('firefly.rule_help_strict')]) !!}
                     </div>
@@ -59,7 +59,7 @@
                     <div class="card-header">
                         <h3 class="card-title">{{ __('firefly.rule_triggers') }}</h3>
                     </div>
-                    <div class="card-body rule-trigger-box">
+                    <div class="card-body rule-trigger-box p-0">
                         <table class="table table-sm table-bordered table-striped">
                             <thead>
                             <tr>

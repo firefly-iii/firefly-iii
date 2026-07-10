@@ -42,7 +42,7 @@
                     <div class="card-header">
                         <h3 class="card-title">{{ __('firefly.rule_triggers') }}</h3>
                     </div>
-                    <div class="card    -body rule-trigger-box">
+                    <div class="card-body p-0 rule-trigger-box">
                         <table class="table table-sm table-bordered table-striped">
                             <thead>
                             <tr>

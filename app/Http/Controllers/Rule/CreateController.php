@@ -196,6 +196,7 @@ final class CreateController extends Controller
             'preFilled'    => $preFilled,
             'oldActions'   => $oldActions,
             'triggerCount' => $triggerCount,
+            'ruleGroup'    => null,
             'actionCount'  => $actionCount,
             'subTitle'     => $subTitle,
         ]);
@@ -248,6 +249,7 @@ final class CreateController extends Controller
             'preFilled'    => $preFilled,
             'oldActions'   => $oldActions,
             'triggerCount' => $triggerCount,
+            'ruleGroup'    => null,
             'actionCount'  => $actionCount,
             'subTitle'     => $subTitle,
         ]);

@@ -129,6 +129,7 @@ trait ModelInformation
                 $string = view('rules.partials.trigger', [
                     'oldTrigger' => $trigger,
                     'oldValue'   => $values[$index],
+                    'oldProhibited' => null,
                     'oldChecked' => false,
                     'count'      => $index + 1,
                     'triggers'   => $triggers,
@@ -244,6 +245,7 @@ trait ModelInformation
                 $renderInfo = [
                     'oldTrigger' => $trigger,
                     'oldValue'   => $values[$ii],
+                    'oldProhibited' => null,
                     'oldChecked' => false,
                     'count'      => $ii + 1,
                     'triggers'   => $triggers,

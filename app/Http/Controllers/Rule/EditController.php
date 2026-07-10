@@ -201,6 +201,7 @@ final class EditController extends Controller
                     'oldTrigger' => OperatorQuerySearch::getRootOperator($operator['type']),
                     'oldValue'   => $operator['value'],
                     'oldChecked' => false,
+                    'oldProhibited' => null,
                     'count'      => $index + 1,
                     'triggers'   => $triggers,
                 ])->render();
