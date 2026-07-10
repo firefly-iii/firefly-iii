@@ -253,7 +253,9 @@ final class IndexController extends Controller
                     // only fill in total_left_to_pay when bill is not yet paid.
                     // #11474 and when it is expected in the current period
                     if (count($bill['paid_dates']) < count($bill['pay_dates'])) {
-                        $count = count($bill['pay_dates']) - count($bill['paid_dates']);
+                        // #12468 the count does not need to subtract paid_dates, that is already accounted for.
+                        //$count = count($bill['pay_dates']) - count($bill['paid_dates']);
+                        $count = count($bill['pay_dates']);
                         if ($count > 0) {
                             $avg                                                 = bcdiv(bcadd((string) $bill['amount_min'], (string) $bill['amount_max']), '2');
                             $avg                                                 = bcmul($avg, (string) $count);

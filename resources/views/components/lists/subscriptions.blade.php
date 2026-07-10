@@ -77,7 +77,7 @@
         </td>
         <td class="expected_in_period hidden-sm hidden-xs">
             @if($entry['next_expected_match'])
-            {{ new \Carbon\Carbon($entry['next_expected_match'])->isoFormat($monthAndDayFormat) }}
+                {{ new \Carbon\Carbon($entry['next_expected_match'])->isoFormat($monthAndDayFormat) }}
             @endif
         </td>
         @endif
@@ -101,7 +101,7 @@
         @endif
         <td class="expected_in_period hidden-sm hidden-xs">
             @foreach($entry['pay_dates'] as $date)
-            {{ new \Carbon\Carbon($date)->isoFormat($monthAndDayFormat) }}<br>
+               {{ new \Carbon\Carbon($date)->isoFormat($monthAndDayFormat) }}<br>
             @endforeach
 
         </td>
@@ -113,17 +113,19 @@
         --}}
 
         @if(count($entry['paid_dates']) > 0 && $entry['active'])
-        <td class="paid_in_period text-success">
-            @foreach($entry['paid_dates'] as $currentPaid)
-            <a href="{{ route('transactions.show', $currentPaid['transaction_group_id']) }}">
-                {{ new \Carbon\Carbon($currentPaid['date'])->isoFormat($monthAndDayFormat) }}
-            </a>
-            <br/>
-            @endforeach
+            <td class="paid_in_period text-success">
+                @foreach($entry['paid_dates'] as $currentPaid)
+                    <a href="{{ route('transactions.show', $currentPaid['transaction_group_id']) }}">{{ new \Carbon\Carbon($currentPaid['date'])->isoFormat($monthAndDayFormat) }}</a><br/>
+              @endforeach
         </td>
         <td class="expected_in_period hidden-sm hidden-xs">
-            @if($entry['next_expected_match'])
-            {{ new \Carbon\Carbon($entry['next_expected_match'])->isoFormat($monthAndDayFormat) }}
+            <!-- not just show next expected match, loop all pay_dates. -->
+            @if($entry['next_expected_match'] && 1 === count($entry['pay_dates']))
+                {{ new \Carbon\Carbon($entry['next_expected_match'])->isoFormat($monthAndDayFormat) }}
+            @elseif($entry['next_expected_match'] && count($entry['pay_dates']) > 0)
+                @foreach($entry['pay_dates'] as $date)
+                    {{ new \Carbon\Carbon($date)->isoFormat($monthAndDayFormat) }}<br>
+                @endforeach
             @else
                 <span class="text-muted">{{ $entry['next_expected_match_diff'] }}</span>
             @endif
@@ -139,7 +141,7 @@
         <td class="hidden-sm hidden-xs">
             {{ __('firefly.repeat_freq_' . $entry['repeat_freq']) }}
             @if($entry['skip'] > 0)
-            {{ __('firefly.skips_over') }} {{ $entry['skip'] }}
+                {{ __('firefly.skips_over') }} {{ $entry['skip'] }}
             @endif
             @if(null !== $entry['end_date'])
             <br>

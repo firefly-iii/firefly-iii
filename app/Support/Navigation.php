@@ -140,6 +140,7 @@ class Navigation
 
     public function diffInPeriods(string $period, int $skip, Carbon $beginning, Carbon $end): int
     {
+        [$beginning, $end] = $beginning->lt($end) ? [$beginning, $end] : [$end, $beginning];
         Log::debug(sprintf('diffInPeriods: %s (skip: %d), between %s and %s.', $period, $skip, $beginning->format('Y-m-d'), $end->format('Y-m-d')));
         $map       = [
             'daily'     => 'diffInDays',
