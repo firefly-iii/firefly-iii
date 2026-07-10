@@ -24,6 +24,9 @@ export default class Preferences {
     getByName(name) {
         return api.get('/api/v1/preferences/' + name);
     }
+    getList(names) {
+        return api.get('/api/v1/preferences-list/' + names);
+    }
     getByNameNow(name) {
         return api.get('/api/v1/preferences/' + name);
     }

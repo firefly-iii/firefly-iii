@@ -56,6 +56,7 @@ use FireflyIII\Support\Binder\Date;
 use FireflyIII\Support\Binder\DynamicConfigKey;
 use FireflyIII\Support\Binder\EitherConfigKey;
 use FireflyIII\Support\Binder\JournalList;
+use FireflyIII\Support\Binder\PreferenceList;
 use FireflyIII\Support\Binder\TagList;
 use FireflyIII\Support\Binder\TagOrId;
 use FireflyIII\Support\Binder\UserGroupAccount;
@@ -109,6 +110,7 @@ return [
         'journalList'               => JournalList::class,
         'categoryList'              => CategoryList::class,
         'tagList'                   => TagList::class,
+        'preferenceList'                   => PreferenceList::class,
 
         // others
         'fromCurrencyCode'          => CurrencyCode::class,

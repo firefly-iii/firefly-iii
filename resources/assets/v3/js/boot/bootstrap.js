@@ -28,6 +28,7 @@ import Shepherd from 'shepherd.js';
 import "cally";
 import {getFreshVariable} from "../store/get-fresh-variable.js";
 import {getVariable} from "../store/get-variable.js";
+import {getVariables} from "../store/get-variables.js";
 import {getViewRange} from "../support/get-viewrange.js";
 import {loadTranslations} from "../support/load-translations.js";
 
@@ -45,34 +46,32 @@ getFreshVariable('lastActivity').then((serverValue) => {
         throw new Error('401 in getFreshVariable.');
     }
     const localValue = store.get('lastActivity');
-    store.set('cacheValid', localValue === serverValue);
-    store.set('lastActivity', serverValue);
-    console.log('Server value: ' + serverValue);
-    console.log('Local value:  ' + localValue);
-    console.log('Cache valid:  ' + (localValue === serverValue));
+    // store.set('cacheValid', localValue === serverValue);
+    // store.set('lastActivity', serverValue);
+    // console.log('Server value: ' + serverValue);
+    // console.log('Local value:  ' + localValue);
+    // console.log('Cache valid:  ' + (localValue === serverValue));
 }).then(() => {
-    Promise.all([
-        getVariable('viewRange'),
-        getVariable('darkMode'),
-        getVariable('locale'),
-        getVariable('language')
-    ]).then((values) => {
+    Promise.resolve(
+        getVariables(['viewRange','darkMode','locale','language', 'convert_to_primary']),
+    ).then((values) => {
+        console.log(values);
         if (!store.get('start') || !store.get('end')) {
             // calculate new start and end, and store them.
-            const range = getViewRange(values[0], new Date);
+            const range = getViewRange(values.viewRange, new Date);
             store.set('start', range.start);
             store.set('end', range.end);
         }
 
         // save local in window.__ something
-        window.__localeId__ = values[2];
-        store.set('language', values[3]);
-        store.set('locale', values[3]);
-        loadTranslations(values[3]).then(() => {
+        window.__localeId__ = values.locale;
+        store.set('language', values.language);
+        store.set('locale', values.locale);
+        loadTranslations(values.locale).then(() => {
             const event = new Event('firefly-iii-bootstrapped');
             document.dispatchEvent(event);
             window.bootstrapped = true;
-            console.log('Bootstrapped!');
+            // console.log('Bootstrapped!');
 
             // page may have an introduction necessary to be played.
             // if (!showTour) {

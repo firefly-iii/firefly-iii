@@ -821,6 +821,22 @@ Route::group(
     }
 );
 
+// Preference API routes:
+Route::group(
+    [
+        'namespace' => 'FireflyIII\Api\V1\Controllers\User',
+        'prefix'    => 'v1/preferences-list',
+        'as'        => 'api.v1.preferences-list.',
+    ],
+    static function (): void {
+//        Route::get('', ['uses' => 'PreferencesController@index', 'as' => 'index']);
+//        Route::post('', ['uses' => 'PreferencesController@store', 'as' => 'store']);
+        // Route::get('{preferenceList}', ['uses' => 'PreferencesController@showList', 'as' => 'show-list'])->where('preferenceList', ',+');
+        Route::get('{preferenceList}', ['uses' => 'PreferencesController@showList', 'as' => 'show']);
+//        Route::put('{preferenceName}', ['uses' => 'PreferencesController@update', 'as' => 'update']);
+    }
+);
+
 // Webhook API routes:
 Route::group(
     [

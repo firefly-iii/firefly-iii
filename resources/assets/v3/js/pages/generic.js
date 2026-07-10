@@ -25,7 +25,7 @@ import dates from './shared/dates.js';
 let index = function () {
     return {
         init() {
-            console.log('Generic JS for page with few features.');
+            // console.log('Generic JS for page with few features.');
         }
     }
 };
@@ -38,22 +38,22 @@ const comps = {
 };
 
 function loadPage(comps) {
-    console.log('loadPage');
+    // console.log('loadPage');
     Object.keys(comps).forEach(comp => {
         let data = comps[comp]();
         Alpine.data(comp, () => data);
-        console.log(comp);
+        // console.log(comp);
     });
     Alpine.start();
 }
 
 // wait for load until bootstrapped event is received.
 document.addEventListener('firefly-iii-bootstrapped', () => {
-    console.log('Loaded through event listener.');
+    // console.log('Loaded through event listener.');
     loadPage(comps);
 });
 // or is bootstrapped before event is triggered.
 if (window.bootstrapped) {
-    console.log('Loaded through window variable.');
+    // console.log('Loaded through window variable.');
     loadPage(comps);
 }
