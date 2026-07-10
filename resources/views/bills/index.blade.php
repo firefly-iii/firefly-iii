@@ -7,11 +7,8 @@
         <x-empty-page :route="route('subscriptions.create')" type="bills" object-type="default" />
     @endif
     @if($total > 0)
-
-
-                        <x-lists.subscriptions :bills="$bills" :sums="$sums" :totals="$totals" />
-
-@endif
+        <x-lists.subscriptions :bills="$bills" :sums="$sums" :totals="$totals" :today="$today" />
+   @endif
 @endsection
 @section('scripts')
     @vite(['js/pages/generic.js'])
