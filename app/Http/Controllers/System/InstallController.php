@@ -32,6 +32,7 @@ use FireflyIII\Support\Facades\Preferences;
 use FireflyIII\Support\Http\Controllers\GetConfigurationData;
 use FireflyIII\Support\System\IsOldVersion;
 use Illuminate\Contracts\View\Factory;
+use Illuminate\Contracts\View\View;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
@@ -40,7 +41,6 @@ use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Log;
 use Laravel\Passport\Passport;
 use phpseclib3\Crypt\RSA;
-use Illuminate\Contracts\View\View;
 
 use function Safe\file_put_contents;
 
