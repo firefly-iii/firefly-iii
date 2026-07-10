@@ -162,7 +162,7 @@
         </td>
     </tr>
     @endforeach
-    @foreach($sums[$objectGroupOrder] as $sum)
+    @foreach(($sums[$objectGroupOrder] ?? []) as $sum)
         @if('0' !== $sum['avg'])
     <tr>
         <td class="hidden-sm hidden-xs" colspan="2">&nbsp;</td> <!-- handle -->
