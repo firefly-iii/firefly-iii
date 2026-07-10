@@ -48,13 +48,13 @@ class TransactionGroupEventObjects
 
     public function appendFromTransactionGroup(TransactionGroup $transactionGroup): void
     {
-        //Log::debug(sprintf('Appended transaction group #%d', $transactionGroup->id));
+        // Log::debug(sprintf('Appended transaction group #%d', $transactionGroup->id));
         $this->transactionGroups->push($transactionGroup);
 
         /** @var TransactionJournal $journal */
         foreach ($transactionGroup->transactionJournals as $journal) {
             $journal->refresh();
-            //Log::debug(sprintf('Appended transaction journal #%d (%s)', $journal->id, $journal->date->format('Y-m-d H:i:s')));
+            // Log::debug(sprintf('Appended transaction journal #%d (%s)', $journal->id, $journal->date->format('Y-m-d H:i:s')));
             $this->transactionJournals->put($journal->id, $journal);
             $this->budgets    = $this->budgets->merge($journal->budgets);
             $this->categories = $this->categories->merge($journal->categories);
