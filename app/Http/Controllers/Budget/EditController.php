@@ -73,7 +73,7 @@ final class EditController extends Controller
     {
         $subTitle          = (string) trans('firefly.edit_budget', ['name' => $budget->name]);
         $autoBudget        = $this->repository->getAutoBudget($budget);
-        $preFilled = [];
+        $preFilled         = [];
 
         // auto budget types
         $autoBudgetTypes   = [
@@ -116,7 +116,7 @@ final class EditController extends Controller
 
         return view('budgets.edit', [
             'budget'            => $budget,
-            'preFilled'        => $preFilled,
+            'preFilled'         => $preFilled,
             'subTitle'          => $subTitle,
             'autoBudgetTypes'   => $autoBudgetTypes,
             'autoBudgetPeriods' => $autoBudgetPeriods,
