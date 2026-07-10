@@ -104,7 +104,7 @@ final class PreferencesController extends Controller
         $names   = implode(',', $preferenceList->pluck('name')->toArray());
 
         // make paginator:
-        $paginator = new LengthAwarePaginator($preferenceList, $count, 31337, 1);
+        $paginator = new LengthAwarePaginator($preferenceList, $count, 31_337, 1);
         $paginator->setPath(route('api.v1.preferences-list.show', [$names]) . $this->buildParams());
 
         /** @var PreferenceTransformer $transformer */

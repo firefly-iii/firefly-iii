@@ -70,11 +70,6 @@ final class InstallController extends Controller
         'firefly-iii:verify-security-alerts' => [],
     ];
 
-    /**
-     * Show index.
-     *
-     * @return Factory|View
-     */
     public function index(): Factory|\Illuminate\Contracts\View\View|RedirectResponse
     {
         Log::debug('Now in installer index.');
