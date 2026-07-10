@@ -2,7 +2,7 @@
 @section('content')
 
     {{-- upper show-all instruction --}}
-    @if(count($periods) > 0)
+    @if(is_countable($periods) && count($periods) > 0)
         <div class="row">
             {{-- for withdrawals, deposits and transfers --}}
             <div class="col-lg-4 col-md-6 col-sm-12 col-xs-12">
@@ -62,7 +62,7 @@
 
     {{-- list with journals --}}
     <div class="row">
-        <div class="@if(count($periods) > 0) col-lg-10 col-md-10 col-sm-12 @else col-lg-12 col-md-12 col-sm-12 @endif">
+        <div class="@if(is_countable($periods) && count($periods) > 0) col-lg-10 col-md-10 col-sm-12 @else col-lg-12 col-md-12 col-sm-12 @endif">
             <div class="card mb-2">
                 <x-elements.card-header-with-menu :cardTitle="$subTitle" :route="route('transactions.create', [$objectType])" :linkTitle="__('firefly.create_new_transaction')" />
                 <div class="card-body p-0">
@@ -70,7 +70,7 @@
                 </div>
                 <div class="card-footer">
                     {{-- links for other views --}}
-                    @if(count($periods) > 0)
+                    @if(is_countable($periods) && count($periods) > 0)
                         <p>
                             <span class="bi bi-calendar"></span>
                             <a href="{{ route('transactions.index.all', [$objectType]) }}">{{ __('firefly.show_all_no_filter') }}</a>
@@ -86,7 +86,7 @@
         </div>
 
         {{-- boxes with info --}}
-        @if(count($periods) > 0)
+        @if(is_countable($periods) && count($periods) > 0)
             <div class="col-lg-2 col-md-2 col-sm-12 col-xs-12">
                 <x-lists.periods :periods="$periods" />
             </div>
@@ -95,7 +95,7 @@
     </div>
 
     {{-- lower show-all instruction  --}}
-    @if(count($periods) > 0)
+    @if(is_countable($periods) && count($periods) > 0)
         <div class="row">
             <div class="offset-lg-10 col-lg-2 offset-md-10 col-md-2 col-sm-12 col-xs-12">
                 <p class="small text-center"><a href="{{ route('transactions.index.all', [$objectType]) }}">{{ __('firefly.showEverything') }}</a></p>
@@ -108,7 +108,7 @@
     @vite(['js/pages/generic.js'])
     {{--  required for groups.twig --}}
     <script type="text/javascript" nonce="{{ $JS_NONCE }}">
-        var showAll = @if(count($periods) > 0) false @else true @endif;
+        var showAll = @if(is_countable($periods) && count($periods) > 0) false @else true @endif;
         var cloneGroupUrl = '{{ route('transactions.clone') }}';
         var cloneAndEditUrl = '{{ route('transactions.clone') }}?redirect=edit';
         var categoryChartUrl = '{{ route('chart.transactions.categories', [$objectType, $start->format('Y-m-d'), $end->format('Y-m-d')]) }}';
