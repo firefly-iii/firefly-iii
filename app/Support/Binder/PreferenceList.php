@@ -23,8 +23,6 @@ declare(strict_types=1);
 
 namespace FireflyIII\Support\Binder;
 
-use FireflyIII\Models\Tag;
-use FireflyIII\Repositories\Tag\TagRepositoryInterface;
 use FireflyIII\Support\Facades\Preferences;
 use Illuminate\Routing\Route;
 use Illuminate\Support\Collection;
@@ -48,17 +46,18 @@ class PreferenceList implements BinderInterface
                 throw new NotFoundHttpException();
             }
 
-            $list       = array_unique(explode(',', $value));
+            $list   = array_unique(explode(',', $value));
             Log::debug('List of preferences is', $list);
-            $result = new Collection;
-            foreach($list as $item) {
+            $result = new Collection();
+            foreach ($list as $item) {
                 $current = Preferences::get($item);
-                if(null !== $current) {
+                if (null !== $current) {
                     Log::debug(sprintf('Add %s to the result', $item));
                     $result->push($current);
                 }
             }
             Log::debug('List of preferences is', $result->toArray());
+
             return $result;
         }
         Log::error('PreferenceList: user is not logged in.');

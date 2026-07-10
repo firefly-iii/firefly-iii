@@ -68,6 +68,7 @@ class Installer
         // or when old firefly version
         if ($this->hasNoTables() || $this->isOldVersionInstalled()) {
             Log::debug('Will redirect to installer.');
+
             return response()->redirectTo(route('installer.index'));
         }
         OAuthKeys::verifyKeysRoutine();

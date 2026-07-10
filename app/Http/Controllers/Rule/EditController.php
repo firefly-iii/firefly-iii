@@ -198,12 +198,12 @@ final class EditController extends Controller
         foreach ($submittedOperators as $operator) {
             try {
                 $renderedEntries[] = view('rules.partials.trigger', [
-                    'oldTrigger' => OperatorQuerySearch::getRootOperator($operator['type']),
-                    'oldValue'   => $operator['value'],
-                    'oldChecked' => false,
+                    'oldTrigger'    => OperatorQuerySearch::getRootOperator($operator['type']),
+                    'oldValue'      => $operator['value'],
+                    'oldChecked'    => false,
                     'oldProhibited' => null,
-                    'count'      => $index + 1,
-                    'triggers'   => $triggers,
+                    'count'         => $index + 1,
+                    'triggers'      => $triggers,
                 ])->render();
             } catch (Throwable $e) {
                 $message = sprintf('Throwable was thrown in getPreviousTriggers(): %s', $e->getMessage());
