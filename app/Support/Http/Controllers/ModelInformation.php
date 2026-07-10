@@ -127,12 +127,12 @@ trait ModelInformation
         foreach ($billTriggers as $index => $trigger) {
             try {
                 $string = view('rules.partials.trigger', [
-                    'oldTrigger' => $trigger,
-                    'oldValue'   => $values[$index],
+                    'oldTrigger'    => $trigger,
+                    'oldValue'      => $values[$index],
                     'oldProhibited' => null,
-                    'oldChecked' => false,
-                    'count'      => $index + 1,
-                    'triggers'   => $triggers,
+                    'oldChecked'    => false,
+                    'count'         => $index + 1,
+                    'triggers'      => $triggers,
                 ])->render();
             } catch (Throwable $e) {
                 Log::debug(sprintf('Throwable was thrown in getTriggersForBill(): %s', $e->getMessage()));
@@ -243,12 +243,12 @@ trait ModelInformation
         foreach ($journalTriggers as $ii => $trigger) {
             try {
                 $renderInfo = [
-                    'oldTrigger' => $trigger,
-                    'oldValue'   => $values[$ii],
+                    'oldTrigger'    => $trigger,
+                    'oldValue'      => $values[$ii],
                     'oldProhibited' => null,
-                    'oldChecked' => false,
-                    'count'      => $ii + 1,
-                    'triggers'   => $triggers,
+                    'oldChecked'    => false,
+                    'count'         => $ii + 1,
+                    'triggers'      => $triggers,
                 ];
                 $string     = view('rules.partials.trigger', $renderInfo)->render();
             } catch (Throwable $e) {

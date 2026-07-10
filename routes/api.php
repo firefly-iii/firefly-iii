@@ -829,11 +829,11 @@ Route::group(
         'as'        => 'api.v1.preferences-list.',
     ],
     static function (): void {
-//        Route::get('', ['uses' => 'PreferencesController@index', 'as' => 'index']);
-//        Route::post('', ['uses' => 'PreferencesController@store', 'as' => 'store']);
+        //        Route::get('', ['uses' => 'PreferencesController@index', 'as' => 'index']);
+        //        Route::post('', ['uses' => 'PreferencesController@store', 'as' => 'store']);
         // Route::get('{preferenceList}', ['uses' => 'PreferencesController@showList', 'as' => 'show-list'])->where('preferenceList', ',+');
         Route::get('{preferenceList}', ['uses' => 'PreferencesController@showList', 'as' => 'show']);
-//        Route::put('{preferenceName}', ['uses' => 'PreferencesController@update', 'as' => 'update']);
+        //        Route::put('{preferenceName}', ['uses' => 'PreferencesController@update', 'as' => 'update']);
     }
 );
 
