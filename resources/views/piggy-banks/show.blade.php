@@ -131,7 +131,7 @@
                     <div class="card-header">
                         <h3 class="card-title">{{ trans('form.notes') }}</h3>
                     </div>
-                    <div class="box-body markdown">{{ parse_markdown($piggy['notes']) }}
+                    <div class="box-body markdown">{!! parse_markdown($piggy['notes']) !!}
                     </div>
                 </div>
 

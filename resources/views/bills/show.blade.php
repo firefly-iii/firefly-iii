@@ -134,7 +134,7 @@
                         <h3 class="card-title">{{ __('firefly.notes') }}</h3>
                     </div>
                     <div class="card-body">
-                        {{parse_markdown($object['data']['notes']) }}
+                        {!! parse_markdown($object['data']['notes']) !!}
                     </div>
                 </div>
             @endif

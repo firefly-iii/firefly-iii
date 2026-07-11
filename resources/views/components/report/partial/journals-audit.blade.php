@@ -127,7 +127,7 @@
             {{ $journal['updated_at']->isoFormat($dateTimeFormat) }}
         </td>
         <td class="hide-notes">
-            {{ parse_markdown($journal['notes'] ?? '') }}
+            {!! parse_markdown($journal['notes'] ?? '') !!}
         </td>
 
         <!-- more new dates -->
