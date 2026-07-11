@@ -193,6 +193,7 @@ final class ShowController extends Controller
             'limits'      => $limits,
             'attachments' => $attachments,
             'budget'      => $budget,
+            'budgetLimit' => null,
             'repetition'  => $repetition,
             'groups'      => $groups,
             'subTitle'    => $subTitle,
