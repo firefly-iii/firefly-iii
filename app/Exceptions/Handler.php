@@ -241,21 +241,21 @@ class Handler extends ExceptionHandler
         }
 
         // remove sensitive info from POST.
-        $post = '';
-        if('PUT' === request()->method() || 'POST' === request()->method()) {
+        $post            = '';
+        if ('PUT' === request()->method() || 'POST' === request()->method()) {
             $sensitive = ['password', 'password_confirmation', 'secret', 'token', 'api_key', 'client_secret'];
             // @mago-expect lint:no-request-all
-            $content = request()->all();
+            $content   = request()->all();
             foreach ($sensitive as $field) {
                 if (array_key_exists($field, $content)) {
                     $content[$field] = '(removed)';
                 }
             }
-            $post = json_encode($content);
+            $post      = json_encode($content);
         }
 
         // remove specific headers
-        $headers = request()->headers->all();
+        $headers         = request()->headers->all();
         unset($headers['authorization'], $headers['cookie'], $headers['x-csrf-token']);
 
         $data            = [
