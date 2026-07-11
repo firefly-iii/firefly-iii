@@ -4,21 +4,10 @@
         <x-empty-page :route="route('piggy-banks.create')" type="piggies" object-type="default" />
     @endif
     @if(count($piggyBanks) > 0)
+        <x-lists.piggy-banks :piggyBanks="$piggyBanks" />
         <div class="row">
             <div class="col-lg-12 col-md-12 col-sm-12">
-                <div class="card mb-3">
-                    <x-elements.card-header-with-menu :cardTitle="__('firefly.piggyBanks')" :route="route('piggy-banks.create')" :linkTitle="__('firefly.create_new_piggy_bank')" />
-                    <div class="card-body p-0">
-                        <x-lists.piggy-banks :piggyBanks="$piggyBanks" />
-                    </div>
-                    <x-elements.card-footer-with-menu :route="route('piggy-banks.create')" :linkTitle="__('firefly.create_new_piggy_bank')" />
-                </div>
-            </div>
-        </div>
-
-        <div class="row">
-            <div class="col-lg-12 col-md-12 col-sm-12">
-                <div class="card mb-3">
+                <div class="card mb-2">
                     <div class="card-header">
                         <h3 class="card-title">{{ __('firefly.account_status') }}</h3>
                     </div>

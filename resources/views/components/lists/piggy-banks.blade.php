@@ -1,19 +1,25 @@
+
 @foreach($piggyBanks as $objectGroupOrder => $objectGroup)
-    <h5 class="m-3">{{ $objectGroup['object_group_title'] }}</h5>
+    <div class="row">
+        <div class="col-lg-12 col-md-12 col-sm-12">
+            <div class="card mb-2">
+                <x-elements.card-header-with-menu :cardTitle="$objectGroup['object_group_title']" :route="route('piggy-banks.create')" :linkTitle="__('firefly.create_new_piggy_bank')" />
+                <div class="card-body p-0">
+
 <table class="table table-hover table-sm table-sm" id="piggy-sortable">
     <thead>
     <tr>
-        <th style="width:50px;" class="d-none d-md-table-cell">&nbsp;</th>
-        <th class="d-table-cell d-md-none"></th>
-        <th style="width:50px;"></th>
-        <th style="width:30%;">{{ __('firefly.piggy_bank') }}</th>
-        <th style="width:10%;" class="text-end">{{ __('firefly.saved_so_far') }}</th>
+        <th class="w-4 d-none d-md-table-cell">&nbsp;</th>
+        <th class="w-4 d-table-cell d-md-none"></th>
+        <th class="w-4"></th>
+        <th class="w-25" style="width:30%;">{{ __('firefly.piggy_bank') }}</th>
+        <th class="w-10 text-end">{{ __('firefly.saved_so_far') }}</th>
         <th class="d-none d-md-table-cell"></th>
         <th class="d-none d-md-table-cell"></th>
         <th class="d-none d-md-table-cell"></th>
-        <th style="width:10%;" class="text-end">{{ __('firefly.target_amount') }}</th>
-        <th style="width:10%;" class="d-none d-md-table-cell text-end">{{ __('firefly.left_to_save') }}</th>
-        <th style="width:15%;" class="d-none d-md-table-cell text-end">{{ __('firefly.suggested_savings_per_month') }}</th>
+        <th class="w-10 text-end">{{ __('firefly.target_amount') }}</th>
+        <th class="w-10 d-none d-md-table-cell text-end">{{ __('firefly.left_to_save') }}</th>
+        <th class="w-15 d-none d-md-table-cell text-end">{{ __('firefly.suggested_savings_per_month') }}</th>
     </tr>
     </thead>
     @if(count($objectGroup['piggy_banks']) > 0)
@@ -142,4 +148,10 @@
     </tbody>
     @endif
 </table>
+                </div>
+                <x-elements.card-footer-with-menu :route="route('piggy-banks.create')" :linkTitle="__('firefly.create_new_piggy_bank')" />
+            </div>
+        </div>
+    </div>
+
 @endforeach
