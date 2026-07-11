@@ -48,8 +48,6 @@ $(document).ready(function () {
                             result.push(data[i].name);
                         }
                     }
-                    console.log(data);
-                    console.log(result);
                     // Process data if needed
                     return result;
                 });

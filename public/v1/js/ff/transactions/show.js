@@ -47,38 +47,101 @@ function getLinkModal(e) {
 
 function makeAutoComplete() {
 
-    // input link-journal
-    var source = new Bloodhound({
-        datumTokenizer: Bloodhound.tokenizers.obj.whitespace('name'),
-        queryTokenizer: Bloodhound.tokenizers.whitespace,
-        prefetch: {
-            url: acURL + '?uid=' + uid,
-            filter: function (list) {
-                return $.map(list, function (item) {
-                    return item;
-                });
-            }
-        },
-        remote: {
-            url: acURL + '?query=%QUERY&uid=' + uid,
-            wildcard: '%QUERY',
-            filter: function (list) {
-                return $.map(list, function (item) {
-                    return item;
-                });
-            }
-        }
+    var inputItem = document.getElementsByClassName('link-journal')[0];
+
+    inputItem.addEventListener('autocomplete', (event) => {
+        selectedJournal(event);
+        console.log('Selected value:', event);
     });
-    source.initialize();
-    $('.link-journal').typeahead({hint: true, highlight: true,}, {source: source, displayKey: 'name', autoSelect: false})
-        .on('typeahead:select', selectedJournal);
+
+    new BootstrapSimpleAutocomplete(inputItem, {
+        renderItem: function (option, query, index) {
+            const item = document.createElement('a');
+            item.className = 'dropdown-item';
+            item.innerText = option.name;
+            item.setAttribute('role', 'option');
+            item.setAttribute('aria-selected', 'false');
+            item.id = `autocomplete-item-${this.id}-${index}`;
+
+            item.addEventListener('click', () => this.selectOption(option));
+            return item;
+            // return option.name;
+            // const item = document.createElement('a');
+            // item.className = 'dropdown-item';
+            // item.setAttribute('role', 'option');
+            // item.setAttribute('aria-selected', 'false');
+            // item.id = `autocomplete-item-${this.id}-${index}`;
+            //
+            // // Example: Highlight the query in the option text
+            // // const regex = new RegExp(`(${query})`, 'gi');
+            // // item.innerHTML = option.replace(regex, '<strong>$1</strong>');
+            //
+            // // item.addEventListener('click', () => this.selectOption(option));
+            // return item;
+        },
+        fetchFunction: function (query) {
+            // Custom data fetching logic
+            return fetch(acURL + '?query=' + encodeURIComponent(query),
+                {
+                    method: 'GET',
+                    credentials: 'include',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Accept': 'application/json',
+                        'X-CSRF-TOKEN': token
+                    },
+                }
+            )
+                .then((response) => response.json())
+                .then((data) => {
+                    return data;
+                    var result = [];
+                    for(var i in data) {
+                        if(data.hasOwnProperty(i)) {
+                            result.push(data[i].name);
+                        }
+                    }
+                    // Process data if needed
+                    return result;
+                });
+        },
+    });
+    //
+    //
+    //
+    // // input link-journal
+    // var source = new Bloodhound({
+    //     datumTokenizer: Bloodhound.tokenizers.obj.whitespace('name'),
+    //     queryTokenizer: Bloodhound.tokenizers.whitespace,
+    //     prefetch: {
+    //         url: acURL + '?uid=' + uid,
+    //         filter: function (list) {
+    //             return $.map(list, function (item) {
+    //                 return item;
+    //             });
+    //         }
+    //     },
+    //     remote: {
+    //         url: acURL + '?query=%QUERY&uid=' + uid,
+    //         wildcard: '%QUERY',
+    //         filter: function (list) {
+    //             return $.map(list, function (item) {
+    //                 return item;
+    //             });
+    //         }
+    //     }
+    // });
+    // source.initialize();
+    // $('.link-journal').typeahead({hint: true, highlight: true,}, {source: source, displayKey: 'name', autoSelect: false})
+    //     .on('typeahead:select', selectedJournal);
 }
 
-function selectedJournal(event, journal) {
+function selectedJournal(event) {
+    console.log(event);
     $('#journal-selector').hide();
     $('#journal-selection').show();
-    $('#selected-journal').html('<a href="' + groupURL.replace('%GROUP%', journal.transaction_group_id) + '">' + journal.description + '</a>').show();
-    $('input[name="opposing"]').val(journal.id);
+    $('#selected-journal').html('<a href="' + groupURL.replace('%GROUP%', event.detail.value.transaction_group_id) + '">' + event.detail.value.description + '</a>').show();
+    $('input[name="opposing"]').val(event.detail.value.id);
 }
 
 function cloneTransaction(e) {

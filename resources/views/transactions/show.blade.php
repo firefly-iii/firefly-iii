@@ -585,7 +585,8 @@
             return false
         }
     </script>
-    <script type="text/javascript" src="v1/js/lib/typeahead/typeahead.bundle.min.js?v={{ $FF_BUILD_TIME }}"
+    {{-- new auto complete --}}
+    <script type="text/javascript" src="v1/js/lib/bootstrap-simple-autocomplete.js?v={{ $FF_BUILD_TIME }}"
             nonce="{{ $JS_NONCE }}"></script>
     <script type="text/javascript" src="v1/js/ff/transactions/show.js?v={{ $FF_BUILD_TIME }}"
             nonce="{{ $JS_NONCE }}"></script>
