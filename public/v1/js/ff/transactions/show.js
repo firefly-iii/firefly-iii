@@ -106,34 +106,6 @@ function makeAutoComplete() {
                 });
         },
     });
-    //
-    //
-    //
-    // // input link-journal
-    // var source = new Bloodhound({
-    //     datumTokenizer: Bloodhound.tokenizers.obj.whitespace('name'),
-    //     queryTokenizer: Bloodhound.tokenizers.whitespace,
-    //     prefetch: {
-    //         url: acURL + '?uid=' + uid,
-    //         filter: function (list) {
-    //             return $.map(list, function (item) {
-    //                 return item;
-    //             });
-    //         }
-    //     },
-    //     remote: {
-    //         url: acURL + '?query=%QUERY&uid=' + uid,
-    //         wildcard: '%QUERY',
-    //         filter: function (list) {
-    //             return $.map(list, function (item) {
-    //                 return item;
-    //             });
-    //         }
-    //     }
-    // });
-    // source.initialize();
-    // $('.link-journal').typeahead({hint: true, highlight: true,}, {source: source, displayKey: 'name', autoSelect: false})
-    //     .on('typeahead:select', selectedJournal);
 }
 
 function selectedJournal(event) {

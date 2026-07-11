@@ -55,30 +55,4 @@ $(document).ready(function () {
     });
 
 
-
-
-    // var objectGroupAC = new Bloodhound({
-    //                                        datumTokenizer: Bloodhound.tokenizers.obj.whitespace('title'),
-    //                                        queryTokenizer: Bloodhound.tokenizers.whitespace,
-    //                                        prefetch: {
-    //                                            url: 'api/v1/autocomplete/object-groups?uid=' + uid,
-    //                                            filter: function (list) {
-    //                                                return $.map(list, function (obj) {
-    //                                                    return obj;
-    //                                                });
-    //                                            }
-    //                                        },
-    //                                        remote: {
-    //                                            url: 'api/v1/autocomplete/object-groups?query=%QUERY&uid=' + uid,
-    //                                            wildcard: '%QUERY',
-    //                                            filter: function (list) {
-    //                                                return $.map(list, function (obj) {
-    //                                                    return obj;
-    //                                                });
-    //                                            }
-    //                                        }
-    //                                    });
-    // objectGroupAC.initialize();
-    // $('input[name="object_group"]').typeahead({hint: true, highlight: true,}, {source: objectGroupAC, displayKey: 'title', autoSelect: false});
-
 });
