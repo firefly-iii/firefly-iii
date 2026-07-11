@@ -119,44 +119,40 @@ jobs:
         env:
           FIREFLY_III_ROOT: /github/workspace
           GH_TOKEN: ''
-      - name: Run CI
-        if: ${{ inputs.quick != true }}
+      - name: Install Composer dependencies
         run: |
           cp .env.example .env
           # install all packages etc.
           rm -rf vendor composer.lock
           composer update --no-scripts -q
-          if [[ "$quick" == true ]]; then
-            echo 'Will NOT run Mago Format, will not Lint, will not run PHPStan'
-          fi
+          rm .env
+      - name: Run CI
+        if: ${{ inputs.quick != true }}
+        run: |
+          cp .env.example .env
+          # format code.
+          echo "Will now run Mago Format"
+          ./vendor/bin/mago format
+          sudo chown -R runner:docker resources/lang
+          echo "Will now run PHPCS"
+          .ci/phpcs.sh
 
-          if [[ "$quick" == false ]]; then
-            # format code.
-            echo "Will now run Mago Format"
-            ./vendor/bin/mago format
-            sudo chown -R runner:docker resources/lang
-            echo "Will now run PHPCS"
-            .ci/phpcs.sh
-
-            # lint and check
-            echo "Will now run Mago Lint"
-            ./vendor/bin/mago lint
-            echo "Will now run PHPstan"
-            .ci/phpstan.sh
-            rm .env
-          fi
+          # lint and check
+          echo "Will now run Mago Lint"
+          ./vendor/bin/mago lint
+          echo "Will now run PHPstan"
+          .ci/phpstan.sh
+          rm .env
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           quick: ${{ inputs.quick || false }}
       - name: Lint Blade templates
         if: ${{ inputs.quick != true }}
         run: |
-          if [[ "$quick" == false ]]; then
-            echo "Will now run Blade linter"
-            cp .env.example .env
-            php artisan blade:lint
-            rm .env
-          fi
+          echo "Will now run Blade linter"
+          cp .env.example .env
+          php artisan blade:lint
+          rm .env
         env:
           quick: ${{ inputs.quick || false }}
       - name: Crowdin action
