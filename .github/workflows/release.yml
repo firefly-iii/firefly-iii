@@ -8,9 +8,10 @@ on:
         required: true
         default: 'develop'
       quick:
-        description: 'Skip most checks. true or false'
+        type: boolean
+        description: 'Quick run'
         required: true
-        default: 'false'
+        default: false
       phpversion:
         description: 'PHP version'
         required: true
@@ -35,7 +36,7 @@ jobs:
 
         env:
           version: ${{ github.event_name == 'schedule' && 'develop' || inputs.version }}
-          quick: ${{ inputs.quick || 'false' }}
+          quick: ${{ inputs.quick || false }}
       - name: Checkout
         uses: actions/checkout@v7
         with:
@@ -79,8 +80,13 @@ jobs:
           php-version: ${{ github.event.inputs.phpversion || '8.5' }}
           extensions: mbstring, intl, zip, bcmath
       - name: Lint PHP
+        if: ${{ inputs.quick != true }}
         run: |
-          if [[ "$quick" == "false" ]]; then
+          if [[ "$quick" == true ]]; then
+            echo "Will NOT run PHP lint"
+          fi
+          if [[ "$quick" == false ]]; then
+            echo "Will run PHP lint!"
             php_lint_file()
             {
                 local php_file="$1"
@@ -102,9 +108,10 @@ jobs:
             fi
           fi
         env:
-          quick: ${{ inputs.quick || 'false' }}
+          quick: ${{ inputs.quick || false }}
       - name: Code cleanup
         id: code-cleanup
+        if: ${{ inputs.quick != true }}
         uses: JC5/firefly-iii-dev@main
         with:
           action: 'ff3:code'
@@ -113,13 +120,17 @@ jobs:
           FIREFLY_III_ROOT: /github/workspace
           GH_TOKEN: ''
       - name: Run CI
+        if: ${{ inputs.quick != true }}
         run: |
           cp .env.example .env
           # install all packages etc.
           rm -rf vendor composer.lock
           composer update --no-scripts -q
+          if [[ "$quick" == true ]]; then
+            echo 'Will NOT run Mago Format, will not Lint, will not run PHPStan'
+          fi
 
-          if [[ "$quick" == "false" ]]; then
+          if [[ "$quick" == false ]]; then
             # format code.
             echo "Will now run Mago Format"
             ./vendor/bin/mago format
@@ -136,18 +147,20 @@ jobs:
           fi
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          quick: ${{ inputs.quick || 'false' }}
+          quick: ${{ inputs.quick || false }}
       - name: Lint Blade templates
+        if: ${{ inputs.quick != true }}
         run: |
-          if [[ "$quick" == "false" ]]; then
+          if [[ "$quick" == false ]]; then
             echo "Will now run Blade linter"
             cp .env.example .env
             php artisan blade:lint
             rm .env
           fi
         env:
-          quick: ${{ inputs.quick || 'false' }}
+          quick: ${{ inputs.quick || false }}
       - name: Crowdin action
+        if: ${{ inputs.quick != true }}
         uses: crowdin/github-action@v2
         with:
           upload_sources: true
@@ -174,6 +187,7 @@ jobs:
           npm run build --workspace=v3 --verbose
           npm update
       - name: Cleanup changelog
+        if: ${{ inputs.quick != true }}
         id: cleanup-changelog
         uses: JC5/firefly-iii-dev@main
         with:
@@ -183,6 +197,7 @@ jobs:
           FIREFLY_III_ROOT: /github/workspace
           GH_TOKEN: ${{ secrets.CHANGELOG_TOKEN }}
       - name: "Create THANKS.md"
+        if: ${{ inputs.quick != true }}
         id: thank-you
         uses: JC5/firefly-iii-dev@main
         with:
