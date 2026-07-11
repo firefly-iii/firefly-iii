@@ -181,6 +181,7 @@ final class IndexController extends Controller
             'subTitle'     => $subTitle,
             'objectType'   => $objectType,
             'subTitleIcon' => $subTitleIcon,
+            'periods'      => [],
             'groups'       => $groups,
             'start'        => $start,
             'end'          => $end,
