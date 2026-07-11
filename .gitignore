@@ -8,6 +8,7 @@ yarn-error.log
 /.ci/php-cs-fixer/vendor
 coverage.xml
 output.txt
+*.LICENSE.txt
 
 # ignore generated files.
 public/build
@@ -15,6 +16,8 @@ public/build
 # ignore v1 build files
 resources/assets/v1/node_modules
 resources/assets/v1/build
+
+public/v1/js/js/*.js
 public/v1/js/app.js*
 public/v1/js/app_vue.js*
 public/v1/js/create*
