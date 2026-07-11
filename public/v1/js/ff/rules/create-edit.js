@@ -413,8 +413,9 @@ function updateTriggerInput(selectList) {
  * @param URL
  */
 function createAutoComplete(input, URL) {
-    console.log('Now in createAutoComplete("' + URL + '").');
-    input.typeahead('destroy');
+
+    //console.log('The name is ',inputResult.prop('name'));
+    var inputItem = document.getElementsByName(input.prop('name'))[0];
 
     // append URL:
     var lastChar      = URL[URL.length - 1];
@@ -422,47 +423,92 @@ function createAutoComplete(input, URL) {
     if ('&' === lastChar) {
         urlParamSplit = '';
     }
-    var source = new Bloodhound({
-                                    datumTokenizer: Bloodhound.tokenizers.obj.whitespace('name'),
-                                    queryTokenizer: Bloodhound.tokenizers.whitespace,
-                                    prefetch: {
-                                        url: URL + urlParamSplit + 'uid=' + uid,
-                                        filter: function (list) {
-                                            return $.map(list, function (item) {
-                                                if (item.hasOwnProperty('active') && item.active === true) {
-                                                    return {name: item.name};
-                                                }
-                                                if (item.hasOwnProperty('active') && item.active === false) {
-                                                    return;
-                                                }
-                                                if (item.hasOwnProperty('active')) {
-                                                    console.log(item.active);
-                                                }
-                                                return {name: item.name};
-                                            });
-                                        }
-                                    },
-                                    remote: {
-                                        url: URL + urlParamSplit + 'query=%QUERY&uid=' + uid,
-                                        wildcard: '%QUERY',
-                                        filter: function (list) {
-                                            return $.map(list, function (item) {
-                                                if (item.hasOwnProperty('active') && item.active === true) {
-                                                    return {name: item.name};
-                                                }
-                                                if (item.hasOwnProperty('active') && item.active === false) {
-                                                    return;
-                                                }
-                                                if (item.hasOwnProperty('active')) {
-                                                    console.log(item.active);
-                                                }
-                                                return {name: item.name};
-                                            });
-                                        }
-                                    }
-                                });
-    source.initialize();
-    input.typeahead({hint: true, highlight: true,}, {source: source, displayKey: 'name', autoSelect: false});
+
+    var finalURL = URL + urlParamSplit + 'query=';
+
+    new BootstrapSimpleAutocomplete(inputItem, {
+        fetchFunction: function (query) {
+            // Custom data fetching logic
+            return fetch(finalURL + encodeURIComponent(query),
+                {
+                    method: 'GET',
+                    credentials: 'include',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Accept': 'application/json',
+                        'X-CSRF-TOKEN': token
+                    },
+                }
+            )
+                .then((response) => response.json())
+                .then((data) => {
+                    var result = [];
+                    for(var i in data) {
+                        if(data.hasOwnProperty(i)) {
+                            result.push(data[i].name);
+                        }
+                    }
+                    console.log(data);
+                    console.log(result);
+                    // Process data if needed
+                    return result;
+                });
+        },
+    });
+    // return;
+    //
+    //
+    //
+    // console.log('Now in createAutoComplete("' + URL + '").');
+    // input.typeahead('destroy');
+    //
+    // // append URL:
+    // var lastChar      = URL[URL.length - 1];
+    // var urlParamSplit = '?';
+    // if ('&' === lastChar) {
+    //     urlParamSplit = '';
+    // }
+    // var source = new Bloodhound({
+    //                                 datumTokenizer: Bloodhound.tokenizers.obj.whitespace('name'),
+    //                                 queryTokenizer: Bloodhound.tokenizers.whitespace,
+    //                                 prefetch: {
+    //                                     url: URL + urlParamSplit + 'uid=' + uid,
+    //                                     filter: function (list) {
+    //                                         return $.map(list, function (item) {
+    //                                             if (item.hasOwnProperty('active') && item.active === true) {
+    //                                                 return {name: item.name};
+    //                                             }
+    //                                             if (item.hasOwnProperty('active') && item.active === false) {
+    //                                                 return;
+    //                                             }
+    //                                             if (item.hasOwnProperty('active')) {
+    //                                                 console.log(item.active);
+    //                                             }
+    //                                             return {name: item.name};
+    //                                         });
+    //                                     }
+    //                                 },
+    //                                 remote: {
+    //                                     url: URL + urlParamSplit + 'query=%QUERY&uid=' + uid,
+    //                                     wildcard: '%QUERY',
+    //                                     filter: function (list) {
+    //                                         return $.map(list, function (item) {
+    //                                             if (item.hasOwnProperty('active') && item.active === true) {
+    //                                                 return {name: item.name};
+    //                                             }
+    //                                             if (item.hasOwnProperty('active') && item.active === false) {
+    //                                                 return;
+    //                                             }
+    //                                             if (item.hasOwnProperty('active')) {
+    //                                                 console.log(item.active);
+    //                                             }
+    //                                             return {name: item.name};
+    //                                         });
+    //                                     }
+    //                                 }
+    //                             });
+    // source.initialize();
+    // input.typeahead({hint: true, highlight: true,}, {source: source, displayKey: 'name', autoSelect: false});
 }
 
 function testRuleTriggers() {

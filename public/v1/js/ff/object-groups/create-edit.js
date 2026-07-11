@@ -22,31 +22,65 @@
 
 $(document).ready(function () {
     "use strict";
-
     // auto complete for object group.
     console.log('Object group auto complete thing.');
-    var objectGroupAC = new Bloodhound({
-                                           datumTokenizer: Bloodhound.tokenizers.obj.whitespace('title'),
-                                           queryTokenizer: Bloodhound.tokenizers.whitespace,
-                                           prefetch: {
-                                               url: 'api/v1/autocomplete/object-groups?uid=' + uid,
-                                               filter: function (list) {
-                                                   return $.map(list, function (obj) {
-                                                       return obj;
-                                                   });
-                                               }
-                                           },
-                                           remote: {
-                                               url: 'api/v1/autocomplete/object-groups?query=%QUERY&uid=' + uid,
-                                               wildcard: '%QUERY',
-                                               filter: function (list) {
-                                                   return $.map(list, function (obj) {
-                                                       return obj;
-                                                   });
-                                               }
-                                           }
-                                       });
-    objectGroupAC.initialize();
-    $('input[name="object_group"]').typeahead({hint: true, highlight: true,}, {source: objectGroupAC, displayKey: 'title', autoSelect: false});
+
+    var inputElement = document.getElementById('ffInput_object_group');
+    new BootstrapSimpleAutocomplete(inputElement, {
+        fetchFunction: function (query) {
+            // Custom data fetching logic
+            return fetch('api/v1/autocomplete/object-groups?_token=' + token + 'query=' + encodeURIComponent(query),
+                {
+                    method: 'GET',
+                    credentials: 'include',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Accept': 'application/json',
+                        'X-CSRF-TOKEN': token
+                    },
+                }
+            )
+                .then((response) => response.json())
+                .then((data) => {
+                    var result = [];
+                    for(var i in data) {
+                        if(data.hasOwnProperty(i)) {
+                            result.push(data[i].name);
+                        }
+                    }
+                    console.log(data);
+                    console.log(result);
+                    // Process data if needed
+                    return result;
+                });
+        },
+    });
+
+
+
+
+    // var objectGroupAC = new Bloodhound({
+    //                                        datumTokenizer: Bloodhound.tokenizers.obj.whitespace('title'),
+    //                                        queryTokenizer: Bloodhound.tokenizers.whitespace,
+    //                                        prefetch: {
+    //                                            url: 'api/v1/autocomplete/object-groups?uid=' + uid,
+    //                                            filter: function (list) {
+    //                                                return $.map(list, function (obj) {
+    //                                                    return obj;
+    //                                                });
+    //                                            }
+    //                                        },
+    //                                        remote: {
+    //                                            url: 'api/v1/autocomplete/object-groups?query=%QUERY&uid=' + uid,
+    //                                            wildcard: '%QUERY',
+    //                                            filter: function (list) {
+    //                                                return $.map(list, function (obj) {
+    //                                                    return obj;
+    //                                                });
+    //                                            }
+    //                                        }
+    //                                    });
+    // objectGroupAC.initialize();
+    // $('input[name="object_group"]').typeahead({hint: true, highlight: true,}, {source: objectGroupAC, displayKey: 'title', autoSelect: false});
 
 });
