@@ -61,6 +61,11 @@ $success: #64B624;
 body.waiting * {
     cursor: progress;
 }
+
+.money-neutral {
+    color: #999;
+}
+
 /* some borders and lines */
 .top-light-border {border-top:1px #aaa solid;}
 .top-dark-border {border-top:1px #777 solid;}

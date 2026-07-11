@@ -301,8 +301,9 @@ if (!function_exists('get_app_configuration')) {
 }
 
 if (!function_exists('format_amount_by_symbol')) {
-    function format_amount_by_symbol(string $amount, ?string $symbol = null, ?int $decimalPlaces = null, ?bool $coloured = null): string
+    function format_amount_by_symbol(string|null $amount, ?string $symbol = null, ?int $decimalPlaces = null, ?bool $coloured = null): string
     {
+        $amount = null === $amount ? '0' : $amount;
         return Steam::formatAmountBySymbol($amount, $symbol, $decimalPlaces, $coloured);
     }
 }
