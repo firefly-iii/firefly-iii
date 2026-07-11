@@ -119,8 +119,8 @@
                                         <span class="available_amount" data-id="{{ $budget['id'] }}" data-currency="{{ $budget['transaction_currency']['id'] }}"
                                               data-value="{{ $budget['amount'] }}">
                                             {!! format_amount_by_symbol($budget['amount'], $budget['transaction_currency']['symbol'], $budget['transaction_currency']['decimal_places'], true) !!}
-                                        @if($convertToPrimary && 0 !== $budget->pc_amount)
-                                                ({!!  format_amount_by_symbol($budget->pc_amount, $primaryCurrency->symbol, $primaryCurrency->decimal_places, true)  !!})
+                                        @if($convertToPrimary && array_key_exists('pc_amount', $budget) && 0 !== $budget['pc_amount'])
+                                                ({!!  format_amount_by_symbol($budget['pc_amount'], $primaryCurrency->symbol, $primaryCurrency->decimal_places, true)  !!})
                                             @endif
                                         </span>
                                     </small>

@@ -1,4 +1,5 @@
 @foreach($bills as $objectGroupOrder => $objectGroup)
+    @if(count($objectGroup['bills']) > 0)
     <div class="row">
         <div class="col-lg-12 col-sm-12 col-md-12">
             <div class="card mb-2">
@@ -230,7 +231,8 @@
             </div>
         </div>
     </div>
-@endforeach
+@endif
+    @endforeach
 
 @if(count($totals) > 0)
 
