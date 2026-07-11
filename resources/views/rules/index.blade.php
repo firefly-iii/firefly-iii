@@ -111,7 +111,7 @@
                                                         text-muted
                                                    @endif
                                                    "
-                                                ><br/>{{ parse_markdown($rule->description) }}</small>
+                                                ><br/>{!! parse_markdown($rule->description) !!}</small>
                                                @endif
                                             <small>(@if($rule->strict)<span class="text-danger">{{ __('firefly.rule_is_strict') }}</span>@else<span class="text-success">{{ __('firefly.rule_is_not_strict') }}</span>@endif&ZeroWidthSpace;)</small>
                                         </td>
