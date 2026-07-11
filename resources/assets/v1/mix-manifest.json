@@ -67,7 +67,6 @@
     "/public/v1/js/ff/tags/create-edit.js": "/public/v1/js/ff/tags/create-edit.js",
     "/public/v1/js/ff/tags/index.js": "/public/v1/js/ff/tags/index.js",
     "/public/v1/js/ff/tags/show.js": "/public/v1/js/ff/tags/show.js",
-    "/public/v1/js/ff/transactions/convert.js": "/public/v1/js/ff/transactions/convert.js",
     "/public/v1/js/ff/transactions/index.js": "/public/v1/js/ff/transactions/index.js",
     "/public/v1/js/ff/transactions/list.js": "/public/v1/js/ff/transactions/list.js",
     "/public/v1/js/ff/transactions/mass/edit-bulk.js": "/public/v1/js/ff/transactions/mass/edit-bulk.js",
