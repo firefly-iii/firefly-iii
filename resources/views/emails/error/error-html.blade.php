@@ -12,7 +12,7 @@
 </p>
 
 <p style="font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;font-size:13px;">
-{{ trans('email.error_location', ['file' => $file, 'line' => $line, 'code' => $code]) }}
+{!! trans('email.error_location', ['file' => $file, 'line' => $line, 'code' => $code]) !!}
 </p>
 
 <p style="font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;font-size:13px;">

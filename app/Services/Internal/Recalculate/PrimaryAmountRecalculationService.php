@@ -143,7 +143,7 @@ class PrimaryAmountRecalculationService
         TransactionObserver::$recalculate = false;
         Log::debug(sprintf('Count of set is %d', $set->count()));
         foreach ($set as $item) {
-            Log::debug(sprintf('Touch transaction #%d', $item->id));
+            //Log::debug(sprintf('Touch transaction #%d', $item->id));
 
             // here we are.
             /** @var null|Transaction $transaction */
@@ -177,7 +177,7 @@ class PrimaryAmountRecalculationService
         TransactionObserver::$recalculate = false;
         Log::debug(sprintf('Count of set is %d', $set->count()));
         foreach ($set as $item) {
-            Log::debug(sprintf('Touch transaction #%d', $item->id));
+            // Log::debug(sprintf('Touch transaction #%d', $item->id));
 
             // here we are.
             /** @var null|Transaction $transaction */
