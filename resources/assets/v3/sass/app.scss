@@ -28,6 +28,8 @@ $danger: #CD5029;
 $primary: #1E6581;
 $success: #64B624;
 
+
+
 @use "admin-lte/src/scss/adminlte" with (
      $color-mode-type: $color-mode-type,
     $link-decoration: $link-decoration,
@@ -36,7 +38,6 @@ $success: #64B624;
     $primary: $primary,
     $success: $success
 );
-
 
 @import 'shepherd.js/dist/css/shepherd.css';
 
@@ -195,6 +196,9 @@ td.thirty th.thirty {width:30%;}
 .w-98 {width:98% !important;}
 .w-99 {width:99% !important;}
 .w-100 {width:100% !important;}
+
+
+
 
 
 // @import "admin-lte/dist/css/adminlte.min.css";
