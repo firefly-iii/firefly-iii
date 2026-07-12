@@ -27,7 +27,7 @@ document.addEventListener("DOMContentLoaded", (event) => {
 function startRunningCommands(index) {
     console.log('Now in startRunningCommands with index' + index);
     if (0 === index) {
-        document.querySelector('#status-box').innerHTML = '<span class="fa fa-spin fa-spinner"></span> Running first command...';
+        document.querySelector('#status-box').innerHTML = '<span class="bi bi-hourglass"></span> Running first command...';
     }
     runCommand(index);
 }
@@ -49,7 +49,7 @@ function runCommand(index) {
                 index++;
                 if (response.hasNextCommand) {
                     // inform user
-                    document.querySelector('#status-box').innerHTML = '<span class="fa fa-spin fa-spinner"></span> Just executed ' + response.previous + '...';
+                    document.querySelector('#status-box').innerHTML = '<span class="bi bi-hourglass"></span> Just executed ' + response.previous + '...';
                     console.log('Will call next command.');
                     runCommand(index);
                 } else {
@@ -90,7 +90,7 @@ function startMigration() {
 
 function startDecryption() {
     console.log('Now in startDecryption');
-    document.querySelector('#status-box').innerHTML = '<span class="fa fa-spin fa-spinner"></span> Setting up DB #2...';
+    document.querySelector('#status-box').innerHTML = '<span class="bi bi-hourglass"></span> Setting up DB #2...';
     fetch(decryptUrl, {
         method: 'POST',
         headers: {
@@ -117,7 +117,7 @@ function startDecryption() {
  *
  */
 function startPassport() {
-    document.querySelector('#status-box').innerHTML = '<span class="fa fa-spin fa-spinner"></span> Setting up OAuth2...';
+    document.querySelector('#status-box').innerHTML = '<span class="bi bi-hourglass"></span> Setting up OAuth2...';
     fetch(keysUrl, {
         method: 'POST',
         headers: {
@@ -143,7 +143,7 @@ function startPassport() {
  *
  */
 function startUpgrade() {
-    document.querySelector('#status-box').innerHTML = '<span class="fa fa-spin fa-spinner"></span> Upgrading database...';
+    document.querySelector('#status-box').innerHTML = '<span class="bi bi-hourglass"></span> Upgrading database...';
     fetch(upgradeUrl, {
         method: 'POST',
         headers: {
@@ -168,7 +168,7 @@ function startUpgrade() {
  *
  */
 function startVerify() {
-    document.querySelector('#status-box').innerHTML = '<span class="fa fa-spin fa-spinner"></span> Verify database integrity...';
+    document.querySelector('#status-box').innerHTML = '<span class="bi bi-hourglass"></span> Verify database integrity...';
     fetch(veifyUrl, {
         method: 'POST',
         headers: {

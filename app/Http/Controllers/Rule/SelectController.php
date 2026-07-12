@@ -176,7 +176,7 @@ final class SelectController extends Controller
         $view               = 'ERROR, see logs.';
 
         try {
-            $view = view('list.journals-array-tiny', ['groups' => $collection])->render();
+            $view = view('rules.rule.triggers-by-rule', ['groups' => $collection])->render();
         } catch (Throwable $exception) {
             Log::error(sprintf('Could not render view in testTriggers(): %s', $exception->getMessage()));
             Log::error($exception->getTraceAsString());

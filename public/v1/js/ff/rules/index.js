@@ -176,7 +176,7 @@ function testRuleTriggers(e) {
         icon = $('span', obj);
     }
     // change icon:
-    icon.addClass('fa-spinner fa-spin').removeClass('fa-flask');
+    icon.addClass('bi bi-hourglass').removeClass('bi-flask');
 
     var modal = $("#testTriggerModal");
     // respond to modal:
@@ -210,7 +210,7 @@ function testRuleTriggers(e) {
 }
 
 function disableRuleSpinners() {
-    $('i.test_rule_triggers').removeClass('fa-spin fa-spinner').addClass('fa-flask');
+    $('i.test_rule_triggers').removeClass('bi bi-hourglass').addClass('bi-flask');
 }
 
 

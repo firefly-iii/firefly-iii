@@ -36,7 +36,7 @@
             </div>
         </div>
 
-        <div class="row">
+        <div class="row content">
             <div class="col-lg-12 col-md-12 col-sm-12">
                 <div class="card mb-2">
                     <div class="card-header">
@@ -62,7 +62,7 @@
                         <p>
                             <br/>
                             <a href="#" class="btn btn-outline-secondary add_rule_trigger">{{ __('firefly.add_rule_trigger') }}</a>
-                            <a href="#" class="btn btn-outline-secondary test_rule_triggers"><span
+                            <a href="#" class="btn btn-outline-secondary test_rule_triggers"  data-bs-toggle="modal" data-bs-target="#testTriggerModal"><span
                                     class="bi bi-flask"></span> {{ __('firefly.test_rule_triggers') }}</a>
                         </p>
                     </div>
@@ -70,7 +70,6 @@
             </div>
         </div>
 
-        @include('rules.partials.test-trigger-modal')
 
         <div class="row">
             <div class="col-lg-12 col-md-12 col-sm-12">
@@ -123,11 +122,12 @@
 
         </div>
     </form>
+    @vite(['js/pages/generic.js'])
 
 
 @endsection
 @section('scripts')
-    @vite(['js/pages/generic.js'])
+    @include('rules.partials.test-trigger-modal')
 
     {{-- new auto complete --}}
     <script type="text/javascript" src="v1/js/lib/bootstrap-simple-autocomplete.js?v={{ $FF_BUILD_TIME }}"

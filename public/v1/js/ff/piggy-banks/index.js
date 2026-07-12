@@ -84,7 +84,7 @@ function removeMoney(e) {
 
 function stopSorting() {
     "use strict";
-    $('.loadSpin').addClass('fa fa-refresh fa-spin');
+    $('.loadSpin').addClass('bi bi-hourglass');
 
     $.each($('#piggy-sortable>tbody>tr.piggy-sortable'), function (i, v) {
         var holder = $(v);
@@ -112,6 +112,6 @@ function stopSorting() {
 
         $.post('piggy-banks/set-order/' + id, {order: newOrder, objectGroupTitle: objectGroupTitle, _token: token})
     });
-    $('.loadSpin').removeClass('fa fa-refresh fa-spin');
+    $('.loadSpin').removeClass('bi bi-hourglass');
 
 }

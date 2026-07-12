@@ -473,12 +473,12 @@ function createAutoComplete(input, URL) {
 
 function testRuleTriggers() {
     "use strict";
-
+    console.log('testRuleTriggers');
     // find the button:
     var button = $('.test_rule_triggers');
 
     // replace with spinner. fa-spin fa-spinner
-    button.html('<span class="fa fa-spin fa-spinner"></span> ' + testRuleTriggersText);
+    button.html('<span class="bi bi-hourglass"></span> ' + testRuleTriggersText);
     button.attr('disabled', 'disabled');
 
     // Serialize all trigger data
@@ -493,7 +493,6 @@ function testRuleTriggers() {
 
         // Set title and body
         modal.find(".transactions-list").html(data.html);
-        button.attr('disabled', '');
         // Show warning if appropriate
         if (data.warning) {
             modal.find(".transaction-warning .warning-contents").text(data.warning);
@@ -501,10 +500,10 @@ function testRuleTriggers() {
         } else {
             modal.find(".transaction-warning").hide();
         }
-        button.removeAttr('disabled');
-        button.html('<span class="fa fa-flask"></span> ' + testRuleTriggersText);
+        button.html('<span class="bi bi-flask"></span> ' + testRuleTriggersText).attr('disabled', false);
         // Show the modal dialog
-        modal.modal();
+        console.log('Show modal');
+        modal.show();
     }).fail(function () {
         alert('Cannot get transactions for given triggers.');
     });

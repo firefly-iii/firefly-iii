@@ -66,7 +66,7 @@ function showHelp(e) {
     }
     console.log('route', route);
     console.log('special page', specialPage);
-    $('#helpBody').html('<span class="fa fa-refresh fa-spin"></span>');
+    $('#helpBody').html('<span class="bi bi-hourglass"></span>');
     $('#helpModal').modal('show');
     $('#helpTitle').html(helpPageTitle);
     $('#helpBody').html(helpPageBody);
