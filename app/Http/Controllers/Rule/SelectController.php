@@ -214,11 +214,8 @@ final class SelectController extends Controller
             $warning = (string) trans('firefly.warning_no_matching_transactions');
         }
 
-        // Return json response
-        $view          = 'ERROR, see logs.';
-
         try {
-            $view = view('list.journals-array-tiny', ['groups' => $collection])->render();
+            $view = view('rules.rule.triggers-by-rule', ['groups' => $collection])->render();
         } catch (Throwable $exception) {
             $message = sprintf('Could not render view in testTriggersByRule(): %s', $exception->getMessage());
             Log::error($message);
