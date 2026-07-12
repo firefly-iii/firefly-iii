@@ -96,7 +96,6 @@ return [
 
     // tokens and keys
     'fixer_api_key'                        => env('FIXER_API_KEY', ''),
-    'ipinfo_token'                         => env('IPINFO_TOKEN', ''),
     'static_cron_token'                    => env('STATIC_CRON_TOKEN'),
 
     // flags

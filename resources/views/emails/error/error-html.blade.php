@@ -24,7 +24,7 @@
 </p>
 
 <p style="font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;font-size:13px;">
-{{ trans('email.error_ip', ['ip' => $ip]) }} (<a href="https://ipinfo.io/{{ $ip }}/json?token={{ $token }}">info</a>)<br />
+{{ trans('email.error_ip', ['ip' => $ip]) }} (<a href="https://www.whatismyip.com/ip/{{ $ip }}/">info</a>)<br />
 {{ $method }} {{ trans('email.error_url', ['url' => $url]) }}<br />
 {{ trans('email.error_user_agent', ['userAgent' => $userAgent]) }}
 </p>

@@ -73,7 +73,6 @@ class MailError extends Job implements ShouldQueue
         $args['loggedIn'] = $this->userData['id'] > 0;
         $args['user']     = $this->userData;
         $args['ip']       = $this->ipAddress;
-        $args['token']    = config('firefly.ipinfo_token');
 
         // limit number of error mails that can be sent.
         if ($this->reachedLimit()) {
