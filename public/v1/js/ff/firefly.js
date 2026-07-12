@@ -58,7 +58,10 @@ $(function () {
 
     // save sidebar collapsed state when page loads.
     $('[data-lte-toggle="sidebar"]').click(function () {
-        localStorage.setItem('ff3_sidebar_collapsed', ($('body').hasClass('sidebar-collapse')));
+        var res =  !($('body').hasClass('sidebar-collapse'));
+        console.log('Click on sidebar, new setting is ', res);
+
+        localStorage.setItem('ff3_sidebar_collapsed',res);
     });
 
 
