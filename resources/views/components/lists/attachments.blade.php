@@ -24,7 +24,7 @@
                     @endif
                 </a>
                 ({{ print_nice_filesize($attachment['size']) }})
-                @if('' !== (string)$attachment['notes_text'])
+                @if(array_key_exists('notes_text', $attachment) && '' !== (string)$attachment['notes_text'])
                     {!! parse_markdown($attachment['notes_text']) !!}
                 @endif
             @endif

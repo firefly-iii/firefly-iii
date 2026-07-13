@@ -208,9 +208,9 @@
                                 <tr data-id="{{ $budget['id'] }}">
                                     <td class="hidden-sm hidden-xs">
                                         <div class="btn-group btn-group-sm">
-                                            <a href="#" class="handle object-handle btn btn-secondary"><span class="bi bi-list"></span></a>
-                                            <a href="{{ route('budgets.edit', $budget['id']) }}" class="btn btn-xs btn-primary"><span class="bi bi-pencil"></span></a>
-                                            <a href="{{ route('budgets.delete', $budget['id']) }}" class="btn btn-xs btn-danger"><span class="bi bi-trash"></span></a>
+                                            <a href="#" class="handle object-handle btn btn-outline-primary"><span class="bi bi-list"></span></a>
+                                            <a href="{{ route('budgets.edit', $budget['id']) }}" class="btn btn-outline-primary"><span class="bi bi-pencil"></span></a>
+                                            <a href="{{ route('budgets.delete', $budget['id']) }}" class="btn btn-xs btn-outline-danger"><span class="bi bi-trash"></span></a>
                                         </div>
                                     </td>
                                     <td>

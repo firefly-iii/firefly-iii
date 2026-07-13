@@ -9,6 +9,7 @@
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="mobile-web-app-capable" content="yes">
     <!--
+    (BLANK)
     If the base href URL begins with "http://" but you are sure it should start with "https://",
     please visit the following page: https://bit.ly/FF3-broken-base-href
     -->
