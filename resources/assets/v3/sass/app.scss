@@ -24,20 +24,49 @@ $color-mode-type: data;
 $link-decoration: none;
 $font-family-sans-serif: "Roboto", sans-serif;
 
-$danger: #CD5029;
-$primary: #1E6581;
-$success: #64B624;
+// colors are for light mode.
+$danger: #CD5029; // original
+//$danger: #993B1E; // slightly darker for WCAG on white bg
+$primary: #1E6581; // original
+//$primary: #1C5E78; // slightly darker for WCAG test on white bg
+$success: #64B624; // original
+//$success: #356114; // darker for WCAG pass
+//$info: #065E6F;
 
+//$danger: #000;
+//$primary: #000;
+//$success: #000;
 
 
 @use "admin-lte/src/scss/adminlte" with (
-     $color-mode-type: $color-mode-type,
+    $color-mode-type: $color-mode-type,
     $link-decoration: $link-decoration,
     $font-family-sans-serif: $font-family-sans-serif,
     $danger: $danger,
     $primary: $primary,
     $success: $success
 );
+// for light mode, different money colors are used.
+html[data-bs-theme="light"] .money-negative {
+    color: #993B1E !important;
+}
+html[data-bs-theme="light"] .money-positive {
+    color: #356114 !important;
+}
+html[data-bs-theme="light"] .money-transfer {
+    color: #065E6F !important;
+}
+
+// for dark mode, different money colors are used.
+html[data-bs-theme="dark"] .money-negative {
+    color: #E69F89 !important;
+}
+html[data-bs-theme="dark"] .money-positive {
+    color: #6BC427 !important;
+}
+html[data-bs-theme="dark"] .money-transfer {
+    color: #0BC1E5 !important;
+}
 
 @import 'shepherd.js/dist/css/shepherd.css';
 
