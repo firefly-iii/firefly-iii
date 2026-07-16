@@ -39,7 +39,7 @@
     {{-- opening balance --}}
 @elseif('Opening balance' === $type)
     {{-- Is a positive opening balance, present as positive. --}}
-    @if('Initial balance account' === $transaction['source_account_type'])
+    @if('Initial balance account' === $sourceAccount['type'])
         {!! format_amount_by_symbol($amount['amount']*-1, $amount['currency_symbol'], $amount['currency_decimal_places']) !!}
         {{-- opening balance may have foreign amount (also pos) --}}
         @if(null !== $foreign['amount'])
