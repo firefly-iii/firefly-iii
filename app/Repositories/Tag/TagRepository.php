@@ -32,6 +32,7 @@ use FireflyIII\Models\Attachment;
 use FireflyIII\Models\Location;
 use FireflyIII\Models\Note;
 use FireflyIII\Models\Tag;
+use FireflyIII\Models\TransactionJournal;
 use FireflyIII\Support\Facades\Steam;
 use FireflyIII\Support\Repositories\UserGroup\UserGroupInterface;
 use FireflyIII\Support\Repositories\UserGroup\UserGroupTrait;
@@ -48,9 +49,47 @@ class TagRepository implements TagRepositoryInterface, UserGroupInterface
 {
     use UserGroupTrait;
 
+    #[Override]
+    public function attachToJournals(Tag $tag, array $journalIds): array
+    {
+        $owned          = TransactionJournal::where('user_id', $this->user->id)->whereIn('id', $journalIds)->pluck('id')->toArray();
+        $invalid        = array_values(array_diff($journalIds, $owned));
+        $alreadyLinked  = $tag->transactionJournals()->whereIn('transaction_journals.id', $owned)->pluck('transaction_journals.id')->toArray();
+        $toAttach       = array_values(array_diff($owned, $alreadyLinked));
+
+        if ([] !== $toAttach) {
+            $tag->transactionJournals()->syncWithoutDetaching($toAttach);
+        }
+
+        return [
+            'attached'         => $toAttach,
+            'already_attached' => $alreadyLinked,
+            'invalid'          => $invalid,
+        ];
+    }
+
     public function count(): int
     {
         return $this->user->tags()->count();
+    }
+
+    #[Override]
+    public function detachFromJournals(Tag $tag, array $journalIds): array
+    {
+        $owned        = TransactionJournal::where('user_id', $this->user->id)->whereIn('id', $journalIds)->pluck('id')->toArray();
+        $invalid      = array_values(array_diff($journalIds, $owned));
+        $linked       = $tag->transactionJournals()->whereIn('transaction_journals.id', $owned)->pluck('transaction_journals.id')->toArray();
+        $notAttached  = array_values(array_diff($owned, $linked));
+
+        if ([] !== $linked) {
+            $tag->transactionJournals()->detach($linked);
+        }
+
+        return [
+            'detached'     => $linked,
+            'not_attached' => $notAttached,
+            'invalid'      => $invalid,
+        ];
     }
 
     /**

@@ -597,6 +597,9 @@ Route::group(
 
         Route::get('{tagOrId}/transactions', ['uses' => 'ListController@transactions', 'as' => 'transactions']);
         Route::get('{tagOrId}/attachments', ['uses' => 'ListController@attachments', 'as' => 'attachments']);
+
+        Route::post('{tagOrId}/transactions/attach', ['uses' => 'TransactionsController@attach', 'as' => 'transactions.attach']);
+        Route::post('{tagOrId}/transactions/detach', ['uses' => 'TransactionsController@detach', 'as' => 'transactions.detach']);
     }
 );
 // Transaction API routes:

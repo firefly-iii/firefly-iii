@@ -44,7 +44,21 @@ use Illuminate\Support\Collection;
  */
 interface TagRepositoryInterface
 {
+    /**
+     * Links the tag to one or more transaction journals owned by the current user.
+     *
+     * Returns ['attached' => int[], 'already_attached' => int[], 'invalid' => int[]].
+     */
+    public function attachToJournals(Tag $tag, array $journalIds): array;
+
     public function count(): int;
+
+    /**
+     * Unlinks the tag from one or more transaction journals owned by the current user.
+     *
+     * Returns ['detached' => int[], 'not_attached' => int[], 'invalid' => int[]].
+     */
+    public function detachFromJournals(Tag $tag, array $journalIds): array;
 
     /**
      * This method destroys a tag.
