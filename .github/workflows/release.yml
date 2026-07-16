@@ -33,7 +33,8 @@ jobs:
           fi
 
           echo "Run quick? = '$quick'"
-
+          # suppresses the warning about the default branch being 'master' instead of 'main'.
+          git config --global init.defaultBranch main
         env:
           version: ${{ github.event_name == 'schedule' && 'develop' || inputs.version }}
           quick: ${{ inputs.quick || false }}
