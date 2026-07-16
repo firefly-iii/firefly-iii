@@ -135,9 +135,9 @@
                                         {{-- DESTINATION ACCOUNT NAME FOR WITHDRAWAL --}}
                                         @if($journal['transaction_type_type'] === 'Withdrawal')
                                             <input class="form-control input-sm" spellcheck="false"
-                                                   placeholder="@if($journal['destination_type'] !== 'Cash account'){{ $journal['destination_account_name'] }}@endif"
+                                                   placeholder="@if(array_key_exists('destination_type', $journal) && $journal['destination_type'] !== 'Cash account'){{ $journal['destination_account_name'] }}@endif"
                                                    name="destination_name[{{ $journal['transaction_journal_id'] }}]" type="text" autocomplete="off"
-                                                   value="@if($journal['destination_type'] !== 'Cash account'){{ $journal['destination_account_name'] }}@endif">
+                                                   value="@if(array_key_exists('destination_type', $journal) && $journal['destination_type'] !== 'Cash account'){{ $journal['destination_account_name'] }}@endif">
                                         @endif
                                         @endif
                                     </td>

@@ -7,7 +7,7 @@
                     <div class="row">
                         <div class="col-9">
                             <h3 class="card-title">
-                                @if(null !== ($budgetLimit ?? null))
+                                @if(null !== $budgetLimit)
                                     {{ trans('firefly.chart_budget_in_period', ['name' => $budget->name, 'start' => $budgetLimit->start_date->isoFormat($monthAndDayFormat), 'end' =>  $budgetLimit->end_date->isoFormat($monthAndDayFormat), 'currency' => $budgetLimit->transactionCurrency->name]) }}
                                 @else
                                     {{ trans('firefly.chart_all_journals_for_budget', ['name' => $budget->name]) }}
@@ -28,7 +28,7 @@
                 <div class="card-body">
                     <canvas id="budgetOverview" class="wide-chart" height="400" width="100%"></canvas>
                 </div>
-                @if(null !== ($budgetLimit ?? null))
+                @if(null !== $budgetLimit)
                     <div class="card-footer">
                         <p class="text-muted">
                             {{ trans('firefly.chart_budget_in_period_only_currency', ['currency' => $budgetLimit->transactionCurrency->name]) }}
@@ -142,7 +142,7 @@
         @if(count($limits) > 0)
             <div class="col-lg-3 col-md-3 col-sm-12 col-xs-12">
                 @foreach($limits as $limit)
-                    <div class="card @if($limit->start_date == $budgetLimit->start_date) card-primary card-outline @endif">
+                    <div class="card @if(null !== $budgetLimit && $limit->start_date === $budgetLimit->start_date) card-primary card-outline @endif">
                         <div class="card-header">
                             <h3 class="card-title"><a href="{{ route('budgets.show.limit',[$budget->id,$limit->id]) }}">{{ $limit->start_date->isoFormat($monthAndDayFormat) }} &mdash;{{ $limit->end_date->isoFormat($monthAndDayFormat) }}
                                 </a>
