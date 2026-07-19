@@ -40,7 +40,6 @@ use FireflyIII\Support\Repositories\UserGroup\UserGroupInterface;
 use FireflyIII\Support\Repositories\UserGroup\UserGroupTrait;
 use Illuminate\Support\Collection;
 use Override;
-
 use function Safe\json_encode;
 
 /**
@@ -65,10 +64,9 @@ class JournalRepository implements JournalRepositoryInterface, UserGroupInterfac
     public function countByMeta(string $field, string $value, bool $includeDeleted): int
     {
         $search = TransactionJournalMeta::leftJoin('transaction_journals', 'transaction_journals.id', '=', 'journal_meta.transaction_journal_id')
-            ->where('name', $field)
-            ->where('data', json_encode($value))
-            ->where('transaction_journals.user_id', $this->user->id)
-        ;
+                                        ->where('name', $field)
+                                        ->where('data', json_encode($value))
+                                        ->where('transaction_journals.user_id', $this->user->id);
         if ($includeDeleted) {
             $search->withTrashed();
         }
@@ -80,11 +78,10 @@ class JournalRepository implements JournalRepositoryInterface, UserGroupInterfac
     public function countByNotes(string $value, bool $includeDeleted): int
     {
         $search = Note::query()
-            ->where('noteable_type', TransactionJournal::class)
-            ->leftJoin('transaction_journals', 'transaction_journals.id', '=', 'notes.noteable_id')
-            ->where('transaction_journals.user_id', $this->user->id)
-            ->where('text', 'LIKE', sprintf('%%%s%%', $value))
-        ;
+                      ->where('noteable_type', TransactionJournal::class)
+                      ->leftJoin('transaction_journals', 'transaction_journals.id', '=', 'notes.noteable_id')
+                      ->where('transaction_journals.user_id', $this->user->id)
+                      ->where('text', 'LIKE', sprintf('%%%s%%', $value));
         if ($includeDeleted) {
             $search->withTrashed();
         }
@@ -118,10 +115,9 @@ class JournalRepository implements JournalRepositoryInterface, UserGroupInterfac
     public function findByType(array $types): Collection
     {
         return $this->user->transactionJournals()
-            ->leftJoin('transaction_types', 'transaction_types.id', '=', 'transaction_journals.transaction_type_id')
-            ->whereIn('transaction_types.type', $types)
-            ->get(['transaction_journals.*'])
-        ;
+                          ->leftJoin('transaction_types', 'transaction_types.id', '=', 'transaction_journals.transaction_type_id')
+                          ->whereIn('transaction_types.type', $types)
+                          ->get(['transaction_journals.*']);
     }
 
     /**
@@ -136,7 +132,10 @@ class JournalRepository implements JournalRepositoryInterface, UserGroupInterfac
     #[Override]
     public function getAllUncompletedJournals(): Collection
     {
-        return TransactionJournal::query()->where('completed', false)->get(['transaction_journals.*']);
+        if (null === $this->userGroup) {
+            return TransactionJournal::query()->where('completed', false)->get(['transaction_journals.*']);
+        }
+        return $this->userGroup->transactionJournals()->where('completed', false)->get(['transaction_journals.*']);
     }
 
     public function getDestinationAccount(TransactionJournal $journal): Account
@@ -148,7 +147,7 @@ class JournalRepository implements JournalRepositoryInterface, UserGroupInterfac
         }
 
         /** @var null|Account $res */
-        $res         = $transaction->account;
+        $res = $transaction->account;
         if (null === $res) {
             throw new FireflyException('Account is unexpectedly NULL.');
         }
@@ -161,7 +160,7 @@ class JournalRepository implements JournalRepositoryInterface, UserGroupInterfac
      */
     public function getJournalTotal(TransactionJournal $journal): string
     {
-        $cache  = new CacheProperties();
+        $cache = new CacheProperties();
         $cache->addProperty($journal->id);
         $cache->addProperty('amount-positive');
         if ($cache->has()) {
@@ -170,7 +169,7 @@ class JournalRepository implements JournalRepositoryInterface, UserGroupInterfac
 
         // saves on queries:
         $amount = $journal->transactions()->where('amount', '>', 0)->get()->sum('amount');
-        $amount = (string) $amount;
+        $amount = (string)$amount;
         $cache->store($amount);
 
         return $amount;
@@ -187,7 +186,7 @@ class JournalRepository implements JournalRepositoryInterface, UserGroupInterfac
         /** @var null|Note $note */
         $note = $link->notes()->first();
 
-        return (string) $note?->text;
+        return (string)$note?->text;
     }
 
     /**
@@ -222,7 +221,7 @@ class JournalRepository implements JournalRepositoryInterface, UserGroupInterfac
         }
 
         /** @var null|Account $res */
-        $res         = $transaction->account;
+        $res = $transaction->account;
         if (null === $res) {
             throw new FireflyException('Account is unexpectedly NULL.');
         }

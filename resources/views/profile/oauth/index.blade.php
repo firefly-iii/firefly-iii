@@ -419,7 +419,7 @@
                                         {{ __('firefly.profile_create_token') }}
                                     </h4>
 
-                                    <button aria-hidden="true" class="close" data-dismiss="modal" type="button">
+                                    <button aria-hidden="true" class="close" data-bs-dismiss="modal" type="button">
                                         &times;
                                     </button>
                                 </div>
@@ -480,7 +480,7 @@
 
                                 <!-- Modal Actions -->
                                 <div class="modal-footer">
-                                    <button class="btn btn-secondary" data-dismiss="modal"
+                                    <button class="btn btn-secondary" data-bs-dismiss="modal"
                                             type="button">{{__('firefly.close')}}
                                     </button>
                                     <button class="btn btn-primary" type="button" @click="storePat">
@@ -500,7 +500,7 @@
                                         {{ __('firefly.profile_personal_access_token') }}
                                     </h4>
 
-                                    <button aria-hidden="true" class="close" data-dismiss="modal" type="button">
+                                    <button aria-hidden="true" class="close" data-bs-dismiss="modal" type="button">
                                         &times;
                                     </button>
                                 </div>
@@ -515,7 +515,7 @@
 
                                 <!-- Modal Actions -->
                                 <div class="modal-footer">
-                                    <button class="btn btn-secondary" data-dismiss="modal" type="button">{{
+                                    <button class="btn btn-secondary" data-bs-dismiss="modal" type="button">{{
                                 __('firefly.close')
                             }}
                                     </button>

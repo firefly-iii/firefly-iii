@@ -5,7 +5,7 @@
             <div class="row">
                 <div class="col-lg-12">
                     <div class="alert alert-success alert-dismissible" role="alert">
-                        <button class="close" data-dismiss="alert" type="button" aria-label="{{ __('firefly.close') }}"><span aria-hidden="true">&times;</span></button>
+                        <button class="close" data-bs-dismiss="alert" type="button" aria-label="{{ __('firefly.close') }}"><span aria-hidden="true">&times;</span></button>
                         <strong>{{ __("firefly.flash_success") }}</strong> <span x-html="success_message"></span>
                     </div>
                 </div>
@@ -217,7 +217,7 @@
                         <textarea class="form-control" rows="10" readonly x-model="message_content"></textarea>
                     </div>
                     <div class="modal-footer">
-                        <button type="button" class="btn btn-default" data-dismiss="modal">{{ __('firefly.close') }}</button>
+                        <button type="button" class="btn btn-default" data-bs-dismiss="modal">{{ __('firefly.close') }}</button>
                     </div>
                 </div>
             </div>
@@ -258,7 +258,7 @@
 
                     </div>
                     <div class="modal-footer">
-                        <button type="button" class="btn btn-default" data-dismiss="modal">{{ __('firefly.close') }}</button>
+                        <button type="button" class="btn btn-default" data-bs-dismiss="modal">{{ __('firefly.close') }}</button>
                     </div>
                 </div>
             </div>

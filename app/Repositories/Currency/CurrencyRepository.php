@@ -398,7 +398,7 @@ class CurrencyRepository implements CurrencyRepositoryInterface, UserGroupInterf
 
     public function searchCurrency(string $search, int $limit): Collection
     {
-        $query = TransactionCurrency::query()->where('enabled', true)->orderBy('code', 'ASC');
+        $query = TransactionCurrency::query()->orderBy('code', 'ASC');
         if ('' !== $search) {
             $query->whereLike('name', sprintf('%%%s%%', $search));
         }
