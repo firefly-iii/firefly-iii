@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "4852f0fa1c992ff23e0205143b73db6f",
+    "content-hash": "2c80899795fc81f74966483b5dae7620",
     "packages": [
         {
             "name": "bacon/bacon-qr-code",
@@ -10246,16 +10246,16 @@
         },
         {
             "name": "carthage-software/mago",
-            "version": "1.43.0",
+            "version": "1.44.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/carthage-software/mago.git",
-                "reference": "3bee8a65ba55d037f8a9656e7b6be029f817c4e3"
+                "reference": "f303d492ebf79bd691009cc5dd0c6907a5ae3bc3"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/carthage-software/mago/zipball/3bee8a65ba55d037f8a9656e7b6be029f817c4e3",
-                "reference": "3bee8a65ba55d037f8a9656e7b6be029f817c4e3",
+                "url": "https://api.github.com/repos/carthage-software/mago/zipball/f303d492ebf79bd691009cc5dd0c6907a5ae3bc3",
+                "reference": "f303d492ebf79bd691009cc5dd0c6907a5ae3bc3",
                 "shasum": ""
             },
             "require": {
@@ -10293,7 +10293,7 @@
             ],
             "support": {
                 "issues": "https://github.com/carthage-software/mago/issues",
-                "source": "https://github.com/carthage-software/mago/tree/1.43.0"
+                "source": "https://github.com/carthage-software/mago/tree/1.44.0"
             },
             "funding": [
                 {
@@ -10301,7 +10301,7 @@
                     "type": "github"
                 }
             ],
-            "time": "2026-07-05T12:16:04+00:00"
+            "time": "2026-07-18T22:50:18+00:00"
         },
         {
             "name": "cloudcreativity/json-api-testing",
