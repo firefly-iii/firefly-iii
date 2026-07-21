@@ -25,38 +25,34 @@ var calendar;
 $(document).ready(function () {
     "use strict";
     $(".content-wrapper form input:enabled:visible:first").first().focus().select();
-    if (!Modernizr.inputtypes.date) {
-        $('input[type="date"]').datepicker(
-            {
-                dateFormat: 'yy-mm-dd'
-            }
-        );
-    }
     initializeButtons();
     initializeAutoComplete();
-    respondToFirstDateChange();
-    respondToRepetitionEnd();
-    $('.switch-button').on('click', switchTransactionType);
-    $('#ffInput_repetition_end').on('change', respondToRepetitionEnd);
-    $('#ffInput_first_date').on('change', respondToFirstDateChange);
-
+    // respondToFirstDateChange();
+    // respondToRepetitionEnd();
+    // $('.switch-button').on('click', switchTransactionType);
+    // $('#ffInput_repetition_end').on('change', respondToRepetitionEnd);
+    // $('#ffInput_first_date').on('change', respondToFirstDateChange);
+    //
     // new date
-    var firstDate = $('#ffInput_first_date').val();
-
-    // create calendar on load:
-    calendar = $('#recurring_calendar').fullCalendar(
-        {
-            defaultDate: firstDate,
-            editable: false,
-            height: 400,
-            width: 200,
-            contentHeight: 400,
-            aspectRatio: 1.25,
-            eventLimit: true,
-            eventSources: [],
-        });
-
-    $('#calendar-link').on('click', showRepCalendar);
+    // var firstDate = $('#ffInput_first_date').val();
+    //
+    //
+    //
+    //
+    // // create calendar on load:
+    // calendar = $('#recurring_calendar').fullCalendar(
+    //     {
+    //         defaultDate: firstDate,
+    //         editable: false,
+    //         height: 400,
+    //         width: 200,
+    //         contentHeight: 400,
+    //         aspectRatio: 1.25,
+    //         eventLimit: true,
+    //         eventSources: [],
+    //     });
+    //
+    // $('#calendar-link').on('click', showRepCalendar);
 });
 
 /**
@@ -142,9 +138,9 @@ function parseRepetitionSuggestions(data) {
 
 function initializeAutoComplete() {
     initTagsAC();
-    initExpenseAC();
-    initRevenueAC();
-    initCategoryAC();
+    // initExpenseAC();
+    // initRevenueAC();
+    // initCategoryAC();
 }
 
 /**

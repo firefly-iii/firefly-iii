@@ -23,38 +23,35 @@
  */
 function initTagsAC() {
     console.log('initTagsAC()');
-    var tagTags = new Bloodhound({
-                                     datumTokenizer: Bloodhound.tokenizers.obj.whitespace('name'),
-                                     queryTokenizer: Bloodhound.tokenizers.whitespace,
-                                     prefetch: {
-                                         url: 'api/v1/autocomplete/tags?uid=' + uid,
-                                         filter: function (list) {
-                                             return $.map(list, function (item) {
-                                                 return {name: item.name};
-                                             });
-                                         }
-                                     },
-                                     remote: {
-                                         url: 'api/v1/autocomplete/tags?query=%QUERY&uid=' + uid,
-                                         wildcard: '%QUERY',
-                                         filter: function (list) {
-                                             return $.map(list, function (item) {
-                                                 return {name: item.name};
-                                             });
-                                         }
-                                     }
-                                 });
-    tagTags.initialize();
-    $('input[name="tags"]').tagsinput({
-                                          typeaheadjs: {
-                                              hint: true,
-                                              highlight: true,
-                                              name: 'tags',
-                                              displayKey: 'name',
-                                              valueKey: 'name',
-                                              source: tagTags.ttAdapter()
-                                          }
-                                      });
+
+    var inputElement = document.getElementById('ffInput_tags');
+    new BootstrapSimpleAutocomplete(inputElement, {
+        fetchFunction: function (query) {
+            // Custom data fetching logic
+            return fetch('api/v1/autocomplete/tags?_token=' + token + '&query=' + encodeURIComponent(query),
+                {
+                    method: 'GET',
+                    credentials: 'include',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Accept': 'application/json',
+                        'X-CSRF-TOKEN': token
+                    },
+                }
+            )
+                .then((response) => response.json())
+                .then((data) => {
+                    var result = [];
+                    for(var i in data) {
+                        if(data.hasOwnProperty(i)) {
+                            result.push(data[i].name);
+                        }
+                    }
+                    // Process data if needed
+                    return result;
+                });
+        },
+    });
 }
 
 /**

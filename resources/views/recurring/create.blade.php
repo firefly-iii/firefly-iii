@@ -2,7 +2,7 @@
 @section('content')
 
     <form action="{{ route('recurring.store') }}" method="post" id="store" class="form-horizontal"
-          enctype="multipart/form-data">
+          enctype="multipart/form-data" x-data="create">
         <input type="hidden" name="_token" value="{{ csrf_token() }}"/>
         {{-- row with recurrence information --}}
         <div class="row">
@@ -96,13 +96,13 @@
                         {!! AccountForm::activeDepositDestinations('deposit_source_id', null, ['label' => trans('form.deposit_source_id')]) !!}
 
                         {{-- destination if deposit or transfer: --}}
-                        {{ AccountForm::longAccountList('destination_id', null, ['label' => trans('form.asset_destination_account')]) }}
+                        {!! AccountForm::longAccountList('destination_id', null, ['label' => trans('form.asset_destination_account')]) !!}
 
                         {{-- destination account name for withdrawals --}}
                         {{-- {!! ExpandedForm::text('destination_name', null, {label: trans('form.expense_account')}) }} --}}
 
                         {{-- NEW for withdrawals, also a drop down with expense accounts, loans, debts, mortgages or (cash). --}}
-                        {{ AccountForm::activeWithdrawalDestinations('withdrawal_destination_id', null, ['label' => trans('form.withdrawal_destination_id')]) }}
+                        {!! AccountForm::activeWithdrawalDestinations('withdrawal_destination_id', null, ['label' => trans('form.withdrawal_destination_id')]) !!}
                     </div>
                 </div>
             </div>
@@ -200,17 +200,10 @@
     </div>
 @endsection
 @section('scripts')
-    @vite(['js/pages/generic.js'])
-    <script type="text/javascript" src="v1/js/lib/modernizr-custom.js?v={{ $FF_BUILD_TIME }}"
-            nonce="{{ $JS_NONCE }}"></script>
-    <script type="text/javascript" src="v1/js/lib/typeahead/typeahead.bundle.min.js?v={{ $FF_BUILD_TIME }}"
-            nonce="{{ $JS_NONCE }}"></script>
+    @vite(['js/pages/recurring/create.js'])
+    <!--
+    <script type="text/javascript" src="v1/js/lib/bootstrap-simple-autocomplete.js?v={{ $FF_BUILD_TIME }}" nonce="{{ $JS_NONCE }}"></script>
     <script type="text/javascript" src="v1/js/ff/common/autocomplete.js?v={{ $FF_BUILD_TIME }}"
-            nonce="{{ $JS_NONCE }}"></script>
-    <script type="text/javascript" src="v1/js/lib/bootstrap-tagsinput.min.js?v={{ $FF_BUILD_TIME }}"
-            nonce="{{ $JS_NONCE }}"></script>
-    <script type="text/javascript" src="v1/js/lib/jquery-ui.min.js?v={{ $FF_BUILD_TIME }}" nonce="{{ $JS_NONCE }}"></script>
-    <script type="text/javascript" src="v1/lib/fc/fullcalendar.min.js?v={{ $FF_BUILD_TIME }}"
             nonce="{{ $JS_NONCE }}"></script>
     <script type="text/javascript" nonce="{{ $JS_NONCE }}">
         var transactionType = "{{ $preFilled['transaction_type'] }}";
@@ -220,15 +213,8 @@
     </script>
     <script type="text/javascript" src="v1/js/ff/recurring/create.js?v={{ $FF_BUILD_TIME }}"
             nonce="{{ $JS_NONCE }}"></script>
+            -->
 @endsection
 
 @section('styles')
-    <link href="v1/css/bootstrap-tagsinput.css?v={{ $FF_BUILD_TIME }}" type="text/css" rel="stylesheet" media="all"
-          nonce="{{ $JS_NONCE }}">
-    <link href="v1/css/jquery-ui/jquery-ui.structure.min.css?v={{ $FF_BUILD_TIME }}" type="text/css" rel="stylesheet"
-          media="all" nonce="{{ $JS_NONCE }}">
-    <link href="v1/css/jquery-ui/jquery-ui.theme.min.css?v={{ $FF_BUILD_TIME }}" type="text/css" rel="stylesheet"
-          media="all" nonce="{{ $JS_NONCE }}">
-    <link href="v1/lib/fc/fullcalendar.min.css?v={{ $FF_BUILD_TIME }}" type="text/css" rel="stylesheet" media="all"
-          nonce="{{ $JS_NONCE }}">
 @endsection

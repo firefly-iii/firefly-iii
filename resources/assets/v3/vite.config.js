@@ -71,6 +71,7 @@ export default defineConfig(({command, mode, isSsrBuild, isPreview}) => {
                     // rules
 
                     // recurring transactions
+                    'js/pages/recurring/create.js',
 
                     // subscriptions
 

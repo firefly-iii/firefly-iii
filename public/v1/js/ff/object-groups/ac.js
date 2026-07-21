@@ -25,7 +25,7 @@ $(document).ready(function () {
     // auto complete for object group.
     console.log('Object group auto complete thing.');
 
-    var inputElement = document.getElementById('ffInput_title');
+    var inputElement = document.getElementById('ffInput_object_group');
     new BootstrapSimpleAutocomplete(inputElement, {
         fetchFunction: function (query) {
             // Custom data fetching logic

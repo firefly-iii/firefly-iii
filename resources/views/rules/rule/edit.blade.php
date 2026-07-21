@@ -122,11 +122,11 @@
 
         </div>
     </form>
-    @vite(['js/pages/generic.js'])
 
 
 @endsection
 @section('scripts')
+    @vite(['js/pages/generic.js'])
     @include('rules.partials.test-trigger-modal')
 
     {{-- new auto complete --}}

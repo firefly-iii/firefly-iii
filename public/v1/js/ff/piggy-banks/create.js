@@ -22,12 +22,6 @@
 
 $(document).ready(function () {
     "use strict";
-    $(".content-wrapper form input:enabled:visible:first").first().focus().select();
-    if (!Modernizr.inputtypes.date) {
-        $('input[type="date"]').datepicker(
-            {
-                dateFormat: 'yy-mm-dd'
-            }
-        );
-    }
+    $("#ffInput_name").focus().select();
+
 });

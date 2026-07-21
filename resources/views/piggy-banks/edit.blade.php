@@ -62,21 +62,9 @@
 @endsection
 @section('scripts')
     @vite(['js/pages/generic.js'])
-    <script type="text/javascript" src="v1/js/lib/modernizr-custom.js?v={{ $FF_BUILD_TIME }}"
-            nonce="{{ $JS_NONCE }}"></script>
-    <script type="text/javascript" src="v1/js/lib/jquery-ui.min.js?v={{ $FF_BUILD_TIME }}" nonce="{{ $JS_NONCE }}"></script>
     <script type="text/javascript" src="v1/js/ff/piggy-banks/create.js?v={{ $FF_BUILD_TIME }}"
             nonce="{{ $JS_NONCE }}"></script>
     {{-- auto complete for object groups --}}
-    <script type="text/javascript" src="v1/js/lib/typeahead/typeahead.bundle.min.js?v={{ $FF_BUILD_TIME }}"
-            nonce="{{ $JS_NONCE }}"></script>
-    <script type="text/javascript" src="v1/js/ff/object-groups/create-edit.js?v={{ $FF_BUILD_TIME }}"
-            nonce="{{ $JS_NONCE }}"></script>
-@endsection
-
-@section('styles')
-    <link href="v1/css/jquery-ui/jquery-ui.structure.min.css?v={{ $FF_BUILD_TIME }}" type="text/css" rel="stylesheet"
-          media="all" nonce="{{ $JS_NONCE }}">
-    <link href="v1/css/jquery-ui/jquery-ui.theme.min.css?v={{ $FF_BUILD_TIME }}" type="text/css" rel="stylesheet"
-          media="all" nonce="{{ $JS_NONCE }}">
+    <script type="text/javascript" src="v1/js/lib/bootstrap-simple-autocomplete.js?v={{ $FF_BUILD_TIME }}" nonce="{{ $JS_NONCE }}"></script>
+    <script type="text/javascript" src="v1/js/ff/object-groups/ac.js?v={{ $FF_BUILD_TIME }}" nonce="{{ $JS_NONCE }}"></script>
 @endsection
