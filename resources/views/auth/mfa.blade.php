@@ -1,4 +1,4 @@
-@extends('layout.v2.session')
+@extends('layout.v3.auth')
 @section('content')
 
     @if($errors->any())
