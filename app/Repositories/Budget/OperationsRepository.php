@@ -276,16 +276,27 @@ class OperationsRepository implements OperationsRepositoryInterface, UserGroupIn
         bool $convertToPrimary = false
     ): array {
         //        Log::debug(sprintf('Start of %s.', __METHOD__));
-        $summarizer = new TransactionSummarizer($this->user);
+        $legacyCurrencyBehavior = $this->usesLegacyBudgetCurrencyBehavior();
+        $summarizer             = new TransactionSummarizer($this->user);
         $summarizer->setConvertToPrimary($convertToPrimary);
 
-        // filter $journals by range AND currency if it is present.
-        $expenses   = array_filter(
+        $expenses               = array_filter(
             $expenses,
-            static fn (array $expense): bool => $expense['date']->between($start, $end) && $expense['currency_id'] === $transactionCurrency->id
+            static function (array $expense) use ($start, $end, $transactionCurrency, $convertToPrimary, $legacyCurrencyBehavior): bool {
+                if (!$expense['date']->between($start, $end)) {
+                    return false;
+                }
+                if ($legacyCurrencyBehavior) {
+                    return $expense['currency_id'] === $transactionCurrency->id;
+                }
+
+                return $convertToPrimary
+                    || $expense['currency_id'] === $transactionCurrency->id
+                    || (int) ($expense['foreign_currency_id'] ?? 0) === $transactionCurrency->id;
+            }
         );
 
-        return $summarizer->groupByCurrencyId($expenses, 'negative', false);
+        return $summarizer->groupByCurrencyId($expenses, 'negative', !$legacyCurrencyBehavior);
     }
 
     public function sumCollectedExpensesByBudget(array $expenses, Budget $budget, bool $convertToPrimary = false): array
@@ -297,7 +308,7 @@ class OperationsRepository implements OperationsRepositoryInterface, UserGroupIn
         // filter $journals by range AND currency if it is present.
         $expenses   = array_filter($expenses, static fn (array $expense): bool => $expense['budget_id'] === $budget->id);
 
-        return $summarizer->groupByCurrencyId($expenses, 'negative', false);
+        return $summarizer->groupByCurrencyId($expenses, 'negative', !$this->usesLegacyBudgetCurrencyBehavior());
     }
 
     /**
@@ -343,24 +354,30 @@ class OperationsRepository implements OperationsRepositoryInterface, UserGroupIn
         if (!$budgets instanceof Collection) {
             $budgets = $this->getBudgets();
         }
-        if ($currency instanceof TransactionCurrency) {
-            Log::debug(sprintf('Limit to normal currency %s', $currency->code));
+        $legacyCurrencyBehavior = $this->usesLegacyBudgetCurrencyBehavior();
+        if ($currency instanceof TransactionCurrency && $legacyCurrencyBehavior) {
+            Log::debug(sprintf('Limit to primary currency %s using legacy budget behavior', $currency->code));
             $collector->setNormalCurrency($currency);
+        }
+        if ($currency instanceof TransactionCurrency && !$legacyCurrencyBehavior && !$convertToPrimary) {
+            Log::debug(sprintf('Limit to primary or foreign currency %s', $currency->code));
+            $collector->setCurrency($currency);
         }
         if ($budgets->count() > 0) {
             $collector->setBudgets($budgets);
         }
         $journals   = $collector->getExtractedJournals();
 
-        // same but for transactions in the foreign currency:
-        if ($currency instanceof TransactionCurrency) {
-            Log::debug('STOP looking for transactions in the foreign currency.');
-        }
         $summarizer = new TransactionSummarizer($this->user);
         // 2025-04-21 overrule "convertToPrimary" because in this particular view, we never want to do this.
         $summarizer->setConvertToPrimary($convertToPrimary);
 
-        return $summarizer->groupByCurrencyId($journals, 'negative', false);
+        return $summarizer->groupByCurrencyId($journals, 'negative', !$legacyCurrencyBehavior);
+    }
+
+    private function usesLegacyBudgetCurrencyBehavior(): bool
+    {
+        return true === config('firefly.feature_flags.legacy_budget_currency_behavior', false);
     }
 
     private function getBudgets(): Collection

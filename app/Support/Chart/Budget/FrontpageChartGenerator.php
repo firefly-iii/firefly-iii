@@ -129,7 +129,15 @@ class FrontpageChartGenerator
      */
     private function noBudgetLimits(array $data, Budget $budget): array
     {
-        $spent = $this->opsRepository->sumExpenses($this->start, $this->end, null, new Collection()->push($budget));
+        $convertToPrimary = $this->convertToPrimary && !$this->usesLegacyBudgetCurrencyBehavior();
+        $spent            = $this->opsRepository->sumExpenses(
+            $this->start,
+            $this->end,
+            null,
+            new Collection()->push($budget),
+            null,
+            $convertToPrimary
+        );
 
         /** @var array $entry */
         foreach ($spent as $entry) {
@@ -181,7 +189,15 @@ class FrontpageChartGenerator
             Log::debug(sprintf('Processing limit #%d with %s %s', $limit->id, $limit->transactionCurrency->code, $limit->amount));
         }
 
-        $spent      = $this->opsRepository->sumExpenses($limit->start_date, $limit->end_date, null, new Collection()->push($budget), $currency);
+        $convertToPrimary = $this->convertToPrimary && !$this->usesLegacyBudgetCurrencyBehavior();
+        $spent            = $this->opsRepository->sumExpenses(
+            $limit->start_date,
+            $limit->end_date,
+            null,
+            new Collection()->push($budget),
+            $currency,
+            $convertToPrimary
+        );
         Log::debug(sprintf('Spent array has %d entries.', count($spent)));
 
         /** @var array $entry */
@@ -198,6 +214,11 @@ class FrontpageChartGenerator
         }
 
         return $data;
+    }
+
+    private function usesLegacyBudgetCurrencyBehavior(): bool
+    {
+        return true === config('firefly.feature_flags.legacy_budget_currency_behavior', false);
     }
 
     /**

@@ -8,6 +8,8 @@ yarn-error.log
 /.ci/php-cs-fixer/vendor
 coverage.xml
 output.txt
+/.idea
+/.phpunit.cache
 
 # ignore generated files.
 public/build

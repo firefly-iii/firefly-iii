@@ -120,27 +120,24 @@ class BudgetLimitEnrichment implements EnrichmentInterface
         foreach ($this->collection as $budgetLimit) {
             Log::debug(sprintf('Filtering expenses for budget limit #%d (budget #%d)', $budgetLimit->id, $budgetLimit->budget_id));
             $id                  = (int) $budgetLimit->id;
-            $filteredExpenses    = $this->filterToBudget($expenses, $budgetLimit->budget_id);
+            $budgetExpenses      = $this->filterToBudget($expenses, $budgetLimit->budget_id);
             $filteredExpenses    = $repository->sumCollectedExpenses(
-                $filteredExpenses,
+                $budgetExpenses,
                 $budgetLimit->start_date,
                 $budgetLimit->end_date,
                 $budgetLimit->transactionCurrency
             );
             $this->expenses[$id] = array_values($filteredExpenses);
 
-            if ($this->convertToPrimary && $budgetLimit->transactionCurrency->id !== $this->primaryCurrency->id) {
+            if ($this->convertToPrimary) {
                 $pcFilteredExpenses    = $repository->sumCollectedExpenses(
-                    $expenses,
+                    $budgetExpenses,
                     $budgetLimit->start_date,
                     $budgetLimit->end_date,
                     $budgetLimit->transactionCurrency,
                     true
                 );
                 $this->pcExpenses[$id] = array_values($pcFilteredExpenses);
-            }
-            if ($this->convertToPrimary && $budgetLimit->transactionCurrency->id === $this->primaryCurrency->id) {
-                $this->pcExpenses[$id] = $this->expenses[$id] ?? [];
             }
         }
     }
