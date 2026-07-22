@@ -76,6 +76,7 @@ return [
         'handle_debts'           => true,
         'expression_engine'      => true,
         'running_balance_column' => (bool)env_default_when_empty(env('USE_RUNNING_BALANCE'), true), // this is only the default value, is not used.
+        'legacy_budget_currency_behavior' => (bool) env_default_when_empty(env('USE_LEGACY_BUDGET_CURRENCY_BEHAVIOR'), false),
         // see cer.php for exchange rates feature flag.
     ],
 'version' => 'develop/2026-07-21',
