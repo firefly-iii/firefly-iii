@@ -22,52 +22,72 @@ import '../../boot/bootstrap.js';
 import sidebar from '../../pages/shared/sidebar.js';
 import dates from '../shared/dates.js';
 import Autocomplete from "bootstrap5-autocomplete";
+import 'use-bootstrap-tag/dist/use-bootstrap-tag.css'
+import UseBootstrapTag from 'use-bootstrap-tag'
+
+
 let create = function () {
     return {
-        createCategoryAutocomplete() {
-            console.log('here we are');
-            let token = 'hello';
-            Autocomplete.init('#ffInput_category', {
 
-                server: './api/v1/autocomplete/categories?_token=' + token,
-                onServerResponse: function(data) {
-                    console.log(data.body);
-                    return Promise.resolve(data);
-                },
-
-                fetchFunction: function (query) {
-                    // Custom data fetching logic
-                    return fetch('api/v1/autocomplete/categories?_token=' + token + '&query=' + encodeURIComponent(query),
-                        {
-                            method: 'GET',
-                            credentials: 'include',
-                            headers: {
-                                'Content-Type': 'application/json',
-                                'Accept': 'application/json',
-                                'X-CSRF-TOKEN': token
-                            },
-                        }
-                    )
-                        .then((response) => response.json())
-                        .then((data) => {
-                            var result = [];
-                            for(var i in data) {
-                                if(data.hasOwnProperty(i)) {
-                                    result.push(data[i].name);
-                                }
-                            }
-                            // Process data if needed
-                            return result;
-                        });
-                },
-            });
-        },
         init() {
+            this.createTagField();
             this.createAutocomplete();
+        },
+        createTagField(){
+            UseBootstrapTag(document.getElementById('ffInput_tags'));
         },
         createAutocomplete() {
             this.createCategoryAutocomplete();
-        }
+        },
+        createCategoryAutocomplete() {
+            let token = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
+            Autocomplete.init('#ffInput_category', {
+
+                server: './api/v1/autocomplete/categories?_token=' + token,
+                labelField: 'name',
+                valueField: 'name',
+                liveServer: true,
+                fetchOptions: {
+                                method: 'GET',
+                                credentials: 'include',
+                                headers: {
+                                    'Content-Type': 'application/json',
+                                    'Accept': 'application/json',
+                                    'X-CSRF-TOKEN': token
+                                }
+                            }
+                // onServerResponse: function(data) {
+                //     console.log(data.body);
+                //     return Promise.resolve(data);
+                // },
+                //
+                // fetchFunction: function (query) {
+                //     // Custom data fetching logic
+                //     return fetch('api/v1/autocomplete/categories?_token=' + token + '&query=' + encodeURIComponent(query),
+                //         {
+                //             method: 'GET',
+                //             credentials: 'include',
+                //             headers: {
+                //                 'Content-Type': 'application/json',
+                //                 'Accept': 'application/json',
+                //                 'X-CSRF-TOKEN': token
+                //             },
+                //         }
+                //     )
+                //         .then((response) => response.json())
+                //         .then((data) => {
+                //             var result = [];
+                //             for(var i in data) {
+                //                 if(data.hasOwnProperty(i)) {
+                //                     result.push(data[i].name);
+                //                 }
+                //             }
+                //             // Process data if needed
+                //             return result;
+                //         });
+                // },
+            });
+        },
     }
 };
 

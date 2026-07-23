@@ -42,13 +42,13 @@ class CLIToken implements BinderInterface
         $users      = $repository->all();
 
         // check for static token
-        if ($value === config('firefly.static_cron_token') && 32 === strlen(config('firefly.static_cron_token'))) {
+        if (hash_equals($value, config('firefly.static_cron_token')) && 32 === strlen(config('firefly.static_cron_token'))) {
             return $value;
         }
 
         foreach ($users as $user) {
             $accessToken = Preferences::getForUser($user, 'access_token');
-            if (null !== $accessToken && $accessToken->data === $value) {
+            if (null !== $accessToken && hash_equals($accessToken->data, $value)) {
                 Log::info(sprintf('Recognized user #%d (%s) from his access token.', $user->id, $user->email));
 
                 return $value;

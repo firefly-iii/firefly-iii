@@ -24,12 +24,22 @@
                         {!! ExpandedForm::integer('repetitions',null) !!}
 
                         {{-- calendar in popup --}}
+                        <div class="row mb-3">
+                            <div class="input-group has-validation">
+                            <label for="inputEmail3" class="col-sm-3 col-form-label">{{ trans('form.calendar') }}</label>
+                            <div class="col-sm-9">
+                                <span type="text" readonly class="form-control-plaintext">
+                                    <a href="#" id="calendar-link">{{ __('firefly.click_for_calendar') }}</a></span>
+                            </div>
+                            </div>
+                        </div>
+
                         <div class="form-group" id="calendar_holder">
                             <label for="ffInput_calendar"
-                                   class="col-sm-4 control-label">{{ trans('form.calendar') }}</label>
+                                   class="col-sm-4 control-label"></label>
                             <div class="col-sm-8">
                                 <p class="form-control-static" id="ffInput_calendar">
-                                    <a href="#" id="calendar-link">{{ __('firefly.click_for_calendar') }}</a>
+
                                 </p>
                             </div>
                         </div>
