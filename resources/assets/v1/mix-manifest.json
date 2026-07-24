@@ -38,6 +38,7 @@
     "/public/v1/js/ff/install/index.js": "/public/v1/js/ff/install/index.js",
     "/public/v1/js/ff/intro/intro.js": "/public/v1/js/ff/intro/intro.js",
     "/public/v1/js/ff/list/groups.js": "/public/v1/js/ff/list/groups.js",
+    "/public/v1/js/ff/object-groups/ac.js": "/public/v1/js/ff/object-groups/ac.js",
     "/public/v1/js/ff/object-groups/create-edit.js": "/public/v1/js/ff/object-groups/create-edit.js",
     "/public/v1/js/ff/object-groups/index.js": "/public/v1/js/ff/object-groups/index.js",
     "/public/v1/js/ff/piggy-banks/create.js": "/public/v1/js/ff/piggy-banks/create.js",
