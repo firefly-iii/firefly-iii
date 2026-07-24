@@ -146,7 +146,8 @@
                         @endif
 
                         {{-- TAGS --}}
-                        {!! ExpandedForm::text('tags') !!}
+                        {{-- ExpandedForm::text('tags') --}}
+                        {!! ExpandedForm::multiSelect('tags', [],null, ['multiple'=> 'multiple']) !!}
 
                         {{-- RELATE THIS TRANSFER TO A PIGGY BANK --}}
                         {!! PiggyBankForm::piggyBankList('piggy_bank_id') !!}

@@ -1,15 +1,10 @@
 {
-    "scripts": {
-
-    },
+    "scripts": {},
     "workspaces": [
         "resources/assets/v1",
         "resources/assets/v3"
     ],
-    "devDependencies": {
-
-    },
     "dependencies": {
-
+        "bootstrap5-tags": "^1.7.17"
     }
 }

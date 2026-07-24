@@ -25,8 +25,8 @@ var calendar;
 $(document).ready(function () {
     "use strict";
     $(".content-wrapper form input:enabled:visible:first").first().focus().select();
-    initializeButtons();
-    initializeAutoComplete();
+    // initializeButtons();
+    // initializeAutoComplete();
     // respondToFirstDateChange();
     // respondToRepetitionEnd();
     // $('.switch-button').on('click', switchTransactionType);
