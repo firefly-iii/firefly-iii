@@ -6,7 +6,7 @@
                 <x-elements.card-header-with-menu :cardTitle="$objectGroup['object_group_title']" :route="route('piggy-banks.create')" :linkTitle="__('firefly.create_new_piggy_bank')" />
                 <div class="card-body p-0">
 
-<table class="table table-hover table-sm table-sm" id="piggy-sortable">
+<table class="table table-hover table-sm table-sm piggy-sortable">
     <thead>
     <tr>
         <th class="w-4 d-none d-md-table-cell">&nbsp;</th>

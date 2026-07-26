@@ -34,7 +34,7 @@ $(function () {
     $('.addMoney').on('click', addMoney);
     $('.removeMoney').on('click', removeMoney);
 
-    $('#piggy-sortable').find('tbody').sortable(
+    $('table.piggy-sortable').find('tbody').sortable(
         {
             helper: fixPiggyHelper,
             stop: stopSorting,
