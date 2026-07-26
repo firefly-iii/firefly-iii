@@ -11,9 +11,9 @@
         <template x-if="0 === index">
             <div class="col-sm-10">
                 <div
-                    data-latitude="{{ $latitude }}"
-                    data-longitude="{{ $longitude }}"
-                    data-zoom-level="{{ $zoomLevel }}"
+                    data-latitude="{{ $latitude ?? '' }}"
+                    data-longitude="{{ $longitude ?? '' }}"
+                    data-zoom-level="{{ $zoomLevel ?? '' }}"
                     id="location_map" class="map-size" :data-index="index"></div>
                 <span class="muted small">
             <template x-if="!transaction.hasLocation">
