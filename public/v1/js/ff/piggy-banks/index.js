@@ -86,7 +86,7 @@ function stopSorting() {
     "use strict";
     $('.loadSpin').addClass('bi bi-hourglass');
 
-    $.each($('#piggy-sortable>tbody>tr.piggy-sortable'), function (i, v) {
+    $.each($('.piggy-sortable>tbody>tr.piggy-sortable'), function (i, v) {
         var holder = $(v);
         var parentBody = holder.parent();
         var objectGroupTitle = parentBody.data('title');
