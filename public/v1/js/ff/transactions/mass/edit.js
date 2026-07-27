@@ -130,4 +130,41 @@ $(document).ready(function () {
 
     $('input[name^="category["]').typeahead({hint: true, highlight: true,}, {source: categories, displayKey: 'name', autoSelect: false});
 
+    // tags
+    if ($('input[name^="tags["]').length > 0) {
+        console.log('Tags.');
+        var tagTags = new Bloodhound({
+                                         datumTokenizer: Bloodhound.tokenizers.obj.whitespace('name'),
+                                         queryTokenizer: Bloodhound.tokenizers.whitespace,
+                                         prefetch: {
+                                             url: 'api/v1/autocomplete/tags?uid=' + uid,
+                                             filter: function (list) {
+                                                 return $.map(list, function (item) {
+                                                     return {name: item.name};
+                                                 });
+                                             }
+                                         },
+                                         remote: {
+                                             url: 'api/v1/autocomplete/tags?query=%QUERY&uid=' + uid,
+                                             wildcard: '%QUERY',
+                                             filter: function (list) {
+                                                 return $.map(list, function (item) {
+                                                     return {name: item.name};
+                                                 });
+                                             }
+                                         }
+                                     });
+        tagTags.initialize();
+        $('input[name^="tags["]').tagsinput({
+                                                typeaheadjs: {
+                                                    hint: true,
+                                                    highlight: true,
+                                                    name: 'tags',
+                                                    displayKey: 'name',
+                                                    valueKey: 'name',
+                                                    source: tagTags.ttAdapter()
+                                                }
+                                            });
+    }
+
 });

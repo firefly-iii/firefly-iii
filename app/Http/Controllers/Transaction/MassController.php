@@ -244,6 +244,24 @@ final class MassController extends Controller
         return (string) $value[$journalId];
     }
 
+    private function getTagsFromRequest(MassEditJournalRequest $request, int $journalId): ?array
+    {
+        $value = $request->input('tags');
+        if (!is_array($value) || !array_key_exists($journalId, $value)) {
+            return null;
+        }
+
+        $string = trim((string) $value[$journalId]);
+        if ('' === $string) {
+            return [];
+        }
+
+        return array_values(array_filter(
+            array_map(trim(...), explode(',', $string)),
+            static fn (string $tag): bool => '' !== $tag
+        ));
+    }
+
     /**
      * @throws FireflyException
      */
@@ -271,6 +289,10 @@ final class MassController extends Controller
             'amount'           => $this->getStringFromRequest($request, $journal->id, 'amount'),
             'foreign_amount'   => $this->getStringFromRequest($request, $journal->id, 'foreign_amount'),
         ];
+        $tags    = $this->getTagsFromRequest($request, $journal->id);
+        if (null !== $tags) {
+            $data['tags'] = $tags;
+        }
         Log::debug(sprintf('Will update journal #%d with data.', $journal->id), $data);
 
         // call service to update.

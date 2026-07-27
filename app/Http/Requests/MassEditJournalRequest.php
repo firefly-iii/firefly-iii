@@ -49,6 +49,7 @@ class MassEditJournalRequest extends FormRequest
             'source_id.*'      => ['numeric', 'belongsToUser:accounts,id'],
             'destination_id.*' => ['numeric', 'belongsToUser:accounts,id'],
             'journals.*'       => ['numeric', 'belongsToUser:transaction_journals,id'],
+            'tags.*'           => ['nullable', 'max:1024'],
             'revenue_account'  => 'max:255',
             'expense_account'  => 'max:255',
         ];
