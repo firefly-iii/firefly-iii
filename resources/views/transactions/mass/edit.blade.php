@@ -23,8 +23,9 @@
                                 <th class="col-lg-1 col-md-1 col-sm-1">{{ trans('list.date') }}</th>
                                 <th class="col-lg-2 col-md-2 col-sm-2">{{ trans('list.from') }}</th>
                                 <th class="col-lg-2 col-md-2 col-sm-2">{{ trans('list.to') }}</th>
-                                <th class="col-lg-2 col-md-2 col-sm-2">{{ trans('list.category') }}</th>
-                                <th class="col-lg-2 col-md-2 col-sm-2">{{ trans('list.budget') }}</th>
+                                <th class="col-lg-1 col-md-1 col-sm-1">{{ trans('list.category') }}</th>
+                                <th class="col-lg-1 col-md-1 col-sm-1">{{ trans('list.budget') }}</th>
+                                <th class="col-lg-2 col-md-2 col-sm-2">{{ trans('list.tags') }}</th>
                             </tr>
                             @foreach($journals as $journal)
                                 <tr>
@@ -159,6 +160,12 @@
                                             </select>
                                         @endif
                                     </td>
+                                    {{-- tags --}}
+                                    <td>
+                                        <input class="form-control input-sm" placeholder="" autocomplete="off" spellcheck="false"
+                                               name="tags[{{ $journal['transaction_journal_id'] }}]" type="text"
+                                               value="@foreach($journal['tags'] ?? [] as $tag){{ $tag['name'] }}@if(!$loop->last),@endif@endforeach">
+                                    </td>
                                 </tr>
                             @endforeach
                         </table>
@@ -179,8 +186,9 @@
     </script>
     <script type="text/javascript" src="v1/js/lib/typeahead/typeahead.bundle.min.js?v={{ $FF_BUILD_TIME }}" nonce="{{ $JS_NONCE }}"></script>
     <script type="text/javascript" src="v1/js/ff/common/autocomplete.js?v={{ $FF_BUILD_TIME }}" nonce="{{ $JS_NONCE }}"></script>
+    <script type="text/javascript" src="v1/js/lib/bootstrap-tagsinput.min.js?v={{ $FF_BUILD_TIME }}" nonce="{{ $JS_NONCE }}"></script>
     <script type="text/javascript" src="v1/js/ff/transactions/mass/edit.js?v={{ $FF_BUILD_TIME }}" nonce="{{ $JS_NONCE }}"></script>
 @endsection
-@section('scripts')
-    @vite(['js/pages/generic.js'])
+@section('styles')
+    <link href="v1/css/bootstrap-tagsinput.css?v={{ $FF_BUILD_TIME }}" type="text/css" rel="stylesheet" media="all" nonce="{{ $JS_NONCE }}">
 @endsection
