@@ -67,37 +67,40 @@ final class RecurrenceController extends Controller
      */
     public function events(Request $request): JsonResponse
     {
-        $occurrences = [];
-        $return      = [];
-        $start       = null;
-        $end         = null;
-        $firstDate   = null;
+        $occurrences                   = [];
+        $return                        = [];
+        $start                         = null;
+        $end                           = null;
+        $firstDate                     = null;
+
         try {
             $start = Carbon::createFromFormat('Y-m-d', $request->input('start'));
         } catch (InvalidFormatException $e) {
             Log::debug($e->getMessage()); // not that interesting
         }
+
         try {
             $end = Carbon::createFromFormat('Y-m-d', $request->input('end'));
         } catch (InvalidFormatException $e) {
             Log::debug($e->getMessage()); // not that interesting
         }
+
         try {
             $firstDate = Carbon::createFromFormat('Y-m-d', $request->input('first_date'));
         } catch (InvalidFormatException $e) {
             Log::debug($e->getMessage()); // not that interesting
         }
-        $endDate          = '' !== (string)$request->input('end_date') ? Carbon::createFromFormat('Y-m-d', $request->input('end_date')) : null;
-        $endsAt           = (string)$request->input('ends');
-        $repetitionType   = explode(',', (string)$request->input('type'))[0];
-        $repetitions      = (int)$request->input('reps');
-        $weekend          = (int)$request->input('weekend');
-        $repetitionMoment = '';
-        $skip             = (int)$request->input('skip');
-        $skip             = $skip < 0 || $skip > 31 ? 0 : $skip;
-        $weekend          = $weekend < 1 || $weekend > 4 ? 1 : $weekend;
+        $endDate                       = '' !== (string) $request->input('end_date') ? Carbon::createFromFormat('Y-m-d', $request->input('end_date')) : null;
+        $endsAt                        = (string) $request->input('ends');
+        $repetitionType                = explode(',', (string) $request->input('type'))[0];
+        $repetitions                   = (int) $request->input('reps');
+        $weekend                       = (int) $request->input('weekend');
+        $repetitionMoment              = '';
+        $skip                          = (int) $request->input('skip');
+        $skip                          = $skip < 0 || $skip > 31 ? 0 : $skip;
+        $weekend                       = $weekend < 1 || $weekend > 4 ? 1 : $weekend;
 
-        $start        = session()->get('start');
+        $start                         = session()->get('start');
 
         if (!$endDate instanceof Carbon) {
             // safety catch:
@@ -115,16 +118,16 @@ final class RecurrenceController extends Controller
             return response()->json();
         }
         // if $firstDate is beyond start, use that one:
-        $actualStart = clone $firstDate;
+        $actualStart                   = clone $firstDate;
 
         if ('weekly' === $repetitionType || 'monthly' === $repetitionType) {
-            $repetitionMoment = explode(',', (string)$request->input('type'))[1] ?? '1';
+            $repetitionMoment = explode(',', (string) $request->input('type'))[1] ?? '1';
         }
         if ('ndom' === $repetitionType) {
             $repetitionMoment = str_ireplace('ndom,', '', $request->input('type'));
         }
         if ('yearly' === $repetitionType) {
-            $repetitionMoment = explode(',', (string)$request->input('type'))[1] ?? '2025-01-01';
+            $repetitionMoment = explode(',', (string) $request->input('type'))[1] ?? '2025-01-01';
         }
         $actualStart->startOfDay();
         $repetition                    = new RecurrenceRepetition();
@@ -150,7 +153,7 @@ final class RecurrenceController extends Controller
         foreach ($occurrences as $current) {
             if ($current->gte($start)) {
                 $event    = [
-                    'id'        => $repetitionType . $firstDate->format('Ymd'),
+                    'id'        => $repetitionType.$firstDate->format('Ymd'),
                     'title'     => 'X',
                     'allDay'    => true,
                     'start'     => $current->format('Y-m-d'),
@@ -170,8 +173,8 @@ final class RecurrenceController extends Controller
      */
     public function suggest(Request $request): JsonResponse
     {
-        $string = '' === (string)$request->input('date') ? Carbon::now()->format('Y-m-d') : (string)$request->input('date');
-        $today  = today(config('app.timezone'))->startOfDay();
+        $string      = '' === (string) $request->input('date') ? Carbon::now()->format('Y-m-d') : (string) $request->input('date');
+        $today       = today(config('app.timezone'))->startOfDay();
 
         try {
             $date = Carbon::createFromFormat('Y-m-d', $string, config('app.timezone'));
@@ -182,37 +185,37 @@ final class RecurrenceController extends Controller
             return response()->json();
         }
         $date->startOfDay();
-        $preSelected = (string)$request->input('pre_select');
+        $preSelected = (string) $request->input('pre_select');
         $locale      = Steam::getLocale();
 
         Log::debug(sprintf('date = %s, today = %s. date > today? %s', $date->toAtomString(), $today->toAtomString(), var_export($date > $today, true)));
-        Log::debug(sprintf('past = true? %s', var_export('true' === (string)$request->input('past'), true)));
+        Log::debug(sprintf('past = true? %s', var_export('true' === (string) $request->input('past'), true)));
 
-        $result = [];
-        if ($date > $today || 'true' === (string)$request->input('past')) {
+        $result      = [];
+        if ($date > $today || 'true' === (string) $request->input('past')) {
             Log::debug('Will fill dropdown.');
             $weekly     = sprintf('weekly,%s', $date->dayOfWeekIso);
             $monthly    = sprintf('monthly,%s', $date->day);
-            $dayOfWeek  = (string)trans(sprintf('config.dow_%s', $date->dayOfWeekIso));
+            $dayOfWeek  = (string) trans(sprintf('config.dow_%s', $date->dayOfWeekIso));
             $ndom       = sprintf('ndom,%s,%s', $date->weekOfMonth, $date->dayOfWeekIso);
             $yearly     = sprintf('yearly,%s', $date->format('Y-m-d'));
-            $yearlyDate = $date->isoFormat((string)trans('config.month_and_day_no_year_js', [], $locale));
+            $yearlyDate = $date->isoFormat((string) trans('config.month_and_day_no_year_js', [], $locale));
             $result     = [
-                'daily'  => ['label' => (string)trans('firefly.recurring_daily'), 'selected' => str_starts_with($preSelected, 'daily')],
+                'daily'  => ['label' => (string) trans('firefly.recurring_daily'), 'selected' => str_starts_with($preSelected, 'daily')],
                 $weekly  => [
-                    'label'    => (string)trans('firefly.recurring_weekly', ['weekday' => $dayOfWeek]),
+                    'label'    => (string) trans('firefly.recurring_weekly', ['weekday' => $dayOfWeek]),
                     'selected' => str_starts_with($preSelected, 'weekly'),
                 ],
                 $monthly => [
-                    'label'    => (string)trans('firefly.recurring_monthly', ['dayOfMonth' => $date->day]),
+                    'label'    => (string) trans('firefly.recurring_monthly', ['dayOfMonth' => $date->day]),
                     'selected' => str_starts_with($preSelected, 'monthly'),
                 ],
                 $ndom    => [
-                    'label'    => (string)trans('firefly.recurring_ndom', ['weekday' => $dayOfWeek, 'dayOfMonth' => $date->weekOfMonth]),
+                    'label'    => (string) trans('firefly.recurring_ndom', ['weekday' => $dayOfWeek, 'dayOfMonth' => $date->weekOfMonth]),
                     'selected' => str_starts_with($preSelected, 'ndom'),
                 ],
                 $yearly  => [
-                    'label'    => (string)trans('firefly.recurring_yearly', ['date' => $yearlyDate]),
+                    'label'    => (string) trans('firefly.recurring_yearly', ['date' => $yearlyDate]),
                     'selected' => str_starts_with($preSelected, 'yearly'),
                 ],
             ];
