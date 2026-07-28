@@ -25,8 +25,6 @@ var calendar;
 $(document).ready(function () {
     "use strict";
     $(".content-wrapper form input:enabled:visible:first").first().focus().select();
-    // initializeButtons();
-    // initializeAutoComplete();
     // respondToFirstDateChange();
     // respondToRepetitionEnd();
     // $('.switch-button').on('click', switchTransactionType);
@@ -108,7 +106,7 @@ function respondToFirstDateChange() {
 
     // preselected value:
     var preSelected = oldRepetitionType;
-    if(preSelected === '') {
+    if('' === preSelected) {
         preSelected = select.val();
     }
 
@@ -137,8 +135,8 @@ function parseRepetitionSuggestions(data) {
 }
 
 function initializeAutoComplete() {
-    initTagsAC();
-    // initExpenseAC();
+    //initTagsAC();
+    //initExpenseAC();
     // initRevenueAC();
     // initCategoryAC();
 }
@@ -216,7 +214,7 @@ function updateFormFields() {
     }
 
     if (transactionType === 'transfer') {
-        // $('#source_name_holder').hide(); // source name no longer exists.
+            // $('#source_name_holder').hide(); // source name no longer exists.
         $('#deposit_source_id_holder').hide(); // new one!
 
         $('#source_id_holder').show();

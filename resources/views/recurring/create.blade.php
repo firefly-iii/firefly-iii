@@ -4,6 +4,7 @@
     <form action="{{ route('recurring.store') }}" method="post" id="store" class="form-horizontal"
           enctype="multipart/form-data" x-data="create">
         <input type="hidden" name="_token" value="{{ csrf_token() }}"/>
+        <input type="hidden" name="transaction_type" value="withdrawal">
         {{-- row with recurrence information --}}
         <div class="row">
 
@@ -28,8 +29,7 @@
                             <div class="input-group has-validation">
                             <label for="inputEmail3" class="col-sm-3 col-form-label">{{ trans('form.calendar') }}</label>
                             <div class="col-sm-9">
-                                <span type="text" readonly class="form-control-plaintext">
-                                    <a href="#" id="calendar-link">{{ __('firefly.click_for_calendar') }}</a></span>
+                                <button class="btn btn-outline-secondary" type="button" id="calendar-link">{{ __('firefly.click_for_calendar') }}</button>
                             </div>
                             </div>
                         </div>
@@ -75,25 +75,24 @@
                     <div class="card-body">
                         <p><em>{{ __('firefly.mandatory_fields_for_tranaction') }}</em></p>
                         {{-- three buttons to distinguish type of transaction --}}
-                        <div class="form-group" id="name_holder">
-                            <label for="ffInput_type" class="col-sm-4 control-label">
-                                {{ trans('form.transaction_type') }}
-                            </label>
+                        <div class="row mb-3" id="transaction_type_holder">
+                            <div class="input-group">
+                                <label for="ffInput_transaction_type" class="col-sm-3 col-form-label has-validation">{{ trans('form.transaction_type') }}</label>
 
-                            <div class="col-sm-8">
-                                <div class="btn-group btn-group-sm">
-                                    <a href="#" class="btn btn-outline-secondary switch-button"
-                                       data-value="withdrawal">{{ __('firefly.withdrawal') }}</a>
-                                    <a href="#" class="btn btn-outline-secondary switch-button"
-                                       data-value="deposit">{{ __('firefly.deposit') }}</a>
-                                    <a href="#" class="btn btn-outline-secondary switch-button"
-                                       data-value="transfer">{{ __('firefly.transfer') }}</a>
+                                <div class="col-sm-9 pt-1">
+                                    <div class="btn-group btn-group-sm">
+                                        <button type="button" class="btn btn-secondary switch-button"
+                                           data-value="withdrawal">{{ __('firefly.withdrawal') }}</button>
+                                        <button type="button" class="btn btn-secondary switch-button"
+                                           data-value="deposit">{{ __('firefly.deposit') }}</button>
+                                        <button type="button" class="btn btn-secondary switch-button"
+                                           data-value="transfer">{{ __('firefly.transfer') }}</button>
+                                    </div>
                                 </div>
                             </div>
                         </div>
-                        <input type="hidden" name="transaction_type" value="">
-                        {{-- end of three buttons --}}
 
+                        {{-- end of three buttons --}}
                         {!! ExpandedForm::text('transaction_description') !!}
                         {{-- transaction information (mandatory) --}}
                         {!! CurrencyForm::currencyList('transaction_currency_id', $primaryCurrency->id) !!}
@@ -168,7 +167,7 @@
                     </div>
                     <div class="card-footer text-end">
                         <button type="submit" class="btn btn-success">
-                            {{ __('store_new_recurrence') }}
+                            {{ __('firefly.store_new_recurrence') }}
                         </button>
                     </div>
                 </div>
@@ -211,6 +210,11 @@
     </div>
 @endsection
 @section('scripts')
+    <script type="text/javascript" nonce="{{ $JS_NONCE }}">
+        var suggestUrl = "{{ route('recurring.suggest') }}";
+        var oldRepetitionType = "{{ $oldRepetitionType }}";
+        var eventsUrl = "{{ route('recurring.events') }}";
+    </script>
     @vite(['js/pages/recurring/create.js'])
     <!--
     <script type="text/javascript" src="v1/js/lib/bootstrap-simple-autocomplete.js?v={{ $FF_BUILD_TIME }}" nonce="{{ $JS_NONCE }}"></script>
@@ -218,8 +222,8 @@
             nonce="{{ $JS_NONCE }}"></script>
     <script type="text/javascript" nonce="{{ $JS_NONCE }}">
         var transactionType = "{{ $preFilled['transaction_type'] }}";
-        var suggestUrl = "{{ route('recurring.suggest') }}";
-        var eventsUrl = "{{ route('recurring.events') }}";
+
+
         var oldRepetitionType = "{{ $oldRepetitionType }}";
     </script>
     <script type="text/javascript" src="v1/js/ff/recurring/create.js?v={{ $FF_BUILD_TIME }}"
