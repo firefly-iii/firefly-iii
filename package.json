@@ -1,10 +1,15 @@
 {
-    "scripts": {},
+    "scripts": {
+        "postinstall": "patch-package --error-on-fail"
+    },
     "workspaces": [
         "resources/assets/v1",
-        "resources/assets/v3"
+        "resources/assets/v2"
     ],
+    "devDependencies": {
+        "postcss": "^8.5.23"
+    },
     "dependencies": {
-        "bootstrap5-tags": "^1.7.17"
+        "patch-package": "^8.0.1"
     }
 }
