@@ -146,7 +146,7 @@
 
                         {{-- TAGS --}}
                         {{-- ExpandedForm::text('tags') --}}
-                        {!! ExpandedForm::multiSelect('tags', [],null, ['multiple'=> 'multiple']) !!}
+                        {!! ExpandedForm::multiSelect('tags', [], null) !!}
 
                         {{-- RELATE THIS TRANSFER TO A PIGGY BANK --}}
                         {!! PiggyBankForm::piggyBankList('piggy_bank_id') !!}
@@ -208,13 +208,11 @@
             </div>
         </div>
     </div>
+    <input type="hidden" id="repetitionType" value="{{ $oldRepetitionType}}" />
+    <input type="hidden" id="suggestUrl" value="{{ route('recurring.suggest') }}" />
+    <input type="hidden" id="eventsUrl" value="{{ route('recurring.events') }}" />
 @endsection
 @section('scripts')
-    <script type="text/javascript" nonce="{{ $JS_NONCE }}">
-        var suggestUrl = "{{ route('recurring.suggest') }}";
-        var oldRepetitionType = "{{ $oldRepetitionType }}";
-        var eventsUrl = "{{ route('recurring.events') }}";
-    </script>
     @vite(['js/pages/recurring/create.js'])
     <!--
     <script type="text/javascript" src="v1/js/lib/bootstrap-simple-autocomplete.js?v={{ $FF_BUILD_TIME }}" nonce="{{ $JS_NONCE }}"></script>

@@ -150,7 +150,11 @@ final class EditController extends Controller
         ];
         $array['first_date']                = substr((string) $array['first_date'], 0, 10);
         $array['repeat_until']              = substr((string) $array['repeat_until'], 0, 10);
-        $array['transactions'][0]['tags']   = implode(',', $array['transactions'][0]['tags'] ?? []);
+        $tags = [];
+        foreach($array['transactions'][0]['tags'] as $tag) {
+            $tags[$tag] = $tag;
+        }
+        $array['transactions'][0]['tags']   = $tags;
         $array['transactions'][0]['amount'] = round((float) $array['transactions'][0]['amount'], $array['transactions'][0]['currency_decimal_places']);
         if (null !== $array['transactions'][0]['foreign_amount'] && '' !== $array['transactions'][0]['foreign_amount']) {
             $array['transactions'][0]['foreign_amount'] = round(

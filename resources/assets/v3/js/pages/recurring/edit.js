@@ -1,5 +1,5 @@
 /*
- * dashboard.js
+ * edit.js
  * Copyright (c) 2026 james@firefly-iii.org
  *
  * This file is part of Firefly III (https://github.com/firefly-iii).
@@ -18,44 +18,41 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
+
 import '../../boot/bootstrap.js';
 import sidebar from '../../pages/shared/sidebar.js';
 import dates from '../shared/dates.js';
-
-
-import {Calendar} from 'fullcalendar';
-import themePlugin from 'fullcalendar/themes/monarch'; // YOUR THEME
-import dayGridPlugin from 'fullcalendar/daygrid';
-import timeGridPlugin from 'fullcalendar/timegrid';
-import listPlugin from 'fullcalendar/list';
-import {createTagField} from '../../form/create-tag-field.js';
-import {createAutocomplete} from '../../form/create-autocomplete.js';
-import {createButtonSwitcher} from './shared/create-button-switcher.js';
+import {createTagField} from "../../form/create-tag-field.js";
+import {createAutocomplete} from "../../form/create-autocomplete.js";
+import {createButtonSwitcher} from "./shared/create-button-switcher.js";
+import {switchTransactionType} from "./shared/switch-transaction-type.js";
 import {respondToFirstDateChange} from './shared/respond-to-first-date-change.js';
-import {switchTransactionType} from './shared/switch-transaction-type.js';
 import {respondToRepetitionEnd} from './shared/respond-to-repetition-end.js';
+import {Calendar} from "fullcalendar";
+import themePlugin from "fullcalendar/themes/monarch";
+import dayGridPlugin from "fullcalendar/daygrid";
+import timeGridPlugin from "fullcalendar/timegrid";
+import listPlugin from "fullcalendar/list";
+
 // stylesheets
 import 'fullcalendar/skeleton.css'; // ALWAYS NEED SKELETON
 import 'fullcalendar/themes/monarch/theme.css'; // YOUR THEME
 import 'fullcalendar/themes/monarch/palettes/purple.css'; // YOUR THEME'S PALETTE
 
-
-let create = function () {
+let edit = function () {
     return {
-        calendar: null,
-        eventSource: null,
         init() {
             createTagField('ffInput_tags');
-            createAutocomplete('ffInput_category', './api/v1/autocomplete/categories');
+            createAutocomplete('ffInput_category','./api/v1/autocomplete/categories');
             createButtonSwitcher();
-            switchTransactionType('withdrawal');
+            switchTransactionType(document.getElementsByName('transaction_type')[0].value);
+
             let type = document.getElementById('repetitionType').value;
             let suggestUrl = document.getElementById('suggestUrl').value;
             respondToFirstDateChange(type, suggestUrl);
             respondToRepetitionEnd();
             document.getElementById('ffInput_first_date').addEventListener('change', respondToFirstDateChange.bind(this));
             document.getElementById('ffInput_repetition_end').addEventListener('change', respondToRepetitionEnd.bind(this));
-
 
             let calendarEl = document.getElementById('recurring_calendar');
             this.calendar = new Calendar(calendarEl, {
@@ -69,6 +66,7 @@ let create = function () {
             this.calendar.render();
             document.getElementById('calendar-link').addEventListener('click', this.showRepCalendar.bind(this));
         },
+
         showRepCalendar() {
             let eventsUrl = document.getElementById('eventsUrl').value;
             // pre-append URL with repetition info:
@@ -92,7 +90,7 @@ let create = function () {
 
 
 const comps = {
-    create,
+    edit,
     sidebar,
     dates
 };

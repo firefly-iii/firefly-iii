@@ -3,9 +3,9 @@
 
     <form method="post" action="{{ route('recurring.update', $recurrence->id) }}" class="form-horizontal"
           accept-charset="UTF-8"
-          enctype="multipart/form-data">
+          enctype="multipart/form-data" x-data="edit">
         <input type="hidden" name="_token" value="{{ csrf_token() }}"/>
-
+        <input type="hidden" name="transaction_type" value="{{ $preFilled['transaction_type'] }}"/>
         {{-- row with recurrence information --}}
         <div class="row">
 
@@ -27,14 +27,12 @@
                         {!! ExpandedForm::integer('repetitions', $array['nr_of_repetitions']) !!}
 
                         {{-- calendar in popup --}}
-                        <div class="form-group" id="calendar_holder">
-                            <label for="ffInput_calendar"
-                                   class="col-sm-4 control-label">{{ trans('form.calendar') }}</label>
-
-                            <div class="col-sm-8">
-                                <p class="form-control-static" id="ffInput_calendar">
-                                    <a href="#" id="calendar-link">{{ __('firefly.click_for_calendar') }}</a>
-                                </p>
+                        <div class="row mb-3">
+                            <div class="input-group has-validation">
+                                <label for="inputEmail3" class="col-sm-3 col-form-label">{{ trans('form.calendar') }}</label>
+                                <div class="col-sm-9">
+                                    <button class="btn btn-outline-secondary" type="button" id="calendar-link">{{ __('firefly.click_for_calendar') }}</button>
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -69,23 +67,22 @@
                     <div class="card-body">
                         <p><em>{{ __('firefly.mandatory_fields_for_tranaction') }}</em></p>
                         {{-- three buttons to distinguish type of transaction --}}
-                        <div class="form-group" id="name_holder">
-                            <label for="ffInput_type" class="col-sm-4 control-label">
-                                {{ trans('form.transaction_type') }}
-                            </label>
+                        <div class="row mb-3" id="transaction_type_holder">
+                            <div class="input-group">
+                                <label for="ffInput_transaction_type" class="col-sm-3 col-form-label has-validation">{{ trans('form.transaction_type') }}</label>
 
-                            <div class="col-sm-8">
-                                <div class="btn-group btn-group-sm">
-                                    <a href="#" class="btn btn-outline-secondary switch-button"
-                                       data-value="withdrawal">{{ __('firefly.withdrawal') }}</a>
-                                    <a href="#" class="btn btn-outline-secondary switch-button"
-                                       data-value="deposit">{{ __('firefly.deposit') }}</a>
-                                    <a href="#" class="btn btn-outline-secondary switch-button"
-                                       data-value="transfer">{{ __('firefly.transfer') }}</a>
+                                <div class="col-sm-9 pt-1">
+                                    <div class="btn-group btn-group-sm">
+                                        <button type="button" class="btn btn-secondary switch-button"
+                                                data-value="withdrawal">{{ __('firefly.withdrawal') }}</button>
+                                        <button type="button" class="btn btn-secondary switch-button"
+                                                data-value="deposit">{{ __('firefly.deposit') }}</button>
+                                        <button type="button" class="btn btn-secondary switch-button"
+                                                data-value="transfer">{{ __('firefly.transfer') }}</button>
+                                    </div>
                                 </div>
                             </div>
                         </div>
-                        <input type="hidden" name="transaction_type" value="">
                         {{-- end of three buttons --}}
                         {!! ExpandedForm::text('transaction_description', $array['transactions'][0]['description']) !!}
                         {{-- transaction information (mandatory) --}}
@@ -137,7 +134,7 @@
                         @endif
 
                         {{-- TAGS --}}
-                        {!! ExpandedForm::text('tags', $array['transactions'][0]['tags']) !!}
+                        {!! ExpandedForm::multiSelect('tags', $array['transactions'][0]['tags'],null) !!}
 
                         {{-- RELATE THIS TRANSFER TO A PIGGY BANK --}}
                         {!! PiggyBankForm::piggyBankList('piggy_bank_id',$array['transactions'][0]['piggy_bank_id'])  !!}
@@ -199,36 +196,13 @@
             </div>
         </div>
     </div>
+    <input type="hidden" id="repetitionType" value="{{ $currentRepType}}" />
+    <input type="hidden" id="suggestUrl" value = "{{ route('recurring.suggest') }}" />
+    <input type="hidden" id="eventsUrl" value = "{{ route('recurring.events') }}" />
 @endsection
 @section('scripts')
-    @vite(['js/pages/generic.js'])
-    <script type="text/javascript" src="v1/js/lib/modernizr-custom.js?v={{ $FF_BUILD_TIME }}"
-            nonce="{{ $JS_NONCE }}"></script>
-    <script type="text/javascript" src="v1/js/lib/typeahead/typeahead.bundle.min.js?v={{ $FF_BUILD_TIME }}"
-            nonce="{{ $JS_NONCE }}"></script>
-    <script type="text/javascript" src="v1/js/ff/common/autocomplete.js?v={{ $FF_BUILD_TIME }}"
-            nonce="{{ $JS_NONCE }}"></script>
-    <script type="text/javascript" src="v1/js/lib/bootstrap-tagsinput.min.js?v={{ $FF_BUILD_TIME }}"
-            nonce="{{ $JS_NONCE }}"></script>
-    <script type="text/javascript" src="v1/js/lib/jquery-ui.min.js?v={{ $FF_BUILD_TIME }}" nonce="{{ $JS_NONCE }}"></script>
-    <script type="text/javascript" src="v1/lib/fc/fullcalendar.min.js?v={{ $FF_BUILD_TIME }}"
-            nonce="{{ $JS_NONCE }}"></script>
-    <script type="text/javascript" nonce="{{ $JS_NONCE }}">
-        var transactionType = "{{ $preFilled['transaction_type'] }}";
-        var suggestUrl = "{{ route('recurring.suggest') }}";
-        var eventsUrl = "{{ route('recurring.events') }}";
-        var currentRepType = "{{ $currentRepType }}";
-    </script>
-    <script type="text/javascript" src="v1/js/ff/recurring/edit.js?v={{ $FF_BUILD_TIME }}" nonce="{{ $JS_NONCE }}"></script>
+    @vite(['js/pages/recurring/edit.js'])
 @endsection
 
 @section('styles')
-    <link href="v1/css/bootstrap-tagsinput.css?v={{ $FF_BUILD_TIME }}" type="text/css" rel="stylesheet" media="all"
-          nonce="{{ $JS_NONCE }}">
-    <link href="v1/css/jquery-ui/jquery-ui.structure.min.css?v={{ $FF_BUILD_TIME }}" type="text/css" rel="stylesheet"
-          media="all" nonce="{{ $JS_NONCE }}">
-    <link href="v1/css/jquery-ui/jquery-ui.theme.min.css?v={{ $FF_BUILD_TIME }}" type="text/css" rel="stylesheet"
-          media="all" nonce="{{ $JS_NONCE }}">
-    <link href="v1/lib/fc/fullcalendar.min.css?v={{ $FF_BUILD_TIME }}" type="text/css" rel="stylesheet" media="all"
-          nonce="{{ $JS_NONCE }}">
 @endsection
