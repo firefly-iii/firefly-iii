@@ -98,7 +98,7 @@ export function addAllAutocompleteToForm(filters) {
             selector: 'input.ac-description',
             serverUrl: urls.description,
             valueField: 'id',
-            labelField: 'title',
+            labelField: 'name',
             onChange: changeDescription,
             onSelectItem: changeDescription,
         });
@@ -109,8 +109,13 @@ function addAutocomplete(options) {
     const params = {
         server: options.serverUrl,
         serverParams: {},
+        fixed: true,
         fetchOptions: {
+            method: 'GET',
+            credentials: 'include',
             headers: {
+                'Content-Type': 'application/json',
+                'Accept': 'application/json',
                 'X-CSRF-TOKEN': document.head.querySelector('meta[name="csrf-token"]').content
             }
         },
@@ -124,7 +129,6 @@ function addAutocomplete(options) {
         params.serverParams['types'] = options.account_types;
     }
     if (typeof options.onRenderItem !== 'undefined' && null !== options.onRenderItem) {
-        console.log('overrule onRenderItem.');
         params.onRenderItem = options.onRenderItem;
     }
     if (options.valueField) {
