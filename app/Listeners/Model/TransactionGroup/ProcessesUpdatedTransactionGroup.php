@@ -94,7 +94,7 @@ class ProcessesUpdatedTransactionGroup
     private function unifyAccountsForGroup(TransactionGroup $group): int
     {
         if (1 === $group->transactionJournals->count()) {
-            //Log::debug('Nothing to do in unifyAccounts()');
+            // Log::debug('Nothing to do in unifyAccounts()');
 
             return 0;
         }
