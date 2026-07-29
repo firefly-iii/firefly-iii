@@ -150,8 +150,8 @@ final class EditController extends Controller
         ];
         $array['first_date']                = substr((string) $array['first_date'], 0, 10);
         $array['repeat_until']              = substr((string) $array['repeat_until'], 0, 10);
-        $tags = [];
-        foreach($array['transactions'][0]['tags'] as $tag) {
+        $tags                               = [];
+        foreach ($array['transactions'][0]['tags'] as $tag) {
             $tags[$tag] = $tag;
         }
         $array['transactions'][0]['tags']   = $tags;
