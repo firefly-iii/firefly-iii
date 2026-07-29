@@ -84,7 +84,7 @@ function startMigration() {
         }
 
     }).fail(function () {
-        document.querySelector('#status-box').innerHTML = '<span class="fa fa-warning"></span> Migration failed! See log files :(';
+        document.querySelector('#status-box').innerHTML = '<span class="bi bi-exclamation-triangle"></span> Migration failed! See log files :(';
     });
 }
 
@@ -109,7 +109,7 @@ function startDecryption() {
         }
 
     }).fail(function () {
-        document.querySelector('#status-box').innerHTML = '<span class="fa fa-warning"></span> Migration failed! See log files :(';
+        document.querySelector('#status-box').innerHTML = '<span class="bi bi-exclamation-triangle"></span> Migration failed! See log files :(';
     });
 }
 
@@ -135,7 +135,7 @@ function startPassport() {
         }
 
     }).fail(function () {
-        document.querySelector('#status-box').innerHTML = '<span class="fa fa-warning"></span> OAuth2 failed! See log files :(';
+        document.querySelector('#status-box').innerHTML = '<span class="bi bi-exclamation-triangle"></span> OAuth2 failed! See log files :(';
     });
 }
 
@@ -160,7 +160,7 @@ function startUpgrade() {
             displaySoftFail(data.message);
         }
     }).fail(function () {
-        document.querySelector('#status-box').innerHTML = '<span class="fa fa-warning"></span> Upgrade failed! See log files :(';
+        document.querySelector('#status-box').innerHTML = '<span class="bi bi-exclamation-triangle"></span> Upgrade failed! See log files :(';
     });
 }
 
@@ -185,7 +185,7 @@ function startVerify() {
             displaySoftFail(data.message);
         }
     }).fail(function () {
-        document.querySelector('#status-box').innerHTML = '<span class="fa fa-warning"></span> Verification failed! See log files :(';
+        document.querySelector('#status-box').innerHTML = '<span class="bi bi-exclamation-triangle"></span> Verification failed! See log files :(';
     });
 }
 
@@ -193,14 +193,14 @@ function startVerify() {
  *
  */
 function completeDone() {
-    document.querySelector('#status-box').innerHTML = '<span class="fa fa-thumbs-up"></span> Installation + upgrade complete! Wait to be redirected...';
+    document.querySelector('#status-box').innerHTML = '<span class="bi bi-hand-thumbs-up"></span> Installation + upgrade complete! Wait to be redirected...';
     setTimeout(function () {
         window.location = homeUrl;
     }, 3000);
 }
 
 function displaySoftFail(message) {
-    document.querySelector('#status-box').innerHTML = '<span class="fa fa-warning"></span> ' + message + '<br /><br />Please read the ' +
+    document.querySelector('#status-box').innerHTML = '<span class="bi bi-exclamation-triangle"></span> ' + message + '<br /><br />Please read the ' +
         '<a href="https://docs.firefly-iii.org/">' +
         'documentation</a> about this, and upgrade by hand.';
 }

@@ -31,7 +31,7 @@
         </div>
         @endforeach
     </div>
-    <div class="card-footer">
+    <div class="card-footer text-end">
         <a href="{{ route('piggy-banks.index') }}" class="btn btn-primary btn-sm"><span class="bi bi-bullseye"></span> {{ __('firefly.go_to_piggies') }}</a>
     </div>
 </div>
