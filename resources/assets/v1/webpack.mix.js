@@ -27,7 +27,7 @@ mix.webpackConfig({
             // 'vue$': 'vue/dist/vue.runtime.common.js'
         },
         fallback: {
-            "stream": require.resolve("stream-browserify"),
+            // "stream": require.resolve("stream-browserify"),
             "zlib": false,
             "https": false,
             "http": false
@@ -36,21 +36,3 @@ mix.webpackConfig({
 });
 
 mix.js('src/app.js', 'build').copy('build','../../../public/v1/js');
-// mix.js('src/app_vue.js', 'build').vue({version: 2});
-// mix.js('src/create_transaction.js', 'build').vue({version: 2});
-// mix.js('src/edit_transaction.js', 'build').vue({version: 2});
-// mix.js('src/profile.js', 'build').vue({version: 2});
-//
-// // webhooks
-// mix.js('src/webhooks/index.js', 'build/webhooks').vue({version: 2});
-// mix.js('src/webhooks/create.js', 'build/webhooks').vue({version: 2});
-// mix.js('src/webhooks/edit.js', 'build/webhooks').vue({version: 2});
-// mix.js('src/webhooks/show.js', 'build/webhooks').vue({version: 2}).copy('build','../../../public/v1/js')
-
-// exchange rates
-// mix.js('src/exchange-rates/index.js', 'build/exchange-rates').vue({version: 2});
-// mix.js('src/exchange-rates/rates.js', 'build/exchange-rates').vue({version: 2});
-
-// administrations
-// mix.js('src/administrations/index.js', 'build/administrations').vue({version: 2});
-// mix.js('src/administrations/edit.js', 'build/administrations').vue({version: 2});

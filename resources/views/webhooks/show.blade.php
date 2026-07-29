@@ -208,7 +208,7 @@
             <div class="modal-dialog modal-lg">
                 <div class="modal-content">
                     <div class="modal-header">
-                        <h4 class="modal-title">{{ __('firefly.message_content_title') }}</h4>
+                        <h5 class="modal-title">{{ __('firefly.message_content_title') }}</h5>
                     </div>
                     <div class="modal-body">
                         <p>
@@ -228,7 +228,7 @@
             <div class="modal-dialog modal-lg">
                 <div class="modal-content">
                     <div class="modal-header">
-                        <h4 class="modal-title">{{ __('firefly.attempt_content_title') }}</h4>
+                        <h5 class="modal-title">{{ __('firefly.attempt_content_title') }}</h5>
                     </div>
                     <div class="modal-body">
                         <p>
@@ -242,7 +242,7 @@
                         <template x-for="message in message_attempts">
                         <div style="border:1px #eee solid;margin-bottom:0.5em;">
                             <strong>
-                                <span x-text="i18next.t('firefly.webhook_attempt_at', {moment: message.created_at})"
+                                <span x-text="i18next.t('firefly.webhook_attempt_at', {moment: message.created_at})"></span>
                                 <span class="text-danger">(<span x-text="message.status_code"></span>)</span>
                             </strong>
                             <p>

@@ -298,7 +298,7 @@ let transactions = function () {
                 this.formData.foreignCurrencies = data.foreignCurrencies;
             });
 
-            loadBudgets().then(data => {
+            loadBudgets(true).then(data => {
                 this.formData.budgets = data;
                 this.formStates.loadingBudgets = false;
             });

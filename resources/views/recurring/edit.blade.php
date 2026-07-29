@@ -182,7 +182,7 @@
         <div class="modal-dialog modal-lg">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h4 class="modal-title">{{ __('firefly.recurring_calendar_view') }}</h4>
+                    <h5 class="modal-title">{{ __('firefly.recurring_calendar_view') }}</h5>
                 </div>
                 <div class="modal-body">
                     <div id="recurring_calendar"  class="calendar-display">

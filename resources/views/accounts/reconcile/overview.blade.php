@@ -4,7 +4,7 @@
             <h5 class="modal-title">
                 {{ __('firefly.overview_of_reconcile_modal') }}
             </h5>
-            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="{{ __('firefly.close') }}"></button>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" tabindex="-1" aria-label="{{ __('firefly.close') }}"></button>
         </div>
 
         <form class="form-horizontal inline" id="income" action="{{ $route }}" method="POST">

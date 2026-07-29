@@ -21,7 +21,7 @@
 
 import Get from "../../../api/model/budget/get.js";
 
-export function loadBudgets() {
+export function loadBudgets(includeInactive) {
     let params = {
         page: 1, limit: 1337
     };
@@ -34,10 +34,19 @@ export function loadBudgets() {
         for (let i in response.data.data) {
             if (response.data.data.hasOwnProperty(i)) {
                 let current = response.data.data[i];
-                let obj = {
-                    id: current.id, name: current.attributes.name,
-                };
-                returnData.push(obj);
+                if(true === current.attributes.active) {
+                    let obj = {
+                        id: current.id, name: current.attributes.name,
+                    };
+                    returnData.push(obj);
+                    continue;
+                }
+                if(includeInactive && false === current.attributes.active) {
+                    let obj = {
+                        id: current.id, name: current.attributes.name,
+                    };
+                    returnData.push(obj);
+                }
             }
         }
         return returnData;

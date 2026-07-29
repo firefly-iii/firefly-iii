@@ -121,9 +121,9 @@
                                 <div class="modal-dialog">
                                     <div class="modal-content">
                                         <div class="modal-header">
-                                            <h4 class="modal-title">
+                                            <h5 class="modal-title">
                                                 {{ __('firefly.profile_oauth_create_client') }}
-                                            </h4>
+                                            </h5>
 
                                             <button aria-hidden="true" class="close" data-bs-dismiss="modal"
                                                     type="button">&times;
@@ -225,9 +225,9 @@
                                 <div class="modal-dialog">
                                     <div class="modal-content">
                                         <div class="modal-header">
-                                            <h4 class="modal-title">
+                                            <h5 class="modal-title">
                                                 {{ __('firefly.profile_oauth_edit_client') }}
-                                            </h4>
+                                            </h5>
 
                                             <button aria-hidden="true" class="close" data-bs-dismiss="modal"
                                                     type="button">&times;
@@ -311,9 +311,9 @@
                                 <div class="modal-dialog">
                                     <div class="modal-content">
                                         <div class="modal-header">
-                                            <h4 class="modal-title">
+                                            <h5 class="modal-title">
                                                 {{ __('firefly.profile_oauth_client_secret_title') }}
-                                            </h4>
+                                            </h5>
 
                                             <button aria-hidden="true" class="close" data-bs-dismiss="modal"
                                                     type="button">&times;
@@ -415,9 +415,9 @@
                         <div class="modal-dialog">
                             <div class="modal-content">
                                 <div class="modal-header">
-                                    <h4 class="modal-title">
+                                    <h5 class="modal-title">
                                         {{ __('firefly.profile_create_token') }}
-                                    </h4>
+                                    </h5>
 
                                     <button aria-hidden="true" class="close" data-bs-dismiss="modal" type="button">
                                         &times;
@@ -496,9 +496,9 @@
                         <div class="modal-dialog">
                             <div class="modal-content">
                                 <div class="modal-header">
-                                    <h4 class="modal-title">
+                                    <h5 class="modal-title">
                                         {{ __('firefly.profile_personal_access_token') }}
-                                    </h4>
+                                    </h5>
 
                                     <button aria-hidden="true" class="close" data-bs-dismiss="modal" type="button">
                                         &times;
