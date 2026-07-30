@@ -70,6 +70,7 @@ jobs:
       - name: Configure Git
         run: |
           # do some configuration
+          sudo ln -fs /usr/share/zoneinfo/Europe/Amsterdam /etc/localtime
           sudo timedatectl set-timezone Europe/Amsterdam
           git config user.name JC5
           git config user.email release@firefly-iii.org
