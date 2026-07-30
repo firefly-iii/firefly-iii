@@ -21,24 +21,16 @@
                         <table class="table table-responsive  table-hover sortable">
                             <thead>
                             <tr>
-                                <th class="hidden-sm hidden-xs" data-defaultsort="disabled">&nbsp;</th>
                                 <th data-defaultsign="az">{{ trans('list.title') }}</th>
                                 <th data-defaultsort="disabled">{{ trans('list.transaction_s') }}</th>
                                 <th data-defaultsort="disabled">{{ trans('list.repetitions') }}</th>
                                 <th data-defaultsign="month" data-dateformat="{{ $madMomentJS }}">{{ trans('list.next_due') }}</th>
+                                <th class="hidden-sm hidden-xs" data-defaultsort="disabled">&nbsp;</th>
                             </tr>
                             </thead>
                             <tbody>
                             @foreach($paginator as $rt)
                                 <tr>
-                                    <td class="hidden-sm hidden-xs">
-                                        <div class="btn-group btn-group-sm edit_tr_buttons">
-                                            <a class="btn btn-outline-secondary btn-xs" title="{{ __('firefly.edit') }}" href="{{ route('recurring.edit',$rt['id']) }}"><span
-                                                    class="bi bi-pencil"></span></a><a class="btn btn-danger btn-xs" title="{{ __('firefly.delete') }}"
-                                                                                             href="{{ route('recurring.delete',$rt['id']) }}"><span
-                                                    class="bi bi-trash"></span></a>
-                                        </div>
-                                    </td>
                                     <td data-value="{{ $rt['title'] }}">
                                         @if($rt['attachments'] > 0)
                                             <span class="bi bi-paperclip"></span>
@@ -118,6 +110,17 @@
                                                 @endforeach
                                             @endforeach
                                         </ul>
+                                    </td>
+                                    <td class="hidden-sm hidden-xs text-end">
+                                        <div class="dropdown">
+                                            <button class="btn btn-sm btn-outline-secondary dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                                {{ __('firefly.actions') }}
+                                            </button>
+                                            <ul class="dropdown-menu">
+                                                <li><a class="dropdown-item" href="{{ route('recurring.edit',$rt['id']) }}"><span class="bi bi-pencil"></span> {{ __('firefly.edit') }}</a></li>
+                                                <li><a class="dropdown-item text-danger" href="{{ route('recurring.delete',$rt['id']) }}"><span class="bi bi-trash"></span> {{ __('firefly.delete') }}</a></li>
+                                            </ul>
+                                        </div>
                                     </td>
                                 </tr>
                             @endforeach

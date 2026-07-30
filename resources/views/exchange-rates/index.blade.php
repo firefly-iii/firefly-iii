@@ -48,15 +48,6 @@
                                            x-text="i18next.t('firefly.exchange_rates_from_to', {from: currency.name, to: sub.name})"></a>
                                     </li>
                                 </template>
-                                {{--
-                                <template x-show="sub.id !== currency.id">
-                                    <li>
-                                        <a :href="'exchange-rates/' + currency.code + '/' + sub.code"
-                                           :title="i18next.t('firefly.exchange_rates_from_to', {from: currency.name, to: sub.name})"
-                                           x-text="i18next.t('firefly.exchange_rates_from_to', {from: currency.name, to: sub.name})"></a>
-                                    </li>
-                                </template>
-                                --}}
                             </template>
                         </ul>
                         </template>

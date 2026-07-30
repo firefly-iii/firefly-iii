@@ -29,7 +29,7 @@
     @foreach($objectGroup['piggy_banks'] as $piggy)
     <tr class="piggy-sortable" data-id="{{ $piggy['id'] }}" data-name="{{ $piggy['name'] }}" data-order="{{ $piggy['order'] }}">
         <td class="d-none d-md-table-cell">
-            <a class="btn btn-md bi bi-list piggy-handle"></a>
+            <a class="btn btn-sm bi bi-list piggy-handle"></a>
             <span class="loadSpin"></span>
         </td>
         <!--
@@ -114,7 +114,7 @@
         </td>
         <td style="width:100px;" class="text-end">
             <div class="dropdown">
-                <button class="btn btn-md btn-outline-secondary dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+                <button class="btn btn-sm btn-outline-secondary dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
                     {{__('firefly.actions')}}
                 </button>
                 <ul class="dropdown-menu">

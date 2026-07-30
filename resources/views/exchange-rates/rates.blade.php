@@ -100,18 +100,15 @@
                                         <!-- (<span v-text="rate.inverse_id"></span>) -->
                                         <input type="number" class="form-control" min="0" step="any" x-model="rate.inverse">
                                     </td>
-                                    <td>
-                                        <div class="btn-group">
-                                            <button
-                                                :disabled="saveButtonDisabled(index)"
-                                                class="btn btn-default" :title="i18next.t('firefly.submit')"
-                                                @click="updateRate(index)">
-                                                <em class="bi bi-floppy"></em>
+                                    <td class="text-end">
+                                        <div class="dropdown">
+                                            <button class="btn btn-sm btn-outline-secondary dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                                {{ __('firefly.actions') }}
                                             </button>
-                                            <button class="btn btn-danger" :title="i18next.t('firefly.delete')"
-                                                    @click="deleteRate(index)">
-                                                <em class="bi bi-trash"></em>
-                                            </button>
+                                            <ul class="dropdown-menu">
+                                                <li><button :disabled="saveButtonDisabled(index)" @click="updateRate(index)" :title="i18next.t('firefly.submit')" class="dropdown-item" href="#"><em class="bi bi-floppy"></em> {{ __('firefly.save') }}</button></li>
+                                                <li><button @click="deleteRate(index)" :title="i18next.t('firefly.delete')" class="dropdown-item text-danger" href="#"><em class="bi bi-trash"></em> {{ __('firefly.delete') }}</button></li>
+                                            </ul>
                                         </div>
                                     </td>
                                 </tr>

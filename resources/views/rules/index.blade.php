@@ -60,11 +60,10 @@
                                 <thead>
                                 <tr>
                                     <th class="five">&nbsp;</th>
-                                    <th class="ten">&nbsp;</th>
-                                    <th class="ten">&nbsp;</th>
                                     <th class="quarter">{{ __('firefly.rule_name') }}</th>
                                     <th class="quarter d-xs-none">{{ __('firefly.rule_triggers') }}</th>
                                     <th class="quarter d-xs-none">{{ __('firefly.rule_actions') }}</th>
+                                    <th class="w-20">&nbsp;</th>
                                 </tr>
                                 </thead>
                                 <tbody class="rule-connected-list">
@@ -72,30 +71,10 @@
                                     <tr class="single-rule" data-order="{{ $rule->order }}" data-id="{{ $rule->id }}" data-group-id="{{ $ruleGroup->id }}" data-position="{{ $loop->index }}">
                                         <td>
                                             <div class="btn-group btn-group-sm prio_buttons">
-                                                <span class="bi bi-list rule-handle"></span>
+                                                <a class="btn btn-sm bi bi-list rule-handle"></a>
                                             </div>
                                         </td>
-                                        <td>
-                                            <div class="btn-group btn-group-sm edit_buttons">
-                                                <a title="{{ __('firefly.edit') }}" href="{{ route('rules.edit', $rule->id) }}"
-                                                   class="btn btn-outline-secondary"><span
-                                                        class="bi bi-pencil"></span></a>
-                                                <a title="{{ __('firefly.delete') }}" href="{{ route('rules.delete', $rule->id) }}" class="btn btn-danger"><span class="bi bi-trash"></span></a>
-                                            </div>
-                                        </td>
-                                        <td>
-                                            <div class="btn-group btn-group-sm test_buttons">
-                                                {{-- show which transactions would match --}}
-                                                <a href="{{ route('rules.search',$rule->id) }}" class="btn btn-outline-secondary @if(false === $rule->strict) test_rule_triggers @endif" data-id="{{ $rule->id }}" title="{{ __('firefly.test_rule_triggers') }}"><span data-id="{{ $rule->id }}" class="bi bi-flask"></span></a>
-                                                @if($rule->active)
-                                                    {{-- actually execute rule --}}
-                                                    <a href="{{ route('rules.select-transactions',$rule->id) }}" class="btn btn-outline-secondary" title=" {{ trans('firefly.apply_rule_selection', ['title' => $rule->title]) }}"><span class="bi bi-power "></span></a>
-                                                @endif
 
-                                                {{--  duplicate rule --}}
-                                                <a href="#" class="btn btn-outline-secondary duplicate-rule" data-id="{{ $rule->id }}" title=" {{ trans('firefly.duplicate_rule', ['title' => $rule->title]) }}"><span class="bi bi-copy"></span></a>
-                                            </div>
-                                        </td>
                                         <td class="markdown">
                                             @if($rule->active)
                                                 {{ $rule->title }}
@@ -157,6 +136,22 @@
                                                     <li>{{ __('firefly.show_actions') }}</li>
                                                 </ul>
                                             @endif
+                                        </td>
+                                        <td>
+                                            <div class="dropdown">
+                                                <button class="btn btn-sm btn-outline-secondary dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                                    {{ __('firefly.actions') }}
+                                                </button>
+                                                <ul class="dropdown-menu">
+                                                    <li><a class="dropdown-item" title="{{ __('firefly.edit') }}" href="{{ route('rules.edit', $rule->id) }}"><span class="bi bi-pencil"></span> {{ __('firefly.edit') }} </a></li>
+                                                    <li><a class="dropdown-item text-danger" title="{{ __('firefly.delete') }}" href="{{ route('rules.delete', $rule->id) }}"><span class="bi bi-trash"></span> {{ __('firefly.delete') }}</a></li>
+                                                    <li><a class="dropdown-item @if(false === $rule->strict) test_rule_triggers @endif" data-id="{{ $rule->id }}" href="{{ route('rules.search',$rule->id) }}"><span data-id="{{ $rule->id }}" class="bi bi-flask"></span> {{ __('firefly.test_rule_triggers') }}</a></li>
+                                                    @if($rule->active)
+                                                        <li><a class="dropdown-item" href="{{ route('rules.select-transactions',$rule->id) }}"><span class="bi bi-power"></span> {{ trans('firefly.apply_rule_selection', ['title' => $rule->title]) }}</a></li>
+                                                    @endif
+                                                    <li><a class="dropdown-item duplicate-rule" data-id="{{ $rule->id }}" title="{{ trans('firefly.duplicate_rule', ['title' => $rule->title]) }}"><span class="bi bi-copy"></span> {{ trans('firefly.duplicate_rule', ['title' => $rule->title]) }}</a></li>
+                                                </ul>
+                                            </div>
                                         </td>
                                     </tr>
                                 @endforeach

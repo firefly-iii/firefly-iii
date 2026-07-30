@@ -38,7 +38,7 @@
     @foreach($accounts as $account)
     <tr class="sortable-object" data-id="{{ $account->id }}" data-order="{{ $account->order }}" data-position="{{ $loop->index }}">
         <td class="hidden-sm hidden-xs">
-            <span class="bi bi-list object-handle"></span>
+            <span class="btn btn-sm bi bi-list object-handle"></span>
         </td>
         <td>
             <a href="{{ route('accounts.show',$account->id) }}">{{ $account->name }}</a>

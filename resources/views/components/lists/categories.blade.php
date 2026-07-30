@@ -4,25 +4,19 @@
 <table class="table table-hover sortable">
     <thead>
     <tr>
-        <th data-defaultsort="disabled">&nbsp;</th>
         <th data-defaultsign="az">{{ trans('list.name') }}</th>
         <th data-defaultsign="month" class="hidden-sm hidden-xs">{{ trans('list.lastActivity') }}</th>
+        <th data-defaultsort="disabled">&nbsp;</th>
     </tr>
     </thead>
     <tbody>
     <tr>
-        <td>&nbsp;</td>
         <td><a href="{{ route('categories.no-category') }}"><em>{{ __('firefly.without_category') }}</em></a></td>
         <td class="hidden-sm hidden-xs">&nbsp;</td>
+        <td>&nbsp;</td>
     </tr>
     @foreach($categories as $category)
     <tr>
-        <td>
-            <div class="btn-group btn-group-sm">
-                <a href="{{ route('categories.edit', [$category->id]) }}" class="btn btn-outline-secondary btn-xs"><span class="bi bi-pencil"></span></a>
-                <a href="{{ route('categories.delete', [$category->id]) }}" class="btn btn-danger btn-xs"><span class="bi bi-trash"></span></a>
-            </div>
-        </td>
         <td data-value="{{ $category->name }}">
             <a href="{{ route('categories.show', [$category->id]) }}" title="{{ $category->name }}">{{ $category->name }}</a>
             @if($category->attachments->count() > 0)
@@ -38,6 +32,17 @@
             <em>{{ __('firefly.never') }}</em>
         </td>
         @endif
+        <td class="text-end">
+            <div class="dropdown">
+                <button class="btn btn-sm btn-outline-secondary dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+                    {{ __('firefly.actions') }}
+                </button>
+                <ul class="dropdown-menu">
+                    <li><a class="dropdown-item" href="{{ route('categories.edit', [$category->id]) }}"><span class="bi bi-pencil"></span> {{ __('firefly.edit') }}</a></li>
+                    <li><a class="dropdown-item text-danger" href="{{ route('categories.delete', [$category->id]) }}"><span class="bi bi-trash"></span> {{ __('firefly.delete') }}</a></li>
+                </ul>
+            </div>
+        </td>
     </tr>
     @endforeach
     </tbody>

@@ -17,39 +17,15 @@
                         <table class="table table-striped table-hover">
                             <thead>
                             <tr>
-                                <th>&nbsp;</th>
                                 <th>{{ __('firefly.currency') }}</th>
                                 <th>{{ __('firefly.number_of_decimals') }}</th>
+                                <th>&nbsp;</th>
                             </tr>
                             </thead>
                             <tbody>
                             @foreach($currencies as $currency)
                                 <tr>
-                                        <td>
-                                            <div class="btn-group btn-group-sm">
-                                                @if($isOwner)
-                                                <a class="btn btn-outline-secondary" href="{{ route('currencies.edit',[$currency['id']]) }}"><span
-                                                        class="bi bi-pencil"></span></a>
-                                                <a class="btn btn-danger" href="{{ route('currencies.delete',[$currency['id']]) }}"><span
-                                                        class="bi bi-trash"></span></a>
-                                                @endif
-                                                {{-- Disable the currency. --}}
-                                                @if($currency->userGroupEnabled)
-                                                    <a class="btn btn-outline-secondary disable-currency" data-code="{{ $currency['code'] }}"
-                                                       href="#">
-                                                        <span class="bi bi-app"></span>
-                                                        {{ __('firefly.disable_currency') }}</a>
-                                                @endif
 
-                                                {{-- Enable the currency. --}}
-                                                @if(!$currency->userGroupEnabled)
-                                                    <a class="btn btn-outline-secondary enable-currency" data-code="{{ $currency['code'] }}"
-                                                       href="#">
-                                                        <span class="bi bi-check"></span>
-                                                        {{ __('firefly.enable_currency') }}</a>
-                                                @endif
-                                            </div>
-                                        </td>
                                     <td>
                                         @if(!$currency->userGroupEnabled)<span class="text-muted">@endif
                                             {{ $currency->name }} ({{ $currency->code }}) ({{ $currency->symbol }})
@@ -61,6 +37,25 @@
                                     </td>
 
                                     <td>{{ $currency->decimal_places }}</td>
+                                    <td class="text-end">
+                                        <div class="dropdown">
+                                            <button class="btn btn-sm btn-outline-secondary dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                                {{ __('firefly.actions') }}
+                                            </button>
+                                            <ul class="dropdown-menu">
+                                                @if($isOwner)
+                                                    <li><a class="dropdown-item" href="{{ route('currencies.edit',[$currency['id']]) }}"><span class="bi bi-pencil"></span> {{ __('firefly.edit') }}</a></li>
+                                                    <li><a class="dropdown-item text-danger" href="{{ route('currencies.delete',[$currency['id']]) }}"><span class="bi bi-trash"></span> {{ __('firefly.delete') }}</a></li>
+                                                @endif
+                                                @if($currency->userGroupEnabled)
+                                                    <li><a class="dropdown-item disable-currency" href="#" data-code="{{ $currency['code'] }}"><span class="bi bi-app"></span> {{ __('firefly.disable_currency') }}</a></li>
+                                                @endif
+                                                @if(!$currency->userGroupEnabled)
+                                                    <li><a class="dropdown-item enable-currency" href="#" data-code="{{ $currency['code'] }}"><span class="bi bi-check"></span> {{ __('firefly.enable_currency') }}</a></li>
+                                                @endif
+                                            </ul>
+                                        </div>
+                                    </td>
                                 </tr>
                             @endforeach
                             </tbody>

@@ -25,7 +25,7 @@
                             <tbody>
                             @foreach($objectGroups as $objectGroup)
                                 <tr class="group-sortable" data-id="{{ $objectGroup['id'] }}" data-name="{{ e($objectGroup['title']) }}" data-order="{{ $objectGroup['order'] }}">
-                                    <td><span class="bi bi-list group-handle"></span></td>
+                                    <td><span class="btn btn-sm bi bi-list group-handle"></span></td>
                                     <td>
                                         <strong>{{ $objectGroup['title'] }}</strong><br/>
                                         @foreach($objectGroup['piggyBanks'] as $piggyBank)
@@ -35,14 +35,15 @@
                                             - {{ __('firefly.bill') }}: <a href="{{ route('subscriptions.show', [$subscription['id']]) }}">{{ $subscription['name'] }}</a><br>
                                         @endforeach
                                     </td>
-                                    <td>
-                                        <div class="btn-group btn-group-sm">
-                                            <a class="btn btn-outline-secondary" href="{{ route('object-groups.edit', [$objectGroup['id']]) }}">
-                                                <span class="bi bi-pencil"></span>
-                                            </a>
-                                            <a class="btn btn-danger" href="{{ route('object-groups.delete', [$objectGroup['id']]) }}">
-                                                <span class="bi bi-trash"></span>
-                                            </a>
+                                    <td class="text-end">
+                                        <div class="dropdown">
+                                            <button class="btn btn-sm btn-outline-secondary dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                                {{ __('firefly.actions') }}
+                                            </button>
+                                            <ul class="dropdown-menu">
+                                                <li><a class="dropdown-item" href="{{ route('object-groups.edit', [$objectGroup['id']]) }}"><span class="bi bi-pencil"></span> {{ __('firefly.edit') }}</a></li>
+                                                <li><a class="dropdown-item text-danger" href="{{ route('object-groups.delete', [$objectGroup['id']]) }}"><span class="bi bi-trash"></span> {{ __('firefly.delete') }}</a></li>
+                                            </ul>
                                         </div>
                                     </td>
                                 </tr>
