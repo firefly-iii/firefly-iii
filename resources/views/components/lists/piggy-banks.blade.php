@@ -29,7 +29,7 @@
     @foreach($objectGroup['piggy_banks'] as $piggy)
     <tr class="piggy-sortable" data-id="{{ $piggy['id'] }}" data-name="{{ $piggy['name'] }}" data-order="{{ $piggy['order'] }}">
         <td class="d-none d-md-table-cell">
-            <a class="btn bi bi-list piggy-handle"></a>
+            <a class="btn btn-md bi bi-list piggy-handle"></a>
             <span class="loadSpin"></span>
         </td>
         <!--
@@ -112,18 +112,24 @@
             @endif
             @endif
         </td>
-        <td style="width:100px;">
-            <div class="btn-group btn-group-sm">
-                <a href="{{ route('piggy-banks.edit', $piggy['id']) }}" class="btn btn-secondary btn-sm"><span class="bi bi-pencil"></span></a>
-                <a href="{{ route('piggy-banks.delete', $piggy['id']) }}" class="btn btn-danger btn-sm"><span class="bi bi-trash"></span></a>
+        <td style="width:100px;" class="text-end">
+            <div class="dropdown">
+                <button class="btn btn-md btn-outline-secondary dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+                    {{__('firefly.actions')}}
+                </button>
+                <ul class="dropdown-menu">
+                    <li><a class="dropdown-item" href="{{ route('piggy-banks.edit', $piggy['id']) }}"><span class="bi bi-pencil"></span> {{ __('firefly.edit') }}</a></li>
+                    <li><a class="dropdown-item text-danger" href="{{ route('piggy-banks.delete', $piggy['id']) }}"><span class="bi bi-trash"></span> {{ __('firefly.delete') }}</a></li>
+                </ul>
             </div>
         </td>
     </tr>
     @endforeach
     <tr>
         <td class="d-none d-md-table-cell">&nbsp;</td> {{-- handle --}}
+        <!--
         <td class="d-table-cell d-md-none">&nbsp;</td> {{-- mobile buttons --}}
-        <td>&nbsp;</td> {{-- normal buttons --}}
+        -->
         <td>&nbsp;</td> {{-- title --}}
         <td class="text-end">
             @foreach($objectGroup['sums'] as $sum)
@@ -148,6 +154,8 @@
             {!! format_amount_by_symbol($sum['save_per_month'], $sum['currency_symbol'], $sum['currency_decimal_places']) !!}<br />
             @endforeach
         </td>
+        <td>&nbsp;</td> {{-- normal buttons --}}
+
     </tr>
     </tbody>
     @endif
