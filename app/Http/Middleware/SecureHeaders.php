@@ -45,16 +45,16 @@ class SecureHeaders
     public function handle(Request $request, Closure $next)
     {
         // generate and share nonce.
-        $nonce = base64_encode(random_bytes(16));
+        $nonce              = base64_encode(random_bytes(16));
         Vite::useCspNonce($nonce);
         if (class_exists(Debugbar::class)) {
             Debugbar::getJavascriptRenderer()->setCspNonce($nonce);
         }
         app('view')->share('JS_NONCE', $nonce);
 
-        $response          = $next($request);
-        $trackingScriptSrc = $this->getTrackingScriptSource();
-        $csp               = [
+        $response           = $next($request);
+        $trackingScriptSrc  = $this->getTrackingScriptSource();
+        $csp                = [
             "default-src 'none'",
             "object-src 'none'",
             sprintf("script-src 'unsafe-eval' 'strict-dynamic' 'nonce-%1s'", $nonce),
@@ -68,28 +68,28 @@ class SecureHeaders
             "manifest-src 'self'",
         ];
 
-//        // overrule in development mode
-//        if (true === config('firefly.is_local_dev')) {
-//            $ip  = '192.168.96.165';
-//            $csp = [
-//                "default-src 'none'",
-//                "object-src 'none'",
-//                sprintf("script-src 'unsafe-eval' 'strict-dynamic' 'nonce-%1s'", $nonce),
-//                //                 sprintf("style-src 'self' 'nonce-%1s' https://10.0.0.15:5173/", $nonce), // safe variant
-//                sprintf("style-src 'self' 'unsafe-inline' https://%s:5173/", $ip), // unsafe variant
-//                "base-uri 'self'",
-//                "form-action 'self'",
-//                sprintf("font-src 'self' data: https://%s:5173/", $ip),
-//                sprintf('connect-src \'self\' %1$s https://%2$s:5173/ wss://%2$s:5173/', $trackingScriptSrc, $ip),
-//                sprintf("img-src 'self' data: 'nonce-%1s'", $nonce),
-//                "manifest-src 'self'",
-//            ];
-//        }
+        //        // overrule in development mode
+        //        if (true === config('firefly.is_local_dev')) {
+        //            $ip  = '192.168.96.165';
+        //            $csp = [
+        //                "default-src 'none'",
+        //                "object-src 'none'",
+        //                sprintf("script-src 'unsafe-eval' 'strict-dynamic' 'nonce-%1s'", $nonce),
+        //                //                 sprintf("style-src 'self' 'nonce-%1s' https://10.0.0.15:5173/", $nonce), // safe variant
+        //                sprintf("style-src 'self' 'unsafe-inline' https://%s:5173/", $ip), // unsafe variant
+        //                "base-uri 'self'",
+        //                "form-action 'self'",
+        //                sprintf("font-src 'self' data: https://%s:5173/", $ip),
+        //                sprintf('connect-src \'self\' %1$s https://%2$s:5173/ wss://%2$s:5173/', $trackingScriptSrc, $ip),
+        //                sprintf("img-src 'self' data: 'nonce-%1s'", $nonce),
+        //                "manifest-src 'self'",
+        //            ];
+        //        }
 
-        $route     = $request->route();
-        $customUrl = '';
-        $authGuard = (string)config('firefly.authentication_guard');
-        $logoutUrl = (string)config('firefly.custom_logout_url');
+        $route              = $request->route();
+        $customUrl          = '';
+        $authGuard          = (string) config('firefly.authentication_guard');
+        $logoutUrl          = (string) config('firefly.custom_logout_url');
         if ('remote_user_guard' === $authGuard && '' !== $logoutUrl) {
             $customUrl = $logoutUrl;
         }
@@ -116,7 +116,7 @@ class SecureHeaders
                 $response->headers->set('Content-Security-Policy', implode('; ', $csp));
             }
         }
-        $permissionsPolicy = 'unload=(), geolocation=(), microphone=(), camera=(), payment=(), magnetometer=(), gyroscope=()';
+        $permissionsPolicy  = 'unload=(), geolocation=(), microphone=(), camera=(), payment=(), magnetometer=(), gyroscope=()';
         if (method_exists($response, 'header')) {
             $response->header('X-XSS-Protection', '1; mode=block');
             $response->header('X-Content-Type-Options', 'nosniff');
@@ -126,7 +126,6 @@ class SecureHeaders
             $response->header('Permissions-Policy', $permissionsPolicy);
             $response->header('Cross-Origin-Opener-Policy', 'same-origin');
             $response->header('Cross-Origin-Resource-Policy', 'same-origin');
-
         }
         if (!method_exists($response, 'header')) {
             $response->headers->set('X-XSS-Protection', '1; mode=block');
@@ -147,8 +146,8 @@ class SecureHeaders
      */
     private function getTrackingScriptSource(): string
     {
-        if ('' !== (string)config('firefly.tracker_site_id') && '' !== (string)config('firefly.tracker_url')) {
-            return (string)config('firefly.tracker_url');
+        if ('' !== (string) config('firefly.tracker_site_id') && '' !== (string) config('firefly.tracker_url')) {
+            return (string) config('firefly.tracker_url');
         }
 
         return '';
