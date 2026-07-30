@@ -3,6 +3,15 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
+## v6.7.0
+
+
+
+
+Security findings by Alwen Roselio, Don Werner Salas and Allan Glenn Aceres.
+
+
+
 ## v6.6.6 - 2026-07-01
 
 <!-- summary: This release fixes a bug in v6.6.5 that will remove foreign currency information from deposits. -->
