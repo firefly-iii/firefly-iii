@@ -2914,7 +2914,8 @@ return [
 
     // debug page
     'debug_page'                                          => 'Debug page',
-    'debug_submit_instructions'                           => 'If you are running into problems, you can use the information in this box as debug information. Please copy-and-paste into a new or existing <a href="https://github.com/firefly-iii/firefly-iii/issues">GitHub issue</a>. It will generate a beautiful table that can be used to quickly diagnose your problem.',
+    'debug_submit_instructions'                           => 'If you are running into problems, you can use the information in the boxes below to help the developers debug the issue. Please copy-and-paste into a new or existing <a href="https://github.com/firefly-iii/firefly-iii/issues">GitHub issue</a>. It will generate a beautiful table that can be used to quickly diagnose your problem.',
+    'debug_no_private' => 'Sharing this information will NOT compromise your security and it will not reveal any financial or personal information.',
     'debug_pretty_table'                                  => 'If you copy/paste the box below into a GitHub issue it will generate a table. Please do not surround this text with backticks or quotes.',
     'debug_additional_data'                               => 'You may also share the content of the box below. You can also copy-and-paste this into a new or existing <a href="https://github.com/firefly-iii/firefly-iii/issues">GitHub issue</a>. However, the content of this box may contain private information such as account names, transaction details or email addresses.',
 

@@ -199,6 +199,7 @@
                                 <th class="quarter">{{ __('firefly.budgeted') }}</th>
                                 <th class="hidden-sm hidden-xs">{{ __('firefly.spent') }} ({{  strtolower(__('firefly.per_day')) }})</th>
                                 <th>{{ __('firefly.left') }} ({{ strtolower(__('firefly.per_day')) }})</th>
+                                <th class="hidden-sm hidden-xs ten">&nbsp;</th>
                             </tr>
                             </thead>
                             <tbody>
@@ -206,12 +207,8 @@
 
                             @foreach($budgets as $budget)
                                 <tr data-id="{{ $budget['id'] }}">
-                                    <td class="hidden-sm hidden-xs">
-                                        <div class="btn-group btn-group-sm">
-                                            <a href="#" class="handle object-handle btn btn-outline-primary"><span class="bi bi-list"></span></a>
-                                            <a href="{{ route('budgets.edit', $budget['id']) }}" class="btn btn-outline-primary"><span class="bi bi-pencil"></span></a>
-                                            <a href="{{ route('budgets.delete', $budget['id']) }}" class="btn btn-xs btn-outline-danger"><span class="bi bi-trash"></span></a>
-                                        </div>
+                                    <td>
+                                        <a href="#" class="handle object-handle btn btn-sm"><span class="bi bi-list"></span></a>
                                     </td>
                                     <td>
                                         @if(0 === count($budget['budgeted']))
@@ -369,6 +366,23 @@
                                                 @endif
                                             </span><br />
                                         @endforeach
+                                    </td>
+                                    <td class="hidden-sm hidden-xs text-end">
+
+
+                                        <div class="dropdown">
+                                            <button class="btn btn-outline-secondary dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                                {{ __('firefly.actions') }}
+                                            </button>
+                                            <ul class="dropdown-menu">
+                                                <li>
+                                                    <a href="{{ route('budgets.edit', $budget['id']) }}" class="dropdown-item"><span class="bi bi-pencil"></span> {{ __('firefly.edit') }}</a>
+                                                </li>
+                                                <li><a href="{{ route('budgets.delete', $budget['id']) }}" class="dropdown-item text-danger">
+                                                        <span class="bi bi-trash"></span> {{ __('firefly.delete') }}
+                                                    </a></li>
+                                            </ul>
+                                        </div>
                                     </td>
                                 </tr>
                             @endforeach

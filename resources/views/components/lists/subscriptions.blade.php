@@ -11,13 +11,13 @@
                         <thead>
                         <tr>
                             <th class="hidden-sm hidden-xs">&nbsp;</th>
-                            <th class="hidden-sm hidden-xs">&nbsp;</th>
                             <th>{{ __('list.name') }}</th>
                             <th class="hidden-sm hidden-md hidden-xs">{{ __('list.linked_to_rules') }}</th>
                             <th class="text-end">{{ trans('list.matchingAmount') }}</th>
                             <th class="hidden-sm hidden-xs">{{ trans('list.paid_current_period') }}</th>
                             <th class="hidden-sm hidden-xs">{{ trans('list.next_expected_match') }}</th>
                             <th class="hidden-sm hidden-xs">{{ trans('list.repeat_freq') }}</th>
+                            <th class="hidden-sm hidden-xs">&nbsp;</th>
                         </tr>
                         </thead>
                         @if(count($objectGroup['bills']) > 0)
@@ -26,16 +26,7 @@
                                 <tr class="bill-sortable" data-id="{{ $entry['id'] }}" data-name="{{ $entry['name'] }}"
                                     data-order="{{ $entry['order'] }}" data-position="{{ $loop->index }}">
                                     <td class="hidden-sm hidden-xs">
-                                        <span class="bi bi-list bill-handle"></span>
-                                    </td>
-                                    <td class="hidden-sm hidden-xs">
-                                        <div class="btn-group btn-group-sm edit_tr_buttons"><a
-                                                href="{{ route('subscriptions.edit',$entry['id']) }}"
-                                                class="btn btn-secondary"><span
-                                                    class="bi bi-pencil"></span></a><a
-                                                href="{{ route('subscriptions.delete',$entry['id']) }}"
-                                                class="btn btn-danger"><span
-                                                    class="bi bi-trash"></span></a></div>
+                                        <a class="btn btn-sm bi bi-list bill-handle"></a>
                                     </td>
                                     <td>
                                         @if(!$entry['active'])
@@ -175,13 +166,24 @@
                                             @endif
                                         @endif
                                     </td>
+                                    <td class="hidden-sm hidden-xs text-end">
+                                        <div class="dropdown">
+                                            <button class="btn btn-sm btn-outline-secondary dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                                {{ __('firefly.actions') }}
+                                            </button>
+                                            <ul class="dropdown-menu">
+                                                <li><a class="dropdown-item" href="{{ route('subscriptions.edit',$entry['id']) }}"><span class="bi bi-pencil"></span> {{ __('firefly.edit') }}</a></li>
+                                                <li><a class="dropdown-item text-danger" href="{{ route('subscriptions.delete',$entry['id']) }}"><span class="bi bi-trash"></span> {{ __('firefly.delete') }}</a></li>
+                                            </ul>
+                                        </div>
+                                    </td>
                                 </tr>
                             @endforeach
                             @if(array_key_exists($objectGroupOrder, $sums))
                                 @foreach($sums[$objectGroupOrder] as $sum)
                                     @if('0' !== $sum['avg'])
                                         <tr>
-                                            <td class="hidden-sm hidden-xs" colspan="2">&nbsp;</td> <!-- handle -->
+                                            <td class="hidden-sm hidden-xs">&nbsp;</td> <!-- handle -->
                                             <td colspan="2" class="text-end"> <!-- title -->
                                                 <small>{{ __('firefly.sum') }} ({{ $sum['currency_name'] }})
                                                     ({{ __('firefly.active_exp_bills_only') }})</small>
@@ -189,12 +191,12 @@
                                             <td class="text-end"> <!-- amount -->
                                                 {!! format_amount_by_symbol($sum['avg'], $sum['currency_symbol'], $sum['currency_decimal_places']) !!}
                                             </td>
-                                            <td class="hidden-sm hidden-xs" colspan="3">&nbsp;</td> <!-- handle -->
+                                            <td class="hidden-sm hidden-xs" colspan="4">&nbsp;</td> <!-- handle -->
                                         </tr>
                                     @endif
                                     @if('0' !== $sum['total_left_to_pay'])
                                         <tr>
-                                            <td class="hidden-sm hidden-xs" colspan="2">&nbsp;</td> <!-- handle -->
+                                            <td class="hidden-sm hidden-xs">&nbsp;</td> <!-- handle -->
                                             <td colspan="2" class="text-end"> <!-- title -->
                                                 <small>{{ __('firefly.sum') }} ({{ $sum['currency_name'] }})
                                                     ({{ __('firefly.left_to_pay_active_bills') }})</small>
@@ -202,12 +204,12 @@
                                             <td class="text-end"> <!-- amount -->
                                                 {!! format_amount_by_symbol($sum['total_left_to_pay'], $sum['currency_symbol'], $sum['currency_decimal_places']) !!}
                                             </td>
-                                            <td class="hidden-sm hidden-xs" colspan="3">&nbsp;</td> <!-- handle -->
+                                            <td class="hidden-sm hidden-xs" colspan="4">&nbsp;</td> <!-- handle -->
                                         </tr>
                                     @endif
                                     @if('0' !== $sum['per_period'])
                                         <tr>
-                                            <td class="hidden-sm hidden-xs" colspan="2">&nbsp;</td> <!-- handle -->
+                                            <td class="hidden-sm hidden-xs">&nbsp;</td> <!-- handle -->
                                             <td colspan="2" class="text-end"> <!-- title -->
                                                 <small>{{ __('firefly.per_period_sum_' . $sum['period']) }}
                                                     ({{ $sum['currency_name'] }})
@@ -216,7 +218,7 @@
                                             <td class="text-end"> <!-- amount -->
                                                 {!!  format_amount_by_symbol($sum['per_period'], $sum['currency_symbol'], $sum['currency_decimal_places']) !!}
                                             </td>
-                                            <td class="hidden-sm hidden-xs" colspan="3">&nbsp;</td> <!-- handle -->
+                                            <td class="hidden-sm hidden-xs" colspan="4">&nbsp;</td> <!-- handle -->
                                         </tr>
                                     @endif
                                 @endforeach

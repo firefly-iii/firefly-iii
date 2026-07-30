@@ -10,8 +10,9 @@
     <thead>
     <tr>
         <th class="w-4 d-none d-md-table-cell">&nbsp;</th>
-        <th class="w-4 d-table-cell d-md-none"></th>
-        <th class="w-4"></th>
+        <!--
+        <th class="w-4"></th> {{-- mobile handlers --}}
+        -->
         <th class="w-25" style="width:30%;">{{ __('firefly.piggy_bank') }}</th>
         <th class="w-10 text-end">{{ __('firefly.saved_so_far') }}</th>
         <th class="d-none d-md-table-cell"></th>
@@ -20,6 +21,7 @@
         <th class="w-10 text-end">{{ __('firefly.target_amount') }}</th>
         <th class="w-10 d-none d-md-table-cell text-end">{{ __('firefly.left_to_save') }}</th>
         <th class="w-15 d-none d-md-table-cell text-end">{{ __('firefly.suggested_savings_per_month') }}</th>
+        <th class="w-4">&nbsp;</th>
     </tr>
     </thead>
     @if(count($objectGroup['piggy_banks']) > 0)
@@ -27,21 +29,17 @@
     @foreach($objectGroup['piggy_banks'] as $piggy)
     <tr class="piggy-sortable" data-id="{{ $piggy['id'] }}" data-name="{{ $piggy['name'] }}" data-order="{{ $piggy['order'] }}">
         <td class="d-none d-md-table-cell">
-            <span class="bi bi-list piggy-handle"></span>
+            <a class="btn bi bi-list piggy-handle"></a>
             <span class="loadSpin"></span>
         </td>
+        <!--
         <td class="d-table-cell d-md-none">
             <div class="btn-group btn-group-sm">
                 <a href="{{ route('piggy-banks.remove-money-mobile', $piggy['id']) }}" class="btn btn-secondary btn-sm"><span class="bi bi-dash"></span></a>
                 <a href="{{ route('piggy-banks.add-money-mobile', $piggy['id']) }}" class="btn btn-secondary btn-sm"><span class="bi bi-plus"></span></a>
             </div>
         </td>
-        <td style="width:100px;">
-            <div class="btn-group btn-group-sm">
-                <a href="{{ route('piggy-banks.edit', $piggy['id']) }}" class="btn btn-secondary btn-sm"><span class="bi bi-pencil"></span></a>
-                <a href="{{ route('piggy-banks.delete', $piggy['id']) }}" class="btn btn-danger btn-sm"><span class="bi bi-trash"></span></a>
-            </div>
-        </td>
+        -->
         <td>
             <a href="{{ route('piggy-banks.show', $piggy['id']) }}" title="{{ $piggy['name'] }}">{{ $piggy['name'] }}</a>
             @if(count($piggy['attachments']) > 0)
@@ -113,6 +111,12 @@
             ({!! format_amount_by_symbol($piggy['pc_save_per_month'], $primaryCurrency->symbol, $primaryCurrency->decimal_places) !!})
             @endif
             @endif
+        </td>
+        <td style="width:100px;">
+            <div class="btn-group btn-group-sm">
+                <a href="{{ route('piggy-banks.edit', $piggy['id']) }}" class="btn btn-secondary btn-sm"><span class="bi bi-pencil"></span></a>
+                <a href="{{ route('piggy-banks.delete', $piggy['id']) }}" class="btn btn-danger btn-sm"><span class="bi bi-trash"></span></a>
+            </div>
         </td>
     </tr>
     @endforeach
