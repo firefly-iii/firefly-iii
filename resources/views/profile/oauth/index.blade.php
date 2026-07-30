@@ -78,29 +78,17 @@
 
                                                     <!-- Secret -->
                                                     <td style="vertical-align: middle;text-align:right">
-                                                        <div class="btn-group">
-                                                            <template x-if="client.confidential">
-                                                                <a :title="i18next.t('firefly.regenerate_secret')"
-                                                                   class="btn btn-default btn-sm"
-                                                                   @click="regenerateSecret(client)">
-                                                                    <em :title="i18next.t('firefly.regenerate_secret')"
-                                                                        class="bi bi-arrow-clockwise"></em>
-                                                                    {{ __('firefly.regenerate_secret') }}
-                                                                </a>
-                                                            </template>
-                                                            <a class="btn btn-sm btn-default"
-                                                               :title="i18next.t('firefly.edit')" tabindex="-1"
-                                                               @click="edit(client)">
-                                                                <em :title="i18next.t('firefly.edit')"
-                                                                    class="bi bi-pencil"></em>
-                                                                {{ __('firefly.edit') }}
-                                                            </a>
-                                                            <a :title="i18next.t('firefly.delete')"
-                                                               class="btn btn-sm btn-danger" @click="destroy(client)">
-                                                                <em :title="i18next.t('firefly.delete')"
-                                                                    class="bi bi-trash"></em>
-                                                                {{ __('firefly.delete') }}
-                                                            </a>
+                                                        <div class="dropdown">
+                                                            <button class="btn btn-sm btn-outline-secondary dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                                                {{ __('firefly.actions') }}
+                                                            </button>
+                                                            <ul class="dropdown-menu">
+                                                                <template x-if="client.confidential">
+                                                                    <li><a @click="regenerateSecret(client)" :title="i18next.t('firefly.regenerate_secret')" class="dropdown-item"><em :title="i18next.t('firefly.regenerate_secret')" class="bi bi-arrow-clockwise"></em> {{ __('firefly.regenerate_secret') }}</a></li>
+                                                                </template>
+                                                                <li><a @click="edit(client)" :title="i18next.t('firefly.edit')" tabindex="-1" class="dropdown-item"><em :title="i18next.t('firefly.edit')" class="bi bi-pencil"></em> {{ __('firefly.edit') }}</a></li>
+                                                                <li><a @click="destroy(client)" :title="i18next.t('firefly.delete')" class="dropdown-item btn-danger"><em :title="i18next.t('firefly.delete')" class="bi bi-trash"></em> {{ __('firefly.delete') }}</a></li>
+                                                            </ul>
                                                         </div>
                                                     </td>
                                                 </tr>
@@ -392,7 +380,7 @@
 
                                                 <!-- Delete Button -->
                                                 <td style="vertical-align: middle;">
-                                                    <a class="action-link text-danger" @click="revoke(token)">
+                                                    <a class="btn btn-outline-danger action-link" @click="revoke(token)">
                                                         {{ __('firefly.delete') }}
                                                     </a>
                                                 </td>
