@@ -161,7 +161,7 @@
                                     </span>
                                     @elseif($first['transaction_type_type'] === 'Opening balance')
                                         {{-- Opening balance stored amount is always negative: find out which way the money goes --}}
-                                        @if($groupArray['transactions'][0]['source_account_type'] === 'Initial balance account')
+                                        @if($groupArray['transactions'][0]['source_type'] === 'Initial balance account')
                                             {!! format_amount_by_symbol($amount['amount']*-1,$amount['symbol'], $amount['decimal_places']) !!}
                                         @else
                                             {!! format_amount_by_symbol($amount['amount'],$amount['symbol'], $amount['decimal_places']) !!}
@@ -281,7 +281,7 @@
                         <table class="table">
                             <tr>
                                 <td colspan="2">
-                                    @if('Cash account' === $journal['source_account_type'])
+                                    @if('Cash account' === $journal['source_type'])
                                         <span class="text-success">({{ __('firefly.cash') }})</span>
                                     @else
                                         <a href="{{ route('accounts.show', $journal['source_account_id']) }}"
