@@ -25,7 +25,7 @@ document.addEventListener("DOMContentLoaded", (event) => {
 });
 
 function startRunningCommands(index) {
-    console.log('Now in startRunningCommands with index' + index);
+    console.log('Now in startRunningCommands with index ' + index);
     if (0 === index) {
         document.querySelector('#status-box').innerHTML = '<span class="bi bi-hourglass"></span> Running first command...';
     }
@@ -43,24 +43,31 @@ function runCommand(index) {
         },
         body: JSON.stringify({_token: token, index: parseInt(index)}),
     })
-        .then(response => response.json())
         .then(response => {
-            if (response.error === false) {
-                index++;
-                if (response.hasNextCommand) {
-                    // inform user
-                    document.querySelector('#status-box').innerHTML = '<span class="bi bi-hourglass"></span> Just executed ' + response.previous + '...';
-                    console.log('Will call next command.');
-                    runCommand(index);
-                } else {
-                    completeDone();
-                    console.log('Finished!');
-                }
-            } else {
-                displaySoftFail(response.errorMessage);
-                console.error(response);
+            if(403 === response.status) {
+                window.location.reload();
+                //displaySoftFail('Please reload the page to continue.');
+                //console.error(response);
             }
-        })
+            response.json().then(json => {
+                console.log('JSON is', json);
+                if (false === json.error) {
+                    index++;
+                    if (json.hasNextCommand) {
+                        // inform user
+                        document.querySelector('#status-box').innerHTML = '<span class="bi bi-hourglass"></span> Just executed ' + json.previous + '...';
+                        console.log('Will call next command.');
+                        runCommand(index);
+                    } else {
+                        completeDone();
+                        console.log('Finished!');
+                    }
+                }
+                if(true === json.error) {
+                    displaySoftFail(json.errorMessage);
+                }
+            });
+        });
 }
 
 function startMigration() {
@@ -105,7 +112,7 @@ function startDecryption() {
             // move to decrypt routine.
             startPassport();
         } else {
-            displaySoftFail(data.message);
+            displaySoftFail(response.message);
         }
 
     }).fail(function () {
@@ -169,7 +176,7 @@ function startUpgrade() {
  */
 function startVerify() {
     document.querySelector('#status-box').innerHTML = '<span class="bi bi-hourglass"></span> Verify database integrity...';
-    fetch(veifyUrl, {
+    fetch(verifyUrl, {
         method: 'POST',
         headers: {
             'Accept': 'application/json',

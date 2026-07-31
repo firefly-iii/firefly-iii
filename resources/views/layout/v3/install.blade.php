@@ -14,7 +14,7 @@
     please visit the following page: https://bit.ly/FF3-broken-base-href
     -->
     <base href="{{ route('index', null, true) }}/">
-    <title>{{ __('firefly.login_page_title')  }}</title>
+    <title>Firefly III - Installation and upgrade</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes"/>
     <meta name="theme-color" content="#007bff" media="(prefers-color-scheme: light)"/>
     <meta name="theme-color" content="#1a1a1a" media="(prefers-color-scheme: dark)"/>
@@ -27,6 +27,9 @@
             document.documentElement.setAttribute('data-bs-theme', (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light'))
         })()
     </script>
+    <style nonce="{{ $JS_NONCE }}">
+        textarea {font-family:Menlo, Monaco, Consolas, monospace;font-size:8pt !important;}
+    </style>
 </head>
 <body class="bg-body-tertiary">
 <main class="align-items-center min-vh-100 py-5">
@@ -36,8 +39,16 @@
                 <p class="text-center">
                     <img src="images/logo-session.png" width="68" height="100" alt="Firefly III Logo" title="Firefly III"/><br>
                 </p>
-                <h1><strong>Firefly</strong> III - @yield('status_code') @yield('status') :(</h1>
-                <h2 class="text-danger">@yield('sub_title')</h2>
+                @if(str_starts_with($FF_VERSION, 'develop'))
+                    <h1 style="font-family: monospace;font-size:16pt;">
+                        <em class="bi bi-wrench"></em>
+                        <strong>Firefly</strong> III {{ $FF_VERSION }} - Installation and upgrade</h1>
+                @endif
+                @if(!str_starts_with($FF_VERSION, 'develop'))
+                    <h1>
+                        <em class="bi bi-wrench"></em>
+                        <strong>Firefly</strong> III v{{ $FF_VERSION }} - Installation and upgrade</h1>
+                @endif
                 @yield('content')
             </div>
         </div>

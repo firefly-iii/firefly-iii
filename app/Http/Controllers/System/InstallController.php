@@ -102,6 +102,7 @@ final class InstallController extends Controller
 
     public function runCommand(Request $request): JsonResponse
     {
+        //return response()->json([], 403);
         if ($this->hasNoTables() || $this->isOldVersionInstalled()) {
             $requestIndex = (int) $request->input('index');
             $response     = ['hasNextCommand' => false, 'done' => true, 'previous' => null, 'error' => false, 'errorMessage' => null];
