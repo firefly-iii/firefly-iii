@@ -60,7 +60,7 @@ class AccountBalanceCalculator
             // this order is the same as GroupCollector
             ->orderBy('transaction_journals.date', 'DESC')
             ->orderBy('transaction_journals.order', 'ASC')
-            ->orderBy('transaction_journals.id', 'DESC')
+            ->orderBy('transaction_journals.id', 'ASC')
             ->orderBy('transaction_journals.description', 'DESC')
             ->orderBy('transactions.amount', 'DESC')
             ->where('transactions.account_id', $accountId)
@@ -113,7 +113,7 @@ class AccountBalanceCalculator
             // this order is the same as GroupCollector, but in the exact reverse.
             ->orderBy('transaction_journals.date', 'asc')
             ->orderBy('transaction_journals.order', 'desc')
-            ->orderBy('transaction_journals.id', 'asc')
+            ->orderBy('transaction_journals.id', 'asc') // ASC, because it must be reversed.
             ->orderBy('transaction_journals.description', 'asc')
             ->orderBy('transactions.amount', 'asc')
         ;
