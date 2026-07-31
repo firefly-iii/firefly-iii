@@ -141,9 +141,11 @@ final class ForgotPasswordController extends Controller
         try {
             $configuredHost = parse_url((string) config('app.url'), PHP_URL_HOST);
         } catch (UrlException $e) {
+            Log::error('There is no APP_URL set');
             throw new FireflyException('Please set a valid and correct Firefly III URL in the APP_URL environment variable.', 0, $e);
         }
         if (!is_string($configuredHost)) {
+            Log::error('There is no valid APP_URL set');
             throw new FireflyException('Please set a valid and correct Firefly III URL in the APP_URL environment variable.');
         }
         $host = request()->host();
