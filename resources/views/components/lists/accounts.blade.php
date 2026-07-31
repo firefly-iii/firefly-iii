@@ -4,8 +4,8 @@
 <table class="table table-sm table-hover" id="sortable-table">
     <thead>
     <tr>
-        <th class="hidden-sm hidden-xs">&nbsp;</th>
-        <th>{{ trans('list.name') }}</th>
+        <th class="w-5 hidden-sm hidden-xs">&nbsp;</th>
+        <th class="w-20">{{ trans('list.name') }}</th>
         @if('asset' === $objectType)
 
         <th class="hidden-sm hidden-xs hidden-md">{{ trans('list.role') }}</th>
@@ -30,7 +30,7 @@
         <th class="hidden-sm hidden-xs hidden-md">{{ trans('list.lastActivity') }}</th>
         @endif
         <th
-            class="fifteen hidden-sm hidden-xs hidden-md">{{ trans('list.balanceDiff') }}</th>
+            class="w-15 hidden-sm hidden-xs hidden-md">{{ trans('list.balanceDiff') }}</th>
         <th class="hidden-sm hidden-xs">&nbsp;</th>
     </tr>
     </thead>

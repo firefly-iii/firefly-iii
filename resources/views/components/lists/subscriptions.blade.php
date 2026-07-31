@@ -10,12 +10,12 @@
                     <table class="table table-hover table-sm" id="bill-sortable">
                         <thead>
                         <tr>
-                            <th class="hidden-sm hidden-xs">&nbsp;</th>
-                            <th>{{ __('list.name') }}</th>
-                            <th class="hidden-sm hidden-md hidden-xs">{{ __('list.linked_to_rules') }}</th>
-                            <th class="text-end">{{ trans('list.matchingAmount') }}</th>
-                            <th class="hidden-sm hidden-xs">{{ trans('list.paid_current_period') }}</th>
-                            <th class="hidden-sm hidden-xs">{{ trans('list.next_expected_match') }}</th>
+                            <th class="w-5 hidden-sm hidden-xs">&nbsp;</th>
+                            <th class="w-25">{{ __('list.name') }}</th>
+                            <th class="w-20 hidden-sm hidden-md hidden-xs">{{ __('list.linked_to_rules') }}</th>
+                            <th class="w-5 text-end">{{ trans('list.matchingAmount') }}</th>
+                            <th class="w-15 hidden-sm hidden-xs">{{ trans('list.paid_current_period') }}</th>
+                            <th class="w-15 hidden-sm hidden-xs">{{ trans('list.next_expected_match') }}</th>
                             <th class="hidden-sm hidden-xs">{{ trans('list.repeat_freq') }}</th>
                             <th class="hidden-sm hidden-xs">&nbsp;</th>
                         </tr>
