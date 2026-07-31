@@ -57,10 +57,10 @@
                         </li>
                     @endif
                     @foreach($operators as $operator)
-                        @if($operator['prohibited'])
+                        @if(array_key_exists('prohibited', $operator) && $operator['prohibited'])
                             <li>{{ trans('firefly.search_modifier_not_' . $operator['type'], ['value' => $operator['value']]) }}</li>
                         @endif
-                        @if(!$operator['prohibited'])
+                        @if(array_key_exists('prohibited', $operator) && !$operator['prohibited'])
                             <li>{{ trans('firefly.search_modifier_' . $operator['type'], ['value' => $operator['value']]) }}</li>
                         @endif
                     @endforeach
