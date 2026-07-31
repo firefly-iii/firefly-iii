@@ -1,10 +1,5 @@
 @extends('layout.v3.debug')
 @section('content')
-<style nonce="{{ $JS_NONCE }}">
-    p.default-text {font-family:Arial, Arial, Helvetica, sans-serif;font-size:12@pt;width:600px;}
-    p.warn-text {font-family:Arial, Arial, Helvetica, sans-serif;font-size:12pt;width:600px;color:#a00;}
-    textarea {font-family:Menlo, Monaco, Consolas, monospace;font-size:8pt !important;}
-</style>
 <p>
     {!! trans('firefly.debug_submit_instructions') !!}
 </p>
@@ -45,7 +40,4 @@ Debug information generated at {{ $now }} for Firefly III version **{{ !$FF_IS_D
 <p>
     <a href="{{ route('index') }}">{{ trans('firefly.back_to_index') }}</a>
 </p>
-
-</body>
-</html>
 @endsection

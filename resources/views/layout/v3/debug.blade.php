@@ -27,6 +27,9 @@
             document.documentElement.setAttribute('data-bs-theme', (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light'))
         })()
     </script>
+    <style nonce="{{ $JS_NONCE }}">
+        textarea {font-family:Menlo, Monaco, Consolas, monospace;font-size:8pt !important;}
+    </style>
 </head>
 <body class="bg-body-tertiary">
 <main class="align-items-center min-vh-100 py-5">
@@ -52,7 +55,7 @@
         </div>
     </div>
 </main>
-@vite(['js/pages/blank.js'])
 
+@vite(['js/pages/blank.js'])
 </body>
 </html>
