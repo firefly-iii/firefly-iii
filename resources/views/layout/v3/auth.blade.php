@@ -36,7 +36,7 @@
     </div>
     @yield('content')
 </div>
-@vite(['js/pages/generic.js'])
+@vite(['js/pages/blank.js'])
 @yield('scripts')
 
 </body>

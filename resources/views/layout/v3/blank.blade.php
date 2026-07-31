@@ -43,7 +43,7 @@
         </div>
     </div>
 </main>
-@vite(['js/pages/generic.js'])
+@vite(['js/pages/blank.js'])
 
 </body>
 </html>
