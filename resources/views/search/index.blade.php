@@ -137,7 +137,7 @@
         var delete_selected_txt = "{{ trans('firefly.delete') }}";
         var edit_bulk_selected_txt = "{{ trans('firefly.bulk_edit') }}";
 
-        var searchQuery = "{{ $fullQuery }}";
+        var searchQuery = "{!! addslashes($fullQuery) !!}";
         var searchUrl = "{{ route('search.search') }}?page={{ $page }}";
         var searchPage = {{ $page }};
         var cloneGroupUrl = '{{ route('transactions.clone') }}';
