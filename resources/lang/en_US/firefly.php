@@ -2267,7 +2267,7 @@ return [
     'newDeposit'                                          => 'New deposit',
     'newTransfer'                                         => 'New transfer',
     'bills_to_pay'                                        => 'Subscriptions to pay',
-    'no_waiting' => 'No subscriptions are waiting to be paid',
+    'no_waiting'                                          => 'No subscriptions are waiting to be paid',
     'per_day'                                             => 'Per day',
     'left_to_spend_per_day'                               => 'Left to spend per day',
     'bills_paid'                                          => 'Subscriptions paid',
