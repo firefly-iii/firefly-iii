@@ -39,8 +39,8 @@ function drawChart() {
     columnChart(accountExpenseUrl, 'expense-accounts-chart');
     columnChart(accountRevenueUrl, 'revenue-accounts-chart');
     getPiggyBanks();
-    console.log('Get all boxes');
-    getAllBoxes();
+    //console.log('Get all boxes');
+    //getAllBoxes();
 
     function getAllBoxes() {
         // get summary.

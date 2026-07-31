@@ -47,7 +47,7 @@ function parseToLocalDates() {
 $(function () {
     "use strict";
 
-    // configAccounting(currencySymbol);
+    configAccounting(currencySymbol);
 
     // on submit of logout button:
     $('.logout-link').click(function (e) {
@@ -165,8 +165,8 @@ function currencySelect(e) {
 }
 
 function configAccounting(customCurrency) {
-
-// Settings object that controls default parameters for library methods:
+    console.log('configAccounting');
+    // Settings object that controls default parameters for library methods:
     accounting.settings = {
         currency: {
             symbol: customCurrency,   // default currency symbol is '$'

@@ -215,7 +215,7 @@
         var piggyInfoUrl = '{{ route('json.fp.piggy-banks') }}';
         var drawVerticalLine = '';
         {{-- render vertical line with text "today"  --}}
-            @if($start->lte($today) && $end->gte($today))
+        @if($start->lte($today) && $end->gte($today))
             drawVerticalLine = '{{ $today->isoFormat($monthAndDayFormat) }}';
         @endif
     </script>
