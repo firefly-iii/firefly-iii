@@ -78,7 +78,7 @@
                     <p class="d-none d-sm-block"><a href="{{ route('subscriptions.index') }}">{{ __('firefly.bills_to_pay') }}</a></p>
                 </template>
                 <template x-if="0 === billBox.unpaid.length && !loading">
-                    <p class="d-none d-sm-block">TODO No subscriptions are waiting to be paid</p>
+                    <p class="d-none d-sm-block"><em>{{ __('firefly.no_waiting') }}</p>
                 </template>
             </div>
             <span class="small-box-icon">
