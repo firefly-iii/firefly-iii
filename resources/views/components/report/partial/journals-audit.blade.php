@@ -40,8 +40,8 @@
 
         <td class="hide-buttons">
             <div class="btn-group btn-group-sm">
-                <a href="{{ route('transactions.edit',$journal['transaction_group_id']) }}" class="btn btn-xs btn-outline-secondary"><span class="bi bi-pencil"></span></a>
-                <a href="{{ route('transactions.delete',$journal['transaction_group_id']) }}" class="btn btn-xs btn-danger"><span class="bi bi-trash"></span></a>
+                <a href="{{ route('transactions.edit',$journal['transaction_group_id']) }}" class="btn btn-sm btn-outline-secondary"><span class="bi bi-pencil"></span></a>
+                <a href="{{ route('transactions.delete',$journal['transaction_group_id']) }}" class="btn btn-sm btn-danger"><span class="bi bi-trash"></span></a>
             </div>
         </td>
 

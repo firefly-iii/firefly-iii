@@ -65,7 +65,7 @@
         <tr data-date="{{ $journal['date']->format('Y-m-d') }}" data-id="{{ $journal['transaction_journal_id'] }}">
             <td class="hidden-xs">
                 <div class="btn-group btn-group-sm">
-                    <a href="{{ route('transactions.edit', [$journal['transaction_group_id']]) }}" class="btn btn-xs btn-outline-secondary"><span
+                    <a href="{{ route('transactions.edit', [$journal['transaction_group_id']]) }}" class="btn btn-sm btn-outline-secondary"><span
                                 class="bi bi-pencil"></span></a>
                     <a href="{{ route('transactions.delete', [$journal['transaction_group_id']]) }}" class="btn btn-danger"><span
                                 class="bi bi-trash"></span></a>

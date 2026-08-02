@@ -14,9 +14,9 @@
         <tr>
             <td data-value="{{ $info['name'] }}">
                 @if($info['id'] !== 0)
-                    <a class="btn btn-outline-secondary btn-xs" href="{{ route('budgets.show', [$info['id']]) }}"><span class="bi bi-box-arrow-up-right"></span></a>
+                    <a class="btn btn-outline-secondary btn-sm" href="{{ route('budgets.show', [$info['id']]) }}"><span class="bi bi-box-arrow-up-right"></span></a>
                 @else
-                    <a class="btn btn-outline-secondary btn-xs" href="{{ route('budgets.no-budget') }}"><span class="bi bi-box-arrow-up-right"></span></a>
+                    <a class="btn btn-outline-secondary btn-sm" href="{{ route('budgets.no-budget') }}"><span class="bi bi-box-arrow-up-right"></span></a>
                 @endif
             </td>
             <td data-value="{{ $info['name'] }}">

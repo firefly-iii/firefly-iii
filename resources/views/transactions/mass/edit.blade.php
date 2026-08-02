@@ -30,13 +30,13 @@
                                 <tr>
                                     <td>
                                         {{-- LINK TO EDIT FORM --}}
-                                        <a href="{{ route('transactions.edit', $journal['transaction_group_id']) }}" class="btn btn-xs btn-outline-secondary"><span
+                                        <a href="{{ route('transactions.edit', $journal['transaction_group_id']) }}" class="btn btn-sm btn-outline-secondary"><span
                                                 class="bi bi-pencil"></span></a>
                                         <input type="hidden" name="journals[]" value="{{ $journal['transaction_journal_id']  }}"/>
                                     </td>
                                     <td>
                                         {{-- DESCRIPTION --}}
-                                        <input class="form-control input-sm" autocomplete="off"
+                                        <input class="form-control form-control-sm" autocomplete="off"
                                                placeholder="{{ $journal['description']  }}" name="description[{{ $journal['transaction_journal_id']  }}]"
                                                type="text" value="{{ $journal['description']  }}">
                                     </td>
@@ -44,16 +44,14 @@
                                     <td>
                                         @if(false === $journal['reconciled'])
                                             <div class="input-group input-group-sm">
-                                                <span class="input-group-addon">{{ $journal['currency_symbol']  }}</span>
-                                                <input name="amount[{{ $journal['transaction_journal_id']  }}]" class="form-control" autocomplete="off"
-                                                       step="any" type="number" value="{{ $journal['amount']  }}">
-                                                <input type="hidden" name="transaction_currency_id[{{ $journal['transaction_journal_id']  }}]"
-                                                       value="{{ $journal['currency_id']  }}">
+                                                <span class="input-group-text" id="basic-addon1">{{ $journal['currency_symbol'] }}</span>
+                                                <input name="amount[{{ $journal['transaction_journal_id']  }}]" class="form-control" autocomplete="off" step="any" type="number" value="{{ $journal['amount']  }}">
+                                                <input type="hidden" name="transaction_currency_id[{{ $journal['transaction_journal_id']  }}]" value="{{ $journal['currency_id']  }}">
                                             </div>
                                             @if(null !== $journal['foreign_amount'])
                                                 {{-- insert foreign data --}}
                                                 <div class="input-group input-group-sm">
-                                                    <span class="input-group-addon">{{ $journal['foreign_currency_symbol']  }}</span>
+                                                    <span class="input-group-text">{{ $journal['foreign_currency_symbol']  }}</span>
                                                     <input name="foreign_amount[{{ $journal['transaction_journal_id']  }}]" class="form-control" autocomplete="off"
                                                            step="any" type="number" value="{{ $journal['foreign_amount']  }}">
                                                     <input type="hidden" name="foreign_currency_id[{{ $journal['transaction_journal_id']  }}]"
@@ -86,7 +84,7 @@
                                     </td>
                                     <td>
                                         {{-- DATE --}}
-                                        <input class="form-control input-sm" autocomplete="off"
+                                        <input class="form-control form-control-sm" autocomplete="off"
                                                name="date[{{ $journal['transaction_journal_id']  }}]" type="datetime-local" value="{{ $journal['date']  }}">
                                     </td>
                                     <!-- {{ $journal['transaction_type_type']  }} -->
@@ -99,17 +97,18 @@
                                         @if(false === $journal['reconciled'])
                                         {{-- SOURCE ACCOUNT ID FOR TRANSFER OR WITHDRAWAL --}}
                                         @if($journal['transaction_type_type'] == 'Transfer' or $journal['transaction_type_type'] == 'Withdrawal')
-                                            <select class="form-control input-sm" name="source_id[{{ $journal['transaction_journal_id'] }}]">
+                                            <select class="form-control form-control-sm" name="source_id[{{ $journal['transaction_journal_id'] }}]">
                                                 @foreach($withdrawalSources as $account)
                                                     <option value="{{ $account->id }}" @if($account->id === $journal['source_account_id']) selected @endif
                                                             label="{{ $account->name }}">{{ $account->name }}</option>
                                                 @endforeach
                                             </select>
+
                                         @endif
 
                                         {{-- SOURCE ACCOUNT NAME FOR DEPOSIT --}}
                                         @if($journal['transaction_type_type'] == 'Deposit')
-                                            <input class="form-control input-sm" spellcheck="false"
+                                            <input class="form-control form-control-sm" spellcheck="false"
                                                    placeholder="@if($journal['source_account_type'] !== 'Cash account'){{ $journal['source_account_name'] }}@endif"
                                                    autocomplete="off"
                                                    name="source_name[{{ $journal['transaction_journal_id'] }}]" type="text"
@@ -124,7 +123,7 @@
                                         @if(false === $journal['reconciled'])
                                         {{-- DESTINATION ACCOUNT NAME FOR TRANSFER AND DEPOSIT --}}
                                         @if($journal['transaction_type_type'] == 'Transfer' || $journal['transaction_type_type'] == 'Deposit')
-                                            <select class="form-control input-sm" name="destination_id[{{ $journal['transaction_journal_id'] }}]">
+                                            <select class="form-control form-control-sm" name="destination_id[{{ $journal['transaction_journal_id'] }}]">
                                                 @foreach($depositDestinations as $account)
                                                     <option value="{{ $account->id }}" @if($account->id === $journal['destination_account_id']) selected="selected" @endif
                                                             label="{{ $account->name }}">{{ $account->name }}</option>
@@ -134,22 +133,22 @@
 
                                         {{-- DESTINATION ACCOUNT NAME FOR WITHDRAWAL --}}
                                         @if($journal['transaction_type_type'] === 'Withdrawal')
-                                            <input class="form-control input-sm" spellcheck="false"
-                                                   placeholder="@if(array_key_exists('destination_type', $journal) && $journal['destination_type'] !== 'Cash account'){{ $journal['destination_account_name'] }}@endif"
+                                            <input class="form-control form-control-sm" spellcheck="false"
+                                                   placeholder="@if(array_key_exists('destination_account_type', $journal) && $journal['destination_account_type'] !== 'Cash account'){{ $journal['destination_account_name'] }}@endif"
                                                    name="destination_name[{{ $journal['transaction_journal_id'] }}]" type="text" autocomplete="off"
-                                                   value="@if(array_key_exists('destination_type', $journal) && $journal['destination_type'] !== 'Cash account'){{ $journal['destination_account_name'] }}@endif">
+                                                   value="@if(array_key_exists('destination_account_type', $journal) && $journal['destination_account_type'] !== 'Cash account') {{ $journal['destination_account_name'] }}@endif">
                                         @endif
                                         @endif
                                     </td>
                                     {{-- category --}}
                                     <td class="position-relative">
-                                        <input class="form-control input-sm" placeholder="{{ $journal['category_name'] }}" autocomplete="off" spellcheck="false"
+                                        <input class="form-control form-control-sm" placeholder="{{ $journal['category_name'] }}" autocomplete="off" spellcheck="false"
                                                name="category[{{ $journal['transaction_journal_id'] }}]" type="text" value="{{ $journal['category_name'] }}">
                                     </td>
                                     {{-- budget --}}
                                     <td>
                                         @if($journal['transaction_type_type'] === 'Withdrawal')
-                                            <select class="form-control input-sm" name="budget_id[{{ $journal['transaction_journal_id'] }}]">
+                                            <select class="form-control form-control-sm" name="budget_id[{{ $journal['transaction_journal_id'] }}]">
                                                 <option value="0" label="({{ __('firefly.no_budget') }})"
                                                         @if($journal['budget_id'] === 0) selected="selected" @endif>{{ __('firefly.no_budget') }}</option>
                                                 @foreach($budgets as $budget)

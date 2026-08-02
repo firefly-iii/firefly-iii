@@ -225,7 +225,7 @@
     </tbody>
     <tfoot>
     <tr>
-        <td colspan="8">&nbsp;</td>
+        <td colspan="7">&nbsp;</td>
         <td class="d-xs-none text-end">
             <div class="d-none action-menu">
             <button class="btn btn-sm btn-outline-secondary dropdown-toggle" type="button" id="bottom_action_menu" data-bs-toggle="dropdown" aria-expanded="false">{{ __('firefly.actions') }} <span class="caret"></span></button>
@@ -237,7 +237,7 @@
             </div>
         </td>
 
-        <td>&nbsp;</td>
+        <td class="text-end"><input id="list_ALL_bottom" value="1" name="select-all" type="checkbox" class="select-all form-check-inline"/></td>
 
     </tr>
     <tr>

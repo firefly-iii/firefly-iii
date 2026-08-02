@@ -14,7 +14,7 @@
     please visit the following page: https://bit.ly/FF3-broken-base-href
     -->
     <base href="{{ route('index', null, true) }}/">
-    <title>{{ __('firefly.login_page_title')  }}</title>
+    <title>@yield('status') - {{ $title ?? 'Firefly III'  }}</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes"/>
     <meta name="theme-color" content="#007bff" media="(prefers-color-scheme: light)"/>
     <meta name="theme-color" content="#1a1a1a" media="(prefers-color-scheme: dark)"/>
@@ -36,7 +36,7 @@
                 <p class="text-center">
                     <img src="images/logo-session.png" width="68" height="100" alt="Firefly III Logo" title="Firefly III"/><br>
                 </p>
-                <h1><strong>Firefly</strong> III - @yield('status_code') @yield('status') :(</h1>
+                <h1><strong>Firefly</strong> III - @yield('status_code') @yield('status')</h1>
                 <h2 class="text-danger">@yield('sub_title')</h2>
                 @yield('content')
             </div>

@@ -83,7 +83,7 @@
                                 <p>
 
                                     <input type="hidden" name="_token" value="{{ csrf_token() }}"/>
-                                    <button type="submit" class="btn btn-danger btn-xs"><span
+                                    <button type="submit" class="btn btn-danger btn-sm"><span
                                             class="bi bi-arrow-repeat"></span> {{ __('firefly.regenerate_command_line_token')  }}
                                     </button>
                                 </p>

@@ -61,6 +61,7 @@ class GracefulNotFoundHandler extends ExceptionHandler
         }
         $name  = $route->getName();
         if (!auth()->check()) {
+
             return parent::render($request, $e);
         }
 

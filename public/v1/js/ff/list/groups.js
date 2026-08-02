@@ -122,10 +122,12 @@ function countChecked() {
 
 function checkAll() {
     $('.mass-select').prop('checked', true);
+    $('.select-all').prop('checked', true);
 }
 
 function uncheckAll() {
     $('.mass-select').prop('checked', false);
+    $('.select-all').prop('checked', false);
 }
 
 function updateActionButtons() {
