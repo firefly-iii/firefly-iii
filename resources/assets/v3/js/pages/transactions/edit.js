@@ -245,7 +245,7 @@ let transactions = function () {
                 const data = response.data.data;
                 this.groupProperties.id = parseInt(data.id);
                 this.groupProperties.transactionType = data.attributes.transactions[0].type.toLowerCase();
-                this.groupProperties.title = data.attributes.title ?? data.attributes.transactions[0].description;
+                this.groupProperties.title = data.attributes.group_title ?? data.attributes.transactions[0].description;
                 this.entries = parseDownloadedSplits(data.attributes.transactions, parseInt(data.id));
 
                 // remove waiting thing.

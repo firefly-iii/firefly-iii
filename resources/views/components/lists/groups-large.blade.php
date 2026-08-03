@@ -92,6 +92,17 @@
             @endif
         <td class="top-light-border d-xs-none text-end">
             <div class=""> <!-- d-none ? -->
+
+                <button class="btn btn-sm btn-outline-secondary dropdown-toggle" type="button" id="group_menu_{{ $group['id'] }}" data-bs-toggle="dropdown" aria-expanded="false">{{ __('firefly.actions') }} <span class="caret"></span></button>
+                <ul class="dropdown-menu" aria-labelledby="group_menu_{{ $group['id'] }}">
+                    <li><a class="dropdown-item" href="{{ route('transactions.edit', [$group['id']]) }}"><span class="bi bi-pencil"></span> {{ __('firefly.edit') }}</a></li>
+                    <li><a class="dropdown-item" href="{{ route('transactions.delete', [$group['id']]) }}"><span class="text-danger bi bi-trash"></span> {{ __('firefly.delete') }}</a></li>
+                    <li><a class="dropdown-item" href="#" data-id="{{ $group['id'] }}" class="clone-transaction"><span class="bi bi-copy"></span> {{ __('firefly.clone') }}</a></li>
+                    <li><a class="dropdown-item" href="#" data-id="{{ $group['id'] }}" class="clone-transaction-and-edit"><span class="bi bi-copy"></span> {{ __('firefly.clone_and_edit') }}</a></li>
+                </ul>
+
+
+                <!--
                 <button type="button" class="btn btn-sm btn-outline-secondary dropdown-toggle" data-toggle="dropdown"
                         aria-haspopup="true" aria-expanded="false">{{ __('firefly.actions') }} <span class="caret"></span></button>
                 <ul class="dropdown-menu dropdown-menu-right" role="menu">
@@ -100,6 +111,7 @@
                     <li><a href="#" data-id="{{ $group['id'] }}" class="clone-transaction"><span class="bi bi-copy"></span> {{ __('firefly.clone') }}</a></li>
                     <li><a href="#" data-id="{{ $group['id'] }}" class="clone-transaction-and-edit"><span class="bi bi-copy"></span> {{ __('firefly.clone_and_edit') }}</a></li>
                 </ul>
+                -->
             </div>
         </td>
         <td class="top-light-border d-xs-none">&nbsp;</td><!-- would have checkbox -->

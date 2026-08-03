@@ -87,6 +87,7 @@ let create = function () {
         // properties for the entire transaction group
         groupProperties: {
             transactionType: 'unknown',
+            titleErrors: [],
             title: null,
             id: null,
             totalAmount: 0,
@@ -429,7 +430,7 @@ let create = function () {
 
             // catch for group title:
             // TODO later this must be handled with more care (ie use the group title input)
-            if (transactions.length > 1) {
+            if (transactions.length > 1 && ('' === submission.group_title || null === submission.group_title)) {
                 submission.group_title = transactions[0].description;
             }
 

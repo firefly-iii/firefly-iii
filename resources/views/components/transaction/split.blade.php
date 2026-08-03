@@ -7,6 +7,8 @@
                     <h3 class="card-title">{{ __('firefly.basic_journal_information') }}</h3>
                 </div>
                 <div class="card-body">
+                    <!-- GROUP TITLE -->
+                    @include('partials.form.transaction.group-title')
                     <!-- DESCRIPTION -->
                     @include('partials.form.transaction.description')
 

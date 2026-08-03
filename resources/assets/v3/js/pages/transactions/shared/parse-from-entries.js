@@ -97,6 +97,26 @@ export function parseFromEntries(entries, originals, transactionType) {
             if (typeof entry.destination_account.id !== 'undefined' && '' !== entry.destination_account.id.toString()) {
                 current.destination_id = entry.destination_account.id;
             }
+            if(i > 0) {
+                if('withdrawal' === transactionType) {
+                    // overrule source
+                    current.source_id = returnArray[0].source_id;
+                    current.source_name = returnArray[0].source_name;
+                }
+                if('deposit' === transactionType) {
+                    // overrule destination
+                    current.destination_id = returnArray[0].destination_id;
+                    current.destination_name = returnArray[0].destination_name;
+                }
+                if('transfer' === transactionType) {
+                    // overrule both
+                    current.source_id = returnArray[0].source_id;
+                    current.source_name = returnArray[0].source_name;
+                    current.destination_id = returnArray[0].destination_id;
+                    current.destination_name = returnArray[0].destination_name;
+                }
+                console.log('Overrule depending on ', transactionType);
+            }
 
             current.type = transactionType;
 
