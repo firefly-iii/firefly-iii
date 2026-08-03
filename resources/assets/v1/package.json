@@ -15,6 +15,6 @@
         "bootstrap-sass": "^3",
         "jquery": "^4",
         "laravel-mix": "^6.0",
-        "webpack": "~5.105.4"
+        "webpack": "~5.109.2"
     }
 }
