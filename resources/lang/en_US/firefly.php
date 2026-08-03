@@ -2452,7 +2452,7 @@ return [
     'average_income_per_account'                          => 'Average income per account',
     'total'                                               => 'Total',
     'description'                                         => 'Description',
-    'group-title' => 'Shared description for all transactions',
+    'group-title'                                         => 'Shared description for all transactions',
     'sum_of_period'                                       => 'Sum of period',
     'average_in_period'                                   => 'Average in period',
     'no_account_role'                                     => '(no role)',
