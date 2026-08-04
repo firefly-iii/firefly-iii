@@ -9,11 +9,11 @@ var dateRangeMeta = {
 title: "{{ $dateRangeTitle }}",
 url: "{{ route('daterange') }}",
 labels: {
-apply: "{{ __('firefly.apply') }}",
-cancel: "{{ __('firefly.cancel') }}",
-from: "{{ __('firefly.from') }}",
-to: "{{ __('firefly.to') }}",
-customRange: "{{ __('firefly.customRange') }}"
+apply: "{{ escape_for_js(__('firefly.apply')) }}",
+cancel: "{{ escape_for_js(__('firefly.cancel')) }}",
+from: "{{ escape_for_js(__('firefly.from')) }}",
+to: "{{ escape_for_js(__('firefly.to')) }}",
+customRange: "{{ escape_for_js(__('firefly.customRange')) }}"
 }
 };
 
@@ -44,27 +44,27 @@ var sessionEnd = '{{ session('end')->format('Y-m-d') }}';
 var todayText = ' {{ trans('firefly.today') }}';
 
 // some formatting stuff:
-var month_and_day_js = "{{ trans('config.month_and_day_js') }}";
-var date_time_js = "{{ trans('config.date_time_js') }}";
+var month_and_day_js = "{{ escape_for_js(trans('config.month_and_day_js')) }}";
+var date_time_js = "{{ escape_for_js(trans('config.date_time_js')) }}";
 var acc_config_new = {format: accountingConfig};
 
 // strings and translations used often:
-var helpPageTitle = "{{ trans('firefly.help_for_this_page') }}";
-var helpPageBody = "{{ trans('firefly.help_for_this_page_body') }}";
+var helpPageTitle = "{{ escape_for_js(trans('firefly.help_for_this_page')) }}";
+var helpPageBody = "{{ escape_for_js(trans('firefly.help_for_this_page_body')) }}";
 
-var anonymous_warning_on_txt = "{{ trans('firefly.anonymous_warning_on') }}";
-var anonymous_warning_off_txt= "{{ trans('firefly.anonymous_warning_off') }}";
+var anonymous_warning_on_txt = "{{ escape_for_js(trans('firefly.anonymous_warning_on')) }}";
+var anonymous_warning_off_txt= "{{ escape_for_js(trans('firefly.anonymous_warning_off')) }}";
 
-var edit_selected_txt = "{{ trans('firefly.mass_edit') }}";
-var edit_bulk_selected_txt = "{{ trans('firefly.bulk_edit') }}";
-var delete_selected_txt = "{{ trans('firefly.mass_delete') }}";
+var edit_selected_txt = "{{ escape_for_js(trans('firefly.mass_edit')) }}";
+var edit_bulk_selected_txt = "{{ escape_for_js(trans('firefly.bulk_edit')) }}";
+var delete_selected_txt = "{{ escape_for_js(trans('firefly.mass_delete')) }}";
 
 var mass_edit_url   = '{{ route('transactions.mass.edit', ['']) }}';
 var bulk_edit_url   = '{{ route('transactions.bulk.edit', ['']) }}';
 var mass_delete_url = '{{ route('transactions.mass.delete', ['']) }}';
 
 // for demo:
-var nextLabel = "{{ trans('firefly.intro_next_label') }}";
-var prevLabel = "{{ trans('firefly.intro_prev_label') }}";
-var skipLabel = "{{ trans('firefly.intro_skip_label') }}";
-var doneLabel = "{{ trans('firefly.intro_done_label') }}";
+var nextLabel = "{{ escape_for_js(trans('firefly.intro_next_label')) }}";
+var prevLabel = "{{ escape_for_js(trans('firefly.intro_prev_label')) }}";
+var skipLabel = "{{ escape_for_js(trans('firefly.intro_skip_label')) }}";
+var doneLabel = "{{ escape_for_js(trans('firefly.intro_done_label')) }}";

@@ -133,11 +133,8 @@
 @section('scripts')
     @vite(['js/pages/generic.js'])
     <script type="text/javascript" nonce="{{ $JS_NONCE }}">
-        var edit_selected_txt = "{{ trans('firefly.edit') }}";
-        var delete_selected_txt = "{{ trans('firefly.delete') }}";
-        var edit_bulk_selected_txt = "{{ trans('firefly.bulk_edit') }}";
 
-        var searchQuery = "{!! addslashes($fullQuery) !!}";
+        var searchQuery = "{!! escape_for_js($fullQuery) !!}";
         var searchUrl = "{{ route('search.search') }}?page={{ $page }}";
         var searchPage = {{ $page }};
         var cloneGroupUrl = '{{ route('transactions.clone') }}';

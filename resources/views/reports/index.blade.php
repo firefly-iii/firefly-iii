@@ -182,13 +182,12 @@
     <script type="text/javascript" nonce="{{ $JS_NONCE }}">
         var minDate = "{{ $start->format('Y-m-d') }}";
         var picker;
-        var selectAllText = "{{ trans('firefly.multi_select_select_all') }}";
-        var nonSelectedText = "{{ trans('firefly.multi_select_no_selection') }}";
-        var nSelectedText = "{{ trans('firefly.multi_select_n_selected') }}";
-        var allSelectedText = "{{ trans('firefly.multi_select_all_selected') }}";
-        var filterPlaceholder = "{{ trans('firefly.multi_select_filter_placeholder') }}";
+        var selectAllText = "{{ escape_for_js(trans('firefly.multi_select_select_all')) }}";
+        var nonSelectedText = "{{ escape_for_js(trans('firefly.multi_select_no_selection')) }}";
+        var nSelectedText = "{{ escape_for_js(trans('firefly.multi_select_n_selected')) }}";
+        var allSelectedText = "{{ escape_for_js(trans('firefly.multi_select_all_selected')) }}";
+        var filterPlaceholder = "{{ escape_for_js(trans('firefly.multi_select_filter_placeholder')) }}";
     </script>
-    <script type="text/javascript" src="v1/js/lib/jquery-4.0.0.min.js?v={{ $FF_BUILD_TIME }}" nonce="{{ $JS_NONCE }}"></script>
     <script type="text/javascript" src="v1/js/lib/daterangepicker.js?v={{ $FF_BUILD_TIME }}" nonce="{{ $JS_NONCE }}"></script>
     <script type="text/javascript" src="v1/js/lib/bootstrap-multiselect.js?v={{ $FF_BUILD_TIME }}" nonce="{{ $JS_NONCE }}"></script>
     <script type="text/javascript" src="v1/js/ff/reports/all.js?v={{ $FF_BUILD_TIME }}" nonce="{{ $JS_NONCE }}"></script>
