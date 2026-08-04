@@ -82,13 +82,13 @@ if(!function_exists('escape_for_js')) {
             }
 
             $codepoint = mb_ord($char, 'UTF-8');
-            if (0x10000 > $codepoint) {
+            if (0x1_0000 > $codepoint) {
                 return \sprintf('\u%04X', $codepoint);
             }
 
             // Split characters outside the BMP into surrogate pairs
             // https://tools.ietf.org/html/rfc2781.html#section-2.1
-            $u = $codepoint - 0x10000;
+            $u = $codepoint - 0x1_0000;
             $high = 0xD800 | ($u >> 10);
             $low = 0xDC00 | ($u & 0x3FF);
 
