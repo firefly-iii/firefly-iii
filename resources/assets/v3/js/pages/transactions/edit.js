@@ -131,7 +131,7 @@ let transactions = function () {
             // parse transaction:
             let transactions = parseFromEntries(this.entries, this.originals, this.groupProperties.transactionType);
             let submission = {
-                group_title: this.groupProperties.editTitle,
+                group_title: this.groupProperties.title,
                 fire_webhooks: this.formStates.webhooksButton,
                 apply_rules: this.formStates.rulesButton,
                 transactions: transactions
