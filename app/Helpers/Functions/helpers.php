@@ -54,7 +54,7 @@ if(!function_exists('escape_for_js')) {
         // escape all non-alphanumeric characters
         // into their \x or \uHHHH representations
 
-        if (false === preg_match('//u', $string)) {
+        if (0 === preg_match('//u', $string)) {
             throw new FireflyException('The string to escape is not a valid UTF-8 string.');
         }
 
