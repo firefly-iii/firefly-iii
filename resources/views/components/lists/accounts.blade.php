@@ -4,18 +4,18 @@
 <table class="table table-sm table-hover" id="sortable-table">
     <thead>
     <tr>
-        <th class="w-5 hidden-sm hidden-xs">&nbsp;</th>
+        <th class="w-5">&nbsp;</th>
         <th class="w-20">{{ trans('list.name') }}</th>
         @if('asset' === $objectType)
 
-        <th class="hidden-sm hidden-xs hidden-md">{{ trans('list.role') }}</th>
+        <th {{-- hide on LG and smaller. --}} class="d-lg-table-cell d-none">{{ trans('list.role') }}</th>
         @endif
         @if('liabilities' === $objectType)
             <th>{{ trans('list.liability_type') }}</th>
             <th>{{ trans('form.liability_direction') }}</th>
             <th>{{ trans('list.interest') }} ({{ trans('list.interest_period') }})</th>
         @endif
-        <th class="hidden-sm hidden-xs">{{ trans('form.account_number') }}</th>
+        <th>{{ trans('form.account_number') }}</th>
         @if('liabilities' !== $objectType)
         <th class="text-end">{{ trans('list.currentBalance') }}</th>
         @endif
@@ -24,20 +24,19 @@
             {{ trans('firefly.left_in_debt') }}
         </th>
         @endif
-        <th class="hidden-sm hidden-xs">{{ trans('list.active') }}</th>
+        <th {{-- hide on SM --}} class="d-md-table-cell d-none">{{ trans('list.active') }}</th>
         {{-- hide last activity to make room for other stuff --}}
         @if('liabilities' !== $objectType)
-        <th class="hidden-sm hidden-xs hidden-md">{{ trans('list.lastActivity') }}</th>
+        <th {{-- hide on LG and smaller. --}} class="d-lg-table-cell d-none">{{ trans('list.lastActivity') }}</th>
         @endif
-        <th
-            class="w-15 hidden-sm hidden-xs hidden-md">{{ trans('list.balanceDiff') }}</th>
-        <th class="hidden-sm hidden-xs">&nbsp;</th>
+        <th  {{-- hide on SM --}} class="w-15 d-md-table-cell d-none text-end">{{ trans('list.balanceDiff') }}</th>
+        <th>&nbsp;</th>
     </tr>
     </thead>
     <tbody>
     @foreach($accounts as $account)
     <tr class="sortable-object" data-id="{{ $account->id }}" data-order="{{ $account->order }}" data-position="{{ $loop->index }}">
-        <td class="hidden-sm hidden-xs">
+        <td>
             <span class="btn btn-sm bi bi-list object-handle"></span>
         </td>
         <td>
@@ -50,7 +49,7 @@
             @endif
         </td>
         @if('asset' === $objectType)
-        <td class="hidden-sm hidden-xs hidden-md">
+        <td {{-- hide on LG and smaller. --}} class="d-lg-table-cell d-none">
             @foreach($account->accountMeta as $entry)
             @if('account_role' === $entry->name)
                 {{ __('firefly.account_role_'.$entry['data']) }}
@@ -63,7 +62,7 @@
         <td>{{ trans('firefly.liability_direction_' . $account->liability_direction . '_short')  }}</td>
         <td>{{ $account->interest }}% ({{ strtolower($account->interestPeriod) }})</td>
         @endif
-        <td class="hidden-sm hidden-xs">{{ $account->iban }} @if('' === $account->iban) {{ account_get_meta_field($account, 'account_number') }}@endif</td>
+        <td>{{ $account->iban }} @if('' === $account->iban) {{ account_get_meta_field($account, 'account_number') }}@endif</td>
         @if('liabilities' !== $objectType)
         <td class="text-end">
                 <span class="mr-2">
@@ -94,7 +93,7 @@
             @endif
         </td>
         @endif
-        <td class="hidden-sm hidden-xs">
+        <td  {{-- hide on SM --}} class="d-md-table-cell d-none">
             @if($account->active)
                 <span class="bi bi-check"></span>
             @endif
@@ -105,17 +104,17 @@
         {{-- hide last activity to make room for other stuff --}}
         @if('liabilities' !== $objectType)
         @if($account->lastActivityDate)
-        <td class="hidden-sm hidden-xs hidden-md">
+        <td {{-- hide on LG and smaller. --}} class="d-lg-table-cell d-none">
             <!-- {{ $account->lastActivityDate }} -->
             {{ $account->lastActivityDate?->isoFormat($monthAndDayFormat) }}
         </td>
         @else
-        <td class="hidden-sm hidden-xs hidden-md">
+        <td {{-- hide on LG and smaller. --}} class="d-lg-table-cell d-none">
             <em>{{ __('firefly.never') }}</em>
         </td>
         @endif
         @endif
-        <td class="text-end hidden-sm hidden-xs hidden-md">
+        <td {{-- hide on SM --}} class="text-end d-md-table-cell d-none">
                 <span class="mr-1">
                     @foreach($account->differences as $key => $balance)
                         <span title="{{ $key }}">
@@ -134,7 +133,7 @@
                     @endforeach
                 </span>
         </td>
-        <td class="hidden-sm hidden-xs justify-content-end">
+        <td class="hidden-sm justify-content-end">
             <div class="dropdown">
                 <button class="btn btn-outline-secondary btn-sm dropdown-toggle" type="button" id="action_menu_{{$account->id}}" data-bs-toggle="dropdown" aria-expanded="false">
                     {{ __('firefly.actions') }}

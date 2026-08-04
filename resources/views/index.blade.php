@@ -58,8 +58,7 @@
                 </div>
             </div>
         </div>
-        <div class="col-lg-4 col-md-6 col-sm-12">
-
+        <div class="col-lg-4 col-md-12 col-sm-12">
             <!--TRANSACTIONS -->
             @foreach($transactions as $data)
                 <div class="card card-outline mb-2">

@@ -31,7 +31,7 @@
                                 <th>{{ __('list.responds_with') }}</th>
                                 <th>{{ __('list.secret') }} ({{ strtolower(__('firefly.show')) }} / {{ strtolower(__('firefly.hide')) }})</th>
                                 <th>{{ __('list.url') }}</th>
-                                <th class="hidden-sm hidden-xs">&nbsp;</th>
+                                <th>&nbsp;</th>
                             </tr>
                             </thead>
                             <tbody>
@@ -86,7 +86,7 @@
                                     <code :title="webhook.full_url" x-text="webhook.url"></code>
 
                                 </td>
-                                <td class="hidden-sm hidden-xs text-end">
+                                <td class="hidden-sm text-end">
                                     <div class="dropdown">
                                         <button class="btn btn-sm btn-secondary-outline dropdown-toggle" type="button" :id="'webhook_menu_' +  webhook.id" data-bs-toggle="dropdown" aria-expanded="false">
                                             {{ __('firefly.actions') }}

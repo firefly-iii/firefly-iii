@@ -11,7 +11,7 @@ $hideCategory = $hideCategory ?? false;
         <th>&nbsp;</th>
         <th>{{ trans('list.description') }}</th>
         <th>{{ trans('list.amount') }}</th>
-        <th class="hidden-sm hidden-xs">{{ trans('list.date') }}</th>
+        <th>{{ trans('list.date') }}</th>
         @if(!$hideSource)
             <th class="hidden-xs">{{ trans('list.from') }}</th>
         @endif
@@ -93,7 +93,7 @@ $hideCategory = $hideCategory ?? false;
 
             </td>
 
-            <td class="hidden-sm hidden-xs">
+            <td>
                 {{ $transaction['date']->isoFormat($monthAndDayFormat) }}
             </td>
 

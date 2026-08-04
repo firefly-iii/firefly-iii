@@ -25,7 +25,7 @@
                                 <th>{{ trans('list.transaction_type') }}</th>
                                 <th>{{ trans('list.description') }}</th>
                                 <th>{{ trans('list.amount') }}</th>
-                                <th class="hidden-sm hidden-xs">{{ trans('list.date') }}</th>
+                                <th>{{ trans('list.date') }}</th>
                                 <th class="hidden-xs">{{ trans('list.from') }}</th>
                                 <th class="hidden-xs">{{ trans('list.to') }}</th>
                             </tr>

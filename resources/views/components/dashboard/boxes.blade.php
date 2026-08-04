@@ -1,5 +1,5 @@
 <div class="row mb-2" x-data="boxes" id="box_out_holder">
-    <div class="col-xl-3 col-lg-6 col-md-12 col-sm-12">
+    <div class="col-xl-3 col-lg-6 col-md-6 col-sm-6">
         <div class="small-box text-bg-primary">
             <div class="inner balance-box">
                 <h4 class="hover-expand">
@@ -31,7 +31,7 @@
                     </p>
                 </template>
             </div>
-            <span class="small-box-icon">
+            <span class="small-box-icon d-none d-lg-block d-xl-block d-xxl-block">
                 <em class="bi bi-boxes"></em>
             </span>
 
@@ -50,7 +50,7 @@
         <!--end::Small Box Widget 1-->
     </div>
     <!--end::Col-->
-    <div class="col-xl-3 col-lg-6 col-md-12 col-sm-12"  style="flex-grow: 1;">
+    <div class="col-xl-3 col-lg-6 col-md-6 col-sm-6"  style="flex-grow: 1;">
         <!--begin::Small Box Widget 2-->
         <div class="small-box text-bg-success">
             <div class="inner">
@@ -81,7 +81,7 @@
                     <p class="d-none d-sm-block"><em>{{ __('firefly.no_waiting') }}</p>
                 </template>
             </div>
-            <span class="small-box-icon">
+            <span class="small-box-icon d-none d-lg-block d-xl-block d-xxl-block">
                 <em class="bi bi-calendar"></em>
             </span>
             <span class="small-box-footer d-none d-xl-block">
@@ -104,7 +104,7 @@
         <!--end::Small Box Widget 2-->
     </div>
     <!--end::Col-->
-    <div class="col-xl-3 col-lg-6 col-md-12 col-sm-12"  style="flex-grow: 1;">
+    <div class="col-xl-3 col-lg-6 col-md-6 col-sm-6"  style="flex-grow: 1;">
         <!--begin::Small Box Widget 3-->
         <div class="small-box text-bg-warning">
             <div class="inner">
@@ -134,7 +134,7 @@
                     <p class="d-none d-sm-block"><em>{{ __('firefly.box_no_budgeted') }}</em></p>
                 </template>
             </div>
-            <span class="small-box-icon">
+            <span class="small-box-icon d-none d-lg-block d-xl-block d-xxl-block">
                 <em class="bi bi-cash"></em>
             </span>
             <span class="small-box-footer d-none d-xl-block">
@@ -155,7 +155,7 @@
         <!--end::Small Box Widget 3-->
     </div>
     <!--end::Col-->
-    <div class="col-xl-3 col-lg-6 col-md-12 col-sm-12" style="flex-grow: 1;">
+    <div class="col-xl-3 col-lg-6 col-md-6 col-sm-6" style="flex-grow: 1;">
         <!--begin::Small Box Widget 4-->
         <div class="small-box text-bg-danger">
             <div class="inner">
@@ -181,7 +181,7 @@
                     </p>
                 </template>
             </div>
-            <span class="small-box-icon">
+            <span class="small-box-icon d-none d-lg-block d-xl-block d-xxl-block">
                 <i class="bi bi-graph-up"></i>
             </span>
             <span class="small-box-footer d-none d-xl-block">

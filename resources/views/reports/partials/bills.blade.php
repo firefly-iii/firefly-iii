@@ -2,8 +2,8 @@
     <thead>
     <tr>
         <th data-defaultsign="az">{{ trans('form.name') }}</th>
-        <th data-defaultsign="_19" class="text-end hidden-xs">{{ trans('form.amount_min') }}</th>
-        <th data-defaultsign="_19" class="text-end hidden-xs">{{ trans('form.amount_max') }}</th>
+        <th data-defaultsign="_19" class="text-end">{{ trans('form.amount_min') }}</th>
+        <th data-defaultsign="_19" class="text-end">{{ trans('form.amount_max') }}</th>
         <th data-defaultsign="_19">{{ trans('form.expected_on') }}</th>
         <th data-defaultsign="_19" class="text-end">{{ trans('form.paid') }}</th>
     </tr>

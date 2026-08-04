@@ -5,14 +5,14 @@
     <thead>
     <tr>
         <th data-defaultsign="az">{{ trans('list.name') }}</th>
-        <th data-defaultsign="month" class="hidden-sm hidden-xs">{{ trans('list.lastActivity') }}</th>
+        <th data-defaultsign="month">{{ trans('list.lastActivity') }}</th>
         <th data-defaultsort="disabled">&nbsp;</th>
     </tr>
     </thead>
     <tbody>
     <tr>
         <td><a href="{{ route('categories.no-category') }}"><em>{{ __('firefly.without_category') }}</em></a></td>
-        <td class="hidden-sm hidden-xs">&nbsp;</td>
+        <td>&nbsp;</td>
         <td>&nbsp;</td>
     </tr>
     @foreach($categories as $category)
@@ -24,11 +24,11 @@
             @endif
         </td>
         @if(null !== $category->lastActivity)
-        <td class="hidden-sm hidden-xs" data-value="{{ $category->lastActivity->format('Y-m-d H-i-s') }}">
+        <td data-value="{{ $category->lastActivity->format('Y-m-d H-i-s') }}">
             {{ $category->lastActivity->isoFormat($monthAndDayFormat) }}
         </td>
         @else
-        <td class="hidden-sm hidden-xs" data-value="0000-00-00 00-00-00">
+        <td data-value="0000-00-00 00-00-00">
             <em>{{ __('firefly.never') }}</em>
         </td>
         @endif

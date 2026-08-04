@@ -30,7 +30,7 @@
                             <tr>
                                 <th>{{ __('list.title') }}</th>
                                 <th>{{ __('list.primary_currency') }}</th>
-                                <th class="hidden-sm hidden-xs">&nbsp;</th>
+                                <th>&nbsp;</th>
                             </tr>
                             </thead>
                             <tbody>
@@ -42,7 +42,7 @@
                                 <td>
                                     <span x-text="administration.currency_name"></span> (<span x-text="administration.currency_code"></span>)
                                 </td>
-                                <td class="hidden-sm hidden-xs">
+                                <td>
                                     <button class="btn btn-sm btn-secondary-outline dropdown-toggle" type="button" :id="'card_header_' + administration.id" data-bs-toggle="dropdown" aria-expanded="false">
                                             {{ __('firefly.actions') }} <span class="caret"></span></button>
                                     <ul class="dropdown-menu" :aria-labelledby="'card_header_' + administration.id">

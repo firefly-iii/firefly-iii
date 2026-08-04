@@ -130,7 +130,7 @@
                 </li>
                 <!-- end anonymous -->
                 <!-- help button -->
-                <li class="nav-item hidden-sm hidden-xs">
+                <li class="nav-item">
                     <a href="#" class="nav-link" id="help" data-extra="{{ $objectType ?? '' }}"
                        data-route="{{ $original_route_name }}" data-bs-toggle="modal" data-bs-target="#helpModal">
                         <em class="bi bi-question-circle"></em>
@@ -320,8 +320,8 @@
         <span>
             <a href="https://www.firefly-iii.org/" target="_blank" title="Firefly III">Firefly III</a> &copy; James Cole, <a
                 href="https://www.gnu.org/licenses/agpl-3.0.html" title="AGPL-3.0-or-later.">AGPL-3.0-or-later</a>.
-            @if($FF_IS_ALPHA)<small class="text-danger hidden-xs"><br>{{ __('firefly.is_alpha_warning') }}</small>@endif
-            @if($FF_IS_BETA)<small class="text-warning hidden-xs"><br>{{ __('firefly.is_beta_warning') }}</small>@endif
+            @if($FF_IS_ALPHA)<small class="text-danger"><br>{{ __('firefly.is_alpha_warning') }}</small>@endif
+            @if($FF_IS_BETA)<small class="text-warning"><br>{{ __('firefly.is_beta_warning') }}</small>@endif
         </span>
     </footer>
 </div>

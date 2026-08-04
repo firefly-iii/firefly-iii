@@ -1,7 +1,7 @@
 @extends('layout.v3.session')
 @section('content')
     <div class="row">
-        <div class="col-lg-9 col-md-12 col-sm-12 col-xs-12">
+        <div class="col-xl-9 col-lg-12 col-md-12 col-sm-12 col-xs-12">
             <div class="card mb-2">
                 <div class="card-header">
                     <h3 class="card-title">{{ __('firefly.reconcile_range') }}</h3>
@@ -83,7 +83,7 @@
                 </div>
             </div>
         </div>
-        <div class="col-lg-3 col-md-12 col-sm-12 col-xs-12">
+        <div class="col-xl-3 col-lg-12 col-md-12 col-sm-12 col-xs-12">
             <div class="card mb-2">
                 <div class="card-header">
                     <h3 class="card-title">{{ __('firefly.reconcile_options') }}</h3>

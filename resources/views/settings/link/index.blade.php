@@ -10,10 +10,10 @@
                     <table class="table table-hover sortable">
                         <thead>
                         <tr>
-                            <th class="hidden-sm hidden-xs" data-defaultsort="disabled">&nbsp;</th>
+                            <th data-defaultsort="disabled">&nbsp;</th>
                             <th data-defaultsign="az">{{ trans('list.name') }}</th>
-                            <th class="hidden-sm hidden-xs" data-defaultsign="az">{{ trans('list.inward') }}</th>
-                            <th class="hidden-sm hidden-xs" data-defaultsign="az">{{ trans('list.outward') }}</th>
+                            <th data-defaultsign="az">{{ trans('list.inward') }}</th>
+                            <th data-defaultsign="az">{{ trans('list.outward') }}</th>
                             <th data-defaultsign="_19">{{ trans('list.number_of_transactions') }}</th>
                         </tr>
                         </thead>

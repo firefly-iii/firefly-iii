@@ -25,7 +25,7 @@
                                 <th data-defaultsort="disabled">{{ trans('list.transaction_s') }}</th>
                                 <th data-defaultsort="disabled">{{ trans('list.repetitions') }}</th>
                                 <th data-defaultsign="month" data-dateformat="{{ $madMomentJS }}">{{ trans('list.next_due') }}</th>
-                                <th class="hidden-sm hidden-xs" data-defaultsort="disabled">&nbsp;</th>
+                                <th data-defaultsort="disabled">&nbsp;</th>
                             </tr>
                             </thead>
                             <tbody>
@@ -111,7 +111,7 @@
                                             @endforeach
                                         </ul>
                                     </td>
-                                    <td class="hidden-sm hidden-xs text-end">
+                                    <td class="hidden-sm text-end">
                                         <div class="dropdown">
                                             <button class="btn btn-sm btn-outline-secondary dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
                                                 {{ __('firefly.actions') }}

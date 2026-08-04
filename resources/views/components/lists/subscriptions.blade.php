@@ -10,14 +10,14 @@
                     <table class="table table-hover table-sm" id="bill-sortable">
                         <thead>
                         <tr>
-                            <th class="w-5 hidden-sm hidden-xs">&nbsp;</th>
+                            <th class="w-5">&nbsp;</th>
                             <th class="w-25">{{ __('list.name') }}</th>
-                            <th class="w-20 hidden-sm hidden-md hidden-xs">{{ __('list.linked_to_rules') }}</th>
+                            <th class="w-20">{{ __('list.linked_to_rules') }}</th>
                             <th class="w-5 text-end">{{ trans('list.matchingAmount') }}</th>
-                            <th class="w-15 hidden-sm hidden-xs">{{ trans('list.paid_current_period') }}</th>
-                            <th class="w-15 hidden-sm hidden-xs">{{ trans('list.next_expected_match') }}</th>
-                            <th class="hidden-sm hidden-xs">{{ trans('list.repeat_freq') }}</th>
-                            <th class="hidden-sm hidden-xs">&nbsp;</th>
+                            <th class="w-15">{{ trans('list.paid_current_period') }}</th>
+                            <th class="w-15">{{ trans('list.next_expected_match') }}</th>
+                            <th>{{ trans('list.repeat_freq') }}</th>
+                            <th>&nbsp;</th>
                         </tr>
                         </thead>
                         @if(count($objectGroup['bills']) > 0)
@@ -25,7 +25,7 @@
                             @foreach($objectGroup['bills'] as $entry)
                                 <tr class="bill-sortable" data-id="{{ $entry['id'] }}" data-name="{{ $entry['name'] }}"
                                     data-order="{{ $entry['order'] }}" data-position="{{ $loop->index }}">
-                                    <td class="hidden-sm hidden-xs">
+                                    <td>
                                         <a class="btn btn-sm bi bi-list bill-handle"></a>
                                     </td>
                                     <td>
@@ -40,7 +40,7 @@
                                         @endif
 
                                     </td>
-                                    <td class="hidden-sm hidden-md hidden-xs rules">
+                                    <td class="hidden-sm rules">
                                         @if(count($entry['rules']) > 0)
                                             <ul class="list-unstyled">
                                                 @foreach($entry['rules'] as $rule)
@@ -77,7 +77,7 @@
                                         <td class="paid_in_period text-muted">
                                             {{ trans('firefly.not_expected_period') }}
                                         </td>
-                                        <td class="expected_in_period hidden-sm hidden-xs">
+                                        <td class="expected_in_period">
                                             @if($entry['next_expected_match'])
                                                 {{ new \Carbon\Carbon($entry['next_expected_match'])->isoFormat($monthAndDayFormat) }}
                                             @endif
@@ -102,7 +102,7 @@
                                                 <!-- {{ __('firefly.bill_expected_date', ['date' => $entry['next_expected_match_diff']]) }} -->
                                             </td>
                                         @endif
-                                        <td class="expected_in_period hidden-sm hidden-xs">
+                                        <td class="expected_in_period">
                                             @foreach($entry['pay_dates'] as $date)
                                                 {{ new \Carbon\Carbon($date)->isoFormat($monthAndDayFormat) }}<br>
                                             @endforeach
@@ -122,7 +122,7 @@
                                                 <br/>
                                             @endforeach
                                         </td>
-                                        <td class="expected_in_period hidden-sm hidden-xs">
+                                        <td class="expected_in_period">
                                             <!-- not just show next expected match, loop all pay_dates. -->
                                             @if($entry['next_expected_match'] && 1 === count($entry['pay_dates']))
                                                 {{ new \Carbon\Carbon($entry['next_expected_match'])->isoFormat($monthAndDayFormat) }}
@@ -140,9 +140,9 @@
                                         <td class="paid_in_period text-muted">
                                             ~
                                         </td>
-                                        <td class="expected_in_period text-muted hidden-sm hidden-xs">~</td>
+                                        <td class="expected_in_period text-muted">~</td>
                                     @endif
-                                    <td class="hidden-sm hidden-xs">
+                                    <td>
                                         {{ __('firefly.repeat_freq_' . $entry['repeat_freq']) }}
                                         @if($entry['skip'] > 0)
                                             {{ __('firefly.skips_over') }} {{ $entry['skip'] }}
@@ -166,7 +166,7 @@
                                             @endif
                                         @endif
                                     </td>
-                                    <td class="hidden-sm hidden-xs text-end">
+                                    <td class="hidden-sm text-end">
                                         <div class="dropdown">
                                             <button class="btn btn-sm btn-outline-secondary dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
                                                 {{ __('firefly.actions') }}
@@ -183,7 +183,7 @@
                                 @foreach($sums[$objectGroupOrder] as $sum)
                                     @if('0' !== $sum['avg'])
                                         <tr>
-                                            <td class="hidden-sm hidden-xs">&nbsp;</td> <!-- handle -->
+                                            <td>&nbsp;</td> <!-- handle -->
                                             <td colspan="2" class="text-end"> <!-- title -->
                                                 <small>{{ __('firefly.sum') }} ({{ $sum['currency_name'] }})
                                                     ({{ __('firefly.active_exp_bills_only') }})</small>
@@ -191,12 +191,12 @@
                                             <td class="text-end"> <!-- amount -->
                                                 {!! format_amount_by_symbol($sum['avg'], $sum['currency_symbol'], $sum['currency_decimal_places']) !!}
                                             </td>
-                                            <td class="hidden-sm hidden-xs" colspan="4">&nbsp;</td> <!-- handle -->
+                                            <td colspan="4">&nbsp;</td> <!-- handle -->
                                         </tr>
                                     @endif
                                     @if('0' !== $sum['total_left_to_pay'])
                                         <tr>
-                                            <td class="hidden-sm hidden-xs">&nbsp;</td> <!-- handle -->
+                                            <td>&nbsp;</td> <!-- handle -->
                                             <td colspan="2" class="text-end"> <!-- title -->
                                                 <small>{{ __('firefly.sum') }} ({{ $sum['currency_name'] }})
                                                     ({{ __('firefly.left_to_pay_active_bills') }})</small>
@@ -204,12 +204,12 @@
                                             <td class="text-end"> <!-- amount -->
                                                 {!! format_amount_by_symbol($sum['total_left_to_pay'], $sum['currency_symbol'], $sum['currency_decimal_places']) !!}
                                             </td>
-                                            <td class="hidden-sm hidden-xs" colspan="4">&nbsp;</td> <!-- handle -->
+                                            <td colspan="4">&nbsp;</td> <!-- handle -->
                                         </tr>
                                     @endif
                                     @if('0' !== $sum['per_period'])
                                         <tr>
-                                            <td class="hidden-sm hidden-xs">&nbsp;</td> <!-- handle -->
+                                            <td>&nbsp;</td> <!-- handle -->
                                             <td colspan="2" class="text-end"> <!-- title -->
                                                 <small>{{ __('firefly.per_period_sum_' . $sum['period']) }}
                                                     ({{ $sum['currency_name'] }})
@@ -218,7 +218,7 @@
                                             <td class="text-end"> <!-- amount -->
                                                 {!!  format_amount_by_symbol($sum['per_period'], $sum['currency_symbol'], $sum['currency_decimal_places']) !!}
                                             </td>
-                                            <td class="hidden-sm hidden-xs" colspan="4">&nbsp;</td> <!-- handle -->
+                                            <td colspan="4">&nbsp;</td> <!-- handle -->
                                         </tr>
                                     @endif
                                 @endforeach

@@ -4,10 +4,10 @@
         <th class="hidden-xs" colspan="2">&nbsp;</th>
         <th>{{ trans('list.description') }}</th>
         <th class="text-end">{{ trans('list.amount') }}</th>
-        <th class="hidden-xs hidden-sm hidden-md">{{ trans('list.reconcile') }}</th>
-        <th class="hidden-xs hidden-sm">{{ trans('list.date') }}</th>
-        <th class="hidden-xs hidden-sm hidden-md">{{ trans('list.from') }}</th>
-        <th class="hidden-xs hidden-sm hidden-md">{{ trans('list.to') }}</th>
+        <th class="hidden-xs">{{ trans('list.reconcile') }}</th>
+        <th class="hidden-xs">{{ trans('list.date') }}</th>
+        <th class="hidden-xs">{{ trans('list.from') }}</th>
+        <th class="hidden-xs">{{ trans('list.to') }}</th>
     </tr>
     </thead>
     <tbody>
@@ -121,15 +121,15 @@
 
             </td>
 
-            <td class="hidden-sm hidden-xs">
+            <td>
                 {{ $journal['date']->isoFormat($monthAndDayFormat) }}
             </td>
 
-            <td class="hidden-xs hidden-sm hidden-md">
+            <td class="hidden-xs">
                 <a href="{{ route('accounts.show', [$journal['source_account_id']]) }}" title="{{ $journal['source_account_iban'] ?? $journal['source_account_name'] }}">{{ $journal['source_account_name'] }}</a>
             </td>
 
-            <td class="hidden-xs hidden-sm hidden-md">
+            <td class="hidden-xs">
                 <a href="{{ route('accounts.show', [$journal['destination_account_id']]) }}" title="{{ $journal['destination_account_iban'] ?? $journal['destination_account_name'] }}">{{ $journal['destination_account_name'] }}</a>
             </td>
         </tr>
