@@ -33,7 +33,7 @@ function startRunningCommands(index) {
 }
 
 function runCommand(index) {
-    console.log('Now in runCommand(' + index + '): ' + runCommandUrl);
+    console.log('Now in runCommand(index: ' + index + '): ' + runCommandUrl);
 
     fetch(runCommandUrl, {
         method: 'POST',
@@ -44,7 +44,9 @@ function runCommand(index) {
         body: JSON.stringify({_token: token, index: parseInt(index)}),
     })
         .then(response => {
+            console.log('Now processing return (index: ' + index + '): ' + runCommandUrl);
             if(403 === response.status) {
+                console.log('403 could indicate were done.')
                 window.location.reload();
                 //displaySoftFail('Please reload the page to continue.');
                 //console.error(response);
@@ -70,131 +72,8 @@ function runCommand(index) {
         });
 }
 
-function startMigration() {
-    console.log('Now in startMigration');
 
-    fetch(migrateUrl, {
-        method: 'POST',
-        headers: {
-            'Accept': 'application/json',
-            'Content-Type': 'application/json'
-        },
-        body: JSON.stringify({_token: token}),
-    })
-        .then(response => response.json())
-        .then(response => {
-        if (response.error === false) {
-            // move to decrypt routine.
-            startDecryption();
-        } else {
-            displaySoftFail(response.message);
-        }
 
-    }).fail(function () {
-        document.querySelector('#status-box').innerHTML = '<span class="bi bi-exclamation-triangle"></span> Migration failed! See log files :(';
-    });
-}
-
-function startDecryption() {
-    console.log('Now in startDecryption');
-    document.querySelector('#status-box').innerHTML = '<span class="bi bi-hourglass"></span> Setting up DB #2...';
-    fetch(decryptUrl, {
-        method: 'POST',
-        headers: {
-            'Accept': 'application/json',
-            'Content-Type': 'application/json'
-        },
-        body: JSON.stringify({_token: token}),
-    })
-        .then(response => response.json())
-        .then(response => {
-        if (response.error === false) {
-            // move to decrypt routine.
-            startPassport();
-        } else {
-            displaySoftFail(response.message);
-        }
-
-    }).fail(function () {
-        document.querySelector('#status-box').innerHTML = '<span class="bi bi-exclamation-triangle"></span> Migration failed! See log files :(';
-    });
-}
-
-/**
- *
- */
-function startPassport() {
-    document.querySelector('#status-box').innerHTML = '<span class="bi bi-hourglass"></span> Setting up OAuth2...';
-    fetch(keysUrl, {
-        method: 'POST',
-        headers: {
-            'Accept': 'application/json',
-            'Content-Type': 'application/json'
-        },
-        body: JSON.stringify({_token: token}),
-    })
-        .then(response => response.json())
-        .then(response => {
-        if (response.error === false) {
-            startUpgrade();
-        } else {
-            displaySoftFail(data.message);
-        }
-
-    }).fail(function () {
-        document.querySelector('#status-box').innerHTML = '<span class="bi bi-exclamation-triangle"></span> OAuth2 failed! See log files :(';
-    });
-}
-
-/**
- *
- */
-function startUpgrade() {
-    document.querySelector('#status-box').innerHTML = '<span class="bi bi-hourglass"></span> Upgrading database...';
-    fetch(upgradeUrl, {
-        method: 'POST',
-        headers: {
-            'Accept': 'application/json',
-            'Content-Type': 'application/json'
-        },
-        body: JSON.stringify({_token: token}),
-    })
-        .then(response => response.json())
-        .then(response => {
-        if (response.error === false) {
-            startVerify();
-        } else {
-            displaySoftFail(data.message);
-        }
-    }).fail(function () {
-        document.querySelector('#status-box').innerHTML = '<span class="bi bi-exclamation-triangle"></span> Upgrade failed! See log files :(';
-    });
-}
-
-/**
- *
- */
-function startVerify() {
-    document.querySelector('#status-box').innerHTML = '<span class="bi bi-hourglass"></span> Verify database integrity...';
-    fetch(verifyUrl, {
-        method: 'POST',
-        headers: {
-            'Accept': 'application/json',
-            'Content-Type': 'application/json'
-        },
-        body: JSON.stringify({_token: token}),
-    })
-        .then(response => response.json())
-        .then(response => {
-        if (response.error === false) {
-            completeDone();
-        } else {
-            displaySoftFail(data.message);
-        }
-    }).fail(function () {
-        document.querySelector('#status-box').innerHTML = '<span class="bi bi-exclamation-triangle"></span> Verification failed! See log files :(';
-    });
-}
 
 /**
  *
