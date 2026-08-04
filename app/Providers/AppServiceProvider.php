@@ -24,6 +24,9 @@ declare(strict_types=1);
 namespace FireflyIII\Providers;
 
 use FireflyIII\Models\Account;
+use FireflyIII\Support\Authentication\RemoteUserGuard;
+use FireflyIII\Support\Authentication\RemoteUserProvider;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Blade;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Response;
@@ -34,7 +37,7 @@ use Laravel\Passport\Passport;
 use Override;
 
 use function Safe\preg_match;
-
+use Illuminate\Contracts\Foundation\Application;
 /**
  * Class AppServiceProvider
  */
@@ -60,56 +63,18 @@ class AppServiceProvider extends ServiceProvider
             return response()->json($value)->withHeaders($headers);
         });
 
-        //        // blade extension for active top menu sub menu (like "accounts")
-        //        // TODO DO NOT USE ME
-        //        Blade::directive('menuSubActive', function (string $route): string {
-        //            $route = trim($route, "'");
-        //            $name = Route::getCurrentRoute()->getName() ?? '';
-        //            Log::debug(sprintf('menuSubActive("%s", "%s")', $route, $name));
-        //            if (str_contains($name, $route)) {
-        //                return 'menu-open';
-        //            }
-        //
-        //            return '';
-        //        });
-
-        //        // blade extension for active top menu sub menu item (like "accounts" => "asset accounts)
-        //        // TODO DO NOT USE ME
-        //        Blade::directive('menuSubItemActive', function (string $routeAndType): string {
-        //
-        //        });
-
-        //        // TODO @deprecated
-        //        // blade extension for account balance.
-        //        Blade::directive('balance', function (string $account): string {
-        //            var_dump($account);
-        //            exit;
-        //            return $account;
-        //            return 'blablabla';
-        //        });
-
-        // TODO @deprecated
-        // blade extension
-        Blade::directive('activeXRoutePartial', function (string $route): string {
-            $name = Route::getCurrentRoute()->getName() ?? '';
-            if (str_contains($name, $route)) {
-                return 'menu-open';
+        Auth::extend(
+            'remote_user_guard',
+            function(Application $app, string $name, array $config): RemoteUserGuard {
+                return new RemoteUserGuard(Auth::createUserProvider($config['provider']));
             }
+        );
 
-            return '';
-        });
-        Blade::if('partialroute', function (string $route, string $firstParam = ''): bool {
-            $name       = Route::getCurrentRoute()->getName() ?? '';
-            if ('' === $firstParam && str_contains($name, $route)) {
-                return true;
-            }
+        // new code for authorization.
+        Passport::authorizationView('auth.oauth.authorize');
 
-            /** @var null|array $params */
-            $params     = Route::getCurrentRoute()->parameters();
-            $params ??= [];
-            $objectType = $params['objectType'] ?? '';
-
-            return $objectType === $firstParam && str_contains($name, $route);
+        Auth::provider('remote_user_provider', function (Application $app, array $config): RemoteUserProvider {
+            return new RemoteUserProvider();
         });
     }
 
