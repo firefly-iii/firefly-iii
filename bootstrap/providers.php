@@ -25,6 +25,7 @@ use FireflyIII\Providers\AccountServiceProvider;
 use FireflyIII\Providers\AdminServiceProvider;
 use FireflyIII\Providers\AppServiceProvider;
 use FireflyIII\Providers\AttachmentServiceProvider;
+use FireflyIII\Providers\AuthServiceProvider;
 use FireflyIII\Providers\BillServiceProvider;
 use FireflyIII\Providers\BudgetServiceProvider;
 use FireflyIII\Providers\CategoryServiceProvider;
@@ -38,21 +39,20 @@ use FireflyIII\Providers\RuleGroupServiceProvider;
 use FireflyIII\Providers\RuleServiceProvider;
 use FireflyIII\Providers\SearchServiceProvider;
 use FireflyIII\Providers\TagServiceProvider;
-use TwigBridge\ServiceProvider;
+// use TwigBridge\ServiceProvider;
+use PragmaRX\Google2FALaravel\ServiceProvider;
 
 return [
     // Package Service Providers...
 
     // Application Service Providers...
     AppServiceProvider::class,
-    FireflyIII\Providers\AuthServiceProvider::class,
-    // FireflyIII\Providers\BroadcastServiceProvider::class,
-    // EventServiceProvider::class,
+    AuthServiceProvider::class,
     RouteServiceProvider::class,
 
     // own stuff:
-    PragmaRX\Google2FALaravel\ServiceProvider::class,
     ServiceProvider::class,
+    // ServiceProvider::class,
 
     // More service providers.
     AccountServiceProvider::class,
