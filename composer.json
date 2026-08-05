@@ -100,7 +100,6 @@
         "predis/predis": "^3",
         "psr/log": "<4",
         "ramsey/uuid": "^4.7",
-        "rcrowe/twigbridge": "^0.14",
         "spatie/laravel-html": "^3.13",
         "spatie/laravel-ignition": "^2",
         "spatie/period": "^2.4",
@@ -175,7 +174,6 @@
         "post-update-cmd": [
             "@php artisan config:clear",
             "@php artisan route:clear",
-            "@php artisan twig:clean",
             "@php artisan view:clear",
             "@php artisan clear-compiled",
             "@php artisan cache:clear",
