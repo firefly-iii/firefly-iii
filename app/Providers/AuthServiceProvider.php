@@ -23,10 +23,7 @@ declare(strict_types=1);
 
 namespace FireflyIII\Providers;
 
-use FireflyIII\Support\Authentication\RemoteUserGuard;
-use FireflyIII\Support\Authentication\RemoteUserProvider;
 use Illuminate\Foundation\Support\Providers\AuthServiceProvider as ServiceProvider;
-use Illuminate\Support\Facades\Auth;
 use Laravel\Passport\Passport;
 
 /**
@@ -41,8 +38,6 @@ class AuthServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
-
-
         // Passport::tokensExpireIn(now()->addDays(14));
     }
 }
