@@ -23,21 +23,18 @@ declare(strict_types=1);
 
 namespace FireflyIII\Providers;
 
-use FireflyIII\Models\Account;
 use FireflyIII\Support\Authentication\RemoteUserGuard;
 use FireflyIII\Support\Authentication\RemoteUserProvider;
+use Illuminate\Contracts\Foundation\Application;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Blade;
-use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Response;
-use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Schema;
 use Illuminate\Support\ServiceProvider;
 use Laravel\Passport\Passport;
 use Override;
 
 use function Safe\preg_match;
-use Illuminate\Contracts\Foundation\Application;
+
 /**
  * Class AppServiceProvider
  */
@@ -63,12 +60,9 @@ class AppServiceProvider extends ServiceProvider
             return response()->json($value)->withHeaders($headers);
         });
 
-        Auth::extend(
-            'remote_user_guard',
-            function(Application $app, string $name, array $config): RemoteUserGuard {
-                return new RemoteUserGuard(Auth::createUserProvider($config['provider']));
-            }
-        );
+        Auth::extend('remote_user_guard', function (Application $app, string $name, array $config): RemoteUserGuard {
+            return new RemoteUserGuard(Auth::createUserProvider($config['provider']));
+        });
 
         // new code for authorization.
         Passport::authorizationView('auth.oauth.authorize');
