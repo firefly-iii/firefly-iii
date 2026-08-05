@@ -511,7 +511,7 @@
                             <table class="table table-hover">
                                 @foreach($events[$journal['transaction_journal_id']] as $event)
                                     <tr>
-                                        <td class="thirty">{{ $event['amount'] }}</td>
+                                        <td class="thirty">{!! $event['amount'] !!}</td>
                                         <td>
                                             <a href="{{ route('piggy-banks.show', [$event['piggy_id']]) }}">{{ $event['piggy'] }}</a>
                                         </td>

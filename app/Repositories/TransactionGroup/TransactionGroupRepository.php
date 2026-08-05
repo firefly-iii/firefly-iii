@@ -298,8 +298,8 @@ class TransactionGroupRepository implements TransactionGroupRepositoryInterface,
             if (null === $row->piggyBank) {
                 continue;
             }
-            // get currency preference.
-            $currencyPreference   = AccountMeta::query()->where('account_id', $row->piggyBank->account_id)->where('name', 'currency_id')->first();
+            // get currency preference of the connected account(s).
+            $currencyPreference   = AccountMeta::query()->where('account_id', $row->piggyBank->accounts->first()->id)->where('name', 'currency_id')->first();
             if (null !== $currencyPreference) {
                 $currency = Amount::getTransactionCurrencyById((int) $currencyPreference->data);
             }
