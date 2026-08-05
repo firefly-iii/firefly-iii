@@ -75,7 +75,7 @@ class RemoteUserGuard implements Guard
         }
 
         // test value for development
-         $userID = 'james@firefly-iii.org';
+         // $userID = 'james@firefly-iii.org';
 
         if (null === $userID || '' === $userID) {
             Log::error(sprintf('No user in header "%s".', $header));
