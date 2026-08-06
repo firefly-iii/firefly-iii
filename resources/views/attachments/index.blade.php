@@ -40,7 +40,7 @@
                                 <td data-value="{{ $att->attachable_type }}_{{ $att->attachable_id }}">
                                     @if($att->attachable_type === 'FireflyIII\\Models\\TransactionJournal')
                                         <a href="{{ route('transactions.show', [$att->attachable_id]) }}">
-                                            {{ $att->attachable->description }}
+                                            {{ $att->attachable?->description }}
                                         </a>
                                     @else
                                         {{ $att->attachable_type }}

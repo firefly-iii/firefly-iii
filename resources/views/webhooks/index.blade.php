@@ -86,7 +86,7 @@
                                     <code :title="webhook.full_url" x-text="webhook.url"></code>
 
                                 </td>
-                                <td class="hidden-sm text-end">
+                                <td class="text-end">
                                     <div class="dropdown">
                                         <button class="btn btn-sm btn-secondary-outline dropdown-toggle" type="button" :id="'webhook_menu_' +  webhook.id" data-bs-toggle="dropdown" aria-expanded="false">
                                             {{ __('firefly.actions') }}

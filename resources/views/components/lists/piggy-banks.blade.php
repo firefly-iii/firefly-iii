@@ -6,21 +6,19 @@
                 <x-elements.card-header-with-menu :cardTitle="$objectGroup['object_group_title']" :route="route('piggy-banks.create')" :linkTitle="__('firefly.create_new_piggy_bank')" />
                 <div class="card-body p-0">
 
-<table class="table table-hover table-sm table-sm piggy-sortable">
+<table class="table table-bordered table-hover table-sm table-sm piggy-sortable">
     <thead>
     <tr>
-        <th class="w-4 d-none d-md-table-cell">&nbsp;</th>
-        <!--
-        <th class="w-4"></th> {{-- mobile handlers --}}
-        -->
+        <th class="w-4">&nbsp;</th>
+        <th class="w-4 d-lg-none"></th> {{-- mobile handlers --}}
         <th class="w-25" style="width:30%;">{{ __('firefly.piggy_bank') }}</th>
         <th class="w-10 text-end">{{ __('firefly.saved_so_far') }}</th>
-        <th class="d-none d-md-table-cell"></th>
-        <th class="d-none d-md-table-cell"></th>
-        <th class="d-none d-md-table-cell"></th>
+        <th class="d-none d-lg-table-cell"></th>
+        <th class="d-none d-lg-table-cell"></th>
+        <th class="d-none d-lg-table-cell"></th>
         <th class="w-10 text-end">{{ __('firefly.target_amount') }}</th>
-        <th class="w-10 d-none d-md-table-cell text-end">{{ __('firefly.left_to_save') }}</th>
-        <th class="w-15 d-none d-md-table-cell text-end">{{ __('firefly.suggested_savings_per_month') }}</th>
+        <th class="w-10 text-end d-none d-lg-table-cell">{{ __('firefly.left_to_save') }}</th>
+        <th class="w-15 text-end d-none d-xxl-table-cell">{{ __('firefly.suggested_savings_per_month') }}</th>
         <th class="w-4">&nbsp;</th>
     </tr>
     </thead>
@@ -28,18 +26,16 @@
     <tbody class="piggy-connected-list" @if(0 !== $objectGroupOrder)data-title="{{ $objectGroup['object_group_title'] }}"@else data-title=""@endif>
     @foreach($objectGroup['piggy_banks'] as $piggy)
     <tr class="piggy-sortable" data-id="{{ $piggy['id'] }}" data-name="{{ $piggy['name'] }}" data-order="{{ $piggy['order'] }}">
-        <td class="d-none d-md-table-cell">
+        <td class="">
             <a class="btn btn-sm bi bi-list piggy-handle"></a>
             <span class="loadSpin"></span>
         </td>
-        <!--
-        <td class="d-table-cell d-md-none">
+        <td class="d-lg-none"> <!-- mobile buttons -->
             <div class="btn-group btn-group-sm">
-                <a href="{{ route('piggy-banks.remove-money-mobile', $piggy['id']) }}" class="btn btn-secondary btn-sm"><span class="bi bi-dash"></span></a>
-                <a href="{{ route('piggy-banks.add-money-mobile', $piggy['id']) }}" class="btn btn-secondary btn-sm"><span class="bi bi-plus"></span></a>
+                <a href="{{ route('piggy-banks.remove-money-mobile', $piggy['id']) }}" class="btn btn-outline-danger btn-sm"><span class="bi bi-dash"></span></a>
+                <a href="{{ route('piggy-banks.add-money-mobile', $piggy['id']) }}" class="btn btn-outline-success btn-sm"><span class="bi bi-plus"></span></a>
             </div>
         </td>
-        -->
         <td>
             <a href="{{ route('piggy-banks.show', $piggy['id']) }}" title="{{ $piggy['name'] }}">{{ $piggy['name'] }}</a>
             @if(count($piggy['attachments']) > 0)
@@ -54,14 +50,14 @@
                         @endif
                     </span>
         </td>
-        <td class="d-none d-md-table-cell" style="width:40px;">
+        <td class="d-none d-lg-table-cell" style="width:40px;">
             @if($piggy['current_amount'] > 0)
             <a href="{{ route('piggy-banks.remove-money', $piggy['id']) }}" class="btn btn-secondary btn-sm removeMoney" data-id="{{ $piggy['id'] }}">
                 <span data-id="{{ $piggy['id'] }}" class="bi bi-dash"></span></a>
             @endif
         </td>
 
-        <td class="piggyBar d-none d-md-table-cell">
+        <td class="d-none d-lg-table-cell piggyBar">
             @if(null !== $piggy['percentage'])
                 <div class="progress"
                     style="height: 21px" role="progressbar" aria-valuenow="{{ round(max(30, $piggy['percentage'])) }}" aria-valuemin="0" aria-valuemax="100">
@@ -82,7 +78,7 @@
         </td>
 
 
-        <td style="width:40px;" class="d-none d-md-table-cell">
+        <td class="d-none d-lg-table-cell">
             @if($piggy['left_to_save'] > 0 || null === $piggy['left_to_save'])
             <a href="{{ route('piggy-banks.add-money', $piggy['id']) }}" class="btn btn-secondary btn-sm addMoney" data-id="{{ $piggy['id'] }}">
                 <span data-id="{{ $piggy['id'] }}" class="b bi-plus"></span></a>
@@ -96,7 +92,7 @@
             @endif
             @endif
         </td>
-        <td class="text-end d-none d-md-table-cell">
+        <td class="text-end d-none d-lg-table-cell">
             @if($piggy['left_to_save'] > 0)
             <span title="{{ __('firefly.left_to_save') }}">{!! format_amount_by_symbol($piggy['left_to_save'],$piggy['currency_symbol'],$piggy['currency_decimal_places']) !!}</span>
                 @if($convertToPrimary && $piggy['currency_id'] !== $primaryCurrency->id && null !== $piggy['pc_left_to_save'])
@@ -104,7 +100,7 @@
             @endif
             @endif
         </td>
-        <td class="d-none d-md-table-cell text-end">
+        <td class="text-end d-none d-xxl-table-cell">
             @if(null !== $piggy['target_date'] && null !== $piggy['save_per_month'])
             {!! format_amount_by_symbol($piggy['save_per_month'], $piggy['currency_symbol'], $piggy['currency_decimal_places']) !!}
                 @if($convertToPrimary && $piggy['currency_id'] !== $primaryCurrency->id && null !== $piggy['pc_save_per_month'])
@@ -112,7 +108,7 @@
             @endif
             @endif
         </td>
-        <td style="width:100px;" class="text-end">
+        <td class="text-end">
             <div class="dropdown">
                 <button class="btn btn-sm btn-outline-secondary dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
                     {{__('firefly.actions')}}
@@ -126,30 +122,29 @@
     </tr>
     @endforeach
     <tr>
-        <td class="d-none d-md-table-cell">&nbsp;</td> {{-- handle --}}
-        <!--
-        <td class="d-table-cell d-md-none">&nbsp;</td> {{-- mobile buttons --}}
-        -->
+        <td class="">&nbsp;</td> {{-- handle --}}
+        <td class="d-lg-none ">&nbsp;</td> {{-- mobile buttons --}}
         <td>&nbsp;</td> {{-- title --}}
         <td class="text-end">
             @foreach($objectGroup['sums'] as $sum)
             {!! format_amount_by_symbol($sum['saved'], $sum['currency_symbol'], $sum['currency_decimal_places']) !!}<br />
             @endforeach
         </td>
-        <td class="d-none d-md-table-cell">&nbsp;</td> {{-- remove money --}}
-        <td class="d-none d-md-table-cell">&nbsp;</td> {{-- progress --}}
-        <td class="d-none d-md-table-cell">&nbsp;</td> {{-- add money --}}
+        <td class="d-none d-lg-table-cell">&nbsp;</td> {{-- remove money --}}
+        <td class="d-none d-lg-table-cell">&nbsp;</td> {{-- progress --}}
+        <td class="d-none d-lg-table-cell">&nbsp;</td> {{-- add money --}}
         <td class="text-end">
+
             @foreach($objectGroup['sums'] as $sum)
             {!! format_amount_by_symbol($sum['target'], $sum['currency_symbol'], $sum['currency_decimal_places']) !!}<br />
             @endforeach
         </td>
-        <td class="text-end d-none d-md-table-cell">
+        <td class="text-end d-none d-lg-table-cell">
             @foreach($objectGroup['sums'] as $sum)
             {!! format_amount_by_symbol($sum['left_to_save'], $sum['currency_symbol'], $sum['currency_decimal_places']) !!}<br />
             @endforeach
         </td>
-        <td class="d-none d-md-table-cell text-end">
+        <td class="text-end d-none d-xxl-table-cell">
             @foreach($objectGroup['sums'] as $sum)
             {!! format_amount_by_symbol($sum['save_per_month'], $sum['currency_symbol'], $sum['currency_decimal_places']) !!}<br />
             @endforeach

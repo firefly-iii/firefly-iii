@@ -194,12 +194,12 @@
                         <table class="table sortable-table table-striped sortable" id="budgetList">
                             <thead>
                             <tr>
-                                <th class="hidden-sm ten">&nbsp;</th>
+                                <th class="ten">&nbsp;</th>
                                 <th>{{ __('firefly.budget') }}</th>
                                 <th class="quarter">{{ __('firefly.budgeted') }}</th>
                                 <th>{{ __('firefly.spent') }} ({{  strtolower(__('firefly.per_day')) }})</th>
                                 <th>{{ __('firefly.left') }} ({{ strtolower(__('firefly.per_day')) }})</th>
-                                <th class="hidden-sm ten">&nbsp;</th>
+                                <th class="ten">&nbsp;</th>
                             </tr>
                             </thead>
                             <tbody>
@@ -318,7 +318,7 @@
                                             @endforeach
                                         @endif
                                     </td>
-                                    <td class="hidden-sm spent text-end" data-id="{{ $budget['id'] }}">
+                                    <td class="spent text-end" data-id="{{ $budget['id'] }}">
                                         {{-- this is spent in budget limits: --}}
                                         @foreach($budget['budgeted'] as $budgetLimit)
                                         <span title="{{ __('firefly.spent_this_period') }}">{!! format_amount_by_symbol($budgetLimit['spent'], $budgetLimit['currency_symbol'], $budgetLimit['currency_decimal_places'])  !!}</span>
@@ -367,7 +367,7 @@
                                             </span><br />
                                         @endforeach
                                     </td>
-                                    <td class="hidden-sm text-end">
+                                    <td class="text-end">
 
 
                                         <div class="dropdown">

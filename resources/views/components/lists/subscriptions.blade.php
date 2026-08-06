@@ -12,11 +12,11 @@
                         <tr>
                             <th class="w-5">&nbsp;</th>
                             <th class="w-25">{{ __('list.name') }}</th>
-                            <th class="w-20">{{ __('list.linked_to_rules') }}</th>
+                            <th class="w-20 d-xl-table-cell d-none"  {{-- hide on LG and smaller --}}>{{ __('list.linked_to_rules') }}</th>
                             <th class="w-5 text-end">{{ trans('list.matchingAmount') }}</th>
                             <th class="w-15">{{ trans('list.paid_current_period') }}</th>
                             <th class="w-15">{{ trans('list.next_expected_match') }}</th>
-                            <th>{{ trans('list.repeat_freq') }}</th>
+                            <th class="d-xl-table-cell d-none">{{ trans('list.repeat_freq') }}</th>
                             <th>&nbsp;</th>
                         </tr>
                         </thead>
@@ -40,7 +40,7 @@
                                         @endif
 
                                     </td>
-                                    <td class="hidden-sm rules">
+                                    <td class="rules d-xl-table-cell d-none"  {{-- hide on LG and smaller --}}>
                                         @if(count($entry['rules']) > 0)
                                             <ul class="list-unstyled">
                                                 @foreach($entry['rules'] as $rule)
@@ -142,7 +142,7 @@
                                         </td>
                                         <td class="expected_in_period text-muted">~</td>
                                     @endif
-                                    <td>
+                                    <td class="d-xl-table-cell d-none">
                                         {{ __('firefly.repeat_freq_' . $entry['repeat_freq']) }}
                                         @if($entry['skip'] > 0)
                                             {{ __('firefly.skips_over') }} {{ $entry['skip'] }}
@@ -166,7 +166,7 @@
                                             @endif
                                         @endif
                                     </td>
-                                    <td class="hidden-sm text-end">
+                                    <td class="text-end">
                                         <div class="dropdown">
                                             <button class="btn btn-sm btn-outline-secondary dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
                                                 {{ __('firefly.actions') }}
@@ -182,8 +182,8 @@
                             @if(array_key_exists($objectGroupOrder, $sums))
                                 @foreach($sums[$objectGroupOrder] as $sum)
                                     @if('0' !== $sum['avg'])
-                                        <tr>
-                                            <td>&nbsp;</td> <!-- handle -->
+                                        <tr {{-- hide on MD and smaller --}} class="d-lg-table-row d-none">
+                                            <td class="d-xl-table-cell d-none">&nbsp;</td> <!-- handle -->
                                             <td colspan="2" class="text-end"> <!-- title -->
                                                 <small>{{ __('firefly.sum') }} ({{ $sum['currency_name'] }})
                                                     ({{ __('firefly.active_exp_bills_only') }})</small>
@@ -195,8 +195,8 @@
                                         </tr>
                                     @endif
                                     @if('0' !== $sum['total_left_to_pay'])
-                                        <tr>
-                                            <td>&nbsp;</td> <!-- handle -->
+                                        <tr {{-- hide on MD and smaller --}} class="d-lg-table-row d-none">
+                                            <td class="d-xl-table-cell d-none">&nbsp;</td> <!-- handle -->
                                             <td colspan="2" class="text-end"> <!-- title -->
                                                 <small>{{ __('firefly.sum') }} ({{ $sum['currency_name'] }})
                                                     ({{ __('firefly.left_to_pay_active_bills') }})</small>
@@ -208,8 +208,8 @@
                                         </tr>
                                     @endif
                                     @if('0' !== $sum['per_period'])
-                                        <tr>
-                                            <td>&nbsp;</td> <!-- handle -->
+                                        <tr {{-- hide on MD and smaller --}} class="d-lg-table-row d-none">
+                                            <td class="d-xl-table-cell d-none">&nbsp;</td> <!-- handle -->
                                             <td colspan="2" class="text-end"> <!-- title -->
                                                 <small>{{ __('firefly.per_period_sum_' . $sum['period']) }}
                                                     ({{ $sum['currency_name'] }})

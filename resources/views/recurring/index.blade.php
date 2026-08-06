@@ -111,7 +111,7 @@
                                             @endforeach
                                         </ul>
                                     </td>
-                                    <td class="hidden-sm text-end">
+                                    <td class="text-end">
                                         <div class="dropdown">
                                             <button class="btn btn-sm btn-outline-secondary dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
                                                 {{ __('firefly.actions') }}

@@ -133,7 +133,7 @@
                     @endforeach
                 </span>
         </td>
-        <td class="hidden-sm justify-content-end">
+        <td class="justify-content-end">
             <div class="dropdown">
                 <button class="btn btn-outline-secondary btn-sm dropdown-toggle" type="button" id="action_menu_{{$account->id}}" data-bs-toggle="dropdown" aria-expanded="false">
                     {{ __('firefly.actions') }}
