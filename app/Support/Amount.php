@@ -228,7 +228,9 @@ class Amount
         // Log::debug(sprintf('Get amount from journal #%d', $journal->id));
         $convertToPrimary  = $this->convertToPrimary();
         $currency          = $this->getPrimaryCurrency();
-        $field             = false === $forceNormalAmount && $convertToPrimary && $currency->id !== $journal->transaction_currency_id ? 'native_amount' : 'amount';
+        $field             = false === $forceNormalAmount && $convertToPrimary && $currency->id !== $journal->transaction_currency_id
+            ? 'native_amount'
+            : 'amount';
 
         /** @var null|Transaction $sourceTransaction */
         $sourceTransaction = $journal->transactions()->where('amount', '<', 0)->first();

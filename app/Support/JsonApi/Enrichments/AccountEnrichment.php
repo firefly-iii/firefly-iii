@@ -345,7 +345,7 @@ class AccountEnrichment implements EnrichmentInterface
                 'interest_period',
                 'current_debt',
                 'cc_monthly_payment_date',
-                'cc_type'
+                'cc_type',
             ])
             ->whereIn('account_id', $this->ids)
             ->get(['account_meta.id', 'account_meta.account_id', 'account_meta.name', 'account_meta.data'])
