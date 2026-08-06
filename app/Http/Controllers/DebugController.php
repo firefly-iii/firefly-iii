@@ -122,12 +122,6 @@ final class DebugController extends Controller
             AccountBalanceCalculator::recalculateAll(false);
         }
 
-        try {
-            Artisan::call('twig:clean');
-        } catch (Exception $e) { // intentional generic exception
-            throw new FireflyException($e->getMessage(), 0, $e);
-        }
-
         Artisan::call('view:clear');
 
         return redirect(route('index'));
