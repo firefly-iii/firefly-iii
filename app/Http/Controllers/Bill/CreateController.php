@@ -121,7 +121,7 @@ final class CreateController extends Controller
         }
 
         // redirect to previous URL.
-        $redirect  = redirect($this->getPreviousUrl('bills.create.url'));
+        $redirect           = redirect($this->getPreviousUrl('bills.create.url'));
         if (1 === (int) $request->input('create_another')) {
             // set value so create routine will not overwrite URL:
             $request->session()->put('bills.create.fromStore', true);
