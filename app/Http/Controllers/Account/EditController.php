@@ -139,11 +139,12 @@ final class EditController extends Controller
         // code to handle active-checkboxes
         $hasOldInput          = null !== $request->old('_token');
         $virtualBalance       = $account->virtual_balance ?? '0';
+        $paymentDate = $repository->getMetaValue($account, 'cc_monthly_payment_date');
         $preFilled            = [
             'account_number'          => $repository->getMetaValue($account, 'account_number'),
             'account_role'            => $repository->getMetaValue($account, 'account_role'),
             'cc_type'                 => $repository->getMetaValue($account, 'cc_type'),
-            'cc_monthly_payment_date' => substr($repository->getMetaValue($account, 'cc_monthly_payment_date'), 0, 10),
+            'cc_monthly_payment_date' => null === $paymentDate ? null : substr($paymentDate, 0, 10),
             'BIC'                     => $repository->getMetaValue($account, 'BIC'),
             'opening_balance_date'    => substr((string) $openingBalanceDate, 0, 10),
             'liability_type_id'       => $account->account_type_id,
