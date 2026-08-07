@@ -100,7 +100,7 @@ final class OperationsController extends Controller
     public function income(Collection $accounts, Carbon $start, Carbon $end): string
     {
         // chart properties for cache:
-        $cache  = new CacheProperties();
+        $cache           = new CacheProperties();
         $cache->addProperty($start);
         $cache->addProperty($end);
         $cache->addProperty('income-report');
@@ -108,8 +108,8 @@ final class OperationsController extends Controller
         if ($cache->has()) {
             return $cache->get();
         }
-        $report = $this->tasker->getIncomeReport($start, $end, $accounts);
-        $type   = 'income-entry';
+        $report          = $this->tasker->getIncomeReport($start, $end, $accounts);
+        $type            = 'income-entry';
         $incomeTopLength = count($report['accounts']);
 
         try {
