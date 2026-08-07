@@ -32,9 +32,9 @@
                         </td>
                     @else
                             <td>
-                                @php
-                            var_dump($report['accounts'][$account['id']]['sum'] ?? null);
-                            @endphp
+                                @if('0' === $report['accounts'][$account['id']]['sum'])
+                                    &nbsp;
+                                @endif
                             </td>
                     @endif
 
