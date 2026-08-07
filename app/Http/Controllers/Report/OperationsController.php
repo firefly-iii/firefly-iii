@@ -110,9 +110,10 @@ final class OperationsController extends Controller
         }
         $report = $this->tasker->getIncomeReport($start, $end, $accounts);
         $type   = 'income-entry';
+        $incomeTopLength = count($report['accounts']);
 
         try {
-            $result = view('reports.partials.income-expenses', ['report' => $report, 'type' => $type])->render();
+            $result = view('reports.partials.income-expenses', ['report' => $report, 'type' => $type, 'incomeTopLength' => $incomeTopLength])->render();
         } catch (Throwable $e) {
             Log::error(sprintf('Could not render reports.partials.income-expenses: %s', $e->getMessage()));
             Log::error($e->getTraceAsString());
