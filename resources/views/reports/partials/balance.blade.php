@@ -31,9 +31,11 @@
                                class="bi bi-info-circle text-muted firefly-info-button"></span>
                         </td>
                     @else
-                        @if($report['accounts'][$account['id']]['sum'] != 0)
-                            <td>&nbsp;</td>
-                        @endif
+                            <td>
+                                @php
+                            var_dump($report['accounts'][$account['id']]['sum'] ?? null);
+                            @endphp
+                            </td>
                     @endif
 
                 @endforeach
