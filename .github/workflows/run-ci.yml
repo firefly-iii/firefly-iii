@@ -1,4 +1,4 @@
-name: 'Code - Create new release'
+name: 'Code - Run CI'
 
 on:
   workflow_dispatch:
