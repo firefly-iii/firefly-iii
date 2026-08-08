@@ -1,0 +1,102 @@
+name: 'Code - Run CI'
+
+on:
+  workflow_dispatch:
+    inputs:
+      phpversion:
+        description: 'PHP version'
+        required: true
+        default: '8.5'
+  schedule:
+    - cron: '0 3 * * MON'
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Validate input
+        run: |
+          git config --global init.defaultBranch main
+      - name: Checkout
+        uses: actions/checkout@v7
+        with:
+          fetch-depth: 0
+      - name: Switch and pull
+        run: |
+          #
+          # Always check out origin/develop, unless its a branch release.
+          #
+          BRANCH_TO_PULL=origin/develop
+          git checkout --track $BRANCH_TO_PULL
+          git pull
+      - name: Configure Git
+        run: |
+          # do some configuration
+          sudo ln -fs /usr/share/zoneinfo/Europe/Amsterdam /etc/localtime
+          sudo timedatectl set-timezone Europe/Amsterdam
+          git config user.name JC5
+          git config user.email release@firefly-iii.org
+          git config advice.addIgnoredFile false
+          git config push.autoSetupRemote true
+      - name: Setup PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: ${{ github.event.inputs.phpversion || '8.5' }}
+          extensions: mbstring, intl, zip, bcmath
+      - name: Lint PHP
+        run: |
+          echo "Will run PHP lint!"
+          php_lint_file()
+          {
+              local php_file="$1"
+              php -l "$php_file" &> /dev/null
+              if [ "$?" -ne 0 ]
+              then
+                  echo -e "[FAIL] $php_file"
+                  return 1
+              fi
+          }
+
+          export -f php_lint_file
+
+          find . -path ./vendor -prune -o -name '*.php' | parallel -j 4 php_lint_file {}
+
+          if [ "$?" -ne 0 ]
+          then
+              exit 1
+          fi
+      - name: Install Composer dependencies
+        run: |
+          cp .env.example .env
+          # install all packages etc.
+          rm -rf vendor composer.lock
+          composer update --no-scripts -q
+          rm .env
+      - name: Run CI
+        run: |
+          cp .env.example .env
+          # format code.
+          echo "Will now run Mago Format"
+          ./vendor/bin/mago format
+          sudo chown -R runner:docker resources/lang
+          echo "Will now run PHPCS"
+          .ci/phpcs.sh
+
+          # lint and check
+          echo "Will now run Mago Lint"
+          ./vendor/bin/mago lint
+          echo "Will now run PHPstan"
+          .ci/phpstan.sh
+
+          # remove .env file again.
+          rm .env
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      - name: Lint Blade templates
+        run: |
+          echo "Will now run Blade linter"
+          cp .env.example .env
+          php artisan blade:lint
+          rm .env
+          GH_TOKEN: ${{ github.token }}
+          version: ${{ github.event_name == 'schedule' && 'develop' || inputs.version }}
