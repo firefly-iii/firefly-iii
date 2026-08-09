@@ -43,6 +43,7 @@ use Illuminate\Support\Facades\URL;
 use Illuminate\Support\Facades\View;
 use function Safe\ini_get;
 use function Safe\realpath;
+use function Safe\parse_url;
 
 /**
  * Class Controller.
