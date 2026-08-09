@@ -73,6 +73,7 @@ class Tag extends Model
             if (null !== $tag) {
                 return $tag;
             }
+
             throw new NotFoundHttpException();
         }
 

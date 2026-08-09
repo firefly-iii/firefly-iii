@@ -60,6 +60,7 @@ class InvitedUser extends Model
             if (null !== $attempt) {
                 return $attempt;
             }
+
             throw new NotFoundHttpException();
         }
 

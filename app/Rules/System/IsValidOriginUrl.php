@@ -1,4 +1,7 @@
 <?php
+
+declare(strict_types=1);
+
 /*
  * IsValidOriginUrl.php
  * Copyright (c) 2026 james@firefly-iii.org
@@ -24,27 +27,29 @@ namespace FireflyIII\Rules\System;
 use Closure;
 use Illuminate\Contracts\Validation\ValidationRule;
 use Safe\Exceptions\UrlException;
+use Override;
+
 use function Safe\parse_url;
 
 class IsValidOriginUrl implements ValidationRule
 {
-
-    #[\Override]
+    #[Override]
     public function validate(string $attribute, mixed $value, Closure $fail): void
     {
         if (!auth()->check()) {
-             $fail('validation.no_auth_present')->translate();
+            $fail('validation.no_auth_present')->translate();
 
             return;
         }
-        $value = (string)$value;
-        if(str_contains($value, '%2F')) {
+        $value = (string) $value;
+        if (str_contains($value, '%2F')) {
             $value = urldecode($value);
         }
-        if('' === $value) {
+        if ('' === $value) {
             // string can be empty.
             return;
         }
+
         try {
             $parts = parse_url($value);
         } catch (UrlException) {
@@ -52,12 +57,14 @@ class IsValidOriginUrl implements ValidationRule
 
             return;
         }
-        if(!array_key_exists('path', $parts) || array_key_exists('scheme', $parts) || array_key_exists('host', $parts)) {
+        if (!array_key_exists('path', $parts) || array_key_exists('scheme', $parts) || array_key_exists('host', $parts)) {
             $fail('validation.bad_url_parts')->translate();
+
             return;
         }
-        if(!str_starts_with($parts['path'], '/')) {
+        if (!str_starts_with($parts['path'], '/')) {
             $fail('validation.bad_url_parts')->translate();
+
             // return;
         }
     }

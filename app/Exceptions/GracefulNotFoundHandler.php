@@ -63,6 +63,7 @@ class GracefulNotFoundHandler extends ExceptionHandler
         if (!auth()->check()) {
             return parent::render($request, $e);
         }
+
         switch ($name) {
             default:
                 Log::warning(sprintf('GracefulNotFoundHandler cannot handle route with name "%s"', $name));
@@ -261,6 +262,7 @@ class GracefulNotFoundHandler extends ExceptionHandler
 
         if (TransactionTypeEnum::RECONCILIATION->value === $type) {
             session()->flash('info', trans('errors.note_not_found_reconciliation', ['description' => $group->title ?? $journal->description]));
+
             return redirect(route('accounts.index', ['asset']));
         }
         session()->flash('info', trans('errors.note_not_found_group', ['description' => $group->title ?? $journal->description]));
