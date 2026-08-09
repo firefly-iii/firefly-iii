@@ -102,6 +102,7 @@ class User extends Authenticatable implements OAuthenticatable
             if (null !== $user) {
                 return $user;
             }
+
             throw new NotFoundHttpException();
         }
 

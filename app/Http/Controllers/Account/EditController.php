@@ -84,7 +84,7 @@ final class EditController extends Controller
         if (!$this->isEditableAccount($account)) {
             return $this->redirectAccountToAccount($account);
         }
-        $from = $request->input('_from', '');
+        $from                 = $request->input('_from', '');
         $objectType           = config('firefly.shortNamesByFullName')[$account->accountType->type];
         $subTitle             = (string) trans(sprintf('firefly.edit_%s_account', $objectType), ['name' => $account->name]);
         $subTitleIcon         = config(sprintf('firefly.subIconsByIdentifier.%s', $objectType));
@@ -165,7 +165,7 @@ final class EditController extends Controller
         $request->session()->flash('preFilled', $preFilled);
 
         return view('accounts.edit', [
-            'from'=>$from,
+            'from'                => $from,
             'account'             => $account,
             'currency'            => $currency,
             'canEditCurrency'     => $canEditCurrency,
@@ -214,8 +214,9 @@ final class EditController extends Controller
         }
 
         // redirect
-        $from    = $request->input('_from', '');
-        $redirect = redirect(route('index') . $from);;
+        $from     = $request->input('_from', '');
+        $redirect = redirect(route('index').$from);
+
         if (1 === (int) $request->input('return_to_edit')) {
             // set value so edit routine will not overwrite URL:
             $request->session()->put('accounts.edit.fromUpdate', true);

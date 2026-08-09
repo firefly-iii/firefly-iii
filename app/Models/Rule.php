@@ -71,6 +71,7 @@ class Rule extends Model
             if (null !== $rule) {
                 return $rule;
             }
+
             throw new NotFoundHttpException();
         }
 

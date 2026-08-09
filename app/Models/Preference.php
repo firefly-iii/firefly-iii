@@ -95,6 +95,7 @@ class Preference extends Model
 
                 return $preference;
             }
+
             throw new NotFoundHttpException();
         }
 

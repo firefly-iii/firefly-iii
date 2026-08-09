@@ -60,6 +60,7 @@ class TransactionJournalLink extends Model
             if (null !== $link) {
                 return $link;
             }
+
             throw new NotFoundHttpException();
         }
 
