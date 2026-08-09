@@ -29,6 +29,9 @@ return [
     '404_github_link'         => 'If you are sure this page should exist, please open a ticket on <strong><a href="https://github.com/firefly-iii/firefly-iii/issues">GitHub</a></strong>.',
     'whoops'                  => 'Whoops',
     'note_not_found_account' => 'Account ":name" has been deleted and can no longer be viewed. Please enjoy this overview of all other accounts of the same type.',
+    'note_not_found_group' => 'Transaction ":description" has been deleted and can no longer be viewed. Please enjoy this overview of all other transactions of the same type.',
+    'note_not_found_reconciliation' => 'Reconciliation ":description" has been deleted and can no longer be viewed. Here is an overview of the account it belonged to.',
+
     'fatal_error'             => 'There was a fatal error. Please check the log files in "storage/logs" or use "docker logs -f [container]" to see what\'s going on.',
     'maintenance_mode'        => 'Firefly III is in maintenance mode.',
     'be_right_back'           => 'Be right back!',

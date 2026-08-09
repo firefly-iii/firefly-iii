@@ -39,8 +39,8 @@ use Illuminate\Routing\Controller as BaseController;
 use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Route;
+use Illuminate\Support\Facades\URL;
 use Illuminate\Support\Facades\View;
-
 use function Safe\ini_get;
 use function Safe\realpath;
 
@@ -59,13 +59,13 @@ abstract class Controller extends BaseController
     use ValidatesRequests;
 
     // fails on PHP < 8.4
-    public protected(set) string $name;
-    protected bool $convertToPrimary = false;
-    protected string $dateTimeFormat;
+    public protected(set) string   $name;
+    protected bool                 $convertToPrimary = false;
+    protected string               $dateTimeFormat;
     protected ?TransactionCurrency $primaryCurrency;
-    protected string $monthAndDayFormat;
-    protected string $monthFormat;
-    protected string $redirectUrl    = '/';
+    protected string               $monthAndDayFormat;
+    protected string               $monthFormat;
+    protected string               $redirectUrl      = '/';
 
     /**
      * Controller constructor.
@@ -81,20 +81,20 @@ abstract class Controller extends BaseController
 
             return;
         }
-        $isDemoSite  = (bool) $isDemoSiteConfig->data;
+        $isDemoSite = (bool)$isDemoSiteConfig->data;
         View::share('IS_DEMO_SITE', $isDemoSite);
         View::share('DEMO_USERNAME', config('firefly.demo_username'));
         View::share('DEMO_PASSWORD', config('firefly.demo_password'));
         View::share('FF_VERSION', config('firefly.version'));
         View::share('FF_BUILD_TIME', config('firefly.build_time'));
-
+        View::share('FF3_FROM', urlencode($this->getFromUrl()));
         // this breaks when running < PHP 8.5 and is totally intentional.
-        $input       = ' James is cool';
-        $output      = $input
-            |> trim(...)
-            |> (fn (string $string) => str_replace(' ', '-', $string))
-            |> (fn (string $string) => str_replace(['.', '/', '…'], '', $string))
-            |> strtolower(...);
+        $input  = ' James is cool';
+        $output = $input
+                  |> trim(...)
+                  |> (fn(string $string) => str_replace(' ', '-', $string))
+                  |> (fn(string $string) => str_replace(['.', '/', '…'], '', $string))
+                  |> strtolower(...);
 
         // is webhooks enabled?
         View::share(
@@ -105,8 +105,8 @@ abstract class Controller extends BaseController
         View::share('featuringCer', true === AppConfiguration::get('enable_exchange_rates', config('cer.enabled'))->data);
 
         // share custom auth guard info.
-        $authGuard   = config('firefly.authentication_guard');
-        $logoutUrl   = config('firefly.custom_logout_url');
+        $authGuard = config('firefly.authentication_guard');
+        $logoutUrl = config('firefly.custom_logout_url');
 
         // overrule v2 layout back to v1.
 
@@ -126,17 +126,17 @@ abstract class Controller extends BaseController
         View::share('uploadSize', $uploadSize);
 
         // share is alpha, is beta
-        $isAlpha     = false;
-        $isBeta      = false;
-        $isDevelop   = false;
-        if (str_contains((string) config('firefly.version'), 'alpha')) {
+        $isAlpha   = false;
+        $isBeta    = false;
+        $isDevelop = false;
+        if (str_contains((string)config('firefly.version'), 'alpha')) {
             $isAlpha = true;
         }
-        if (str_contains((string) config('firefly.version'), 'develop') || str_contains((string) config('firefly.version'), 'branch')) {
+        if (str_contains((string)config('firefly.version'), 'develop') || str_contains((string)config('firefly.version'), 'branch')) {
             $isDevelop = true;
         }
 
-        if (str_contains((string) config('firefly.version'), 'beta')) {
+        if (str_contains((string)config('firefly.version'), 'beta')) {
             $isBeta = true;
         }
 
@@ -145,11 +145,11 @@ abstract class Controller extends BaseController
         View::share('FF_IS_DEVELOP', $isDevelop);
 
         $this->middleware(function ($request, $next): mixed {
-            $locale                  = Steam::getLocale();
+            $locale = Steam::getLocale();
             // translations for specific strings:
-            $this->monthFormat       = (string) trans('config.month_js', [], $locale);
-            $this->monthAndDayFormat = (string) trans('config.month_and_day_js', [], $locale);
-            $this->dateTimeFormat    = (string) trans('config.date_time_js', [], $locale);
+            $this->monthFormat       = (string)trans('config.month_js', [], $locale);
+            $this->monthAndDayFormat = (string)trans('config.month_and_day_js', [], $locale);
+            $this->dateTimeFormat    = (string)trans('config.date_time_js', [], $locale);
             $darkMode                = 'browser';
             $this->primaryCurrency   = null;
             // get shown-intro-preference:
@@ -181,5 +181,21 @@ abstract class Controller extends BaseController
 
             return $next($request);
         });
+    }
+
+    private function getFromUrl(): string
+    {
+        $current = parse_url(URL::full());
+        $from    = '';
+        if (array_key_exists('path', $current)) {
+            $from = $current['path'];
+        }
+        if (array_key_exists('query', $current) && strlen($current['query']) > 0) {
+            $from .= '?' . $current['query'];
+        }
+        if (array_key_exists('fragment', $current) && strlen($current['fragment']) > 0) {
+            $from .= '#' . $current['fragment'];
+        }
+        return $from;
     }
 }

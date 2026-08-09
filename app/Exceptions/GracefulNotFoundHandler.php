@@ -260,8 +260,10 @@ class GracefulNotFoundHandler extends ExceptionHandler
         $request->session()->reflash();
 
         if (TransactionTypeEnum::RECONCILIATION->value === $type) {
+            session()->flash('info', trans('errors.note_not_found_reconciliation', ['description' => $group->title ?? $journal->description]));
             return redirect(route('accounts.index', ['asset']));
         }
+        session()->flash('info', trans('errors.note_not_found_group', ['description' => $group->title ?? $journal->description]));
 
         return redirect(route('transactions.index', [strtolower((string) $type)]));
     }
