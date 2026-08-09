@@ -28,7 +28,7 @@
                                 <div class="btn-group">
                                 <button type="submit" class="btn btn-info"><span class="bi bi-search"></span> {{ __('firefly.search') }}</button>
                                 @if($ruleId > 0 && $ruleChanged)
-                                    <a href="{{ route('rules.edit', [$ruleId]) }}?from_query={{ $fullQuery }}"
+                                    <a href="{{ route('rules.edit', [$ruleId]) }}?from_query={{ $fullQuery }}&amp;_from={{ urlencode($FF3_FROM) }}"
                                        class="btn btn-outline-secondary">{{ trans('firefly.update_rule_from_query', ['rule' => $rule->title]) }}</a>
                                 @endif
                                 <a href="{{ route('rules.create') }}?from_query={{ $fullQuery }}" class="btn btn-outline-secondary">{{ __('firefly.create_rule_from_query') }}</a>

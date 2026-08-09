@@ -10,14 +10,14 @@
             <th class="twenty" scope="row">
                 {{-- link to object: --}}
                 @if ('FireflyIII\\Models\\Rule' == $logEntry->changer_type)
-                    <a href="{{ route('rules.edit', [$logEntry->changer_id] ) }}">
-                        @endif
-                        @if ('FireflyIII\\User' == $logEntry->changer_type)
-                            <a href="{{ route('profile.index') }}">
-                                @endif
-                                {{ str_replace(['FireflyIII\\Models\\', 'FireflyIII\\'], '', $logEntry->changer_type) }}
-                                #{{ $logEntry->changer_id }}
-                            </a>
+                    <a href="{{ route('rules.edit', [$logEntry->changer_id] ) }}?_from={{ urlencode($FF3_FROM) }}">
+                @endif
+                @if ('FireflyIII\\User' == $logEntry->changer_type)
+                    <a href="{{ route('profile.index') }}">
+                @endif
+                    {{ str_replace(['FireflyIII\\Models\\', 'FireflyIII\\'], '', $logEntry->changer_type) }}
+                    #{{ $logEntry->changer_id }}
+                    </a>
             </th>
             <td class="thirty" title="{{ $logEntry->created_at->isoFormat($dateTimeFormat) }}">
                 {{ __('firefly.ale_action_' . $logEntry->action) }}

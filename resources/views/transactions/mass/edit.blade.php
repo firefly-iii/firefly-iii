@@ -30,7 +30,7 @@
                                 <tr>
                                     <td>
                                         {{-- LINK TO EDIT FORM --}}
-                                        <a href="{{ route('transactions.edit', $journal['transaction_group_id']) }}" class="btn btn-sm btn-outline-secondary"><span
+                                        <a href="{{ route('transactions.edit', $journal['transaction_group_id']) }}?_from={{ urlencode($FF3_FROM) }}" class="btn btn-sm btn-outline-secondary"><span
                                                 class="bi bi-pencil"></span></a>
                                         <input type="hidden" name="journals[]" value="{{ $journal['transaction_journal_id']  }}"/>
                                     </td>

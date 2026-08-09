@@ -44,8 +44,8 @@
                                             </button>
                                             <ul class="dropdown-menu">
                                                 @if($isOwner)
-                                                    <li><a class="dropdown-item" href="{{ route('currencies.edit',[$currency['id']]) }}"><span class="bi bi-pencil"></span> {{ __('firefly.edit') }}</a></li>
-                                                    <li><a class="dropdown-item text-danger" href="{{ route('currencies.delete',[$currency['id']]) }}"><span class="bi bi-trash"></span> {{ __('firefly.delete') }}</a></li>
+                                                    <li><a class="dropdown-item" href="{{ route('currencies.edit',[$currency['id']]) }}?_from={{ urlencode($FF3_FROM) }}"><span class="bi bi-pencil"></span> {{ __('firefly.edit') }}</a></li>
+                                                    <li><a class="dropdown-item text-danger" href="{{ route('currencies.delete',[$currency['id']]) }}?_from={{ urlencode($FF3_FROM) }}"><span class="bi bi-trash"></span> {{ __('firefly.delete') }}</a></li>
                                                 @endif
                                                 @if($currency->userGroupEnabled)
                                                     <li><a class="dropdown-item disable-currency" href="#" data-code="{{ $currency['code'] }}"><span class="bi bi-app"></span> {{ __('firefly.disable_currency') }}</a></li>

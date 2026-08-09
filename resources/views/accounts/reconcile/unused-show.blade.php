@@ -11,8 +11,8 @@
                             <button id="transaction_menu" class="btn btn-box-tool dropdown-toggle" data-toggle="dropdown"><span class="bi bi-list"></span>
                             </button>
                             <ul class="dropdown-menu" role="menu">
-                                <li><a href="{{ route('transactions.edit',[$journal->id]) }}"><span class="bi bi-pencil"></span> {{ __('firefly.edit') }}</a></li>
-                                <li><a href="{{ route('transactions.delete',[$journal->id]) }}"><span class="bi bi-trash"></span> {{ __('firefly.delete') }}</a></li>
+                                <li><a href="{{ route('transactions.edit',[$journal->id]) }}?_from={{ urlencode($FF3_FROM) }}"><span class="bi bi-pencil"></span> {{ __('firefly.edit') }}</a></li>
+                                <li><a href="{{ route('transactions.delete',[$journal->id]) }}?_from={{ urlencode($FF3_FROM) }}"><span class="bi bi-trash"></span> {{ __('firefly.delete') }}</a></li>
                             </ul>
                         </div>
                     </div>
@@ -48,7 +48,7 @@
                     <div class="text-end">
                         <div class="btn-group">
                             <a class="btn btn-outline-secondary" href="{{ route('transactions.edit',[$journal->id]) }}"><span class="bi bi-pencil"></span> {{ __('firefly.edit') }}</a>
-                            <a href="{{ route('transactions.delete',[$journal->id]) }}" class="btn btn-danger"><span class="bi bi-trash"></span> {{ __('firefly.delete') }}
+                            <a href="{{ route('transactions.delete',[$journal->id]) }}?_from={{ urlencode($FF3_FROM) }}" class="btn btn-danger"><span class="bi bi-trash"></span> {{ __('firefly.delete') }}
                             </a>
                         </div>
                     </div>

@@ -95,8 +95,8 @@
 
                 <button class="btn btn-sm btn-outline-secondary dropdown-toggle" type="button" id="group_menu_{{ $group['id'] }}" data-bs-toggle="dropdown" aria-expanded="false">{{ __('firefly.actions') }} <span class="caret"></span></button>
                 <ul class="dropdown-menu" aria-labelledby="group_menu_{{ $group['id'] }}">
-                    <li><a class="dropdown-item" href="{{ route('transactions.edit', [$group['id']]) }}"><span class="bi bi-pencil"></span> {{ __('firefly.edit') }}</a></li>
-                    <li><a class="dropdown-item" href="{{ route('transactions.delete', [$group['id']]) }}"><span class="text-danger bi bi-trash"></span> {{ __('firefly.delete') }}</a></li>
+                    <li><a class="dropdown-item" href="{{ route('transactions.edit', [$group['id']]) }}?_from={{ urlencode($FF3_FROM) }}"><span class="bi bi-pencil"></span> {{ __('firefly.edit') }}</a></li>
+                    <li><a class="dropdown-item" href="{{ route('transactions.delete', [$group['id']]) }}?_from={{ urlencode($FF3_FROM) }}"><span class="text-danger bi bi-trash"></span> {{ __('firefly.delete') }}</a></li>
                     <li><a class="dropdown-item" href="#" data-id="{{ $group['id'] }}" class="clone-transaction"><span class="bi bi-copy"></span> {{ __('firefly.clone') }}</a></li>
                     <li><a class="dropdown-item" href="#" data-id="{{ $group['id'] }}" class="clone-transaction-and-edit"><span class="bi bi-copy"></span> {{ __('firefly.clone_and_edit') }}</a></li>
                 </ul>
@@ -190,9 +190,9 @@
         <td class="d-xs-none {{ $className }} text-end">
                 <button class="btn btn-sm btn-outline-secondary dropdown-toggle" type="button" id="journal_menu_{{ $transaction['transaction_journal_id'] }}" data-bs-toggle="dropdown" aria-expanded="false">{{ __('firefly.actions') }} <span class="caret"></span></button>
                 <ul class="dropdown-menu" aria-labelledby="journal_menu_{{ $transaction['transaction_journal_id'] }}">
-                    <li><a class="dropdown-item" href="{{ route('transactions.edit', [$group['id']]) }}"><span class="bi bi-pencil"></span> {{ __('firefly.edit') }}</a></li>
+                    <li><a class="dropdown-item" href="{{ route('transactions.edit', [$group['id']]) }}?_from={{ urlencode($FF3_FROM) }}"><span class="bi bi-pencil"></span> {{ __('firefly.edit') }}</a></li>
                     @if($transaction['transaction_type_type'] !== 'Opening balance' && $transaction['transaction_type_type'] !== 'Liability credit')
-                        <li><a class="dropdown-item" href="{{ route('transactions.delete', [$group['id']]) }}"><span class="text-danger bi bi-trash"></span> {{ __('firefly.delete') }}</a></li>
+                        <li><a class="dropdown-item" href="{{ route('transactions.delete', [$group['id']]) }}?_from={{ urlencode($FF3_FROM) }}"><span class="text-danger bi bi-trash"></span> {{ __('firefly.delete') }}</a></li>
                     @endif
                     @if($transaction['transaction_type_type'] !== 'Reconciliation' and $transaction['transaction_type_type'] !== 'Opening balance' and $transaction['transaction_type_type'] !== 'Liability credit')
                         <li><a class="dropdown-item" href="#" data-id="{{ $group['id'] }}" class="clone-transaction"><span class="bi bi-copy"></span> {{ __('firefly.clone') }}</a></li>

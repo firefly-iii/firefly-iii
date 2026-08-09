@@ -376,9 +376,9 @@
                                             </button>
                                             <ul class="dropdown-menu">
                                                 <li>
-                                                    <a href="{{ route('budgets.edit', $budget['id']) }}" class="dropdown-item"><span class="bi bi-pencil"></span> {{ __('firefly.edit') }}</a>
+                                                    <a href="{{ route('budgets.edit', $budget['id']) }}?_from={{ urlencode($FF3_FROM) }}" class="dropdown-item"><span class="bi bi-pencil"></span> {{ __('firefly.edit') }}</a>
                                                 </li>
-                                                <li><a href="{{ route('budgets.delete', $budget['id']) }}" class="dropdown-item text-danger">
+                                                <li><a href="{{ route('budgets.delete', $budget['id']) }}?_from={{ urlencode($FF3_FROM) }}" class="dropdown-item text-danger">
                                                         <span class="bi bi-trash"></span> {{ __('firefly.delete') }}
                                                     </a></li>
                                             </ul>
@@ -459,12 +459,12 @@
         var budgetIndexUrl = "{{ route('budgets.index',['START','END']) }}";
 
         // budget limit create form.
-        var createBudgetLimitUrl = "{{ route('budget-limits.create', ['REPLACEME', $start->format('Y-m-d'), $end->format('Y-m-d')]) }}";
+        var createBudgetLimitUrl = "{{ route('budget-limits.create', ['REPLACEME', $start->format('Y-m-d'), $end->format('Y-m-d')]) }}?_from={{ urlencode($FF3_FROM) }}";
         var storeBudgetLimitUrl = "{{ route('budget-limits.store') }}";
-        var updateBudgetLimitUrl = "{{ route('budget-limits.update', ['REPLACEME']) }}";
+        var updateBudgetLimitUrl = "{{ route('budget-limits.update', ['REPLACEME']) }}?_from={{ urlencode($FF3_FROM) }}";
         var showBudgetLimitUrl = "{{ route('budget-limits.show', ['REPLACEME']) }}";
-        var editBudgetLimitUrl = "{{ route('budget-limits.edit', ['REPLACEME']) }}";
-        var deleteBudgetLimitUrl = "{{ route('budget-limits.delete', ['REPLACEME']) }}";
+        var editBudgetLimitUrl = "{{ route('budget-limits.edit', ['REPLACEME']) }}?_from={{ urlencode($FF3_FROM) }}";
+        var deleteBudgetLimitUrl = "{{ route('budget-limits.delete', ['REPLACEME']) }}?_from={{ urlencode($FF3_FROM) }}";
         var totalBudgetedUrl = "{{ route('json.budget.total-budgeted', ['REPLACEME', $start->format('Y-m-d'), $end->format('Y-m-d')]) }}";
 
         // period thing:

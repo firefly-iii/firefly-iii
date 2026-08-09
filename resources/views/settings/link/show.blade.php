@@ -23,7 +23,7 @@
                             <tr>
                                 <td>
                                     <div class="btn-group btn-group-sm">
-                                        <a href="{{ route('transactions.link.delete', [$link->id]) }}" class="btn btn-danger delete-link" data-id="{{ $link->id }}"><span class="bi bi-trash"></span></a>
+                                        <a href="{{ route('transactions.link.delete', [$link->id]) }}?_from={{ urlencode($FF3_FROM) }}" class="btn btn-danger delete-link" data-id="{{ $link->id }}"><span class="bi bi-trash"></span></a>
                                         <a href="#" class="btn btn-outline-secondary switch-link" data-id="{{ $link->id }}"><span
                                                 class="bi bi-arrow-left-right"></span></a>
                                     </div>

@@ -45,7 +45,7 @@
                                             <ul class="list-unstyled">
                                                 @foreach($entry['rules'] as $rule)
                                                     <li>
-                                                        <a href="{{ route('rules.edit', [$rule['id']]) }}">
+                                                        <a href="{{ route('rules.edit', [$rule['id']]) }}?_from={{ urlencode($FF3_FROM) }}">
                                                             {{ $rule['title'] }}
                                                         </a>
                                                         @if(!$rule['active'])
@@ -172,8 +172,8 @@
                                                 {{ __('firefly.actions') }}
                                             </button>
                                             <ul class="dropdown-menu">
-                                                <li><a class="dropdown-item" href="{{ route('subscriptions.edit',$entry['id']) }}"><span class="bi bi-pencil"></span> {{ __('firefly.edit') }}</a></li>
-                                                <li><a class="dropdown-item text-danger" href="{{ route('subscriptions.delete',$entry['id']) }}"><span class="bi bi-trash"></span> {{ __('firefly.delete') }}</a></li>
+                                                <li><a class="dropdown-item" href="{{ route('subscriptions.edit',$entry['id']) }}?_from={{ urlencode($FF3_FROM) }}"><span class="bi bi-pencil"></span> {{ __('firefly.edit') }}</a></li>
+                                                <li><a class="dropdown-item text-danger" href="{{ route('subscriptions.delete',$entry['id']) }}?_from={{ urlencode($FF3_FROM) }}"><span class="bi bi-trash"></span> {{ __('firefly.delete') }}</a></li>
                                             </ul>
                                         </div>
                                     </td>

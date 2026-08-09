@@ -12,10 +12,10 @@
                             <button class="btn btn-sm btn-secondary-outline dropdown-toggle" type="button" id="card_header_menu" data-bs-toggle="dropdown" aria-expanded="false">{{ __('firefly.actions') }} <span class="caret"></span></button>
                             <ul class="dropdown-menu" aria-labelledby="card_header_menu">
                                     {{-- edit + delete --}}
-                                    <li><a class="dropdown-item" href="{{ route('transactions.edit', [$transactionGroup->id]) }}"><span
+                                    <li><a class="dropdown-item" href="{{ route('transactions.edit', [$transactionGroup->id]) }}?_from={{ urlencode($FF3_FROM) }}"><span
                                                 class="bi bi-pencil"></span> {{ __('firefly.edit') }}</a></li>
                                     @if($groupArray['transactions'][0]['type'] !== 'reconciliation' && $groupArray['transactions'][0]['type'] !== 'opening balance' && $groupArray['transactions'][0]['type'] !== 'liability credit')
-                                        <li><a class="dropdown-item" href="{{ route('transactions.delete', [$transactionGroup->id]) }}"><span
+                                        <li><a class="dropdown-item" href="{{ route('transactions.delete', [$transactionGroup->id]) }}?_from={{ urlencode($FF3_FROM) }}"><span
                                                     class="bi bi-trash"></span> {{ __('firefly.delete') }}</a></li>
                                     @endif
                                     @if($groupArray['transactions'][0]['type'] !== 'reconciliation' && $groupArray['transactions'][0]['type'] !== 'opening balance' && $groupArray['transactions'][0]['type'] !== 'liability credit')
@@ -217,10 +217,10 @@
                                 <button class="btn btn-sm btn-secondary-outline dropdown-toggle" type="button" id="menu_journal_{{ $journal['transaction_journal_id'] }}" data-bs-toggle="dropdown" aria-expanded="false">{{ __('firefly.actions') }} <span class="caret"></span></button>
                                 <ul class="dropdown-menu" aria-labelledby="menu_journal_{{ $journal['transaction_journal_id'] }}">
                                         {{-- edit + delete --}}
-                                        <li><a class="dropdown-item" href="{{ route('transactions.edit', [$transactionGroup->id]) }}"><span
+                                        <li><a class="dropdown-item" href="{{ route('transactions.edit', [$transactionGroup->id]) }}?_from={{ urlencode($FF3_FROM) }}"><span
                                                     class="bi bi-pencil"></span> {{ __('firefly.edit') }}</a></li>
                                         @if($groupArray['transactions'][0]['type'] !== 'reconciliation' && $groupArray['transactions'][0]['type'] !== 'opening balance' && $groupArray['transactions'][0]['type'] !== 'liability credit')
-                                            <li><a class="dropdown-item" href="{{ route('transactions.delete', [$transactionGroup->id]) }}"><span
+                                            <li><a class="dropdown-item" href="{{ route('transactions.delete', [$transactionGroup->id]) }}?_from={{ urlencode($FF3_FROM) }}"><span
                                                         class="bi bi-trash"></span> {{ __('firefly.delete') }}</a></li>
                                         @endif
                                         @if($journal['reconciled'])
@@ -461,7 +461,7 @@
                                             <div class="btn-group btn-group-sm">
                                                 <a href="#" class="btn btn-outline-secondary switch-link" data-id="{{ $link['id'] }}"><span
                                                         class="bi bi-arrow-left-right"></span></a>
-                                                <a href="{{ route('transactions.link.delete', [$link['id']]) }}"
+                                                <a href="{{ route('transactions.link.delete', [$link['id']]) }}?_from={{ urlencode($FF3_FROM) }}"
                                                    class="btn btn-danger"><span class="bi bi-trash"></span></a>
                                             </div>
                                         </td>

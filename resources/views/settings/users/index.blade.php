@@ -50,9 +50,9 @@
                             <tr>
                                 <td class="hidden-xs" data-value="{{ $user->id }}">
                                     <div class="btn-group btn-group-sm">
-                                        <a class="btn btn-outline-secondary" href="{{ route('settings.users.edit',$user->id) }}"><span
+                                        <a class="btn btn-outline-secondary" href="{{ route('settings.users.edit',$user->id) }}?_from={{ urlencode($FF3_FROM) }}"><span
                                                 class="bi bi-pencil"></span></a>
-                                        <a class="btn btn-danger" href="{{ route('settings.users.delete',$user->id) }}"><span
+                                        <a class="btn btn-danger" href="{{ route('settings.users.delete',$user->id) }}?_from={{ urlencode($FF3_FROM) }}"><span
                                                 class="bi bi-trash"></span></a>
                                     </div>
                                 </td>

@@ -47,9 +47,9 @@
             </div>
             <div class="card-footer">
                 <div class="btn-group">
-                    <a href="{{ route('recurring.edit', [$array['id']]) }}" class="btn btn-sm btn-outline-secondary"><span
+                    <a href="{{ route('recurring.edit', [$array['id']]) }}?_from={{ urlencode($FF3_FROM) }}" class="btn btn-sm btn-outline-secondary"><span
                             class="bi bi-pencil"></span> {{ __('firefly.edit') }}</a>
-                    <a href="{{ route('recurring.delete', [$array['id']]) }}" class="btn btn-sm btn-danger">{{ __('firefly.delete') }}
+                    <a href="{{ route('recurring.delete', [$array['id']]) }}?_from={{ urlencode($FF3_FROM) }}" class="btn btn-sm btn-danger">{{ __('firefly.delete') }}
                         <span class="bi bi-trash"></span></a>
                 </div>
             </div>

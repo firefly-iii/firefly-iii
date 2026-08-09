@@ -23,9 +23,9 @@
                                 <td>
                                     @if($linkType->editable)
                                         <div class="btn-group btn-group-sm">
-                                            <a class="btn btn-outline-secondary btn-sm" href="{{ route('settings.links.edit',$linkType->id) }}"><span
+                                            <a class="btn btn-outline-secondary btn-sm" href="{{ route('settings.links.edit',$linkType->id) }}?_from={{ urlencode($FF3_FROM) }}"><span
                                                     class="bi bi-pencil"></span></a>
-                                            <a class="btn btn-danger btn-sm" href="{{ route('settings.links.delete',$linkType->id) }}"><span
+                                            <a class="btn btn-danger btn-sm" href="{{ route('settings.links.delete',$linkType->id) }}?_from={{ urlencode($FF3_FROM) }}"><span
                                                     class="bi bi-trash"></span></a>
                                         </div>
                                     @endif

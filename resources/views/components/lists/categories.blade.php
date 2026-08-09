@@ -38,8 +38,8 @@
                     {{ __('firefly.actions') }}
                 </button>
                 <ul class="dropdown-menu">
-                    <li><a class="dropdown-item" href="{{ route('categories.edit', [$category->id]) }}"><span class="bi bi-pencil"></span> {{ __('firefly.edit') }}</a></li>
-                    <li><a class="dropdown-item text-danger" href="{{ route('categories.delete', [$category->id]) }}"><span class="bi bi-trash"></span> {{ __('firefly.delete') }}</a></li>
+                    <li><a class="dropdown-item" href="{{ route('categories.edit', [$category->id]) }}?_from={{ urlencode($FF3_FROM) }}"><span class="bi bi-pencil"></span> {{ __('firefly.edit') }}</a></li>
+                    <li><a class="dropdown-item text-danger" href="{{ route('categories.delete', [$category->id]) }}?_from={{ urlencode($FF3_FROM) }}"><span class="bi bi-trash"></span> {{ __('firefly.delete') }}</a></li>
                 </ul>
             </div>
         </td>

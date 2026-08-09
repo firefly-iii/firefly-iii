@@ -12,8 +12,8 @@
                             <button class="btn btn-sm btn-secondary-outline dropdown-toggle" type="button" id="card_header_menu" data-bs-toggle="dropdown" aria-expanded="false">
                                     <span class="bi bi-list"></span></button>
                             <ul class="dropdown-menu" aria-labelledby="card_header_menu">
-                                        <li><a class="dropdown-item" href="{{ route('subscriptions.edit', $object['data']['id']) }}"><span class="bi bi-pencil"></span> {{ __('firefly.edit') }}</a></li>
-                                        <li><a class="dropdown-item" href="{{ route('subscriptions.delete', $object['data']['id']) }}"><span class="bi bi-trash"></span> {{ __('firefly.delete') }}</a></li>
+                                        <li><a class="dropdown-item" href="{{ route('subscriptions.edit', $object['data']['id']) }}?_from={{ urlencode($FF3_FROM) }}"><span class="bi bi-pencil"></span> {{ __('firefly.edit') }}</a></li>
+                                        <li><a class="dropdown-item" href="{{ route('subscriptions.delete', $object['data']['id']) }}?_from={{ urlencode($FF3_FROM) }}"><span class="bi bi-trash"></span> {{ __('firefly.delete') }}</a></li>
                                     </ul>
                         </div>
                     </div>
@@ -91,8 +91,8 @@
                 </div>
                 <div class="card-footer">
                     <div class="btn-group">
-                        <a class="btn btn-outline-secondary" href="{{ route('subscriptions.edit', [$object['data']['id']]) }}">{{ __('firefly.edit') }}</a>
-                        <a class="btn btn-danger" href="{{ route('subscriptions.delete', [$object['data']['id']]) }}">{{ __('firefly.delete') }}</a>
+                        <a class="btn btn-outline-secondary" href="{{ route('subscriptions.edit', [$object['data']['id']]) }}?_from={{ urlencode($FF3_FROM) }}">{{ __('firefly.edit') }}</a>
+                        <a class="btn btn-danger" href="{{ route('subscriptions.delete', [$object['data']['id']]) }}?_from={{ urlencode($FF3_FROM) }}">{{ __('firefly.delete') }}</a>
                     </div>
                 </div>
             </div>
@@ -106,7 +106,7 @@
                     @if($rules->count() > 0)
                         <ul>
                             @foreach($rules as $rule)
-                                <li><a href="{{ route('rules.edit', [$rule->id]) }}">{{ $rule->title }}</a>
+                                <li><a href="{{ route('rules.edit', [$rule->id]) }}?_from={{ urlencode($FF3_FROM) }}">{{ $rule->title }}</a>
                                     @if(!$rule->active)({{ strtolower(__('firefly.list_inactive_rule')) }})@endif
                                 </li>
                             @endforeach

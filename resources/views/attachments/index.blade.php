@@ -25,9 +25,9 @@
                             <tr>
                                 <td data-value="{{ $att->id }}">
                                     <div class="btn-group btn-group-sm">
-                                        <a href="{{ route('attachments.edit', $att->id) }}" class="btn btn-outline-secondary"><span class="bi bi-pencil"></span></a>
-                                        <a href="{{ route('attachments.delete', $att->id) }}" class="btn btn-outline-danger"><span class="bi bi-trash"></span></a>
-                                        <a href="{{ route('attachments.download', $att->id) }}" class="btn btn-outline-secondary"><span class="bi bi-download"></span></a>
+                                        <a href="{{ route('attachments.edit', $att->id) }}?_from={{ urlencode($FF3_FROM) }}" class="btn btn-outline-secondary"><span class="bi bi-pencil"></span></a>
+                                        <a href="{{ route('attachments.delete', $att->id) }}?_from={{ urlencode($FF3_FROM) }}" class="btn btn-outline-danger"><span class="bi bi-trash"></span></a>
+                                        <a href="{{ route('attachments.download', $att->id) }}?_from={{ urlencode($FF3_FROM) }}" class="btn btn-outline-secondary"><span class="bi bi-download"></span></a>
                                     </div>
                                 </td>
                                 <td data-value="{{ $att->filename }}">

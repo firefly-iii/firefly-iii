@@ -27,14 +27,14 @@
                                         <span class="bi bi-list"></span>
                                     </button>
                                     <ul class="dropdown-menu" aria-labelledby="card_header_{{ $ruleGroup->id }}">
-                                        <li><a class="dropdown-item" href="{{ route('rule-groups.edit',$ruleGroup->id) }}"><span class="bi bi-pencil"></span> {{ __('firefly.edit') }}</a></li>
-                                        <li><a class="dropdown-item" href="{{ route('rule-groups.delete',$ruleGroup->id) }}"><span class="bi bi-trash"></span> {{ __('firefly.delete') }}</a></li>
+                                        <li><a class="dropdown-item" href="{{ route('rule-groups.edit',$ruleGroup->id) }}?_from={{ urlencode($FF3_FROM) }}"><span class="bi bi-pencil"></span> {{ __('firefly.edit') }}</a></li>
+                                        <li><a class="dropdown-item" href="{{ route('rule-groups.delete',$ruleGroup->id) }}?_from={{ urlencode($FF3_FROM) }}"><span class="bi bi-trash"></span> {{ __('firefly.delete') }}</a></li>
                                         <li><a class="dropdown-item" href="{{ route('rule-groups.select-transactions',$ruleGroup->id) }}"><span
                                                     class="bi bi-power"></span> {{ trans('firefly.apply_rule_group_selection', ['title' => $ruleGroup->title]) }}
                                             </a></li>
 
-                                        <li><a class="dropdown-item" href="{{ route('rule-groups.create') }}"><em class="bi bi-plus-circle"></em> {{ __('firefly.new_rule_group') }}</a></li>
-                                        <li><a href="{{ route('rules.create', $ruleGroup->id) }}" class="dropdown-item new_rule"><em class="bi bi-plus-circle"></em> {{ __('firefly.new_rule') }}</a></li>
+                                        <li><a class="dropdown-item" href="{{ route('rule-groups.create') }}?_from={{ urlencode($FF3_FROM) }}"><em class="bi bi-plus-circle"></em> {{ __('firefly.new_rule_group') }}</a></li>
+                                        <li><a href="{{ route('rules.create', $ruleGroup->id) }}?_from={{ urlencode($FF3_FROM) }}" class="dropdown-item new_rule"><em class="bi bi-plus-circle"></em> {{ __('firefly.new_rule') }}</a></li>
 
                                         @if($ruleGroup->order > 1)
                                             <li><a href="#" class="dropdown-item move-group" data-direction="up" data-id="{{ $ruleGroup->id }}"><span
@@ -143,11 +143,11 @@
                                                     {{ __('firefly.actions') }}
                                                 </button>
                                                 <ul class="dropdown-menu">
-                                                    <li><a class="dropdown-item" title="{{ __('firefly.edit') }}" href="{{ route('rules.edit', $rule->id) }}"><span class="bi bi-pencil"></span> {{ __('firefly.edit') }} </a></li>
-                                                    <li><a class="dropdown-item text-danger" title="{{ __('firefly.delete') }}" href="{{ route('rules.delete', $rule->id) }}"><span class="bi bi-trash"></span> {{ __('firefly.delete') }}</a></li>
-                                                    <li><a class="dropdown-item @if(false === $rule->strict) test_rule_triggers @endif" data-id="{{ $rule->id }}" href="{{ route('rules.search',$rule->id) }}"><span data-id="{{ $rule->id }}" class="bi bi-flask"></span> {{ __('firefly.test_rule_triggers') }}</a></li>
+                                                    <li><a class="dropdown-item" title="{{ __('firefly.edit') }}" href="{{ route('rules.edit', $rule->id) }}?_from={{ urlencode($FF3_FROM) }}"><span class="bi bi-pencil"></span> {{ __('firefly.edit') }} </a></li>
+                                                    <li><a class="dropdown-item text-danger" title="{{ __('firefly.delete') }}" href="{{ route('rules.delete', $rule->id) }}?_from={{ urlencode($FF3_FROM) }}"><span class="bi bi-trash"></span> {{ __('firefly.delete') }}</a></li>
+                                                    <li><a class="dropdown-item @if(false === $rule->strict) test_rule_triggers @endif" data-id="{{ $rule->id }}" href="{{ route('rules.search',$rule->id) }}?_from={{ urlencode($FF3_FROM) }}"><span data-id="{{ $rule->id }}" class="bi bi-flask"></span> {{ __('firefly.test_rule_triggers') }}</a></li>
                                                     @if($rule->active)
-                                                        <li><a class="dropdown-item" href="{{ route('rules.select-transactions',$rule->id) }}"><span class="bi bi-power"></span> {{ trans('firefly.apply_rule_selection', ['title' => $rule->title]) }}</a></li>
+                                                        <li><a class="dropdown-item" href="{{ route('rules.select-transactions',$rule->id) }}?_from={{ urlencode($FF3_FROM) }}"><span class="bi bi-power"></span> {{ trans('firefly.apply_rule_selection', ['title' => $rule->title]) }}</a></li>
                                                     @endif
                                                     <li><a class="dropdown-item duplicate-rule" data-id="{{ $rule->id }}" title="{{ trans('firefly.duplicate_rule', ['title' => $rule->title]) }}"><span class="bi bi-copy"></span> {{ trans('firefly.duplicate_rule', ['title' => $rule->title]) }}</a></li>
                                                 </ul>

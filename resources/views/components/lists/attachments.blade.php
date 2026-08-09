@@ -3,8 +3,8 @@
     <tr>
         <td class="onetwenty">
             <div class="btn-group btn-group-sm">
-                <a href="{{ route('attachments.edit', $attachment['id']) }}" class="btn btn-outline-secondary"><span class="bi bi-pencil"></span></a>
-                <a href="{{ route('attachments.delete', $attachment['id']) }}" class="btn btn-danger"><span class="bi bi-trash"></span></a>
+                <a href="{{ route('attachments.edit', $attachment['id']) }}?_from={{ urlencode($FF3_FROM) }}" class="btn btn-outline-secondary"><span class="bi bi-pencil"></span></a>
+                <a href="{{ route('attachments.delete', $attachment['id']) }}?_from={{ urlencode($FF3_FROM) }}" class="btn btn-danger"><span class="bi bi-trash"></span></a>
                 @if($attachment['file_exists'])
                     <a href="{{ route('attachments.download', $attachment['id']) }}" class="btn btn-outline-secondary"><span class="bi bi-download"></span></a>
                 @endif
