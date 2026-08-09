@@ -27,6 +27,7 @@ use FireflyIII\Enums\UserRoleEnum;
 use FireflyIII\Models\Account;
 use FireflyIII\Models\Location;
 use FireflyIII\Rules\IsValidAmount;
+use FireflyIII\Rules\System\IsValidOriginUrl;
 use FireflyIII\Rules\UniqueIban;
 use FireflyIII\Support\Facades\Steam;
 use FireflyIII\Support\Request\AppendsLocationData;
@@ -120,6 +121,7 @@ class AccountFormRequest extends FormRequest
             'what'                               => 'in:'.$types,
             'interest_period'                    => 'in:daily,monthly,yearly',
             'notes'                              => ['min:1', 'max:32768', 'nullable'],
+            '_from' => ['string','min:0','max:255', new IsValidOriginUrl()],
         ];
         $rules          = Location::requestRules($rules);
 

@@ -23,6 +23,8 @@
 declare(strict_types=1);
 
 return [
+    'no_auth_present' => 'Looks like you\'re not authenticated',
+    'bad_url_parts' => 'The redirect URL is invalid.',
     'verifying_password'              => 'Verifying password...',
     'invalid_account_list'            => 'Invalid account type list entry ":value"',
     'invalid_transaction_type_list'   => 'Invalid transaction type list',

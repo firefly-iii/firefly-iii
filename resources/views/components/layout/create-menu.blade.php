@@ -7,7 +7,7 @@
 
 
 
-        <a href="{{ route('transactions.create', ['withdrawal']) }}?_from={{ $FF3_FROM }}" class="dropdown-item">
+        <a href="{{ route('transactions.create', ['withdrawal']) }}?_from={{ urlencode($FF3_FROM) }}" class="dropdown-item">
             <div class="d-flex">
                 <div class="grow">
                     <h3 class="dropdown-item-title">
@@ -19,7 +19,7 @@
             </div>
         </a>
         <div class="dropdown-divider"></div>
-        <a href="{{ route('transactions.create', ['deposit']) }}?_from={{ $FF3_FROM }}" class="dropdown-item">
+        <a href="{{ route('transactions.create', ['deposit']) }}?_from={{ urlencode($FF3_FROM) }}" class="dropdown-item">
             <div class="d-flex">
                 <div class="grow">
                     <h3 class="dropdown-item-title">
@@ -31,7 +31,7 @@
             </div>
         </a>
         <div class="dropdown-divider"></div>
-        <a href="{{ route('transactions.create', ['transfer']) }}?_from={{ $FF3_FROM }}" class="dropdown-item">
+        <a href="{{ route('transactions.create', ['transfer']) }}?_from={{ urlencode($FF3_FROM) }}" class="dropdown-item">
             <div class="d-flex">
                 <div class="grow">
                     <h3 class="dropdown-item-title">
@@ -44,7 +44,7 @@
         </a>
         <div class="dropdown-divider"></div>
 
-        <a href="{{ route('accounts.create', ['asset']) }}?_from={{ $FF3_FROM }}" class="dropdown-item">
+        <a href="{{ route('accounts.create', ['asset']) }}?_from={{ urlencode($FF3_FROM) }}" class="dropdown-item">
             <div class="d-flex">
                 <div class="grow">
                     <h3 class="dropdown-item-title">
@@ -56,7 +56,7 @@
             </div>
         </a>
         <div class="dropdown-divider"></div>
-        <a href="{{ route('accounts.create', ['liabilities']) }}?_from={{ $FF3_FROM }}" class="dropdown-item">
+        <a href="{{ route('accounts.create', ['liabilities']) }}?_from={{ urlencode($FF3_FROM) }}" class="dropdown-item">
             <div class="d-flex">
                 <div class="grow">
                     <h3 class="dropdown-item-title">
@@ -69,7 +69,7 @@
         </a>
         <div class="dropdown-divider"></div>
 
-        <a href="{{ route('budgets.create') }}?_from={{ $FF3_FROM }}" class="dropdown-item">
+        <a href="{{ route('budgets.create') }}?_from={{ urlencode($FF3_FROM) }}" class="dropdown-item">
             <div class="d-flex">
                 <div class="grow">
                     <h3 class="dropdown-item-title">
@@ -81,7 +81,7 @@
             </div>
         </a>
         <div class="dropdown-divider"></div>
-        <a href="{{ route('categories.create') }}?_from={{ $FF3_FROM }}" class="dropdown-item">
+        <a href="{{ route('categories.create') }}?_from={{ urlencode($FF3_FROM) }}" class="dropdown-item">
             <div class="d-flex">
                 <div class="grow">
                     <h3 class="dropdown-item-title">
@@ -93,7 +93,7 @@
             </div>
         </a>
         <div class="dropdown-divider"></div>
-        <a href="{{ route('piggy-banks.create') }}?_from={{ $FF3_FROM }}" class="dropdown-item">
+        <a href="{{ route('piggy-banks.create') }}?_from={{ urlencode($FF3_FROM) }}" class="dropdown-item">
             <div class="d-flex">
                 <div class="grow">
                     <h3 class="dropdown-item-title">
@@ -105,7 +105,7 @@
             </div>
         </a>
         <div class="dropdown-divider"></div>
-        <a href="{{ route('subscriptions.create') }}?_from={{ $FF3_FROM }}" class="dropdown-item">
+        <a href="{{ route('subscriptions.create') }}?_from={{ urlencode($FF3_FROM) }}" class="dropdown-item">
             <div class="d-flex">
                 <div class="grow">
                     <h3 class="dropdown-item-title">
@@ -117,7 +117,7 @@
             </div>
         </a>
         <div class="dropdown-divider"></div>
-        <a href="{{ route('rules.create') }}?_from={{ $FF3_FROM }}" class="dropdown-item">
+        <a href="{{ route('rules.create') }}?_from={{ urlencode($FF3_FROM) }}" class="dropdown-item">
             <div class="d-flex">
                 <div class="grow">
                     <h3 class="dropdown-item-title">
@@ -129,7 +129,7 @@
             </div>
         </a>
         <div class="dropdown-divider"></div>
-        <a href="{{ route('recurring.create') }}?_from={{ $FF3_FROM }}" class="dropdown-item">
+        <a href="{{ route('recurring.create') }}?_from={{ urlencode($FF3_FROM) }}" class="dropdown-item">
             <div class="d-flex">
                 <div class="grow">
                     <h3 class="dropdown-item-title">
@@ -141,7 +141,7 @@
             </div>
         </a>
         <div class="dropdown-divider"></div>
-        <a href="{{ route('webhooks.create') }}?_from={{ $FF3_FROM }}" class="dropdown-item">
+        <a href="{{ route('webhooks.create') }}?_from={{ urlencode($FF3_FROM) }}" class="dropdown-item">
             <div class="d-flex">
                 <div class="grow">
                     <h3 class="dropdown-item-title">

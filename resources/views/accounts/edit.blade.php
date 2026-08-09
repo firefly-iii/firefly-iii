@@ -10,9 +10,9 @@
           accept-charset="UTF-8"
           enctype="multipart/form-data">
         <input type="hidden" name="_token" value="{{ csrf_token() }}"/>
-
+        <input type="hidden" name="_from" value="{{ $from }}" />
         <input type="hidden" name="id" value="{{ $account->id }}"/>
-        <input type="hidden" name="$objectType" value="{{ $objectType }}"/>
+        <input type="hidden" name="objectType" value="{{ $objectType }}"/>
 
         <div class="row">
             <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">

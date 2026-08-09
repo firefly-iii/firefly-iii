@@ -139,8 +139,8 @@
                     {{ __('firefly.actions') }}
                 </button>
                 <ul class="dropdown-menu" aria-labelledby="action_menu_{{$account->id}}">
-                    <li><a class="dropdown-item" href="{{ route('accounts.edit',$account->id) }}"><span class="bi bi-pencil"></span> {{ __('firefly.edit') }}</a></li>
-                    <li><a class="dropdown-item" href="{{ route('accounts.delete',$account->id) }}"><span class="bi bi-trash"></span> {{ __('firefly.delete') }}</a></li>
+                    <li><a class="dropdown-item" href="{{ route('accounts.edit',$account->id) }}?_from={{ urlencode($FF3_FROM) }}"><span class="bi bi-pencil"></span> {{ __('firefly.edit') }}</a></li>
+                    <li><a class="dropdown-item" href="{{ route('accounts.delete',$account->id) }}?_from={{ urlencode($FF3_FROM) }}"><span class="bi bi-trash"></span> {{ __('firefly.delete') }}</a></li>
                     @if('asset' === $objectType)
                         <li><a class="dropdown-item" href="{{ route('accounts.reconcile',$account->id) }}"><span class="bi bi-check"></span> {{ __('firefly.reconcile_this_account') }}</a></li>
                     @endif

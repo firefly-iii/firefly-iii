@@ -44,7 +44,7 @@ final class CreateController extends Controller
 {
     use ModelInformation;
 
-    private AttachmentHelperInterface $attachments;
+    private AttachmentHelperInterface  $attachments;
     private AccountRepositoryInterface $repository;
 
     /**
@@ -57,7 +57,7 @@ final class CreateController extends Controller
         // translations:
         $this->middleware(function ($request, $next) {
             app('view')->share('mainTitleIcon', 'bi-credit-card');
-            app('view')->share('title', (string) trans('firefly.accounts'));
+            app('view')->share('title', (string)trans('firefly.accounts'));
 
             $this->repository  = app(AccountRepositoryInterface::class);
             $this->attachments = app(AttachmentHelperInterface::class);
@@ -71,11 +71,12 @@ final class CreateController extends Controller
      *
      * @return Factory|View
      */
-    public function create(Request $request, string $objectType): Factory|\Illuminate\Contracts\View\View
+    public function create(Request $request, string $objectType): Factory | \Illuminate\Contracts\View\View
     {
         $subTitleIcon        = config(sprintf('firefly.subIconsByIdentifier.%s', $objectType));
-        $subTitle            = (string) trans(sprintf('firefly.make_new_%s_account', $objectType));
+        $subTitle            = (string)trans(sprintf('firefly.make_new_%s_account', $objectType));
         $roles               = $this->getRoles();
+        $from = $request->input('_from', '');
         $liabilityTypes      = $this->getLiabilityTypes();
         $hasOldInput         = null !== $request->old('_token');
         $locations           = [
@@ -89,18 +90,18 @@ final class CreateController extends Controller
         $liabilityDirections = ['debit' => trans('firefly.liability_direction_debit'), 'credit' => trans('firefly.liability_direction_credit')];
 
         // interest calculation periods:
-        $interestPeriods     = [];
+        $interestPeriods = [];
         foreach (config('firefly.interest_periods') as $period) {
             $interestPeriods[$period] = trans(sprintf('firefly.interest_calc_%s', $period));
         }
 
-        // pre fill some data
+        // prefill some data
         $request->session()->flash('preFilled', [
             'currency_id'       => $this->primaryCurrency->id,
-            'include_net_worth' => !$hasOldInput || (bool) $request->old('include_net_worth'),
+            'include_net_worth' => !$hasOldInput || (bool)$request->old('include_net_worth'),
         ]);
         // issue #8321
-        $showNetWorth        = true;
+        $showNetWorth = true;
         if ('liabilities' !== $objectType && 'asset' !== $objectType) {
             $showNetWorth = false;
         }
@@ -114,6 +115,7 @@ final class CreateController extends Controller
 
         return view('accounts.create', [
             'subTitleIcon'        => $subTitleIcon,
+            'from'                => $from,
             'liabilityDirections' => $liabilityDirections,
             'showNetWorth'        => $showNetWorth,
             'locations'           => $locations,
@@ -127,9 +129,9 @@ final class CreateController extends Controller
 
     public function store(AccountFormRequest $request): RedirectResponse
     {
-        $data      = $request->getAccountData();
-        $account   = $this->repository->store($data);
-        $request->session()->flash('success', (string) trans('firefly.stored_new_account', ['name' => $account->name]));
+        $data    = $request->getAccountData();
+        $account = $this->repository->store($data);
+        $request->session()->flash('success', (string)trans('firefly.stored_new_account', ['name' => $account->name]));
         Preferences::mark();
 
         Log::channel('audit')->info('Stored new account.', $data);
@@ -146,13 +148,13 @@ final class CreateController extends Controller
 
         // store attachment(s):
         /** @var null|array $files */
-        $files     = $request->hasFile('attachments') ? $request->file('attachments') : null;
+        $files = $request->hasFile('attachments') ? $request->file('attachments') : null;
         if (null !== $files && !auth()->user()->hasRole('demo')) {
             $this->attachments->saveAttachmentsForModel($account, $files);
         }
         if (null !== $files && auth()->user()->hasRole('demo')) {
             Log::channel('audit')->warning(sprintf('The demo user is trying to upload attachments in %s.', __METHOD__));
-            session()->flash('info', (string) trans('firefly.no_att_demo_user'));
+            session()->flash('info', (string)trans('firefly.no_att_demo_user'));
         }
 
         if (count($this->attachments->getMessages()->get('attachments')) > 0) {
@@ -160,8 +162,9 @@ final class CreateController extends Controller
         }
 
         // redirect to previous URL.
-        $redirect  = redirect($this->getPreviousUrl('accounts.create.url'));
-        if (1 === (int) $request->input('create_another')) {
+        $from    = $request->input('_from', '');
+        $redirect = redirect(route('index') . $from);
+        if (1 === (int)$request->input('create_another')) {
             // set value so create routine will not overwrite URL:
             $request->session()->put('accounts.create.fromStore', true);
 

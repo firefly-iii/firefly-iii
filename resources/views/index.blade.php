@@ -119,7 +119,7 @@
                                     </li>
                                     <li>
                                         <a class="dropdown-item"
-                                           href="{{ route('accounts.edit', [$data['account']['id']]) }}">{{ __('firefly.edit') }}</a>
+                                           href="{{ route('accounts.edit', [$data['account']['id']]) }}?_from={{ urlencode($FF3_FROM) }}">{{ __('firefly.edit') }}</a>
                                     </li>
                                     <li>
                                         <a class="dropdown-item"

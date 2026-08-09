@@ -87,7 +87,7 @@ abstract class Controller extends BaseController
         View::share('DEMO_PASSWORD', config('firefly.demo_password'));
         View::share('FF_VERSION', config('firefly.version'));
         View::share('FF_BUILD_TIME', config('firefly.build_time'));
-        View::share('FF3_FROM', urlencode($this->getFromUrl()));
+        View::share('FF3_FROM', $this->getFromUrl());
         // this breaks when running < PHP 8.5 and is totally intentional.
         $input  = ' James is cool';
         $output = $input

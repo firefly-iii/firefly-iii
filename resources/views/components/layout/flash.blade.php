@@ -62,8 +62,9 @@
 
 @endif
 
+
 {{--  WARNING MESSAGE (ALWAYS SINGULAR) --}}
-@if(\Illuminate\Support\Facades\Session::has('warning'))
+@if(session()->has('warning'))
     <div class="alert alert-warning alert-dismissible fade show" role="alert">
     <strong>{{ __('firefly.flash_warning') }}</strong> {{ session('warning') }}
     <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="{{ __('firefly.close') }}"></button>
@@ -71,7 +72,7 @@
 @endif
 
 {{-- ERROR MESSAGE (CAN BE MULTIPLE) --}}
-@if(\Illuminate\Support\Facades\Session::has('error'))
+@if(session()->has('error'))
 <div class="alert alert-danger alert-dismissible fade show" role="alert">
     {{-- MULTIPLE ERRORS (BAD) --}}
     @if(!is_string(session('error')) && is_iterable(session('error')) && count(session('error')) > 1)
@@ -99,3 +100,17 @@
 </div>
 @endif
 
+@if($errors->count() > 0)
+    <div class="alert alert-danger alert-dismissible fade show" role="alert">
+        {{-- MULTIPLE ERRORS (BAD) --}}
+            <strong>
+                {{ trans_choice('firefly.flash_error_multiple', $errors->count(), ['count' => $errors->count()]) }}:
+            </strong>
+            <ul class="list-unstyled">
+                @foreach($errors->all() as $error)
+                    <li>{{ $error }}</li>
+                @endforeach
+            </ul>
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="{{ __('firefly.close') }}"></button>
+    </div>
+    @endif
