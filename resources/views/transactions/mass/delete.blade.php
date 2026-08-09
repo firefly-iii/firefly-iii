@@ -94,8 +94,8 @@
 
                     </div>
                     <div class="card-footer text-end">
-                        <input type="submit" name="submit" value="{{ trans('form.delete_all_permanently') }}" class="btn btn-danger"/>
                         <a href="{{ route('index') }}" class="btn-outline-secondary btn">{{ trans('form.cancel') }}</a>
+                        <input type="submit" name="submit" value="{{ trans('form.delete_all_permanently') }}" class="btn btn-danger"/>
                     </div>
                 </div>
             </div>

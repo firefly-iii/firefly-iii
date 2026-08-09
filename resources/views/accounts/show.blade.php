@@ -33,9 +33,9 @@
                                     <span class="bi bi-list"></span>
                                 </button>
                                 <ul class="dropdown-menu" aria-labelledby="card_header_menu">
-                                        <li><a class="dropdown-item" href="{{ route('accounts.edit', [$account->id]) }}"><span
+                                        <li><a class="dropdown-item" href="{{ route('accounts.edit', [$account->id]) }}?_from=/accounts/show/{{ $account->id }}"><span
                                                     class="bi bi-pencil"></span> {{ __('firefly.edit') }}</a></li>
-                                        <li><a class="dropdown-item" href="{{ route('accounts.delete', [$account->id]) }}"><span
+                                        <li><a class="dropdown-item" href="{{ route('accounts.delete', [$account->id]) }}?_from=/accounts/show/{{ $account->id }}"><span
                                                     class="bi bi-trash"></span> {{ __('firefly.delete') }}</a></li>
                                         <li>
                                             <a class="dropdown-item" href="{{ route('accounts.reconcile', [$account->id]) }}"><span class="bi bi-check"></span> {{ __('firefly.reconcile_this_account') }}</a>

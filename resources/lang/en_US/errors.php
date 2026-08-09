@@ -28,6 +28,7 @@ return [
     '404_send_error'          => 'If you were redirected to this page automatically, please accept my apologies. There is a mention of this error in your log files and I would be grateful if you sent me the error to me.',
     '404_github_link'         => 'If you are sure this page should exist, please open a ticket on <strong><a href="https://github.com/firefly-iii/firefly-iii/issues">GitHub</a></strong>.',
     'whoops'                  => 'Whoops',
+    'note_not_found_account' => 'Account ":name" has been deleted and can no longer be viewed. Please enjoy this overview of all other accounts of the same type.',
     'fatal_error'             => 'There was a fatal error. Please check the log files in "storage/logs" or use "docker logs -f [container]" to see what\'s going on.',
     'maintenance_mode'        => 'Firefly III is in maintenance mode.',
     'be_right_back'           => 'Be right back!',

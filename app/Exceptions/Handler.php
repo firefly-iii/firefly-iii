@@ -184,7 +184,6 @@ class Handler extends ExceptionHandler
                 'exception' => 'UndisclosedException',
             ], $errorCode);
         }
-
         if ($e instanceof NotFoundHttpException) {
             Log::debug('Refer to GracefulNotFoundHandler');
             $handler = app(GracefulNotFoundHandler::class);

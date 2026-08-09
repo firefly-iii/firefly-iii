@@ -99,6 +99,7 @@ class Bill extends Model
             if (null !== $bill) {
                 return $bill;
             }
+            throw new NotFoundHttpException();
         }
 
         throw new AuthenticationException();

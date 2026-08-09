@@ -19,7 +19,6 @@
                         </p>
                     </div>
                     <div class="card-footer text-end">
-                        <input type="submit" name="submit" value="{{ trans('form.deletePermanently') }}" class="btn btn-danger"/>
                         @if('Withdrawal' === $journal->transaction_type_type)
                             <a href="{{ route('transactions.index','withdrawal') }}" class="btn-outline-secondary btn">{{ trans('form.cancel') }}</a>
                         @endif
@@ -29,6 +28,7 @@
                         @if('Transfer' === $journal->transaction_type_type)
                             <a href="{{ route('transactions.index','transfers') }}" class="btn-outline-secondary btn">{{ trans('form.cancel') }}</a>
                         @endif
+                            <input type="submit" name="submit" value="{{ trans('form.deletePermanently') }}" class="btn btn-danger"/>
                     </div>
                 </div>
             </div>

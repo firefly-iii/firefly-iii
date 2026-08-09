@@ -59,6 +59,7 @@ class ObjectGroup extends Model
             if (null !== $objectGroup) {
                 return $objectGroup;
             }
+            throw new NotFoundHttpException();
         }
 
         throw new AuthenticationException();

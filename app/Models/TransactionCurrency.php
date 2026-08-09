@@ -63,6 +63,7 @@ class TransactionCurrency extends Model
 
                 return $currency;
             }
+            throw new NotFoundHttpException();
         }
 
         throw new AuthenticationException();

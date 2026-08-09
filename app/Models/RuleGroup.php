@@ -71,6 +71,7 @@ class RuleGroup extends Model
             if (null !== $ruleGroup) {
                 return $ruleGroup;
             }
+            throw new NotFoundHttpException();
         }
 
         throw new AuthenticationException();

@@ -1,6 +1,6 @@
 @extends('layout.v3.blank')
 @section('status_code','404')
-@section('status','Not Found')
+@section('status','Page not found')
 @section('sub_title', trans('errors.404_header'))
 @section('content')
 <div class="row">

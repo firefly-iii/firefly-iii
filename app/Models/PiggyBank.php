@@ -83,6 +83,7 @@ class PiggyBank extends Model
             if (null !== $piggyBank) {
                 return $piggyBank;
             }
+            throw new NotFoundHttpException();
         }
 
         throw new AuthenticationException();

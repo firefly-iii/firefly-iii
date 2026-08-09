@@ -63,7 +63,7 @@ class Account extends Model
     /**
      * Route binder. Converts the key in the URL to the specified object (or throw 404).
      *
-     * @throws NotFoundHttpException
+     * @throws NotFoundHttpException|AuthenticationException
      */
     public static function routeBinder(self|string $value): self
     {
@@ -81,6 +81,7 @@ class Account extends Model
             if (null !== $account) {
                 return $account;
             }
+            throw new NotFoundHttpException();
         }
 
         throw new AuthenticationException();

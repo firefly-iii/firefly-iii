@@ -59,6 +59,7 @@ class WebhookAttempt extends Model
             if (null !== $attempt && $attempt->webhookMessage->webhook->user_id === $user->id) {
                 return $attempt;
             }
+            throw new NotFoundHttpException();
         }
 
         throw new AuthenticationException();

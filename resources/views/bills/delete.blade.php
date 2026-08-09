@@ -25,9 +25,9 @@
                             @endif
                         </p>
                     </div>
-                    <div class="card-footer">
-                        <input type="submit" name="submit" value="{{ trans('form.deletePermanently') }}" class="btn btn-danger text-end"/>
+                    <div class="card-footer text-end">
                         <a href="{{ URL::previous() }}" class="btn-outline-secondary btn">{{ trans('form.cancel') }}</a>
+                        <input type="submit" name="submit" value="{{ trans('form.deletePermanently') }}" class="btn btn-danger text-end"/>
                     </div>
                 </div>
             </div>

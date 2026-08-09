@@ -160,8 +160,8 @@
                     </div>
 
                     <div class="card-footer text-end">
-                        <input type="submit" name="submit" value="{{ trans('form.update_all_journals') }}" class="btn btn-success "/>
                         <a href="{{ route('index') }}" class="btn-outline-secondary btn">{{ trans('form.cancel') }}</a>
+                        <input type="submit" name="submit" value="{{ trans('form.update_all_journals') }}" class="btn btn-success "/>
                     </div>
 
                 </div>

@@ -80,6 +80,7 @@ class AvailableBudget extends Model
             if (null !== $availableBudget) {
                 return $availableBudget;
             }
+            throw new NotFoundHttpException();
         }
 
         throw new AuthenticationException();
