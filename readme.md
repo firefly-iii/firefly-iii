@@ -159,10 +159,10 @@ OK, that was a joke. But for real, when you feel Firefly III made your life bett
 
 Firefly III is sponsored by TestMu AI. Their support allows me to test Firefly III more easily and introduce even fewer bugs with every release.
 
-Browser testing via:
+Browser testing via TestMu AI:
 
 <a href="https://www.testmuai.com/?utm_source=fireflyiii&utm_medium=sponsor" target="_blank">
-<img src=".github/assets/img/testmu.png" alt="Testmu" style="vertical-align: middle;" width="250" />
+<img src=".github/assets/img/testmu.png" alt="TestMu AI" style="vertical-align: middle;" width="250" />
 </a>
 
 <!-- END OF SPONSOR TEXT -->
