@@ -50,6 +50,7 @@ let create = function () {
     return {
         // transactions are stored in "entries":
         entries: [],
+        i18next: null,
 
         // state of the form is stored in formState:
         formStates: {
@@ -335,6 +336,7 @@ let create = function () {
 
         init() {
             console.log('init()');
+            this.i18next = i18next;
             this.addSplit();
 
             // load currencies and save in form data.

@@ -18,6 +18,9 @@
                     <!-- DESTINATION ACCOUNT -->
                     @include('partials.form.transaction.destination-account')
 
+                    <!-- DETECTED TRANSACTION TYPE -->
+                    @include('partials.form.transaction.transaction-type')
+
                     <!-- DATE AND TIME -->
                     @include('partials.form.transaction.date-time')
                 </div>

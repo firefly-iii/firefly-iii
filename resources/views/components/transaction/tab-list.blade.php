@@ -21,9 +21,7 @@
                 </li>
             </template>
             <li class="nav-item" role="presentation">
-                <button class="nav-link" type="button" role="tab" @click="addSplit()"
-                ><em class="bi bi-plus-circle"></em>
-                </button>
+                <button class="nav-link" type="button" role="tab" @click="addSplit()"><em class="bi bi-plus-circle"></em></button>
             </li>
             <li class="nav-item">
                 <a class="nav-link disabled" aria-disabled="true">
