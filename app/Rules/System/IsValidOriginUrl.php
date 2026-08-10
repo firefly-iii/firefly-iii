@@ -26,8 +26,8 @@ namespace FireflyIII\Rules\System;
 
 use Closure;
 use Illuminate\Contracts\Validation\ValidationRule;
-use Safe\Exceptions\UrlException;
 use Override;
+use Safe\Exceptions\UrlException;
 
 use function Safe\parse_url;
 
