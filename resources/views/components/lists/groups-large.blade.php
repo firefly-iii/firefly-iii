@@ -88,11 +88,10 @@
             @if(($showCategory ?? false) || $showBudget ?? false)
                 <td colspan="5" class="top-light-border">&nbsp;</td>
             @else
-                <td colspan="4" class="top-light-border">&nbsp;b</td>
+                <td colspan="4" class="top-light-border">&nbsp;</td>
             @endif
         <td class="top-light-border d-xs-none text-end">
             <div class=""> <!-- d-none ? -->
-
                 <button class="btn btn-sm btn-outline-secondary dropdown-toggle" type="button" id="group_menu_{{ $group['id'] }}" data-bs-toggle="dropdown" aria-expanded="false">{{ __('firefly.actions') }} <span class="caret"></span></button>
                 <ul class="dropdown-menu" aria-labelledby="group_menu_{{ $group['id'] }}">
                     <li><a class="dropdown-item" href="{{ route('transactions.edit', [$group['id']]) }}?_from={{ urlencode($FF3_FROM) }}"><span class="bi bi-pencil"></span> {{ __('firefly.edit') }}</a></li>
@@ -123,6 +122,9 @@
             @endif
             @if(1 === $group['count'])
                 <a href="{{ route('transactions.show', [$group['id']]) }}" title="{{ $transaction['description'] }}">
+            @endif
+            @if($group['count'] > 1)
+                &nbsp;&nbsp;&nbsp;&nbsp;
             @endif
                 {{ $transaction['description'] }}
             @if(1 === $group['count'])
