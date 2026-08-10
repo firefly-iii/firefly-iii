@@ -82,35 +82,28 @@ jobs:
           php-version: ${{ github.event.inputs.phpversion || '8.5' }}
           extensions: mbstring, intl, zip, bcmath
       - name: Lint PHP
-        if: ${{ inputs.quick != true }}
+        if: ${{ inputs.ccc != true }}
         run: |
-          if [[ "$quick" == true ]]; then
-            echo "Will NOT run PHP lint"
+          echo "Will run PHP lint!"
+          php_lint_file()
+          {
+              local php_file="$1"
+              php -l "$php_file" &> /dev/null
+              if [ "$?" -ne 0 ]
+              then
+                  echo -e "[FAIL] $php_file"
+                  return 1
+              fi
+          }
+
+          export -f php_lint_file
+
+          find . -path ./vendor -prune -o -name '*.php' | parallel -j 4 php_lint_file {}
+
+          if [ "$?" -ne 0 ]
+          then
+              exit 1
           fi
-          if [[ "$quick" == false ]]; then
-            echo "Will run PHP lint!"
-            php_lint_file()
-            {
-                local php_file="$1"
-                php -l "$php_file" &> /dev/null
-                if [ "$?" -ne 0 ]
-                then
-                    echo -e "[FAIL] $php_file"
-                    return 1
-                fi
-            }
-
-            export -f php_lint_file
-
-            find . -path ./vendor -prune -o -name '*.php' | parallel -j 4 php_lint_file {}
-
-            if [ "$?" -ne 0 ]
-            then
-                exit 1
-            fi
-          fi
-        env:
-          quick: ${{ inputs.quick || false }}
       - name: Code cleanup
         id: code-cleanup
         if: ${{ inputs.quick != true }}
@@ -147,7 +140,6 @@ jobs:
           rm .env
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          quick: ${{ inputs.quick || false }}
       - name: Lint Blade templates
         if: ${{ inputs.quick != true }}
         run: |
@@ -155,8 +147,6 @@ jobs:
           cp .env.example .env
           php artisan blade:lint
           rm .env
-        env:
-          quick: ${{ inputs.quick || false }}
       - name: Crowdin action
         if: ${{ inputs.quick != true }}
         uses: crowdin/github-action@v2
@@ -181,7 +171,6 @@ jobs:
       - name: Build JS
         run: |
           npm install
-          npm run prod --workspace=v1 --verbose
           npm run build --workspace=v3 --verbose
           npm update
       - name: Cleanup changelog
