@@ -46,6 +46,7 @@ let edit = function () {
             this.downloadAdministration(administrationId);
         },
         downloadAdministration: function (id) {
+            // TODO use API code.
             axios.get("./api/v1/user-groups/" + id).then((response) => {
                 let current = response.data.data;
                 this.administration = {
@@ -77,6 +78,7 @@ let edit = function () {
             };
 
             // post!
+            // TODO use API code.
             axios.put('./api/v1/user-groups/' + this.administration.id, data).then((response) => {
                 let administrationId = parseInt(response.data.data.id);
                 window.location.href = './administrations?user_group_id=' + administrationId + '&message=updated';

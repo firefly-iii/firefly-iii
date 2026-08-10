@@ -35,6 +35,7 @@ let index = function () {
         },
 
         downloadAdministrations: function (page) {
+            // TODO use API endpoint.
             axios.get("./api/v1/user-groups?page=" + page).then((response) => {
                 for (let i in response.data.data) {
                     if (response.data.data.hasOwnProperty(i)) {

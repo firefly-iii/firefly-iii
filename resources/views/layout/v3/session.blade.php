@@ -337,7 +337,7 @@
     type="text/javascript" nonce="{{ $JS_NONCE }}"></script>
 
 {{-- Base script: jquery and bootstrap --}}
-<script src="v1/js/app.js?v={{ $FF_BUILD_TIME }}" type="text/javascript" nonce="{{ $JS_NONCE }}"></script>
+<script src="v1/lib/jquery-4.0.0.min.js?v={{ $FF_BUILD_TIME }}" type="text/javascript" nonce="{{ $JS_NONCE }}"></script>
 
 {{-- introduction --}}
 @if(!$shownDemo)
