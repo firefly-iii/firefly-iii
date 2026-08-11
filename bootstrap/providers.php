@@ -53,6 +53,7 @@ return [
     // own stuff:
     PragmaRX\Google2FALaravel\ServiceProvider::class,
     ServiceProvider::class,
+    Intervention\Image\Laravel\ServiceProvider::class,
 
     // More service providers.
     AccountServiceProvider::class,

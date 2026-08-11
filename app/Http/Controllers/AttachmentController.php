@@ -32,6 +32,7 @@ use Illuminate\Contracts\View\Factory;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response as LaravelResponse;
+use Illuminate\Support\Facades\Storage;
 use Illuminate\View\View;
 
 /**
@@ -95,27 +96,14 @@ final class AttachmentController extends Controller
      *
      * @throws FireflyException
      */
-    public function download(Attachment $attachment)
+    public function download(Attachment $attachment): RedirectResponse|View
     {
         if ($this->repository->exists($attachment)) {
-            $content  = $this->repository->getContent($attachment);
-            $quoted   = sprintf('"%s"', addcslashes(basename($attachment->filename), '"\\'));
+            $url = Storage::disk('upload')->temporaryUrl($attachment->fileName(), now()->addMinutes(10), [
+                'ResponseContentDisposition' => 'attachment; filename="'.addcslashes($attachment->filename, '"\\').'"',
+            ]);
 
-            /** @var LaravelResponse $response */
-            $response = response($content);
-            $response
-                ->header('Content-Description', 'File Transfer')
-                ->header('Content-Type', 'application/octet-stream')
-                ->header('Content-Disposition', 'attachment; filename='.$quoted)
-                ->header('Content-Transfer-Encoding', 'binary')
-                ->header('Connection', 'Keep-Alive')
-                ->header('Expires', '0')
-                ->header('Cache-Control', 'must-revalidate, post-check=0, pre-check=0')
-                ->header('Pragma', 'public')
-                ->header('Content-Length', (string) strlen($content))
-            ;
-
-            return $response;
+            return redirect()->away($url);
         }
         $message = 'Could not find the indicated attachment. The file is no longer there.';
 
@@ -187,29 +175,15 @@ final class AttachmentController extends Controller
      *
      * @throws FireflyException
      */
-    public function view(Attachment $attachment): LaravelResponse|View
+    public function view(Attachment $attachment): RedirectResponse|View
     {
         if ($this->repository->exists($attachment)) {
-            $content = $this->repository->getContent($attachment);
-
-            // prevent XSS by adding a new secure header.
-            $csp     = [
-                "default-src 'none'",
-                "object-src 'none'",
-                "script-src 'none'",
-                "style-src 'self' 'unsafe-inline'",
-                "base-uri 'none'",
-                "font-src 'none'",
-                "connect-src 'none'",
-                "img-src 'self'",
-                "manifest-src 'none'",
-            ];
-
-            return response()->make($content, 200, [
-                'Content-Security-Policy' => implode('; ', $csp),
-                'Content-Type'            => $attachment->mime,
-                'Content-Disposition'     => 'inline; filename="'.$attachment->filename.'"',
+            $url = Storage::disk('upload')->temporaryUrl($attachment->fileName(), now()->addMinutes(5), [
+                'ResponseContentDisposition' => 'inline; filename="'.addcslashes($attachment->filename, '"\\').'"',
+                'ResponseContentType'        => $attachment->mime,
             ]);
+
+            return redirect()->away($url);
         }
 
         $message = 'Could not find the indicated attachment. The file is no longer there.';

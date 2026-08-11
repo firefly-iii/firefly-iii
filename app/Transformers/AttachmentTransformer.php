@@ -26,6 +26,7 @@ namespace FireflyIII\Transformers;
 
 use FireflyIII\Models\Attachment;
 use FireflyIII\Repositories\Attachment\AttachmentRepositoryInterface;
+use Illuminate\Support\Facades\Storage;
 
 /**
  * Class AttachmentTransformer
@@ -57,7 +58,9 @@ class AttachmentTransformer extends AbstractTransformer
             'attachable_type' => str_replace('FireflyIII\Models\\', '', $attachment->attachable_type),
             'hash'            => $attachment->md5,
             'filename'        => $attachment->filename,
-            'download_url'    => route('api.v1.attachments.download', [$attachment->id]),
+            'download_url'    => Storage::disk('upload')->temporaryUrl($attachment->fileName(), now()->addHours(1), [
+                'ResponseContentDisposition' => 'attachment; filename="'.addcslashes($attachment->filename, '"\\').'"',
+            ]),
             'upload_url'      => route('api.v1.attachments.upload', [$attachment->id]),
             'title'           => $attachment->title,
             'notes'           => $this->repository->getNoteText($attachment),

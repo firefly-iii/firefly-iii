@@ -26,6 +26,7 @@ namespace FireflyIII\Helpers\Attachments;
 use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Models\Attachment;
 use FireflyIII\Models\PiggyBank;
+use FireflyIII\Support\ImageConverter;
 use Illuminate\Contracts\Encryption\DecryptException;
 use Illuminate\Contracts\Filesystem\Filesystem;
 use Illuminate\Database\Eloquent\Model;
@@ -60,6 +61,8 @@ class AttachmentHelper implements AttachmentHelperInterface
 
     protected Filesystem $uploadDisk;
 
+    protected ImageConverter $imageConverter;
+
     /**
      * AttachmentHelper constructor.
      */
@@ -71,6 +74,7 @@ class AttachmentHelper implements AttachmentHelperInterface
         $this->messages      = new MessageBag();
         $this->attachments   = new Collection();
         $this->uploadDisk    = Storage::disk('upload');
+        $this->imageConverter = app(ImageConverter::class);
     }
 
     /**
@@ -175,12 +179,23 @@ class AttachmentHelper implements AttachmentHelperInterface
         $parts                = explode('/', $attachment->fileName());
         $file                 = $parts[count($parts) - 1];
         Log::debug(sprintf('Write file to disk in file named "%s"', $file));
-        $this->uploadDisk->put($file, $content);
+
+        // Convert image to WebP if applicable before storing.
+        [$content, $convertedMime, $convertedSize] = $this->imageConverter->convertToWebP($content, $mime);
+        if ($convertedMime !== $mime) {
+            Log::debug(sprintf('Converted %s to %s.', $mime, $convertedMime));
+            $mime                 = $convertedMime;
+            $attachment->filename = $this->replaceExtension($attachment->filename, 'webp');
+        }
+
+        $this->uploadDisk->put($file, $content, [
+            'ContentType' => $mime,
+        ]);
 
         // update attachment.
-        $attachment->md5      = md5_file($path);
+        $attachment->md5      = md5($content);
         $attachment->mime     = $mime;
-        $attachment->size     = strlen($content);
+        $attachment->size     = $convertedSize;
         $attachment->uploaded = true;
         $attachment->save();
 
@@ -295,8 +310,19 @@ class AttachmentHelper implements AttachmentHelperInterface
             $content              = (string) $fileObject->fread($file->getSize());
             Log::debug(sprintf('Full file length is %d and upload size is %d.', strlen($content), $file->getSize()));
 
+            // Convert image to WebP if applicable.
+            [$content, $convertedMime, $convertedSize] = $this->imageConverter->convertToWebP($content, $attachment->mime);
+            if ($convertedMime !== $attachment->mime) {
+                Log::debug(sprintf('Converted %s to %s.', $attachment->mime, $convertedMime));
+                $attachment->mime     = $convertedMime;
+                $attachment->size     = $convertedSize;
+                $attachment->filename = $this->replaceExtension($attachment->filename, 'webp');
+            }
+
             // store it without encryption.
-            $this->uploadDisk->put($attachment->fileName(), $content);
+            $this->uploadDisk->put($attachment->fileName(), $content, [
+                'ContentType' => $attachment->mime,
+            ]);
             $attachment->uploaded = true; // update attachment
             $attachment->save();
             $this->attachments->push($attachment);
@@ -376,5 +402,18 @@ class AttachmentHelper implements AttachmentHelperInterface
         }
 
         return $result;
+    }
+
+    /**
+     * Replace the file extension in a filename.
+     */
+    private function replaceExtension(string $filename, string $newExt): string
+    {
+        $parts = pathinfo($filename);
+        if (isset($parts['extension'])) {
+            return $parts['filename'].'.'.$newExt;
+        }
+
+        return $filename.'.'.$newExt;
     }
 }

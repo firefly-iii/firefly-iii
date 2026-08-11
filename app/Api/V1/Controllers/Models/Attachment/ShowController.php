@@ -36,6 +36,7 @@ use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Response as LaravelResponse;
 use Illuminate\Pagination\LengthAwarePaginator;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Storage;
 use League\Fractal\Pagination\IlluminatePaginatorAdapter;
 use League\Fractal\Resource\Collection as FractalCollection;
 use League\Fractal\Resource\Item;
@@ -73,7 +74,7 @@ final class ShowController extends Controller
      *
      * @throws FireflyException
      */
-    public function download(Attachment $attachment): LaravelResponse
+    public function download(Attachment $attachment): JsonResponse
     {
         if (true === auth()->user()->hasRole('demo')) {
             Log::channel('audit')->warning(sprintf('Demo user tries to access attachment API in %s', __METHOD__));
@@ -87,27 +88,11 @@ final class ShowController extends Controller
             throw new FireflyException('200000: File has not been uploaded (yet).');
         }
         if ($this->repository->exists($attachment)) {
-            $content  = $this->repository->getContent($attachment);
-            if ('' === $content) {
-                throw new FireflyException('200002: File is empty (zero bytes).');
-            }
-            $quoted   = sprintf('"%s"', addcslashes(basename($attachment->filename), '"\\'));
+            $url = Storage::disk('upload')->temporaryUrl($attachment->fileName(), now()->addHours(1), [
+                'ResponseContentDisposition' => 'attachment; filename="'.addcslashes($attachment->filename, '"\\').'"',
+            ]);
 
-            /** @var LaravelResponse $response */
-            $response = response($content);
-            $response
-                ->header('Content-Description', 'File Transfer')
-                ->header('Content-Type', 'application/octet-stream')
-                ->header('Content-Disposition', 'attachment; filename='.$quoted)
-                ->header('Content-Transfer-Encoding', 'binary')
-                ->header('Connection', 'Keep-Alive')
-                ->header('Expires', '0')
-                ->header('Cache-Control', 'must-revalidate, post-check=0, pre-check=0')
-                ->header('Pragma', 'public')
-                ->header('Content-Length', (string) strlen($content))
-            ;
-
-            return $response;
+            return response()->json(['data' => ['download_url' => $url]]);
         }
 
         throw new FireflyException('200003: File does not exist.');

@@ -59,11 +59,29 @@ return [
         ],
 
         // local storage configuration for upload and export:
-        'upload'    => [
+        'upload'       => [
+            'driver'                  => 's3',
+            'key'                     => env('MEGA_S4_KEY'),
+            'secret'                  => env('MEGA_S4_SECRET'),
+            'region'                  => env('MEGA_S4_REGION', 'ap-tokyo'),
+            'bucket'                  => env('MEGA_S4_BUCKET', 'firefly'),
+            'url'                     => env('MEGA_S4_URL'),
+            'endpoint'                => env('MEGA_S4_ENDPOINT'),
+            'use_path_style_endpoint' => true,
+            'visibility'              => 'private',
+            'throw'                   => true,
+            'options'                 => [
+                'http' => [
+                    'connect_timeout' => 5,
+                    'timeout'         => 15,
+                ],
+            ],
+        ],
+        'local_upload' => [
             'driver' => 'local',
             'root'   => storage_path('upload'),
         ],
-        'export'    => [
+        'export'       => [
             'driver' => 'local',
             'root'   => storage_path('export'),
         ],
