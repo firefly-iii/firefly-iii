@@ -206,7 +206,22 @@ class BillRepository implements BillRepositoryInterface, UserGroupInterface
 
     public function getBillsForAccounts(Collection $accounts): Collection
     {
-        $fields = ['bills.id', 'bills.created_at', 'bills.updated_at', 'bills.deleted_at', 'bills.user_id', 'bills.name', 'bills.amount_min', 'bills.amount_max', 'bills.date', 'bills.transaction_currency_id', 'bills.repeat_freq', 'bills.skip', 'bills.automatch', 'bills.active',];
+        $fields = [
+            'bills.id',
+            'bills.created_at',
+            'bills.updated_at',
+            'bills.deleted_at',
+            'bills.user_id',
+            'bills.name',
+            'bills.amount_min',
+            'bills.amount_max',
+            'bills.date',
+            'bills.transaction_currency_id',
+            'bills.repeat_freq',
+            'bills.skip',
+            'bills.automatch',
+            'bills.active',
+        ];
         $ids    = $accounts->pluck('id')->toArray();
 
         return $this->user->bills()
