@@ -75,8 +75,9 @@ let create = function () {
 
         // form data (except transactions) is stored in formData
         formData: {
-            primaryCurrency: null,
-            defaultCurrency: null,
+            // primaryCurrency: null,
+            // defaultCurrency: null,
+            amountCurrency: null, // this is the currency of the amount field
             enabledCurrencies: [],
             primaryCurrencies: [],
             foreignCurrencies: [],
@@ -164,7 +165,7 @@ let create = function () {
                 // this also locks the amount into the amount of the source account
                 // and the foreign amount (if different) in that of the destination account.
                 console.log('filter down currencies for transfer.');
-                this.filterPrimaryCurrencies(this.entries[0].source_account.currency_code);
+                this.determineAmountCurrency(this.entries[0].source_account.currency_code);
                 this.filterForeignCurrencies(this.entries[0].destination_account.currency_code);
                 this.disableSplitAccounts();
                 return;
@@ -173,22 +174,21 @@ let create = function () {
             if ('Asset account' === sourceType && ['Expense account', 'Debt', 'Loan', 'Mortgage'].includes(destType)) {
                 this.groupProperties.transactionType = 'withdrawal';
                 console.log('[a] Transaction type is detected to be "' + this.groupProperties.transactionType + '".');
-                this.filterPrimaryCurrencies(this.entries[0].source_account.currency_code);
+                this.determineAmountCurrency(this.entries[0].source_account.currency_code);
                 this.disableSplitAccounts();
                 return;
             }
             if ('Asset account' === sourceType && 'unknown' === destType) {
                 this.groupProperties.transactionType = 'withdrawal';
                 console.log('[b] Transaction type is detected to be "' + this.groupProperties.transactionType + '".');
-                console.log(this.entries[0].source_account);
-                this.filterPrimaryCurrencies(this.entries[0].source_account.currency_code);
+                this.determineAmountCurrency(this.entries[0].source_account.currency_code);
                 this.disableSplitAccounts();
                 return;
             }
             if (['Debt', 'Loan', 'Mortgage'].includes(sourceType) && 'Expense account' === destType) {
                 this.groupProperties.transactionType = 'withdrawal';
                 console.log('[c] Transaction type is detected to be "' + this.groupProperties.transactionType + '".');
-                this.filterPrimaryCurrencies(this.entries[0].source_account.currency_code);
+                this.determineAmountCurrency(this.entries[0].source_account.currency_code);
                 this.disableSplitAccounts();
                 return;
             }
@@ -198,11 +198,13 @@ let create = function () {
                 this.groupProperties.transactionType = 'deposit';
                 console.log('Transaction type is detected to be "' + this.groupProperties.transactionType + '".');
                 this.disableSplitAccounts();
+                this.determineAmountCurrency(this.entries[0].destination_account.currency_code);
                 return;
             }
             if ('unknown' === sourceType && ['Asset account', 'Debt', 'Loan', 'Mortgage'].includes(destType)) {
                 this.groupProperties.transactionType = 'deposit';
                 console.log('Transaction type is detected to be "' + this.groupProperties.transactionType + '".');
+                this.determineAmountCurrency(this.entries[0].destination_account.currency_code);
                 this.disableSplitAccounts();
                 return;
             }
@@ -210,12 +212,14 @@ let create = function () {
                 this.groupProperties.transactionType = 'deposit';
                 console.warn('FORCE transaction type to be "' + this.groupProperties.transactionType + '".');
                 this.entries[0].source_account.id = '';
+                this.determineAmountCurrency(this.entries[0].destination_account.currency_code);
                 this.disableSplitAccounts();
                 return;
             }
             if (['Debt', 'Loan', 'Mortgage'].includes(sourceType) && 'Asset account' === destType) {
                 this.groupProperties.transactionType = 'deposit';
                 console.log('Transaction type is detected to be "' + this.groupProperties.transactionType + '".');
+                this.determineAmountCurrency(this.entries[0].destination_account.currency_code);
                 this.disableSplitAccounts();
                 return;
             }
@@ -261,7 +265,7 @@ let create = function () {
             }
         },
 
-        filterPrimaryCurrencies(code) {
+        determineAmountCurrency(code) {
             let list = [];
             let currency;
             for (let i in this.formData.enabledCurrencies) {
@@ -273,12 +277,13 @@ let create = function () {
                 }
             }
             list.push(currency);
-            this.formData.primaryCurrencies = list;
-
-            // this also forces the currency_code on ALL entries.
-            for (let i in this.entries) {
-                if (this.entries.hasOwnProperty(i)) {
-                    this.entries[i].currency_code = code;
+            if(1 === list.length) {
+                this.formData.amountCurrency = list[0];
+                // this also forces the currency_code on ALL entries.
+                for (let i in this.entries) {
+                    if (this.entries.hasOwnProperty(i)) {
+                        this.entries[i].currency_code = code;
+                    }
                 }
             }
         },
@@ -342,8 +347,7 @@ let create = function () {
             // load currencies and save in form data.
             loadCurrencies().then(data => {
                 this.formStates.loadingCurrencies = false;
-                this.formData.primaryCurrency = data.primaryCurrency;
-                this.formData.defaultCurrency = data.defaultCurrency;
+                this.formData.amountCurrency = data.primaryCurrency;
                 this.formData.enabledCurrencies = data.enabledCurrencies;
                 this.formData.primaryCurrencies = data.primaryCurrencies;
                 this.formData.foreignCurrencies = data.foreignCurrencies;

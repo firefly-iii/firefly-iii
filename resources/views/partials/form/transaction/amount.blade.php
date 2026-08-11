@@ -1,23 +1,8 @@
 <div class="row mb-3">
-    <!-- select for currency -->
-    <div class="col-sm-3">
-        <!-- is loading currencies -->
-        <template x-if="formStates.loadingCurrencies">
-            <span class="form-control-plaintext"><div class="spinner-border spinner-border-sm" role="status">
-  <span class="visually-hidden">Loading...</span>
-</div></span>
-        </template>
-        <!-- is no longer loading currencies -->
-        <template x-if="!formStates.loadingCurrencies">
-            <select class="form-control" :id="'currency_code_' + index" x-model="transaction.currency_code">
-                <template x-for="currency in formData.primaryCurrencies">
-                    <option :selected="currency.id == formData.primaryCurrency.id"
-                            :label="currency.name" :value="currency.code"
-                            x-text="currency.name"></option>
-                </template>
-            </select>
-        </template>
-    </div>
+    <!-- text label for currency -->
+    <label :for="'amount_' + index"
+           class="col-sm-3 col-form-label d-none d-sm-block" x-text="formData.amountCurrency ? formData.amountCurrency.name : ''">
+    </label>
     <!-- actual amount -->
     <div class="col-sm-9">
         <input type="number" step="any" min="0"
