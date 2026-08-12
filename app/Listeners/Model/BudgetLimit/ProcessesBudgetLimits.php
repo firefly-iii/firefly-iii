@@ -1,9 +1,5 @@
 <?php
 
-
-
-
-
 /*
  * ProcessesBudgetLimits.php
  * Copyright (c) 2026 james@firefly-iii.org

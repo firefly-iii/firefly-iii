@@ -1,6 +1,5 @@
 <?php
 
-
 /*
  * 2025_09_25_175248_create_period_statistics.php
  * Copyright (c) 2026 james@firefly-iii.org
