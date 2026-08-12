@@ -1,7 +1,4 @@
 <?php
-
-declare(strict_types=1);
-
 /*
  * AccountTypeApiRequest.php
  * Copyright (c) 2025 https://github.com/ctrl-f5
@@ -21,6 +18,12 @@ declare(strict_types=1);
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
+
+
+
+declare(strict_types=1);
+
+
 
 namespace FireflyIII\Api\V1\Requests\Models\Account;
 
