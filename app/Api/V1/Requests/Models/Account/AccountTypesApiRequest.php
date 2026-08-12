@@ -1,4 +1,5 @@
 <?php
+
 /*
  * AccountTypeApiRequest.php
  * Copyright (c) 2025 https://github.com/ctrl-f5
@@ -19,11 +20,7 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-
-
 declare(strict_types=1);
-
-
 
 namespace FireflyIII\Api\V1\Requests\Models\Account;
 

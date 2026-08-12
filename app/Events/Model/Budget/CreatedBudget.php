@@ -1,9 +1,5 @@
 <?php
 
-
-
-
-
 /*
  * CreatedBudget.php
  * Copyright (c) 2026 james@firefly-iii.org
@@ -25,8 +21,6 @@
  */
 
 declare(strict_types=1);
-
-
 
 namespace FireflyIII\Events\Model\Budget;
 

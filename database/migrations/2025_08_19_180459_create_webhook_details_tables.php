@@ -1,9 +1,5 @@
 <?php
 
-
-
-
-
 /*
  * 2025_08_19_180459_create_webhook_details_tables.php
  * Copyright (c) 2026 james@firefly-iii.org
@@ -25,8 +21,6 @@
  */
 
 declare(strict_types=1);
-
-
 
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\QueryException;

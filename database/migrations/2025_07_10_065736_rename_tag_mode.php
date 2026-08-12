@@ -1,9 +1,5 @@
 <?php
 
-
-
-
-
 /*
  * 2025_07_10_065736_rename_tag_mode.php
  * Copyright (c) 2026 james@firefly-iii.org
@@ -25,8 +21,6 @@
  */
 
 declare(strict_types=1);
-
-
 
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;

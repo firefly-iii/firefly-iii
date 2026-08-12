@@ -1,6 +1,5 @@
 <?php
 
-
 /*
  * 2026_04_13_185808_migrations_04_2026.php
  * Copyright (c) 2026 james@firefly-iii.org
