@@ -7,7 +7,7 @@
     id="navigation"
     x-data="sidebar"
 >
-    <li class="nav-item">
+    <li class="nav-item search-xl">
         <form action="{{ route('search.index') }}" method="get" class="pb-2">
             <div class="form-row align-items-center">
                 <div class="col-auto">
@@ -21,6 +21,12 @@
             </div>
             </div>
         </form>
+    </li>
+    <li class="nav-item search-xs" style="display:none;">
+        <a href="{{ route('search.index') }}" class="nav-link {{ \FireflyIII\Support\Blade\Navigation::menuItemActive('search.index') }}">
+            <em class="nav-icon bi bi-search"></em>
+            <p>{{ __('firefly.search') }}</p>
+        </a>
     </li>
     <li class="nav-item">
         <a href="{{ route('index') }}" class="nav-link {{ \FireflyIII\Support\Blade\Navigation::menuItemActive('index') }}">

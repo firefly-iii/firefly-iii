@@ -73,7 +73,7 @@
 </head>
 <!--end::Head-->
 <!--begin::Body-->
-<body class="layout-fixed sidebar-mini sidebar-expand-lg bg-body-tertiary">
+<body class="layout-fixed sidebar-mini sidebar-expand-lg sidebar-without-hover bg-body-tertiary">
 {{-- this entry is in the header so it's loaded early --}}
 <script type="text/javascript" nonce="{{ $JS_NONCE }}">
     var forceDemoOff = false;
