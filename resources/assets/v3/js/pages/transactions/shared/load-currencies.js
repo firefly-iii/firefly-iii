@@ -35,7 +35,7 @@ export function loadCurrencies() {
         };
 
         returnData.foreignCurrencies.push({
-            id: 0, name: '(no foreign currency)', code: '', default: false, symbol: '', decimal_places: 2,
+            id: 0, name: '(no foreign currency)', code: '__NO_CODE__', default: false, symbol: '', decimal_places: 2,
         });
         for (let i in response.data.data) {
             if (response.data.data.hasOwnProperty(i)) {
@@ -62,6 +62,7 @@ export function loadCurrencies() {
                 }
             }
         }
+        console.log(returnData);
         return returnData;
     });
 }

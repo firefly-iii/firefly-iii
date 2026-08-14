@@ -59,7 +59,7 @@ export function parseDownloadedSplits(downloads, groupId) {
             current.amount = parseFloat(download.amount).toFixed(download.currency_decimal_places);
             current.currency_code = download.currency_code;
             if(null !== download.foreign_amount) {
-                current.forein_currency_code = download.foreign_currency_code;
+                current.foreign_currency_code = download.foreign_currency_code;
                 current.foreign_amount = parseFloat(download.foreign_amount).toFixed(download.foreign_currency_decimal_places);
             }
 

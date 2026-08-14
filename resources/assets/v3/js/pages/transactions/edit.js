@@ -49,6 +49,7 @@ const urls = getUrls();
 
 let transactions = function () {
     return {
+        i18next: null,
         // transactions are stored in "entries":
         entries: [],
         originals: [],
@@ -77,6 +78,7 @@ let transactions = function () {
         // form data (except transactions) is stored in formData
         formData: {
             primaryCurrency: null,
+            amountCurrency: null, // this is the currency of the amount field/**/
             enabledCurrencies: [],
             primaryCurrencies: [],
             foreignCurrencies: [],
@@ -112,6 +114,14 @@ let transactions = function () {
             }
             this.formBehaviour.categorySelectVisible = document.querySelector('input.ac-category').nextSibling.classList.contains('show');
         },
+        changedForeignAmount(e) {
+            const index = parseInt(e.target.dataset.index);
+            if('' === e.target.value) {
+                this.entries[index].foreign_amount = '';
+                return;
+            }
+            this.entries[index].foreign_amount = parseFloat(e.target.value);
+        },
 
         // submit the transaction form.
         // basically the same as store.js.
@@ -127,7 +137,6 @@ let transactions = function () {
                     this.entries[i].errors = defaultErrorSet();
                 }
             }
-
             // parse transaction:
             let transactions = parseFromEntries(this.entries, this.originals, this.groupProperties.transactionType);
             let submission = {
@@ -234,8 +243,6 @@ let transactions = function () {
             return formatMoney(this.groupProperties.totalAmount, this.entries[0].currency_code ?? 'EUR');
         },
         getTags(index) {
-            console.log('at get tags ' + index);
-            console.log(this.entries[index].tags);
             return this.entries[index].tags ?? [];
         },
 
@@ -250,6 +257,27 @@ let transactions = function () {
                 this.groupProperties.transactionType = data.attributes.transactions[0].type.toLowerCase();
                 this.groupProperties.title = data.attributes.group_title ?? data.attributes.transactions[0].description;
                 this.entries = parseDownloadedSplits(data.attributes.transactions, parseInt(data.id));
+
+                // set amountCurrency.
+                for(let i in this.formData.enabledCurrencies) {
+                    if(this.formData.enabledCurrencies.hasOwnProperty(i)) {
+                        if(this.formData.enabledCurrencies[i].code === this.entries[0].currency_code) {
+                            this.formData.amountCurrency = this.formData.enabledCurrencies[i];
+                            console.log('selected ' + this.formData.amountCurrency.code + ' as amount currency.');
+                        }
+                    }
+                }
+                // limit foreignCurrencies to a single one when it's a transfer
+                if('transfer' === this.groupProperties.transactionType) {
+                    this.formData.foreignCurrencies = [];
+                    for(let i in this.formData.enabledCurrencies) {
+                        if(this.formData.enabledCurrencies.hasOwnProperty(i)) {
+                            if(this.formData.enabledCurrencies[i].code === this.entries[0].forein_currency_code) {
+                                this.formData.foreignCurrencies.push(this.formData.enabledCurrencies[i]);
+                            }
+                        }
+                    }
+                }
 
                 // remove waiting thing.
                 this.notifications.wait.show = false;
@@ -287,10 +315,10 @@ let transactions = function () {
         },
 
         init() {
+            this.i18next = i18next;
             // download translations and get the transaction group.
             this.notifications.wait.show = true;
             this.notifications.wait.text = i18next.t('firefly.wait_loading_transaction');
-            this.getTransactionGroup();
 
             // load meta data.
             loadCurrencies().then(data => {
@@ -299,6 +327,7 @@ let transactions = function () {
                 this.formData.enabledCurrencies = data.enabledCurrencies;
                 this.formData.primaryCurrencies = data.primaryCurrencies;
                 this.formData.foreignCurrencies = data.foreignCurrencies;
+                this.getTransactionGroup();
             });
 
             loadBudgets(true).then(data => {

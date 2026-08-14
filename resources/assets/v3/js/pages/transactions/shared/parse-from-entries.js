@@ -77,17 +77,31 @@ export function parseFromEntries(entries, originals, transactionType) {
                 current.latitude = entry.latitude.toString();
                 current.zoom_level = entry.zoomLevel;
             }
-
+            if ('__NO_CODE__' === entry.foreign_currency_code) {
+                entry.foreign_currency_code = '';
+            }
             // if foreign amount currency code is set:
+            current.foreign_amount = null;
+            current.foreign_currency_code = null;
             if (typeof entry.foreign_currency_code !== 'undefined' && '' !== entry.foreign_currency_code.toString()) {
                 current.foreign_currency_code = entry.foreign_currency_code;
-                if (typeof entry.foreign_amount !== 'undefined' && '' !== entry.foreign_amount.toString()) {
+                console.log('There is a foreign currency code set, ', current.foreign_currency_code);
+                if (typeof entry.foreign_amount !== 'undefined' && '' !== entry.foreign_amount.toString() && 0.0 !== entry.foreign_amount) {
                     current.foreign_amount = entry.foreign_amount;
+                    console.log('There is also a foreign amount set, ', current.foreign_amount);
                 }
-                if (typeof entry.foreign_amount === 'undefined' || '' === entry.foreign_amount.toString()) {
-                    delete current.foreign_amount;
-                    delete current.foreign_currency_code;
-                }
+                // if (typeof entry.foreign_amount === 'undefined' || '' === entry.foreign_amount.toString() || 0.0 === entry.foreign_amount) {
+                //     delete current.foreign_amount;
+                //     delete current.foreign_currency_code;
+                //     current.foreign_amount = null;
+                //     current.foreign_currency_code = null;
+                //     console.log('Remove or reset foreign currency info.');
+                // }
+            }
+            if (null === current.foreign_amount || null === current.foreign_currency_code) {
+                console.log('Set both to NULL because one of them is NULL.');
+                current.foreign_amount = '0';
+                current.foreign_currency_code = '';
             }
 
             // if ID is set:
@@ -97,18 +111,18 @@ export function parseFromEntries(entries, originals, transactionType) {
             if (typeof entry.destination_account.id !== 'undefined' && '' !== entry.destination_account.id.toString()) {
                 current.destination_id = entry.destination_account.id;
             }
-            if(i > 0) {
-                if('withdrawal' === transactionType) {
+            if (i > 0) {
+                if ('withdrawal' === transactionType) {
                     // overrule source
                     current.source_id = returnArray[0].source_id;
                     current.source_name = returnArray[0].source_name;
                 }
-                if('deposit' === transactionType) {
+                if ('deposit' === transactionType) {
                     // overrule destination
                     current.destination_id = returnArray[0].destination_id;
                     current.destination_name = returnArray[0].destination_name;
                 }
-                if('transfer' === transactionType) {
+                if ('transfer' === transactionType) {
                     // overrule both
                     current.source_id = returnArray[0].source_id;
                     current.source_name = returnArray[0].source_name;

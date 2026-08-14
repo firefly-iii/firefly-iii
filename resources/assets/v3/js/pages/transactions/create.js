@@ -298,6 +298,16 @@ let create = function () {
                 }
             }
         },
+        changedForeignAmount(e) {
+            const index = parseInt(e.target.dataset.index);
+            this.entries[index].foreign_amount = parseFloat(e.target.value);
+            //this.groupProperties.totalAmount = 0;
+            // for (let i in this.entries) {
+            //     if (this.entries.hasOwnProperty(i)) {
+            //         this.groupProperties.totalAmount = this.groupProperties.totalAmount + parseFloat(this.entries[i].amount);
+            //     }
+            // }
+        },
 
         addedSplit() {
             addAllAutocompleteToForm(this.filters);
