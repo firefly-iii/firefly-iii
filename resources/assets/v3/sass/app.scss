@@ -73,8 +73,17 @@ html[data-bs-theme="dark"] .money-transfer {
 // custom Firefly III CSS
 .general-chart-error {
     height: 30px;
+    // TODO move picutre
     background: url('/v1/images/error.png') no-repeat center center;
 }
+
+// hide search.
+body.sidebar-collapse .search-xl {display:none;}
+body.sidebar-collapse .search-xs {display:block !important;}
+// show search
+
+ul.nav:nth-child(1) > li:nth-child(2)
+
 .piggy-handle {
     cursor: move;
 }
