@@ -182,9 +182,6 @@ interface GroupCollectorInterface
      */
     public function excludeForeignCurrency(TransactionCurrency $currency): self;
 
-    public function hasForeignCurrencyId(): self;
-    public function hasNoForeignCurrencyId(): self;
-
     /**
      * Limit the result to NOT a set of specific transaction groups.
      */
@@ -298,10 +295,14 @@ interface GroupCollectorInterface
      */
     public function hasAttachments(): self;
 
+    public function hasForeignCurrencyId(): self;
+
     /**
      * Has no attachments
      */
     public function hasNoAttachments(): self;
+
+    public function hasNoForeignCurrencyId(): self;
 
     public function internalReferenceContains(string $internalReference): self;
 
