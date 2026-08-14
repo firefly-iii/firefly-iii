@@ -182,6 +182,9 @@ interface GroupCollectorInterface
      */
     public function excludeForeignCurrency(TransactionCurrency $currency): self;
 
+    public function hasForeignCurrencyId(): self;
+    public function hasNoForeignCurrencyId(): self;
+
     /**
      * Limit the result to NOT a set of specific transaction groups.
      */

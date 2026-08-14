@@ -154,6 +154,7 @@ return [
         'account_is_cash'                 => ['alias' => false, 'needs_context' => false],
         'currency_is'                     => ['alias' => false, 'needs_context' => true],
         'foreign_currency_is'             => ['alias' => false, 'needs_context' => true],
+        'has_foreign_amount'             => ['alias' => false, 'needs_context' => false],
         'id'                              => ['alias' => false, 'trigger_class' => '', 'needs_context' => true],
         'journal_id'                      => ['alias' => false, 'trigger_class' => '', 'needs_context' => true],
         'recurrence_id'                   => ['alias' => false, 'trigger_class' => '', 'needs_context' => true],

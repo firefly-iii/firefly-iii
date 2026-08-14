@@ -104,6 +104,24 @@ trait AmountCollection
         return $this;
     }
 
+    public function hasForeignCurrencyId(): GroupCollectorInterface
+    {
+        $this->query->where(static function (EloquentBuilder $q): void {
+            $q->whereNotNull('source.foreign_currency_id');
+        });
+
+        return $this;
+    }
+
+    public function hasNoForeignCurrencyId(): GroupCollectorInterface
+    {
+        $this->query->where(static function (EloquentBuilder $q): void {
+            $q->whereNull('source.foreign_currency_id');
+        });
+
+        return $this;
+    }
+
     /**
      * Get transactions where the amount is less than.
      */
