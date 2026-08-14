@@ -104,24 +104,6 @@ trait AmountCollection
         return $this;
     }
 
-    public function hasForeignCurrencyId(): GroupCollectorInterface
-    {
-        $this->query->where(static function (EloquentBuilder $q): void {
-            $q->whereNotNull('source.foreign_currency_id');
-        });
-
-        return $this;
-    }
-
-    public function hasNoForeignCurrencyId(): GroupCollectorInterface
-    {
-        $this->query->where(static function (EloquentBuilder $q): void {
-            $q->whereNull('source.foreign_currency_id');
-        });
-
-        return $this;
-    }
-
     /**
      * Get transactions where the amount is less than.
      */
@@ -143,6 +125,24 @@ trait AmountCollection
         $this->query->where(static function (EloquentBuilder $q) use ($amount): void {
             $q->whereNotNull('destination.foreign_amount');
             $q->where('destination.foreign_amount', '>=', Steam::positive($amount));
+        });
+
+        return $this;
+    }
+
+    public function hasForeignCurrencyId(): GroupCollectorInterface
+    {
+        $this->query->where(static function (EloquentBuilder $q): void {
+            $q->whereNotNull('source.foreign_currency_id');
+        });
+
+        return $this;
+    }
+
+    public function hasNoForeignCurrencyId(): GroupCollectorInterface
+    {
+        $this->query->where(static function (EloquentBuilder $q): void {
+            $q->whereNull('source.foreign_currency_id');
         });
 
         return $this;

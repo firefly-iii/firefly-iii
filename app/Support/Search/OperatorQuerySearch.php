@@ -2397,12 +2397,17 @@ class OperatorQuerySearch implements SearchInterface
                 $this->collector->foreignAmountIsNot($amount);
 
                 break;
+
             case 'has_foreign_amount':
                 $this->collector->hasForeignCurrencyId();
+
                 break;
+
             case '-has_foreign_amount':
                 $this->collector->hasNoForeignCurrencyId();
+
                 break;
+
             case '-amount_more':
             case 'amount_less':
                 // strip comma's, make dots.
