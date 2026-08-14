@@ -24,6 +24,7 @@ declare(strict_types=1);
 
 namespace FireflyIII\Api\V1\Controllers\Models\Transaction;
 
+use Override;
 use FireflyIII\Api\V1\Controllers\Controller;
 use FireflyIII\Api\V1\Requests\Models\Transaction\UpdateRequest;
 use FireflyIII\Events\Model\TransactionGroup\TransactionGroupEventFlags;
@@ -48,6 +49,7 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 final class UpdateController extends Controller
 {
     private TransactionGroupRepositoryInterface $groupRepository;
+    #[Override]
     protected array $acceptedRoles = [];
 
     /**

@@ -24,6 +24,7 @@ declare(strict_types=1);
 
 namespace FireflyIII\Api\V1\Controllers\Data\Bulk;
 
+use Override;
 use FireflyIII\Api\V1\Controllers\Controller;
 use FireflyIII\Api\V1\Requests\Data\Bulk\TransactionRequest;
 use FireflyIII\Enums\UserRoleEnum;
@@ -46,6 +47,7 @@ final class TransactionController extends Controller
 {
     private AccountRepositoryInterface $repository;
 
+    #[Override]
     protected array $acceptedRoles = [UserRoleEnum::MANAGE_TRANSACTIONS];
 
     public function __construct()

@@ -24,6 +24,7 @@ declare(strict_types=1);
 
 namespace FireflyIII;
 
+use Override;
 use Deprecated;
 use Exception;
 use FireflyIII\Enums\UserRoleEnum;
@@ -84,8 +85,11 @@ class User extends Authenticatable implements OAuthenticatable
     use Notifiable;
     use ReturnsIntegerIdTrait;
 
+    #[Override]
     protected $fillable = ['email', 'password', 'blocked', 'blocked_code', 'user_group_id'];
+    #[Override]
     protected $hidden   = ['password', 'remember_token'];
+    #[Override]
     protected $table    = 'users';
 
     /**
@@ -404,6 +408,7 @@ class User extends Authenticatable implements OAuthenticatable
      *
      * @param string $token
      */
+    #[Override]
     public function sendPasswordResetNotification(#[SensitiveParameter] $token): void
     {
         $ipAddress = Request::ip();
@@ -478,6 +483,7 @@ class User extends Authenticatable implements OAuthenticatable
         return $this->hasMany(Webhook::class);
     }
 
+    #[Override]
     protected function casts(): array
     {
         return ['created_at' => 'datetime', 'updated_at' => 'datetime', 'blocked' => 'boolean'];

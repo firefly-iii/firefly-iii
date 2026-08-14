@@ -24,6 +24,7 @@ declare(strict_types=1);
 
 namespace FireflyIII\Api\V1\Controllers\Autocomplete;
 
+use Override;
 use FireflyIII\Api\V1\Controllers\Controller;
 use FireflyIII\Api\V1\Requests\Autocomplete\AutocompleteApiRequest;
 use FireflyIII\Enums\UserRoleEnum;
@@ -42,6 +43,7 @@ final class PiggyBankController extends Controller
 {
     private AccountRepositoryInterface $accountRepository;
     private PiggyBankRepositoryInterface $piggyRepository;
+    #[Override]
     protected array $acceptedRoles = [UserRoleEnum::READ_PIGGY_BANKS];
 
     /**

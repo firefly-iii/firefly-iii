@@ -24,6 +24,7 @@ declare(strict_types=1);
 
 namespace FireflyIII\Api\V1\Controllers\Data\Export;
 
+use Override;
 use FireflyIII\Api\V1\Controllers\Controller;
 use FireflyIII\Api\V1\Requests\Data\Export\ExportRequest;
 use FireflyIII\Enums\UserRoleEnum;
@@ -41,6 +42,7 @@ use function Safe\date;
 final class ExportController extends Controller
 {
     private ExportDataGenerator $exporter;
+    #[Override]
     protected array $acceptedRoles = [UserRoleEnum::READ_ONLY];
 
     /**

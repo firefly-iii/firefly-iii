@@ -24,6 +24,7 @@ declare(strict_types=1);
 
 namespace FireflyIII\Api\V1\Controllers\Chart;
 
+use Override;
 use Carbon\Carbon;
 use FireflyIII\Api\V1\Controllers\Controller;
 use FireflyIII\Api\V1\Requests\DateRangeRequest;
@@ -52,6 +53,7 @@ final class BudgetController extends Controller
     use CleansChartData;
     use ValidatesUserGroupTrait;
 
+    #[Override]
     protected array $acceptedRoles = [UserRoleEnum::READ_ONLY];
 
     protected OperationsRepositoryInterface $opsRepository;

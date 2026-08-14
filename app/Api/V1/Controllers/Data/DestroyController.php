@@ -24,6 +24,7 @@ declare(strict_types=1);
 
 namespace FireflyIII\Api\V1\Controllers\Data;
 
+use Override;
 use FireflyIII\Api\V1\Controllers\Controller;
 use FireflyIII\Api\V1\Requests\Data\DestroyRequest;
 use FireflyIII\Enums\AccountTypeEnum;
@@ -58,6 +59,7 @@ final class DestroyController extends Controller
 {
     private bool $unused;
 
+    #[Override]
     protected array $acceptedRoles = [UserRoleEnum::FULL];
 
     public function __construct()

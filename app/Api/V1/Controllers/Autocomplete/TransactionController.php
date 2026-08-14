@@ -24,6 +24,7 @@ declare(strict_types=1);
 
 namespace FireflyIII\Api\V1\Controllers\Autocomplete;
 
+use Override;
 use FireflyIII\Api\V1\Controllers\Controller;
 use FireflyIII\Api\V1\Requests\Autocomplete\AutocompleteApiRequest;
 use FireflyIII\Api\V1\Requests\Autocomplete\AutocompleteTransactionApiRequest;
@@ -41,6 +42,7 @@ use Illuminate\Support\Collection;
  */
 final class TransactionController extends Controller
 {
+    #[Override]
     protected array $acceptedRoles = [UserRoleEnum::READ_ONLY];
     private TransactionGroupRepositoryInterface $groupRepository;
     private JournalRepositoryInterface $repository;

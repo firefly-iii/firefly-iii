@@ -24,6 +24,7 @@ declare(strict_types=1);
 
 namespace FireflyIII\Api\V1\Controllers\Chart;
 
+use Override;
 use FireflyIII\Api\V1\Controllers\Controller;
 use FireflyIII\Api\V1\Requests\Chart\ChartRequest;
 use FireflyIII\Enums\TransactionTypeEnum;
@@ -45,6 +46,7 @@ final class BalanceController extends Controller
     use CleansChartData;
     use CollectsAccountsFromFilter;
 
+    #[Override]
     protected array $acceptedRoles = [UserRoleEnum::READ_ONLY];
 
     private array $chartData       = [];

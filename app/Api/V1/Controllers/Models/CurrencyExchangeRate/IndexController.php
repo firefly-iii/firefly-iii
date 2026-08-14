@@ -24,6 +24,7 @@ declare(strict_types=1);
 
 namespace FireflyIII\Api\V1\Controllers\Models\CurrencyExchangeRate;
 
+use Override;
 use FireflyIII\Api\V1\Controllers\Controller;
 use FireflyIII\Enums\UserRoleEnum;
 use FireflyIII\Repositories\ExchangeRate\ExchangeRateRepositoryInterface;
@@ -42,6 +43,7 @@ final class IndexController extends Controller
 
     public const string RESOURCE_KEY = 'exchange-rates';
 
+    #[Override]
     protected array $acceptedRoles   = [UserRoleEnum::OWNER];
     private ExchangeRateRepositoryInterface $repository;
 

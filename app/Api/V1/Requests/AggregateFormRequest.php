@@ -36,6 +36,7 @@ abstract class AggregateFormRequest extends ApiRequest
      */
     protected array $requests      = [];
 
+    #[Override]
     protected array $acceptedRoles = [];
 
     #[Override]

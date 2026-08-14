@@ -24,6 +24,7 @@ declare(strict_types=1);
 
 namespace FireflyIII\Api\V1\Controllers\Data;
 
+use Override;
 use FireflyIII\Api\V1\Controllers\Controller;
 use FireflyIII\Enums\UserRoleEnum;
 use FireflyIII\Models\Account;
@@ -47,6 +48,7 @@ use Illuminate\Http\Request;
  */
 final class PurgeController extends Controller
 {
+    #[Override]
     protected array $acceptedRoles = [UserRoleEnum::FULL];
 
     public function __construct()

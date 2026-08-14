@@ -24,6 +24,7 @@ declare(strict_types=1);
 
 namespace FireflyIII\Api\V1\Controllers\Autocomplete;
 
+use Override;
 use Deprecated;
 use FireflyIII\Api\V1\Controllers\Controller;
 use FireflyIII\Api\V1\Requests\Autocomplete\AutocompleteApiRequest;
@@ -40,6 +41,7 @@ use Illuminate\Http\Request;
 final class CurrencyController extends Controller
 {
     private CurrencyRepositoryInterface $repository;
+    #[Override]
     protected array $acceptedRoles = [UserRoleEnum::READ_ONLY];
 
     /**

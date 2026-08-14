@@ -24,6 +24,7 @@ declare(strict_types=1);
 
 namespace FireflyIII\Api\V1\Controllers\Models\Transaction;
 
+use Override;
 use FireflyIII\Api\V1\Controllers\Controller;
 use FireflyIII\Api\V1\Requests\Models\Transaction\StoreRequest;
 use FireflyIII\Enums\UserRoleEnum;
@@ -52,6 +53,7 @@ final class StoreController extends Controller
 {
     use TransactionFilter;
 
+    #[Override]
     protected array $acceptedRoles = [UserRoleEnum::MANAGE_TRANSACTIONS];
     private TransactionGroupRepositoryInterface $groupRepository;
 

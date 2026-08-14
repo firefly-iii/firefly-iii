@@ -24,6 +24,7 @@ declare(strict_types=1);
 
 namespace FireflyIII\Api\V1\Controllers\Autocomplete;
 
+use Override;
 use FireflyIII\Api\V1\Controllers\Controller;
 use FireflyIII\Api\V1\Requests\Autocomplete\AutocompleteApiRequest;
 use FireflyIII\Enums\AccountTypeEnum;
@@ -46,7 +47,9 @@ final class AccountController extends Controller
     use AccountFilter;
 
     // this array only exists to test if the constructor will use it properly.
+    #[Override]
     protected array $accepts       = ['application/json', 'application/vnd.api+json'];
+    #[Override]
     protected array $acceptedRoles = [UserRoleEnum::READ_ONLY];
 
     /** @var array<int, string> */
