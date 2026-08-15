@@ -24,7 +24,6 @@ declare(strict_types=1);
 
 namespace FireflyIII\Api\V1\Controllers\Autocomplete;
 
-use Override;
 use FireflyIII\Api\V1\Controllers\Controller;
 use FireflyIII\Api\V1\Requests\Autocomplete\AutocompleteApiRequest;
 use FireflyIII\Api\V1\Requests\Autocomplete\AutocompleteTransactionApiRequest;
@@ -36,6 +35,7 @@ use FireflyIII\Repositories\TransactionGroup\TransactionGroupRepositoryInterface
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Collection;
+use Override;
 
 /**
  * Class TransactionController

@@ -24,7 +24,6 @@ declare(strict_types=1);
 
 namespace FireflyIII\Api\V1\Controllers\Autocomplete;
 
-use Override;
 use FireflyIII\Api\V1\Controllers\Controller;
 use FireflyIII\Api\V1\Requests\Autocomplete\AutocompleteApiRequest;
 use FireflyIII\Enums\UserRoleEnum;
@@ -35,6 +34,7 @@ use FireflyIII\Repositories\PiggyBank\PiggyBankRepositoryInterface;
 use FireflyIII\Support\Facades\Amount;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
+use Override;
 
 /**
  * Class PiggyBankController

@@ -24,7 +24,6 @@ declare(strict_types=1);
 
 namespace FireflyIII\Api\V1\Controllers\Models\CurrencyExchangeRate;
 
-use Override;
 use Carbon\Carbon;
 use FireflyIII\Api\V1\Controllers\Controller;
 use FireflyIII\Api\V1\Requests\Models\CurrencyExchangeRate\DestroyRequest;
@@ -37,6 +36,7 @@ use FireflyIII\Repositories\ExchangeRate\ExchangeRateRepositoryInterface;
 use FireflyIII\Support\Http\Api\ValidatesUserGroupTrait;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
+use Override;
 
 final class DestroyController extends Controller
 {

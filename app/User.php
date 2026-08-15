@@ -24,7 +24,6 @@ declare(strict_types=1);
 
 namespace FireflyIII;
 
-use Override;
 use Deprecated;
 use Exception;
 use FireflyIII\Enums\UserRoleEnum;
@@ -72,6 +71,7 @@ use Illuminate\Support\Str;
 use Laravel\Passport\Contracts\OAuthenticatable;
 use Laravel\Passport\HasApiTokens;
 use NotificationChannels\Pushover\PushoverReceiver;
+use Override;
 use SensitiveParameter;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 

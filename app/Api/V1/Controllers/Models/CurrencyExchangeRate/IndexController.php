@@ -24,7 +24,6 @@ declare(strict_types=1);
 
 namespace FireflyIII\Api\V1\Controllers\Models\CurrencyExchangeRate;
 
-use Override;
 use FireflyIII\Api\V1\Controllers\Controller;
 use FireflyIII\Enums\UserRoleEnum;
 use FireflyIII\Repositories\ExchangeRate\ExchangeRateRepositoryInterface;
@@ -33,6 +32,7 @@ use FireflyIII\Transformers\ExchangeRateTransformer;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Pagination\LengthAwarePaginator;
+use Override;
 
 /**
  * Class ShowController

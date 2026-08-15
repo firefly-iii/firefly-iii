@@ -24,7 +24,6 @@ declare(strict_types=1);
 
 namespace FireflyIII\Api\V1\Controllers\Models\Transaction;
 
-use Override;
 use FireflyIII\Api\V1\Controllers\Controller;
 use FireflyIII\Api\V1\Requests\Models\Transaction\UpdateRequest;
 use FireflyIII\Events\Model\TransactionGroup\TransactionGroupEventFlags;
@@ -41,6 +40,7 @@ use FireflyIII\User;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Facades\Log;
 use League\Fractal\Resource\Item;
+use Override;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 /**

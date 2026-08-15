@@ -24,7 +24,6 @@ declare(strict_types=1);
 
 namespace FireflyIII\Api\V1\Controllers\Chart;
 
-use Override;
 use FireflyIII\Api\V1\Controllers\Controller;
 use FireflyIII\Api\V1\Requests\Chart\ChartRequest;
 use FireflyIII\Enums\TransactionTypeEnum;
@@ -37,6 +36,7 @@ use FireflyIII\Support\Http\Api\CleansChartData;
 use FireflyIII\Support\Http\Api\CollectsAccountsFromFilter;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
+use Override;
 
 /**
  * Class BalanceController
