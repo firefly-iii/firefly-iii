@@ -90,16 +90,8 @@ export function parseFromEntries(entries, originals, transactionType) {
                     current.foreign_amount = entry.foreign_amount;
                     console.log('There is also a foreign amount set, ', current.foreign_amount);
                 }
-                // if (typeof entry.foreign_amount === 'undefined' || '' === entry.foreign_amount.toString() || 0.0 === entry.foreign_amount) {
-                //     delete current.foreign_amount;
-                //     delete current.foreign_currency_code;
-                //     current.foreign_amount = null;
-                //     current.foreign_currency_code = null;
-                //     console.log('Remove or reset foreign currency info.');
-                // }
             }
             if (null === current.foreign_amount || null === current.foreign_currency_code) {
-                console.log('Set both to NULL because one of them is NULL.');
                 current.foreign_amount = '0';
                 current.foreign_currency_code = '';
             }

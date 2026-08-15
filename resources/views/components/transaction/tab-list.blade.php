@@ -26,7 +26,7 @@
             <li class="nav-item">
                 <a class="nav-link disabled" aria-disabled="true">
                     {{ __('firefly.total') }}:
-                    <span x-text="formattedTotalAmount()"></span>
+                    <span x-text="parseTotalAmount()"></span>
                 </a>
             </li>
 

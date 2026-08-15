@@ -27,6 +27,7 @@ import {addAllAutocompleteToForm, getUrls} from "./shared/add-autocomplete.js";
 import {loadCurrencies} from "./shared/load-currencies.js";
 import {loadBudgets} from "./shared/load-budgets.js";
 import {loadPiggyBanks} from "./shared/load-piggy-banks.js";
+import {processUploadError} from "./shared/process-upload-error.js";
 import {loadSubscriptions} from "./shared/load-subscriptions.js";
 import Tags from "bootstrap5-tags";
 import i18next from "i18next";
@@ -36,6 +37,8 @@ import Put from "../../api/model/transaction/put.js";
 import {processAttachments} from "./shared/process-attachments.js";
 import {spliceErrorsIntoTransactions} from "./shared/splice-errors-into-transactions.js";
 import sidebar from "../shared/sidebar.js";
+import {disableSplitAccounts} from "./shared/disable-split-accounts.js";
+import {parseTotalAmount} from "./shared/parse-total-amount.js";
 
 // TODO upload attachments to other file
 // TODO fix two maps, perhaps disconnect from entries entirely.
@@ -49,7 +52,9 @@ const urls = getUrls();
 
 let transactions = function () {
     return {
+        // needed for translations
         i18next: null,
+
         // transactions are stored in "entries":
         entries: [],
         originals: [],
@@ -107,6 +112,17 @@ let transactions = function () {
             }
         },
 
+        // shared functions between edit/create
+        parseTotalAmount: parseTotalAmount,
+        disableSplitAccounts: disableSplitAccounts,
+        processUploadError: processUploadError,
+
+        // part of the account selection auto-complete
+        filters: {
+            source: [], destination: [],
+        },
+
+        // events in the form
         keyUpFromCategory(e) {
             if (e.key === 'Enter' && false === this.formBehaviour.categorySelectVisible) {
                 this.save();
@@ -114,111 +130,6 @@ let transactions = function () {
             }
             this.formBehaviour.categorySelectVisible = document.querySelector('input.ac-category').nextSibling.classList.contains('show');
         },
-        changedForeignAmount(e) {
-            const index = parseInt(e.target.dataset.index);
-            if('' === e.target.value) {
-                this.entries[index].foreign_amount = '';
-                return;
-            }
-            this.entries[index].foreign_amount = parseFloat(e.target.value);
-        },
-
-        // submit the transaction form.
-        // basically the same as store.js.
-        save() {
-            this.notifications.error.show = false;
-            this.notifications.success.show = false;
-            this.notifications.wait.show = false;
-            this.formStates.isSubmitting = true;
-
-            // reset all errors in the entries array:
-            for (let i in this.entries) {
-                if (this.entries.hasOwnProperty(i)) {
-                    this.entries[i].errors = defaultErrorSet();
-                }
-            }
-            // parse transaction:
-            let transactions = parseFromEntries(this.entries, this.originals, this.groupProperties.transactionType);
-            let submission = {
-                group_title: this.groupProperties.title,
-                fire_webhooks: this.formStates.webhooksButton,
-                apply_rules: this.formStates.rulesButton,
-                transactions: transactions
-            };
-
-            // catch for group title:
-            if (null === this.groupProperties.title && transactions.length > 1) {
-                submission.group_title = transactions[0].description;
-            }
-            if(1 === transactions.length) {
-                submission.group_title = null;
-            }
-
-            // submit the transaction. Multi-stage process thing going on here!
-            let putter = new Put();
-            putter.put(submission, {id: this.groupProperties.id}).then((response) => {
-                const group = response.data.data;
-
-                // submission was a success!
-                this.groupProperties.id = parseInt(group.id);
-                this.groupProperties.title = group.attributes.group_title ?? group.attributes.transactions[0].description
-
-                // process attachments, if any:
-                const attachmentCount = processAttachments(this.groupProperties.id, group.attributes.transactions);
-
-                if (attachmentCount > 0) {
-                    // if count is more than zero, system is processing transactions in the background.
-                    this.notifications.wait.show = true;
-                    this.notifications.wait.text = i18next.t('firefly.wait_attachments');
-                    return;
-                }
-
-                // if not, respond to user options:
-                this.showMessageOrRedirectUser();
-            }).catch((error) => {
-                this.formStates.isSubmitting = false;
-                if (typeof error.response !== 'undefined') {
-                    this.parseErrors(error.response.data);
-                }
-            });
-        },
-
-        // part of the account selection auto-complete
-        filters: {
-            source: [], destination: [],
-        },
-
-        addSplit() {
-            console.log('addSplit()');
-            this.entries.push(createEmptySplit());
-            this.disableSplitAccounts();
-            addAllAutocompleteToForm(this.filters);
-        },
-        addedSplit() {
-            console.log('addedSplit()');
-            this.disableSplitAccounts();
-            addAllAutocompleteToForm(this.filters);
-        },
-
-        disableSplitAccounts() {
-            if(this.entries.length > 1) {
-                // disable source and/or destination, based on account type.
-                for(let i = 1;i<this.entries.length;i++) {
-                    // disable source when withdrawal or transfer
-                    if('transfer' === this.groupProperties.transactionType || 'withdrawal' === this.groupProperties.transactionType) {
-                        this.entries[i].source_account.disabled = true;
-                        console.log('Disable source account #' + i);
-                    }
-                    // disable destination when deposit or transfer
-                    if('transfer' === this.groupProperties.transactionType || 'deposit' === this.groupProperties.transactionType) {
-                        this.entries[i].destination_account.disabled = true;
-                        console.log('Disable destination account #' + i);
-                    }
-                }
-            }
-        },
-
-        // events in the form
         changedDateTime(event) {
             console.warn('changedDateTime, event is not used');
         },
@@ -235,13 +146,6 @@ let transactions = function () {
             console.warn('changedSourceAccount, event is not used');
         },
 
-        // duplicate function but this is easier.
-        formattedTotalAmount() {
-            if (this.entries.length === 0) {
-                return formatMoney(this.groupProperties.totalAmount, 'EUR');
-            }
-            return formatMoney(this.groupProperties.totalAmount, this.entries[0].currency_code ?? 'EUR');
-        },
         getTags(index) {
             return this.entries[index].tags ?? [];
         },
@@ -417,15 +321,88 @@ let transactions = function () {
         processUpload(event) {
             this.showMessageOrRedirectUser();
         },
-        // TODO is a duplicate
-        processUploadError(event) {
+
+        changedForeignAmount(e) {
+            const index = parseInt(e.target.dataset.index);
+            if('' === e.target.value) {
+                this.entries[index].foreign_amount = '';
+                return;
+            }
+            this.entries[index].foreign_amount = parseFloat(e.target.value);
+        },
+
+        // submit the transaction form.
+        // basically the same as store.js.
+        save() {
+            this.notifications.error.show = false;
             this.notifications.success.show = false;
             this.notifications.wait.show = false;
-            this.notifications.error.show = true;
-            this.formStates.isSubmitting = false;
-            this.notifications.error.text = i18next.t('firefly.errors_upload');
-            console.error(event);
+            this.formStates.isSubmitting = true;
+
+            // reset all errors in the entries array:
+            for (let i in this.entries) {
+                if (this.entries.hasOwnProperty(i)) {
+                    this.entries[i].errors = defaultErrorSet();
+                }
+            }
+            // parse transaction:
+            let transactions = parseFromEntries(this.entries, this.originals, this.groupProperties.transactionType);
+            let submission = {
+                group_title: this.groupProperties.title,
+                fire_webhooks: this.formStates.webhooksButton,
+                apply_rules: this.formStates.rulesButton,
+                transactions: transactions
+            };
+
+            // catch for group title:
+            if (null === this.groupProperties.title && transactions.length > 1) {
+                submission.group_title = transactions[0].description;
+            }
+            if(1 === transactions.length) {
+                submission.group_title = null;
+            }
+
+            // submit the transaction. Multi-stage process thing going on here!
+            let putter = new Put();
+            putter.put(submission, {id: this.groupProperties.id}).then((response) => {
+                const group = response.data.data;
+
+                // submission was a success!
+                this.groupProperties.id = parseInt(group.id);
+                this.groupProperties.title = group.attributes.group_title ?? group.attributes.transactions[0].description
+
+                // process attachments, if any:
+                const attachmentCount = processAttachments(this.groupProperties.id, group.attributes.transactions);
+
+                if (attachmentCount > 0) {
+                    // if count is more than zero, system is processing transactions in the background.
+                    this.notifications.wait.show = true;
+                    this.notifications.wait.text = i18next.t('firefly.wait_attachments');
+                    return;
+                }
+
+                // if not, respond to user options:
+                this.showMessageOrRedirectUser();
+            }).catch((error) => {
+                this.formStates.isSubmitting = false;
+                if (typeof error.response !== 'undefined') {
+                    this.parseErrors(error.response.data);
+                }
+            });
         },
+
+        addSplit() {
+            console.log('addSplit()');
+            this.entries.push(createEmptySplit());
+            this.disableSplitAccounts();
+            addAllAutocompleteToForm(this.filters);
+        },
+        addedSplit() {
+            console.log('addedSplit()');
+            this.disableSplitAccounts();
+            addAllAutocompleteToForm(this.filters);
+        },
+
     }
 }
 

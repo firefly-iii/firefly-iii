@@ -35,8 +35,11 @@ import {loadSubscriptions} from "./shared/load-subscriptions.js";
 import {addAllAutocompleteToForm, getUrls} from "./shared/add-autocomplete.js";
 import {processAttachments} from "./shared/process-attachments.js";
 import {spliceErrorsIntoTransactions} from "./shared/splice-errors-into-transactions.js";
+import {disableSplitAccounts} from './shared/disable-split-accounts.js';
+import {parseTotalAmount} from "./shared/parse-total-amount.js";
 // import {addLocation} from "./shared/manage-locations.js";
 import i18next from "i18next";
+import {processUploadError} from "./shared/process-upload-error.js";
 // TODO fix tags
 // TODO upload attachments to other file
 // TODO fix two maps, perhaps disconnect from entries entirely.
@@ -48,9 +51,20 @@ const urls = getUrls();
 
 let create = function () {
     return {
+        // needed for translations.
+        i18next: null,
+
         // transactions are stored in "entries":
         entries: [],
-        i18next: null,
+
+        // properties for the entire transaction group
+        groupProperties: {
+            transactionType: 'unknown',
+            titleErrors: [],
+            title: null,
+            id: null,
+            totalAmount: 0,
+        },
 
         // state of the form is stored in formState:
         formStates: {
@@ -67,7 +81,7 @@ let create = function () {
             categorySelectVisible: false
         },
 
-        // form behavior during transaction
+        // form behavior during transaction, for shared components.
         formBehaviour: {
             formType: 'create',
             foreignCurrencyEnabled: true,
@@ -79,21 +93,14 @@ let create = function () {
             // defaultCurrency: null,
             amountCurrency: null, // this is the currency of the amount field
             enabledCurrencies: [],
-            primaryCurrencies: [],
-            foreignCurrencies: [],
+            primaryCurrencies: [], // TODO this list is not being used.
+            foreignCurrencies: [], // this is the select list for foreign currencies.
             budgets: [],
             piggyBanks: [],
             subscriptions: [],
         },
 
-        // properties for the entire transaction group
-        groupProperties: {
-            transactionType: 'unknown',
-            titleErrors: [],
-            title: null,
-            id: null,
-            totalAmount: 0,
-        },
+
 
         // notifications
         notifications: {
@@ -103,14 +110,14 @@ let create = function () {
                 show: false, text: '', url: '',
             }, wait: {
                 show: false, text: '',
-
             }
         },
 
 
         // part of the account selection auto-complete
         filters: {
-            source: [], destination: [],
+            source: [],
+            destination: [],
         },
 
         // events in the form
@@ -129,23 +136,10 @@ let create = function () {
         changedSourceAccount(event) {
             this.detectTransactionType();
         },
-        disableSplitAccounts() {
-            if(this.entries.length > 1) {
-                // disable source and/or destination, based on account type.
-                for(let i = 1;i<this.entries.length;i++) {
-                    // disable source when withdrawal or transfer
-                    if('transfer' === this.groupProperties.transactionType || 'withdrawal' === this.groupProperties.transactionType) {
-                        this.entries[i].source_account.disabled = true;
-                        console.log('Disable source account #' + i);
-                    }
-                    // disable destination when deposit or transfer
-                    if('transfer' === this.groupProperties.transactionType || 'deposit' === this.groupProperties.transactionType) {
-                        this.entries[i].destination_account.disabled = true;
-                        console.log('Disable destination account #' + i);
-                    }
-                }
-            }
-        },
+        // shared functions with edit/create transaction.
+        disableSplitAccounts: disableSplitAccounts,
+        parseTotalAmount: parseTotalAmount,
+        processUploadError: processUploadError,
 
         detectTransactionType() {
             const sourceType = this.entries[0].source_account.type ?? 'unknown';
@@ -227,12 +221,6 @@ let create = function () {
             this.disableSplitAccounts();
         },
 
-        formattedTotalAmount() {
-            if (this.entries.length === 0) {
-                return formatMoney(this.groupProperties.totalAmount, 'EUR');
-            }
-            return formatMoney(this.groupProperties.totalAmount, this.entries[0].currency_code ?? 'EUR');
-        },
 
         filterForeignCurrencies(code) {
             let list = [];
@@ -316,23 +304,6 @@ let create = function () {
         processUpload(event) {
             console.log('Now in processUpload()');
             this.showMessageOrRedirectUser();
-        },
-
-        processUploadError(event) {
-            console.log('Now in processUploadError()');
-            this.notifications.success.show = false;
-            this.notifications.wait.show = false;
-            this.notifications.error.show = true;
-            this.formStates.isSubmitting = false;
-            this.notifications.error.text = i18next.t('firefly.errors_upload');
-            console.log(event.detail.error.response.status);
-            if(413 === event.detail.error.response.status) {
-                this.notifications.error.text = i18next.t('firefly.upload_too_large');
-            }
-            // delete transaction and let user try again.
-            let del = new Delete();
-            del.delete(this.groupProperties.id);
-            // console.error(event);
         },
         clearDescription(index) {
             this.entries[index].description = '';
