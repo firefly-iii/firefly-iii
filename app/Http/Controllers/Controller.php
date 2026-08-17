@@ -193,7 +193,11 @@ abstract class Controller extends BaseController
             $from = $current['path'];
         }
         if (array_key_exists('query', $current) && '' !== $current['query']) {
-            $from .= '?'.$current['query'];
+            // parse query and remove existing _from.
+            $parts = [];
+            parse_str($current['query'], $parts);
+            unset($parts['_from']);
+            $from .= http_build_query($parts);
         }
         if (array_key_exists('fragment', $current) && '' !== $current['fragment']) {
             $from .= '#'.$current['fragment'];

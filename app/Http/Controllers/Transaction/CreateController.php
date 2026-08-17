@@ -24,10 +24,12 @@ declare(strict_types=1);
 
 namespace FireflyIII\Http\Controllers\Transaction;
 
+use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Http\Controllers\Controller;
 use FireflyIII\Models\TransactionGroup;
 use FireflyIII\Repositories\Account\AccountRepositoryInterface;
 use FireflyIII\Repositories\TransactionGroup\TransactionGroupRepositoryInterface;
+use FireflyIII\Rules\System\IsValidOriginUrl;
 use FireflyIII\Services\Internal\Update\GroupCloneService;
 use FireflyIII\Support\Facades\AppConfiguration;
 use FireflyIII\Support\Facades\Preferences;
@@ -101,6 +103,15 @@ final class CreateController extends Controller
      */
     public function create(?string $objectType): Factory|View
     {
+        // validate "from" parameter.
+        // TODO better place to do this perhaps?
+        $from = request()->get('_from');
+        $validator = validator(['_from' => $from], ['nullable', 'max:255', new IsValidOriginUrl()]);
+        if ($validator->fails()) {
+            throw new FireflyException(trans('validation.bad_url_parts'));
+        }
+
+
         Preferences::mark();
 
         $sourceId                   = (int) request()->get('source');

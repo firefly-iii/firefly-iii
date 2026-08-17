@@ -37,9 +37,15 @@ import {processAttachments} from "./shared/process-attachments.js";
 import {spliceErrorsIntoTransactions} from "./shared/splice-errors-into-transactions.js";
 import {disableSplitAccounts} from './shared/disable-split-accounts.js';
 import {parseTotalAmount} from "./shared/parse-total-amount.js";
+import {keyUpFromCategory} from "./shared/keyup-from-category.js";
+import {changedAmount} from "./shared/changed-amount.js";
+import {changedForeignAmount} from "./shared/changed-foreign-amount.js";
+import {parseErrors} from "./shared/parse-errors.js";
 // import {addLocation} from "./shared/manage-locations.js";
 import i18next from "i18next";
 import {processUploadError} from "./shared/process-upload-error.js";
+import {showMessageOrRedirectUser} from "./shared/show-message-or-redirect.js";
+import {addSplit} from "./shared/add-split.js";
 // TODO fix tags
 // TODO upload attachments to other file
 // TODO fix two maps, perhaps disconnect from entries entirely.
@@ -140,6 +146,12 @@ let create = function () {
         disableSplitAccounts: disableSplitAccounts,
         parseTotalAmount: parseTotalAmount,
         processUploadError: processUploadError,
+        keyUpFromCategory: keyUpFromCategory,
+        changedAmount: changedAmount,
+        changedForeignAmount: changedForeignAmount,
+        showMessageOrRedirectUser: showMessageOrRedirectUser,
+        parseErrors: parseErrors,
+        addSplit:addSplit,
 
         detectTransactionType() {
             const sourceType = this.entries[0].source_account.type ?? 'unknown';
@@ -276,26 +288,6 @@ let create = function () {
             }
         },
 
-        changedAmount(e) {
-            const index = parseInt(e.target.dataset.index);
-            this.entries[index].amount = parseFloat(e.target.value);
-            this.groupProperties.totalAmount = 0;
-            for (let i in this.entries) {
-                if (this.entries.hasOwnProperty(i)) {
-                    this.groupProperties.totalAmount = this.groupProperties.totalAmount + parseFloat(this.entries[i].amount);
-                }
-            }
-        },
-        changedForeignAmount(e) {
-            const index = parseInt(e.target.dataset.index);
-            this.entries[index].foreign_amount = parseFloat(e.target.value);
-            //this.groupProperties.totalAmount = 0;
-            // for (let i in this.entries) {
-            //     if (this.entries.hasOwnProperty(i)) {
-            //         this.groupProperties.totalAmount = this.groupProperties.totalAmount + parseFloat(this.entries[i].amount);
-            //     }
-            // }
-        },
 
         addedSplit() {
             addAllAutocompleteToForm(this.filters);
@@ -384,13 +376,6 @@ let create = function () {
             // destination can never be revenue account
             this.filters.destination = ['Expense account', 'Loan', 'Debt', 'Mortgage', 'Asset account'];
         },
-        keyUpFromCategory(e) {
-            if (e.key === 'Enter' && false === this.formStates.categorySelectVisible) {
-                this.save();
-                return;
-            }
-            this.formStates.categorySelectVisible = document.querySelector('input.ac-category').nextSibling.classList.contains('show');
-        },
         save() {
             this.notifications.error.show = false;
             this.notifications.success.show = false;
@@ -446,53 +431,6 @@ let create = function () {
                     this.parseErrors(error.response.data);
                 }
             });
-        },
-
-        showMessageOrRedirectUser() {
-            // disable all messages:
-            this.notifications.error.show = false;
-            this.notifications.success.show = false;
-            this.notifications.wait.show = false;
-
-            if (this.formStates.returnHereButton) {
-                this.notifications.success.show = true;
-                this.notifications.success.url = 'transactions/show/' + parseInt(this.groupProperties.id);
-                this.notifications.success.text = i18next.t('firefly.stored_journal_js', {
-                    description: this.groupProperties.title,
-                    interpolation: {escapeValue: false}
-                });
-                this.formStates.isSubmitting = false;
-                // reset group title again
-                this.groupProperties.title = null;
-
-                if (this.formStates.resetButton) {
-                    this.entries = [];
-                    this.addSplit();
-                    this.groupProperties.totalAmount = 0;
-                }
-                return;
-            }
-            window.location = 'transactions/show/' + this.groupProperties.id + '?transaction_group_id=' + this.groupProperties.id + '&message=created';
-        },
-
-        parseErrors(data) {
-            // disable all messages:
-            this.notifications.error.show = true;
-            this.notifications.success.show = false;
-            this.notifications.wait.show = false;
-            this.formStates.isSubmitting = false;
-            this.notifications.error.text = i18next.t('firefly.errors_submission_v2', {errorMessage: data.message});
-
-            if (data.hasOwnProperty('errors')) {
-                this.entries = spliceErrorsIntoTransactions(data.errors, this.entries);
-            }
-        },
-
-        addSplit() {
-            console.log('addSplit()');
-            this.entries.push(createEmptySplit());
-            this.disableSplitAccounts();
-            addAllAutocompleteToForm(this.filters);
         },
 
         removeSplit(index) {

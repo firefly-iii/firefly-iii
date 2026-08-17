@@ -34,11 +34,16 @@ import i18next from "i18next";
 import {createEmptySplit, defaultErrorSet} from "./shared/create-empty-split.js";
 import {parseFromEntries} from "./shared/parse-from-entries.js";
 import Put from "../../api/model/transaction/put.js";
+import {showMessageOrRedirectUser} from "./shared/show-message-or-redirect.js";
 import {processAttachments} from "./shared/process-attachments.js";
-import {spliceErrorsIntoTransactions} from "./shared/splice-errors-into-transactions.js";
 import sidebar from "../shared/sidebar.js";
 import {disableSplitAccounts} from "./shared/disable-split-accounts.js";
 import {parseTotalAmount} from "./shared/parse-total-amount.js";
+import {keyUpFromCategory} from "./shared/keyup-from-category.js";
+import {changedAmount} from "./shared/changed-amount.js";
+import {changedForeignAmount} from "./shared/changed-foreign-amount.js";
+import {parseErrors} from "./shared/parse-errors.js";
+import {addSplit} from "./shared/add-split.js";
 
 // TODO upload attachments to other file
 // TODO fix two maps, perhaps disconnect from entries entirely.
@@ -116,20 +121,18 @@ let transactions = function () {
         parseTotalAmount: parseTotalAmount,
         disableSplitAccounts: disableSplitAccounts,
         processUploadError: processUploadError,
+        keyUpFromCategory: keyUpFromCategory,
+        changedAmount: changedAmount,
+        changedForeignAmount: changedForeignAmount,
+        showMessageOrRedirectUser: showMessageOrRedirectUser,
+        parseErrors: parseErrors,
+        addSplit:addSplit,
 
         // part of the account selection auto-complete
         filters: {
             source: [], destination: [],
         },
 
-        // events in the form
-        keyUpFromCategory(e) {
-            if (e.key === 'Enter' && false === this.formBehaviour.categorySelectVisible) {
-                this.save();
-                return;
-            }
-            this.formBehaviour.categorySelectVisible = document.querySelector('input.ac-category').nextSibling.classList.contains('show');
-        },
         changedDateTime(event) {
             console.warn('changedDateTime, event is not used');
         },
@@ -274,61 +277,10 @@ let transactions = function () {
             });
         },
 
-        changedAmount(e) {
-            const index = parseInt(e.target.dataset.index);
-            this.entries[index].amount = parseFloat(e.target.value);
-            this.groupProperties.totalAmount = 0;
-            for (let i in this.entries) {
-                if (this.entries.hasOwnProperty(i)) {
-                    this.groupProperties.totalAmount = this.groupProperties.totalAmount + parseFloat(this.entries[i].amount);
-                }
-            }
-        },
-        // TODO is a duplicate
-        showMessageOrRedirectUser() {
-            // disable all messages:
-            this.notifications.error.show = false;
-            this.notifications.success.show = false;
-            this.notifications.wait.show = false;
 
-            if (this.formStates.returnHereButton) {
-                let title = this.groupProperties.title;
-                if('' === title) {
-                    title = this.entries[0].description;
-                }
-                this.notifications.success.show = true;
-                this.notifications.success.url = 'transactions/show/' + this.groupProperties.id;
-                this.notifications.success.text = i18next.t('firefly.updated_journal_js', {description: title});
-                this.formStates.isSubmitting = false;
-                return;
-            }
-            window.location = 'transactions/show/' + this.groupProperties.id + '?transaction_group_id=' + this.groupProperties.id + '&message=updated';
-        },
-        // TODO is a duplicate
-        parseErrors(data) {
-            // disable all messages:
-            this.notifications.error.show = true;
-            this.notifications.success.show = false;
-            this.notifications.wait.show = false;
-            this.formStates.isSubmitting = false;
-            this.notifications.error.text = i18next.t('firefly.errors_submission_v2', {errorMessage: data.message});
-
-            if (data.hasOwnProperty('errors')) {
-                this.entries = spliceErrorsIntoTransactions(data.errors, this.entries);
-            }
-        },
         // TODO is a duplicate
         processUpload(event) {
             this.showMessageOrRedirectUser();
-        },
-
-        changedForeignAmount(e) {
-            const index = parseInt(e.target.dataset.index);
-            if('' === e.target.value) {
-                this.entries[index].foreign_amount = '';
-                return;
-            }
-            this.entries[index].foreign_amount = parseFloat(e.target.value);
         },
 
         // submit the transaction form.
@@ -391,12 +343,7 @@ let transactions = function () {
             });
         },
 
-        addSplit() {
-            console.log('addSplit()');
-            this.entries.push(createEmptySplit());
-            this.disableSplitAccounts();
-            addAllAutocompleteToForm(this.filters);
-        },
+        // exclusive to edit form, used to initialize splits.
         addedSplit() {
             console.log('addedSplit()');
             this.disableSplitAccounts();
