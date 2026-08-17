@@ -153,7 +153,7 @@ final class ConfigurationController extends Controller
         $singleUser            = AppConfiguration::get('single_user_mode', true);
         $lastCheck             = AppConfiguration::get('last_update_check', 1);
         $enableExchangeRates   = AppConfiguration::get('enable_exchange_rates', config('cer.enabled'));
-        $useRunningBalance     = AppConfiguration::get('use_running_balance', true);
+        $useRunningBalance     = AppConfiguration::get('use_running_balance', config('firefly.feature_flags.running_balance_column'));
         $enableExternalMap     = AppConfiguration::get('enable_external_map', false);
         $enableExternalRates   = AppConfiguration::get('enable_external_rates', false);
         $allowWebhooks         = AppConfiguration::get('allow_webhooks', false);
