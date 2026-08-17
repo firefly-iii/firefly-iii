@@ -103,15 +103,6 @@ final class CreateController extends Controller
      */
     public function create(?string $objectType): Factory|View
     {
-        // validate "from" parameter.
-        // TODO better place to do this perhaps?
-        $from = request()->get('_from');
-        $validator = validator(['_from' => $from], ['nullable', 'max:255', new IsValidOriginUrl()]);
-        if ($validator->fails()) {
-            throw new FireflyException(trans('validation.bad_url_parts'));
-        }
-
-
         Preferences::mark();
 
         $sourceId                   = (int) request()->get('source');

@@ -26,6 +26,7 @@ namespace FireflyIII\Http\Controllers;
 use FireflyIII\Events\Model\Webhook\WebhookMessagesRequestSending;
 use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Models\TransactionCurrency;
+use FireflyIII\Rules\System\IsValidOriginUrl;
 use FireflyIII\Support\Facades\Amount;
 use FireflyIII\Support\Facades\AppConfiguration;
 use FireflyIII\Support\Facades\Preferences;
@@ -68,6 +69,7 @@ abstract class Controller extends BaseController
     protected string $monthAndDayFormat;
     protected string $monthFormat;
     protected string $redirectUrl    = '/';
+    protected string $from = '';
 
     /**
      * Controller constructor.
@@ -89,7 +91,8 @@ abstract class Controller extends BaseController
         View::share('DEMO_PASSWORD', config('firefly.demo_password'));
         View::share('FF_VERSION', config('firefly.version'));
         View::share('FF_BUILD_TIME', config('firefly.build_time'));
-        View::share('FF3_FROM', $this->getFromUrl());
+        $this->from = $this->getFromUrl();
+        View::share('FF3_FROM', $this->from);
         // this breaks when running < PHP 8.5 and is totally intentional.
         $input       = ' James is cool';
         $output      = $input
@@ -201,6 +204,11 @@ abstract class Controller extends BaseController
         }
         if (array_key_exists('fragment', $current) && '' !== $current['fragment']) {
             $from .= '#'.$current['fragment'];
+        }
+        // validate query, and give error if invalid.
+        $validator = validator(['_from' => $from], ['nullable', 'max:255', new IsValidOriginUrl()]);
+        if ($validator->fails()) {
+            throw new FireflyException(trans('validation.bad_url_parts'));
         }
 
         return $from;
