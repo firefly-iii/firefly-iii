@@ -157,7 +157,7 @@ final class ConfigurationController extends Controller
         $enableExternalMap     = AppConfiguration::get('enable_external_map', false);
         $enableExternalRates   = AppConfiguration::get('enable_external_rates', false);
         $allowWebhooks         = AppConfiguration::get('allow_webhooks', false);
-        $enableBatchProcessing = AppConfiguration::get('enable_batch_processing', false);
+        $enableBatchProcessing = AppConfiguration::get('enable_batch_processing', true);
         $validUrlProtocols     = AppConfiguration::get('valid_url_protocols', config('firefly.valid_url_protocols'));
 
         return [

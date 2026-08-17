@@ -40,7 +40,7 @@ class ProcessesNewTransactionGroup implements ShouldQueue
     {
         Log::debug(sprintf('Running event handler for %s', get_class($event)));
 
-        $setting    = AppConfiguration::get('enable_batch_processing', false)->data;
+        $setting    = AppConfiguration::get('enable_batch_processing', true)->data;
         if (true === $event->flags->batchSubmission && true === $setting) {
             Log::debug('Will do nothing for event because it is part of a batch.');
 
