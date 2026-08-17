@@ -2603,7 +2603,7 @@ return [
     'setting_enable_exchange_rates'                       => 'Enable exchange rates',
     'setting_enable_exchange_rates_explain'               => 'Firefly III has the capability of calculating exchange rates for you.',
     'setting_use_running_balance'                         => 'Use "running balance"-column and data',
-    'setting_use_running_balance_explain'                 => 'Firefly III can calculate the current running balance for you, and display this in various places. It is still slightly experimental, so disabled by default. You may need to restart your container or fire the initial command manually (see the docs).',
+    'setting_use_running_balance_explain'                 => 'Firefly III can calculate the current running balance for you, and display this in various places.',
     'setting_enable_external_map'                         => 'Use external map service',
     'setting_enable_external_map_explain'                 => 'Firefly III uses an external service to display locations. Is this OK?',
     'setting_enable_external_rates'                       => 'Download exchange rates from the web',
