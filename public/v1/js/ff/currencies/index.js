@@ -24,9 +24,43 @@
 $(function () {
     "use strict";
     $('.make_default').on('click', setDefaultCurrency);
-    $('.enable-currency').on('click', enableCurrency);
-    $('.disable-currency').on('click', disableCurrency);
+    $('.currency-toggle').on('change', toggleCurrency);
+    syncStickyOffsets();
+    $(window).on('resize', syncStickyOffsets);
 });
+
+/**
+ * Three things are stacked here: the sticky .content-header, a .currencies-header-gap-fill
+ * that plugs the natural gap below it (box border, box-body padding, ...), and the sticky
+ * table head. None of these have a fixed, hardcodable size (text wraps, viewport width
+ * varies), so measure the actual rendered layout and keep both dynamic pieces in sync with it:
+ *
+ * - The table head's `top` is set to the <table> element's own natural distance from the top
+ *   of the document. The table itself is never sticky, so its position always reflects the
+ *   true, un-stuck layout, including every bit of spacing above it however it's produced.
+ *   (Deliberately not measured by toggling the <th> cells' own `position` on and off: that
+ *   briefly un-stickies the real sticky element, which on this table produces a stale/
+ *   mispainted header until the next repaint.)
+ * - The gap-fill's height is simply the distance between .content-header's bottom edge and
+ *   that same table top -- whatever that gap is, this closes it exactly.
+ */
+function syncStickyOffsets() {
+    "use strict";
+    var mainHeaderHeight = 50; // .main-header, fixed height set in layout/default.twig
+    var $tableHead = $('.currencies-table thead th');
+    var $gapFill = $('.currencies-header-gap-fill');
+    var table = document.querySelector('.currencies-table');
+
+    if (0 === $tableHead.length || null === table) {
+        return;
+    }
+
+    var naturalDocumentTop = table.getBoundingClientRect().top + window.scrollY;
+    var contentHeaderBottom = mainHeaderHeight + $('.content-header').outerHeight();
+
+    $tableHead.css('top', naturalDocumentTop + 'px');
+    $gapFill.css('height', Math.max(0, naturalDocumentTop - contentHeaderBottom) + 'px');
+}
 
 function setDefaultCurrency(e) {
     console.log('Setting default currency');
@@ -64,12 +98,16 @@ function setDefaultCurrency(e) {
     return false;
 }
 
-function enableCurrency(e) {
-    var button = $(e.currentTarget);
-    var currencyCode = button.data('code');
+function toggleCurrency(e) {
+    var checkbox = $(e.currentTarget);
+    var currencyCode = checkbox.data('code');
+    var enabling = checkbox.prop('checked');
+
+    // lock the switch while the request is in flight so a second click can't race it.
+    checkbox.prop('disabled', true);
 
     var params = {
-        enabled: true
+        enabled: enabling
     }
 
     $.ajax({
@@ -81,36 +119,13 @@ function enableCurrency(e) {
             'X-CSRF-Token': $('meta[name="csrf-token"]').attr('content'),
         },
         error: function () {
-            window.location = redirectUrl + '?message=enable_failed&code=' + currencyCode;
+            // revert the toggle to its previous state, the request did not go through.
+            checkbox.prop('checked', !enabling);
+            checkbox.prop('disabled', false);
+            window.location = redirectUrl + '?message=' + (enabling ? 'enable_failed' : 'disable_failed') + '&code=' + currencyCode;
         },
         success: function () {
-            window.location = redirectUrl + '?message=enabled&code=' + currencyCode;
-        }
-    });
-    return false;
-}
-
-function disableCurrency(e) {
-    var button = $(e.currentTarget);
-    var currencyCode = button.data('code');
-
-    var params = {
-        enabled: false
-    }
-
-    $.ajax({
-        url: updateCurrencyUrl + '/' + currencyCode,
-        data: JSON.stringify(params),
-        type: 'PUT',
-        headers: {
-            'Content-Type': 'application/json',
-            'X-CSRF-Token': $('meta[name="csrf-token"]').attr('content'),
-        },
-        error: function () {
-            window.location = redirectUrl + '?message=disable_failed&code=' + currencyCode;
-        },
-        success: function () {
-            window.location = redirectUrl + '?message=disabled&code=' + currencyCode;
+            window.location = redirectUrl + '?message=' + (enabling ? 'enabled' : 'disabled') + '&code=' + currencyCode;
         }
     });
     return false;

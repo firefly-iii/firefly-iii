@@ -203,12 +203,23 @@ class Amount
         return $amount;
     }
 
+    /**
+     * The currencies enabled for the current user's administration (user group). This mirrors
+     * getPrimaryCurrency(): "enabled" is a group-level setting (see Options > Currencies and
+     * CurrencyRepository::update()), not a per-user one, so this must read from the same
+     * userGroup->currencies() relation rather than the user's own (largely unused) pivot.
+     */
     public function getCurrencies(): Collection
     {
-        /** @var User $user */
-        $user = auth()->user();
+        if (auth()->check()) {
+            /** @var User $user */
+            $user = auth()->user();
+            if (null !== $user->userGroup) {
+                return $user->userGroup->currencies()->orderBy('code', 'ASC')->get();
+            }
+        }
 
-        return $user->currencies()->orderBy('code', 'ASC')->get();
+        return new Collection([$this->getSystemCurrency()]);
     }
 
     /**

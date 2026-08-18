@@ -132,7 +132,7 @@ class CurrencyForm
         $primaryCurrency = $options['currency'] ?? app('amount')->getPrimaryCurrency();
 
         /** @var Collection $currencies */
-        $currencies      = app('amount')->getAllCurrencies();
+        $currencies      = app('amount')->getCurrencies();
         unset($options['currency'], $options['placeholder']);
 
         // perhaps the currency has been sent to us in the field $amount_currency_id_$name (amount_currency_id_amount)

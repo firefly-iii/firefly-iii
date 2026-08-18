@@ -92,7 +92,7 @@
     {% include 'partials.favicons' %}
 
 </head>
-<body class="skin-firefly-iii sidebar-mini hold-transition">
+<body class="skin-firefly-iii sidebar-mini hold-transition fixed">
 <div class="wrapper" id="app">
 
     <header class="main-header">
@@ -157,7 +157,7 @@
     <div class="content-wrapper">
         <section class="content-header">
             {% include('partials.page-header') %}
-            {% block breadcrumbs %}{% endblock %}
+            {% block header_actions %}{% endblock %}
         </section>
 
         <section class="content">

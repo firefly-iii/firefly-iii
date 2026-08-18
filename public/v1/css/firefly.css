@@ -326,3 +326,175 @@ span.twitter-typeahead {
     background-color: #428bca;
 }
 */
+
+/*
+ * The "fixed" body class (see layout/default.twig) pins the header and sidebar via
+ * AdminLTE's own CSS, but AdminLTE never constrains the sidebar's height, so without this
+ * it just extends below the viewport with no way to reach the lower nav items. Give it its
+ * own height and scrollbar instead, independent from the main content column.
+ */
+.fixed .main-sidebar {
+    height: 100vh;
+    overflow-y: auto;
+}
+
+/*
+ * AdminLTE also sets `.fixed .wrapper { overflow: hidden; }`. The actual page scroll always
+ * happens on <html> (the wrapper never grows taller than its content, so it never scrolls
+ * itself), but "hidden" still makes it a scroll container for CSS purposes, which breaks
+ * `position: sticky` on anything inside it (e.g. the currencies table header) because the
+ * sticky offset then gets measured against .wrapper instead of the real viewport.
+ */
+.fixed .wrapper {
+    overflow: visible;
+}
+
+/*
+ * Page title + breadcrumb (applies app-wide): stays visible while the page below it scrolls.
+ * Selector needs to match ".skin-firefly-iii .content-header" in specificity: the light skin
+ * stylesheet sets that background to transparent, which would otherwise win the cascade over
+ * a plain ".content-header" rule despite this file loading later. `inherit` (rather than a
+ * hardcoded colour) keeps this correct in both the light and dark skin, since .content-header
+ * is a direct child of .content-wrapper, which both skins already colour correctly.
+ */
+.skin-firefly-iii .content-header {
+    position: sticky;
+    top: 50px; /* height of the fixed .main-header, see layout/default.twig */
+    z-index: 30;
+    background-color: inherit;
+}
+
+/*
+ * Sits in .content-header's top-right corner, in the spot the (now removed) breadcrumb used
+ * to occupy. .content-header has position:relative (set by AdminLTE), so this is positioned
+ * relative to it.
+ */
+.content-header-actions {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+}
+
+/*
+ * The currencies table naturally starts a bit below .content-header's own bottom edge (the
+ * box's border-top, box-body's padding-top, etc. -- normal AdminLTE spacing used all over the
+ * app, not something worth stripping globally just for this one sticky header). Nothing
+ * sticky covers that gap on its own, so as the page scrolls, rows become briefly visible
+ * through it. This element plugs that gap: absolutely positioned against .content-header
+ * (which establishes the containing block, being position:sticky/relative), it moves with
+ * .content-header automatically and needs no sticky positioning of its own. Its height is the
+ * exact size of that gap, computed in JS (ff/currencies/index.js) since it depends on
+ * .content-header's rendered height, which varies (text wrap, viewport width).
+ */
+.currencies-header-gap-fill {
+    position: absolute;
+    left: 0;
+    right: 0;
+    top: 100%;
+    height: 0;
+    background-color: inherit; /* matches .content-header's own background, its direct parent */
+    z-index: 20;
+}
+
+/*
+ * Currencies overview table. The header's `top` offset isn't a fixed pixel value: it depends
+ * on .content-header's actual rendered height, which varies (text wrap, viewport width), so
+ * it's kept in sync by JS (ff/currencies/index.js) rather than guessed as a hardcoded value.
+ */
+.currencies-table thead th {
+    position: sticky;
+    top: 50px; /* overridden by JS once .content-header is measured */
+    z-index: 10;
+    background-color: #ffffff;
+    box-shadow: inset 0 -1px 0 #f4f4f4;
+}
+
+.currencies-table__index,
+.currencies-table__enabled,
+.currencies-table__actions {
+    text-align: center;
+    white-space: nowrap;
+}
+
+.currencies-table__index {
+    width: 48px;
+    color: #999999;
+}
+
+.currencies-table__actions {
+    width: 64px;
+}
+
+/* Toggle switch, used to enable/disable a currency. */
+.switch {
+    position: relative;
+    display: inline-block;
+    width: 40px;
+    height: 22px;
+    margin: 0;
+    cursor: pointer;
+    vertical-align: middle;
+}
+
+.switch input {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    margin: 0;
+    opacity: 0;
+    cursor: pointer;
+}
+
+.switch__track {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: #d2d6de;
+    border-radius: 999px;
+    transition: background-color 180ms ease-out;
+}
+
+.switch__track::before {
+    content: "";
+    position: absolute;
+    top: 2px;
+    left: 2px;
+    width: 18px;
+    height: 18px;
+    background-color: #ffffff;
+    border-radius: 50%;
+    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.25);
+    transition: transform 180ms cubic-bezier(0.34, 1.1, 0.64, 1);
+}
+
+.switch input:checked ~ .switch__track {
+    background-color: #00a65a;
+}
+
+.switch input:checked ~ .switch__track::before {
+    transform: translateX(18px);
+}
+
+.switch input:focus ~ .switch__track {
+    box-shadow: 0 0 0 2px rgba(0, 166, 90, 0.35);
+}
+
+.switch input:disabled ~ .switch__track {
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+
+.switch:active .switch__track::before {
+    width: 20px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .switch__track,
+    .switch__track::before {
+        transition: none;
+    }
+}
