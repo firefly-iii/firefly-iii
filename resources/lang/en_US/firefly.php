@@ -1787,6 +1787,8 @@ return [
     'currency_is_disabled'                      => 'Disabled',
     'enable_currency'                           => 'Enable',
     'disable_currency'                          => 'Disable',
+    'currency_country'                          => 'Country',
+    'currency_enabled_column'                   => 'Enabled',
     'currencies_default_disabled'               => 'Most of these currencies are disabled by default. To use them, you must enable them first.',
     'currency_is_now_enabled'                   => 'Currency ":name" has been enabled',
     'could_not_enable_currency'                 => 'Could not enable currency ":name". Please review the logs.',

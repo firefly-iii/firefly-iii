@@ -23,6 +23,7 @@ declare(strict_types=1);
 
 namespace FireflyIII\Models;
 
+use FireflyIII\Support\CurrencyCountryMap;
 use FireflyIII\Support\Models\ReturnsIntegerIdTrait;
 use FireflyIII\User;
 use Illuminate\Database\Eloquent\Casts\Attribute;
@@ -105,6 +106,17 @@ class TransactionCurrency extends Model
     {
         return Attribute::make(
             get: static fn ($value) => (int) $value,
+        );
+    }
+
+    /**
+     * Representative country label for this currency, for display only (a currency
+     * code does not map 1:1 to a country, e.g. EUR).
+     */
+    protected function countryName(): Attribute
+    {
+        return Attribute::make(
+            get: static fn ($value, array $attributes) => CurrencyCountryMap::get((string) ($attributes['code'] ?? '')),
         );
     }
 

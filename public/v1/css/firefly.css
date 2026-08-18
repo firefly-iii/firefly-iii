@@ -326,3 +326,94 @@ span.twitter-typeahead {
     background-color: #428bca;
 }
 */
+
+/* Currencies overview table. */
+.currencies-table__index,
+.currencies-table__enabled,
+.currencies-table__actions {
+    text-align: center;
+    white-space: nowrap;
+}
+
+.currencies-table__index {
+    width: 48px;
+    color: #999999;
+}
+
+.currencies-table__actions {
+    width: 64px;
+}
+
+/* Toggle switch, used to enable/disable a currency. */
+.switch {
+    position: relative;
+    display: inline-block;
+    width: 40px;
+    height: 22px;
+    margin: 0;
+    cursor: pointer;
+    vertical-align: middle;
+}
+
+.switch input {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    margin: 0;
+    opacity: 0;
+    cursor: pointer;
+}
+
+.switch__track {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: #d2d6de;
+    border-radius: 999px;
+    transition: background-color 180ms ease-out;
+}
+
+.switch__track::before {
+    content: "";
+    position: absolute;
+    top: 2px;
+    left: 2px;
+    width: 18px;
+    height: 18px;
+    background-color: #ffffff;
+    border-radius: 50%;
+    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.25);
+    transition: transform 180ms cubic-bezier(0.34, 1.1, 0.64, 1);
+}
+
+.switch input:checked ~ .switch__track {
+    background-color: #00a65a;
+}
+
+.switch input:checked ~ .switch__track::before {
+    transform: translateX(18px);
+}
+
+.switch input:focus ~ .switch__track {
+    box-shadow: 0 0 0 2px rgba(0, 166, 90, 0.35);
+}
+
+.switch input:disabled ~ .switch__track {
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+
+.switch:active .switch__track::before {
+    width: 20px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .switch__track,
+    .switch__track::before {
+        transition: none;
+    }
+}

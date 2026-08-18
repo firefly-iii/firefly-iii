@@ -22,61 +22,73 @@
                         <div style="padding-left:8px;">
                             {{ currencies.links('pagination.bootstrap-4')|raw }}
                         </div>
-                        <table class="table table-hover">
+                        <table class="table table-hover currencies-table">
                             <thead>
                             <tr>
-                                <th>&nbsp;</th>
+                                <th class="currencies-table__index">#</th>
                                 <th>{{ 'currency'|_ }}</th>
-                                <th>{{ 'number_of_decimals'|_ }}</th>
+                                <th>{{ 'currency_country'|_ }}</th>
+                                <th class="currencies-table__enabled">{{ 'currency_enabled_column'|_ }}</th>
+                                {% if isOwner %}
+                                    <th class="currencies-table__actions">{{ 'actions'|_ }}</th>
+                                {% endif %}
                             </tr>
                             </thead>
                             <tbody>
                             {% for currency in currencies %}
-                                <tr>
-                                        <td>
-                                            <div class="btn-group btn-group-xs">
-                                                {% if isOwner %}
-                                                <a class="btn btn-default" href="{{ route('currencies.edit',currency.id) }}"><span
-                                                        class="fa fa-fw fa-pencil"></span></a>
-                                                <a class="btn btn-danger" href="{{ route('currencies.delete',currency.id) }}"><span
-                                                        class="fa fa-fw fa-trash"></span></a>
-                                                {% endif %}
-                                                {# Disable the currency. #}
-                                                {% if currency.userGroupEnabled %}
-                                                    <a class="btn btn-default disable-currency" data-code="{{ currency.code }}"
-                                                       href="#">
-                                                        <span class="fa fa-fw fa-square-o"></span>
-                                                        {{ 'disable_currency'|_ }}</a>
-                                                {% endif %}
-
-                                                {# Enable the currency. #}
-                                                {% if not currency.userGroupEnabled %}
-                                                    <a class="btn btn-default enable-currency" data-code="{{ currency.code }}"
-                                                       href="#">
-                                                        <span class="fa fa-fw fa-check-square-o"></span>
-                                                        {{ 'enable_currency'|_ }}</a>
-                                                {% endif %}
-                                            </div>
-                                        </td>
+                                <tr{% if not currency.userGroupEnabled %} class="text-muted"{% endif %}>
+                                    <td class="currencies-table__index">
+                                        {{ (currencies.currentPage() - 1) * currencies.perPage() + loop.index }}
+                                    </td>
                                     <td>
-                                        {% if currency.userGroupEnabled == false %}
-                                        <span class="text-muted">
-                                        {% endif %}
-                                            {{ currency.name }} ({{ currency.code }}) ({{ currency.symbol|raw }})
+                                        {{ currency.name }} ({{ currency.code }}) ({{ currency.symbol|raw }})
                                         {% if currency.id == primaryCurrency.id %}
                                             <span class="label label-success" id="default-currency">{{ 'primary_currency_button'|_ }}</span>
                                         {% endif %}
-                                        {% if currency.userGroupEnabled == false %}
-
-                                            <span class="label label-default">{{ 'currency_is_disabled'|_ }}</span>
-                                            {% endif %}
-
-                                        {% if currency.userGroupEnabled == false %}
-                                        </span>
-                                        {% endif %}
                                     </td>
-
-                                    <td>{{ currency.decimal_places }}</td>
+                                    <td>{{ currency.country_name }}</td>
+                                    <td class="currencies-table__enabled">
+                                        <label class="switch" title="{{ (currency.userGroupEnabled ? 'disable_currency' : 'enable_currency')|_ }}">
+                                            <input type="checkbox" class="currency-toggle" data-code="{{ currency.code }}"
+                                                   {% if currency.userGroupEnabled %}checked="checked"{% endif %}>
+                                            <span class="switch__track" aria-hidden="true"></span>
+                                            <span class="sr-only">
+                                                {{ (currency.userGroupEnabled ? 'disable_currency' : 'enable_currency')|_ }}
+                                                {{ currency.code }}
+                                            </span>
+                                        </label>
+                                    </td>
+                                    {% if isOwner %}
+                                        <td class="currencies-table__actions">
+                                            <div class="btn-group">
+                                                <button type="button" class="btn btn-default btn-xs dropdown-toggle" data-toggle="dropdown"
+                                                        aria-haspopup="true" aria-expanded="false"
+                                                        title="{{ 'actions'|_ }}">
+                                                    <span class="fa fa-ellipsis-h"></span>
+                                                </button>
+                                                <ul class="dropdown-menu dropdown-menu-right" role="menu">
+                                                    {% if currency.id != primaryCurrency.id %}
+                                                        <li>
+                                                            <a href="#" class="make_default" data-code="{{ currency.code }}">
+                                                                <span class="fa fa-fw fa-star"></span> {{ 'make_default_currency'|_ }}
+                                                            </a>
+                                                        </li>
+                                                        <li class="divider"></li>
+                                                    {% endif %}
+                                                    <li>
+                                                        <a href="{{ route('currencies.edit',currency.id) }}">
+                                                            <span class="fa fa-fw fa-pencil"></span> {{ 'edit'|_ }}
+                                                        </a>
+                                                    </li>
+                                                    <li>
+                                                        <a href="{{ route('currencies.delete',currency.id) }}">
+                                                            <span class="fa fa-fw fa-trash"></span> {{ 'delete'|_ }}
+                                                        </a>
+                                                    </li>
+                                                </ul>
+                                            </div>
+                                        </td>
+                                    {% endif %}
                                 </tr>
                             {% endfor %}
                             </tbody>

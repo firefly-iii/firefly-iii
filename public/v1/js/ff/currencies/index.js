@@ -24,8 +24,7 @@
 $(function () {
     "use strict";
     $('.make_default').on('click', setDefaultCurrency);
-    $('.enable-currency').on('click', enableCurrency);
-    $('.disable-currency').on('click', disableCurrency);
+    $('.currency-toggle').on('change', toggleCurrency);
 });
 
 function setDefaultCurrency(e) {
@@ -64,12 +63,16 @@ function setDefaultCurrency(e) {
     return false;
 }
 
-function enableCurrency(e) {
-    var button = $(e.currentTarget);
-    var currencyCode = button.data('code');
+function toggleCurrency(e) {
+    var checkbox = $(e.currentTarget);
+    var currencyCode = checkbox.data('code');
+    var enabling = checkbox.prop('checked');
+
+    // lock the switch while the request is in flight so a second click can't race it.
+    checkbox.prop('disabled', true);
 
     var params = {
-        enabled: true
+        enabled: enabling
     }
 
     $.ajax({
@@ -81,36 +84,13 @@ function enableCurrency(e) {
             'X-CSRF-Token': $('meta[name="csrf-token"]').attr('content'),
         },
         error: function () {
-            window.location = redirectUrl + '?message=enable_failed&code=' + currencyCode;
+            // revert the toggle to its previous state, the request did not go through.
+            checkbox.prop('checked', !enabling);
+            checkbox.prop('disabled', false);
+            window.location = redirectUrl + '?message=' + (enabling ? 'enable_failed' : 'disable_failed') + '&code=' + currencyCode;
         },
         success: function () {
-            window.location = redirectUrl + '?message=enabled&code=' + currencyCode;
-        }
-    });
-    return false;
-}
-
-function disableCurrency(e) {
-    var button = $(e.currentTarget);
-    var currencyCode = button.data('code');
-
-    var params = {
-        enabled: false
-    }
-
-    $.ajax({
-        url: updateCurrencyUrl + '/' + currencyCode,
-        data: JSON.stringify(params),
-        type: 'PUT',
-        headers: {
-            'Content-Type': 'application/json',
-            'X-CSRF-Token': $('meta[name="csrf-token"]').attr('content'),
-        },
-        error: function () {
-            window.location = redirectUrl + '?message=disable_failed&code=' + currencyCode;
-        },
-        success: function () {
-            window.location = redirectUrl + '?message=disabled&code=' + currencyCode;
+            window.location = redirectUrl + '?message=' + (enabling ? 'enabled' : 'disabled') + '&code=' + currencyCode;
         }
     });
     return false;
