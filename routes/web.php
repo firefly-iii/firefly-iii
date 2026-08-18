@@ -1419,22 +1419,3 @@ Route::group(
     }
 );
 
-// User Group / Administrations Controller.
-Route::group(
-    ['middleware' => 'user-full-auth', 'namespace' => 'FireflyIII\Http\Controllers', 'prefix' => 'administrations', 'as' => 'administrations.'],
-    static function (): void {
-        Route::get('', ['uses' => 'UserGroup\IndexController@index', 'as' => 'index']);
-        Route::get('create', ['uses' => 'UserGroup\CreateController@create', 'as' => 'create']);
-        Route::get('edit/{userGroup}', ['uses' => 'UserGroup\EditController@edit', 'as' => 'edit']);
-        // Route::get('show/{userGroup}', ['uses' => 'UserGroup\ShowController@show', 'as' => 'show']);
-
-        //        Route::post('rescan/{bill}', ['uses' => 'Bill\ShowController@rescan', 'as' => 'rescan']);
-        //        Route::get('delete/{bill}', ['uses' => 'Bill\DeleteController@delete', 'as' => 'delete']);
-        //
-        //        Route::post('store', ['uses' => 'Bill\CreateController@store', 'as' => 'store']);
-        //        Route::post('update/{bill}', ['uses' => 'Bill\EditController@update', 'as' => 'update']);
-        //        Route::post('destroy/{bill}', ['uses' => 'Bill\DeleteController@destroy', 'as' => 'destroy']);
-        //
-        //        Route::post('set-order/{bill}', ['uses' => 'Bill\IndexController@setOrder', 'as' => 'set-order']);
-    }
-);

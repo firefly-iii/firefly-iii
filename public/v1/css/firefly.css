@@ -327,7 +327,88 @@ span.twitter-typeahead {
 }
 */
 
-/* Currencies overview table. */
+/*
+ * The "fixed" body class (see layout/default.twig) pins the header and sidebar via
+ * AdminLTE's own CSS, but AdminLTE never constrains the sidebar's height, so without this
+ * it just extends below the viewport with no way to reach the lower nav items. Give it its
+ * own height and scrollbar instead, independent from the main content column.
+ */
+.fixed .main-sidebar {
+    height: 100vh;
+    overflow-y: auto;
+}
+
+/*
+ * AdminLTE also sets `.fixed .wrapper { overflow: hidden; }`. The actual page scroll always
+ * happens on <html> (the wrapper never grows taller than its content, so it never scrolls
+ * itself), but "hidden" still makes it a scroll container for CSS purposes, which breaks
+ * `position: sticky` on anything inside it (e.g. the currencies table header) because the
+ * sticky offset then gets measured against .wrapper instead of the real viewport.
+ */
+.fixed .wrapper {
+    overflow: visible;
+}
+
+/*
+ * Page title + breadcrumb (applies app-wide): stays visible while the page below it scrolls.
+ * Selector needs to match ".skin-firefly-iii .content-header" in specificity: the light skin
+ * stylesheet sets that background to transparent, which would otherwise win the cascade over
+ * a plain ".content-header" rule despite this file loading later. `inherit` (rather than a
+ * hardcoded colour) keeps this correct in both the light and dark skin, since .content-header
+ * is a direct child of .content-wrapper, which both skins already colour correctly.
+ */
+.skin-firefly-iii .content-header {
+    position: sticky;
+    top: 50px; /* height of the fixed .main-header, see layout/default.twig */
+    z-index: 30;
+    background-color: inherit;
+}
+
+/*
+ * Sits in .content-header's top-right corner, in the spot the (now removed) breadcrumb used
+ * to occupy. .content-header has position:relative (set by AdminLTE), so this is positioned
+ * relative to it.
+ */
+.content-header-actions {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+}
+
+/*
+ * The currencies table naturally starts a bit below .content-header's own bottom edge (the
+ * box's border-top, box-body's padding-top, etc. -- normal AdminLTE spacing used all over the
+ * app, not something worth stripping globally just for this one sticky header). Nothing
+ * sticky covers that gap on its own, so as the page scrolls, rows become briefly visible
+ * through it. This element plugs that gap: absolutely positioned against .content-header
+ * (which establishes the containing block, being position:sticky/relative), it moves with
+ * .content-header automatically and needs no sticky positioning of its own. Its height is the
+ * exact size of that gap, computed in JS (ff/currencies/index.js) since it depends on
+ * .content-header's rendered height, which varies (text wrap, viewport width).
+ */
+.currencies-header-gap-fill {
+    position: absolute;
+    left: 0;
+    right: 0;
+    top: 100%;
+    height: 0;
+    background-color: inherit; /* matches .content-header's own background, its direct parent */
+    z-index: 20;
+}
+
+/*
+ * Currencies overview table. The header's `top` offset isn't a fixed pixel value: it depends
+ * on .content-header's actual rendered height, which varies (text wrap, viewport width), so
+ * it's kept in sync by JS (ff/currencies/index.js) rather than guessed as a hardcoded value.
+ */
+.currencies-table thead th {
+    position: sticky;
+    top: 50px; /* overridden by JS once .content-header is measured */
+    z-index: 10;
+    background-color: #ffffff;
+    box-shadow: inset 0 -1px 0 #f4f4f4;
+}
+
 .currencies-table__index,
 .currencies-table__enabled,
 .currencies-table__actions {

@@ -25,7 +25,42 @@ $(function () {
     "use strict";
     $('.make_default').on('click', setDefaultCurrency);
     $('.currency-toggle').on('change', toggleCurrency);
+    syncStickyOffsets();
+    $(window).on('resize', syncStickyOffsets);
 });
+
+/**
+ * Three things are stacked here: the sticky .content-header, a .currencies-header-gap-fill
+ * that plugs the natural gap below it (box border, box-body padding, ...), and the sticky
+ * table head. None of these have a fixed, hardcodable size (text wraps, viewport width
+ * varies), so measure the actual rendered layout and keep both dynamic pieces in sync with it:
+ *
+ * - The table head's `top` is set to the <table> element's own natural distance from the top
+ *   of the document. The table itself is never sticky, so its position always reflects the
+ *   true, un-stuck layout, including every bit of spacing above it however it's produced.
+ *   (Deliberately not measured by toggling the <th> cells' own `position` on and off: that
+ *   briefly un-stickies the real sticky element, which on this table produces a stale/
+ *   mispainted header until the next repaint.)
+ * - The gap-fill's height is simply the distance between .content-header's bottom edge and
+ *   that same table top -- whatever that gap is, this closes it exactly.
+ */
+function syncStickyOffsets() {
+    "use strict";
+    var mainHeaderHeight = 50; // .main-header, fixed height set in layout/default.twig
+    var $tableHead = $('.currencies-table thead th');
+    var $gapFill = $('.currencies-header-gap-fill');
+    var table = document.querySelector('.currencies-table');
+
+    if (0 === $tableHead.length || null === table) {
+        return;
+    }
+
+    var naturalDocumentTop = table.getBoundingClientRect().top + window.scrollY;
+    var contentHeaderBottom = mainHeaderHeight + $('.content-header').outerHeight();
+
+    $tableHead.css('top', naturalDocumentTop + 'px');
+    $gapFill.css('height', Math.max(0, naturalDocumentTop - contentHeaderBottom) + 'px');
+}
 
 function setDefaultCurrency(e) {
     console.log('Setting default currency');
