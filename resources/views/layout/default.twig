@@ -38,6 +38,11 @@
     {# the theme #}
     <link href="v1/lib/adminlte/css/AdminLTE.min.css?v={{ FF_VERSION }}" rel="stylesheet" type="text/css"
           nonce="{{ JS_NONCE }}">
+    {# instrument-panel design tokens: loaded before the dark/light skin blocks below so
+       instrument-panel-dark.css (inside those blocks) can correctly override these
+       custom properties; see instrument-panel-tokens.css. #}
+    <link href="v1/css/instrument-panel-tokens.css?v={{ FF_VERSION }}" rel="stylesheet" type="text/css"
+          nonce="{{ JS_NONCE }}">
     {% if 'browser' == darkMode %}
         <script nonce="{{ JS_NONCE }}">
             // If `prefers-color-scheme` is not supported, fall back to light mode.
@@ -56,11 +61,15 @@
               nonce="{{ JS_NONCE }}" media="(prefers-color-scheme: dark)">
         <link href="v1/lib/adminlte/css/skins/skin-light.min.css?v={{ FF_VERSION }}" rel="stylesheet" type="text/css"
               nonce="{{ JS_NONCE }}" media="(prefers-color-scheme: light)">
+        <link href="v1/css/instrument-panel-dark.css?v={{ FF_VERSION }}" rel="stylesheet" type="text/css"
+              nonce="{{ JS_NONCE }}" media="(prefers-color-scheme: dark)">
     {% endif %}
     {% if 'dark' == darkMode %}
         <link href="v1/css/daterangepicker-dark.css?v={{ FF_VERSION }}" rel="stylesheet" type="text/css"
               nonce="{{ JS_NONCE }}">
         <link href="v1/lib/adminlte/css/skins/skin-dark.min.css?v={{ FF_VERSION }}" rel="stylesheet" type="text/css"
+              nonce="{{ JS_NONCE }}">
+        <link href="v1/css/instrument-panel-dark.css?v={{ FF_VERSION }}" rel="stylesheet" type="text/css"
               nonce="{{ JS_NONCE }}">
     {% endif %}
     {% if 'light' == darkMode %}
@@ -71,6 +80,7 @@
     {% endif %}
     {# Firefly III customisations #}
     <link href="v1/css/firefly.css?v={{ FF_VERSION }}" rel="stylesheet" type="text/css" nonce="{{ JS_NONCE }}">
+    <link href="v1/css/instrument-panel.css?v={{ FF_VERSION }}" rel="stylesheet" type="text/css" nonce="{{ JS_NONCE }}">
 
     {# Extra CSS for the demo: #}
     {% if not shownDemo %}
@@ -93,6 +103,14 @@
 
 </head>
 <body class="skin-firefly-iii sidebar-mini hold-transition fixed">
+<!--
+THESIS: financial data as an operator's instrument panel, not a consumer budgeting toy -- refuses the soft-gradient fintech-app default this category always ships.
+OWN-WORLD: near-black graphite surfaces, one hairline border, amber accent for action/state, IBM Plex Sans/Mono paired throughout, tabular monospace numerals on every amount, dark by default (light available).
+STORY: an operator opens their own numbers the same way they check Grafana or Portainer -- reads deltas at a glance, trusts the panel, acts.
+FIRST VIEWPORT: dark content-wrapper, dark hairline-bordered sidebar with amber active-item rule, four flat instrument readouts (no gradient cards) above a data chart, all type in Plex, all amounts tabular.
+FORM: financial instrument panel, direction 6 of 7 grounded candidates (trading-terminal grammar), assigned by concept-seed.mjs seed key 04c53d58, raised with Ikeda Datamatics' ornament-free density and the cutting-bench's "state is a mark, not only a hue."
+FINISH: unreviewed and undocumented is unfinished; this build ends with the finish review, the verdict, DESIGN.md, and every shipping raster carrying its provenance.
+-->
 <div class="wrapper" id="app">
 
     <header class="main-header">

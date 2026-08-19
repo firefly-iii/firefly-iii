@@ -1,0 +1,114 @@
+/*
+ * instrument-panel-tokens.css
+ *
+ * Fonts and light-mode (base) design tokens for the instrument-panel visual
+ * system. Loaded early -- right after AdminLTE.min.css, before the
+ * light/dark/browser-auto skin blocks -- so instrument-panel-dark.css,
+ * loaded later within those blocks, can correctly override these same
+ * custom properties. The component rules that consume these tokens live in
+ * instrument-panel.css, loaded separately and later (after firefly.css) so
+ * they win the cascade against AdminLTE/skin CSS; see that file for the
+ * full system description.
+ */
+
+/* ============================= FONTS ============================= */
+/* Self-hosted (this product never contacts external servers unless told
+   to -- a Google Fonts request would violate that). IBM Plex: an
+   engineering/technical-communications face, real character for this
+   instrument-panel world, Sans + Mono share one system so UI text and
+   tabular data read as one language. */
+
+@font-face {
+    font-family: "Plex Sans";
+    src: url("../fonts/plex/ibm-plex-sans-latin-400-normal.woff2") format("woff2");
+    font-weight: 400;
+    font-style: normal;
+    font-display: swap;
+}
+
+@font-face {
+    font-family: "Plex Sans";
+    src: url("../fonts/plex/ibm-plex-sans-latin-500-normal.woff2") format("woff2");
+    font-weight: 500;
+    font-style: normal;
+    font-display: swap;
+}
+
+@font-face {
+    font-family: "Plex Sans";
+    src: url("../fonts/plex/ibm-plex-sans-latin-600-normal.woff2") format("woff2");
+    font-weight: 600;
+    font-style: normal;
+    font-display: swap;
+}
+
+@font-face {
+    font-family: "Plex Sans";
+    src: url("../fonts/plex/ibm-plex-sans-latin-700-normal.woff2") format("woff2");
+    font-weight: 700;
+    font-style: normal;
+    font-display: swap;
+}
+
+@font-face {
+    font-family: "Plex Mono";
+    src: url("../fonts/plex/ibm-plex-mono-latin-400-normal.woff2") format("woff2");
+    font-weight: 400;
+    font-style: normal;
+    font-display: swap;
+}
+
+@font-face {
+    font-family: "Plex Mono";
+    src: url("../fonts/plex/ibm-plex-mono-latin-500-normal.woff2") format("woff2");
+    font-weight: 500;
+    font-style: normal;
+    font-display: swap;
+}
+
+@font-face {
+    font-family: "Plex Mono";
+    src: url("../fonts/plex/ibm-plex-mono-latin-600-normal.woff2") format("woff2");
+    font-weight: 600;
+    font-style: normal;
+    font-display: swap;
+}
+
+/* ============================= TOKENS (light / base) ============================= */
+
+:root {
+    --ip-font-ui: "Plex Sans", -apple-system, "Segoe UI", sans-serif;
+    --ip-font-mono: "Plex Mono", ui-monospace, "SFMono-Regular", Menlo, Consolas, monospace;
+
+    --ip-bg: #eef1f4;
+    --ip-bg-alt: #e4e9ee;
+    --ip-surface: #ffffff;
+    --ip-surface-raised: #f7f9fb;
+    --ip-border: #d7dee5;
+    --ip-border-strong: #c3ccd4;
+
+    --ip-fg: #17222c;
+    --ip-fg-muted: #4c5964;
+    --ip-fg-faint: #7c8894;
+    --ip-fg-on-accent: #ffffff;
+    --ip-fg-on-dark-sidebar: #c3ccd4;
+
+    --ip-accent: #a3660a;
+    --ip-accent-strong: #7f4f06;
+    --ip-accent-tint: rgba(163, 102, 10, 0.12);
+
+    --ip-positive: #1c7a43;
+    --ip-positive-tint: rgba(28, 122, 67, 0.12);
+    --ip-negative: #b6362c;
+    --ip-negative-tint: rgba(182, 54, 44, 0.12);
+    --ip-info: #1c689e;
+    --ip-info-tint: rgba(28, 104, 158, 0.12);
+
+    --ip-focus-ring: 0 0 0 3px var(--ip-accent-tint);
+    --ip-shadow-panel: 0 1px 2px rgba(23, 34, 44, 0.06), 0 4px 12px rgba(23, 34, 44, 0.05);
+
+    /* AdminLTE's own dark sidebar stays dark in both themes -- it is a
+       fixed navigation chrome color, not a content surface. */
+    --ip-sidebar-bg: #171f27;
+    --ip-sidebar-bg-active: #232e39;
+}

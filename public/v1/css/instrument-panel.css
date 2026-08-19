@@ -1,0 +1,670 @@
+/*
+ * instrument-panel.css
+ *
+ * Firefly III v1 visual system: "financial instrument panel". Dense, precise,
+ * data-first -- modeled on the trading-terminal / observability-dashboard
+ * grammar this app's own audience (self-hosting, privacy-conscious operators)
+ * already lives in daily, calibrated down to Operate-mode restraint: one
+ * accent, familiar Bootstrap 3/AdminLTE 2 affordances kept intact, nothing
+ * decorative. See PRODUCT.md and the direction contract in this file's
+ * matching commit for the full brief.
+ *
+ * Loaded after AdminLTE.min.css and firefly.css: this file re-skins the
+ * existing component set via CSS custom properties, it does not replace
+ * markup, classes, or behavior. Tokens (fonts + the --ip-* custom
+ * properties consumed below) live in instrument-panel-tokens.css, loaded
+ * earlier for correct light/dark override ordering -- see that file and
+ * instrument-panel-dark.css.
+ */
+
+/* ============================ BASE / TYPE ============================ */
+
+body,
+.wrapper,
+.btn,
+.form-control,
+input,
+select,
+textarea,
+.dropdown-menu {
+    font-family: var(--ip-font-ui);
+}
+
+body {
+    background-color: var(--ip-bg);
+    color: var(--ip-fg);
+    font-size: 13.5px;
+    line-height: 1.5;
+    -webkit-font-smoothing: antialiased;
+}
+
+h1, h2, h3, h4, h5, h6 {
+    font-family: var(--ip-font-ui);
+    font-weight: 600;
+    letter-spacing: -0.01em;
+    color: var(--ip-fg);
+}
+
+a {
+    color: var(--ip-accent-strong);
+}
+
+a:hover,
+a:focus {
+    color: var(--ip-accent);
+}
+
+/* Tabular data: amounts, dates, counters, table numerics. Financial figures
+   are measurement, not a "technical" costume -- monospace here is doing its
+   job: every digit column aligns, deltas scan at a glance. */
+.box-body table td.text-right,
+table.table td.text-right,
+.info-box-number,
+td.transaction-amount,
+span.balance,
+.currencies-table td:first-child {
+    font-family: var(--ip-font-mono);
+    font-variant-numeric: tabular-nums;
+    font-feature-settings: "tnum" 1;
+}
+
+/* Selection, caret, focus ring -- browser surfaces the design would
+   otherwise leave on defaults. */
+::selection {
+    background: var(--ip-accent);
+    color: var(--ip-fg-on-accent);
+}
+
+a:focus-visible,
+button:focus-visible,
+.btn:focus-visible,
+input:focus-visible,
+select:focus-visible,
+textarea:focus-visible,
+.form-control:focus {
+    outline: none;
+    box-shadow: var(--ip-focus-ring);
+    border-color: var(--ip-accent);
+}
+
+/* Themed scrollbars (webkit) so a dark or light surface never carries a
+   stock OS scrollbar. */
+::-webkit-scrollbar {
+    width: 11px;
+    height: 11px;
+}
+
+::-webkit-scrollbar-track {
+    background: var(--ip-bg-alt);
+}
+
+::-webkit-scrollbar-thumb {
+    background-color: var(--ip-border-strong);
+    border-radius: 6px;
+    border: 2px solid var(--ip-bg-alt);
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background-color: var(--ip-fg-faint);
+}
+
+/* ============================ CHROME: HEADER ============================ */
+
+.main-header {
+    background-color: var(--ip-sidebar-bg);
+    border-bottom: 1px solid var(--ip-border-strong);
+}
+
+.main-header .logo {
+    background-color: var(--ip-sidebar-bg);
+    color: var(--ip-fg-on-dark-sidebar);
+    font-family: var(--ip-font-mono);
+    font-weight: 600;
+    letter-spacing: -0.01em;
+    border-bottom: none;
+}
+
+.main-header .logo:hover,
+.main-header .navbar {
+    background-color: var(--ip-sidebar-bg);
+}
+
+.main-header .navbar .nav > li > a {
+    color: var(--ip-fg-on-dark-sidebar);
+}
+
+.main-header .navbar .nav > li > a:hover,
+.main-header .navbar .nav > li > a:focus {
+    color: #ffffff;
+    background: var(--ip-sidebar-bg-active);
+}
+
+.main-header .sidebar-toggle {
+    color: var(--ip-fg-on-dark-sidebar);
+}
+
+.main-header .sidebar-toggle:hover {
+    color: #ffffff;
+    background: var(--ip-sidebar-bg-active);
+}
+
+/* ============================ CHROME: SIDEBAR ============================ */
+
+.main-sidebar,
+.left-side {
+    background-color: var(--ip-sidebar-bg);
+}
+
+.sidebar-form input[type="text"] {
+    background: var(--ip-sidebar-bg-active);
+    border: 1px solid transparent;
+    color: var(--ip-fg-on-dark-sidebar);
+    font-family: var(--ip-font-ui);
+}
+
+.sidebar-form .btn {
+    background: var(--ip-sidebar-bg-active);
+    color: var(--ip-fg-on-dark-sidebar);
+}
+
+.sidebar-menu > li.header {
+    color: var(--ip-fg-faint);
+    background: var(--ip-sidebar-bg);
+    font-family: var(--ip-font-mono);
+    font-size: 11px;
+    letter-spacing: 0.06em;
+}
+
+.sidebar-menu > li > a {
+    color: var(--ip-fg-on-dark-sidebar);
+    border-left: 2px solid transparent;
+}
+
+.sidebar-menu > li:hover > a,
+.sidebar-menu > li.active > a,
+.sidebar-menu > li.menu-open > a {
+    background: var(--ip-sidebar-bg-active);
+    color: #ffffff;
+    border-left-color: var(--ip-accent);
+}
+
+.sidebar-menu li.treeview-menu > li > a {
+    color: var(--ip-fg-on-dark-sidebar);
+}
+
+.sidebar-menu li.treeview-menu > li.active > a,
+.sidebar-menu li.treeview-menu > li > a:hover {
+    color: #ffffff;
+}
+
+/* =========================== CONTENT SURFACE =========================== */
+
+.content-wrapper {
+    background-color: var(--ip-bg);
+}
+
+.content-header {
+    background-color: var(--ip-bg);
+}
+
+.content-header > h1 {
+    font-weight: 700;
+    letter-spacing: -0.02em;
+}
+
+/* ============================== PANELS ============================== */
+
+.box {
+    background: var(--ip-surface);
+    border: 1px solid var(--ip-border);
+    border-top: 1px solid var(--ip-border);
+    border-radius: 4px;
+    box-shadow: var(--ip-shadow-panel);
+}
+
+.box-header {
+    color: var(--ip-fg);
+    background: transparent;
+}
+
+.box-header.with-border {
+    border-bottom: 1px solid var(--ip-border);
+}
+
+.box-title {
+    font-weight: 600;
+    letter-spacing: -0.01em;
+}
+
+.box-footer {
+    background: var(--ip-surface-raised);
+    border-top: 1px solid var(--ip-border);
+}
+
+/* ============================== BUTTONS ============================== */
+
+.btn {
+    border-radius: 4px;
+    font-weight: 500;
+    letter-spacing: 0;
+    border: 1px solid transparent;
+}
+
+.btn-default {
+    background: var(--ip-surface);
+    border-color: var(--ip-border-strong);
+    color: var(--ip-fg);
+}
+
+.btn-default:hover,
+.btn-default:focus {
+    background: var(--ip-surface-raised);
+    border-color: var(--ip-fg-faint);
+    color: var(--ip-fg);
+}
+
+.btn-success,
+.btn-success.content-header-actions {
+    background: var(--ip-positive);
+    border-color: var(--ip-positive);
+    color: #ffffff;
+}
+
+.btn-success:hover,
+.btn-success:focus {
+    filter: brightness(1.08);
+    background: var(--ip-positive);
+    border-color: var(--ip-positive);
+    color: #ffffff;
+}
+
+.btn-danger {
+    background: var(--ip-negative);
+    border-color: var(--ip-negative);
+}
+
+.btn-primary {
+    background: var(--ip-accent);
+    border-color: var(--ip-accent);
+    color: var(--ip-fg-on-accent);
+}
+
+.btn-primary:hover,
+.btn-primary:focus {
+    filter: brightness(1.08);
+    background: var(--ip-accent);
+    border-color: var(--ip-accent);
+    color: var(--ip-fg-on-accent);
+}
+
+/* ============================== TABLES ============================== */
+
+.table {
+    color: var(--ip-fg);
+}
+
+.table > thead > tr > th {
+    border-bottom: 1px solid var(--ip-border-strong);
+    color: var(--ip-fg-muted);
+    font-family: var(--ip-font-mono);
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+}
+
+.table > tbody > tr > td,
+.table > tbody > tr > th {
+    border-top: 1px solid var(--ip-border);
+}
+
+.table-hover > tbody > tr:hover {
+    background-color: var(--ip-surface-raised);
+}
+
+/* ============================== FORMS ============================== */
+
+.form-control {
+    background: var(--ip-surface);
+    border: 1px solid var(--ip-border-strong);
+    color: var(--ip-fg);
+    border-radius: 4px;
+    box-shadow: none;
+}
+
+.form-control:focus {
+    box-shadow: var(--ip-focus-ring);
+}
+
+.input-group-addon {
+    background: var(--ip-surface-raised);
+    border: 1px solid var(--ip-border-strong);
+    color: var(--ip-fg-muted);
+}
+
+label {
+    color: var(--ip-fg);
+    font-weight: 500;
+}
+
+.help-block,
+.text-muted {
+    color: var(--ip-fg-muted);
+}
+
+/* ============================== DROPDOWNS ============================== */
+
+.dropdown-menu {
+    background: var(--ip-surface);
+    border: 1px solid var(--ip-border);
+    box-shadow: var(--ip-shadow-panel);
+}
+
+.dropdown-menu > li > a {
+    color: var(--ip-fg);
+}
+
+.dropdown-menu > li > a:hover,
+.dropdown-menu > li > a:focus {
+    background: var(--ip-surface-raised);
+    color: var(--ip-fg);
+}
+
+.dropdown-menu .divider {
+    background-color: var(--ip-border);
+}
+
+/* ============================== LABELS / STATE ============================== */
+/* State is never color alone here (a raise carried from a declined
+   challenger): every semantic label pairs its tint with a border, and
+   status already ships with a text/icon alongside color throughout the
+   app's existing markup -- this keeps that pairing legible on the new
+   palette instead of relying on hue by itself. */
+
+.label-success {
+    background-color: var(--ip-positive);
+}
+
+.label-danger {
+    background-color: var(--ip-negative);
+}
+
+.label-info {
+    background-color: var(--ip-info);
+}
+
+.label-default {
+    background-color: var(--ip-border-strong);
+    color: var(--ip-fg);
+}
+
+.text-success {
+    color: var(--ip-positive) !important;
+}
+
+.text-danger,
+.text-red {
+    color: var(--ip-negative) !important;
+}
+
+.text-info,
+.text-primary {
+    color: var(--ip-info) !important;
+}
+
+.text-warning,
+.text-yellow {
+    color: var(--ip-accent) !important;
+}
+
+.bg-info {
+    background-color: var(--ip-info) !important;
+    color: #ffffff !important;
+}
+
+.bg-warning {
+    background-color: var(--ip-accent) !important;
+    color: var(--ip-fg-on-accent) !important;
+}
+
+/* ============================== ALERTS / FLASHES ============================== */
+
+.alert {
+    border-radius: 4px;
+    border: 1px solid transparent;
+}
+
+.alert-success {
+    background: var(--ip-positive-tint);
+    border-color: var(--ip-positive);
+    color: var(--ip-fg);
+}
+
+.alert-danger {
+    background: var(--ip-negative-tint);
+    border-color: var(--ip-negative);
+    color: var(--ip-fg);
+}
+
+.alert-info,
+.alert-warning {
+    background: var(--ip-info-tint);
+    border-color: var(--ip-info);
+    color: var(--ip-fg);
+}
+
+/* ============================== PROGRESS ============================== */
+
+.progress {
+    background: var(--ip-border);
+    border-radius: 3px;
+    box-shadow: none;
+    height: 6px;
+}
+
+.progress-bar {
+    background: var(--ip-accent);
+    box-shadow: none;
+}
+
+.progress-bar-green,
+.progress-bar-success {
+    background: var(--ip-positive);
+}
+
+.progress-bar-red,
+.progress-bar-danger {
+    background: var(--ip-negative);
+}
+
+.progress-bar-yellow,
+.progress-bar-warning {
+    background: var(--ip-accent);
+}
+
+/* ============================== PAGINATION ============================== */
+
+.pagination > li > a,
+.pagination > li > span {
+    background: var(--ip-surface);
+    border-color: var(--ip-border-strong);
+    color: var(--ip-fg);
+    font-family: var(--ip-font-mono);
+}
+
+.pagination > li > a:hover {
+    background: var(--ip-surface-raised);
+}
+
+.pagination > .active > a,
+.pagination > .active > span {
+    background: var(--ip-accent);
+    border-color: var(--ip-accent);
+    color: var(--ip-fg-on-accent);
+}
+
+/* ============================== DASHBOARD KPI STRIP ============================== */
+/* .info-box and its bg-*-gradient state classes are functional: JS toggles
+   bg-green-gradient / bg-red-gradient / bg-blue-gradient on the "left to
+   spend" box to signal under/over/no-budget (public/v1/js/ff/index.js).
+   Class names are kept exactly as-is; only their paint changes -- from an
+   AdminLTE gradient card to a flat instrument-panel readout. */
+
+.info-box,
+/* AdminLTE ships these on `!important`, the only way to be sure a card
+   never renders in the old gradient again regardless of which state class
+   JS has toggled onto it. */
+.info-box.bg-aqua-gradient,
+.info-box.bg-teal-gradient,
+.info-box.bg-green-gradient,
+.info-box.bg-red-gradient,
+.info-box.bg-blue-gradient {
+    background: var(--ip-surface) !important;
+    border: 1px solid var(--ip-border);
+    border-radius: 4px;
+    box-shadow: none;
+    color: var(--ip-fg);
+}
+
+.info-box .info-box-icon {
+    background: var(--ip-surface-raised);
+    color: var(--ip-fg-muted);
+    border-radius: 4px 0 0 4px;
+}
+
+.info-box .info-box-content {
+    color: var(--ip-fg);
+}
+
+.info-box .info-box-text {
+    color: var(--ip-fg-muted);
+    font-family: var(--ip-font-mono);
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+}
+
+.info-box .info-box-text a {
+    color: inherit;
+}
+
+.info-box .info-box-number {
+    color: var(--ip-fg);
+    font-weight: 600;
+}
+
+.info-box .progress-description {
+    color: var(--ip-fg-muted);
+}
+
+.info-box.bg-aqua-gradient .info-box-icon,
+.info-box.bg-teal-gradient .info-box-icon {
+    color: var(--ip-info);
+}
+
+.info-box.bg-green-gradient {
+    border-color: var(--ip-positive);
+}
+
+.info-box.bg-green-gradient .info-box-icon {
+    color: var(--ip-positive);
+}
+
+.info-box.bg-red-gradient {
+    border-color: var(--ip-negative);
+}
+
+.info-box.bg-red-gradient .info-box-icon {
+    color: var(--ip-negative);
+}
+
+.info-box.bg-blue-gradient .info-box-icon {
+    color: var(--ip-accent);
+}
+
+/* ============================== FOOTER ============================== */
+
+.main-footer {
+    background: var(--ip-surface);
+    border-top: 1px solid var(--ip-border);
+    color: var(--ip-fg-muted);
+}
+
+/* ============================== PERIOD NAVIGATOR (Budgets) ============================== */
+/* One tight inline group -- step arrows, a single month+year picker, a
+   jump-to-current shortcut -- replacing what used to be two duplicate
+   month dropdowns plus a separate arrow group spread across a wide row. */
+
+.period-nav {
+    display: flex;
+    align-items: stretch;
+    gap: 4px;
+    max-width: 460px;
+}
+
+.period-nav__step {
+    flex: 0 0 auto;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 40px;
+    padding-left: 0;
+    padding-right: 0;
+}
+
+.period-nav__picker {
+    flex: 1 1 auto;
+    min-width: 0;
+    padding-left: 6px;
+    padding-right: 20px;
+    font-weight: 600;
+    font-family: var(--ip-font-mono);
+    font-size: 12.5px;
+    text-align: center;
+    text-align-last: center;
+    cursor: pointer;
+}
+
+.period-nav__today {
+    flex: 0 0 auto;
+    margin-left: 8px;
+    color: var(--ip-fg-muted);
+}
+
+@media (max-width: 400px) {
+    .period-nav {
+        flex-wrap: wrap;
+    }
+
+    .period-nav__today {
+        margin-left: 0;
+        margin-top: 4px;
+        flex: 1 1 100%;
+    }
+}
+
+/* ============================== CURRENCY TOGGLE (from a previous pass) ============================== */
+/* Re-themed onto tokens instead of the hardcoded AdminLTE green it shipped
+   with, so it now follows light/dark like everything else. */
+
+.switch__track {
+    background-color: var(--ip-border-strong);
+}
+
+.switch input:checked ~ .switch__track {
+    background-color: var(--ip-positive);
+}
+
+.switch input:focus ~ .switch__track {
+    box-shadow: var(--ip-focus-ring);
+}
+
+.currencies-table thead th,
+.currencies-header-gap-fill {
+    background-color: var(--ip-surface);
+}
+
+.skin-firefly-iii .content-header {
+    background-color: var(--ip-bg);
+}
