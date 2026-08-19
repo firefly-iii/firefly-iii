@@ -84,7 +84,7 @@ final class ShowController extends Controller
         /** @var Carbon $end */
         $subTitleIcon = 'bi-bookmark';
         $page         = (int) $request->input('page');
-        $page         = min(max(1, $page), 2 ** 16);
+        $page     = clamp($page, 1, 2 ** 16);
         $attachments  = $this->repository->getAttachments($category);
         $pageSize     = (int) Preferences::get('listPageSize', 50)->data;
         $oldest       = $this->repository->firstUseDate($category) ?? today(config('app.timezone'))->startOfYear();
@@ -136,7 +136,7 @@ final class ShowController extends Controller
         // default values:
         $subTitleIcon = 'bi-bookmark';
         $page         = (int) $request->input('page');
-        $page         = min(max(1, $page), 2 ** 16);
+        $page     = clamp($page, 1, 2 ** 16);
         $pageSize     = (int) Preferences::get('listPageSize', 50)->data;
         $start        = null;
         $end          = null;

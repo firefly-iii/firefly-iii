@@ -179,7 +179,7 @@ abstract class Controller extends BaseController
     {
         $bag      = new ParameterBag();
         $page     = (int) request()->get('page');
-        $page     = min(max(1, $page), 2 ** 16);
+        $page     = clamp($page, 1, 2 ** 16);
         $bag->set('page', $page);
 
         // some date fields:
@@ -221,7 +221,7 @@ abstract class Controller extends BaseController
             }
             if (null !== $value) {
                 $value = (int) $value;
-                $value = min(max(1, $value), 2 ** 16);
+                $value = clamp($value, 1, 2**16);
                 $bag->set($integer, $value);
             }
             // && 'limit' === $integer

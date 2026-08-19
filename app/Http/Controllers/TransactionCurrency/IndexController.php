@@ -72,7 +72,7 @@ final class IndexController extends Controller
         /** @var User $user */
         $user       = auth()->user();
         $page       = 0 === (int) $request->input('page') ? 1 : (int) $request->input('page');
-        $page       = min(max(1, $page), 2 ** 16);
+        $page     = clamp($page, 1, 2 ** 16);
         $pageSize   = (int) Preferences::get('listPageSize', 50)->data;
         $collection = $this->repository->getAll();
 

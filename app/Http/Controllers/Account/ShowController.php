@@ -215,7 +215,7 @@ final class ShowController extends Controller
         $start        = $this->repository->oldestJournalDate($account) ?? today(config('app.timezone'))->startOfMonth();
         $subTitleIcon = config('firefly.subIconsByIdentifier.'.$account->accountType->type);
         $page         = (int) $request->input('page');
-        $page         = min(max(1, $page), 2 ** 16);
+        $page     = clamp($page, 1, 2 ** 16);
         $pageSize     = (int) Preferences::get('listPageSize', 50)->data;
         $currency     = $this->repository->getAccountCurrency($account) ?? $this->primaryCurrency;
         $subTitle     = (string) trans('firefly.all_journals_for_account', ['name' => $account->name]);
