@@ -13,36 +13,38 @@
                     <h3 class="box-title">{{ 'budget_period_navigator'|_ }}</h3>
                 </div>
                 <div class="box-body">
-                    <div class="row" id="periodNavigator">
-                        <div class="col-lg-2 col-md-4 col-sm-12 col-xs-12">
-                            <select class="form-control selectPeriod" name="previous">
-                                <option label="{{ 'select_date'|_ }}" value="x">{{ 'select_date'|_ }}</option>
-                                {% for array in prevLoop %}
-                                    <option label="{{ array.title }}" value="{{ array.label }}" data-start="{{ array.start.format('Y-m-d') }}"
-                                            data-end="{{ array.end.format('Y-m-d') }}">{{ array.title }}</option>
-                                {% endfor %}
-                            </select>
-                        </div>
-                        <div class="col-lg-8 col-md-4 col-sm-12 col-xs-12 text-center">
-                            <div class="btn btn-group btn-group-lg" style="padding-top:0;">
-                                <a href="{{ route('budgets.index', [prevLoop[0].start.format('Y-m-d'), prevLoop[0].end.format('Y-m-d')]) }}"
-                                   class="btn btn-default" title="{{ prevLoop[0].title }}">&larr;</a>
-                                <a title="{{ start.isoFormat(monthAndDayFormat) }} - {{ end.isoFormat(monthAndDayFormat) }}"
-                                   href="{{ route('budgets.index', [start.format('Y-m-d'), end.format('Y-m-d')]) }}"
-                                   class="btn btn-default">{{ periodTitle }}</a>
-                                <a href="{{ route('budgets.index', [nextLoop[0].start.format('Y-m-d'), nextLoop[0].end.format('Y-m-d')]) }}"
-                                   class="btn btn-default" title="{{ nextLoop[0].title }}">&rarr;</a>
-                            </div>
-                        </div>
-                        <div class="col-lg-2 col-md-4 col-sm-12 col-xs-12 text-right">
-                            <select class="form-control selectPeriod" name="next">
-                                <option label="{{ 'select_date'|_ }}" value="x">{{ 'select_date'|_ }}</option>
-                                {% for array in nextLoop %}
-                                    <option label="{{ array.title }}" value="{{ array.label }}" data-start="{{ array.start.format('Y-m-d') }}"
-                                            data-end="{{ array.end.format('Y-m-d') }}">{{ array.title }}</option>
-                                {% endfor %}
-                            </select>
-                        </div>
+                    {# One control instead of three doing the same job (two identical month
+                       dropdowns plus a step-arrow group): step arrows, a single month+year
+                       picker pre-set to the current period, and a jump-to-current shortcut.
+                       Reuses the exact same server-computed period list and JS handler
+                       (public/v1/js/ff/budgets/index.js) as before -- this only changes the
+                       markup, not the (fiscal-year-aware) date logic behind it. #}
+                    <div class="period-nav" id="periodNavigator">
+                        <a href="{{ route('budgets.index', [prevLoop[0].start.format('Y-m-d'), prevLoop[0].end.format('Y-m-d')]) }}"
+                           class="btn btn-default period-nav__step" title="{{ prevLoop[0].title }}" aria-label="{{ prevLoop[0].title }}">
+                            <span class="fa fa-chevron-left" aria-hidden="true"></span>
+                        </a>
+
+                        <select class="form-control selectPeriod period-nav__picker" name="period"
+                                aria-label="{{ 'budget_period_navigator'|_ }}">
+                            {% for array in prevLoop|reverse %}
+                                <option value="{{ array.label }}" data-start="{{ array.start.format('Y-m-d') }}"
+                                        data-end="{{ array.end.format('Y-m-d') }}">{{ array.title }}</option>
+                            {% endfor %}
+                            <option value="{{ start.format('Y-m-d') }}" data-start="{{ start.format('Y-m-d') }}"
+                                    data-end="{{ end.format('Y-m-d') }}" selected="selected">{{ periodTitle }}</option>
+                            {% for array in nextLoop %}
+                                <option value="{{ array.label }}" data-start="{{ array.start.format('Y-m-d') }}"
+                                        data-end="{{ array.end.format('Y-m-d') }}">{{ array.title }}</option>
+                            {% endfor %}
+                        </select>
+
+                        <a href="{{ route('budgets.index', [nextLoop[0].start.format('Y-m-d'), nextLoop[0].end.format('Y-m-d')]) }}"
+                           class="btn btn-default period-nav__step" title="{{ nextLoop[0].title }}" aria-label="{{ nextLoop[0].title }}">
+                            <span class="fa fa-chevron-right" aria-hidden="true"></span>
+                        </a>
+
+                        <a href="{{ route('budgets.index') }}" class="btn btn-default period-nav__today">{{ 'current_period'|_ }}</a>
                     </div>
                 </div>
             </div>

@@ -1,0 +1,45 @@
+/*
+ * instrument-panel-dark.css
+ *
+ * Dark token overrides for the instrument-panel system (see
+ * instrument-panel.css for the full component treatment and rationale).
+ * Loaded exactly like skins/skin-dark.min.css already is: unconditionally
+ * under the "dark" setting, or media-gated to prefers-color-scheme under
+ * "browser" mode. Never loaded under "light".
+ *
+ * Physical scene this palette is built for: a self-hosting operator
+ * checking their own numbers the same evening they're checking Grafana,
+ * Portainer, Proxmox -- dark, precise, screen-lit, not paper-lit.
+ */
+
+:root {
+    --ip-bg: #0b0f14;
+    --ip-bg-alt: #0e1319;
+    --ip-surface: #131a21;
+    --ip-surface-raised: #1a232c;
+    --ip-border: #24303b;
+    --ip-border-strong: #34424f;
+
+    --ip-fg: #e7edf3;
+    --ip-fg-muted: #93a3b3;
+    --ip-fg-faint: #5b6b7c;
+    --ip-fg-on-accent: #1a1002;
+
+    --ip-accent: #f0a63a;
+    --ip-accent-strong: #f5bc63;
+    --ip-accent-tint: rgba(240, 166, 58, 0.14);
+
+    --ip-positive: #3ac47d;
+    --ip-positive-tint: rgba(58, 196, 125, 0.14);
+    --ip-negative: #e8544e;
+    --ip-negative-tint: rgba(232, 84, 78, 0.14);
+    --ip-info: #4db1f0;
+    --ip-info-tint: rgba(77, 177, 240, 0.14);
+
+    --ip-shadow-panel: 0 1px 2px rgba(0, 0, 0, 0.35), 0 4px 16px rgba(0, 0, 0, 0.3);
+
+    /* Sidebar is already this dark in light mode too; keep it identical so
+       the nav never visually "flips" independent of content. */
+    --ip-sidebar-bg: #0e1319;
+    --ip-sidebar-bg-active: #1a232c;
+}
