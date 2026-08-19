@@ -1,7 +1,9 @@
 {% extends './layout/default' %}
 
 {% block header_actions %}
-    <a class="btn btn-success content-header-actions" href="{{ route('currencies.create') }}">{{ 'create_currency'|_ }}</a>
+    {% if isOwner %}
+        <a class="btn btn-success content-header-actions" href="{{ route('currencies.create') }}">{{ 'create_currency'|_ }}</a>
+    {% endif %}
     {# Covers the natural gap between .content-header and the table (box border + box-body
        padding); see the comment on .currencies-header-gap-fill in firefly.css. #}
     <div class="currencies-header-gap-fill"></div>
@@ -23,9 +25,7 @@
                                 <th>{{ 'currency'|_ }}</th>
                                 <th>{{ 'currency_country'|_ }}</th>
                                 <th class="currencies-table__enabled">{{ 'currency_enabled_column'|_ }}</th>
-                                {% if isOwner %}
-                                    <th class="currencies-table__actions">{{ 'actions'|_ }}</th>
-                                {% endif %}
+                                <th class="currencies-table__actions">{{ 'actions'|_ }}</th>
                             </tr>
                             </thead>
                             <tbody>
@@ -52,8 +52,9 @@
                                             </span>
                                         </label>
                                     </td>
-                                    {% if isOwner %}
-                                        <td class="currencies-table__actions">
+                                    {% set notPrimary = currency.id != primaryCurrency.id %}
+                                    <td class="currencies-table__actions">
+                                        {% if notPrimary or isOwner %}
                                             <div class="btn-group">
                                                 <button type="button" class="btn btn-default btn-xs dropdown-toggle" data-toggle="dropdown"
                                                         aria-haspopup="true" aria-expanded="false"
@@ -61,28 +62,36 @@
                                                     <span class="fa fa-ellipsis-h"></span>
                                                 </button>
                                                 <ul class="dropdown-menu dropdown-menu-right" role="menu">
-                                                    {% if currency.id != primaryCurrency.id %}
+                                                    {# Setting your own administration's primary currency only ever touches your own
+                                                       administration (see CurrencyRepository/UserGroupTrait), so any user may do it --
+                                                       not just the site owner. Editing/deleting the currency *definition* itself
+                                                       affects shared, installation-wide data, so that stays owner-only. #}
+                                                    {% if notPrimary %}
                                                         <li>
                                                             <a href="#" class="make_default" data-code="{{ currency.code }}">
                                                                 <span class="fa fa-fw fa-star"></span> {{ 'make_default_currency'|_ }}
                                                             </a>
                                                         </li>
-                                                        <li class="divider"></li>
                                                     {% endif %}
-                                                    <li>
-                                                        <a href="{{ route('currencies.edit',currency.id) }}">
-                                                            <span class="fa fa-fw fa-pencil"></span> {{ 'edit'|_ }}
-                                                        </a>
-                                                    </li>
-                                                    <li>
-                                                        <a href="{{ route('currencies.delete',currency.id) }}">
-                                                            <span class="fa fa-fw fa-trash"></span> {{ 'delete'|_ }}
-                                                        </a>
-                                                    </li>
+                                                    {% if isOwner %}
+                                                        {% if notPrimary %}
+                                                            <li class="divider"></li>
+                                                        {% endif %}
+                                                        <li>
+                                                            <a href="{{ route('currencies.edit',currency.id) }}">
+                                                                <span class="fa fa-fw fa-pencil"></span> {{ 'edit'|_ }}
+                                                            </a>
+                                                        </li>
+                                                        <li>
+                                                            <a href="{{ route('currencies.delete',currency.id) }}">
+                                                                <span class="fa fa-fw fa-trash"></span> {{ 'delete'|_ }}
+                                                            </a>
+                                                        </li>
+                                                    {% endif %}
                                                 </ul>
                                             </div>
-                                        </td>
-                                    {% endif %}
+                                        {% endif %}
+                                    </td>
                                 </tr>
                             {% endfor %}
                             </tbody>
