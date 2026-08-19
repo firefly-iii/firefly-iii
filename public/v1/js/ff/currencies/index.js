@@ -31,35 +31,45 @@ $(function () {
 
 /**
  * Three things are stacked here: the sticky .content-header, a .currencies-header-gap-fill
- * that plugs the natural gap below it (box border, box-body padding, ...), and the sticky
- * table head. None of these have a fixed, hardcodable size (text wraps, viewport width
- * varies), so measure the actual rendered layout and keep both dynamic pieces in sync with it:
+ * that plugs the *structural* gap below it (.content's padding, the box's border, box-body's
+ * padding -- always there, regardless of page content), and the sticky table head, pinned
+ * flush against the gap-fill's bottom edge.
  *
- * - The table head's `top` is set to the <table> element's own natural distance from the top
- *   of the document. The table itself is never sticky, so its position always reflects the
- *   true, un-stuck layout, including every bit of spacing above it however it's produced.
- *   (Deliberately not measured by toggling the <th> cells' own `position` on and off: that
- *   briefly un-stickies the real sticky element, which on this table produces a stale/
- *   mispainted header until the next repaint.)
- * - The gap-fill's height is simply the distance between .content-header's bottom edge and
- *   that same table top -- whatever that gap is, this closes it exactly.
+ * Deliberately NOT sized/positioned off the <table> element's actual current distance from
+ * the page top: that distance also includes whatever non-structural content happens to be
+ * sitting above the table on a given request -- e.g. a flash message ("Please ask the owner
+ * to..."). Sizing the gap-fill to cover that too would visually swallow the flash message
+ * behind the opaque header instead of showing it. Using only the structural gap means: with
+ * no flash message, the table already sits exactly at that offset, so the header is pinned
+ * from the very first pixel of scroll same as before; with a flash message, the table starts
+ * further down and the header simply hasn't reached its sticky point yet -- it scrolls
+ * normally (in sync with the still-visible flash message above it) until it catches up to the
+ * same offset, at which point it locks, with nothing ever hidden or exposing rows beneath it.
+ *
+ * The structural gap is read from computed styles rather than hardcoded, so it stays correct
+ * if that spacing ever changes; .content-header's own height is still measured (text wraps,
+ * viewport width varies).
  */
 function syncStickyOffsets() {
     "use strict";
     var mainHeaderHeight = 50; // .main-header, fixed height set in layout/default.twig
     var $tableHead = $('.currencies-table thead th');
     var $gapFill = $('.currencies-header-gap-fill');
-    var table = document.querySelector('.currencies-table');
+    var contentEl = document.querySelector('.content');
+    var boxEl = document.querySelector('.box');
+    var boxBodyEl = document.querySelector('.box-body');
 
-    if (0 === $tableHead.length || null === table) {
+    if (0 === $tableHead.length || null === contentEl || null === boxEl || null === boxBodyEl) {
         return;
     }
 
-    var naturalDocumentTop = table.getBoundingClientRect().top + window.scrollY;
+    var structuralGap = parseFloat(getComputedStyle(contentEl).paddingTop)
+        + parseFloat(getComputedStyle(boxEl).borderTopWidth)
+        + parseFloat(getComputedStyle(boxBodyEl).paddingTop);
     var contentHeaderBottom = mainHeaderHeight + $('.content-header').outerHeight();
 
-    $tableHead.css('top', naturalDocumentTop + 'px');
-    $gapFill.css('height', Math.max(0, naturalDocumentTop - contentHeaderBottom) + 'px');
+    $gapFill.css('height', structuralGap + 'px');
+    $tableHead.css('top', (contentHeaderBottom + structuralGap) + 'px');
 }
 
 function setDefaultCurrency(e) {
