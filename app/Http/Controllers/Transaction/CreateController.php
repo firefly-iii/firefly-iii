@@ -115,30 +115,12 @@ final class CreateController extends Controller
         $subTitle                   = (string) trans(sprintf('breadcrumbs.create_%s', strtolower((string) $objectType)));
         $subTitleIcon               = 'bi-plus';
 
-        /** @var null|array $optionalFields */
-        $optionalFields             = Preferences::get('transaction_journal_optional_fields', [])->data;
         $allowedOpposingTypes       = config('firefly.allowed_opposing_types');
         $accountToTypes             = config('firefly.account_to_transaction');
         $previousUrl                = $this->rememberPreviousUrl('transactions.create.url');
         $parts                      = parse_url((string) $previousUrl);
         $search                     = sprintf('?%s', $parts['query'] ?? '');
         $previousUrl                = str_replace($search, '', $previousUrl);
-        if (!is_array($optionalFields)) {
-            $optionalFields = [];
-        }
-        // not really a fan of this, but meh.
-        $optionalDateFields         = [
-            'interest_date' => $optionalFields['interest_date'] ?? false,
-            'book_date'     => $optionalFields['book_date'] ?? false,
-            'process_date'  => $optionalFields['process_date'] ?? false,
-            'due_date'      => $optionalFields['due_date'] ?? false,
-            'payment_date'  => $optionalFields['payment_date'] ?? false,
-            'invoice_date'  => $optionalFields['invoice_date'] ?? false,
-        ];
-        $optionalFields['external_url'] ??= false;
-        $optionalFields['location']     ??= false;
-        $optionalFields['location'] = $optionalFields['location']
-        && true === AppConfiguration::get('enable_external_map', config('firefly.enable_external_map', false))->data;
 
         // map info:
         $longitude                  = config('firefly.default_location.longitude');
@@ -154,10 +136,8 @@ final class CreateController extends Controller
             'latitude'             => $latitude,
             'zoomLevel'            => $zoomLevel,
             'objectType'           => $objectType,
-            // 'optionalDateFields'   => $optionalDateFields,
             'subTitle'             => $subTitle,
             'previousUrl'          => $previousUrl,
-            // 'optionalFields'       => $optionalFields,
             'preFilled'            => $preFilled,
             'allowedOpposingTypes' => $allowedOpposingTypes,
             'accountToTypes'       => $accountToTypes,
