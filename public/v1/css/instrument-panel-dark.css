@@ -38,8 +38,23 @@
 
     --ip-shadow-panel: 0 1px 2px rgba(0, 0, 0, 0.35), 0 4px 16px rgba(0, 0, 0, 0.3);
 
-    /* Sidebar is already this dark in light mode too; keep it identical so
-       the nav never visually "flips" independent of content. */
+    /* Header tokens are intentionally not redeclared here -- it stays the
+       same near-black in both themes; see instrument-panel-tokens.css. */
+
+    /* Sidebar follows the theme: dark surface here (close to the header,
+       but still its own tone), light one in instrument-panel-tokens.css. */
     --ip-sidebar-bg: #0e1319;
     --ip-sidebar-bg-active: #1a232c;
+    --ip-sidebar-border: #1c2530;
+    --ip-fg-on-sidebar: #c3ccd4;
+    --ip-fg-on-sidebar-strong: #ffffff;
+    --ip-sidebar-accent: var(--ip-accent);
+
+    /* Primary CTA (.btn-success): outline here instead of light mode's
+       solid dark fill -- a filled black button would vanish into this
+       background, so it reads as a green outline pill instead. */
+    --ip-cta-bg: transparent;
+    --ip-cta-bg-hover: rgba(58, 196, 125, 0.12);
+    --ip-cta-border: var(--ip-positive);
+    --ip-cta-fg: var(--ip-positive);
 }

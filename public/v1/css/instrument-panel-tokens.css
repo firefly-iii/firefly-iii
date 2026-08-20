@@ -92,7 +92,6 @@
     --ip-fg-muted: #4c5964;
     --ip-fg-faint: #7c8894;
     --ip-fg-on-accent: #ffffff;
-    --ip-fg-on-dark-sidebar: #c3ccd4;
 
     --ip-accent: #a3660a;
     --ip-accent-strong: #7f4f06;
@@ -108,8 +107,27 @@
     --ip-focus-ring: 0 0 0 3px var(--ip-accent-tint);
     --ip-shadow-panel: 0 1px 2px rgba(23, 34, 44, 0.06), 0 4px 12px rgba(23, 34, 44, 0.05);
 
-    /* AdminLTE's own dark sidebar stays dark in both themes -- it is a
-       fixed navigation chrome color, not a content surface. */
-    --ip-sidebar-bg: #171f27;
-    --ip-sidebar-bg-active: #232e39;
+    /* Header: fixed near-black chrome, identical in both themes (never
+       overridden in instrument-panel-dark.css) -- it's navigation furniture,
+       not a content surface that should flip with the theme. */
+    --ip-header-bg: #111418;
+    --ip-header-bg-active: #1c2126;
+    --ip-fg-on-header: #c7cfd6;
+
+    /* Sidebar: unlike the header, this follows the theme -- light surface
+       with dark text here, overridden dark in instrument-panel-dark.css. */
+    --ip-sidebar-bg: #ffffff;
+    --ip-sidebar-bg-active: #eef1f4;
+    --ip-sidebar-border: #e4e9ee;
+    --ip-fg-on-sidebar: #4c5964;
+    --ip-fg-on-sidebar-strong: #17222c;
+    --ip-sidebar-accent: #17222c;
+
+    /* Primary CTA (.btn-success): solid dark in light mode, outline in dark
+       mode -- distinct from --ip-positive, which stays green everywhere and
+       keeps its own job (amount coloring). */
+    --ip-cta-bg: #17222c;
+    --ip-cta-bg-hover: #2a343e;
+    --ip-cta-border: #17222c;
+    --ip-cta-fg: #ffffff;
 }

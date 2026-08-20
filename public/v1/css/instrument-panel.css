@@ -109,65 +109,73 @@ textarea:focus-visible,
 }
 
 /* ============================ CHROME: HEADER ============================ */
+/* AdminLTE's own skin-light.min.css/skin-dark.min.css scope their header/
+   sidebar/button rules under `.skin-firefly-iii .xxx` (2+ classes), which
+   beats a plain `.xxx` rule here regardless of stylesheet load order --
+   specificity, not cascade position, decides the tie. Every rule below that
+   has a same-property counterpart in those skin files is written with the
+   same `.skin-firefly-iii` prefix so it wins on equal specificity, loading
+   later. */
 
-.main-header {
-    background-color: var(--ip-sidebar-bg);
+.main-header,
+.skin-firefly-iii .main-header .navbar {
+    background-color: var(--ip-header-bg);
     border-bottom: 1px solid var(--ip-border-strong);
 }
 
-.main-header .logo {
-    background-color: var(--ip-sidebar-bg);
-    color: var(--ip-fg-on-dark-sidebar);
+.skin-firefly-iii .main-header .logo {
+    background-color: var(--ip-header-bg);
+    color: var(--ip-fg-on-header);
     font-family: var(--ip-font-mono);
     font-weight: 600;
     letter-spacing: -0.01em;
     border-bottom: none;
 }
 
-.main-header .logo:hover,
-.main-header .navbar {
-    background-color: var(--ip-sidebar-bg);
+.skin-firefly-iii .main-header .logo:hover {
+    background-color: var(--ip-header-bg);
 }
 
-.main-header .navbar .nav > li > a {
-    color: var(--ip-fg-on-dark-sidebar);
+.skin-firefly-iii .main-header .navbar .nav > li > a {
+    color: var(--ip-fg-on-header);
 }
 
-.main-header .navbar .nav > li > a:hover,
-.main-header .navbar .nav > li > a:focus {
+.skin-firefly-iii .main-header .navbar .nav > li > a:hover,
+.skin-firefly-iii .main-header .navbar .nav > li > a:focus {
     color: #ffffff;
-    background: var(--ip-sidebar-bg-active);
+    background: var(--ip-header-bg-active);
 }
 
-.main-header .sidebar-toggle {
-    color: var(--ip-fg-on-dark-sidebar);
+.skin-firefly-iii .main-header .navbar .sidebar-toggle {
+    color: var(--ip-fg-on-header);
 }
 
-.main-header .sidebar-toggle:hover {
+.skin-firefly-iii .main-header .navbar .sidebar-toggle:hover {
     color: #ffffff;
-    background: var(--ip-sidebar-bg-active);
+    background: var(--ip-header-bg-active);
 }
 
 /* ============================ CHROME: SIDEBAR ============================ */
 
-.main-sidebar,
-.left-side {
+.skin-firefly-iii .main-sidebar,
+.skin-firefly-iii .left-side {
     background-color: var(--ip-sidebar-bg);
+    border-right: 1px solid var(--ip-sidebar-border);
 }
 
-.sidebar-form input[type="text"] {
+.skin-firefly-iii .sidebar-form input[type="text"] {
     background: var(--ip-sidebar-bg-active);
     border: 1px solid transparent;
-    color: var(--ip-fg-on-dark-sidebar);
+    color: var(--ip-fg-on-sidebar-strong);
     font-family: var(--ip-font-ui);
 }
 
-.sidebar-form .btn {
+.skin-firefly-iii .sidebar-form .btn {
     background: var(--ip-sidebar-bg-active);
-    color: var(--ip-fg-on-dark-sidebar);
+    color: var(--ip-fg-on-sidebar-strong);
 }
 
-.sidebar-menu > li.header {
+.skin-firefly-iii .sidebar-menu > li.header {
     color: var(--ip-fg-faint);
     background: var(--ip-sidebar-bg);
     font-family: var(--ip-font-mono);
@@ -175,26 +183,26 @@ textarea:focus-visible,
     letter-spacing: 0.06em;
 }
 
-.sidebar-menu > li > a {
-    color: var(--ip-fg-on-dark-sidebar);
+.skin-firefly-iii .sidebar-menu > li > a {
+    color: var(--ip-fg-on-sidebar);
     border-left: 2px solid transparent;
 }
 
-.sidebar-menu > li:hover > a,
-.sidebar-menu > li.active > a,
-.sidebar-menu > li.menu-open > a {
+.skin-firefly-iii .sidebar-menu > li:hover > a,
+.skin-firefly-iii .sidebar-menu > li.active > a,
+.skin-firefly-iii .sidebar-menu > li.menu-open > a {
     background: var(--ip-sidebar-bg-active);
-    color: #ffffff;
-    border-left-color: var(--ip-accent);
+    color: var(--ip-fg-on-sidebar-strong);
+    border-left-color: var(--ip-sidebar-accent);
 }
 
-.sidebar-menu li.treeview-menu > li > a {
-    color: var(--ip-fg-on-dark-sidebar);
+.skin-firefly-iii .sidebar-menu .treeview-menu > li > a {
+    color: var(--ip-fg-on-sidebar);
 }
 
-.sidebar-menu li.treeview-menu > li.active > a,
-.sidebar-menu li.treeview-menu > li > a:hover {
-    color: #ffffff;
+.skin-firefly-iii .sidebar-menu .treeview-menu > li.active > a,
+.skin-firefly-iii .sidebar-menu .treeview-menu > li > a:hover {
+    color: var(--ip-fg-on-sidebar-strong);
 }
 
 /*
@@ -313,19 +321,24 @@ textarea:focus-visible,
     color: var(--ip-fg);
 }
 
-.btn-success,
+/* !important: AdminLTE's skin CSS also styles `.btn` elements that happen to
+   sit inside a `.box-header` (e.g. `.skin-firefly-iii .box > .box-header
+   .btn`, 4 classes) -- higher specificity than any reasonable `.btn-success`
+   selector, and our "New budget" button now lives in exactly that spot
+   (box-header--actions). Matches the precedent already set for overriding
+   AdminLTE's own !important rules elsewhere in this file. */
+.skin-firefly-iii .btn-success,
 .btn-success.content-header-actions {
-    background: var(--ip-positive);
-    border-color: var(--ip-positive);
-    color: #ffffff;
+    background: var(--ip-cta-bg) !important;
+    border-color: var(--ip-cta-border) !important;
+    color: var(--ip-cta-fg) !important;
 }
 
-.btn-success:hover,
-.btn-success:focus {
-    filter: brightness(1.08);
-    background: var(--ip-positive);
-    border-color: var(--ip-positive);
-    color: #ffffff;
+.skin-firefly-iii .btn-success:hover,
+.skin-firefly-iii .btn-success:focus {
+    background: var(--ip-cta-bg-hover) !important;
+    border-color: var(--ip-cta-border) !important;
+    color: var(--ip-cta-fg) !important;
 }
 
 .btn-danger {
