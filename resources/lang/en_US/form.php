@@ -36,6 +36,7 @@ return [
     'skip'                         => 'Skip',
     'enabled'                      => 'Enabled',
     'name'                         => 'Name',
+    'field_is_required'            => 'This field is required',
     'active'                       => 'Active',
     'amount_min'                   => 'Minimum amount',
     'amount_max'                   => 'Maximum amount',

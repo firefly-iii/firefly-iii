@@ -9,25 +9,19 @@
     <form method="POST" action="{{ route('budgets.store') }}" accept-charset="UTF-8" class="form-horizontal" id="store" enctype="multipart/form-data">
         <input name="_token" type="hidden" value="{{ csrf_token() }}">
         <input name="active" type="hidden" value="1">
+        {# Unchecked by default (so "Save & Exit" behaves exactly like the old plain
+           submit button); "Save & Create New" checks this via JS before submitting,
+           reproducing the old "return here" checkbox's behaviour without showing it. #}
+        <input type="checkbox" name="create_another" id="create_another" value="1" class="budget-create-another">
 
         <div class="row">
-            <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
+            <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
                 <div class="box box-primary">
                     <div class="box-header with-border">
-                        <h3 class="box-title">{{ 'mandatoryFields'|_ }}</h3>
+                        <h3 class="box-title">{{ subTitle }}</h3>
                     </div>
                     <div class="box-body">
-                        {{ ExpandedForm.text('name') }}
-                    </div>
-                </div>
-            </div>
-            <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
-                {# panel for auto-budget #}
-                <div class="box">
-                    <div class="box-header with-border">
-                        <h3 class="box-title">{{ 'optionalFields'|_ }}</h3>
-                    </div>
-                    <div class="box-body">
+                        {{ ExpandedForm.text('name', null, {required: true}) }}
                         {{ ExpandedForm.select('auto_budget_type', autoBudgetTypes,null, {helpText: trans('firefly.auto_budget_help')}) }}
                         {{ CurrencyForm.currencyList('auto_budget_currency_id') }}
                         {{ ExpandedForm.amountNoCurrency('auto_budget_amount') }}
@@ -38,25 +32,32 @@
             </div>
         </div>
         <div class="row">
-            <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
-                {# panel for options #}
-                <div class="box">
-                    <div class="box-header with-border">
-                        <h3 class="box-title">{{ 'options'|_ }}</h3>
-                    </div>
-                    <div class="box-body">
-                        {{ ExpandedForm.optionsList('create','budget') }}
-                    </div>
-                    <div class="box-footer">
-                        <button type="submit" class="btn pull-right btn-success">{{ 'store_new_budget'|_ }}</button>
-                    </div>
+            <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                <div class="budget-form-actions">
+                    <button type="submit" class="btn btn-success" id="saveExitBtn">{{ 'save_and_exit_budget'|_ }}</button>
+                    <button type="submit" class="btn btn-success" id="saveCreateNewBtn">{{ 'save_and_create_new_budget'|_ }}</button>
+                    <button type="button" class="btn btn-danger" id="cancelCreateBudgetBtn">{{ 'cancel'|_ }}</button>
                 </div>
-
             </div>
-
         </div>
     </form>
 
+    <div class="modal fade" id="cancelCreateBudgetModal" tabindex="-1" role="dialog" aria-labelledby="cancelCreateBudgetModalLabel">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="{{ 'close'|_ }}">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                    <h4 class="modal-title" id="cancelCreateBudgetModalLabel">{{ 'create_budget_cancel_title'|_ }}</h4>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">{{ 'create_budget_cancel_dont_cancel'|_ }}</button>
+                    <a href="{{ route('budgets.index') }}" class="btn btn-danger">{{ 'create_budget_cancel_understood'|_ }}</a>
+                </div>
+            </div>
+        </div>
+    </div>
 
 {% endblock %}
 {% block scripts %}

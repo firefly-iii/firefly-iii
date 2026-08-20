@@ -38,5 +38,21 @@ $(function () {
     }
 
     updateAutoBudget();
-    
+
+    // "Save & Create New" reproduces the old "return here" checkbox's behaviour
+    // (checked, then submit) without showing the checkbox itself.
+    $('#saveCreateNewBtn').on('click', function () {
+        $('#create_another').prop('checked', true);
+    });
+
+    // "Save & Exit" is the plain submit -- make sure the checkbox is off in case
+    // the user clicked "Save & Create New" first, then came back and clicked this.
+    $('#saveExitBtn').on('click', function () {
+        $('#create_another').prop('checked', false);
+    });
+
+    $('#cancelCreateBudgetBtn').on('click', function () {
+        $('#cancelCreateBudgetModal').modal('show');
+    });
+
 });

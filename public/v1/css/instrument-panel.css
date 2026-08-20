@@ -197,6 +197,30 @@ textarea:focus-visible,
     color: #ffffff;
 }
 
+/*
+ * Treeview collapse/expand indicator. AdminLTE ships this as a bare
+ * fa-angle-left (unrotated = pointing left) that rotates -90deg to point
+ * down when a submenu opens. Pointing left at rest to mean "click to
+ * reveal a list below" reads backwards -- rotate the resting state 180deg
+ * so it points right (the disclosure-triangle convention: collapsed = >,
+ * expanded = v) instead. AdminLTE's own `.menu-open ... { rotate(-90deg) }`
+ * rule is more specific than this and still wins once a submenu opens, so
+ * the expanded state (pointing down) is untouched.
+ *
+ * Separately: AdminLTE also auto-expands a submenu via `.active >
+ * .treeview-menu { display: block }` when the current page lives inside
+ * it, but never had a matching arrow rule for that case -- the arrow
+ * simply never rotated, even though the list was visibly open. Added
+ * here so the arrow always reflects what's actually on screen.
+ */
+.sidebar-menu > li > a > .pull-right-container > .fa-angle-left {
+    transform: rotate(180deg);
+}
+
+.sidebar-menu > li.active > a > .pull-right-container > .fa-angle-left {
+    transform: rotate(-90deg);
+}
+
 /* =========================== CONTENT SURFACE =========================== */
 
 .content-wrapper {
@@ -234,6 +258,32 @@ textarea:focus-visible,
 .box-title {
     font-weight: 600;
     letter-spacing: -0.01em;
+}
+
+/* Puts a single action button in the box-header, aligned with the title --
+   used where a box had its "create" button duplicated in both the body and
+   the footer (e.g. Budgets); one button, in one obvious place. */
+.box-header--actions {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 8px;
+}
+
+/* AdminLTE gives .box-header a clearfix (::before/::after {content:" ";
+   display:table}) to contain floated box-tools. Under flex those pseudo-
+   elements become two extra (near-zero-width) flex items, so
+   justify-content:space-between splits its gap across 3 slots instead of
+   1 -- title and button both end up shifted inward instead of flush at the
+   edges. Drop the generated content here; nothing is floated to contain. */
+.box-header--actions::before,
+.box-header--actions::after {
+    content: none;
+    display: none;
+}
+
+.box-header--actions .box-title {
+    margin: 0;
 }
 
 .box-footer {
@@ -591,6 +641,23 @@ label {
     color: var(--ip-fg-muted);
 }
 
+/* ============================== BUDGETS TABLE ============================== */
+/* Drag handle (row reordering) stays alone on the left, same spot it's always
+   been. Edit/delete used to sit right next to it in one crowded button group;
+   they now live in a kebab menu in a dedicated actions column on the right,
+   same pattern as the Currencies table. */
+
+.budgets-table__handle {
+    width: 32px;
+    text-align: center;
+}
+
+.budgets-table__actions {
+    width: 56px;
+    text-align: center;
+    white-space: nowrap;
+}
+
 /* ============================== PERIOD NAVIGATOR (Budgets) ============================== */
 /* One tight inline group -- step arrows, a single month+year picker, a
    jump-to-current shortcut -- replacing what used to be two duplicate
@@ -615,6 +682,11 @@ label {
 
 .period-nav__picker {
     flex: 1 1 auto;
+    /* Bootstrap's .form-control sets width:100%, which -- since flex-basis:auto
+       defers to the width property when one is set -- would otherwise force this
+       select to claim the whole row by itself and push the arrows onto their own
+       lines. Override it so the select sizes like a normal flex item instead. */
+    width: auto;
     min-width: 0;
     padding-left: 6px;
     padding-right: 20px;
@@ -644,6 +716,30 @@ label {
     }
 }
 
+/*
+ * .content-header-actions (firefly.css) absolutely positions whatever sits in the page
+ * header's top-right slot -- fine for a single short button (Currencies/Accounts), which
+ * happens to fit within the title's own height so nothing ever visibly overlapped. It was
+ * never actually responsive though: give it something taller, like .period-nav wrapping to
+ * two rows on a narrow phone, and it floats over the title and the content below with
+ * nothing accounting for its real height. Below tablet width, drop out of absolute
+ * positioning entirely so it flows in-document below the title instead -- correct by
+ * construction rather than by coincidentally being short enough. Only `position` changes
+ * here, not `display`, so .period-nav's own flex layout (and its own wrap rule above) is
+ * untouched.
+ */
+@media (max-width: 767px) {
+    .content-header-actions {
+        position: static;
+        display: block;
+        margin-top: 10px;
+    }
+
+    .period-nav.content-header-actions {
+        display: flex;
+    }
+}
+
 /* ============================== CURRENCY TOGGLE (from a previous pass) ============================== */
 /* Re-themed onto tokens instead of the hardcoded AdminLTE green it shipped
    with, so it now follows light/dark like everything else. */
@@ -667,4 +763,68 @@ label {
 
 .skin-firefly-iii .content-header {
     background-color: var(--ip-bg);
+}
+
+/* ============================== BUDGET CREATE FORM ============================== */
+
+.budget-create-another {
+    display: none;
+}
+
+.budget-form-actions {
+    display: flex;
+    gap: 8px;
+    background: var(--ip-bg-alt);
+    border: 1px solid var(--ip-border);
+    border-radius: 4px;
+    padding: 12px;
+}
+
+.budget-form-actions .btn {
+    flex: 1 1 0;
+    padding: 10px 16px;
+    font-weight: 600;
+}
+
+@media (max-width: 600px) {
+    .budget-form-actions {
+        flex-direction: column;
+    }
+}
+
+/* Shared chrome (header, panels, buttons, form controls) is already themed
+   app-wide; .modal itself never picked up tokens because this is the first
+   flagship-page use of a Bootstrap modal since the redesign. */
+.modal-content {
+    background: var(--ip-surface);
+    color: var(--ip-fg);
+    border: 1px solid var(--ip-border);
+    border-radius: 4px;
+    box-shadow: var(--ip-shadow-panel);
+}
+
+.modal-header,
+.modal-footer {
+    border-color: var(--ip-border);
+}
+
+.modal-title {
+    font-weight: 600;
+    letter-spacing: -0.01em;
+}
+
+.modal-backdrop {
+    background-color: var(--ip-fg);
+}
+
+.modal .close {
+    color: var(--ip-fg);
+    text-shadow: none;
+    opacity: 0.6;
+}
+
+.modal .close:hover,
+.modal .close:focus {
+    color: var(--ip-fg);
+    opacity: 1;
 }
