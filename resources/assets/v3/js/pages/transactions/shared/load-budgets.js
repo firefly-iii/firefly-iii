@@ -20,6 +20,7 @@
 
 
 import Get from "../../../api/model/budget/get.js";
+import i18next from "i18next";
 
 export function loadBudgets(includeInactive) {
     let params = {
@@ -36,14 +37,16 @@ export function loadBudgets(includeInactive) {
                 let current = response.data.data[i];
                 if(true === current.attributes.active) {
                     let obj = {
-                        id: current.id, name: current.attributes.name,
+                        id: current.id,
+                        name: current.attributes.name,
                     };
                     returnData.push(obj);
                     continue;
                 }
                 if(includeInactive && false === current.attributes.active) {
                     let obj = {
-                        id: current.id, name: current.attributes.name,
+                        id: current.id,
+                        name: current.attributes.name + ' ('+i18next.t('firefly.inactive').toLowerCase()+')',
                     };
                     returnData.push(obj);
                 }

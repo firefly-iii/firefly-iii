@@ -25,5 +25,5 @@ export function addSplit() {
     console.log('addSplit()');
     this.entries.push(createEmptySplit());
     this.disableSplitAccounts();
-    addAllAutocompleteToForm(this.filters);
+    this.addAllAutocompleteToForm();
 }

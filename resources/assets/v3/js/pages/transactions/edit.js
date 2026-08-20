@@ -44,6 +44,9 @@ import {changedAmount} from "./shared/changed-amount.js";
 import {changedForeignAmount} from "./shared/changed-foreign-amount.js";
 import {parseErrors} from "./shared/parse-errors.js";
 import {addSplit} from "./shared/add-split.js";
+import {clearDestinationAccount, clearSourceAccount} from "./shared/clear-fields.js";
+import {detectTransactionType} from "./shared/detect-transaction-type.js";
+import {determineAmountCurrency} from "./shared/determine-amount-currency.js";
 
 // TODO upload attachments to other file
 // TODO fix two maps, perhaps disconnect from entries entirely.
@@ -127,11 +130,13 @@ let transactions = function () {
         showMessageOrRedirectUser: showMessageOrRedirectUser,
         parseErrors: parseErrors,
         addSplit:addSplit,
+        clearSourceAccount: clearSourceAccount,
+        clearDestinationAccount: clearDestinationAccount,
+        detectTransactionType: detectTransactionType,
+        determineAmountCurrency: determineAmountCurrency,
+        addAllAutocompleteToForm: addAllAutocompleteToForm,
 
         // part of the account selection auto-complete
-        filters: {
-            source: [], destination: [],
-        },
 
         changedDateTime(event) {
             console.warn('changedDateTime, event is not used');
@@ -193,9 +198,6 @@ let transactions = function () {
                 for (let i in this.entries) {
                     if (this.entries.hasOwnProperty(i)) {
                         this.groupProperties.totalAmount = this.groupProperties.totalAmount + parseFloat(this.entries[i].amount);
-                        // TODO this does not include all possible types.
-                        this.filters.source.push(this.entries[i].source_account.type);
-                        this.filters.destination.push(this.entries[i].destination_account.type);
                     }
                 }
                 setTimeout(() => {
@@ -222,6 +224,7 @@ let transactions = function () {
         },
 
         init() {
+            console.log('Init()');
             this.i18next = i18next;
             // download translations and get the transaction group.
             this.notifications.wait.show = true;
@@ -347,7 +350,7 @@ let transactions = function () {
         addedSplit() {
             console.log('addedSplit()');
             this.disableSplitAccounts();
-            addAllAutocompleteToForm(this.filters);
+            this.addAllAutocompleteToForm();
         },
 
     }

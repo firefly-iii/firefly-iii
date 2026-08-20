@@ -64,6 +64,7 @@ return [
                 'you_create_transfer',
                 'you_create_withdrawal',
                 'you_create_deposit',
+                'inactive',
                 'liability_direction_debit_short',
                 'liability_direction_credit_short',
                 'liability_direction_null_short',

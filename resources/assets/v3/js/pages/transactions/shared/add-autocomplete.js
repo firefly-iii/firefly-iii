@@ -38,7 +38,33 @@ export function getUrls() {
     }
 }
 
-export function addAllAutocompleteToForm(filters) {
+export function addAllAutocompleteToForm() {
+    console.log('Now in addAllAutocompleteToForm()');
+    // filters are hard coded.
+    // part of the account selection auto-complete
+    let filters = {
+        // source can never be expense account
+        source: ['Asset account', 'Loan', 'Debt', 'Mortgage', 'Revenue account'],
+        // destination can never be revenue account
+        destination: ['Expense account', 'Loan', 'Debt', 'Mortgage', 'Asset account'],
+    };
+    // depending on the type of the transaction,
+    // the filters are changed. For edit form, this means
+    // the available account types may be limited.
+    if('edit' === this.formBehaviour.formType) {
+
+        if('withdrawal' === this.groupProperties.transactionType) {
+            filters.destination = ['Expense account'];
+        }
+        if('deposit' === this.groupProperties.transactionType) {
+            filters.source = ['Revenue account'];
+        }
+        if('transfer' === this.groupProperties.transactionType) {
+            filters.source = [this.entries[0].source_account.type];
+            filters.destination = [this.entries[0].source_account.type];
+        }
+    }
+
     const urls = getUrls();
     setTimeout(() => {
         // addedSplit, is called from the HTML
