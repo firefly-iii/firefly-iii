@@ -30,16 +30,12 @@ use Illuminate\View\Component;
 
 class Split extends Component
 {
-    public array $optionalFields;
-    public array $optionalDateFields;
 
     /**
      * Create a new component instance.
      */
-    public function __construct(array $optionalFields, array $optionalDateFields)
+    public function __construct()
     {
-        $this->optionalFields     = $optionalFields;
-        $this->optionalDateFields = $optionalDateFields;
     }
 
     /**

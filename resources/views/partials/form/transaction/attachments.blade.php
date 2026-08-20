@@ -1,4 +1,4 @@
-@if(true === $optionalFields['attachments'])
+<template x-if="true === formBehaviour.customFields.attachments">
     <div class="row mb-3">
         <label :for="'attachments_' + index"
                class="col-sm-1 col-form-label d-none d-sm-block">
@@ -13,4 +13,4 @@
                    >
         </div>
     </div>
-@endif
+</template>

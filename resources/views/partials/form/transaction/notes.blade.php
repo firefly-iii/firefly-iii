@@ -1,5 +1,6 @@
-@if(true === $optionalFields['notes'])
-<div class="row mb-3">
+
+<template x-if="true === formBehaviour.customFields.notes">
+    <div class="row mb-3">
     <label :for="'notes_' + index" class="col-sm-1 col-form-label d-none d-sm-block">
         <em title="{{ __('firefly.notes') }}" class="bi bi-fonts"></em>
     </label>
@@ -10,4 +11,5 @@
                   placeholder="{{ __('firefly.notes')  }}"></textarea>
     </div>
 </div>
-@endif
+</template>
+

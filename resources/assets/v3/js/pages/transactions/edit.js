@@ -86,6 +86,7 @@ let transactions = function () {
             formType: 'edit',
             foreignCurrencyEnabled: true,
             categorySelectVisible: false,
+            customFields: {},
         },
 
         // form data (except transactions) is stored in formData
@@ -135,6 +136,7 @@ let transactions = function () {
         detectTransactionType: detectTransactionType,
         determineAmountCurrency: determineAmountCurrency,
         addAllAutocompleteToForm: addAllAutocompleteToForm,
+
 
         // part of the account selection auto-complete
 
@@ -225,6 +227,13 @@ let transactions = function () {
 
         init() {
             console.log('Init()');
+
+            // load custom field preference and enable/disable those fields.
+            this.loadCustomFields().then(data => {
+                console.log('Loaded custom fields');
+                this.formBehaviour.customFields = data;
+            });
+
             this.i18next = i18next;
             // download translations and get the transaction group.
             this.notifications.wait.show = true;

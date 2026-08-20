@@ -49,6 +49,7 @@ import {addSplit} from "./shared/add-split.js";
 import {clearSourceAccount, clearDestinationAccount} from './shared/clear-fields.js';
 import {detectTransactionType} from './shared/detect-transaction-type.js';
 import {determineAmountCurrency} from './shared/determine-amount-currency.js';
+import {loadCustomFields} from './shared/load-custom-fields.js';
 // TODO fix two maps, perhaps disconnect from entries entirely.
 // TODO map location from preferences
 // TODO field preferences
@@ -91,6 +92,7 @@ let create = function () {
         formBehaviour: {
             formType: 'create',
             foreignCurrencyEnabled: true,
+            customFields: {},
         },
 
         // form data (except transactions) is stored in formData
@@ -152,7 +154,8 @@ let create = function () {
         clearDestinationAccount: clearDestinationAccount,
         detectTransactionType: detectTransactionType,
         determineAmountCurrency: determineAmountCurrency,
-     addAllAutocompleteToForm: addAllAutocompleteToForm,
+        addAllAutocompleteToForm: addAllAutocompleteToForm,
+        loadCustomFields: loadCustomFields,
 
 
         filterForeignCurrencies(code) {
@@ -211,6 +214,10 @@ let create = function () {
             this.addSplit();
 
             // load custom field preference and enable/disable those fields.
+            this.loadCustomFields().then(data => {
+                console.log('Loaded custom fields', data);
+                this.formBehaviour.customFields = data;
+            });
 
             // load currencies and save in form data.
             loadCurrencies().then(data => {
