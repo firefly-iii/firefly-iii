@@ -64,7 +64,7 @@ class SecureHeaders
             // "form-action 'self'", // safe
             "font-src 'self' data:",
             sprintf("connect-src 'self' https://api.pwnedpasswords.com %s", $trackingScriptSrc),
-            sprintf("img-src 'self' data: 'nonce-%1s' ", $nonce),
+            sprintf("img-src 'self' data:  https://tile.openstreetmap.org 'nonce-%1s' ", $nonce),
             "manifest-src 'self'",
         ];
 

@@ -50,6 +50,9 @@ import {clearSourceAccount, clearDestinationAccount} from './shared/clear-fields
 import {detectTransactionType} from './shared/detect-transaction-type.js';
 import {determineAmountCurrency} from './shared/determine-amount-currency.js';
 import {loadCustomFields} from './shared/load-custom-fields.js';
+import L from 'leaflet';
+import 'leaflet/dist/leaflet.css';
+
 // TODO fix two maps, perhaps disconnect from entries entirely.
 // TODO map location from preferences
 // TODO field preferences
@@ -217,6 +220,18 @@ let create = function () {
             this.loadCustomFields().then(data => {
                 console.log('Loaded custom fields', data);
                 this.formBehaviour.customFields = data;
+                if(true === data.location) {
+                    console.log('Need to add map.');
+
+                    setTimeout(() => {
+                    let map = L.map(document.getElementById('location_map_0')).setView([51.505, -0.09], 13);
+                    L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
+                        maxZoom: 19,
+                        referrerPolicy: 'origin-when-cross-origin',
+                        attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>'
+                    }).addTo(map);
+                    }, 2000);
+                }
             });
 
             // load currencies and save in form data.

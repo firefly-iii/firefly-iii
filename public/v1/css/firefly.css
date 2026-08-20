@@ -31,7 +31,7 @@
 .low-chart {width:100%;height:200px;}
 .medium-chart {width:100%;height:250px;}
 .center-chart {width:100%;margin:0 auto;}
-.map-size {width:100%;height:300px;}
+.map-size {height:300px;}
 
 /* install box border */
 .install-box-border {border:1px #ddd solid;}
