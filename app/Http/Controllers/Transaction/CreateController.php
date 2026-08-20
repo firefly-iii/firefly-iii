@@ -132,9 +132,9 @@ final class CreateController extends Controller
         return view('transactions.create', [
             'subTitleIcon'         => $subTitleIcon,
             'cash'                 => $cash,
-            'longitude'            => $longitude,
-            'latitude'             => $latitude,
-            'zoomLevel'            => $zoomLevel,
+//            'longitude'            => $longitude,
+//            'latitude'             => $latitude,
+//            'zoomLevel'            => $zoomLevel,
             'objectType'           => $objectType,
             'subTitle'             => $subTitle,
             'previousUrl'          => $previousUrl,

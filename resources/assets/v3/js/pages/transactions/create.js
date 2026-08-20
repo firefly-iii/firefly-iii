@@ -52,6 +52,7 @@ import {determineAmountCurrency} from './shared/determine-amount-currency.js';
 import {loadCustomFields} from './shared/load-custom-fields.js';
 import L from 'leaflet';
 import 'leaflet/dist/leaflet.css';
+import {loadDefaultCoordinates} from './shared/load-default-coordinates.js';
 
 // TODO fix two maps, perhaps disconnect from entries entirely.
 // TODO map location from preferences
@@ -66,6 +67,9 @@ let create = function () {
 
         // transactions are stored in "entries":
         entries: [],
+
+        // maps are stored in this array so they can be referred to.
+        maps: [],
 
         // properties for the entire transaction group
         groupProperties: {
@@ -96,6 +100,12 @@ let create = function () {
             formType: 'create',
             foreignCurrencyEnabled: true,
             customFields: {},
+            defaultCoordinates: {
+                loaded: false,
+                latitude: 30,
+                longitude: 20,
+                zoom_level: 9,
+            },
         },
 
         // form data (except transactions) is stored in formData
@@ -108,7 +118,7 @@ let create = function () {
             foreignCurrencies: [], // this is the select list for foreign currencies.
             budgets: [],
             piggyBanks: [],
-            subscriptions: [],
+            subscriptions: []
         },
 
 
@@ -159,6 +169,7 @@ let create = function () {
         determineAmountCurrency: determineAmountCurrency,
         addAllAutocompleteToForm: addAllAutocompleteToForm,
         loadCustomFields: loadCustomFields,
+        loadDefaultCoordinates: loadDefaultCoordinates,
 
 
         filterForeignCurrencies(code) {
@@ -209,30 +220,75 @@ let create = function () {
         clearCategory(index) {
             this.entries[index].category_name = '';
         },
+        displayMap(index) {
+            index = parseInt(index);
+            if (true === this.formBehaviour.customFields.location) {
 
+                if (false === this.formBehaviour.defaultCoordinates.loaded) {
+                    // load first, then show map.
+                    this.loadDefaultCoordinates().then(data => {
+                        this.formBehaviour.defaultCoordinates = data;
+                        this.renderMap(index, true);
+                    });
+                    return;
+                }
+                this.renderMap(index, false);
+            }
+        },
+        renderMap(index, useDefault) {
+            const el = document.getElementById('location_map_' + index);
+            let latitude = parseFloat(this.formBehaviour.defaultCoordinates.latitude);
+            let longitude = parseFloat(this.formBehaviour.defaultCoordinates.longitude);
+            let zoomLevel = parseInt(this.formBehaviour.defaultCoordinates.zoom_level);
+            if(!useDefault) {
+                console.log('Using coordinates from data attributes');
+                latitude = parseFloat(el.dataset.latitude);
+                longitude = parseFloat(el.dataset.longitude);
+                zoomLevel = parseInt(el.dataset.zoomLevel);
+            }
+            console.log('lat', latitude);
+            console.log('long', longitude);
+            console.log('zoom', zoomLevel);
+
+            this.maps[index] = L.map(el).setView([latitude, longitude], zoomLevel);
+            L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
+                maxZoom: 19,
+                referrerPolicy: 'origin-when-cross-origin',
+                attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>'
+            }).addTo(this.maps[index]);
+        },
+        respondToTabSwitch(event) {
+                // event.target // newly activated tab
+                // event.relatedTarget // previous active tab
+            let index = parseInt(event.currentTarget.dataset.index);
+            console.log(this);
+            if(this.maps.hasOwnProperty(index)) {
+                this.maps[index].invalidateSize();
+            }
+                //console.log('Switched to new tab!', event.target.dataset.index);
+        },
+        addTabListener() {
+            // on switch tab (to re-render map if necessary).
+            // this.maps[index].invalidateSize();
+            setTimeout(() => {
+            const tabEl = document.querySelectorAll('button[data-bs-toggle="tab"]')
+            console.log('Found tab elements', tabEl.length);
+            for(let i = 0; i < tabEl.length; i++) {
+                console.log('Add to tab element', i);
+                tabEl[i].removeEventListener('shown.bs.tab', this.respondToTabSwitch);
+                tabEl[i].addEventListener('shown.bs.tab', this.respondToTabSwitch.bind(this), true);
+            }
+            // tabEl.addEventListener('shown.bs.tab', event => {
+            //     // event.target // newly activated tab
+            //     // event.relatedTarget // previous active tab
+            //     console.log('Switched to new tab!');
+            // });
+            }, 500);
+        },
 
         init() {
-            console.log('init()');
             this.i18next = i18next;
             this.addSplit();
-
-            // load custom field preference and enable/disable those fields.
-            this.loadCustomFields().then(data => {
-                console.log('Loaded custom fields', data);
-                this.formBehaviour.customFields = data;
-                if(true === data.location) {
-                    console.log('Need to add map.');
-
-                    setTimeout(() => {
-                    let map = L.map(document.getElementById('location_map_0')).setView([51.505, -0.09], 13);
-                    L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
-                        maxZoom: 19,
-                        referrerPolicy: 'origin-when-cross-origin',
-                        attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>'
-                    }).addTo(map);
-                    }, 2000);
-                }
-            });
 
             // load currencies and save in form data.
             loadCurrencies().then(data => {
@@ -256,6 +312,13 @@ let create = function () {
                 this.formStates.loadingSubscriptions = false;
             });
 
+            // load custom field preference and enable/disable those fields.
+            this.loadCustomFields().then(data => {
+                console.log('Loaded custom fields', data);
+                this.formBehaviour.customFields = data;
+            });
+
+
             document.addEventListener('upload-success', (event) => {
                 console.log('Now in event listener "upload-success"');
                 this.processUpload(event);
@@ -270,6 +333,10 @@ let create = function () {
                 console.log('Now in event listener "upload-failed"')
                 this.processUploadError(event);
             });
+
+
+
+
             // document.addEventListener('location-move', (event) => {
             //     this.entries[event.detail.index].latitude = event.detail.latitude;
             //     this.entries[event.detail.index].longitude = event.detail.longitude;

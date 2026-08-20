@@ -6,9 +6,6 @@
             <div class="tab-content" id="splitTabsContent">
                 <template x-for="transaction, index in entries">
                     <x-transaction.split
-                        :zoomLevel="$zoomLevel"
-                        :latitude="$latitude"
-                        :longitude="$longitude"
                          />
                 </template>
             </div>

@@ -9,6 +9,7 @@
                             data-bs-toggle="tab"
                             :data-bs-target="'#split-'+index+'-pane'"
                             type="button" role="tab"
+                            :data-index="index"
                             :aria-controls="'split-'+index+'-pane'"
                             aria-selected="true">
                         <template x-if="'' === transaction.description">

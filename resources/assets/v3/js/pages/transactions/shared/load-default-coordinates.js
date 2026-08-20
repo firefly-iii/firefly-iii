@@ -1,5 +1,5 @@
 /*
- * add-split.js
+ * load-default-coordinates.js
  * Copyright (c) 2026 james@firefly-iii.org
  *
  * This file is part of Firefly III (https://github.com/firefly-iii).
@@ -18,13 +18,10 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-import {createEmptySplit} from "./create-empty-split.js";
-import {addAllAutocompleteToForm} from "./add-autocomplete.js";
+import Configuration from "../../../api/configuration/get.js";
 
-export function addSplit() {
-    console.log('addSplit()');
-    this.entries.push(createEmptySplit());
-    this.disableSplitAccounts();
-    this.addAllAutocompleteToForm();
-    this.addTabListener();
+export function loadDefaultCoordinates() {
+    return (new Configuration()).getByName('firefly.default_location').then(data => {
+        return data.data.data.value;
+    });
 }
