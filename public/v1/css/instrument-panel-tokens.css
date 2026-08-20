@@ -13,62 +13,63 @@
 
 /* ============================= FONTS ============================= */
 /* Self-hosted (this product never contacts external servers unless told
-   to -- a Google Fonts request would violate that). IBM Plex: an
-   engineering/technical-communications face, real character for this
-   instrument-panel world, Sans + Mono share one system so UI text and
-   tabular data read as one language. */
+   to -- a Google Fonts request would violate that). Geist: Vercel's
+   dashboard/dev-tool face, drawn for dense data UI rather than adapted
+   from a print family -- reads sharper and more current than the IBM
+   Plex pairing this replaces. Sans + Mono share one system so UI text
+   and tabular data still read as one language. */
 
 @font-face {
-    font-family: "Plex Sans";
-    src: url("../fonts/plex/ibm-plex-sans-latin-400-normal.woff2") format("woff2");
+    font-family: "Geist Sans";
+    src: url("../fonts/geist/geist-sans-latin-400-normal.woff2") format("woff2");
     font-weight: 400;
     font-style: normal;
     font-display: swap;
 }
 
 @font-face {
-    font-family: "Plex Sans";
-    src: url("../fonts/plex/ibm-plex-sans-latin-500-normal.woff2") format("woff2");
+    font-family: "Geist Sans";
+    src: url("../fonts/geist/geist-sans-latin-500-normal.woff2") format("woff2");
     font-weight: 500;
     font-style: normal;
     font-display: swap;
 }
 
 @font-face {
-    font-family: "Plex Sans";
-    src: url("../fonts/plex/ibm-plex-sans-latin-600-normal.woff2") format("woff2");
+    font-family: "Geist Sans";
+    src: url("../fonts/geist/geist-sans-latin-600-normal.woff2") format("woff2");
     font-weight: 600;
     font-style: normal;
     font-display: swap;
 }
 
 @font-face {
-    font-family: "Plex Sans";
-    src: url("../fonts/plex/ibm-plex-sans-latin-700-normal.woff2") format("woff2");
+    font-family: "Geist Sans";
+    src: url("../fonts/geist/geist-sans-latin-700-normal.woff2") format("woff2");
     font-weight: 700;
     font-style: normal;
     font-display: swap;
 }
 
 @font-face {
-    font-family: "Plex Mono";
-    src: url("../fonts/plex/ibm-plex-mono-latin-400-normal.woff2") format("woff2");
+    font-family: "Geist Mono";
+    src: url("../fonts/geist/geist-mono-latin-400-normal.woff2") format("woff2");
     font-weight: 400;
     font-style: normal;
     font-display: swap;
 }
 
 @font-face {
-    font-family: "Plex Mono";
-    src: url("../fonts/plex/ibm-plex-mono-latin-500-normal.woff2") format("woff2");
+    font-family: "Geist Mono";
+    src: url("../fonts/geist/geist-mono-latin-500-normal.woff2") format("woff2");
     font-weight: 500;
     font-style: normal;
     font-display: swap;
 }
 
 @font-face {
-    font-family: "Plex Mono";
-    src: url("../fonts/plex/ibm-plex-mono-latin-600-normal.woff2") format("woff2");
+    font-family: "Geist Mono";
+    src: url("../fonts/geist/geist-mono-latin-600-normal.woff2") format("woff2");
     font-weight: 600;
     font-style: normal;
     font-display: swap;
@@ -77,8 +78,8 @@
 /* ============================= TOKENS (light / base) ============================= */
 
 :root {
-    --ip-font-ui: "Plex Sans", -apple-system, "Segoe UI", sans-serif;
-    --ip-font-mono: "Plex Mono", ui-monospace, "SFMono-Regular", Menlo, Consolas, monospace;
+    --ip-font-ui: "Geist Sans", -apple-system, "Segoe UI", sans-serif;
+    --ip-font-mono: "Geist Mono", ui-monospace, "SFMono-Regular", Menlo, Consolas, monospace;
 
     --ip-bg: #eef1f4;
     --ip-bg-alt: #e4e9ee;
