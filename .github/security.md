@@ -24,10 +24,12 @@ any the following security issues may result in a permanent ban from the Firefly
 
 1. Any SSRF or DNS/hostname issues in any user provided URL field (webhooks, ntfy, SimpleFIN, Slack). It's by design 
 that users may set up any URL they want, be it internal, private or non-existing.
-2. Any XSS issue without a viable attack tree. See also the heading "attack service and risk assessment" earlier in this 
+2. Any (XSS) issue without a viable attack tree. See also the heading "attack service and risk assessment" earlier in this 
 policy. If you can find a spot where Firefly III or the associated tools render unescaped data, it's not a security 
 issue unless you can show me an actual attack that gets that data into the system.
-3. Any issue that is not true. AI models have already *hallucinated* security issues in Firefly III. They've 
+3. There are (end)points where one (non-admin) user can affect all other users. For example, browsing to `/flush` will 
+also clear out other user's cached data. Purging deleted records may also remove other user's soft-deleted data.
+4. Any issue that is not true. AI models have already *hallucinated* security issues in Firefly III. They've 
 referred to **non-existing** functions, templates and files. Including line numbers and code excerpts. Validate your 
 findings before you report them to me.
 
