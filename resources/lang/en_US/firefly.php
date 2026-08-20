@@ -2599,6 +2599,7 @@ return [
     'config_features'                                     => 'Enabled features',
     'config_tech'                                         => 'Tech related features',
     'config_external_connections'                         => 'Privacy-sensitive settings (connects to the internet)',
+    'no_external_map_disabled' => 'This option is disabled because Firefly III is not allowed to download external maps.',
 
     'setting_enable_exchange_rates'                       => 'Enable exchange rates',
     'setting_enable_exchange_rates_explain'               => 'Firefly III has the capability of calculating exchange rates for you.',

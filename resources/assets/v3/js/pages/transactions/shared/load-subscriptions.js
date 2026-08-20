@@ -19,8 +19,9 @@
  */
 
 import SubscriptionGet from "../../../api/model/subscription/get.js";
+import i18next from "i18next";
 
-export function loadSubscriptions() {
+export function loadSubscriptions(includeInactive) {
     let params = {
         page: 1, limit: 1337
     };
@@ -38,9 +39,15 @@ export function loadSubscriptions() {
                 let current = response.data.data[i];
                 let objectGroupId = current.attributes.object_group_id ?? '0';
                 let objectGroupTitle = current.attributes.object_group_title ?? '(no group)';
-                let piggyBank = {
-                    id: current.id, name: current.attributes.name, order: current.attributes.order,
+                let subscription = {
+                    id: current.id,
+                    name: current.attributes.active ? current.attributes.name : current.attributes.name + ' ('+i18next.t('firefly.inactive').toLowerCase()+')',
+                    order: current.attributes.order,
                 };
+                if(!includeInactive && false === current.attributes.active) {
+                    // skip over inactive items.
+                    continue;
+                }
                 if (!subscriptions.hasOwnProperty(objectGroupId)) {
                     subscriptions[objectGroupId] = {
                         id: objectGroupId,
@@ -49,7 +56,7 @@ export function loadSubscriptions() {
                         subscriptions: []
                     };
                 }
-                subscriptions[objectGroupId].subscriptions.push(piggyBank);
+                subscriptions[objectGroupId].subscriptions.push(subscription);
                 subscriptions[objectGroupId].subscriptions.sort((a, b) => a.order - b.order);
             }
         }

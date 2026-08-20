@@ -18,7 +18,6 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-import i18next from "i18next";
 import Delete from "../../../api/model/transaction/delete.js";
 
 export function processUploadError(event){
@@ -26,10 +25,10 @@ export function processUploadError(event){
     this.notifications.wait.show = false;
     this.notifications.error.show = true;
     this.formStates.isSubmitting = false;
-    this.notifications.error.text = i18next.t('firefly.errors_upload');
+    this.notifications.error.text = this.i18next.t('firefly.errors_upload');
     console.log(event.detail.error.response.status);
     if(413 === event.detail.error.response.status) {
-        this.notifications.error.text = i18next.t('firefly.upload_too_large');
+        this.notifications.error.text = this.i18next.t('firefly.upload_too_large');
     }
     if('create' === this.formBehaviour.formType) {
         // delete transaction and let user try again.

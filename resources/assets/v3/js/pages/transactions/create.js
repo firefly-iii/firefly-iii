@@ -49,10 +49,7 @@ import {addSplit} from "./shared/add-split.js";
 import {clearSourceAccount, clearDestinationAccount} from './shared/clear-fields.js';
 import {detectTransactionType} from './shared/detect-transaction-type.js';
 import {determineAmountCurrency} from './shared/determine-amount-currency.js';
-// TODO fix tags
-// TODO upload attachments to other file
 // TODO fix two maps, perhaps disconnect from entries entirely.
-// TODO group title
 // TODO map location from preferences
 // TODO field preferences
 
@@ -213,6 +210,8 @@ let create = function () {
             this.i18next = i18next;
             this.addSplit();
 
+            // load custom field preference and enable/disable those fields.
+
             // load currencies and save in form data.
             loadCurrencies().then(data => {
                 this.formStates.loadingCurrencies = false;
@@ -230,7 +229,7 @@ let create = function () {
                 this.formData.piggyBanks = data;
                 this.formStates.loadingPiggyBanks = false;
             });
-            loadSubscriptions().then(data => {
+            loadSubscriptions(false).then(data => {
                 this.formData.subscriptions = data;
                 this.formStates.loadingSubscriptions = false;
             });
@@ -293,7 +292,6 @@ let create = function () {
             };
 
             // catch for group title:
-            // TODO later this must be handled with more care (ie use the group title input)
             if (transactions.length > 1 && ('' === submission.group_title || null === submission.group_title)) {
                 submission.group_title = transactions[0].description;
             }

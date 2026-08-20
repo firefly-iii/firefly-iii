@@ -27,7 +27,7 @@ export function parseErrors(data) {
     this.notifications.success.show = false;
     this.notifications.wait.show = false;
     this.formStates.isSubmitting = false;
-    this.notifications.error.text = i18next.t('firefly.errors_submission_v2', {errorMessage: data.message});
+    this.notifications.error.text = this.i18next.t('firefly.errors_submission_v2', {errorMessage: data.message});
 
     if (data.hasOwnProperty('errors')) {
         this.entries = spliceErrorsIntoTransactions(data.errors, this.entries);

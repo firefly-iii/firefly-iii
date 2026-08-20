@@ -138,7 +138,7 @@ final class CreateController extends Controller
         $optionalFields['external_url'] ??= false;
         $optionalFields['location']     ??= false;
         $optionalFields['location'] = $optionalFields['location']
-        && true === AppConfiguration::get('enable_external_map', config('firefly.enable_external_map'))->data;
+        && true === AppConfiguration::get('enable_external_map', config('firefly.enable_external_map', false))->data;
 
         // map info:
         $longitude                  = config('firefly.default_location.longitude');

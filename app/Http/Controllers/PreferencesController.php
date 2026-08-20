@@ -32,6 +32,7 @@ use FireflyIII\Http\Requests\PreferencesRequest;
 use FireflyIII\Models\Account;
 use FireflyIII\Models\Preference;
 use FireflyIII\Repositories\Account\AccountRepositoryInterface;
+use FireflyIII\Support\Facades\AppConfiguration;
 use FireflyIII\Support\Facades\Navigation;
 use FireflyIII\Support\Facades\Preferences;
 use FireflyIII\Support\Facades\Steam;
@@ -193,9 +194,12 @@ final class PreferencesController extends Controller
             $ntfyPass          = '';
         }
 
+        $mapEnabled = true === AppConfiguration::get('enable_external_map', config('firefly.enable_external_map', false))->data;
+
         return view('preferences.index', [
             'anonymous'          => $anonymous,
             'language'           => $language,
+            'mapEnabled' => $mapEnabled,
             'pushoverAppToken'   => $pushoverAppToken,
             'pushoverUserToken'  => $pushoverUserToken,
             'ntfyServer'         => $ntfyServer,

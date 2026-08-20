@@ -1,4 +1,4 @@
-<div :class="{'tab-pane fade pt-2':true, 'show active': index ===0}" :id="'split-'+index+'-pane'" role="tabpanel" :aria-labelledby="'split-'+index+'-tab'" tabindex="0" x-init="addedSplit()">
+<div :class="{'tab-pane fade pt-2':true, 'show active': index ===0 }" :id="'split-'+index+'-pane'" role="tabpanel" :aria-labelledby="'split-'+index+'-tab'" tabindex="0" x-init="addedSplit()">
     <div class="row mb-2">
         <div class="col-xl-6 col-lg-6 col-md-12 col-xs-12 mb-2">
             <!-- BASIC TRANSACTION INFORMATION -->
