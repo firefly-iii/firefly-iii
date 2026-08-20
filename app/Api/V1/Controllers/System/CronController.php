@@ -44,17 +44,18 @@ final class CronController extends Controller
     {
         CLIToken::routeBinder($cliToken, $request->route());
         $config                           = $request->getAll();
+        $user = CLIToken::findUserByToken($cliToken);
 
         Log::debug(sprintf('Now in %s', __METHOD__));
         Log::debug(sprintf('Date is %s', $config['date']->toIsoString()));
         $return                           = [];
-        $return['recurring_transactions'] = $this->runRecurring($config['force'], $config['date']);
-        $return['auto_budgets']           = $this->runAutoBudget($config['force'], $config['date']);
+        $return['recurring_transactions'] = $this->runRecurring($user, $config['force'], $config['date']);
+        $return['auto_budgets']           = $this->runAutoBudget($user, $config['force'], $config['date']);
         if (true === AppConfiguration::get('enable_external_rates', config('cer.download_enabled'))->data) {
-            $return['exchange_rates'] = $this->exchangeRatesCronJob($config['force'], $config['date']);
+            $return['exchange_rates'] = $this->exchangeRatesCronJob($user, $config['force'], $config['date']);
         }
-        $return['bill_notifications']     = $this->billWarningCronJob($config['force'], $config['date']);
-        $return['webhooks']               = $this->webhookCronJob($config['force'], $config['date']);
+        $return['bill_notifications']     = $this->billWarningCronJob($user, $config['force'], $config['date']);
+        $return['webhooks']               = $this->webhookCronJob($user, $config['force'], $config['date']);
 
         return response()->api($return);
     }

@@ -31,17 +31,19 @@ use FireflyIII\Support\Cronjobs\BillWarningCronjob;
 use FireflyIII\Support\Cronjobs\ExchangeRatesCronjob;
 use FireflyIII\Support\Cronjobs\RecurringCronjob;
 use FireflyIII\Support\Cronjobs\WebhookCronjob;
+use FireflyIII\User;
 
 /**
  * Trait CronRunner
  */
 trait CronRunner
 {
-    protected function billWarningCronJob(bool $force, Carbon $date): array
+    protected function billWarningCronJob(User $user, bool $force, Carbon $date): array
     {
         /** @var BillWarningCronjob $billWarning */
         $billWarning = app(BillWarningCronjob::class);
         $billWarning->setForce($force);
+        $billWarning->setUser($user);
         $billWarning->setDate($date);
 
         try {
@@ -58,11 +60,12 @@ trait CronRunner
         ];
     }
 
-    protected function exchangeRatesCronJob(bool $force, Carbon $date): array
+    protected function exchangeRatesCronJob(User $user, bool $force, Carbon $date): array
     {
         /** @var ExchangeRatesCronjob $exchangeRates */
         $exchangeRates = app(ExchangeRatesCronjob::class);
         $exchangeRates->setForce($force);
+        $exchangeRates->setUser($user);
         $exchangeRates->setDate($date);
 
         try {
@@ -79,11 +82,12 @@ trait CronRunner
         ];
     }
 
-    protected function runAutoBudget(bool $force, Carbon $date): array
+    protected function runAutoBudget(User $user, bool $force, Carbon $date): array
     {
         /** @var AutoBudgetCronjob $autoBudget */
         $autoBudget = app(AutoBudgetCronjob::class);
         $autoBudget->setForce($force);
+        $autoBudget->setUser($user);
         $autoBudget->setDate($date);
 
         try {
@@ -100,11 +104,12 @@ trait CronRunner
         ];
     }
 
-    protected function runRecurring(bool $force, Carbon $date): array
+    protected function runRecurring(User $user, bool $force, Carbon $date): array
     {
         /** @var RecurringCronjob $recurring */
         $recurring = app(RecurringCronjob::class);
         $recurring->setForce($force);
+        $recurring->setUser($user);
         $recurring->setDate($date);
 
         try {
@@ -121,11 +126,12 @@ trait CronRunner
         ];
     }
 
-    protected function webhookCronJob(bool $force, Carbon $date): array
+    protected function webhookCronJob(User $user, bool $force, Carbon $date): array
     {
         /** @var WebhookCronjob $webhook */
         $webhook = app(WebhookCronjob::class);
         $webhook->setForce($force);
+        $webhook->setUser($user);
         $webhook->setDate($date);
 
         try {

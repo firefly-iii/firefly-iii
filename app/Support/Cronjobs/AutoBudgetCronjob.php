@@ -49,7 +49,7 @@ class AutoBudgetCronjob extends AbstractCronjob
         // less than half a day ago:
         if ($lastTime > 0 && $diff <= 43_200) {
             Log::info(sprintf('It has been %s since the auto budget cron-job has fired.', $diffForHumans));
-            if (false === $this->force) {
+            if (false === $this->force || false === $this->isOwner) {
                 Log::info('The auto budget cron-job will not fire now.');
                 $this->message = sprintf('It has been %s since the auto budget cron-job has fired. It will not fire now.', $diffForHumans);
 
@@ -73,6 +73,7 @@ class AutoBudgetCronjob extends AbstractCronjob
         /** @var CreateAutoBudgetLimits $job */
         $job                = app(CreateAutoBudgetLimits::class, [$this->date]);
         $job->setDate($this->date);
+        $job->setUser($this->user);
         $job->handle();
 
         // get stuff from job:

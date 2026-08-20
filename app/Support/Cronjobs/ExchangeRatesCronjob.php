@@ -49,7 +49,7 @@ class ExchangeRatesCronjob extends AbstractCronjob
         // less than half a day ago:
         if ($lastTime > 0 && $diff <= 43_200) {
             Log::info(sprintf('It has been %s since the exchange rates cron-job has fired.', $diffForHumans));
-            if (false === $this->force) {
+            if (false === $this->force || false === $this->isOwner) {
                 Log::info('The exchange rates cron-job will not fire now.');
                 $this->message = sprintf('It has been %s since the exchange rates cron-job has fired. It will not fire now.', $diffForHumans);
 
@@ -74,6 +74,7 @@ class ExchangeRatesCronjob extends AbstractCronjob
         /** @var DownloadExchangeRates $job */
         $job                = app(DownloadExchangeRates::class);
         $job->setDate($this->date);
+        $job->setUser($this->user);
         $job->handle();
 
         // get stuff from job:

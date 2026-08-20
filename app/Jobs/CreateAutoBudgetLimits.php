@@ -33,6 +33,7 @@ use FireflyIII\Models\BudgetLimit;
 use FireflyIII\Repositories\Budget\BudgetLimitRepositoryInterface;
 use FireflyIII\Repositories\Budget\OperationsRepositoryInterface;
 use FireflyIII\Support\Facades\Navigation;
+use FireflyIII\User;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
@@ -52,6 +53,7 @@ class CreateAutoBudgetLimits implements ShouldQueue
     use SerializesModels;
 
     private Carbon $date;
+    private User $user;
 
     /**
      * Create a new job instance.
@@ -74,7 +76,11 @@ class CreateAutoBudgetLimits implements ShouldQueue
     public function handle(): void
     {
         Log::debug(sprintf('Now at start of CreateAutoBudgetLimits() job for %s.', $this->date->format('D d M Y')));
-        $autoBudgets = AutoBudget::get();
+
+        $autoBudgets = AutoBudget::leftJoin('budgets','auto_budgets.budget_id','=','budgets.id')->where('budgets.user_id', $this->user->id)->get(['auto_budgets.*']);
+        if($this->user->hasRole('owner')) {
+            $autoBudgets = AutoBudget::get();
+        }
         Log::debug(sprintf('Found %d auto budgets.', $autoBudgets->count()));
         foreach ($autoBudgets as $autoBudget) {
             $this->handleAutoBudget($autoBudget);
@@ -86,6 +92,11 @@ class CreateAutoBudgetLimits implements ShouldQueue
         $newDate    = clone $date;
         $newDate->startOfDay();
         $this->date = $newDate;
+    }
+
+    public function setUser(User $user): void
+    {
+        $this->user = $user;
     }
 
     private function createAdjustedLimit(AutoBudget $autoBudget): void

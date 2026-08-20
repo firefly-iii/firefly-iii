@@ -29,6 +29,7 @@ use FireflyIII\Models\CurrencyExchangeRate;
 use FireflyIII\Models\TransactionCurrency;
 use FireflyIII\Repositories\Currency\CurrencyRepositoryInterface;
 use FireflyIII\Repositories\User\UserRepositoryInterface;
+use FireflyIII\User;
 use GuzzleHttp\Client;
 use GuzzleHttp\Exception\ConnectException;
 use GuzzleHttp\Exception\GuzzleException;
@@ -58,6 +59,7 @@ class DownloadExchangeRates implements ShouldQueue
     private Carbon $date;
     private CurrencyRepositoryInterface $repository;
     private Collection $users;
+    private User $user;
 
     /**
      * Create a new job instance.
@@ -65,11 +67,6 @@ class DownloadExchangeRates implements ShouldQueue
     public function __construct(?Carbon $date)
     {
         $this->repository = app(CurrencyRepositoryInterface::class);
-
-        // get all users:
-        /** @var UserRepositoryInterface $userRepository */
-        $userRepository   = app(UserRepositoryInterface::class);
-        $this->users      = $userRepository->all();
 
         if ($date instanceof Carbon) {
             $newDate    = clone $date;
@@ -99,6 +96,20 @@ class DownloadExchangeRates implements ShouldQueue
         $newDate->startOfDay();
         $this->date = $newDate;
     }
+
+    public function setUser(User $user): void
+    {
+        $this->user = $user;
+        $this->users = new Collection([$user]);
+        if($user->hasRole('admin')) {
+            // get all users:
+            /** @var UserRepositoryInterface $userRepository */
+            $userRepository   = app(UserRepositoryInterface::class);
+            $this->users      = $userRepository->all();
+        }
+    }
+
+
 
     /**
      * @throws GuzzleException

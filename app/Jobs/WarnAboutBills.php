@@ -50,6 +50,7 @@ class WarnAboutBills implements ShouldQueue
 
     private Carbon $date;
     private bool $force;
+    private User $user;
 
     /**
      * Create a new job instance.
@@ -77,7 +78,14 @@ class WarnAboutBills implements ShouldQueue
     public function handle(): void
     {
         Log::debug(sprintf('Now at start of WarnAboutBills() job for %s.', $this->date->format('D d M Y')));
-        foreach (User::all() as $user) {
+
+        $users = [$this->user];
+        if($this->user->hasRole('owner')) {
+            Log::debug('User is owner, will run for all users.');
+            $users = User::all();
+        }
+
+        foreach ($users as $user) {
             $bills   = $user->bills()->where('active', true)->get();
             $overdue = [];
 
@@ -112,6 +120,11 @@ class WarnAboutBills implements ShouldQueue
     public function setForce(bool $force): void
     {
         $this->force = $force;
+    }
+
+    public function setUser(User $user): void
+    {
+        $this->user = $user;
     }
 
     private function getDates(Bill $bill): array

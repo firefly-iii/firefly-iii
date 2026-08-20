@@ -56,7 +56,7 @@ class BillWarningCronjob extends AbstractCronjob
         // less than half a day ago:
         if ($lastTime > 0 && $diff <= 43_200) {
             Log::info(sprintf('It has been %s since the bill notification cron-job has fired.', $diffForHumans));
-            if (false === $this->force) {
+            if (false === $this->force || false === $this->isOwner) {
                 Log::info('The cron-job will not fire now.');
                 $this->message      = sprintf('It has been %s since the bill notification cron-job has fired. It will not fire now.', $diffForHumans);
                 $this->jobFired     = false;
@@ -85,6 +85,7 @@ class BillWarningCronjob extends AbstractCronjob
         /** @var WarnAboutBills $job */
         $job                = app(WarnAboutBills::class);
         $job->setDate($this->date);
+        $job->setUser($this->user);
         $job->setForce($this->force);
         $job->handle();
 

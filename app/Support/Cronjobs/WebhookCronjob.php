@@ -56,7 +56,7 @@ class WebhookCronjob extends AbstractCronjob
         // less than ten minutes ago.
         if ($lastTime > 0 && $diff <= 600) {
             Log::info(sprintf('It has been %s since the webhook cron-job has fired.', $diffForHumans));
-            if (false === $this->force) {
+            if (false === $this->force || false === $this->isOwner) {
                 Log::info('The cron-job will not fire now.');
                 $this->message      = sprintf('It has been %s since the webhook cron-job has fired. It will not fire now.', $diffForHumans);
                 $this->jobFired     = false;
