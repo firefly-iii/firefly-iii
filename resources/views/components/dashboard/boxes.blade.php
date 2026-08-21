@@ -16,7 +16,7 @@
                 <template x-if="loading">
                     <p class="d-none d-xs-block">
                         <div class="spinner-border spinner-border-sm" role="status">
-  <span class="visually-hidden">Loading...</span>
+  <span class="visually-hidden">{{ __('firefly.thinking') }}</span>
 </div>
                     </p>
                 </template>
@@ -70,7 +70,7 @@
                 <template x-if="loading">
                     <p class="d-none d-sm-block">
                         <div class="spinner-border spinner-border-sm" role="status">
-  <span class="visually-hidden">Loading...</span>
+  <span class="visually-hidden">{{ __('firefly.thinking') }}</span>
 </div>
                     </p>
                 </template>
@@ -123,7 +123,7 @@
                 <template x-if="loading">
                     <p class="d-none d-sm-block">
                         <div class="spinner-border spinner-border-sm" role="status">
-  <span class="visually-hidden">Loading...</span>
+  <span class="visually-hidden">{{ __('firefly.thinking') }}</span>
 </div>
                     </p>
                 </template>
@@ -171,7 +171,7 @@
                 <template x-if="loading">
                     <p class="d-none d-sm-block">
                         <div class="spinner-border spinner-border-sm" role="status">
-  <span class="visually-hidden">Loading...</span>
+  <span class="visually-hidden">{{ __('firefly.thinking') }}</span>
 </div>
                     </p>
                 </template>

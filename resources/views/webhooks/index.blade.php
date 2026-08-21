@@ -8,7 +8,7 @@
                         <template x-if="0 === webhooks.length && loading">
                             <div class="d-flex justify-content-center m-2">
                                 <div class="spinner-border" role="status">
-                                    <span class="visually-hidden">Loading...</span>
+                                    <span class="visually-hidden">{{ __('firefly.thinking') }}</span>
                                 </div>
                             </div>
                         </template>

@@ -30,6 +30,7 @@ return [
     'actions'                                             => 'Actions',
     'edit'                                                => 'Edit',
     'loading'                                             => 'Loading',
+    'thinking' => 'Thinking...',
     'transaction_journal_id'                              => 'Transaction journal ID',
     'delete'                                              => 'Delete',
     'split'                                               => 'Split',

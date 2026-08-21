@@ -31,7 +31,7 @@
                 {{-- loading indicator --}}
                 <div class="overlay text-center m-2">
                     <div class="spinner-border spinner-border-sm" role="status">
-  <span class="visually-hidden">Loading...</span>
+  <span class="visually-hidden">{{ __('firefly.thinking') }}</span>
 </div>
                 </div>
             </div>
@@ -46,7 +46,7 @@
                 {{-- loading indicator --}}
                 <div class="overlay text-center m-2">
                     <div class="spinner-border spinner-border-sm" role="status">
-  <span class="visually-hidden">Loading...</span>
+  <span class="visually-hidden">{{ __('firefly.thinking') }}</span>
 </div>
                 </div>
             </div>
@@ -65,7 +65,7 @@
                 {{-- loading indicator --}}
                 <div class="overlay text-center m-2">
                     <div class="spinner-border spinner-border-sm" role="status">
-  <span class="visually-hidden">Loading...</span>
+  <span class="visually-hidden">{{ __('firefly.thinking') }}</span>
 </div>
                 </div>
             </div>
@@ -80,7 +80,7 @@
                 {{-- loading indicator --}}
                 <div class="overlay text-center m-2">
                     <div class="spinner-border spinner-border-sm" role="status">
-  <span class="visually-hidden">Loading...</span>
+  <span class="visually-hidden">{{ __('firefly.thinking') }}</span>
 </div>
                 </div>
             </div>
@@ -118,7 +118,7 @@
                 {{-- loading indicator --}}
                 <div class="overlay text-center m-2">
                     <div class="spinner-border spinner-border-sm" role="status">
-  <span class="visually-hidden">Loading...</span>
+  <span class="visually-hidden">{{ __('firefly.thinking') }}</span>
 </div>
                 </div>
             </div>
@@ -153,7 +153,7 @@
                 {{-- loading indicator --}}
                 <div class="overlay text-center m-2">
                     <div class="spinner-border spinner-border-sm" role="status">
-  <span class="visually-hidden">Loading...</span>
+  <span class="visually-hidden">{{ __('firefly.thinking') }}</span>
 </div>
                 </div>
             </div>
@@ -172,7 +172,7 @@
                 {{-- loading indicator --}}
                 <div class="overlay text-center m-2">
                     <div class="spinner-border spinner-border-sm" role="status">
-  <span class="visually-hidden">Loading...</span>
+  <span class="visually-hidden">{{ __('firefly.thinking') }}</span>
 </div>
                 </div>
             </div>

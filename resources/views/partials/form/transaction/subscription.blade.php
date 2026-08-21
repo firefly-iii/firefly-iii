@@ -7,7 +7,7 @@
             <template x-if="formStates.loadingSubscriptions">
                 <span class="form-control-plaintext">
                     <div class="spinner-border spinner-border-sm text-primary" role="status">
-                        <span class="visually-hidden">Loading...</span>
+                        <span class="visually-hidden">{{ __('firefly.thinking') }}</span>
                     </div>
                 </span>
             </template>

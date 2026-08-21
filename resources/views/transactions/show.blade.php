@@ -4,7 +4,7 @@
         <template x-if="loading">
             <div class="alert alert-info alert-dismissible fade show" role="alert">
                 <div class="spinner-border spinner-border-sm" role="status">
-                    <span class="visually-hidden">Loading...</span>
+                    <span class="visually-hidden">{{ __('firefly.thinking') }}</span>
                 </div>
                 <span x-text="i18next.t('firefly.wait_loading_page')"></span>
                 <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="{{ __('firefly.close') }}"></button>
@@ -74,7 +74,7 @@
                         </tr>
                         <tr>
                             <td class="forty">{{ trans('list.type') }}</td>
-                            <td><span x-text="i18next.t('firefly.' + (group.transactions[0] ? group.transactions[0].type : ''))"></span></td>d>
+                            <td><span x-text="i18next.t('firefly.' + (group.transactions[0] ? group.transactions[0].type : ''))"></span></td>
                         </tr>
                         <tr>
                             <td>{{ trans('list.description') }}</td>

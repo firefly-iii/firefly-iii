@@ -9,7 +9,7 @@
                     <div class="col-lg-12">
                         <div id="status-box" class="p-3 install-box-border">
                             <div class="spinner-border spinner-border-sm" role="status">
-                                <span class="visually-hidden">Loading...</span>
+                                <span class="visually-hidden">{{ __('firefly.thinking') }}</span>
                             </div>
                         </div>
                     </div>

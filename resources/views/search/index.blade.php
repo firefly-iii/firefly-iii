@@ -93,7 +93,7 @@
                         {{-- loading indicator --}}
                         <div class="overlay">
                             <div class="spinner-border spinner-border-sm" role="status">
-                                <span class="visually-hidden">Loading...</span>
+                                <span class="visually-hidden">{{ __('firefly.thinking') }}</span>
                             </div>
                         </div>
                     </div>

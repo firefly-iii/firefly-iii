@@ -4,7 +4,7 @@
             <label class="form-label">&nbsp;</label>
             <template x-if="formStates.loadingCurrencies">
                 <span class="form-control-plaintext"><div class="spinner-border spinner-border-sm" role="status">
-  <span class="visually-hidden">Loading...</span>
+  <span class="visually-hidden">{{ __('firefly.thinking') }}</span>
 </div></span>
             </template>
             <template x-if="!formStates.loadingCurrencies">
