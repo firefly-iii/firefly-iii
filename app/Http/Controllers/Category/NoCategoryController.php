@@ -85,7 +85,7 @@ final class NoCategoryController extends Controller
         /** @var Carbon $start */
         /** @var Carbon $end */
         $page      = (int) $request->input('page');
-        $page     = clamp($page, 1, 2 ** 16);
+        $page      = clamp($page, 1, 2 ** 16);
         $pageSize  = (int) Preferences::get('listPageSize', 50)->data;
         $subTitle  = trans('firefly.without_category_between', [
             'start' => $start->isoFormat($this->monthAndDayFormat),
@@ -135,7 +135,7 @@ final class NoCategoryController extends Controller
         $end       = null;
         $periods   = new Collection();
         $page      = (int) $request->input('page');
-        $page     = clamp($page, 1, 2 ** 16);
+        $page      = clamp($page, 1, 2 ** 16);
         $pageSize  = (int) Preferences::get('listPageSize', 50)->data;
         Log::debug('Start of noCategory()');
         $subTitle  = (string) trans('firefly.all_journals_without_category');

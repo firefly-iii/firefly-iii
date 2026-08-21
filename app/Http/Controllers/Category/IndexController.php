@@ -71,7 +71,7 @@ final class IndexController extends Controller
     public function index(Request $request): Factory|\Illuminate\Contracts\View\View
     {
         $page       = 0 === (int) $request->input('page') ? 1 : (int) $request->input('page');
-        $page     = clamp($page, 1, 2 ** 16);
+        $page       = clamp($page, 1, 2 ** 16);
         $pageSize   = (int) Preferences::get('listPageSize', 50)->data;
         $collection = $this->repository->getCategories();
         $total      = $collection->count();

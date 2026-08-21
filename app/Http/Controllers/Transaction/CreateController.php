@@ -24,14 +24,11 @@ declare(strict_types=1);
 
 namespace FireflyIII\Http\Controllers\Transaction;
 
-use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Http\Controllers\Controller;
 use FireflyIII\Models\TransactionGroup;
 use FireflyIII\Repositories\Account\AccountRepositoryInterface;
 use FireflyIII\Repositories\TransactionGroup\TransactionGroupRepositoryInterface;
-use FireflyIII\Rules\System\IsValidOriginUrl;
 use FireflyIII\Services\Internal\Update\GroupCloneService;
-use FireflyIII\Support\Facades\AppConfiguration;
 use FireflyIII\Support\Facades\Preferences;
 use Illuminate\Contracts\View\Factory;
 use Illuminate\Contracts\View\View;
@@ -105,36 +102,36 @@ final class CreateController extends Controller
     {
         Preferences::mark();
 
-        $sourceId                   = (int) request()->get('source');
-        $destinationId              = (int) request()->get('destination');
+        $sourceId             = (int) request()->get('source');
+        $destinationId        = (int) request()->get('destination');
 
         /** @var AccountRepositoryInterface $accountRepository */
-        $accountRepository          = app(AccountRepositoryInterface::class);
-        $cash                       = $accountRepository->getCashAccount();
-        $preFilled                  = session()->has('preFilled') ? session('preFilled') : [];
-        $subTitle                   = (string) trans(sprintf('breadcrumbs.create_%s', strtolower((string) $objectType)));
-        $subTitleIcon               = 'bi-plus';
+        $accountRepository    = app(AccountRepositoryInterface::class);
+        $cash                 = $accountRepository->getCashAccount();
+        $preFilled            = session()->has('preFilled') ? session('preFilled') : [];
+        $subTitle             = (string) trans(sprintf('breadcrumbs.create_%s', strtolower((string) $objectType)));
+        $subTitleIcon         = 'bi-plus';
 
-        $allowedOpposingTypes       = config('firefly.allowed_opposing_types');
-        $accountToTypes             = config('firefly.account_to_transaction');
-        $previousUrl                = $this->rememberPreviousUrl('transactions.create.url');
-        $parts                      = parse_url((string) $previousUrl);
-        $search                     = sprintf('?%s', $parts['query'] ?? '');
-        $previousUrl                = str_replace($search, '', $previousUrl);
+        $allowedOpposingTypes = config('firefly.allowed_opposing_types');
+        $accountToTypes       = config('firefly.account_to_transaction');
+        $previousUrl          = $this->rememberPreviousUrl('transactions.create.url');
+        $parts                = parse_url((string) $previousUrl);
+        $search               = sprintf('?%s', $parts['query'] ?? '');
+        $previousUrl          = str_replace($search, '', $previousUrl);
 
         // map info:
-        $longitude                  = config('firefly.default_location.longitude');
-        $latitude                   = config('firefly.default_location.latitude');
-        $zoomLevel                  = config('firefly.default_location.zoom_level');
+        $longitude            = config('firefly.default_location.longitude');
+        $latitude             = config('firefly.default_location.latitude');
+        $zoomLevel            = config('firefly.default_location.zoom_level');
 
         session()->put('preFilled', $preFilled);
 
         return view('transactions.create', [
             'subTitleIcon'         => $subTitleIcon,
             'cash'                 => $cash,
-//            'longitude'            => $longitude,
-//            'latitude'             => $latitude,
-//            'zoomLevel'            => $zoomLevel,
+            //            'longitude'            => $longitude,
+            //            'latitude'             => $latitude,
+            //            'zoomLevel'            => $zoomLevel,
             'objectType'           => $objectType,
             'subTitle'             => $subTitle,
             'previousUrl'          => $previousUrl,

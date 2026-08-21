@@ -30,7 +30,7 @@ return [
     'actions'                                             => 'Actions',
     'edit'                                                => 'Edit',
     'loading'                                             => 'Loading',
-    'thinking' => 'Thinking...',
+    'thinking'                                            => 'Thinking...',
     'transaction_journal_id'                              => 'Transaction journal ID',
     'delete'                                              => 'Delete',
     'split'                                               => 'Split',
@@ -2123,7 +2123,7 @@ return [
 
     // transactions:
     'wait_loading_transaction'                            => 'Please wait for the form to load',
-    'wait_loading_page'                            => 'Please wait a moment for the page to load',
+    'wait_loading_page'                                   => 'Please wait a moment for the page to load',
     'wait_loading_data'                                   => 'Please wait for your information to load...',
     'wait_attachments'                                    => 'Please wait for the attachments to upload.',
     'errors_upload'                                       => 'The upload has failed. Please check your browser console for the error.',
@@ -2601,7 +2601,7 @@ return [
     'config_features'                                     => 'Enabled features',
     'config_tech'                                         => 'Tech related features',
     'config_external_connections'                         => 'Privacy-sensitive settings (connects to the internet)',
-    'no_external_map_disabled' => 'This option is disabled because Firefly III is not allowed to download external maps.',
+    'no_external_map_disabled'                            => 'This option is disabled because Firefly III is not allowed to download external maps.',
 
     'setting_enable_exchange_rates'                       => 'Enable exchange rates',
     'setting_enable_exchange_rates_explain'               => 'Firefly III has the capability of calculating exchange rates for you.',

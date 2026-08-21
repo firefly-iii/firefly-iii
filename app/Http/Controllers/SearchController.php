@@ -67,7 +67,7 @@ final class SearchController extends Controller
         }
         $fullQuery        = (string) $fullQuery;
         $page             = 0 === (int) $request->input('page') ? 1 : (int) $request->input('page');
-        $page     = clamp(value: $page, min:1, max:2 ** 16);
+        $page             = clamp(value: $page, min: 1, max: 2 ** 16);
         $ruleId           = (int) $request->input('rule');
         $ruleChanged      = false;
 
@@ -117,7 +117,7 @@ final class SearchController extends Controller
         }
         $fullQuery  = (string) $entry;
         $page       = 0 === (int) $request->input('page') ? 1 : (int) $request->input('page');
-        $page     = clamp(value: $page, min:1, max:2 ** 16);
+        $page       = clamp(value: $page, min: 1, max: 2 ** 16);
 
         $searcher->parseQuery($fullQuery);
 

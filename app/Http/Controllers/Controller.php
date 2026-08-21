@@ -69,7 +69,7 @@ abstract class Controller extends BaseController
     protected string $monthAndDayFormat;
     protected string $monthFormat;
     protected string $redirectUrl    = '/';
-    protected string $from = '';
+    protected string $from           = '';
 
     /**
      * Controller constructor.
@@ -91,7 +91,7 @@ abstract class Controller extends BaseController
         View::share('DEMO_PASSWORD', config('firefly.demo_password'));
         View::share('FF_VERSION', config('firefly.version'));
         View::share('FF_BUILD_TIME', config('firefly.build_time'));
-        $this->from = $this->getFromUrl();
+        $this->from  = $this->getFromUrl();
         View::share('FF3_FROM', $this->from);
         // this breaks when running < PHP 8.5 and is totally intentional.
         $input       = ' James is cool';
@@ -190,8 +190,8 @@ abstract class Controller extends BaseController
 
     private function getFromUrl(): string
     {
-        $current = parse_url(URL::full());
-        $from    = '';
+        $current   = parse_url(URL::full());
+        $from      = '';
         if (array_key_exists('path', $current)) {
             $from = $current['path'];
         }
