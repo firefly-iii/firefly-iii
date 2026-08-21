@@ -36,6 +36,25 @@ use Illuminate\Support\Facades\Log;
  */
 class CLIToken implements BinderInterface
 {
+    public static function findUserByToken(string $value): ?User
+    {
+        /** @var UserRepositoryInterface $repository */
+        $repository = app(UserRepositoryInterface::class);
+        $users      = $repository->all();
+
+        foreach ($users as $user) {
+            $accessToken = Preferences::getForUser($user, 'access_token');
+            if (null !== $accessToken && hash_equals((string) $accessToken->data, $value)) {
+                Log::info(sprintf('Recognized user #%d (%s) from his access token.', $user->id, $user->email));
+
+                return $user;
+            }
+        }
+        Log::error(sprintf('Recognized no users by access token "%s"', $value));
+
+        return null;
+    }
+
     public static function routeBinder(string $value, Route $route): string
     {
         /** @var UserRepositoryInterface $repository */
@@ -43,13 +62,13 @@ class CLIToken implements BinderInterface
         $users      = $repository->all();
 
         // check for static token
-        if (hash_equals($value, (string)config('firefly.static_cron_token')) && 32 === strlen(config('firefly.static_cron_token'))) {
+        if (hash_equals($value, (string) config('firefly.static_cron_token')) && 32 === strlen(config('firefly.static_cron_token'))) {
             return $value;
         }
 
         foreach ($users as $user) {
             $accessToken = Preferences::getForUser($user, 'access_token');
-            if (null !== $accessToken && hash_equals((string)$accessToken->data, $value)) {
+            if (null !== $accessToken && hash_equals((string) $accessToken->data, $value)) {
                 Log::info(sprintf('Recognized user #%d (%s) from his access token.', $user->id, $user->email));
 
                 return $value;
@@ -58,24 +77,5 @@ class CLIToken implements BinderInterface
         Log::error(sprintf('Recognized no users by access token "%s"', $value));
 
         throw new AuthenticationException();
-    }
-
-    public static function findUserByToken(string $value): ?User
-    {
-
-        /** @var UserRepositoryInterface $repository */
-        $repository = app(UserRepositoryInterface::class);
-        $users      = $repository->all();
-
-        foreach ($users as $user) {
-            $accessToken = Preferences::getForUser($user, 'access_token');
-            if (null !== $accessToken && hash_equals((string)$accessToken->data, $value)) {
-                Log::info(sprintf('Recognized user #%d (%s) from his access token.', $user->id, $user->email));
-
-                return $user;
-            }
-        }
-        Log::error(sprintf('Recognized no users by access token "%s"', $value));
-        return null;
     }
 }

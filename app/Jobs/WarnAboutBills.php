@@ -80,7 +80,7 @@ class WarnAboutBills implements ShouldQueue
         Log::debug(sprintf('Now at start of WarnAboutBills() job for %s.', $this->date->format('D d M Y')));
 
         $users = [$this->user];
-        if($this->user->hasRole('owner')) {
+        if ($this->user->hasRole('owner')) {
             Log::debug('User is owner, will run for all users.');
             $users = User::all();
         }

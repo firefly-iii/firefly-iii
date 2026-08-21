@@ -194,12 +194,12 @@ final class PreferencesController extends Controller
             $ntfyPass          = '';
         }
 
-        $mapEnabled = true === AppConfiguration::get('enable_external_map', config('firefly.enable_external_map', false))->data;
+        $mapEnabled                     = true === AppConfiguration::get('enable_external_map', config('firefly.enable_external_map', false))->data;
 
         return view('preferences.index', [
             'anonymous'          => $anonymous,
             'language'           => $language,
-            'mapEnabled' => $mapEnabled,
+            'mapEnabled'         => $mapEnabled,
             'pushoverAppToken'   => $pushoverAppToken,
             'pushoverUserToken'  => $pushoverUserToken,
             'ntfyServer'         => $ntfyServer,

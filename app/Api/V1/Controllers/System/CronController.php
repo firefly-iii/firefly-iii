@@ -44,7 +44,7 @@ final class CronController extends Controller
     {
         CLIToken::routeBinder($cliToken, $request->route());
         $config                           = $request->getAll();
-        $user = CLIToken::findUserByToken($cliToken);
+        $user                             = CLIToken::findUserByToken($cliToken);
 
         Log::debug(sprintf('Now in %s', __METHOD__));
         Log::debug(sprintf('Date is %s', $config['date']->toIsoString()));

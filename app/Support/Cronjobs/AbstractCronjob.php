@@ -32,15 +32,15 @@ use FireflyIII\User;
  */
 abstract class AbstractCronjob
 {
-    public bool      $jobErrored      = false;
-    public bool      $jobFired        = false;
-    public bool      $jobSucceeded    = false;
-    public ?string   $message         = null;
-    public int       $timeBetweenRuns = 43_200;
+    public bool    $jobErrored      = false;
+    public bool    $jobFired        = false;
+    public bool    $jobSucceeded    = false;
+    public ?string $message         = null;
+    public int     $timeBetweenRuns = 43_200;
     protected Carbon $date;
-    protected bool   $force           = false;
-    protected User     $user;
-    protected bool $isOwner = false;
+    protected bool $force           = false;
+    protected User $user;
+    protected bool $isOwner         = false;
 
     /**
      * AbstractCronjob constructor.
@@ -65,7 +65,7 @@ abstract class AbstractCronjob
 
     final public function setUser(User $user): void
     {
-        $this->user = $user;
+        $this->user    = $user;
         $this->isOwner = $user->hasRole('owner');
     }
 }
