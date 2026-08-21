@@ -1,5 +1,15 @@
 @extends('layout.v3.session')
 @section('content')
+    <div x-data="show">
+        <template x-if="loading">
+            <div class="alert alert-info alert-dismissible fade show" role="alert">
+                <div class="spinner-border spinner-border-sm" role="status">
+                    <span class="visually-hidden">Loading...</span>
+                </div>
+                <span x-text="i18next.t('firefly.wait_loading_page')"></span>
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="{{ __('firefly.close') }}"></button>
+            </div>
+        </template>
     <div class="row">
         <div class="col-lg-6">
             <div class="card mb-2">
@@ -60,20 +70,21 @@
                         <tbody>
                         <tr>
                             <td class="forty">{{ trans('list.id') }}</td>
-                            <td>#{{ $transactionGroup->id }}</td>
+                            <td>#<span x-text="group.id"></span></td>
                         </tr>
                         <tr>
                             <td class="forty">{{ trans('list.type') }}</td>
-                            <td>{{ __($first['transaction_type_type']) }}</td>
+                            <td><span x-text="i18next.t('firefly.' + (group.transactions[0] ? group.transactions[0].type : ''))"></span></td>d>
                         </tr>
                         <tr>
                             <td>{{ trans('list.description') }}</td>
                             <td>
-                                @if(1 === $splits)
-                                    {{ $first['description'] }}
-                                @else
-                                    {{ $transactionGroup->title }}
-                                @endif
+                                <template x-if="1 === group.transactions.length">
+                                    <span x-text="group.transactions[0].description"></span>
+                                </template>
+                                <template x-if="group.transactions.length > 1">
+                                    <span x-text="group.group_title"></span>
+                                </template>
                             </td>
                         </tr>
                         <tr>
@@ -539,9 +550,11 @@
     {{-- modal for linking journals. Will be filled by AJAX --}}
     <div class="modal fade" tabindex="-1" role="dialog" id="linkJournalModal">
     </div>
+    </div>
+
 @endsection
 @section('scripts')
-    @vite(['js/pages/generic.js'])
+    @vite(['js/pages/transactions/show.js'])
     <script type="text/javascript" nonce="{{ $JS_NONCE }}">
         var modalDialogURL = '{{ route('transactions.link.modal', ['%JOURNAL%']) }}';
         var acURL = '{{ route('api.v1.autocomplete.transactions-with-id') }}';
