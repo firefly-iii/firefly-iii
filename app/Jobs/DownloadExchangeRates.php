@@ -101,7 +101,7 @@ class DownloadExchangeRates implements ShouldQueue
     {
         $this->user = $user;
         $this->users = new Collection([$user]);
-        if($user->hasRole('admin')) {
+        if($this->user->hasRole('admin')) {
             // get all users:
             /** @var UserRepositoryInterface $userRepository */
             $userRepository   = app(UserRepositoryInterface::class);
