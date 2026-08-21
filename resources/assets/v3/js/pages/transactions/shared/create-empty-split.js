@@ -104,7 +104,7 @@ export function createEmptySplit() {
         hasLocation: false,
         latitude: null,
         longitude: null,
-        zoomLevel: null,
+        zoom_level: null,
 
 
         // date and time

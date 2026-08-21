@@ -35,6 +35,7 @@ use FireflyIII\Factory\TagFactory;
 use FireflyIII\Factory\TransactionJournalMetaFactory;
 use FireflyIII\Factory\TransactionTypeFactory;
 use FireflyIII\Models\Account;
+use FireflyIII\Models\Location;
 use FireflyIII\Models\Transaction;
 use FireflyIII\Models\TransactionGroup;
 use FireflyIII\Models\TransactionJournal;
@@ -194,6 +195,7 @@ class JournalUpdateService
         $this->updateCurrency();
         $this->updateAmount();
         $this->updateForeignAmount();
+        $this->updateLocation();
 
         Preferences::mark();
 
@@ -910,5 +912,29 @@ class JournalUpdateService
             return;
         }
         Log::debug('No type field present.');
+    }
+
+    private function updateLocation(): void
+    {
+        if($this->hasFields(['longitude','latitude','zoom_level'])) {
+            // if all are null or zero, delete current location.
+            if(null === $this->data['longitude'] && null === $this->data['latitude'] && null === $this->data['zoom_level']) {
+                $this->transactionJournal->locations()->delete();
+                return;
+            }
+            if('' === $this->data['longitude'] && '' === $this->data['latitude'] && null === $this->data['zoom_level']) {
+                $this->transactionJournal->locations()->delete();
+                return;
+            }
+            $location = $this->transactionJournal->locations()->first();
+            if(null === $location) {
+                $location = new Location();
+                $location->locatable()->associate($this->transactionJournal);
+            }
+            $location->longitude  = $this->data['longitude'] ?? null;
+            $location->latitude   = $this->data['latitude'];
+            $location->zoom_level = $this->data['zoom_level'];
+            $location->save();
+        }
     }
 }

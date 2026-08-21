@@ -12,7 +12,7 @@
         "bootstrap5-autocomplete": "^1",
         "bootstrap5-tags": "^1.7.17",
         "cally": "^0.9.2",
-        "date-fns": "4.4.0",
+        "date-fns": "^4.4.0",
         "fullcalendar": "^7.0.1",
         "i18next": "^26.0.3",
         "i18next-chained-backend": "^5.0.0",
@@ -20,7 +20,7 @@
         "i18next-localstorage-backend": "^4.2.0",
         "leaflet": "^1.9.4",
         "patch-package": "^8.0.1",
-        "shepherd.js": "^15.2.2",
+        "shepherd.js": "^11.2.0",
         "store": "^2.0.12"
     },
     "type": "module",

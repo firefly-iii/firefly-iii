@@ -79,11 +79,12 @@ class UpdateRequest extends FormRequest
             'category_id',
             'bill_id',
             'recurrence_id',
+            'zoom_level'
         ];
         $this->dateFields     = ['date', 'interest_date', 'book_date', 'process_date', 'due_date', 'payment_date', 'invoice_date'];
         $this->textareaFields = ['notes'];
         // not really floats, for validation.
-        $this->floatFields    = ['amount', 'foreign_amount'];
+        $this->floatFields    = ['amount', 'foreign_amount','longitude','latitude'];
         $this->stringFields   = [
             'type',
             'currency_code',

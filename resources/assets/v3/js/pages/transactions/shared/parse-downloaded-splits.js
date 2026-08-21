@@ -86,7 +86,7 @@ export function parseDownloadedSplits(downloads, groupId) {
                 current.hasLocation = true;
                 current.latitude = download.latitude;
                 current.longitude = download.longitude;
-                current.zoomLevel = download.zoom_level;
+                current.zoom_level = download.zoom_level;
             }
             returnArray.push(current);
         }

@@ -23,6 +23,7 @@ import sidebar from '../../pages/shared/sidebar.js';
 import dates from '../shared/dates.js';
 import i18next from "i18next";
 import Get from '../../api/model/transaction/get.js';
+import {format} from "date-fns";
 
 let show = function () {
     return {
@@ -45,7 +46,16 @@ let show = function () {
         downloadTransactionGroup() {
             (new Get()).show(this.group.id).then((response) => {
                 const info = response.data.data;
-                this.group.transactions = info.attributes.transactions;
+                this.group.transactions = [];
+                for(let i =0;i<info.attributes.transactions.length;i++){
+                    if(info.attributes.transactions.hasOwnProperty(i)) {
+                        let current =info.attributes.transactions[i];
+                        current.dateObject = new Date(current.date);
+                        current.dateFormatted = format(current.dateObject, this.i18next.t('config.date_time_fns'))
+                        this.group.transactions.push(current);
+                    }
+                }
+
                 this.loading = false;
             });
         }

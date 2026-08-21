@@ -12,9 +12,10 @@
         <template x-if="true || 0 === index">
             <div class="col-sm-10">
                 <div x-init="displayMap(index)"
-                    :data-longitude="formBehaviour.defaultCoordinates.longitude"
-                    :data-latitude="formBehaviour.defaultCoordinates.latitude"
-                    :data-zoom-level="formBehaviour.defaultCoordinates.zoom_level"
+                    :data-add-marker="transaction.hasLocation ? 'true' : 'false'"
+                    :data-longitude="transaction.longitude ?? formBehaviour.defaultCoordinates.longitude"
+                    :data-latitude="transaction.latitude ?? formBehaviour.defaultCoordinates.latitude"
+                    :data-zoom-level="transaction.zoom_level ?? formBehaviour.defaultCoordinates.zoom_level"
 
                     :id="'location_map_' + index" class="map-size location-map" :data-index="index"></div>
                 <span class="muted small">
@@ -22,7 +23,7 @@
                 <span>{{ __('firefly.click_tap_location') }}</span>
             </template>
             <template x-if="transaction.hasLocation">
-                <a :data-index="index" href="#" @click="clearLocation">{{ __('firefly.clear_location') }}</a>
+                <a :data-index="index" href="#" @click.prevent="clearLocation">{{ __('firefly.clear_location') }}</a>
             </template>
         </span>
             </div>

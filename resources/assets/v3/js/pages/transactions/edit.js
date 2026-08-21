@@ -47,7 +47,13 @@ import {addSplit} from "./shared/add-split.js";
 import {clearDestinationAccount, clearSourceAccount} from "./shared/clear-fields.js";
 import {detectTransactionType} from "./shared/detect-transaction-type.js";
 import {determineAmountCurrency} from "./shared/determine-amount-currency.js";
-
+import {loadCustomFields} from './shared/load-custom-fields.js';
+import {displayMap} from "./shared/display-map.js";
+import {loadDefaultCoordinates} from './shared/load-default-coordinates.js';
+import {renderMap} from './shared/render-map.js';
+import 'leaflet/dist/leaflet.css';
+import {onMapClick} from './shared/on-map-click.js';
+import {onMapZoom} from './shared/on-map-zoom.js';
 // TODO upload attachments to other file
 // TODO fix two maps, perhaps disconnect from entries entirely.
 // TODO group title
@@ -66,6 +72,10 @@ let transactions = function () {
         // transactions are stored in "entries":
         entries: [],
         originals: [],
+
+        // maps are stored in this array so they can be referred to.
+        maps: [],
+        markers: [],
 
         // state of the form is stored in formState:
         formStates: {
@@ -87,6 +97,12 @@ let transactions = function () {
             foreignCurrencyEnabled: true,
             categorySelectVisible: false,
             customFields: {},
+            defaultCoordinates: {
+                loaded: false,
+                latitude: 30,
+                longitude: 20,
+                zoom_level: 9,
+            },
         },
 
         // form data (except transactions) is stored in formData
@@ -136,6 +152,12 @@ let transactions = function () {
         detectTransactionType: detectTransactionType,
         determineAmountCurrency: determineAmountCurrency,
         addAllAutocompleteToForm: addAllAutocompleteToForm,
+        loadCustomFields: loadCustomFields,
+        displayMap: displayMap,
+        loadDefaultCoordinates: loadDefaultCoordinates,
+        renderMap: renderMap,
+        onMapClick: onMapClick,
+        onMapZoom: onMapZoom,
 
 
         // part of the account selection auto-complete
@@ -159,7 +181,18 @@ let transactions = function () {
         getTags(index) {
             return this.entries[index].tags ?? [];
         },
+        clearLocation(e) {
 
+            let index = parseInt(e.currentTarget.dataset.index);
+            this.entries[index].hasLocation = false;
+            this.entries[index].latitude = null;
+            this.entries[index].longitude = null;
+            this.entries[index].zoom_level = null;
+
+            if(this.markers.hasOwnProperty(index)) {
+                this.maps[index].removeLayer(this.markers[index]);
+            }
+        },
         getTransactionGroup() {
             this.entries = [];
             const page = window.location.href.split('/');
@@ -271,22 +304,23 @@ let transactions = function () {
             document.addEventListener('upload-error', (event) => {
                 this.processUploadError(event);
             });
-            document.addEventListener('location-move', (event) => {
-                this.entries[event.detail.index].latitude = event.detail.latitude;
-                this.entries[event.detail.index].longitude = event.detail.longitude;
-            });
+            // document.addEventListener('location-move', (event) => {
+            //     this.entries[event.detail.index].latitude = event.detail.latitude;
+            //     this.entries[event.detail.index].longitude = event.detail.longitude;
+            // });
 
-            document.addEventListener('location-set', (event) => {
-                this.entries[event.detail.index].hasLocation = true;
-                this.entries[event.detail.index].latitude = event.detail.latitude;
-                this.entries[event.detail.index].longitude = event.detail.longitude;
-                this.entries[event.detail.index].zoomLevel = event.detail.zoomLevel;
-            });
+            // document.addEventListener('location-set', (event) => {
+            //     this.entries[event.detail.index].hasLocation = true;
+            //     this.entries[event.detail.index].latitude = event.detail.latitude;
+            //     this.entries[event.detail.index].longitude = event.detail.longitude;
+            //     this.entries[event.detail.index].zoom_level = event.detail.zoomLevel;
+            // });
 
-            document.addEventListener('location-zoom', (event) => {
-                this.entries[event.detail.index].hasLocation = true;
-                this.entries[event.detail.index].zoomLevel = event.detail.zoomLevel;
-            });
+            // document.addEventListener('location-zoom', (event) => {
+            //     console.log('this happens?');
+            //     this.entries[event.detail.index].hasLocation = true;
+            //     this.entries[event.detail.index].zoom_level = event.detail.zoomLevel;
+            // });
         },
 
 

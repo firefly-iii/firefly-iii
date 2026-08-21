@@ -70,13 +70,15 @@ export function parseFromEntries(entries, originals, transactionType) {
             current.external_url = entry.external_url;
 
             // location
-            current.store_location = false;
+            current.longitude = null;
+            current.latitude = null;
+            current.zoom_level = null;
             if (entry.hasLocation) {
-                current.store_location = true;
                 current.longitude = entry.longitude.toString();
                 current.latitude = entry.latitude.toString();
-                current.zoom_level = entry.zoomLevel;
+                current.zoom_level = entry.zoom_level;
             }
+            console.log('Zoom level is now ', entry.zoom_level);
             if ('__NO_CODE__' === entry.foreign_currency_code) {
                 entry.foreign_currency_code = '';
             }

@@ -90,12 +90,9 @@
                         <tr>
                             <td class="thirty">{{ trans('list.date') }}</td>
                             <td>
-                                <span class="date-time" data-date="{{ $first['date']->toIso8601ZuluString() }}" title="{{ $first['date']->isoFormat($dateTimeFormat) }}@if('' !== $first['date_tz']) ({{ trans('firefly.stored_in_tz', ['timezone' => $first['date_tz']]) }}, {{ trans('firefly.displayed_in_tz', ['timezone' => config('app.timezone')]) }})@endif">
-                                {{ $first['date']->isoFormat($dateTimeFormat) }}
-                                @if('' !== $first['date_tz'])
-                                    ({{ trans('firefly.stored_in_tz', ['timezone' => $first['date_tz']]) }})
-                                @endif
-                                </span>
+                                <template x-if="group.transactions.length > 0">
+                                    <span x-text="group.transactions[0].dateFormatted" :title="group.transactions[0].date"></span>
+                                </template>
                             </td>
                         </tr>
                         </tbody>
@@ -363,12 +360,13 @@
                                 </td>
                             </tr>
                             <tr>
-                                <td>{{ __('firefly.transaction_journal_id') }}</td>
-                                <td>#{{ $journal['transaction_journal_id'] }}</td>
+                                <td class="w-30">{{ __('firefly.transaction_journal_id') }}</td>
+                                <td>#{{ $journal['transaction_journal_id'] }}
+                            </td>
                             </tr>
                             @if(null !== $journal['category_id'])
                                 <tr>
-                                    <td class="thirty">{{ __('firefly.category') }}</td>
+                                    <td class="w-30">{{ __('firefly.category') }}</td>
                                     <td>
                                         <a href="{{ route('categories.show', [$journal['category_id']]) }}">{{ $journal['category_name'] }}</a>
                                     </td>
@@ -376,7 +374,7 @@
                             @endif
                             @if(null !== $journal['budget_id'] && $first['transaction_type_type'] === 'Withdrawal')
                                 <tr>
-                                    <td class="forty">{{ __('firefly.budget') }}</td>
+                                    <td class="w-30">{{ __('firefly.budget') }}</td>
                                     <td>
                                         <a href="{{ route('budgets.show', [$journal['budget_id']]) }}">{{ $journal['budget_name'] }}</a>
                                     </td>
@@ -384,9 +382,17 @@
                             @endif
                             @if(null !== $journal['bill_id'] && $first['transaction_type_type'] === 'Withdrawal')
                                 <tr>
-                                    <td class="forty">{{ __('firefly.bill') }}</td>
+                                    <td class="w-30">{{ __('firefly.bill') }}</td>
                                     <td>
                                         <a href="{{ route('subscriptions.show', [$journal['bill_id']]) }}">{{ $journal['bill_name'] }}</a>
+                                    </td>
+                                </tr>
+                            @endif
+                            @if(null !== $journal['location']['latitude'])
+                                <tr>
+                                    <td class="w-30"> {{ __('firefly.location') }}</td>
+                                    <td>
+                                        <div id="map_index_0">Map here</div>
                                     </td>
                                 </tr>
                             @endif
@@ -394,7 +400,7 @@
                             @foreach(['interest_date','book_date','process_date','due_date','payment_date','invoice_date'] as $dateField)
                                 @if(journal_has_meta($journal['transaction_journal_id'], $dateField))
                                     <tr>
-                                        <td class="forty">{{ trans('list.' . $dateField) }}</td>
+                                        <td class="w-30">{{ trans('list.' . $dateField) }}</td>
                                         <td>{{ journal_get_meta_date($journal['transaction_journal_id'], $dateField)->isoFormat($monthAndDayFormat) }}</td>
                                     </tr>
                                 @endif

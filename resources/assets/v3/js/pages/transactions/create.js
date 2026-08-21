@@ -50,12 +50,17 @@ import {clearSourceAccount, clearDestinationAccount} from './shared/clear-fields
 import {detectTransactionType} from './shared/detect-transaction-type.js';
 import {determineAmountCurrency} from './shared/determine-amount-currency.js';
 import {loadCustomFields} from './shared/load-custom-fields.js';
+import {loadDefaultCoordinates} from './shared/load-default-coordinates.js';
 import L from 'leaflet';
 import 'leaflet/dist/leaflet.css';
-import {loadDefaultCoordinates} from './shared/load-default-coordinates.js';
 import markerIcon from "leaflet/dist/images/marker-icon.png";
 import markerRetinaIcon from "leaflet/dist/images/marker-icon-2x.png";
 import shadow from 'leaflet/dist/images/marker-shadow.png';
+import {displayMap} from './shared/display-map.js';
+import {renderMap} from './shared/render-map.js';
+import {onMapClick} from './shared/on-map-click.js';
+import {onMapZoom} from "./shared/on-map-zoom.js";
+
 
 // TODO fix two maps, perhaps disconnect from entries entirely.
 // TODO map location from preferences
@@ -174,6 +179,10 @@ let create = function () {
         addAllAutocompleteToForm: addAllAutocompleteToForm,
         loadCustomFields: loadCustomFields,
         loadDefaultCoordinates: loadDefaultCoordinates,
+        displayMap: displayMap,
+        renderMap: renderMap,
+        onMapClick: onMapClick,
+        onMapZoom: onMapZoom,
 
 
         filterForeignCurrencies(code) {
@@ -224,69 +233,8 @@ let create = function () {
         clearCategory(index) {
             this.entries[index].category_name = '';
         },
-        displayMap(index) {
-            index = parseInt(index);
-            if (true === this.formBehaviour.customFields.location) {
-
-                if (false === this.formBehaviour.defaultCoordinates.loaded) {
-                    // load first, then show map.
-                    this.loadDefaultCoordinates().then(data => {
-                        this.formBehaviour.defaultCoordinates = data;
-                        this.renderMap(index, true);
-                    });
-                    return;
-                }
-                this.renderMap(index, false);
-            }
-        },
-        onMapClick(event) {
-
-            L.Marker.prototype.setIcon(L.icon({
-                iconUrl: markerIcon,
-                iconRetinaIcon: markerRetinaIcon,
-                shadowUrl: shadow,
-                iconSize: [25, 41],
-                iconAnchor: [12, 41]
-            }));
 
 
-            let index = parseInt(event.originalEvent.currentTarget.dataset.index);
-            this.entries[index].hasLocation = true;
-            this.entries[index].latitude = event.latlng.lat;
-            this.entries[index].longitude = event.latlng.lng;
-            this.entries[index].zoomLevel = this.maps[index].getZoom();
-
-            // add marker.
-            if(this.markers.hasOwnProperty(index)) {
-                this.maps[index].removeLayer(this.markers[index]);
-            }
-            this.markers[index] = L.marker(event.latlng);
-            this.markers[index].addTo(this.maps[index]);
-
-        },
-        renderMap(index, useDefault) {
-            const el = document.getElementById('location_map_' + index);
-            let latitude = parseFloat(this.formBehaviour.defaultCoordinates.latitude);
-            let longitude = parseFloat(this.formBehaviour.defaultCoordinates.longitude);
-            let zoomLevel = parseInt(this.formBehaviour.defaultCoordinates.zoom_level);
-            if(!useDefault) {
-                console.log('Using coordinates from data attributes');
-                latitude = parseFloat(el.dataset.latitude);
-                longitude = parseFloat(el.dataset.longitude);
-                zoomLevel = parseInt(el.dataset.zoomLevel);
-            }
-            // console.log('lat', latitude);
-            // console.log('long', longitude);
-            // console.log('zoom', zoomLevel);
-
-            this.maps[index] = L.map(el).setView([latitude, longitude], zoomLevel);
-            this.maps[index].on('click', this.onMapClick.bind(this));
-            L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
-                maxZoom: 19,
-                referrerPolicy: 'origin-when-cross-origin',
-                attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>'
-            }).addTo(this.maps[index]);
-        },
         respondToTabSwitch(event) {
                 // event.target // newly activated tab
                 // event.relatedTarget // previous active tab
