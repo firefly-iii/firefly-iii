@@ -41,7 +41,10 @@ class StoresAuditLogEntry implements ShouldQueue
             'before'    => $event->before,
             'after'     => $event->after,
         ];
-
+        if ('' === trim((string)$event->before) && '' === trim((string)$event->after)) {
+            Log::debug('Will not store event log because before and after are both empty.');
+            return;
+        }
         if ($event->before === $event->after) {
             Log::debug('Will not store event log because before and after are the same.');
 
