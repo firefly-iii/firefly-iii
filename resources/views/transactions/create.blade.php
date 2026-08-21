@@ -5,8 +5,7 @@
             <x-transaction.tab-list />
             <div class="tab-content" id="splitTabsContent">
                 <template x-for="transaction, index in entries">
-                    <x-transaction.split
-                         />
+                    <x-transaction.split />
                 </template>
             </div>
     </div>

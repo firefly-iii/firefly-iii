@@ -20,7 +20,6 @@
 
 import '../../boot/bootstrap.js';
 import dates from '../../pages/shared/dates.js';
-import formatMoney from "../../util/format-money.js";
 import Get from "../../api/model/transaction/get.js";
 import {parseDownloadedSplits} from "./shared/parse-downloaded-splits.js";
 import {addAllAutocompleteToForm, getUrls} from "./shared/add-autocomplete.js";
@@ -54,13 +53,7 @@ import {renderMap} from './shared/render-map.js';
 import 'leaflet/dist/leaflet.css';
 import {onMapClick} from './shared/on-map-click.js';
 import {onMapZoom} from './shared/on-map-zoom.js';
-// TODO upload attachments to other file
-// TODO fix two maps, perhaps disconnect from entries entirely.
-// TODO group title
-// TODO map location from preferences
-// TODO field preferences
-// TODO filters
-// TODO parse amount
+import {clearLocation} from './shared/clear-location.js';
 
 const urls = getUrls();
 
@@ -158,6 +151,7 @@ let transactions = function () {
         renderMap: renderMap,
         onMapClick: onMapClick,
         onMapZoom: onMapZoom,
+        clearLocation: clearLocation,
 
 
         // part of the account selection auto-complete
@@ -181,18 +175,7 @@ let transactions = function () {
         getTags(index) {
             return this.entries[index].tags ?? [];
         },
-        clearLocation(e) {
 
-            let index = parseInt(e.currentTarget.dataset.index);
-            this.entries[index].hasLocation = false;
-            this.entries[index].latitude = null;
-            this.entries[index].longitude = null;
-            this.entries[index].zoom_level = null;
-
-            if(this.markers.hasOwnProperty(index)) {
-                this.maps[index].removeLayer(this.markers[index]);
-            }
-        },
         getTransactionGroup() {
             this.entries = [];
             const page = window.location.href.split('/');

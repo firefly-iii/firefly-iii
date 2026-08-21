@@ -206,36 +206,6 @@ let transactions = function () {
             return formatMoney(this.groupProperties.totalAmount, this.entries[0].currency_code ?? 'EUR');
         },
 
-        filterForeignCurrencies(code) {
-            let list = [];
-            let currency;
-            for (let i in this.formData.enabledCurrencies) {
-                if (this.formData.enabledCurrencies.hasOwnProperty(i)) {
-                    let current = this.formData.enabledCurrencies[i];
-                    if (current.code === code) {
-                        currency = current;
-                    }
-                }
-            }
-            list.push(currency);
-            this.formData.foreignCurrencies = list;
-            // is he source account currency anyway:
-            if (1 === list.length && list[0].code === this.entries[0].source_account.currency_code) {
-                console.log('Foreign currency is same as source currency. Disable foreign amount.');
-                this.formBehaviour.foreignCurrencyEnabled = false;
-            }
-            if (1 === list.length && list[0].code !== this.entries[0].source_account.currency_code) {
-                console.log('Foreign currency is NOT same as source currency. Enable foreign amount.');
-                this.formBehaviour.foreignCurrencyEnabled = true;
-            }
-
-            // this also forces the currency_code on ALL entries.
-            for (let i in this.entries) {
-                if (this.entries.hasOwnProperty(i)) {
-                    this.entries[i].foreign_currency_code = code;
-                }
-            }
-        },
 
         filterPrimaryCurrencies(code) {
             let list = [];

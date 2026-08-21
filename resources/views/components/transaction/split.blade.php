@@ -97,6 +97,9 @@
 
                     <!-- DATE FIELDS -->
                     @include('partials.form.transaction.date-fields')
+
+                    <!-- TRANSACTION LINKS -->
+                    @include('partials.form.transaction.links')
                 </div>
             </div>
         </div>
