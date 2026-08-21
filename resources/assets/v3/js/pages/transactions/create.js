@@ -53,6 +53,9 @@ import {loadCustomFields} from './shared/load-custom-fields.js';
 import L from 'leaflet';
 import 'leaflet/dist/leaflet.css';
 import {loadDefaultCoordinates} from './shared/load-default-coordinates.js';
+import markerIcon from "leaflet/dist/images/marker-icon.png";
+import markerRetinaIcon from "leaflet/dist/images/marker-icon-2x.png";
+import shadow from 'leaflet/dist/images/marker-shadow.png';
 
 // TODO fix two maps, perhaps disconnect from entries entirely.
 // TODO map location from preferences
@@ -70,6 +73,7 @@ let create = function () {
 
         // maps are stored in this array so they can be referred to.
         maps: [],
+        markers: [],
 
         // properties for the entire transaction group
         groupProperties: {
@@ -235,6 +239,31 @@ let create = function () {
                 this.renderMap(index, false);
             }
         },
+        onMapClick(event) {
+
+            L.Marker.prototype.setIcon(L.icon({
+                iconUrl: markerIcon,
+                iconRetinaIcon: markerRetinaIcon,
+                shadowUrl: shadow,
+                iconSize: [25, 41],
+                iconAnchor: [12, 41]
+            }));
+
+
+            let index = parseInt(event.originalEvent.currentTarget.dataset.index);
+            this.entries[index].hasLocation = true;
+            this.entries[index].latitude = event.latlng.lat;
+            this.entries[index].longitude = event.latlng.lng;
+            this.entries[index].zoomLevel = this.maps[index].getZoom();
+
+            // add marker.
+            if(this.markers.hasOwnProperty(index)) {
+                this.maps[index].removeLayer(this.markers[index]);
+            }
+            this.markers[index] = L.marker(event.latlng);
+            this.markers[index].addTo(this.maps[index]);
+
+        },
         renderMap(index, useDefault) {
             const el = document.getElementById('location_map_' + index);
             let latitude = parseFloat(this.formBehaviour.defaultCoordinates.latitude);
@@ -246,11 +275,12 @@ let create = function () {
                 longitude = parseFloat(el.dataset.longitude);
                 zoomLevel = parseInt(el.dataset.zoomLevel);
             }
-            console.log('lat', latitude);
-            console.log('long', longitude);
-            console.log('zoom', zoomLevel);
+            // console.log('lat', latitude);
+            // console.log('long', longitude);
+            // console.log('zoom', zoomLevel);
 
             this.maps[index] = L.map(el).setView([latitude, longitude], zoomLevel);
+            this.maps[index].on('click', this.onMapClick.bind(this));
             L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
                 maxZoom: 19,
                 referrerPolicy: 'origin-when-cross-origin',

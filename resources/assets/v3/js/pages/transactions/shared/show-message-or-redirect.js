@@ -64,8 +64,13 @@ export function showMessageOrRedirectUser() {
     baseHref = baseHref.substring(0, baseHref.length - 1);
 
     if ('' !== from) {
-        console.log('Redirect to valid _from parameter: ' + baseHref + ' ' +  from);
-        window.location = baseHref + from;
+        if('edit' === this.formBehaviour.formType) {
+            console.log('Redirect to valid _from parameter: ' + baseHref + ' ' + from + ' ' + '?transaction_group_id=' + this.groupProperties.id + '&message=updated');
+            window.location = baseHref + from + '?transaction_group_id=' + this.groupProperties.id + '&message=updated';
+            return;
+        }
+        console.log('Redirect to valid _from parameter: ' + baseHref + ' ' + from + ' ' + '?transaction_group_id=' + this.groupProperties.id + '&message=created');
+        window.location = baseHref + from + '?transaction_group_id=' + this.groupProperties.id + '&message=created';
         return;
     }
     if('edit' === this.formBehaviour.formType) {
