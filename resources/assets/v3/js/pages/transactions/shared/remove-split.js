@@ -1,5 +1,5 @@
 /*
- * display-map.js
+ * remove-split.js
  * Copyright (c) 2026 james@firefly-iii.org
  *
  * This file is part of Firefly III (https://github.com/firefly-iii).
@@ -18,22 +18,10 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-export function displayMap(index) {
-    index = parseInt(index);
-    // show location?
-    if (true === this.formBehaviour.customFields.location) {
-        if(true === this.entries[index].hasLocation) {
-            this.renderMap(index, false);
-            return;
-        }
-        if (false === this.formBehaviour.defaultCoordinates.loaded) {
-            // load first, then show map.
-            this.loadDefaultCoordinates().then(data => {
-                this.formBehaviour.defaultCoordinates = data;
-                this.renderMap(index, true);
-            });
-            return;
-        }
-        this.renderMap(index, false);
-    }
-}
+export function removeSplit(index) {
+    this.entries.splice(index, 1);
+    this.links.splice(index, 1);
+    // fall back to index 0
+    const triggerFirstTabEl = document.querySelector('#split-0-tab')
+    triggerFirstTabEl.click();
+};

@@ -54,6 +54,7 @@ import 'leaflet/dist/leaflet.css';
 import {onMapClick} from './shared/on-map-click.js';
 import {onMapZoom} from './shared/on-map-zoom.js';
 import {clearLocation} from './shared/clear-location.js';
+import {removeSplit} from "./shared/remove-split.js";
 
 const urls = getUrls();
 
@@ -65,6 +66,7 @@ let transactions = function () {
         // transactions are stored in "entries":
         entries: [],
         originals: [],
+        links: [],
 
         // maps are stored in this array so they can be referred to.
         maps: [],
@@ -113,6 +115,7 @@ let transactions = function () {
         // properties for the entire transaction group
         groupProperties: {
             transactionType: 'unknown',
+            titleErrors: [],
             title: null,
             editTitle: null,
             id: null, totalAmount: 0,
@@ -152,6 +155,7 @@ let transactions = function () {
         onMapClick: onMapClick,
         onMapZoom: onMapZoom,
         clearLocation: clearLocation,
+        removeSplit: removeSplit,
 
 
         // part of the account selection auto-complete

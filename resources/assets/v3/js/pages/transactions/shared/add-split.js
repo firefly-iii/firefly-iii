@@ -24,6 +24,7 @@ import {addAllAutocompleteToForm} from "./add-autocomplete.js";
 export function addSplit() {
     console.log('addSplit()');
     this.entries.push(createEmptySplit());
+    this.links.push([]);
     this.disableSplitAccounts();
     this.addAllAutocompleteToForm();
     this.addTabListener();

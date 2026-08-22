@@ -7,12 +7,8 @@
         <div class="form-group">
 
         <div class="form-control-plaintext">
-            <button class="btn btn-sm btn-outline-primary">Manage related transactions</button>
+            <button class="btn btn-sm btn-outline-primary" data-bs-toggle="modal" :data-bs-target="'#linksModal_' + index" type="button">Manage related transactions</button>
         </div>
-            <!-- Button trigger modal -->
-            <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal">
-                Launch demo modal
-            </button>
         </div>
     </div>
 </div>

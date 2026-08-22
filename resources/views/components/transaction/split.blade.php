@@ -1,4 +1,5 @@
-<div :class="{'tab-pane fade pt-2':true, 'show active': index ===0 }" :id="'split-'+index+'-pane'" role="tabpanel" :aria-labelledby="'split-'+index+'-tab'" tabindex="0" x-init="addedSplit()">
+<div :class="{'tab-pane fade pt-2':true, 'show active': index ===0 }" :id="'split-'+index+'-pane'" role="tabpanel"
+     :aria-labelledby="'split-'+index+'-tab'" tabindex="0" x-init="addedSplit()">
     <div class="row mb-2">
         <div class="col-xl-6 col-lg-6 col-md-12 col-xs-12 mb-2">
             <!-- BASIC TRANSACTION INFORMATION -->
@@ -133,6 +134,80 @@
         </div>
         <div class="col-12">
 
+        </div>
+    </div>
+    <!-- Modal for links -->
+    <div class="modal modal-xl fade" :id="'linksModal_' + index" data-bs-backdrop="static" tabindex="-1"
+         aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h1 class="modal-title fs-5" id="exampleModalLabel">Transaction relations</h1>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="container-fluid">
+                        <div class="row">
+                            <div class="col">
+                                <p><em class="text-info">
+                                        Bla bla bla explanation.
+                                    </em>
+                                    <template x-if="0 === links[index].length">
+                                        <em>This transaction has no relations to other transactions (yet).</em>
+                                    </template>
+                                </p>
+                            </div>
+                        </div>
+                        <template x-if="links[index].length > 0">
+                            <div class="row">
+                                <div class="col">
+                                    <table class="table table-sm table-bordered">
+                                        <tr>
+                                            <th colspan="2">Transaction relations</th>
+                                        </tr>
+                                        <tr>
+                                            <td>Pays for / is paid by <a href="#">#123: something else</a></td>
+                                            <td class="w-20">
+                                                switch,change, del
+                                            </td>
+                                        </tr>
+                                    </table>
+                                </div>
+                            </div>
+                        </template>
+                        <div class="row">
+                            <div class="col">
+                                <h5>Add a new relation</h5>
+                                <div class="row">
+                                    <div class="col">
+                                        <input type="text" readonly class="form-control-plaintext" value="This transaction">
+                                    </div>
+                                    <div class="col">
+                                        <input type="text" class="form-control" placeholder="First name" aria-label="First name">
+                                    </div>
+                                    <div class="col">
+                                        <input type="text" class="form-control" placeholder="Last name" aria-label="Last name">
+                                    </div>
+                                    <div class="col">
+                                        <input type="submit" class="btn btn-primary">
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+                <div class="modal-footer">
+                    <div class="row inline" style="width:100%;">
+                        <div class="col align-middle d-flex align-items-center">
+                            <em><small>Changes are saved automatically</small></em>
+                        </div>
+                        <div class="col text-end">
+                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
         </div>
     </div>
 </div>

@@ -52,6 +52,7 @@ import {onMapClick} from './shared/on-map-click.js';
 import {onMapZoom} from "./shared/on-map-zoom.js";
 import {clearLocation} from './shared/clear-location.js';
 import bootstrap from "bootstrap/dist/js/bootstrap.bundle.js";
+import {removeSplit} from "./shared/remove-split.js";
 
 
 let create = function () {
@@ -61,6 +62,9 @@ let create = function () {
 
         // transactions are stored in "entries":
         entries: [],
+
+        // links are stored in "links" for each transaction journal.
+        links: [],
 
         // maps are stored in this array so they can be referred to.
         maps: [],
@@ -155,6 +159,7 @@ let create = function () {
         showMessageOrRedirectUser: showMessageOrRedirectUser,
         parseErrors: parseErrors,
         addSplit:addSplit,
+        removeSplit: removeSplit,
         clearSourceAccount: clearSourceAccount,
         clearDestinationAccount: clearDestinationAccount,
         detectTransactionType: detectTransactionType,
@@ -347,12 +352,7 @@ let create = function () {
             });
         },
 
-        removeSplit(index) {
-            this.entries.splice(index, 1);
-            // fall back to index 0
-            const triggerFirstTabEl = document.querySelector('#split-0-tab')
-            triggerFirstTabEl.click();
-        },
+
 
     }
 }
