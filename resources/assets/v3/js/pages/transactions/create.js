@@ -51,6 +51,7 @@ import {renderMap} from './shared/render-map.js';
 import {onMapClick} from './shared/on-map-click.js';
 import {onMapZoom} from "./shared/on-map-zoom.js";
 import {clearLocation} from './shared/clear-location.js';
+import bootstrap from "bootstrap/dist/js/bootstrap.bundle.js";
 
 
 let create = function () {
@@ -234,6 +235,11 @@ let create = function () {
             }
             // TODO don't do this on a timeout!
             }, 500);
+        },
+        manageTransactionLinks() {
+            console.log('here we are!');
+            let modal1 = bootstrap.Modal.getOrCreateInstance('#linksModal');
+            modal1.show();
         },
 
         init() {
