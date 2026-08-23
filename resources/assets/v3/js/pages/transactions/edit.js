@@ -369,6 +369,7 @@ let transactions = function () {
                 // if not, respond to user options:
                 this.showMessageOrRedirectUser();
             }).catch((error) => {
+                console.log(error);
                 this.formStates.isSubmitting = false;
                 if (typeof error.response !== 'undefined') {
                     this.parseErrors(error.response.data);

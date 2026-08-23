@@ -200,7 +200,7 @@ abstract class Controller extends BaseController
             $parts = [];
             parse_str($current['query'], $parts);
             unset($parts['_from']);
-            $from .= http_build_query($parts);
+            $from .= '?' . http_build_query($parts);
         }
         if (array_key_exists('fragment', $current) && '' !== $current['fragment']) {
             $from .= '#'.$current['fragment'];

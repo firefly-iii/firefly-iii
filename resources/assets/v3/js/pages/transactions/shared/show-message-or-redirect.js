@@ -57,20 +57,39 @@ export function showMessageOrRedirectUser() {
     // the redirect also depends on the "from" in the query param, which is validated by Firefly III on the server side.
     // get from parameter from query
     const urlParams = new URLSearchParams(window.location.search);
-    const from = urlParams.get('_from').toString();
+    let params = urlParams.get('_from');
 
+    // find parts
+    let parts = URL.parse(params, 'https://example.com/');
+    let from;
+    let separator = '?';
+    if('' === parts.search) {
+        from = urlParams.get('_from').toString();
+    }
+    if('' !== parts.search) {
+        let obj = new URLSearchParams(parts.search);
+        let pathName = parts.pathname; // we redirect here!
+        obj.delete('message');
+        obj.delete('transaction_group_id');
+        if(0 === obj.size) {
+            from = pathName;
+        }
+        if(obj.size > 0) {
+            separator = '&';
+            from = pathName + '?' + obj.toString();
+        }
+    }
     // grab base href
     let baseHref = document.querySelector('base').getAttribute('href');
     baseHref = baseHref.substring(0, baseHref.length - 1);
+    let finalFrom = baseHref + from;
 
     if ('' !== from) {
         if('edit' === this.formBehaviour.formType) {
-            console.log('Redirect to valid _from parameter: ' + baseHref + ' ' + from + ' ' + '?transaction_group_id=' + this.groupProperties.id + '&message=updated');
-            window.location = baseHref + from + '?transaction_group_id=' + this.groupProperties.id + '&message=updated';
+            window.location = finalFrom + separator + 'transaction_group_id=' + this.groupProperties.id + '&message=updated';
             return;
         }
-        console.log('Redirect to valid _from parameter: ' + baseHref + ' ' + from + ' ' + '?transaction_group_id=' + this.groupProperties.id + '&message=created');
-        window.location = baseHref + from + '?transaction_group_id=' + this.groupProperties.id + '&message=created';
+        window.location = finalFrom + separator + 'transaction_group_id=' + this.groupProperties.id + '&message=created';
         return;
     }
     if('edit' === this.formBehaviour.formType) {
