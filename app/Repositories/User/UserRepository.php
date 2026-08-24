@@ -274,6 +274,15 @@ class UserRepository implements UserRepositoryInterface
         return $collection;
     }
 
+    public function getUsersByRole(string $role): Collection
+    {
+        return User::leftJoin('role_user', 'role_user.user_id', '=', 'users.id')
+            ->leftJoin('roles', 'roles.id', 'role_user.role_id')
+            ->where('roles.name', $role)
+            ->get()
+        ;
+    }
+
     public function hasRole(Authenticatable|User|null $user, string $role): bool
     {
         if (!$user instanceof Authenticatable) {
@@ -416,13 +425,5 @@ class UserRepository implements UserRepositoryInterface
         $invitee = InvitedUser::query()->where('invite_code', $code)->where('expires', '>', $now->format('Y-m-d H:i:s'))->where('redeemed', 0)->first();
 
         return null !== $invitee;
-    }
-
-    public function getUsersByRole(string $role): Collection
-    {
-        return User::leftJoin('role_user','role_user.user_id','=','users.id')
-            ->leftJoin('roles','roles.id','role_user.role_id')
-            ->where('roles.name', $role)
-            ->get();
     }
 }

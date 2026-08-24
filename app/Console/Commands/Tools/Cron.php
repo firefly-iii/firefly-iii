@@ -62,28 +62,28 @@ class Cron extends Command
     public function handle(): int
     {
         /** @var UserRepositoryInterface $repository */
-        $repository = app(UserRepositoryInterface::class);
-        $admin = $repository->getUsersByRole('owner')->first();
-        if(null === $admin) {
+        $repository  = app(UserRepositoryInterface::class);
+        $admin       = $repository->getUsersByRole('owner')->first();
+        if (null === $admin) {
             $this->friendlyError('There is no user in the system with the "owner"-role, cannot continue.');
+
             return 1;
         }
         $this->admin = $admin;
-        $doAll
-               = !$this->option('download-cer')
-            && !$this->option('create-recurring')
-            && !$this->option('create-auto-budgets')
-            && !$this->option('send-subscription-warnings')
-            && !$this->option('check-version')
-            && !$this->option('send-webhook-messages');
-        $date  = null;
+        $doAll       = !$this->option('download-cer')
+        && !$this->option('create-recurring')
+        && !$this->option('create-auto-budgets')
+        && !$this->option('send-subscription-warnings')
+        && !$this->option('check-version')
+        && !$this->option('send-webhook-messages');
+        $date        = null;
 
         try {
             $date = new Carbon($this->option('date'));
         } catch (InvalidArgumentException $e) {
             $this->friendlyError(sprintf('"%s" is not a valid date', $this->option('date')));
         }
-        $force = (bool) $this->option('force');
+        $force       = (bool) $this->option('force');
 
         // Fire exchange rates cron job.
         if (true === AppConfiguration::get('enable_external_rates', config('cer.download_enabled'))->data && ($doAll || $this->option('download-cer'))) {
