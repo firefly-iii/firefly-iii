@@ -414,23 +414,26 @@ class CurrencyRepository implements CurrencyRepositoryInterface, UserGroupInterf
     {
         try {
             $res = CurrencyExchangeRate::create([
-                'user_id' => $this->user->id,
-                'user_group_id' => $this->userGroup->id,
+                'user_id'          => $this->user->id,
+                'user_group_id'    => $this->userGroup->id,
                 'from_currency_id' => $fromCurrency->id,
-                'to_currency_id' => $toCurrency->id,
-                'date' => $date,
-                'date_tz' => $date->format('e'),
-                'rate' => $rate,
+                'to_currency_id'   => $toCurrency->id,
+                'date'             => $date,
+                'date_tz'          => $date->format('e'),
+                'rate'             => $rate,
             ]);
-        } catch(QueryException) {
+        } catch (QueryException) {
             Log::warning('Currency exchange rate already exists, so return existing one.');
             $res = CurrencyExchangeRate::where('user_id', $this->user->id)
                 ->where('user_group_id', $this->userGroup->id)
                 ->where('from_currency_id', $fromCurrency->id)
                 ->where('to_currency_id', $toCurrency->id)
-                ->where('date', $date)->first();
-    }
-    return $res;
+                ->where('date', $date)
+                ->first()
+            ;
+        }
+
+        return $res;
     }
 
     /**
