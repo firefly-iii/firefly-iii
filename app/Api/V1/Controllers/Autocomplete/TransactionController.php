@@ -145,14 +145,14 @@ final class TransactionController extends Controller
         /** @var TransactionJournal $journal */
         foreach ($result as $journal) {
             $currency = Amount::getCurrencyFromJournal($journal);
-            $array[] = [
+            $array[]  = [
                 'id'                   => (string) $journal->id,
                 'transaction_group_id' => (string) $journal->transaction_group_id,
-                'name'                 =>  $journal->description,
+                'name'                 => $journal->description,
                 'description'          => $journal->description,
-                'date' => $journal->date,
-                'currency_code' => $currency->code,
-                'amount' => Steam::positive(Amount::getAmountFromJournalObject($journal)),
+                'date'                 => $journal->date,
+                'currency_code'        => $currency->code,
+                'amount'               => Steam::positive(Amount::getAmountFromJournalObject($journal)),
             ];
         }
 
