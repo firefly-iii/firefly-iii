@@ -219,6 +219,15 @@ class Amount
         return (string) $amount;
     }
 
+    public function getCurrencyFromJournal(TransactionJournal $journal): TransactionCurrency {
+        /** @var Transaction|null $first */
+        $first = $journal->transactions->first();
+        if(null === $first){
+            return $this->getPrimaryCurrency();
+        }
+        return $first->transactionCurrency;
+    }
+
     /**
      * Experimental function to see if we can quickly and quietly get the amount from a journal.
      * This depends on the user's default currency and the wish to have it converted.

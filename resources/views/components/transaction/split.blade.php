@@ -193,7 +193,7 @@
                                         </select>
                                     </div>
                                     <div class="col">
-                                        <input type="text" name="search" class="form-control linked-transactions-search" placeholder="TODO Search here..." aria-label="TODO Search here...">
+                                        <input type="text" name="search" :id="'linksModal_search_' + index" class="form-control linked-transactions-search" placeholder="TODO Search here..." aria-label="TODO Search here...">
                                     </div>
                                     <div class="col w-15 text-end">
                                         <input type="submit" name="submit" value="TODO Save" class="btn btn-primary">

@@ -85,6 +85,7 @@ Route::group(
         Route::get('tags', ['uses' => 'TagController@tags', 'as' => 'tags']);
         Route::get('transactions', ['uses' => 'TransactionController@transactions', 'as' => 'transactions']);
         Route::get('transactions-with-id', ['uses' => 'TransactionController@transactionsWithID', 'as' => 'transactions-with-id']);
+        Route::get('transactions-with-meta', ['uses' => 'TransactionController@transactionsWithMeta', 'as' => 'transactions-with-meta']);
         Route::get('transaction-types', ['uses' => 'TransactionTypeController@transactionTypes', 'as' => 'transaction-types']);
     }
 );

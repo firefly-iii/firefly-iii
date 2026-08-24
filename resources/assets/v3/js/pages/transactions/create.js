@@ -54,6 +54,7 @@ import {clearLocation} from './shared/clear-location.js';
 import bootstrap from "bootstrap/dist/js/bootstrap.bundle.js";
 import {removeSplit} from "./shared/remove-split.js";
 import {loadTransactionLinks} from './shared/load-transaction-links.js';
+import Autocomplete from "bootstrap5-autocomplete";
 
 
 let create = function () {
@@ -244,11 +245,31 @@ let create = function () {
             // TODO don't do this on a timeout!
             }, 500);
         },
-        manageTransactionLinks() {
-            console.log('here we are!');
-            let modal1 = bootstrap.Modal.getOrCreateInstance('#linksModal');
-            modal1.show();
-        },
+        createAutocomplete(fieldIdentifier, url) {
+        let token = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
+
+            const renderJournal = function (item, b, c) {
+                return item.description + '<br><small class="text-muted">'+item.currency_code +' '+item.amount+ ' @ ' +item.date+'</small>';
+            };
+            console.log('Make autocomplete.');
+        Autocomplete.init('#' + fieldIdentifier, {
+
+            server: url + '?_token=' + token,
+            labelField: 'name',
+            valueField: 'id',
+            liveServer: true,
+            onRenderItem: renderJournal,
+            fetchOptions: {
+                method: 'GET',
+                credentials: 'include',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Accept': 'application/json',
+                    'X-CSRF-TOKEN': token
+                }
+            }
+        });
+    },
 
         init() {
             this.i18next = i18next;
@@ -286,6 +307,8 @@ let create = function () {
                         //console.log(data);
                         this.formData.linkTypes = data;
                         this.formStates.loadingLinks = false;
+                        this.createAutocomplete('linksModal_search_0','api/v1/autocomplete/transactions-with-meta');
+
                     });
                 }
             });

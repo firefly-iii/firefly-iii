@@ -32,6 +32,8 @@ use FireflyIII\Models\TransactionGroup;
 use FireflyIII\Models\TransactionJournal;
 use FireflyIII\Repositories\Journal\JournalRepositoryInterface;
 use FireflyIII\Repositories\TransactionGroup\TransactionGroupRepositoryInterface;
+use FireflyIII\Support\Facades\Amount;
+use FireflyIII\Support\Facades\Steam;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Collection;
@@ -114,6 +116,43 @@ final class TransactionController extends Controller
                 'transaction_group_id' => (string) $journal->transaction_group_id,
                 'name'                 => sprintf('#%d: %s', $journal->transaction_group_id, $journal->description),
                 'description'          => sprintf('#%d: %s', $journal->transaction_group_id, $journal->description),
+            ];
+        }
+
+        return response()->api($array);
+    }
+
+    public function transactionsWithMeta(AutocompleteApiRequest $request): JsonResponse
+    {
+        $result = new Collection();
+        if (is_numeric($request->attributes->get('query'))) {
+            // search for group, not journal.
+            $firstResult = $this->groupRepository->find((int) $request->attributes->get('query'));
+            if ($firstResult instanceof TransactionGroup) {
+                // group may contain multiple journals, each a result:
+                foreach ($firstResult->transactionJournals as $journal) {
+                    $result->push($journal);
+                }
+            }
+        }
+        if (!is_numeric($request->attributes->get('query'))) {
+            $result = $this->repository->searchJournalDescriptions($request->attributes->get('query'), $request->attributes->get('limit'));
+        }
+
+        // limit and unique
+        $array  = [];
+
+        /** @var TransactionJournal $journal */
+        foreach ($result as $journal) {
+            $currency = Amount::getCurrencyFromJournal($journal);
+            $array[] = [
+                'id'                   => (string) $journal->id,
+                'transaction_group_id' => (string) $journal->transaction_group_id,
+                'name'                 =>  $journal->description,
+                'description'          => $journal->description,
+                'date' => $journal->date,
+                'currency_code' => $currency->code,
+                'amount' => Steam::positive(Amount::getAmountFromJournalObject($journal)),
             ];
         }
 
