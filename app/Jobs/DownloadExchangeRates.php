@@ -25,6 +25,7 @@ declare(strict_types=1);
 namespace FireflyIII\Jobs;
 
 use Carbon\Carbon;
+use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Models\CurrencyExchangeRate;
 use FireflyIII\Models\TransactionCurrency;
 use FireflyIII\Repositories\Currency\CurrencyRepositoryInterface;
@@ -95,6 +96,7 @@ class DownloadExchangeRates implements ShouldQueue
         $newDate    = clone $date;
         $newDate->startOfDay();
         $this->date = $newDate;
+        Log::debug(sprintf('Date overruled to be %s', $newDate->format('Y-m-d')));
     }
 
     public function setUser(User $user): void
@@ -184,7 +186,11 @@ class DownloadExchangeRates implements ShouldQueue
                 $existing = $this->repository->getExchangeRate($from, $to, $date);
                 if (!$existing instanceof CurrencyExchangeRate) {
                     Log::debug(sprintf('Saved rate from %s to %s for user #%d.', $from->code, $to->code, $user->id));
-                    $this->repository->setExchangeRate($from, $to, $date, $rate);
+                    try {
+                        $this->repository->setExchangeRate($from, $to, $date, $rate);
+                    } catch(FireflyException $e) {
+                        Log::warning(sprintf('Could not set exchange rate, but ignore this: %s', $e->getMessage()));
+                    }
                 }
             }
         }

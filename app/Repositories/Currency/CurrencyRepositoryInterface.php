@@ -112,6 +112,8 @@ interface CurrencyRepositoryInterface
      * Set currency exchange rate.
      *
      * Used in download exchange rate cron job. Needs the user object!
+     *
+     * @throws FireflyException
      */
     public function setExchangeRate(TransactionCurrency $fromCurrency, TransactionCurrency $toCurrency, Carbon $date, float $rate): CurrencyExchangeRate;
 
