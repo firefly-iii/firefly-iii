@@ -186,9 +186,10 @@ class DownloadExchangeRates implements ShouldQueue
                 $existing = $this->repository->getExchangeRate($from, $to, $date);
                 if (!$existing instanceof CurrencyExchangeRate) {
                     Log::debug(sprintf('Saved rate from %s to %s for user #%d.', $from->code, $to->code, $user->id));
+
                     try {
                         $this->repository->setExchangeRate($from, $to, $date, $rate);
-                    } catch(FireflyException $e) {
+                    } catch (FireflyException $e) {
                         Log::warning(sprintf('Could not set exchange rate, but ignore this: %s', $e->getMessage()));
                     }
                 }
