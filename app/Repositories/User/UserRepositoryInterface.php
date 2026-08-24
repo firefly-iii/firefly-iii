@@ -49,8 +49,6 @@ interface UserRepositoryInterface
      */
     public function all(): Collection;
 
-    public function getUsersByRole(string $role): Collection;
-
     /**
      * Gives a user a role.
      */
@@ -107,6 +105,8 @@ interface UserRepositoryInterface
     public function getUserData(User $user): array;
 
     public function getUserGroups(User $user): Collection;
+
+    public function getUsersByRole(string $role): Collection;
 
     public function hasRole(Authenticatable|User|null $user, string $role): bool;
 
