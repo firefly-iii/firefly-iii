@@ -41,6 +41,7 @@ use FireflyIII\Services\Internal\Update\CurrencyUpdateService;
 use FireflyIII\Support\Facades\Amount;
 use FireflyIII\Support\Repositories\UserGroup\UserGroupInterface;
 use FireflyIII\Support\Repositories\UserGroup\UserGroupTrait;
+use Illuminate\Database\QueryException;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Log;
 use Override;
@@ -411,15 +412,25 @@ class CurrencyRepository implements CurrencyRepositoryInterface, UserGroupInterf
      */
     public function setExchangeRate(TransactionCurrency $fromCurrency, TransactionCurrency $toCurrency, Carbon $date, float $rate): CurrencyExchangeRate
     {
-        return CurrencyExchangeRate::create([
-            'user_id'          => $this->user->id,
-            'user_group_id'    => $this->userGroup->id,
-            'from_currency_id' => $fromCurrency->id,
-            'to_currency_id'   => $toCurrency->id,
-            'date'             => $date,
-            'date_tz'          => $date->format('e'),
-            'rate'             => $rate,
-        ]);
+        try {
+            $res = CurrencyExchangeRate::create([
+                'user_id' => $this->user->id,
+                'user_group_id' => $this->userGroup->id,
+                'from_currency_id' => $fromCurrency->id,
+                'to_currency_id' => $toCurrency->id,
+                'date' => $date,
+                'date_tz' => $date->format('e'),
+                'rate' => $rate,
+            ]);
+        } catch(QueryException) {
+            Log::warning('Currency exchange rate already exists, so return existing one.');
+            $res = CurrencyExchangeRate::where('user_id', $this->user->id)
+                ->where('user_group_id', $this->userGroup->id)
+                ->where('from_currency_id', $fromCurrency->id)
+                ->where('to_currency_id', $toCurrency->id)
+                ->where('date', $date)->first();
+    }
+    return $res;
     }
 
     /**
