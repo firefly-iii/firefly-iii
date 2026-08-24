@@ -49,6 +49,8 @@ interface UserRepositoryInterface
      */
     public function all(): Collection;
 
+    public function getUsersByRole(string $role): Collection;
+
     /**
      * Gives a user a role.
      */

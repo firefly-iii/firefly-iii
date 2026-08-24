@@ -27,6 +27,7 @@ namespace FireflyIII\Console\Commands\Tools;
 use Carbon\Carbon;
 use FireflyIII\Console\Commands\ShowsFriendlyMessages;
 use FireflyIII\Exceptions\FireflyException;
+use FireflyIII\Repositories\User\UserRepositoryInterface;
 use FireflyIII\Support\Cronjobs\AutoBudgetCronjob;
 use FireflyIII\Support\Cronjobs\BillWarningCronjob;
 use FireflyIII\Support\Cronjobs\ExchangeRatesCronjob;
@@ -34,6 +35,7 @@ use FireflyIII\Support\Cronjobs\RecurringCronjob;
 use FireflyIII\Support\Cronjobs\UpdateCheckCronjob;
 use FireflyIII\Support\Cronjobs\WebhookCronjob;
 use FireflyIII\Support\Facades\AppConfiguration;
+use FireflyIII\User;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\Log;
 use InvalidArgumentException;
@@ -55,8 +57,18 @@ class Cron extends Command
         {--send-webhook-messages : Sends any stray webhook messages (with a maximum of 5).}
         ';
 
+    private User $admin;
+
     public function handle(): int
     {
+        /** @var UserRepositoryInterface $repository */
+        $repository = app(UserRepositoryInterface::class);
+        $admin = $repository->getUsersByRole('owner')?->first();
+        if(null === $admin) {
+            $this->friendlyError('There is no user in the system with the "owner"-role, cannot continue.');
+            return 1;
+        }
+        $this->admin = $admin;
         $doAll
                = !$this->option('download-cer')
             && !$this->option('create-recurring')
@@ -147,6 +159,7 @@ class Cron extends Command
     {
         $autoBudget = new AutoBudgetCronjob();
         $autoBudget->setForce($force);
+        $autoBudget->setUser($this->admin);
         // set date in cron job:
         if ($date instanceof Carbon) {
             $autoBudget->setDate($date);
@@ -169,6 +182,7 @@ class Cron extends Command
     {
         $updateCheck = new UpdateCheckCronjob();
         $updateCheck->setForce($force);
+        $updateCheck->setUser($this->admin);
         $updateCheck->fire();
 
         if ($updateCheck->jobErrored) {
@@ -187,6 +201,7 @@ class Cron extends Command
         Log::debug(sprintf('Created new ExchangeRateConverter in %s', __METHOD__));
         $exchangeRates = new ExchangeRatesCronjob();
         $exchangeRates->setForce($force);
+        $exchangeRates->setUser($this->admin);
         // set date in cron job:
         if ($date instanceof Carbon) {
             $exchangeRates->setDate($date);
@@ -212,6 +227,7 @@ class Cron extends Command
     {
         $recurring = new RecurringCronjob();
         $recurring->setForce($force);
+        $recurring->setUser($this->admin);
 
         // set date in cron job:
         if ($date instanceof Carbon) {
@@ -237,6 +253,7 @@ class Cron extends Command
     {
         $subscriptionWarningJob = new BillWarningCronjob();
         $subscriptionWarningJob->setForce($force);
+        $subscriptionWarningJob->setUser($this->admin);
         // set date in cron job:
         if ($date instanceof Carbon) {
             $subscriptionWarningJob->setDate($date);
@@ -259,6 +276,7 @@ class Cron extends Command
     {
         $webhook = new WebhookCronjob();
         $webhook->setForce($force);
+        $webhook->setUser($this->admin);
         // set date in cron job:
         if ($date instanceof Carbon) {
             $webhook->setDate($date);

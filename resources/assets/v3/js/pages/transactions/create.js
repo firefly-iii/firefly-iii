@@ -53,6 +53,7 @@ import {onMapZoom} from "./shared/on-map-zoom.js";
 import {clearLocation} from './shared/clear-location.js';
 import bootstrap from "bootstrap/dist/js/bootstrap.bundle.js";
 import {removeSplit} from "./shared/remove-split.js";
+import {loadTransactionLinks} from './shared/load-transaction-links.js';
 
 
 let create = function () {
@@ -65,6 +66,7 @@ let create = function () {
 
         // links are stored in "links" for each transaction journal.
         links: [],
+        preparedLinks: [],
 
         // maps are stored in this array so they can be referred to.
         maps: [],
@@ -83,6 +85,7 @@ let create = function () {
         formStates: {
             loadingCurrencies: true,
             loadingBudgets: true,
+            loadingLinks: true,
             loadingPiggyBanks: true,
             loadingSubscriptions: true,
             isSubmitting: false,
@@ -260,6 +263,7 @@ let create = function () {
                 this.formData.foreignCurrencies = data.foreignCurrencies;
             });
 
+
             loadBudgets(false).then(data => {
                 this.formData.budgets = data;
                 this.formStates.loadingBudgets = false;
@@ -276,6 +280,14 @@ let create = function () {
             // load custom field preference and enable/disable those fields.
             this.loadCustomFields().then(data => {
                 this.formBehaviour.customFields = data;
+                // linked-transactions-search
+                if(true === data.links) {
+                    loadTransactionLinks().then(data => {
+                        //console.log(data);
+                        this.formData.linkTypes = data;
+                        this.formStates.loadingLinks = false;
+                    });
+                }
             });
 
 

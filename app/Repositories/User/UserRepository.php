@@ -417,4 +417,12 @@ class UserRepository implements UserRepositoryInterface
 
         return null !== $invitee;
     }
+
+    public function getUsersByRole(string $role): Collection
+    {
+        return User::leftJoin('role_user','role_user.user_id','=','users.id')
+            ->leftJoin('roles','roles.id','role_user.role_id')
+            ->where('roles.name', $role)
+            ->get();
+    }
 }

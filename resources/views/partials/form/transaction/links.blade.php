@@ -7,7 +7,17 @@
         <div class="form-group">
 
         <div class="form-control-plaintext">
-            <button class="btn btn-sm btn-outline-primary" data-bs-toggle="modal" :data-bs-target="'#linksModal_' + index" type="button">Manage related transactions</button>
+            <template x-if="formStates.loadingLinks">
+                <button disabled="disabled" class="btn btn-sm btn-outline-primary" data-bs-toggle="modal" :data-bs-target="'#linksModal_' + index" type="button">
+                    <div class="spinner-border spinner-border-sm" role="status">
+                        <span class="visually-hidden">{{ __('firefly.thinking') }}</span>
+                    </div>
+                </button>
+            </template>
+            <template x-if="!formStates.loadingLinks">
+                <button class="btn btn-sm btn-outline-primary" data-bs-toggle="modal" :data-bs-target="'#linksModal_' + index" type="button">
+                    TODO Manage related transactions</button>
+            </template>
         </div>
         </div>
     </div>

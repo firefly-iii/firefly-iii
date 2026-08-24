@@ -138,11 +138,11 @@
     </div>
     <!-- Modal for links -->
     <div class="modal modal-xl fade" :id="'linksModal_' + index" data-bs-backdrop="static" tabindex="-1"
-         aria-labelledby="exampleModalLabel" aria-hidden="true">
+         :aria-labelledby="'linksModal_' + index" aria-hidden="true">
         <div class="modal-dialog">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h1 class="modal-title fs-5" id="exampleModalLabel">Transaction relations</h1>
+                    <h1 class="modal-title fs-5" :id="'linksModal_' + index">Transaction relations</h1>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
@@ -150,10 +150,10 @@
                         <div class="row">
                             <div class="col">
                                 <p><em class="text-info">
-                                        Bla bla bla explanation.
+                                        TODO Bla bla bla explanation.
                                     </em>
                                     <template x-if="0 === links[index].length">
-                                        <em>This transaction has no relations to other transactions (yet).</em>
+                                        <em>TODO This transaction has no relations to other transactions (yet).</em>
                                     </template>
                                 </p>
                             </div>
@@ -177,19 +177,26 @@
                         </template>
                         <div class="row">
                             <div class="col">
-                                <h5>Add a new relation</h5>
+                                <h5>Link this (TODO NEW?) transaction to another transaction</h5>
                                 <div class="row">
-                                    <div class="col">
+                                    <div class="col w-30">
                                         <input type="text" readonly class="form-control-plaintext" value="This transaction">
                                     </div>
                                     <div class="col">
-                                        <input type="text" class="form-control" placeholder="First name" aria-label="First name">
+                                        <select class="form-control" name="link_type_id" :data-index="index" :id="'link_type_id_' + index">
+                                            <template x-for="type in formData.linkTypes ">
+                                                <option :value="type.id + '_inward'" :label="type.inward" x-text="type.inward"></option>
+                                            </template>
+                                            <template x-for="type in formData.linkTypes">
+                                                <option :value="type.id + '_outward'" :label="type.outward" x-text="type.outward"></option>
+                                            </template>
+                                        </select>
                                     </div>
                                     <div class="col">
-                                        <input type="text" class="form-control" placeholder="Last name" aria-label="Last name">
+                                        <input type="text" name="search" class="form-control linked-transactions-search" placeholder="TODO Search here..." aria-label="TODO Search here...">
                                     </div>
-                                    <div class="col">
-                                        <input type="submit" class="btn btn-primary">
+                                    <div class="col w-15 text-end">
+                                        <input type="submit" name="submit" value="TODO Save" class="btn btn-primary">
                                     </div>
                                 </div>
                             </div>
