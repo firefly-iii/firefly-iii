@@ -196,7 +196,7 @@
                                         <input type="text" name="search" :id="'linksModal_search_' + index" class="form-control linked-transactions-search" placeholder="TODO Search here..." aria-label="TODO Search here...">
                                     </div>
                                     <div class="col w-15 text-end">
-                                        <input type="submit" name="submit" value="TODO Save" class="btn btn-primary">
+                                        <input type="submit" name="submit" :data-index="index" @click.prevent="saveNewLink" value="TODO Save" class="btn btn-primary">
                                     </div>
                                 </div>
                             </div>

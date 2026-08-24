@@ -55,7 +55,8 @@ import bootstrap from "bootstrap/dist/js/bootstrap.bundle.js";
 import {removeSplit} from "./shared/remove-split.js";
 import {loadTransactionLinks} from './shared/load-transaction-links.js';
 import Autocomplete from "bootstrap5-autocomplete";
-
+import formatMoney from "../../util/format-money.js";
+import {format} from "date-fns";
 
 let create = function () {
     return {
@@ -245,20 +246,22 @@ let create = function () {
             // TODO don't do this on a timeout!
             }, 500);
         },
+        saveNewLink(e) {
+            // add entry to temporary table. 
+        },
         createAutocomplete(fieldIdentifier, url) {
         let token = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
 
             const renderJournal = function (item, b, c) {
-                return item.description + '<br><small class="text-muted">'+item.currency_code +' '+item.amount+ ' @ ' +item.date+'</small>';
+                return item.description + '<br><small class="text-muted">' + formatMoney(item.amount, item.currency_code) + ' @ ' + format(new Date(item.date), this.i18next.t('config.date_time_fns')) +'</small>';
             };
-            console.log('Make autocomplete.');
         Autocomplete.init('#' + fieldIdentifier, {
 
             server: url + '?_token=' + token,
             labelField: 'name',
             valueField: 'id',
             liveServer: true,
-            onRenderItem: renderJournal,
+            onRenderItem: renderJournal.bind(this),
             fetchOptions: {
                 method: 'GET',
                 credentials: 'include',
