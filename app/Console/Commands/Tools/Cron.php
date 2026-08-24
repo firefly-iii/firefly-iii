@@ -63,7 +63,7 @@ class Cron extends Command
     {
         /** @var UserRepositoryInterface $repository */
         $repository = app(UserRepositoryInterface::class);
-        $admin = $repository->getUsersByRole('owner')?->first();
+        $admin = $repository->getUsersByRole('owner')->first();
         if(null === $admin) {
             $this->friendlyError('There is no user in the system with the "owner"-role, cannot continue.');
             return 1;
