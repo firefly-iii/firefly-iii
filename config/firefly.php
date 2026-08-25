@@ -124,7 +124,6 @@ return [
         'email_change_undo_token',
         'email_change_confirm_token',
         'access_token',
-        'lastActivity',
         'login_ip_history',
         'previous_email_latest',
         'previous_email_',
