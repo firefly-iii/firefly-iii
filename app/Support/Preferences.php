@@ -321,11 +321,6 @@ class Preferences
     {
         $systemPreferences = config('firefly.system_preference_keys');
         if(false === $overrule && (in_array($name, $systemPreferences, true) || array_any($systemPreferences, fn(string $arrayValue) => str_starts_with($name, $arrayValue)))) {
-            var_dump(false === $overrule);
-            var_dump(in_array($name, $systemPreferences, true));
-            var_dump(array_any($systemPreferences, fn(string $arrayValue) => str_starts_with($name, $arrayValue)));
-            var_dump((in_array($name, $systemPreferences, true) || array_any($systemPreferences, fn(string $arrayValue) => str_starts_with($name, $arrayValue))));
-            die('x');
             throw new FireflyException(sprintf('Function setForUser() cannot be used to set preference "%s"', $name));
         }
         $fullName         = sprintf('preference%s%s', $user->id, $name);
