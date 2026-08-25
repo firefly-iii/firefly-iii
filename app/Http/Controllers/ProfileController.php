@@ -197,7 +197,7 @@ final class ProfileController extends Controller
         $subTitle       = $user->email;
         $userId         = $user->id;
         $enabled2FA     = null !== $user->mfa_secret;
-        $recoveryData   = Preferences::get('mfa_recovery', [])->data;
+        $recoveryData   = Preferences::get('mfa_recovery', [], true)->data;
         if (!is_array($recoveryData)) {
             $recoveryData = [];
         }

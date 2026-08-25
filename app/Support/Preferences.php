@@ -116,7 +116,7 @@ class Preferences
         Cache::put($key, '', 5);
     }
 
-    public function get(string $name, array|bool|int|string|null $default = null): ?Preference
+    public function get(string $name, array|bool|int|string|null $default = null, bool $overrule = false): ?Preference
     {
         /** @var null|User $user */
         $user = auth()->user();
@@ -127,7 +127,7 @@ class Preferences
             return $preference;
         }
 
-        return $this->getForUser($user, $name, $default);
+        return $this->getForUser($user, $name, $default, $overrule);
     }
 
     public function getArrayForUser(User $user, array $list): array
@@ -207,7 +207,7 @@ class Preferences
         return $result;
     }
 
-    public function getForUser(User $user, string $name, array|bool|int|string|null $default = null): ?Preference
+    public function getForUser(User $user, string $name, array|bool|int|string|null $default = null, bool $overrule = false): ?Preference
     {
         // Log::debug(sprintf('getForUser(#%d, "%s")', $user->id, $name));
         // don't care about user group ID, except for some specific preferences.
@@ -239,7 +239,7 @@ class Preferences
             return null;
         }
 
-        return $this->setForUser($user, $name, $default);
+        return $this->setForUser($user, $name, $default, $overrule);
     }
 
     public function getFresh(string $name, array|bool|int|string|null $default = null): ?Preference
