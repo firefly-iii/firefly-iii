@@ -54,6 +54,6 @@ class NotifiesUserAboutNewIpAddress implements ShouldQueue
             $list[$index]['notified'] = true;
         }
 
-        Preferences::setForUser($user, 'login_ip_history', $list);
+        Preferences::setForUser($user, 'login_ip_history', $list, true);
     }
 }

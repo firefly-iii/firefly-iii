@@ -72,7 +72,7 @@ class StoresNewIpAddress implements ShouldQueue
 
         /** @var bool $send */
         $send       = Preferences::getForUser($user, 'notification_user_login', true)->data;
-        Preferences::setForUser($user, 'login_ip_history', $preference);
+        Preferences::setForUser($user, 'login_ip_history', $preference, true);
 
         if (false === $inArray && true === $send) {
             event(new UserLoggedInFromNewIpAddress($user));

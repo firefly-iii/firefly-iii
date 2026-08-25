@@ -58,7 +58,7 @@ class CreatesAccessTokens extends Command
             $pref = Preferences::getForUser($user, 'access_token');
             if (null === $pref) {
                 $token = $user->generateAccessToken();
-                Preferences::setForUser($user, 'access_token', $token);
+                Preferences::setForUser($user, 'access_token', $token, true);
                 $this->friendlyInfo(sprintf('Generated access token for user %s', $user->email));
                 ++$count;
             }

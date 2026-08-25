@@ -25,6 +25,7 @@ use FireflyIII\Exceptions\Handler;
 use FireflyIII\Http\Middleware\AcceptHeaders;
 use FireflyIII\Http\Middleware\Authenticate;
 use FireflyIII\Http\Middleware\Binder;
+use FireflyIII\Http\Middleware\CatchBlockedUsers;
 use FireflyIII\Http\Middleware\EncryptCookies;
 use FireflyIII\Http\Middleware\Installer;
 use FireflyIII\Http\Middleware\InterestingMessage;
@@ -112,6 +113,7 @@ $app = Application::configure(basePath: dirname(__DIR__))
                                              // EnsureFrontendRequestsAreStateful::class,
                                              'auth:api',
                                              Binder::class,
+                                             CatchBlockedUsers::class,
                           ]
                       );
                       $middleware->appendToGroup('api_basic', [AcceptHeaders::class, Binder::class]);

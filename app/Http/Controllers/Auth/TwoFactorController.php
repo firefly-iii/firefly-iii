@@ -130,7 +130,7 @@ final class TwoFactorController extends Controller
         $preference = (int) Preferences::get('mfa_failure_count', 0)->data;
         ++$preference;
         Log::channel('audit')->info(sprintf('MFA failure count is set to %d.', $preference));
-        Preferences::set('mfa_failure_count', $preference);
+        Preferences::set('mfa_failure_count', $preference, true);
     }
 
     private function addToMFAHistory(string $mfaCode): void
@@ -140,7 +140,7 @@ final class TwoFactorController extends Controller
         $entry        = ['time' => Carbon::now()->getTimestamp(), 'code' => $mfaCode];
         $mfaHistory[] = $entry;
 
-        Preferences::set('mfa_history', $mfaHistory);
+        Preferences::set('mfa_history', $mfaHistory, true);
         $this->filterMFAHistory();
     }
 
@@ -160,7 +160,7 @@ final class TwoFactorController extends Controller
                 $newHistory[] = ['time' => $time, 'code' => $code];
             }
         }
-        Preferences::set('mfa_history', $newHistory);
+        Preferences::set('mfa_history', $newHistory, true);
     }
 
     private function getMFAFailureCounter(): int
@@ -226,12 +226,12 @@ final class TwoFactorController extends Controller
             event(new UserHasNoMFABackupCodesLeft($user));
         }
 
-        Preferences::set('mfa_recovery', $newList);
+        Preferences::set('mfa_recovery', $newList, true);
     }
 
     private function resetMFAFailureCounter(): void
     {
-        Preferences::set('mfa_failure_count', 0);
+        Preferences::set('mfa_failure_count', 0, true);
         Log::channel('audit')->info('MFA failure count is set to zero.');
     }
 }

@@ -116,7 +116,7 @@ final class MfaController extends Controller
         $recoveryCodes = $recovery->lowercase()->setCount(8)->setBlocks(2)->setChars(6)->toArray(); // Generate 8 codes // Every code must have 2 blocks // Each block must have 6 chars
         $codes         = implode("\r\n", $recoveryCodes);
 
-        Preferences::set('mfa_recovery', $recoveryCodes);
+        Preferences::set('mfa_recovery', $recoveryCodes, true);
         Preferences::mark();
 
         // send user notification.
@@ -163,8 +163,8 @@ final class MfaController extends Controller
         /** @var User $user */
         $user       = auth()->user();
 
-        Preferences::delete('temp-mfa-secret');
-        Preferences::delete('temp-mfa-codes');
+        Preferences::delete('temp-mfa-secret', true);
+        Preferences::delete('temp-mfa-codes', true);
         $repository->setMFACode($user, null);
         Preferences::mark();
 
@@ -209,7 +209,7 @@ final class MfaController extends Controller
         $secret     = Google2FA::generateSecretKey();
         $image      = Google2FA::getQRCodeInline($domain, auth()->user()->email, $secret);
 
-        Preferences::set('temp-mfa-secret', $secret);
+        Preferences::set('temp-mfa-secret', $secret, true);
 
         return view('profile.mfa.enable-mfa', ['image' => $image, 'secret' => $secret]);
     }
@@ -249,7 +249,7 @@ final class MfaController extends Controller
 
         $repository->setMFACode($user, $secret);
 
-        Preferences::delete('temp-mfa-secret');
+        Preferences::delete('temp-mfa-secret', true);
 
         session()->flash('success', (string) trans('firefly.saved_preferences'));
         Preferences::mark();
@@ -301,7 +301,7 @@ final class MfaController extends Controller
         $entry        = ['time' => Carbon::now()->getTimestamp(), 'code' => $mfaCode];
         $mfaHistory[] = $entry;
 
-        Preferences::set('mfa_history', $mfaHistory);
+        Preferences::set('mfa_history', $mfaHistory, true);
         $this->filterMFAHistory();
     }
 
@@ -321,6 +321,6 @@ final class MfaController extends Controller
                 $newHistory[] = ['time' => $time, 'code' => $code];
             }
         }
-        Preferences::set('mfa_history', $newHistory);
+        Preferences::set('mfa_history', $newHistory, true);
     }
 }

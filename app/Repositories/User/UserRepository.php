@@ -83,12 +83,12 @@ class UserRepository implements UserRepositoryInterface
         $oldEmail           = $user->email;
 
         // save old email as pref
-        Preferences::setForUser($user, 'previous_email_latest', $oldEmail);
-        Preferences::setForUser($user, 'previous_email_'.Carbon::now()->format('Y-m-d-H-i-s'), $oldEmail);
+        Preferences::setForUser($user, 'previous_email_latest', $oldEmail, true);
+        Preferences::setForUser($user, 'previous_email_'.Carbon::now()->format('Y-m-d-H-i-s'), $oldEmail, true);
 
         // set undo and confirm token:
-        Preferences::setForUser($user, 'email_change_undo_token', bin2hex(random_bytes(16)));
-        Preferences::setForUser($user, 'email_change_confirm_token', bin2hex(random_bytes(16)));
+        Preferences::setForUser($user, 'email_change_undo_token', bin2hex(random_bytes(16)), true);
+        Preferences::setForUser($user, 'email_change_confirm_token', bin2hex(random_bytes(16)), true);
         // update user
 
         $user->email        = $newEmail;
@@ -410,8 +410,8 @@ class UserRepository implements UserRepositoryInterface
         $oldEmail    = $user->email;
 
         // save old email as pref
-        Preferences::setForUser($user, 'admin_previous_email_latest', $oldEmail);
-        Preferences::setForUser($user, 'admin_previous_email_'.Carbon::now()->format('Y-m-d-H-i-s'), $oldEmail);
+        Preferences::setForUser($user, 'admin_previous_email_latest', $oldEmail, true);
+        Preferences::setForUser($user, 'admin_previous_email_'.Carbon::now()->format('Y-m-d-H-i-s'), $oldEmail, true);
 
         $user->email = $newEmail;
         $user->save();

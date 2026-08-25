@@ -137,6 +137,7 @@ final class ProfileController extends Controller
         // find preference with this token value.
         /** @var Collection $set */
         $set  = Preferences::findByName('email_change_confirm_token');
+        /** @var User|null $user */
         $user = null;
 
         /** @var Preference $preference */
@@ -147,11 +148,14 @@ final class ProfileController extends Controller
         }
         // update user to clear blocked and blocked_code.
         if (null === $user) {
-            throw new FireflyException('Invalid token.');
+            throw new FireflyException('[a] Invalid token.');
+        }
+        if('email_changed' !== $user->blocked_code) {
+            throw new FireflyException('[b] Invalid token.');
         }
         $repository->unblockUser($user);
         // also remove the "remote_guard_alt_email" preference.
-        Preferences::deleteForUser($user, 'remote_guard_alt_email');
+        Preferences::deleteForUser($user, 'remote_guard_alt_email', true);
 
         // return to log in.
         session()->flash('success', (string) trans('firefly.login_with_new_email'));
@@ -209,7 +213,7 @@ final class ProfileController extends Controller
         $accessToken    = Preferences::get('access_token');
         if (null === $accessToken) {
             $token       = $user->generateAccessToken();
-            $accessToken = Preferences::set('access_token', $token);
+            $accessToken = Preferences::set('access_token', $token, true);
         }
 
         return view('profile.index', [
@@ -375,7 +379,7 @@ final class ProfileController extends Controller
         /** @var User $user */
         $user  = auth()->user();
         $token = $user->generateAccessToken();
-        Preferences::set('access_token', $token);
+        Preferences::set('access_token', $token, true);
         session()->flash('success', (string) trans('firefly.token_regenerated'));
 
         return redirect(route('profile.index'));

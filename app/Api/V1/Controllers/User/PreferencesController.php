@@ -135,7 +135,6 @@ final class PreferencesController extends Controller
 
         /** @var PreferenceTransformer $transformer */
         $transformer = app(PreferenceTransformer::class);
-        $transformer->setParameters($this->parameters);
 
         $resource    = new Item($pref, $transformer, 'preferences');
 
