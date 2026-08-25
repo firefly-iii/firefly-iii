@@ -794,6 +794,14 @@ Breadcrumbs::for(
 );
 
 Breadcrumbs::for(
+    'profile.change-name',
+    static function (Generator $breadcrumbs): void {
+        $breadcrumbs->parent('profile.index');
+        $breadcrumbs->push(trans('breadcrumbs.change_name'), route('profile.change-name'));
+    }
+);
+
+Breadcrumbs::for(
     'profile.delete-account',
     static function (Generator $breadcrumbs): void {
         $breadcrumbs->parent('profile.index');

@@ -819,6 +819,11 @@ Route::group(
         Route::get('', ['uses' => 'PreferencesController@index', 'as' => 'index']);
         Route::post('', ['uses' => 'PreferencesController@postIndex', 'as' => 'update']);
         Route::post('test-notification', ['uses' => 'PreferencesController@testNotification', 'as' => 'test-notification']);
+        // Deliberately its own minimal endpoint rather than reusing postIndex/'update': that
+        // handler treats the whole preferences form as one unit and resets any field it
+        // doesn't see in the request (notifications, convertToPrimary, etc.) -- a lightweight
+        // header toggle posting just darkMode would wipe those out as a side effect.
+        Route::post('dark-mode', ['uses' => 'PreferencesController@setDarkMode', 'as' => 'dark-mode']);
     }
 );
 
@@ -827,11 +832,13 @@ Route::group(
     ['middleware' => 'user-full-auth', 'namespace' => 'FireflyIII\Http\Controllers', 'prefix' => 'profile', 'as' => 'profile.'],
     static function (): void {
         Route::get('', ['uses' => 'ProfileController@index', 'as' => 'index']);
+        Route::get('change-name', ['uses' => 'ProfileController@changeName', 'as' => 'change-name']);
         Route::get('change-email', ['uses' => 'ProfileController@changeEmail', 'as' => 'change-email']);
         Route::get('change-password', ['uses' => 'ProfileController@changePassword', 'as' => 'change-password']);
         Route::get('delete-account', ['uses' => 'ProfileController@deleteAccount', 'as' => 'delete-account']);
 
         Route::post('delete-account', ['uses' => 'ProfileController@postDeleteAccount', 'as' => 'delete-account.post']);
+        Route::post('change-name', ['uses' => 'ProfileController@postChangeName', 'as' => 'change-name.post']);
         Route::post('change-password', ['uses' => 'ProfileController@postChangePassword', 'as' => 'change-password.post']);
         Route::post('change-email', ['uses' => 'ProfileController@postChangeEmail', 'as' => 'change-email.post']);
         Route::post('regenerate', ['uses' => 'ProfileController@regenerate', 'as' => 'regenerate']);

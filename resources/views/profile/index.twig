@@ -47,6 +47,9 @@
                             <div class="row">
                                 <div class="col-lg-6">
                                     <ul>
+                                        <li>
+                                            <a href="{{ route('profile.change-name') }}">{{ 'change_your_name'|_ }}</a>
+                                        </li>
                                         {% if true == isInternalAuth %}
                                             <li>
                                                 <a href="{{ route('profile.change-email') }}">{{ 'change_your_email'|_ }}</a>

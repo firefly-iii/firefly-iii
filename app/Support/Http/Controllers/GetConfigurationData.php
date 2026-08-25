@@ -94,7 +94,13 @@ trait GetConfigurationData
 
         /** @var Carbon $first */
         $first          = session('first');
-        $title          = sprintf('%s - %s', $start->isoFormat($this->monthAndDayFormat), $end->isoFormat($this->monthAndDayFormat));
+        // a range that covers exactly one calendar month reads better as "August, 2026"
+        // than as "August 1st, 2026 - August 31st, 2026"; anything else (a week, a
+        // quarter, a custom range, "last 30 days", etc.) keeps the full start - end title.
+        $isFullMonth    = 1 === (int) $start->format('j') && $end->isSameDay($start->copy()->endOfMonth());
+        $title          = $isFullMonth
+            ? $start->isoFormat('MMMM, YYYY')
+            : sprintf('%s - %s', $start->isoFormat($this->monthAndDayFormat), $end->isoFormat($this->monthAndDayFormat));
         $isCustom       = true === session('is_custom_range', false);
         $today          = today(config('app.timezone'));
         $ranges         = [

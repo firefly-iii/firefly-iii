@@ -44,6 +44,7 @@ return [
     'accounts'               => 'Accounts',
     'changePassword'         => 'Change your password',
     'change_email'           => 'Change your email address',
+    'change_name'            => 'Change your name',
     'bills'                  => 'Subscriptions',
     'newBill'                => 'New subscription',
     'edit_bill'              => 'Edit subscription ":name"',

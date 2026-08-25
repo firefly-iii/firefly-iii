@@ -155,32 +155,91 @@ textarea:focus-visible,
     background: var(--ip-header-bg-active);
 }
 
+/* At header icon size, a thin fa-sun-o reads as a gear, not a sun -- color is
+   doing the disambiguation the outline alone can't at this scale. Scoped to
+   just the sun glyph (the one actually getting mistaken for settings); the
+   moon and the "follow browser" half-circle stay the header's normal icon
+   color, since neither is ambiguous the same way. */
+.skin-firefly-iii #theme-toggle .fa-sun-o {
+    color: #f5c518;
+}
+
+/* Search: a flex child of .main-header .navbar, sandwiched between the
+   sidebar-toggle and .navbar-custom-menu (see layout/default.twig) instead
+   of the sidebar it used to live in, so it stays reachable when the sidebar
+   is collapsed (desktop mini mode) or closed (mobile drawer). Centering it
+   with flex (flex:1 1 auto + justify-content:center) rather than absolute
+   positioning means it actually reserves its own space in the layout and
+   shrinks instead of overlapping .navbar-custom-menu when that grows (a
+   long display name, a wide date range). */
+.skin-firefly-iii .main-header .navbar {
+    display: flex;
+    align-items: center;
+}
+
+/* .navbar-custom-menu (help/date-range/user-menu) has its own internal
+   float-based layout, not flex -- if it's squeezed for
+   width it wraps onto a second line rather than shrinking cleanly. It never
+   loses the fight for space; .header-search does all the shrinking instead,
+   down to being quite narrow rather than forcing that wrap. */
+.skin-firefly-iii .main-header .navbar-custom-menu {
+    flex-shrink: 0;
+}
+
+.header-search {
+    display: flex;
+    justify-content: center;
+    flex: 1 1 auto;
+    min-width: 40px;
+    margin: 0 8px;
+}
+
+.header-search .input-group {
+    width: 100%;
+    max-width: 360px;
+}
+
+.skin-firefly-iii .header-search .form-control {
+    background: var(--ip-header-bg-active);
+    border: 1px solid transparent;
+    color: #ffffff;
+    font-family: var(--ip-font-ui);
+    height: 32px;
+    box-shadow: none;
+}
+
+.header-search .form-control::placeholder {
+    color: var(--ip-fg-on-header);
+}
+
+.header-search .form-control:focus {
+    border-color: var(--ip-accent);
+    box-shadow: none;
+}
+
+.skin-firefly-iii .header-search .btn {
+    background: var(--ip-header-bg-active);
+    border: 1px solid transparent;
+    color: var(--ip-fg-on-header);
+    height: 32px;
+}
+
+.skin-firefly-iii .header-search .btn:hover {
+    color: #ffffff;
+}
+
+@media (max-width: 600px) {
+    .header-search .form-control::placeholder {
+        color: transparent;
+    }
+}
+
 /* ============================ CHROME: SIDEBAR ============================ */
 
 .skin-firefly-iii .main-sidebar,
 .skin-firefly-iii .left-side {
     background-color: var(--ip-sidebar-bg);
     border-right: 1px solid var(--ip-sidebar-border);
-}
-
-.skin-firefly-iii .sidebar-form input[type="text"] {
-    background: var(--ip-sidebar-bg-active);
-    border: 1px solid transparent;
-    color: var(--ip-fg-on-sidebar-strong);
-    font-family: var(--ip-font-ui);
-}
-
-.skin-firefly-iii .sidebar-form .btn {
-    background: var(--ip-sidebar-bg-active);
-    color: var(--ip-fg-on-sidebar-strong);
-}
-
-.skin-firefly-iii .sidebar-menu > li.header {
-    color: var(--ip-fg-faint);
-    background: var(--ip-sidebar-bg);
-    font-family: var(--ip-font-mono);
-    font-size: 11px;
-    letter-spacing: 0.06em;
 }
 
 .skin-firefly-iii .sidebar-menu > li > a {
@@ -416,25 +475,29 @@ label {
 }
 
 /* ============================== DROPDOWNS ============================== */
-
+/* !important throughout: skin-dark.min.css's `.skin-firefly-iii .dropdown-menu`
+   rules (and, for the link color, its own !important) don't reliably lose to
+   a same-or-higher-specificity rule here -- same family of fight as
+   .btn-success above, just on a selector this time instead of a load-order
+   quirk. Forcing it removes any doubt. */
 .dropdown-menu {
-    background: var(--ip-surface);
-    border: 1px solid var(--ip-border);
-    box-shadow: var(--ip-shadow-panel);
+    background: var(--ip-surface) !important;
+    border: 1px solid var(--ip-border) !important;
+    box-shadow: var(--ip-shadow-panel) !important;
 }
 
 .dropdown-menu > li > a {
-    color: var(--ip-fg);
+    color: var(--ip-fg) !important;
 }
 
 .dropdown-menu > li > a:hover,
 .dropdown-menu > li > a:focus {
-    background: var(--ip-surface-raised);
-    color: var(--ip-fg);
+    background: var(--ip-surface-raised) !important;
+    color: var(--ip-fg) !important;
 }
 
 .dropdown-menu .divider {
-    background-color: var(--ip-border);
+    background-color: var(--ip-border) !important;
 }
 
 /* ============================== LABELS / STATE ============================== */

@@ -32,6 +32,7 @@ use FireflyIII\Exceptions\ValidationException;
 use FireflyIII\Http\Middleware\IsDemoUser;
 use FireflyIII\Http\Requests\DeleteAccountFormRequest;
 use FireflyIII\Http\Requests\EmailFormRequest;
+use FireflyIII\Http\Requests\NameFormRequest;
 use FireflyIII\Http\Requests\ProfileFormRequest;
 use FireflyIII\Models\Preference;
 use FireflyIII\Repositories\User\UserRepositoryInterface;
@@ -182,6 +183,31 @@ class ProfileController extends Controller
         }
 
         return view('profile.logout-other-sessions');
+    }
+
+    /**
+     * Change your name.
+     */
+    public function changeName(): Factory|View
+    {
+        $title        = auth()->user()->email;
+        $name         = app('preferences')->get('display_name')?->data;
+        $subTitle     = (string) trans('firefly.change_your_name');
+        $subTitleIcon = 'fa-user-o';
+
+        return view('profile.change-name', compact('title', 'subTitle', 'subTitleIcon', 'name'));
+    }
+
+    /**
+     * Submit the change name form.
+     */
+    public function postChangeName(NameFormRequest $request): Redirector|RedirectResponse
+    {
+        $name = $request->convertString('name');
+        app('preferences')->set('display_name', $name);
+        session()->flash('success', (string) trans('firefly.name_changed'));
+
+        return redirect(route('profile.index'));
     }
 
     /**

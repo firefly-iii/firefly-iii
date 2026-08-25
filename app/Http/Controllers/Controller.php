@@ -137,12 +137,17 @@ abstract class Controller extends BaseController
                     $this->convertToPrimary = Amount::convertToPrimary();
                     $page                   = $this->getPageName();
                     $shownDemo              = $this->hasSeenDemo();
+                    $rawName                = app('preferences')->get('display_name')?->data;
+                    $rawName                = is_string($rawName) ? trim($rawName) : '';
+                    $firstName              = '' !== $rawName ? trim(explode(' ', $rawName)[0]) : explode('@', (string) auth()->user()->email)[0];
+                    $headerGreeting         = (string) trans('firefly.header_greeting', ['name' => $firstName]);
                     View::share('language', $language);
                     View::share('locale', $locale);
                     View::share('convertToPrimary', $this->convertToPrimary);
                     View::share('shownDemo', $shownDemo);
                     View::share('current_route_name', $page);
                     View::share('original_route_name', Route::currentRouteName());
+                    View::share('headerGreeting', $headerGreeting);
 
                     // lottery to send any remaining webhooks:
                     if (7 === random_int(1, 10)) {

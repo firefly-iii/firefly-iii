@@ -13,8 +13,6 @@
         </a>
     </li>
 
-    <li class="header text-uppercase">{{ 'financial_control'|_ }}</li>
-
     <li class="{{ activeRoutePartial('budgets') }}" id="budget-menu">
         <a href="{{ route('budgets.index') }}">
             <em class="fa fa-pie-chart fa-fw"></em>
@@ -35,8 +33,6 @@
             <span>{{ 'piggyBanks'|_ }}</span>
         </a>
     </li>
-
-    <li class="header text-uppercase">{{ 'accounting'|_ }}</li>
 
     <li class="{{ activeRoutePartial('transactions') }} treeview" id="transaction-menu">
         <a href="#">
@@ -108,8 +104,6 @@
             {% endif %}
         </ul>
     </li>
-
-    <li class="header text-uppercase">{{ 'others'|_ }}</li>
 
     <li class="{{ activeRoutePartial('accounts') }} treeview" id="account-menu">
         <a href="#">
@@ -196,70 +190,7 @@
         </li>
     {% endif %}
 
-    <li class="{{ activeRoutePartial('setting') }} {{ activeRoutePartial('profile') }} {{ activeRoutePartial('preferences') }} {{ activeRoutePartial('currencies') }} {{ activeRoutePartial('exchange-rates') }} treeview"
-        id="option-menu">
-        <a href="#">
-            <em class="fa fa-sliders fa-fw"></em>
-            <span>{{ 'options'|_ }}</span>
-            <span class="pull-right-container">
-        <span class="fa fa-angle-left pull-right"></span>
-      </span>
-        </a>
-
-        <ul class="treeview-menu">
-            <li class="{{ activeRoutePartial('profile') }}">
-                <a class="{{ activeRouteStrict('profile.index') }}" href="{{ route('profile.index') }}">
-                    <span class="fa fa-angle-right fa-fw"></span>
-                    <span>{{ 'profile'|_ }}</span>
-                </a>
-            </li>
-            <li class="{{ activeRoutePartial('preferences') }}">
-                <a class="{{ activeRouteStrict('preferences.index') }}"
-                   href="{{ route('preferences.index') }}">
-                    <span class="fa fa-angle-right fa-fw"></span>
-                    <span>{{ 'preferences'|_ }}</span>
-                </a>
-            </li>
-            <li class="{{ activeRoutePartial('currencies') }}">
-                <a class="{{ activeRoutePartial('currencies') }}" href="{{ route('currencies.index') }}">
-                    <span class="fa fa-angle-right fa-fw"></span>
-                    <span>{{ 'currencies'|_ }}</span>
-                </a>
-            </li>
-            {% if config('cer.enabled') %}
-            <li class="{{ activeRoutePartial('exchange-rates') }}">
-                <a class="{{ activeRoutePartial('exchange-rates') }}" href="{{ route('exchange-rates.index') }}">
-                    <span class="fa fa-angle-right fa-fw"></span>
-                    <span>{{ 'menu_exchange_rates_index'|_ }}</span>
-                </a>
-            </li>
-            {% endif %}
-            {% if hasRole('owner') %}
-                <li class="{{ activeRoutePartial('settings') }}">
-                    <a class="{{ activeRoutePartial('settings') }}" href="{{ route('settings.index') }}">
-                        <span class="fa fa-angle-right fa-fw"></span>
-                        <span>{{ 'system_settings'|_ }}</span>
-                    </a>
-                </li>
-            {% endif %}
-        </ul>
-    </li>
-
-    {% if 'web' == authGuard %}
-        <li>
-            <a href="{{ route('logout') }}" class="logout-link">
-                <em class="fa fa-sign-out fa-fw"></em>
-                <span>{{ 'logout'|_ }}
-                </span>
-            </a>
-        </li>
-    {% endif %}
-    {% if 'remote_user_guard' == authGuard and '' != logoutUrl %}
-        <li>
-            <a href="{{ logoutUrl }}">
-                <em class="fa fa-sign-out fa-fw"></em>
-                <span>{{ 'logout'|_ }}</span>
-            </a>
-        </li>
-    {% endif %}
+    {# "Options" (profile/preferences/currencies/exchange-rates/settings) and "Logout"
+       moved to the dropdown under the user's name in the header (layout/default.twig) --
+       the sidebar is primary navigation only now. #}
 </ul>

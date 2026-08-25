@@ -37,6 +37,7 @@ use FireflyIII\Repositories\Account\AccountRepositoryInterface;
 use FireflyIII\Support\Facades\Preferences;
 use FireflyIII\User;
 use Illuminate\Contracts\View\Factory;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Redirector;
@@ -340,6 +341,22 @@ class PreferencesController extends Controller
         Preferences::mark();
 
         return redirect(route('preferences.index'));
+    }
+
+    /**
+     * Quick light/dark toggle in the header, distinct from the full preferences form:
+     * only ever sets an explicit 'light' or 'dark' (the header toggle is binary by
+     * design; "follow browser" stays a preferences-page-only option).
+     */
+    public function setDarkMode(Request $request): JsonResponse
+    {
+        $mode = (string) $request->get('darkMode');
+        if (!in_array($mode, ['light', 'dark'], true)) {
+            return response()->json(['ok' => 'error'], 422);
+        }
+        Preferences::set('darkMode', $mode);
+
+        return response()->json(['ok' => 'ok']);
     }
 
     public function testNotification(Request $request): mixed

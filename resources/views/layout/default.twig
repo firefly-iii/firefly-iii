@@ -127,14 +127,44 @@ FINISH: unreviewed and undocumented is unfinished; this build ends with the fini
             <a href="#" class="sidebar-toggle" data-toggle="push-menu" role="button">
                 <span class="sr-only">{{ 'toggleNavigation'|_ }}</span>
             </a>
+
+            {# A flex child of .navbar (sandwiched between the sidebar toggle and the
+               right-hand menu, see .main-header .navbar in instrument-panel.css) rather
+               than absolutely positioned, so it actually reserves its own space instead
+               of guessing a width and overlapping whatever's next to it. Lives here
+               instead of in the sidebar so it stays reachable when the sidebar is
+               collapsed (desktop mini mode) or closed (mobile drawer). #}
+            <form action="{{ route('search.index') }}" method="get" class="header-search">
+                <div class="input-group">
+                    <input autocomplete="off" type="text" name="search" class="form-control"
+                           placeholder="{{ 'searchPlaceholder'|_ }}" value="{{ query }}" spellcheck="false"/>
+                    <span class="input-group-btn">
+                        <button type="submit" name="go" id="header-search-btn" class="btn btn-flat"><span class="fa fa-search"></span></button>
+                    </span>
+                </div>
+            </form>
+
             <div class="navbar-custom-menu">
                 <ul class="nav navbar-nav">
 
+                    {# Was the help ("?") icon's spot; help itself now lives in the "Hey
+                       <name>" dropdown below, always visible there instead of hidden below
+                       the sm/xs breakpoint. Binary by design (light/dark only) -- "follow
+                       browser" stays a preferences-page-only option; see
+                       PreferencesController::setDarkMode(). Icon and data-current-mode are
+                       server-rendered from the resolved darkMode preference; a "browser"
+                       preference shows the adjust/half icon since neither sun nor moon would
+                       be accurate without knowing the OS preference, which only JS can read. #}
                     <li class="hidden-sm hidden-xs">
-                        <a href="#" id="help" data-route="{{ original_route_name }}"
-                           data-extra="{{ objectType|default("") }}">
-                            <span class="fa fa-question-circle" data-route="{{ original_route_name }}"
-                                  data-extra="{{ objectType|default("") }}"></span>
+                        <a href="#" id="theme-toggle" data-current-mode="{{ darkMode }}"
+                           title="{{ 'toggle_theme'|_ }}">
+                            {% if darkMode == 'dark' %}
+                                <span class="fa fa-sun-o"></span>
+                            {% elseif darkMode == 'light' %}
+                                <span class="fa fa-moon-o"></span>
+                            {% else %}
+                                <span class="fa fa-adjust"></span>
+                            {% endif %}
                         </a>
                     </li>
 
@@ -144,13 +174,54 @@ FINISH: unreviewed and undocumented is unfinished; this build ends with the fini
                         </span>
                     </li>
 
+                    {# Was previously a mix of the sidebar's "Options" treeview (profile,
+                       preferences, currencies, exchange rates, system settings) and a
+                       separate "Logout" item; both now live here instead, under the user's
+                       name, so the sidebar is pure primary navigation. Same route guards
+                       (owner-only settings, exchange-rates feature flag, auth-guard-specific
+                       logout) as the sidebar version they replaced. #}
                     <li class="dropdown user user-menu">
-                    <span style="cursor:default;color:#fff;padding: 15px;display: block;line-height: 20px;">
-                        <span class="hidden-xs">{{ Auth.user.email }}</span>
-                    </span>
-                    </li>
-                    <li id="sidebar-toggle">
-                        <a href="#" data-toggle="control-sidebar"><span class="fa fa-plus-circle"></span></a>
+                        <a href="#" class="dropdown-toggle" data-toggle="dropdown" aria-expanded="false" style="padding: 15px; line-height: 20px;">
+                            <span class="hidden-xs">{{ headerGreeting }}</span>
+                            <span class="caret"></span>
+                        </a>
+                        <ul class="dropdown-menu dropdown-menu-right" role="menu">
+                            <li>
+                                <a href="{{ route('profile.index') }}"><span class="fa fa-fw fa-user"></span> {{ 'profile'|_ }}</a>
+                            </li>
+                            <li>
+                                <a href="{{ route('preferences.index') }}"><span class="fa fa-fw fa-gear"></span> {{ 'preferences'|_ }}</a>
+                            </li>
+                            <li>
+                                <a href="{{ route('currencies.index') }}"><span class="fa fa-fw fa-usd"></span> {{ 'currencies'|_ }}</a>
+                            </li>
+                            {% if config('cer.enabled') %}
+                                <li>
+                                    <a href="{{ route('exchange-rates.index') }}"><span class="fa fa-fw fa-exchange"></span> {{ 'menu_exchange_rates_index'|_ }}</a>
+                                </li>
+                            {% endif %}
+                            {% if hasRole('owner') %}
+                                <li>
+                                    <a href="{{ route('settings.index') }}"><span class="fa fa-fw fa-hand-spock-o"></span> {{ 'system_settings'|_ }}</a>
+                                </li>
+                            {% endif %}
+                            <li>
+                                <a href="#" id="help" data-route="{{ original_route_name }}" data-extra="{{ objectType|default("") }}">
+                                    <span class="fa fa-fw fa-question-circle" data-route="{{ original_route_name }}" data-extra="{{ objectType|default("") }}"></span> {{ 'help_menu_item'|_ }}
+                                </a>
+                            </li>
+                            <li class="divider"></li>
+                            {% if 'web' == authGuard %}
+                                <li>
+                                    <a href="{{ route('logout') }}" class="logout-link"><span class="fa fa-fw fa-sign-out"></span> {{ 'logout'|_ }}</a>
+                                </li>
+                            {% endif %}
+                            {% if 'remote_user_guard' == authGuard and '' != logoutUrl %}
+                                <li>
+                                    <a href="{{ logoutUrl }}"><span class="fa fa-fw fa-sign-out"></span> {{ 'logout'|_ }}</a>
+                                </li>
+                            {% endif %}
+                        </ul>
                     </li>
                 </ul>
             </div>
@@ -159,15 +230,6 @@ FINISH: unreviewed and undocumented is unfinished; this build ends with the fini
     </header>
     <aside class="main-sidebar">
         <section class="sidebar">
-            <form action="{{ route('search.index') }}" method="get" class="sidebar-form">
-                <div class="input-group">
-                    <input autocomplete="off" type="text" name="search" class="form-control"
-                           placeholder="{{ 'searchPlaceholder'|_ }}" value="{{ query }}" spellcheck="false"/>
-                    <span class="input-group-btn">
-                <button type='submit' name='go' id='search-btn' class="btn btn-flat"><span class="fa fa-search"></span></button>
-              </span>
-                </div>
-            </form>
             {% include('partials.menu-sidebar') %}
         </section>
     </aside>
@@ -200,12 +262,10 @@ FINISH: unreviewed and undocumented is unfinished; this build ends with the fini
                 href="{{ route('debug') }}">{{ Config.get('firefly.version') }}</a>
         </div>
         <strong><a href="https://github.com/firefly-iii/firefly-iii">Firefly III</a></strong>
-        <small class="text-muted">&copy; James Cole, <a href="https://www.gnu.org/licenses/agpl-3.0.html">AGPL-3.0-or-later</a>.</small>
+        <small class="text-muted">&copy; Sudarshan Shetty, <a href="https://www.gnu.org/licenses/agpl-3.0.html">AGPL-3.0-or-later</a>.</small>
         {% if FF_IS_ALPHA %}<small class="text-danger hidden-xs"><br>{{ 'is_alpha_warning'|_ }}</small>{% endif %}
         {% if FF_IS_BETA %}<small class="text-warning hidden-xs"><br>{{ 'is_beta_warning'|_ }}</small>{% endif %}
     </footer>
-
-    {% include('partials.control-bar') %}
 
 </div>
 <div class="modal fade" id="defaultModal" tabindex="-1" role="dialog">
