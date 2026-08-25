@@ -137,7 +137,8 @@ final class ProfileController extends Controller
         // find preference with this token value.
         /** @var Collection $set */
         $set  = Preferences::findByName('email_change_confirm_token');
-        /** @var User|null $user */
+
+        /** @var null|User $user */
         $user = null;
 
         /** @var Preference $preference */
@@ -150,7 +151,7 @@ final class ProfileController extends Controller
         if (null === $user) {
             throw new FireflyException('[a] Invalid token.');
         }
-        if('email_changed' !== $user->blocked_code) {
+        if ('email_changed' !== $user->blocked_code) {
             throw new FireflyException('[b] Invalid token.');
         }
         $repository->unblockUser($user);
