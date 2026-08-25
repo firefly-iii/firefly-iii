@@ -65,7 +65,7 @@ final class TwoFactorController extends Controller
     public function submitMFA(Request $request): RedirectResponse
     {
         /** @var array $mfaHistory */
-        $mfaHistory    = Preferences::get('mfa_history', [])->data;
+        $mfaHistory    = Preferences::get('mfa_history', [], true)->data;
         $mfaCode       = (string) $request->input('one_time_password');
 
         // is in history? then refuse to use it.
@@ -127,7 +127,7 @@ final class TwoFactorController extends Controller
 
     private function addToMFAFailureCounter(): void
     {
-        $preference = (int) Preferences::get('mfa_failure_count', 0)->data;
+        $preference = (int) Preferences::get('mfa_failure_count', 0, true)->data;
         ++$preference;
         Log::channel('audit')->info(sprintf('MFA failure count is set to %d.', $preference));
         Preferences::set('mfa_failure_count', $preference, true);
@@ -136,7 +136,7 @@ final class TwoFactorController extends Controller
     private function addToMFAHistory(string $mfaCode): void
     {
         /** @var array $mfaHistory */
-        $mfaHistory   = Preferences::get('mfa_history', [])->data;
+        $mfaHistory   = Preferences::get('mfa_history', [], true)->data;
         $entry        = ['time' => Carbon::now()->getTimestamp(), 'code' => $mfaCode];
         $mfaHistory[] = $entry;
 
@@ -150,7 +150,7 @@ final class TwoFactorController extends Controller
     private function filterMFAHistory(): void
     {
         /** @var array $mfaHistory */
-        $mfaHistory = Preferences::get('mfa_history', [])->data;
+        $mfaHistory = Preferences::get('mfa_history', [], true)->data;
         $newHistory = [];
         $now        = Carbon::now()->getTimestamp();
         foreach ($mfaHistory as $entry) {
@@ -165,7 +165,7 @@ final class TwoFactorController extends Controller
 
     private function getMFAFailureCounter(): int
     {
-        $value = (int) Preferences::get('mfa_failure_count', 0)->data;
+        $value = (int) Preferences::get('mfa_failure_count', 0, true)->data;
         Log::channel('audit')->info(sprintf('MFA failure count is %d.', $value));
 
         return $value;

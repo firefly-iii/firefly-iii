@@ -297,7 +297,7 @@ final class MfaController extends Controller
     private function addToMFAHistory(string $mfaCode): void
     {
         /** @var array $mfaHistory */
-        $mfaHistory   = Preferences::get('mfa_history', [])->data;
+        $mfaHistory   = Preferences::get('mfa_history', [], true)->data;
         $entry        = ['time' => Carbon::now()->getTimestamp(), 'code' => $mfaCode];
         $mfaHistory[] = $entry;
 
@@ -311,7 +311,7 @@ final class MfaController extends Controller
     private function filterMFAHistory(): void
     {
         /** @var array $mfaHistory */
-        $mfaHistory = Preferences::get('mfa_history', [])->data;
+        $mfaHistory = Preferences::get('mfa_history', [], true)->data;
         $newHistory = [];
         $now        = Carbon::now()->getTimestamp();
         foreach ($mfaHistory as $entry) {
