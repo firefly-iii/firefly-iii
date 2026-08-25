@@ -78,8 +78,8 @@ return [
         'running_balance_column' => (bool)env_default_when_empty(env('USE_RUNNING_BALANCE'), true), // this is only the default value, is not used.
         // see cer.php for exchange rates feature flag.
     ],
-'version' => 'develop/2026-08-24',
-'build_time' => 1787574810,
+'version' => 'develop/2026-08-25',
+'build_time' => 1787639781,
     'api_version'                          => '2.1.0', // field is no longer used.
     'db_version'                           => 28, // field is no longer used.
 
@@ -120,7 +120,7 @@ return [
 
     // system preference keys.
     // cannot be set or overruled by the user, despite being in the preferences table
-        'system_preference_keys' => [
+    'system_preference_keys'               => [
         'email_change_undo_token',
         'email_change_confirm_token',
         'access_token',
