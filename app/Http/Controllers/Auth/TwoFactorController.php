@@ -194,7 +194,7 @@ final class TwoFactorController extends Controller
      */
     private function isBackupCode(string $mfaCode): bool
     {
-        $list = Preferences::get('mfa_recovery', [])->data;
+        $list = Preferences::get('mfa_recovery', [], true)->data;
         if (!is_array($list)) {
             $list = [];
         }
@@ -207,7 +207,7 @@ final class TwoFactorController extends Controller
      */
     private function removeFromBackupCodes(string $mfaCode): void
     {
-        $list    = Preferences::get('mfa_recovery', [])->data;
+        $list    = Preferences::get('mfa_recovery', [], true)->data;
         if (!is_array($list)) {
             $list = [];
         }
