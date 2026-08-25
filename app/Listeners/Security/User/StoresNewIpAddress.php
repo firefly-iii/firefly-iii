@@ -45,7 +45,7 @@ class StoresNewIpAddress implements ShouldQueue
         }
 
         /** @var array $preference */
-        $preference = Preferences::getForUser($user, 'login_ip_history', [])->data;
+        $preference = Preferences::getForUser($user, 'login_ip_history', [], true)->data;
         $inArray    = false;
         $ip         = request()->ip();
         Log::debug(sprintf('User logging in from IP address %s', $ip));

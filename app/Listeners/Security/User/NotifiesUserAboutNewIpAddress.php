@@ -41,7 +41,7 @@ class NotifiesUserAboutNewIpAddress implements ShouldQueue
         }
 
         /** @var null|array $list */
-        $list = Preferences::getForUser($user, 'login_ip_history', [])->data;
+        $list = Preferences::getForUser($user, 'login_ip_history', [], true)->data;
         if (!is_array($list)) {
             $list = [];
         }
