@@ -1885,16 +1885,16 @@
         },
         {
             "name": "laravel/framework",
-            "version": "v13.27.0",
+            "version": "v13.29.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/laravel/framework.git",
-                "reference": "f3fa8f3591fa2e8f0b7dedfffc3fc324d2aad31b"
+                "reference": "6e2c363716964d8238cee7097b258119a984f0cf"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/laravel/framework/zipball/f3fa8f3591fa2e8f0b7dedfffc3fc324d2aad31b",
-                "reference": "f3fa8f3591fa2e8f0b7dedfffc3fc324d2aad31b",
+                "url": "https://api.github.com/repos/laravel/framework/zipball/6e2c363716964d8238cee7097b258119a984f0cf",
+                "reference": "6e2c363716964d8238cee7097b258119a984f0cf",
                 "shasum": ""
             },
             "require": {
@@ -2108,7 +2108,7 @@
                 "issues": "https://github.com/laravel/framework/issues",
                 "source": "https://github.com/laravel/framework"
             },
-            "time": "2026-08-25T14:16:00+00:00"
+            "time": "2026-08-25T20:57:16+00:00"
         },
         {
             "name": "laravel/passport",
@@ -4723,16 +4723,16 @@
         },
         {
             "name": "phpseclib/phpseclib",
-            "version": "3.0.56",
+            "version": "3.0.57",
             "source": {
                 "type": "git",
                 "url": "https://github.com/phpseclib/phpseclib.git",
-                "reference": "7adbbe38cde25e2df2116dbf2673c407e24fa305"
+                "reference": "d17e0ddaeaf6f22f7e007cbb437d78792fe2a0e4"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/phpseclib/phpseclib/zipball/7adbbe38cde25e2df2116dbf2673c407e24fa305",
-                "reference": "7adbbe38cde25e2df2116dbf2673c407e24fa305",
+                "url": "https://api.github.com/repos/phpseclib/phpseclib/zipball/d17e0ddaeaf6f22f7e007cbb437d78792fe2a0e4",
+                "reference": "d17e0ddaeaf6f22f7e007cbb437d78792fe2a0e4",
                 "shasum": ""
             },
             "require": {
@@ -4813,7 +4813,7 @@
             ],
             "support": {
                 "issues": "https://github.com/phpseclib/phpseclib/issues",
-                "source": "https://github.com/phpseclib/phpseclib/tree/3.0.56"
+                "source": "https://github.com/phpseclib/phpseclib/tree/3.0.57"
             },
             "funding": [
                 {
@@ -4829,7 +4829,7 @@
                     "type": "tidelift"
                 }
             ],
-            "time": "2026-08-03T04:36:50+00:00"
+            "time": "2026-08-26T12:13:21+00:00"
         },
         {
             "name": "pragmarx/google2fa",

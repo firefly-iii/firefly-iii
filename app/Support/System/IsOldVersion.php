@@ -112,7 +112,11 @@ trait IsOldVersion
             $message = $e->getMessage();
             Log::error(sprintf('Error message trying to access users-table: %s', $message));
             if ($this->isAccessDenied($message)) {
-                throw new FireflyException('It seems your database configuration is not correct. Please verify the username and password in your .env file.', 0, $e);
+                throw new FireflyException(
+                    'It seems your database configuration is not correct. Please verify the username and password in your .env file.',
+                    0,
+                    $e
+                );
             }
             if ($this->noTablesExist($message)) {
                 // redirect to UpdateController
