@@ -429,7 +429,7 @@ class CurrencyRepository implements CurrencyRepositoryInterface, UserGroupInterf
             Log::error(sprintf('Could not save exchange rate: %s', $message));
             if (str_contains($message, 'Integrity constraint violation')) {
                 Log::warning(sprintf('Currency exchange rate already exists, so return existing one: %s', $message));
-                $res = CurrencyExchangeRate::where('user_id', $this->user->id)
+                $res = CurrencyExchangeRate::query()->where('user_id', $this->user->id)
                     ->where('user_group_id', $this->userGroup->id)
                     ->where('from_currency_id', $fromCurrency->id)
                     ->where('to_currency_id', $toCurrency->id)
