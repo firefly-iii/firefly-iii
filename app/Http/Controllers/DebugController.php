@@ -65,8 +65,8 @@ use const PHP_SAPI;
  */
 final class DebugController extends Controller
 {
-    use IsOldVersion;
     use GetConfigurationData;
+    use IsOldVersion;
 
     /**
      * DebugController constructor.

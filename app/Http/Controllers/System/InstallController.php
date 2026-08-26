@@ -29,7 +29,6 @@ use Exception;
 use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Http\Controllers\Controller;
 use FireflyIII\Support\Facades\AppConfiguration;
-use FireflyIII\Support\Facades\Preferences;
 use FireflyIII\Support\Http\Controllers\GetConfigurationData;
 use FireflyIII\Support\System\IsOldVersion;
 use Illuminate\Contracts\View\Factory;
@@ -42,9 +41,9 @@ use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Log;
 use Laravel\Passport\Passport;
 use phpseclib3\Crypt\RSA;
-use function Safe\json_encode;
 
 use function Safe\file_put_contents;
+use function Safe\json_encode;
 
 /**
  * Class InstallController
@@ -80,26 +79,8 @@ final class InstallController extends Controller
             return view('install.index');
         }
         Log::debug('Installer has finished, return to home.');
+
         return response()->redirectToRoute('home');
-    }
-
-    /**
-     * Create specific RSA keys.
-     */
-    private function keys(): void
-    {
-        if ($this->hasNoTables() || $this->isOldVersionInstalled()) {
-            $key                      = RSA::createKey(4096);
-
-            [$publicKey, $privateKey] = [Passport::keyPath('oauth-public.key'), Passport::keyPath('oauth-private.key')];
-
-            if (file_exists($publicKey) || file_exists($privateKey)) {
-                return;
-            }
-
-            file_put_contents($publicKey, (string) $key->getPublicKey());
-            file_put_contents($privateKey, $key->toString('PKCS1'));
-        }
     }
 
     public function runCommand(Request $request): JsonResponse
@@ -161,20 +142,25 @@ final class InstallController extends Controller
     {
         $key = hash('sha256', sprintf('Installer - %s - %s', $command, json_encode($args)));
         Log::debug(sprintf('Will now call command %s with args.', $command), $args);
-        if(Cache::has($key)) {
+        if (Cache::has($key)) {
             $time = Cache::get($key);
             $diff = Carbon::now()->timestamp - $time;
-            if($diff < 120) {
-                throw new FireflyException(sprintf('This command was called recently, please wait two minutes before you try again (wait time is another %d sec).', 120- $diff));
+            if ($diff < 120) {
+                throw new FireflyException(sprintf(
+                    'This command was called recently, please wait two minutes before you try again (wait time is another %d sec).',
+                    120 - $diff
+                ));
             }
         }
+
         try {
             if ('generate-keys' === $command) {
                 $this->keys();
             }
-            if('firefly-iii:create-database' === $command && !$this->hasNoTables()) {
+            if ('firefly-iii:create-database' === $command && !$this->hasNoTables()) {
                 Log::debug('Database already exists, skipping create-database command.');
                 Cache::set($key, Carbon::now()->timestamp);
+
                 return true;
             }
             if ('generate-keys' !== $command) {
@@ -183,10 +169,30 @@ final class InstallController extends Controller
             }
         } catch (Exception $e) { // intentional generic exception
             Cache::clear();
+
             throw new FireflyException($e->getMessage(), 0, $e);
         }
         Cache::set($key, Carbon::now()->timestamp);
 
         return true;
+    }
+
+    /**
+     * Create specific RSA keys.
+     */
+    private function keys(): void
+    {
+        if ($this->hasNoTables() || $this->isOldVersionInstalled()) {
+            $key                      = RSA::createKey(4096);
+
+            [$publicKey, $privateKey] = [Passport::keyPath('oauth-public.key'), Passport::keyPath('oauth-private.key')];
+
+            if (file_exists($publicKey) || file_exists($privateKey)) {
+                return;
+            }
+
+            file_put_contents($publicKey, (string) $key->getPublicKey());
+            file_put_contents($privateKey, $key->toString('PKCS1'));
+        }
     }
 }

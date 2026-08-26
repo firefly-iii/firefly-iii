@@ -67,16 +67,17 @@ final class ShowController extends Controller
         });
     }
 
-    public function redirectToGroup(TransactionJournal $journal): RedirectResponse {
-        return redirect(route('transactions.show', [$journal->transaction_group_id]));
-    }
-
     /**
      * @return JsonResponse
      */
     public function debugShow(TransactionGroup $transactionGroup)
     {
         return response()->json($this->repository->expandGroup($transactionGroup));
+    }
+
+    public function redirectToGroup(TransactionJournal $journal): RedirectResponse
+    {
+        return redirect(route('transactions.show', [$journal->transaction_group_id]));
     }
 
     /**
