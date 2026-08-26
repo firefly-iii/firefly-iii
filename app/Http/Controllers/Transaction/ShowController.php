@@ -36,6 +36,7 @@ use FireflyIII\Transformers\TransactionGroupTransformer;
 use FireflyIII\User;
 use Illuminate\Contracts\View\Factory;
 use Illuminate\Http\JsonResponse;
+use Illuminate\Http\RedirectResponse;
 use Illuminate\View\View;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
@@ -64,6 +65,10 @@ final class ShowController extends Controller
 
             return $next($request);
         });
+    }
+
+    public function redirectToGroup(TransactionJournal $journal): RedirectResponse {
+        return redirect(route('transactions.show', [$journal->transaction_group_id]));
     }
 
     /**

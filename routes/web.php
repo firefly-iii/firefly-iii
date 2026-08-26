@@ -1327,6 +1327,7 @@ Route::group(
         Route::post('unreconcile/{tj}', ['uses' => 'Transaction\EditController@unreconcile', 'as' => 'unreconcile']);
 
         Route::get('show/{transactionGroup?}', ['uses' => 'Transaction\ShowController@show', 'as' => 'show']);
+        Route::get('show-by-journal/{tj}', ['uses' => 'Transaction\ShowController@redirectToGroup', 'as' => 'show-by-journal']);
         Route::get('debug/{transactionGroup}', ['uses' => 'Transaction\ShowController@debugShow', 'as' => 'debug']);
     }
 );

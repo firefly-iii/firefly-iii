@@ -247,7 +247,33 @@ let create = function () {
             }, 500);
         },
         saveNewLink(e) {
-            // add entry to temporary table. 
+            let index = parseInt(e.currentTarget.dataset.index);
+
+            let linkSelect = document.getElementById('link_type_id_' + index);
+            let linkType = linkSelect.value;
+            let linkLabel = linkSelect.options[linkSelect.selectedIndex].innerHTML;
+            let searchBox = document.getElementById('links_modal_search_' + index);
+            let hiddenField = searchBox.parentNode.querySelector('input[name="search"]');
+            if('' === linkType || '' === hiddenField.value || '' === searchBox.value) {
+                return;
+            }
+
+            // add entry to temporary table.
+            console.log('Link ' + linkType+ ' ("'+linkLabel+'") to transaction #' + hiddenField.value + '("'+searchBox.value+'")');
+
+            this.links[index].push(
+                {
+                    id: 0,
+                    type: linkType,
+                    label: linkLabel,
+                    journal_id: hiddenField.value,
+                    group_id: hiddenField.value,
+                    description: searchBox.value,
+                    editMode: false,
+                }
+            );
+            searchBox.value = '';
+            hiddenField.value = '';
         },
         createAutocomplete(fieldIdentifier, url) {
         let token = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
@@ -259,6 +285,7 @@ let create = function () {
 
             server: url + '?_token=' + token,
             labelField: 'name',
+            hiddenInput: true,
             valueField: 'id',
             liveServer: true,
             onRenderItem: renderJournal.bind(this),
@@ -310,7 +337,7 @@ let create = function () {
                         //console.log(data);
                         this.formData.linkTypes = data;
                         this.formStates.loadingLinks = false;
-                        this.createAutocomplete('linksModal_search_0','api/v1/autocomplete/transactions-with-meta');
+                        this.createAutocomplete('links_modal_search_0','api/v1/autocomplete/transactions-with-meta');
 
                     });
                 }

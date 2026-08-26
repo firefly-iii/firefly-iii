@@ -137,12 +137,12 @@
         </div>
     </div>
     <!-- Modal for links -->
-    <div class="modal modal-xl fade" :id="'linksModal_' + index" data-bs-backdrop="static" tabindex="-1"
-         :aria-labelledby="'linksModal_' + index" aria-hidden="true">
+    <div class="modal modal-xl fade" :id="'links_modal_' + index" data-bs-backdrop="static" tabindex="-1"
+         :aria-labelledby="'links_modal_' + index" aria-hidden="true">
         <div class="modal-dialog">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h1 class="modal-title fs-5" :id="'linksModal_' + index">Transaction relations</h1>
+                    <h1 class="modal-title fs-5">Transaction relations</h1>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
@@ -165,12 +165,21 @@
                                         <tr>
                                             <th colspan="2">Transaction relations</th>
                                         </tr>
-                                        <tr>
-                                            <td>Pays for / is paid by <a href="#">#123: something else</a></td>
-                                            <td class="w-20">
-                                                switch,change, del
-                                            </td>
-                                        </tr>
+                                        <template x-for="link, key in links[index]" key="link.id">
+                                            <tr>
+                                                <td>
+                                                    <span x-text="link.label"></span> <a :href="'transactions/show-by-journal/' + link.journal_id" target="_blank"><span x-text="link.description"></span></a>
+                                                </td>
+                                                <td class="w-20">
+                                                    <div class="btn-group btn-group-sm">
+                                                        <button :data-row-index="key" @click.prevent="switchLink" class="btn btn-outline-secondary" title="{{ __('firefly.switch') }}"><em class="bi bi-arrow-left-right"></em></button>
+                                                        <button :data-row-index="key" @click.prevent="editLink" class="btn btn-outline-secondary" title="{{ __('firefly.edit') }}"><em class="bi bi-pencil"></em></button>
+                                                        <button :data-row-index="key" @click.prevent="removeLink" class="btn btn-outline-danger" title="{{ __('firefly.delete') }}"><em class="bi bi-trash"></em></button>
+                                                    </div>
+                                                </td>
+                                            </tr>
+                                        </template>
+
                                     </table>
                                 </div>
                             </div>
@@ -193,7 +202,7 @@
                                         </select>
                                     </div>
                                     <div class="col">
-                                        <input type="text" name="search" :id="'linksModal_search_' + index" class="form-control linked-transactions-search" placeholder="TODO Search here..." aria-label="TODO Search here...">
+                                        <input type="text" name="search" :id="'links_modal_search_' + index" class="form-control linked-transactions-search" placeholder="TODO Search here..." aria-label="TODO Search here...">
                                     </div>
                                     <div class="col w-15 text-end">
                                         <input type="submit" name="submit" :data-index="index" @click.prevent="saveNewLink" value="TODO Save" class="btn btn-primary">

@@ -8,15 +8,16 @@
 
         <div class="form-control-plaintext">
             <template x-if="formStates.loadingLinks">
-                <button disabled="disabled" class="btn btn-sm btn-outline-primary" data-bs-toggle="modal" :data-bs-target="'#linksModal_' + index" type="button">
+                <button disabled="disabled" class="btn btn-sm btn-outline-primary" type="button">
                     <div class="spinner-border spinner-border-sm" role="status">
                         <span class="visually-hidden">{{ __('firefly.thinking') }}</span>
                     </div>
                 </button>
             </template>
             <template x-if="!formStates.loadingLinks">
-                <button class="btn btn-sm btn-outline-primary" data-bs-toggle="modal" :data-bs-target="'#linksModal_' + index" type="button">
-                    TODO Manage related transactions</button>
+                <button class="btn btn-sm btn-outline-primary" data-bs-toggle="modal" :data-bs-target="'#links_modal_' + index" type="button">
+                    {{ __('firefly.manage_related_transactions') }}
+                    </button>
             </template>
         </div>
         </div>

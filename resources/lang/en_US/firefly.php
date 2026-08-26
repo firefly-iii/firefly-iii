@@ -2858,6 +2858,8 @@ return [
     'overview_for_recurrence'                             => 'Overview for recurring transaction ":title"',
     'warning_duplicates_repetitions'                      => 'In rare instances, dates appear twice in this list. This can happen when multiple repetitions collide. Firefly III will always generate one transaction per day.',
     'created_transactions'                                => 'Related transactions',
+    'manage_related_transactions'                                => 'Manage related transactions',
+    'switch' => 'Switch',
     'expected_withdrawals'                                => 'Expected withdrawals',
     'expected_deposits'                                   => 'Expected deposits',
     'expected_transfers'                                  => 'Expected transfers',
