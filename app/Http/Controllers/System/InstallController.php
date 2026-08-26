@@ -24,6 +24,7 @@ declare(strict_types=1);
 
 namespace FireflyIII\Http\Controllers\System;
 
+use Carbon\Carbon;
 use Exception;
 use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Http\Controllers\Controller;
@@ -54,7 +55,7 @@ final class InstallController extends Controller
 
     public const string BASEDIR_ERROR   = 'Firefly III cannot execute the upgrade commands. It is not allowed to because of an open_basedir restriction.';
     public const string FORBIDDEN_ERROR = 'Internal PHP function "proc_close" is disabled for your installation. Auto-migration is not possible.';
-    public const string OTHER_ERROR     = 'An unknown error prevented Firefly III from executing the "<code>%s</code>"-command. Sorry.';
+    public const string OTHER_ERROR     = 'An error prevented Firefly III from executing the "<code>%s</code>"-command: ';
 
     private string $lastError           = '';
     // empty on purpose.
@@ -63,7 +64,7 @@ final class InstallController extends Controller
         // Check 4 places: InstallController, Docker image, UpgradeDatabase, composer.json
         'firefly-iii:create-database'        => [],
         'migrate'                            => ['--seed' => true, '--force' => true],
-        'generate-keys'                      => [], // an exception :(
+        'generate-keys'                      => [],
         'firefly-iii:upgrade-database'       => [],
         'firefly-iii:set-latest-version'     => ['--james-is-cool' => true],
         'firefly-iii:verify-security-alerts' => [],
@@ -77,14 +78,14 @@ final class InstallController extends Controller
 
             return view('install.index');
         }
-
+        Log::debug('Installer has finished, return to home.');
         return response()->redirectToRoute('home');
     }
 
     /**
      * Create specific RSA keys.
      */
-    public function keys(): void
+    private function keys(): void
     {
         if ($this->hasNoTables() || $this->isOldVersionInstalled()) {
             $key                      = RSA::createKey(4096);
@@ -105,6 +106,7 @@ final class InstallController extends Controller
         // return response()->json([], 403);
         if ($this->hasNoTables() || $this->isOldVersionInstalled()) {
             $requestIndex = (int) $request->input('index');
+            $requestIndex = clamp($requestIndex, 0, count($this->upgradeCommands) - 1);
             $response     = ['hasNextCommand' => false, 'done' => true, 'previous' => null, 'error' => false, 'errorMessage' => null];
 
             Log::debug(sprintf('Will now run commands. Request index is %d', $requestIndex));
@@ -156,22 +158,33 @@ final class InstallController extends Controller
      */
     private function executeCommand(string $command, array $args): bool
     {
+        $key = hash('sha256', sprintf('Installer - %s - %s', $command, json_encode($args)));
         Log::debug(sprintf('Will now call command %s with args.', $command), $args);
-
+        if(Cache::has($key)) {
+            $time = Cache::get($key);
+            $diff = Carbon::now()->timestamp - $time;
+            if($diff < 120) {
+                throw new FireflyException(sprintf('This command was called recently, please wait two minutes before you try again (wait time is another %d sec).', 120- $diff));
+            }
+        }
         try {
             if ('generate-keys' === $command) {
                 $this->keys();
+            }
+            if('firefly-iii:create-database' === $command && !$this->hasNoTables()) {
+                Log::debug('Database already exists, skipping create-database command.');
+                Cache::set($key, Carbon::now()->timestamp);
+                return true;
             }
             if ('generate-keys' !== $command) {
                 Artisan::call($command, $args);
                 Log::debug(Artisan::output());
             }
         } catch (Exception $e) { // intentional generic exception
+            Cache::clear();
             throw new FireflyException($e->getMessage(), 0, $e);
         }
-        // clear cache as well.
-        Cache::clear();
-        Preferences::mark();
+        Cache::set($key, Carbon::now()->timestamp);
 
         return true;
     }

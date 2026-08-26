@@ -39,6 +39,7 @@ use FireflyIII\Support\Facades\Preferences;
 use FireflyIII\Support\Facades\Steam;
 use FireflyIII\Support\Http\Controllers\GetConfigurationData;
 use FireflyIII\Support\Models\AccountBalanceCalculator;
+use FireflyIII\Support\System\IsOldVersion;
 use FireflyIII\User;
 use Illuminate\Contracts\View\Factory;
 use Illuminate\Http\RedirectResponse;
@@ -64,6 +65,7 @@ use const PHP_SAPI;
  */
 final class DebugController extends Controller
 {
+    use IsOldVersion;
     use GetConfigurationData;
 
     /**
@@ -106,6 +108,9 @@ final class DebugController extends Controller
      */
     public function flush(Request $request): RedirectResponse
     {
+        if ($this->hasNoTables() || $this->isOldVersionInstalled()) {
+            throw new FireflyException('This is not the moment.');
+        }
         Preferences::mark();
         $request->session()->forget(['start', 'end', '_previous', 'viewRange', 'range', 'is_custom_range', 'temp-mfa-secret', 'temp-mfa-codes']);
 

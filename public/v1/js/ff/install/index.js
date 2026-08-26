@@ -18,7 +18,6 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-
 document.addEventListener("DOMContentLoaded", (event) => {
     console.log('Starting...');
     startRunningCommands(0);

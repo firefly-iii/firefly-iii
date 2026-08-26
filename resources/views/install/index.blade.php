@@ -20,7 +20,6 @@
 </div>
 @endsection
 @section('scripts')
-@yield('scripts')
 <script type="text/javascript" nonce="{{ $JS_NONCE }}">
     var token = '{{ csrf_token() }}';
     var index = 0;
@@ -29,5 +28,3 @@
 </script>
 <script type="text/javascript" src="v1/js/ff/install/index.js" nonce="{{ $JS_NONCE }}"></script>
 @endsection
-</body>
-</html>

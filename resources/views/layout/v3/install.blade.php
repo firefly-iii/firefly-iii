@@ -1,4 +1,4 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="{{ __('config.html_language') }}">
 <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
