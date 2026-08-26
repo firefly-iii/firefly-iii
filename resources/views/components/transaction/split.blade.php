@@ -150,10 +150,10 @@
                         <div class="row">
                             <div class="col">
                                 <p><em class="text-info">
-                                        TODO Bla bla bla explanation.
+                                        {{ __('firefly.explain_related') }}
                                     </em>
                                     <template x-if="0 === links[index].length">
-                                        <em>TODO This transaction has no relations to other transactions (yet).</em>
+                                        <em>{{ __('firefly.no_relations_yet') }}</em>
                                     </template>
                                 </p>
                             </div>
@@ -163,19 +163,45 @@
                                 <div class="col">
                                     <table class="table table-sm table-bordered">
                                         <tr>
-                                            <th colspan="2">Transaction relations</th>
+                                            <th colspan="2">{{ __('firefly.related_transactions') }}</th>
                                         </tr>
                                         <template x-for="link, key in links[index]" key="link.id">
                                             <tr>
                                                 <td>
-                                                    <span x-text="link.label"></span> <a :href="'transactions/show-by-journal/' + link.journal_id" target="_blank"><span x-text="link.description"></span></a>
+                                                    <template x-if="!link.editMode">
+                                                        <span>
+                                                            <span x-text="link.link_type_label"></span> <a :href="'transactions/show-by-journal/' + link.journal_id" target="_blank"><span x-text="link.journal_description"></span></a>
+                                                        </span>
+                                                    </template>
+                                                    <template x-if="link.editMode">
+                                                        <div class="row">
+                                                            <div class="col">
+                                                                <div class="input-group">
+                                                                <select name="new-link-type" class="form-control">
+                                                                    <template x-for="type in formData.linkTypes ">
+                                                                        <option :selected="type.id === link.link_type_id && 'inward' === link.link_type_direction"  :value="type.id + '_inward'" :label="type.inward" x-text="type.inward"></option>
+                                                                    </template>
+                                                                    <template x-for="type in formData.linkTypes">
+                                                                        <option :selected="type.id === link.link_type_id && 'outward' === link.link_type_direction" :value="type.id + '_outward'" :label="type.outward" x-text="type.outward"></option>
+                                                                    </template>
+                                                                </select>
+                                                                <button type="button" :data-index="index" :data-row-index="key" @click.prevent="saveEditedLink" class="btn btn-sm btn-outline-success"><em class="bi bi-check"></em></button>
+                                                                </div>
+                                                            </div>
+                                                            <div class="col">
+                                                                <input type="text" readonly class="form-control-plaintext" :value="link.journal_description">
+                                                            </div>
+                                                        </div>
+                                                    </template>
                                                 </td>
                                                 <td class="w-20">
+                                                    <template x-if="!link.editMode">
                                                     <div class="btn-group btn-group-sm">
-                                                        <button :data-row-index="key" @click.prevent="switchLink" class="btn btn-outline-secondary" title="{{ __('firefly.switch') }}"><em class="bi bi-arrow-left-right"></em></button>
-                                                        <button :data-row-index="key" @click.prevent="editLink" class="btn btn-outline-secondary" title="{{ __('firefly.edit') }}"><em class="bi bi-pencil"></em></button>
-                                                        <button :data-row-index="key" @click.prevent="removeLink" class="btn btn-outline-danger" title="{{ __('firefly.delete') }}"><em class="bi bi-trash"></em></button>
+                                                        <button :data-index="index" :data-row-index="key" @click.prevent="switchLink" class="btn btn-outline-secondary" title="{{ __('firefly.switch') }}"><em class="bi bi-arrow-left-right"></em></button>
+                                                        <button :data-index="index" :data-row-index="key" @click.prevent="editLink" class="btn btn-outline-secondary" title="{{ __('firefly.edit') }}"><em class="bi bi-pencil"></em></button>
+                                                        <button :data-index="index" :data-row-index="key" @click.prevent="removeLink" class="btn btn-outline-danger" title="{{ __('firefly.delete') }}"><em class="bi bi-trash"></em></button>
                                                     </div>
+                                                    </template>
                                                 </td>
                                             </tr>
                                         </template>
@@ -186,10 +212,15 @@
                         </template>
                         <div class="row">
                             <div class="col">
-                                <h5>Link this (TODO NEW?) transaction to another transaction</h5>
+                                <template x-if="'create' === formBehaviour.formType">
+                                    <h5>{{ __('firefly.link_header_create') }}</h5>
+                                </template>
+                                <template x-if="'edit' === formBehaviour.formType">
+                                    <h5>{{ __('firefly.link_header_edit') }}</h5>
+                                </template>
                                 <div class="row">
                                     <div class="col w-30">
-                                        <input type="text" readonly class="form-control-plaintext" value="This transaction">
+                                        <input type="text" readonly class="form-control-plaintext" value="{{ __('firefly.this_transaction') }}">
                                     </div>
                                     <div class="col">
                                         <select class="form-control" name="link_type_id" :data-index="index" :id="'link_type_id_' + index">
@@ -202,10 +233,10 @@
                                         </select>
                                     </div>
                                     <div class="col">
-                                        <input type="text" name="search" :id="'links_modal_search_' + index" class="form-control linked-transactions-search" placeholder="TODO Search here..." aria-label="TODO Search here...">
+                                        <input type="text" name="search" :id="'links_modal_search_' + index" class="form-control linked-transactions-search" placeholder="{{ __('firefly.search_query_here') }}" aria-label="{{ __('firefly.search_query_here') }}">
                                     </div>
                                     <div class="col w-15 text-end">
-                                        <input type="submit" name="submit" :data-index="index" @click.prevent="saveNewLink" value="TODO Save" class="btn btn-primary">
+                                        <input type="submit" name="submit" :data-index="index" @click.prevent="saveNewLink" value="{{ __('firefly.add') }}" class="btn btn-primary">
                                     </div>
                                 </div>
                             </div>
@@ -216,10 +247,12 @@
                 <div class="modal-footer">
                     <div class="row inline" style="width:100%;">
                         <div class="col align-middle d-flex align-items-center">
-                            <em><small>Changes are saved automatically</small></em>
+                            <em><small>
+                                    {{ __('firefly.auto_save_active') }}
+                                </small></em>
                         </div>
                         <div class="col text-end">
-                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">{{ __('firefly.close') }}</button>
                         </div>
                     </div>
                 </div>

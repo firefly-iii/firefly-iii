@@ -122,7 +122,8 @@ let create = function () {
             foreignCurrencies: [], // this is the select list for foreign currencies.
             budgets: [],
             piggyBanks: [],
-            subscriptions: []
+            subscriptions: [],
+            linkTypes: [],
         },
 
 
@@ -246,6 +247,52 @@ let create = function () {
             // TODO don't do this on a timeout!
             }, 500);
         },
+        switchLink(e) {
+            let rowIndex = parseInt(e.currentTarget.dataset.rowIndex);
+            let index = parseInt(e.currentTarget.dataset.index);
+            let linkTypeId = parseInt(this.links[index][rowIndex].link_type.split('_')[0]);
+            let linkTypeDirection = this.links[index][rowIndex].link_type.split('_')[1];
+            let linkType = this.formData.linkTypes.find(link => link.id === linkTypeId);
+            // switch link type.
+            linkTypeDirection = 'inward' === linkTypeDirection ? 'outward' : 'inward';
+            if(typeof linkType === 'undefined') {
+                console.error('Link type not found for id ' + linkTypeId);
+                console.log(this.formData.linkTypes);
+                return;
+            }
+            this.links[index][rowIndex].link_type = linkType.id + '_' + linkTypeDirection;
+            this.links[index][rowIndex].link_type_label = linkType[linkTypeDirection];
+            this.links[index][rowIndex].link_type_direction = linkTypeDirection;
+        },
+        removeLink(e) {
+            let rowIndex = parseInt(e.currentTarget.dataset.rowIndex);
+            let index = parseInt(e.currentTarget.dataset.index);
+            this.links[index].splice(rowIndex,1);
+        },
+        saveEditedLink(e) {
+            let rowIndex = parseInt(e.currentTarget.dataset.rowIndex);
+            let index = parseInt(e.currentTarget.dataset.index);
+            let selector = e.currentTarget.parentNode.querySelector('select[name="new-link-type"]');
+
+            let linkType = selector.value;
+            let linkTypeId = parseInt(linkType.split('_')[0]);
+            let linkTypeDirection = linkType.split('_')[1];
+            let linkTypeObj = this.formData.linkTypes.find(link => link.id === linkTypeId);
+            if(typeof linkTypeObj === 'undefined') {
+                console.error('Link type not found for id ' + linkTypeId);
+                return;
+            }
+            this.links[index][rowIndex].link_type = linkTypeId + '_' + linkTypeDirection;
+            this.links[index][rowIndex].link_type_id = linkTypeId;
+            this.links[index][rowIndex].link_type_direction = linkTypeDirection;
+            this.links[index][rowIndex].link_type_label = linkTypeObj[linkTypeDirection];
+            this.links[index][rowIndex].editMode = false;
+        },
+        editLink(e) {
+            let rowIndex = parseInt(e.currentTarget.dataset.rowIndex);
+            let index = parseInt(e.currentTarget.dataset.index);
+            this.links[index][rowIndex].editMode = true;
+        },
         saveNewLink(e) {
             let index = parseInt(e.currentTarget.dataset.index);
 
@@ -254,6 +301,11 @@ let create = function () {
             let linkLabel = linkSelect.options[linkSelect.selectedIndex].innerHTML;
             let searchBox = document.getElementById('links_modal_search_' + index);
             let hiddenField = searchBox.parentNode.querySelector('input[name="search"]');
+
+            let linkTypeId = parseInt(linkType.split('_')[0]);
+            let linkTypeDirection = linkType.split('_')[1];
+            let linkTypeObj = this.formData.linkTypes.find(link => link.id === linkTypeId);
+
             if('' === linkType || '' === hiddenField.value || '' === searchBox.value) {
                 return;
             }
@@ -264,17 +316,20 @@ let create = function () {
             this.links[index].push(
                 {
                     id: 0,
-                    type: linkType,
-                    label: linkLabel,
+                    link_type: linkTypeId + '_' + linkTypeDirection,
+                    link_type_id: linkTypeId,
+                    link_type_direction: linkTypeDirection,
+                    link_type_label: linkTypeObj[linkTypeDirection],
                     journal_id: hiddenField.value,
                     group_id: hiddenField.value,
-                    description: searchBox.value,
+                    journal_description: searchBox.value,
                     editMode: false,
                 }
             );
             searchBox.value = '';
             hiddenField.value = '';
         },
+
         createAutocomplete(fieldIdentifier, url) {
         let token = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
 
@@ -335,7 +390,14 @@ let create = function () {
                 if(true === data.links) {
                     loadTransactionLinks().then(data => {
                         //console.log(data);
-                        this.formData.linkTypes = data;
+                        for(let i = 0; i < data.length; i++) {
+                            if(data.hasOwnProperty(i)) {
+                                let current = data[i];
+                                current.id = parseInt(current.id);
+                                this.formData.linkTypes.push(current);
+                            }
+                        }
+                        //this.formData.linkTypes = data;
                         this.formStates.loadingLinks = false;
                         this.createAutocomplete('links_modal_search_0','api/v1/autocomplete/transactions-with-meta');
 
