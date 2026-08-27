@@ -34,7 +34,7 @@ class CreatesLinkTypes extends Command
 
     protected $description = 'Creates all link types.';
 
-    protected $signature = 'correction:link-types';
+    protected $signature   = 'correction:link-types';
 
     /**
      * Execute the console command.
@@ -49,7 +49,7 @@ class CreatesLinkTypes extends Command
             'Reimbursement' => ['(partially) reimburses', 'is (partially) reimbursed by'],
         ];
         foreach ($set as $name => $values) {
-            $link = LinkType::query()->where('name', $name)->first();
+            $link           = LinkType::query()->where('name', $name)->first();
             if (null === $link) {
                 $link          = new LinkType();
                 $link->name    = $name;

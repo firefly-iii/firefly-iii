@@ -35,9 +35,9 @@ class UpgradesPrimaryCurrencyAmounts extends Command
 
     public const string CONFIG_NAME = '620_pc_amounts';
 
-    protected $description = 'Runs the primary currency amounts calculations.';
+    protected $description          = 'Runs the primary currency amounts calculations.';
 
-    protected $signature = 'upgrade:620-pc-amounts {--F|force : Force the execution of this command.}';
+    protected $signature            = 'upgrade:620-pc-amounts {--F|force : Force the execution of this command.}';
 
     /**
      * Execute the console command.
@@ -61,7 +61,7 @@ class UpgradesPrimaryCurrencyAmounts extends Command
     {
         $configVar = AppConfiguration::get(self::CONFIG_NAME, false);
 
-        return (bool)$configVar?->data;
+        return (bool) $configVar?->data;
     }
 
     private function markAsExecuted(): void

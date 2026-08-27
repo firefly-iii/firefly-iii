@@ -39,10 +39,10 @@ class UpgradesMultiPiggyBanks extends Command
 
     public const string CONFIG_NAME = '620_make_multi_piggies';
 
-    protected $description = 'Upgrade piggy banks so they can use multiple accounts.';
+    protected $description          = 'Upgrade piggy banks so they can use multiple accounts.';
 
-    protected                            $signature = 'upgrade:620-piggy-banks {--F|force : Force the execution of this command.}';
-    private AccountRepositoryInterface   $accountRepository;
+    protected $signature            = 'upgrade:620-piggy-banks {--F|force : Force the execution of this command.}';
+    private AccountRepositoryInterface $accountRepository;
     private PiggyBankRepositoryInterface $repository;
 
     /**
@@ -67,7 +67,7 @@ class UpgradesMultiPiggyBanks extends Command
     {
         $configVar = AppConfiguration::get(self::CONFIG_NAME, false);
 
-        return (bool)$configVar?->data;
+        return (bool) $configVar?->data;
     }
 
     private function markAsExecuted(): void
@@ -85,8 +85,8 @@ class UpgradesMultiPiggyBanks extends Command
         }
         $this->repository->setUser($piggyBank->account->user);
         $this->accountRepository->setUser($piggyBank->account->user);
-        $repetition = $this->repository->getRepetition($piggyBank, true);
-        $currency   = $this->accountRepository->getAccountCurrency($piggyBank->account) ?? Amount::getPrimaryCurrencyByUserGroup($piggyBank->account->user->userGroup);
+        $repetition                         = $this->repository->getRepetition($piggyBank, true);
+        $currency                           = $this->accountRepository->getAccountCurrency($piggyBank->account) ?? Amount::getPrimaryCurrencyByUserGroup($piggyBank->account->user->userGroup);
 
         // update piggy bank to have a currency.
         $piggyBank->transaction_currency_id = $currency->id;
@@ -94,7 +94,7 @@ class UpgradesMultiPiggyBanks extends Command
 
         // store current amount in account association.
         $piggyBank->accounts()->sync([$piggyBank->account->id => ['current_amount' => $repetition->current_amount]]);
-        $piggyBank->account_id = null;
+        $piggyBank->account_id              = null;
         $piggyBank->saveQuietly();
 
         // remove all repetitions (no longer used)

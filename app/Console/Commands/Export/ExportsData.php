@@ -40,6 +40,7 @@ use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Log;
 use InvalidArgumentException;
 use Safe\Exceptions\FilesystemException;
+
 use function Safe\file_put_contents;
 
 class ExportsData extends Command
@@ -49,7 +50,7 @@ class ExportsData extends Command
 
     protected $description = 'Command to export data from Firefly III.';
 
-    protected                          $signature = 'firefly-iii:export-data
+    protected $signature   = 'firefly-iii:export-data
     {--user=1 : The user ID that the export should run for.}
     {--token= : The user\'s access token.}
     {--start= : First transaction to export. Defaults to your very first transaction. Only applies to transaction export.}
@@ -84,7 +85,7 @@ class ExportsData extends Command
         }
         // set up repositories.
         $this->stupidLaravel();
-        $user = $this->getUser();
+        $user       = $this->getUser();
         $this->journalRepository->setUser($user);
         $this->accountRepository->setUser($user);
 
@@ -99,7 +100,7 @@ class ExportsData extends Command
 
         // make export object and configure it.
         /** @var ExportDataGenerator $exporter */
-        $exporter = app(ExportDataGenerator::class);
+        $exporter   = app(ExportDataGenerator::class);
         $exporter->setUser($user);
 
         $exporter->setStart($options['start']);
@@ -114,7 +115,7 @@ class ExportsData extends Command
         $exporter->setExportRules($options['export']['rules']);
         $exporter->setExportBills($options['export']['bills']);
         $exporter->setExportPiggies($options['export']['piggies']);
-        $data = $exporter->export();
+        $data       = $exporter->export();
         if (0 === count($data)) {
             $this->friendlyError('You must export *something*. Use --export-transactions or another option. See docs.firefly-iii.org');
         }
@@ -160,7 +161,7 @@ class ExportsData extends Command
     {
         $final       = new Collection();
         $accounts    = new Collection();
-        $accountList = (string)$this->option('accounts');
+        $accountList = (string) $this->option('accounts');
         $types       = [AccountTypeEnum::ASSET->value, AccountTypeEnum::LOAN->value, AccountTypeEnum::DEBT->value, AccountTypeEnum::MORTGAGE->value];
         if ('' !== $accountList) {
             $accountIds = explode(',', $accountList);
@@ -242,7 +243,7 @@ class ExportsData extends Command
      */
     private function getExportDirectory(): string
     {
-        $directory = (string)$this->option('export_directory');
+        $directory = (string) $this->option('export_directory');
         if ('' === $directory) {
             $directory = './';
         }

@@ -32,6 +32,7 @@ use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Storage;
 use League\Flysystem\FilesystemException;
 use Safe\Exceptions\JsonException;
+
 use function Safe\json_decode;
 
 class VerifySecurityAlerts extends Command
@@ -40,7 +41,7 @@ class VerifySecurityAlerts extends Command
 
     protected $description = 'Verify security alerts';
 
-    protected $signature = 'firefly-iii:verify-security-alerts';
+    protected $signature   = 'firefly-iii:verify-security-alerts';
 
     /**
      * Execute the console command.
@@ -62,7 +63,7 @@ class VerifySecurityAlerts extends Command
             return 0;
         }
         $content = $disk->get('alerts.json');
-        $json    = json_decode((string)$content, true, 10);
+        $json    = json_decode((string) $content, true, 10);
 
         /** @var array $array */
         foreach ($json as $array) {

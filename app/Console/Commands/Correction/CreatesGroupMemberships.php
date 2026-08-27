@@ -39,8 +39,8 @@ class CreatesGroupMemberships extends Command
 
     public const string CONFIG_NAME = '560_create_group_memberships';
 
-    protected $description = 'Update group memberships';
-    protected $signature   = 'correction:create-group-memberships';
+    protected $description          = 'Update group memberships';
+    protected $signature            = 'correction:create-group-memberships';
 
     /**
      * TODO move to helper.
@@ -50,21 +50,22 @@ class CreatesGroupMemberships extends Command
     public static function createGroupMembership(User $user): void
     {
         // check if membership exists
-        $userGroup = UserGroup::query()->where('title', $user->email)->first();
+        $userGroup  = UserGroup::query()->where('title', $user->email)->first();
         if (null === $userGroup) {
             $userGroup = UserGroup::create(['title' => $user->email]);
         }
 
-        $userRole = UserRole::query()->where('title', UserRoleEnum::OWNER->value)->first();
+        $userRole   = UserRole::query()->where('title', UserRoleEnum::OWNER->value)->first();
 
         if (null === $userRole) {
             throw new FireflyException('Firefly III could not find a user role. Please make sure all migrations have run.');
         }
         $membership = GroupMembership::query()
-                                     ->where('user_id', $user->id)
-                                     ->where('user_group_id', $userGroup->id)
-                                     ->where('user_role_id', $userRole->id)
-                                     ->first();
+            ->where('user_id', $user->id)
+            ->where('user_group_id', $userGroup->id)
+            ->where('user_role_id', $userRole->id)
+            ->first()
+        ;
         if (null === $membership) {
             GroupMembership::create(['user_id' => $user->id, 'user_role_id' => $userRole->id, 'user_group_id' => $userGroup->id]);
         }

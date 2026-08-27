@@ -39,7 +39,7 @@ use Override;
 final class BudgetController extends Controller
 {
     #[Override]
-    protected array                   $acceptedRoles = [UserRoleEnum::READ_BUDGETS];
+    protected array $acceptedRoles = [UserRoleEnum::READ_BUDGETS];
     private BudgetRepositoryInterface $repository;
 
     /**
@@ -65,7 +65,7 @@ final class BudgetController extends Controller
     public function budgets(AutocompleteApiRequest $request): JsonResponse
     {
         $result   = $this->repository->searchBudget($request->attributes->get('query'), $request->attributes->get('limit'));
-        $filtered = $result->map(static fn(Budget $item): array => ['id' => (string)$item->id, 'name' => $item->name, 'active' => $item->active]);
+        $filtered = $result->map(static fn (Budget $item): array => ['id' => (string) $item->id, 'name' => $item->name, 'active' => $item->active]);
 
         return response()->api($filtered->toArray());
     }

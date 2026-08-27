@@ -52,7 +52,7 @@ final class AccountController extends Controller
 
     protected array $acceptedRoles = [UserRoleEnum::READ_ONLY];
 
-    private array                      $chartData = [];
+    private array $chartData       = [];
     private AccountRepositoryInterface $repository;
 
     /**
@@ -100,28 +100,28 @@ final class AccountController extends Controller
     private function renderAccountData(array $params, Account $account): void
     {
         Log::debug(sprintf('Now in %s(array, #%d)', __METHOD__, $account->id));
-        $currency     = $this->repository->getAccountCurrency($account);
-        $currentStart = clone $params['start'];
-        $range        = Steam::finalAccountBalanceInRange($account, $params['start'], clone $params['end'], $this->convertToPrimary);
-        $period       = $params['period'] ?? '1D';
+        $currency          = $this->repository->getAccountCurrency($account);
+        $currentStart      = clone $params['start'];
+        $range             = Steam::finalAccountBalanceInRange($account, $params['start'], clone $params['end'], $this->convertToPrimary);
+        $period            = $params['period'] ?? '1D';
 
-        $previous   = array_values($range)[0]['balance'];
-        $pcPrevious = null;
+        $previous          = array_values($range)[0]['balance'];
+        $pcPrevious        = null;
         if (!$currency instanceof TransactionCurrency) {
             $currency = $this->primaryCurrency;
         }
-        $currentSet = [
+        $currentSet        = [
             'label'                   => $account->name,
 
             // the currency that belongs to the account.
-            'currency_id'             => (string)$currency->id,
+            'currency_id'             => (string) $currency->id,
             'currency_name'           => $currency->name,
             'currency_code'           => $currency->code,
             'currency_symbol'         => $currency->symbol,
             'currency_decimal_places' => $currency->decimal_places,
 
             // the primary currency
-            'primary_currency_id'     => (string)$this->primaryCurrency->id,
+            'primary_currency_id'     => (string) $this->primaryCurrency->id,
 
             // the default currency of the user (could be the same!)
             'date'                    => $params['start']->toAtomString(),
@@ -135,7 +135,7 @@ final class AccountController extends Controller
         ];
         if ($this->convertToPrimary) {
             $currentSet['pc_entries']                      = [];
-            $currentSet['primary_currency_id']             = (string)$this->primaryCurrency->id;
+            $currentSet['primary_currency_id']             = (string) $this->primaryCurrency->id;
             $currentSet['primary_currency_code']           = $this->primaryCurrency->code;
             $currentSet['primary_currency_symbol']         = $this->primaryCurrency->symbol;
             $currentSet['primary_currency_decimal_places'] = $this->primaryCurrency->decimal_places;
@@ -143,13 +143,13 @@ final class AccountController extends Controller
         }
         // create array of values to collect.
 
-        $rangeDates = array_map(static fn(string $d): Carbon => Carbon::createFromFormat('Y-m-d', $d)->startOfDay(), array_keys($range));
-        $rangeVals  = array_values($range);
-        $rangeIdx   = 0;
-        $rangeCount = count($rangeDates);
+        $rangeDates        = array_map(static fn (string $d): Carbon => Carbon::createFromFormat('Y-m-d', $d)->startOfDay(), array_keys($range));
+        $rangeVals         = array_values($range);
+        $rangeIdx          = 0;
+        $rangeCount        = count($rangeDates);
 
         while ($currentStart <= $params['end']) {
-            $label = $currentStart->toAtomString();
+            $label                         = $currentStart->toAtomString();
 
             // Advance through all range entries up to current chart date
             while ($rangeIdx < $rangeCount && $rangeDates[$rangeIdx] <= $currentStart) {
@@ -165,7 +165,7 @@ final class AccountController extends Controller
                 $currentSet['pc_entries'][$label] = $pcPrevious;
             }
 
-            $currentStart = Navigation::addPeriod($currentStart, $period);
+            $currentStart                  = Navigation::addPeriod($currentStart, $period);
         }
         $this->chartData[] = $currentSet;
     }

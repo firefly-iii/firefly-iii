@@ -29,6 +29,7 @@ use FireflyIII\Support\Facades\AppConfiguration;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\Log;
 use Safe\Exceptions\InfoException;
+
 use function Safe\set_time_limit;
 
 try {
@@ -86,7 +87,7 @@ class UpgradesDatabase extends Command
             $this->call($command, $args);
         }
         // index will set FF3 version.
-        AppConfiguration::set('ff3_build_time', (int)config('firefly.build_time'));
+        AppConfiguration::set('ff3_build_time', (int) config('firefly.build_time'));
 
         return 0;
     }

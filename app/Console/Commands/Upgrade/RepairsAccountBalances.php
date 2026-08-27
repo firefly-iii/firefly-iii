@@ -35,8 +35,8 @@ class RepairsAccountBalances extends Command
 
     public const string CONFIG_NAME = '610_correct_balances';
 
-    protected $description = 'Recalculate all account balance amounts';
-    protected $signature   = 'upgrade:610-account-balances {--F|force : Force the execution of this command.}';
+    protected $description          = 'Recalculate all account balance amounts';
+    protected $signature            = 'upgrade:610-account-balances {--F|force : Force the execution of this command.}';
 
     public function handle(): int
     {
@@ -67,7 +67,7 @@ class RepairsAccountBalances extends Command
     {
         $configVar = AppConfiguration::get(self::CONFIG_NAME, false);
 
-        return (bool)$configVar?->data;
+        return (bool) $configVar?->data;
     }
 
     private function markAsExecuted(): void

@@ -94,11 +94,11 @@ final class DestroyController extends Controller
 
         if (false === AppConfiguration::get('allow_webhooks', config('firefly.allow_webhooks'))->data) {
             Log::channel('audit')->warning(sprintf(
-                                               'User tries to destroy webhook #%d, message #%d, attempt #%d, but webhooks are DISABLED.',
-                                               $webhook->id,
-                                               $message->id,
-                                               $attempt->id
-                                           ));
+                'User tries to destroy webhook #%d, message #%d, attempt #%d, but webhooks are DISABLED.',
+                $webhook->id,
+                $message->id,
+                $attempt->id
+            ));
 
             throw new NotFoundHttpException('Webhooks are not enabled.');
         }

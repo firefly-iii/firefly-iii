@@ -35,7 +35,7 @@ class RemovesZeroAmount extends Command
 
     protected $description = 'Delete transactions with zero amount.';
 
-    protected $signature = 'correction:zero-amounts';
+    protected $signature   = 'correction:zero-amounts';
 
     /**
      * Execute the console command.

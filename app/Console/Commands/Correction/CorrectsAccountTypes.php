@@ -43,11 +43,11 @@ class CorrectsAccountTypes extends Command
 {
     use ShowsFriendlyMessages;
 
-    protected                          $description = 'Make sure all journals have the correct from/to account types.';
-    protected                          $signature   = 'correction:account-types';
-    private int                        $count;
-    private array                      $expected;
-    private AccountFactory             $factory;
+    protected $description = 'Make sure all journals have the correct from/to account types.';
+    protected $signature   = 'correction:account-types';
+    private int $count;
+    private array $expected;
+    private AccountFactory $factory;
     private AccountRepositoryInterface $repository;
 
     /**
@@ -62,17 +62,18 @@ class CorrectsAccountTypes extends Command
         $this->expected = config('firefly.source_dests');
         $expected       = config('firefly.source_dests');
 
-        $query = TransactionJournal::leftJoin('transaction_types', 'transaction_journals.transaction_type_id', '=', 'transaction_types.id')
-                                   ->leftJoin('transactions as source', static function (JoinClause $join): void {
-                                       $join->on('transaction_journals.id', '=', 'source.transaction_journal_id')->where('source.amount', '<', 0);
-                                   })
-                                   ->leftJoin('transactions as destination', static function (JoinClause $join): void {
-                                       $join->on('transaction_journals.id', '=', 'destination.transaction_journal_id')->where('destination.amount', '>', 0);
-                                   })
-                                   ->leftJoin('accounts as source_account', 'source.account_id', '=', 'source_account.id')
-                                   ->leftJoin('accounts as destination_account', 'destination.account_id', '=', 'destination_account.id')
-                                   ->leftJoin('account_types as source_account_type', 'source_account.account_type_id', '=', 'source_account_type.id')
-                                   ->leftJoin('account_types as destination_account_type', 'destination_account.account_type_id', '=', 'destination_account_type.id');
+        $query          = TransactionJournal::leftJoin('transaction_types', 'transaction_journals.transaction_type_id', '=', 'transaction_types.id')
+            ->leftJoin('transactions as source', static function (JoinClause $join): void {
+                $join->on('transaction_journals.id', '=', 'source.transaction_journal_id')->where('source.amount', '<', 0);
+            })
+            ->leftJoin('transactions as destination', static function (JoinClause $join): void {
+                $join->on('transaction_journals.id', '=', 'destination.transaction_journal_id')->where('destination.amount', '>', 0);
+            })
+            ->leftJoin('accounts as source_account', 'source.account_id', '=', 'source_account.id')
+            ->leftJoin('accounts as destination_account', 'destination.account_id', '=', 'destination_account.id')
+            ->leftJoin('account_types as source_account_type', 'source_account.account_type_id', '=', 'source_account_type.id')
+            ->leftJoin('account_types as destination_account_type', 'destination_account.account_type_id', '=', 'destination_account_type.id')
+        ;
 
         // list all valid combinations, those are allowed. So we select those which are broken.
         $query->where(static function (Builder $q) use ($expected): void {
@@ -89,19 +90,19 @@ class CorrectsAccountTypes extends Command
             }
         });
 
-        $resultSet = $query->get([
-                                     'transaction_journals.id',
-                                     // 'transaction_type_id as type_id',
-                                     'transaction_types.type as journal_type',
-                                     // 'source.id as source_transaction_id',
-                                     // 'source_account.id as source_account_id',
-                                     // 'source_account_type.id as source_account_type_id',
-                                     'source_account_type.type as source_account_type',
-                                     // 'destination.id as destination_transaction_id',
-                                     // 'destination_account.id as destination_account_id',
-                                     // 'destination_account_type.id as destination_account_type_id',
-                                     'destination_account_type.type as destination_account_type',
-                                 ]);
+        $resultSet      = $query->get([
+            'transaction_journals.id',
+            // 'transaction_type_id as type_id',
+            'transaction_types.type as journal_type',
+            // 'source.id as source_transaction_id',
+            // 'source_account.id as source_account_id',
+            // 'source_account_type.id as source_account_type_id',
+            'source_account_type.type as source_account_type',
+            // 'destination.id as destination_transaction_id',
+            // 'destination_account.id as destination_account_id',
+            // 'destination_account_type.id as destination_account_type_id',
+            'destination_account_type.type as destination_account_type',
+        ]);
         if ($resultSet->count() > 0) {
             $this->friendlyLine(sprintf('Found %d journals that need to be fixed.', $resultSet->count()));
             foreach ($resultSet as $entry) {
@@ -138,13 +139,13 @@ class CorrectsAccountTypes extends Command
     private function fixJournal(TransactionJournal $journal, string $transactionType, Transaction $source, Transaction $dest): void
     {
         Log::debug(sprintf('Going to fix journal #%d', $journal->id));
-        $this->repository = app(AccountRepositoryInterface::class);
+        $this->repository       = app(AccountRepositoryInterface::class);
         $this->repository->setUser($journal->user);
         ++$this->count;
         // variables:
-        $sourceType      = $source->account->accountType->type;
-        $destinationType = $dest->account->accountType->type;
-        $combination     = sprintf('%s%s%s', $transactionType, $source->account->accountType->type, $dest->account->accountType->type);
+        $sourceType             = $source->account->accountType->type;
+        $destinationType        = $dest->account->accountType->type;
+        $combination            = sprintf('%s%s%s', $transactionType, $source->account->accountType->type, $dest->account->accountType->type);
         Log::debug(sprintf('Combination is "%s"', $combination));
 
         if ($this->shouldBeTransfer($transactionType, $sourceType, $destinationType)) {
@@ -169,9 +170,9 @@ class CorrectsAccountTypes extends Command
         }
 
         // transaction has no valid source.
-        $validSources    = array_keys($this->expected[$transactionType]);
-        $canCreateSource = $this->canCreateSource($validSources);
-        $hasValidSource  = $this->hasValidAccountType($validSources, $sourceType);
+        $validSources           = array_keys($this->expected[$transactionType]);
+        $canCreateSource        = $this->canCreateSource($validSources);
+        $hasValidSource         = $this->hasValidAccountType($validSources, $sourceType);
         if (!$hasValidSource && $canCreateSource) {
             $this->giveNewRevenue($journal, $source);
 
@@ -254,7 +255,7 @@ class CorrectsAccountTypes extends Command
         $oldDest                     = $destTransaction->account;
         $destTransaction->account_id = $newDestination->id;
         $destTransaction->save();
-        $message = sprintf(
+        $message                     = sprintf(
             'Transaction journal #%d, destination account changed from #%d ("%s") to #%d ("%s").',
             $journal->id,
             $oldDest->id,
@@ -276,12 +277,12 @@ class CorrectsAccountTypes extends Command
         $destination->account()->associate($newDestination);
         $destination->save();
         $this->friendlyPositive(sprintf(
-                                    'Firefly III gave transaction #%d a new destination %s: #%d ("%s").',
-                                    $journal->transaction_group_id,
-                                    AccountTypeEnum::EXPENSE->value,
-                                    $newDestination->id,
-                                    $newDestination->name
-                                ));
+            'Firefly III gave transaction #%d a new destination %s: #%d ("%s").',
+            $journal->transaction_group_id,
+            AccountTypeEnum::EXPENSE->value,
+            $newDestination->id,
+            $newDestination->name
+        ));
         Log::debug(sprintf('Associated account #%d with transaction #%d', $newDestination->id, $destination->id));
         $this->inspectJournal($journal);
     }
@@ -295,12 +296,12 @@ class CorrectsAccountTypes extends Command
         $source->account()->associate($newSource);
         $source->save();
         $this->friendlyPositive(sprintf(
-                                    'Firefly III gave transaction #%d a new source %s: #%d ("%s").',
-                                    $journal->transaction_group_id,
-                                    AccountTypeEnum::REVENUE->value,
-                                    $newSource->id,
-                                    $newSource->name
-                                ));
+            'Firefly III gave transaction #%d a new source %s: #%d ("%s").',
+            $journal->transaction_group_id,
+            AccountTypeEnum::REVENUE->value,
+            $newSource->id,
+            $newSource->name
+        ));
         Log::debug(sprintf('Associated account #%d with transaction #%d', $newSource->id, $source->id));
         $this->inspectJournal($journal);
     }
@@ -313,7 +314,7 @@ class CorrectsAccountTypes extends Command
     private function inspectJournal(TransactionJournal $journal): void
     {
         Log::debug(sprintf('Now inspecting journal #%d', $journal->id));
-        $transactions = $journal->transactions()->count();
+        $transactions      = $journal->transactions()->count();
         if (2 !== $transactions) {
             Log::debug(sprintf('Journal has %d transactions, so can\'t fix.', $transactions));
             $this->friendlyError(sprintf('Cannot inspect transaction journal #%d because it has %d transaction(s) instead of 2.', $journal->id, $transactions));
@@ -340,7 +341,7 @@ class CorrectsAccountTypes extends Command
 
             return;
         }
-        $expectedTypes = $this->expected[$type][$sourceAccountType];
+        $expectedTypes     = $this->expected[$type][$sourceAccountType];
         if (!in_array($destAccountType, $expectedTypes, strict: true)) {
             Log::debug(sprintf('[b] Going to fix journal #%d', $journal->id));
             $this->fixJournal($journal, $type, $sourceTransaction, $destTransaction);
@@ -398,7 +399,7 @@ class CorrectsAccountTypes extends Command
         $oldSource = $source->account;
         $source->account()->associate($result);
         $source->save();
-        $message = sprintf(
+        $message   = sprintf(
             'Transaction journal #%d, source account changed from #%d ("%s") to #%d ("%s").',
             $journal->id,
             $oldSource->id,
@@ -417,7 +418,7 @@ class CorrectsAccountTypes extends Command
         $withdrawal = TransactionType::whereType(TransactionTypeEnum::WITHDRAWAL->value)->first();
         $journal->transactionType()->associate($withdrawal);
         $journal->save();
-        $message = sprintf('Converted transaction #%d from a transfer to a withdrawal.', $journal->id);
+        $message    = sprintf('Converted transaction #%d from a transfer to a withdrawal.', $journal->id);
         $this->friendlyInfo($message);
         Log::debug($message);
         // check it again:

@@ -41,9 +41,9 @@ class UpgradesCurrencyPreferences extends Command
 
     public const string CONFIG_NAME = '610_upgrade_currency_prefs';
 
-    protected $description = 'Upgrade user currency preferences';
+    protected $description          = 'Upgrade user currency preferences';
 
-    protected $signature = 'upgrade:610-currency-preferences {--F|force : Force the execution of this command.}';
+    protected $signature            = 'upgrade:610-currency-preferences {--F|force : Force the execution of this command.}';
 
     /**
      * Execute the console command.
@@ -67,16 +67,17 @@ class UpgradesCurrencyPreferences extends Command
     private function getPreference(User $user): string
     {
         $preference = Preference::query()
-                                ->where('user_id', $user->id)
-                                ->where('name', 'currencyPreference')
-                                ->first(['id', 'user_id', 'name', 'data', 'updated_at', 'created_at']);
+            ->where('user_id', $user->id)
+            ->where('name', 'currencyPreference')
+            ->first(['id', 'user_id', 'name', 'data', 'updated_at', 'created_at'])
+        ;
 
         if (null === $preference) {
             return 'EUR';
         }
 
         if (null !== $preference->data && !is_array($preference->data)) {
-            return (string)$preference->data;
+            return (string) $preference->data;
         }
 
         return 'EUR';
@@ -86,7 +87,7 @@ class UpgradesCurrencyPreferences extends Command
     {
         $configVar = AppConfiguration::get(self::CONFIG_NAME, false);
 
-        return (bool)$configVar?->data;
+        return (bool) $configVar?->data;
     }
 
     private function markAsExecuted(): void
@@ -103,7 +104,7 @@ class UpgradesCurrencyPreferences extends Command
             $this->upgradeGroupPreferences($group);
         }
 
-        $users = User::get();
+        $users  = User::get();
 
         /** @var User $user */
         foreach ($users as $user) {

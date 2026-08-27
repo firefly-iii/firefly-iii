@@ -44,14 +44,14 @@ class UpgradesBillsToRules extends Command
 
     public const string CONFIG_NAME = '480_bills_to_rules';
 
-    protected $description = 'Migrate bills to rules.';
+    protected $description          = 'Migrate bills to rules.';
 
-    protected                            $signature = 'upgrade:480-bills-to-rules {--F|force : Force the execution of this command.}';
-    private BillRepositoryInterface      $billRepository;
-    private int                          $count;
+    protected $signature            = 'upgrade:480-bills-to-rules {--F|force : Force the execution of this command.}';
+    private BillRepositoryInterface $billRepository;
+    private int $count;
     private RuleGroupRepositoryInterface $ruleGroupRepository;
-    private RuleRepositoryInterface      $ruleRepository;
-    private UserRepositoryInterface      $userRepository;
+    private RuleRepositoryInterface $ruleRepository;
+    private UserRepositoryInterface $userRepository;
 
     /**
      * Execute the console command.
@@ -88,7 +88,7 @@ class UpgradesBillsToRules extends Command
     {
         $configVar = AppConfiguration::get(self::CONFIG_NAME, false);
 
-        return (bool)$configVar?->data;
+        return (bool) $configVar?->data;
     }
 
     private function markAsExecuted(): void
@@ -101,17 +101,17 @@ class UpgradesBillsToRules extends Command
         if ('MIGRATED_TO_RULES' === $bill->match) {
             return;
         }
-        $languageString = null !== $language->data && !is_array($language->data) ? (string)$language->data : 'en_US';
+        $languageString = null !== $language->data && !is_array($language->data) ? (string) $language->data : 'en_US';
 
         // get match thing:
-        $match   = implode(' ', explode(',', $bill->match));
-        $newRule = [
+        $match          = implode(' ', explode(',', $bill->match));
+        $newRule        = [
             'rule_group_id'   => $ruleGroup->id,
             'active'          => true,
             'strict'          => false,
             'stop_processing' => false, // field is no longer used.
-            'title'           => (string)trans('firefly.rule_for_bill_title', ['name' => $bill->name], $languageString),
-            'description'     => (string)trans('firefly.rule_for_bill_description', ['name' => $bill->name], $languageString),
+            'title'           => (string) trans('firefly.rule_for_bill_title', ['name' => $bill->name], $languageString),
+            'description'     => (string) trans('firefly.rule_for_bill_description', ['name' => $bill->name], $languageString),
             'trigger'         => 'store-journal',
             'triggers'        => [['type' => 'description_contains', 'value' => $match]],
             'actions'         => [['type' => 'link_to_bill', 'value' => $bill->name]],
@@ -129,7 +129,7 @@ class UpgradesBillsToRules extends Command
         $this->ruleRepository->store($newRule);
 
         // update bill:
-        $newBillData = [
+        $newBillData    = [
             'currency_id' => $bill->transaction_currency_id,
             'name'        => $bill->name,
             'match'       => 'MIGRATED_TO_RULES',
@@ -155,18 +155,18 @@ class UpgradesBillsToRules extends Command
 
         /** @var Preference $lang */
         $lang       = Preferences::getForUser($user, 'language', 'en_US');
-        $language   = null !== $lang->data && !is_array($lang->data) ? (string)$lang->data : 'en_US';
-        $groupTitle = (string)trans('firefly.rulegroup_for_bills_title', [], $language);
+        $language   = null !== $lang->data && !is_array($lang->data) ? (string) $lang->data : 'en_US';
+        $groupTitle = (string) trans('firefly.rulegroup_for_bills_title', [], $language);
         $ruleGroup  = $this->ruleGroupRepository->findByTitle($groupTitle);
 
         if (!$ruleGroup instanceof RuleGroup) {
             $ruleGroup = $this->ruleGroupRepository->store([
-                                                               'title'       => (string)trans('firefly.rulegroup_for_bills_title', [], $language),
-                                                               'description' => (string)trans('firefly.rulegroup_for_bills_description', [], $language),
-                                                               'active'      => true,
-                                                           ]);
+                'title'       => (string) trans('firefly.rulegroup_for_bills_title', [], $language),
+                'description' => (string) trans('firefly.rulegroup_for_bills_description', [], $language),
+                'active'      => true,
+            ]);
         }
-        $bills = $this->billRepository->getBills();
+        $bills      = $this->billRepository->getBills();
 
         /** @var Bill $bill */
         foreach ($bills as $bill) {

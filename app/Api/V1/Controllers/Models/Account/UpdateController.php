@@ -69,7 +69,7 @@ final class UpdateController extends Controller
     {
         Log::debug(sprintf('Now in %s', __METHOD__));
         $data         = $request->getUpdateData();
-        $data['type'] = config('firefly.shortNamesByFullName.' . $account->accountType->type);
+        $data['type'] = config('firefly.shortNamesByFullName.'.$account->accountType->type);
         $account      = $this->repository->update($account, $data);
         $manager      = $this->getManager();
         $account->refresh();
@@ -77,15 +77,15 @@ final class UpdateController extends Controller
 
         // enrich
         /** @var User $admin */
-        $admin      = auth()->user();
-        $enrichment = new AccountEnrichment();
+        $admin        = auth()->user();
+        $enrichment   = new AccountEnrichment();
         $enrichment->setDate(null);
         $enrichment->setUser($admin);
-        $account = $enrichment->enrichSingle($account);
+        $account      = $enrichment->enrichSingle($account);
 
         /** @var AccountTransformer $transformer */
-        $transformer = app(AccountTransformer::class);
-        $resource    = new Item($account, $transformer, self::RESOURCE_KEY);
+        $transformer  = app(AccountTransformer::class);
+        $resource     = new Item($account, $transformer, self::RESOURCE_KEY);
 
         return response()->json($manager->createData($resource)->toArray())->header('Content-Type', self::CONTENT_TYPE);
     }

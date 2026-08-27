@@ -47,7 +47,7 @@ class RemovesBills extends Command
         if (null === $withdrawal) {
             return 0;
         }
-        $journals = TransactionJournal::query()->whereNotNull('bill_id')->where('transaction_type_id', '!=', $withdrawal->id)->get();
+        $journals   = TransactionJournal::query()->whereNotNull('bill_id')->where('transaction_type_id', '!=', $withdrawal->id)->get();
 
         /** @var TransactionJournal $journal */
         foreach ($journals as $journal) {

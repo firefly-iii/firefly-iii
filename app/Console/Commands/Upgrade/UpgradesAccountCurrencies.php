@@ -44,11 +44,11 @@ class UpgradesAccountCurrencies extends Command
 
     public const string CONFIG_NAME = '480_account_currencies';
 
-    protected                          $description = 'Give all accounts proper currency info.';
-    protected                          $signature   = 'upgrade:480-account-currencies {--F|force : Force the execution of this command.}';
+    protected $description          = 'Give all accounts proper currency info.';
+    protected $signature            = 'upgrade:480-account-currencies {--F|force : Force the execution of this command.}';
     private AccountRepositoryInterface $accountRepos;
-    private int                        $count;
-    private UserRepositoryInterface    $userRepos;
+    private int $count;
+    private UserRepositoryInterface $userRepos;
 
     /**
      * Each (asset) account must have a reference to a preferred currency. If the account does not have one, it's
@@ -77,7 +77,7 @@ class UpgradesAccountCurrencies extends Command
     {
         $configVar = AppConfiguration::get(self::CONFIG_NAME, false);
 
-        return (bool)$configVar?->data;
+        return (bool) $configVar?->data;
     }
 
     private function markAsExecuted(): void
@@ -100,9 +100,9 @@ class UpgradesAccountCurrencies extends Command
     private function updateAccount(Account $account, TransactionCurrency $currency): void
     {
         $this->accountRepos->setUser($account->user);
-        $accountCurrency = (int)$this->accountRepos->getMetaValue($account, 'currency_id');
+        $accountCurrency = (int) $this->accountRepos->getMetaValue($account, 'currency_id');
         $openingBalance  = $this->accountRepos->getOpeningBalance($account);
-        $obCurrency      = (int)$openingBalance?->transaction_currency_id;
+        $obCurrency      = (int) $openingBalance?->transaction_currency_id;
 
         // both 0? set to default currency:
         if (0 === $accountCurrency && 0 === $obCurrency) {
@@ -147,7 +147,7 @@ class UpgradesAccountCurrencies extends Command
     private function updateCurrenciesForUser(User $user): void
     {
         $this->accountRepos->setUser($user);
-        $accounts = $this->accountRepos->getAccountsByType([AccountTypeEnum::DEFAULT->value, AccountTypeEnum::ASSET->value]);
+        $accounts        = $this->accountRepos->getAccountsByType([AccountTypeEnum::DEFAULT->value, AccountTypeEnum::ASSET->value]);
 
         // get user's currency preference:
         $primaryCurrency = Amount::getPrimaryCurrencyByUserGroup($user->userGroup);

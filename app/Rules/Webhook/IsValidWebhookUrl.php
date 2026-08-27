@@ -40,8 +40,8 @@ class IsValidWebhookUrl implements ValidationRule
     public function validate(string $attribute, mixed $value, Closure $fail): void
     {
         $value          = (string) $value;
-        $parsed = parse_url($value, PHP_URL_HOST);
-        if(!is_string($parsed)) {
+        $parsed         = parse_url($value, PHP_URL_HOST);
+        if (!is_string($parsed)) {
             $fail('validation.bad_url')->translate();
         }
         $resolved       = gethostbyname($parsed);
@@ -70,7 +70,7 @@ class IsValidWebhookUrl implements ValidationRule
         $validProtocols = AppConfiguration::get('valid_url_protocols', config('firefly.valid_url_protocols'))->data;
         $parts          = explode(',', $validProtocols);
         $valid          = false;
-        $scheme = parse_url($value, PHP_URL_SCHEME);
+        $scheme         = parse_url($value, PHP_URL_SCHEME);
         foreach ($parts as $part) {
             if (is_string($scheme) && str_starts_with($scheme, $part)) {
                 $valid = true;

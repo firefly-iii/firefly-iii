@@ -54,7 +54,7 @@ final class StoreController extends Controller
     use TransactionFilter;
 
     #[Override]
-    protected array                             $acceptedRoles = [UserRoleEnum::MANAGE_TRANSACTIONS];
+    protected array $acceptedRoles = [UserRoleEnum::MANAGE_TRANSACTIONS];
     private TransactionGroupRepositoryInterface $groupRepository;
 
     /**
@@ -65,8 +65,8 @@ final class StoreController extends Controller
         parent::__construct();
         $this->middleware(function (Request $request, $next) {
             /** @var User $admin */
-            $admin     = auth()->user();
-            $userGroup = $this->validateUserGroup($request);
+            $admin                 = auth()->user();
+            $userGroup             = $this->validateUserGroup($request);
 
             $this->groupRepository = app(TransactionGroupRepositoryInterface::class);
             $this->groupRepository->setUser($admin);
@@ -111,36 +111,37 @@ final class StoreController extends Controller
             throw new ValidationException($validator);
         }
 
-        $manager = $this->getManager();
+        $manager            = $this->getManager();
 
         /** @var User $admin */
-        $admin = auth()->user();
+        $admin              = auth()->user();
 
         // use new group collector:
         /** @var GroupCollectorInterface $collector */
-        $collector = app(GroupCollectorInterface::class);
+        $collector          = app(GroupCollectorInterface::class);
         $collector
             ->setUser($admin)
             ->setUserGroup($this->userGroup)
             // filter on transaction group.
             ->setTransactionGroup($transactionGroup)
             // all info needed for the API:
-            ->withAPIInformation();
+            ->withAPIInformation()
+        ;
 
-        $selectedGroup = $collector->getGroups()->first();
+        $selectedGroup      = $collector->getGroups()->first();
         if (null === $selectedGroup) {
             throw HttpException::fromStatusCode(410, '200032: Cannot find transaction. Possibly, a rule deleted this transaction after its creation.');
         }
 
         // enrich
-        $enrichment = new TransactionGroupEnrichment();
+        $enrichment         = new TransactionGroupEnrichment();
         $enrichment->setUser($admin);
-        $selectedGroup = $enrichment->enrichSingle($selectedGroup);
+        $selectedGroup      = $enrichment->enrichSingle($selectedGroup);
 
         /** @var TransactionGroupTransformer $transformer */
-        $transformer = app(TransactionGroupTransformer::class);
+        $transformer        = app(TransactionGroupTransformer::class);
         $transformer->setParameters($this->parameters);
-        $resource = new Item($selectedGroup, $transformer, 'transactions');
+        $resource           = new Item($selectedGroup, $transformer, 'transactions');
 
         return response()->json($manager->createData($resource)->toArray())->header('Content-Type', self::CONTENT_TYPE);
     }

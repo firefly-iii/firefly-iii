@@ -49,7 +49,7 @@ class PaginationRequest extends ApiRequest
     public function rules(): array
     {
         return [
-            'sort'  => ['nullable', new IsValidSortInstruction((string)$this->sortClass)],
+            'sort'  => ['nullable', new IsValidSortInstruction((string) $this->sortClass)],
             'limit' => ['numeric', 'min:1', 'max:131337'],
             'page'  => ['numeric', 'min:1', 'max:131337'],
         ];
@@ -62,12 +62,12 @@ class PaginationRequest extends ApiRequest
                 return;
             }
 
-            $limit = $this->convertInteger('limit');
+            $limit  = $this->convertInteger('limit');
             if (0 === $limit) {
                 // get default for user:
                 /** @var User $user */
                 $user  = auth()->user();
-                $limit = (int)Preferences::getForUser($user, 'listPageSize', 50)->data;
+                $limit = (int) Preferences::getForUser($user, 'listPageSize', 50)->data;
             }
             $page   = $this->convertInteger('page');
             $page   = clamp(value: $page, min: 1, max: 2 ** 16);

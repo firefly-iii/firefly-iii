@@ -78,19 +78,19 @@ class StoreRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'type'              => ['required', 'in:withdrawal,transfer,deposit'],
-            'title'             => ['required', 'min:1', 'max:255', 'uniqueObjectForUser:recurrences,title'],
-            'description'       => ['min:1', 'max:32768'],
-            'first_date'        => ['required', 'date'],
-            'apply_rules'       => [new IsBoolean()],
-            'active'            => [new IsBoolean()],
-            'repeat_until'      => ['nullable', 'date'],
-            'nr_of_repetitions' => ['nullable', 'numeric', 'min:1', 'max:255'],
+            'type'                                 => ['required', 'in:withdrawal,transfer,deposit'],
+            'title'                                => ['required', 'min:1', 'max:255', 'uniqueObjectForUser:recurrences,title'],
+            'description'                          => ['min:1', 'max:32768'],
+            'first_date'                           => ['required', 'date'],
+            'apply_rules'                          => [new IsBoolean()],
+            'active'                               => [new IsBoolean()],
+            'repeat_until'                         => ['nullable', 'date'],
+            'nr_of_repetitions'                    => ['nullable', 'numeric', 'min:1', 'max:255'],
 
-            'repetitions.*.type'    => ['required', 'in:daily,weekly,ndom,monthly,yearly'],
-            'repetitions.*.moment'  => ['string', 'min:0', 'max:10'],
-            'repetitions.*.skip'    => ['nullable', 'numeric', 'min:0', 'max:31'],
-            'repetitions.*.weekend' => ['numeric', 'min:1', 'max:4'],
+            'repetitions.*.type'                   => ['required', 'in:daily,weekly,ndom,monthly,yearly'],
+            'repetitions.*.moment'                 => ['string', 'min:0', 'max:10'],
+            'repetitions.*.skip'                   => ['nullable', 'numeric', 'min:0', 'max:31'],
+            'repetitions.*.weekend'                => ['numeric', 'min:1', 'max:4'],
 
             'transactions.*.description'           => ['required', 'min:1', 'max:255'],
             'transactions.*.amount'                => ['required', new IsValidPositiveAmount()],
@@ -139,7 +139,7 @@ class StoreRequest extends FormRequest
      */
     private function getRepetitionData(): array
     {
-        $return = [];
+        $return      = [];
 
         // repetition data:
         /** @var null|array $repetitions */
@@ -150,7 +150,7 @@ class StoreRequest extends FormRequest
 
         /** @var array $repetition */
         foreach ($repetitions as $repetition) {
-            $current = [];
+            $current  = [];
             if (array_key_exists('type', $repetition)) {
                 $current['type'] = $repetition['type'];
             }
@@ -158,10 +158,10 @@ class StoreRequest extends FormRequest
                 $current['moment'] = $repetition['moment'];
             }
             if (array_key_exists('skip', $repetition)) {
-                $current['skip'] = (int)$repetition['skip'];
+                $current['skip'] = (int) $repetition['skip'];
             }
             if (array_key_exists('weekend', $repetition)) {
-                $current['weekend'] = (int)$repetition['weekend'];
+                $current['weekend'] = (int) $repetition['weekend'];
             }
 
             $return[] = $current;
@@ -176,7 +176,7 @@ class StoreRequest extends FormRequest
      */
     private function getTransactionData(): array
     {
-        $return = [];
+        $return       = [];
 
         // transaction data:
         /** @var null|array $transactions */
