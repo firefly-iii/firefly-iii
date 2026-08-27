@@ -33,18 +33,17 @@ class ClearsEmptyForeignAmounts extends Command
     use ShowsFriendlyMessages;
 
     /**
-     * The name and signature of the console command.
-     *
-     * @var string
-     */
-    protected $signature   = 'correction:clears-empty-foreign-amounts';
-
-    /**
      * The console command description.
      *
      * @var string
      */
     protected $description = 'Removes references to foreign amounts if there is no amount.';
+    /**
+     * The name and signature of the console command.
+     *
+     * @var string
+     */
+    protected $signature = 'correction:clears-empty-foreign-amounts';
 
     /**
      * Execute the console command.

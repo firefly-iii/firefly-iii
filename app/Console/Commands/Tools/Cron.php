@@ -46,7 +46,7 @@ class Cron extends Command
 
     protected $description = 'Runs all Firefly III cron-job related commands. Configure a cron job according to the official Firefly III documentation.';
 
-    protected $signature   = 'firefly-iii:cron
+    protected $signature = 'firefly-iii:cron
         {--F|force : Force the cron job(s) to execute.}
         {--date= : Set the date in YYYY-MM-DD to make Firefly III think that\'s the current date.}
         {--check-version : Check if there is a new Firefly III version. Other tasks will be skipped unless also requested.}
@@ -62,8 +62,8 @@ class Cron extends Command
     public function handle(): int
     {
         /** @var UserRepositoryInterface $repository */
-        $repository  = app(UserRepositoryInterface::class);
-        $admin       = $repository->getUsersByRole('owner')->first();
+        $repository = app(UserRepositoryInterface::class);
+        $admin      = $repository->getUsersByRole('owner')->first();
         if (null === $admin) {
             $this->friendlyError('There is no user in the system with the "owner"-role, cannot continue.');
 
@@ -71,11 +71,11 @@ class Cron extends Command
         }
         $this->admin = $admin;
         $doAll       = !$this->option('download-cer')
-        && !$this->option('create-recurring')
-        && !$this->option('create-auto-budgets')
-        && !$this->option('send-subscription-warnings')
-        && !$this->option('check-version')
-        && !$this->option('send-webhook-messages');
+                       && !$this->option('create-recurring')
+                       && !$this->option('create-auto-budgets')
+                       && !$this->option('send-subscription-warnings')
+                       && !$this->option('check-version')
+                       && !$this->option('send-webhook-messages');
         $date        = null;
 
         try {
@@ -83,7 +83,7 @@ class Cron extends Command
         } catch (InvalidArgumentException $e) {
             $this->friendlyError(sprintf('"%s" is not a valid date', $this->option('date')));
         }
-        $force       = (bool) $this->option('force');
+        $force = (bool)$this->option('force');
 
         // Fire exchange rates cron job.
         if (true === AppConfiguration::get('enable_external_rates', config('cer.download_enabled'))->data && ($doAll || $this->option('download-cer'))) {

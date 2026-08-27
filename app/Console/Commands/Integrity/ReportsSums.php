@@ -57,8 +57,8 @@ class ReportsSums extends Command
 
         /** @var User $user */
         foreach ($userRepository->all() as $user) {
-            $sum     = (string) $user->transactions()->selectRaw('SUM(amount) as total')->value('total');
-            $foreign = (string) $user->transactions()->selectRaw('SUM(foreign_amount) as total')->value('total');
+            $sum     = (string)$user->transactions()->selectRaw('SUM(amount) as total')->value('total');
+            $foreign = (string)$user->transactions()->selectRaw('SUM(foreign_amount) as total')->value('total');
             $sum     = '' === $sum ? '0' : $sum;
             $foreign = '' === $foreign ? '0' : $foreign;
             $sum     = Steam::floatalize($sum);

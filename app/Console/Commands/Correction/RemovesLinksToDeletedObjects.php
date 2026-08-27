@@ -39,18 +39,17 @@ class RemovesLinksToDeletedObjects extends Command
     use ShowsFriendlyMessages;
 
     /**
-     * The name and signature of the console command.
-     *
-     * @var string
-     */
-    protected $signature   = 'correction:remove-links-to-deleted-objects';
-
-    /**
      * The console command description.
      *
      * @var string
      */
     protected $description = 'Removes deleted entries from intermediate tables.';
+    /**
+     * The name and signature of the console command.
+     *
+     * @var string
+     */
+    protected $signature = 'correction:remove-links-to-deleted-objects';
 
     /**
      * Execute the console command.
@@ -58,33 +57,29 @@ class RemovesLinksToDeletedObjects extends Command
     public function handle(): void
     {
         $deletedTags       = Tag::query()
-            ->withTrashed()
-            ->whereNotNull('deleted_at')
-            ->get('tags.id')
-            ->pluck('id')
-            ->toArray()
-        ;
+                                ->withTrashed()
+                                ->whereNotNull('deleted_at')
+                                ->get('tags.id')
+                                ->pluck('id')
+                                ->toArray();
         $deletedJournals   = TransactionJournal::query()
-            ->withTrashed()
-            ->whereNotNull('deleted_at')
-            ->get('transaction_journals.id')
-            ->pluck('id')
-            ->toArray()
-        ;
+                                               ->withTrashed()
+                                               ->whereNotNull('deleted_at')
+                                               ->get('transaction_journals.id')
+                                               ->pluck('id')
+                                               ->toArray();
         $deletedBudgets    = Budget::query()
-            ->withTrashed()
-            ->whereNotNull('deleted_at')
-            ->get('budgets.id')
-            ->pluck('id')
-            ->toArray()
-        ;
+                                   ->withTrashed()
+                                   ->whereNotNull('deleted_at')
+                                   ->get('budgets.id')
+                                   ->pluck('id')
+                                   ->toArray();
         $deletedCategories = Category::query()
-            ->withTrashed()
-            ->whereNotNull('deleted_at')
-            ->get('categories.id')
-            ->pluck('id')
-            ->toArray()
-        ;
+                                     ->withTrashed()
+                                     ->whereNotNull('deleted_at')
+                                     ->get('categories.id')
+                                     ->pluck('id')
+                                     ->toArray();
 
         if (count($deletedTags) > 0) {
             $this->cleanupTags($deletedTags);
@@ -102,7 +97,7 @@ class RemovesLinksToDeletedObjects extends Command
         // count and clean up available budgets in currencies with no budget limits.
         // this is not entirely the place for it but OK.
         /** @var AvailableBudgetRepositoryInterface $repository */
-        $repository        = app(AvailableBudgetRepositoryInterface::class);
+        $repository = app(AvailableBudgetRepositoryInterface::class);
 
         /** @var User $user */
         foreach (User::get() as $user) {

@@ -33,18 +33,17 @@ class ValidatesFilePermissions extends Command
     use ShowsFriendlyMessages;
 
     /**
-     * The name and signature of the console command.
-     *
-     * @var string
-     */
-    protected $signature   = 'integrity:file-permissions';
-
-    /**
      * The console command description.
      *
      * @var string
      */
     protected $description = 'Command description';
+    /**
+     * The name and signature of the console command.
+     *
+     * @var string
+     */
+    protected $signature = 'integrity:file-permissions';
 
     /**
      * Execute the console command.
@@ -62,7 +61,7 @@ class ValidatesFilePermissions extends Command
                 $message = sprintf('Directory "%s" cannot found. It is necessary to allow files to be uploaded.', $directory);
                 Log::error($message);
                 $this->friendlyError($message);
-                $errors  = true;
+                $errors = true;
 
                 continue;
             }
@@ -71,7 +70,7 @@ class ValidatesFilePermissions extends Command
                 $message = sprintf('Directory "%s" is not writeable. Uploading attachments may fail silently.', $directory);
                 $this->friendlyError($message);
                 Log::error($message);
-                $errors  = true;
+                $errors = true;
             }
             Log::debug('It is writeable!');
             Log::debug(sprintf('Done processing %s', $directory));

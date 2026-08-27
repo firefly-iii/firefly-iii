@@ -36,7 +36,7 @@ class CorrectsPrimaryCurrencyAmounts extends Command
 
     protected $description = 'Recalculate primary currency amounts for all objects.';
 
-    protected $signature   = 'correction:recalculate-pc-amounts';
+    protected $signature = 'correction:recalculate-pc-amounts';
 
     /**
      * Execute the console command.

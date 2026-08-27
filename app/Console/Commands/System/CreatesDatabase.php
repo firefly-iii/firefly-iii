@@ -37,7 +37,7 @@ class CreatesDatabase extends Command
 
     protected $description = 'Tries to create the database if it doesn\'t exist yet.';
 
-    protected $signature   = 'firefly-iii:create-database';
+    protected $signature = 'firefly-iii:create-database';
 
     public function handle(): int
     {
@@ -53,15 +53,15 @@ class CreatesDatabase extends Command
             return 0;
         }
         // try to set up a raw connection:
-        $exists    = false;
-        $dsn       = sprintf('mysql:host=%s;port=%d;charset=utf8mb4', config('database.connections.mysql.host'), config('database.connections.mysql.port'));
+        $exists = false;
+        $dsn    = sprintf('mysql:host=%s;port=%d;charset=utf8mb4', config('database.connections.mysql.host'), config('database.connections.mysql.port'));
 
-        if ('' !== (string) config('database.connections.mysql.unix_socket')) {
+        if ('' !== (string)config('database.connections.mysql.unix_socket')) {
             $dsn = sprintf('mysql:unix_socket=%s;charset=utf8mb4', config('database.connections.mysql.unix_socket'));
         }
         $this->friendlyLine(sprintf('DSN is %s', $dsn));
 
-        $options   = [
+        $options = [
             PDO::ATTR_ERRMODE            => PDO::ERRMODE_EXCEPTION,
             PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_ASSOC,
             PDO::ATTR_EMULATE_PREPARES   => false,
@@ -69,7 +69,7 @@ class CreatesDatabase extends Command
 
         // when it fails, display error
         try {
-            $pdo = new PDO($dsn, (string) config('database.connections.mysql.username'), (string) config('database.connections.mysql.password'), $options);
+            $pdo = new PDO($dsn, (string)config('database.connections.mysql.username'), (string)config('database.connections.mysql.password'), $options);
         } catch (PDOException $e) {
             $this->friendlyError(sprintf('Error when connecting to DB: %s', $e->getMessage()));
 
@@ -79,7 +79,7 @@ class CreatesDatabase extends Command
         // only continue when no error.
         // with PDO, try to list DB's (
         /** @var array $stmt */
-        $stmt      = $pdo->query('SHOW DATABASES;');
+        $stmt = $pdo->query('SHOW DATABASES;');
         // slightly more complex but less error-prone.
         foreach ($stmt as $row) {
             $name = $row['Database'] ?? false;

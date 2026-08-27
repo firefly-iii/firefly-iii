@@ -36,9 +36,9 @@ class UpgradesBudgetLimitPeriods extends Command
 
     public const string CONFIG_NAME = '550_budget_limit_periods';
 
-    protected $description          = 'Append budget limits with their (estimated) timeframe.';
+    protected $description = 'Append budget limits with their (estimated) timeframe.';
 
-    protected $signature            = 'upgrade:550-budget-limit-periods {--F|force : Force the execution of this command.}';
+    protected $signature = 'upgrade:550-budget-limit-periods {--F|force : Force the execution of this command.}';
 
     /**
      * Execute the console command.
@@ -59,7 +59,7 @@ class UpgradesBudgetLimitPeriods extends Command
 
     private function fixLimit(BudgetLimit $limit): void
     {
-        $period        = $this->getLimitPeriod($limit);
+        $period = $this->getLimitPeriod($limit);
 
         if (null === $period) {
             $message = sprintf(
@@ -76,7 +76,7 @@ class UpgradesBudgetLimitPeriods extends Command
         $limit->period = $period;
         $limit->saveQuietly();
 
-        $msg           = sprintf(
+        $msg = sprintf(
             'Budget limit #%d (%s - %s) period is "%s".',
             $limit->id,
             $limit->start_date->format('Y-m-d'),
@@ -96,7 +96,7 @@ class UpgradesBudgetLimitPeriods extends Command
         if (
             '1' === $limit->start_date->format('N')
             && '7' === $limit->end_date->format('N')
-            && 6 === (int) $limit->end_date->diffInDays($limit->start_date, true)
+            && 6 === (int)$limit->end_date->diffInDays($limit->start_date, true)
         ) {
             return 'weekly';
         }
@@ -116,7 +116,7 @@ class UpgradesBudgetLimitPeriods extends Command
         if (
             in_array($limit->start_date->format('j-n'), $start, true) // start of quarter
             && in_array($limit->end_date->format('j-n'), $end, true) // end of quarter
-            && 2 === (int) $limit->start_date->diffInMonths($limit->end_date, true)
+            && 2 === (int)$limit->start_date->diffInMonths($limit->end_date, true)
         ) {
             return 'quarterly';
         }
@@ -126,7 +126,7 @@ class UpgradesBudgetLimitPeriods extends Command
         if (
             in_array($limit->start_date->format('j-n'), $start, true) // start of quarter
             && in_array($limit->end_date->format('j-n'), $end, true) // end of quarter
-            && 5 === (int) $limit->start_date->diffInMonths($limit->end_date, true)
+            && 5 === (int)$limit->start_date->diffInMonths($limit->end_date, true)
         ) {
             return 'half_year';
         }
@@ -142,7 +142,7 @@ class UpgradesBudgetLimitPeriods extends Command
     {
         $configVar = AppConfiguration::get(self::CONFIG_NAME, false);
 
-        return (bool) $configVar->data;
+        return (bool)$configVar->data;
     }
 
     private function markAsExecuted(): void

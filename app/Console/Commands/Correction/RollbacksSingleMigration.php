@@ -33,18 +33,17 @@ class RollbacksSingleMigration extends Command
     use ShowsFriendlyMessages;
 
     /**
-     * The name and signature of the console command.
-     *
-     * @var string
-     */
-    protected $signature   = 'correction:rollback-single-migration {--force}';
-
-    /**
      * The console command description.
      *
      * @var string
      */
     protected $description = 'Removes the last entry from the migration table. ';
+    /**
+     * The name and signature of the console command.
+     *
+     * @var string
+     */
+    protected $signature = 'correction:rollback-single-migration {--force}';
 
     /**
      * Execute the console command.
@@ -68,7 +67,7 @@ class RollbacksSingleMigration extends Command
         $this->friendlyLine('');
         $this->friendlyLine('If this doesn\'t work, run the command a few times to remove more rows and try "php artisan migrate" again.');
         $this->friendlyLine('');
-        $res   = true;
+        $res = true;
         if (!$this->option('force')) {
             $this->friendlyWarning('Use this command at your own risk.');
             $res = $this->confirm('Are you sure you want to continue?');
@@ -76,9 +75,8 @@ class RollbacksSingleMigration extends Command
 
         if ($res) {
             DB::table('migrations')
-                ->where('id', (int) $entry->id)
-                ->delete()
-            ;
+              ->where('id', (int)$entry->id)
+              ->delete();
             $this->friendlyInfo(sprintf('Database migration #%d ("%s") is deleted.', $entry->id, $entry->migration));
             $this->friendlyLine('');
             $this->friendlyLine('Try running "php artisan migrate" now.');

@@ -35,26 +35,25 @@ class ChecksForUpdates extends Command
     use ShowsFriendlyMessages;
 
     /**
-     * The name and signature of the console command.
-     *
-     * @var string
-     */
-    protected $signature   = 'firefly-iii:check-for-updates {--force}';
-
-    /**
      * The console command description.
      *
      * @var string
      */
     protected $description = 'Checks for Firefly III updates';
+    /**
+     * The name and signature of the console command.
+     *
+     * @var string
+     */
+    protected $signature = 'firefly-iii:check-for-updates {--force}';
 
     /**
      * Execute the console command.
      */
     public function handle(): int
     {
-        $build      = Carbon::createFromTimestamp(config('firefly.build_time'), config('app.timezone'));
-        $version    = config('firefly.version');
+        $build   = Carbon::createFromTimestamp(config('firefly.build_time'), config('app.timezone'));
+        $version = config('firefly.version');
 
         $this->friendlyLine(sprintf('You are running version "%s", built on %s', $version, $build->format('Y-m-d H:i')));
         $permission = AppConfiguration::get('permission_update_check', -1)->data;
@@ -68,9 +67,9 @@ class ChecksForUpdates extends Command
         }
 
         /** @var UpdateRequestInterface $request */
-        $request    = app(UpdateRequestInterface::class);
+        $request = app(UpdateRequestInterface::class);
         // stable, alpha or beta
-        $info       = $request->getUpdateInformation($version, $build, 'stable');
+        $info = $request->getUpdateInformation($version, $build, 'stable');
 
         if ('' !== $info->getError()) {
             $this->friendlyError($info->getError());

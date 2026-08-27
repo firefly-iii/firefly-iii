@@ -40,10 +40,10 @@ class AddsTransactionIdentifiers extends Command
 
     public const string CONFIG_NAME = '480_transaction_identifier';
 
-    protected $description          = 'Fixes transaction identifiers.';
-    protected $signature            = 'upgrade:480-transaction-identifiers {--F|force : Force the execution of this command.}';
+    protected                             $description = 'Fixes transaction identifiers.';
+    protected                             $signature   = 'upgrade:480-transaction-identifiers {--F|force : Force the execution of this command.}';
     private JournalCLIRepositoryInterface $cliRepository;
-    private int $count;
+    private int                           $count;
 
     /**
      * This method gives all transactions which are part of a split journal (so more than 2) a sort of "order" so they
@@ -94,12 +94,11 @@ class AddsTransactionIdentifiers extends Command
         try {
             /** @var Transaction $opposing */
             $opposing = Transaction::query()
-                ->where('transaction_journal_id', $transaction->transaction_journal_id)
-                ->where('amount', $amount)
-                ->where('identifier', '=', 0)
-                ->whereNotIn('id', $exclude)
-                ->first()
-            ;
+                                   ->where('transaction_journal_id', $transaction->transaction_journal_id)
+                                   ->where('amount', $amount)
+                                   ->where('identifier', '=', 0)
+                                   ->whereNotIn('id', $exclude)
+                                   ->first();
         } catch (QueryException $e) {
             Log::error($e->getMessage());
             $this->friendlyError('Firefly III could not find the "identifier" field in the "transactions" table.');
@@ -117,7 +116,7 @@ class AddsTransactionIdentifiers extends Command
     {
         $configVar = AppConfiguration::get(self::CONFIG_NAME, false);
 
-        return (bool) $configVar?->data;
+        return (bool)$configVar?->data;
     }
 
     private function markAsExecuted(): void
@@ -155,8 +154,8 @@ class AddsTransactionIdentifiers extends Command
                 $opposing->identifier    = $identifier;
                 $transaction->save();
                 $opposing->save();
-                $exclude[]               = $transaction->id;
-                $exclude[]               = $opposing->id;
+                $exclude[] = $transaction->id;
+                $exclude[] = $opposing->id;
                 ++$this->count;
             }
             ++$identifier;

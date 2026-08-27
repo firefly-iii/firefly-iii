@@ -37,6 +37,7 @@ use Illuminate\Support\Collection;
 use League\Fractal\Pagination\IlluminatePaginatorAdapter;
 use League\Fractal\Resource\Collection as FractalCollection;
 use League\Fractal\Resource\Item;
+use function Safe\preg_match;
 
 /**
  * Class PreferencesController
@@ -130,10 +131,10 @@ final class PreferencesController extends Controller
         if ('currencyPreference' === $data['name']) {
             throw new FireflyException('Please use api/v1/currencies/default instead.');
         }
-        if ('language' === $data['name'] && !in_array($data['data'], array_keys(config('firefly.languages')))) {
+        if ('language' === $data['name'] && !in_array($data['data'], array_keys(config('firefly.languages')), true)) {
             throw new FireflyException('Invalid language specified.');
         }
-        if ('locale' === $data['name'] && 'equal' !== $data['data'] && false === preg_match('/^[A-Za-z0-9_.@-]+$/', $data['data'])) {
+        if ('locale' === $data['name'] && 'equal' !== $data['data'] && 0 === preg_match('/^[A-Za-z0-9_.@-]+$/', $data['data'])) {
             throw new FireflyException('Invalid locale specified.');
         }
 

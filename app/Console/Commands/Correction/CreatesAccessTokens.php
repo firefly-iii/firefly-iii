@@ -37,7 +37,7 @@ class CreatesAccessTokens extends Command
 
     protected $description = 'Creates user access tokens which are used for command line access to personal data.';
 
-    protected $signature   = 'correction:access-tokens';
+    protected $signature = 'correction:access-tokens';
 
     /**
      * Execute the console command.
@@ -50,8 +50,8 @@ class CreatesAccessTokens extends Command
         /** @var UserRepositoryInterface $repository */
         $repository = app(UserRepositoryInterface::class);
 
-        $count      = 0;
-        $users      = $repository->all();
+        $count = 0;
+        $users = $repository->all();
 
         /** @var User $user */
         foreach ($users as $user) {

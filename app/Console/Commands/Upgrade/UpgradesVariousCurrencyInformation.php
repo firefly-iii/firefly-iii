@@ -43,13 +43,13 @@ class UpgradesVariousCurrencyInformation extends Command
 
     public const string CONFIG_NAME = '480_other_currencies';
 
-    protected $description          = 'Update all journal currency information.';
-    protected $signature            = 'upgrade:480-currency-information {--F|force : Force the execution of this command.}';
-    private array $accountCurrencies;
-    private AccountRepositoryInterface $accountRepos;
+    protected                             $description = 'Update all journal currency information.';
+    protected                             $signature   = 'upgrade:480-currency-information {--F|force : Force the execution of this command.}';
+    private array                         $accountCurrencies;
+    private AccountRepositoryInterface    $accountRepos;
     private JournalCLIRepositoryInterface $cliRepos;
-    private int $count;
-    private JournalRepositoryInterface $journalRepos;
+    private int                           $count;
+    private JournalRepositoryInterface    $journalRepos;
 
     /**
      * Execute the console command.
@@ -74,14 +74,14 @@ class UpgradesVariousCurrencyInformation extends Command
 
     private function getCurrency(Account $account): ?TransactionCurrency
     {
-        $accountId                           = $account->id;
+        $accountId = $account->id;
         if (array_key_exists($accountId, $this->accountCurrencies) && 0 === $this->accountCurrencies[$accountId]) {
             return null;
         }
         if (array_key_exists($accountId, $this->accountCurrencies) && $this->accountCurrencies[$accountId] instanceof TransactionCurrency) {
             return $this->accountCurrencies[$accountId];
         }
-        $currency                            = $this->accountRepos->getAccountCurrency($account);
+        $currency = $this->accountRepos->getAccountCurrency($account);
         if (!$currency instanceof TransactionCurrency) {
             $this->accountCurrencies[$accountId] = 0;
 
@@ -125,8 +125,7 @@ class UpgradesVariousCurrencyInformation extends Command
                     ->leftJoin('accounts', 'transactions.account_id', '=', 'accounts.id')
                     ->leftJoin('account_types', 'accounts.account_type_id', '=', 'account_types.id')
                     ->where('account_types.type', '!=', AccountTypeEnum::INITIAL_BALANCE->value)
-                    ->first(['transactions.*'])
-                ;
+                    ->first(['transactions.*']);
 
                 break;
 
@@ -138,8 +137,7 @@ class UpgradesVariousCurrencyInformation extends Command
                     ->leftJoin('accounts', 'transactions.account_id', '=', 'accounts.id')
                     ->leftJoin('account_types', 'accounts.account_type_id', '=', 'account_types.id')
                     ->where('account_types.type', '!=', AccountTypeEnum::RECONCILIATION->value)
-                    ->first(['transactions.*'])
-                ;
+                    ->first(['transactions.*']);
 
                 break;
         }
@@ -151,7 +149,7 @@ class UpgradesVariousCurrencyInformation extends Command
     {
         $configVar = AppConfiguration::get(self::CONFIG_NAME, false);
 
-        return (bool) $configVar?->data;
+        return (bool)$configVar?->data;
     }
 
     private function isMultiCurrency(Account $account): bool
@@ -202,11 +200,11 @@ class UpgradesVariousCurrencyInformation extends Command
         $isMultiCurrency = $this->isMultiCurrency($account);
         if (!$currency instanceof TransactionCurrency) {
             $this->friendlyError(sprintf(
-                'Account #%d ("%s") has no currency preference, so transaction journal #%d can\'t be corrected',
-                $account->id,
-                $account->name,
-                $journal->id
-            ));
+                                     'Account #%d ("%s") has no currency preference, so transaction journal #%d can\'t be corrected',
+                                     $account->id,
+                                     $account->name,
+                                     $journal->id
+                                 ));
             ++$this->count;
 
             return;
@@ -243,11 +241,11 @@ class UpgradesVariousCurrencyInformation extends Command
     private function updateOtherJournalsCurrencies(): void
     {
         $set = $this->cliRepos->getAllJournals([
-            TransactionTypeEnum::WITHDRAWAL->value,
-            TransactionTypeEnum::DEPOSIT->value,
-            TransactionTypeEnum::OPENING_BALANCE->value,
-            TransactionTypeEnum::RECONCILIATION->value,
-        ]);
+                                                   TransactionTypeEnum::WITHDRAWAL->value,
+                                                   TransactionTypeEnum::DEPOSIT->value,
+                                                   TransactionTypeEnum::OPENING_BALANCE->value,
+                                                   TransactionTypeEnum::RECONCILIATION->value,
+                                               ]);
 
         /** @var TransactionJournal $journal */
         foreach ($set as $journal) {

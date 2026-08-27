@@ -38,20 +38,11 @@ use Illuminate\Support\Facades\Log;
 trait VerifiesAccessToken
 {
     /**
-     * Abstract method to make sure trait knows about method "option".
-     *
-     * @param null|string $key
-     *
-     * @return mixed
-     */
-    abstract public function option($key = null);
-
-    /**
      * @throws FireflyException
      */
     public function getUser(): User
     {
-        $userId     = (int) $this->option('user');
+        $userId = (int)$this->option('user');
 
         /** @var UserRepositoryInterface $repository */
         $repository = app(UserRepositoryInterface::class);
@@ -64,16 +55,25 @@ trait VerifiesAccessToken
     }
 
     /**
+     * Abstract method to make sure trait knows about method "option".
+     *
+     * @param null|string $key
+     *
+     * @return mixed
+     */
+    abstract public function option($key = null);
+
+    /**
      * Returns false when given token does not match given user token.
      */
     protected function verifyAccessToken(): bool
     {
-        $userId      = (int) $this->option('user');
-        $token       = (string) $this->option('token');
+        $userId = (int)$this->option('user');
+        $token  = (string)$this->option('token');
 
         /** @var UserRepositoryInterface $repository */
-        $repository  = app(UserRepositoryInterface::class);
-        $user        = $repository->find($userId);
+        $repository = app(UserRepositoryInterface::class);
+        $user       = $repository->find($userId);
 
         if (null === $user) {
             Log::error(sprintf('verifyAccessToken(): no such user for input "%d"', $userId));

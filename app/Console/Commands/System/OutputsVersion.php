@@ -30,7 +30,7 @@ class OutputsVersion extends Command
 {
     protected $description = 'Outputs the Firefly III version';
 
-    protected $signature   = 'firefly-iii:output-version';
+    protected $signature = 'firefly-iii:output-version';
 
     /**
      * Execute the console command.

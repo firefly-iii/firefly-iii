@@ -131,7 +131,10 @@ final class TwoFactorController extends Controller
         ++$preference;
         Log::channel('audit')->info(sprintf('MFA failure count is set to %d.', $preference));
         Preferences::set('mfa_failure_count', $preference, true);
-        sleep(2 ** $preference);
+        $preference = clamp($preference, 2, 16);
+        $count = 2 ** $preference;
+        Log::debug(sprintf('Sleeping for %d seconds to slow down brute force attacks.', $count));
+        sleep($count);
     }
 
     private function addToMFAHistory(string $mfaCode): void

@@ -110,20 +110,19 @@ class CorrectsOpeningBalanceCurrencies extends Command
     {
         /** @var Collection */
         return TransactionJournal::leftJoin('transaction_types', 'transaction_types.id', '=', 'transaction_journals.transaction_type_id')
-            ->whereNull('transaction_journals.deleted_at')
-            ->where('transaction_types.type', TransactionTypeEnum::OPENING_BALANCE->value)
-            ->get(['transaction_journals.*'])
-        ;
+                                 ->whereNull('transaction_journals.deleted_at')
+                                 ->where('transaction_types.type', TransactionTypeEnum::OPENING_BALANCE->value)
+                                 ->get(['transaction_journals.*']);
     }
 
     private function setCorrectCurrency(Account $account, TransactionJournal $journal): int
     {
         $currency = $this->getCurrency($account);
         $count    = 0;
-        if ((int) $journal->transaction_currency_id !== $currency->id) {
+        if ((int)$journal->transaction_currency_id !== $currency->id) {
             $journal->transaction_currency_id = $currency->id;
             $journal->save();
-            $count                            = 1;
+            $count = 1;
         }
 
         /** @var Transaction $transaction */
@@ -131,7 +130,7 @@ class CorrectsOpeningBalanceCurrencies extends Command
             if ($transaction->transaction_currency_id !== $currency->id) {
                 $transaction->transaction_currency_id = $currency->id;
                 $transaction->save();
-                $count                                = 1;
+                $count = 1;
             }
         }
 

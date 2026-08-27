@@ -39,7 +39,7 @@ class CreatesFirstUser extends Command
 
     protected $description = 'Creates a new user and gives admin rights. Outputs the password on the command line. Strictly for testing.';
 
-    protected $signature   = 'system:create-first-user {email}';
+    protected                       $signature = 'system:create-first-user {email}';
     private UserRepositoryInterface $repository;
 
     /**
@@ -53,7 +53,7 @@ class CreatesFirstUser extends Command
             return 1;
         }
         $this->stupidLaravel();
-        $count          = $this->repository->count();
+        $count = $this->repository->count();
         if ($count > 0) {
             $this->friendlyError('Already have more than zero users in DB.');
 
@@ -67,7 +67,7 @@ class CreatesFirstUser extends Command
         $user->setRememberToken(Str::random(60));
 
         Log::info(sprintf('Registered new user %s', $user->email));
-        $owner          = new OwnerNotifiable();
+        $owner = new OwnerNotifiable();
         event(new NewUserRegistered($owner, $user));
 
         $this->friendlyInfo(sprintf('Created new admin user (ID #%d) with email address "%s" and password "%s".', $user->id, $user->email, $password));

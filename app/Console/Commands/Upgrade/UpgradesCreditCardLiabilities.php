@@ -39,8 +39,8 @@ class UpgradesCreditCardLiabilities extends Command
 
     public const string CONFIG_NAME = '480_cc_liabilities';
 
-    protected $description          = 'Convert old credit card liabilities.';
-    protected $signature            = 'upgrade:480-cc-liabilities {--F|force : Force the execution of this command.}';
+    protected $description = 'Convert old credit card liabilities.';
+    protected $signature   = 'upgrade:480-cc-liabilities {--F|force : Force the execution of this command.}';
 
     /**
      * Execute the console command.
@@ -84,7 +84,7 @@ class UpgradesCreditCardLiabilities extends Command
     {
         $configVar = AppConfiguration::get(self::CONFIG_NAME, false);
 
-        return (bool) $configVar?->data;
+        return (bool)$configVar?->data;
     }
 
     private function markAsExecuted(): void

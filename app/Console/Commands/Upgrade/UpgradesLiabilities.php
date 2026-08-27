@@ -41,8 +41,8 @@ class UpgradesLiabilities extends Command
 
     public const string CONFIG_NAME = '560_upgrade_liabilities';
 
-    protected $description          = 'Upgrade liabilities to new 5.6.0 structure.';
-    protected $signature            = 'upgrade:560-liabilities {--F|force : Force the execution of this command.}';
+    protected $description = 'Upgrade liabilities to new 5.6.0 structure.';
+    protected $signature   = 'upgrade:560-liabilities {--F|force : Force the execution of this command.}';
 
     /**
      * Execute the console command.
@@ -95,7 +95,7 @@ class UpgradesLiabilities extends Command
     {
         $configVar = AppConfiguration::get(self::CONFIG_NAME, false);
 
-        return (bool) $configVar?->data;
+        return (bool)$configVar?->data;
     }
 
     private function markAsExecuted(): void
@@ -109,8 +109,7 @@ class UpgradesLiabilities extends Command
             ->accounts()
             ->leftJoin('account_types', 'account_types.id', '=', 'accounts.account_type_id')
             ->whereIn('account_types.type', config('firefly.valid_liabilities'))
-            ->get(['accounts.*'])
-        ;
+            ->get(['accounts.*']);
 
         /** @var Account $account */
         foreach ($accounts as $account) {
@@ -134,7 +133,7 @@ class UpgradesLiabilities extends Command
     private function upgradeLiability(Account $account): void
     {
         /** @var AccountRepositoryInterface $repository */
-        $repository     = app(AccountRepositoryInterface::class);
+        $repository = app(AccountRepositoryInterface::class);
         $repository->setUser($account->user);
 
         // get opening balance, and correct if necessary.
@@ -145,7 +144,7 @@ class UpgradesLiabilities extends Command
         }
 
         // add liability direction property (if it does not yet exist!)
-        $value          = $repository->getMetaValue($account, 'liability_direction');
+        $value = $repository->getMetaValue($account, 'liability_direction');
         if (null === $value) {
             /** @var AccountMetaFactory $factory */
             $factory = app(AccountMetaFactory::class);
