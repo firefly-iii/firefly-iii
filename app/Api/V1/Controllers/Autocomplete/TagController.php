@@ -38,9 +38,9 @@ use Override;
  */
 final class TagController extends Controller
 {
-    private TagRepositoryInterface $repository;
     #[Override]
-    protected array $acceptedRoles = [UserRoleEnum::READ_ONLY];
+    protected array                $acceptedRoles = [UserRoleEnum::READ_ONLY];
+    private TagRepositoryInterface $repository;
 
     /**
      * TagController constructor.
@@ -65,7 +65,7 @@ final class TagController extends Controller
 
         /** @var Tag $tag */
         foreach ($result as $tag) {
-            $array[] = ['id' => (string) $tag->id, 'name' => $tag->tag, 'tag' => $tag->tag];
+            $array[] = ['id' => (string)$tag->id, 'name' => $tag->tag, 'tag' => $tag->tag];
         }
 
         return response()->api($array);

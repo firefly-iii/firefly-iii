@@ -38,9 +38,9 @@ use Override;
  */
 final class BillController extends Controller
 {
-    private BillRepositoryInterface $repository;
     #[Override]
-    protected array $acceptedRoles = [UserRoleEnum::READ_SUBSCRIPTIONS];
+    protected array                 $acceptedRoles = [UserRoleEnum::READ_SUBSCRIPTIONS];
+    private BillRepositoryInterface $repository;
 
     /**
      * BillController constructor.
@@ -65,7 +65,7 @@ final class BillController extends Controller
     public function bills(AutocompleteApiRequest $request): JsonResponse
     {
         $result   = $this->repository->searchBill($request->attributes->get('query'), $request->attributes->get('limit'));
-        $filtered = $result->map(static fn (Bill $item): array => ['id' => (string) $item->id, 'name' => $item->name, 'active' => $item->active]);
+        $filtered = $result->map(static fn(Bill $item): array => ['id' => (string)$item->id, 'name' => $item->name, 'active' => $item->active]);
 
         return response()->api($filtered->toArray());
     }

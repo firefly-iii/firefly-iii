@@ -76,15 +76,15 @@ final class UpdateController extends Controller
             throw new FireflyException('200020: Link type cannot be changed.');
         }
 
-        $data        = $request->getAll();
+        $data = $request->getAll();
         $this->repository->update($linkType, $data);
-        $manager     = $this->getManager();
+        $manager = $this->getManager();
 
         /** @var LinkTypeTransformer $transformer */
         $transformer = app(LinkTypeTransformer::class);
         $transformer->setParameters($this->parameters);
 
-        $resource    = new Item($linkType, $transformer, 'link_types');
+        $resource = new Item($linkType, $transformer, 'link_types');
 
         return response()->json($manager->createData($resource)->toArray())->header('Content-Type', self::CONTENT_TYPE);
     }

@@ -47,11 +47,11 @@ class UpdateRequest extends FormRequest
 
     public function getData(): array
     {
-        $fields               = ['title' => ['title', 'convertString'], 'active' => ['active', 'boolean'], 'url' => ['url', 'convertString']];
+        $fields = ['title' => ['title', 'convertString'], 'active' => ['active', 'boolean'], 'url' => ['url', 'convertString']];
 
-        $triggers             = $this->get('triggers', []);
-        $responses            = $this->get('responses', []);
-        $deliveries           = $this->get('deliveries', []);
+        $triggers   = $this->get('triggers', []);
+        $responses  = $this->get('responses', []);
+        $deliveries = $this->get('deliveries', []);
 
         if (in_array(0, [count($triggers), count($responses), count($deliveries)], strict: true)) {
             throw new FireflyException('Unexpectedly got no responses, triggers or deliveries.');
@@ -76,7 +76,7 @@ class UpdateRequest extends FormRequest
         $validProtocols = AppConfiguration::get('valid_url_protocols', config('firefly.valid_url_protocols'))->data;
 
         /** @var Webhook $webhook */
-        $webhook        = $this->route()->parameter('webhook');
+        $webhook = $this->route()->parameter('webhook');
 
         return [
             'title'        => sprintf('min:1|max:255|uniqueObjectForUser:webhooks,title,%d', $webhook->id),

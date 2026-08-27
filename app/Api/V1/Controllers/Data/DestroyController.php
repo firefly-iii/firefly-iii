@@ -57,10 +57,9 @@ use Override;
  */
 final class DestroyController extends Controller
 {
-    private bool $unused;
-
     #[Override]
     protected array $acceptedRoles = [UserRoleEnum::FULL];
+    private bool $unused;
 
     public function __construct()
     {
@@ -74,8 +73,8 @@ final class DestroyController extends Controller
 
     public function destroy(DestroyRequest $request): JsonResponse
     {
-        $objects         = $request->getObjects();
-        $this->unused    = $request->boolean('unused');
+        $objects      = $request->getObjects();
+        $this->unused = $request->boolean('unused');
 
         $allExceptAssets = [
             AccountTypeEnum::BENEFICIARY->value,
@@ -177,11 +176,11 @@ final class DestroyController extends Controller
     private function destroyBudgets(): void
     {
         /** @var AvailableBudgetRepositoryInterface $abRepository */
-        $abRepository     = app(AvailableBudgetRepositoryInterface::class);
+        $abRepository = app(AvailableBudgetRepositoryInterface::class);
         $abRepository->destroyAll();
 
         /** @var BudgetLimitRepositoryInterface $blRepository */
-        $blRepository     = app(BudgetLimitRepositoryInterface::class);
+        $blRepository = app(BudgetLimitRepositoryInterface::class);
         $blRepository->destroyAll();
 
         /** @var BudgetRepositoryInterface $budgetRepository */

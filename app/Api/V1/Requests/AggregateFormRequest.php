@@ -31,13 +31,12 @@ use RuntimeException;
 
 abstract class AggregateFormRequest extends ApiRequest
 {
+    #[Override]
+    protected array $acceptedRoles = [];
     /**
      * @var Request[]
      */
-    protected array $requests      = [];
-
-    #[Override]
-    protected array $acceptedRoles = [];
+    protected array $requests = [];
 
     #[Override]
     public function initialize(
@@ -47,8 +46,9 @@ abstract class AggregateFormRequest extends ApiRequest
         array $cookies = [],
         array $files = [],
         array $server = [],
-        $content = null
-    ): void {
+              $content = null
+    ): void
+    {
         parent::initialize($query, $request, $attributes, $cookies, $files, $server, $content);
 
         // instantiate all subrequests and share current requests' bags with them
@@ -56,7 +56,7 @@ abstract class AggregateFormRequest extends ApiRequest
 
         /** @var array|string $config */
         foreach ($this->getRequests() as $config) {
-            $requestClass         = is_array($config) ? array_shift($config) : $config;
+            $requestClass = is_array($config) ? array_shift($config) : $config;
 
             if (!is_a($requestClass, Request::class, true)) {
                 throw new RuntimeException('getRequests() must return class-strings of subclasses of Request');
@@ -86,7 +86,7 @@ abstract class AggregateFormRequest extends ApiRequest
         // check all subrequests for rules and combine them
         return array_reduce(
             $this->requests,
-            static fn (array $rules, FormRequest $request): array => $rules + (method_exists($request, 'rules') ? $request->rules() : []),
+            static fn(array $rules, FormRequest $request): array => $rules + (method_exists($request, 'rules') ? $request->rules() : []),
             []
         );
     }

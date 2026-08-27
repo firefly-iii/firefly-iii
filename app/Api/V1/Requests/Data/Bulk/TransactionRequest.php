@@ -33,7 +33,6 @@ use Illuminate\Contracts\Validation\Validator;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Support\Facades\Log;
 use JsonException;
-
 use function Safe\json_decode;
 
 /**

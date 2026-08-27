@@ -65,8 +65,8 @@ use const PHP_SAPI;
  */
 final class DebugController extends Controller
 {
-    use GetConfigurationData;
     use IsOldVersion;
+    use GetConfigurationData;
 
     /**
      * DebugController constructor.
@@ -144,23 +144,26 @@ final class DebugController extends Controller
         $table      = $this->generateTable();
         $table      = str_replace(["\n", "\t", '  '], '', $table);
         $now        = now(config('app.timezone'))->format('Y-m-d H:i:s');
-
-        // get latest log file:
-        $logger     = Log::driver();
-        // PHPstan doesn't recognize the method because of its polymorphic nature.
-        $handlers   = $logger->getHandlers();
         $logContent = '';
-        foreach ($handlers as $handler) {
-            if ($handler instanceof RotatingFileHandler) {
-                $logFile = $handler->getUrl();
-                if (null !== $logFile && file_exists($logFile)) {
-                    $logContent = file_get_contents($logFile);
+
+        if(auth()->check() && auth()->user()->hasRole('owner')) {
+            // get latest log file:
+            $logger = Log::driver();
+            // PHPstan doesn't recognize the method because of its polymorphic nature.
+            $handlers = $logger->getHandlers();
+
+            foreach ($handlers as $handler) {
+                if ($handler instanceof RotatingFileHandler) {
+                    $logFile = $handler->getUrl();
+                    if (null !== $logFile && file_exists($logFile)) {
+                        $logContent = file_get_contents($logFile);
+                    }
                 }
             }
-        }
-        if ('' !== $logContent) {
-            // last few lines
-            $logContent = 'Truncated from this point <----|'.substr($logContent, -16_384);
+            if ('' !== $logContent) {
+                // last few lines
+                $logContent = 'Truncated from this point <----|' . substr($logContent, -16_384);
+            }
         }
 
         return view('debug', ['table' => $table, 'now' => $now, 'logContent' => $logContent]);

@@ -45,7 +45,7 @@ final class DestroyController extends Controller
     public const string RESOURCE_KEY = 'exchange-rates';
 
     #[Override]
-    protected array $acceptedRoles   = [UserRoleEnum::OWNER];
+    protected array                         $acceptedRoles = [UserRoleEnum::OWNER];
     private ExchangeRateRepositoryInterface $repository;
 
     public function __construct()

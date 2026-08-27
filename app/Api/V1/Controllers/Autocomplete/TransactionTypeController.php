@@ -38,9 +38,9 @@ use Override;
  */
 final class TransactionTypeController extends Controller
 {
-    private TransactionTypeRepositoryInterface $repository;
     #[Override]
-    protected array $acceptedRoles = [UserRoleEnum::READ_ONLY];
+    protected array                            $acceptedRoles = [UserRoleEnum::READ_ONLY];
+    private TransactionTypeRepositoryInterface $repository;
 
     /**
      * TransactionTypeController constructor.
@@ -64,7 +64,7 @@ final class TransactionTypeController extends Controller
         /** @var TransactionType $type */
         foreach ($types as $type) {
             // different key for consistency.
-            $array[] = ['id' => (string) $type->id, 'name' => $type->type, 'type' => $type->type];
+            $array[] = ['id' => (string)$type->id, 'name' => $type->type, 'type' => $type->type];
         }
 
         return response()->api($array);

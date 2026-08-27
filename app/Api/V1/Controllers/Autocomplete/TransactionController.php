@@ -45,9 +45,9 @@ use Override;
 final class TransactionController extends Controller
 {
     #[Override]
-    protected array $acceptedRoles = [UserRoleEnum::READ_ONLY];
+    protected array                             $acceptedRoles = [UserRoleEnum::READ_ONLY];
     private TransactionGroupRepositoryInterface $groupRepository;
-    private JournalRepositoryInterface $repository;
+    private JournalRepositoryInterface          $repository;
 
     /**
      * TransactionController constructor.
@@ -70,7 +70,7 @@ final class TransactionController extends Controller
 
     public function transactions(AutocompleteTransactionApiRequest $request): JsonResponse
     {
-        $result   = $this->repository->searchJournalDescriptions($request->attributes->get('query'), $request->attributes->get('limit'));
+        $result = $this->repository->searchJournalDescriptions($request->attributes->get('query'), $request->attributes->get('limit'));
 
         // limit and unique
         $filtered = $result->unique('description');
@@ -79,8 +79,8 @@ final class TransactionController extends Controller
         /** @var TransactionJournal $journal */
         foreach ($filtered as $journal) {
             $array[] = [
-                'id'                   => (string) $journal->id,
-                'transaction_group_id' => (string) $journal->transaction_group_id,
+                'id'                   => (string)$journal->id,
+                'transaction_group_id' => (string)$journal->transaction_group_id,
                 'name'                 => $journal->description,
                 'description'          => $journal->description,
             ];
@@ -94,7 +94,7 @@ final class TransactionController extends Controller
         $result = new Collection();
         if (is_numeric($request->attributes->get('query'))) {
             // search for group, not journal.
-            $firstResult = $this->groupRepository->find((int) $request->attributes->get('query'));
+            $firstResult = $this->groupRepository->find((int)$request->attributes->get('query'));
             if ($firstResult instanceof TransactionGroup) {
                 // group may contain multiple journals, each a result:
                 foreach ($firstResult->transactionJournals as $journal) {
@@ -107,13 +107,13 @@ final class TransactionController extends Controller
         }
 
         // limit and unique
-        $array  = [];
+        $array = [];
 
         /** @var TransactionJournal $journal */
         foreach ($result as $journal) {
             $array[] = [
-                'id'                   => (string) $journal->id,
-                'transaction_group_id' => (string) $journal->transaction_group_id,
+                'id'                   => (string)$journal->id,
+                'transaction_group_id' => (string)$journal->transaction_group_id,
                 'name'                 => sprintf('#%d: %s', $journal->transaction_group_id, $journal->description),
                 'description'          => sprintf('#%d: %s', $journal->transaction_group_id, $journal->description),
             ];
@@ -127,7 +127,7 @@ final class TransactionController extends Controller
         $result = new Collection();
         if (is_numeric($request->attributes->get('query'))) {
             // search for group, not journal.
-            $firstResult = $this->groupRepository->find((int) $request->attributes->get('query'));
+            $firstResult = $this->groupRepository->find((int)$request->attributes->get('query'));
             if ($firstResult instanceof TransactionGroup) {
                 // group may contain multiple journals, each a result:
                 foreach ($firstResult->transactionJournals as $journal) {
@@ -140,14 +140,14 @@ final class TransactionController extends Controller
         }
 
         // limit and unique
-        $array  = [];
+        $array = [];
 
         /** @var TransactionJournal $journal */
         foreach ($result as $journal) {
             $currency = Amount::getCurrencyFromJournal($journal);
             $array[]  = [
-                'id'                   => (string) $journal->id,
-                'transaction_group_id' => (string) $journal->transaction_group_id,
+                'id'                   => (string)$journal->id,
+                'transaction_group_id' => (string)$journal->transaction_group_id,
                 'name'                 => $journal->description,
                 'description'          => $journal->description,
                 'date'                 => $journal->date,

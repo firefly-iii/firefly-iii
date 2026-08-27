@@ -33,7 +33,6 @@ use Illuminate\Http\Request;
 use Illuminate\Http\Response as LaravelResponse;
 use Override;
 use Safe\Exceptions\DatetimeException;
-
 use function Safe\date;
 
 /**
@@ -41,9 +40,9 @@ use function Safe\date;
  */
 final class ExportController extends Controller
 {
-    private ExportDataGenerator $exporter;
     #[Override]
-    protected array $acceptedRoles = [UserRoleEnum::READ_ONLY];
+    protected array             $acceptedRoles = [UserRoleEnum::READ_ONLY];
+    private ExportDataGenerator $exporter;
 
     /**
      * ExportController constructor.
@@ -195,14 +194,13 @@ final class ExportController extends Controller
         $response
             ->header('Content-Description', 'File Transfer')
             ->header('Content-Type', 'application/octet-stream')
-            ->header('Content-Disposition', 'attachment; filename='.$fileName)
+            ->header('Content-Disposition', 'attachment; filename=' . $fileName)
             ->header('Content-Transfer-Encoding', 'binary')
             ->header('Connection', 'Keep-Alive')
             ->header('Expires', '0')
             ->header('Cache-Control', 'must-revalidate, post-check=0, pre-check=0')
             ->header('Pragma', 'public')
-            ->header('Content-Length', (string) strlen((string) $data[$key]))
-        ;
+            ->header('Content-Length', (string)strlen((string)$data[$key]));
 
         return $response;
     }

@@ -72,8 +72,8 @@ class StoreRequest extends FormRequest
      */
     public function rules(): array
     {
-        $validTriggers   = $this->getTriggers();
-        $validActions    = array_keys(config('firefly.rule-actions'));
+        $validTriggers = $this->getTriggers();
+        $validActions  = array_keys(config('firefly.rule-actions'));
 
         // some triggers and actions require text:
         $contextTriggers = implode(',', $this->getTriggersWithContext());
@@ -85,11 +85,11 @@ class StoreRequest extends FormRequest
             'rule_group_id'              => ['belongsToUser:rule_groups', 'required_without:rule_group_title'],
             'rule_group_title'           => ['nullable', 'min:1', 'max:255', 'required_without:rule_group_id', 'belongsToUser:rule_groups,title'],
             'trigger'                    => ['required', 'in:store-journal,update-journal,manual-activation'],
-            'triggers.*.type'            => 'required|in:'.implode(',', $validTriggers),
-            'triggers.*.value'           => 'required_if:actions.*.type,'.$contextTriggers.'|min:1|ruleTriggerValue|max:1024',
+            'triggers.*.type'            => 'required|in:' . implode(',', $validTriggers),
+            'triggers.*.value'           => 'required_if:actions.*.type,' . $contextTriggers . '|min:1|ruleTriggerValue|max:1024',
             'triggers.*.stop_processing' => [new IsBoolean()],
             'triggers.*.active'          => [new IsBoolean()],
-            'actions.*.type'             => 'required|in:'.implode(',', $validActions),
+            'actions.*.type'             => 'required|in:' . implode(',', $validActions),
             'actions.*.value'            => [sprintf('required_if:actions.*.type,%s', $contextActions), new IsValidActionExpression(), 'ruleActionValue'],
             'actions.*.stop_processing'  => [new IsBoolean()],
             'actions.*.active'           => [new IsBoolean()],
@@ -124,7 +124,7 @@ class StoreRequest extends FormRequest
         $actions = $data['actions'] ?? [];
         // need at least one trigger
         if (!is_countable($actions) || 0 === count($actions)) {
-            $validator->errors()->add('title', (string) trans('validation.at_least_one_action'));
+            $validator->errors()->add('title', (string)trans('validation.at_least_one_action'));
         }
     }
 
@@ -133,10 +133,10 @@ class StoreRequest extends FormRequest
      */
     protected function atLeastOneActiveAction(Validator $validator): void
     {
-        $data          = $validator->getData();
+        $data = $validator->getData();
 
         /** @var null|array|int|string $actions */
-        $actions       = $data['actions'] ?? [];
+        $actions = $data['actions'] ?? [];
         // need at least one trigger
         if (!is_countable($actions) || 0 === count($actions)) {
             return;
@@ -153,7 +153,7 @@ class StoreRequest extends FormRequest
             }
         }
         if ($allInactive) {
-            $validator->errors()->add(sprintf('actions.%d.active', $inactiveIndex), (string) trans('validation.at_least_one_active_action'));
+            $validator->errors()->add(sprintf('actions.%d.active', $inactiveIndex), (string)trans('validation.at_least_one_active_action'));
         }
     }
 
@@ -162,10 +162,10 @@ class StoreRequest extends FormRequest
      */
     protected function atLeastOneActiveTrigger(Validator $validator): void
     {
-        $data          = $validator->getData();
+        $data = $validator->getData();
 
         /** @var null|array|int|string $triggers */
-        $triggers      = $data['triggers'] ?? [];
+        $triggers = $data['triggers'] ?? [];
         // need at least one trigger
         if (!is_countable($triggers) || 0 === count($triggers)) {
             return;
@@ -182,7 +182,7 @@ class StoreRequest extends FormRequest
             }
         }
         if ($allInactive) {
-            $validator->errors()->add(sprintf('triggers.%d.active', $inactiveIndex), (string) trans('validation.at_least_one_active_trigger'));
+            $validator->errors()->add(sprintf('triggers.%d.active', $inactiveIndex), (string)trans('validation.at_least_one_active_trigger'));
         }
     }
 
@@ -195,7 +195,7 @@ class StoreRequest extends FormRequest
         $triggers = $data['triggers'] ?? [];
         // need at least one trigger
         if (!is_countable($triggers) || 0 === count($triggers)) {
-            $validator->errors()->add('title', (string) trans('validation.at_least_one_trigger'));
+            $validator->errors()->add('title', (string)trans('validation.at_least_one_trigger'));
         }
     }
 
@@ -208,8 +208,8 @@ class StoreRequest extends FormRequest
                 $return[] = [
                     'type'            => $action['type'],
                     'value'           => $action['value'],
-                    'active'          => $this->convertBoolean((string) ($action['active'] ?? 'true')),
-                    'stop_processing' => $this->convertBoolean((string) ($action['stop_processing'] ?? 'false')),
+                    'active'          => $this->convertBoolean((string)($action['active'] ?? 'true')),
+                    'stop_processing' => $this->convertBoolean((string)($action['stop_processing'] ?? 'false')),
                 ];
             }
         }
@@ -226,9 +226,9 @@ class StoreRequest extends FormRequest
                 $return[] = [
                     'type'            => $trigger['type'] ?? '',
                     'value'           => $trigger['value'] ?? null,
-                    'prohibited'      => $this->convertBoolean((string) ($trigger['prohibited'] ?? 'false')),
-                    'active'          => $this->convertBoolean((string) ($trigger['active'] ?? 'true')),
-                    'stop_processing' => $this->convertBoolean((string) ($trigger['stop_processing'] ?? 'false')),
+                    'prohibited'      => $this->convertBoolean((string)($trigger['prohibited'] ?? 'false')),
+                    'active'          => $this->convertBoolean((string)($trigger['active'] ?? 'true')),
+                    'stop_processing' => $this->convertBoolean((string)($trigger['stop_processing'] ?? 'false')),
                 ];
             }
         }

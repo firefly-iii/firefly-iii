@@ -48,9 +48,9 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
  */
 final class UpdateController extends Controller
 {
-    private TransactionGroupRepositoryInterface $groupRepository;
     #[Override]
-    protected array $acceptedRoles = [];
+    protected array                             $acceptedRoles = [];
+    private TransactionGroupRepositoryInterface $groupRepository;
 
     /**
      * TransactionController constructor.
@@ -60,7 +60,7 @@ final class UpdateController extends Controller
         parent::__construct();
         $this->middleware(function ($request, $next) {
             /** @var User $admin */
-            $admin                 = auth()->user();
+            $admin = auth()->user();
 
             $this->groupRepository = app(TransactionGroupRepositoryInterface::class);
             $this->groupRepository->setUser($admin);
@@ -77,19 +77,19 @@ final class UpdateController extends Controller
      */
     public function update(UpdateRequest $request, TransactionGroup $transactionGroup): JsonResponse
     {
-        $data                     = $request->getAll();
+        $data = $request->getAll();
         Log::debug('Now in update routine for transaction group', $data);
-        $oldHash                  = $this->groupRepository->getCompareHash($transactionGroup);
-        $objects                  = TransactionGroupEventObjects::collectFromTransactionGroup($transactionGroup);
-        $transactionGroup         = $this->groupRepository->update($transactionGroup, $data);
+        $oldHash          = $this->groupRepository->getCompareHash($transactionGroup);
+        $objects          = TransactionGroupEventObjects::collectFromTransactionGroup($transactionGroup);
+        $transactionGroup = $this->groupRepository->update($transactionGroup, $data);
         $objects->appendFromTransactionGroup($transactionGroup);
-        $newHash                  = $this->groupRepository->getCompareHash($transactionGroup);
-        $manager                  = $this->getManager();
+        $newHash = $this->groupRepository->getCompareHash($transactionGroup);
+        $manager = $this->getManager();
 
         Preferences::mark();
-        $applyRules               = $data['apply_rules'] ?? true;
-        $fireWebhooks             = $data['fire_webhooks'] ?? true;
-        $runRecalculations        = $oldHash !== $newHash;
+        $applyRules        = $data['apply_rules'] ?? true;
+        $fireWebhooks      = $data['fire_webhooks'] ?? true;
+        $runRecalculations = $oldHash !== $newHash;
 
         $flags                    = new TransactionGroupEventFlags();
         $flags->applyRules        = $applyRules;
@@ -100,32 +100,31 @@ final class UpdateController extends Controller
         event(new WebhookMessagesRequestSending());
 
         /** @var User $admin */
-        $admin                    = auth()->user();
+        $admin = auth()->user();
 
         // use new group collector:
         /** @var GroupCollectorInterface $collector */
-        $collector                = app(GroupCollectorInterface::class);
+        $collector = app(GroupCollectorInterface::class);
         $collector
             ->setUser($admin)
             // filter on transaction group.
             ->setTransactionGroup($transactionGroup)
             // all info needed for the API:
-            ->withAPIInformation()
-        ;
+            ->withAPIInformation();
 
-        $selectedGroup            = $collector->getGroups()->first();
+        $selectedGroup = $collector->getGroups()->first();
         if (null === $selectedGroup) {
             throw new NotFoundHttpException();
         }
 
         // enrich
-        $enrichment               = new TransactionGroupEnrichment();
+        $enrichment = new TransactionGroupEnrichment();
         $enrichment->setUser($admin);
-        $selectedGroup            = $enrichment->enrichSingle($selectedGroup);
+        $selectedGroup = $enrichment->enrichSingle($selectedGroup);
 
         /** @var TransactionGroupTransformer $transformer */
-        $transformer              = app(TransactionGroupTransformer::class);
-        $resource                 = new Item($selectedGroup, $transformer, 'transactions');
+        $transformer = app(TransactionGroupTransformer::class);
+        $resource    = new Item($selectedGroup, $transformer, 'transactions');
 
         return response()->json($manager->createData($resource)->toArray())->header('Content-Type', self::CONTENT_TYPE);
     }

@@ -79,14 +79,14 @@ final class StoreController extends Controller
             throw new NotFoundHttpException();
         }
         Log::debug(sprintf('Now in %s', __METHOD__));
-        $data        = $request->getAll();
-        $attachment  = $this->repository->store($data);
-        $manager     = $this->getManager();
+        $data       = $request->getAll();
+        $attachment = $this->repository->store($data);
+        $manager    = $this->getManager();
 
         /** @var AttachmentTransformer $transformer */
         $transformer = app(AttachmentTransformer::class);
 
-        $resource    = new Item($attachment, $transformer, 'attachments');
+        $resource = new Item($attachment, $transformer, 'attachments');
 
         return response()->json($manager->createData($resource)->toArray())->header('Content-Type', self::CONTENT_TYPE);
     }

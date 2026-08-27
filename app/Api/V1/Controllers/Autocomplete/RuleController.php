@@ -38,9 +38,9 @@ use Override;
  */
 final class RuleController extends Controller
 {
-    private RuleRepositoryInterface $repository;
     #[Override]
-    protected array $acceptedRoles = [UserRoleEnum::READ_RULES];
+    protected array                 $acceptedRoles = [UserRoleEnum::READ_RULES];
+    private RuleRepositoryInterface $repository;
 
     /**
      * RuleController constructor.
@@ -66,7 +66,7 @@ final class RuleController extends Controller
         /** @var Rule $rule */
         foreach ($rules as $rule) {
             $response[] = [
-                'id'          => (string) $rule->id,
+                'id'          => (string)$rule->id,
                 'name'        => $rule->title,
                 'description' => $rule->description,
                 'active'      => $rule->active,

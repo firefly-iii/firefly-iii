@@ -58,7 +58,7 @@ class UpdateRequest extends FormRequest
     public function getAll(): array
     {
         // this is the way:
-        $fields                 = [
+        $fields       = [
             'title'             => ['title', 'convertString'],
             'description'       => ['description', 'convertString'],
             'first_date'        => ['first_date', 'convertDateTime'],
@@ -68,9 +68,9 @@ class UpdateRequest extends FormRequest
             'active'            => ['active', 'boolean'],
             'notes'             => ['notes', 'convertString'],
         ];
-        $reps                   = $this->getRepetitionData();
-        $transactions           = $this->getTransactionData();
-        $return                 = ['recurrence' => $this->getAllData($fields)];
+        $reps         = $this->getRepetitionData();
+        $transactions = $this->getTransactionData();
+        $return       = ['recurrence' => $this->getAllData($fields)];
         if (null !== $reps) {
             $return['repetitions'] = $reps;
         }
@@ -88,18 +88,18 @@ class UpdateRequest extends FormRequest
         $recurrence = $this->route()->parameter('recurrence');
 
         return [
-            'title'                                => sprintf('min:1|max:255|uniqueObjectForUser:recurrences,title,%d', $recurrence->id),
-            'description'                          => ['min:1', 'max:32768'],
-            'first_date'                           => ['date', 'after:1970-01-02', 'before:2038-01-17'],
-            'apply_rules'                          => [new IsBoolean()],
-            'active'                               => [new IsBoolean()],
-            'repeat_until'                         => ['nullable', 'date'],
-            'nr_of_repetitions'                    => ['nullable', 'numeric', 'min:1', 'max:255'],
+            'title'             => sprintf('min:1|max:255|uniqueObjectForUser:recurrences,title,%d', $recurrence->id),
+            'description'       => ['min:1', 'max:32768'],
+            'first_date'        => ['date', 'after:1970-01-02', 'before:2038-01-17'],
+            'apply_rules'       => [new IsBoolean()],
+            'active'            => [new IsBoolean()],
+            'repeat_until'      => ['nullable', 'date'],
+            'nr_of_repetitions' => ['nullable', 'numeric', 'min:1', 'max:255'],
 
-            'repetitions.*.type'                   => 'in:daily,weekly,ndom,monthly,yearly',
-            'repetitions.*.moment'                 => ['string', 'min:0', 'max:10'],
-            'repetitions.*.skip'                   => ['nullable', 'numeric', 'min:0', 'max:31'],
-            'repetitions.*.weekend'                => ['nullable', 'numeric', 'min:1', 'max:4'],
+            'repetitions.*.type'    => 'in:daily,weekly,ndom,monthly,yearly',
+            'repetitions.*.moment'  => ['string', 'min:0', 'max:10'],
+            'repetitions.*.skip'    => ['nullable', 'numeric', 'min:0', 'max:31'],
+            'repetitions.*.weekend' => ['nullable', 'numeric', 'min:1', 'max:4'],
 
             'transactions.*.description'           => ['min:1', 'max:255'],
             'transactions.*.amount'                => [new IsValidPositiveAmount()],
@@ -151,7 +151,7 @@ class UpdateRequest extends FormRequest
      */
     private function getRepetitionData(): ?array
     {
-        $return      = [];
+        $return = [];
 
         // repetition data:
         /** @var null|array $repetitions */
@@ -162,21 +162,21 @@ class UpdateRequest extends FormRequest
 
         /** @var array $repetition */
         foreach ($repetitions as $repetition) {
-            $current  = [];
+            $current = [];
             if (array_key_exists('type', $repetition)) {
                 $current['type'] = $repetition['type'];
             }
 
             if (array_key_exists('moment', $repetition)) {
-                $current['moment'] = (string) $repetition['moment'];
+                $current['moment'] = (string)$repetition['moment'];
             }
 
             if (array_key_exists('skip', $repetition)) {
-                $current['skip'] = (int) $repetition['skip'];
+                $current['skip'] = (int)$repetition['skip'];
             }
 
             if (array_key_exists('weekend', $repetition)) {
-                $current['weekend'] = (int) $repetition['weekend'];
+                $current['weekend'] = (int)$repetition['weekend'];
             }
             $return[] = $current;
         }
@@ -193,7 +193,7 @@ class UpdateRequest extends FormRequest
      */
     private function getTransactionData(): array
     {
-        $return       = [];
+        $return = [];
 
         // transaction data:
         /** @var null|array $transactions */
