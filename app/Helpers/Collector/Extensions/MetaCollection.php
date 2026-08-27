@@ -471,7 +471,7 @@ trait MetaCollection
         // this method adds a "postFilter" to the collector.
         $list                = $tags->pluck('tag')->toArray();
         $list                = array_map(strtolower(...), $list);
-        $filter              = static function (array $object) use ($list): bool|array {
+        $filter              = static function (array $object) use ($list): array|bool {
             $includedJournals       = [];
             $return                 = $object;
             unset($return['transactions']);
