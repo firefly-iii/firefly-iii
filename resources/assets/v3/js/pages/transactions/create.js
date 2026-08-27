@@ -24,6 +24,9 @@ import dates from '../shared/dates.js';
 import {defaultErrorSet} from "./shared/create-empty-split.js";
 import {parseFromEntries} from "./shared/parse-from-entries.js";
 import Post from "../../api/model/transaction/post.js";
+
+import PostLink from '../../api/model/transaction-link/post.js';
+
 import {loadCurrencies} from "./shared/load-currencies.js";
 import {loadBudgets} from "./shared/load-budgets.js";
 import {loadPiggyBanks} from "./shared/load-piggy-banks.js";
@@ -96,7 +99,11 @@ let create = function () {
             resetButton: false,
             rulesButton: true,
             webhooksButton: true,
-            categorySelectVisible: false
+            categorySelectVisible: false,
+            // some properties that must all be true before the user can be redirected safely.
+            storedGroup: false,
+            storedLinks: false,
+            storedAttachments: false,
         },
 
         // form behavior during transaction, for shared components.
@@ -216,6 +223,7 @@ let create = function () {
 
         processUpload(event) {
             console.log('Now in processUpload()');
+            this.formStates.storedAttachments = true;
             this.showMessageOrRedirectUser();
         },
         clearDescription(index) {
@@ -324,6 +332,7 @@ let create = function () {
                     group_id: hiddenField.value,
                     journal_description: searchBox.value,
                     editMode: false,
+                    stored: false,
                 }
             );
             searchBox.value = '';
@@ -403,6 +412,9 @@ let create = function () {
 
                     });
                 }
+                if(false === data.links) {
+                    this.formStates.storedLinks = true;
+                }
             });
 
 
@@ -422,6 +434,68 @@ let create = function () {
             });
 
 
+        },
+        processTransactionLinks(transactions) {
+            console.log('processTransactionLinks');
+            let count = 0;
+            for(let i =0;i<transactions.length;i++) {
+                if(transactions.hasOwnProperty(i) && this.links.hasOwnProperty(i)) {
+                    let journalId = transactions[i];
+                    for(let j =0;i<this.links[i].length;j++) {
+                        if(this.links[i].hasOwnProperty(j)) {
+                            console.log('processTransactionLinks for ', i, j);
+                            count++;
+                            let link = this.links[i][j];
+                            let left = journalId;
+                            let right = parseInt(link.journal_id);
+                            if('inward' === link.link_type_direction) {
+                                left = parseInt(link.journal_id);
+                                right = journalId;
+                            }
+                            this.links[i][j].stored = true;
+                            this.redirectAfterTransactionLinks(i, j);
+                            // (new PostLink).post(link.link_type_id, left, right, null).then(function() {
+                            //     console.log('Here we are after post');
+                            // }).catch(function(e) {
+                            //     console.error(e);
+                            // }).finally(function() {
+                            //     console.log('finally');
+                            // });
+                        }
+                    }
+                }
+            }
+            console.log('Done!');
+            if(0 === count) {
+                console.log('No links, so all are stored.');
+                this.formStates.storedLinks = true;
+            }
+        },
+        redirectAfterTransactionLinks(oldI, oldJ)  {
+            console.log('Posted transaction links for ', oldI, oldJ);
+            this.formStates.storedLinks = true;
+            this.showMessageOrRedirectUser();
+            return;
+            this.links[oldI][oldJ].stored = true;
+            console.log('Now redirect after transaction links')
+            let completed = true;
+            for(let i = 0;i<this.links.length;i++) {
+                if(this.links.hasOwnProperty(i)) {
+                    for(let j =0;i<this.links[i].length;j++) {
+                        if (this.links[i].hasOwnProperty(j)) {
+                            console.log('Now loop redirect after transaction links', i, j)
+                            if(false === this.links[i][i].stored) {
+                                completed = false;
+                            }
+                        }
+                    }
+                }
+            }
+            console.log('End result is ', completed);
+            if(true === completed) {
+                this.formStates.storedLinks = completed;
+                this.showMessageOrRedirectUser();
+            }
         },
         save() {
             this.notifications.error.show = false;
@@ -455,14 +529,28 @@ let create = function () {
             // submit the transaction. Multi-stage process thing going on here!
             let poster = new Post();
             poster.post(submission).then((response) => {
+                this.formStates.storedGroup = true;
                 const group = response.data.data;
                 // submission was a success!
                 this.groupProperties.id = parseInt(group.id);
-                this.groupProperties.title = group.attributes.group_title ?? group.attributes.transactions[0].description
+                this.groupProperties.title = group.attributes.group_title ?? group.attributes.transactions[0].description;
 
+                // submit all transaction links, based on the order of the transaction IDs
+                //this.
+                let transactions = [];
+                for(let i=0;i<group.attributes.transactions.length;i++) {
+                    if(group.attributes.transactions.hasOwnProperty(i)) {
+                        transactions.push(parseInt(group.attributes.transactions[i].transaction_journal_id));
+                    }
+                }
+                console.log('Go to process transactions', transactions);
+                this.processTransactionLinks(transactions);
+                console.log('Done with process transactions', transactions);
                 // process attachments, if any:
                 const attachmentCount = processAttachments(this.groupProperties.id, group.attributes.transactions);
-
+                if (0 === attachmentCount) {
+                    this.formStates.storedAttachments = true;
+                }
                 if (attachmentCount > 0) {
                     // if count is more than zero, system is processing transactions in the background.
                     this.notifications.wait.show = true;

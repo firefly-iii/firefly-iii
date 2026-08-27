@@ -21,6 +21,15 @@
 import i18next from "i18next";
 
 export function showMessageOrRedirectUser() {
+    if(false === this.formStates.storedGroup) {
+        console.error('Not yet stored group, return false.');
+    }
+    if(false === this.formStates.storedAttachments) {
+        console.error('Not yet stored attachments, return false.');
+    }
+    if(false === this.formStates.storedLinks) {
+        console.error('Not yet stored links, return false.');
+    }
     // disable all messages:
     this.notifications.error.show = false;
     this.notifications.success.show = false;
