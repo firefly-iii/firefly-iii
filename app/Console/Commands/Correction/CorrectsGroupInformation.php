@@ -79,7 +79,7 @@ class CorrectsGroupInformation extends Command
 
             return;
         }
-        $set = [
+        $set   = [
             Account::class,
             Attachment::class,
             AvailableBudget::class,
@@ -113,11 +113,11 @@ class CorrectsGroupInformation extends Command
         }
         if (0 !== $result) {
             $this->friendlyPositive(sprintf(
-                                        'User #%d: Moved %d %s objects to the correct group.',
-                                        $user->id,
-                                        $result,
-                                        str_replace('FireflyIII\Models\\', '', $className)
-                                    ));
+                'User #%d: Moved %d %s objects to the correct group.',
+                $user->id,
+                $result,
+                str_replace('FireflyIII\Models\\', '', $className)
+            ));
         }
     }
 }

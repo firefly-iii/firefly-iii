@@ -34,6 +34,7 @@ use Illuminate\Support\Facades\Storage;
 use Safe\Exceptions\FileinfoException;
 use Safe\Exceptions\FilesystemException;
 use Safe\Exceptions\StringsException;
+
 use function Safe\file_put_contents;
 use function Safe\md5_file;
 use function Safe\mime_content_type;
@@ -45,7 +46,7 @@ class ScansAttachments extends Command
 
     protected $description = 'Rescan all attachments and re-set the correct MD5 hash and mime.';
 
-    protected $signature = 'firefly-iii:scan-attachments';
+    protected $signature   = 'firefly-iii:scan-attachments';
 
     /**
      * Execute the console command.
@@ -75,7 +76,7 @@ class ScansAttachments extends Command
                 Log::error(sprintf('Could not decrypt data of attachment #%d: %s', $attachment->id, $e->getMessage()));
                 $decryptedContent = $encryptedContent;
             }
-            $tempFileName = tempnam(sys_get_temp_dir(), 'FireflyIII');
+            $tempFileName     = tempnam(sys_get_temp_dir(), 'FireflyIII');
             file_put_contents($tempFileName, $decryptedContent);
             $attachment->md5  = md5_file($tempFileName);
             $attachment->mime = mime_content_type($tempFileName);

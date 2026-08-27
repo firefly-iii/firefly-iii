@@ -34,7 +34,7 @@ class SetsLatestVersion extends Command
 
     protected $description = 'Set latest version in DB.';
 
-    protected $signature = 'firefly-iii:set-latest-version {--james-is-cool}';
+    protected $signature   = 'firefly-iii:set-latest-version {--james-is-cool}';
 
     /**
      * Execute the console command.
@@ -46,7 +46,7 @@ class SetsLatestVersion extends Command
 
             return 0;
         }
-        AppConfiguration::set('ff3_build_time', (int)config('firefly.build_time'));
+        AppConfiguration::set('ff3_build_time', (int) config('firefly.build_time'));
         $this->friendlyInfo('Updated version.');
 
         return 0;

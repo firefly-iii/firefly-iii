@@ -39,9 +39,9 @@ class UpgradesBudgetLimits extends Command
 
     public const string CONFIG_NAME = '480_bl_currency';
 
-    protected $description = 'Give budget limits a currency';
+    protected $description          = 'Give budget limits a currency';
 
-    protected $signature = 'upgrade:480-budget-limit-currencies {--F|force : Force the execution of this command.}';
+    protected $signature            = 'upgrade:480-budget-limit-currencies {--F|force : Force the execution of this command.}';
 
     /**
      * Execute the console command.
@@ -72,11 +72,11 @@ class UpgradesBudgetLimits extends Command
                         $budgetLimit->transaction_currency_id = $currency->id;
                         $budgetLimit->saveQuietly();
                         $this->friendlyInfo(sprintf(
-                                                'Budget limit #%d (part of budget "%s") now has a currency setting (%s).',
-                                                $budgetLimit->id,
-                                                $budget->name,
-                                                $currency->name
-                                            ));
+                            'Budget limit #%d (part of budget "%s") now has a currency setting (%s).',
+                            $budgetLimit->id,
+                            $budget->name,
+                            $currency->name
+                        ));
                         ++$count;
                     }
                 }
@@ -91,7 +91,7 @@ class UpgradesBudgetLimits extends Command
     {
         $configVar = AppConfiguration::get(self::CONFIG_NAME, false);
 
-        return (bool)$configVar?->data;
+        return (bool) $configVar?->data;
     }
 
     private function markAsExecuted(): void

@@ -35,9 +35,9 @@ class UpgradesRuleActions extends Command
 
     public const string CONFIG_NAME = '610_migrate_rule_actions';
 
-    protected $description = 'Migrate rule actions away from expression engine';
+    protected $description          = 'Migrate rule actions away from expression engine';
 
-    protected $signature = 'upgrade:600-rule-actions {--F|force : Force the execution of this command.}';
+    protected $signature            = 'upgrade:600-rule-actions {--F|force : Force the execution of this command.}';
 
     /**
      * Execute the console command.
@@ -65,7 +65,7 @@ class UpgradesRuleActions extends Command
     {
         $configVar = AppConfiguration::get(self::CONFIG_NAME, false);
 
-        return (bool)$configVar?->data;
+        return (bool) $configVar?->data;
     }
 
     private function markAsExecuted(): void
@@ -80,8 +80,8 @@ class UpgradesRuleActions extends Command
 
         /** @var RuleAction $action */
         foreach ($actions as $action) {
-            if (str_starts_with((string)$action->action_value, '=')) {
-                $action->action_value = sprintf('%s%s', '\=', substr((string)$action->action_value, 1));
+            if (str_starts_with((string) $action->action_value, '=')) {
+                $action->action_value = sprintf('%s%s', '\=', substr((string) $action->action_value, 1));
                 $action->save();
                 ++$count;
             }

@@ -37,6 +37,7 @@ use Illuminate\Support\Collection;
 use League\Fractal\Pagination\IlluminatePaginatorAdapter;
 use League\Fractal\Resource\Collection as FractalCollection;
 use League\Fractal\Resource\Item;
+
 use function Safe\preg_match;
 
 /**
@@ -62,14 +63,14 @@ final class PreferencesController extends Controller
         $preferences = $collection->slice(($this->parameters->get('page') - 1) * $pageSize, $pageSize);
 
         // make paginator:
-        $paginator = new LengthAwarePaginator($preferences, $count, $pageSize, $this->parameters->get('page'));
-        $paginator->setPath(route('api.v1.preferences.index') . $this->buildParams());
+        $paginator   = new LengthAwarePaginator($preferences, $count, $pageSize, $this->parameters->get('page'));
+        $paginator->setPath(route('api.v1.preferences.index').$this->buildParams());
 
         /** @var PreferenceTransformer $transformer */
         $transformer = app(PreferenceTransformer::class);
         $transformer->setParameters($this->parameters);
 
-        $resource = new FractalCollection($preferences, $transformer, self::RESOURCE_KEY);
+        $resource    = new FractalCollection($preferences, $transformer, self::RESOURCE_KEY);
         $resource->setPaginator(new IlluminatePaginatorAdapter($paginator));
 
         return response()->json($manager->createData($resource)->toArray())->header('Content-Type', self::CONTENT_TYPE);
@@ -83,7 +84,7 @@ final class PreferencesController extends Controller
      */
     public function show(Preference $preference): JsonResponse
     {
-        $manager = $this->getManager();
+        $manager     = $this->getManager();
 
         if ('currencyPreference' === $preference->name) {
             throw new FireflyException('Please use api/v1/currencies/primary instead.');
@@ -93,25 +94,25 @@ final class PreferencesController extends Controller
         $transformer = app(PreferenceTransformer::class);
         $transformer->setParameters($this->parameters);
 
-        $resource = new Item($preference, $transformer, 'preferences');
+        $resource    = new Item($preference, $transformer, 'preferences');
 
         return response()->json($manager->createData($resource)->toArray())->header('Content-Type', self::CONTENT_TYPE);
     }
 
     public function showList(Collection $preferenceList): JsonResponse
     {
-        $manager = $this->getManager();
-        $count   = $preferenceList->count();
-        $names   = implode(',', $preferenceList->pluck('name')->toArray());
+        $manager     = $this->getManager();
+        $count       = $preferenceList->count();
+        $names       = implode(',', $preferenceList->pluck('name')->toArray());
 
         // make paginator:
-        $paginator = new LengthAwarePaginator($preferenceList, $count, 31_337, 1);
-        $paginator->setPath(route('api.v1.preferences-list.show', [$names]) . $this->buildParams());
+        $paginator   = new LengthAwarePaginator($preferenceList, $count, 31_337, 1);
+        $paginator->setPath(route('api.v1.preferences-list.show', [$names]).$this->buildParams());
 
         /** @var PreferenceTransformer $transformer */
         $transformer = app(PreferenceTransformer::class);
 
-        $resource = new FractalCollection($preferenceList, $transformer, self::RESOURCE_KEY);
+        $resource    = new FractalCollection($preferenceList, $transformer, self::RESOURCE_KEY);
         $resource->setPaginator(new IlluminatePaginatorAdapter($paginator));
 
         return response()->json($manager->createData($resource)->toArray())->header('Content-Type', self::CONTENT_TYPE);
@@ -125,8 +126,8 @@ final class PreferencesController extends Controller
      */
     public function store(PreferenceStoreRequest $request): JsonResponse
     {
-        $manager = $this->getManager();
-        $data    = $request->getAll();
+        $manager     = $this->getManager();
+        $data        = $request->getAll();
 
         if ('currencyPreference' === $data['name']) {
             throw new FireflyException('Please use api/v1/currencies/default instead.');
@@ -138,12 +139,12 @@ final class PreferencesController extends Controller
             throw new FireflyException('Invalid locale specified.');
         }
 
-        $pref = Preferences::set($data['name'], $data['data']);
+        $pref        = Preferences::set($data['name'], $data['data']);
 
         /** @var PreferenceTransformer $transformer */
         $transformer = app(PreferenceTransformer::class);
 
-        $resource = new Item($pref, $transformer, 'preferences');
+        $resource    = new Item($pref, $transformer, 'preferences');
 
         return response()->json($manager->createData($resource)->toArray())->header('Content-Type', self::CONTENT_TYPE);
     }
@@ -160,15 +161,15 @@ final class PreferencesController extends Controller
             throw new FireflyException('Please use api/v1/currencies/primary instead.');
         }
 
-        $manager = $this->getManager();
-        $data    = $request->getAll();
-        $pref    = Preferences::set($preference->name, $data['data']);
+        $manager     = $this->getManager();
+        $data        = $request->getAll();
+        $pref        = Preferences::set($preference->name, $data['data']);
 
         /** @var PreferenceTransformer $transformer */
         $transformer = app(PreferenceTransformer::class);
         $transformer->setParameters($this->parameters);
 
-        $resource = new Item($pref, $transformer, 'preferences');
+        $resource    = new Item($pref, $transformer, 'preferences');
 
         return response()->json($manager->createData($resource)->toArray())->header('Content-Type', self::CONTENT_TYPE);
     }

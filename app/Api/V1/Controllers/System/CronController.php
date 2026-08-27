@@ -43,8 +43,8 @@ final class CronController extends Controller
     public function cron(CronRequest $request, #[SensitiveParameter] string $cliToken): JsonResponse
     {
         CLIToken::routeBinder($cliToken, $request->route());
-        $config = $request->getAll();
-        $user   = CLIToken::findUserByToken($cliToken);
+        $config                           = $request->getAll();
+        $user                             = CLIToken::findUserByToken($cliToken);
 
         Log::debug(sprintf('Now in %s', __METHOD__));
         Log::debug(sprintf('Date is %s', $config['date']->toIsoString()));
@@ -54,8 +54,8 @@ final class CronController extends Controller
         if (true === AppConfiguration::get('enable_external_rates', config('cer.download_enabled'))->data) {
             $return['exchange_rates'] = $this->exchangeRatesCronJob($user, $config['force'], $config['date']);
         }
-        $return['bill_notifications'] = $this->billWarningCronJob($user, $config['force'], $config['date']);
-        $return['webhooks']           = $this->webhookCronJob($user, $config['force'], $config['date']);
+        $return['bill_notifications']     = $this->billWarningCronJob($user, $config['force'], $config['date']);
+        $return['webhooks']               = $this->webhookCronJob($user, $config['force'], $config['date']);
 
         return response()->api($return);
     }

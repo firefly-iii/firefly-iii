@@ -33,7 +33,7 @@ class CorrectsPreferences extends Command
 {
     protected $description = 'Give Firefly III preferences a user group ID so they can be made administration specific.';
 
-    protected $signature = 'correction:preferences';
+    protected $signature   = 'correction:preferences';
 
     /**
      * Execute the console command.

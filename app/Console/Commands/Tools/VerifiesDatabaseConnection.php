@@ -38,12 +38,13 @@ class VerifiesDatabaseConnection extends Command
      * @var string
      */
     protected $description = 'This command tries to connect to the database.';
+
     /**
      * The name and signature of the console command.
      *
      * @var string
      */
-    protected $signature = 'firefly-iii:verify-database-connection';
+    protected $signature   = 'firefly-iii:verify-database-connection';
 
     /**
      * Execute the console command.

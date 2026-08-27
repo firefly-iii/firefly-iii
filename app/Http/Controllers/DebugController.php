@@ -65,8 +65,8 @@ use const PHP_SAPI;
  */
 final class DebugController extends Controller
 {
-    use IsOldVersion;
     use GetConfigurationData;
+    use IsOldVersion;
 
     /**
      * DebugController constructor.
@@ -146,9 +146,9 @@ final class DebugController extends Controller
         $now        = now(config('app.timezone'))->format('Y-m-d H:i:s');
         $logContent = '';
 
-        if(auth()->check() && auth()->user()->hasRole('owner')) {
+        if (auth()->check() && auth()->user()->hasRole('owner')) {
             // get latest log file:
-            $logger = Log::driver();
+            $logger   = Log::driver();
             // PHPstan doesn't recognize the method because of its polymorphic nature.
             $handlers = $logger->getHandlers();
 
@@ -162,7 +162,7 @@ final class DebugController extends Controller
             }
             if ('' !== $logContent) {
                 // last few lines
-                $logContent = 'Truncated from this point <----|' . substr($logContent, -16_384);
+                $logContent = 'Truncated from this point <----|'.substr($logContent, -16_384);
             }
         }
 

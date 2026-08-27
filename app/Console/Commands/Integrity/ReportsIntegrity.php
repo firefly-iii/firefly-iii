@@ -34,7 +34,7 @@ class ReportsIntegrity extends Command
 
     protected $description = 'Will report on the integrity of your database.';
 
-    protected $signature = 'firefly-iii:report-integrity';
+    protected $signature   = 'firefly-iii:report-integrity';
 
     /**
      * Execute the console command.

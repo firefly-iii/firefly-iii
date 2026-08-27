@@ -39,7 +39,7 @@ use Override;
 final class ObjectGroupController extends Controller
 {
     #[Override]
-    protected array                        $acceptedRoles = [UserRoleEnum::READ_ONLY];
+    protected array $acceptedRoles = [UserRoleEnum::READ_ONLY];
     private ObjectGroupRepositoryInterface $repository;
 
     /**
@@ -69,7 +69,7 @@ final class ObjectGroupController extends Controller
 
         /** @var ObjectGroup $objectGroup */
         foreach ($result as $objectGroup) {
-            $return[] = ['id' => (string)$objectGroup->id, 'name' => $objectGroup->title, 'title' => $objectGroup->title];
+            $return[] = ['id' => (string) $objectGroup->id, 'name' => $objectGroup->title, 'title' => $objectGroup->title];
         }
 
         return response()->api($return);

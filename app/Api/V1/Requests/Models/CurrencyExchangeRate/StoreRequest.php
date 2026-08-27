@@ -45,17 +45,17 @@ class StoreRequest extends FormRequest
 
     public function getFromCurrency(): TransactionCurrency
     {
-        return Amount::getTransactionCurrencyByCode((string)$this->get('from'));
+        return Amount::getTransactionCurrencyByCode((string) $this->get('from'));
     }
 
     public function getRate(): string
     {
-        return (string)$this->get('rate');
+        return (string) $this->get('rate');
     }
 
     public function getToCurrency(): TransactionCurrency
     {
-        return Amount::getTransactionCurrencyByCode((string)$this->get('to'));
+        return Amount::getTransactionCurrencyByCode((string) $this->get('to'));
     }
 
     /**

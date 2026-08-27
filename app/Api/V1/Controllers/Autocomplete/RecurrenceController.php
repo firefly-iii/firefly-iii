@@ -39,7 +39,7 @@ use Override;
 final class RecurrenceController extends Controller
 {
     #[Override]
-    protected array                      $acceptedRoles = [UserRoleEnum::READ_RECURRING];
+    protected array $acceptedRoles = [UserRoleEnum::READ_RECURRING];
     private RecurringRepositoryInterface $repository;
 
     /**
@@ -66,7 +66,7 @@ final class RecurrenceController extends Controller
         /** @var Recurrence $recurrence */
         foreach ($recurrences as $recurrence) {
             $response[] = [
-                'id'          => (string)$recurrence->id,
+                'id'          => (string) $recurrence->id,
                 'name'        => $recurrence->title,
                 'description' => $recurrence->description,
                 'active'      => $recurrence->active,

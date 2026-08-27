@@ -36,8 +36,8 @@ class CorrectsLongDescriptions extends Command
 
     private const int MAX_LENGTH = 1000;
 
-    protected $description = 'Fixes long descriptions in journals and groups.';
-    protected $signature   = 'correction:long-descriptions';
+    protected $description       = 'Fixes long descriptions in journals and groups.';
+    protected $signature         = 'correction:long-descriptions';
 
     /**
      * Execute the console command.
@@ -49,20 +49,20 @@ class CorrectsLongDescriptions extends Command
 
         /** @var TransactionJournal $journal */
         foreach ($journals as $journal) {
-            if (strlen((string)$journal->description) > self::MAX_LENGTH) {
-                $journal->description = substr((string)$journal->description, 0, self::MAX_LENGTH);
+            if (strlen((string) $journal->description) > self::MAX_LENGTH) {
+                $journal->description = substr((string) $journal->description, 0, self::MAX_LENGTH);
                 $journal->save();
                 $this->friendlyWarning(sprintf('Truncated description of transaction journal #%d', $journal->id));
                 ++$count;
             }
         }
 
-        $groups = TransactionGroup::query()->where(DB::raw('LENGTH(title)'), '>', self::MAX_LENGTH)->get(['id', 'title']);
+        $groups   = TransactionGroup::query()->where(DB::raw('LENGTH(title)'), '>', self::MAX_LENGTH)->get(['id', 'title']);
 
         /** @var TransactionGroup $group */
         foreach ($groups as $group) {
-            if (strlen((string)$group->title) > self::MAX_LENGTH) {
-                $group->title = substr((string)$group->title, 0, self::MAX_LENGTH);
+            if (strlen((string) $group->title) > self::MAX_LENGTH) {
+                $group->title = substr((string) $group->title, 0, self::MAX_LENGTH);
                 $group->save();
                 $this->friendlyWarning(sprintf('Truncated description of transaction group #%d', $group->id));
                 ++$count;

@@ -48,16 +48,16 @@ class CorrectsGroupAccounts extends Command
     public function handle(): int
     {
         Log::debug('Start of correction:group-accounts');
-        $groups = [];
-        $res    = TransactionJournal::query()->groupBy('transaction_group_id')->get([
-                                                                                        'transaction_group_id',
-                                                                                        DB::raw('COUNT(transaction_group_id) as the_count'),
-                                                                                    ]);
+        $groups                   = [];
+        $res                      = TransactionJournal::query()->groupBy('transaction_group_id')->get([
+            'transaction_group_id',
+            DB::raw('COUNT(transaction_group_id) as the_count'),
+        ]);
 
         /** @var TransactionJournal $journal */
         foreach ($res as $journal) {
-            if ((int)$journal->the_count > 1) {
-                $groups[] = (int)$journal->transaction_group_id;
+            if ((int) $journal->the_count > 1) {
+                $groups[] = (int) $journal->transaction_group_id;
             }
         }
         $flags                    = new TransactionGroupEventFlags();

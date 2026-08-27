@@ -54,19 +54,19 @@ final class ShowController extends Controller
      */
     public function index(Request $request): JsonResponse
     {
-        $pageSize = $this->parameters->get('limit');
-        $type     = $request->input('type') ?? 'default';
+        $pageSize     = $this->parameters->get('limit');
+        $type         = $request->input('type') ?? 'default';
         $this->parameters->set('type', $type);
 
-        $types   = $this->mapTransactionTypes($this->parameters->get('type'));
-        $manager = $this->getManager();
+        $types        = $this->mapTransactionTypes($this->parameters->get('type'));
+        $manager      = $this->getManager();
 
         /** @var User $admin */
-        $admin = auth()->user();
+        $admin        = auth()->user();
 
         // use new group collector:
         /** @var GroupCollectorInterface $collector */
-        $collector = app(GroupCollectorInterface::class);
+        $collector    = app(GroupCollectorInterface::class);
         $collector
             ->setUser($admin)
             // all info needed for the API:
@@ -76,23 +76,24 @@ final class ShowController extends Controller
             // set page to retrieve
             ->setPage($this->parameters->get('page'))
             // set types of transactions to return.
-            ->setTypes($types);
+            ->setTypes($types)
+        ;
         if (null !== $this->parameters->get('start') || null !== $this->parameters->get('end')) {
             $collector->setRange($this->parameters->get('start'), $this->parameters->get('end'));
         }
-        $paginator = $collector->getPaginatedGroups();
-        $paginator->setPath(route('api.v1.transactions.index') . $this->buildParams());
+        $paginator    = $collector->getPaginatedGroups();
+        $paginator->setPath(route('api.v1.transactions.index').$this->buildParams());
 
         // enrich
-        $enrichment = new TransactionGroupEnrichment();
+        $enrichment   = new TransactionGroupEnrichment();
         $enrichment->setUser($admin);
         $transactions = $enrichment->enrich($paginator->getCollection());
 
         /** @var TransactionGroupTransformer $transformer */
-        $transformer = app(TransactionGroupTransformer::class);
+        $transformer  = app(TransactionGroupTransformer::class);
         $transformer->setParameters($this->parameters);
 
-        $resource = new FractalCollection($transactions, $transformer, 'transactions');
+        $resource     = new FractalCollection($transactions, $transformer, 'transactions');
         $resource->setPaginator(new IlluminatePaginatorAdapter($paginator));
 
         return response()->json($manager->createData($resource)->toArray())->header('Content-Type', self::CONTENT_TYPE);
@@ -106,20 +107,21 @@ final class ShowController extends Controller
      */
     public function show(TransactionGroup $transactionGroup): JsonResponse
     {
-        $manager = $this->getManager();
+        $manager       = $this->getManager();
 
         /** @var User $admin */
-        $admin = auth()->user();
+        $admin         = auth()->user();
 
         // use new group collector:
         /** @var GroupCollectorInterface $collector */
-        $collector = app(GroupCollectorInterface::class);
+        $collector     = app(GroupCollectorInterface::class);
         $collector
             ->setUser($admin)
             // filter on transaction group.
             ->setTransactionGroup($transactionGroup)
             // all info needed for the API:
-            ->withAPIInformation();
+            ->withAPIInformation()
+        ;
 
         $selectedGroup = $collector->getGroups()->first();
         if (null === $selectedGroup) {
@@ -127,14 +129,14 @@ final class ShowController extends Controller
         }
 
         // enrich
-        $enrichment = new TransactionGroupEnrichment();
+        $enrichment    = new TransactionGroupEnrichment();
         $enrichment->setUser($admin);
         $selectedGroup = $enrichment->enrichSingle($selectedGroup);
 
         /** @var TransactionGroupTransformer $transformer */
-        $transformer = app(TransactionGroupTransformer::class);
+        $transformer   = app(TransactionGroupTransformer::class);
         $transformer->setParameters($this->parameters);
-        $resource = new Item($selectedGroup, $transformer, 'transactions');
+        $resource      = new Item($selectedGroup, $transformer, 'transactions');
 
         return response()->json($manager->createData($resource)->toArray())->header('Content-Type', self::CONTENT_TYPE);
     }

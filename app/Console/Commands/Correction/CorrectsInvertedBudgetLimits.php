@@ -40,12 +40,13 @@ class CorrectsInvertedBudgetLimits extends Command
      * @var string
      */
     protected $description = 'Reverse budget limits where the dates are inverted.';
+
     /**
      * The name and signature of the console command.
      *
      * @var string
      */
-    protected $signature = 'correction:corrects-inverted-budget-limits';
+    protected $signature   = 'correction:corrects-inverted-budget-limits';
 
     /**
      * Execute the console command.

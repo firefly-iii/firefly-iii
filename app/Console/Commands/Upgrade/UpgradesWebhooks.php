@@ -41,8 +41,8 @@ class UpgradesWebhooks extends Command
 
     public const string CONFIG_NAME = '640_upgrade_webhooks';
 
-    protected $description = 'Upgrade webhooks so they can handle multiple triggers.';
-    protected $signature   = 'upgrade:640-upgrade-webhooks {--F|force : Force the execution of this command.}';
+    protected $description          = 'Upgrade webhooks so they can handle multiple triggers.';
+    protected $signature            = 'upgrade:640-upgrade-webhooks {--F|force : Force the execution of this command.}';
 
     /**
      * Execute the console command.
@@ -66,7 +66,7 @@ class UpgradesWebhooks extends Command
     {
         $configVar = AppConfiguration::get(self::CONFIG_NAME, false);
 
-        return (bool)$configVar?->data;
+        return (bool) $configVar?->data;
     }
 
     private function markAsExecuted(): void
@@ -76,17 +76,17 @@ class UpgradesWebhooks extends Command
 
     private function upgradeWebhook(Webhook $webhook): void
     {
-        $delivery = WebhookDelivery::tryFrom((int)$webhook->delivery);
-        $response = WebhookResponse::tryFrom((int)$webhook->response);
-        $trigger  = WebhookTrigger::tryFrom((int)$webhook->trigger);
+        $delivery          = WebhookDelivery::tryFrom((int) $webhook->delivery);
+        $response          = WebhookResponse::tryFrom((int) $webhook->response);
+        $trigger           = WebhookTrigger::tryFrom((int) $webhook->trigger);
         if (in_array(null, [$delivery, $response, $trigger], true)) {
             $this->friendlyError(sprintf('[a] Webhook #%d has an invalid delivery, response or trigger value. Will not upgrade.', $webhook->id));
 
             return;
         }
-        $deliveryModel = WebhookDeliveryModel::query()->where('key', $delivery->value)->first();
-        $responseModel = WebhookResponseModel::query()->where('key', $response->value)->first();
-        $triggerModel  = WebhookTriggerModel::query()->where('key', $trigger->value)->first();
+        $deliveryModel     = WebhookDeliveryModel::query()->where('key', $delivery->value)->first();
+        $responseModel     = WebhookResponseModel::query()->where('key', $response->value)->first();
+        $triggerModel      = WebhookTriggerModel::query()->where('key', $trigger->value)->first();
         if (in_array(null, [$deliveryModel, $responseModel, $triggerModel], true)) {
             $this->friendlyError(sprintf('[b] Webhook #%d has an invalid delivery, response or trigger model. Will not upgrade.', $webhook->id));
 

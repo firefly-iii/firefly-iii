@@ -40,7 +40,7 @@ class RemovesOrphanedTransactions extends Command
 
     protected $description = 'Deletes orphaned transactions.';
 
-    protected $signature = 'correction:orphaned-transactions';
+    protected $signature   = 'correction:orphaned-transactions';
 
     /**
      * Execute the console command.
@@ -69,10 +69,10 @@ class RemovesOrphanedTransactions extends Command
             $journal?->delete();
             Transaction::query()->where('transaction_journal_id', $transaction->transaction_journal_id)->delete();
             $this->friendlyWarning(sprintf(
-                                       'Deleted transaction journal #%d because account #%d was already deleted.',
-                                       $transaction->transaction_journal_id,
-                                       $transaction->account_id
-                                   ));
+                'Deleted transaction journal #%d because account #%d was already deleted.',
+                $transaction->transaction_journal_id,
+                $transaction->account_id
+            ));
             ++$count;
         }
     }
@@ -80,9 +80,10 @@ class RemovesOrphanedTransactions extends Command
     private function deleteOrphanedJournals(): void
     {
         $set   = TransactionJournal::leftJoin('transaction_groups', 'transaction_journals.transaction_group_id', 'transaction_groups.id')
-                                   ->whereNotNull('transaction_groups.deleted_at')
-                                   ->whereNull('transaction_journals.deleted_at')
-                                   ->get(['transaction_journals.id', 'transaction_journals.transaction_group_id']);
+            ->whereNotNull('transaction_groups.deleted_at')
+            ->whereNull('transaction_journals.deleted_at')
+            ->get(['transaction_journals.id', 'transaction_journals.transaction_group_id'])
+        ;
         $count = $set->count();
         if (0 === $count) {
             // $this->friendlyPositive('No orphaned journals.');
@@ -96,10 +97,10 @@ class RemovesOrphanedTransactions extends Command
             if (null !== $journal) {
                 $journal->delete();
                 $this->friendlyWarning(sprintf(
-                                           'Journal #%d (part of deleted transaction group #%d) has been deleted as well.',
-                                           $entry->id,
-                                           $entry->transaction_group_id
-                                       ));
+                    'Journal #%d (part of deleted transaction group #%d) has been deleted as well.',
+                    $entry->id,
+                    $entry->transaction_group_id
+                ));
             }
         }
     }
@@ -111,21 +112,22 @@ class RemovesOrphanedTransactions extends Command
     {
         $count = 0;
         $set   = Transaction::leftJoin('transaction_journals', 'transactions.transaction_journal_id', '=', 'transaction_journals.id')
-                            ->whereNotNull('transaction_journals.deleted_at')
-                            ->whereNull('transactions.deleted_at')
-                            ->whereNotNull('transactions.id')
-                            ->get(['transaction_journals.id as journal_id', 'transactions.id as transaction_id']);
+            ->whereNotNull('transaction_journals.deleted_at')
+            ->whereNull('transactions.deleted_at')
+            ->whereNotNull('transactions.id')
+            ->get(['transaction_journals.id as journal_id', 'transactions.id as transaction_id'])
+        ;
 
         /** @var stdClass $entry */
         foreach ($set as $entry) {
-            $transaction = Transaction::find((int)$entry->transaction_id);
+            $transaction = Transaction::find((int) $entry->transaction_id);
             if (null !== $transaction) {
                 $transaction->delete();
                 $this->friendlyWarning(sprintf(
-                                           'Transaction #%d (part of deleted transaction journal #%d) has been deleted as well.',
-                                           $entry->transaction_id,
-                                           $entry->journal_id
-                                       ));
+                    'Transaction #%d (part of deleted transaction journal #%d) has been deleted as well.',
+                    $entry->transaction_id,
+                    $entry->journal_id
+                ));
                 ++$count;
             }
         }

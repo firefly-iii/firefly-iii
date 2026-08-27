@@ -36,9 +36,9 @@ class UpgradesAccountMetaData extends Command
 
     public const string CONFIG_NAME = '480_rename_account_meta';
 
-    protected $description = 'Rename account meta-data to new format.';
+    protected $description          = 'Rename account meta-data to new format.';
 
-    protected $signature = 'upgrade:480-account-meta {--F|force : Force the execution of this command.}';
+    protected $signature            = 'upgrade:480-account-meta {--F|force : Force the execution of this command.}';
 
     /**
      * Execute the console command.
@@ -85,7 +85,7 @@ class UpgradesAccountMetaData extends Command
     {
         $configVar = AppConfiguration::get(self::CONFIG_NAME, false);
 
-        return (bool)$configVar?->data;
+        return (bool) $configVar?->data;
     }
 
     private function markAsExecuted(): void
