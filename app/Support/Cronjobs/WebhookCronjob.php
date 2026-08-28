@@ -30,6 +30,7 @@ use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Models\Configuration;
 use FireflyIII\Support\Facades\AppConfiguration;
 use FireflyIII\Support\Facades\Preferences;
+use FireflyIII\User;
 use Illuminate\Support\Facades\Log;
 
 /**
@@ -43,44 +44,47 @@ class WebhookCronjob extends AbstractCronjob
     public function fire(): void
     {
         Log::debug(sprintf('Now in %s', __METHOD__));
+        /** @var User $user */
+        foreach($this->users as $user) {
 
-        /** @var Configuration $config */
-        $config        = AppConfiguration::get('last_webhook_job', 0);
-        $lastTime      = (int) $config->data;
-        $diff          = now(config('app.timezone'))->getTimestamp() - $lastTime;
-        $diffForHumans = now(config('app.timezone'))->diffForHumans(Carbon::createFromTimestamp($lastTime), null, true);
+            /** @var Configuration $config */
+            $config = AppConfiguration::get(sprintf('last_webhook_job_%d', $user->id), 0);
+            $lastTime = (int)$config->data;
+            $diff = now(config('app.timezone'))->getTimestamp() - $lastTime;
+            $diffForHumans = now(config('app.timezone'))->diffForHumans(Carbon::createFromTimestamp($lastTime), null, true);
 
-        if (0 === $lastTime) {
-            Log::info('The webhook cron-job has never fired before.');
-        }
-        // less than ten minutes ago.
-        if ($lastTime > 0 && $diff <= 600) {
-            Log::info(sprintf('It has been %s since the webhook cron-job has fired.', $diffForHumans));
-            if (false === $this->force || false === $this->isOwner) {
-                Log::info('The cron-job will not fire now.');
-                $this->message      = sprintf('It has been %s since the webhook cron-job has fired. It will not fire now.', $diffForHumans);
-                $this->jobFired     = false;
-                $this->jobErrored   = false;
-                $this->jobSucceeded = false;
+            if (0 === $lastTime) {
+                Log::info(sprintf('The webhook cron-job has never fired before for user #%d.', $user->id));
+            }
+            // less than ten minutes ago.
+            if ($lastTime > 0 && $diff <= 600) {
+                Log::info(sprintf('It has been %s since the webhook cron-job has fired for user #%d.', $diffForHumans, $user->id));
+                if (false === $this->force || false === $user->hasRole('owner')) {
+                    Log::info(sprintf('The cron-job will not fire now for user #%d.', $user->id));
+                    $this->message = sprintf('It has been %s since the webhook cron-job has fired. It will not fire now.', $diffForHumans);
+                    $this->jobFired = false;
+                    $this->jobErrored = false;
+                    $this->jobSucceeded = false;
 
-                return;
+                    return;
+                }
+
+                Log::info(sprintf('Execution of the webhook cron-job has been FORCED for user #%d.', $user->id));
             }
 
-            Log::info('Execution of the webhook cron-job has been FORCED.');
-        }
+            if ($lastTime > 0 && $diff > 600) {
+                Log::info(sprintf('It has been %s since the webhook cron-job has fired for user #%d. It will fire now!', $diffForHumans, $user->id));
+            }
 
-        if ($lastTime > 0 && $diff > 600) {
-            Log::info(sprintf('It has been %s since the webhook cron-job has fired. It will fire now!', $diffForHumans));
+            $this->fireWebhookMessages($user);
         }
-
-        $this->fireWebhookMessages();
 
         Preferences::mark();
     }
 
-    private function fireWebhookMessages(): void
+    private function fireWebhookMessages(User $user): void
     {
-        Log::info(sprintf('Will now send webhook messages for date "%s".', $this->date->format('Y-m-d H:i:s')));
+        Log::info(sprintf('Will now send webhook messages for date "%s" and user #%d.', $this->date->format('Y-m-d H:i:s'), $user->id));
 
         Log::debug(sprintf('send event WebhookMessagesRequestSending from %s', __METHOD__));
         event(new WebhookMessagesRequestSending());
@@ -91,7 +95,7 @@ class WebhookCronjob extends AbstractCronjob
         $this->jobSucceeded = true;
         $this->message      = 'Send webhook messages cron job fired successfully.';
 
-        AppConfiguration::set('last_webhook_job', (int) $this->date->format('U'));
+        AppConfiguration::set(sprintf('last_webhook_job_%d', $user->id), (int) $this->date->format('U'));
         Log::info(sprintf('Marked the last time this job has run as "%s" (%d)', $this->date->format('Y-m-d H:i:s'), (int) $this->date->format('U')));
         Log::info('Done with webhook cron job task.');
     }

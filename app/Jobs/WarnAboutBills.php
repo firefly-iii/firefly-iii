@@ -79,14 +79,7 @@ class WarnAboutBills implements ShouldQueue
     {
         Log::debug(sprintf('Now at start of WarnAboutBills() job for %s.', $this->date->format('D d M Y')));
 
-        $users = [$this->user];
-        if ($this->user->hasRole('owner')) {
-            Log::debug('User is owner, will run for all users.');
-            $users = User::all();
-        }
-
-        foreach ($users as $user) {
-            $bills   = $user->bills()->where('active', true)->get();
+            $bills   = $this->user->bills()->where('active', true)->get();
             $overdue = [];
 
             /** @var Bill $bill */
@@ -105,8 +98,7 @@ class WarnAboutBills implements ShouldQueue
                     }
                 }
             }
-            $this->sendOverdueAlerts($user, $overdue);
-        }
+            $this->sendOverdueAlerts($this->user, $overdue);
         Log::debug('Done with handle()');
     }
 

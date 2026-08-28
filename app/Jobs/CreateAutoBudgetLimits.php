@@ -77,12 +77,7 @@ class CreateAutoBudgetLimits implements ShouldQueue
     {
         Log::debug(sprintf('Now at start of CreateAutoBudgetLimits() job for %s.', $this->date->format('D d M Y')));
 
-        $autoBudgets = AutoBudget::leftJoin('budgets', 'auto_budgets.budget_id', '=', 'budgets.id')->where('budgets.user_id', $this->user->id)->get([
-            'auto_budgets.*',
-        ]);
-        if ($this->user->hasRole('owner')) {
-            $autoBudgets = AutoBudget::get();
-        }
+        $autoBudgets = AutoBudget::leftJoin('budgets', 'auto_budgets.budget_id', '=', 'budgets.id')->where('budgets.user_id', $this->user->id)->get(['auto_budgets.*',]);
         Log::debug(sprintf('Found %d auto budgets.', $autoBudgets->count()));
         foreach ($autoBudgets as $autoBudget) {
             $this->handleAutoBudget($autoBudget);
