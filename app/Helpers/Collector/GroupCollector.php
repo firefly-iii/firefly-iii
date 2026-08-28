@@ -455,6 +455,11 @@ class GroupCollector implements GroupCollectorInterface
         // filter the array using all available post filters:
         $collection  = $this->postFilterCollection($collection);
 
+        // if post filters were applied, the raw row count is wrong, so count the filtered groups instead.
+        if (count($this->postFilters) > 0) {
+            $this->total = $collection->count();
+        }
+
         // sort the collection, if sort instructions are present.
         $collection  = $this->sortCollection($collection);
 
