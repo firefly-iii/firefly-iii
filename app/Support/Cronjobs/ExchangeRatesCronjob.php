@@ -40,8 +40,9 @@ class ExchangeRatesCronjob extends AbstractCronjob
     public function fire(): void
     {
         /** @var User $user */
-        foreach($this->users as $user) {
-            $key = sprintf('last_cer_job_%d', $user->id);
+        foreach ($this->users as $user) {
+            $key           = sprintf('last_cer_job_%d', $user->id);
+
             /** @var Configuration $config */
             $config        = AppConfiguration::get($key, 0);
             $lastTime      = (int) $config->data;
@@ -55,7 +56,12 @@ class ExchangeRatesCronjob extends AbstractCronjob
                 Log::info(sprintf('It has been %s since the exchange rates cron-job has fired for user #%d.', $diffForHumans, $user->id));
                 if (false === $this->force || false === $user->hasRole('owner')) {
                     Log::info(sprintf('The exchange rates cron-job will not fire now for user #%d.', $user->id));
-                    $this->message = sprintf('It has been %s since the exchange rates cron-job has fired for user #%d. It will not fire now.', $diffForHumans, $user->id);
+                    $this->message = sprintf(
+                        'It has been %s since the exchange rates cron-job has fired for user #%d. It will not fire now.',
+                        $diffForHumans,
+                        $user->id
+                    );
+
                     continue;
                 }
 
@@ -88,7 +94,12 @@ class ExchangeRatesCronjob extends AbstractCronjob
         $this->message      = 'Exchange rates cron job fired successfully.';
 
         AppConfiguration::set(sprintf('last_cer_job_%d', $user->id), (int) $this->date->format('U'));
-        Log::info(sprintf('Marked the last time this job has run as "%s" (%d) for user #%d', $this->date->format('Y-m-d H:i:s'), (int) $this->date->format('U'), $user->id));
+        Log::info(sprintf(
+            'Marked the last time this job has run as "%s" (%d) for user #%d',
+            $this->date->format('Y-m-d H:i:s'),
+            (int) $this->date->format('U'),
+            $user->id
+        ));
         Log::info('Done with exchange rates job task.');
     }
 }

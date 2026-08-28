@@ -29,7 +29,6 @@ use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Models\CurrencyExchangeRate;
 use FireflyIII\Models\TransactionCurrency;
 use FireflyIII\Repositories\Currency\CurrencyRepositoryInterface;
-use FireflyIII\Repositories\User\UserRepositoryInterface;
 use FireflyIII\User;
 use GuzzleHttp\Client;
 use GuzzleHttp\Exception\ConnectException;
@@ -40,7 +39,6 @@ use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Queue\SerializesModels;
-use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Log;
 use Safe\Exceptions\JsonException;
 
@@ -100,7 +98,7 @@ class DownloadExchangeRates implements ShouldQueue
 
     public function setUser(User $user): void
     {
-        $this->user  = $user;
+        $this->user = $user;
     }
 
     /**
@@ -171,20 +169,20 @@ class DownloadExchangeRates implements ShouldQueue
 
     private function saveRate(TransactionCurrency $from, TransactionCurrency $to, Carbon $date, float $rate): void
     {
-            $this->repository->setUser($this->user);
-            $this->repository->setUserGroup($this->user->userGroup);
-            if ($this->repository->isEnabled($from) && $this->repository->isEnabled($to)) {
-                $existing = $this->repository->getExchangeRate($from, $to, $date);
-                if (!$existing instanceof CurrencyExchangeRate) {
-                    Log::debug(sprintf('Saved rate from %s to %s for user #%d.', $from->code, $to->code, $this->user->id));
+        $this->repository->setUser($this->user);
+        $this->repository->setUserGroup($this->user->userGroup);
+        if ($this->repository->isEnabled($from) && $this->repository->isEnabled($to)) {
+            $existing = $this->repository->getExchangeRate($from, $to, $date);
+            if (!$existing instanceof CurrencyExchangeRate) {
+                Log::debug(sprintf('Saved rate from %s to %s for user #%d.', $from->code, $to->code, $this->user->id));
 
-                    try {
-                        $this->repository->setExchangeRate($from, $to, $date, $rate);
-                    } catch (FireflyException $e) {
-                        Log::warning(sprintf('Could not set exchange rate, but ignore this: %s', $e->getMessage()));
-                    }
+                try {
+                    $this->repository->setExchangeRate($from, $to, $date, $rate);
+                } catch (FireflyException $e) {
+                    Log::warning(sprintf('Could not set exchange rate, but ignore this: %s', $e->getMessage()));
                 }
             }
+        }
     }
 
     private function saveRates(TransactionCurrency $currency, Carbon $date, array $rates): void

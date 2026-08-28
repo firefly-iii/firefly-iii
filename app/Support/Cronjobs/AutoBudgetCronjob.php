@@ -40,13 +40,11 @@ class AutoBudgetCronjob extends AbstractCronjob
     public function fire(): void
     {
         /** @var User $user */
-        foreach($this->users as $user) {
-
-
+        foreach ($this->users as $user) {
             /** @var Configuration $config */
-            $config = AppConfiguration::get(sprintf('last_ab_job_%d', $user->id), 0);
-            $lastTime = (int)$config->data;
-            $diff = now(config('app.timezone'))->getTimestamp() - $lastTime;
+            $config        = AppConfiguration::get(sprintf('last_ab_job_%d', $user->id), 0);
+            $lastTime      = (int) $config->data;
+            $diff          = now(config('app.timezone'))->getTimestamp() - $lastTime;
             $diffForHumans = now(config('app.timezone'))->diffForHumans(Carbon::createFromTimestamp($lastTime), null, true);
             if (0 === $lastTime) {
                 Log::info(sprintf('Auto budget cron-job has never fired before for user #%d.', $user->id));
@@ -56,7 +54,11 @@ class AutoBudgetCronjob extends AbstractCronjob
                 Log::info(sprintf('It has been %s since the auto budget cron-job has fired for user #%d.', $diffForHumans, $user->id));
                 if (false === $this->force || false === $user->hasRole('owner')) {
                     Log::info(sprintf('The auto budget cron-job will not fire now for user #%d.', $user->id));
-                    $this->message = sprintf('It has been %s since the auto budget cron-job has fired. It will not fire now for user #%d.', $diffForHumans, $user->id);
+                    $this->message = sprintf(
+                        'It has been %s since the auto budget cron-job has fired. It will not fire now for user #%d.',
+                        $diffForHumans,
+                        $user->id
+                    );
 
                     return;
                 }

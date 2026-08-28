@@ -65,19 +65,21 @@ class Cron extends Command
         /** @var UserRepositoryInterface $repository */
         $repository  = app(UserRepositoryInterface::class);
         $this->users = $repository->all();
-        /** @var User|null $admin */
+
+        /** @var null|User $admin */
         $admin       = $repository->getUsersByRole('owner')->first();
         if (null === $admin) {
             $this->friendlyError('There is no user in the system with the "owner"-role, cannot continue.');
 
             return 1;
         }
-        $doAll       = !$this->option('download-cer')
-        && !$this->option('create-recurring')
-        && !$this->option('create-auto-budgets')
-        && !$this->option('send-subscription-warnings')
-        && !$this->option('check-version')
-        && !$this->option('send-webhook-messages');
+        $doAll
+                     = !$this->option('download-cer')
+            && !$this->option('create-recurring')
+            && !$this->option('create-auto-budgets')
+            && !$this->option('send-subscription-warnings')
+            && !$this->option('check-version')
+            && !$this->option('send-webhook-messages');
         $date        = null;
 
         try {

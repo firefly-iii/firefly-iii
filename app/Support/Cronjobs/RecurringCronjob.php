@@ -46,11 +46,11 @@ class RecurringCronjob extends AbstractCronjob
         Log::debug(sprintf('Now in %s', __METHOD__));
 
         /** @var User $user */
-        foreach($this->users as $user) {
+        foreach ($this->users as $user) {
             /** @var Configuration $config */
-            $config = AppConfiguration::get(sprintf('last_rt_job_%d', $user->id), 0);
-            $lastTime = (int)$config->data;
-            $diff = now(config('app.timezone'))->getTimestamp() - $lastTime;
+            $config        = AppConfiguration::get(sprintf('last_rt_job_%d', $user->id), 0);
+            $lastTime      = (int) $config->data;
+            $diff          = now(config('app.timezone'))->getTimestamp() - $lastTime;
             $diffForHumans = now(config('app.timezone'))->diffForHumans(Carbon::createFromTimestamp($lastTime), null, true);
 
             if (0 === $lastTime) {
@@ -61,9 +61,13 @@ class RecurringCronjob extends AbstractCronjob
                 Log::info(sprintf('It has been "%s" since the recurring transactions cron-job has fired for user #%d.', $diffForHumans, $user->id));
                 if (false === $this->force || false === $user->hasRole('owner')) {
                     Log::info(sprintf('The cron-job will not fire now for user #%d.', $user->id));
-                    $this->message = sprintf('It has been "%s" since the recurring transactions cron-job has fired for user #%d. It will not fire now.', $diffForHumans, $user->id);
-                    $this->jobFired = false;
-                    $this->jobErrored = false;
+                    $this->message      = sprintf(
+                        'It has been "%s" since the recurring transactions cron-job has fired for user #%d. It will not fire now.',
+                        $diffForHumans,
+                        $user->id
+                    );
+                    $this->jobFired     = false;
+                    $this->jobErrored   = false;
                     $this->jobSucceeded = false;
 
                     return;
@@ -72,7 +76,11 @@ class RecurringCronjob extends AbstractCronjob
             }
 
             if ($lastTime > 0 && $diff > 43_200) {
-                Log::info(sprintf('It has been "%s" since the recurring transactions cron-job has fired. It will fire now for user #%d!', $diffForHumans, $user->id));
+                Log::info(sprintf(
+                    'It has been "%s" since the recurring transactions cron-job has fired. It will fire now for user #%d!',
+                    $diffForHumans,
+                    $user->id
+                ));
             }
 
             $this->fireRecurring($user);
@@ -96,7 +104,12 @@ class RecurringCronjob extends AbstractCronjob
         $this->message      = 'Recurring transactions cron job fired successfully.';
 
         AppConfiguration::set(sprintf('last_rt_job_%d', $user->id), (int) $this->date->format('U'));
-        Log::info(sprintf('Marked the last time this job has run as "%s" (%d) for user #%d', $this->date->format('Y-m-d H:i:s'), (int) $this->date->format('U'), $user->id));
+        Log::info(sprintf(
+            'Marked the last time this job has run as "%s" (%d) for user #%d',
+            $this->date->format('Y-m-d H:i:s'),
+            (int) $this->date->format('U'),
+            $user->id
+        ));
         Log::info('Done with recurring cron job task.');
     }
 }
