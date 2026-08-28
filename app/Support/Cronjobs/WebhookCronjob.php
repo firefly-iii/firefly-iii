@@ -44,13 +44,13 @@ class WebhookCronjob extends AbstractCronjob
     public function fire(): void
     {
         Log::debug(sprintf('Now in %s', __METHOD__));
-        /** @var User $user */
-        foreach($this->users as $user) {
 
+        /** @var User $user */
+        foreach ($this->users as $user) {
             /** @var Configuration $config */
-            $config = AppConfiguration::get(sprintf('last_webhook_job_%d', $user->id), 0);
-            $lastTime = (int)$config->data;
-            $diff = now(config('app.timezone'))->getTimestamp() - $lastTime;
+            $config        = AppConfiguration::get(sprintf('last_webhook_job_%d', $user->id), 0);
+            $lastTime      = (int) $config->data;
+            $diff          = now(config('app.timezone'))->getTimestamp() - $lastTime;
             $diffForHumans = now(config('app.timezone'))->diffForHumans(Carbon::createFromTimestamp($lastTime), null, true);
 
             if (0 === $lastTime) {
@@ -61,9 +61,9 @@ class WebhookCronjob extends AbstractCronjob
                 Log::info(sprintf('It has been %s since the webhook cron-job has fired for user #%d.', $diffForHumans, $user->id));
                 if (false === $this->force || false === $user->hasRole('owner')) {
                     Log::info(sprintf('The cron-job will not fire now for user #%d.', $user->id));
-                    $this->message = sprintf('It has been %s since the webhook cron-job has fired. It will not fire now.', $diffForHumans);
-                    $this->jobFired = false;
-                    $this->jobErrored = false;
+                    $this->message      = sprintf('It has been %s since the webhook cron-job has fired. It will not fire now.', $diffForHumans);
+                    $this->jobFired     = false;
+                    $this->jobErrored   = false;
                     $this->jobSucceeded = false;
 
                     return;

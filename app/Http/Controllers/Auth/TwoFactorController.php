@@ -90,7 +90,7 @@ final class TwoFactorController extends Controller
                 Log::channel('audit')->info(sprintf('User "%s" has had %d failed MFA attempts.', $user->email, $counter));
                 event(new UserKeepsFailingMFA($user, $counter));
             }
-            if($counter > 20) {
+            if ($counter > 20) {
                 // if the user keeps failing MFA, log them out.
                 Log::channel('audit')->info(sprintf('User "%s" has had %d failed MFA attempts. Logging them out.', $user->email, $counter));
                 Auth::guard()->logout();

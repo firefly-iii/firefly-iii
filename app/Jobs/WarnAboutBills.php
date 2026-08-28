@@ -79,26 +79,26 @@ class WarnAboutBills implements ShouldQueue
     {
         Log::debug(sprintf('Now at start of WarnAboutBills() job for %s.', $this->date->format('D d M Y')));
 
-            $bills   = $this->user->bills()->where('active', true)->get();
-            $overdue = [];
+        $bills   = $this->user->bills()->where('active', true)->get();
+        $overdue = [];
 
-            /** @var Bill $bill */
-            foreach ($bills as $bill) {
-                Log::debug(sprintf('Now checking bill #%d ("%s")', $bill->id, $bill->name));
-                $dates = $this->getDates($bill);
-                if ($this->needsOverdueAlert($dates)) {
-                    $overdue[] = ['bill' => $bill, 'dates' => $dates];
+        /** @var Bill $bill */
+        foreach ($bills as $bill) {
+            Log::debug(sprintf('Now checking bill #%d ("%s")', $bill->id, $bill->name));
+            $dates = $this->getDates($bill);
+            if ($this->needsOverdueAlert($dates)) {
+                $overdue[] = ['bill' => $bill, 'dates' => $dates];
+            }
+            if ($this->hasDateFields($bill)) {
+                if ($this->needsWarning($bill, 'end_date')) {
+                    $this->sendWarning($bill, 'end_date');
                 }
-                if ($this->hasDateFields($bill)) {
-                    if ($this->needsWarning($bill, 'end_date')) {
-                        $this->sendWarning($bill, 'end_date');
-                    }
-                    if ($this->needsWarning($bill, 'extension_date')) {
-                        $this->sendWarning($bill, 'extension_date');
-                    }
+                if ($this->needsWarning($bill, 'extension_date')) {
+                    $this->sendWarning($bill, 'extension_date');
                 }
             }
-            $this->sendOverdueAlerts($this->user, $overdue);
+        }
+        $this->sendOverdueAlerts($this->user, $overdue);
         Log::debug('Done with handle()');
     }
 

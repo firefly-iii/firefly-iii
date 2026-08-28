@@ -25,8 +25,6 @@ declare(strict_types=1);
 namespace FireflyIII\Support\Cronjobs;
 
 use Carbon\Carbon;
-use FireflyIII\Exceptions\FireflyException;
-use FireflyIII\User;
 use Illuminate\Support\Collection;
 
 /**
@@ -49,7 +47,7 @@ abstract class AbstractCronjob
     public function __construct()
     {
         $this->users = new Collection();
-        $this->date = today(config('app.timezone'));
+        $this->date  = today(config('app.timezone'));
     }
 
     abstract public function fire(): void;
@@ -65,7 +63,8 @@ abstract class AbstractCronjob
         $this->force = $force;
     }
 
-    final public function setUsers(Collection $users): void {
+    final public function setUsers(Collection $users): void
+    {
         $this->users = $users;
     }
 }

@@ -41,16 +41,17 @@ use Illuminate\Support\Collection;
 trait CronRunner
 {
     protected UserRepositoryInterface $repository;
+
     protected function billWarningCronJob(User $user, bool $force, Carbon $date): array
     {
         /** @var BillWarningCronjob $billWarning */
         $billWarning = app(BillWarningCronjob::class);
         $billWarning->setForce($force);
         // if the user is owner, run for all users.
-        $users = new Collection([$user]);
-        if($user->hasRole('owner')) {
+        $users       = new Collection([$user]);
+        if ($user->hasRole('owner')) {
             $this->repository = app(UserRepositoryInterface::class);
-            $users = $this->repository->allAvailable();
+            $users            = $this->repository->allAvailable();
         }
         $billWarning->setUsers($users);
         $billWarning->setDate($date);
@@ -76,10 +77,10 @@ trait CronRunner
         $exchangeRates->setForce($force);
 
         // if the user is owner, run for all users.
-        $users = new Collection([$user]);
-        if($user->hasRole('owner')) {
+        $users         = new Collection([$user]);
+        if ($user->hasRole('owner')) {
             $this->repository = app(UserRepositoryInterface::class);
-            $users = $this->repository->allAvailable();
+            $users            = $this->repository->allAvailable();
         }
         $exchangeRates->setUsers($users);
         $exchangeRates->setDate($date);
@@ -104,10 +105,10 @@ trait CronRunner
         $autoBudget = app(AutoBudgetCronjob::class);
         $autoBudget->setForce($force);
         // if the user is owner, run for all users.
-        $users = new Collection([$user]);
-        if($user->hasRole('owner')) {
+        $users      = new Collection([$user]);
+        if ($user->hasRole('owner')) {
             $this->repository = app(UserRepositoryInterface::class);
-            $users = $this->repository->allAvailable();
+            $users            = $this->repository->allAvailable();
         }
         $autoBudget->setUsers($users);
         $autoBudget->setDate($date);
@@ -133,10 +134,10 @@ trait CronRunner
         $recurring->setForce($force);
 
         // if the user is owner, run for all users.
-        $users = new Collection([$user]);
-        if($user->hasRole('owner')) {
+        $users     = new Collection([$user]);
+        if ($user->hasRole('owner')) {
             $this->repository = app(UserRepositoryInterface::class);
-            $users = $this->repository->allAvailable();
+            $users            = $this->repository->allAvailable();
         }
         $recurring->setUsers($users);
         $recurring->setDate($date);
@@ -161,10 +162,10 @@ trait CronRunner
         $webhook = app(WebhookCronjob::class);
         $webhook->setForce($force);
         // if the user is owner, run for all users.
-        $users = new Collection([$user]);
-        if($user->hasRole('owner')) {
+        $users   = new Collection([$user]);
+        if ($user->hasRole('owner')) {
             $this->repository = app(UserRepositoryInterface::class);
-            $users = $this->repository->allAvailable();
+            $users            = $this->repository->allAvailable();
         }
         $webhook->setUsers($users);
         $webhook->setDate($date);

@@ -53,7 +53,7 @@ class UserRepository implements UserRepositoryInterface
 
     public function allAvailable(): Collection
     {
-        return User::query()->orderBy('id', 'DESC')->where('users.blocked',false)->get(['users.*']);
+        return User::query()->orderBy('id', 'DESC')->where('users.blocked', false)->get(['users.*']);
     }
 
     public function attachRole(User $user, string $role): bool

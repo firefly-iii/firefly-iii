@@ -44,12 +44,13 @@ class BillWarningCronjob extends AbstractCronjob
     public function fire(): void
     {
         Log::debug(sprintf('Now in %s', __METHOD__));
+
         /** @var User $user */
-        foreach($this->users as $user) {
+        foreach ($this->users as $user) {
             /** @var Configuration $config */
-            $config = AppConfiguration::get(sprintf('last_bw_job_%d', $user->id), 0);
-            $lastTime = (int)$config->data;
-            $diff = now(config('app.timezone'))->getTimestamp() - $lastTime;
+            $config        = AppConfiguration::get(sprintf('last_bw_job_%d', $user->id), 0);
+            $lastTime      = (int) $config->data;
+            $diff          = now(config('app.timezone'))->getTimestamp() - $lastTime;
             $diffForHumans = now(config('app.timezone'))->diffForHumans(Carbon::createFromTimestamp($lastTime), null, true);
 
             if (0 === $lastTime) {
@@ -60,9 +61,9 @@ class BillWarningCronjob extends AbstractCronjob
                 Log::info(sprintf('It has been %s since the bill notification cron-job has fired for user #%d.', $diffForHumans, $user->id));
                 if (false === $this->force || false === $user->hasRole('owner')) {
                     Log::info(sprintf('The cron-job will not fire now for user #%d.', $user->id));
-                    $this->message = sprintf('It has been %s since the bill notification cron-job has fired. It will not fire now.', $diffForHumans);
-                    $this->jobFired = false;
-                    $this->jobErrored = false;
+                    $this->message      = sprintf('It has been %s since the bill notification cron-job has fired. It will not fire now.', $diffForHumans);
+                    $this->jobFired     = false;
+                    $this->jobErrored   = false;
                     $this->jobSucceeded = false;
 
                     return;
@@ -98,7 +99,12 @@ class BillWarningCronjob extends AbstractCronjob
         $this->message      = 'Bill notification cron job fired successfully.';
 
         AppConfiguration::set(sprintf('last_bw_job_%d', $user->id), (int) $this->date->format('U'));
-        Log::info(sprintf('Marked the last time this job has run as "%s" (%d) for user #%d', $this->date->format('Y-m-d H:i:s'), (int) $this->date->format('U'), $user->id));
+        Log::info(sprintf(
+            'Marked the last time this job has run as "%s" (%d) for user #%d',
+            $this->date->format('Y-m-d H:i:s'),
+            (int) $this->date->format('U'),
+            $user->id
+        ));
         Log::info('Done with bill notification cron job task.');
     }
 }
