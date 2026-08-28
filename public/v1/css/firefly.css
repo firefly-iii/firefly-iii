@@ -375,39 +375,35 @@ span.twitter-typeahead {
     right: 10px;
 }
 
+
 /*
- * There's always a small structural gap below .content-header before the box's content
- * starts (.content's own padding, the box's border-top, box-body's padding-top -- normal
- * AdminLTE spacing used all over the app, not something worth stripping globally just for
- * this one sticky header). Nothing sticky covers that gap on its own, so as the page scrolls,
- * rows would become briefly visible through it. This element plugs exactly that structural
- * gap (not any dynamic content that might also be sitting there, like a flash message -- see
- * the comment in ff/currencies/index.js for why that distinction matters). Absolutely
- * positioned against .content-header (which establishes the containing block, being
- * position:sticky/relative), it moves with .content-header automatically and needs no sticky
- * positioning of its own. Height is computed in JS since it depends on rendered spacing.
+ * Currencies overview table: a genuine bounded viewport with its own scrollbar, not page
+ * content that happens to contain rows. Sticky (pinned flush under .content-header) with a
+ * max-height that fills the rest of the viewport -- both driven by .content-header's actual
+ * rendered height, which varies (text wrap, viewport width), so they're kept in sync by JS
+ * (ff/currencies/index.js) rather than guessed as hardcoded values. overflow-y:auto makes this
+ * the scrolling ancestor for the sticky <thead> below, and gives it its own internal scrollbar
+ * -- once its rows are exhausted, native browser scroll-chaining hands scrolling back to the
+ * page, no extra wiring needed.
  */
-.currencies-header-gap-fill {
-    position: absolute;
-    left: 0;
-    right: 0;
-    top: 100%;
-    height: 0;
-    background-color: inherit; /* matches .content-header's own background, its direct parent */
-    z-index: 20;
+.currencies-table-viewport {
+    position: sticky;
+    top: 50px; /* overridden by JS once .content-header is measured */
+    max-height: calc(100vh - 50px - 20px); /* overridden by JS */
+    overflow-y: auto;
 }
 
 /*
- * Currencies overview table. The header's `top` offset isn't a fixed pixel value: it depends
- * on .content-header's actual rendered height, which varies (text wrap, viewport width), so
- * it's kept in sync by JS (ff/currencies/index.js) rather than guessed as a hardcoded value.
+ * Sticky *within* .currencies-table-viewport (its nearest scrolling ancestor) rather than the
+ * page -- top:0 is all this needs, since the container above already accounts for
+ * .content-header's height. No per-element pixel offset to keep in sync.
  */
 .currencies-table thead th {
     position: sticky;
-    top: 50px; /* overridden by JS once .content-header is measured */
+    top: 0;
     z-index: 10;
-    background-color: #ffffff;
-    box-shadow: inset 0 -1px 0 #f4f4f4;
+    background-color: var(--ip-surface);
+    box-shadow: inset 0 -1px 0 var(--ip-border);
 }
 
 .currencies-table__index,

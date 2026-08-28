@@ -289,8 +289,16 @@ textarea:focus-visible,
 }
 
 /* =========================== CONTENT SURFACE =========================== */
-
-.content-wrapper {
+/* skin-dark.min.css's `.skin-firefly-iii .content-wrapper, .skin-firefly-iii
+   .right-side` (2 classes) was beating the plain rule below (1 class) --
+   same specificity fight as the header/sidebar/dropdown fixes elsewhere in
+   this file. .content-wrapper is the backdrop directly below .content-header
+   (same --ip-bg token, so once this actually wins they read as one
+   continuous background instead of a visible seam at the boundary between
+   them); .content itself has no background of its own and just shows this
+   one through, and cards/panels still paint their own --ip-surface on top,
+   untouched. */
+.skin-firefly-iii .content-wrapper {
     background-color: var(--ip-bg);
 }
 
@@ -305,10 +313,16 @@ textarea:focus-visible,
 
 /* ============================== PANELS ============================== */
 
-.box {
-    background: var(--ip-surface);
-    border: 1px solid var(--ip-border);
-    border-top: 1px solid var(--ip-border);
+/* !important: skin-dark.min.css's `.skin-firefly-iii .box` rules (background
+   AND border, both 2 classes) were beating this -- same fight as
+   .dropdown-menu and .btn-success above, and the reason the Currencies
+   table's card and its own sticky header (already correctly themed) ended
+   up two different shades, reading as a detached header floating over a
+   mismatched card instead of one bounded table. */
+.skin-firefly-iii .box {
+    background: var(--ip-surface) !important;
+    border: 1px solid var(--ip-border) !important;
+    border-top: 1px solid var(--ip-border) !important;
     border-radius: 4px;
     box-shadow: var(--ip-shadow-panel);
 }
@@ -830,11 +844,6 @@ label {
 
 .switch input:focus ~ .switch__track {
     box-shadow: var(--ip-focus-ring);
-}
-
-.currencies-table thead th,
-.currencies-header-gap-fill {
-    background-color: var(--ip-surface);
 }
 
 .skin-firefly-iii .content-header {

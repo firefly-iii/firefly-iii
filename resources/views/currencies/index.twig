@@ -4,9 +4,6 @@
     {% if isOwner %}
         <a class="btn btn-success content-header-actions" href="{{ route('currencies.create') }}">{{ 'create_currency'|_ }}</a>
     {% endif %}
-    {# Covers the natural gap between .content-header and the table (box border + box-body
-       padding); see the comment on .currencies-header-gap-fill in firefly.css. #}
-    <div class="currencies-header-gap-fill"></div>
 {% endblock %}
 
 {% block content %}
@@ -18,6 +15,14 @@
                         <div style="padding-left:8px;">
                             {{ currencies.links('pagination.bootstrap-4')|raw }}
                         </div>
+                        {# Its own bounded, independently scrolling viewport rather than normal
+                           page content: sticky (pinned flush under .content-header, see
+                           ff/currencies/index.js) with a max-height that fills the rest of the
+                           viewport and overflow-y:auto for the rows. The <thead> below is
+                           sticky *within this container* (top:0, relative to its nearest
+                           scrolling ancestor -- this element), which is why it no longer needs
+                           any pixel offset of its own: the browser handles it natively. #}
+                        <div class="currencies-table-viewport">
                         <table class="table table-hover currencies-table">
                             <thead>
                             <tr>
@@ -96,6 +101,7 @@
                             {% endfor %}
                             </tbody>
                         </table>
+                        </div>
                         <div style="padding-left:8px;">
                             {{ currencies.links('pagination.bootstrap-4')|raw }}
                         </div>

@@ -30,46 +30,32 @@ $(function () {
 });
 
 /**
- * Three things are stacked here: the sticky .content-header, a .currencies-header-gap-fill
- * that plugs the *structural* gap below it (.content's padding, the box's border, box-body's
- * padding -- always there, regardless of page content), and the sticky table head, pinned
- * flush against the gap-fill's bottom edge.
+ * Positions and sizes the table's own scroll viewport: pinned flush against the bottom of the
+ * sticky .content-header (zero gap -- the table header reads as the table's own top boundary,
+ * not a strip floating above it), with a max-height that fills the rest of the viewport so the
+ * table gets its own internal scrollbar instead of growing the page.
  *
- * Deliberately NOT sized/positioned off the <table> element's actual current distance from
- * the page top: that distance also includes whatever non-structural content happens to be
- * sitting above the table on a given request -- e.g. a flash message ("Please ask the owner
- * to..."). Sizing the gap-fill to cover that too would visually swallow the flash message
- * behind the opaque header instead of showing it. Using only the structural gap means: with
- * no flash message, the table already sits exactly at that offset, so the header is pinned
- * from the very first pixel of scroll same as before; with a flash message, the table starts
- * further down and the header simply hasn't reached its sticky point yet -- it scrolls
- * normally (in sync with the still-visible flash message above it) until it catches up to the
- * same offset, at which point it locks, with nothing ever hidden or exposing rows beneath it.
- *
- * The structural gap is read from computed styles rather than hardcoded, so it stays correct
- * if that spacing ever changes; .content-header's own height is still measured (text wraps,
- * viewport width varies).
+ * Both numbers depend on .content-header's actual rendered height, which varies (text wraps,
+ * viewport width changes), so they're measured rather than hardcoded. The <thead> itself needs
+ * no offset of its own any more -- it's sticky at top:0 relative to this container, which the
+ * browser handles natively regardless of where the container ends up on the page.
  */
 function syncStickyOffsets() {
     "use strict";
     var mainHeaderHeight = 50; // .main-header, fixed height set in layout/default.twig
-    var $tableHead = $('.currencies-table thead th');
-    var $gapFill = $('.currencies-header-gap-fill');
-    var contentEl = document.querySelector('.content');
-    var boxEl = document.querySelector('.box');
-    var boxBodyEl = document.querySelector('.box-body');
+    var bottomMargin = 20; // breathing room between the viewport's bottom edge and the window
+    var $viewport = $('.currencies-table-viewport');
 
-    if (0 === $tableHead.length || null === contentEl || null === boxEl || null === boxBodyEl) {
+    if (0 === $viewport.length) {
         return;
     }
 
-    var structuralGap = parseFloat(getComputedStyle(contentEl).paddingTop)
-        + parseFloat(getComputedStyle(boxEl).borderTopWidth)
-        + parseFloat(getComputedStyle(boxBodyEl).paddingTop);
-    var contentHeaderBottom = mainHeaderHeight + $('.content-header').outerHeight();
+    var top = mainHeaderHeight + $('.content-header').outerHeight();
 
-    $gapFill.css('height', structuralGap + 'px');
-    $tableHead.css('top', (contentHeaderBottom + structuralGap) + 'px');
+    $viewport.css({
+        top: top + 'px',
+        maxHeight: 'calc(100vh - ' + top + 'px - ' + bottomMargin + 'px)'
+    });
 }
 
 function setDefaultCurrency(e) {
