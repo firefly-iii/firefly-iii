@@ -35,6 +35,7 @@ use Illuminate\Contracts\View\Factory;
 use Illuminate\Contracts\View\View;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Log;
 use PragmaRX\Google2FALaravel\Support\Authenticator;
 use Psr\Container\ContainerExceptionInterface;
@@ -88,6 +89,13 @@ final class TwoFactorController extends Controller
                 // do not reset MFA failure counter, but DO send a warning to the user.
                 Log::channel('audit')->info(sprintf('User "%s" has had %d failed MFA attempts.', $user->email, $counter));
                 event(new UserKeepsFailingMFA($user, $counter));
+            }
+            if($counter > 20) {
+                // if the user keeps failing MFA, log them out.
+                Log::channel('audit')->info(sprintf('User "%s" has had %d failed MFA attempts. Logging them out.', $user->email, $counter));
+                Auth::guard()->logout();
+                $request->session()->invalidate();
+                $request->session()->regenerateToken();
             }
             unset($user);
         }

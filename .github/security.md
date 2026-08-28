@@ -19,7 +19,7 @@ a security issue. Without an attack path, no dice.
 
 ## Perceived security issues that are exempt from reporting
 
-Due to a large number of irrelevant, noisy and uninformed AI-generated security advisories coming my way, reporting 
+Due to a large number of irrelevant, noisy and uninformed AI-generated security advisories coming the team's, reporting 
 any the following security issues may result in a permanent ban from the Firefly III organization on GitHub.
 
 1. Any SSRF or DNS/hostname issues in any user provided URL field (webhooks, ntfy, SimpleFIN, Slack). It's by design 
@@ -32,6 +32,10 @@ also clear out other user's cached data. Purging deleted records may also remove
 4. Any issue that is not true. AI models have already *hallucinated* security issues in Firefly III. They've 
 referred to **non-existing** functions, templates and files. Including line numbers and code excerpts. Validate your 
 findings before you report them to me.
+
+In addition, please note that there are some well-known false positives that many models report as a vulnerability,
+while in fact they are not. If you report one of these, you may be ignored now and in the future. Naturally, we will 
+not disclose them in this policy.
 
 ## Supported versions
 

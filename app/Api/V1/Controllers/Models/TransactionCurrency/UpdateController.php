@@ -89,7 +89,6 @@ final class UpdateController extends Controller
 
         /** @var CurrencyTransformer $transformer */
         $transformer = app(CurrencyTransformer::class);
-        $transformer->setParameters($this->parameters);
 
         $resource    = new Item($currency, $transformer, 'currencies');
 
