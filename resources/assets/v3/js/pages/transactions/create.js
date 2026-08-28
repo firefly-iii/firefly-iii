@@ -60,6 +60,8 @@ import {switchLink} from "./shared/switch-link.js";
 import {removeLink} from "./shared/remove-link.js";
 import {saveEditedLink} from "./shared/save-edited-link.js";
 import {saveNewLink} from "./shared/save-new-link.js";
+import {redirectAfterTransactionLinks} from './shared/redirect-after-transaction-links.js';
+import {processTransactionLinks} from './shared/process-transaction-links.js';
 
 let create = function () {
     return {
@@ -190,6 +192,8 @@ let create = function () {
         removeLink: removeLink,
         saveEditedLink: saveEditedLink,
         saveNewLink: saveNewLink,
+        processTransactionLinks: processTransactionLinks,
+        redirectAfterTransactionLinks: redirectAfterTransactionLinks,
 
         filterForeignCurrencies(code) {
             let list = [];
@@ -332,55 +336,7 @@ let create = function () {
 
 
         },
-        processTransactionLinks(transactions) {
-            let count = 0;
-            for (let i = 0; i < transactions.length; i++) {
-                if (transactions.hasOwnProperty(i) && this.links.hasOwnProperty(i)) {
-                    let journalId = transactions[i];
-                    for (let j = 0; j < this.links[i].length; j++) {
-                        if (this.links[i].hasOwnProperty(j)) {
-                            count++;
-                            let link = this.links[i][j];
-                            let left = journalId;
-                            let right = parseInt(link.journal_id);
-                            if ('inward' === link.link_type_direction) {
-                                left = parseInt(link.journal_id);
-                                right = journalId;
-                            }
-                            (new PostLink).post(link.link_type_id, left, right, null).then(() => {
-                                this.redirectAfterTransactionLinks(i, j);
-                            }).catch(function (e) {
-                                console.error(e);
-                            }).finally(function () {
-                                console.log('finally');
-                            });
-                        }
-                    }
-                }
-            }
-            if (0 === count) {
-                this.formStates.storedLinks = true;
-            }
-        },
-        redirectAfterTransactionLinks(oldI, oldJ) {
-            this.links[oldI][oldJ].stored = true;
-            let completed = true;
-            for (let i = 0; i < this.links.length; i++) {
-                if (this.links.hasOwnProperty(i)) {
-                    for (let j = 0; j < this.links[i].length; j++) {
-                        if (this.links[i].hasOwnProperty(j)) {
-                            if (false === this.links[i][i].stored) {
-                                completed = false;
-                            }
-                        }
-                    }
-                }
-            }
-            if (true === completed) {
-                this.formStates.storedLinks = completed;
-                this.showMessageOrRedirectUser();
-            }
-        },
+
         save() {
             this.notifications.error.show = false;
             this.notifications.success.show = false;

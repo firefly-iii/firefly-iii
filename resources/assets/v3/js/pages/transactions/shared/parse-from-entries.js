@@ -78,7 +78,6 @@ export function parseFromEntries(entries, originals, transactionType) {
                 current.latitude = entry.latitude.toString();
                 current.zoom_level = entry.zoom_level;
             }
-            console.log('Zoom level is now ', entry.zoom_level);
             if ('__NO_CODE__' === entry.foreign_currency_code) {
                 entry.foreign_currency_code = '';
             }

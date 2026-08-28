@@ -62,6 +62,8 @@ import {switchLink} from "./shared/switch-link.js";
 import {removeLink} from "./shared/remove-link.js";
 import {saveEditedLink} from "./shared/save-edited-link.js";
 import {saveNewLink} from "./shared/save-new-link.js";
+import {processTransactionLinks} from "./shared/process-transaction-links.js";
+import {redirectAfterTransactionLinks} from "./shared/redirect-after-transaction-links.js";
 
 const urls = getUrls();
 
@@ -91,6 +93,10 @@ let transactions = function () {
             resetButton: true,
             rulesButton: true,
             webhooksButton: true,
+            // some properties that must all be true before the user can be redirected safely.
+            storedGroup: false,
+            storedLinks: false,
+            storedAttachments: false,
         },
 
         // form behavior during transaction
@@ -170,6 +176,8 @@ let transactions = function () {
         removeLink: removeLink,
         saveEditedLink: saveEditedLink,
         saveNewLink: saveNewLink,
+        processTransactionLinks: processTransactionLinks,
+        redirectAfterTransactionLinks: redirectAfterTransactionLinks,
 
 
         // part of the account selection auto-complete
@@ -387,15 +395,28 @@ let transactions = function () {
             // submit the transaction. Multi-stage process thing going on here!
             let putter = new Put();
             putter.put(submission, {id: this.groupProperties.id}).then((response) => {
+                this.formStates.storedGroup = true;
                 const group = response.data.data;
 
                 // submission was a success!
                 this.groupProperties.id = parseInt(group.id);
-                this.groupProperties.title = group.attributes.group_title ?? group.attributes.transactions[0].description
+                this.groupProperties.title = group.attributes.group_title ?? group.attributes.transactions[0].description;
+
+                // process transaction links
+                // submit all transaction links, based on the order of the transaction IDs
+                let transactions = [];
+                for (let i = 0; i < group.attributes.transactions.length; i++) {
+                    if (group.attributes.transactions.hasOwnProperty(i)) {
+                        transactions.push(parseInt(group.attributes.transactions[i].transaction_journal_id));
+                    }
+                }
+                this.processTransactionLinks(transactions);
 
                 // process attachments, if any:
                 const attachmentCount = processAttachments(this.groupProperties.id, group.attributes.transactions);
-
+                if (0 === attachmentCount) {
+                    this.formStates.storedAttachments = true;
+                }
                 if (attachmentCount > 0) {
                     // if count is more than zero, system is processing transactions in the background.
                     this.notifications.wait.show = true;
