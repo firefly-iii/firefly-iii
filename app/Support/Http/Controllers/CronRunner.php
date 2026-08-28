@@ -46,7 +46,13 @@ trait CronRunner
         /** @var BillWarningCronjob $billWarning */
         $billWarning = app(BillWarningCronjob::class);
         $billWarning->setForce($force);
-        $billWarning->setUser($user);
+        // if the user is owner, run for all users.
+        $users = new Collection([$user]);
+        if($user->hasRole('owner')) {
+            $this->repository = app(UserRepositoryInterface::class);
+            $users = $this->repository->allAvailable();
+        }
+        $billWarning->setUsers($users);
         $billWarning->setDate($date);
 
         try {
@@ -97,7 +103,13 @@ trait CronRunner
         /** @var AutoBudgetCronjob $autoBudget */
         $autoBudget = app(AutoBudgetCronjob::class);
         $autoBudget->setForce($force);
-        $autoBudget->setUser($user);
+        // if the user is owner, run for all users.
+        $users = new Collection([$user]);
+        if($user->hasRole('owner')) {
+            $this->repository = app(UserRepositoryInterface::class);
+            $users = $this->repository->allAvailable();
+        }
+        $autoBudget->setUsers($users);
         $autoBudget->setDate($date);
 
         try {
@@ -119,7 +131,14 @@ trait CronRunner
         /** @var RecurringCronjob $recurring */
         $recurring = app(RecurringCronjob::class);
         $recurring->setForce($force);
-        $recurring->setUser($user);
+
+        // if the user is owner, run for all users.
+        $users = new Collection([$user]);
+        if($user->hasRole('owner')) {
+            $this->repository = app(UserRepositoryInterface::class);
+            $users = $this->repository->allAvailable();
+        }
+        $recurring->setUsers($users);
         $recurring->setDate($date);
 
         try {
@@ -141,7 +160,13 @@ trait CronRunner
         /** @var WebhookCronjob $webhook */
         $webhook = app(WebhookCronjob::class);
         $webhook->setForce($force);
-        $webhook->setUser($user);
+        // if the user is owner, run for all users.
+        $users = new Collection([$user]);
+        if($user->hasRole('owner')) {
+            $this->repository = app(UserRepositoryInterface::class);
+            $users = $this->repository->allAvailable();
+        }
+        $webhook->setUsers($users);
         $webhook->setDate($date);
 
         try {

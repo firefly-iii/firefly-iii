@@ -114,9 +114,6 @@ class CreateRecurringTransactions implements ShouldQueue
             Log::debug('Grab all recurrences from the database.');
             $this->repository->setUser($this->user);
             $this->recurrences = $this->repository->get();
-            if ($this->user->hasRole('owner')) {
-                $this->recurrences = $this->repository->getAll();
-            }
         }
 
         $result          = [];

@@ -161,7 +161,7 @@ class Cron extends Command
     {
         $autoBudget = new AutoBudgetCronjob();
         $autoBudget->setForce($force);
-        $autoBudget->setUser($this->admin);
+        $autoBudget->setUsers($this->users);
         // set date in cron job:
         if ($date instanceof Carbon) {
             $autoBudget->setDate($date);
@@ -184,7 +184,7 @@ class Cron extends Command
     {
         $updateCheck = new UpdateCheckCronjob();
         $updateCheck->setForce($force);
-        $updateCheck->setUser($this->admin);
+        $updateCheck->setUsers($this->users);
         $updateCheck->fire();
 
         if ($updateCheck->jobErrored) {
@@ -229,7 +229,7 @@ class Cron extends Command
     {
         $recurring = new RecurringCronjob();
         $recurring->setForce($force);
-        $recurring->setUser($this->admin);
+        $recurring->setUsers($this->users);
 
         // set date in cron job:
         if ($date instanceof Carbon) {
@@ -255,7 +255,7 @@ class Cron extends Command
     {
         $subscriptionWarningJob = new BillWarningCronjob();
         $subscriptionWarningJob->setForce($force);
-        $subscriptionWarningJob->setUser($this->admin);
+        $subscriptionWarningJob->setUsers($this->users);
         // set date in cron job:
         if ($date instanceof Carbon) {
             $subscriptionWarningJob->setDate($date);
@@ -278,7 +278,7 @@ class Cron extends Command
     {
         $webhook = new WebhookCronjob();
         $webhook->setForce($force);
-        $webhook->setUser($this->admin);
+        $webhook->setUsers($this->users);
         // set date in cron job:
         if ($date instanceof Carbon) {
             $webhook->setDate($date);

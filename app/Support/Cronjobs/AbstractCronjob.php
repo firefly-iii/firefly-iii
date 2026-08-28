@@ -41,8 +41,6 @@ abstract class AbstractCronjob
     public int     $timeBetweenRuns = 43_200;
     protected Carbon $date;
     protected bool $force           = false;
-    protected User $user;
-    protected bool $isOwner         = false;
     protected Collection $users;
 
     /**
@@ -67,12 +65,6 @@ abstract class AbstractCronjob
         $this->force = $force;
     }
 
-    final public function setUser(User $user): void
-    {
-        throw new FireflyException(sprintf('Do not use setUser() in %s', get_class($this)));
-        $this->user    = $user;
-        $this->isOwner = $user->hasRole('owner');
-    }
     final public function setUsers(Collection $users): void {
         $this->users = $users;
     }

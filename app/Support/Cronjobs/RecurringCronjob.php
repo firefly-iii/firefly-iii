@@ -30,6 +30,7 @@ use FireflyIII\Jobs\CreateRecurringTransactions;
 use FireflyIII\Models\Configuration;
 use FireflyIII\Support\Facades\AppConfiguration;
 use FireflyIII\Support\Facades\Preferences;
+use FireflyIII\User;
 use Illuminate\Support\Facades\Log;
 
 /**
@@ -44,46 +45,48 @@ class RecurringCronjob extends AbstractCronjob
     {
         Log::debug(sprintf('Now in %s', __METHOD__));
 
-        /** @var Configuration $config */
-        $config        = AppConfiguration::get('last_rt_job', 0);
-        $lastTime      = (int) $config->data;
-        $diff          = now(config('app.timezone'))->getTimestamp() - $lastTime;
-        $diffForHumans = now(config('app.timezone'))->diffForHumans(Carbon::createFromTimestamp($lastTime), null, true);
+        /** @var User $user */
+        foreach($this->users as $user) {
+            /** @var Configuration $config */
+            $config = AppConfiguration::get(sprintf('last_rt_job_%d', $user->id), 0);
+            $lastTime = (int)$config->data;
+            $diff = now(config('app.timezone'))->getTimestamp() - $lastTime;
+            $diffForHumans = now(config('app.timezone'))->diffForHumans(Carbon::createFromTimestamp($lastTime), null, true);
 
-        if (0 === $lastTime) {
-            Log::info('Recurring transactions cron-job has never fired before.');
-        }
-        // less than half a day ago:
-        if ($lastTime > 0 && $diff <= 43_200) {
-            Log::info(sprintf('It has been "%s" since the recurring transactions cron-job has fired.', $diffForHumans));
-            if (false === $this->force || false === $this->isOwner) {
-                Log::info('The cron-job will not fire now.');
-                $this->message      = sprintf('It has been "%s" since the recurring transactions cron-job has fired. It will not fire now.', $diffForHumans);
-                $this->jobFired     = false;
-                $this->jobErrored   = false;
-                $this->jobSucceeded = false;
-
-                return;
+            if (0 === $lastTime) {
+                Log::info(sprintf('Recurring transactions cron-job has never fired before for user #%d.', $user->id));
             }
-            Log::info('Execution of the recurring transaction cron-job has been FORCED.');
+            // less than half a day ago:
+            if ($lastTime > 0 && $diff <= 43_200) {
+                Log::info(sprintf('It has been "%s" since the recurring transactions cron-job has fired for user #%d.', $diffForHumans, $user->id));
+                if (false === $this->force || false === $user->hasRole('owner')) {
+                    Log::info(sprintf('The cron-job will not fire now for user #%d.', $user->id));
+                    $this->message = sprintf('It has been "%s" since the recurring transactions cron-job has fired for user #%d. It will not fire now.', $diffForHumans, $user->id);
+                    $this->jobFired = false;
+                    $this->jobErrored = false;
+                    $this->jobSucceeded = false;
+
+                    return;
+                }
+                Log::info(sprintf('Execution of the recurring transaction cron-job has been FORCED for user #%d.', $user->id));
+            }
+
+            if ($lastTime > 0 && $diff > 43_200) {
+                Log::info(sprintf('It has been "%s" since the recurring transactions cron-job has fired. It will fire now for user #%d!', $diffForHumans, $user->id));
+            }
+
+            $this->fireRecurring($user);
         }
-
-        if ($lastTime > 0 && $diff > 43_200) {
-            Log::info(sprintf('It has been "%s" since the recurring transactions cron-job has fired. It will fire now!', $diffForHumans));
-        }
-
-        $this->fireRecurring();
-
         Preferences::mark();
     }
 
-    private function fireRecurring(): void
+    private function fireRecurring(User $user): void
     {
         Log::info(sprintf('Will now fire recurring cron job task for date "%s".', $this->date->format('Y-m-d H:i:s')));
 
         $job                = new CreateRecurringTransactions($this->date);
         $job->setForce($this->force);
-        $job->setUser($this->user);
+        $job->setUser($user);
         $job->handle();
 
         // get stuff from job:
@@ -92,8 +95,8 @@ class RecurringCronjob extends AbstractCronjob
         $this->jobSucceeded = true;
         $this->message      = 'Recurring transactions cron job fired successfully.';
 
-        AppConfiguration::set('last_rt_job', (int) $this->date->format('U'));
-        Log::info(sprintf('Marked the last time this job has run as "%s" (%d)', $this->date->format('Y-m-d H:i:s'), (int) $this->date->format('U')));
+        AppConfiguration::set(sprintf('last_rt_job_%d', $user->id), (int) $this->date->format('U'));
+        Log::info(sprintf('Marked the last time this job has run as "%s" (%d) for user #%d', $this->date->format('Y-m-d H:i:s'), (int) $this->date->format('U'), $user->id));
         Log::info('Done with recurring cron job task.');
     }
 }
