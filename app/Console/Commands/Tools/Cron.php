@@ -37,6 +37,7 @@ use FireflyIII\Support\Cronjobs\WebhookCronjob;
 use FireflyIII\Support\Facades\AppConfiguration;
 use FireflyIII\User;
 use Illuminate\Console\Command;
+use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Log;
 use InvalidArgumentException;
 
@@ -57,19 +58,20 @@ class Cron extends Command
         {--send-webhook-messages : Sends any stray webhook messages (with a maximum of 5).}
         ';
 
-    private User $admin;
+    private Collection $users;
 
     public function handle(): int
     {
         /** @var UserRepositoryInterface $repository */
         $repository  = app(UserRepositoryInterface::class);
+        $this->users = $repository->all();
+        /** @var User|null $admin */
         $admin       = $repository->getUsersByRole('owner')->first();
         if (null === $admin) {
             $this->friendlyError('There is no user in the system with the "owner"-role, cannot continue.');
 
             return 1;
         }
-        $this->admin = $admin;
         $doAll       = !$this->option('download-cer')
         && !$this->option('create-recurring')
         && !$this->option('create-auto-budgets')
@@ -201,7 +203,7 @@ class Cron extends Command
         Log::debug(sprintf('Created new ExchangeRateConverter in %s', __METHOD__));
         $exchangeRates = new ExchangeRatesCronjob();
         $exchangeRates->setForce($force);
-        $exchangeRates->setUser($this->admin);
+        $exchangeRates->setUsers($this->users);
         // set date in cron job:
         if ($date instanceof Carbon) {
             $exchangeRates->setDate($date);

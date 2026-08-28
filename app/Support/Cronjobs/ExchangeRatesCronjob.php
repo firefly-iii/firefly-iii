@@ -29,6 +29,7 @@ use FireflyIII\Jobs\DownloadExchangeRates;
 use FireflyIII\Models\Configuration;
 use FireflyIII\Support\Facades\AppConfiguration;
 use FireflyIII\Support\Facades\Preferences;
+use FireflyIII\User;
 use Illuminate\Support\Facades\Log;
 
 /**
@@ -38,43 +39,46 @@ class ExchangeRatesCronjob extends AbstractCronjob
 {
     public function fire(): void
     {
-        /** @var Configuration $config */
-        $config        = AppConfiguration::get('last_cer_job', 0);
-        $lastTime      = (int) $config->data;
-        $diff          = now(config('app.timezone'))->getTimestamp() - $lastTime;
-        $diffForHumans = now(config('app.timezone'))->diffForHumans(Carbon::createFromTimestamp($lastTime), null, true);
-        if (0 === $lastTime) {
-            Log::info('Exchange rates cron-job has never fired before.');
-        }
-        // less than half a day ago:
-        if ($lastTime > 0 && $diff <= 43_200) {
-            Log::info(sprintf('It has been %s since the exchange rates cron-job has fired.', $diffForHumans));
-            if (false === $this->force || false === $this->isOwner) {
-                Log::info('The exchange rates cron-job will not fire now.');
-                $this->message = sprintf('It has been %s since the exchange rates cron-job has fired. It will not fire now.', $diffForHumans);
+        /** @var User $user */
+        foreach($this->users as $user) {
+            $key = sprintf('last_cer_job_%d', $user->id);
+            /** @var Configuration $config */
+            $config        = AppConfiguration::get($key, 0);
+            $lastTime      = (int) $config->data;
+            $diff          = now(config('app.timezone'))->getTimestamp() - $lastTime;
+            $diffForHumans = now(config('app.timezone'))->diffForHumans(Carbon::createFromTimestamp($lastTime), null, true);
+            if (0 === $lastTime) {
+                Log::info(sprintf('Exchange rates cron-job has never fired before for user #%d.', $user->id));
+            }
+            // less than half a day ago:
+            if ($lastTime > 0 && $diff <= 43_200) {
+                Log::info(sprintf('It has been %s since the exchange rates cron-job has fired for user #%d.', $diffForHumans, $user->id));
+                if (false === $this->force || false === $this->isOwner) {
+                    Log::info(sprintf('The exchange rates cron-job will not fire now for user #%d.', $user->id));
+                    $this->message = sprintf('It has been %s since the exchange rates cron-job has fired for user #%d. It will not fire now.', $diffForHumans, $user->id);
+                    continue;
+                }
 
-                return;
+                Log::info(sprintf('Execution of the exchange rates cron-job has been FORCED for user #%d.', $user->id));
             }
 
-            Log::info('Execution of the exchange rates cron-job has been FORCED.');
-        }
+            if ($lastTime > 0 && $diff > 43_200) {
+                Log::info(sprintf('It has been %s since the exchange rates cron-job has fired. It will fire now!', $diffForHumans));
+            }
 
-        if ($lastTime > 0 && $diff > 43_200) {
-            Log::info(sprintf('It has been %s since the exchange rates cron-job has fired. It will fire now!', $diffForHumans));
+            $this->fireExchangeRateJob($user);
+            Preferences::mark();
         }
-
-        $this->fireExchangeRateJob();
-        Preferences::mark();
     }
 
-    private function fireExchangeRateJob(): void
+    private function fireExchangeRateJob(User $user): void
     {
-        Log::info(sprintf('Will now fire exchange rates cron job task for date "%s".', $this->date->format('Y-m-d')));
+        Log::info(sprintf('Will now fire exchange rates cron job task for date "%s" and user #%d.', $this->date->format('Y-m-d'), $user->id));
 
         /** @var DownloadExchangeRates $job */
         $job                = app(DownloadExchangeRates::class);
         $job->setDate($this->date);
-        $job->setUser($this->user);
+        $job->setUser($user);
         $job->handle();
 
         // get stuff from job:
@@ -83,7 +87,7 @@ class ExchangeRatesCronjob extends AbstractCronjob
         $this->jobSucceeded = true;
         $this->message      = 'Exchange rates cron job fired successfully.';
 
-        AppConfiguration::set('last_cer_job', (int) $this->date->format('U'));
+        AppConfiguration::set(sprintf('last_cer_job_%d', $user->id), (int) $this->date->format('U'));
         Log::info('Done with exchange rates job task.');
     }
 }

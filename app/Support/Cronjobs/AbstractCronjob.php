@@ -25,7 +25,9 @@ declare(strict_types=1);
 namespace FireflyIII\Support\Cronjobs;
 
 use Carbon\Carbon;
+use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\User;
+use Illuminate\Support\Collection;
 
 /**
  * Class AbstractCronjob
@@ -41,12 +43,14 @@ abstract class AbstractCronjob
     protected bool $force           = false;
     protected User $user;
     protected bool $isOwner         = false;
+    protected Collection $users;
 
     /**
      * AbstractCronjob constructor.
      */
     public function __construct()
     {
+        $this->users = new Collection();
         $this->date = today(config('app.timezone'));
     }
 
@@ -65,7 +69,11 @@ abstract class AbstractCronjob
 
     final public function setUser(User $user): void
     {
+        throw new FireflyException(sprintf('Do not use setUser() in %s', get_class($this)));
         $this->user    = $user;
         $this->isOwner = $user->hasRole('owner');
+    }
+    final public function setUsers(Collection $users): void {
+        $this->users = $users;
     }
 }

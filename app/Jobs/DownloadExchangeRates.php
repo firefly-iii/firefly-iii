@@ -59,7 +59,6 @@ class DownloadExchangeRates implements ShouldQueue
     private array $active = [];
     private Carbon $date;
     private CurrencyRepositoryInterface $repository;
-    private Collection $users;
     private User $user;
 
     /**
@@ -102,13 +101,6 @@ class DownloadExchangeRates implements ShouldQueue
     public function setUser(User $user): void
     {
         $this->user  = $user;
-        $this->users = new Collection([$user]);
-        if ($this->user->hasRole('admin')) {
-            // get all users:
-            /** @var UserRepositoryInterface $userRepository */
-            $userRepository = app(UserRepositoryInterface::class);
-            $this->users    = $userRepository->all();
-        }
     }
 
     /**
@@ -179,13 +171,12 @@ class DownloadExchangeRates implements ShouldQueue
 
     private function saveRate(TransactionCurrency $from, TransactionCurrency $to, Carbon $date, float $rate): void
     {
-        foreach ($this->users as $user) {
-            $this->repository->setUser($user);
-            $this->repository->setUserGroup($user->userGroup);
+            $this->repository->setUser($this->user);
+            $this->repository->setUserGroup($this->user->userGroup);
             if ($this->repository->isEnabled($from) && $this->repository->isEnabled($to)) {
                 $existing = $this->repository->getExchangeRate($from, $to, $date);
                 if (!$existing instanceof CurrencyExchangeRate) {
-                    Log::debug(sprintf('Saved rate from %s to %s for user #%d.', $from->code, $to->code, $user->id));
+                    Log::debug(sprintf('Saved rate from %s to %s for user #%d.', $from->code, $to->code, $this->user->id));
 
                     try {
                         $this->repository->setExchangeRate($from, $to, $date, $rate);
@@ -194,7 +185,6 @@ class DownloadExchangeRates implements ShouldQueue
                     }
                 }
             }
-        }
     }
 
     private function saveRates(TransactionCurrency $currency, Carbon $date, array $rates): void
