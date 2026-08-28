@@ -1,6 +1,6 @@
 import Get from "../../../api/model/link-type/get.js";
 
-export function loadTransactionLinks() {
+export function loadLinkTypes() {
     let params = {
         page: 1, limit: 1337
     };

@@ -55,7 +55,7 @@ import {onMapClick} from './shared/on-map-click.js';
 import {onMapZoom} from './shared/on-map-zoom.js';
 import {clearLocation} from './shared/clear-location.js';
 import {removeSplit} from "./shared/remove-split.js";
-import {loadTransactionLinks} from "./shared/load-transaction-links.js";
+import {loadLinkTypes} from "./shared/load-transaction-links.js";
 import {createLinkAutocomplete} from "./shared/create-link-autocomplete.js";
 import {editLink} from "./shared/edit-link.js";
 import {switchLink} from "./shared/switch-link.js";
@@ -216,6 +216,8 @@ let transactions = function () {
 
                 for(let i = 0; i < this.entries.length; i++) {
                     this.links[i] = []; // empty set of links.
+                    // then fill the set using the ID.
+                    //this.l
                 }
 
                 // set amountCurrency.
@@ -306,7 +308,7 @@ let transactions = function () {
                 this.formBehaviour.customFields = data;
                 // linked-transactions-search
                 if (true === data.links) {
-                    loadTransactionLinks().then(data => {
+                    loadLinkTypes().then(data => {
                         //console.log(data);
                         for (let i = 0; i < data.length; i++) {
                             if (data.hasOwnProperty(i)) {

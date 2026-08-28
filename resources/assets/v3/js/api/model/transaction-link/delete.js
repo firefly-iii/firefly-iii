@@ -1,6 +1,6 @@
 /*
- * remove-link.js
- * Copyright (c) 2026 james@firefly-iii.org
+ * post.js
+ * Copyright (c) 2023 james@firefly-iii.org
  *
  * This file is part of Firefly III (https://github.com/firefly-iii).
  *
@@ -18,14 +18,11 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-import Delete from '../../../api/model/transaction-link/delete.js';
+import {api} from "../../../boot/axios";
 
-export function removeLink(e) {
-    let rowIndex = parseInt(e.currentTarget.dataset.rowIndex);
-    let index = parseInt(e.currentTarget.dataset.index);
-    if(0 !== this.links[index][rowIndex].id) {
-        // also actually delete it.
-        (new Delete).delete(this.links[index][rowIndex].id);
+export default class Delete {
+    delete(id) {
+        let url = '/api/v1/transaction-links/' + parseInt(id);
+        return api.delete(url);
     }
-    this.links[index].splice(rowIndex, 1);
 }
