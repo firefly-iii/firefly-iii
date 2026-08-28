@@ -55,6 +55,7 @@ import {onMapClick} from './shared/on-map-click.js';
 import {onMapZoom} from './shared/on-map-zoom.js';
 import {clearLocation} from './shared/clear-location.js';
 import {removeSplit} from "./shared/remove-split.js";
+import {loadTransactionLinks} from "./shared/load-transaction-links.js";
 
 const urls = getUrls();
 
@@ -110,6 +111,7 @@ let transactions = function () {
             budgets: [],
             piggyBanks: [],
             subscriptions: [],
+            linkTypes: [],
         },
 
         // properties for the entire transaction group
@@ -192,6 +194,10 @@ let transactions = function () {
                 this.groupProperties.title = data.attributes.group_title ?? data.attributes.transactions[0].description;
                 this.entries = parseDownloadedSplits(data.attributes.transactions, parseInt(data.id));
 
+                for(let i = 0; i < this.entries.length; i++) {
+                    this.links[i] = []; // empty set of links.
+                }
+
                 // set amountCurrency.
                 for(let i in this.formData.enabledCurrencies) {
                     if(this.formData.enabledCurrencies.hasOwnProperty(i)) {
@@ -246,13 +252,6 @@ let transactions = function () {
         },
 
         init() {
-            console.log('Init()');
-
-            // load custom field preference and enable/disable those fields.
-            this.loadCustomFields().then(data => {
-                console.log('Loaded custom fields');
-                this.formBehaviour.customFields = data;
-            });
 
             this.i18next = i18next;
             // download translations and get the transaction group.
@@ -280,6 +279,32 @@ let transactions = function () {
             loadSubscriptions(true).then(data => {
                 this.formData.subscriptions = data;
                 this.formStates.loadingSubscriptions = false;
+            });
+
+            // load custom field preference and enable/disable those fields.
+            this.loadCustomFields().then(data => {
+                this.formBehaviour.customFields = data;
+                // linked-transactions-search
+                if (true === data.links) {
+                    loadTransactionLinks().then(data => {
+                        //console.log(data);
+                        for (let i = 0; i < data.length; i++) {
+                            if (data.hasOwnProperty(i)) {
+                                let current = data[i];
+                                current.id = parseInt(current.id);
+                                this.formData.linkTypes.push(current);
+                            }
+                        }
+                        //this.formData.linkTypes = data;
+                        // TODO fix for all mdodals.
+                        this.formStates.loadingLinks = false;
+                        this.createAutocomplete('links_modal_search_0', 'api/v1/autocomplete/transactions-with-meta');
+
+                    });
+                }
+                if (false === data.links) {
+                    this.formStates.storedLinks = true;
+                }
             });
 
             // add some event listeners

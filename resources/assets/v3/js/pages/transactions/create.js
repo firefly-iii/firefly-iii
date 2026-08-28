@@ -24,9 +24,7 @@ import dates from '../shared/dates.js';
 import {defaultErrorSet} from "./shared/create-empty-split.js";
 import {parseFromEntries} from "./shared/parse-from-entries.js";
 import Post from "../../api/model/transaction/post.js";
-
 import PostLink from '../../api/model/transaction-link/post.js';
-
 import {loadCurrencies} from "./shared/load-currencies.js";
 import {loadBudgets} from "./shared/load-budgets.js";
 import {loadPiggyBanks} from "./shared/load-piggy-banks.js";
@@ -43,7 +41,7 @@ import i18next from "i18next";
 import {processUploadError} from "./shared/process-upload-error.js";
 import {showMessageOrRedirectUser} from "./shared/show-message-or-redirect.js";
 import {addSplit} from "./shared/add-split.js";
-import {clearSourceAccount, clearDestinationAccount} from './shared/clear-fields.js';
+import {clearDestinationAccount, clearSourceAccount} from './shared/clear-fields.js';
 import {detectTransactionType} from './shared/detect-transaction-type.js';
 import {determineAmountCurrency} from './shared/determine-amount-currency.js';
 import {loadCustomFields} from './shared/load-custom-fields.js';
@@ -54,7 +52,6 @@ import {renderMap} from './shared/render-map.js';
 import {onMapClick} from './shared/on-map-click.js';
 import {onMapZoom} from "./shared/on-map-zoom.js";
 import {clearLocation} from './shared/clear-location.js';
-import bootstrap from "bootstrap/dist/js/bootstrap.bundle.js";
 import {removeSplit} from "./shared/remove-split.js";
 import {loadTransactionLinks} from './shared/load-transaction-links.js';
 import Autocomplete from "bootstrap5-autocomplete";
@@ -134,7 +131,6 @@ let create = function () {
         },
 
 
-
         // notifications
         notifications: {
             error: {
@@ -171,7 +167,7 @@ let create = function () {
         changedForeignAmount: changedForeignAmount,
         showMessageOrRedirectUser: showMessageOrRedirectUser,
         parseErrors: parseErrors,
-        addSplit:addSplit,
+        addSplit: addSplit,
         removeSplit: removeSplit,
         clearSourceAccount: clearSourceAccount,
         clearDestinationAccount: clearDestinationAccount,
@@ -234,25 +230,25 @@ let create = function () {
         },
 
         respondToTabSwitch(event) {
-                // event.target // newly activated tab
-                // event.relatedTarget // previous active tab
+            // event.target // newly activated tab
+            // event.relatedTarget // previous active tab
             let index = parseInt(event.currentTarget.dataset.index);
             console.log(this);
-            if(this.maps.hasOwnProperty(index)) {
+            if (this.maps.hasOwnProperty(index)) {
                 this.maps[index].invalidateSize();
             }
-                //console.log('Switched to new tab!', event.target.dataset.index);
+            //console.log('Switched to new tab!', event.target.dataset.index);
         },
         addTabListener() {
             // on switch tab (to re-render map if necessary).
             // this.maps[index].invalidateSize();
             setTimeout(() => {
-            const tabEl = document.querySelectorAll('button[data-bs-toggle="tab"]')
-            for(let i = 0; i < tabEl.length; i++) {
-                tabEl[i].removeEventListener('shown.bs.tab', this.respondToTabSwitch);
-                tabEl[i].addEventListener('shown.bs.tab', this.respondToTabSwitch.bind(this), true);
-            }
-            // TODO don't do this on a timeout!
+                const tabEl = document.querySelectorAll('button[data-bs-toggle="tab"]')
+                for (let i = 0; i < tabEl.length; i++) {
+                    tabEl[i].removeEventListener('shown.bs.tab', this.respondToTabSwitch);
+                    tabEl[i].addEventListener('shown.bs.tab', this.respondToTabSwitch.bind(this), true);
+                }
+                // TODO don't do this on a timeout!
             }, 500);
         },
         switchLink(e) {
@@ -263,7 +259,7 @@ let create = function () {
             let linkType = this.formData.linkTypes.find(link => link.id === linkTypeId);
             // switch link type.
             linkTypeDirection = 'inward' === linkTypeDirection ? 'outward' : 'inward';
-            if(typeof linkType === 'undefined') {
+            if (typeof linkType === 'undefined') {
                 console.error('Link type not found for id ' + linkTypeId);
                 console.log(this.formData.linkTypes);
                 return;
@@ -275,7 +271,7 @@ let create = function () {
         removeLink(e) {
             let rowIndex = parseInt(e.currentTarget.dataset.rowIndex);
             let index = parseInt(e.currentTarget.dataset.index);
-            this.links[index].splice(rowIndex,1);
+            this.links[index].splice(rowIndex, 1);
         },
         saveEditedLink(e) {
             let rowIndex = parseInt(e.currentTarget.dataset.rowIndex);
@@ -286,7 +282,7 @@ let create = function () {
             let linkTypeId = parseInt(linkType.split('_')[0]);
             let linkTypeDirection = linkType.split('_')[1];
             let linkTypeObj = this.formData.linkTypes.find(link => link.id === linkTypeId);
-            if(typeof linkTypeObj === 'undefined') {
+            if (typeof linkTypeObj === 'undefined') {
                 console.error('Link type not found for id ' + linkTypeId);
                 return;
             }
@@ -314,12 +310,12 @@ let create = function () {
             let linkTypeDirection = linkType.split('_')[1];
             let linkTypeObj = this.formData.linkTypes.find(link => link.id === linkTypeId);
 
-            if('' === linkType || '' === hiddenField.value || '' === searchBox.value) {
+            if ('' === linkType || '' === hiddenField.value || '' === searchBox.value) {
                 return;
             }
 
             // add entry to temporary table.
-            console.log('Link ' + linkType+ ' ("'+linkLabel+'") to transaction #' + hiddenField.value + '("'+searchBox.value+'")');
+            console.log('Link ' + linkType + ' ("' + linkLabel + '") to transaction #' + hiddenField.value + '("' + searchBox.value + '")');
 
             this.links[index].push(
                 {
@@ -339,31 +335,31 @@ let create = function () {
             hiddenField.value = '';
         },
 
-        createAutocomplete(fieldIdentifier, url) {
-        let token = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
+        createLinkAutocomplete(fieldIdentifier, url) {
+            let token = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
 
             const renderJournal = function (item, b, c) {
-                return item.description + '<br><small class="text-muted">' + formatMoney(item.amount, item.currency_code) + ' @ ' + format(new Date(item.date), this.i18next.t('config.date_time_fns')) +'</small>';
+                return item.description + '<br><small class="text-muted">' + formatMoney(item.amount, item.currency_code) + ' @ ' + format(new Date(item.date), this.i18next.t('config.date_time_fns')) + '</small>';
             };
-        Autocomplete.init('#' + fieldIdentifier, {
+            Autocomplete.init('#' + fieldIdentifier, {
 
-            server: url + '?_token=' + token,
-            labelField: 'name',
-            hiddenInput: true,
-            valueField: 'id',
-            liveServer: true,
-            onRenderItem: renderJournal.bind(this),
-            fetchOptions: {
-                method: 'GET',
-                credentials: 'include',
-                headers: {
-                    'Content-Type': 'application/json',
-                    'Accept': 'application/json',
-                    'X-CSRF-TOKEN': token
+                server: url + '?_token=' + token,
+                labelField: 'name',
+                hiddenInput: true,
+                valueField: 'id',
+                liveServer: true,
+                onRenderItem: renderJournal.bind(this),
+                fetchOptions: {
+                    method: 'GET',
+                    credentials: 'include',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Accept': 'application/json',
+                        'X-CSRF-TOKEN': token
+                    }
                 }
-            }
-        });
-    },
+            });
+        },
 
         init() {
             this.i18next = i18next;
@@ -396,23 +392,24 @@ let create = function () {
             this.loadCustomFields().then(data => {
                 this.formBehaviour.customFields = data;
                 // linked-transactions-search
-                if(true === data.links) {
+                if (true === data.links) {
                     loadTransactionLinks().then(data => {
                         //console.log(data);
-                        for(let i = 0; i < data.length; i++) {
-                            if(data.hasOwnProperty(i)) {
+                        for (let i = 0; i < data.length; i++) {
+                            if (data.hasOwnProperty(i)) {
                                 let current = data[i];
                                 current.id = parseInt(current.id);
                                 this.formData.linkTypes.push(current);
                             }
                         }
+                        // TODO fix for all modals.
                         //this.formData.linkTypes = data;
                         this.formStates.loadingLinks = false;
-                        this.createAutocomplete('links_modal_search_0','api/v1/autocomplete/transactions-with-meta');
+                        this.createLinkAutocomplete('links_modal_search_0', 'api/v1/autocomplete/transactions-with-meta');
 
                     });
                 }
-                if(false === data.links) {
+                if (false === data.links) {
                     this.formStates.storedLinks = true;
                 }
             });
@@ -436,63 +433,50 @@ let create = function () {
 
         },
         processTransactionLinks(transactions) {
-            console.log('processTransactionLinks');
             let count = 0;
-            for(let i =0;i<transactions.length;i++) {
-                if(transactions.hasOwnProperty(i) && this.links.hasOwnProperty(i)) {
+            for (let i = 0; i < transactions.length; i++) {
+                if (transactions.hasOwnProperty(i) && this.links.hasOwnProperty(i)) {
                     let journalId = transactions[i];
-                    for(let j =0;i<this.links[i].length;j++) {
-                        if(this.links[i].hasOwnProperty(j)) {
-                            console.log('processTransactionLinks for ', i, j);
+                    for (let j = 0; j < this.links[i].length; j++) {
+                        if (this.links[i].hasOwnProperty(j)) {
                             count++;
                             let link = this.links[i][j];
                             let left = journalId;
                             let right = parseInt(link.journal_id);
-                            if('inward' === link.link_type_direction) {
+                            if ('inward' === link.link_type_direction) {
                                 left = parseInt(link.journal_id);
                                 right = journalId;
                             }
-                            this.links[i][j].stored = true;
-                            this.redirectAfterTransactionLinks(i, j);
-                            // (new PostLink).post(link.link_type_id, left, right, null).then(function() {
-                            //     console.log('Here we are after post');
-                            // }).catch(function(e) {
-                            //     console.error(e);
-                            // }).finally(function() {
-                            //     console.log('finally');
-                            // });
+                            (new PostLink).post(link.link_type_id, left, right, null).then(() => {
+                                this.redirectAfterTransactionLinks(i, j);
+                            }).catch(function (e) {
+                                console.error(e);
+                            }).finally(function () {
+                                console.log('finally');
+                            });
                         }
                     }
                 }
             }
-            console.log('Done!');
-            if(0 === count) {
-                console.log('No links, so all are stored.');
+            if (0 === count) {
                 this.formStates.storedLinks = true;
             }
         },
-        redirectAfterTransactionLinks(oldI, oldJ)  {
-            console.log('Posted transaction links for ', oldI, oldJ);
-            this.formStates.storedLinks = true;
-            this.showMessageOrRedirectUser();
-            return;
+        redirectAfterTransactionLinks(oldI, oldJ) {
             this.links[oldI][oldJ].stored = true;
-            console.log('Now redirect after transaction links')
             let completed = true;
-            for(let i = 0;i<this.links.length;i++) {
-                if(this.links.hasOwnProperty(i)) {
-                    for(let j =0;i<this.links[i].length;j++) {
+            for (let i = 0; i < this.links.length; i++) {
+                if (this.links.hasOwnProperty(i)) {
+                    for (let j = 0; j < this.links[i].length; j++) {
                         if (this.links[i].hasOwnProperty(j)) {
-                            console.log('Now loop redirect after transaction links', i, j)
-                            if(false === this.links[i][i].stored) {
+                            if (false === this.links[i][i].stored) {
                                 completed = false;
                             }
                         }
                     }
                 }
             }
-            console.log('End result is ', completed);
-            if(true === completed) {
+            if (true === completed) {
                 this.formStates.storedLinks = completed;
                 this.showMessageOrRedirectUser();
             }
@@ -504,10 +488,10 @@ let create = function () {
             this.formStates.isSubmitting = true;
 
             for (let i in this.entries) {
-                    if (this.entries.hasOwnProperty(i)) {
-                        this.entries[i].errors = defaultErrorSet();
-                    }
+                if (this.entries.hasOwnProperty(i)) {
+                    this.entries[i].errors = defaultErrorSet();
                 }
+            }
 
             // final check on transaction type.
             this.detectTransactionType();
@@ -536,10 +520,9 @@ let create = function () {
                 this.groupProperties.title = group.attributes.group_title ?? group.attributes.transactions[0].description;
 
                 // submit all transaction links, based on the order of the transaction IDs
-                //this.
                 let transactions = [];
-                for(let i=0;i<group.attributes.transactions.length;i++) {
-                    if(group.attributes.transactions.hasOwnProperty(i)) {
+                for (let i = 0; i < group.attributes.transactions.length; i++) {
+                    if (group.attributes.transactions.hasOwnProperty(i)) {
                         transactions.push(parseInt(group.attributes.transactions[i].transaction_journal_id));
                     }
                 }
@@ -566,7 +549,6 @@ let create = function () {
                 }
             });
         },
-
 
 
     }
