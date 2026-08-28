@@ -26,18 +26,21 @@ namespace FireflyIII\Support\Http\Controllers;
 
 use Carbon\Carbon;
 use FireflyIII\Exceptions\FireflyException;
+use FireflyIII\Repositories\User\UserRepositoryInterface;
 use FireflyIII\Support\Cronjobs\AutoBudgetCronjob;
 use FireflyIII\Support\Cronjobs\BillWarningCronjob;
 use FireflyIII\Support\Cronjobs\ExchangeRatesCronjob;
 use FireflyIII\Support\Cronjobs\RecurringCronjob;
 use FireflyIII\Support\Cronjobs\WebhookCronjob;
 use FireflyIII\User;
+use Illuminate\Support\Collection;
 
 /**
  * Trait CronRunner
  */
 trait CronRunner
 {
+    protected UserRepositoryInterface $repository;
     protected function billWarningCronJob(User $user, bool $force, Carbon $date): array
     {
         /** @var BillWarningCronjob $billWarning */
@@ -65,7 +68,14 @@ trait CronRunner
         /** @var ExchangeRatesCronjob $exchangeRates */
         $exchangeRates = app(ExchangeRatesCronjob::class);
         $exchangeRates->setForce($force);
-        $exchangeRates->setUser($user);
+
+        // if the user is owner, run for all users.
+        $users = new Collection([$user]);
+        if($user->hasRole('owner')) {
+            $this->repository = app(UserRepositoryInterface::class);
+            $users = $this->repository->allAvailable();
+        }
+        $exchangeRates->setUsers($users);
         $exchangeRates->setDate($date);
 
         try {
