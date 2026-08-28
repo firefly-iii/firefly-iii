@@ -53,7 +53,7 @@ import {onMapClick} from './shared/on-map-click.js';
 import {onMapZoom} from "./shared/on-map-zoom.js";
 import {clearLocation} from './shared/clear-location.js';
 import {removeSplit} from "./shared/remove-split.js";
-import {loadLinkTypes} from './shared/load-transaction-links.js';
+import {loadLinkTypes} from "./shared/load-link-types.js";
 import {createLinkAutocomplete} from "./shared/create-link-autocomplete.js";
 import {editLink} from "./shared/edit-link.js";
 import {switchLink} from "./shared/switch-link.js";

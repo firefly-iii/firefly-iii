@@ -170,7 +170,14 @@
                                                 <td>
                                                     <template x-if="!link.editMode">
                                                         <span>
-                                                            <span x-text="link.link_type_label"></span> <a :href="'transactions/show-by-journal/' + link.journal_id" target="_blank"><span x-text="link.journal_description"></span></a>
+                                                            <template x-if="0 === link.group_id">
+                                                                <span><span x-text="link.link_type_label"></span> <a :href="'transactions/show-by-journal/' + link.journal_id" target="_blank"><span x-text="link.journal_description"></span></a>
+                                                                </span>
+                                                            </template>
+                                                            <template x-if="0 !== link.group_id">
+                                                                <span><span x-text="link.link_type_label"></span> <a :href="'transactions/show/' + link.group_id" target="_blank"><span x-text="link.journal_description"></span></a>
+                                                                </span>
+                                                            </template>
                                                         </span>
                                                     </template>
                                                     <template x-if="link.editMode">

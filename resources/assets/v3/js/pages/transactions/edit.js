@@ -55,7 +55,8 @@ import {onMapClick} from './shared/on-map-click.js';
 import {onMapZoom} from './shared/on-map-zoom.js';
 import {clearLocation} from './shared/clear-location.js';
 import {removeSplit} from "./shared/remove-split.js";
-import {loadLinkTypes} from "./shared/load-transaction-links.js";
+import {loadLinkTypes} from "./shared/load-link-types.js";
+import {loadTransactionLinks} from './shared/load-transaction-links.js';
 import {createLinkAutocomplete} from "./shared/create-link-autocomplete.js";
 import {editLink} from "./shared/edit-link.js";
 import {switchLink} from "./shared/switch-link.js";
@@ -178,6 +179,7 @@ let transactions = function () {
         saveNewLink: saveNewLink,
         processTransactionLinks: processTransactionLinks,
         redirectAfterTransactionLinks: redirectAfterTransactionLinks,
+        loadTransactionLinks: loadTransactionLinks,
 
 
         // part of the account selection auto-complete
@@ -214,10 +216,9 @@ let transactions = function () {
                 this.groupProperties.title = data.attributes.group_title ?? data.attributes.transactions[0].description;
                 this.entries = parseDownloadedSplits(data.attributes.transactions, parseInt(data.id));
 
+                // set empty arrays
                 for(let i = 0; i < this.entries.length; i++) {
                     this.links[i] = []; // empty set of links.
-                    // then fill the set using the ID.
-                    //this.l
                 }
 
                 // set amountCurrency.
@@ -321,6 +322,12 @@ let transactions = function () {
                         // TODO fix for all mdodals.
                         this.formStates.loadingLinks = false;
                         this.createLinkAutocomplete('links_modal_search_0', 'api/v1/autocomplete/transactions-with-meta');
+
+                        for(let i = 0; i < this.entries.length; i++) {
+                            this.links[i] = []; // empty set of links.
+                            // then fill the set using the ID.
+                            this.loadTransactionLinks(i, this.entries[i].transaction_journal_id);
+                        }
 
                     });
                 }

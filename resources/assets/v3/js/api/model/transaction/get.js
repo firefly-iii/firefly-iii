@@ -32,6 +32,12 @@ export default class Get {
         return api.get('/api/v1/transactions', {params: params});
     }
     show(id, params){
-        return api.get('/api/v1/transactions/' + id, {params: params});
+        return api.get('/api/v1/transactions/' + parseInt(id), {params: params});
+    }
+    showJournal(id, params){
+        return api.get('/api/v1/transaction-journals/' + parseInt(id), {params: params});
+    }
+    transactionLinks(id, params){
+        return api.get('/api/v1/transaction-journals/' + parseInt(id) + '/links', {params: params});
     }
 }
