@@ -54,9 +54,12 @@ import {onMapZoom} from "./shared/on-map-zoom.js";
 import {clearLocation} from './shared/clear-location.js';
 import {removeSplit} from "./shared/remove-split.js";
 import {loadTransactionLinks} from './shared/load-transaction-links.js';
-import Autocomplete from "bootstrap5-autocomplete";
-import formatMoney from "../../util/format-money.js";
-import {format} from "date-fns";
+import {createLinkAutocomplete} from "./shared/create-link-autocomplete.js";
+import {editLink} from "./shared/edit-link.js";
+import {switchLink} from "./shared/switch-link.js";
+import {removeLink} from "./shared/remove-link.js";
+import {saveEditedLink} from "./shared/save-edited-link.js";
+import {saveNewLink} from "./shared/save-new-link.js";
 
 let create = function () {
     return {
@@ -181,6 +184,12 @@ let create = function () {
         onMapClick: onMapClick,
         onMapZoom: onMapZoom,
         clearLocation: clearLocation,
+        createLinkAutocomplete: createLinkAutocomplete,
+        editLink: editLink,
+        switchLink: switchLink,
+        removeLink: removeLink,
+        saveEditedLink: saveEditedLink,
+        saveNewLink: saveNewLink,
 
         filterForeignCurrencies(code) {
             let list = [];
@@ -250,115 +259,6 @@ let create = function () {
                 }
                 // TODO don't do this on a timeout!
             }, 500);
-        },
-        switchLink(e) {
-            let rowIndex = parseInt(e.currentTarget.dataset.rowIndex);
-            let index = parseInt(e.currentTarget.dataset.index);
-            let linkTypeId = parseInt(this.links[index][rowIndex].link_type.split('_')[0]);
-            let linkTypeDirection = this.links[index][rowIndex].link_type.split('_')[1];
-            let linkType = this.formData.linkTypes.find(link => link.id === linkTypeId);
-            // switch link type.
-            linkTypeDirection = 'inward' === linkTypeDirection ? 'outward' : 'inward';
-            if (typeof linkType === 'undefined') {
-                console.error('Link type not found for id ' + linkTypeId);
-                console.log(this.formData.linkTypes);
-                return;
-            }
-            this.links[index][rowIndex].link_type = linkType.id + '_' + linkTypeDirection;
-            this.links[index][rowIndex].link_type_label = linkType[linkTypeDirection];
-            this.links[index][rowIndex].link_type_direction = linkTypeDirection;
-        },
-        removeLink(e) {
-            let rowIndex = parseInt(e.currentTarget.dataset.rowIndex);
-            let index = parseInt(e.currentTarget.dataset.index);
-            this.links[index].splice(rowIndex, 1);
-        },
-        saveEditedLink(e) {
-            let rowIndex = parseInt(e.currentTarget.dataset.rowIndex);
-            let index = parseInt(e.currentTarget.dataset.index);
-            let selector = e.currentTarget.parentNode.querySelector('select[name="new-link-type"]');
-
-            let linkType = selector.value;
-            let linkTypeId = parseInt(linkType.split('_')[0]);
-            let linkTypeDirection = linkType.split('_')[1];
-            let linkTypeObj = this.formData.linkTypes.find(link => link.id === linkTypeId);
-            if (typeof linkTypeObj === 'undefined') {
-                console.error('Link type not found for id ' + linkTypeId);
-                return;
-            }
-            this.links[index][rowIndex].link_type = linkTypeId + '_' + linkTypeDirection;
-            this.links[index][rowIndex].link_type_id = linkTypeId;
-            this.links[index][rowIndex].link_type_direction = linkTypeDirection;
-            this.links[index][rowIndex].link_type_label = linkTypeObj[linkTypeDirection];
-            this.links[index][rowIndex].editMode = false;
-        },
-        editLink(e) {
-            let rowIndex = parseInt(e.currentTarget.dataset.rowIndex);
-            let index = parseInt(e.currentTarget.dataset.index);
-            this.links[index][rowIndex].editMode = true;
-        },
-        saveNewLink(e) {
-            let index = parseInt(e.currentTarget.dataset.index);
-
-            let linkSelect = document.getElementById('link_type_id_' + index);
-            let linkType = linkSelect.value;
-            let linkLabel = linkSelect.options[linkSelect.selectedIndex].innerHTML;
-            let searchBox = document.getElementById('links_modal_search_' + index);
-            let hiddenField = searchBox.parentNode.querySelector('input[name="search"]');
-
-            let linkTypeId = parseInt(linkType.split('_')[0]);
-            let linkTypeDirection = linkType.split('_')[1];
-            let linkTypeObj = this.formData.linkTypes.find(link => link.id === linkTypeId);
-
-            if ('' === linkType || '' === hiddenField.value || '' === searchBox.value) {
-                return;
-            }
-
-            // add entry to temporary table.
-            console.log('Link ' + linkType + ' ("' + linkLabel + '") to transaction #' + hiddenField.value + '("' + searchBox.value + '")');
-
-            this.links[index].push(
-                {
-                    id: 0,
-                    link_type: linkTypeId + '_' + linkTypeDirection,
-                    link_type_id: linkTypeId,
-                    link_type_direction: linkTypeDirection,
-                    link_type_label: linkTypeObj[linkTypeDirection],
-                    journal_id: hiddenField.value,
-                    group_id: hiddenField.value,
-                    journal_description: searchBox.value,
-                    editMode: false,
-                    stored: false,
-                }
-            );
-            searchBox.value = '';
-            hiddenField.value = '';
-        },
-
-        createLinkAutocomplete(fieldIdentifier, url) {
-            let token = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
-
-            const renderJournal = function (item, b, c) {
-                return item.description + '<br><small class="text-muted">' + formatMoney(item.amount, item.currency_code) + ' @ ' + format(new Date(item.date), this.i18next.t('config.date_time_fns')) + '</small>';
-            };
-            Autocomplete.init('#' + fieldIdentifier, {
-
-                server: url + '?_token=' + token,
-                labelField: 'name',
-                hiddenInput: true,
-                valueField: 'id',
-                liveServer: true,
-                onRenderItem: renderJournal.bind(this),
-                fetchOptions: {
-                    method: 'GET',
-                    credentials: 'include',
-                    headers: {
-                        'Content-Type': 'application/json',
-                        'Accept': 'application/json',
-                        'X-CSRF-TOKEN': token
-                    }
-                }
-            });
         },
 
         init() {

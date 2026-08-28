@@ -56,6 +56,12 @@ import {onMapZoom} from './shared/on-map-zoom.js';
 import {clearLocation} from './shared/clear-location.js';
 import {removeSplit} from "./shared/remove-split.js";
 import {loadTransactionLinks} from "./shared/load-transaction-links.js";
+import {createLinkAutocomplete} from "./shared/create-link-autocomplete.js";
+import {editLink} from "./shared/edit-link.js";
+import {switchLink} from "./shared/switch-link.js";
+import {removeLink} from "./shared/remove-link.js";
+import {saveEditedLink} from "./shared/save-edited-link.js";
+import {saveNewLink} from "./shared/save-new-link.js";
 
 const urls = getUrls();
 
@@ -158,6 +164,12 @@ let transactions = function () {
         onMapZoom: onMapZoom,
         clearLocation: clearLocation,
         removeSplit: removeSplit,
+        createLinkAutocomplete: createLinkAutocomplete,
+        editLink: editLink,
+        switchLink: switchLink,
+        removeLink: removeLink,
+        saveEditedLink: saveEditedLink,
+        saveNewLink: saveNewLink,
 
 
         // part of the account selection auto-complete
@@ -298,7 +310,7 @@ let transactions = function () {
                         //this.formData.linkTypes = data;
                         // TODO fix for all mdodals.
                         this.formStates.loadingLinks = false;
-                        this.createAutocomplete('links_modal_search_0', 'api/v1/autocomplete/transactions-with-meta');
+                        this.createLinkAutocomplete('links_modal_search_0', 'api/v1/autocomplete/transactions-with-meta');
 
                     });
                 }
