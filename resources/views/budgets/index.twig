@@ -445,11 +445,12 @@
                         </div>
                         <div class="box-body">
                             {% for budget in inactive %}
-                                {% if loop.index == inactive.count() %}
+                                <div class="clearfix">
                                     <a href="{{ route('budgets.show',budget.id) }}">{{ budget.name }}</a>
-                                {% else %}
-                                    <a href="{{ route('budgets.show',budget.id) }}">{{ budget.name }}</a>,
-                                {% endif %}
+                                    <a href="{{ route('budgets.edit',budget.id) }}" class="pull-right" title="{{ 'edit'|_ }}">
+                                        <span class="fa fa-fw fa-pencil"></span>
+                                    </a>
+                                </div>
                             {% endfor %}
                         </div>
                     </div>

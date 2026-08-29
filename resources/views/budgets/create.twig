@@ -42,27 +42,10 @@
         </div>
     </form>
 
-    <div class="modal fade" id="cancelCreateBudgetModal" tabindex="-1" role="dialog" aria-labelledby="cancelCreateBudgetModalLabel">
-        <div class="modal-dialog" role="document">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <button type="button" class="close" data-dismiss="modal" aria-label="{{ 'close'|_ }}">
-                        <span aria-hidden="true">&times;</span>
-                    </button>
-                    <h4 class="modal-title" id="cancelCreateBudgetModalLabel">{{ 'create_budget_cancel_title'|_ }}</h4>
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-default" data-dismiss="modal">{{ 'create_budget_cancel_dont_cancel'|_ }}</button>
-                    {# href is the Cancel button's own destination by default; when the modal is
-                       opened by intercepting a sidebar click instead, create.js rewrites it to
-                       that link's destination for the duration of this one confirmation. #}
-                    <a href="{{ route('budgets.index') }}" class="btn btn-danger" id="cancelCreateBudgetUnderstood">{{ 'create_budget_cancel_understood'|_ }}</a>
-                </div>
-            </div>
-        </div>
-    </div>
+    {% include 'partials.budget-cancel-modal' %}
 
 {% endblock %}
 {% block scripts %}
+    <script type="text/javascript" src="v1/js/ff/budgets/cancel-confirm.js?v={{ FF_VERSION }}" nonce="{{ JS_NONCE }}"></script>
     <script type="text/javascript" src="v1/js/ff/budgets/create.js?v={{ FF_VERSION }}" nonce="{{ JS_NONCE }}"></script>
 {% endblock %}

@@ -51,29 +51,7 @@ $(function () {
         $('#create_another').prop('checked', false);
     });
 
-    // The "Understood" link's href is the Cancel button's own destination by default
-    // (rendered server-side); captured once so it can always be restored below, even after
-    // a sidebar click has temporarily pointed it somewhere else.
-    var $cancelUnderstood = $('#cancelCreateBudgetUnderstood');
-    var cancelDestination = $cancelUnderstood.attr('href');
-
-    $('#cancelCreateBudgetBtn').on('click', function () {
-        $cancelUnderstood.attr('href', cancelDestination);
-        $('#cancelCreateBudgetModal').modal('show');
-    });
-
-    // Sidebar links navigate away from this page just as abruptly as Cancel used to before
-    // it got a confirmation -- reuse that same modal instead of a second one. Only real
-    // navigation is intercepted: treeview parents (href="#", just expand/collapse a submenu)
-    // are left alone so AdminLTE's own toggle behaviour still works.
-    $('.sidebar-menu a').on('click', function (e) {
-        var href = $(this).attr('href');
-        if (!href || '#' === href) {
-            return;
-        }
-        e.preventDefault();
-        $cancelUnderstood.attr('href', href);
-        $('#cancelCreateBudgetModal').modal('show');
-    });
+    // Cancel button and sidebar-navigation confirmation are shared with the
+    // Edit Budget page -- see cancel-confirm.js.
 
 });
