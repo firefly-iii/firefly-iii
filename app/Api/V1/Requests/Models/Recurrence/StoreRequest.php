@@ -88,7 +88,7 @@ class StoreRequest extends FormRequest
             'nr_of_repetitions'                    => ['nullable', 'numeric', 'min:1', 'max:255'],
 
             'repetitions.*.type'                   => ['required', 'in:daily,weekly,ndom,monthly,yearly'],
-            'repetitions.*.moment'                 => ['min:0', 'max:10'],
+            'repetitions.*.moment'                 => ['nullable'],
             'repetitions.*.skip'                   => ['nullable', 'numeric', 'min:0', 'max:31'],
             'repetitions.*.weekend'                => ['numeric', 'min:1', 'max:4'],
 
