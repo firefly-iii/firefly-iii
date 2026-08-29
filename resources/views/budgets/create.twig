@@ -53,7 +53,10 @@
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-default" data-dismiss="modal">{{ 'create_budget_cancel_dont_cancel'|_ }}</button>
-                    <a href="{{ route('budgets.index') }}" class="btn btn-danger">{{ 'create_budget_cancel_understood'|_ }}</a>
+                    {# href is the Cancel button's own destination by default; when the modal is
+                       opened by intercepting a sidebar click instead, create.js rewrites it to
+                       that link's destination for the duration of this one confirmation. #}
+                    <a href="{{ route('budgets.index') }}" class="btn btn-danger" id="cancelCreateBudgetUnderstood">{{ 'create_budget_cancel_understood'|_ }}</a>
                 </div>
             </div>
         </div>

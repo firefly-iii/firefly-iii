@@ -193,12 +193,13 @@
 {% endblock %}
 {% block scripts %}
     <script type="text/javascript" nonce="{{ JS_NONCE }}">
-        var lineColor = 'red';
-        var lineTextColor = '#000';
-        if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) {
-            lineColor = '#a00';
-            lineTextColor = '#bec5cb';
-        }
+        {# Chart.js reads plain JS colors, not CSS -- and can't tell the app's own light/dark
+           preference from the OS's, which prefers-color-scheme alone would. Reading the
+           already-resolved --ip-chart-marker* custom properties (see instrument-panel-tokens/
+           dark.css) picks up whichever theme is actually rendering, however that was decided. #}
+        var chartMarkerStyle = getComputedStyle(document.documentElement);
+        var lineColor = chartMarkerStyle.getPropertyValue('--ip-chart-marker').trim() || 'red';
+        var lineTextColor = chartMarkerStyle.getPropertyValue('--ip-chart-marker-fg').trim() || '#000';
         var billCount = {{ billCount }};
         var accountFrontpageUrl = '{{ route('chart.account.frontpage') }}';
         var accountRevenueUrl = '{{ route('chart.account.revenue') }}';
