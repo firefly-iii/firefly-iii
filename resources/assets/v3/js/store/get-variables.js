@@ -21,7 +21,7 @@
 import Get from "../api/preferences/index.js";
 
 export function getVariables(preferences) {
-    console.log('Now in getVariables', preferences);
+    //console.log('Now in getVariables', preferences);
     let chain = Promise.resolve();
     let collectable = [];
     let result = {};
@@ -69,7 +69,7 @@ export function getVariables(preferences) {
         // console.log('Have something to collect');
         chain = chain.then(() => {
             let names = collectable.join(',');
-            console.log('Will collect', names);
+            //console.log('Will collect', names);
             return getter.getList(names).then((response) => {
                 let parsed = parseResponses(response);
                 // console.log('Returning "' + names + '" from server: ', parsed);
@@ -97,6 +97,6 @@ export function parseResponses(response) {
             window.store.set(current.attributes.name, current.attributes.data);
         }
     }
-    console.log('parseResponses', result);
+    // console.log('parseResponses', result);
     return result;
 }

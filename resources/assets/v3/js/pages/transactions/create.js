@@ -24,7 +24,6 @@ import dates from '../shared/dates.js';
 import {defaultErrorSet} from "./shared/create-empty-split.js";
 import {parseFromEntries} from "./shared/parse-from-entries.js";
 import Post from "../../api/model/transaction/post.js";
-import PostLink from '../../api/model/transaction-link/post.js';
 import {loadCurrencies} from "./shared/load-currencies.js";
 import {loadBudgets} from "./shared/load-budgets.js";
 import {loadPiggyBanks} from "./shared/load-piggy-banks.js";
@@ -62,6 +61,7 @@ import {saveEditedLink} from "./shared/save-edited-link.js";
 import {saveNewLink} from "./shared/save-new-link.js";
 import {redirectAfterTransactionLinks} from './shared/redirect-after-transaction-links.js';
 import {processTransactionLinks} from './shared/process-transaction-links.js';
+import {addTabListener} from "./shared/add-tab-listener.js";
 
 let create = function () {
     return {
@@ -92,9 +92,10 @@ let create = function () {
         formStates: {
             loadingCurrencies: true,
             loadingBudgets: true,
-            loadingLinks: true,
+            loadingLinks: null,
             loadingPiggyBanks: true,
             loadingSubscriptions: true,
+            loadingTransaction: true,
             isSubmitting: false,
             returnHereButton: false,
             saveAsNewButton: false, // edit form only
@@ -194,6 +195,7 @@ let create = function () {
         saveNewLink: saveNewLink,
         processTransactionLinks: processTransactionLinks,
         redirectAfterTransactionLinks: redirectAfterTransactionLinks,
+        addTabListener: addTabListener,
 
         filterForeignCurrencies(code) {
             let list = [];
@@ -228,6 +230,8 @@ let create = function () {
 
         addedSplit() {
             this.addAllAutocompleteToForm();
+            this.addTabListener();
+            this.formStates.loadingTransaction = false;
         },
 
         processUpload(event) {
@@ -252,18 +256,42 @@ let create = function () {
             }
             //console.log('Switched to new tab!', event.target.dataset.index);
         },
-        addTabListener() {
-            // on switch tab (to re-render map if necessary).
-            // this.maps[index].invalidateSize();
-            setTimeout(() => {
-                const tabEl = document.querySelectorAll('button[data-bs-toggle="tab"]')
-                for (let i = 0; i < tabEl.length; i++) {
-                    tabEl[i].removeEventListener('shown.bs.tab', this.respondToTabSwitch);
-                    tabEl[i].addEventListener('shown.bs.tab', this.respondToTabSwitch.bind(this), true);
+
+        // this method automatically calls some
+        // "next steps", whenever the state of the form loads or changes.
+        // used during the init phase of the form.
+        autoStep() {
+            // check if custom field "links" is enabled and if so, load the link types and save them in formData.
+            if (null === this.formStates.loadingLinks && this.formBehaviour.customFields.hasOwnProperty('links') && true === this.formBehaviour.customFields.links) {
+                this.formStates.loadingLinks = true;
+                loadLinkTypes().then(data => {
+                    for (let i = 0; i < data.length; i++) {
+                        if (data.hasOwnProperty(i)) {
+                            let current = data[i];
+                            current.id = parseInt(current.id);
+                            this.formData.linkTypes.push(current);
+                        }
+                    }
+                    this.formStates.loadingLinks = false;
+                    this.autoStep(); // yes, recurring.
+
+                });
+            }
+            if (this.formBehaviour.customFields.hasOwnProperty('links') && false === this.formBehaviour.customFields.links) {
+                this.formStates.storedLinks = true;
+                this.formStates.loadingLinks = false;
+            }
+            // check if the transaction is loaded and also the transaction links AND the field is enabled, then load the autocomplete for links.
+            if (false === this.formStates.loadingTransaction && false === this.formStates.loadingLinks && this.formBehaviour.customFields.hasOwnProperty('links') && true === this.formBehaviour.customFields.links) {
+                for(let i = 0; i < this.entries.length; i++) {
+                    if(this.entries.hasOwnProperty(i)) {
+                        this.createLinkAutocomplete('links_modal_search_' + i, 'api/v1/autocomplete/transactions-with-meta');
+                    }
                 }
-                // TODO don't do this on a timeout!
-            }, 500);
+            }
+
         },
+
 
         init() {
             this.i18next = i18next;
@@ -276,46 +304,30 @@ let create = function () {
                 this.formData.enabledCurrencies = data.enabledCurrencies;
                 this.formData.primaryCurrencies = data.primaryCurrencies;
                 this.formData.foreignCurrencies = data.foreignCurrencies;
+                this.autoStep();
             });
 
 
             loadBudgets(false).then(data => {
                 this.formData.budgets = data;
                 this.formStates.loadingBudgets = false;
+                this.autoStep();
             });
             loadPiggyBanks().then(data => {
                 this.formData.piggyBanks = data;
                 this.formStates.loadingPiggyBanks = false;
+                this.autoStep();
             });
             loadSubscriptions(false).then(data => {
                 this.formData.subscriptions = data;
                 this.formStates.loadingSubscriptions = false;
+                this.autoStep();
             });
 
             // load custom field preference and enable/disable those fields.
             this.loadCustomFields().then(data => {
                 this.formBehaviour.customFields = data;
-                // linked-transactions-search
-                if (true === data.links) {
-                    loadLinkTypes().then(data => {
-                        //console.log(data);
-                        for (let i = 0; i < data.length; i++) {
-                            if (data.hasOwnProperty(i)) {
-                                let current = data[i];
-                                current.id = parseInt(current.id);
-                                this.formData.linkTypes.push(current);
-                            }
-                        }
-                        // TODO fix for all modals.
-                        //this.formData.linkTypes = data;
-                        this.formStates.loadingLinks = false;
-                        this.createLinkAutocomplete('links_modal_search_0', 'api/v1/autocomplete/transactions-with-meta');
-
-                    });
-                }
-                if (false === data.links) {
-                    this.formStates.storedLinks = true;
-                }
+                this.autoStep();
             });
 
 

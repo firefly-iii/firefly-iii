@@ -39,7 +39,6 @@ export function getUrls() {
 }
 
 export function addAllAutocompleteToForm() {
-    console.log('Now in addAllAutocompleteToForm()');
     // filters are hard coded.
     // part of the account selection auto-complete
     let filters = {

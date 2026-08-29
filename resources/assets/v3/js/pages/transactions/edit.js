@@ -65,6 +65,7 @@ import {saveEditedLink} from "./shared/save-edited-link.js";
 import {saveNewLink} from "./shared/save-new-link.js";
 import {processTransactionLinks} from "./shared/process-transaction-links.js";
 import {redirectAfterTransactionLinks} from "./shared/redirect-after-transaction-links.js";
+import {addTabListener} from "./shared/add-tab-listener.js";
 
 const urls = getUrls();
 
@@ -180,7 +181,7 @@ let transactions = function () {
         processTransactionLinks: processTransactionLinks,
         redirectAfterTransactionLinks: redirectAfterTransactionLinks,
         loadTransactionLinks: loadTransactionLinks,
-
+        addTabListener: addTabListener,
 
         // part of the account selection auto-complete
 
@@ -252,6 +253,10 @@ let transactions = function () {
                     }
                 }
                 setTimeout(() => {
+                    // send event that transaction group is loaded.
+                    // document.dispatchEvent(new CustomEvent('transaction-group-loaded'));
+
+                    // TODO should not be on a timeout.
                     // render tags:
                     Tags.init('select.ac-tags', {
                         allowClear: true,
@@ -273,6 +278,7 @@ let transactions = function () {
                 }, 150);
             });
         },
+
 
         init() {
 
@@ -318,10 +324,7 @@ let transactions = function () {
                                 this.formData.linkTypes.push(current);
                             }
                         }
-                        //this.formData.linkTypes = data;
-                        // TODO fix for all mdodals.
                         this.formStates.loadingLinks = false;
-                        this.createLinkAutocomplete('links_modal_search_0', 'api/v1/autocomplete/transactions-with-meta');
 
                         for(let i = 0; i < this.entries.length; i++) {
                             this.links[i] = []; // empty set of links.
@@ -336,6 +339,14 @@ let transactions = function () {
                 }
             });
 
+            // document.addEventListener('transaction-group-loaded', (event) => {
+            //     this.createLinkAutocompletes();
+            //     this.createLinkAutocomplete('links_modal_search_0', 'api/v1/autocomplete/transactions-with-meta');
+            //     this.entries[event.detail.index].latitude = event.detail.latitude;
+            //     this.entries[event.detail.index].longitude = event.detail.longitude;
+            // });
+
+
             // add some event listeners
             document.addEventListener('upload-success', (event) => {
                 this.processUpload(event);
@@ -345,10 +356,7 @@ let transactions = function () {
             document.addEventListener('upload-error', (event) => {
                 this.processUploadError(event);
             });
-            // document.addEventListener('location-move', (event) => {
-            //     this.entries[event.detail.index].latitude = event.detail.latitude;
-            //     this.entries[event.detail.index].longitude = event.detail.longitude;
-            // });
+
 
             // document.addEventListener('location-set', (event) => {
             //     this.entries[event.detail.index].hasLocation = true;
@@ -449,6 +457,7 @@ let transactions = function () {
             console.log('addedSplit()');
             this.disableSplitAccounts();
             this.addAllAutocompleteToForm();
+            this.addTabListener();
         },
 
     }

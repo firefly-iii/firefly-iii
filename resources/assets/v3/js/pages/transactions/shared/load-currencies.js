@@ -52,9 +52,9 @@ export function loadCurrencies() {
 
                         };
                     if (obj.primary) {
-                        console.log('Made ' + obj.code + ' primary.');
+                        //console.log('Made ' + obj.code + ' primary.');
                         returnData.primaryCurrency = obj;
-                        console.log(returnData.primaryCurrency);
+                        //console.log(returnData.primaryCurrency);
                     }
                     returnData.enabledCurrencies.push(obj);
                     returnData.primaryCurrencies.push(obj);
@@ -62,7 +62,7 @@ export function loadCurrencies() {
                 }
             }
         }
-        console.log(returnData);
+        //console.log(returnData);
         return returnData;
     });
 }

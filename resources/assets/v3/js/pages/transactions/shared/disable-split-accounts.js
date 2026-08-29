@@ -21,20 +21,20 @@
 
 // what happens when a user adds more than one split?
 export function disableSplitAccounts() {
-    console.log('Call disableSplitAccounts');
+    //console.log('Call disableSplitAccounts');
     if(this.entries.length > 1) {
-        console.log('Activate disableSplitAccounts');
+        //console.log('Activate disableSplitAccounts');
         // disable source and/or destination, based on account type.
         for(let i = 1;i<this.entries.length;i++) {
             // disable source when withdrawal or transfer
             if('transfer' === this.groupProperties.transactionType || 'withdrawal' === this.groupProperties.transactionType) {
                 this.entries[i].source_account.disabled = true;
-                console.log('Disable source account #' + i + 1);
+                // console.log('Disable source account #' + i + 1);
             }
             // disable destination when deposit or transfer
             if('transfer' === this.groupProperties.transactionType || 'deposit' === this.groupProperties.transactionType) {
                 this.entries[i].destination_account.disabled = true;
-                console.log('Disable destination account #' + i + 1);
+                // console.log('Disable destination account #' + i + 1);
             }
         }
     }

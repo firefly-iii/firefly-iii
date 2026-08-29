@@ -27,12 +27,12 @@ import LocalStorageBackend from "i18next-localstorage-backend";
 let loaded = false;
 
 function loadTranslations(locale) {
-    console.log('loadTranslations(' + locale + ')');
+    // console.log('loadTranslations(' + locale + ')');
     if (false === loaded) {
         const replacedLocale = locale.replace('-', '_');
         loaded = true;
         const expireTime = import.meta.env.MODE === 'development' ? 1 : 7 * 24 * 60 * 60 * 1000;
-        console.log('Will load language "'+replacedLocale+'"');
+        // console.log('Will load language "'+replacedLocale+'"');
         return i18next
             .use(ChainedBackend)
             .init({
@@ -54,7 +54,7 @@ function loadTranslations(locale) {
                 }
             });
     }
-    console.warn('Loading translations skipped.');
+    console.warn(   'Loading translations skipped.');
     return Promise.resolve();
 }
 

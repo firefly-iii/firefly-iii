@@ -57,7 +57,7 @@ export default () => ({
     language: 'en_US',
 
     init() {
-        console.log('init on dates');
+        // console.log('init on dates');
         this.range = {
             start: new Date(window.store.get('start')),
             end: new Date(window.store.get('end'))
@@ -83,7 +83,7 @@ export default () => ({
 
 
     buildDateRange() {
-        console.log('Dates buildDateRange');
+        //console.log('Dates buildDateRange');
 
         // generate ranges
         let nextRange = this.getNextRange();

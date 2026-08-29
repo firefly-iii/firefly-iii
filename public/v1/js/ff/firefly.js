@@ -165,7 +165,7 @@ function currencySelect(e) {
 }
 
 function configAccounting(customCurrency) {
-    console.log('configAccounting');
+    // console.log('configAccounting');
     // Settings object that controls default parameters for library methods:
     accounting.settings = {
         currency: {

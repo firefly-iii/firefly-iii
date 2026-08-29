@@ -1,5 +1,5 @@
 /*
- * sidebar.js
+ * add-tab-listener.js
  * Copyright (c) 2026 james@firefly-iii.org
  *
  * This file is part of Firefly III (https://github.com/firefly-iii).
@@ -18,14 +18,12 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-export default () => ({
-    foo: 'bar',
-    init() {
-        //console.log('init op sidebar')
-    },
-    logoutUser(e) {
-        e.preventDefault();
-        document.getElementById('logout-form').submit();
-        console.log('Logout user');
+export function addTabListener() {
+    // on switch tab (to re-render map if necessary).
+    const tabEl = document.querySelectorAll('button[data-bs-toggle="tab"]')
+    // console.log('tabEl length is now', tabEl.length);
+        for (let i = 0; i < tabEl.length; i++) {
+        tabEl[i].removeEventListener('shown.bs.tab', this.respondToTabSwitch);
+        tabEl[i].addEventListener('shown.bs.tab', this.respondToTabSwitch.bind(this), true);
     }
-});
+}

@@ -55,7 +55,7 @@ getFreshVariable('lastActivity').then((serverValue) => {
     Promise.resolve(
         getVariables(['viewRange','darkMode','locale','language', 'convert_to_primary']),
     ).then((values) => {
-        console.log(values);
+        //console.log(values);
         if (!store.get('start') || !store.get('end')) {
             // calculate new start and end, and store them.
             const range = getViewRange(values.viewRange, new Date);
