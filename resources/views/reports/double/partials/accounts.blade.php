@@ -16,8 +16,8 @@
                 @else
                     {{ $account['source_name'] }} / {{ $account['dest_name'] }}
                 @endif
-                @if($iban['source_iban'] !== '' && $account['dest_iban'] !== '')
-                    @if($iban['source_iban'] === $iban['dest_iban'])
+                @if($account['source_iban'] !== '' && $account['dest_iban'] !== '')
+                    @if($account['source_iban'] === $account['dest_iban'])
                         ({{ $account['source_iban'] }})
                     @else
                         ({{ $account['source_iban'] }} / ({{ $account['dest_iban'] }}))
