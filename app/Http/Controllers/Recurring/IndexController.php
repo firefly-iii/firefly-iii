@@ -39,7 +39,6 @@ use Illuminate\Pagination\LengthAwarePaginator;
 use Illuminate\View\View;
 use Psr\Container\ContainerExceptionInterface;
 use Psr\Container\NotFoundExceptionInterface;
-use Symfony\Component\HttpFoundation\ParameterBag;
 
 /**
  * Class IndexController
