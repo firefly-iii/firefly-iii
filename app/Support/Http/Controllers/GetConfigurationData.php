@@ -212,7 +212,7 @@ trait GetConfigurationData
 
     protected function verifyRecurringCronJob(): void
     {
-        $config   = AppConfiguration::get('last_rt_job', 0);
+        $config   = AppConfiguration::get(sprintf('last_rt_job_%d', auth()->user()->id), 0);
         $lastTime = (int) $config?->data;
         $now      = Carbon::now()->getTimestamp();
         Log::debug(sprintf('verifyRecurringCronJob: last time is %d ("%s"), now is %d', $lastTime, $config?->data, $now));

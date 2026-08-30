@@ -62,6 +62,7 @@ import {saveNewLink} from "./shared/save-new-link.js";
 import {redirectAfterTransactionLinks} from './shared/redirect-after-transaction-links.js';
 import {processTransactionLinks} from './shared/process-transaction-links.js';
 import {addTabListener} from "./shared/add-tab-listener.js";
+import {autoStep} from "./shared/auto-step.js";
 
 let create = function () {
     return {
@@ -196,6 +197,7 @@ let create = function () {
         processTransactionLinks: processTransactionLinks,
         redirectAfterTransactionLinks: redirectAfterTransactionLinks,
         addTabListener: addTabListener,
+        autoStep: autoStep,
 
         filterForeignCurrencies(code) {
             let list = [];
@@ -257,40 +259,7 @@ let create = function () {
             //console.log('Switched to new tab!', event.target.dataset.index);
         },
 
-        // this method automatically calls some
-        // "next steps", whenever the state of the form loads or changes.
-        // used during the init phase of the form.
-        autoStep() {
-            // check if custom field "links" is enabled and if so, load the link types and save them in formData.
-            if (null === this.formStates.loadingLinks && this.formBehaviour.customFields.hasOwnProperty('links') && true === this.formBehaviour.customFields.links) {
-                this.formStates.loadingLinks = true;
-                loadLinkTypes().then(data => {
-                    for (let i = 0; i < data.length; i++) {
-                        if (data.hasOwnProperty(i)) {
-                            let current = data[i];
-                            current.id = parseInt(current.id);
-                            this.formData.linkTypes.push(current);
-                        }
-                    }
-                    this.formStates.loadingLinks = false;
-                    this.autoStep(); // yes, recurring.
 
-                });
-            }
-            if (this.formBehaviour.customFields.hasOwnProperty('links') && false === this.formBehaviour.customFields.links) {
-                this.formStates.storedLinks = true;
-                this.formStates.loadingLinks = false;
-            }
-            // check if the transaction is loaded and also the transaction links AND the field is enabled, then load the autocomplete for links.
-            if (false === this.formStates.loadingTransaction && false === this.formStates.loadingLinks && this.formBehaviour.customFields.hasOwnProperty('links') && true === this.formBehaviour.customFields.links) {
-                for(let i = 0; i < this.entries.length; i++) {
-                    if(this.entries.hasOwnProperty(i)) {
-                        this.createLinkAutocomplete('links_modal_search_' + i, 'api/v1/autocomplete/transactions-with-meta');
-                    }
-                }
-            }
-
-        },
 
 
         init() {
@@ -334,7 +303,7 @@ let create = function () {
             document.addEventListener('upload-success', (event) => {
                 console.log('Now in event listener "upload-success"');
                 this.processUpload(event);
-                document.querySelectorAll("input[type=file]").value = "";
+                document.querySelectorAll("input[type=file]").forEach(input => input.value = "");
             });
 
             document.addEventListener('upload-error', (event) => {

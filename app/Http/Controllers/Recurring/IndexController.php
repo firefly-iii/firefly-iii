@@ -100,7 +100,6 @@ final class IndexController extends Controller
 
         /** @var RecurrenceTransformer $transformer */
         $transformer = app(RecurrenceTransformer::class);
-        $transformer->setParameters(new ParameterBag());
 
         $recurring   = [];
 

@@ -55,7 +55,6 @@ import {onMapClick} from './shared/on-map-click.js';
 import {onMapZoom} from './shared/on-map-zoom.js';
 import {clearLocation} from './shared/clear-location.js';
 import {removeSplit} from "./shared/remove-split.js";
-import {loadLinkTypes} from "./shared/load-link-types.js";
 import {loadTransactionLinks} from './shared/load-transaction-links.js';
 import {createLinkAutocomplete} from "./shared/create-link-autocomplete.js";
 import {editLink} from "./shared/edit-link.js";
@@ -66,6 +65,7 @@ import {saveNewLink} from "./shared/save-new-link.js";
 import {processTransactionLinks} from "./shared/process-transaction-links.js";
 import {redirectAfterTransactionLinks} from "./shared/redirect-after-transaction-links.js";
 import {addTabListener} from "./shared/add-tab-listener.js";
+import {autoStep} from "./shared/auto-step.js";
 
 const urls = getUrls();
 
@@ -88,7 +88,9 @@ let transactions = function () {
             loadingCurrencies: true,
             loadingBudgets: true,
             loadingPiggyBanks: true,
+            loadingLinks: null,
             loadingSubscriptions: true,
+            loadingTransaction: true,
             isSubmitting: false,
             returnHereButton: false,
             saveAsNewButton: false, // edit form only
@@ -182,6 +184,7 @@ let transactions = function () {
         redirectAfterTransactionLinks: redirectAfterTransactionLinks,
         loadTransactionLinks: loadTransactionLinks,
         addTabListener: addTabListener,
+        autoStep: autoStep,
 
         // part of the account selection auto-complete
 
@@ -212,6 +215,7 @@ let transactions = function () {
             const getter = new Get();
             getter.show(groupId, {}).then((response) => {
                 const data = response.data.data;
+                this.formStates.loadingTransaction = false;
                 this.groupProperties.id = parseInt(data.id);
                 this.groupProperties.transactionType = data.attributes.transactions[0].type.toLowerCase();
                 this.groupProperties.title = data.attributes.group_title ?? data.attributes.transactions[0].description;
@@ -242,7 +246,7 @@ let transactions = function () {
                         }
                     }
                 }
-
+                this.autoStep();
                 // remove waiting thing.
                 this.notifications.wait.show = false;
             }).then(() => {
@@ -276,6 +280,7 @@ let transactions = function () {
                         }
                     });
                 }, 150);
+                this.autoStep();
             });
         },
 
@@ -294,82 +299,42 @@ let transactions = function () {
                 this.formData.enabledCurrencies = data.enabledCurrencies;
                 this.formData.primaryCurrencies = data.primaryCurrencies;
                 this.formData.foreignCurrencies = data.foreignCurrencies;
+                this.autoStep();
                 this.getTransactionGroup();
+                this.autoStep();
             });
 
             loadBudgets(true).then(data => {
                 this.formData.budgets = data;
                 this.formStates.loadingBudgets = false;
+                this.autoStep();
             });
             loadPiggyBanks().then(data => {
                 this.formData.piggyBanks = data;
                 this.formStates.loadingPiggyBanks = false;
+                this.autoStep();
             });
             loadSubscriptions(true).then(data => {
                 this.formData.subscriptions = data;
                 this.formStates.loadingSubscriptions = false;
+                this.autoStep();
             });
 
             // load custom field preference and enable/disable those fields.
             this.loadCustomFields().then(data => {
                 this.formBehaviour.customFields = data;
-                // linked-transactions-search
-                if (true === data.links) {
-                    loadLinkTypes().then(data => {
-                        //console.log(data);
-                        for (let i = 0; i < data.length; i++) {
-                            if (data.hasOwnProperty(i)) {
-                                let current = data[i];
-                                current.id = parseInt(current.id);
-                                this.formData.linkTypes.push(current);
-                            }
-                        }
-                        this.formStates.loadingLinks = false;
-
-                        for(let i = 0; i < this.entries.length; i++) {
-                            this.links[i] = []; // empty set of links.
-                            // then fill the set using the ID.
-                            this.loadTransactionLinks(i, this.entries[i].transaction_journal_id);
-                        }
-
-                    });
-                }
-                if (false === data.links) {
-                    this.formStates.storedLinks = true;
-                }
+                this.autoStep();
             });
-
-            // document.addEventListener('transaction-group-loaded', (event) => {
-            //     this.createLinkAutocompletes();
-            //     this.createLinkAutocomplete('links_modal_search_0', 'api/v1/autocomplete/transactions-with-meta');
-            //     this.entries[event.detail.index].latitude = event.detail.latitude;
-            //     this.entries[event.detail.index].longitude = event.detail.longitude;
-            // });
-
 
             // add some event listeners
             document.addEventListener('upload-success', (event) => {
                 this.processUpload(event);
-                document.querySelectorAll("input[type=file]").value = "";
+                document.querySelectorAll("input[type=file]").forEach(input => input.value = "");
             });
 
             document.addEventListener('upload-error', (event) => {
                 this.processUploadError(event);
             });
-
-
-            // document.addEventListener('location-set', (event) => {
-            //     this.entries[event.detail.index].hasLocation = true;
-            //     this.entries[event.detail.index].latitude = event.detail.latitude;
-            //     this.entries[event.detail.index].longitude = event.detail.longitude;
-            //     this.entries[event.detail.index].zoom_level = event.detail.zoomLevel;
-            // });
-
-            // document.addEventListener('location-zoom', (event) => {
-            //     console.log('this happens?');
-            //     this.entries[event.detail.index].hasLocation = true;
-            //     this.entries[event.detail.index].zoom_level = event.detail.zoomLevel;
-            // });
         },
 
 
