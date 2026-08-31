@@ -68,7 +68,7 @@
                             <td>
                                 @foreach($yearAverage as $avg)
                                     {!! format_amount_by_symbol($avg['avg'], $avg['currency_symbol'], $avg['currency_decimal_places'], true) !!}
-                                @if($convertToPrimary && 0 !== $ag['pc_avg'])
+                                @if($convertToPrimary && 0 !== $avg['pc_avg'])
                                     ({!! format_amount_by_symbol($avg['pc_avg'], $primaryCurrency->symbol, $primaryCurrency->decimal_places, true)  !!})
                                 @endif
                                 <br>
@@ -80,7 +80,7 @@
                             <td>
                                 @foreach($overallAverage as $avg)
                                     {!! format_amount_by_symbol($avg['avg'], $avg['currency_symbol'], $avg['currency_decimal_places'], true) !!}
-                                    @if($convertToPrimary && 0 !== $ag['pc_avg'])
+                                    @if($convertToPrimary && 0 !== $avg['pc_avg'])
                                         ({!! format_amount_by_symbol($avg['pc_avg'], $primaryCurrency->symbol, $primaryCurrency->decimal_places, true) !!})
                                     @endif
                                     <br>
