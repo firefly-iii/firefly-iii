@@ -380,10 +380,10 @@ final class DoubleController extends Controller
      */
     public function topExpenses(Collection $accounts, Collection $doubles, Carbon $start, Carbon $end)
     {
-        $expanded = $this->accountRepository->expandWithDoubles($doubles);
-        $accounts = $accounts->merge($expanded);
-        $spent    = $this->opsRepository->listExpenses($start, $end, $accounts);
-        $result   = [];
+        $expanded        = $this->accountRepository->expandWithDoubles($doubles);
+        $accounts        = $accounts->merge($expanded);
+        $spent           = $this->opsRepository->listExpenses($start, $end, $accounts);
+        $result          = [];
         $incomeTopLength = 0;
         foreach ($spent as $currency) {
             foreach ($currency['transaction_journals'] as $journal) {
@@ -408,11 +408,11 @@ final class DoubleController extends Controller
         }
         // sort by amount_float
         // sort temp array by amount.
-        $amounts  = array_column($result, 'amount_float');
+        $amounts         = array_column($result, 'amount_float');
         array_multisort($amounts, SORT_ASC, $result);
 
         try {
-            $result = view('reports.double.partials.top-expenses', ['result' => $result, 'incomeTopLength' =>  $incomeTopLength])->render();
+            $result = view('reports.double.partials.top-expenses', ['result' => $result, 'incomeTopLength' => $incomeTopLength])->render();
         } catch (Throwable $e) {
             Log::error(sprintf('Could not render reports.partials.budget-period: %s', $e->getMessage()));
             $result = sprintf('Could not render view: %s', $e->getMessage());
