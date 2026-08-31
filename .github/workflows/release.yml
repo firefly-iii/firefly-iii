@@ -149,7 +149,7 @@ jobs:
           rm .env
       - name: Crowdin action
         if: ${{ inputs.quick != true }}
-        uses: crowdin/github-action@v2
+        uses: crowdin/github-action@v3
         with:
           upload_sources: true
           download_translations: true
