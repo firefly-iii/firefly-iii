@@ -68,14 +68,14 @@ final class CronController extends Controller
             'bill_notifications'     => [],
             'webhooks'               => [],
         ];
-        foreach ($users as $user) {
-            $return['recurring_transactions'][] = $this->runRecurring($user, $config['force'], $config['date']);
-            $return['auto_budgets'][]           = $this->runAutoBudget($user, $config['force'], $config['date']);
+        foreach ($users as $current) {
+            $return['recurring_transactions'][] = $this->runRecurring($current, $config['force'], $config['date']);
+            $return['auto_budgets'][]           = $this->runAutoBudget($current, $config['force'], $config['date']);
             if (true === AppConfiguration::get('enable_external_rates', config('cer.download_enabled'))->data) {
-                $return['exchange_rates'][] = $this->exchangeRatesCronJob($user, $config['force'], $config['date']);
+                $return['exchange_rates'][] = $this->exchangeRatesCronJob($current, $config['force'], $config['date']);
             }
-            $return['bill_notifications'][] = $this->billWarningCronJob($user, $config['force'], $config['date']);
-            $return['webhooks'][]           = $this->webhookCronJob($user, $config['force'], $config['date']);
+            $return['bill_notifications'][] = $this->billWarningCronJob($current, $config['force'], $config['date']);
+            $return['webhooks'][]           = $this->webhookCronJob($current, $config['force'], $config['date']);
         }
 
         return response()->api($return);
