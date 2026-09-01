@@ -26,10 +26,12 @@ namespace FireflyIII\Api\V1\Controllers\System;
 
 use FireflyIII\Api\V1\Controllers\Controller;
 use FireflyIII\Api\V1\Requests\System\CronRequest;
+use FireflyIII\Repositories\User\UserRepositoryInterface;
 use FireflyIII\Support\Binder\CLIToken;
 use FireflyIII\Support\Facades\AppConfiguration;
 use FireflyIII\Support\Http\Controllers\CronRunner;
 use Illuminate\Http\JsonResponse;
+use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Log;
 use SensitiveParameter;
 
@@ -42,20 +44,39 @@ final class CronController extends Controller
 
     public function cron(CronRequest $request, #[SensitiveParameter] string $cliToken): JsonResponse
     {
-        CLIToken::routeBinder($cliToken, $request->route());
-        $config                           = $request->getAll();
-        $user                             = CLIToken::findUserByToken($cliToken);
+        /** @var UserRepositoryInterface $repository */
+        $repository = app(UserRepositoryInterface::class);
+        $result     = CLIToken::routeBinder($cliToken, $request->route());
+        $config     = $request->getAll();
+        $user       = CLIToken::findUserByToken($cliToken);
+        $users      = new Collection();
+        if (null !== $user) {
+            $users->push($user);
+        }
 
+        // no user matches the cliToken but that is OK if the token matches the static token (we check again)
+        if (null === $user && hash_equals($result, (string)config('firefly.static_cron_token')) && 32 === strlen(config('firefly.static_cron_token'))) {
+            Log::info('No user matches the cliToken but the static token matches, so we will continue for ALL users.');
+            $users = $repository->allAvailable();
+        }
         Log::debug(sprintf('Now in %s', __METHOD__));
         Log::debug(sprintf('Date is %s', $config['date']->toIsoString()));
-        $return                           = [];
-        $return['recurring_transactions'] = $this->runRecurring($user, $config['force'], $config['date']);
-        $return['auto_budgets']           = $this->runAutoBudget($user, $config['force'], $config['date']);
-        if (true === AppConfiguration::get('enable_external_rates', config('cer.download_enabled'))->data) {
-            $return['exchange_rates'] = $this->exchangeRatesCronJob($user, $config['force'], $config['date']);
+        $return = [
+            'recurring_transactions' => [],
+            'auto_budgets'           => [],
+            'exchange_rates'         => [],
+            'bill_notifications'     => [],
+            'webhooks'               => [],
+        ];
+        foreach ($users as $user) {
+            $return['recurring_transactions'][] = $this->runRecurring($user, $config['force'], $config['date']);
+            $return['auto_budgets'][]           = $this->runAutoBudget($user, $config['force'], $config['date']);
+            if (true === AppConfiguration::get('enable_external_rates', config('cer.download_enabled'))->data) {
+                $return['exchange_rates'][] = $this->exchangeRatesCronJob($user, $config['force'], $config['date']);
+            }
+            $return['bill_notifications'][] = $this->billWarningCronJob($user, $config['force'], $config['date']);
+            $return['webhooks'][]           = $this->webhookCronJob($user, $config['force'], $config['date']);
         }
-        $return['bill_notifications']     = $this->billWarningCronJob($user, $config['force'], $config['date']);
-        $return['webhooks']               = $this->webhookCronJob($user, $config['force'], $config['date']);
 
         return response()->api($return);
     }

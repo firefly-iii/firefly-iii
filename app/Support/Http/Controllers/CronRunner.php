@@ -67,6 +67,7 @@ trait CronRunner
             'job_succeeded' => $billWarning->jobSucceeded,
             'job_errored'   => $billWarning->jobErrored,
             'message'       => $billWarning->message,
+            'user' => (string)$user->id
         ];
     }
 
@@ -96,6 +97,7 @@ trait CronRunner
             'job_succeeded' => $exchangeRates->jobSucceeded,
             'job_errored'   => $exchangeRates->jobErrored,
             'message'       => $exchangeRates->message,
+            'user' => (string)$user->id
         ];
     }
 
@@ -124,6 +126,7 @@ trait CronRunner
             'job_succeeded' => $autoBudget->jobSucceeded,
             'job_errored'   => $autoBudget->jobErrored,
             'message'       => $autoBudget->message,
+            'user' => (string)$user->id
         ];
     }
 
@@ -153,6 +156,7 @@ trait CronRunner
             'job_succeeded' => $recurring->jobSucceeded,
             'job_errored'   => $recurring->jobErrored,
             'message'       => $recurring->message,
+            'user' => (string)$user->id
         ];
     }
 
@@ -181,6 +185,7 @@ trait CronRunner
             'job_succeeded' => $webhook->jobSucceeded,
             'job_errored'   => $webhook->jobErrored,
             'message'       => $webhook->message,
+            'user' => (string)$user->id
         ];
     }
 }
