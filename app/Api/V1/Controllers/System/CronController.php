@@ -55,13 +55,13 @@ final class CronController extends Controller
         }
 
         // no user matches the cliToken but that is OK if the token matches the static token (we check again)
-        if (null === $user && hash_equals($result, (string)config('firefly.static_cron_token')) && 32 === strlen(config('firefly.static_cron_token'))) {
+        if (null === $user && hash_equals($result, (string) config('firefly.static_cron_token')) && 32 === strlen(config('firefly.static_cron_token'))) {
             Log::info('No user matches the cliToken but the static token matches, so we will continue for ALL users.');
             $users = $repository->allAvailable();
         }
         Log::debug(sprintf('Now in %s', __METHOD__));
         Log::debug(sprintf('Date is %s', $config['date']->toIsoString()));
-        $return = [
+        $return     = [
             'recurring_transactions' => [],
             'auto_budgets'           => [],
             'exchange_rates'         => [],
@@ -74,8 +74,8 @@ final class CronController extends Controller
             if (true === AppConfiguration::get('enable_external_rates', config('cer.download_enabled'))->data) {
                 $return['exchange_rates'][] = $this->exchangeRatesCronJob($current, $config['force'], $config['date']);
             }
-            $return['bill_notifications'][] = $this->billWarningCronJob($current, $config['force'], $config['date']);
-            $return['webhooks'][]           = $this->webhookCronJob($current, $config['force'], $config['date']);
+            $return['bill_notifications'][]     = $this->billWarningCronJob($current, $config['force'], $config['date']);
+            $return['webhooks'][]               = $this->webhookCronJob($current, $config['force'], $config['date']);
         }
 
         return response()->api($return);
