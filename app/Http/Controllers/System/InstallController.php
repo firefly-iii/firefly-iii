@@ -40,7 +40,7 @@ use Illuminate\Support\Facades\Artisan;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Log;
 use Laravel\Passport\Passport;
-use phpseclib3\Crypt\RSA;
+use phpseclib4\Crypt\RSA;
 
 use function Safe\file_put_contents;
 use function Safe\json_encode;
