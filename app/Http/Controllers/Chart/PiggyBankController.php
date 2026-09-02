@@ -74,11 +74,12 @@ final class PiggyBankController extends Controller
 
         // enrich
         /** @var User $admin */
-        $admin       = auth()->user();
-        $enrichment  = new PiggyBankEnrichment();
+        $admin                  = auth()->user();
+        $enrichment             = new PiggyBankEnrichment();
         $enrichment->setUser($admin);
+
         /** @var PiggyBank $piggyBank */
-        $piggyBank   = $enrichment->enrichSingle($piggyBank);
+        $piggyBank              = $enrichment->enrichSingle($piggyBank);
         $set                    = $repository->getEvents($piggyBank);
         $set                    = $set->reverse();
         $locale                 = Steam::getLocale();
@@ -110,8 +111,8 @@ final class PiggyBankController extends Controller
         $chartData[$finalLabel] = $finalSum;
 
         $data                   = $this->generator->singleSet($piggyBank->name, $chartData);
-        $response  = [
-            'data' => $data,
+        $response               = [
+            'data'     => $data,
             'currency' => $piggyBank->meta['currency']->toArray(),
         ];
         $cache->store($response);
