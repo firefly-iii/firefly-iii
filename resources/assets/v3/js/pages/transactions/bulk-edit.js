@@ -22,11 +22,65 @@
 import '../../boot/bootstrap.js';
 import sidebar from '../../pages/shared/sidebar.js';
 import dates from '../shared/dates.js';
+import Tags from "bootstrap5-tags";
+import i18next from 'i18next';
+import {addAutocomplete} from "./shared/add-autocomplete.js";
 
 let edit = function () {
     return {
+        detectCategoryChange(e) {
+            if('' !== e.target.value) {
+                // tags_action_do_nothing
+                document.querySelector('input[name="ignore_category"]').removeAttribute('checked');
+            }
+        },
+        detectBudgetChange(e) {
+            if(0 !== parseInt(e.target.value)) {
+                // tags_action_do_nothing
+                document.querySelector('input[name="ignore_budget"]').removeAttribute('checked');
+            }
+        },
+        detectTagChange(e) {
+            let count = 0;
+            let options = document.querySelector('select[name="tags"]').options;
+            for(let i = 0; i < options.length; i ++){
+                if (true === options[i].selected){
+                    count++;
+                }
+            }
+            if(count > 0 && true === document.getElementById('tags_action_do_nothing').checked ) {
+                document.getElementById('tags_action_do_nothing').checked = false;
+                document.getElementById('tags_action_do_replace').checked = true;
+            }
+        },
         init() {
-            // console.log('Generic JS for page with few features.');
+
+            addAutocomplete({
+                selector: 'input.ac-category',
+                serverUrl: '/api/v1/autocomplete/categories',
+                valueField: 'name',
+                labelField: 'name',
+            });
+
+
+            Tags.init('select.ac-tags', {
+                allowClear: true,
+                server: '/api/v1/autocomplete/tags',
+                liveServer: true,
+                clearEnd: true,
+                labelField: 'tag',
+                valueField: 'tag',
+                queryParam: 'query',
+                allowNew: true,
+                //serverDataKey: 'data',
+                notFoundMessage: i18next.t('firefly.nothing_found'),
+                noCache: true,
+                fetchOptions: {
+                    headers: {
+                        'X-CSRF-TOKEN': document.head.querySelector('meta[name="csrf-token"]').content
+                    }
+                }
+            });
         }
     }
 };

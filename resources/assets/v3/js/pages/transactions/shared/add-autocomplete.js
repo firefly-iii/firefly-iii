@@ -79,7 +79,7 @@ export function addAllAutocompleteToForm() {
             liveServer: true,
             clearEnd: true,
             labelField: 'tag',
-            valueField: 'id',
+            valueField: 'tag',
             queryParam: 'query',
             allowNew: true,
             //serverDataKey: 'data',
@@ -130,7 +130,7 @@ export function addAllAutocompleteToForm() {
     }, 150);
 }
 
-function addAutocomplete(options) {
+export function addAutocomplete(options) {
     const params = {
         server: options.serverUrl,
         serverParams: {},

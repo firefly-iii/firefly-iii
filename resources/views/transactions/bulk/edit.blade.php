@@ -1,6 +1,6 @@
 @extends('layout.v3.session')
 @section('content')
-    <form method="POST" action="{{ route('transactions.bulk.update') }}" accept-charset="UTF-8" class="form-horizontal" id="update">
+    <form method="POST" action="{{ route('transactions.bulk.update') }}" accept-charset="UTF-8" class="form-horizontal" id="update" x-data="edit">
         <input name="_token" type="hidden" value="{{ csrf_token() }}">
 
         <div class="row">
@@ -97,7 +97,7 @@
                                     <tr>
                                         <th class="quarter">{{ trans('list.category') }}</th>
                                         <td>
-                                            <input class="form-control" id="category-ac" placeholder="" name="category" autocomplete="off" type="text" value="" spellcheck="false">
+                                            <input @change="detectCategoryChange" class="form-control ac-category" placeholder="" name="category" autocomplete="off" type="text" value="" spellcheck="false">
                                         </td>
                                         <td>
                                             <div class="checkbox">
@@ -111,7 +111,7 @@
                                     <tr>
                                         <th>{{ trans('list.budget') }}</th>
                                         <td>
-                                            <select class="form-control" name="budget_id">
+                                            <select @change="detectBudgetChange" class="form-control" name="budget_id">
                                                 @foreach($budgetList as $id => $budget)
                                                     <option value="{{ $id }}" label="{{ $budget }}">{{ $budget }}</option>
                                                 @endforeach
@@ -129,7 +129,12 @@
                                     <tr>
                                         <th>{{ trans('list.tags') }}</th>
                                         <td>
-                                            <input class="form-control" placeholder="" name="tags" autocomplete="off" type="text" value="" spellcheck="false">
+                                            <select @change="detectTagChange"
+                                                class="form-select ac-tags"
+                                                name="tags"
+                                                multiple>
+                                                <option value="">{{ __('firefly.select_tag') }}</option>
+                                            </select>
                                         </td>
                                         <td>
                                             <div class="radio">
@@ -173,7 +178,7 @@
     </form>
 @endsection
 @section('scripts')
-    @vite(['js/pages/bulk-edit.js'])
+    @vite(['js/pages/transactions/bulk-edit.js'])
 @endsection
 @section('styles')
 
