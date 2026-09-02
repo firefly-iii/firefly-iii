@@ -21,13 +21,6 @@
 $(document).ready(function () {
     "use strict";
     $(".content-wrapper form input:enabled:visible:first").first().focus().select();
-    if (!Modernizr.inputtypes.date) {
-        $('input[type="date"]').datepicker(
-            {
-                dateFormat: 'yy-mm-dd'
-            }
-        );
-    }
     // change the 'ffInput_opening_balance' text based on the
     // selection of the direction.
     $("#ffInput_liability_direction").change(triggerDirection);

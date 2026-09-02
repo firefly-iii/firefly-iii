@@ -21,16 +21,7 @@
 
 $(document).ready(function () {
     "use strict";
-    if (!Modernizr.inputtypes.date) {
-        $('input[type="date"]').datepicker({
-            dateFormat: 'yy-mm-dd'
-        });
-    }
     $('.submit-test').click(submitTest);
-
-    $.get('./api/v1/accounts?type=asset&page=1&limit=100', function (data) {
-        console.log('OK');
-    });
 });
 
 function submitTest(e) {
