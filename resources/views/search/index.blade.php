@@ -45,7 +45,7 @@
                     <ul>
                     @if(count($words) > 0)
                         <li>
-                            {!! trans('firefly.search_for_query',['query' => join(' ',array_map(function(string $value): string {return sprintf('<span class="search-word">%s</span>', $value);}, $words))]) !!}
+                            {!! trans('firefly.search_for_query',['query' => join(' ',array_map(function(string $value): string {return sprintf('<span class="search-word">%s</span>', e($value));}, $words))]) !!}
                         </li>
                     @endif
                     @if(count($excludedWords) > 0)

@@ -5,12 +5,65 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 
 ## v6.7.0
 
+<!-- summary: This release introduces a new layout and fixes many bugs. -->
 
+### Known issues
+- Editing and creating split transactions may sometimes mix up the order of the splits. The data itself is never mixed up however.
+- Some user managed to get a PR co-authored by Claude past my eagle eyes. Sorry about that. Luckily just a small fix.
 
+### Added
 
-Security findings by Alwen Roselio, Don Werner Salas and Allan Glenn Aceres.
+- Added a view for all transactions
 
+### Changed
 
+- Switched from Twig template engine to Blade.
+- Introduced a new version of the AdminLTE template.
+- Introduces new forms for creating and editing transactions
+- Switched from Font Awesome to Bootstrap Icons
+- Cron jobs are now per user, only users with the "owner" role can force the cron job or run it for different users.
+
+### Removed
+
+- Old forms, old code, old images.
+
+### Fixed
+
+- #10652
+- #11161
+- #11802
+- #12435
+- #12453
+- #12455
+- #12468
+- #12500
+- #12577
+- #12578
+- #12583
+- #12607
+- #12608
+- #12626
+- #12639
+- #12642
+- #12662
+- Setting an invalid language would break your account.
+
+### Security
+
+- #12497
+- A variety of security findings by Alwen Roselio, Don Werner Salas and Allan Glenn Aceres touching CSV export, installer security and many more.
+- User "1diot9" discovered that you can overwrite arbitrary preferences. This means you can also overwrite security sensitive preferences, like your email reset code.
+- Removed security sensitive info from the debug page.
+- It was possible to brute force 2FA code attempts.
+- URL validation could be circumvented.
+- Flushing the cache would reset some timeouts.
+- You can still use the webhooks API to connect to arbitrary and weird URLs and internal IPs.
+- You will delete everybody's purged notes when you delete your own purged notes.
+- The API token is still part of the URL.
+
+### API
+
+- See https://api-docs.firefly-iii.org/
 
 ## v6.6.6 - 2026-07-01
 
