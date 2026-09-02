@@ -22,7 +22,7 @@ import '../../boot/bootstrap.js';
 import sidebar from '../../pages/shared/sidebar.js';
 import dates from '../shared/dates.js';
 import i18next from "i18next";
-import {drawChart} from '../../shared/draw-chart.js';
+import {drawSingleCurrencyChart} from '../../shared/draw-chart.js';
 import {getVariable} from "../../store/get-variable.js";
 
 let show = function () {
@@ -31,11 +31,10 @@ let show = function () {
             // console.log('Generic JS for page with few features.');
             //const ctx = document.getElementById('piggy-bank-history');
             getVariable('anonymous').then((value) => {
-                drawChart('line', 'some-url', 'piggy-bank-history', value);
+                const page = window.location.href.split('/');
+                const piggyBankID = parseInt(page[page.length - 1]);
+                drawSingleCurrencyChart('line', 'chart/piggy-bank/' + piggyBankID, 'piggy-bank-history', value);
             });
-
-
-
 
         },
         confirmHistoryRemoval(e) {

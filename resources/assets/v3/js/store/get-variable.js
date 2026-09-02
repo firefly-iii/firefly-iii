@@ -23,6 +23,7 @@ import Post from "../api/preferences/post.js";
 
 export function getVariable(name, defaultValue = null) {
     const validCache = window.store.get('cacheValid');
+    console.log('Cache valid: ', validCache);
     // currently unused, window.X can be used by the blade template
     // to make things available quicker than if the store has to grab it through the API.
     // then again, it's not that slow.

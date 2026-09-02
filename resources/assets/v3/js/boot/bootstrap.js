@@ -46,8 +46,8 @@ getFreshVariable('lastActivity').then((serverValue) => {
         throw new Error('401 in getFreshVariable.');
     }
     const localValue = store.get('lastActivity');
-    // store.set('cacheValid', localValue === serverValue);
-    // store.set('lastActivity', serverValue);
+    store.set('cacheValid', localValue === serverValue);
+    store.set('lastActivity', serverValue);
     // console.log('Server value: ' + serverValue);
     // console.log('Local value:  ' + localValue);
     // console.log('Cache valid:  ' + (localValue === serverValue));

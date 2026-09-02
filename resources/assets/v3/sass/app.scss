@@ -72,9 +72,20 @@ html[data-bs-theme="dark"] .money-transfer {
 
 // custom Firefly III CSS
 .general-chart-error {
-    height: 30px;
-    // TODO move picutre
-    background: url('/v1/images/error.png') no-repeat center center;
+    min-height: 250px;
+    text-align:center;
+    background-size: 32px 32px;
+    background-image: url('/images/warning-sign.png');
+    background-repeat: no-repeat;
+    background-position: center center;
+}
+.empty-chart-error {
+    min-height: 250px;
+    text-align:center;
+    background-size: 32px 32px;
+    background-image: url('/images/empty.png');
+    background-repeat: no-repeat;
+    background-position: center center;
 }
 
 // hide search.

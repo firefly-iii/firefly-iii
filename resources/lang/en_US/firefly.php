@@ -44,6 +44,7 @@ return [
     'month_to_date'                                       => 'Month to date',
     'year_to_date'                                        => 'Year to date',
     'previous_year'                                       => 'Previous year (:year)',
+    'could_not_load_chart' => 'Could not load chart. Sorry about that. This is the error:',
     'YTD'                                                 => 'YTD',
     'welcome_back'                                        => 'What\'s playing?',
     'main_dashboard_page_title'                           => 'Home',

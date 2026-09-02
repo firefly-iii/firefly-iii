@@ -19,12 +19,23 @@
  */
 
 import Chart from 'chart.js/auto';
+import formatMoney from "../util/format-money.js";
+import i18next from "i18next";
 
 let defaultChartOptions = {
 
     elements: {
         line: {
             cubicInterpolationMode: 'monotone'
+        }
+    },
+    plugins: {
+        legend: {
+            display: false,
+        },
+        tooltip: {
+            callbacks: {
+            }
         }
     },
     responsive: true,
@@ -39,68 +50,78 @@ let defaultChartOptions = {
         y: {
             display: true,
             beginAtZero: true,
-            ticks: {
-                //     break ticks when too long.
-                callback: function (value, index, ticks) {
-                    if(anonymous) {
-                        return '0'; 
-                    }
-                    return formatLabel(value, 20);
-                }
-            }
+            ticks: {}
         },
-        // ],
-        // yAxes: [{
-        //     ticks: {
-        //         callback: function (tickValue) {
-        //             "use strict";
-        //             if (anonymous) {
-        //                 return accounting.formatMoney(0);
-        //             }
-        //             // use first symbol or null:
-        //             return accounting.formatMoney(tickValue);
-        //         },
-        //         beginAtZero: true
-        //     }
-        //
-        // }]
-    },
-    // tooltips: {
-    //     mode: 'label',
-    //     callbacks: {
-    //         label: function (tooltipItem, data) {
-    //             "use strict";
-    //             var string = accounting.formatMoney(tooltipItem.yLabel, data.datasets[tooltipItem.datasetIndex].currency_symbol);
-    //             if (anonymous) {
-    //                 string = accounting.formatMoney(0);
-    //             }
-    //             return data.datasets[tooltipItem.datasetIndex].label + ': ' + string;
-    //         }
-    //     }
-    // }
+    }
 };
 
-export function drawChart(type, url, holder, anonymous) {
+export function drawSingleCurrencyChart(type, url, holder, anonymous) {
     if ('line' === type) {
-        drawLineChart(url, holder, anonymous);
+        drawSingleCurrencyLineChart(url, holder, anonymous);
     }
 }
 
-function drawLineChart(url, holder) {
-    // lineChart
-    console.log('here we are');
-    const ctx = document.getElementById(holder).getContext('2d');
+function drawSingleCurrencyLineChart(url, holder, anonymous) {
 
-    new Chart(ctx, {
-        type: 'line',
-        data: {
-            labels: ['Red', 'Blue', 'Yellow', 'Green', 'Purple', 'Orange'],
-            datasets: [{
-                label: '# of Votes',
-                data: [12, 19, 3, 5, 2, 3],
-                borderWidth: 1
-            }]
-        },
-        options: defaultChartOptions
+    document.getElementById(holder).classList.remove('general-chart-error');
+    window.axios.get(url).then((response) => {
+        let all = response.data;
+        let data = all.data;
+        let currency = all.currency;
+
+
+        let yAxisCallback = function (value, index, ticks) {
+            if (anonymous) {
+                value = '0';
+            }
+            return formatMoney(value, currency.code);
+        }
+        let labelCallback = function (tooltipItem) {
+            "use strict";
+            let index = tooltipItem.dataIndex;
+            let amount = tooltipItem.dataset.data[index];
+            let label = tooltipItem.label;
+            let string = formatMoney(amount, currency.code);
+            if (anonymous) {
+                string = formatMoney('0', currency.code);
+            }
+            return label + ': ' + string;
+        }
+
+
+        let options = {...defaultChartOptions};
+        options.scales.y.ticks.callback = yAxisCallback;
+        options.plugins.tooltip.callbacks.label = labelCallback;
+
+
+        if (typeof data === 'undefined' || 0 === data.length ||
+            (typeof data === 'object' && typeof data.labels === 'object' && 0 === data.labels.length)
+        ) {
+            let el = document.getElementById(holder).parentElement;
+            el.innerHTML = '';
+            el.classList.add('general-chart-error');
+            el.innerText = i18next.t('firefly.no_data_for_chart');
+            return;
+        }
+
+        // TODO colorize data?
+        // if (colorData) {
+        //     data = colorizeData(data);
+        // }
+
+        // lineChart
+        const ctx = document.getElementById(holder).getContext('2d');
+        new Chart(ctx, {
+            type: 'line',
+            data: data,
+            options: options
+        });
+    }).catch((error) => {
+        let el = document.getElementById(holder).parentElement;
+        el.innerHTML = '';
+        el.classList.add('general-chart-error');
+        el.innerText = i18next.t('firefly.could_not_load_chart') + ' ' + error;
     });
+
+
 }

@@ -33,6 +33,8 @@ use FireflyIII\Support\CacheProperties;
 use FireflyIII\Support\Facades\Navigation;
 use FireflyIII\Support\Facades\Steam;
 use FireflyIII\Support\Http\Controllers\DateCalculation;
+use FireflyIII\Support\JsonApi\Enrichments\PiggyBankEnrichment;
+use FireflyIII\User;
 use Illuminate\Http\JsonResponse;
 
 /**
@@ -67,8 +69,16 @@ final class PiggyBankController extends Controller
         $cache->addProperty('chart.piggy-bank.history');
         $cache->addProperty($piggyBank->id);
         if ($cache->has()) {
-            return response()->json($cache->get());
+            // return response()->json($cache->get());
         }
+
+        // enrich
+        /** @var User $admin */
+        $admin       = auth()->user();
+        $enrichment  = new PiggyBankEnrichment();
+        $enrichment->setUser($admin);
+        /** @var PiggyBank $piggyBank */
+        $piggyBank   = $enrichment->enrichSingle($piggyBank);
         $set                    = $repository->getEvents($piggyBank);
         $set                    = $set->reverse();
         $locale                 = Steam::getLocale();
@@ -80,7 +90,7 @@ final class PiggyBankController extends Controller
         $firstEvent             = $set->first();
         $firstDate              = null === $firstEvent ? new Carbon() : $firstEvent->date;
 
-        // which ever is older:
+        // whichever is older:
         $oldest                 = $startDate->lt($firstDate) ? $startDate : $firstDate;
         $today                  = today(config('app.timezone'));
         // depending on diff, do something with range of chart.
@@ -100,8 +110,12 @@ final class PiggyBankController extends Controller
         $chartData[$finalLabel] = $finalSum;
 
         $data                   = $this->generator->singleSet($piggyBank->name, $chartData);
-        $cache->store($data);
+        $response  = [
+            'data' => $data,
+            'currency' => $piggyBank->meta['currency']->toArray(),
+        ];
+        $cache->store($response);
 
-        return response()->json($data);
+        return response()->json($response);
     }
 }
