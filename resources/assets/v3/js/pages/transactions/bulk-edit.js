@@ -31,13 +31,13 @@ let edit = function () {
         detectCategoryChange(e) {
             if('' !== e.target.value) {
                 // tags_action_do_nothing
-                document.querySelector('input[name="ignore_category"]').removeAttribute('checked');
+                document.querySelector('input[name="ignore_category"]').checked = false;
             }
         },
         detectBudgetChange(e) {
             if(0 !== parseInt(e.target.value)) {
                 // tags_action_do_nothing
-                document.querySelector('input[name="ignore_budget"]').removeAttribute('checked');
+                document.querySelector('input[name="ignore_budget"]').checked = false;
             }
         },
         detectTagChange(e) {

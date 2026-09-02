@@ -230,7 +230,7 @@
                                         <input type="text" readonly class="form-control-plaintext" value="{{ __('firefly.this_transaction') }}">
                                     </div>
                                     <div class="col">
-                                        <select class="form-control" name="link_type_id" :data-index="index" :id="'link_type_id_' + index">
+                                        <select class="form-select" name="link_type_id" :data-index="index" :id="'link_type_id_' + index">
                                             <template x-for="type in formData.linkTypes ">
                                                 <option :value="type.id + '_inward'" :label="type.inward" x-text="type.inward"></option>
                                             </template>

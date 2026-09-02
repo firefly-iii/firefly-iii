@@ -13,7 +13,7 @@
                 </span>
             </template>
             <template x-if="!formStates.loadingBudgets">
-                <select class="form-control"
+                <select class="form-select"
                         :id="'budget_id_' + index"
                         x-model="transaction.budget_id"
                         @keyup.enter="submitTransaction()"

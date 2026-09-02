@@ -59,7 +59,7 @@
                                         <p>{{ __('firefly.pref_languages_help') }}</p>
                                         <div class="form-group">
                                             <div class="col-sm-12">
-                                                <select class="form-control" id="lang_holder" name="language">
+                                                <select class="form-select" id="lang_holder" name="language">
                                                     @foreach($languages as $key => $lang)
                                                         <option @if($language === $key)selected @endif
                                                         value="{{ $key }}">{{ $lang['name_locale'] }}
@@ -87,7 +87,7 @@
                                             <p class="text-warning">{{ __('firefly.pref_locale_exception') }}</p>
                                             <div class="form-group">
                                                 <div class="col-sm-12">
-                                                    <select class="form-control" id="locale_holder" name="locale">
+                                                    <select class="form-select" id="locale_holder" name="locale">
                                                         @foreach($locales as $key => $loc)
                                                             <option @if($locale === $key) selected @endif
                                                             value="{{ $key }}">

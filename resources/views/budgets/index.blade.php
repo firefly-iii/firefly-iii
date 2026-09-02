@@ -10,7 +10,7 @@
                 <div class="card-body">
                     <div class="row" id="periodNavigator">
                         <div class="col-lg-2 col-md-4 col-sm-12 col-xs-12">
-                            <select class="form-control selectPeriod" name="previous">
+                            <select class="form-select selectPeriod" name="previous">
                                 <option label="{{ __('firefly.select_date') }}" value="x">{{ __('firefly.select_date') }}</option>
                                 @foreach($prevLoop as $array)
                                     <option label="{{ $array['title'] }}" value="{{ $array['label'] }}" data-start="{{ $array['start']->format('Y-m-d') }}"
@@ -30,7 +30,7 @@
                             </div>
                         </div>
                         <div class="col-lg-2 col-md-4 col-sm-12 col-xs-12 text-end">
-                            <select class="form-control selectPeriod" name="next">
+                            <select class="form-select selectPeriod" name="next">
                                 <option label="{{ __('firefly.select_date') }}" value="x">{{ __('firefly.select_date') }}</option>
                                 @foreach($nextLoop as $array)
                                     <option label="{{ $array['title'] }}" value="{{ $array['label'] }}" data-start="{{ $array['start']->format('Y-m-d') }}"

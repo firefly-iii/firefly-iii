@@ -15,7 +15,7 @@
                 <input type="hidden" name="end" value="{{ $end->format('Y-m-d') }}"/>
                 <input type="hidden" name="budget_id" value="{{ $budget->id }}"/>
                 <div class="form-group mb-3">
-                    <select class="form-control" name="transaction_currency_id">
+                    <select class="form-select" name="transaction_currency_id">
                         @foreach($currencies as $currency)
                             <option label="{{ $currency->name }}" value="{{ $currency->id }}">{{ $currency->name }}</option>
                         @endforeach

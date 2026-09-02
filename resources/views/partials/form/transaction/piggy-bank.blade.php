@@ -13,7 +13,7 @@
                 </span>
             </template>
             <template x-if="!formStates.loadingPiggyBanks">
-                <select class="form-control"
+                <select class="form-select"
                         :id="'piggy_bank_id_' + index"
                         @keyup.enter="submitTransaction()"
                         x-model="transaction.piggy_bank_id">

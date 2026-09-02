@@ -8,7 +8,7 @@
 </div></span>
             </template>
             <template x-if="!formStates.loadingCurrencies">
-                <select class="form-control"
+                <select class="form-select"
                         :id="'foreign_currency_code_' + index"
                         x-model="transaction.foreign_currency_code">
                     <template x-for="currency in formData.foreignCurrencies">

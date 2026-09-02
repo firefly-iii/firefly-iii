@@ -12,7 +12,7 @@
                 </span>
             </template>
             <template x-if="!formStates.loadingSubscriptions">
-                <select class="form-control"
+                <select class="form-select"
                         :id="'bill_id_' + index"
                         @keyup.enter="submitTransaction()"
                         x-model="transaction.bill_id">
