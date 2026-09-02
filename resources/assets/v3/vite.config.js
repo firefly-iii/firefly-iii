@@ -82,6 +82,7 @@ export default defineConfig(({command, mode, isSsrBuild, isPreview}) => {
                     // transactions
                     'js/pages/transactions/create.js',
                     'js/pages/transactions/edit.js',
+                    'js/pages/transactions/bulk-edit.js',
                     'js/pages/transactions/show.js',
 
                     // tags

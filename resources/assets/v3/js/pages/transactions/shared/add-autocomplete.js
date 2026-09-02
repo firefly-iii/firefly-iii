@@ -53,10 +53,10 @@ export function addAllAutocompleteToForm() {
     if('edit' === this.formBehaviour.formType) {
 
         if('withdrawal' === this.groupProperties.transactionType) {
-            filters.destination = ['Expense account'];
+            // filters.destination = ['Expense account'];
         }
         if('deposit' === this.groupProperties.transactionType) {
-            filters.source = ['Revenue account'];
+            // filters.source = ['Revenue account'];
         }
         if('transfer' === this.groupProperties.transactionType) {
             filters.source = [this.entries[0].source_account.type];

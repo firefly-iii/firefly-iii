@@ -97,7 +97,7 @@
                                     <tr>
                                         <th class="quarter">{{ trans('list.category') }}</th>
                                         <td>
-                                            <input class="form-control" placeholder="" name="category" autocomplete="off" type="text" value="" spellcheck="false">
+                                            <input class="form-control" id="category-ac" placeholder="" name="category" autocomplete="off" type="text" value="" spellcheck="false">
                                         </td>
                                         <td>
                                             <div class="checkbox">
@@ -173,15 +173,8 @@
     </form>
 @endsection
 @section('scripts')
-    @vite(['js/pages/generic.js'])
-    <script type="text/javascript" nonce="{{ $JS_NONCE }}">
-        var what = "";
-    </script>
-    <script type="text/javascript" src="v1/js/lib/typeahead/typeahead.bundle.min.js?v={{ $FF_BUILD_TIME }}" nonce="{{ $JS_NONCE }}"></script>
-    <script type="text/javascript" src="v1/js/ff/common/autocomplete.js?v={{ $FF_BUILD_TIME }}" nonce="{{ $JS_NONCE }}"></script>
-    <script type="text/javascript" src="v1/js/lib/bootstrap-tagsinput.min.js?v={{ $FF_BUILD_TIME }}" nonce="{{ $JS_NONCE }}"></script>
-    <script type="text/javascript" src="v1/js/ff/transactions/mass/edit-bulk.js?v={{ $FF_BUILD_TIME }}" nonce="{{ $JS_NONCE }}"></script>
+    @vite(['js/pages/bulk-edit.js'])
 @endsection
 @section('styles')
-    <link href="v1/css/bootstrap-tagsinput.css?v={{ $FF_BUILD_TIME }}" type="text/css" rel="stylesheet" media="all" nonce="{{ $JS_NONCE }}">
+
 @endsection

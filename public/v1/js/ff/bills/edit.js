@@ -18,8 +18,6 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-/** global: Modernizr */
-
 $(document).ready(function () {
     "use strict";
     $(".content-wrapper form input:enabled:visible:first").first().focus().select();

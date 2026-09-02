@@ -18,7 +18,6 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-/** global: edit_selected_txt, edit_bulk_selected_txt, delete_selected_txt, token */
 
 /**
  * @deprecated

@@ -18,13 +18,9 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-/** global: Modernizr */
-
 $(document).ready(function () {
     "use strict";
     // auto complete for object group.
-    console.log('Object group auto complete thing.');
-
     var inputElement = document.getElementById('ffInput_object_group');
     new BootstrapSimpleAutocomplete(inputElement, {
         fetchFunction: function (query) {

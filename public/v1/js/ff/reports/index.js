@@ -18,7 +18,6 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-/** global: minDate, nonSelectedText, allSelectedText, filterPlaceholder, nSelectedText, selectAllText */
 
 var defaultMultiSelect = {
     disableIfEmpty: true,

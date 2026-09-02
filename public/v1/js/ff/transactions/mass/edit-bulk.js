@@ -18,12 +18,61 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-/** global: what */
+
 
 $(document).ready(function () {
     "use strict";
-    initTagsAC();
-    initCategoryAC();
+
+    // auto complete for tags
+    // render tags:
+    Tags.init('select.ac-tags', {
+        allowClear: true,
+        server: urls.tag,
+        liveServer: true,
+        clearEnd: true,
+        labelField: 'tag',
+        valueField: 'id',
+        queryParam: 'query',
+        allowNew: true,
+        //serverDataKey: 'data',
+        notFoundMessage: i18next.t('firefly.nothing_found'),
+        noCache: true,
+        fetchOptions: {
+            headers: {
+                'X-CSRF-TOKEN': document.head.querySelector('meta[name="csrf-token"]').content
+            }
+        }
+    });
+
+    // auto complete for category.
+    var inputElement = document.getElementById('category-ac');
+    new BootstrapSimpleAutocomplete(inputElement, {
+        fetchFunction: function (query) {
+            // Custom data fetching logic
+            return fetch('api/v1/autocomplete/categories?_token=' + token + '&query=' + encodeURIComponent(query),
+                {
+                    method: 'GET',
+                    credentials: 'include',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Accept': 'application/json',
+                        'X-CSRF-TOKEN': token
+                    },
+                }
+            )
+                .then((response) => response.json())
+                .then((data) => {
+                    var result = [];
+                    for (var i in data) {
+                        if (data.hasOwnProperty(i)) {
+                            result.push(data[i].name);
+                        }
+                    }
+                    // Process data if needed
+                    return result;
+                });
+        },
+    });
 
     // on change, remove the checkbox.
     $('input[name="category"]').change(function () {

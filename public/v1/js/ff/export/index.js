@@ -18,7 +18,6 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-/** global: jobKey, Modernizr */
 
 var intervalId = 0;
 

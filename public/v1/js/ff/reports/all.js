@@ -17,7 +17,6 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
-/** global: startDate, endDate, accountIds */
 function loadAjaxPartial(holder, url) {
     "use strict";
     $.get(url).done(function (data) {
