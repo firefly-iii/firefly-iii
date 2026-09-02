@@ -29,28 +29,28 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 
 ### Fixed
 
-- #10652
-- #11161
-- #11802
-- #12435
-- #12453
-- #12455
-- #12468
-- #12500
-- #12577
-- #12578
-- #12583
-- #12607
-- #12608
-- #12626
-- #12639
-- #12642
-- #12662
+- [Issue 10652](https://github.com/firefly-iii/firefly-iii/issues/10652) (Handling split transactions has some issues (user interface)) reported by @jgmm81
+- [Issue 11161](https://github.com/firefly-iii/firefly-iii/issues/11161) (Can't select autocomplete when using a screen reader) reported by @hamiltlr
+- [Issue 11802](https://github.com/firefly-iii/firefly-iii/issues/11802) (Some attachment uploads fail silently) reported by @JC5
+- [Issue 12435](https://github.com/firefly-iii/firefly-iii/issues/12435) (The "Related piggy banks" info card assigns the native currency symbol when dealing with a foreign currency) reported by @jgmm81
+- [Issue 12453](https://github.com/firefly-iii/firefly-iii/issues/12453) (Subscriptions: Return to form checkbox doesn't work) reported by @SteffoSpieler
+- [Issue 12455](https://github.com/firefly-iii/firefly-iii/issues/12455) (native_amount conversion uses now() instead of transaction date) reported by @tarzan77cz
+- [Issue 12468](https://github.com/firefly-iii/firefly-iii/issues/12468) (Weekly subscription not accounted to be paid if there were already a payment on that month) reported by @brunofontes
+- [Issue 12500](https://github.com/firefly-iii/firefly-iii/issues/12500) (Subscriptions widget  show incorrect numbers.) reported by @wascarreyes01
+- [Issue 12577](https://github.com/firefly-iii/firefly-iii/issues/12577) (API: /accounts endpoint never returns credit_card_type / monthly_payment_date (missing from AccountEnrichment allowlist)) reported by @chigia001
+- [Issue 12578](https://github.com/firefly-iii/firefly-iii/issues/12578) (API PUT/POST /accounts stores monthly_payment_date in a format incompatible with the web UI's date input) reported by @chigia001
+- [Discussion 12583](https://github.com/orgs/firefly-iii/discussions/12583) (How to search for non-foreign currency transactions) started by @skogsvik
+- [Issue 12607](https://github.com/firefly-iii/firefly-iii/issues/12607) (Foreign amount can be added but not removed from transaction) reported by @RyanMcClean
+- [Issue 12608](https://github.com/firefly-iii/firefly-iii/issues/12608) (Add a Search icon (and function) near top of collapsed menu list) reported by @PAS-BC
+- [Issue 12626](https://github.com/firefly-iii/firefly-iii/issues/12626) (MySQL/MariaDB SSL options not checked for empty strings) reported by @hhhuut
+- [Issue 12639](https://github.com/firefly-iii/firefly-iii/issues/12639) (Test rules endpoint always returns no results unless optional accounts argument is passed) reported by @grgar
+- [PR 12642](https://github.com/firefly-iii/firefly-iii/pull/12642) (Fix #12639: match accounts arg of rule trigger & test) reported by @grgar
+- [Issue 12662](https://github.com/firefly-iii/firefly-iii/issues/12662) (A Search for Tags returns more page groups than required) reported by @PAS-BC
 - Setting an invalid language would break your account.
 
 ### Security
 
-- #12497
+- [PR 12497](https://github.com/firefly-iii/firefly-iii/pull/12497) (ci: pin github-action-get-latest-release to a full commit SHA) reported by @kobihikri
 - A variety of security findings by Alwen Roselio, Don Werner Salas and Allan Glenn Aceres touching CSV export, installer security and many more.
 - User "1diot9" discovered that you can overwrite arbitrary preferences. This means you can also overwrite security sensitive preferences, like your email reset code.
 - Removed security sensitive info from the debug page.
