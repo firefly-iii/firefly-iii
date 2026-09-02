@@ -2,11 +2,11 @@
 @section('content')
     <!-- set location data high up -->
     <script type="text/javascript" nonce="{{ $JS_NONCE }}">
-        var locations = {{ json_encode($locations) }};
+        var locations = {!! json_encode($locations) !!};
         var mapboxToken = "{{ config('firefly.mapbox_api_key') }}";
     </script>
 
-    <form method="post" action="{{ route('accounts.update',$account->id) }}" class="form-horizontal"
+    <form method="post" action="{{ route('accounts.update',$account->id) }}" class="form-horizontal" x-data="edit"
           accept-charset="UTF-8"
           enctype="multipart/form-data">
         <input type="hidden" name="_token" value="{{ csrf_token() }}"/>
@@ -105,16 +105,5 @@
     </form>
 @endsection
 @section('scripts')
-    <script type="text/javascript" nonce="{{ $JS_NONCE }}">
-        var iAmOwed = '{{ __('firefly.i_am_owed_amount') }}';
-        var iOwe = '{{ __('firefly.i_owe_amount') }}';
-    </script>
-    <script type="text/javascript" src="v1/js/ff/accounts/edit.js?v={{ $FF_BUILD_TIME }}" nonce="{{ $JS_NONCE }}"></script>
-@endsection
-
-@section('styles')
-    <link href="v1/css/jquery-ui/jquery-ui.structure.min.css?v={{ $FF_BUILD_TIME }}" type="text/css" rel="stylesheet"
-          media="all" nonce="{{ $JS_NONCE }}">
-    <link href="v1/css/jquery-ui/jquery-ui.theme.min.css?v={{ $FF_BUILD_TIME }}" type="text/css" rel="stylesheet"
-          media="all" nonce="{{ $JS_NONCE }}">
+    @vite(['js/pages/accounts/edit.js'])
 @endsection

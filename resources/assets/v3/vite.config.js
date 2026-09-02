@@ -40,6 +40,10 @@ export default defineConfig(({command, mode, isSsrBuild, isPreview}) => {
                     // CSS for entire app
                     'sass/app.scss',
 
+                    // accounts
+                    'js/pages/accounts/create.js',
+                    'js/pages/accounts/edit.js',
+
                     // dashboard
                     'js/pages/dashboard/boxes.js',
                     'js/pages/dashboard/dashboard.js',

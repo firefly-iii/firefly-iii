@@ -2,7 +2,7 @@
 @section('content')
     <!-- set location data high up -->
     <script type="text/javascript" nonce="{{ $JS_NONCE }}">
-        var locations = {{ json_encode($locations) }};
+        var locations = {!! json_encode($locations) !!};
         var mapboxToken = "{{ config('firefly.mapbox_api_key') }}";
     </script>
 

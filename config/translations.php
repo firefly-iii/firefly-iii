@@ -66,6 +66,8 @@ return [
                 'you_create_deposit',
                 'wait_loading_page',
                 'withdrawal',
+                'i_owe_amount',
+                'i_am_owed_amount',
                 'deposit',
                 'transfer',
                 'inactive',

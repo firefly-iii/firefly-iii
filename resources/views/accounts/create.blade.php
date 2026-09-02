@@ -7,7 +7,7 @@
     </script>
 
     <form action="{{ route('accounts.store') }}" method="post" id="store" class="form-horizontal"
-          enctype="multipart/form-data">
+          enctype="multipart/form-data" x-data="create">
         <input type="hidden" name="_token" value="{{ csrf_token() }}"/>
         <input type="hidden" name="objectType" value="{{ $objectType }}"/>
         <input type="hidden" name="active" value="1"/>
@@ -83,16 +83,7 @@
     </form>
 @endsection
 @section('scripts')
-    <script type="text/javascript" nonce="{{ $JS_NONCE }}">
-        var iAmOwed = '{{ __('firefly.i_am_owed_amount') }}';
-        var iOwe = '{{ __('firefly.i_owe_amount') }}';
-    </script>
-    <script type="text/javascript" src="v1/js/ff/accounts/create.js?v={{ $FF_BUILD_TIME }}" nonce="{{ $JS_NONCE }}"></script>
+    @vite(['js/pages/accounts/create.js'])
 @endsection
-
 @section('styles')
-    <link href="v1/css/jquery-ui/jquery-ui.structure.min.css?v={{ $FF_BUILD_TIME }}" type="text/css" rel="stylesheet"
-          media="all" nonce="{{ $JS_NONCE }}">
-    <link href="v1/css/jquery-ui/jquery-ui.theme.min.css?v={{ $FF_BUILD_TIME }}" type="text/css" rel="stylesheet"
-          media="all" nonce="{{ $JS_NONCE }}">
 @endsection
