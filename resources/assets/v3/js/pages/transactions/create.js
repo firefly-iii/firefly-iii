@@ -52,7 +52,6 @@ import {onMapClick} from './shared/on-map-click.js';
 import {onMapZoom} from "./shared/on-map-zoom.js";
 import {clearLocation} from './shared/clear-location.js';
 import {removeSplit} from "./shared/remove-split.js";
-import {loadLinkTypes} from "./shared/load-link-types.js";
 import {createLinkAutocomplete} from "./shared/create-link-autocomplete.js";
 import {editLink} from "./shared/edit-link.js";
 import {switchLink} from "./shared/switch-link.js";
@@ -63,6 +62,7 @@ import {redirectAfterTransactionLinks} from './shared/redirect-after-transaction
 import {processTransactionLinks} from './shared/process-transaction-links.js';
 import {addTabListener} from "./shared/add-tab-listener.js";
 import {autoStep} from "./shared/auto-step.js";
+import {respondToTabSwitch} from "./shared/respond-to-tab-switch.js";
 
 let create = function () {
     return {
@@ -198,6 +198,7 @@ let create = function () {
         redirectAfterTransactionLinks: redirectAfterTransactionLinks,
         addTabListener: addTabListener,
         autoStep: autoStep,
+        respondToTabSwitch: respondToTabSwitch,
 
         filterForeignCurrencies(code) {
             let list = [];
@@ -248,16 +249,7 @@ let create = function () {
             this.entries[index].category_name = '';
         },
 
-        respondToTabSwitch(event) {
-            // event.target // newly activated tab
-            // event.relatedTarget // previous active tab
-            let index = parseInt(event.currentTarget.dataset.index);
-            console.log(this);
-            if (this.maps.hasOwnProperty(index)) {
-                this.maps[index].invalidateSize();
-            }
-            //console.log('Switched to new tab!', event.target.dataset.index);
-        },
+
 
 
 

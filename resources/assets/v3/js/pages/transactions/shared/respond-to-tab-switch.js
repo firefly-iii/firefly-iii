@@ -1,6 +1,6 @@
 /*
- * show.js
- * Copyright (c) 2019 james@firefly-iii.org
+ * respond-to-tab-switch.js
+ * Copyright (c) 2026 james@firefly-iii.org
  *
  * This file is part of Firefly III (https://github.com/firefly-iii).
  *
@@ -18,21 +18,13 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-$(function () {
-    "use strict";
-    if (false && typeof(lineChart) === 'function' && typeof(piggyBankID) !== 'undefined') {
-        lineChart('chart/piggy-bank/' + piggyBankID, 'piggy-bank-history');
+export function respondToTabSwitch(event) {
+    // event.target // newly activated tab
+    // event.relatedTarget // previous active tab
+    let index = parseInt(event.currentTarget.dataset.index);
+    console.log(this);
+    if (this.maps.hasOwnProperty(index)) {
+        this.maps[index].invalidateSize();
     }
-
-    // $('.confirm-history-delete').click(function() {
-    //         return confirm(confirmText);
-    // });
-
-    // on submit of logout button:
-    // $('.reset-link').click(function(e) {
-    //     console.log('here we are');
-    //     e.preventDefault();
-    //     document.getElementById('reset-form').submit();
-    //     return false;
-    // });
-});
+    //console.log('Switched to new tab!', event.target.dataset.index);
+};

@@ -30,7 +30,7 @@ import {processUploadError} from "./shared/process-upload-error.js";
 import {loadSubscriptions} from "./shared/load-subscriptions.js";
 import Tags from "bootstrap5-tags";
 import i18next from "i18next";
-import {createEmptySplit, defaultErrorSet} from "./shared/create-empty-split.js";
+import {defaultErrorSet} from "./shared/create-empty-split.js";
 import {parseFromEntries} from "./shared/parse-from-entries.js";
 import Put from "../../api/model/transaction/put.js";
 import {showMessageOrRedirectUser} from "./shared/show-message-or-redirect.js";
@@ -66,6 +66,7 @@ import {processTransactionLinks} from "./shared/process-transaction-links.js";
 import {redirectAfterTransactionLinks} from "./shared/redirect-after-transaction-links.js";
 import {addTabListener} from "./shared/add-tab-listener.js";
 import {autoStep} from "./shared/auto-step.js";
+import {respondToTabSwitch} from "./shared/respond-to-tab-switch.js";
 
 const urls = getUrls();
 
@@ -160,7 +161,7 @@ let transactions = function () {
         changedForeignAmount: changedForeignAmount,
         showMessageOrRedirectUser: showMessageOrRedirectUser,
         parseErrors: parseErrors,
-        addSplit:addSplit,
+        addSplit: addSplit,
         clearSourceAccount: clearSourceAccount,
         clearDestinationAccount: clearDestinationAccount,
         detectTransactionType: detectTransactionType,
@@ -185,6 +186,7 @@ let transactions = function () {
         loadTransactionLinks: loadTransactionLinks,
         addTabListener: addTabListener,
         autoStep: autoStep,
+        respondToTabSwitch: respondToTabSwitch,
 
         // part of the account selection auto-complete
 
@@ -222,25 +224,25 @@ let transactions = function () {
                 this.entries = parseDownloadedSplits(data.attributes.transactions, parseInt(data.id));
 
                 // set empty arrays
-                for(let i = 0; i < this.entries.length; i++) {
+                for (let i = 0; i < this.entries.length; i++) {
                     this.links[i] = []; // empty set of links.
                 }
 
                 // set amountCurrency.
-                for(let i in this.formData.enabledCurrencies) {
-                    if(this.formData.enabledCurrencies.hasOwnProperty(i)) {
-                        if(this.formData.enabledCurrencies[i].code === this.entries[0].currency_code) {
+                for (let i in this.formData.enabledCurrencies) {
+                    if (this.formData.enabledCurrencies.hasOwnProperty(i)) {
+                        if (this.formData.enabledCurrencies[i].code === this.entries[0].currency_code) {
                             this.formData.amountCurrency = this.formData.enabledCurrencies[i];
                             console.log('selected ' + this.formData.amountCurrency.code + ' as amount currency.');
                         }
                     }
                 }
                 // limit foreignCurrencies to a single one when it's a transfer
-                if('transfer' === this.groupProperties.transactionType) {
+                if ('transfer' === this.groupProperties.transactionType) {
                     this.formData.foreignCurrencies = [];
-                    for(let i in this.formData.enabledCurrencies) {
-                        if(this.formData.enabledCurrencies.hasOwnProperty(i)) {
-                            if(this.formData.enabledCurrencies[i].code === this.entries[0].forein_currency_code) {
+                    for (let i in this.formData.enabledCurrencies) {
+                        if (this.formData.enabledCurrencies.hasOwnProperty(i)) {
+                            if (this.formData.enabledCurrencies[i].code === this.entries[0].forein_currency_code) {
                                 this.formData.foreignCurrencies.push(this.formData.enabledCurrencies[i]);
                             }
                         }
@@ -370,7 +372,7 @@ let transactions = function () {
             if (null === this.groupProperties.title && transactions.length > 1) {
                 submission.group_title = transactions[0].description;
             }
-            if(1 === transactions.length) {
+            if (1 === transactions.length) {
                 submission.group_title = null;
             }
 
