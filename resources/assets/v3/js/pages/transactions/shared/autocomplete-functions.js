@@ -48,16 +48,15 @@ export function changeDestinationAccount(item, ac) {
         document.querySelector('#form')._x_dataStack[0].$data.entries[index].destination_account = {
             name: ac._searchInput.value, alpine_name: ac._searchInput.value,
         };
-        document.querySelector('#form')._x_dataStack[0].changedDestinationAccount();
+        document.querySelector('#form')._x_dataStack[0].changedDestinationAccount(index);
     }
 }
 
 export function selectDestinationAccount(item, ac) {
     const index = parseInt(ac._searchInput.attributes['data-index'].value);
-    document.querySelector('#form')._x_dataStack[0].$data.entries[index].destination_account = {
-        id: item.id, name: item.name, alpine_name: item.name, type: item.type, currency_code: item.currency_code,
-    };
-    document.querySelector('#form')._x_dataStack[0].changedDestinationAccount();
+    const newAccount = {id: item.id, name: item.name, alpine_name: item.name, type: item.type, currency_code: item.currency_code,};
+    document.querySelector('#form')._x_dataStack[0].$data.entries[index].destination_account = newAccount;
+    document.querySelector('#form')._x_dataStack[0].changedDestinationAccount(index);
 }
 
 export function changeSourceAccount(item, ac) {
@@ -70,15 +69,13 @@ export function changeSourceAccount(item, ac) {
         document.querySelector('#form')._x_dataStack[0].$data.entries[index].source_account = {
             name: ac._searchInput.value, alpine_name: ac._searchInput.value,
         };
-
-        document.querySelector('#form')._x_dataStack[0].changedSourceAccount();
+        document.querySelector('#form')._x_dataStack[0].changedSourceAccount(index);
     }
 }
 
 export function selectSourceAccount(item, ac) {
     const index = parseInt(ac._searchInput.attributes['data-index'].value);
-    document.querySelector('#form')._x_dataStack[0].$data.entries[index].source_account = {
-        id: item.id, name: item.name, alpine_name: item.name, type: item.type, currency_code: item.currency_code,
-    };
-    document.querySelector('#form')._x_dataStack[0].changedSourceAccount();
+    const newAccount = {id: item.id, name: item.name, alpine_name: item.name, type: item.type, currency_code: item.currency_code,};
+    document.querySelector('#form')._x_dataStack[0].$data.entries[index].source_account = newAccount;
+    document.querySelector('#form')._x_dataStack[0].changedSourceAccount(index);
 }

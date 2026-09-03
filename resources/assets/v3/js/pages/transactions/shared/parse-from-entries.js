@@ -39,7 +39,7 @@ export function parseFromEntries(entries, originals, transactionType) {
                 current.description = entry.description;
             }
 
-            // source and destination
+            // source and destination NAME
             current.source_name = entry.source_account.name;
             current.destination_name = entry.destination_account.name;
 

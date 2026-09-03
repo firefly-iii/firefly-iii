@@ -233,7 +233,6 @@ let transactions = function () {
                     if (this.formData.enabledCurrencies.hasOwnProperty(i)) {
                         if (this.formData.enabledCurrencies[i].code === this.entries[0].currency_code) {
                             this.formData.amountCurrency = this.formData.enabledCurrencies[i];
-                            console.log('selected ' + this.formData.amountCurrency.code + ' as amount currency.');
                         }
                     }
                 }
@@ -421,7 +420,6 @@ let transactions = function () {
 
         // exclusive to edit form, used to initialize splits.
         addedSplit() {
-            console.log('addedSplit()');
             this.disableSplitAccounts();
             this.addAllAutocompleteToForm();
             this.addTabListener();
