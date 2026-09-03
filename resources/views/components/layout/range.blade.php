@@ -7,7 +7,7 @@
         id="date-range"
     >
         <em class="bi bi-calendar"></em>
-        <span class="daterange-holder"></span>
+        <span class="daterange-holder d-none d-md-inline"></span>
     </a>
     <ul
         x-data="dates" x-bind="eventListeners"

@@ -99,6 +99,7 @@
             </ul>
             <!--begin::End Navbar Links-->
             <ul class="navbar-nav ms-auto">
+                @if($FF_IS_DEVELOP)
                 <li class="nav-item">
                     <span class="nav-link">
                         Size:
@@ -110,6 +111,7 @@
                         <span class="d-none d-xxl-inline">xxl</span>
                     </span>
                 </li>
+                @endif
 
                 <!-- start: date range selector -->
                 <x-layout.range/>

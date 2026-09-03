@@ -63,6 +63,7 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 
 ### API
 
+- #12689
 - See https://api-docs.firefly-iii.org/
 
 ## v6.6.6 - 2026-07-01
