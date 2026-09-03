@@ -247,12 +247,15 @@ final class BudgetLimitController extends Controller
         if (-1 === bccomp($amount, '0')) {
             $amount = bcmul($amount, '-1');
         }
-        $notes                           = (string) $request->input('notes');
-        if (strlen($notes) > 32_768) {
-            $notes = substr($notes, 0, 32_768);
+        $update = ['amount' => $amount];
+        if($request->has('notes')) {
+            $notes = (string)$request->input('notes');
+            if (strlen($notes) > 32_768) {
+                $notes = substr($notes, 0, 32_768);
+            }
+            $update['notes'] = $notes;
         }
-
-        $limit                           = $this->blRepository->update($budgetLimit, ['amount' => $amount, 'notes' => $notes]);
+        $limit                           = $this->blRepository->update($budgetLimit, $update);
         Preferences::mark();
         $array                           = $limit->toArray();
 

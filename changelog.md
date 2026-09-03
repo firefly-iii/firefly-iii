@@ -46,6 +46,7 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 - [Issue 12639](https://github.com/firefly-iii/firefly-iii/issues/12639) (Test rules endpoint always returns no results unless optional accounts argument is passed) reported by @grgar
 - [PR 12642](https://github.com/firefly-iii/firefly-iii/pull/12642) (Fix #12639: match accounts arg of rule trigger & test) reported by @grgar
 - [Issue 12662](https://github.com/firefly-iii/firefly-iii/issues/12662) (A Search for Tags returns more page groups than required) reported by @PAS-BC
+- #12687
 - Setting an invalid language would break your account.
 
 ### Security
