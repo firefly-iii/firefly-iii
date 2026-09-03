@@ -198,7 +198,13 @@ final class BudgetLimitController extends Controller
         if ($request->expectsJson()) {
             $array                           = $limit->toArray();
             // add some extra metadata:
-            $spentArr                        = $this->opsRepository->sumExpenses($limit->start_date, $limit->end_date, null, new Collection()->push($budget), $currency);
+            $spentArr                        = $this->opsRepository->sumExpenses(
+                $limit->start_date,
+                $limit->end_date,
+                null,
+                new Collection()->push($budget),
+                $currency
+            );
             $array['spent']                  = $spentArr[$currency->id]['sum'] ?? '0';
             $array['left_formatted']         = Amount::formatAnything($limit->transactionCurrency, bcadd($array['spent'], (string) $array['amount']));
             $array['amount_formatted']       = Amount::formatAnything($limit->transactionCurrency, $limit['amount']);
@@ -247,9 +253,9 @@ final class BudgetLimitController extends Controller
         if (-1 === bccomp($amount, '0')) {
             $amount = bcmul($amount, '-1');
         }
-        $update = ['amount' => $amount];
-        if($request->has('notes')) {
-            $notes = (string)$request->input('notes');
+        $update                          = ['amount' => $amount];
+        if ($request->has('notes')) {
+            $notes           = (string) $request->input('notes');
             if (strlen($notes) > 32_768) {
                 $notes = substr($notes, 0, 32_768);
             }
