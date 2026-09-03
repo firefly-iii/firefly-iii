@@ -25,7 +25,12 @@ import dates from './shared/dates.js';
 let index = function () {
     return {
         init() {
-            // console.log('Generic JS for page with few features.');
+            (function() {
+                let list = document.querySelectorAll('div.app-content form input[type="text"]:enabled');
+                if (list.length > 0) {
+                    list[0].focus();
+                }
+            })();
         }
     }
 };

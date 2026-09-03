@@ -229,32 +229,3 @@
     <script type="text/javascript" src="v1/js/ff/index.js?v={{ $FF_BUILD_TIME }}" nonce="{{ $JS_NONCE }}"></script>
 
 @endsection
-{{--
-<script type="text/javascript" nonce="{{ $JS_NONCE }}">
-    var lineColor = 'red';
-    var lineTextColor = '#000';
-    if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) {
-        lineColor = '#a00';
-        lineTextColor = '#bec5cb';
-    }
-    var billCount = {{ $billCount }};
-    var accountFrontpageUrl = '{{ route('chart.account.frontpage') }}';
-    var accountRevenueUrl = '{{ route('chart.account.revenue') }}';
-    var accountExpenseUrl = '{{ route('chart.account.expense') }}';
-    var piggyInfoUrl = '{{ route('json.fp.piggy-banks') }}';
-    var drawVerticalLine = '';
-    <!--render vertical line with text "today"  -->
-    @if($start->lte($today) and $end->gte($today))
-    drawVerticalLine = '{{ $today->isoFormat($monthAndDayFormat) }}';
-    @endif
-</script>
-
-<script type="text/javascript" src="v1/js/lib/Chart.bundle.min.js?v={{ $FF_BUILD_TIME }}"
-        nonce="{{ $JS_NONCE }}"></script>
-<script type="text/javascript" src="v1/js/lib/chartjs-plugin-annotation.min.js?v={{ $FF_BUILD_TIME }}"
-        nonce="{{ $JS_NONCE }}"></script>
-<script type="text/javascript" src="v1/js/ff/charts.defaults.js?v={{ $FF_BUILD_TIME }}"
-        nonce="{{ $JS_NONCE }}"></script>
-<script type="text/javascript" src="v1/js/ff/charts.js?v={{ $FF_BUILD_TIME }}" nonce="{{ $JS_NONCE }}"></script>
-<script type="text/javascript" src="v1/js/ff/index.js?v={{ $FF_BUILD_TIME }}" nonce="{{ $JS_NONCE }}"></script>
---}}

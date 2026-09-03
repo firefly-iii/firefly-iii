@@ -214,19 +214,6 @@
 @endsection
 @section('scripts')
     @vite(['js/pages/recurring/create.js'])
-    <!--
-    <script type="text/javascript" src="v1/js/lib/bootstrap-simple-autocomplete.js?v={{ $FF_BUILD_TIME }}" nonce="{{ $JS_NONCE }}"></script>
-    <script type="text/javascript" src="v1/js/ff/common/autocomplete.js?v={{ $FF_BUILD_TIME }}"
-            nonce="{{ $JS_NONCE }}"></script>
-    <script type="text/javascript" nonce="{{ $JS_NONCE }}">
-        var transactionType = "{{ $preFilled['transaction_type'] }}";
-
-
-        var oldRepetitionType = "{{ $oldRepetitionType }}";
-    </script>
-    <script type="text/javascript" src="v1/js/ff/recurring/create.js?v={{ $FF_BUILD_TIME }}"
-            nonce="{{ $JS_NONCE }}"></script>
-            -->
 @endsection
 
 @section('styles')

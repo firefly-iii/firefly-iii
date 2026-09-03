@@ -3,7 +3,7 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
-## v6.7.0
+## v6.7.0 - 2026-09-17
 
 <!-- summary: This release introduces a new layout and fixes many bugs. -->
 

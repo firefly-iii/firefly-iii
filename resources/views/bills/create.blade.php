@@ -1,7 +1,7 @@
 @extends('layout.v3.session')
 @section('content')
 
-    <form method="POST" action="{{ route('subscriptions.store') }}" accept-charset="UTF-8" class="form-horizontal" id="store" enctype="multipart/form-data">
+    <form x-data="index" method="POST" action="{{ route('subscriptions.store') }}" accept-charset="UTF-8" class="form-horizontal" id="store" enctype="multipart/form-data">
         <input name="_token" type="hidden" value="{{ csrf_token() }}">
 
         <div class="row">
@@ -64,9 +64,6 @@
 
 @section('scripts')
     @vite(['js/pages/generic.js'])
-    <script type="text/javascript" src="v1/js/ff/bills/create.js?v={{ $FF_BUILD_TIME }}" nonce="{{ $JS_NONCE }}"></script>
-
-    {{-- auto complete for object groups --}}
     <script type="text/javascript" src="v1/js/lib/bootstrap-simple-autocomplete.js?v={{ $FF_BUILD_TIME }}" nonce="{{ $JS_NONCE }}"></script>
     <script type="text/javascript" src="v1/js/ff/object-groups/ac.js?v={{ $FF_BUILD_TIME }}" nonce="{{ $JS_NONCE }}"></script>
 @endsection
