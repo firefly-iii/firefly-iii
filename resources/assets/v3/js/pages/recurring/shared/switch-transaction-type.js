@@ -31,6 +31,7 @@ function switchTransactionType(transactionType) {
             list[i].classList.add('btn-secondary');
         }
     }
+    document.querySelector('input[type="hidden"][name="transaction_type"]').value = transactionType;
     if ('withdrawal' === transactionType) {
         // hide source account name:
         document.getElementById('deposit_source_id_holder').style.display = 'none';

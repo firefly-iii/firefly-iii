@@ -24,12 +24,15 @@ declare(strict_types=1);
 
 namespace FireflyIII\Services\Internal\Update;
 
+use FireflyIII\Enums\TransactionTypeEnum;
 use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Factory\TransactionCurrencyFactory;
 use FireflyIII\Models\Note;
 use FireflyIII\Models\Recurrence;
 use FireflyIII\Models\RecurrenceRepetition;
 use FireflyIII\Models\RecurrenceTransaction;
+use FireflyIII\Models\Transaction;
+use FireflyIII\Models\TransactionType;
 use FireflyIII\Services\Internal\Support\RecurringTransactionTrait;
 use FireflyIII\Services\Internal\Support\TransactionTypeTrait;
 use FireflyIII\User;
@@ -90,6 +93,14 @@ class RecurrenceUpdateService
             if (array_key_exists('notes', $info)) {
                 $this->setNoteText($recurrence, $info['notes']);
             }
+            // update the type.
+            if (array_key_exists('type', $info)) {
+                $type = ucfirst($info['type']);
+                $object = TransactionType::query()->where('type', $type)->first();
+                if(null !== $object) {
+                    $recurrence->transaction_type_id = $object->id;
+                }
+            }
         }
         $recurrence->save();
 
@@ -100,7 +111,7 @@ class RecurrenceUpdateService
             $this->updateRepetitions($recurrence, $data['repetitions'] ?? []);
         }
         // update all transactions:
-        // update all transactions (and associated meta-data)
+        // update all transactions (and associated metadata)
         if (array_key_exists('transactions', $data)) {
             $this->updateTransactions($recurrence, $data['transactions'] ?? []);
         }
@@ -237,6 +248,13 @@ class RecurrenceUpdateService
         }
         if (array_key_exists('piggy_bank_id', $submitted)) {
             $this->updatePiggyBank($transaction, (int) $submitted['piggy_bank_id']);
+        }
+        if(array_key_exists('type', $submitted)) {
+            $type = TransactionType::query()->where('type', ucfirst($submitted['type']))->first();
+            if(null !== $type) {
+                $transaction->transaction_type_id = $type->id;
+                $transaction->save();
+            }
         }
     }
 

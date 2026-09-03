@@ -26,7 +26,7 @@ function createButtonSwitcher() {
 
         list[i].addEventListener('click', (event) => {
             let transactionType = event.currentTarget.dataset.value;
-            // console.log('Clicked value is ' + transactionType);
+            console.log('Clicked value is ' + transactionType);
             switchTransactionType(transactionType);
             return false;
         });
