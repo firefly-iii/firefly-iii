@@ -10,6 +10,7 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 ### Known issues
 - Editing and creating split transactions may sometimes mix up the order of the splits. The data itself is never mixed up however.
 - Some user managed to get a PR co-authored by Claude past my eagle eyes. Sorry about that. Luckily just a small fix.
+- Many small and large usability issues still exist in the new layout. My humble apologies. I could not catch them all (sad Pikachu face).
 
 ### Added
 
@@ -59,8 +60,8 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 - URL validation could be circumvented.
 - Flushing the cache would reset some timeouts.
 - You can still use the webhooks API to connect to arbitrary and weird URLs and internal IPs.
-- You will delete everybody's purged notes when you delete your own purged notes.
-- The API token is still part of the URL.
+- You will still delete everybody's purged notes when you delete your own purged notes.
+- The (static) cron job token is still part of the URL if you call it over the web.
 
 ### API
 
