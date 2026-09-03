@@ -45,9 +45,9 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 - [Issue 12608](https://github.com/firefly-iii/firefly-iii/issues/12608) (Add a Search icon (and function) near top of collapsed menu list) reported by @PAS-BC
 - [Issue 12626](https://github.com/firefly-iii/firefly-iii/issues/12626) (MySQL/MariaDB SSL options not checked for empty strings) reported by @hhhuut
 - [Issue 12639](https://github.com/firefly-iii/firefly-iii/issues/12639) (Test rules endpoint always returns no results unless optional accounts argument is passed) reported by @grgar
-- [PR 12642](https://github.com/firefly-iii/firefly-iii/pull/12642) (Fix #12639: match accounts arg of rule trigger & test) reported by @grgar
+- [PR 12642](https://github.com/firefly-iii/firefly-iii/pull/12642) (Fix [Issue 12639](https://github.com/firefly-iii/firefly-iii/issues/12639) (Test rules endpoint always returns no results unless optional accounts argument is passed) reported by @grgar: match accounts arg of rule trigger & test) reported by @grgar
 - [Issue 12662](https://github.com/firefly-iii/firefly-iii/issues/12662) (A Search for Tags returns more page groups than required) reported by @PAS-BC
-- #12687
+- [Issue 12687](https://github.com/firefly-iii/firefly-iii/issues/12687) (Changing budgeted amount in a budget deletes notes.) reported by @rdesbo
 - Setting an invalid language would break your account.
 
 ### Security
@@ -65,7 +65,7 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 
 ### API
 
-- #12689
+- [Issue 12689](https://github.com/firefly-iii/firefly-iii/issues/12689) (Unable to update monthly_payment_date via API) reported by @Toshik1978
 - See https://api-docs.firefly-iii.org/
 
 ## v6.6.6 - 2026-07-01
