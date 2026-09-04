@@ -13,7 +13,7 @@
                         <div class="row mb-3">
                             <label for="inputReportType" class="col-sm-3 col-form-label">{{ __('firefly.report_type') }}</label>
                             <div class="col-sm-9">
-                                <select name="report_type" class="form-control" id="inputReportType">
+                                <select name="report_type" class="form-select" id="inputReportType">
                                     <option selected label="{{ __('firefly.report_type_default') }}" value="default">{{ __('firefly.report_type_default') }}</option>
                                     <option label="{{ __('firefly.report_type_audit') }}" value="audit">{{ __('firefly.report_type_audit') }}</option>
                                     <option label="{{ __('firefly.report_type_budget') }}" value="budget">{{ __('firefly.report_type_budget') }}</option>
@@ -26,7 +26,7 @@
                         <div class="row mb-3">
                             <label for="inputAccounts" class="col-sm-3 col-form-label">{{ __('firefly.report_included_accounts') }}</label>
                             <div class="col-sm-9" id="inputAccountsSelect">
-                                <select id="inputAccounts" name="accounts[]" multiple class="form-control">
+                                <select id="inputAccounts" name="accounts[]" multiple class="form-select">
                                     @foreach($groupedAccounts as $role => $$accountList)
                                         <optgroup label="{{ $role }}">
                                             @foreach($$accountList as $account)

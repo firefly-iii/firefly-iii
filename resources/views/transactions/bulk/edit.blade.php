@@ -111,7 +111,7 @@
                                     <tr>
                                         <th>{{ trans('list.budget') }}</th>
                                         <td>
-                                            <select @change="detectBudgetChange" class="form-control" name="budget_id">
+                                            <select @change="detectBudgetChange" class="form-select" name="budget_id">
                                                 @foreach($budgetList as $id => $budget)
                                                     <option value="{{ $id }}" label="{{ $budget }}">{{ $budget }}</option>
                                                 @endforeach

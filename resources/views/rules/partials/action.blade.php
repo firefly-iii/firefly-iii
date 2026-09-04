@@ -4,7 +4,7 @@
     </td>
     <td class="thirty">
         {{-- TODO error when invalid name --}}
-        <select name="actions[{{ $count }}][type]" class="form-control">
+        <select name="actions[{{ $count }}][type]" class="form-select">
             @foreach(all_rule_actions() as $key => $type)
                 <option value="{{ $key }}" label="{{ $type }}" @if($key === $oldAction) selected @endif>{{ $type }}</option>
             @endforeach

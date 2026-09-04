@@ -3,7 +3,7 @@
         <a href="#" class="btn btn-danger btn-sm remove-trigger"><span class="bi bi-trash"></span></a>
     </td>
     <td class="thirty">
-        <select name="triggers[{{ $count }}][type]" class="form-control">
+        <select name="triggers[{{ $count }}][type]" class="form-select">
             @foreach($triggers as $key => $type)
                 <option value="{{ $key }}" label="{{ $type }}"
                         @if($oldTrigger === $key)

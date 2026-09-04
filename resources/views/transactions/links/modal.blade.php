@@ -11,7 +11,7 @@
                 <div class="form-group">
                     <label for="link_type" class="col-sm-4 control-label">{{ __('firefly.this_transaction') }}</label>
                     <div class="col-sm-8">
-                        <select id="link_type" class="form-control" name="link_type">
+                        <select id="link_type" class="form-select" name="link_type">
                             @foreach($linkTypes as $linkType)
                                 <option label="{{ journal_link_translation('inward', $linkType->inward) }}"
                                         value="{{ $linkType->id }}_inward">{{ journal_link_translation('inward', $linkType->inward) }}</option>

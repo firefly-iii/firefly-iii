@@ -380,7 +380,7 @@ Breadcrumbs::for(
     'subscriptions.index',
     static function (Generator $breadcrumbs): void {
         $breadcrumbs->parent('home');
-        $breadcrumbs->push(trans('breadcrumbs.bills'), route('subscriptions.index'));
+        $breadcrumbs->push(trans('breadcrumbs.subscriptions'), route('subscriptions.index'));
     }
 );
 Breadcrumbs::for(

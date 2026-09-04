@@ -92,9 +92,7 @@ return [
     'email_change_body_to_old'                   => 'You or somebody with access to your Firefly III account has changed your email address. If you did not expect this to happen, you **must** follow the "undo"-link below to protect your account!',
     'email_change_ignore'                        => 'If you initiated this change, you may safely ignore this message.',
     'email_change_old'                           => 'The old email address was: :email',
-    'email_change_old_strong'                    => 'The old email address was: **:email**',
     'email_change_new'                           => 'The new email address is: :email',
-    'email_change_new_strong'                    => 'The new email address is: **:email**',
     'email_change_instructions'                  => 'You cannot use Firefly III until you confirm this change. Please follow the link below to do so.',
     'email_change_undo_link'                     => 'To undo the change, follow this link:',
 

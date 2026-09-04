@@ -24,9 +24,6 @@ declare(strict_types=1);
 
 return [
     'home'                   => 'Home',
-    'budgets'                => 'Budgets',
-    'subscriptions'          => 'Subscriptions',
-    'transactions'           => 'Transactions',
     'title_expenses'         => 'Expenses',
     'title_withdrawal'       => 'Expenses',
     'title_revenue'          => 'Revenue / income',

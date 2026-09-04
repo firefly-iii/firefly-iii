@@ -27,12 +27,10 @@ return [
     '404_page_does_not_exist'       => 'The page you have requested does not exist. Please check that you have not entered the wrong URL. Did you make a typo perhaps?',
     '404_send_error'                => 'If you were redirected to this page automatically, please accept my apologies. There is a mention of this error in your log files and I would be grateful if you sent me the error to me.',
     '404_github_link'               => 'If you are sure this page should exist, please open a ticket on <strong><a href="https://github.com/firefly-iii/firefly-iii/issues">GitHub</a></strong>.',
-    'whoops'                        => 'Whoops',
     'note_not_found_account'        => 'Account ":name" has been deleted and can no longer be viewed. Please enjoy this overview of all other accounts of the same type.',
     'note_not_found_group'          => 'Transaction ":description" has been deleted and can no longer be viewed. Please enjoy this overview of all other transactions of the same type.',
     'note_not_found_reconciliation' => 'Reconciliation ":description" has been deleted and can no longer be viewed. Here is an overview of the account it belonged to.',
 
-    'fatal_error'                   => 'There was a fatal error. Please check the log files in "storage/logs" or use "docker logs -f [container]" to see what\'s going on.',
     'maintenance_mode'              => 'Firefly III is in maintenance mode.',
     'be_right_back'                 => 'Be right back!',
     'check_back'                    => 'Firefly III is down for some necessary maintenance. Please check back in a second. If you happen to see this message on the demo site, just wait a few minutes. The database is reset every few hours.',
@@ -53,7 +51,4 @@ return [
     'tell_more'                     => 'Tell us more than "it says Whoops!"',
     'include_logs'                  => 'Include error logs (see above).',
     'what_did_you_do'               => 'Tell us what you were doing.',
-    'offline_header'                => 'You are probably offline',
-    'offline_unreachable'           => 'Firefly III is unreachable. Your device is currently offline or the server is not working.',
-    'offline_github'                => 'If you are sure both your device and the server are online, please open a ticket on <strong><a href="https://github.com/firefly-iii/firefly-iii/issues">GitHub</a></strong>.',
 ];

@@ -63,7 +63,7 @@ $(function () {
         }
 
         // make account select a hip new bootstrap multi-select thing.
-        $('#inputAccounts').multiselect(defaultMultiSelect);
+        //$('#inputAccounts').multiselect(defaultMultiSelect);
 
         // set date from cookie
         var startStr = readCookie('report-start');
