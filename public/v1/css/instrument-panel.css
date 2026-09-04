@@ -155,12 +155,59 @@ textarea:focus-visible,
     background: var(--ip-header-bg-active);
 }
 
-/* At header icon size, a thin fa-sun-o reads as a gear, not a sun -- color is
-   doing the disambiguation the outline alone can't at this scale. Scoped to
-   just the sun glyph (the one actually getting mistaken for settings); the
-   moon and the "follow browser" half-circle stay the header's normal icon
-   color, since neither is ambiguous the same way. */
-.skin-firefly-iii #theme-toggle .fa-sun-o {
+/* Theme switcher: a 3-segment Light/Dark/System pill in the dark header,
+   modeled on Geist's ThemeSwitcher (a recessed track with a solid pill on
+   the active segment) rather than the single click-to-flip icon this
+   replaced. Sibling items (#daterange, "Hey <name>") vertically center via
+   padding:15px on an <a>/<span> that fills the 50px header -- this is a
+   <div>, so it never picked that up on its own; center its <li> directly
+   instead of trying to replicate that padding math on a 3-button pill. */
+.theme-switcher-item {
+    display: flex;
+    align-items: center;
+    height: 50px;
+}
+
+.theme-switcher {
+    display: flex;
+    align-items: center;
+    gap: 2px;
+    background: var(--ip-header-bg-active);
+    border-radius: 999px;
+    padding: 2px;
+}
+
+.theme-switcher__option {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 26px;
+    height: 26px;
+    border: none;
+    border-radius: 999px;
+    background: transparent;
+    color: var(--ip-fg-on-header);
+    font-size: 12px;
+}
+
+.theme-switcher__option:hover {
+    color: #ffffff;
+}
+
+.theme-switcher__option.active {
+    background: #ffffff;
+    color: var(--ip-header-bg);
+}
+
+.theme-switcher__option.active:hover {
+    color: var(--ip-header-bg);
+}
+
+/* At this size a thin fa-sun-o reads as a gear, not a sun -- color is doing
+   the disambiguation the outline alone can't. Scoped to just the sun glyph
+   (the one actually getting mistaken for settings); the moon and monitor
+   icons stay whatever color their segment already is. */
+.theme-switcher__option .fa-sun-o {
     color: #f5c518;
 }
 
@@ -912,4 +959,205 @@ label {
 .modal .close:focus {
     color: var(--ip-fg);
     opacity: 1;
+}
+
+/* ============================== USER ADMINISTRATION ============================== */
+
+.box-header--icon {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.box-header--icon .box-title {
+    margin: 0;
+}
+
+.box-icon-badge {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex: 0 0 auto;
+    width: 34px;
+    height: 34px;
+    border-radius: 50%;
+    font-size: 14px;
+}
+
+.box-icon-badge--info {
+    background: var(--ip-info-tint);
+    color: var(--ip-info);
+}
+
+.box-icon-badge--positive {
+    background: var(--ip-positive-tint);
+    color: var(--ip-positive);
+}
+
+.box-icon-badge--accent {
+    background: var(--ip-accent-secondary-tint);
+    color: var(--ip-accent-secondary);
+}
+
+/* Admin/2FA/blocked columns on the users table: a small soft-tint circle
+   behind the check/times icon reads as a status pill at a glance, instead of
+   a bare colored glyph sitting directly on the row. */
+.status-dot {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 22px;
+    height: 22px;
+    border-radius: 50%;
+    font-size: 11px;
+}
+
+.status-dot--positive {
+    background: var(--ip-positive-tint);
+    color: var(--ip-positive);
+}
+
+.status-dot--negative {
+    background: var(--ip-negative-tint);
+    color: var(--ip-negative);
+}
+
+.users-table__actions {
+    text-align: right;
+}
+
+.table-row-actions {
+    display: inline-flex;
+    gap: 6px;
+    justify-content: flex-end;
+}
+
+/* ============================== DATE RANGE PICKER ============================== */
+/* Retheme the bgrins/daterangepicker widget (header "date range" control) onto
+   the same tokens as everything else instead of its own vendored default/dark/
+   light CSS -- those three files stay loaded (JS toggles between them by name
+   elsewhere) but this section, loaded after them, wins the cascade and is the
+   only one that actually renders. .cancelBtn/.applyBtn need nothing here: they
+   already carry .btn.btn-default/.btn.btn-primary, themed globally above. */
+
+.daterangepicker {
+    font-family: var(--ip-font-ui);
+    background: var(--ip-surface);
+    border: 1px solid var(--ip-border);
+    border-radius: 6px;
+    box-shadow: var(--ip-shadow-panel);
+    color: var(--ip-fg);
+}
+
+.daterangepicker::before,
+.daterangepicker::after {
+    display: none;
+}
+
+.daterangepicker .ranges {
+    background: var(--ip-surface-raised);
+    border-right: 1px solid var(--ip-border);
+}
+
+.daterangepicker .ranges ul {
+    padding: 6px;
+}
+
+.daterangepicker .ranges li {
+    padding: 7px 10px;
+    border-radius: 4px;
+    color: var(--ip-fg-muted);
+    font-size: 13px;
+}
+
+.daterangepicker .ranges li:hover {
+    background: var(--ip-surface);
+    color: var(--ip-fg);
+}
+
+.daterangepicker .ranges li.active {
+    background: var(--ip-accent-tint);
+    color: var(--ip-accent-strong);
+    font-weight: 500;
+}
+
+.daterangepicker .calendar-table {
+    background: var(--ip-surface);
+    border: none;
+}
+
+.daterangepicker th.month {
+    font-family: var(--ip-font-mono);
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    color: var(--ip-fg-muted);
+}
+
+.daterangepicker thead tr:nth-child(2) th {
+    font-family: var(--ip-font-mono);
+    font-size: 11px;
+    font-weight: 600;
+    color: var(--ip-fg-faint);
+}
+
+.daterangepicker th.prev,
+.daterangepicker th.next {
+    color: var(--ip-fg-muted);
+}
+
+.daterangepicker th.prev:hover,
+.daterangepicker th.next:hover {
+    background: var(--ip-surface-raised);
+}
+
+.daterangepicker td {
+    color: var(--ip-fg);
+    border-radius: 50%;
+}
+
+.daterangepicker td.off,
+.daterangepicker td.off.in-range,
+.daterangepicker td.off.start-date,
+.daterangepicker td.off.end-date {
+    background: transparent;
+    color: var(--ip-fg-faint);
+}
+
+.daterangepicker td.weekend {
+    background: transparent;
+}
+
+.daterangepicker td.available:hover {
+    background: var(--ip-surface-raised);
+}
+
+.daterangepicker td.in-range {
+    background: var(--ip-accent-tint);
+    border-radius: 0;
+}
+
+.daterangepicker td.today {
+    box-shadow: inset 0 0 0 1px var(--ip-border-strong);
+}
+
+.daterangepicker td.active,
+.daterangepicker td.active:hover {
+    background: var(--ip-accent);
+    color: var(--ip-fg-on-accent);
+}
+
+.daterangepicker .drp-selected {
+    font-family: var(--ip-font-mono);
+    font-size: 12px;
+    color: var(--ip-fg-muted);
+}
+
+.daterangepicker select.monthselect,
+.daterangepicker select.yearselect {
+    background: var(--ip-surface);
+    border: 1px solid var(--ip-border-strong);
+    color: var(--ip-fg);
+    border-radius: 4px;
 }

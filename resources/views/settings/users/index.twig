@@ -10,7 +10,8 @@
                 <form action="{{ route('settings.users.invite') }}" method="post">
                     <input type="hidden" name="_token" value="{{ csrf_token() }}"/>
                     <div class="box box-primary">
-                        <div class="box-header with-border">
+                        <div class="box-header with-border box-header--icon">
+                            <span class="box-icon-badge box-icon-badge--info"><span class="fa fa-user-plus"></span></span>
                             <h3 class="box-title">{{ 'invite_new_user_title'|_ }}</h3>
                         </div>
                         <div class="box-body">
@@ -32,14 +33,15 @@
     <div class="row">
         <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
             <div class="box box-primary">
-                <div class="box-header with-border">
+                <div class="box-header with-border box-header--icon">
+                    <span class="box-icon-badge box-icon-badge--positive"><span class="fa fa-users"></span></span>
                     <h3 class="box-title">{{ 'all_users'|_ }}</h3>
                 </div>
                 <div class="box-body no-padding">
-                    <table class="table table-responsive table-condensed sortable" aria-label="Table">
+                    <table class="table table-responsive table-condensed sortable users-table" aria-label="Table">
                         <thead>
                         <tr>
-                            <th data-defaultsign="_19" class="hidden-xs" colspan="2">&nbsp;</th>
+                            <th data-defaultsign="_19" class="hidden-xs">&nbsp;</th>
                             <th data-defaultsign="az">{{ trans('list.email') }}</th>
                             <th data-defaultsign="month" class="hidden-xs">{{ trans('list.registered_at') }}</th>
                             <th data-defaultsign="month" class="hidden-xs">{{ trans('list.updated_at') }}</th>
@@ -47,19 +49,12 @@
                             <th class="hidden-xs">{{ trans('list.has_two_factor') }}</th>
                             <th>{{ trans('list.is_blocked') }}</th>
                             <th data-defaultsign="az" class="hidden-xs">{{ trans('list.blocked_code') }}</th>
+                            <th class="hidden-xs users-table__actions">{{ 'actions'|_ }}</th>
                         </tr>
                         </thead>
                         <tbody>
                         {% for user in users %}
                             <tr>
-                                <td class="hidden-xs" data-value="{{ user.id }}">
-                                    <div class="btn-group btn-group-xs">
-                                        <a class="btn btn-default" href="{{ route('settings.users.edit',user.id) }}"><span
-                                                class="fa fa-pencil"></span></a>
-                                        <a class="btn btn-danger" href="{{ route('settings.users.delete',user.id) }}"><span
-                                                class="fa fa-trash"></span></a>
-                                    </div>
-                                </td>
                                 <td class="hidden-xs" data-value="{{ user.id }}">#{{ user.id }}</td>
                                 <td data-value="{{ user.email }}">
                                     <a href="{{ route('settings.users.show',user.id) }}">{{ user.email }}</a></td>
@@ -73,25 +68,23 @@
                                 </td>
                                 <td class="hidden-xs" data-value="{% if user.isAdmin %}1{% else %}0{% endif %}">
                                     {% if user.isAdmin %}
-                                        <small class="text-success"><span class="fa fa-fw fa-check"></span></small>
+                                        <span class="status-dot status-dot--positive"><span class="fa fa-fw fa-check"></span></span>
                                     {% else %}
-                                        <small class="text-danger"><span class="fa fa-fw fa-times"></span></small>
+                                        <span class="status-dot status-dot--negative"><span class="fa fa-fw fa-times"></span></span>
                                     {% endif %}
                                 </td>
                                 <td class="hidden-xs" data-value="{% if user.has2FA %}1{% else %}0{% endif %}">
                                     {% if user.has2FA %}
-                                        <small class="text-success"><span class="fa fa-fw fa-check"></span></small>
+                                        <span class="status-dot status-dot--positive"><span class="fa fa-fw fa-check"></span></span>
                                     {% else %}
-                                        <small class="text-danger"><span class="fa fa-fw fa-times"></span></small>
+                                        <span class="status-dot status-dot--negative"><span class="fa fa-fw fa-times"></span></span>
                                     {% endif %}
                                 </td>
                                 <td data-value="{% if user.blocked %}1{% else %}0{% endif %}">
                                     {% if user.blocked == 1 %}
-                                        <small class="text-danger"><span class="fa fa-fw fa-check"
-                                                                         title="{{ 'yes'|_ }}"></span></small>
+                                        <span class="status-dot status-dot--negative" title="{{ 'yes'|_ }}"><span class="fa fa-fw fa-check"></span></span>
                                     {% else %}
-                                        <small class="text-success"><span class="fa fa-fw fa-times"
-                                                                          title="{{ 'no'|_ }}"></span></small>
+                                        <span class="status-dot status-dot--positive" title="{{ 'no'|_ }}"><span class="fa fa-fw fa-times"></span></span>
                                     {% endif %}
                                 </td>
                                 <td class="hidden-xs">
@@ -105,6 +98,14 @@
                                         {% endif %}
                                     </small>
                                 </td>
+                                <td class="hidden-xs users-table__actions" data-value="{{ user.id }}">
+                                    <div class="table-row-actions">
+                                        <a class="btn btn-default" href="{{ route('settings.users.edit',user.id) }}"><span
+                                                class="fa fa-pencil"></span></a>
+                                        <a class="btn btn-danger" href="{{ route('settings.users.delete',user.id) }}"><span
+                                                class="fa fa-trash"></span></a>
+                                    </div>
+                                </td>
                             </tr>
                         {% endfor %}
                         </tbody>
@@ -117,30 +118,27 @@
         <div class="row">
             <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
                 <div class="box">
-                    <div class="box-header with-border">
+                    <div class="box-header with-border box-header--icon">
+                        <span class="box-icon-badge box-icon-badge--accent"><span class="fa fa-envelope"></span></span>
                         <h3 class="box-title">{{ 'all_invited_users'|_ }}</h3>
                     </div>
                     <div class="box-body no-padding">
-                        <table class="table table-responsive table-condensed sortable">
+                        <table class="table table-responsive table-condensed sortable users-table">
                             <thead>
                             <tr>
-                                <th data-defaultsign="_19" class="hidden-xs" colspan="1">&nbsp;</th>
+                                <th data-defaultsign="_19" class="hidden-xs">&nbsp;</th>
                                 <th data-defaultsign="az">{{ trans('list.email') }}</th>
                                 <th data-defaultsign="month" class="hidden-xs">{{ trans('list.invited_at') }}</th>
                                 <th data-defaultsign="month" class="hidden-xs">{{ trans('list.expires') }}</th>
                                 <th class="hidden-xs">{{ trans('list.invited_by') }}</th>
                                 <th>{{ trans('list.invite_link') }}</th>
+                                <th class="hidden-xs users-table__actions">{{ 'actions'|_ }}</th>
                             </tr>
                             </thead>
                             <tbody>
                             {% for invitee in invitedUsers %}
                                 <tr>
-                                    <td class="hidden-xs" data-value="{{ user.id }}">
-                                        <div class="btn-group btn-group-xs">
-                                            <a class="btn btn-danger delete-invite" href="{{ route('settings.users.delete-invite', invitee.id) }}"><span
-                                                    class="fa fa-trash"></span></a>
-                                        </div>
-                                    </td>
+                                    <td data-value="{{ loop.index }}">{{ loop.index }}</td>
                                     <td>
                                         {{ invitee.email }}
                                     </td>
@@ -161,6 +159,12 @@
                                         {% else %}
                                             <input type="text" class="form-control" readonly value="{{ route('invite', [invitee.invite_code]) }}">
                                         {% endif %}
+                                    </td>
+                                    <td class="hidden-xs users-table__actions">
+                                        <div class="table-row-actions">
+                                            <a class="btn btn-danger delete-invite" href="{{ route('settings.users.delete-invite', invitee.id) }}"><span
+                                                    class="fa fa-trash"></span></a>
+                                        </div>
                                     </td>
                                 </tr>
                             {% endfor %}

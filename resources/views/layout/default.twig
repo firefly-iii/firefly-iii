@@ -149,23 +149,30 @@ FINISH: unreviewed and undocumented is unfinished; this build ends with the fini
 
                     {# Was the help ("?") icon's spot; help itself now lives in the "Hey
                        <name>" dropdown below, always visible there instead of hidden below
-                       the sm/xs breakpoint. Binary by design (light/dark only) -- "follow
-                       browser" stays a preferences-page-only option; see
-                       PreferencesController::setDarkMode(). Icon and data-current-mode are
-                       server-rendered from the resolved darkMode preference; a "browser"
-                       preference shows the adjust/half icon since neither sun nor moon would
-                       be accurate without knowing the OS preference, which only JS can read. #}
-                    <li class="hidden-sm hidden-xs">
-                        <a href="#" id="theme-toggle" data-current-mode="{{ darkMode }}"
-                           title="{{ 'toggle_theme'|_ }}">
-                            {% if darkMode == 'dark' %}
+                       the sm/xs breakpoint. A 3-way segmented control (Light/Dark/System),
+                       matching the same three choices already offered on the Preferences
+                       page (see PreferencesController::setDarkMode() and
+                       config('firefly.available_dark_modes')) -- "system" here means
+                       "follow browser", same option preferences/index.twig calls
+                       dark_mode_option_browser. #}
+                    <li class="hidden-sm hidden-xs theme-switcher-item">
+                        <div class="theme-switcher" role="radiogroup" aria-label="{{ 'toggle_theme'|_ }}">
+                            <button type="button" class="theme-switcher__option{% if darkMode == 'light' %} active{% endif %}"
+                                    data-mode="light" role="radio" aria-checked="{% if darkMode == 'light' %}true{% else %}false{% endif %}"
+                                    title="{{ 'dark_mode_option_light'|_ }}">
                                 <span class="fa fa-sun-o"></span>
-                            {% elseif darkMode == 'light' %}
+                            </button>
+                            <button type="button" class="theme-switcher__option{% if darkMode == 'dark' %} active{% endif %}"
+                                    data-mode="dark" role="radio" aria-checked="{% if darkMode == 'dark' %}true{% else %}false{% endif %}"
+                                    title="{{ 'dark_mode_option_dark'|_ }}">
                                 <span class="fa fa-moon-o"></span>
-                            {% else %}
-                                <span class="fa fa-adjust"></span>
-                            {% endif %}
-                        </a>
+                            </button>
+                            <button type="button" class="theme-switcher__option{% if darkMode == 'browser' %} active{% endif %}"
+                                    data-mode="browser" role="radio" aria-checked="{% if darkMode == 'browser' %}true{% else %}false{% endif %}"
+                                    title="{{ 'dark_mode_option_browser'|_ }}">
+                                <span class="fa fa-desktop"></span>
+                            </button>
+                        </div>
                     </li>
 
                     <li>

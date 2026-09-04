@@ -344,14 +344,13 @@ class PreferencesController extends Controller
     }
 
     /**
-     * Quick light/dark toggle in the header, distinct from the full preferences form:
-     * only ever sets an explicit 'light' or 'dark' (the header toggle is binary by
-     * design; "follow browser" stays a preferences-page-only option).
+     * Quick theme switch from the header's Light/Dark/System segmented control,
+     * distinct from the full preferences form but accepting the same three modes.
      */
     public function setDarkMode(Request $request): JsonResponse
     {
         $mode = (string) $request->get('darkMode');
-        if (!in_array($mode, ['light', 'dark'], true)) {
+        if (!in_array($mode, config('firefly.available_dark_modes'), true)) {
             return response()->json(['ok' => 'error'], 422);
         }
         Preferences::set('darkMode', $mode);

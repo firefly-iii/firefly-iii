@@ -67,23 +67,17 @@ $(function () {
     // when you click on a currency, this happens:
     $('.currency-option').on('click', currencySelect);
 
-    // header light/dark toggle: binary by design, always sets an explicit mode.
-    // Starting from "follow browser" there's no stored preference to flip, so read
-    // what the OS/browser currently resolves to and switch to the opposite of that.
-    $('#theme-toggle').on('click', function (e) {
+    // header theme switcher: a 3-way Light/Dark/System segmented control. Each
+    // button sets its own mode explicitly -- no "current state" to read/flip.
+    $('.theme-switcher__option').on('click', function (e) {
         e.preventDefault();
-        var current = $(this).data('currentMode');
-        var next = 'dark';
-        if ('dark' === current) {
-            next = 'light';
-        } else if ('light' === current) {
-            next = 'dark';
-        } else {
-            next = window.matchMedia('(prefers-color-scheme: dark)').matches ? 'light' : 'dark';
+        var mode = $(this).data('mode');
+        if ($(this).hasClass('active')) {
+            return false;
         }
         $.ajax({
             url: darkModeToggleUrl,
-            data: {darkMode: next},
+            data: {darkMode: mode},
             type: 'POST',
             headers: {
                 'X-CSRF-Token': $('meta[name="csrf-token"]').attr('content'),

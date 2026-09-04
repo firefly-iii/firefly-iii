@@ -103,6 +103,8 @@
     --ip-negative-tint: rgba(182, 54, 44, 0.12);
     --ip-info: #1c689e;
     --ip-info-tint: rgba(28, 104, 158, 0.12);
+    --ip-accent-secondary: #6f42c1;
+    --ip-accent-secondary-tint: rgba(111, 66, 193, 0.12);
 
     --ip-focus-ring: 0 0 0 3px var(--ip-accent-tint);
     --ip-shadow-panel: 0 1px 2px rgba(23, 34, 44, 0.06), 0 4px 12px rgba(23, 34, 44, 0.05);
