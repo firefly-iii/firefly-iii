@@ -48,6 +48,7 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 - [PR 12642](https://github.com/firefly-iii/firefly-iii/pull/12642) (Fix [Issue 12639](https://github.com/firefly-iii/firefly-iii/issues/12639) (Test rules endpoint always returns no results unless optional accounts argument is passed) reported by @grgar: match accounts arg of rule trigger & test) reported by @grgar
 - [Issue 12662](https://github.com/firefly-iii/firefly-iii/issues/12662) (A Search for Tags returns more page groups than required) reported by @PAS-BC
 - [Issue 12687](https://github.com/firefly-iii/firefly-iii/issues/12687) (Changing budgeted amount in a budget deletes notes.) reported by @rdesbo
+- #12694
 - Setting an invalid language would break your account.
 
 ### Security

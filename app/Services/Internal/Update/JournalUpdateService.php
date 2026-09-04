@@ -544,6 +544,7 @@ class JournalUpdateService
         $recordCurrency                       = $origSourceTransaction->transactionCurrency;
         $originalSourceAmount                 = $makePositive ? Steam::positive($originalSourceAmount) : Steam::negative($originalSourceAmount);
         $value                                = $makePositive ? Steam::positive($value) : Steam::negative($value);
+        $this->transactionJournal->touch();
 
         // should not return in NULL but seems to do.
         event(
@@ -573,6 +574,8 @@ class JournalUpdateService
             $bill                              = $this->billRepository->findBill($billId, $billName);
             $this->transactionJournal->bill_id = $bill?->id;
             Log::debug('Updated bill ID');
+            $this->transactionJournal->touch();
+
         }
     }
 
@@ -582,10 +585,12 @@ class JournalUpdateService
         if ($this->hasFields(['budget_id', 'budget_name'])) {
             Log::debug('Will update budget.');
             $this->storeBudget($this->transactionJournal, new NullArrayObject($this->data));
+            $this->transactionJournal->touch();
         }
         // is transfer? remove budget
         if (TransactionTypeEnum::TRANSFER->value === $this->transactionJournal->transactionType->type) {
             $this->transactionJournal->budgets()->sync([]);
+            $this->transactionJournal->touch();
         }
     }
 
@@ -596,6 +601,7 @@ class JournalUpdateService
             Log::debug('Will update category.');
 
             $this->storeCategory($this->transactionJournal, new NullArrayObject($this->data));
+            $this->transactionJournal->touch();
         }
     }
 
@@ -621,6 +627,7 @@ class JournalUpdateService
         $dest->save();
 
         // refresh transactions.
+        $this->transactionJournal->touch();
         $this->sourceTransaction->refresh();
         $this->destinationTransaction->refresh();
         Log::debug(sprintf('Updated currency to #%d (%s)', $currency->id, $currency->code));
@@ -666,6 +673,7 @@ class JournalUpdateService
                 }
                 $factory->updateOrCreate($set);
             }
+            $this->transactionJournal->touch();
             event(
                 new TransactionGroupRequestsAuditLogEntry(
                     $this->transactionJournal->user,
@@ -738,6 +746,7 @@ class JournalUpdateService
             Log::debug(sprintf('Update foreign info to %s (#%d) %s', $foreignCurrency->code, $foreignCurrency->id, $foreignAmount));
 
             // refresh transactions.
+            $this->transactionJournal->touch();
             $this->sourceTransaction->refresh();
             $this->destinationTransaction->refresh();
 
@@ -764,7 +773,6 @@ class JournalUpdateService
             $recordCurrency              = $source->foreignCurrency;
             $originalSourceAmount        = $makePositive ? Steam::positive($originalSourceAmount) : Steam::negative($originalSourceAmount);
             $value                       = $makePositive ? Steam::positive($foreignAmount) : Steam::negative($foreignAmount);
-
             // should not return in NULL but seems to do.
             event(
                 new TransactionGroupRequestsAuditLogEntry(
@@ -792,6 +800,9 @@ class JournalUpdateService
             $dest->foreign_currency_id   = null;
             $dest->foreign_amount        = null;
             $dest->save();
+            $this->transactionJournal->touch();
+            $this->sourceTransaction->refresh();
+            $this->destinationTransaction->refresh();
             Log::debug(sprintf('Foreign amount is "%s" so remove foreign amount info.', $amount));
 
             return;
@@ -809,12 +820,12 @@ class JournalUpdateService
             // if all are null or zero, delete current location.
             if (null === $this->data['longitude'] && null === $this->data['latitude'] && null === $this->data['zoom_level']) {
                 $this->transactionJournal->locations()->delete();
-
+                $this->transactionJournal->touch();
                 return;
             }
             if ('' === $this->data['longitude'] && '' === $this->data['latitude'] && null === $this->data['zoom_level']) {
                 $this->transactionJournal->locations()->delete();
-
+                $this->transactionJournal->touch();
                 return;
             }
             $location             = $this->transactionJournal->locations()->first();
@@ -826,6 +837,7 @@ class JournalUpdateService
             $location->latitude   = $this->data['latitude'];
             $location->zoom_level = $this->data['zoom_level'];
             $location->save();
+            $this->transactionJournal->touch();
         }
     }
 
@@ -865,6 +877,7 @@ class JournalUpdateService
                 // also set date with timezone.
                 $set = ['journal' => $this->transactionJournal, 'name' => sprintf('%s_tz', $field), 'data' => $value?->format('e')];
                 $factory->updateOrCreate($set);
+                $this->transactionJournal->touch();
             }
         }
     }
@@ -880,6 +893,7 @@ class JournalUpdateService
                 Log::debug(sprintf('Field "%s" is present ("%s"), try to update it.', $field, $value));
                 $set   = ['journal' => $this->transactionJournal, 'name' => $field, 'data' => $value];
                 $factory->updateOrCreate($set);
+                $this->transactionJournal->touch();
             }
         }
     }
@@ -890,6 +904,7 @@ class JournalUpdateService
         if ($this->hasFields(['notes'])) {
             $notes = '' === (string) $this->data['notes'] ? null : $this->data['notes'];
             $this->storeNotes($this->transactionJournal, $notes);
+            $this->transactionJournal->touch();
         }
     }
 
@@ -897,6 +912,7 @@ class JournalUpdateService
     {
         if (array_key_exists('reconciled', $this->data) && is_bool($this->data['reconciled'])) {
             $this->transactionJournal->transactions()->update(['reconciled' => $this->data['reconciled']]);
+            $this->transactionJournal->touch();
         }
     }
 
