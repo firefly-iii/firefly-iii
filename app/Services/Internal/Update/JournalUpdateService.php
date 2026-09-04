@@ -486,6 +486,7 @@ class JournalUpdateService
         // refresh transactions.
         $this->sourceTransaction->refresh();
         $this->destinationTransaction->refresh();
+        $this->transactionJournal->touch();
         Log::debug(sprintf('Will set source to #%d ("%s")', $source->id, $source->name));
         Log::debug(sprintf('Will set dest to #%d ("%s")', $destination->id, $destination->name));
     }
@@ -922,6 +923,7 @@ class JournalUpdateService
             Log::debug('Will update tags.');
             $tags = $this->data['tags'] ?? null;
             $this->storeTags($this->transactionJournal, $tags);
+
         }
     }
 
