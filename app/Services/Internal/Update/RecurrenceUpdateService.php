@@ -24,7 +24,6 @@ declare(strict_types=1);
 
 namespace FireflyIII\Services\Internal\Update;
 
-use FireflyIII\Enums\TransactionTypeEnum;
 use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Factory\TransactionCurrencyFactory;
 use FireflyIII\Models\Note;
@@ -95,9 +94,9 @@ class RecurrenceUpdateService
             }
             // update the type.
             if (array_key_exists('type', $info)) {
-                $type = ucfirst($info['type']);
+                $type   = ucfirst($info['type']);
                 $object = TransactionType::query()->where('type', $type)->first();
-                if(null !== $object) {
+                if (null !== $object) {
                     $recurrence->transaction_type_id = $object->id;
                 }
             }
@@ -249,9 +248,9 @@ class RecurrenceUpdateService
         if (array_key_exists('piggy_bank_id', $submitted)) {
             $this->updatePiggyBank($transaction, (int) $submitted['piggy_bank_id']);
         }
-        if(array_key_exists('type', $submitted)) {
+        if (array_key_exists('type', $submitted)) {
             $type = TransactionType::query()->where('type', ucfirst($submitted['type']))->first();
-            if(null !== $type) {
+            if (null !== $type) {
                 $transaction->transaction_type_id = $type->id;
                 $transaction->save();
             }
