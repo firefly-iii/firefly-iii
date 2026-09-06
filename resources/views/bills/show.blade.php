@@ -57,7 +57,7 @@
                             <td>
 
                                 @if(count($object['data']['pay_dates']) > 0)
-                                    {{ new \Carbon\Carbon($object['data']['pay_dates'][0])->isoFormat($monthAndDayFormat) }}
+                                    {{ carbonize($object['data']['pay_dates'][0])->isoFormat($monthAndDayFormat) }}
                                 @else
                                     {{ __('firefly.unknown') }}
                                 @endif
