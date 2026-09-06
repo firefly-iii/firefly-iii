@@ -52,7 +52,7 @@ if (!function_exists('limitStringLength')) {
      */
     function limitStringLength(string $string): string
     {
-        $maxChars = 75;
+        $maxChars = 35;
         $length   = strlen($string);
         if ($length > $maxChars) {
             return substr_replace($string, ' ... ', (int)($maxChars / 2), $length - $maxChars);

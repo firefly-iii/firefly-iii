@@ -21,11 +21,11 @@
                         <table class="table table-responsive  table-hover sortable">
                             <thead>
                             <tr>
-                                <th data-defaultsign="az">{{ trans('list.title') }}</th>
-                                <th data-defaultsort="disabled">{{ trans('list.transaction_s') }}</th>
-                                <th data-defaultsort="disabled">{{ trans('list.repetitions') }}</th>
-                                <th data-defaultsign="month" data-dateformat="{{ $madMomentJS }}">{{ trans('list.next_due') }}</th>
-                                <th data-defaultsort="disabled">&nbsp;</th>
+                                <th class="w-25" data-defaultsign="az">{{ trans('list.title') }}</th>
+                                <th class="w-25" data-defaultsort="disabled">{{ trans('list.transaction_s') }}</th>
+                                <th class="w-25" data-defaultsort="disabled">{{ trans('list.repetitions') }}</th>
+                                <th class="w-20" data-defaultsign="month" data-dateformat="{{ $madMomentJS }}">{{ trans('list.next_due') }}</th>
+                                <th class="w-5" data-defaultsort="disabled">&nbsp;</th>
                             </tr>
                             </thead>
                             <tbody>

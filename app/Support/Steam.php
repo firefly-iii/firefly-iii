@@ -157,14 +157,14 @@ class Steam
                 // the primary currency balance is combined with a converted virtual_balance:
                 $converter                  = new ExchangeRateConverter();
                 // $return['pc_balance'] = bcadd($pcVirtualBalance, $return['pc_balance']);
-                $sumsByCode[$primary->code] = bcadd($pcVirtualBalance, $sumsByCode[$primary->code]);
+                $sumsByCode[$primary->code] = bcadd($pcVirtualBalance, $sumsByCode[$primary->code] ?? '0');
 
                 Log::debug(sprintf('Primary virtual balance (%s) makes the primary total %s', $pcVirtualBalance, $sumsByCode[$primary->code]));
             }
             if (!$convertToPrimary) {
                 // if not, also increase the balance + primary balance for consistency.
                 // $return['balance'] = bcadd($return['balance'], $virtualBalance);
-                $sumsByCode[$currency->code] = bcadd($virtualBalance, $sumsByCode[$currency->code]);
+                $sumsByCode[$currency->code] = bcadd($virtualBalance, $sumsByCode[$currency->code] ?? '0');
 
                 Log::debug(sprintf('Virtual balance (%s) makes the (primary currency) total %s', $virtualBalance, $sumsByCode[$currency->code]));
             }

@@ -59,10 +59,10 @@
                             <table class="table table-sm table-hover table-striped group-rules">
                                 <thead>
                                 <tr>
-                                    <th class="five">&nbsp;</th>
-                                    <th class="quarter">{{ __('firefly.rule_name') }}</th>
-                                    <th class="quarter d-xs-none">{{ __('firefly.rule_triggers') }}</th>
-                                    <th class="quarter d-xs-none">{{ __('firefly.rule_actions') }}</th>
+                                    <th class="w-5">&nbsp;</th>
+                                    <th class="w-25">{{ __('firefly.rule_name') }}</th>
+                                    <th class="w-25 d-xs-none">{{ __('firefly.rule_triggers') }}</th>
+                                    <th class="w-25 d-xs-none">{{ __('firefly.rule_actions') }}</th>
                                     <th class="w-20">&nbsp;</th>
                                 </tr>
                                 </thead>
@@ -137,7 +137,7 @@
                                                 </ul>
                                             @endif
                                         </td>
-                                        <td>
+                                        <td class="text-end">
                                             <div class="dropdown">
                                                 <button class="btn btn-sm btn-outline-secondary dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
                                                     {{ __('firefly.actions') }}

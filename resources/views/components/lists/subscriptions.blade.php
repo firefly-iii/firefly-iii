@@ -38,6 +38,24 @@
                                         @if(count($entry['attachments']) > 0)
                                             <span class="bi bi-paperclip"></span>
                                         @endif
+                                            @if(null !== $entry['end_date'])
+                                                <br>
+                                                @if(new \Carbon\Carbon($entry['end_date'])->lte($today))
+                                                    <span
+                                                        class="text-danger">{{ trans('firefly.bill_end_index_line', ['date' => new \Carbon\Carbon($entry['end_date'])->isoFormat($monthAndDayFormat)])  }}</span>
+                                                @else
+                                                    {{ trans('firefly.bill_end_index_line', ['date' => new \Carbon\Carbon($entry['end_date'])->isoFormat($monthAndDayFormat)])  }}
+                                                @endif
+                                            @endif
+                                            @if($entry['extension_date'])
+                                                <br>
+                                                @if(new \Carbon\Carbon($entry['extension_date'])->lte($today))
+                                                    <span
+                                                        class="text-danger">{{ trans('firefly.bill_extension_index_line', ['date' => new \Carbon\Carbon($entry['extension_date'])->isoFormat($monthAndDayFormat)])  }}</span>
+                                                @else
+                                                    {{ trans('firefly.bill_extension_index_line', ['date' => new \Carbon\Carbon($entry['extension_date'])->isoFormat($monthAndDayFormat)])  }}
+                                                @endif
+                                            @endif
 
                                     </td>
                                     <td class="rules d-xl-table-cell d-none"  {{-- hide on LG and smaller --}}>
@@ -146,24 +164,6 @@
                                         {{ __('firefly.repeat_freq_' . $entry['repeat_freq']) }}
                                         @if($entry['skip'] > 0)
                                             {{ __('firefly.skips_over') }} {{ $entry['skip'] }}
-                                        @endif
-                                        @if(null !== $entry['end_date'])
-                                            <br>
-                                            @if(new \Carbon\Carbon($entry['end_date'])->lte($today))
-                                                <span
-                                                    class="text-danger">{{ trans('firefly.bill_end_index_line', ['date' => new \Carbon\Carbon($entry['end_date'])->isoFormat($monthAndDayFormat)])  }}</span>
-                                            @else
-                                                {{ trans('firefly.bill_end_index_line', ['date' => new \Carbon\Carbon($entry['end_date'])->isoFormat($monthAndDayFormat)])  }}
-                                            @endif
-                                        @endif
-                                        @if($entry['extension_date'])
-                                            <br>
-                                            @if(new \Carbon\Carbon($entry['extension_date'])->lte($today))
-                                                <span
-                                                    class="text-danger">{{ trans('firefly.bill_extension_index_line', ['date' => new \Carbon\Carbon($entry['extension_date'])->isoFormat($monthAndDayFormat)])  }}</span>
-                                            @else
-                                                {{ trans('firefly.bill_extension_index_line', ['date' => new \Carbon\Carbon($entry['extension_date'])->isoFormat($monthAndDayFormat)])  }}
-                                            @endif
                                         @endif
                                     </td>
                                     <td class="text-end">

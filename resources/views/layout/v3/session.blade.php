@@ -42,6 +42,11 @@
             }
             document.documentElement.setAttribute('data-bs-theme', resolved);
             document.documentElement.style.colorScheme = resolved;
+
+            // bonus: overrule local storage with session data:
+            console.warn('Temporary overrule local storage until everything uses the API.');
+            localStorage.setItem('start', '{{ session()->get('start')->format('c') }}');
+            localStorage.setItem('end', '{{ session()->get('end')->format('c') }}');
         })();
     </script>
     <!--end::Theme Init-->

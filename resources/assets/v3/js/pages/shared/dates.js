@@ -21,7 +21,6 @@
 import {addMonths, endOfMonth, startOfMonth, startOfYear, subDays, subMonths} from "date-fns";
 import format from '../../util/format'
 
-
 export default () => ({
     range: {
         start: null, end: null
@@ -32,11 +31,7 @@ export default () => ({
         }
     },
     updateDates(e) {
-        console.log('updateDates (e.originalTarget._props.value)');
-        console.log(e.originalTarget._props.value);
         let split = e.originalTarget._props.value.split('/');
-        // this.range.start = split[0];
-        // this.range.end = split[1];
         console.log('Start is now ' + split[0]);
         console.log('End is now   ' + split[1]);
         window.store.set('start', split[0]);
@@ -48,23 +43,24 @@ export default () => ({
         start: null, end: null
     },
     submitForm() {
-        console.log('submitForm');
+        console.log('submitForm', format(window.store.get('start'), 'yyyy-MM-dd'), format(window.store.get('end'), 'yyyy-MM-dd'));
         // save form and submit for v1.
-        document.getElementById('customStart').value = window.store.get('start');
-        document.getElementById('customEnd').value = window.store.get('end');
+        document.getElementById('customStart').value = format(window.store.get('start'), 'yyyy-MM-dd');
+        document.getElementById('customEnd').value = format(window.store.get('end'), 'yyyy-MM-dd');
         document.getElementById('daterange-form').submit();
     },
     language: 'en_US',
 
     init() {
-        // console.log('init on dates');
+        let end = new Date(window.store.get('end'));
+        let start = new Date(window.store.get('start'));
         this.range = {
-            start: new Date(window.store.get('start')),
-            end: new Date(window.store.get('end'))
+            start: start,
+            end: end
         };
         this.defaultRange = {
-            start: new Date(window.store.get('start')),
-            end: new Date(window.store.get('end'))
+            start: start,
+            end: end
         };
         this.language = window.store.get('language');
         this.locale = window.store.get('locale');
@@ -95,7 +91,6 @@ export default () => ({
 
         // set the title:
         let element = document.getElementsByClassName('daterange-holder')[0];
-        //console.log('element', element);
         element.textContent = format(this.range.start) + ' - ' + format(this.range.end);
         element.setAttribute('data-start', format(this.range.start, 'yyyy-MM-dd'));
         element.setAttribute('data-end', format(this.range.end, 'yyyy-MM-dd'));
@@ -192,13 +187,10 @@ export default () => ({
     changeDateRange(e) {
         console.log('changeDateRange');
         e.preventDefault();
-        // console.log('MainApp: changeDateRange');
         let target = e.currentTarget;
 
         let start = new Date(target.getAttribute('data-start'));
         let end = new Date(target.getAttribute('data-end'));
-        // console.log('MainApp: Change date range', start, end);
-
         window.store.set('start', start);
         window.store.set('end', end);
         this.submitForm();
