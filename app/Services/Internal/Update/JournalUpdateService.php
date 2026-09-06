@@ -576,7 +576,6 @@ class JournalUpdateService
             $this->transactionJournal->bill_id = $bill?->id;
             Log::debug('Updated bill ID');
             $this->transactionJournal->touch();
-
         }
     }
 
@@ -822,11 +821,13 @@ class JournalUpdateService
             if (null === $this->data['longitude'] && null === $this->data['latitude'] && null === $this->data['zoom_level']) {
                 $this->transactionJournal->locations()->delete();
                 $this->transactionJournal->touch();
+
                 return;
             }
             if ('' === $this->data['longitude'] && '' === $this->data['latitude'] && null === $this->data['zoom_level']) {
                 $this->transactionJournal->locations()->delete();
                 $this->transactionJournal->touch();
+
                 return;
             }
             $location             = $this->transactionJournal->locations()->first();
@@ -923,7 +924,6 @@ class JournalUpdateService
             Log::debug('Will update tags.');
             $tags = $this->data['tags'] ?? null;
             $this->storeTags($this->transactionJournal, $tags);
-
         }
     }
 
