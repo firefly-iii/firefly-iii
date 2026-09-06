@@ -338,6 +338,5 @@ trait RecurringTransactionTrait
         }
         $meta->value     = $category->id;
         $meta->save();
-
     }
 }

@@ -38,7 +38,7 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 - [Issue 12455](https://github.com/firefly-iii/firefly-iii/issues/12455) (native_amount conversion uses now() instead of transaction date) reported by @tarzan77cz
 - [Issue 12468](https://github.com/firefly-iii/firefly-iii/issues/12468) (Weekly subscription not accounted to be paid if there were already a payment on that month) reported by @brunofontes
 - [Issue 12500](https://github.com/firefly-iii/firefly-iii/issues/12500) (Subscriptions widget  show incorrect numbers.) reported by @wascarreyes01
-- #12559
+- [Discussion 12559](https://github.com/orgs/firefly-iii/discussions/12559) (Credit Card Balance vs Available Credit) started by @SWellock
 - [Issue 12577](https://github.com/firefly-iii/firefly-iii/issues/12577) (API: /accounts endpoint never returns credit_card_type / monthly_payment_date (missing from AccountEnrichment allowlist)) reported by @chigia001
 - [Issue 12578](https://github.com/firefly-iii/firefly-iii/issues/12578) (API PUT/POST /accounts stores monthly_payment_date in a format incompatible with the web UI's date input) reported by @chigia001
 - [Discussion 12583](https://github.com/orgs/firefly-iii/discussions/12583) (How to search for non-foreign currency transactions) started by @skogsvik
@@ -49,8 +49,8 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 - [PR 12642](https://github.com/firefly-iii/firefly-iii/pull/12642) (Fix [Issue 12639](https://github.com/firefly-iii/firefly-iii/issues/12639) (Test rules endpoint always returns no results unless optional accounts argument is passed) reported by @grgar: match accounts arg of rule trigger & test) reported by @grgar
 - [Issue 12662](https://github.com/firefly-iii/firefly-iii/issues/12662) (A Search for Tags returns more page groups than required) reported by @PAS-BC
 - [Issue 12687](https://github.com/firefly-iii/firefly-iii/issues/12687) (Changing budgeted amount in a budget deletes notes.) reported by @rdesbo
-- #12692
-- #12694
+- [Issue 12692](https://github.com/firefly-iii/firefly-iii/issues/12692) (Updating accounts of a deposit recurrence via API is rejected because the validator assumes "withdrawal") reported by @Toshik1978
+- [Issue 12694](https://github.com/firefly-iii/firefly-iii/issues/12694) (Updating an amount in transaction doesn't make it discoverable in search using `updated_at_after:`) reported by @Toshik1978
 - Setting an invalid language would break your account.
 
 ### Security
