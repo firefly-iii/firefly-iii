@@ -492,7 +492,7 @@ class Steam
             }
             if ($accountCurrency->id !== $primaryCurrency->id && !$convertToPrimary) {
                 $startBalance[$primaryCurrency->code] = (string)('' === (string)$account->virtual_balance ? '0' : $account->virtual_balance);
-                Log::debug(sprintf('[d] Also set start balance in %s to %s', $primaryCurrency->code, $converted));
+                Log::debug(sprintf('[d] Also set start balance in %s to %s', $primaryCurrency->code, $startBalance[$primaryCurrency->code]));
             }
         }
 
