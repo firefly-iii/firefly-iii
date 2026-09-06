@@ -220,14 +220,17 @@ class RecurrenceUpdateService
             if (array_key_exists($field, $submitted)) {
                 $transaction->{$column} = $submitted[$field];
                 $transaction->save();
+                $recurrence->touch();
             }
         }
         // update meta data
         if (array_key_exists('budget_id', $submitted)) {
             $this->setBudget($transaction, (int) $submitted['budget_id']);
+            $recurrence->touch();
         }
         if (array_key_exists('bill_id', $submitted)) {
             $this->setBill($transaction, (int) $submitted['bill_id']);
+            $recurrence->touch();
         }
         // reset category if name is set but empty:
         // can be removed when v1 is retired.
@@ -240,19 +243,23 @@ class RecurrenceUpdateService
         if (array_key_exists('category_id', $submitted)) {
             Log::debug(sprintf('Category ID is submitted, set category to be %d.', (int) $submitted['category_id']));
             $this->setCategory($transaction, (int) $submitted['category_id']);
+            $recurrence->touch();
         }
 
         if (array_key_exists('tags', $submitted) && is_array($submitted['tags'])) {
             $this->updateTags($transaction, $submitted['tags']);
+            $recurrence->touch();
         }
         if (array_key_exists('piggy_bank_id', $submitted)) {
             $this->updatePiggyBank($transaction, (int) $submitted['piggy_bank_id']);
+            $recurrence->touch();
         }
         if (array_key_exists('type', $submitted)) {
             $type = TransactionType::query()->where('type', ucfirst($submitted['type']))->first();
             if (null !== $type) {
                 $transaction->transaction_type_id = $type->id;
                 $transaction->save();
+                $recurrence->touch();
             }
         }
     }
@@ -272,6 +279,7 @@ class RecurrenceUpdateService
             Log::debug('Delete existing repetitions and create new ones.');
             $this->deleteRepetitions($recurrence);
             $this->createRepetitions($recurrence, $repetitions);
+            $recurrence->touch();
 
             return;
         }
@@ -287,6 +295,7 @@ class RecurrenceUpdateService
                 if (array_key_exists($field, $current)) {
                     $match->{$column} = $current[$field];
                     $match->save();
+                    $recurrence->touch();
                 }
             }
         }
