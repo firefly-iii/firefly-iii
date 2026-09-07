@@ -1,83 +1,99 @@
-[![Packagist][packagist-shield]][packagist-url]
-[![License][license-shield]][license-url]
-[![Stargazers][stars-shield]][stars-url]
-[![Donate][donate-shield]][donate-url]
-
-<p align="center">
-<a href='https://ko-fi.com/Q5Q5R4SH1' target='_blank'><img height='36' style='border:0px;height:36px;' src='https://storage.ko-fi.com/cdn/kofi6.png?v=6' border='0' alt='Buy Me a Coffee at ko-fi.com' /></a>
-</p>
-
-<!-- PROJECT LOGO -->
-<br />
 <p align="center">
   <a href="https://firefly-iii.org/">
     <img src="https://raw.githubusercontent.com/firefly-iii/firefly-iii/develop/.github/assets/img/logo-small.png" alt="Firefly III" width="120" height="178">
   </a>
 </p>
   <h1 align="center">Firefly III</h1>
-
   <p align="center">
-    A free and open source personal finance manager
+    A free and open source personal finance manager<br>
+    No AI, no cloud and privacy-friendly
     <br />
-    <a href="https://docs.firefly-iii.org/"><strong>Explore the documentation</strong></a>
-    <br />
-    <br />
-    <a href="https://demo.firefly-iii.org/">View the demo</a>
+    <a href="https://demo.firefly-iii.org/"><strong>Visit the demo</strong></a>
+<br />
+<br />
+    <a href="https://docs.firefly-iii.org/">Read the docs</a>
     ·
-    <a href="https://github.com/firefly-iii/firefly-iii/issues">Report a bug</a>
+    <a href="https://github.com/firefly-iii/firefly-iii/releases/latest">Download the latest release</a>
     ·
-    <a href="https://github.com/firefly-iii/firefly-iii/issues">Request a feature</a>
+    <a href="https://github.com/firefly-iii/firefly-iii/issues">Submit a bug</a>
     ·
-    <a href="https://github.com/firefly-iii/firefly-iii/discussions">Ask questions</a>
+    <a href="https://github.com/firefly-iii/firefly-iii/discussions">Ask a question</a>
+    ·
+    <a href="https://docs.firefly-iii.org/explanation/more-information/donations/#donations">🙏 Donate</a>
   </p>
 
----
+## Welcome to Firefly III 🥳
 
-<p>
-<img align="left" src=".github/assets/img/europe.png" alt="Flag of Europe" height="50"> Billionaires and fascists are breaking democracies and international alliances. Their profits are costing us our safety. (Digital) sovereignty is more important than ever. <strong>Firefly III</strong> is free open source software and originates from, and lives in the European Union (🇳🇱). Support your local software developer for a free and open society.
-</p>
-
----
-
-<!-- MarkdownTOC autolink="true" -->
-
-- [About Firefly III](#about-firefly-iii)
-  - [Purpose](#purpose)
-- [Features](#features)
-- [Who's it for?](#whos-it-for)
-- [The Firefly III eco-system](#the-firefly-iii-eco-system)
-- [Getting Started](#getting-started)
-- [Contributing](#contributing)
-- [Support the development of Firefly III](#support-the-development-of-firefly-iii)
-- [License](#license)
-- [Do you need help, or do you want to get in touch?](#do-you-need-help-or-do-you-want-to-get-in-touch)
-- [Acknowledgements](#acknowledgements)
-
-<!-- /MarkdownTOC -->
-
-## About Firefly III
-
-<p align="center">
-	<img src="https://raw.githubusercontent.com/firefly-iii/firefly-iii/develop/.github/assets/img/imac-complete.png" alt="Firefly III on iMac" />
-</p>
-
-"Firefly III" is a (self-hosted) manager for your personal finances. It can help you keep track of your expenses and income, so you can spend less and save more. Firefly III supports the use of budgets, categories and tags. Using a bunch of external tools, you can import data. It also has many neat financial reports available.
+"Firefly III" is a (self-hosted) manager for your personal finances. It can help you keep track of your expenses and income, so you can spend less and save more. Firefly III supports the use of budgets, categories and tags. Using a bunch of tools, you can import data. It also has many neat financial reports available.
 
 Firefly III should give you **insight** into and **control** over your finances. Money should be useful, not scary. You should be able to *see* where it is going, to *feel* your expenses and to... wow, I'm going overboard with this aren't I?
 
 But you get the idea: this is your money. These are your expenses. Stop them from controlling you. I built this tool because I started to dislike money. Having money, not having money, paying bills with money, you get the idea. But no more. I want to feel "safe", whatever my balance is. And I hope this tool can help you. I know it helps me.
 
-### Purpose
+[![Packagist][packagist-shield]][packagist-url]
+[![License][license-shield]][license-url]
+[![Stargazers][stars-shield]][stars-url]
+[![Donate][donate-shield]][donate-url]
 
-<p align="center">
-  <img src="https://raw.githubusercontent.com/firefly-iii/firefly-iii/develop/.github/assets/img/ipad-complete.png" alt="Firefly III on iPad" width="600">
-</p>
+## Important information
+
+If you don't feel like skipping to the end, here are several ways to run and/or install Firefly III.
+
+- There is a [demo site](https://demo.firefly-iii.org) with an example financial administration already present.
+- You can [install it on your server](https://docs.firefly-iii.org/how-to/firefly-iii/installation/self-managed/).
+- You can [run it using Docker](https://docs.firefly-iii.org/how-to/firefly-iii/installation/docker/).
+- You can [deploy via Kubernetes](https://firefly-iii.github.io/kubernetes/).
+
+Commercial options also exist:
+
+- You can [install it using Softaculous](https://www.softaculous.com/softaculous/apps/others/Firefly_III).
+- You can [install it using AMPPS](https://www.ampps.com/).
+- You can [install it on Cloudron](https://cloudron.io/store/org.fireflyiii.cloudronapp.html).
+- You can [install it on Lando](https://gist.github.com/ArtisKrumins/ccb24f31d6d4872b57e7c9343a9d1bf0).
+- You can [install it on Yunohost](https://github.com/YunoHost-Apps/firefly-iii).
+
+## Why Firefly III?
 
 Personal financial management is pretty difficult, and everybody has their own approach to it. Some people make budgets, other people limit their cashflow by throwing away their credit cards, others try to increase their current cashflow. There are tons of ways to save and earn money. Firefly III works on the principle that if you know where your money is going, you can stop it from going there.
 
 By keeping track of your expenses and your income you can budget accordingly and save money. Stop living from paycheck to paycheck but give yourself the financial wiggle room you need.
 
-You can read more about the purpose of Firefly III in the [documentation](https://docs.firefly-iii.org/).
+You can read more about the purpose of Firefly III in the [documentation](https://docs.firefly-iii.org/explanation/firefly-iii/about/introduction/).
+
+## Is Firefly III for me?
+
+This application is for people who want to track their finances, keep an eye on their money **without having to upload their financial records to the cloud**. It will work for you if you're a bit tech-savvy, you like open source software and you don't mind tinkering with (self-hosted) servers.
+
+## Sponsors and support
+
+<p align="center">
+<a href='https://ko-fi.com/Q5Q5R4SH1' target='_blank'><img height='36' style='border:0px;height:36px;' src='https://storage.ko-fi.com/cdn/kofi6.png?v=6' border='0' alt='Buy Me a Coffee at ko-fi.com' /></a>
+</p>
+
+Firefly III is a side gig. With your sponsorship or support, I can spend more time on Firefly III. So, if you like Firefly III, and if it helps you save lots of money, why not send me a dime for every dollar saved! 🥳
+
+OK, that was a joke. But for real, when you feel Firefly III made your life better, please consider contributing as a sponsor. Please check out my [Patreon](https://www.patreon.com/jc5) and [GitHub Sponsors](https://github.com/sponsors/JC5) page for more information. You can also [buy me a ☕️ coffee at ko-fi.com](https://ko-fi.com/Q5Q5R4SH1) or send something my way using [Liberapay](https://liberapay.com/JC5). Thank you for your consideration.
+
+### Sponsorships
+
+Firefly III is sponsored by TestMu AI. Their support allows me to test Firefly III more easily and introduce even fewer bugs with every release.
+
+Browser testing via TestMu AI:
+
+<a href="https://www.testmuai.com/?utm_source=fireflyiii&utm_medium=sponsor" target="_blank">
+<img src="https://raw.githubusercontent.com/firefly-iii/firefly-iii/develop/.github/assets/img/testmu.png" alt="TestMu AI" style="vertical-align: middle;" width="250" />
+</a>
+
+## Do you need help, or do you want to get in touch?
+
+Do you want to contact me? You can email me at [james@firefly-iii.org](mailto:james@firefly-iii.org) or get in touch through one of the following support channels:
+
+- [GitHub Discussions](https://github.com/firefly-iii/firefly-iii/discussions/) for questions and support
+- [Gitter.im](https://gitter.im/firefly-iii/firefly-iii) for a good chat and a quick answer
+- [GitHub Issues](https://github.com/firefly-iii/firefly-iii/issues) for bugs and issues
+- <a rel="me" href="https://fosstodon.org/@ff3">Mastodon</a> for news and updates
+
+<!-- END OF HELP TEXT -->
 
 ## Features
 
@@ -111,89 +127,50 @@ And to organise everything:
 
 Many more features are listed in the [documentation](https://docs.firefly-iii.org/explanation/firefly-iii/about/introduction/).
 
-## Who's it for?
-<img src="https://raw.githubusercontent.com/firefly-iii/firefly-iii/develop/.github/assets/img/iphone-complete.png" alt="Firefly III on iPhone" align="left" width="250">
 
- This application is for people who want to track their finances, keep an eye on their money **without having to upload their financial records to the cloud**. You're a bit tech-savvy, you like open source software and you don't mind tinkering with (self-hosted) servers.
- 
- <br clear="left"/>
+<!-- END OF SPONSOR TEXT -->
 
 ## The Firefly III eco-system
 
 Several users have built pretty awesome stuff around the Firefly III API. [Check out these tools in the documentation](https://docs.firefly-iii.org/references/firefly-iii/third-parties/apps/).
 
-## Getting Started
-
-There are many ways to run Firefly III
-1. There is a [demo site](https://demo.firefly-iii.org) with an example financial administration already present.
-2. You can [install it on your server](https://docs.firefly-iii.org/how-to/firefly-iii/installation/self-managed/).
-3. You can [run it using Docker](https://docs.firefly-iii.org/how-to/firefly-iii/installation/docker/).
-4. You can [deploy via Kubernetes](https://firefly-iii.github.io/kubernetes/).
-5. You can [install it using Softaculous](https://www.softaculous.com/softaculous/apps/others/Firefly_III).
-6. You can [install it using AMPPS](https://www.ampps.com/).
-7. You can [install it on Cloudron](https://cloudron.io/store/org.fireflyiii.cloudronapp.html).
-8. You can [install it on Lando](https://gist.github.com/ArtisKrumins/ccb24f31d6d4872b57e7c9343a9d1bf0).
-9. You can [install it on Yunohost](https://github.com/YunoHost-Apps/firefly-iii).
-
 ## Contributing
 
-You can contact me at [james@firefly-iii.org](mailto:james@firefly-iii.org), you may open an issue in the [main repository](https://github.com/firefly-iii/firefly-iii) or contact me through [gitter](https://gitter.im/firefly-iii/firefly-iii) and [Mastodon](https://fosstodon.org/@ff3).
+You can contact me at [james@firefly-iii.org](mailto:james@firefly-iii.org), you may open an issue in the [main repository](https://github.com/firefly-iii/firefly-iii) or contact me through [gitter](https://gitter.im/firefly-iii/firefly-iii) and [Mastodon](https://fosstodon.org/@ff3) Of course, there are some [contributing guidelines](https://docs.firefly-iii.org/explanation/support/#contributing-code) and a [code of conduct](https://github.com/firefly-iii/firefly-iii/blob/main/.github/code_of_conduct.md), which I invite you to check out. I can always use your help [squashing bugs](https://docs.firefly-iii.org/explanation/support/), thinking about [new features](https://docs.firefly-iii.org/explanation/support/) or [translating Firefly III](https://docs.firefly-iii.org/how-to/firefly-iii/development/translations/) into other languages. There is also a [security policy](https://github.com/firefly-iii/firefly-iii/security/policy).
 
-Of course, there are some [contributing guidelines](https://docs.firefly-iii.org/explanation/support/#contributing-code) and a [code of conduct](https://github.com/firefly-iii/firefly-iii/blob/main/.github/code_of_conduct.md), which I invite you to check out.
-
-I can always use your help [squashing bugs](https://docs.firefly-iii.org/explanation/support/), thinking about [new features](https://docs.firefly-iii.org/explanation/support/) or [translating Firefly III](https://docs.firefly-iii.org/how-to/firefly-iii/development/translations/) into other languages.
-
-[Sonarcloud][sc-project-url] scans the code of Firefly III. If you want to help improve Firefly III, check out the latest reports and take your pick!
-
-[![Quality Gate Status][sc-gate-shield]][sc-project-url] [![Bugs][sc-bugs-shield]][sc-project-url] [![Code Smells][sc-smells-shield]][sc-project-url] [![Vulnerabilities][sc-vuln-shield]][sc-project-url]
-
-There is also a [security policy](https://github.com/firefly-iii/firefly-iii/security/policy).
-
-[![CII Best Practices][bp-badge]][bp-url]
-
-<!-- SPONSOR TEXT -->
-
-## Support the development of Firefly III
-
-Firefly III is a side gig. With your sponsorship or support, I can spend more time on Firefly III. So, if you like Firefly III, and if it helps you save lots of money, why not send me a dime for every dollar saved! 🥳
-
-OK, that was a joke. But for real, when you feel Firefly III made your life better, please consider contributing as a sponsor. Please check out my [Patreon](https://www.patreon.com/jc5) and [GitHub Sponsors](https://github.com/sponsors/JC5) page for more information. You can also [buy me a ☕️ coffee at ko-fi.com](https://ko-fi.com/Q5Q5R4SH1) or send something my way using [Liberapay](https://liberapay.com/JC5). Thank you for your consideration.
-
-### Sponsorships
-
-Firefly III is sponsored by TestMu AI. Their support allows me to test Firefly III more easily and introduce even fewer bugs with every release.
-
-Browser testing via TestMu AI:
-
-<a href="https://www.testmuai.com/?utm_source=fireflyiii&utm_medium=sponsor" target="_blank">
-<img src=".github/assets/img/testmu.png" alt="TestMu AI" style="vertical-align: middle;" width="250" />
-</a>
-
-<!-- END OF SPONSOR TEXT -->
 
 ## License
 
 This work [is licensed](https://github.com/firefly-iii/firefly-iii/blob/main/LICENSE) under the [GNU Affero General Public License v3](https://www.gnu.org/licenses/agpl-3.0.html).
 
-<!-- HELP TEXT -->
-
-## Do you need help, or do you want to get in touch?
-
-Do you want to contact me? You can email me at [james@firefly-iii.org](mailto:james@firefly-iii.org) or get in touch through one of the following support channels:
-
-- [GitHub Discussions](https://github.com/firefly-iii/firefly-iii/discussions/) for questions and support
-- [Gitter.im](https://gitter.im/firefly-iii/firefly-iii) for a good chat and a quick answer
-- [GitHub Issues](https://github.com/firefly-iii/firefly-iii/issues) for bugs and issues
-- <a rel="me" href="https://fosstodon.org/@ff3">Mastodon</a> for news and updates
-
-<!-- END OF HELP TEXT -->
-
-
 ## Acknowledgements
 
-Over time, [many people have contributed to Firefly III](https://github.com/firefly-iii/firefly-iii/graphs/contributors). I'm grateful for their support and code contributions.
+Over time, [many people have contributed to Firefly III](https://github.com/firefly-iii/firefly-iii/blob/main/THANKS.md). I'm grateful for their support and code contributions.
 
 The Firefly III logo is made by the excellent Cherie Woo.
+
+
+<!-- 
+
+<p>
+<img align="left" src="https://raw.githubusercontent.com/firefly-iii/firefly-iii/develop/.github/assets/img/europe.png" alt="Flag of Europe" height="50"> Billionaires and fascists are breaking democracies and international alliances. Their profits are costing us our safety. (Digital) sovereignty is more important than ever. <strong>Firefly III</strong> is free open source software and originates from, and lives in the European Union (🇳🇱). Support your local software developer for a free and open society.
+</p>
+
+<p align="center">
+	<img src="https://raw.githubusercontent.com/firefly-iii/firefly-iii/develop/.github/assets/img/imac-complete.png" alt="Firefly III on iMac" />
+</p>
+
+
+<p align="center">
+  <img src="https://raw.githubusercontent.com/firefly-iii/firefly-iii/develop/.github/assets/img/ipad-complete.png" alt="Firefly III on iPad" width="600">
+</p>
+
+
+<img src="https://raw.githubusercontent.com/firefly-iii/firefly-iii/develop/.github/assets/img/iphone-complete.png" alt="Firefly III on iPhone" align="left" width="250">
+
+-->
+
+<!-- HELP TEXT -->
 
 [packagist-shield]: https://img.shields.io/packagist/v/grumpydictator/firefly-iii.svg?style=flat-square
 [packagist-url]: https://packagist.org/packages/grumpydictator/firefly-iii
@@ -211,4 +188,6 @@ The Firefly III logo is made by the excellent Cherie Woo.
 [sc-vuln-shield]: https://sonarcloud.io/api/project_badges/measure?project=firefly-iii_firefly-iii&metric=vulnerabilities
 [sc-project-url]: https://sonarcloud.io/dashboard?id=firefly-iii_firefly-iii
 [bp-badge]: https://bestpractices.coreinfrastructure.org/projects/6335/badge
-[bp-url]: https://bestpractices.coreinfrastructure.org/projects/6335 
+[bp-url]: https://bestpractices.coreinfrastructure.org/projects/6335
+
+A final note: This readme was written entirely without the use of LLMs or other artificial text generators. All spelling errors and other mistakes are therefor my own fault.
