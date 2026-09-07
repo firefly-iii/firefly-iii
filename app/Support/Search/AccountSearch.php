@@ -64,19 +64,19 @@ class AccountSearch implements GenericSearchInterface
         switch ($this->field) {
             default:
             case self::SEARCH_ALL:
-            $searchQuery->where(static function (Builder $q1) use ($like, $originalQuery): void {
-                $q1->where(static function (Builder $q2) use ($like): void {
-                    $q2->whereLike('accounts.id', $like);
-                    $q2->orWhereLike('accounts.name', $like);
-                    $q2->orWhereLike('accounts.iban', $like);
+                $searchQuery->where(static function (Builder $q1) use ($like, $originalQuery): void {
+                    $q1->where(static function (Builder $q2) use ($like): void {
+                        $q2->whereLike('accounts.id', $like);
+                        $q2->orWhereLike('accounts.name', $like);
+                        $q2->orWhereLike('accounts.iban', $like);
+                    });
+                    // meta data:
+                    $q1->orWhere(static function (Builder $q3) use ($originalQuery): void {
+                        $json = json_encode($originalQuery, JSON_THROW_ON_ERROR);
+                        $q3->where('account_meta.name', '=', 'account_number');
+                        $q3->whereLike('account_meta.data', $json);
+                    });
                 });
-                // meta data:
-                $q1->orWhere(static function (Builder $q3) use ($originalQuery): void {
-                    $json = json_encode($originalQuery, JSON_THROW_ON_ERROR);
-                    $q3->where('account_meta.name', '=', 'account_number');
-                    $q3->whereLike('account_meta.data', $json);
-                });
-            });
 
                 break;
 
