@@ -1517,7 +1517,7 @@ return [
     'new_administration_created'                          => 'New financial administration "{{title}}" has been created',
     'edit_administration_breadcrumb'                      => 'Edit financial administration ":title"',
     'administrations_page_edit_sub_title'                 => 'Edit financial administration ":title"',
-    'administrations_page_edit_sub_title_js'              => 'Edit financial administration "{title}"',
+    'administrations_page_edit_sub_title_js'              => 'Edit financial administration "{{title}}"',
     'temp_administrations_introduction'                   => 'Firefly III will soon get the ability to manage multiple financial administrations. Right now, you only have the one. You can set the title of this administration and its primary currency. This replaces the previous setting where you would set your "default currency". This setting is now tied to the financial administration and can be different per administration.',
     'temp_administrations_introduction_edit'              => 'Currently, you can only set the "primary currency" of the default financial administration. This replaces the "default currency" setting. This setting is now tied to the financial administration and can be different per administration.',
     'administration_currency_form_help'                   => 'It may take a long time for the page to load if you change the primary currency because transaction may need to be converted to your (new) primary currency.',
