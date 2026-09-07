@@ -73,8 +73,8 @@ class AvailableBudgetCalculator
         Log::debug(sprintf('Limit period is from %s to %s', $start->format('Y-m-d'), $end->format('Y-m-d')));
 
         // from the start until the end of the budget limit, need to loop!
-        $count = 0;
-        $max = 14_600; // 40 years in days.
+        $count       = 0;
+        $max         = 14_600; // 40 years in days.
         $current     = clone $start;
         while ($current <= $end) {
             if ($count > $max) {
@@ -82,7 +82,7 @@ class AvailableBudgetCalculator
 
                 return;
             }
-            $count++;
+            ++$count;
             $this->refreshAvailableBudget($current);
             $current = Navigation::addPeriod($current, $this->viewRange);
         }

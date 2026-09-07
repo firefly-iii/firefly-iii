@@ -36,12 +36,14 @@ use function Safe\preg_split;
  */
 class QueryParser implements QueryParserInterface
 {
-    private int $position = 0;
-    private int $depth = 0;
+    private int $position       = 0;
+    private int $depth          = 0;
+
     private const int MAX_DEPTH = 32;
+
     // private string $query;
-    private array $chrArray = [];
-    private int $count      = 0;
+    private array $chrArray     = [];
+    private int   $count        = 0;
 
     public function parse(string $query): NodeGroup
     {
@@ -125,6 +127,7 @@ class QueryParser implements QueryParserInterface
                         ++$this->depth;
                         $group = $this->buildNodeGroup(true, $prohibited);
                         --$this->depth;
+
                         return new NodeResult($group, false);
                     }
                     // In any other location, it's just a normal character
