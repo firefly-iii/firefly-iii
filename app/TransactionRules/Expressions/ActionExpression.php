@@ -27,7 +27,6 @@ namespace FireflyIII\TransactionRules\Expressions;
 use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\TransactionRules\Engine\CustomExpressionLanguage;
 use Illuminate\Support\Facades\Log;
-use Symfony\Component\ExpressionLanguage\ExpressionLanguage;
 use Symfony\Component\ExpressionLanguage\SyntaxError;
 
 class ActionExpression

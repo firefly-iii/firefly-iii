@@ -34,7 +34,6 @@ use FireflyIII\Http\Middleware\Installer;
 use FireflyIII\Repositories\Account\AccountRepositoryInterface;
 use FireflyIII\Repositories\Bill\BillRepositoryInterface;
 use FireflyIII\Support\Facades\Preferences;
-use FireflyIII\TransactionRules\Engine\CustomExpressionLanguage;
 use FireflyIII\User;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\RedirectResponse;

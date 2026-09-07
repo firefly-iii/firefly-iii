@@ -62,7 +62,7 @@ final class SearchController extends Controller
     {
         // search params:
         $fullQuery        = $request->input('search');
-        $fullQuery = substr($fullQuery, 0, 500);
+        $fullQuery        = substr($fullQuery, 0, 500);
         if (is_array($request->input('search'))) {
             $fullQuery = '';
         }
