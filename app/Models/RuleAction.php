@@ -23,6 +23,7 @@ declare(strict_types=1);
 
 namespace FireflyIII\Models;
 
+use FireflyIII\Support\Facades\AppConfiguration;
 use FireflyIII\Support\Models\ReturnsIntegerIdTrait;
 use FireflyIII\TransactionRules\Expressions\ActionExpression;
 use Illuminate\Database\Eloquent\Casts\Attribute;
@@ -39,12 +40,12 @@ class RuleAction extends Model
 
     public function getValue(array $journal): string
     {
-        if (false === config('firefly.feature_flags.expression_engine')) {
+        if (false === AppConfiguration::get('enable_expression_engine', false)->data) {
             Log::debug('Expression engine is disabled, returning action value as string.');
 
             return (string) $this->action_value;
         }
-        if (true === config('firefly.feature_flags.expression_engine') && str_starts_with($this->action_value, '\=')) {
+        if (true === AppConfiguration::get('enable_expression_engine', false)->data && str_starts_with($this->action_value, '\=')) {
             // return literal string.
             return substr($this->action_value, 1);
         }

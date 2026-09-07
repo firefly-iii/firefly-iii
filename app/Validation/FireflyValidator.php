@@ -37,6 +37,7 @@ use FireflyIII\Repositories\Bill\BillRepositoryInterface;
 use FireflyIII\Repositories\Budget\BudgetRepositoryInterface;
 use FireflyIII\Repositories\PiggyBank\PiggyBankRepositoryInterface;
 use FireflyIII\Services\Password\Verifier;
+use FireflyIII\Support\Facades\AppConfiguration;
 use FireflyIII\Support\Facades\Preferences;
 use FireflyIII\Support\ParseDateString;
 use FireflyIII\User;
@@ -334,7 +335,7 @@ class FireflyValidator extends Validator
         }
 
         // if value is an expression, assume valid
-        if (true === config('firefly.feature_flags.expression_engine') && str_starts_with($value, '=') && strlen($value) > 1) {
+        if (true === AppConfiguration::get('enable_expression_engine', false)->data && str_starts_with($value, '=') && strlen($value) > 1) {
             return true;
         }
 

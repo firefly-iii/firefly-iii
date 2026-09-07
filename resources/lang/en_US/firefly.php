@@ -2619,6 +2619,8 @@ return [
     'setting_valid_url_protocols_explain'                 => 'Firefly III only allows urls to have standard protocols like https and ftp etc. If you\'re a techie you may want to allow others as well.',
     'setting_enable_batch_processing'                     => 'Enable batch processing',
     'setting_enable_batch_processing_explain'             => 'Batch processing is a relatively new feature of Firefly III that allows a set of new transactions (aka a batch) be processed when the final transaction is submitted, and not during the submission of each individual entry. This makes data import faster, but also skips rules until the end. It is an experimental feature so disabled by default.',
+    'setting_enable_expression_engine' => 'Enable expression engine',
+    'setting_enable_expression_engine_explain' => 'The expression engine lets you write rule actions that are dynamic, using the data of the transaction to join text together or copy values. However, it also allows crafty users to run commands on the underlying server or Docker container. This is potentially very dangerous, so the feature is disabled by default. Only enable this when you TRUST ALL your users.',
 
     'setting_single_user_mode'                            => 'Single user mode',
     'setting_single_user_mode_explain'                    => 'By default, Firefly III only accepts one (1) registration: you. This is a security measure, preventing others from using your instance unless you allow them to. Future registrations are blocked. When you uncheck this box, others can use your instance as well, assuming they can reach it (when it is connected to the internet).',

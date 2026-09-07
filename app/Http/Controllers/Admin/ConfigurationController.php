@@ -79,12 +79,14 @@ final class ConfigurationController extends Controller
         $allowWebhooks         = AppConfiguration::get('allow_webhooks', config('firefly.allow_webhooks'))->data;
         $enableBatchProcessing = AppConfiguration::get('enable_batch_processing', true)->data;
         $validUrlProtocols     = AppConfiguration::get('valid_url_protocols', config('firefly.valid_url_protocols'))->data;
+        $enableExpressionEngine = AppConfiguration::get('enable_expression_engine', false)->data;
 
         return view('settings.configuration.index', [
             'subTitle'              => $subTitle,
             'subTitleIcon'          => $subTitleIcon,
             'singleUserMode'        => $singleUserMode,
             'isDemoSite'            => $isDemoSite,
+            'enableExpressionEngine' => $enableExpressionEngine,
             'siteOwner'             => $siteOwner,
             'enableExchangeRates'   => $enableExchangeRates,
             'useRunningBalance'     => $useRunningBalance,
@@ -119,6 +121,7 @@ final class ConfigurationController extends Controller
 
         AppConfiguration::set('valid_url_protocols', $data['valid_url_protocols']);
         AppConfiguration::set('is_demo_site', $data['is_demo_site']);
+        AppConfiguration::set('enable_expression_engine', $data['enable_expression_engine']);
 
         // flash message
         session()->flash('success', (string) trans('firefly.configuration_updated'));

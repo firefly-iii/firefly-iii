@@ -52,6 +52,7 @@ class ConfigurationRequest extends FormRequest
             'valid_url_protocols'     => $this->string('valid_url_protocols'),
             'is_demo_site'            => $this->boolean('is_demo_site'),
             'enable_batch_processing' => $this->boolean('enable_batch_processing'),
+            'enable_expression_engine' => $this->boolean('enable_expression_engine'),
         ];
     }
 
@@ -71,6 +72,7 @@ class ConfigurationRequest extends FormRequest
             'enable_batch_processing' => ['min:0', 'max:1', 'numeric'],
             'valid_url_protocols'     => ['min:0', 'max:255'],
             'is_demo_site'            => ['min:0', 'max:1', 'numeric'],
+            'enable_expression_engine' => ['min:0', 'max:1', 'numeric']
         ];
     }
 

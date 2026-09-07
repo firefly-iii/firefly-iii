@@ -136,11 +136,20 @@ Technical stuff
                             {{ __('firefly.setting_is_demo_site_explain') }}
                         </p>
                         {!! ExpandedForm::checkbox('is_demo_site','1', $isDemoSite)  !!}
+                        <h4>
+                            {{ __('firefly.setting_enable_expression_engine') }}
+                        </h4>
+                        <p>
+                            {{ __('firefly.setting_enable_expression_engine_explain') }}
+                        </p>
+                        {!! ExpandedForm::checkbox('enable_expression_engine','1', $enableExpressionEngine) !!}
+
                         <p>
                             <button type="submit" class="btn btn-success">
                                 {{ __('firefly.store_configuration') }}
                             </button>
                         </p>
+
                     </div>
                 </div>
             </div>
