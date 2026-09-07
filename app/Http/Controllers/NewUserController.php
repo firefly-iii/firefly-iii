@@ -28,6 +28,7 @@ use FireflyIII\Http\Requests\NewUserFormRequest;
 use FireflyIII\Models\TransactionCurrency;
 use FireflyIII\Repositories\Account\AccountRepositoryInterface;
 use FireflyIII\Repositories\Currency\CurrencyRepositoryInterface;
+use FireflyIII\Support\Facades\AppConfiguration;
 use FireflyIII\Support\Facades\Preferences;
 use FireflyIII\Support\Http\Controllers\CreateStuff;
 use Illuminate\Contracts\View\Factory;
@@ -76,8 +77,9 @@ final class NewUserController extends Controller
         if ($count > 0) {
             return redirect(route('index'));
         }
+        $language = config('firefly.default_language') ?? config('firefly.default_preferences.language');
 
-        return view('new-user.index', ['languages' => $languages]);
+        return view('new-user.index', ['languages' => $languages,'language' => $language]);
     }
 
     /**

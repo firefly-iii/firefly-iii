@@ -39,7 +39,7 @@
                             <div class="col-sm-9">
                                 <select class="form-select" id="lang_holder" name="language">
                                     @foreach(config('firefly.languages') as $key => $lang)
-                                        <option @if($lang === $language) selected @endif value="{{ $key }}">{{ $lang['name_locale'] }} ({{ $lang['name_english'] }})
+                                        <option @if($key === $language) selected @endif value="{{ $key }}">{{ $lang['name_locale'] }} ({{ $lang['name_english'] }})
                                         </option>
                                     @endforeach
                                 </select>
