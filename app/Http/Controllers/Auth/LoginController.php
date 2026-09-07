@@ -102,8 +102,7 @@ final class LoginController extends Controller
             $this->fireLockoutEvent($request);
             $seconds = $this->limiter()->availableIn($this->throttleKey($request));
             $message = (string) trans('auth.throttle', ['seconds' => $seconds, 'minutes' => ceil($seconds / 60)]);
-            Log::error(sprintf('Will SLEEP for %d second(s).', $seconds));
-            sleep($seconds);
+            sleep(5);
 
             throw new LockedOutException($message);
         }

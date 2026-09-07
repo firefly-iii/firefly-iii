@@ -51,6 +51,7 @@ class RuleAction extends Model
         $expr = new ActionExpression($this->action_value);
 
         try {
+            $journal['date'] = $journal['date']->toW3cString();
             $result = $expr->evaluate($journal);
         } catch (SyntaxError $e) {
             Log::error(sprintf('Expression engine failed to evaluate expression "%s" with error "%s".', $this->action_value, $e->getMessage()));

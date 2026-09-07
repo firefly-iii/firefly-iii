@@ -64,17 +64,19 @@ class AccountSearch implements GenericSearchInterface
         switch ($this->field) {
             default:
             case self::SEARCH_ALL:
-                $searchQuery->where(static function (Builder $q) use ($like): void {
-                    $q->whereLike('accounts.id', $like);
-                    $q->orWhereLike('accounts.name', $like);
-                    $q->orWhereLike('accounts.iban', $like);
+            $searchQuery->where(static function (Builder $q1) use ($like, $originalQuery): void {
+                $q1->where(static function (Builder $q2) use ($like): void {
+                    $q2->whereLike('accounts.id', $like);
+                    $q2->orWhereLike('accounts.name', $like);
+                    $q2->orWhereLike('accounts.iban', $like);
                 });
                 // meta data:
-                $searchQuery->orWhere(static function (Builder $q) use ($originalQuery): void {
+                $q1->orWhere(static function (Builder $q3) use ($originalQuery): void {
                     $json = json_encode($originalQuery, JSON_THROW_ON_ERROR);
-                    $q->where('account_meta.name', '=', 'account_number');
-                    $q->whereLike('account_meta.data', $json);
+                    $q3->where('account_meta.name', '=', 'account_number');
+                    $q3->whereLike('account_meta.data', $json);
                 });
+            });
 
                 break;
 
@@ -95,7 +97,7 @@ class AccountSearch implements GenericSearchInterface
 
             case self::SEARCH_NUMBER:
                 // meta data:
-                $searchQuery->Where(static function (Builder $q) use ($originalQuery): void {
+                $searchQuery->where(static function (Builder $q) use ($originalQuery): void {
                     $json = json_encode($originalQuery, JSON_THROW_ON_ERROR);
                     $q->where('account_meta.name', 'account_number');
                     $q->where('account_meta.data', $json);

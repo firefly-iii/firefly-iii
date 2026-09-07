@@ -382,6 +382,7 @@ class RecurringRepository implements RecurringRepositoryInterface, UserGroupInte
      */
     public function getXOccurrences(RecurrenceRepetition $repetition, Carbon $date, int $count): array
     {
+        $count = clamp($count, 1,100);
         $skipMod     = $repetition->repetition_skip + 1;
         $occurrences = [];
         if ('daily' === $repetition->repetition_type) {

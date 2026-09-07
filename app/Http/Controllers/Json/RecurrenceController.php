@@ -94,11 +94,12 @@ final class RecurrenceController extends Controller
         $endsAt                        = (string) $request->input('ends');
         $repetitionType                = explode(',', (string) $request->input('type'))[0];
         $repetitions                   = (int) $request->input('reps');
+        $repetitions = clamp($repetitions,1,100);
         $weekend                       = (int) $request->input('weekend');
         $repetitionMoment              = '';
         $skip                          = (int) $request->input('skip');
-        $skip                          = $skip < 0 || $skip > 31 ? 0 : $skip;
-        $weekend                       = $weekend < 1 || $weekend > 4 ? 1 : $weekend;
+        $skip                          = clamp($skip,0,31);
+        $weekend                       = clamp($weekend,1,4);
 
         $start                         = session()->get('start');
 
