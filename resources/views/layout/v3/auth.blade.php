@@ -32,6 +32,9 @@
 <div class="login-box">
     <div class="login-logo">
         <img src="images/logo-session.png" width="68" height="100" alt="Logo" title="Logo"/><br>
+        @if(true===$IS_DEMO_SITE)
+            <a href="{{ route('index', null, true) }}"><strong>Firefly</strong> III</a>
+        @endif
     </div>
     @yield('content')
 </div>
