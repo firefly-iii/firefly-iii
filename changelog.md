@@ -60,19 +60,20 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 - A variety of security findings by Alwen Roselio, Don Werner Salas and Allan Glenn Aceres touching CSV export, installer security and many more.
 - User "1diot9" discovered that you can overwrite arbitrary preferences. This means you can also overwrite security sensitive preferences, like your email reset code.
 - Removed security sensitive info from the debug page.
+- Removed identifying information from the login and registration pages.
 - It was possible to brute force 2FA code attempts.
 - URL validation could be circumvented.
 - Flushing the cache would reset some timeouts.
-- Chained: a stolen password against a 2FA-protected account becomes remote code execution
-- A budget limit spanning centuries is accepted, then recalculated day by day
-- Five bad logins let anyone take the site offline
-- A small search query costs the server many seconds of CPU
-- A 2.5 KB search query exhausts the PHP memory limit
-- One GET request can make the server compute tens of thousands of dates
-- Account search returns every user's bank accounts
-- One search query returns every user's transactions
-- State-changing requests execute before the two-factor check decides to reject them
-- Any logged-in user can run shell commands on the server through a rule action
+- A stolen password against a 2FA-protected account could lead to remote code execution
+- A budget limit spanning centuries was accepted, and then recalculated day by day
+- Five bad logins would let anyone take the app offline
+- A small search query could cost the server many seconds of CPU
+- A 2.5 KB search query could exhaust the PHP memory limit
+- One GET request could make the server compute tens of thousands of dates
+- Account search could return every user's bank accounts (unconfirmed but measures taken)
+- One search query could return every user's transactions (unconfirmed but measures taken)
+- State-changing requests woyld execute before the two-factor check decides to reject them
+- Any logged-in user could run shell commands on the server through a rule action
 
 #### Unresolved security issues
 

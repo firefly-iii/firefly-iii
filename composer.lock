@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "3ee50c523acc2cf01e2ae0c7fc52acad",
+    "content-hash": "3b02e1fd7c9983b8718727ceb266d8a2",
     "packages": [
         {
             "name": "bacon/bacon-qr-code",
@@ -1668,22 +1668,22 @@
         },
         {
             "name": "jc5/google2fa-laravel",
-            "version": "2.0.9",
+            "version": "v2.0.12",
             "source": {
                 "type": "git",
                 "url": "https://github.com/JC5/google2fa-laravel.git",
-                "reference": "af390d117e92963c75fa36868b754e6321b3710f"
+                "reference": "57351cc4aca0436bce04c955dddd3f108935a2f1"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/JC5/google2fa-laravel/zipball/af390d117e92963c75fa36868b754e6321b3710f",
-                "reference": "af390d117e92963c75fa36868b754e6321b3710f",
+                "url": "https://api.github.com/repos/JC5/google2fa-laravel/zipball/57351cc4aca0436bce04c955dddd3f108935a2f1",
+                "reference": "57351cc4aca0436bce04c955dddd3f108935a2f1",
                 "shasum": ""
             },
             "require": {
-                "laravel/framework": ">=5.4.36",
-                "php": ">=8",
-                "pragmarx/google2fa-qrcode": ">1.0"
+                "laravel/framework": ">=13",
+                "php": ">=8.5",
+                "pragmarx/google2fa-qrcode": "^4.0"
             },
             "require-dev": {
                 "orchestra/testbench": "3.4.*|3.5.*|3.6.*|3.7.*|4.*|5.*|6.*",
@@ -1730,7 +1730,7 @@
                 },
                 {
                     "name": "James Cole",
-                    "email": "james@firefly-iii.org",
+                    "email": "thegrumpydictator@gmail.com",
                     "role": "Developer"
                 }
             ],
@@ -1743,9 +1743,9 @@
             ],
             "support": {
                 "issues": "https://github.com/JC5/google2fa-laravel/issues",
-                "source": "https://github.com/JC5/google2fa-laravel/tree/2.0.9"
+                "source": "https://github.com/JC5/google2fa-laravel/tree/v2.0.12"
             },
-            "time": "2023-09-16T02:59:44+00:00"
+            "time": "2026-09-08T05:39:47+00:00"
         },
         {
             "name": "jc5/recovery",
