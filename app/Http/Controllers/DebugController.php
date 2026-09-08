@@ -128,8 +128,10 @@ final class DebugController extends Controller
         }
 
         Artisan::call('view:clear');
+
         return view('flush');
-        //return redirect(route('index'));
+
+        // return redirect(route('index'));
     }
 
     /**
