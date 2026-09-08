@@ -52,6 +52,7 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 - [Issue 12687](https://github.com/firefly-iii/firefly-iii/issues/12687) (Changing budgeted amount in a budget deletes notes.) reported by @rdesbo
 - [Issue 12692](https://github.com/firefly-iii/firefly-iii/issues/12692) (Updating accounts of a deposit recurrence via API is rejected because the validator assumes "withdrawal") reported by @Toshik1978
 - [Issue 12694](https://github.com/firefly-iii/firefly-iii/issues/12694) (Updating an amount in transaction doesn't make it discoverable in search using `updated_at_after:`) reported by @Toshik1978
+- #12710
 - Setting an invalid language would break your account.
 
 ### Security

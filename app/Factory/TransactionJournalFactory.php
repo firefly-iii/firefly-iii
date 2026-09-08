@@ -524,7 +524,7 @@ class TransactionJournalFactory
 
     private function hashArray(NullArrayObject $row): string
     {
-        unset($row['import_hash_v2'], $row['original_source']);
+        unset($row['import_hash_v2'], $row['original_source'], $row['batch_submission']);
 
         try {
             $json = json_encode($row, JSON_THROW_ON_ERROR);
