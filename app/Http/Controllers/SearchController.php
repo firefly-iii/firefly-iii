@@ -61,7 +61,7 @@ final class SearchController extends Controller
     public function index(Request $request, SearchInterface $searcher): Factory|\Illuminate\Contracts\View\View
     {
         // search params:
-        $fullQuery        = $request->input('search');
+        $fullQuery        = (string) $request->input('search');
         $fullQuery        = substr($fullQuery, 0, 500);
         if (is_array($request->input('search'))) {
             $fullQuery = '';
