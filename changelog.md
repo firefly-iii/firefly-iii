@@ -5,7 +5,7 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 
 ## v6.7.0 - 2026-09-17
 
-<!-- summary: This release introduces a new layout and fixes many bugs. -->
+<!-- summary: This release introduces a new layout and fixes many bugs and security issues. -->
 
 ### Known issues
 - Editing and creating split transactions may sometimes mix up the order of the splits. The data itself is never mixed up however.
@@ -14,10 +14,11 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 
 ### Added
 
-- Added a view for all transactions
+- Added a view for all transactions.
 
 ### Changed
 
+- The rule engine features an "expression engine". It is now disabled by default and must be turned on again in `/settings`.
 - Switched from Twig template engine to Blade.
 - Introduced a new version of the AdminLTE template.
 - Introduces new forms for creating and editing transactions
@@ -62,6 +63,19 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 - It was possible to brute force 2FA code attempts.
 - URL validation could be circumvented.
 - Flushing the cache would reset some timeouts.
+- Chained: a stolen password against a 2FA-protected account becomes remote code execution
+- A budget limit spanning centuries is accepted, then recalculated day by day
+- Five bad logins let anyone take the site offline
+- A small search query costs the server many seconds of CPU
+- A 2.5 KB search query exhausts the PHP memory limit
+- One GET request can make the server compute tens of thousands of dates
+- Account search returns every user's bank accounts
+- One search query returns every user's transactions
+- State-changing requests execute before the two-factor check decides to reject them
+- Any logged-in user can run shell commands on the server through a rule action
+
+#### Unresolved security issues
+
 - You can still use the webhooks API to connect to arbitrary and weird URLs and internal IPs.
 - You will still delete everybody's purged notes when you delete your own purged notes.
 - The (static) cron job token is still part of the URL if you call it over the web.
