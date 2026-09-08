@@ -61,40 +61,40 @@ final class ConfigurationController extends Controller
      */
     public function index(): Factory|\Illuminate\Contracts\View\View
     {
-        $subTitle              = (string) trans('firefly.instance_configuration');
-        $subTitleIcon          = 'bi-wrench';
+        $subTitle               = (string) trans('firefly.instance_configuration');
+        $subTitleIcon           = 'bi-wrench';
 
         Log::channel('audit')->info('User visits admin config index.');
 
         // all available configuration and their default value in case
         // they don't exist yet.
-        $singleUserMode        = AppConfiguration::get('single_user_mode', config('firefly.configuration.single_user_mode'))->data;
-        $isDemoSite            = AppConfiguration::get('is_demo_site', config('firefly.configuration.is_demo_site'))->data;
-        $siteOwner             = config('firefly.site_owner');
+        $singleUserMode         = AppConfiguration::get('single_user_mode', config('firefly.configuration.single_user_mode'))->data;
+        $isDemoSite             = AppConfiguration::get('is_demo_site', config('firefly.configuration.is_demo_site'))->data;
+        $siteOwner              = config('firefly.site_owner');
 
-        $enableExchangeRates   = AppConfiguration::get('enable_exchange_rates', config('cer.enabled'))->data;
-        $useRunningBalance     = AppConfiguration::get('use_running_balance', config('firefly.feature_flags.running_balance_column'))->data;
-        $enableExternalMap     = AppConfiguration::get('enable_external_map', config('firefly.enable_external_map'))->data;
-        $enableExternalRates   = AppConfiguration::get('enable_external_rates', config('cer.download_enabled'))->data;
-        $allowWebhooks         = AppConfiguration::get('allow_webhooks', config('firefly.allow_webhooks'))->data;
-        $enableBatchProcessing = AppConfiguration::get('enable_batch_processing', true)->data;
-        $validUrlProtocols     = AppConfiguration::get('valid_url_protocols', config('firefly.valid_url_protocols'))->data;
+        $enableExchangeRates    = AppConfiguration::get('enable_exchange_rates', config('cer.enabled'))->data;
+        $useRunningBalance      = AppConfiguration::get('use_running_balance', config('firefly.feature_flags.running_balance_column'))->data;
+        $enableExternalMap      = AppConfiguration::get('enable_external_map', config('firefly.enable_external_map'))->data;
+        $enableExternalRates    = AppConfiguration::get('enable_external_rates', config('cer.download_enabled'))->data;
+        $allowWebhooks          = AppConfiguration::get('allow_webhooks', config('firefly.allow_webhooks'))->data;
+        $enableBatchProcessing  = AppConfiguration::get('enable_batch_processing', true)->data;
+        $validUrlProtocols      = AppConfiguration::get('valid_url_protocols', config('firefly.valid_url_protocols'))->data;
         $enableExpressionEngine = AppConfiguration::get('enable_expression_engine', false)->data;
 
         return view('settings.configuration.index', [
-            'subTitle'              => $subTitle,
-            'subTitleIcon'          => $subTitleIcon,
-            'singleUserMode'        => $singleUserMode,
-            'isDemoSite'            => $isDemoSite,
+            'subTitle'               => $subTitle,
+            'subTitleIcon'           => $subTitleIcon,
+            'singleUserMode'         => $singleUserMode,
+            'isDemoSite'             => $isDemoSite,
             'enableExpressionEngine' => $enableExpressionEngine,
-            'siteOwner'             => $siteOwner,
-            'enableExchangeRates'   => $enableExchangeRates,
-            'useRunningBalance'     => $useRunningBalance,
-            'enableExternalMap'     => $enableExternalMap,
-            'enableExternalRates'   => $enableExternalRates,
-            'allowWebhooks'         => $allowWebhooks,
-            'enableBatchProcessing' => $enableBatchProcessing,
-            'validUrlProtocols'     => $validUrlProtocols,
+            'siteOwner'              => $siteOwner,
+            'enableExchangeRates'    => $enableExchangeRates,
+            'useRunningBalance'      => $useRunningBalance,
+            'enableExternalMap'      => $enableExternalMap,
+            'enableExternalRates'    => $enableExternalRates,
+            'allowWebhooks'          => $allowWebhooks,
+            'enableBatchProcessing'  => $enableBatchProcessing,
+            'validUrlProtocols'      => $validUrlProtocols,
         ]);
     }
 

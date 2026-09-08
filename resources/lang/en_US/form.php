@@ -48,7 +48,7 @@ return [
     'auto_budget_currency_id'     => 'Currency',
     'external_ip'                 => 'Your server\'s external IP',
     'attachments'                 => 'Attachments',
-    'enable_expression_engine' => 'Enable expression engine',
+    'enable_expression_engine'    => 'Enable expression engine',
     'BIC'                         => 'BIC',
     'verify_password'             => 'Verify password security',
     'source_account'              => 'Source account',
