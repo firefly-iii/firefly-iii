@@ -31,7 +31,7 @@
 <body class="login-page bg-body-secondary">
 <div class="login-box">
     <div class="login-logo">
-        @if(true===$IS_DEMO_SITE)
+        @if(true=== ($IS_DEMO_SITE ?? false))
             <img src="images/logo-session.png" width="68" height="100" alt="Logo" title="Logo"/><br>
             <a href="{{ route('index', null, true) }}"><strong>Firefly</strong> III</a>
         @endif
