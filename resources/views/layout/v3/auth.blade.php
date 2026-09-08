@@ -20,7 +20,7 @@
     <meta name="theme-color" content="#1a1a1a" media="(prefers-color-scheme: dark)"/>
     <meta name="color-scheme" content="light dark">
     @vite(['sass/app.scss'])
-    <x-layout.fav-icons/>
+    <x-layout.fav-icons-clean />
     <script nonce="{{ $JS_NONCE }}">
         (() => {
             'use strict'
@@ -31,8 +31,7 @@
 <body class="login-page bg-body-secondary">
 <div class="login-box">
     <div class="login-logo">
-        <img src="images/logo-session.png" width="68" height="100" alt="Firefly III Logo" title="Firefly III"/><br>
-        <a href='https://demo.firefly-iii.org'><b>Firefly</b> III</a>
+        <img src="images/logo-session.png" width="68" height="100" alt="Logo" title="Logo"/><br>
     </div>
     @yield('content')
 </div>
