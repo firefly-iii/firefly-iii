@@ -47,6 +47,7 @@ export default defineConfig(({command, mode, isSsrBuild, isPreview}) => {
                     // generic
                     'js/pages/generic.js',
                     'js/pages/blank.js', // small bootstrap
+                    'js/pages/flush.js',
 
                     // accounts
                     'js/pages/accounts/create.js',

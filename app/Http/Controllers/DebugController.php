@@ -106,7 +106,7 @@ final class DebugController extends Controller
      *
      * @throws FireflyException
      */
-    public function flush(Request $request): RedirectResponse
+    public function flush(Request $request): View
     {
         if ($this->hasNoTables() || $this->isOldVersionInstalled()) {
             throw new FireflyException('This is not the moment.');
@@ -128,8 +128,8 @@ final class DebugController extends Controller
         }
 
         Artisan::call('view:clear');
-
-        return redirect(route('index'));
+        return view('flush');
+        //return redirect(route('index'));
     }
 
     /**
