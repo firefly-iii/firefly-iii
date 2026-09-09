@@ -88,7 +88,7 @@ class User extends Authenticatable implements OAuthenticatable
     #[Override]
     protected $fillable = ['email', 'password', 'blocked', 'blocked_code', 'user_group_id'];
     #[Override]
-    protected $hidden   = ['password', 'remember_token'];
+    protected $hidden   = ['password', 'remember_token', 'mfa_secret','reset'];
     #[Override]
     protected $table    = 'users';
 
