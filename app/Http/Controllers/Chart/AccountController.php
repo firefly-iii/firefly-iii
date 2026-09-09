@@ -592,17 +592,16 @@ final class AccountController extends Controller
         foreach ($return as $key => $info) {
             if ('balance' !== $key && 'pc_balance' !== $key) {
                 // assume it's a currency:
-                $setCurrency             = $this->currencyRepository->findByCode((string) $key);
+                $setCurrency = $this->currencyRepository->findByCode((string) $key);
                 // skip null and skip the primary currency.
-                if(null !== $setCurrency && $setCurrency->id === $this->primaryCurrency->id) {
+                if (null !== $setCurrency && $setCurrency->id === $this->primaryCurrency->id) {
                     continue;
                 }
-                if(null !== $setCurrency) {
+                if (null !== $setCurrency) {
                     $info['currency_symbol'] = $setCurrency->symbol;
                     $info['currency_code']   = $setCurrency->code;
                     $info['label']           = sprintf('%s (%s) A', $account->name, $setCurrency->symbol);
                 }
-
             }
             if ('balance' === $key) {
                 $info['currency_symbol'] = $accountCurrency->symbol;
