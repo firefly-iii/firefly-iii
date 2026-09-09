@@ -200,7 +200,7 @@ trait PeriodOverview
 
     protected function getSingleModelPeriod(Model $model, string $period, Carbon $start, Carbon $end): array
     {
-        Log::debug(sprintf('Now in getSingleModelPeriod(%s #%d, %s %s)', $model::class, $model->id, $start->format('Y-m-d'), $end->format('Y-m-d')));
+        //Log::debug(sprintf('Now in getSingleModelPeriod(%s #%d, %s %s)', $model::class, $model->id, $start->format('Y-m-d'), $end->format('Y-m-d')));
         $types              = ['spent', 'earned', 'transferred_in', 'transferred_away'];
         $return             = [
             'title'              => Navigation::periodShow($start, $period),
@@ -313,7 +313,7 @@ trait PeriodOverview
 
             return new Collection();
         }
-        Log::debug(sprintf('Now in filterStatistics("%s")', $type));
+        //Log::debug(sprintf('Now in filterStatistics("%s")', $type));
 
         return $this->statistics->filter(static function (PeriodStatistic $statistic) use ($start, $end, $type): bool {
             return $statistic->start->isSameSecond($start) && $statistic->end->isSameSecond($end) && $statistic->type === $type;
@@ -423,14 +423,14 @@ trait PeriodOverview
 
     private function getSingleModelPeriodByType(Model $model, Carbon $start, Carbon $end, string $type): array
     {
-        Log::debug(sprintf(
-            'Now in getSingleModelPeriodByType(%s #%d, %s %s, %s)',
-            $model::class,
-            $model->id,
-            $start->format('Y-m-d H:i:s.u'),
-            $end->format('Y-m-d H:i:s.u'),
-            $type
-        ));
+//        Log::debug(sprintf(
+//            'Now in getSingleModelPeriodByType(%s #%d, %s %s, %s)',
+//            $model::class,
+//            $model->id,
+//            $start->format('Y-m-d H:i:s.u'),
+//            $end->format('Y-m-d H:i:s.u'),
+//            $type
+//        ));
         $statistics = $this->filterStatistics($start, $end, $type);
 
         // nothing found, regenerate them.

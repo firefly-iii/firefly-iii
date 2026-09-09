@@ -593,9 +593,16 @@ final class AccountController extends Controller
             if ('balance' !== $key && 'pc_balance' !== $key) {
                 // assume it's a currency:
                 $setCurrency             = $this->currencyRepository->findByCode((string) $key);
-                $info['currency_symbol'] = $setCurrency->symbol;
-                $info['currency_code']   = $setCurrency->code;
-                $info['label']           = sprintf('%s (%s)', $account->name, $setCurrency->symbol);
+                // skip null and skip the primary currency.
+                if(null !== $setCurrency && $setCurrency->id === $this->primaryCurrency->id) {
+                    continue;
+                }
+                if(null !== $setCurrency) {
+                    $info['currency_symbol'] = $setCurrency->symbol;
+                    $info['currency_code']   = $setCurrency->code;
+                    $info['label']           = sprintf('%s (%s) A', $account->name, $setCurrency->symbol);
+                }
+
             }
             if ('balance' === $key) {
                 $info['currency_symbol'] = $accountCurrency->symbol;

@@ -8,7 +8,7 @@
         ({!! format_amount_by_symbol(bcmul($transaction['foreign_amount'], '-1'), $transaction['foreign_currency_symbol'], $transaction['foreign_currency_decimal_places']) !!})
     @endif
     @if($convertToPrimary && null !== $transaction['pc_amount'])
-        ({!! format_amount_by_symbol(bcmul($transaction['pc_amount'], '-1'), $primaryCurrency->symbol, $primaryCurrency->decimal_places) !!})
+        (~{!! format_amount_by_symbol(bcmul($transaction['pc_amount'], '-1'), $primaryCurrency->symbol, $primaryCurrency->decimal_places) !!})
     @endif
 @endif
 
@@ -18,7 +18,7 @@
         ({!! format_amount_by_symbol($transaction['foreign_amount'], $transaction['foreign_currency_symbol'], $transaction['foreign_currency_decimal_places']) !!})
     @endif
     @if($convertToPrimary && null !== $transaction['pc_amount'])
-        ({!! format_amount_by_symbol($transaction['pc_amount'], $primaryCurrency->symbol, $primaryCurrency->decimal_places) !!})
+        (~{!! format_amount_by_symbol($transaction['pc_amount'], $primaryCurrency->symbol, $primaryCurrency->decimal_places) !!})
     @endif
 @endif
 
@@ -31,7 +31,7 @@
             ({!! format_amount_by_symbol(bcmul($transaction['foreign_amount'],'-1'), $transaction['foreign_currency_symbol'], $transaction['foreign_currency_decimal_places'], false) !!})
         @endif
         @if($convertToPrimary && null !== $transaction['pc_amount'])
-            ({!! format_amount_by_symbol(bcmul($transaction['pc_amount'], '-1'), $primaryCurrency->symbol, $primaryCurrency->decimal_places, false) !!})
+            (~{!! format_amount_by_symbol(bcmul($transaction['pc_amount'], '-1'), $primaryCurrency->symbol, $primaryCurrency->decimal_places, false) !!})
         @endif
     @endif
 
@@ -42,7 +42,7 @@
             ({!! format_amount_by_symbol($transaction['foreign_amount'], $transaction['foreign_currency_symbol'], $transaction['foreign_currency_decimal_places'], false) !!})
         @endif
         @if($convertToPrimary && null !== $transaction['pc_amount'])
-            ({!! format_amount_by_symbol($transaction['pc_amount'], $primaryCurrency->symbol, $primaryCurrency->decimal_places, false) !!})
+            (~{!! format_amount_by_symbol($transaction['pc_amount'], $primaryCurrency->symbol, $primaryCurrency->decimal_places, false) !!})
         @endif
     @endif
     </span>
@@ -52,23 +52,23 @@
 @if(\FireflyIII\Enums\TransactionTypeEnum::OPENING_BALANCE->value === $transaction['transaction_type_type'])
     {{-- Opening balance is deposited on this account (render as positive amount) --}}
     @if(\FireflyIII\Enums\AccountTypeEnum::INITIAL_BALANCE->value === $transaction['source_account_type'])
-        {!! format_amount_by_symbol(bcmul($transaction['amount'],'-1'), $transaction['currency_symbol'], $transaction['currency_decimal_places'], false) !!}
+        {!! format_amount_by_symbol(bcmul($transaction['amount'],'-1'), $transaction['currency_symbol'], $transaction['currency_decimal_places'], true) !!}
         @if(null !== $transaction['foreign_amount'])
-            ({!! format_amount_by_symbol(bcmul($transaction['foreign_amount'],'-1'), $transaction['foreign_currency_symbol'], $transaction['foreign_currency_decimal_places'], false) !!})
+            ({!! format_amount_by_symbol(bcmul($transaction['foreign_amount'],'-1'), $transaction['foreign_currency_symbol'], $transaction['foreign_currency_decimal_places'], true) !!})
         @endif
         @if($convertToPrimary && null !== $transaction['pc_amount'])
-            ({!! format_amount_by_symbol(bcmul($transaction['pc_amount'], '-1'), $primaryCurrency->symbol, $primaryCurrency->decimal_places, false) !!})
+            (~{!! format_amount_by_symbol(bcmul($transaction['pc_amount'], '-1'), $primaryCurrency->symbol, $primaryCurrency->decimal_places, true) !!})
         @endif
     @endif
 
     {{-- Opening balance is removed from this account (render as negative amount) --}}
     @if(\FireflyIII\Enums\AccountTypeEnum::INITIAL_BALANCE->value === $transaction['destination_account_type'])
-        {!! format_amount_by_symbol($transaction['amount'], $transaction['currency_symbol'], $transaction['currency_decimal_places'], false) !!}
+        {!! format_amount_by_symbol($transaction['amount'], $transaction['currency_symbol'], $transaction['currency_decimal_places'], true) !!}
         @if(null !== $transaction['foreign_amount'])
-            ({!! format_amount_by_symbol($transaction['foreign_amount'], $transaction['foreign_currency_symbol'], $transaction['foreign_currency_decimal_places'], false) !!})
+            ({!! format_amount_by_symbol($transaction['foreign_amount'], $transaction['foreign_currency_symbol'], $transaction['foreign_currency_decimal_places'], true) !!})
         @endif
         @if($convertToPrimary && null !== $transaction['pc_amount'])
-            ({!! format_amount_by_symbol($transaction['pc_amount'], $primaryCurrency->symbol, $primaryCurrency->decimal_places, false) !!})
+            ({!! format_amount_by_symbol($transaction['pc_amount'], $primaryCurrency->symbol, $primaryCurrency->decimal_places, true) !!})
         @endif
     @endif
 @endif
@@ -76,23 +76,23 @@
 @if(\FireflyIII\Enums\TransactionTypeEnum::RECONCILIATION->value === $transaction['transaction_type_type'])
     {{-- Reconciliation correction is deposited on this account (render as positive amount) --}}
     @if(\FireflyIII\Enums\AccountTypeEnum::RECONCILIATION->value === $transaction['source_account_type'])
-        {!! format_amount_by_symbol(bcmul($transaction['amount'],'-1'), $transaction['currency_symbol'], $transaction['currency_decimal_places'], false) !!}
+        {!! format_amount_by_symbol(bcmul($transaction['amount'],'-1'), $transaction['currency_symbol'], $transaction['currency_decimal_places'], true) !!}
         @if(null !== $transaction['foreign_amount'])
-            ({!! format_amount_by_symbol(bcmul($transaction['foreign_amount'],'-1'), $transaction['foreign_currency_symbol'], $transaction['foreign_currency_decimal_places'], false) !!})
+            ({!! format_amount_by_symbol(bcmul($transaction['foreign_amount'],'-1'), $transaction['foreign_currency_symbol'], $transaction['foreign_currency_decimal_places'], true) !!})
         @endif
         @if($convertToPrimary && null !== $transaction['pc_amount'])
-            ({!! format_amount_by_symbol(bcmul($transaction['pc_amount'], '-1'), $primaryCurrency->symbol, $primaryCurrency->decimal_places, false) !!})
+            (~{!! format_amount_by_symbol(bcmul($transaction['pc_amount'], '-1'), $primaryCurrency->symbol, $primaryCurrency->decimal_places, true) !!})
         @endif
     @endif
 
     {{-- Reconciliation correction is removed from this account (render as negative amount) --}}
     @if(\FireflyIII\Enums\AccountTypeEnum::RECONCILIATION->value === $transaction['destination_account_type'])
-        {!! format_amount_by_symbol($transaction['amount'], $transaction['currency_symbol'], $transaction['currency_decimal_places'], false) !!}
+        {!! format_amount_by_symbol($transaction['amount'], $transaction['currency_symbol'], $transaction['currency_decimal_places'], true) !!}
         @if(null !== $transaction['foreign_amount'])
-            ({!! format_amount_by_symbol($transaction['foreign_amount'], $transaction['foreign_currency_symbol'], $transaction['foreign_currency_decimal_places'], false) !!})
+            ({!! format_amount_by_symbol($transaction['foreign_amount'], $transaction['foreign_currency_symbol'], $transaction['foreign_currency_decimal_places'], true) !!})
         @endif
         @if($convertToPrimary && null !== $transaction['pc_amount'])
-            ({!! format_amount_by_symbol($transaction['pc_amount'], $primaryCurrency->symbol, $primaryCurrency->decimal_places, false) !!})
+            (~{!! format_amount_by_symbol($transaction['pc_amount'], $primaryCurrency->symbol, $primaryCurrency->decimal_places, true) !!})
         @endif
     @endif
 @endif

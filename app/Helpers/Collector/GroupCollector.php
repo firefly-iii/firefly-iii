@@ -951,13 +951,16 @@ class GroupCollector implements GroupCollectorInterface
 
     private function parseSums(array $groups): array
     {
+        //Log::debug(sprintf('Now in parseGroups for %d group(s).', count($groups)));
         /**
          * @var int   $groudId
          * @var array $group
          */
         foreach ($groups as $groudId => $group) {
+            //Log::debug(sprintf('Now in parseGroups for group #%d with %d transaction(s).', $groudId, count($group['transactions'])));
             /** @var array $transaction */
             foreach ($group['transactions'] as $transaction) {
+                // Log::debug(sprintf('Now in parseTransactions for transaction #%d', $transaction['transaction_journal_id']));
                 $currencyId                                         = (int) $transaction['currency_id'];
                 if (null === $transaction['amount']) {
                     throw new FireflyException(sprintf('Amount is NULL for a transaction in group #%d, please investigate.', $groudId));
@@ -965,6 +968,8 @@ class GroupCollector implements GroupCollectorInterface
                 $pcAmount                                           = (string) ('' === $transaction['pc_amount'] ? '0' : $transaction['pc_amount']);
                 $pcForeignAmount                                    = (string) ('' === $transaction['pc_foreign_amount'] ? '0' : $transaction['pc_foreign_amount']);
                 $foreignAmount                                      = (string) ('' === $transaction['foreign_amount'] ? '0' : $transaction['foreign_amount']);
+
+                // Log::debug(sprintf('pc amount = "%s", pc foreign amount = "%s", foreign amount = "%s"', $pcAmount, $pcForeignAmount, $foreignAmount));
 
                 // set default:
                 if (!array_key_exists($currencyId, $groups[$groudId]['sums'])) {
@@ -974,28 +979,30 @@ class GroupCollector implements GroupCollectorInterface
                     $groups[$groudId]['sums'][$currencyId]['currency_decimal_places'] = $transaction['currency_decimal_places'];
                     $groups[$groudId]['sums'][$currencyId]['amount']                  = '0';
                     $groups[$groudId]['sums'][$currencyId]['pc_amount']               = '0';
+                    //Log::debug(sprintf('Set amount and pc_amount to 0 for currency %s', $transaction['currency_code']));
                 }
                 $groups[$groudId]['sums'][$currencyId]['amount']    = bcadd((string) $groups[$groudId]['sums'][$currencyId]['amount'], $transaction['amount']);
                 $groups[$groudId]['sums'][$currencyId]['pc_amount'] = bcadd((string) $groups[$groudId]['sums'][$currencyId]['pc_amount'], $pcAmount);
 
                 if (null !== $transaction['foreign_amount'] && null !== $transaction['foreign_currency_id']) {
-                    $currencyId                                         = (int) $transaction['foreign_currency_id'];
+                    //Log::debug(sprintf('This transaction also has foreign amount %s %s', $transaction['foreign_currency_code'], $transaction['foreign_amount']));
+                    $foreignCurrencyId                                         = (int) $transaction['foreign_currency_id'];
 
                     // set default:
-                    if (!array_key_exists($currencyId, $groups[$groudId]['sums'])) {
-                        $groups[$groudId]['sums'][$currencyId]['currency_id']             = $currencyId;
-                        $groups[$groudId]['sums'][$currencyId]['currency_code']           = $transaction['foreign_currency_code'];
-                        $groups[$groudId]['sums'][$currencyId]['currency_symbol']         = $transaction['foreign_currency_symbol'];
-                        $groups[$groudId]['sums'][$currencyId]['currency_decimal_places'] = $transaction['foreign_currency_decimal_places'];
-                        $groups[$groudId]['sums'][$currencyId]['amount']                  = '0';
-                        $groups[$groudId]['sums'][$currencyId]['pc_amount']               = '0';
+                    if (!array_key_exists($foreignCurrencyId, $groups[$groudId]['sums'])) {
+                        $groups[$groudId]['sums'][$foreignCurrencyId]['currency_id']             = $foreignCurrencyId;
+                        $groups[$groudId]['sums'][$foreignCurrencyId]['currency_code']           = $transaction['foreign_currency_code'];
+                        $groups[$groudId]['sums'][$foreignCurrencyId]['currency_symbol']         = $transaction['foreign_currency_symbol'];
+                        $groups[$groudId]['sums'][$foreignCurrencyId]['currency_decimal_places'] = $transaction['foreign_currency_decimal_places'];
+                        $groups[$groudId]['sums'][$foreignCurrencyId]['amount']                  = '0';
+                        $groups[$groudId]['sums'][$foreignCurrencyId]['pc_amount']               = '0';
+                        //Log::debug(sprintf('Set amount and pc_amount to 0 for currency %s', $transaction['foreign_currency_code']));
                     }
-                    $groups[$groudId]['sums'][$currencyId]['amount']    = bcadd((string) $groups[$groudId]['sums'][$currencyId]['amount'], $foreignAmount);
-                    $groups[$groudId]['sums'][$currencyId]['pc_amount'] = bcadd($groups[$groudId]['sums'][$currencyId]['amount'], $pcForeignAmount);
+                    $groups[$groudId]['sums'][$foreignCurrencyId]['amount']    = bcadd((string) $groups[$groudId]['sums'][$foreignCurrencyId]['amount'], $foreignAmount);
+                    $groups[$groudId]['sums'][$foreignCurrencyId]['pc_amount'] = bcadd((string) $groups[$groudId]['sums'][$foreignCurrencyId]['pc_amount'], $pcForeignAmount);
                 }
             }
         }
-
         return $groups;
     }
 

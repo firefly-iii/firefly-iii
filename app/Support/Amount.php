@@ -310,7 +310,6 @@ class Amount
         $cache->addProperty('getPrimaryCurrencyByGroup');
         $cache->addProperty($userGroup->id);
         if ($cache->has()) {
-            Log::debug(sprintf('getPrimaryCurrencyByUserGroup(#%d, "%s") = %s', $userGroup->id, $userGroup->title, $cache->get()->code));
 
             return $cache->get();
         }
@@ -324,6 +323,7 @@ class Amount
             $userGroup->currencies()->sync([$primary->id => ['group_default' => true]]);
         }
         $cache->store($primary);
+        Log::debug(sprintf('getPrimaryCurrencyByUserGroup(#%d, "%s") = %s', $userGroup->id, $userGroup->title, $cache->get()->code));
 
         return $primary;
     }

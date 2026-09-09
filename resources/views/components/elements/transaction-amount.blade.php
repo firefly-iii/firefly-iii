@@ -1,4 +1,3 @@
-<!-- TODO amount display helper -->
 {{-- deposit --}}
 @if('Deposit' === $type)
     {{-- amount of deposit --}}
@@ -32,7 +31,7 @@
             ({!! format_amount_by_symbol($foreign['amount']*-1, $foreign['currency_symbol'], $foreign['currency_decimal_places'], false) !!})
         @endif
         {{-- transfer in primary currency. Does not care about direction. --}}
-        @if($convertToPrimary && 0 !== $pcAmount)
+        @if($convertToPrimary && 0 !== $pcAmount && $primaryCurrency->id !== $amount['currency_id'])
             (~ {!! format_amount_by_symbol($pcAmount*-1, $primaryCurrency->symbol, $primaryCurrency->decimal_places) !!})
         @endif
                 </span>
@@ -107,7 +106,7 @@
         ({!! format_amount_by_symbol($foreign['amount'], $foreign['currency_symbol'], $foreign['currency_decimal_places']) !!})
     @endif
     {{--  primary currency amount of withdrawal, if not in foreign currency --}}
-    @if($convertToPrimary && 0 !== $pcAmount && $primaryCurrency->id !== $foreign['currency_id'])
+    @if($convertToPrimary && 0 !== $pcAmount && $primaryCurrency->id !== $amount['currency_id'] && $primaryCurrency->id !== $foreign['currency_id'])
         (~ {!! format_amount_by_symbol($pcAmount, $primaryCurrency->symbol, $primaryCurrency->decimal_places) !!})
     @endif
 @endif

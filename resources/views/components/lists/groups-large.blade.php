@@ -63,24 +63,18 @@
                 @foreach($group['sums'] as $sum)
                     @if('Deposit' === $group['transaction_type'])
                         {!! format_amount_by_symbol($sum['amount']*-1, $sum['currency_symbol'], $sum['currency_decimal_places']) !!}
-                        @if($convertToPrimary && 0 !== $sum['pc_amount'])
-                            (~ {!! format_amount_by_symbol($sum['pc_amount']*-1, $primaryCurrency->symbol, $primaryCurrency->decimal_places) !!})
-                        @endif
-                        @if($loop->index !== count($group['sums'])-1),@endif
+                        @if($convertToPrimary && 0.0 !== (float)$sum['pc_amount'] && $primaryCurrency->id !== $sum['currency_id'])
+                            (~ {!! format_amount_by_symbol($sum['pc_amount']*-1, $primaryCurrency->symbol, $primaryCurrency->decimal_places) !!})@endif{{ $loop->index !== count($group['sums'])-1 ? ',' : '' }}
                     @elseif('Transfer' === $group['transaction_type'])
                         <span class="text-info money-transfer">
                         {!! format_amount_by_symbol($sum['amount']*-1, $sum['currency_symbol'], $sum['currency_decimal_places'], false) !!}
-                        @if($convertToPrimary && 0 !== $sum['pc_amount'])
-                            (~ {!! format_amount_by_symbol($sum['pc_amount']*-1, $primaryCurrency->symbol, $primaryCurrency->decimal_places) !!})
-                        @endif
-                        @if($loop->index !== count($group['sums'])-1),@endif
+                        @if($convertToPrimary && 0 !== $sum['pc_amount'] && $primaryCurrency->id !== $sum['currency_id'])
+                            (~ {!! format_amount_by_symbol($sum['pc_amount']*-1, $primaryCurrency->symbol, $primaryCurrency->decimal_places) !!})@endif{{ $loop->index !== count($group['sums'])-1 ? ',' : '' }}
                         </span>
                     @else
                         {!! format_amount_by_symbol($sum['amount'], $sum['currency_symbol'], $sum['currency_decimal_places']) !!}
-                        @if($convertToPrimary && 0 !== $sum['pc_amount'])
-                            (~ {!! format_amount_by_symbol($sum['pc_amount'], $primaryCurrency->symbol, $primaryCurrency->decimal_places) !!})
-                         @endif
-                        @if($loop->index !== count($group['sums'])-1),@endif
+                        @if($convertToPrimary && 0 !== $sum['pc_amount'] && $primaryCurrency->id !== $sum['currency_id'])
+                            (~ {!! format_amount_by_symbol($sum['pc_amount'], $primaryCurrency->symbol, $primaryCurrency->decimal_places) !!})@endif{{ $loop->index !== count($group['sums'])-1 ? ',' : '' }}
                    @endif
                 @endforeach
             </td>
@@ -134,7 +128,7 @@
         <td class="{{ $className }} text-end">
             <x-elements.transaction-amount
                 :type="$transaction['transaction_type_type']"
-                :amount="['amount' => $transaction['amount'], 'currency_symbol' => $transaction['currency_symbol'], 'currency_decimal_places' => $transaction['currency_decimal_places']]"
+                :amount="['amount' => $transaction['amount'], 'currency_id' => $transaction['currency_id'], 'currency_symbol' => $transaction['currency_symbol'], 'currency_decimal_places' => $transaction['currency_decimal_places']]"
                 :foreign="['amount' => $transaction['foreign_amount'],'currency_id' => $transaction['foreign_currency_id'], 'currency_symbol' => $transaction['foreign_currency_symbol'], 'currency_decimal_places' => $transaction['foreign_currency_decimal_places']]"
                 :account="$account ?? null"
                 :pc-amount="$transaction['pc_amount']"
