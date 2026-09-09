@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace FireflyIII\View\Components\Form\Alpine;
 
 use Closure;
@@ -9,6 +11,7 @@ use Illuminate\View\Component;
 class TransactionCurrency extends Component
 {
     public string $value;
+
     /**
      * Create a new component instance.
      */
@@ -20,7 +23,7 @@ class TransactionCurrency extends Component
     /**
      * Get the view / contents that represent the component.
      */
-    public function render(): View|Closure|string
+    public function render(): Closure|string|View
     {
         return view('components.form.alpine.transaction-currency');
     }
