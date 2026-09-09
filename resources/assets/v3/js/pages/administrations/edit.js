@@ -18,11 +18,11 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-// CSS
 import '../../boot/bootstrap.js';
 import sidebar from '../../pages/shared/sidebar.js';
 import dates from '../shared/dates.js';
 import i18next from "i18next";
+import Get from '../../api/model/currency/get.js';
 
 let edit = function () {
     return {
@@ -32,6 +32,7 @@ let edit = function () {
             title: '',
             currency_id: 0,
         },
+        currencies: [],
         errors: {
             title: [],
             currency_id: [],
@@ -58,6 +59,16 @@ let edit = function () {
                 };
                 this.pageTitle = this.administration.title;
             });
+            const params = {page:1, limit:1337};
+            (new Get).list(params).then((response => {
+                this.currencies = response.data.data.map((currency) => {
+                    return {
+                        id: currency.id,
+                        code: currency.attributes.code,
+                        name: currency.attributes.name,
+                    };
+                });
+            }));
         },
         submit: function (e) {
             // reset messages

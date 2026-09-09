@@ -49,10 +49,9 @@
                         </div>
                         <div class="card-body">
                             <x-form.alpine.title value="administration.title" />
+                            <x-form.alpine.transaction-currency value="administration.currency_id" />
 
                             TODO currency
-
-                            <Title :value=administration.title :error="errors.title" v-on:input="administration.title = $event"></Title>
 
                             <UserGroupCurrency :value=administration.currency_id :error="errors.currency_id"
                                                v-on:input="administration.currency_id = $event"></UserGroupCurrency>
