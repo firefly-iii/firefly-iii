@@ -63,6 +63,7 @@ import {processTransactionLinks} from './shared/process-transaction-links.js';
 import {addTabListener} from "./shared/add-tab-listener.js";
 import {autoStep} from "./shared/auto-step.js";
 import {respondToTabSwitch} from "./shared/respond-to-tab-switch.js";
+import {loadTransactionLinks} from './shared/load-transaction-links.js';
 
 let create = function () {
     return {
@@ -199,6 +200,7 @@ let create = function () {
         addTabListener: addTabListener,
         autoStep: autoStep,
         respondToTabSwitch: respondToTabSwitch,
+        loadTransactionLinks: loadTransactionLinks,
 
         filterForeignCurrencies(code) {
             let list = [];
