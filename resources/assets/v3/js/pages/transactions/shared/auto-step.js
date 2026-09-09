@@ -50,7 +50,7 @@ export function autoStep() {
         for(let i = 0; i < this.entries.length; i++) {
             if(this.entries.hasOwnProperty(i)) {
                 this.createLinkAutocomplete('links_modal_search_' + i, 'api/v1/autocomplete/transactions-with-meta');
-                if(0 !== parseInt(this.entries[i].transaction_journal_id)) {
+                if(0 !== parseInt(this.entries[i].transaction_journal_id) && !isNaN(parseInt(this.entries[i].transaction_journal_id))) {
                     // load the links for this transaction journal.
                     this.loadTransactionLinks(i, parseInt(this.entries[i].transaction_journal_id));
                 }
