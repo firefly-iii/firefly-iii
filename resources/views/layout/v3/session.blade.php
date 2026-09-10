@@ -349,15 +349,15 @@
 {{-- introduction --}}
 @if(!$shownDemo)
     <script type="text/javascript" nonce="{{ $JS_NONCE }}">
-        var showTour = true;
-        var routeForTour = "{{ $current_route_name }}";
-        var routeStepsUrl = "{{ route('json.intro', [$current_route_name, $objectType ?? '']) }}";
-        var routeForFinishedTour = "{{ route('json.intro.finished', [$current_route_name, $objectType ?? '']) }}";
+        window.showTour = true;
+        // var routeForTour = "{{ $current_route_name }}";
+        window.routeStepsUrl = "{{ route('json.intro', [$current_route_name, $objectType ?? '']) }}";
+        window.routeForFinishedTour = "{{ route('json.intro.finished', [$current_route_name, $objectType ?? '']) }}";
     </script>
 @endif
 @if($shownDemo)
     <script type="text/javascript" nonce="{{ $JS_NONCE }}">
-        var showTour = false;
+        window.showTour = false;
     </script>
 @endif
 

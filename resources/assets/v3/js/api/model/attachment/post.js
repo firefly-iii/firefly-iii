@@ -28,6 +28,6 @@ export default class Post {
 
     upload(id, data) {
         let url = './api/v1/attachments/' + id + '/upload';
-        return axios.post(url, data);
+        return api.post(url, data);
     }
 }

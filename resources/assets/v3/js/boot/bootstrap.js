@@ -27,10 +27,10 @@ import axios from 'axios';
 import Shepherd from 'shepherd.js';
 import "cally";
 import {getFreshVariable} from "../store/get-fresh-variable.js";
-import {getVariable} from "../store/get-variable.js";
 import {getVariables} from "../store/get-variables.js";
 import {getViewRange} from "../support/get-viewrange.js";
 import {loadTranslations} from "../support/load-translations.js";
+import i18next from "i18next";
 
 window.bootstrapped = false;
 window.store = store;
@@ -48,14 +48,13 @@ getFreshVariable('lastActivity').then((serverValue) => {
     const localValue = store.get('lastActivity');
     store.set('cacheValid', localValue === serverValue);
     store.set('lastActivity', serverValue);
-    // console.log('Server value: ' + serverValue);
+    // console.log('Server value = ' + serverValue);
     // console.log('Local value:  ' + localValue);
     // console.log('Cache valid:  ' + (localValue === serverValue));
 }).then(() => {
     Promise.resolve(
         getVariables(['viewRange','darkMode','locale','language', 'convert_to_primary']),
     ).then((values) => {
-        //console.log(values);
         if (!store.get('start') || !store.get('end')) {
             // calculate new start and end, and store them.
             const range = getViewRange(values.viewRange, new Date);
@@ -78,61 +77,86 @@ getFreshVariable('lastActivity').then((serverValue) => {
             // console.log('Bootstrapped!');
 
             // page may have an introduction necessary to be played.
-            // if (!showTour) {
-            //     return;
-            // }
-//             const url = '/';
-//             let site = axios.create({baseURL: url, withCredentials: true});
-//             axios.defaults.withCredentials = true;
-//             axios.defaults.baseURL = url;
-//
-//             site.get(routeStepsUrl).then(function (data) {
-//                 let hints = data.data;
-//
-//                 const tour = new Shepherd.Tour({
-//                     useModalOverlay: true,
-//                     defaultStepOptions: {
-//                         // classes: 'shadow-md bg-purple-dark',
-//                         scrollTo: true
-//                     }
-//                 });
-// // cancel, complete
-//                 tour.on('cancel', (eventOptions) => {
-//                     site.post(routeForFinishedTour);
-//                 });
-//                 tour.on('complete', (eventOptions) => {
-//                     site.post(routeForFinishedTour);
-//                 });
-//
-//                 for (let i = 0; i < hints.length; i++) {
-//                     if (hints.hasOwnProperty(i)) {
-//                         let hint = hints[i];
-//
-//                         let step = {
-//                             // id: 'example-step',
-//                             text: hint.text,
-//
-//                             classes: 'example-step-extra-class',
-//                             buttons: [
-//                                 {
-//                                     text: 'Next',
-//                                     action: tour.next
-//                                 }
-//                             ]
-//                         };
-//                         if (hint.hasOwnProperty('element')) {
-//                             step.attachTo = {
-//                                 element: hint.element,
-//                                 on: hint.position
-//                             };
-//                         }
-//                         tour.addStep(step);
-//                     }
-//                 }
-//                 tour.start();
-//
-//
-//             });
+            if (!window.showTour) {
+                console.log('Will not show introduction tour for this page');
+                return;
+            }
+            const url = '/';
+            let site = axios.create({baseURL: url, withCredentials: true});
+            axios.defaults.withCredentials = true;
+            axios.defaults.baseURL = url;
+
+            site.get(window.routeStepsUrl).then(function (data) {
+                let hints = data.data;
+
+                const tour = new Shepherd.Tour({
+                    useModalOverlay: true,
+                    defaultStepOptions: {
+                        // classes: 'shadow-md bg-purple-dark',
+                        scrollTo: true,
+                        cancelIcon: {
+                            enabled: true
+                        },
+                    }
+                });
+                // cancel or complete
+                tour.on('cancel', (eventOptions) => {
+                    site.post(window.routeForFinishedTour);
+                });
+                tour.on('complete', (eventOptions) => {
+                    site.post(window.routeForFinishedTour);
+                });
+
+                for (let i = 0; i < hints.length; i++) {
+                    if (hints.hasOwnProperty(i)) {
+                        let hint = hints[i];
+
+                        let buttons = [];
+                        if(i > 0) {
+                            buttons.push(
+                                {
+                                    text: i18next.t('firefly.intro_prev_label'),
+                                    action: tour.back
+                                }
+                            );
+                        }
+                        if(i < hints.length - 1) {
+                            buttons.push(
+                                {
+                                    text: i18next.t('firefly.intro_next_label'),
+                                    action: tour.next
+                                }
+                            );
+                        }
+                        if(i === hints.length - 1) {
+                            console.log('Add complete');
+                            buttons.push(
+                                {
+                                    text: i18next.t('firefly.intro_done_label'),
+                                    action: tour.complete
+                                }
+                            );
+                        }
+
+
+                        let step = {
+                            // id: 'example-step',
+                            text: hint.text,
+                            buttons: buttons
+                        };
+                        if (hint.hasOwnProperty('element')) {
+                            step.attachTo = {
+                                element: hint.element,
+                                on: hint.position
+                            };
+                        }
+                        tour.addStep(step);
+                    }
+                }
+                tour.start();
+
+
+            });
 
         });
 
