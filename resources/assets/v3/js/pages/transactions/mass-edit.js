@@ -23,6 +23,8 @@ import sidebar from '../../pages/shared/sidebar.js';
 import dates from '../shared/dates.js';
 import {addAutocomplete} from "./shared/add-autocomplete.js";
 
+window.enableDates = false;
+
 let edit = function () {
     return {
         init() {

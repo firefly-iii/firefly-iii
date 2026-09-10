@@ -26,6 +26,8 @@ import Tags from "bootstrap5-tags";
 import i18next from 'i18next';
 import {addAutocomplete} from "./shared/add-autocomplete.js";
 
+window.enableDates = false;
+
 let edit = function () {
     return {
         detectCategoryChange(e) {

@@ -69,6 +69,7 @@ import {autoStep} from "./shared/auto-step.js";
 import {respondToTabSwitch} from "./shared/respond-to-tab-switch.js";
 
 const urls = getUrls();
+window.enableDates = false;
 
 let transactions = function () {
     return {

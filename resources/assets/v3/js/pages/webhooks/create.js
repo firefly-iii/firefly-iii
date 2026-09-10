@@ -26,6 +26,8 @@ import {loadDeliveries} from "./shared/load-deliveries.js";
 import {loadResponses} from "./shared/load-responses.js";
 import {loadTriggers} from "./shared/load-triggers.js";
 
+window.enableDates = false;
+
 let create = function () {
     return {
         error_message: '',

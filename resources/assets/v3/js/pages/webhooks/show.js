@@ -24,6 +24,8 @@ import dates from '../shared/dates.js';
 import format from "date-fns/format";
 import i18next from "i18next";
 
+window.enableDates = false;
+
 let show = function () {
     return {
         i18next: null,

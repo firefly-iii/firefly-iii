@@ -24,6 +24,7 @@ import sidebar from '../../pages/shared/sidebar.js';
 import dates from '../shared/dates.js';
 import i18next from "i18next";
 
+window.enableDates = false;
 let index = function () {
     return {
         webhooks: [],

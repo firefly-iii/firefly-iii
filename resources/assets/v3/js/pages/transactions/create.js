@@ -65,6 +65,8 @@ import {autoStep} from "./shared/auto-step.js";
 import {respondToTabSwitch} from "./shared/respond-to-tab-switch.js";
 import {loadTransactionLinks} from './shared/load-transaction-links.js';
 
+window.enableDates = false;
+
 let create = function () {
     return {
         // needed for translations.

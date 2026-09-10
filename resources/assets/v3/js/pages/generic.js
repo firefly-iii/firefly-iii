@@ -22,6 +22,8 @@ import '../boot/bootstrap.js';
 import sidebar from '../pages/shared/sidebar.js';
 import dates from './shared/dates.js';
 
+window.enableDates = true;
+
 let index = function () {
     return {
         init() {

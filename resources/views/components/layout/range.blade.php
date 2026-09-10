@@ -1,4 +1,4 @@
-<li class="nav-item dropdown">
+<li class="nav-item dropdown" id="date-dropdown">
     <a
         href="#"
         class="nav-link"
@@ -12,6 +12,7 @@
     <ul
         x-data="dates" x-bind="eventListeners"
         class="dropdown-menu"
+
         aria-labelledby="date-range"
         style="--bs-dropdown-min-width: 8rem"
     >

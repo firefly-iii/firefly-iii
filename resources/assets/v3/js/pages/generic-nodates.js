@@ -18,56 +18,28 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-import '../../boot/bootstrap.js';
-import sidebar from '../../pages/shared/sidebar.js';
-import dates from '../shared/dates.js';
-import i18next from "i18next";
-import Get from '../../api/model/transaction/get.js';
-import {format} from "date-fns";
+import '../boot/bootstrap.js';
+import sidebar from '../pages/shared/sidebar.js';
+import dates from './shared/dates.js';
 
 window.enableDates = false;
 
-let show = function () {
+let index = function () {
     return {
-        i18next: null,
-        group: {
-            id: 0,
-            group_title: '',
-            transactions: [],
-
-        },
-        loading: true,
-        id: 0,
         init() {
-            this.i18next = i18next;
-            const page = window.location.href.split('/');
-            this.group.id = parseInt(page[page.length - 1]);
-            this.downloadTransactionGroup();
-            // console.log('Generic JS for page with few features.');
-        },
-        downloadTransactionGroup() {
-            (new Get()).show(this.group.id).then((response) => {
-                const info = response.data.data;
-                this.group.transactions = [];
-                for(let i =0;i<info.attributes.transactions.length;i++){
-                    if(info.attributes.transactions.hasOwnProperty(i)) {
-                        let current =info.attributes.transactions[i];
-                        current.dateObject = new Date(current.date);
-                        current.dateFormatted = format(current.dateObject, this.i18next.t('config.date_time_fns'))
-                        this.group.transactions.push(current);
-                    }
+            (function() {
+                let list = document.querySelectorAll('div.app-content form input[type="text"]:enabled');
+                if (list.length > 0) {
+                    list[0].focus();
                 }
-
-                this.loading = false;
-            });
+            })();
         }
     }
-
 };
 
 
 const comps = {
-    show,
+    index,
     sidebar,
     dates
 };

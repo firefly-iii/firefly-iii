@@ -26,6 +26,7 @@ import {loadTriggers} from "./shared/load-triggers.js";
 import {loadResponses} from "./shared/load-responses.js";
 import {loadDeliveries} from "./shared/load-deliveries.js";
 
+window.enableDates = false;
 let edit = function () {
     return {
         init() {

@@ -214,7 +214,7 @@
 
 @endsection
 @section('scripts')
-    @vite(['js/pages/generic.js'])
+    @vite(['js/pages/generic-nodates.js'])
     <script type="text/javascript" nonce="{{ $JS_NONCE }}">
         var budgetID = {{ $budget->id }};
         var budgetLimitID = 0;

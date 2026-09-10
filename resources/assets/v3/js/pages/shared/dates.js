@@ -43,7 +43,7 @@ export default () => ({
         start: null, end: null
     },
     submitForm() {
-        console.log('submitForm', format(window.store.get('start'), 'yyyy-MM-dd'), format(window.store.get('end'), 'yyyy-MM-dd'));
+        // console.log('submitForm', format(window.store.get('start'), 'yyyy-MM-dd'), format(window.store.get('end'), 'yyyy-MM-dd'));
         // save form and submit for v1.
         document.getElementById('customStart').value = format(window.store.get('start'), 'yyyy-MM-dd');
         document.getElementById('customEnd').value = format(window.store.get('end'), 'yyyy-MM-dd');
@@ -52,6 +52,11 @@ export default () => ({
     language: 'en_US',
 
     init() {
+        if(false === window.enableDates) {
+            console.log('Date selection is disabled on this page.');
+            document.getElementById('date-dropdown').style.display = 'none';
+        }
+
         let end = new Date(window.store.get('end'));
         let start = new Date(window.store.get('start'));
         this.range = {

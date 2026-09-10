@@ -21,11 +21,10 @@
 export default () => ({
     foo: 'bar',
     init() {
-        //console.log('init op sidebar')
+        //console.log('init on sidebar')
     },
     logoutUser(e) {
         e.preventDefault();
         document.getElementById('logout-form').submit();
-        console.log('Logout user');
     }
 });
