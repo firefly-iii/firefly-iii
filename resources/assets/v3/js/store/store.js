@@ -18,9 +18,8 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-let engine = require('store/src/store-engine')
+import engine from 'store/src/store-engine';
+import storages from 'store/storages/all';
+import plugins from 'store/plugins/observe';
 
-let storages = require('store/storages/all')
-let plugins = [require('store/plugins/observe')]
-
-module.exports = engine.createStore(storages, plugins)
+export default engine.createStore(storages, plugins)

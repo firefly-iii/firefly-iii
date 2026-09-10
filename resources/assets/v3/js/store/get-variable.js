@@ -27,7 +27,7 @@ export function getVariable(name, defaultValue = null) {
     // currently unused, window.X can be used by the blade template
     // to make things available quicker than if the store has to grab it through the API.
     // then again, it's not that slow.
-    if (validCache && window.hasOwnProperty(name)) {
+    if (validCache && Object.hasOwn(window, name)) {
         console.log('Returning "'+name+'" from window: ' + window[name]);
         return Promise.resolve(window[name]);
     }
@@ -43,6 +43,7 @@ export function getVariable(name, defaultValue = null) {
         console.log('Returning "'+name+'" from server: ' + parseResponse(name, response));
         return Promise.resolve(parseResponse(name, response));
     }).catch((error) => {
+        console.log(error);
         if('' === defaultValue) {
             // do not try to store empty strings.
             return Promise.resolve(defaultValue);

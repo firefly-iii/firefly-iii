@@ -29,7 +29,7 @@ function getCacheKey(string, params) {
     let newParams = {lastActivity: lastActivity, key: string};
 
     for (const key in params) {
-        if (params.hasOwnProperty(key)) {
+        if (Object.hasOwn(params, key)) {
             if(params[key] === null || params[key] === undefined) {
                 newParams[key] = '';
                 continue;

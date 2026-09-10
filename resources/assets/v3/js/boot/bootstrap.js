@@ -108,7 +108,7 @@ getFreshVariable('lastActivity').then((serverValue) => {
                 });
 
                 for (let i = 0; i < hints.length; i++) {
-                    if (hints.hasOwnProperty(i)) {
+                    if (Object.hasOwn(hints,i)) {
                         let hint = hints[i];
 
                         let buttons = [];
@@ -138,13 +138,12 @@ getFreshVariable('lastActivity').then((serverValue) => {
                             );
                         }
 
-
                         let step = {
                             // id: 'example-step',
                             text: hint.text,
                             buttons: buttons
                         };
-                        if (hint.hasOwnProperty('element')) {
+                        if (Object.hasOwn(hint, 'element')) {
                             step.attachTo = {
                                 element: hint.element,
                                 on: hint.position

@@ -70,7 +70,7 @@ function drawSingleCurrencyLineChart(url, holder, anonymous) {
         let currency = all.currency;
 
 
-        let yAxisCallback = function (value, index, ticks) {
+        let yAxisCallback = function (value) {
             if (anonymous) {
                 value = '0';
             }

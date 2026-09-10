@@ -35,7 +35,7 @@ export function getVariables(preferences) {
         // currently unused, window.X can be used by the blade template
         // to make things available quicker than if the store has to grab it through the API.
         // then again, it's not that slow.
-        if (validCache && window.hasOwnProperty(name)) {
+        if (validCache && Object.hasOwn(window, name)) {
             // console.log('Returning "' + name + '" from window: ' + window[name]);
 
             chain = chain.then(() => {
@@ -91,7 +91,7 @@ export function getVariables(preferences) {
 export function parseResponses(response) {
     let result = {}
     for (let i in response.data.data) {
-        if (response.data.data.hasOwnProperty(i)) {
+        if (Object.hasOwn(response.data.data, i)) {
             let current = response.data.data[i];
             result[current.attributes.name] = current.attributes.data;
             window.store.set(current.attributes.name, current.attributes.data);

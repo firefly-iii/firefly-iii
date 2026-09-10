@@ -23,7 +23,7 @@ import laravel from 'laravel-vite-plugin';
 import manifestSRI from 'vite-plugin-manifest-sri';
 import fs from "fs";
 
-export default defineConfig(({command, mode, isSsrBuild, isPreview}) => {
+export default defineConfig(({command}) => {
     let https = null;
     if (command === 'serve') {
         https = {
