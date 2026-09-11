@@ -36,7 +36,6 @@ use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Log;
 use Safe\Exceptions\PcreException;
-
 use function Safe\preg_match;
 
 /**
@@ -60,7 +59,7 @@ class ReportFormRequest extends FormRequest
         $collection = new Collection();
         if (is_array($set)) {
             foreach ($set as $accountId) {
-                $account = $repository->find((int) $accountId);
+                $account = $repository->find((int)$accountId);
                 if (null !== $account) {
                     $collection->push($account);
                 }
@@ -81,7 +80,7 @@ class ReportFormRequest extends FormRequest
         $collection = new Collection();
         if (is_array($set)) {
             foreach ($set as $budgetId) {
-                $budget = $repository->find((int) $budgetId);
+                $budget = $repository->find((int)$budgetId);
                 if (null !== $budget) {
                     $collection->push($budget);
                 }
@@ -102,7 +101,7 @@ class ReportFormRequest extends FormRequest
         $collection = new Collection();
         if (is_array($set)) {
             foreach ($set as $categoryId) {
-                $category = $repository->find((int) $categoryId);
+                $category = $repository->find((int)$categoryId);
                 if (null !== $category) {
                     $collection->push($category);
                 }
@@ -123,7 +122,7 @@ class ReportFormRequest extends FormRequest
         $collection = new Collection();
         if (is_array($set)) {
             foreach ($set as $accountId) {
-                $account = $repository->find((int) $accountId);
+                $account = $repository->find((int)$accountId);
                 if (null !== $account) {
                     $collection->push($account);
                 }
@@ -141,32 +140,24 @@ class ReportFormRequest extends FormRequest
      */
     public function getEndDate(): Carbon
     {
-        $date  = today(config('app.timezone'));
-        $range = $this->get('daterange');
-        $parts = explode(' - ', (string) $range);
-        if (2 === count($parts)) {
-            $string  = $parts[1];
-            // validate as date
-            // if regex for YYYY-MM-DD:
-            $pattern = '/^(19|20)\d\d-(0[1-9]|1[012])-(0[1-9]|[12][\d]|3[01])$/';
-            $result  = preg_match($pattern, $string);
-            if (0 !== $result) {
-                try {
-                    $date = new Carbon($parts[1]);
-                } catch (Exception $e) { // intentional generic exception
-                    $error = sprintf('"%s" is not a valid date range: %s', $range, $e->getMessage());
-                    Log::error($error);
-                    Log::error($e->getTraceAsString());
+        $date = today(config('app.timezone'));
+        $end  = $this->input('end');
+        // validate as date
+        // if regex for YYYY-MM-DD:
+        $pattern = '/^(19|20)\d\d-(0[1-9]|1[012])-(0[1-9]|[12][\d]|3[01])$/';
+        $result  = preg_match($pattern, $end);
+        if (0 !== $result) {
+            try {
+                $date = new Carbon($end);
+            } catch (Exception $e) { // intentional generic exception
+                $error = sprintf('"%s" is not a valid end: %s', $end, $e->getMessage());
+                Log::error($error);
+                Log::error($e->getTraceAsString());
 
-                    throw new FireflyException($error, 0, $e);
-                }
-
-                return $date;
+                throw new FireflyException($error, 0, $e);
             }
-            $error   = sprintf('"%s" is not a valid date range: %s', $range, 'invalid format :(');
-            Log::error($error);
 
-            throw new FireflyException($error, 0);
+            return $date;
         }
 
         return $date;
@@ -181,31 +172,23 @@ class ReportFormRequest extends FormRequest
     public function getStartDate(): Carbon
     {
         $date  = today(config('app.timezone'));
-        $range = $this->get('daterange');
-        $parts = explode(' - ', (string) $range);
-        if (2 === count($parts)) {
-            $string  = $parts[0];
-            // validate as date
-            // if regex for YYYY-MM-DD:
-            $pattern = '/^(19|20)\d\d-(0[1-9]|1[012])-(0[1-9]|[12][\d]|3[01])$/';
-            $result  = preg_match($pattern, $string);
-            if (0 !== $result) {
-                try {
-                    $date = new Carbon($parts[0]);
-                } catch (Exception $e) { // intentional generic exception
-                    $error = sprintf('"%s" is not a valid date range: %s', $range, $e->getMessage());
-                    Log::error($error);
-                    Log::error($e->getTraceAsString());
+        $start = $this->input('start');
+        // validate as date
+        // if regex for YYYY-MM-DD:
+        $pattern = '/^(19|20)\d\d-(0[1-9]|1[012])-(0[1-9]|[12][\d]|3[01])$/';
+        $result  = preg_match($pattern, $start);
+        if (0 !== $result) {
+            try {
+                $date = new Carbon($start);
+            } catch (Exception $e) { // intentional generic exception
+                $error = sprintf('"%s" is not a valid date range: %s', $start, $e->getMessage());
+                Log::error($error);
+                Log::error($e->getTraceAsString());
 
-                    throw new FireflyException($error, 0, $e);
-                }
-
-                return $date;
+                throw new FireflyException($error, 0, $e);
             }
-            $error   = sprintf('"%s" is not a valid date range: %s', $range, 'invalid format :(');
-            Log::error($error);
 
-            throw new FireflyException($error, 0);
+            return $date;
         }
 
         return $date;
@@ -236,7 +219,7 @@ class ReportFormRequest extends FormRequest
 
                 continue;
             }
-            $tag = $repository->find((int) $tagTag);
+            $tag = $repository->find((int)$tagTag);
             if (null !== $tag) {
                 $collection->push($tag);
             }

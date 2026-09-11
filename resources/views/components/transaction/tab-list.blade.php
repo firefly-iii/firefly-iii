@@ -21,7 +21,7 @@
                     </button>
                 </li>
             </template>
-            <li class="nav-item" role="presentation">
+            <li class="nav-item split_add_btn" role="presentation">
                 <button class="nav-link" type="button" role="tab" @click="addSplit()"><em class="bi bi-plus-circle"></em></button>
             </li>
             <li class="nav-item">

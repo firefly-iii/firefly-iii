@@ -34,52 +34,41 @@ var defaultMultiSelect = {
 
 $(function () {
     "use strict";
-
-    if ($('#inputDateRange').length > 0) {
-
-        $('#inputDateRange').daterangepicker(
-            {
-                locale: {
-                    format: 'YYYY-MM-DD',
-                    firstDay: 1
-                },
-                format: 'YYYY-MM-DD',
-                minDate: minDate,
-                drops: 'down'
-            }
-        );
-
-        // set report type from cookie, if any:
-        if (null !== readCookie('report-type')) {
-            $('select[name="report_type"]').val(readCookie('report-type'));
-        }
-
-        // set accounts from cookie
-        if ((readCookie('report-accounts') !== null)) {
-            var arr = readCookie('report-accounts').split(',');
-            arr.forEach(function (val) {
-                $('#inputAccounts').find('option[value="' + val + '"]').prop('selected', true);
-            });
-        }
-
-        // make account select a hip new bootstrap multi-select thing.
-        //$('#inputAccounts').multiselect(defaultMultiSelect);
-
-        // set date from cookie
-        var startStr = readCookie('report-start');
-        var endStr = readCookie('report-end');
-        if (startStr !== null && endStr !== null && startStr.length === 8 && endStr.length === 8) {
-            var startDate = moment(startStr, "YYYY-MM-DD");
-            var endDate = moment(endStr, "YYYY-MM-DD");
-            var datePicker = $('#inputDateRange').data('daterangepicker');
-            datePicker.setStartDate(startDate);
-            datePicker.setEndDate(endDate);
-        }
+    // set report type from cookie, if any:
+    if (null !== readCookie('report-type')) {
+        $('select[name="report_type"]').val(readCookie('report-type'));
     }
 
+    // set accounts from cookie, if any
+    if ((readCookie('report-accounts') !== null)) {
+        var arr = readCookie('report-accounts').split(',');
+        arr.forEach(function (val) {
+            $('#inputAccounts').find('option[value="' + val + '"]').prop('selected', true);
+        });
+    }
+
+    // set date from cookie, if any.
+    var startStr = readCookie('report-start');
+    var endStr = readCookie('report-end');
+    if (startStr !== null && endStr !== null && startStr.length === 8 && endStr.length === 8) {
+        var startDate = moment(startStr, "YYYY-MM-DD").format('YYYY-MM-DD');
+        var endDate = moment(endStr, "YYYY-MM-DD").format('YYYY-MM-DD');
+        console.log('start date',startDate);
+        console.log('start date',endDate);
+
+        document.getElementById('dateRange-start').value = startDate;
+        document.getElementById('dateRange-end').value = endDate;
+    }
+
+    // pre-select dates
     $('.date-select').on('click', preSelectDate);
+
+    // submit form
     $('#report-form').on('submit', catchSubmit);
+
+    // get report options.
     $('select[name="report_type"]').on('change', getReportOptions);
+
     getReportOptions();
 
 });
@@ -104,6 +93,7 @@ function getReportOptions() {
 
 function setOptionalFromCookies() {
     var arr;
+
     // categories
     if ((readCookie('report-categories') !== null)) {
         arr = readCookie('report-categories').split(',');
@@ -111,7 +101,6 @@ function setOptionalFromCookies() {
             $('#inputCategories').find('option[value="' + encodeURI(val) + '"]').prop('selected', true);
         });
     }
-    $('#inputCategories').multiselect(defaultMultiSelect);
 
     // and budgets!
     if ((readCookie('report-budgets') !== null)) {
@@ -120,7 +109,6 @@ function setOptionalFromCookies() {
             $('#inputBudgets').find('option[value="' + encodeURI(val) + '"]').prop('selected', true);
         });
     }
-    $('#inputBudgets').multiselect(defaultMultiSelect);
 
     // and tags!
     if ((readCookie('report-tags') !== null)) {
@@ -129,7 +117,6 @@ function setOptionalFromCookies() {
             $('#inputTags').find('option[value="' + encodeURI(val) + '"]').prop('selected', true);
         });
     }
-    $('#inputTags').multiselect(defaultMultiSelect);
 
     // and expense/revenue thing
     if ((readCookie('report-double') !== null)) {
@@ -138,15 +125,11 @@ function setOptionalFromCookies() {
             $('#inputDoubleAccounts').find('option[value="' + encodeURI(val) + '"]').prop('selected', true);
         });
     }
-    $('#inputDoubleAccounts').multiselect(defaultMultiSelect);
-
-
 }
 
 function catchSubmit() {
     "use strict";
     // date, processed:
-    var picker = $('#inputDateRange').data('daterangepicker');
 
     // all account ids:
     var accounts = $('#inputAccounts').val();
@@ -163,23 +146,20 @@ function catchSubmit() {
     createCookie('report-budgets', budgets, 365);
     createCookie('report-tags', tags, 365);
     createCookie('report-double', double, 365);
-    createCookie('report-start', moment(picker.startDate).format("YYYYMMDD"), 365);
-    createCookie('report-end', moment(picker.endDate).format("YYYYMMDD"), 365);
+    createCookie('report-start', moment(document.getElementById('dateRange-start').value).format("YYYYMMDD"), 365);
+    createCookie('report-end', moment(document.getElementById('dateRange-end').value).format("YYYYMMDD"), 365);
 
     return true;
 }
 
 function preSelectDate(e) {
     "use strict";
-    var link = $(e.target);
-    var picker = $('#inputDateRange').data('daterangepicker');
+    let link  = $(e.currentTarget);
     var startMoment= moment(link.data('start'), "Y-MM-DD");
     var endMoment= moment(link.data('end'), "Y-MM-DD");
-
-    picker.setStartDate(startMoment);
-    picker.setEndDate(endMoment);
+    document.getElementById('dateRange-start').value = startMoment.format("YYYY-MM-DD");
+    document.getElementById('dateRange-end').value = endMoment.format("YYYY-MM-DD");
     return false;
-
 }
 
 

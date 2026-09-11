@@ -290,6 +290,7 @@ final class ReportController extends Controller
      */
     public function postIndex(ReportFormRequest $request): RedirectResponse|View
     {
+
         // report type:
         $reportType = $request->input('report_type');
         $start      = $request->getStartDate()->format('Ymd');

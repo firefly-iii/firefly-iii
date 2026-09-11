@@ -78,7 +78,6 @@ getFreshVariable('lastActivity').then((serverValue) => {
 
             // page may have an introduction necessary to be played.
             if (!window.showTour) {
-                console.log('Will not show introduction tour for this page');
                 return;
             }
             const url = '/';

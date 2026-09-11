@@ -37,13 +37,13 @@ return [
     ],
     // accounts: create
     'accounts_create'                => [
-        'iban' => ['element' => '#ffInput_iban'],
+        'iban' => ['element' => '#ffInput_iban', 'position' => 'bottom'],
     ],
     // transactions: create
     'transactions_create'            => [
-        'basic_info'    => ['element' => '#transaction-info', 'position' => 'right'],
-        'amount_info'   => ['element' => '#amount-info', 'position' => 'bottom'],
-        'optional_info' => ['element' => '#optional-info', 'position' => 'left'],
+        'basic_info'    => ['element' => '.transaction-info', 'position' => 'right'],
+        'amount_info'   => ['element' => '.amount-info', 'position' => 'bottom'],
+        'optional_info' => ['element' => '.optional-info', 'position' => 'left'],
         'split'         => ['element' => '.split_add_btn', 'position' => 'top'],
     ],
 
@@ -63,10 +63,9 @@ return [
     // budgets: index
     'budgets_index'                  => [
         'intro'            => [],
-        'see_expenses_bar' => ['element' => '#spentBar'],
-        'navigate_periods' => ['element' => '#periodNavigator'],
-        'new_budget'       => ['element' => '#createBudgetBox'],
-        'list_of_budgets'  => ['element' => '#budgetList'],
+        'see_expenses_bar' => ['element' => '.spent_bar', 'position' => 'bottom'],
+        'navigate_periods' => ['element' => '#periodNavigator', 'position' => 'bottom'],
+        'list_of_budgets'  => ['element' => '#budgetList', 'position' => 'bottom'],
         'outro'            => [],
     ],
     // reports: index, default report, audit, budget, cat, tag

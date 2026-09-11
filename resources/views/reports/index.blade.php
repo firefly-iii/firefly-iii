@@ -44,9 +44,14 @@
 
                         <div class="row mb-3">
                             <label for="inputDateRange" class="col-sm-3 col-form-label">{{ __('firefly.report_date_range') }}</label>
-                            <div class="col-sm-9">
-                                <input autocomplete="off" type="text" class="form-control" id="inputDateRange" name="daterange"
-                                       value="{{ session('start')->format('Y-m-d') }} - {{ session('end')->format('Y-m-d') }}">
+                            <div class="col-sm-4">
+                                <input type="date" value="{{ session('start')->format('Y-m-d') }}" class="date-select form-control" name="start" id="dateRange-start" />
+                            </div>
+                            <div class="col-sm-1">
+                                &nbsp;
+                            </div>
+                            <div class="col-sm-4">
+                                <input type="date"  value="{{ session('end')->format('Y-m-d') }}" class="date-select form-control" name="end" id="dateRange-end" />
                             </div>
                         </div>
                         <div class="row mb-3">
@@ -55,12 +60,12 @@
                             <div class="col-sm-9">
                                 @foreach($months as $year => $data)
                                     <a href="#" class="date-select" data-start="{{ $data['start'] }}" data-end="{{ $data['end'] }}">{{ $year }}</a>
-                                @if(1 === $customFiscalYear)
+                                @if(1 === $customFiscalYear || true === $customFiscalYear)
                                         <br/>
                                         <a href="#" class="date-select" data-start="{{ $data['fiscal_start'] }}" data-end="{{ $data['fiscal_end'] }}">{{ $year }}
                                             ({{ __('firefly.fiscal_year') }})</a>
                                     @endif
-                                    @if(0 === $customFiscalYear)
+                                    @if(0 === $customFiscalYear || false === $customFiscalYear)
                                 (<a href="#" class="date-select" data-start="{{ $year }}-01-01" data-end="{{ $year }}-03-31">Q1</a>,
                                 <a href="#" class="date-select" data-start="{{ $year }}-04-01" data-end="{{ $year }}-06-30">Q2</a>,
                                     <a href="#" class="date-select" data-start="{{ $year }}-07-01" data-end="{{ $year }}-09-30">Q3</a>,
@@ -178,7 +183,7 @@
 @endsection
 
 @section('scripts')
-    @vite(['js/pages/generic.js'])
+    @vite(['js/pages/generic-nodates.js'])
     <script type="text/javascript" nonce="{{ $JS_NONCE }}">
         var minDate = "{{ $start->format('Y-m-d') }}";
         var picker;
@@ -188,8 +193,6 @@
         var allSelectedText = "{{ escape_for_js(trans('firefly.multi_select_all_selected')) }}";
         var filterPlaceholder = "{{ escape_for_js(trans('firefly.multi_select_filter_placeholder')) }}";
     </script>
-    <script type="text/javascript" src="v1/js/lib/daterangepicker.js?v={{ $FF_BUILD_TIME }}" nonce="{{ $JS_NONCE }}"></script>
-    <script type="text/javascript" src="v1/js/lib/bootstrap-multiselect.js?v={{ $FF_BUILD_TIME }}" nonce="{{ $JS_NONCE }}"></script>
     <script type="text/javascript" src="v1/js/ff/reports/all.js?v={{ $FF_BUILD_TIME }}" nonce="{{ $JS_NONCE }}"></script>
     <script type="text/javascript" src="v1/js/ff/reports/index.js?v={{ $FF_BUILD_TIME }}" nonce="{{ $JS_NONCE }}"></script>
 @endsection

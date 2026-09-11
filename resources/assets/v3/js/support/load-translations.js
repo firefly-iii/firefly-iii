@@ -29,6 +29,7 @@ let loaded = false;
 function loadTranslations(locale) {
     // console.log('loadTranslations(' + locale + ')');
     if (false === loaded) {
+        console.log('Not yet loaded');
         const replacedLocale = locale.replace('-', '_');
         loaded = true;
         const expireTime = import.meta.env.MODE === 'development' ? 1 : 7 * 24 * 60 * 60 * 1000;

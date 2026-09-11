@@ -7,7 +7,7 @@
                 <div class="card-header">
                     <h3 class="card-title">{{ __('firefly.basic_journal_information') }}</h3>
                 </div>
-                <div class="card-body">
+                <div class="card-body transaction-info">
                     <!-- GROUP TITLE -->
                     @include('partials.form.transaction.group-title')
                     <!-- DESCRIPTION -->
@@ -30,7 +30,7 @@
         <div class="col-xl-6 col-lg-6 col-md-12 col-xs-12 mb-2">
 
             <!-- AMOUNTS -->
-            <div class="card mb-2">
+            <div class="card mb-2 amount-info">
                 <div class="card-header">
                     <h3 class="card-title">
                         {{ __('firefly.transaction_journal_amount') }}
@@ -53,7 +53,7 @@
                         {{ __('firefly.transaction_journal_meta') }}
                     </h3>
                 </div>
-                <div class="card-body">
+                <div class="card-body optional-info">
                     <!-- BUDGET -->
                     @include('partials.form.transaction.budget')
 
