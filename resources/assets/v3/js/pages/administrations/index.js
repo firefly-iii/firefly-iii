@@ -38,7 +38,7 @@ let index = function () {
             // TODO use API endpoint.
             axios.get("./api/v1/user-groups?page=" + page).then((response) => {
                 for (let i in response.data.data) {
-                    if (response.data.data.hasOwnProperty(i)) {
+                    if (Object.hasOwn(response.data.data, i)) {
                         let current = response.data.data[i];
                         let administration = {
                             id: current.id,
