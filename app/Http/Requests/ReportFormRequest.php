@@ -36,6 +36,7 @@ use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Log;
 use Safe\Exceptions\PcreException;
+
 use function Safe\preg_match;
 
 /**
@@ -59,7 +60,7 @@ class ReportFormRequest extends FormRequest
         $collection = new Collection();
         if (is_array($set)) {
             foreach ($set as $accountId) {
-                $account = $repository->find((int)$accountId);
+                $account = $repository->find((int) $accountId);
                 if (null !== $account) {
                     $collection->push($account);
                 }
@@ -80,7 +81,7 @@ class ReportFormRequest extends FormRequest
         $collection = new Collection();
         if (is_array($set)) {
             foreach ($set as $budgetId) {
-                $budget = $repository->find((int)$budgetId);
+                $budget = $repository->find((int) $budgetId);
                 if (null !== $budget) {
                     $collection->push($budget);
                 }
@@ -101,7 +102,7 @@ class ReportFormRequest extends FormRequest
         $collection = new Collection();
         if (is_array($set)) {
             foreach ($set as $categoryId) {
-                $category = $repository->find((int)$categoryId);
+                $category = $repository->find((int) $categoryId);
                 if (null !== $category) {
                     $collection->push($category);
                 }
@@ -122,7 +123,7 @@ class ReportFormRequest extends FormRequest
         $collection = new Collection();
         if (is_array($set)) {
             foreach ($set as $accountId) {
-                $account = $repository->find((int)$accountId);
+                $account = $repository->find((int) $accountId);
                 if (null !== $account) {
                     $collection->push($account);
                 }
@@ -140,8 +141,8 @@ class ReportFormRequest extends FormRequest
      */
     public function getEndDate(): Carbon
     {
-        $date = today(config('app.timezone'));
-        $end  = $this->input('end');
+        $date    = today(config('app.timezone'));
+        $end     = $this->input('end');
         // validate as date
         // if regex for YYYY-MM-DD:
         $pattern = '/^(19|20)\d\d-(0[1-9]|1[012])-(0[1-9]|[12][\d]|3[01])$/';
@@ -171,8 +172,8 @@ class ReportFormRequest extends FormRequest
      */
     public function getStartDate(): Carbon
     {
-        $date  = today(config('app.timezone'));
-        $start = $this->input('start');
+        $date    = today(config('app.timezone'));
+        $start   = $this->input('start');
         // validate as date
         // if regex for YYYY-MM-DD:
         $pattern = '/^(19|20)\d\d-(0[1-9]|1[012])-(0[1-9]|[12][\d]|3[01])$/';
@@ -219,7 +220,7 @@ class ReportFormRequest extends FormRequest
 
                 continue;
             }
-            $tag = $repository->find((int)$tagTag);
+            $tag = $repository->find((int) $tagTag);
             if (null !== $tag) {
                 $collection->push($tag);
             }
