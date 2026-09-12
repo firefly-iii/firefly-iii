@@ -18,15 +18,15 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-
-import {api} from "../../boot/axios";
+import { api } from "../../boot/axios";
 
 export default class Get {
-
     list(params) {
-        return api.get('/api/v1/user-groups', {params: params});
+        return api.get("/api/v1/user-groups", { params: params });
     }
     get(id, params) {
-        return api.get('/api/v1/user-groups/' + parseInt(id), {params: params});
+        return api.get("/api/v1/user-groups/" + parseInt(id), {
+            params: params,
+        });
     }
 }

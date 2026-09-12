@@ -1,4 +1,3 @@
-
 /*
  * on-map-zoom.js
  * Copyright (c) 2026 james@firefly-iii.org

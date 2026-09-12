@@ -18,14 +18,13 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-
 import format from "date-fns/format";
 
 export function getAccount() {
     return {
-        id: '',
-        name: '',
-        alpine_name: '',
+        id: "",
+        name: "",
+        alpine_name: "",
         disabled: false,
     };
 }
@@ -74,15 +73,15 @@ export function defaultErrorSet() {
 
 export function createEmptySplit() {
     let now = new Date();
-    let formatted = format(now, 'yyyy-MM-dd HH:mm');
+    let formatted = format(now, "yyyy-MM-dd HH:mm");
     return {
-        description: '',
+        description: "",
 
         // amount information:
-        amount: '',
-        currency_code: 'EUR',
-        foreign_amount: '',
-        foreign_currency_code: '',
+        amount: "",
+        currency_code: "EUR",
+        foreign_amount: "",
+        foreign_currency_code: "",
 
         // source and destination
         source_account: getAccount(),
@@ -90,15 +89,15 @@ export function createEmptySplit() {
 
         // meta data information:
         budget_id: null,
-        category_name: '',
+        category_name: "",
         piggy_bank_id: null,
         bill_id: null,
         tags: [],
-        notes: '',
+        notes: "",
 
         // other meta fields:
-        internal_reference: '',
-        external_url: '',
+        internal_reference: "",
+        external_url: "",
 
         // map
         hasLocation: false,
@@ -106,15 +105,14 @@ export function createEmptySplit() {
         longitude: null,
         zoom_level: null,
 
-
         // date and time
         date: formatted,
-        interest_date: '',
-        book_date: '',
-        process_date: '',
-        due_date: '',
-        payment_date: '',
-        invoice_date: '',
+        interest_date: "",
+        book_date: "",
+        process_date: "",
+        due_date: "",
+        payment_date: "",
+        invoice_date: "",
 
         errors: defaultErrorSet(),
     };

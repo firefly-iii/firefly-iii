@@ -18,7 +18,6 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-
 import i18next from "i18next";
 import ChainedBackend from "i18next-chained-backend";
 import HttpBackend from "i18next-http-backend";
@@ -29,34 +28,35 @@ let loaded = false;
 function loadTranslations(locale) {
     // console.log('loadTranslations(' + locale + ')');
     if (false === loaded) {
-        console.log('Not yet loaded');
-        const replacedLocale = locale.replace('-', '_');
+        console.log("Not yet loaded");
+        const replacedLocale = locale.replace("-", "_");
         loaded = true;
-        const expireTime = import.meta.env.MODE === 'development' ? 1 : 7 * 24 * 60 * 60 * 1000;
+        const expireTime =
+            import.meta.env.MODE === "development"
+                ? 1
+                : 7 * 24 * 60 * 60 * 1000;
         // console.log('Will load language "'+replacedLocale+'"');
-        return i18next
-            .use(ChainedBackend)
-            .init({
-                load: 'languageOnly',
-                fallbackLng: "en",
-                lng: replacedLocale,
-                debug: import.meta.env.MODE === 'development',
-                backend: {
-                    backends: [
-                        LocalStorageBackend,
-                        HttpBackend
-                    ],
-                    backendOptions: [{
-                        load: 'languageOnly',
-                        expirationTime: expireTime
-                    }, {
-                        loadPath: './v3/i18n/{{lng}}.json'
-                    }]
-                }
-            });
+        return i18next.use(ChainedBackend).init({
+            load: "languageOnly",
+            fallbackLng: "en",
+            lng: replacedLocale,
+            debug: import.meta.env.MODE === "development",
+            backend: {
+                backends: [LocalStorageBackend, HttpBackend],
+                backendOptions: [
+                    {
+                        load: "languageOnly",
+                        expirationTime: expireTime,
+                    },
+                    {
+                        loadPath: "./v3/i18n/{{lng}}.json",
+                    },
+                ],
+            },
+        });
     }
-    console.warn(   'Loading translations skipped.');
+    console.warn("Loading translations skipped.");
     return Promise.resolve();
 }
 
-export {loadTranslations};
+export { loadTranslations };

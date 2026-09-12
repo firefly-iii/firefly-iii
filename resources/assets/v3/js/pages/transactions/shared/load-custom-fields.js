@@ -1,4 +1,3 @@
-
 /*
  * load-custom-fields.js
  * Copyright (c) 2026 james@firefly-iii.org
@@ -19,10 +18,12 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-import Preferences from '../../../api/preferences/index.js';
+import Preferences from "../../../api/preferences/index.js";
 
 export function loadCustomFields() {
-    return (new Preferences()).getByName('transaction_journal_optional_fields').then(data => {
-        return data.data.data.attributes.data;
-    });
+    return new Preferences()
+        .getByName("transaction_journal_optional_fields")
+        .then((data) => {
+            return data.data.data.attributes.data;
+        });
 }

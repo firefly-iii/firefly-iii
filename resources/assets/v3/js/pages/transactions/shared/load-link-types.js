@@ -2,7 +2,8 @@ import Get from "../../../api/model/link-type/get.js";
 
 export function loadLinkTypes() {
     let params = {
-        page: 1, limit: 1337
+        page: 1,
+        limit: 1337,
     };
     let getter = new Get();
     return getter.list(params).then((response) => {

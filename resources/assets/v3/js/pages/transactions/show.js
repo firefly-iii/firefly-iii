@@ -18,13 +18,13 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-import '../../boot/bootstrap.js';
-import sidebar from '../../pages/shared/sidebar.js';
-import dates from '../shared/dates.js';
+import "../../boot/bootstrap.js";
+import sidebar from "../../pages/shared/sidebar.js";
+import dates from "../shared/dates.js";
 import i18next from "i18next";
-import Get from '../../api/model/transaction/get.js';
-import {format} from "date-fns";
-import Alpine from 'alpinejs';
+import Get from "../../api/model/transaction/get.js";
+import { format } from "date-fns";
+import Alpine from "alpinejs";
 
 window.enableDates = false;
 
@@ -33,49 +33,49 @@ let show = function () {
         i18next: null,
         group: {
             id: 0,
-            group_title: '',
+            group_title: "",
             transactions: [],
-
         },
         loading: true,
         id: 0,
         init() {
             this.i18next = i18next;
-            const page = window.location.href.split('/');
+            const page = window.location.href.split("/");
             this.group.id = parseInt(page[page.length - 1]);
             this.downloadTransactionGroup();
             // console.log('Generic JS for page with few features.');
         },
         downloadTransactionGroup() {
-            (new Get()).show(this.group.id).then((response) => {
+            new Get().show(this.group.id).then((response) => {
                 const info = response.data.data;
                 this.group.transactions = [];
-                for(let i =0;i<info.attributes.transactions.length;i++){
-                    if(Object.hasOwn(info.attributes.transactions, i)) {
-                        let current =info.attributes.transactions[i];
+                for (let i = 0; i < info.attributes.transactions.length; i++) {
+                    if (Object.hasOwn(info.attributes.transactions, i)) {
+                        let current = info.attributes.transactions[i];
                         current.dateObject = new Date(current.date);
-                        current.dateFormatted = format(current.dateObject, this.i18next.t('config.date_time_fns'))
+                        current.dateFormatted = format(
+                            current.dateObject,
+                            this.i18next.t("config.date_time_fns"),
+                        );
                         this.group.transactions.push(current);
                     }
                 }
 
                 this.loading = false;
             });
-        }
-    }
-
+        },
+    };
 };
-
 
 const comps = {
     show,
     sidebar,
-    dates
+    dates,
 };
 
 function loadPage(comps) {
     // console.log('loadPage');
-    Object.keys(comps).forEach(comp => {
+    Object.keys(comps).forEach((comp) => {
         let data = comps[comp]();
         Alpine.data(comp, () => data);
         // console.log(comp);
@@ -84,7 +84,7 @@ function loadPage(comps) {
 }
 
 // wait for load until bootstrapped event is received.
-document.addEventListener('firefly-iii-bootstrapped', () => {
+document.addEventListener("firefly-iii-bootstrapped", () => {
     // console.log('Loaded through event listener.');
     loadPage(comps);
 });

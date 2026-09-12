@@ -16,4 +16,4 @@ export function redirectAfterTransactionLinks(oldI, oldJ) {
         this.formStates.storedLinks = completed;
         this.showMessageOrRedirectUser();
     }
-};
+}

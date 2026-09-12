@@ -18,17 +18,19 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-import {api} from "../../../boot/axios";
+import { api } from "../../../boot/axios";
 
 function parseRepetitionSuggestions(response) {
     let data = response.data;
-    let select = document.getElementById('ffInput_repetition_type');
-    select.innerHTML = '';
+    let select = document.getElementById("ffInput_repetition_type");
+    select.innerHTML = "";
     let opt;
     for (var k in data) {
         if (Object.hasOwn(data, k)) {
-            console.log('label: ' + data[k].label + ', selected: ' + data[k].selected);
-            opt = document.createElement('option');
+            console.log(
+                "label: " + data[k].label + ", selected: " + data[k].selected,
+            );
+            opt = document.createElement("option");
             opt.value = k;
             opt.label = data[k].label;
             opt.text = data[k].label;
@@ -42,23 +44,27 @@ function parseRepetitionSuggestions(response) {
 }
 
 function respondToFirstDateChange() {
-    let suggestUrl = './recurring/suggest';
-    let obj = document.getElementById('ffInput_first_date');
-    let select = document.getElementById('ffInput_repetition_type');
+    let suggestUrl = "./recurring/suggest";
+    let obj = document.getElementById("ffInput_first_date");
+    let select = document.getElementById("ffInput_repetition_type");
     let date = obj.value;
     select.disabled = true;
 
     // preselected value:
     var preSelected = this.type;
-    if (preSelected === '') {
+    if (preSelected === "") {
         preSelected = select.value;
     }
-    api.get(suggestUrl, {params: {date: date, pre_select: preSelected, past: 'true'}}).
-    then(parseRepetitionSuggestions)
-    .catch(function () {
-        console.error('Could not load repetition suggestions');
-        alert('Could not load repetition suggestions. Please enter a valid date.');
-    });
+    api.get(suggestUrl, {
+        params: { date: date, pre_select: preSelected, past: "true" },
+    })
+        .then(parseRepetitionSuggestions)
+        .catch(function () {
+            console.error("Could not load repetition suggestions");
+            alert(
+                "Could not load repetition suggestions. Please enter a valid date.",
+            );
+        });
 }
 
-export {respondToFirstDateChange}
+export { respondToFirstDateChange };

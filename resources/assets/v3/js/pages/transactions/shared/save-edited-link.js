@@ -21,19 +21,25 @@
 export function saveEditedLink(e) {
     let rowIndex = parseInt(e.currentTarget.dataset.rowIndex);
     let index = parseInt(e.currentTarget.dataset.index);
-    let selector = e.currentTarget.parentNode.querySelector('select[name="new-link-type"]');
+    let selector = e.currentTarget.parentNode.querySelector(
+        'select[name="new-link-type"]',
+    );
 
     let linkType = selector.value;
-    let linkTypeId = parseInt(linkType.split('_')[0]);
-    let linkTypeDirection = linkType.split('_')[1];
-    let linkTypeObj = this.formData.linkTypes.find(link => link.id === linkTypeId);
-    if (typeof linkTypeObj === 'undefined') {
-        console.error('Link type not found for id ' + linkTypeId);
+    let linkTypeId = parseInt(linkType.split("_")[0]);
+    let linkTypeDirection = linkType.split("_")[1];
+    let linkTypeObj = this.formData.linkTypes.find(
+        (link) => link.id === linkTypeId,
+    );
+    if (typeof linkTypeObj === "undefined") {
+        console.error("Link type not found for id " + linkTypeId);
         return;
     }
-    this.links[index][rowIndex].link_type = linkTypeId + '_' + linkTypeDirection;
+    this.links[index][rowIndex].link_type =
+        linkTypeId + "_" + linkTypeDirection;
     this.links[index][rowIndex].link_type_id = linkTypeId;
     this.links[index][rowIndex].link_type_direction = linkTypeDirection;
-    this.links[index][rowIndex].link_type_label = linkTypeObj[linkTypeDirection];
+    this.links[index][rowIndex].link_type_label =
+        linkTypeObj[linkTypeDirection];
     this.links[index][rowIndex].editMode = false;
-};
+}

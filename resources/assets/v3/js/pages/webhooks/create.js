@@ -18,23 +18,23 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-import '../../boot/bootstrap.js';
-import sidebar from '../../pages/shared/sidebar.js';
-import dates from '../shared/dates.js';
+import "../../boot/bootstrap.js";
+import sidebar from "../../pages/shared/sidebar.js";
+import dates from "../shared/dates.js";
 import i18next from "i18next";
-import {loadDeliveries} from "./shared/load-deliveries.js";
-import {loadResponses} from "./shared/load-responses.js";
-import {loadTriggers} from "./shared/load-triggers.js";
-import Alpine from 'alpinejs';
-import Post from '../../api/model/webhook/post.js'
+import { loadDeliveries } from "./shared/load-deliveries.js";
+import { loadResponses } from "./shared/load-responses.js";
+import { loadTriggers } from "./shared/load-triggers.js";
+import Alpine from "alpinejs";
+import Post from "../../api/model/webhook/post.js";
 
 window.enableDates = false;
 
 let create = function () {
     return {
-        error_message: '',
-        success_message: '',
-        title: '',
+        error_message: "",
+        success_message: "",
+        title: "",
         i18next: null,
         options: {
             triggers: [],
@@ -43,42 +43,36 @@ let create = function () {
         },
         form: {
             triggers: {
-                loading: true
+                loading: true,
             },
             responses: {
-                loading: true
+                loading: true,
             },
             deliveries: {
-                loading: true
+                loading: true,
             },
         },
-        triggers: [
-            "ANY"
-        ],
-        responses: [
-            "RELEVANT"
-        ],
-        deliveries: [
-            "JSON"
-        ],
+        triggers: ["ANY"],
+        responses: ["RELEVANT"],
+        deliveries: ["JSON"],
         active: true,
-        url: '',
+        url: "",
         errors: {
             title: [],
             triggers: [],
             responses: [],
             deliveries: [],
             url: [],
-            active: []
+            active: [],
         },
         hasError: function (field) {
             return this.errors[field].length > 0;
         },
         clearTitle: function () {
-            this.title = '';
+            this.title = "";
         },
         clearUrl: function () {
-            this.url = '';
+            this.url = "";
         },
         handleInput() {
             // this.$emit('input', this.administration.title);
@@ -97,13 +91,13 @@ let create = function () {
                 this.options.deliveries = result;
                 this.form.deliveries.loading = false;
             });
-            console.log('Create webhook page.');
+            console.log("Create webhook page.");
         },
 
         submit: function (e) {
             // reset messages
-            this.error_message = '';
-            this.success_message = '';
+            this.error_message = "";
+            this.success_message = "";
             this.errors = {
                 title: [],
                 triggers: [],
@@ -114,7 +108,7 @@ let create = function () {
             };
 
             // disable button
-            document.getElementById('submitButton').disabled = true;
+            document.getElementById("submitButton").disabled = true;
 
             // collect data
             let data = {
@@ -127,49 +121,59 @@ let create = function () {
             };
 
             // post!
-            (new Post).post(data).then((response) => {
-                let webhookId = parseInt(response.data.data.id);
-                window.location.href = window.previousUrl + '?webhook_id=' + webhookId + '&message=created';
-            }).catch((error) => {
-                //console.log(error.response.data);
-                this.error_message = error.response.data.message;
-                this.errors.title = error.response.data.errors.title ?? [];
-                this.errors.triggers = error.response.data.errors.triggers ?? [];
-                this.errors.responses = error.response.data.errors.responses ?? [];
-                this.errors.deliveries = error.response.data.errors.deliveries ?? [];
-                this.errors.url = error.response.data.errors.url ?? [];
+            new Post()
+                .post(data)
+                .then((response) => {
+                    let webhookId = parseInt(response.data.data.id);
+                    window.location.href =
+                        window.previousUrl +
+                        "?webhook_id=" +
+                        webhookId +
+                        "&message=created";
+                })
+                .catch((error) => {
+                    //console.log(error.response.data);
+                    this.error_message = error.response.data.message;
+                    this.errors.title = error.response.data.errors.title ?? [];
+                    this.errors.triggers =
+                        error.response.data.errors.triggers ?? [];
+                    this.errors.responses =
+                        error.response.data.errors.responses ?? [];
+                    this.errors.deliveries =
+                        error.response.data.errors.deliveries ?? [];
+                    this.errors.url = error.response.data.errors.url ?? [];
 
-                // if there is a key that ends with a dot and a number, include it in the array:
-                for (let key in error.response.data.errors) {
-                    if(key.includes('.')) {
-                        let newKey = key.replace(/\.\d+$/, '');
-                        this.errors[newKey] = this.errors[newKey].concat(error.response.data.errors[key]);
+                    // if there is a key that ends with a dot and a number, include it in the array:
+                    for (let key in error.response.data.errors) {
+                        if (key.includes(".")) {
+                            let newKey = key.replace(/\.\d+$/, "");
+                            this.errors[newKey] = this.errors[newKey].concat(
+                                error.response.data.errors[key],
+                            );
+                        }
                     }
-                }
 
-                console.log(this.errors);
+                    console.log(this.errors);
 
-                // enable button again
-                document.getElementById('submitButton').disabled = false;
-
-            });
+                    // enable button again
+                    document.getElementById("submitButton").disabled = false;
+                });
             if (e) {
                 e.preventDefault();
             }
-        }
-    }
+        },
+    };
 };
-
 
 const comps = {
     create,
     sidebar,
-    dates
+    dates,
 };
 
 function loadPage(comps) {
-    console.log('loadPage');
-    Object.keys(comps).forEach(comp => {
+    console.log("loadPage");
+    Object.keys(comps).forEach((comp) => {
         let data = comps[comp]();
         Alpine.data(comp, () => data);
         console.log(comp);
@@ -178,12 +182,12 @@ function loadPage(comps) {
 }
 
 // wait for load until bootstrapped event is received.
-document.addEventListener('firefly-iii-bootstrapped', () => {
-    console.log('Loaded through event listener.');
+document.addEventListener("firefly-iii-bootstrapped", () => {
+    console.log("Loaded through event listener.");
     loadPage(comps);
 });
 // or is bootstrapped before event is triggered.
 if (window.bootstrapped) {
-    console.log('Loaded through window variable.');
+    console.log("Loaded through window variable.");
     loadPage(comps);
 }

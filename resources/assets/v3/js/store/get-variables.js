@@ -25,7 +25,7 @@ export function getVariables(preferences) {
     let chain = Promise.resolve();
     let collectable = [];
     let result = {};
-    const validCache = window.store.get('cacheValid');
+    const validCache = window.store.get("cacheValid");
     // let fromStore;
 
     // first, check cache if elements are present.
@@ -65,21 +65,24 @@ export function getVariables(preferences) {
         collectable.push(name);
     }
     if (collectable.length > 0) {
-        let getter = (new Get);
+        let getter = new Get();
         // console.log('Have something to collect');
         chain = chain.then(() => {
-            let names = collectable.join(',');
+            let names = collectable.join(",");
             //console.log('Will collect', names);
-            return getter.getList(names).then((response) => {
-                let parsed = parseResponses(response);
-                // console.log('Returning "' + names + '" from server: ', parsed);
-                // add to object:
-                result = Object.assign(result, parsed);
+            return getter
+                .getList(names)
+                .then((response) => {
+                    let parsed = parseResponses(response);
+                    // console.log('Returning "' + names + '" from server: ', parsed);
+                    // add to object:
+                    result = Object.assign(result, parsed);
 
-                return Promise.resolve(result);
-            }).catch((error) => {
-                console.error(error);
-            });
+                    return Promise.resolve(result);
+                })
+                .catch((error) => {
+                    console.error(error);
+                });
         });
     }
 
@@ -89,7 +92,7 @@ export function getVariables(preferences) {
 }
 
 export function parseResponses(response) {
-    let result = {}
+    let result = {};
     for (let i in response.data.data) {
         if (Object.hasOwn(response.data.data, i)) {
             let current = response.data.data[i];

@@ -18,11 +18,11 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-import {api} from "../../boot/axios";
+import { api } from "../../boot/axios";
 
 export default class Post {
     post(name, value) {
-        let url = '/api/v1/preferences';
-        return api.post(url, {name: name, data: value});
+        let url = "/api/v1/preferences";
+        return api.post(url, { name: name, data: value });
     }
 }

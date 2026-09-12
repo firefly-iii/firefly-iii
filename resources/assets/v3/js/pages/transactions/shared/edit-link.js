@@ -18,9 +18,8 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-
 export function editLink(e) {
     let rowIndex = parseInt(e.currentTarget.dataset.rowIndex);
     let index = parseInt(e.currentTarget.dataset.index);
     this.links[index][rowIndex].editMode = true;
-};
+}

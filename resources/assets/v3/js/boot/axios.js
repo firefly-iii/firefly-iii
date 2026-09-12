@@ -18,7 +18,7 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-import axios from 'axios'
+import axios from "axios";
 
 // Be careful when using SSR for cross-request state pollution
 // due to creating a Singleton instance here;
@@ -27,14 +27,12 @@ import axios from 'axios'
 // "export default () => {}" function below (which runs individually
 // for each client)
 
-
 // for use inside Vue files (Options API) through this.$axios and this.$api
 
-
-const url = '/';
-const api = axios.create({baseURL: url, withCredentials: true});
+const url = "/";
+const api = axios.create({ baseURL: url, withCredentials: true });
 
 axios.defaults.withCredentials = true;
 axios.defaults.baseURL = url;
 
-export {api}
+export { api };

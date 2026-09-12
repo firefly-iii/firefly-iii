@@ -30,7 +30,7 @@ export function determineAmountCurrency(code) {
         }
     }
     list.push(currency);
-    if(1 === list.length) {
+    if (1 === list.length) {
         this.formData.amountCurrency = list[0];
         // this also forces the currency_code on ALL entries.
         for (let i in this.entries) {
@@ -39,4 +39,4 @@ export function determineAmountCurrency(code) {
             }
         }
     }
-};
+}

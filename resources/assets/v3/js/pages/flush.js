@@ -18,8 +18,8 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-import '../boot/blank-bootstrap.js';
-window.onload = function(){
+import "../boot/blank-bootstrap.js";
+window.onload = function () {
     localStorage.clear();
-    window.location = document.getElementsByTagName('base')[0].href;
-}
+    window.location = document.getElementsByTagName("base")[0].href;
+};

@@ -1,4 +1,3 @@
-
 /*
  * on-map-click.js
  * Copyright (c) 2026 james@firefly-iii.org
@@ -19,20 +18,20 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-import L from 'leaflet';
+import L from "leaflet";
 import markerIcon from "leaflet/dist/images/marker-icon.png";
 import markerRetinaIcon from "leaflet/dist/images/marker-icon-2x.png";
-import shadow from 'leaflet/dist/images/marker-shadow.png';
+import shadow from "leaflet/dist/images/marker-shadow.png";
 export function onMapClick(event) {
-
-    L.Marker.prototype.setIcon(L.icon({
-        iconUrl: markerIcon,
-        iconRetinaIcon: markerRetinaIcon,
-        shadowUrl: shadow,
-        iconSize: [25, 41],
-        iconAnchor: [12, 41]
-    }));
-
+    L.Marker.prototype.setIcon(
+        L.icon({
+            iconUrl: markerIcon,
+            iconRetinaIcon: markerRetinaIcon,
+            shadowUrl: shadow,
+            iconSize: [25, 41],
+            iconAnchor: [12, 41],
+        }),
+    );
 
     let index = parseInt(event.originalEvent.currentTarget.dataset.index);
     this.entries[index].hasLocation = true;
@@ -41,10 +40,9 @@ export function onMapClick(event) {
     this.entries[index].zoom_level = this.maps[index].getZoom();
 
     // add marker.
-    if(Object.hasOwn(this.markers, index)) {
+    if (Object.hasOwn(this.markers, index)) {
         this.maps[index].removeLayer(this.markers[index]);
     }
     this.markers[index] = L.marker(event.latlng);
     this.markers[index].addTo(this.maps[index]);
-
 }

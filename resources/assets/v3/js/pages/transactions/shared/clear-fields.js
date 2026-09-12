@@ -18,7 +18,7 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-import {getAccount} from "./create-empty-split.js";
+import { getAccount } from "./create-empty-split.js";
 
 export function clearSourceAccount(index) {
     this.entries[index].source_account = getAccount();
@@ -28,4 +28,4 @@ export function clearSourceAccount(index) {
 export function clearDestinationAccount(index) {
     this.entries[index].destination_account = getAccount();
     this.detectTransactionType();
-};
+}

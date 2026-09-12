@@ -22,25 +22,27 @@ import Get from "../api/preferences/index.js";
 import Post from "../api/preferences/post.js";
 
 export function getFreshVariable(name, defaultValue = null) {
-    let getter = (new Get);
-    return getter.getByName(name).then((response) => {
-        // console.log('Get from API');
-        return Promise.resolve(parseResponse(name, response));
-    }).catch((response) => {
-        if(response.status === 404) {
-            // preference does not exist (yet).
-            // POST it and then return it anyway.
-            let poster = (new Post);
-            poster.post(name, defaultValue).then((response) => {
-                return Promise.resolve(parseResponse(name, response));
-            });
-            return;
-        }
-        return Promise.resolve(null);
-    });
+    let getter = new Get();
+    return getter
+        .getByName(name)
+        .then((response) => {
+            // console.log('Get from API');
+            return Promise.resolve(parseResponse(name, response));
+        })
+        .catch((response) => {
+            if (response.status === 404) {
+                // preference does not exist (yet).
+                // POST it and then return it anyway.
+                let poster = new Post();
+                poster.post(name, defaultValue).then((response) => {
+                    return Promise.resolve(parseResponse(name, response));
+                });
+                return;
+            }
+            return Promise.resolve(null);
+        });
 }
 
 function parseResponse(name, response) {
     return response.data.data.attributes.data;
 }
-

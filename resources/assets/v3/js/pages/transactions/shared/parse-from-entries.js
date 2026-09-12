@@ -35,7 +35,10 @@ export function parseFromEntries(entries, originals, transactionType) {
             let current = {};
 
             // fields for transaction
-            if ((compare && original.description !== entry.description) || !compare) {
+            if (
+                (compare && original.description !== entry.description) ||
+                !compare
+            ) {
                 current.description = entry.description;
             }
 
@@ -46,7 +49,6 @@ export function parseFromEntries(entries, originals, transactionType) {
             // amount information:
             current.amount = entry.amount;
             current.currency_code = entry.currency_code;
-
 
             // dates
             current.date = entry.date;
@@ -78,55 +80,76 @@ export function parseFromEntries(entries, originals, transactionType) {
                 current.latitude = entry.latitude.toString();
                 current.zoom_level = entry.zoom_level;
             }
-            if ('__NO_CODE__' === entry.foreign_currency_code) {
-                entry.foreign_currency_code = '';
+            if ("__NO_CODE__" === entry.foreign_currency_code) {
+                entry.foreign_currency_code = "";
             }
             // if foreign amount currency code is set:
             current.foreign_amount = null;
             current.foreign_currency_code = null;
-            if (typeof entry.foreign_currency_code !== 'undefined' && '' !== entry.foreign_currency_code.toString()) {
+            if (
+                typeof entry.foreign_currency_code !== "undefined" &&
+                "" !== entry.foreign_currency_code.toString()
+            ) {
                 current.foreign_currency_code = entry.foreign_currency_code;
-                console.log('There is a foreign currency code set, ', current.foreign_currency_code);
-                if (typeof entry.foreign_amount !== 'undefined' && '' !== entry.foreign_amount.toString() && 0.0 !== entry.foreign_amount) {
+                console.log(
+                    "There is a foreign currency code set, ",
+                    current.foreign_currency_code,
+                );
+                if (
+                    typeof entry.foreign_amount !== "undefined" &&
+                    "" !== entry.foreign_amount.toString() &&
+                    0.0 !== entry.foreign_amount
+                ) {
                     current.foreign_amount = entry.foreign_amount;
-                    console.log('There is also a foreign amount set, ', current.foreign_amount);
+                    console.log(
+                        "There is also a foreign amount set, ",
+                        current.foreign_amount,
+                    );
                 }
             }
-            if (null === current.foreign_amount || null === current.foreign_currency_code) {
-                current.foreign_amount = '0';
-                current.foreign_currency_code = '';
+            if (
+                null === current.foreign_amount ||
+                null === current.foreign_currency_code
+            ) {
+                current.foreign_amount = "0";
+                current.foreign_currency_code = "";
             }
 
             // if ID is set:
-            if (typeof entry.source_account.id !== 'undefined' && '' !== entry.source_account.id.toString()) {
+            if (
+                typeof entry.source_account.id !== "undefined" &&
+                "" !== entry.source_account.id.toString()
+            ) {
                 current.source_id = entry.source_account.id;
             }
-            if (typeof entry.destination_account.id !== 'undefined' && '' !== entry.destination_account.id.toString()) {
+            if (
+                typeof entry.destination_account.id !== "undefined" &&
+                "" !== entry.destination_account.id.toString()
+            ) {
                 current.destination_id = entry.destination_account.id;
             }
             if (i > 0) {
-                if ('withdrawal' === transactionType) {
+                if ("withdrawal" === transactionType) {
                     // overrule source
                     current.source_id = returnArray[0].source_id;
                     current.source_name = returnArray[0].source_name;
                 }
-                if ('deposit' === transactionType) {
+                if ("deposit" === transactionType) {
                     // overrule destination
                     current.destination_id = returnArray[0].destination_id;
                     current.destination_name = returnArray[0].destination_name;
                 }
-                if ('transfer' === transactionType) {
+                if ("transfer" === transactionType) {
                     // overrule both
                     current.source_id = returnArray[0].source_id;
                     current.source_name = returnArray[0].source_name;
                     current.destination_id = returnArray[0].destination_id;
                     current.destination_name = returnArray[0].destination_name;
                 }
-                console.log('Overrule depending on ', transactionType);
+                console.log("Overrule depending on ", transactionType);
             }
 
             current.type = transactionType;
-
 
             returnArray.push(current);
         }

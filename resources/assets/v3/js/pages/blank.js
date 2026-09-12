@@ -18,4 +18,4 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-import '../boot/blank-bootstrap.js';
+import "../boot/blank-bootstrap.js";

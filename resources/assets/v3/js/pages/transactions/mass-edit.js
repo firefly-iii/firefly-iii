@@ -18,11 +18,11 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-import '../../boot/bootstrap.js';
-import sidebar from '../../pages/shared/sidebar.js';
-import dates from '../shared/dates.js';
-import {addAutocomplete} from "./shared/add-autocomplete.js";
-import Alpine from 'alpinejs'
+import "../../boot/bootstrap.js";
+import sidebar from "../../pages/shared/sidebar.js";
+import dates from "../shared/dates.js";
+import { addAutocomplete } from "./shared/add-autocomplete.js";
+import Alpine from "alpinejs";
 
 window.enableDates = false;
 
@@ -33,51 +33,48 @@ let edit = function () {
 
             // AC for description
             addAutocomplete({
-                selector: 'input.ac-description',
-                serverUrl: '/api/v1/autocomplete/transactions',
-                valueField: 'description',
-                labelField: 'description',
+                selector: "input.ac-description",
+                serverUrl: "/api/v1/autocomplete/transactions",
+                valueField: "description",
+                labelField: "description",
             });
-
 
             // AC for destination account
             addAutocomplete({
-                selector: 'input.ac-destination',
-                serverUrl: '/api/v1/autocomplete/accounts',
-                valueField: 'name',
-                labelField: 'name',
+                selector: "input.ac-destination",
+                serverUrl: "/api/v1/autocomplete/accounts",
+                valueField: "name",
+                labelField: "name",
             });
 
             // AC for source account
             addAutocomplete({
-                selector: 'input.ac-source',
-                serverUrl: '/api/v1/autocomplete/accounts',
-                valueField: 'name',
-                labelField: 'name',
+                selector: "input.ac-source",
+                serverUrl: "/api/v1/autocomplete/accounts",
+                valueField: "name",
+                labelField: "name",
             });
 
             // AC for category
             addAutocomplete({
-                selector: 'input.ac-category',
-                serverUrl: '/api/v1/autocomplete/categories',
-                valueField: 'name',
-                labelField: 'name',
+                selector: "input.ac-category",
+                serverUrl: "/api/v1/autocomplete/categories",
+                valueField: "name",
+                labelField: "name",
             });
-
-        }
-    }
+        },
+    };
 };
-
 
 const comps = {
     edit,
     sidebar,
-    dates
+    dates,
 };
 
 function loadPage(comps) {
     // console.log('loadPage');
-    Object.keys(comps).forEach(comp => {
+    Object.keys(comps).forEach((comp) => {
         let data = comps[comp]();
         Alpine.data(comp, () => data);
         // console.log(comp);
@@ -86,7 +83,7 @@ function loadPage(comps) {
 }
 
 // wait for load until bootstrapped event is received.
-document.addEventListener('firefly-iii-bootstrapped', () => {
+document.addEventListener("firefly-iii-bootstrapped", () => {
     // console.log('Loaded through event listener.');
     loadPage(comps);
 });

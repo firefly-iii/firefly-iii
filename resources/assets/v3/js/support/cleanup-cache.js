@@ -21,13 +21,13 @@
 import store from "store";
 
 function cleanupCache() {
-    const localValue = store.get('lastActivity');
+    const localValue = store.get("lastActivity");
 
-    store.each(function(value, key) {
-        if(key.startsWith('dcx') && !key.includes(localValue)) {
+    store.each(function (value, key) {
+        if (key.startsWith("dcx") && !key.includes(localValue)) {
             store.remove(key);
         }
     });
 }
 
-export {cleanupCache};
+export { cleanupCache };

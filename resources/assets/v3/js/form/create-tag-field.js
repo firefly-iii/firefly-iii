@@ -19,26 +19,26 @@
  */
 import Tags from "bootstrap5-tags";
 function createTagField(fieldIdentifier) {
-    let token = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
-    Tags.init('#' + fieldIdentifier,
-        {
-            allowNew: true,
-            allowClear: true,
-            server: './api/v1/autocomplete/tags?_token=' + token,
-            liveServer: true,
-            labelField: 'name',
-            valueField: 'name',
-            fetchOptions: {
-                method: 'GET',
-                credentials: 'include',
-                headers: {
-                    'Content-Type': 'application/json',
-                    'Accept': 'application/json',
-                    'X-CSRF-TOKEN': token
-                }
-            }
-        }
-    );
+    let token = document
+        .querySelector('meta[name="csrf-token"]')
+        .getAttribute("content");
+    Tags.init("#" + fieldIdentifier, {
+        allowNew: true,
+        allowClear: true,
+        server: "./api/v1/autocomplete/tags?_token=" + token,
+        liveServer: true,
+        labelField: "name",
+        valueField: "name",
+        fetchOptions: {
+            method: "GET",
+            credentials: "include",
+            headers: {
+                "Content-Type": "application/json",
+                Accept: "application/json",
+                "X-CSRF-TOKEN": token,
+            },
+        },
+    });
 }
 
-export {createTagField};
+export { createTagField };

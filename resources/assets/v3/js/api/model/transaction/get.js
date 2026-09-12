@@ -18,26 +18,31 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-
-import {api} from "../../../boot/axios";
+import { api } from "../../../boot/axios";
 
 export default class Get {
-
     /**
      *
      * @param params
      * @returns {Promise<AxiosResponse<any>>}
      */
     list(params) {
-        return api.get('/api/v1/transactions', {params: params});
+        return api.get("/api/v1/transactions", { params: params });
     }
-    show(id, params){
-        return api.get('/api/v1/transactions/' + parseInt(id), {params: params});
+    show(id, params) {
+        return api.get("/api/v1/transactions/" + parseInt(id), {
+            params: params,
+        });
     }
-    showJournal(id, params){
-        return api.get('/api/v1/transaction-journals/' + parseInt(id), {params: params});
+    showJournal(id, params) {
+        return api.get("/api/v1/transaction-journals/" + parseInt(id), {
+            params: params,
+        });
     }
-    transactionLinks(id, params){
-        return api.get('/api/v1/transaction-journals/' + parseInt(id) + '/links', {params: params});
+    transactionLinks(id, params) {
+        return api.get(
+            "/api/v1/transaction-journals/" + parseInt(id) + "/links",
+            { params: params },
+        );
     }
 }

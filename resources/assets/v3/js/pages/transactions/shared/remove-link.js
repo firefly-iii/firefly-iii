@@ -18,14 +18,14 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-import Delete from '../../../api/model/transaction-link/delete.js';
+import Delete from "../../../api/model/transaction-link/delete.js";
 
 export function removeLink(e) {
     let rowIndex = parseInt(e.currentTarget.dataset.rowIndex);
     let index = parseInt(e.currentTarget.dataset.index);
-    if(0 !== this.links[index][rowIndex].id) {
+    if (0 !== this.links[index][rowIndex].id) {
         // also actually delete it.
-        (new Delete).delete(this.links[index][rowIndex].id);
+        new Delete().delete(this.links[index][rowIndex].id);
     }
     this.links[index].splice(rowIndex, 1);
 }

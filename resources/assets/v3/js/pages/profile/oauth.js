@@ -18,13 +18,13 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-import '../../boot/bootstrap.js';
-import sidebar from '../../pages/shared/sidebar.js';
-import dates from '../shared/dates.js';
+import "../../boot/bootstrap.js";
+import sidebar from "../../pages/shared/sidebar.js";
+import dates from "../shared/dates.js";
 import i18next from "i18next";
-import {api} from "../../boot/axios";
-import {Modal} from 'bootstrap';
-import Alpine from 'alpinejs';
+import { api } from "../../boot/axios";
+import { Modal } from "bootstrap";
+import Alpine from "alpinejs";
 
 let index = function () {
     return {
@@ -35,15 +35,15 @@ let index = function () {
 
         createForm: {
             errors: [],
-            name: '',
-            redirect_uris: '',
-            confidential: true
+            name: "",
+            redirect_uris: "",
+            confidential: true,
         },
 
         editForm: {
             errors: [],
-            name: '',
-            redirect_uris: ''
+            name: "",
+            redirect_uris: "",
         },
 
         accessToken: null,
@@ -52,33 +52,39 @@ let index = function () {
         scopes: [],
 
         form: {
-            name: '',
+            name: "",
             scopes: [],
-            errors: []
+            errors: [],
         },
         // showCreateTokenForm
-
 
         init() {
             this.i18next = i18next;
             this.getClients();
             this.getTokens();
-            document.getElementById('modal-create-token').addEventListener('shown.bs.modal', () => {
-                document.getElementById('create-token-name').focus();
-            });
-            document.getElementById('modal-create-client').addEventListener('shown.bs.modal', () => {
-                document.getElementById('create-client-name').focus();
-            });
-            document.getElementById('modal-client-secret').addEventListener('shown.bs.modal', () => {
-                setTimeout(() => {
-                    document.getElementById('secret_box').focus();
-                }, 100);
+            document
+                .getElementById("modal-create-token")
+                .addEventListener("shown.bs.modal", () => {
+                    document.getElementById("create-token-name").focus();
+                });
+            document
+                .getElementById("modal-create-client")
+                .addEventListener("shown.bs.modal", () => {
+                    document.getElementById("create-client-name").focus();
+                });
+            document
+                .getElementById("modal-client-secret")
+                .addEventListener("shown.bs.modal", () => {
+                    setTimeout(() => {
+                        document.getElementById("secret_box").focus();
+                    }, 100);
+                });
 
-            });
-
-            document.getElementById('modal-edit-client').addEventListener('shown.bs.modal', () => {
-                document.getElementById('edit-client-name').focus();
-            });
+            document
+                .getElementById("modal-edit-client")
+                .addEventListener("shown.bs.modal", () => {
+                    document.getElementById("edit-client-name").focus();
+                });
             const textBox = document.getElementById("secret_box");
             textBox.onfocus = function () {
                 textBox.select();
@@ -107,78 +113,83 @@ let index = function () {
          * Get all of the personal access tokens for the user.
          */
         getTokens() {
-            console.log('getTokens()');
-            api.get('./oauth/personal-access-tokens')
-                .then(response => {
-                    console.log(response.data);
-                    this.tokens = response.data;
-                });
+            console.log("getTokens()");
+            api.get("./oauth/personal-access-tokens").then((response) => {
+                console.log(response.data);
+                this.tokens = response.data;
+            });
         },
 
         /**
          * Show the form for creating new tokens.
          */
         showCreateTokenForm() {
-            console.log('showCreateTokenForm()');
-            new Modal(document.getElementById('modal-create-token'), {}).show();
+            console.log("showCreateTokenForm()");
+            new Modal(document.getElementById("modal-create-token"), {}).show();
         },
 
         /**
          * Create a new personal access token.
          */
         storePat() {
-            console.log('storePat()');
+            console.log("storePat()");
             this.accessToken = null;
 
             this.form.errors = [];
 
-            api.post('./oauth/personal-access-tokens', this.form)
-                .then(response => {
-                    console.log('Successful POST new token, reset form content.');
-                    this.form.name = '';
+            api.post("./oauth/personal-access-tokens", this.form)
+                .then((response) => {
+                    console.log(
+                        "Successful POST new token, reset form content.",
+                    );
+                    this.form.name = "";
                     this.form.scopes = [];
                     this.form.errors = [];
 
                     this.getTokens();
                     this.showAccessToken(response.data.accessToken);
-
                 })
-                .catch(error => {
-                    console.warn('Bad POST new token, show error.', error);
+                .catch((error) => {
+                    console.warn("Bad POST new token, show error.", error);
                     this.form.errors = [];
-                    if (typeof error.response.data === 'object') {
+                    if (typeof error.response.data === "object") {
                         for (let i in error.response.data.errors) {
                             if (Object.hasOwn(error.response.data.errors, i)) {
-                                this.form.errors.push(error.response.data.errors[i]);
+                                this.form.errors.push(
+                                    error.response.data.errors[i],
+                                );
                             }
                         }
                     } else {
-                        this.form.errors = ['Something went wrong. Please try again.'];
+                        this.form.errors = [
+                            "Something went wrong. Please try again.",
+                        ];
                     }
                 });
         },
-
 
         /**
          * Show the given access token to the user.
          */
         showAccessToken(accessToken) {
-            console.log('showAccessToken');
-            new Modal(document.getElementById('modal-create-token'), {}).hide();
+            console.log("showAccessToken");
+            new Modal(document.getElementById("modal-create-token"), {}).hide();
 
             this.accessToken = accessToken;
 
-            new Modal(document.getElementById('modal-access-token'), {}).show();
+            new Modal(document.getElementById("modal-access-token"), {}).show();
         },
         getClients() {
-            api.get('./oauth/clients')
-                .then(response => {
-                    console.log(response.data);
-                    this.clients = response.data;
-                });
+            api.get("./oauth/clients").then((response) => {
+                console.log(response.data);
+                this.clients = response.data;
+            });
         },
         showCreateClientForm() {
-            new Modal(document.getElementById('modal-create-client'), {}).show();
+            new Modal(
+                document.getElementById("modal-create-client"),
+                {},
+            ).show();
         },
         /**
          * Persist the client to storage using the given form.
@@ -187,11 +198,11 @@ let index = function () {
             form.errors = [];
 
             api[method](uri, form)
-                .then(response => {
+                .then((response) => {
                     this.getClients();
 
-                    form.name = '';
-                    form.redirect_uris = '';
+                    form.name = "";
+                    form.redirect_uris = "";
                     form.errors = [];
 
                     new Modal(document.querySelector(modal), {}).hide();
@@ -200,14 +211,18 @@ let index = function () {
                         this.showClientSecret(response.data.plainSecret);
                     }
                 })
-                .catch(error => {
-                    if (typeof error.response.data === 'object') {
-                        for (const [key, value] of Object.entries(error.response.data.errors)) {
+                .catch((error) => {
+                    if (typeof error.response.data === "object") {
+                        for (const [key, value] of Object.entries(
+                            error.response.data.errors,
+                        )) {
                             console.log(`${key}: ${value}`);
                             form.errors.push(value);
                         }
                     } else {
-                        form.errors = ['Something went wrong. Please try again.'];
+                        form.errors = [
+                            "Something went wrong. Please try again.",
+                        ];
                     }
                     console.log(form.errors);
                 });
@@ -216,10 +231,11 @@ let index = function () {
          * Revoke the given token.
          */
         revoke(token) {
-            api.delete('./oauth/personal-access-tokens/' + token.id)
-                .then(() => {
+            api.delete("./oauth/personal-access-tokens/" + token.id).then(
+                () => {
                     this.getTokens();
-                });
+                },
+            );
         },
 
         /**
@@ -227,35 +243,40 @@ let index = function () {
          */
         showClientSecret(clientSecret) {
             this.clientSecret = clientSecret;
-            new Modal(document.getElementById('modal-client-secret'), {}).show();
+            new Modal(
+                document.getElementById("modal-client-secret"),
+                {},
+            ).show();
         },
         regenerateSecret(client) {
-            api.post('./oauth/clients/regenerate/' + client.id)
-                .then(response => {
+            api.post("./oauth/clients/regenerate/" + client.id).then(
+                (response) => {
                     this.clientSecret = response.data.plainSecret;
-                    new Modal(document.getElementById('modal-client-secret'), {}).show();
-                });
-
+                    new Modal(
+                        document.getElementById("modal-client-secret"),
+                        {},
+                    ).show();
+                },
+            );
         },
 
         /**
          * Destroy the given client.
          */
         destroy(client) {
-            api.delete('./oauth/clients/' + client.id)
-                .then(() => {
-                    this.getClients();
-                });
+            api.delete("./oauth/clients/" + client.id).then(() => {
+                this.getClients();
+            });
         },
         /**
          * Create a new OAuth client for the user.
          */
         store() {
             this.persistClient(
-                'post',
-                './oauth/clients',
+                "post",
+                "./oauth/clients",
                 this.createForm,
-                '#modal-create-client'
+                "#modal-create-client",
             );
         },
         /**
@@ -264,9 +285,9 @@ let index = function () {
         edit(client) {
             this.editForm.id = client.id;
             this.editForm.name = client.name;
-            this.editForm.redirect_uris = client.redirect_uris.join(',');
+            this.editForm.redirect_uris = client.redirect_uris.join(",");
 
-            new Modal(document.getElementById('modal-edit-client'), {}).show();
+            new Modal(document.getElementById("modal-edit-client"), {}).show();
         },
 
         /**
@@ -274,25 +295,24 @@ let index = function () {
          */
         update() {
             this.persistClient(
-                'put',
-                './oauth/clients/' + this.editForm.id,
+                "put",
+                "./oauth/clients/" + this.editForm.id,
                 this.editForm,
-                '#modal-edit-client'
+                "#modal-edit-client",
             );
         },
-    }
+    };
 };
-
 
 const comps = {
     index,
     sidebar,
-    dates
+    dates,
 };
 
 function loadPage(comps) {
-    console.log('loadPage');
-    Object.keys(comps).forEach(comp => {
+    console.log("loadPage");
+    Object.keys(comps).forEach((comp) => {
         let data = comps[comp]();
         Alpine.data(comp, () => data);
         console.log(comp);
@@ -301,12 +321,12 @@ function loadPage(comps) {
 }
 
 // wait for load until bootstrapped event is received.
-document.addEventListener('firefly-iii-bootstrapped', () => {
-    console.log('Loaded through event listener.');
+document.addEventListener("firefly-iii-bootstrapped", () => {
+    console.log("Loaded through event listener.");
     loadPage(comps);
 });
 // or is bootstrapped before event is triggered.
 if (window.bootstrapped) {
-    console.log('Loaded through window variable.');
+    console.log("Loaded through window variable.");
     loadPage(comps);
 }

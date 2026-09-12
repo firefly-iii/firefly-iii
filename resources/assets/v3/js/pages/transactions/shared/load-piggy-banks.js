@@ -22,42 +22,57 @@ import Get from "../../../api/model/piggy-bank/get.js";
 
 export function loadPiggyBanks() {
     let params = {
-        page: 1, limit: 1337
+        page: 1,
+        limit: 1337,
     };
     let getter = new Get();
     return getter.list(params).then((response) => {
         let piggyBanks = {
-            '0': {
-                id: 0, name: '(no group)', order: 0, piggyBanks: [{
-                    id: 0, name: '(no piggy bank)', order: 0,
-                }]
-            }
+            0: {
+                id: 0,
+                name: "(no group)",
+                order: 0,
+                piggyBanks: [
+                    {
+                        id: 0,
+                        name: "(no piggy bank)",
+                        order: 0,
+                    },
+                ],
+            },
         };
 
         for (let i in response.data.data) {
             if (Object.hasOwn(response.data.data, i)) {
                 let current = response.data.data[i];
-                let objectGroupId = current.attributes.object_group_id ?? '0';
-                let objectGroupTitle = current.attributes.object_group_title ?? '(no group)';
+                let objectGroupId = current.attributes.object_group_id ?? "0";
+                let objectGroupTitle =
+                    current.attributes.object_group_title ?? "(no group)";
                 let piggyBank = {
-                    id: current.id, name: current.attributes.name, order: current.attributes.order,
+                    id: current.id,
+                    name: current.attributes.name,
+                    order: current.attributes.order,
                 };
                 if (!Object.hasOwn(piggyBanks, objectGroupId)) {
                     piggyBanks[objectGroupId] = {
                         id: objectGroupId,
                         name: objectGroupTitle,
                         order: current.attributes.object_group_order ?? 0,
-                        piggyBanks: []
+                        piggyBanks: [],
                     };
                 }
                 piggyBanks[objectGroupId].piggyBanks.push(piggyBank);
-                piggyBanks[objectGroupId].piggyBanks.sort((a, b) => a.order - b.order);
+                piggyBanks[objectGroupId].piggyBanks.sort(
+                    (a, b) => a.order - b.order,
+                );
             }
         }
         //tempObject.sort((a,b) => a.order - b.order);
-        return Object.keys(piggyBanks).sort().reduce((obj, key) => {
-            obj[key] = piggyBanks[key];
-            return obj;
-        }, {});
+        return Object.keys(piggyBanks)
+            .sort()
+            .reduce((obj, key) => {
+                obj[key] = piggyBanks[key];
+                return obj;
+            }, {});
     });
 }

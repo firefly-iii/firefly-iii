@@ -18,36 +18,37 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-import '../boot/bootstrap.js';
-import sidebar from '../pages/shared/sidebar.js';
-import dates from './shared/dates.js';
-import Alpine from 'alpinejs';
+import "../boot/bootstrap.js";
+import sidebar from "../pages/shared/sidebar.js";
+import dates from "./shared/dates.js";
+import Alpine from "alpinejs";
 
 window.enableDates = true;
 
 let index = function () {
     return {
         init() {
-            (function() {
-                let list = document.querySelectorAll('div.app-content form input[type="text"]:enabled');
+            (function () {
+                let list = document.querySelectorAll(
+                    'div.app-content form input[type="text"]:enabled',
+                );
                 if (list.length > 0) {
                     list[0].focus();
                 }
             })();
-        }
-    }
+        },
+    };
 };
-
 
 const comps = {
     index,
     sidebar,
-    dates
+    dates,
 };
 
 function loadPage(comps) {
     // console.log('loadPage');
-    Object.keys(comps).forEach(comp => {
+    Object.keys(comps).forEach((comp) => {
         let data = comps[comp]();
         Alpine.data(comp, () => data);
         // console.log(comp);
@@ -56,7 +57,7 @@ function loadPage(comps) {
 }
 
 // wait for load until bootstrapped event is received.
-document.addEventListener('firefly-iii-bootstrapped', () => {
+document.addEventListener("firefly-iii-bootstrapped", () => {
     // console.log('Loaded through event listener.');
     loadPage(comps);
 });

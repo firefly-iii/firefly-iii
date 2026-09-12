@@ -23,28 +23,42 @@ import i18next from "i18next";
 
 export function loadSubscriptions(includeInactive) {
     let params = {
-        page: 1, limit: 1337
+        page: 1,
+        limit: 1337,
     };
     let getter = new SubscriptionGet();
     return getter.list(params).then((response) => {
         let subscriptions = {
-            '0': {
-                id: 0, name: '(no group)', order: 0, subscriptions: [{
-                    id: 0, name: '(no subscription)', order: 0,
-                }]
-            }
+            0: {
+                id: 0,
+                name: "(no group)",
+                order: 0,
+                subscriptions: [
+                    {
+                        id: 0,
+                        name: "(no subscription)",
+                        order: 0,
+                    },
+                ],
+            },
         };
         for (let i in response.data.data) {
             if (Object.hasOwn(response.data.data, i)) {
                 let current = response.data.data[i];
-                let objectGroupId = current.attributes.object_group_id ?? '0';
-                let objectGroupTitle = current.attributes.object_group_title ?? '(no group)';
+                let objectGroupId = current.attributes.object_group_id ?? "0";
+                let objectGroupTitle =
+                    current.attributes.object_group_title ?? "(no group)";
                 let subscription = {
                     id: current.id,
-                    name: current.attributes.active ? current.attributes.name : current.attributes.name + ' ('+i18next.t('firefly.inactive').toLowerCase()+')',
+                    name: current.attributes.active
+                        ? current.attributes.name
+                        : current.attributes.name +
+                          " (" +
+                          i18next.t("firefly.inactive").toLowerCase() +
+                          ")",
                     order: current.attributes.order,
                 };
-                if(!includeInactive && false === current.attributes.active) {
+                if (!includeInactive && false === current.attributes.active) {
                     // skip over inactive items.
                     continue;
                 }
@@ -53,16 +67,20 @@ export function loadSubscriptions(includeInactive) {
                         id: objectGroupId,
                         name: objectGroupTitle,
                         order: current.attributes.object_group_order ?? 0,
-                        subscriptions: []
+                        subscriptions: [],
                     };
                 }
                 subscriptions[objectGroupId].subscriptions.push(subscription);
-                subscriptions[objectGroupId].subscriptions.sort((a, b) => a.order - b.order);
+                subscriptions[objectGroupId].subscriptions.sort(
+                    (a, b) => a.order - b.order,
+                );
             }
         }
-        return Object.keys(subscriptions).sort().reduce((obj, key) => {
-            obj[key] = subscriptions[key];
-            return obj;
-        }, {});
+        return Object.keys(subscriptions)
+            .sort()
+            .reduce((obj, key) => {
+                obj[key] = subscriptions[key];
+                return obj;
+            }, {});
     });
 }

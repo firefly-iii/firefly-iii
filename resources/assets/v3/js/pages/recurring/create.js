@@ -18,67 +18,91 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-import '../../boot/bootstrap.js';
-import sidebar from '../../pages/shared/sidebar.js';
-import dates from '../shared/dates.js';
+import "../../boot/bootstrap.js";
+import sidebar from "../../pages/shared/sidebar.js";
+import dates from "../shared/dates.js";
 
-
-import {Calendar} from 'fullcalendar';
-import themePlugin from 'fullcalendar/themes/monarch'; // YOUR THEME
-import dayGridPlugin from 'fullcalendar/daygrid';
-import timeGridPlugin from 'fullcalendar/timegrid';
-import listPlugin from 'fullcalendar/list';
-import {createTagField} from '../../form/create-tag-field.js';
-import {createAutocomplete} from '../../form/create-autocomplete.js';
-import {createButtonSwitcher} from './shared/create-button-switcher.js';
-import {respondToFirstDateChange} from './shared/respond-to-first-date-change.js';
-import {switchTransactionType} from './shared/switch-transaction-type.js';
-import {respondToRepetitionEnd} from './shared/respond-to-repetition-end.js';
+import { Calendar } from "fullcalendar";
+import themePlugin from "fullcalendar/themes/monarch"; // YOUR THEME
+import dayGridPlugin from "fullcalendar/daygrid";
+import timeGridPlugin from "fullcalendar/timegrid";
+import listPlugin from "fullcalendar/list";
+import { createTagField } from "../../form/create-tag-field.js";
+import { createAutocomplete } from "../../form/create-autocomplete.js";
+import { createButtonSwitcher } from "./shared/create-button-switcher.js";
+import { respondToFirstDateChange } from "./shared/respond-to-first-date-change.js";
+import { switchTransactionType } from "./shared/switch-transaction-type.js";
+import { respondToRepetitionEnd } from "./shared/respond-to-repetition-end.js";
 // stylesheets
-import 'fullcalendar/skeleton.css'; // ALWAYS NEED SKELETON
-import 'fullcalendar/themes/monarch/theme.css'; // YOUR THEME
-import 'fullcalendar/themes/monarch/palettes/purple.css'; // YOUR THEME'S PALETTE
-import Alpine from 'alpinejs';
+import "fullcalendar/skeleton.css"; // ALWAYS NEED SKELETON
+import "fullcalendar/themes/monarch/theme.css"; // YOUR THEME
+import "fullcalendar/themes/monarch/palettes/purple.css"; // YOUR THEME'S PALETTE
+import Alpine from "alpinejs";
 
 let create = function () {
     return {
         calendar: null,
         eventSource: null,
-        repetitionType:null,
+        repetitionType: null,
         respondToFirstDateChange: respondToFirstDateChange,
         init() {
-            createTagField('ffInput_tags');
-            createAutocomplete('ffInput_category', './api/v1/autocomplete/categories');
+            createTagField("ffInput_tags");
+            createAutocomplete(
+                "ffInput_category",
+                "./api/v1/autocomplete/categories",
+            );
             createButtonSwitcher();
-            switchTransactionType('withdrawal');
+            switchTransactionType("withdrawal");
             this.respondToFirstDateChange();
             respondToRepetitionEnd();
-            document.getElementById('ffInput_first_date').addEventListener('change', this.respondToFirstDateChange);
-            document.getElementById('ffInput_repetition_end').addEventListener('change', respondToRepetitionEnd.bind(this));
+            document
+                .getElementById("ffInput_first_date")
+                .addEventListener("change", this.respondToFirstDateChange);
+            document
+                .getElementById("ffInput_repetition_end")
+                .addEventListener("change", respondToRepetitionEnd.bind(this));
 
-
-            let calendarEl = document.getElementById('recurring_calendar');
+            let calendarEl = document.getElementById("recurring_calendar");
             this.calendar = new Calendar(calendarEl, {
-                plugins: [themePlugin, dayGridPlugin, timeGridPlugin, listPlugin],
-                initialView: 'dayGridMonth',
+                plugins: [
+                    themePlugin,
+                    dayGridPlugin,
+                    timeGridPlugin,
+                    listPlugin,
+                ],
+                initialView: "dayGridMonth",
                 headerToolbar: {
-                    left: 'prev,next today',
-                    center: 'title'
-                }
+                    left: "prev,next today",
+                    center: "title",
+                },
             });
             this.calendar.render();
-            document.getElementById('calendar-link').addEventListener('click', this.showRepCalendar.bind(this));
+            document
+                .getElementById("calendar-link")
+                .addEventListener("click", this.showRepCalendar.bind(this));
         },
         showRepCalendar() {
-            let eventsUrl = document.getElementById('eventsUrl').value;
+            let eventsUrl = document.getElementById("eventsUrl").value;
             // pre-append URL with repetition info:
-            let newEventsUrl = eventsUrl + '?type=' + document.getElementById('ffInput_repetition_type').value;
-            newEventsUrl += '&skip=' + document.getElementById('ffInput_skip').value;
-            newEventsUrl += '&ends=' + document.getElementById('ffInput_repetition_end').value;
-            newEventsUrl += '&end_date=' + document.getElementById('ffInput_repeat_until').value;
-            newEventsUrl += '&reps=' + document.getElementById('ffInput_repetitions').value;
-            newEventsUrl += '&first_date=' + document.getElementById('ffInput_first_date').value;
-            newEventsUrl += '&weekend=' + document.getElementById('ffInput_weekend').value;
+            let newEventsUrl =
+                eventsUrl +
+                "?type=" +
+                document.getElementById("ffInput_repetition_type").value;
+            newEventsUrl +=
+                "&skip=" + document.getElementById("ffInput_skip").value;
+            newEventsUrl +=
+                "&ends=" +
+                document.getElementById("ffInput_repetition_end").value;
+            newEventsUrl +=
+                "&end_date=" +
+                document.getElementById("ffInput_repeat_until").value;
+            newEventsUrl +=
+                "&reps=" + document.getElementById("ffInput_repetitions").value;
+            newEventsUrl +=
+                "&first_date=" +
+                document.getElementById("ffInput_first_date").value;
+            newEventsUrl +=
+                "&weekend=" + document.getElementById("ffInput_weekend").value;
 
             let eventSource = new EventSource(newEventsUrl);
             this.calendar.removeAllEventSources();
@@ -86,20 +110,19 @@ let create = function () {
             // $('#calendarModal').modal('show');
 
             return false;
-        }
-    }
+        },
+    };
 };
-
 
 const comps = {
     create,
     sidebar,
-    dates
+    dates,
 };
 
 function loadPage(comps) {
     // console.log('loadPage');
-    Object.keys(comps).forEach(comp => {
+    Object.keys(comps).forEach((comp) => {
         let data = comps[comp]();
         Alpine.data(comp, () => data);
         // console.log(comp);
@@ -108,7 +131,7 @@ function loadPage(comps) {
 }
 
 // wait for load until bootstrapped event is received.
-document.addEventListener('firefly-iii-bootstrapped', () => {
+document.addEventListener("firefly-iii-bootstrapped", () => {
     // console.log('Loaded through event listener.');
     loadPage(comps);
 });

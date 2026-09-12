@@ -18,7 +18,7 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-import {format} from 'date-fns'
+import { format } from "date-fns";
 import {
     bg,
     cs,
@@ -51,8 +51,8 @@ import {
     uk,
     vi,
     zhTW,
-    zhCN
-} from 'date-fns/locale'
+    zhCN,
+} from "date-fns/locale";
 
 const locales = {
     bg,
@@ -86,14 +86,15 @@ const locales = {
     uk,
     vi,
     zhTW,
-    zhCN
-}
+    zhCN,
+};
 
 // by providing a default string of 'PP' or any of its variants for `formatStr`
 // it will format dates in whichever way is appropriate to the locale
-export default function (date, formatStr = 'PP') {
-    let locale = window.__localeId__.replace('_', '');
+export default function (date, formatStr = "PP") {
+    let locale = window.__localeId__.replace("_", "");
     return format(date, formatStr, {
-        locale: locales[locale] ?? locales[locale.slice(0, 2)] ?? locales['enUS'] // or global.__localeId__
-    })
+        locale:
+            locales[locale] ?? locales[locale.slice(0, 2)] ?? locales["enUS"], // or global.__localeId__
+    });
 }

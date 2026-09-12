@@ -18,12 +18,12 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-import {api} from "../../../boot/axios";
+import { api } from "../../../boot/axios";
 
 export default class Get {
-
     get(from, to, params) {
-        return api.get('/api/v1/exchange-rates/' + from + '/' + to , {params: params});
+        return api.get("/api/v1/exchange-rates/" + from + "/" + to, {
+            params: params,
+        });
     }
-
 }

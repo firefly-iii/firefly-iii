@@ -18,12 +18,12 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-
 import Get from "../../../api/model/currency/get.js";
 
 export function loadCurrencies() {
     let params = {
-        page: 1, limit: 1337
+        page: 1,
+        limit: 1337,
     };
     let getter = new Get();
     return getter.list(params).then((response) => {
@@ -35,22 +35,25 @@ export function loadCurrencies() {
         };
 
         returnData.foreignCurrencies.push({
-            id: 0, name: '(no foreign currency)', code: '__NO_CODE__', default: false, symbol: '', decimal_places: 2,
+            id: 0,
+            name: "(no foreign currency)",
+            code: "__NO_CODE__",
+            default: false,
+            symbol: "",
+            decimal_places: 2,
         });
         for (let i in response.data.data) {
             if (Object.hasOwn(response.data.data, i)) {
                 let current = response.data.data[i];
                 if (current.attributes.enabled) {
-                    let obj =
-                        {
-                            id: current.id,
-                            name: current.attributes.name,
-                            code: current.attributes.code,
-                            primary: current.attributes.primary,
-                            symbol: current.attributes.symbol,
-                            decimal_places: current.attributes.decimal_places,
-
-                        };
+                    let obj = {
+                        id: current.id,
+                        name: current.attributes.name,
+                        code: current.attributes.code,
+                        primary: current.attributes.primary,
+                        symbol: current.attributes.symbol,
+                        decimal_places: current.attributes.decimal_places,
+                    };
                     if (obj.primary) {
                         //console.log('Made ' + obj.code + ' primary.');
                         returnData.primaryCurrency = obj;

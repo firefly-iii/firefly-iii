@@ -18,24 +18,27 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-
 import Get from "../../../api/model/budget/get.js";
 import i18next from "i18next";
 
 export function loadBudgets(includeInactive) {
     let params = {
-        page: 1, limit: 1337
+        page: 1,
+        limit: 1337,
     };
     let getter = new Get();
     return getter.list(params).then((response) => {
-        let returnData = [{
-            id: 0, name: '(no budget)',
-        }];
+        let returnData = [
+            {
+                id: 0,
+                name: "(no budget)",
+            },
+        ];
 
         for (let i in response.data.data) {
             if (Object.hasOwn(response.data.data, i)) {
                 let current = response.data.data[i];
-                if(true === current.attributes.active) {
+                if (true === current.attributes.active) {
                     let obj = {
                         id: current.id,
                         name: current.attributes.name,
@@ -43,10 +46,14 @@ export function loadBudgets(includeInactive) {
                     returnData.push(obj);
                     continue;
                 }
-                if(includeInactive && false === current.attributes.active) {
+                if (includeInactive && false === current.attributes.active) {
                     let obj = {
                         id: current.id,
-                        name: current.attributes.name + ' ('+i18next.t('firefly.inactive').toLowerCase()+')',
+                        name:
+                            current.attributes.name +
+                            " (" +
+                            i18next.t("firefly.inactive").toLowerCase() +
+                            ")",
                     };
                     returnData.push(obj);
                 }
@@ -54,5 +61,4 @@ export function loadBudgets(includeInactive) {
         }
         return returnData;
     });
-
 }
