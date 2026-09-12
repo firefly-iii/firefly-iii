@@ -18,6 +18,7 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 
 ### Changed
 
+- oAuth tokens are now on a separate page.
 - The rule engine features an "expression engine". It is now disabled by default and must be turned on again in `/settings`.
 - Switched from Twig template engine to Blade.
 - Introduced a new version of the AdminLTE template.
@@ -57,24 +58,27 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 
 ### Security
 
+If you believe your credits are missing, please let  me know.
+
 - [PR 12497](https://github.com/firefly-iii/firefly-iii/pull/12497) (ci: pin github-action-get-latest-release to a full commit SHA) reported by @kobihikri
 - A variety of security findings by Alwen Roselio, Don Werner Salas and Allan Glenn Aceres touching CSV export, installer security and many more.
-- User "1diot9" discovered that you can overwrite arbitrary preferences. This means you can also overwrite security sensitive preferences, like your email reset code.
+- User "@1diot9" discovered that you can overwrite arbitrary preferences. This means you can also overwrite security sensitive preferences, like your email reset code.
 - Removed security sensitive info from the debug page.
 - Removed identifying information from the login and registration pages.
 - It was possible to brute force 2FA code attempts.
 - URL validation could be circumvented.
 - Flushing the cache would reset some timeouts.
-- A stolen password against a 2FA-protected account could lead to remote code execution
-- A budget limit spanning centuries was accepted, and then recalculated day by day
-- Five bad logins would let anyone take the app offline
-- A small search query could cost the server many seconds of CPU
-- A 2.5 KB search query could exhaust the PHP memory limit
-- One GET request could make the server compute tens of thousands of dates
-- Account search could return every user's bank accounts (unconfirmed but measures taken)
-- One search query could return every user's transactions (unconfirmed but measures taken)
-- State-changing requests woyld execute before the two-factor check decides to reject them
-- Any logged-in user could run shell commands on the server through a rule action
+- A stolen password against a 2FA-protected account could lead to remote code execution, found by Adam K.
+- A budget limit spanning centuries was accepted, and then recalculated day by day, found by Adam K.
+- Five bad logins would let anyone take the app offline, found by Adam K.
+- A small search query could cost the server many seconds of CPU, found by Adam K.
+- A 2.5 KB search query could exhaust the PHP memory limit, found by Adam K.
+- One GET request could make the server compute tens of thousands of dates, found by Adam K.
+- Account search could return every user's bank accounts (unconfirmed but measures taken), found by Adam K.
+- One search query could return every user's transactions (unconfirmed but measures taken), found by Adam K.
+- State-changing requests woyld execute before the two-factor check decides to reject them, found by Adam K.
+- Any logged-in user could run shell commands on the server through a rule action, found by Adam K.
+- The audit logger would your your MFA secret, which is a potential security issue, found by Mathias K.
 
 #### Unresolved security issues
 
