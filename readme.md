@@ -88,6 +88,8 @@ Browser testing via TestMu AI:
 <img src="https://raw.githubusercontent.com/firefly-iii/firefly-iii/develop/.github/assets/img/testmu.png" alt="TestMu AI" style="vertical-align: middle;" width="250" />
 </a>
 
+Firefly III is also sponsored by [Hostinger](https://www.hostg.xyz/aff_c?offer_id=815&aff_id=243699) with a kickback program that pays me a small amount for every new customer that signs up for their hosting services. Consider using them if you do not want to self-host Firefly III.
+
 ## Do you need help, or do you want to get in touch?
 
 Do you want to contact me? You can email me at [james@firefly-iii.org](mailto:james@firefly-iii.org) or get in touch through one of the following support channels:
