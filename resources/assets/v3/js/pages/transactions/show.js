@@ -24,6 +24,7 @@ import dates from '../shared/dates.js';
 import i18next from "i18next";
 import Get from '../../api/model/transaction/get.js';
 import {format} from "date-fns";
+import Alpine from 'alpinejs';
 
 window.enableDates = false;
 
@@ -50,7 +51,7 @@ let show = function () {
                 const info = response.data.data;
                 this.group.transactions = [];
                 for(let i =0;i<info.attributes.transactions.length;i++){
-                    if(info.attributes.transactions.hasOwnProperty(i)) {
+                    if(Object.hasOwn(info.attributes.transactions, i)) {
                         let current =info.attributes.transactions[i];
                         current.dateObject = new Date(current.date);
                         current.dateFormatted = format(current.dateObject, this.i18next.t('config.date_time_fns'))

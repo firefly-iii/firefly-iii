@@ -26,7 +26,7 @@ import i18next from "i18next";
 import Post from '../../api/model/webhook/post.js';
 import Get from  '../../api/model/webhook/get.js';
 import Put from  '../../api/model/webhook/put.js';
-import Alpine from 'alpinejs'
+import Alpine from 'alpinejs';
 
 window.enableDates = false;
 

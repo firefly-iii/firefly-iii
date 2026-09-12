@@ -21,9 +21,8 @@ import i18next from "i18next";
 
 function cleanupErrors(fullName, shortName, errors) {
     let newErrors = [];
-    let message = '';
     for (let i in errors) {
-        if (errors.hasOwnProperty(i)) {
+        if (Object.hasOwn(errors, i)) {
             newErrors.push(errors[i].replace(fullName, shortName));
         }
     }
@@ -35,7 +34,7 @@ export function spliceErrorsIntoTransactions(errors, transactions) {
     let fieldName;
     let errorArray;
     for (const key in errors) {
-        if (errors.hasOwnProperty(key)) {
+        if (Object.hasOwn(errors,key)) {
             if (key === 'group_title') {
                 console.error('Cannot handle error in group title.');
                 // todo handle group errors.
@@ -45,7 +44,7 @@ export function spliceErrorsIntoTransactions(errors, transactions) {
             transactionIndex = parseInt(key.split('.')[1]);
             fieldName = key.split('.')[2];
             errorArray = cleanupErrors(key, fieldName, errors[key]);
-            if (!transactions.hasOwnProperty(transactionIndex)) {
+            if (!Object.hasOwn(transactions, transactionIndex)) {
                 console.error('Cannot handle errors in index #' + transactionIndex);
                 continue;
             }

@@ -25,4 +25,9 @@ export default class Post {
         let url = '/api/v1/webhooks';
         return api.post('./api/v1/webhooks/' + webhook + '/trigger-transaction/' + transaction, {});
     }
+
+    post(submission) {
+        let url = '/api/v1/webhooks/';
+        return api.post(url, submission);
+    }
 }

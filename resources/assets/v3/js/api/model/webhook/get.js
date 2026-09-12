@@ -22,6 +22,9 @@
 import {api} from "../../../boot/axios";
 
 export default class Get {
+    list(params){
+        return api.get('/api/v1/webhooks', {params: params});
+    }
 
     show(id, params){
         return api.get('/api/v1/webhooks/' + parseInt(id), {params: params});

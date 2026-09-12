@@ -59,7 +59,7 @@ export function renderMap(index, useDefault) {
         }));
 
         // add marker.
-        if(this.markers.hasOwnProperty(index)) {
+        if(Object.hasOwn(this.markers, index)) {
             this.maps[index].removeLayer(this.markers[index]);
         }
         this.markers[index] = L.marker([latitude, longitude]);

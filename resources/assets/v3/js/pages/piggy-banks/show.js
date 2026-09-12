@@ -25,6 +25,8 @@ import i18next from "i18next";
 import {drawSingleCurrencyChart} from '../../shared/draw-chart.js';
 import {getVariable} from "../../store/get-variable.js";
 
+window.enableDates = false;
+
 let show = function () {
     return {
         init() {

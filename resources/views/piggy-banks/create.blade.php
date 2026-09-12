@@ -54,7 +54,7 @@
 @endsection
 
 @section('scripts')
-    @vite(['js/pages/generic.js'])
+    @vite(['js/pages/generic-nodates.js'])
     <script type="text/javascript" src="v1/js/ff/piggy-banks/create.js?v={{ $FF_BUILD_TIME }}" nonce="{{ $JS_NONCE }}"></script>
 
     {{-- auto complete for object groups --}}

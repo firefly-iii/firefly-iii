@@ -26,11 +26,11 @@ let uploadFiles = function (fileData) {
     let hasError = false;
 
     for (const key in fileData) {
-        if (fileData.hasOwnProperty(key) && /^0$|^[1-9]\d*$/.test(key) && key <= 4294967294 && false === hasError) {
+        if (Object.hasOwn(fileData, key) && /^0$|^[1-9]\d*$/.test(key) && key <= 4294967294 && false === hasError) {
             let poster = new AttachmentPost();
             poster.post(fileData[key].name, 'TransactionJournal', fileData[key].journal).then(response => {
                 let attachmentId = parseInt(response.data.data.id);
-                poster.upload(attachmentId, fileData[key].content).then(attachmentResponse => {
+                poster.upload(attachmentId, fileData[key].content).then(() => {
                     uploads++;
                     if (uploads === count) {
                         const event = new CustomEvent('upload-success', {detail: {some: 'details'}});
@@ -73,9 +73,9 @@ export function processAttachments(groupId, transactions) {
 
     // loop over all attachments, and add references to this array:
     for (const key in attachments) {
-        if (attachments.hasOwnProperty(key) && /^0$|^[1-9]\d*$/.test(key) && key <= 4294967294) {
+        if (Object.hasOwn(attachments, key) && /^0$|^[1-9]\d*$/.test(key) && key <= 4294967294) {
             for (const fileKey in attachments[key].files) {
-                if (attachments[key].files.hasOwnProperty(fileKey) && /^0$|^[1-9]\d*$/.test(fileKey) && fileKey <= 4294967294) {
+                if (Object.hasOwn(attachments[key].files, fileKey) && /^0$|^[1-9]\d*$/.test(fileKey) && fileKey <= 4294967294) {
                     // include journal thing.
                     toBeUploaded.push({
                         journal: transactions[key].transaction_journal_id,
@@ -89,7 +89,7 @@ export function processAttachments(groupId, transactions) {
 
     // loop all uploads. This is async.
     for (const key in toBeUploaded) {
-        if (toBeUploaded.hasOwnProperty(key) && /^0$|^[1-9]\d*$/.test(key) && key <= 4294967294) {
+        if (Object.hasOwn(toBeUploaded, key) && /^0$|^[1-9]\d*$/.test(key) && key <= 4294967294) {
 
             // create file reader thing that will read all of these uploads
             (function (f, key) {

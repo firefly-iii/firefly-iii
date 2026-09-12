@@ -3,10 +3,10 @@ import PostLink from "../../../api/model/transaction-link/post.js";
 export function processTransactionLinks(transactions) {
     let count = 0;
     for (let i = 0; i < transactions.length; i++) {
-        if (transactions.hasOwnProperty(i) && this.links.hasOwnProperty(i)) {
+        if (Object.hasOwn(transactions,i) && Object.hasOwn(this.links, i)) {
             let journalId = transactions[i];
             for (let j = 0; j < this.links[i].length; j++) {
-                if (this.links[i].hasOwnProperty(j)) {
+                if (Object.hasOwn(this.links[i], j)) {
                     count++;
                     let link = this.links[i][j];
                     let left = journalId;

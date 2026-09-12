@@ -30,5 +30,5 @@
     </form>
 @endsection
 @section('scripts')
-    @vite(['js/pages/generic.js'])
+    @vite(['js/pages/generic-nodates.js'])
 @endsection

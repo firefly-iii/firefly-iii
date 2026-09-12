@@ -18,23 +18,22 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-// CSS
 import '../../boot/bootstrap.js';
 import sidebar from '../../pages/shared/sidebar.js';
 import dates from '../shared/dates.js';
 import i18next from "i18next";
+import Get from '../../api/model/webhook/get.js';
+import GetConfig from '../../api/configuration/get.js';
+import Alpine from 'alpinejs';
 
 window.enableDates = false;
 let index = function () {
     return {
         webhooks: [],
         loading: false,
-        triggers: {
-        },
-        responses: {
-        },
-        deliveries: {
-        },
+        triggers: {},
+        responses: {},
+        deliveries: {},
 
         init() {
             this.loading = true;
@@ -48,10 +47,9 @@ let index = function () {
             webhook.show_secret = !webhook.show_secret;
         },
         downloadWebhooks: function (page) {
-            console.log('downloadWebhooks');
-            axios.get("./api/v1/webhooks?page=" + page).then((response) => {
+            (new Get).list({page: page}).then((response) => {
                 for (let i in response.data.data) {
-                    if (response.data.data.hasOwnProperty(i)) {
+                    if (Object.hasOwn(response.data.data, i)) {
                         let current = response.data.data[i];
                         let webhook = {
                             id: current.id,
@@ -73,44 +71,37 @@ let index = function () {
                 }
 
                 if (response.data.meta.pagination.current_page < response.data.meta.pagination.total_pages) {
-                    this.downloadWebhooks(response.data.meta.pagination.current_page + 1);
-                } else {
-                    this.loading = false;
+                    this.downloadWebhooks(parseInt(response.data.meta.pagination.current_page) + 1);
+                    return;
                 }
+                this.loading = false;
             });
         },
         getOptions: function () {
-            console.log('getOptions');
-            // get triggers
-            axios.get('./api/v1/configuration/webhook.triggers').then((response) => {
+            (new GetConfig).getByName('webhook.triggers').then((response) => {
                 for (let key in response.data.data.value) {
-                    if (!response.data.data.value.hasOwnProperty(key)) {
-                        continue;
+                    if(Object.hasOwn(response.data.data.value, key)) {
+                        this.triggers[key] = i18next.t('firefly.webhook_trigger_' + key);
                     }
-                    this.triggers[key] = i18next.t('firefly.webhook_trigger_' + key);
-                    console.log(key, this.triggers[key]);
                 }
-
-                // get responses
-                axios.get('./api/v1/configuration/webhook.responses').then((response) => {
+            }).then(() => {
+                (new GetConfig).getByName('webhook.responses').then((response) => {
                     for (let key in response.data.data.value) {
-                        if (!response.data.data.value.hasOwnProperty(key)) {
-                            continue;
+                        if(Object.hasOwn(response.data.data.value, key)) {
+                            this.responses[key] = i18next.t('firefly.webhook_response_' + key);
                         }
-                        this.responses[key] = i18next.t('firefly.webhook_response_' + key);
                     }
-                    // get deliveries
-                    axios.get('./api/v1/configuration/webhook.deliveries').then((response) => {
+                }).then(() => {
+                    (new GetConfig).getByName('webhook.deliveries').then((response) => {
                         for (let key in response.data.data.value) {
-                            if (!response.data.data.value.hasOwnProperty(key)) {
-                                continue;
+                            if(Object.hasOwn(response.data.data.value, key)) {
+                                this.deliveries[key] = i18next.t('firefly.webhook_delivery_' + key);
                             }
-                            this.deliveries[key] = i18next.t('firefly.webhook_delivery_' + key);
                         }
-                        // get webhooks
+                    }).then(() => {
                         this.getWebhooks();
-                    })
-                })
+                    });
+                });
             });
         },
     }

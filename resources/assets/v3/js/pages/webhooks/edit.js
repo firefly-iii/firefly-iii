@@ -25,6 +25,9 @@ import i18next from "i18next";
 import {loadTriggers} from "./shared/load-triggers.js";
 import {loadResponses} from "./shared/load-responses.js";
 import {loadDeliveries} from "./shared/load-deliveries.js";
+import Get from '../../api/model/webhook/get.js';
+import Put from '../../api/model/webhook/put.js';
+import Alpine from 'alpinejs'
 
 window.enableDates = false;
 let edit = function () {
@@ -87,7 +90,7 @@ let edit = function () {
             this.downloadWebhook(webhookId);
         },
         downloadWebhook: function (id) {
-            axios.get('./api/v1/webhooks/' + id).then(response => {
+            (new Get).show(id).then(response => {
                 // console.log(response.data.data.attributes);
                 this.title = response.data.data.attributes.title;
                 this.id = parseInt(response.data.data.id);
@@ -114,7 +117,7 @@ let edit = function () {
             };
 
             // disable button
-            $('#submitButton').prop("disabled", true);
+            document.getElementById('submitButton').disabled = true;
 
             // collect data
             let data = {
@@ -127,7 +130,7 @@ let edit = function () {
             };
 
             // post!
-            axios.put('./api/v1/webhooks/' + this.id, data).then((response) => {
+            (new Put).put(data, {id: this.id}).then((response) => {
                 let webhookId = parseInt(response.data.data.id);
                 window.location.href = window.previousUrl + '?webhook_id=' + webhookId + '&message=updated';
             }).catch((error) => {
@@ -140,7 +143,7 @@ let edit = function () {
                 this.errors.url = error.response.data.errors.url;
 
                 // enable button again
-                $('#submitButton').prop("disabled", false);
+                document.getElementById('submitButton').disabled = false;
 
             });
             if (e) {
