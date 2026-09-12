@@ -125,6 +125,7 @@ export function addAllAutocompleteToForm() {
             serverUrl: urls.account,
             valueField: "id",
             labelField: "name",
+            autoselectFirst: true,
             account_types: filters.destination,
             onRenderItem: renderAccount,
             onChange: changeDestinationAccount,
