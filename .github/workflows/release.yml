@@ -82,7 +82,7 @@ jobs:
           php-version: ${{ github.event.inputs.phpversion || '8.5' }}
           extensions: mbstring, intl, zip, bcmath
       - name: Lint PHP
-        if: ${{ inputs.ccc != true }}
+        if: ${{ inputs.quick != true }}
         run: |
           echo "Will run PHP lint!"
           php_lint_file()
@@ -171,6 +171,7 @@ jobs:
       - name: Build JS
         run: |
           npm install
+          npx eslint resources/assets/v3
           npm run build --workspace=v3 --verbose
           npm update
       - name: Cleanup changelog
