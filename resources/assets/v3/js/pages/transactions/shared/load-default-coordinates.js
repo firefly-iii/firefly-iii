@@ -21,7 +21,9 @@
 import Configuration from "../../../api/configuration/get.js";
 
 export function loadDefaultCoordinates() {
-    return (new Configuration()).getByName('firefly.default_location').then(data => {
-        return data.data.data.value;
-    });
+    return new Configuration()
+        .getByName("firefly.default_location")
+        .then((data) => {
+            return data.data.data.value;
+        });
 }

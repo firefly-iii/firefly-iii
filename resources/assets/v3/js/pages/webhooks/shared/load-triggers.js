@@ -19,25 +19,26 @@
  */
 
 import i18next from "i18next";
-import Get from '../../../api/configuration/get.js';
+import Get from "../../../api/configuration/get.js";
 
 export function loadTriggers() {
     let result = [];
 
-    return (new Get).getByName('webhook.triggers').then(response => {
-        for (let key in response.data.data.value) {
-            if(Object.hasOwn(response.data.data.value, key)) {
-                result.push(
-                    {
+    return new Get()
+        .getByName("webhook.triggers")
+        .then((response) => {
+            for (let key in response.data.data.value) {
+                if (Object.hasOwn(response.data.data.value, key)) {
+                    result.push({
                         id: key,
-                        name: i18next.t('firefly.webhook_trigger_' + key),
-                    }
-                );
+                        name: i18next.t("firefly.webhook_trigger_" + key),
+                    });
+                }
             }
-        }
-        return result;
-    }).catch((error) => {
-        console.log(error);
-        return result;
-    });
+            return result;
+        })
+        .catch((error) => {
+            console.log(error);
+            return result;
+        });
 }

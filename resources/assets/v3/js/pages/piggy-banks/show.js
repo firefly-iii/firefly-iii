@@ -18,12 +18,12 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-import '../../boot/bootstrap.js';
-import sidebar from '../../pages/shared/sidebar.js';
-import dates from '../shared/dates.js';
+import "../../boot/bootstrap.js";
+import sidebar from "../../pages/shared/sidebar.js";
+import dates from "../shared/dates.js";
 import i18next from "i18next";
-import {drawSingleCurrencyChart} from '../../shared/draw-chart.js';
-import {getVariable} from "../../store/get-variable.js";
+import { drawSingleCurrencyChart } from "../../shared/draw-chart.js";
+import { getVariable } from "../../store/get-variable.js";
 import Alpine from "alpinejs";
 
 window.enableDates = false;
@@ -33,32 +33,35 @@ let show = function () {
         init() {
             // console.log('Generic JS for page with few features.');
             //const ctx = document.getElementById('piggy-bank-history');
-            getVariable('anonymous').then((value) => {
-                const page = window.location.href.split('/');
+            getVariable("anonymous").then((value) => {
+                const page = window.location.href.split("/");
                 const piggyBankID = parseInt(page[page.length - 1]);
-                drawSingleCurrencyChart('line', 'chart/piggy-bank/' + piggyBankID, 'piggy-bank-history', value);
+                drawSingleCurrencyChart(
+                    "line",
+                    "chart/piggy-bank/" + piggyBankID,
+                    "piggy-bank-history",
+                    value,
+                );
             });
-
         },
         confirmHistoryRemoval() {
-            if(confirm(i18next.t('firefly.reset_history_confirm'))) {
-                document.getElementById('reset-form').submit()
+            if (confirm(i18next.t("firefly.reset_history_confirm"))) {
+                document.getElementById("reset-form").submit();
             }
             return false;
-        }
-    }
+        },
+    };
 };
-
 
 const comps = {
     show,
     sidebar,
-    dates
+    dates,
 };
 
 function loadPage(comps) {
     // console.log('loadPage');
-    Object.keys(comps).forEach(comp => {
+    Object.keys(comps).forEach((comp) => {
         let data = comps[comp]();
         Alpine.data(comp, () => data);
         // console.log(comp);
@@ -67,7 +70,7 @@ function loadPage(comps) {
 }
 
 // wait for load until bootstrapped event is received.
-document.addEventListener('firefly-iii-bootstrapped', () => {
+document.addEventListener("firefly-iii-bootstrapped", () => {
     // console.log('Loaded through event listener.');
     loadPage(comps);
 });

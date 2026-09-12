@@ -26,37 +26,58 @@ let uploadFiles = function (fileData) {
     let hasError = false;
 
     for (const key in fileData) {
-        if (Object.hasOwn(fileData, key) && /^0$|^[1-9]\d*$/.test(key) && key <= 4294967294 && false === hasError) {
+        if (
+            Object.hasOwn(fileData, key) &&
+            /^0$|^[1-9]\d*$/.test(key) &&
+            key <= 4294967294 &&
+            false === hasError
+        ) {
             let poster = new AttachmentPost();
-            poster.post(fileData[key].name, 'TransactionJournal', fileData[key].journal).then(response => {
-                let attachmentId = parseInt(response.data.data.id);
-                poster.upload(attachmentId, fileData[key].content).then(() => {
+            poster
+                .post(
+                    fileData[key].name,
+                    "TransactionJournal",
+                    fileData[key].journal,
+                )
+                .then((response) => {
+                    let attachmentId = parseInt(response.data.data.id);
+                    poster
+                        .upload(attachmentId, fileData[key].content)
+                        .then(() => {
+                            uploads++;
+                            if (uploads === count) {
+                                const event = new CustomEvent(
+                                    "upload-success",
+                                    { detail: { some: "details" } },
+                                );
+                                document.dispatchEvent(event);
+                            }
+                        })
+                        .catch((error) => {
+                            console.error("[a] Could not upload");
+                            // console.error(error);
+                            uploads++;
+                            // break right away
+                            const event = new CustomEvent("upload-failed", {
+                                detail: { error: error },
+                            });
+                            document.dispatchEvent(event);
+                            hasError = true;
+                        });
+                })
+                .catch((error) => {
+                    console.error("Could not create upload.");
+                    console.error(error);
                     uploads++;
-                    if (uploads === count) {
-                        const event = new CustomEvent('upload-success', {detail: {some: 'details'}});
-                        document.dispatchEvent(event);
-                    }
-                }).catch(error => {
-                    console.error('[a] Could not upload');
-                    // console.error(error);
-                    uploads++;
-                    // break right away
-                    const event = new CustomEvent('upload-failed', {detail: {error: error}});
+                    const event = new CustomEvent("upload-failed", {
+                        detail: { error: error },
+                    });
                     document.dispatchEvent(event);
                     hasError = true;
                 });
-            }).catch(error => {
-                console.error('Could not create upload.');
-                console.error(error);
-                uploads++;
-                const event = new CustomEvent('upload-failed', {detail: {error: error}});
-                document.dispatchEvent(event);
-                hasError = true;
-            });
         }
     }
-}
-
+};
 
 export function processAttachments(groupId, transactions) {
     // reverse list of transactions
@@ -73,13 +94,21 @@ export function processAttachments(groupId, transactions) {
 
     // loop over all attachments, and add references to this array:
     for (const key in attachments) {
-        if (Object.hasOwn(attachments, key) && /^0$|^[1-9]\d*$/.test(key) && key <= 4294967294) {
+        if (
+            Object.hasOwn(attachments, key) &&
+            /^0$|^[1-9]\d*$/.test(key) &&
+            key <= 4294967294
+        ) {
             for (const fileKey in attachments[key].files) {
-                if (Object.hasOwn(attachments[key].files, fileKey) && /^0$|^[1-9]\d*$/.test(fileKey) && fileKey <= 4294967294) {
+                if (
+                    Object.hasOwn(attachments[key].files, fileKey) &&
+                    /^0$|^[1-9]\d*$/.test(fileKey) &&
+                    fileKey <= 4294967294
+                ) {
                     // include journal thing.
                     toBeUploaded.push({
                         journal: transactions[key].transaction_journal_id,
-                        file: attachments[key].files[fileKey]
+                        file: attachments[key].files[fileKey],
                     });
                     count++;
                 }
@@ -89,17 +118,21 @@ export function processAttachments(groupId, transactions) {
 
     // loop all uploads. This is async.
     for (const key in toBeUploaded) {
-        if (Object.hasOwn(toBeUploaded, key) && /^0$|^[1-9]\d*$/.test(key) && key <= 4294967294) {
-
+        if (
+            Object.hasOwn(toBeUploaded, key) &&
+            /^0$|^[1-9]\d*$/.test(key) &&
+            key <= 4294967294
+        ) {
             // create file reader thing that will read all of these uploads
             (function (f, key) {
                 let fileReader = new FileReader();
                 fileReader.onloadend = function (evt) {
-                    if (evt.target.readyState === FileReader.DONE) { // DONE == 2
+                    if (evt.target.readyState === FileReader.DONE) {
+                        // DONE == 2
                         fileData.push({
                             name: toBeUploaded[key].file.name,
                             journal: toBeUploaded[key].journal,
-                            content: new Blob([evt.target.result])
+                            content: new Blob([evt.target.result]),
                         });
                         if (fileData.length === count) {
                             uploadFiles(fileData);
@@ -107,7 +140,7 @@ export function processAttachments(groupId, transactions) {
                     }
                 };
                 fileReader.readAsArrayBuffer(f.file);
-            })(toBeUploaded[key], key,);
+            })(toBeUploaded[key], key);
         }
     }
     return count;

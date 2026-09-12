@@ -23,22 +23,23 @@ import Get from "../../../api/configuration/get.js";
 
 function loadDeliveries() {
     let result = [];
-    return (new Get).getByName('webhook.deliveries').then(response => {
-        for (let key in response.data.data.value) {
-            if(Object.hasOwn(response.data.data.value, key)) {
-                result.push(
-                    {
+    return new Get()
+        .getByName("webhook.deliveries")
+        .then((response) => {
+            for (let key in response.data.data.value) {
+                if (Object.hasOwn(response.data.data.value, key)) {
+                    result.push({
                         id: key,
-                        name: i18next.t('firefly.webhook_delivery_' + key),
-                    }
-                );
+                        name: i18next.t("firefly.webhook_delivery_" + key),
+                    });
+                }
             }
-        }
-        return result;
-    }).catch((error) => {
-        console.error(error);
-        return []
-    });
+            return result;
+        })
+        .catch((error) => {
+            console.error(error);
+            return [];
+        });
 }
 
-export {loadDeliveries};
+export { loadDeliveries };

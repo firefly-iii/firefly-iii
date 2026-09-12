@@ -18,19 +18,18 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-import {switchTransactionType} from "./switch-transaction-type.js";
+import { switchTransactionType } from "./switch-transaction-type.js";
 
 function createButtonSwitcher() {
-    let list = document.getElementsByClassName('switch-button');
+    let list = document.getElementsByClassName("switch-button");
     for (let i = 0; i < list.length; i++) {
-
-        list[i].addEventListener('click', (event) => {
+        list[i].addEventListener("click", (event) => {
             let transactionType = event.currentTarget.dataset.value;
-            console.log('Clicked value is ' + transactionType);
+            console.log("Clicked value is " + transactionType);
             switchTransactionType(transactionType);
             return false;
         });
     }
 }
 
-export {createButtonSwitcher};
+export { createButtonSwitcher };

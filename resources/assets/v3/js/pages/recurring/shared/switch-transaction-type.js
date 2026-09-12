@@ -19,61 +19,74 @@
  */
 
 function switchTransactionType(transactionType) {
-    let list = document.getElementsByClassName('switch-button');
+    let list = document.getElementsByClassName("switch-button");
     for (let i = 0; i < list.length; i++) {
         let currentType = list[i].dataset.value;
         if (currentType === transactionType) {
-            list[i].classList.add('btn-primary');
-            list[i].classList.remove('btn-secondary');
+            list[i].classList.add("btn-primary");
+            list[i].classList.remove("btn-secondary");
         }
         if (currentType !== transactionType) {
-            list[i].classList.remove('btn-primary');
-            list[i].classList.add('btn-secondary');
+            list[i].classList.remove("btn-primary");
+            list[i].classList.add("btn-secondary");
         }
     }
-    document.querySelector('input[type="hidden"][name="transaction_type"]').value = transactionType;
-    if ('withdrawal' === transactionType) {
+    document.querySelector(
+        'input[type="hidden"][name="transaction_type"]',
+    ).value = transactionType;
+    if ("withdrawal" === transactionType) {
         // hide source account name:
-        document.getElementById('deposit_source_id_holder').style.display = 'none';
+        document.getElementById("deposit_source_id_holder").style.display =
+            "none";
 
         // // show source account ID:
-        document.getElementById('source_id_holder').style.display = 'block';
+        document.getElementById("source_id_holder").style.display = "block";
 
         // show destination name:
-        document.getElementById('withdrawal_destination_id_holder').style.display = 'block';
+        document.getElementById(
+            "withdrawal_destination_id_holder",
+        ).style.display = "block";
 
         // // hide destination ID:
-        document.getElementById('destination_id_holder').style.display = 'none';
+        document.getElementById("destination_id_holder").style.display = "none";
 
         // show budget + bill
-        document.getElementById('budget_id_holder').style.display = 'block';
-        document.getElementById('bill_id_holder').style.display = 'block';
+        document.getElementById("budget_id_holder").style.display = "block";
+        document.getElementById("bill_id_holder").style.display = "block";
 
         // hide piggy bank:
-        document.getElementById('piggy_bank_id_holder').style.display = 'none';
+        document.getElementById("piggy_bank_id_holder").style.display = "none";
     }
 
-    if (transactionType === 'deposit') {
-        document.getElementById('deposit_source_id_holder').style.display = 'block';
+    if (transactionType === "deposit") {
+        document.getElementById("deposit_source_id_holder").style.display =
+            "block";
 
-        document.getElementById('source_id_holder').style.display = 'none';
+        document.getElementById("source_id_holder").style.display = "none";
 
-        document.getElementById('withdrawal_destination_id_holder').style.display = 'none';
+        document.getElementById(
+            "withdrawal_destination_id_holder",
+        ).style.display = "none";
 
-        document.getElementById('destination_id_holder').style.display = 'block';
-        document.getElementById('budget_id_holder').style.display = 'none';
-        document.getElementById('bill_id_holder').style.display = 'none';
-        document.getElementById('piggy_bank_id_holder').style.display = 'none';
+        document.getElementById("destination_id_holder").style.display =
+            "block";
+        document.getElementById("budget_id_holder").style.display = "none";
+        document.getElementById("bill_id_holder").style.display = "none";
+        document.getElementById("piggy_bank_id_holder").style.display = "none";
     }
 
-    if (transactionType === 'transfer') {
-        document.getElementById('deposit_source_id_holder').style.display = 'none';
-        document.getElementById('source_id_holder').style.display = 'block';
-        document.getElementById('withdrawal_destination_id_holder').style.display = 'none';
-        document.getElementById('destination_id_holder').style.display = 'block';
-        document.getElementById('budget_id_holder').style.display = 'none';
-        document.getElementById('bill_id_holder').style.display = 'none';
-        document.getElementById('piggy_bank_id_holder').style.display = 'block';
+    if (transactionType === "transfer") {
+        document.getElementById("deposit_source_id_holder").style.display =
+            "none";
+        document.getElementById("source_id_holder").style.display = "block";
+        document.getElementById(
+            "withdrawal_destination_id_holder",
+        ).style.display = "none";
+        document.getElementById("destination_id_holder").style.display =
+            "block";
+        document.getElementById("budget_id_holder").style.display = "none";
+        document.getElementById("bill_id_holder").style.display = "none";
+        document.getElementById("piggy_bank_id_holder").style.display = "block";
     }
 }
-export {switchTransactionType};
+export { switchTransactionType };

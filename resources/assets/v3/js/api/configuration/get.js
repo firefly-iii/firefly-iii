@@ -18,10 +18,10 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-import {api} from "../../boot/axios";
+import { api } from "../../boot/axios";
 
 export default class Get {
     getByName(name) {
-        return api.get('/api/v1/configuration/' + name);
+        return api.get("/api/v1/configuration/" + name);
     }
 }

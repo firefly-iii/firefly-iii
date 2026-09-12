@@ -27,4 +27,4 @@ export function respondToTabSwitch(event) {
         this.maps[index].invalidateSize();
     }
     //console.log('Switched to new tab!', event.target.dataset.index);
-};
+}

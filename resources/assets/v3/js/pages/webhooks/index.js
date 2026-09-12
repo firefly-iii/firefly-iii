@@ -18,13 +18,13 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-import '../../boot/bootstrap.js';
-import sidebar from '../../pages/shared/sidebar.js';
-import dates from '../shared/dates.js';
+import "../../boot/bootstrap.js";
+import sidebar from "../../pages/shared/sidebar.js";
+import dates from "../shared/dates.js";
 import i18next from "i18next";
-import Get from '../../api/model/webhook/get.js';
-import GetConfig from '../../api/configuration/get.js';
-import Alpine from 'alpinejs';
+import Get from "../../api/model/webhook/get.js";
+import GetConfig from "../../api/configuration/get.js";
+import Alpine from "alpinejs";
 
 window.enableDates = false;
 let index = function () {
@@ -47,7 +47,7 @@ let index = function () {
             webhook.show_secret = !webhook.show_secret;
         },
         downloadWebhooks: function (page) {
-            (new Get).list({page: page}).then((response) => {
+            new Get().list({ page: page }).then((response) => {
                 for (let i in response.data.data) {
                     if (Object.hasOwn(response.data.data, i)) {
                         let current = response.data.data[i];
@@ -64,59 +64,88 @@ let index = function () {
                             show_secret: false,
                         };
                         if (current.attributes.url.length > 20) {
-                            webhook.url = current.attributes.url.slice(0, 20) + '...';
+                            webhook.url =
+                                current.attributes.url.slice(0, 20) + "...";
                         }
                         this.webhooks.push(webhook);
                     }
                 }
 
-                if (response.data.meta.pagination.current_page < response.data.meta.pagination.total_pages) {
-                    this.downloadWebhooks(parseInt(response.data.meta.pagination.current_page) + 1);
+                if (
+                    response.data.meta.pagination.current_page <
+                    response.data.meta.pagination.total_pages
+                ) {
+                    this.downloadWebhooks(
+                        parseInt(response.data.meta.pagination.current_page) +
+                            1,
+                    );
                     return;
                 }
                 this.loading = false;
             });
         },
         getOptions: function () {
-            (new GetConfig).getByName('webhook.triggers').then((response) => {
-                for (let key in response.data.data.value) {
-                    if(Object.hasOwn(response.data.data.value, key)) {
-                        this.triggers[key] = i18next.t('firefly.webhook_trigger_' + key);
-                    }
-                }
-            }).then(() => {
-                (new GetConfig).getByName('webhook.responses').then((response) => {
+            new GetConfig()
+                .getByName("webhook.triggers")
+                .then((response) => {
                     for (let key in response.data.data.value) {
-                        if(Object.hasOwn(response.data.data.value, key)) {
-                            this.responses[key] = i18next.t('firefly.webhook_response_' + key);
+                        if (Object.hasOwn(response.data.data.value, key)) {
+                            this.triggers[key] = i18next.t(
+                                "firefly.webhook_trigger_" + key,
+                            );
                         }
                     }
-                }).then(() => {
-                    (new GetConfig).getByName('webhook.deliveries').then((response) => {
-                        for (let key in response.data.data.value) {
-                            if(Object.hasOwn(response.data.data.value, key)) {
-                                this.deliveries[key] = i18next.t('firefly.webhook_delivery_' + key);
+                })
+                .then(() => {
+                    new GetConfig()
+                        .getByName("webhook.responses")
+                        .then((response) => {
+                            for (let key in response.data.data.value) {
+                                if (
+                                    Object.hasOwn(response.data.data.value, key)
+                                ) {
+                                    this.responses[key] = i18next.t(
+                                        "firefly.webhook_response_" + key,
+                                    );
+                                }
                             }
-                        }
-                    }).then(() => {
-                        this.getWebhooks();
-                    });
+                        })
+                        .then(() => {
+                            new GetConfig()
+                                .getByName("webhook.deliveries")
+                                .then((response) => {
+                                    for (let key in response.data.data.value) {
+                                        if (
+                                            Object.hasOwn(
+                                                response.data.data.value,
+                                                key,
+                                            )
+                                        ) {
+                                            this.deliveries[key] = i18next.t(
+                                                "firefly.webhook_delivery_" +
+                                                    key,
+                                            );
+                                        }
+                                    }
+                                })
+                                .then(() => {
+                                    this.getWebhooks();
+                                });
+                        });
                 });
-            });
         },
-    }
+    };
 };
-
 
 const comps = {
     index,
     sidebar,
-    dates
+    dates,
 };
 
 function loadPage(comps) {
-    console.log('loadPage');
-    Object.keys(comps).forEach(comp => {
+    console.log("loadPage");
+    Object.keys(comps).forEach((comp) => {
         let data = comps[comp]();
         Alpine.data(comp, () => data);
         console.log(comp);
@@ -125,12 +154,12 @@ function loadPage(comps) {
 }
 
 // wait for load until bootstrapped event is received.
-document.addEventListener('firefly-iii-bootstrapped', () => {
-    console.log('Loaded through event listener.');
+document.addEventListener("firefly-iii-bootstrapped", () => {
+    console.log("Loaded through event listener.");
     loadPage(comps);
 });
 // or is bootstrapped before event is triggered.
 if (window.bootstrapped) {
-    console.log('Loaded through window variable.');
+    console.log("Loaded through window variable.");
     loadPage(comps);
 }

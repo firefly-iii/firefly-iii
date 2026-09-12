@@ -21,37 +21,49 @@
 export function saveNewLink(e) {
     let index = parseInt(e.currentTarget.dataset.index);
 
-    let linkSelect = document.getElementById('link_type_id_' + index);
+    let linkSelect = document.getElementById("link_type_id_" + index);
     let linkType = linkSelect.value;
     let linkLabel = linkSelect.options[linkSelect.selectedIndex].innerHTML;
-    let searchBox = document.getElementById('links_modal_search_' + index);
-    let hiddenField = searchBox.parentNode.querySelector('input[name="search"]');
+    let searchBox = document.getElementById("links_modal_search_" + index);
+    let hiddenField = searchBox.parentNode.querySelector(
+        'input[name="search"]',
+    );
 
-    let linkTypeId = parseInt(linkType.split('_')[0]);
-    let linkTypeDirection = linkType.split('_')[1];
-    let linkTypeObj = this.formData.linkTypes.find(link => link.id === linkTypeId);
+    let linkTypeId = parseInt(linkType.split("_")[0]);
+    let linkTypeDirection = linkType.split("_")[1];
+    let linkTypeObj = this.formData.linkTypes.find(
+        (link) => link.id === linkTypeId,
+    );
 
-    if ('' === linkType || '' === hiddenField.value || '' === searchBox.value) {
+    if ("" === linkType || "" === hiddenField.value || "" === searchBox.value) {
         return;
     }
 
     // add entry to temporary table.
-    console.log('Link ' + linkType + ' ("' + linkLabel + '") to transaction #' + hiddenField.value + '("' + searchBox.value + '")');
-
-    this.links[index].push(
-        {
-            id: 0,
-            link_type: linkTypeId + '_' + linkTypeDirection,
-            link_type_id: linkTypeId,
-            link_type_direction: linkTypeDirection,
-            link_type_label: linkTypeObj[linkTypeDirection],
-            journal_id: hiddenField.value,
-            group_id: hiddenField.value,
-            journal_description: searchBox.value,
-            editMode: false,
-            stored: false,
-        }
+    console.log(
+        "Link " +
+            linkType +
+            ' ("' +
+            linkLabel +
+            '") to transaction #' +
+            hiddenField.value +
+            '("' +
+            searchBox.value +
+            '")',
     );
-    searchBox.value = '';
-    hiddenField.value = '';
-};
+
+    this.links[index].push({
+        id: 0,
+        link_type: linkTypeId + "_" + linkTypeDirection,
+        link_type_id: linkTypeId,
+        link_type_direction: linkTypeDirection,
+        link_type_label: linkTypeObj[linkTypeDirection],
+        journal_id: hiddenField.value,
+        group_id: hiddenField.value,
+        journal_description: searchBox.value,
+        editMode: false,
+        stored: false,
+    });
+    searchBox.value = "";
+    hiddenField.value = "";
+}

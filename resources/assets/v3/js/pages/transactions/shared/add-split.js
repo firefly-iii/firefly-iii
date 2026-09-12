@@ -18,7 +18,7 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-import {createEmptySplit} from "./create-empty-split.js";
+import { createEmptySplit } from "./create-empty-split.js";
 
 export function addSplit() {
     this.entries.push(createEmptySplit());

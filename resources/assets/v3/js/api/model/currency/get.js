@@ -18,20 +18,18 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-import {api} from "../../../boot/axios";
+import { api } from "../../../boot/axios";
 
 export default class Get {
-
     /**
      *
      * @param params
      * @returns {Promise<AxiosResponse<any>>}
      */
     list(params) {
-        return api.get('/api/v1/currencies', {params: params});
+        return api.get("/api/v1/currencies", { params: params });
     }
     get(code) {
-        return api.get('/api/v1/currencies/' + code);
+        return api.get("/api/v1/currencies/" + code);
     }
-
 }

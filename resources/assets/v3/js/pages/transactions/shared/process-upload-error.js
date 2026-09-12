@@ -20,17 +20,19 @@
 
 import Delete from "../../../api/model/transaction/delete.js";
 
-export function processUploadError(event){
+export function processUploadError(event) {
     this.notifications.success.show = false;
     this.notifications.wait.show = false;
     this.notifications.error.show = true;
     this.formStates.isSubmitting = false;
-    this.notifications.error.text = this.i18next.t('firefly.errors_upload');
+    this.notifications.error.text = this.i18next.t("firefly.errors_upload");
     console.log(event.detail.error.response.status);
-    if(413 === event.detail.error.response.status) {
-        this.notifications.error.text = this.i18next.t('firefly.upload_too_large');
+    if (413 === event.detail.error.response.status) {
+        this.notifications.error.text = this.i18next.t(
+            "firefly.upload_too_large",
+        );
     }
-    if('create' === this.formBehaviour.formType) {
+    if ("create" === this.formBehaviour.formType) {
         // delete transaction and let user try again.
         let del = new Delete();
         del.delete(this.groupProperties.id);

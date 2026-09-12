@@ -18,21 +18,21 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-import '../../boot/bootstrap.js';
-import sidebar from '../../pages/shared/sidebar.js';
-import dates from '../shared/dates.js';
+import "../../boot/bootstrap.js";
+import sidebar from "../../pages/shared/sidebar.js";
+import dates from "../shared/dates.js";
 import i18next from "i18next";
-import Get from '../../api/model/currency/get.js';
-import GetUserGroup from '../../api/user-group/get.js';
-import Put from '../../api/user-group/put.js';
+import Get from "../../api/model/currency/get.js";
+import GetUserGroup from "../../api/user-group/get.js";
+import Put from "../../api/user-group/put.js";
 import Alpine from "alpinejs";
 
 let edit = function () {
     return {
         i18next: null,
-        pageTitle: '',
+        pageTitle: "",
         administration: {
-            title: '',
+            title: "",
             currency_id: 0,
         },
         currencies: [],
@@ -40,29 +40,31 @@ let edit = function () {
             title: [],
             currency_id: [],
         },
-        error_message: '',
-        success_message: '',
+        error_message: "",
+        success_message: "",
 
         init() {
             this.i18next = i18next;
-            const page = window.location.href.split('/');
+            const page = window.location.href.split("/");
             const administrationId = parseInt(page[page.length - 1]);
             this.downloadAdministration(administrationId);
         },
         downloadAdministration: function (id) {
-            (new GetUserGroup).get(id, {}).then((response) => {
+            new GetUserGroup().get(id, {}).then((response) => {
                 let current = response.data.data;
                 this.administration = {
                     id: current.id,
                     title: current.attributes.title,
-                    currency_id: parseInt(current.attributes.primary_currency_id),
+                    currency_id: parseInt(
+                        current.attributes.primary_currency_id,
+                    ),
                     currency_code: current.attributes.primary_currency_code,
                     currency_name: current.attributes.primary_currency_name,
                 };
                 this.pageTitle = this.administration.title;
             });
-            const params = {page:1, limit:1337};
-            (new Get).list(params).then((response => {
+            const params = { page: 1, limit: 1337 };
+            new Get().list(params).then((response) => {
                 this.currencies = response.data.data.map((currency) => {
                     return {
                         id: currency.id,
@@ -70,18 +72,18 @@ let edit = function () {
                         name: currency.attributes.name,
                     };
                 });
-            }));
+            });
         },
         submit: function (e) {
             // reset messages
-            this.error_message = '';
-            this.success_message = '';
+            this.error_message = "";
+            this.success_message = "";
             this.errors = {
                 title: [],
                 currency_id: [],
             };
 
-            document.getElementById('submitButton').disabled = true;
+            document.getElementById("submitButton").disabled = true;
 
             // collect data
             let data = {
@@ -90,19 +92,24 @@ let edit = function () {
             };
 
             // post!
-            (new Put).put(data, {id: this.administration.id}).then((response) => {
-                let administrationId = parseInt(response.data.data.id);
-                window.location.href = './administrations?user_group_id=' + administrationId + '&message=updated';
-            }).catch((error) => {
+            new Put()
+                .put(data, { id: this.administration.id })
+                .then((response) => {
+                    let administrationId = parseInt(response.data.data.id);
+                    window.location.href =
+                        "./administrations?user_group_id=" +
+                        administrationId +
+                        "&message=updated";
+                })
+                .catch((error) => {
+                    this.error_message = error.response.data.message;
+                    this.errors.title = error.response.data.errors.title;
+                    this.errors.primary_currency_id =
+                        error.response.data.errors.primary_currency_id;
 
-                this.error_message = error.response.data.message;
-                this.errors.title = error.response.data.errors.title;
-                this.errors.primary_currency_id = error.response.data.errors.primary_currency_id;
-
-                // enable button again
-                document.getElementById('submitButton').disabled = false;
-
-            });
+                    // enable button again
+                    document.getElementById("submitButton").disabled = false;
+                });
             if (e) {
                 e.preventDefault();
             }
@@ -111,24 +118,23 @@ let edit = function () {
             return this.errors[field].length > 0;
         },
         clearTitle: function () {
-            this.administration.title = '';
+            this.administration.title = "";
         },
         handleInput() {
             // this.$emit('input', this.administration.title);
         },
-    }
+    };
 };
-
 
 const comps = {
     edit,
     sidebar,
-    dates
+    dates,
 };
 
 function loadPage(comps) {
-    console.log('loadPage');
-    Object.keys(comps).forEach(comp => {
+    console.log("loadPage");
+    Object.keys(comps).forEach((comp) => {
         let data = comps[comp]();
         Alpine.data(comp, () => data);
         console.log(comp);
@@ -137,12 +143,12 @@ function loadPage(comps) {
 }
 
 // wait for load until bootstrapped event is received.
-document.addEventListener('firefly-iii-bootstrapped', () => {
-    console.log('Loaded through event listener.');
+document.addEventListener("firefly-iii-bootstrapped", () => {
+    console.log("Loaded through event listener.");
     loadPage(comps);
 });
 // or is bootstrapped before event is triggered.
 if (window.bootstrapped) {
-    console.log('Loaded through window variable.');
+    console.log("Loaded through window variable.");
     loadPage(comps);
 }

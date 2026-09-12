@@ -18,86 +18,93 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-
-import '../../boot/bootstrap.js';
-import sidebar from '../../pages/shared/sidebar.js';
-import dates from '../shared/dates.js';
+import "../../boot/bootstrap.js";
+import sidebar from "../../pages/shared/sidebar.js";
+import dates from "../shared/dates.js";
 import Tags from "bootstrap5-tags";
-import i18next from 'i18next';
-import {addAutocomplete} from "./shared/add-autocomplete.js";
-import Alpine from 'alpinejs';
+import i18next from "i18next";
+import { addAutocomplete } from "./shared/add-autocomplete.js";
+import Alpine from "alpinejs";
 
 window.enableDates = false;
 
 let edit = function () {
     return {
         detectCategoryChange(e) {
-            if('' !== e.target.value) {
+            if ("" !== e.target.value) {
                 // tags_action_do_nothing
-                document.querySelector('input[name="ignore_category"]').checked = false;
+                document.querySelector(
+                    'input[name="ignore_category"]',
+                ).checked = false;
             }
         },
         detectBudgetChange(e) {
-            if(0 !== parseInt(e.target.value)) {
+            if (0 !== parseInt(e.target.value)) {
                 // tags_action_do_nothing
-                document.querySelector('input[name="ignore_budget"]').checked = false;
+                document.querySelector('input[name="ignore_budget"]').checked =
+                    false;
             }
         },
         detectTagChange() {
             let count = 0;
             let options = document.querySelector('select[name="tags"]').options;
-            for(let i = 0; i < options.length; i ++){
-                if (true === options[i].selected){
+            for (let i = 0; i < options.length; i++) {
+                if (true === options[i].selected) {
                     count++;
                 }
             }
-            if(count > 0 && true === document.getElementById('tags_action_do_nothing').checked ) {
-                document.getElementById('tags_action_do_nothing').checked = false;
-                document.getElementById('tags_action_do_replace').checked = true;
+            if (
+                count > 0 &&
+                true ===
+                    document.getElementById("tags_action_do_nothing").checked
+            ) {
+                document.getElementById("tags_action_do_nothing").checked =
+                    false;
+                document.getElementById("tags_action_do_replace").checked =
+                    true;
             }
         },
         init() {
-
             addAutocomplete({
-                selector: 'input.ac-category',
-                serverUrl: '/api/v1/autocomplete/categories',
-                valueField: 'name',
-                labelField: 'name',
+                selector: "input.ac-category",
+                serverUrl: "/api/v1/autocomplete/categories",
+                valueField: "name",
+                labelField: "name",
             });
 
-
-            Tags.init('select.ac-tags', {
+            Tags.init("select.ac-tags", {
                 allowClear: true,
-                server: '/api/v1/autocomplete/tags',
+                server: "/api/v1/autocomplete/tags",
                 liveServer: true,
                 clearEnd: true,
-                labelField: 'tag',
-                valueField: 'tag',
-                queryParam: 'query',
+                labelField: "tag",
+                valueField: "tag",
+                queryParam: "query",
                 allowNew: true,
                 //serverDataKey: 'data',
-                notFoundMessage: i18next.t('firefly.nothing_found'),
+                notFoundMessage: i18next.t("firefly.nothing_found"),
                 noCache: true,
                 fetchOptions: {
                     headers: {
-                        'X-CSRF-TOKEN': document.head.querySelector('meta[name="csrf-token"]').content
-                    }
-                }
+                        "X-CSRF-TOKEN": document.head.querySelector(
+                            'meta[name="csrf-token"]',
+                        ).content,
+                    },
+                },
             });
-        }
-    }
+        },
+    };
 };
-
 
 const comps = {
     edit,
     sidebar,
-    dates
+    dates,
 };
 
 function loadPage(comps) {
     // console.log('loadPage');
-    Object.keys(comps).forEach(comp => {
+    Object.keys(comps).forEach((comp) => {
         let data = comps[comp]();
         Alpine.data(comp, () => data);
         // console.log(comp);
@@ -106,7 +113,7 @@ function loadPage(comps) {
 }
 
 // wait for load until bootstrapped event is received.
-document.addEventListener('firefly-iii-bootstrapped', () => {
+document.addEventListener("firefly-iii-bootstrapped", () => {
     // console.log('Loaded through event listener.');
     loadPage(comps);
 });

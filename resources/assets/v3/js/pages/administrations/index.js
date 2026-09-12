@@ -19,10 +19,10 @@
  */
 
 // CSS
-import '../../boot/bootstrap.js';
-import sidebar from '../../pages/shared/sidebar.js';
-import dates from '../shared/dates.js';
-import Get from '../../api/user-group/get.js';
+import "../../boot/bootstrap.js";
+import sidebar from "../../pages/shared/sidebar.js";
+import dates from "../shared/dates.js";
+import Get from "../../api/user-group/get.js";
 import Alpine from "alpinejs";
 
 let index = function () {
@@ -37,38 +37,45 @@ let index = function () {
         },
 
         downloadAdministrations: function (page) {
-            (new Get).list({page: page}).then((response) => {
+            new Get().list({ page: page }).then((response) => {
                 for (let i in response.data.data) {
                     if (Object.hasOwn(response.data.data, i)) {
                         let current = response.data.data[i];
                         let administration = {
                             id: current.id,
                             title: current.attributes.title,
-                            currency_code: current.attributes.primary_currency_code,
-                            currency_name: current.attributes.primary_currency_name,
+                            currency_code:
+                                current.attributes.primary_currency_code,
+                            currency_name:
+                                current.attributes.primary_currency_name,
                         };
                         this.administrations.push(administration);
                     }
                 }
 
-                if (response.data.meta.pagination.current_page < response.data.meta.pagination.total_pages) {
-                    this.downloadAdministrations(parseInt(response.data.meta.pagination.current_page) + 1);
+                if (
+                    response.data.meta.pagination.current_page <
+                    response.data.meta.pagination.total_pages
+                ) {
+                    this.downloadAdministrations(
+                        parseInt(response.data.meta.pagination.current_page) +
+                            1,
+                    );
                 }
             });
         },
-    }
+    };
 };
-
 
 const comps = {
     index,
     sidebar,
-    dates
+    dates,
 };
 
 function loadPage(comps) {
-    console.log('loadPage');
-    Object.keys(comps).forEach(comp => {
+    console.log("loadPage");
+    Object.keys(comps).forEach((comp) => {
         let data = comps[comp]();
         Alpine.data(comp, () => data);
         console.log(comp);
@@ -77,12 +84,12 @@ function loadPage(comps) {
 }
 
 // wait for load until bootstrapped event is received.
-document.addEventListener('firefly-iii-bootstrapped', () => {
-    console.log('Loaded through event listener.');
+document.addEventListener("firefly-iii-bootstrapped", () => {
+    console.log("Loaded through event listener.");
     loadPage(comps);
 });
 // or is bootstrapped before event is triggered.
 if (window.bootstrapped) {
-    console.log('Loaded through window variable.');
+    console.log("Loaded through window variable.");
     loadPage(comps);
 }

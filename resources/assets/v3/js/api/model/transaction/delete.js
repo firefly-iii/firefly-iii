@@ -18,11 +18,11 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-import {api} from "../../../boot/axios";
+import { api } from "../../../boot/axios";
 
 export default class Delete {
     delete(id) {
-        let url = '/api/v1/transactions/' + parseInt(id);
+        let url = "/api/v1/transactions/" + parseInt(id);
         return api.delete(url);
     }
 }

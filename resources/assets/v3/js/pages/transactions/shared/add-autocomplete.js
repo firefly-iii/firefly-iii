@@ -21,21 +21,22 @@
 import Autocomplete from "bootstrap5-autocomplete";
 import i18next from "i18next";
 import {
-    changeCategory, changeDescription,
+    changeCategory,
+    changeDescription,
     changeDestinationAccount,
     changeSourceAccount,
     selectDestinationAccount,
-    selectSourceAccount
+    selectSourceAccount,
 } from "./autocomplete-functions.js";
 import Tags from "bootstrap5-tags";
 
 export function getUrls() {
     return {
-        description: '/api/v1/autocomplete/transactions',
-        account: '/api/v1/autocomplete/accounts',
-        category: '/api/v1/autocomplete/categories',
-        tag: '/api/v1/autocomplete/tags',
-    }
+        description: "/api/v1/autocomplete/transactions",
+        account: "/api/v1/autocomplete/accounts",
+        category: "/api/v1/autocomplete/categories",
+        tag: "/api/v1/autocomplete/tags",
+    };
 }
 
 export function addAllAutocompleteToForm() {
@@ -43,22 +44,33 @@ export function addAllAutocompleteToForm() {
     // part of the account selection auto-complete
     let filters = {
         // source can never be expense account
-        source: ['Asset account', 'Loan', 'Debt', 'Mortgage', 'Revenue account'],
+        source: [
+            "Asset account",
+            "Loan",
+            "Debt",
+            "Mortgage",
+            "Revenue account",
+        ],
         // destination can never be revenue account
-        destination: ['Expense account', 'Loan', 'Debt', 'Mortgage', 'Asset account'],
+        destination: [
+            "Expense account",
+            "Loan",
+            "Debt",
+            "Mortgage",
+            "Asset account",
+        ],
     };
     // depending on the type of the transaction,
     // the filters are changed. For edit form, this means
     // the available account types may be limited.
-    if('edit' === this.formBehaviour.formType) {
-
-        if('withdrawal' === this.groupProperties.transactionType) {
+    if ("edit" === this.formBehaviour.formType) {
+        if ("withdrawal" === this.groupProperties.transactionType) {
             // filters.destination = ['Expense account'];
         }
-        if('deposit' === this.groupProperties.transactionType) {
+        if ("deposit" === this.groupProperties.transactionType) {
             // filters.source = ['Revenue account'];
         }
-        if('transfer' === this.groupProperties.transactionType) {
+        if ("transfer" === this.groupProperties.transactionType) {
             filters.source = [this.entries[0].source_account.type];
             filters.destination = [this.entries[0].source_account.type];
         }
@@ -69,61 +81,68 @@ export function addAllAutocompleteToForm() {
         // addedSplit, is called from the HTML
         // for source account
         const renderAccount = function (item) {
-            return item.name_with_balance + '<br><small class="text-muted">' + i18next.t('firefly.account_type_' + item.type) + '</small>';
+            return (
+                item.name_with_balance +
+                '<br><small class="text-muted">' +
+                i18next.t("firefly.account_type_" + item.type) +
+                "</small>"
+            );
         };
 
         // render tags:
-        Tags.init('select.ac-tags', {
+        Tags.init("select.ac-tags", {
             allowClear: true,
             server: urls.tag,
             liveServer: true,
             clearEnd: true,
-            labelField: 'tag',
-            valueField: 'tag',
-            queryParam: 'query',
+            labelField: "tag",
+            valueField: "tag",
+            queryParam: "query",
             allowNew: true,
             //serverDataKey: 'data',
-            notFoundMessage: i18next.t('firefly.nothing_found'),
+            notFoundMessage: i18next.t("firefly.nothing_found"),
             noCache: true,
             fetchOptions: {
                 headers: {
-                    'X-CSRF-TOKEN': document.head.querySelector('meta[name="csrf-token"]').content
-                }
-            }
+                    "X-CSRF-TOKEN": document.head.querySelector(
+                        'meta[name="csrf-token"]',
+                    ).content,
+                },
+            },
         });
         addAutocomplete({
-            selector: 'input.ac-source',
+            selector: "input.ac-source",
             serverUrl: urls.account,
             account_types: filters.source,
             onRenderItem: renderAccount,
-            valueField: 'id',
-            labelField: 'name',
+            valueField: "id",
+            labelField: "name",
             onChange: changeSourceAccount,
-            onSelectItem: selectSourceAccount
+            onSelectItem: selectSourceAccount,
         });
         addAutocomplete({
-            selector: 'input.ac-dest',
+            selector: "input.ac-dest",
             serverUrl: urls.account,
-            valueField: 'id',
-            labelField: 'name',
+            valueField: "id",
+            labelField: "name",
             account_types: filters.destination,
             onRenderItem: renderAccount,
             onChange: changeDestinationAccount,
-            onSelectItem: selectDestinationAccount
+            onSelectItem: selectDestinationAccount,
         });
         addAutocomplete({
-            selector: 'input.ac-category',
+            selector: "input.ac-category",
             serverUrl: urls.category,
-            valueField: 'id',
-            labelField: 'name',
+            valueField: "id",
+            labelField: "name",
             onChange: changeCategory,
-            onSelectItem: changeCategory
+            onSelectItem: changeCategory,
         });
         addAutocomplete({
-            selector: 'input.ac-description',
+            selector: "input.ac-description",
             serverUrl: urls.description,
-            valueField: 'id',
-            labelField: 'name',
+            valueField: "id",
+            labelField: "name",
             onChange: changeDescription,
             onSelectItem: changeDescription,
         });
@@ -136,24 +155,32 @@ export function addAutocomplete(options) {
         serverParams: {},
         fixed: true,
         fetchOptions: {
-            method: 'GET',
-            credentials: 'include',
+            method: "GET",
+            credentials: "include",
             headers: {
-                'Content-Type': 'application/json',
-                'Accept': 'application/json',
-                'X-CSRF-TOKEN': document.head.querySelector('meta[name="csrf-token"]').content
-            }
+                "Content-Type": "application/json",
+                Accept: "application/json",
+                "X-CSRF-TOKEN": document.head.querySelector(
+                    'meta[name="csrf-token"]',
+                ).content,
+            },
         },
-        queryParam: 'query',
+        queryParam: "query",
         hiddenInput: true,
         // preventBrowserAutocomplete: true,
         highlightTyped: true,
         liveServer: true,
     };
-    if (typeof options.account_types !== 'undefined' && options.account_types.length > 0) {
-        params.serverParams['types'] = options.account_types;
+    if (
+        typeof options.account_types !== "undefined" &&
+        options.account_types.length > 0
+    ) {
+        params.serverParams["types"] = options.account_types;
     }
-    if (typeof options.onRenderItem !== 'undefined' && null !== options.onRenderItem) {
+    if (
+        typeof options.onRenderItem !== "undefined" &&
+        null !== options.onRenderItem
+    ) {
         params.onRenderItem = options.onRenderItem;
     }
     if (options.valueField) {
@@ -168,7 +195,7 @@ export function addAutocomplete(options) {
     if (options.onChange) {
         params.onChange = options.onChange;
     }
-    if(options.hiddenValue) {
+    if (options.hiddenValue) {
         params.hiddenValue = options.hiddenValue;
     }
 

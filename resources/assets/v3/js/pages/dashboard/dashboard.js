@@ -18,31 +18,30 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-import '../../boot/bootstrap.js';
-import sidebar from '../../pages/shared/sidebar.js';
-import dates from '../shared/dates.js';
-import boxes from './boxes.js';
+import "../../boot/bootstrap.js";
+import sidebar from "../../pages/shared/sidebar.js";
+import dates from "../shared/dates.js";
+import boxes from "./boxes.js";
 import Alpine from "alpinejs";
 
 let index = function () {
     return {
         init() {
-            console.log('Dashboard');
-        }
-    }
+            console.log("Dashboard");
+        },
+    };
 };
-
 
 const comps = {
     index,
     sidebar,
     boxes,
-    dates
+    dates,
 };
 
 function loadPage(comps) {
-    console.log('loadPage');
-    Object.keys(comps).forEach(comp => {
+    console.log("loadPage");
+    Object.keys(comps).forEach((comp) => {
         let data = comps[comp]();
         Alpine.data(comp, () => data);
         // console.log(comp);
@@ -51,12 +50,12 @@ function loadPage(comps) {
 }
 
 // wait for load until bootstrapped event is received.
-document.addEventListener('firefly-iii-bootstrapped', () => {
-    console.log('Loaded through event listener.');
+document.addEventListener("firefly-iii-bootstrapped", () => {
+    console.log("Loaded through event listener.");
     loadPage(comps);
 });
 // or is bootstrapped before event is triggered.
 if (window.bootstrapped) {
-    console.log('Loaded through window variable.');
+    console.log("Loaded through window variable.");
     loadPage(comps);
 }

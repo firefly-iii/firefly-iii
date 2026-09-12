@@ -18,53 +18,62 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-import '../../boot/bootstrap.js';
-import sidebar from '../../pages/shared/sidebar.js';
-import dates from '../shared/dates.js';
+import "../../boot/bootstrap.js";
+import sidebar from "../../pages/shared/sidebar.js";
+import dates from "../shared/dates.js";
 import i18next from "i18next";
 import Alpine from "alpinejs";
 
 let create = function () {
     return {
         init() {
-            let list = document.querySelectorAll('div.app-content form input[type="text"]:enabled');
-            if(list.length > 0) {
+            let list = document.querySelectorAll(
+                'div.app-content form input[type="text"]:enabled',
+            );
+            if (list.length > 0) {
                 list[0].focus();
             }
-            let el = document.getElementById('ffInput_liability_direction');
-            if(null !== el) {
-                el.addEventListener('change', (event) => {
+            let el = document.getElementById("ffInput_liability_direction");
+            if (null !== el) {
+                el.addEventListener("change", (event) => {
                     let direction = event.target.value;
-                    if ('credit' === direction) {
-                        document.querySelector('label[for="ffInput_opening_balance"]').textContent = i18next.t('firefly.i_am_owed_amount');
+                    if ("credit" === direction) {
+                        document.querySelector(
+                            'label[for="ffInput_opening_balance"]',
+                        ).textContent = i18next.t("firefly.i_am_owed_amount");
                     }
-                    if ('debit' === direction) {
-                        document.querySelector('label[for="ffInput_opening_balance"]').textContent = i18next.t('firefly.i_owe_amount');
+                    if ("debit" === direction) {
+                        document.querySelector(
+                            'label[for="ffInput_opening_balance"]',
+                        ).textContent = i18next.t("firefly.i_owe_amount");
                     }
                 });
                 // also change it the first time around
                 let direction = el.value;
-                if ('credit' === direction) {
-                    document.querySelector('label[for="ffInput_opening_balance"]').textContent = i18next.t('firefly.i_am_owed_amount');
+                if ("credit" === direction) {
+                    document.querySelector(
+                        'label[for="ffInput_opening_balance"]',
+                    ).textContent = i18next.t("firefly.i_am_owed_amount");
                 }
-                if ('debit' === direction) {
-                    document.querySelector('label[for="ffInput_opening_balance"]').textContent = i18next.t('firefly.i_owe_amount');
+                if ("debit" === direction) {
+                    document.querySelector(
+                        'label[for="ffInput_opening_balance"]',
+                    ).textContent = i18next.t("firefly.i_owe_amount");
                 }
             }
-        }
-    }
+        },
+    };
 };
-
 
 const comps = {
     create,
     sidebar,
-    dates
+    dates,
 };
 
 function loadPage(comps) {
     // console.log('loadPage');
-    Object.keys(comps).forEach(comp => {
+    Object.keys(comps).forEach((comp) => {
         let data = comps[comp]();
         Alpine.data(comp, () => data);
         // console.log(comp);
@@ -73,7 +82,7 @@ function loadPage(comps) {
 }
 
 // wait for load until bootstrapped event is received.
-document.addEventListener('firefly-iii-bootstrapped', () => {
+document.addEventListener("firefly-iii-bootstrapped", () => {
     // console.log('Loaded through event listener.');
     loadPage(comps);
 });

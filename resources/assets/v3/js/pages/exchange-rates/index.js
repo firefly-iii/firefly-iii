@@ -19,12 +19,12 @@
  */
 
 // CSS
-import '../../boot/bootstrap.js';
-import sidebar from '../../pages/shared/sidebar.js';
-import dates from '../shared/dates.js';
+import "../../boot/bootstrap.js";
+import sidebar from "../../pages/shared/sidebar.js";
+import dates from "../shared/dates.js";
 import i18next from "i18next";
-import Alpine from 'alpinejs';
-import Get from '../../api/model/currency/get.js';
+import Alpine from "alpinejs";
+import Get from "../../api/model/currency/get.js";
 
 let index = function () {
     return {
@@ -32,7 +32,7 @@ let index = function () {
         page: 1,
         i18next: null,
         init() {
-           this.i18next = i18next;
+            this.i18next = i18next;
             this.getCurrencies();
         },
         getCurrencies: function () {
@@ -41,7 +41,7 @@ let index = function () {
             this.downloadCurrencies(1);
         },
         downloadCurrencies: function (page) {
-            (new Get).list({enabled: 1, page: page}).then((response) => {
+            new Get().list({ enabled: 1, page: page }).then((response) => {
                 for (let i in response.data.data) {
                     if (Object.hasOwn(response.data.data, i)) {
                         let current = response.data.data[i];
@@ -56,24 +56,29 @@ let index = function () {
                     }
                 }
 
-                if (response.data.meta.pagination.current_page < response.data.meta.pagination.total_pages) {
-                    this.downloadCurrencies(parseInt(response.data.meta.pagination.current_page) + 1);
+                if (
+                    response.data.meta.pagination.current_page <
+                    response.data.meta.pagination.total_pages
+                ) {
+                    this.downloadCurrencies(
+                        parseInt(response.data.meta.pagination.current_page) +
+                            1,
+                    );
                 }
             });
         },
-    }
+    };
 };
-
 
 const comps = {
     index,
     sidebar,
-    dates
+    dates,
 };
 
 function loadPage(comps) {
-    console.log('loadPage');
-    Object.keys(comps).forEach(comp => {
+    console.log("loadPage");
+    Object.keys(comps).forEach((comp) => {
         let data = comps[comp]();
         Alpine.data(comp, () => data);
         console.log(comp);
@@ -82,12 +87,12 @@ function loadPage(comps) {
 }
 
 // wait for load until bootstrapped event is received.
-document.addEventListener('firefly-iii-bootstrapped', () => {
-    console.log('Loaded through event listener.');
+document.addEventListener("firefly-iii-bootstrapped", () => {
+    console.log("Loaded through event listener.");
     loadPage(comps);
 });
 // or is bootstrapped before event is triggered.
 if (window.bootstrapped) {
-    console.log('Loaded through window variable.');
+    console.log("Loaded through window variable.");
     loadPage(comps);
 }

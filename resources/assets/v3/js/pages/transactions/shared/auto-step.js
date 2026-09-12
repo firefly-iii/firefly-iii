@@ -21,14 +21,18 @@
 // this method automatically calls some
 // "next steps", whenever the state of the form loads or changes.
 // used during the init phase of the form.
-import {loadLinkTypes} from "./load-link-types.js";
+import { loadLinkTypes } from "./load-link-types.js";
 
 export function autoStep() {
     // check if custom field "links" is enabled and if so, load the link types and save them in formData.
-    if (null === this.formStates.loadingLinks && Object.hasOwn(this.formBehaviour.customFields, 'links') && true === this.formBehaviour.customFields.links) {
+    if (
+        null === this.formStates.loadingLinks &&
+        Object.hasOwn(this.formBehaviour.customFields, "links") &&
+        true === this.formBehaviour.customFields.links
+    ) {
         this.formStates.loadingLinks = true;
-        loadLinkTypes().then(data => {
-            console.log('done loadLinkTypes()');
+        loadLinkTypes().then((data) => {
+            console.log("done loadLinkTypes()");
             for (let i = 0; i < data.length; i++) {
                 if (Object.hasOwn(data, i)) {
                     let current = data[i];
@@ -38,24 +42,39 @@ export function autoStep() {
             }
             this.formStates.loadingLinks = false;
             this.autoStep(); // yes, recurring.
-
         });
     }
-    if (Object.hasOwn(this.formBehaviour.customFields, 'links') && false === this.formBehaviour.customFields.links) {
+    if (
+        Object.hasOwn(this.formBehaviour.customFields, "links") &&
+        false === this.formBehaviour.customFields.links
+    ) {
         this.formStates.storedLinks = true;
         this.formStates.loadingLinks = false;
     }
     // check if the transaction is loaded and also the transaction links AND the field is enabled, then load the autocomplete for links.
-    if (false === this.formStates.loadingTransaction && false === this.formStates.loadingLinks && Object.hasOwn(this.formBehaviour.customFields, 'links') && true === this.formBehaviour.customFields.links) {
-        for(let i = 0; i < this.entries.length; i++) {
-            if(Object.hasOwn(this.entries, i)) {
-                this.createLinkAutocomplete('links_modal_search_' + i, 'api/v1/autocomplete/transactions-with-meta');
-                if(0 !== parseInt(this.entries[i].transaction_journal_id) && !isNaN(parseInt(this.entries[i].transaction_journal_id))) {
+    if (
+        false === this.formStates.loadingTransaction &&
+        false === this.formStates.loadingLinks &&
+        Object.hasOwn(this.formBehaviour.customFields, "links") &&
+        true === this.formBehaviour.customFields.links
+    ) {
+        for (let i = 0; i < this.entries.length; i++) {
+            if (Object.hasOwn(this.entries, i)) {
+                this.createLinkAutocomplete(
+                    "links_modal_search_" + i,
+                    "api/v1/autocomplete/transactions-with-meta",
+                );
+                if (
+                    0 !== parseInt(this.entries[i].transaction_journal_id) &&
+                    !isNaN(parseInt(this.entries[i].transaction_journal_id))
+                ) {
                     // load the links for this transaction journal.
-                    this.loadTransactionLinks(i, parseInt(this.entries[i].transaction_journal_id));
+                    this.loadTransactionLinks(
+                        i,
+                        parseInt(this.entries[i].transaction_journal_id),
+                    );
                 }
             }
         }
     }
-
 }

@@ -18,16 +18,20 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-import {api} from "../../../boot/axios";
+import { api } from "../../../boot/axios";
 
 export default class Post {
     post(fileName, attachableType, attachableId) {
-        let url = '/api/v1/attachments';
-        return api.post(url, {filename: fileName, attachable_type: attachableType, attachable_id: attachableId});
+        let url = "/api/v1/attachments";
+        return api.post(url, {
+            filename: fileName,
+            attachable_type: attachableType,
+            attachable_id: attachableId,
+        });
     }
 
     upload(id, data) {
-        let url = './api/v1/attachments/' + id + '/upload';
+        let url = "./api/v1/attachments/" + id + "/upload";
         return api.post(url, data);
     }
 }

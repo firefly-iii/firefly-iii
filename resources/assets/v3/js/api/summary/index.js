@@ -18,11 +18,12 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-
-import {api} from "../../boot/axios.js";
+import { api } from "../../boot/axios.js";
 
 export default class Summary {
     get(start, end, code) {
-        return api.get('/api/v1/summary/basic', {params: {start: start, end: end, code: code}});
+        return api.get("/api/v1/summary/basic", {
+            params: { start: start, end: end, code: code },
+        });
     }
 }

@@ -20,10 +20,14 @@
 
 export function addTabListener() {
     // on switch tab (to re-render map if necessary).
-    const tabEl = document.querySelectorAll('button[data-bs-toggle="tab"]')
+    const tabEl = document.querySelectorAll('button[data-bs-toggle="tab"]');
     // console.log('tabEl length is now', tabEl.length);
-        for (let i = 0; i < tabEl.length; i++) {
-        tabEl[i].removeEventListener('shown.bs.tab', this.respondToTabSwitch);
-        tabEl[i].addEventListener('shown.bs.tab', this.respondToTabSwitch.bind(this), true);
+    for (let i = 0; i < tabEl.length; i++) {
+        tabEl[i].removeEventListener("shown.bs.tab", this.respondToTabSwitch);
+        tabEl[i].addEventListener(
+            "shown.bs.tab",
+            this.respondToTabSwitch.bind(this),
+            true,
+        );
     }
 }

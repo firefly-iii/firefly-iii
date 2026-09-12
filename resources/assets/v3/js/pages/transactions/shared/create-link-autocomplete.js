@@ -20,30 +20,41 @@
 
 import Autocomplete from "bootstrap5-autocomplete";
 import formatMoney from "../../../util/format-money.js";
-import {format} from "date-fns";
+import { format } from "date-fns";
 
 export function createLinkAutocomplete(fieldIdentifier, url) {
-    let token = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
+    let token = document
+        .querySelector('meta[name="csrf-token"]')
+        .getAttribute("content");
 
     const renderJournal = function (item) {
-        return item.description + '<br><small class="text-muted">' + formatMoney(item.amount, item.currency_code) + ' @ ' + format(new Date(item.date), this.i18next.t('config.date_time_fns')) + '</small>';
+        return (
+            item.description +
+            '<br><small class="text-muted">' +
+            formatMoney(item.amount, item.currency_code) +
+            " @ " +
+            format(
+                new Date(item.date),
+                this.i18next.t("config.date_time_fns"),
+            ) +
+            "</small>"
+        );
     };
-    Autocomplete.init('#' + fieldIdentifier, {
-
-        server: url + '?_token=' + token,
-        labelField: 'name',
+    Autocomplete.init("#" + fieldIdentifier, {
+        server: url + "?_token=" + token,
+        labelField: "name",
         hiddenInput: true,
-        valueField: 'id',
+        valueField: "id",
         liveServer: true,
         onRenderItem: renderJournal.bind(this),
         fetchOptions: {
-            method: 'GET',
-            credentials: 'include',
+            method: "GET",
+            credentials: "include",
             headers: {
-                'Content-Type': 'application/json',
-                'Accept': 'application/json',
-                'X-CSRF-TOKEN': token
-            }
-        }
+                "Content-Type": "application/json",
+                Accept: "application/json",
+                "X-CSRF-TOKEN": token,
+            },
+        },
     });
-};
+}

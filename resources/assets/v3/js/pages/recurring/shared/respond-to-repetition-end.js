@@ -19,23 +19,29 @@
  */
 
 function respondToRepetitionEnd() {
-    var obj = document.getElementById('ffInput_repetition_end');
+    var obj = document.getElementById("ffInput_repetition_end");
     var value = obj.value;
     switch (value) {
-        case 'forever':
-            document.getElementById('repeat_until_holder').style.display = 'none';
-            document.getElementById('repetitions_holder').style.display = 'none';
+        case "forever":
+            document.getElementById("repeat_until_holder").style.display =
+                "none";
+            document.getElementById("repetitions_holder").style.display =
+                "none";
             break;
-        case 'until_date':
-            document.getElementById('repeat_until_holder').style.display = 'block';
-            document.getElementById('repetitions_holder').style.display = 'none';
+        case "until_date":
+            document.getElementById("repeat_until_holder").style.display =
+                "block";
+            document.getElementById("repetitions_holder").style.display =
+                "none";
 
             break;
-        case 'times':
-            document.getElementById('repeat_until_holder').style.display = 'none';
-            document.getElementById('repetitions_holder').style.display = 'block';
+        case "times":
+            document.getElementById("repeat_until_holder").style.display =
+                "none";
+            document.getElementById("repetitions_holder").style.display =
+                "block";
             break;
     }
 }
 
-export {respondToRepetitionEnd}
+export { respondToRepetitionEnd };

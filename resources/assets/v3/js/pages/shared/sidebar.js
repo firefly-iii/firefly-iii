@@ -19,12 +19,12 @@
  */
 
 export default () => ({
-    foo: 'bar',
+    foo: "bar",
     init() {
         //console.log('init on sidebar')
     },
     logoutUser(e) {
         e.preventDefault();
-        document.getElementById('logout-form').submit();
-    }
+        document.getElementById("logout-form").submit();
+    },
 });

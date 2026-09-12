@@ -18,8 +18,7 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-import {spliceErrorsIntoTransactions} from "./splice-errors-into-transactions.js";
-
+import { spliceErrorsIntoTransactions } from "./splice-errors-into-transactions.js";
 
 export function parseErrors(data) {
     // disable all messages:
@@ -27,9 +26,12 @@ export function parseErrors(data) {
     this.notifications.success.show = false;
     this.notifications.wait.show = false;
     this.formStates.isSubmitting = false;
-    this.notifications.error.text = this.i18next.t('firefly.errors_submission_v2', {errorMessage: data.message});
+    this.notifications.error.text = this.i18next.t(
+        "firefly.errors_submission_v2",
+        { errorMessage: data.message },
+    );
 
-    if (Object.hasOwn(data, 'errors')) {
+    if (Object.hasOwn(data, "errors")) {
         this.entries = spliceErrorsIntoTransactions(data.errors, this.entries);
     }
 }

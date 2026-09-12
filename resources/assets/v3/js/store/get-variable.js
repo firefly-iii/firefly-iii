@@ -22,40 +22,53 @@ import Get from "../api/preferences/index.js";
 import Post from "../api/preferences/post.js";
 
 export function getVariable(name, defaultValue = null) {
-    const validCache = window.store.get('cacheValid');
+    const validCache = window.store.get("cacheValid");
     // console.log('Cache valid: ', validCache);
     // currently unused, window.X can be used by the blade template
     // to make things available quicker than if the store has to grab it through the API.
     // then again, it's not that slow.
     if (validCache && Object.hasOwn(window, name)) {
-        console.log('Returning "'+name+'" from window: ' + window[name]);
+        console.log('Returning "' + name + '" from window: ' + window[name]);
         return Promise.resolve(window[name]);
     }
     // load from store2, if it's present.
     const fromStore = window.store.get(name);
-    if (validCache && typeof fromStore !== 'undefined') {
-        console.log('Returning "'+name+'" from store: ' + fromStore);
+    if (validCache && typeof fromStore !== "undefined") {
+        console.log('Returning "' + name + '" from store: ' + fromStore);
         return Promise.resolve(fromStore);
     }
-    let getter = (new Get);
+    let getter = new Get();
 
-    return getter.getByName(name).then((response) => {
-        console.log('Returning "'+name+'" from server: ' + parseResponse(name, response));
-        return Promise.resolve(parseResponse(name, response));
-    }).catch((error) => {
-        console.log(error);
-        if('' === defaultValue) {
-            // do not try to store empty strings.
-            return Promise.resolve(defaultValue);
-        }
-        // preference does not exist (yet).
-        // POST it and then return it anyway.
-        let poster = (new Post);
-        return poster.post(name, defaultValue).then((response) => {
-            console.log('Returning "'+name+'" from POST: ' + parseResponse(name, response));
+    return getter
+        .getByName(name)
+        .then((response) => {
+            console.log(
+                'Returning "' +
+                    name +
+                    '" from server: ' +
+                    parseResponse(name, response),
+            );
             return Promise.resolve(parseResponse(name, response));
+        })
+        .catch((error) => {
+            console.log(error);
+            if ("" === defaultValue) {
+                // do not try to store empty strings.
+                return Promise.resolve(defaultValue);
+            }
+            // preference does not exist (yet).
+            // POST it and then return it anyway.
+            let poster = new Post();
+            return poster.post(name, defaultValue).then((response) => {
+                console.log(
+                    'Returning "' +
+                        name +
+                        '" from POST: ' +
+                        parseResponse(name, response),
+                );
+                return Promise.resolve(parseResponse(name, response));
+            });
         });
-    });
 }
 
 export function parseResponse(name, response) {
@@ -63,4 +76,3 @@ export function parseResponse(name, response) {
     window.store.set(name, value);
     return value;
 }
-

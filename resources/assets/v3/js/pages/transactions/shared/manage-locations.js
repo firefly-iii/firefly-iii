@@ -27,29 +27,30 @@ let markers = [];
 
 // location-remove
 
-document.addEventListener('location-remove', (event) => {
+document.addEventListener("location-remove", (event) => {
     markers[event.detail.index].remove();
 });
-
 
 function addPointToMap(e) {
     // index is always 0.
     // let index = parseInt(e.originalEvent.currentTarget.attributes['data-index'].value);
     let index = 0;
-    let hasLocation = document.querySelector('#form')._x_dataStack[0].$data.entries[index].hasLocation;
+    let hasLocation =
+        document.querySelector("#form")._x_dataStack[0].$data.entries[index]
+            .hasLocation;
 
     if (false === hasLocation) {
-        markers[index] = new L.marker(e.latlng, {draggable: true});
-        markers[index].on('dragend', dragEnd);
+        markers[index] = new L.marker(e.latlng, { draggable: true });
+        markers[index].on("dragend", dragEnd);
         markers[index].addTo(maps[index]);
 
-        const setEvent = new CustomEvent('location-set', {
+        const setEvent = new CustomEvent("location-set", {
             detail: {
                 latitude: e.latlng.lat,
                 longitude: e.latlng.lng,
                 index: index,
-                zoomLevel: maps[index].getZoom()
-            }
+                zoomLevel: maps[index].getZoom(),
+            },
         });
         document.dispatchEvent(setEvent);
     }
@@ -58,11 +59,11 @@ function addPointToMap(e) {
 function saveZoomOfMap() {
     //let index = parseInt(e.sourceTarget._container.attributes['data-index'].value);
     let index = 0;
-    const zoomEvent = new CustomEvent('location-zoom', {
+    const zoomEvent = new CustomEvent("location-zoom", {
         detail: {
             index: index,
-            zoomLevel: maps[index].getZoom()
-        }
+            zoomLevel: maps[index].getZoom(),
+        },
     });
     document.dispatchEvent(zoomEvent);
 }
@@ -70,36 +71,42 @@ function saveZoomOfMap() {
 function dragEnd(event) {
     let marker = event.target;
     let position = marker.getLatLng();
-    marker.setLatLng(new L.LatLng(position.lat, position.lng), {draggable: 'true'});
-    const moveEvent = new CustomEvent('location-move', {
+    marker.setLatLng(new L.LatLng(position.lat, position.lng), {
+        draggable: "true",
+    });
+    const moveEvent = new CustomEvent("location-move", {
         detail: {
             latitude: position.lat,
             longitude: position.lng,
-            index: 0
-        }
+            index: 0,
+        },
     });
     document.dispatchEvent(moveEvent);
 }
 
 export function addLocation(index) {
     if (index > 0) {
-        console.warn('Corwardly refuse to add a map on split #' + (index + 1));
+        console.warn("Corwardly refuse to add a map on split #" + (index + 1));
         return;
     }
-    if (typeof maps[index] === 'undefined') {
+    if (typeof maps[index] === "undefined") {
         // map holder is always the same:
 
         //let holder = document.getElementById('location_map_' + index);
-        let holder = document.getElementById('location_map');
+        let holder = document.getElementById("location_map");
         if (holder) {
-            maps[index] = L.map(holder).setView([holder.dataset.latitude, holder.dataset.longitude], holder.dataset.zoomLevel);
+            maps[index] = L.map(holder).setView(
+                [holder.dataset.latitude, holder.dataset.longitude],
+                holder.dataset.zoomLevel,
+            );
 
-            L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
+            L.tileLayer("https://tile.openstreetmap.org/{z}/{x}/{y}.png", {
                 maxZoom: 19,
-                attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>'
+                attribution:
+                    '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>',
             }).addTo(maps[index]);
-            maps[index].on('click', addPointToMap);
-            maps[index].on('zoomend', saveZoomOfMap);
+            maps[index].on("click", addPointToMap);
+            maps[index].on("zoomend", saveZoomOfMap);
         }
     }
 }

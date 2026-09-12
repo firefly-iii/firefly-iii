@@ -18,10 +18,12 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-export function keyUpFromCategory(e)  {
-    if (e.key === 'Enter' && false === this.formStates.categorySelectVisible) {
+export function keyUpFromCategory(e) {
+    if (e.key === "Enter" && false === this.formStates.categorySelectVisible) {
         this.save();
         return;
     }
-    this.formStates.categorySelectVisible = document.querySelector('input.ac-category').nextSibling.classList.contains('show');
+    this.formStates.categorySelectVisible = document
+        .querySelector("input.ac-category")
+        .nextSibling.classList.contains("show");
 }

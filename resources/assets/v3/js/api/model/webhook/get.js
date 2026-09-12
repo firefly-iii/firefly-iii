@@ -18,24 +18,38 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-
-import {api} from "../../../boot/axios";
+import { api } from "../../../boot/axios";
 
 export default class Get {
-    list(params){
-        return api.get('/api/v1/webhooks', {params: params});
+    list(params) {
+        return api.get("/api/v1/webhooks", { params: params });
     }
 
-    show(id, params){
-        return api.get('/api/v1/webhooks/' + parseInt(id), {params: params});
+    show(id, params) {
+        return api.get("/api/v1/webhooks/" + parseInt(id), { params: params });
     }
-    messages(id, params){
-        return api.get('/api/v1/webhooks/' + parseInt(id) + '/messages', {params: params});
+    messages(id, params) {
+        return api.get("/api/v1/webhooks/" + parseInt(id) + "/messages", {
+            params: params,
+        });
     }
-    message(webhook, message, params){
-        return api.get('/api/v1/webhooks/' + parseInt(webhook) + '/messages/' + parseInt(message), {params: params});
+    message(webhook, message, params) {
+        return api.get(
+            "/api/v1/webhooks/" +
+                parseInt(webhook) +
+                "/messages/" +
+                parseInt(message),
+            { params: params },
+        );
     }
-    attempts(webhook, message, params){
-        return api.get('/api/v1/webhooks/' + parseInt(webhook) + '/messages/' + parseInt(message) + '/attempts', {params: params});
+    attempts(webhook, message, params) {
+        return api.get(
+            "/api/v1/webhooks/" +
+                parseInt(webhook) +
+                "/messages/" +
+                parseInt(message) +
+                "/attempts",
+            { params: params },
+        );
     }
 }

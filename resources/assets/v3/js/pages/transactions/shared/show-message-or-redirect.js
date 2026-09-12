@@ -21,16 +21,16 @@
 import i18next from "i18next";
 
 export function showMessageOrRedirectUser() {
-    if(false === this.formStates.storedGroup) {
-        console.error('Not yet stored group, return false.');
+    if (false === this.formStates.storedGroup) {
+        console.error("Not yet stored group, return false.");
         return;
     }
-    if(false === this.formStates.storedAttachments) {
-        console.error('Not yet stored attachments, return false.');
+    if (false === this.formStates.storedAttachments) {
+        console.error("Not yet stored attachments, return false.");
         return;
     }
-    if(false === this.formStates.storedLinks) {
-        console.error('Not yet stored links, return false.');
+    if (false === this.formStates.storedLinks) {
+        console.error("Not yet stored links, return false.");
         return;
     }
     // disable all messages:
@@ -41,11 +41,18 @@ export function showMessageOrRedirectUser() {
     if (this.formStates.returnHereButton) {
         this.formStates.isSubmitting = false;
         this.notifications.success.show = true;
-        this.notifications.success.url = 'transactions/show/' + parseInt(this.groupProperties.id);
+        this.notifications.success.url =
+            "transactions/show/" + parseInt(this.groupProperties.id);
 
         // title depends on form role.
-        if('create' === this.formBehaviour.formType) {
-            this.notifications.success.text = i18next.t('firefly.stored_journal_js', {description: this.groupProperties.title, interpolation: {escapeValue: false}});
+        if ("create" === this.formBehaviour.formType) {
+            this.notifications.success.text = i18next.t(
+                "firefly.stored_journal_js",
+                {
+                    description: this.groupProperties.title,
+                    interpolation: { escapeValue: false },
+                },
+            );
             this.groupProperties.title = null;
 
             // reset the form.
@@ -55,58 +62,80 @@ export function showMessageOrRedirectUser() {
                 this.groupProperties.totalAmount = 0;
             }
         }
-        if('edit' === this.formBehaviour.formType) {
+        if ("edit" === this.formBehaviour.formType) {
             let title = this.groupProperties.title;
-            if('' === title) {
+            if ("" === title) {
                 title = this.entries[0].description;
             }
-            this.notifications.success.text = i18next.t('firefly.updated_journal_js', {description: title});
+            this.notifications.success.text = i18next.t(
+                "firefly.updated_journal_js",
+                { description: title },
+            );
         }
-
 
         return;
     }
     // the redirect also depends on the "from" in the query param, which is validated by Firefly III on the server side.
     // get from parameter from query
     const urlParams = new URLSearchParams(window.location.search);
-    let params = urlParams.get('_from');
+    let params = urlParams.get("_from");
 
     // find parts
-    let parts = URL.parse(params, 'https://example.com/');
+    let parts = URL.parse(params, "https://example.com/");
     let from;
-    let separator = '?';
-    if('' === parts.search) {
-        from = urlParams.get('_from').toString();
+    let separator = "?";
+    if ("" === parts.search) {
+        from = urlParams.get("_from").toString();
     }
-    if('' !== parts.search) {
+    if ("" !== parts.search) {
         let obj = new URLSearchParams(parts.search);
         let pathName = parts.pathname; // we redirect here!
-        obj.delete('message');
-        obj.delete('transaction_group_id');
-        if(0 === obj.size) {
+        obj.delete("message");
+        obj.delete("transaction_group_id");
+        if (0 === obj.size) {
             from = pathName;
         }
-        if(obj.size > 0) {
-            separator = '&';
-            from = pathName + '?' + obj.toString();
+        if (obj.size > 0) {
+            separator = "&";
+            from = pathName + "?" + obj.toString();
         }
     }
     // grab base href
-    let baseHref = document.querySelector('base').getAttribute('href');
+    let baseHref = document.querySelector("base").getAttribute("href");
     baseHref = baseHref.substring(0, baseHref.length - 1);
     let finalFrom = baseHref + from;
 
-    if ('' !== from) {
-        if('edit' === this.formBehaviour.formType) {
-            window.location = finalFrom + separator + 'transaction_group_id=' + this.groupProperties.id + '&message=updated';
+    if ("" !== from) {
+        if ("edit" === this.formBehaviour.formType) {
+            window.location =
+                finalFrom +
+                separator +
+                "transaction_group_id=" +
+                this.groupProperties.id +
+                "&message=updated";
             return;
         }
-        window.location = finalFrom + separator + 'transaction_group_id=' + this.groupProperties.id + '&message=created';
+        window.location =
+            finalFrom +
+            separator +
+            "transaction_group_id=" +
+            this.groupProperties.id +
+            "&message=created";
         return;
     }
-    if('edit' === this.formBehaviour.formType) {
-        window.location = 'transactions/show/' + this.groupProperties.id + '?transaction_group_id=' + this.groupProperties.id + '&message=updated';
+    if ("edit" === this.formBehaviour.formType) {
+        window.location =
+            "transactions/show/" +
+            this.groupProperties.id +
+            "?transaction_group_id=" +
+            this.groupProperties.id +
+            "&message=updated";
         return;
     }
-    window.location = 'transactions/show/' + this.groupProperties.id + '?transaction_group_id=' + this.groupProperties.id + '&message=created';
+    window.location =
+        "transactions/show/" +
+        this.groupProperties.id +
+        "?transaction_group_id=" +
+        this.groupProperties.id +
+        "&message=created";
 }
