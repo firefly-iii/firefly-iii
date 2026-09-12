@@ -53,9 +53,11 @@ If you don't feel like skipping to the end, here are several ways to run and/or 
 - You can [run it using Docker](https://docs.firefly-iii.org/how-to/firefly-iii/installation/docker/).
 - You can [deploy via Kubernetes](https://firefly-iii.github.io/kubernetes/).
 
-Commercial options also exist. First, a sponsored option. If you use any of their paid options a small reward is paid to the developer of Firefly III.
+Commercial options also exist. First, a sponsored option:
 
 - A one-click installation is available at **[Hostinger](https://www.hostg.xyz/aff_c?offer_id=815&aff_id=243699)**
+
+If you use any of Hostinger's paid options a small reward is paid to the developer of Firefly III.
 
 Other options are available as well. These are not sponsored, but they do support the development of Firefly III.
 
