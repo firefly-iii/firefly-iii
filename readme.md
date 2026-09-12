@@ -44,7 +44,11 @@ If you don't feel like skipping to the end, here are several ways to run and/or 
 - You can [run it using Docker](https://docs.firefly-iii.org/how-to/firefly-iii/installation/docker/).
 - You can [deploy via Kubernetes](https://firefly-iii.github.io/kubernetes/).
 
-Commercial options also exist:
+Commercial options also exist. First, a sponsored option. If you accept their offer, a small reward is paid to the developer of Firefly III.
+
+- A one-click installation is available at **[Hostinger](https://www.hostg.xyz/aff_c?offer_id=815&aff_id=243699)**
+
+Other options are available as well. These are not sponsored, but they do support the development of Firefly III.
 
 - You can [install it using Softaculous](https://www.softaculous.com/softaculous/apps/others/Firefly_III).
 - You can [install it using AMPPS](https://www.ampps.com/).
@@ -54,7 +58,7 @@ Commercial options also exist:
 
 ## Why Firefly III?
 
-Personal financial management is pretty difficult, and everybody has their own approach to it. Some people make budgets, other people limit their cashflow by throwing away their credit cards, others try to increase their current cashflow. There are tons of ways to save and earn money. Firefly III works on the principle that if you know where your money is going, you can stop it from going there.
+Personal financial management is pretty difficult, and everybody has their own approach to it. Some people make budgets, other people limit their cash flow by throwing away their credit cards, others try to increase their current cashflow. There are tons of ways to save and earn money. Firefly III works on the principle that if you know where your money is going, you can stop it from going there.
 
 By keeping track of your expenses and your income you can budget accordingly and save money. Stop living from paycheck to paycheck but give yourself the financial wiggle room you need.
 
@@ -62,7 +66,7 @@ You can read more about the purpose of Firefly III in the [documentation](https:
 
 ## Is Firefly III for me?
 
-This application is for people who want to track their finances, keep an eye on their money **without having to upload their financial records to the cloud**. It will work for you if you're a bit tech-savvy, you like open source software and you don't mind tinkering with (self-hosted) servers.
+This application is for people who want to track their finances, keep an eye on their money **without having to upload their financial records to the cloud**. Of course you still can, but you don't have to. It will work for you if you're a bit tech-savvy, you like open source software, and you don't mind tinkering with (self-hosted) servers.
 
 ## Sponsors and support
 
