@@ -21,7 +21,7 @@
 
 import Summary from "../../api/summary/index.js";
 import {format} from "date-fns";
-import {getVariable} from "../../store/get-variable.js";
+import {getVariables} from "../../store/get-variables.js";
 import formatMoney from "../../util/format-money.js";
 import {getCacheKey} from "../../support/get-cache-key.js";
 import {cleanupCache} from "../../support/cleanup-cache.js";
@@ -70,7 +70,7 @@ export default () => ({
             this.boxData = response.data;
             window.store.set(boxesCacheKey, response.data);
             this.generateOptions(this.boxData);
-        }).catch((error) => {
+        }).catch(() => {
             console.error('Request gave error.');
         });
     },
@@ -83,9 +83,9 @@ export default () => ({
 
         // process new content:
         for (const i in data) {
-            if (data.hasOwnProperty(i)) {
+            if (Object.hasOwn(data, i)) {
                 const current = data[i];
-                if (!current.hasOwnProperty('key')) {
+                if (!Object.hasOwn(current,'key')) {
                     continue;
                 }
                 let key = current.key;
@@ -97,7 +97,7 @@ export default () => ({
                 // spent info is used in subtitle:
                 if (key.startsWith('spent-in-')) {
                     // prep subtitles (for later)
-                    if (!subtitles.hasOwnProperty(current.currency_code)) {
+                    if (!Object.hasOwn(subtitles, current.currency_code)) {
                         subtitles[current.currency_code] = '';
                     }
                     // append the amount spent.
@@ -109,7 +109,7 @@ export default () => ({
                 // earned info is used in subtitle:
                 if (key.startsWith('earned-in-')) {
                     // prep subtitles (for later)
-                    if (!subtitles.hasOwnProperty(current.currency_code)) {
+                    if (!Object.hasOwn(subtitles, current.currency_code)) {
                         subtitles[current.currency_code] = '';
                     }
                     // prepend the amount earned.
@@ -143,7 +143,7 @@ export default () => ({
             }
         }
         for (let i in subtitles) {
-            if (subtitles.hasOwnProperty(i)) {
+            if (Object.hasOwn(subtitles, i)) {
                 this.balanceBox.subtitles.push(subtitles[i]);
             }
         }
@@ -166,10 +166,10 @@ export default () => ({
     init() {
         // console.log('boxes init');
         // TODO can be replaced by "getVariables"
-        Promise.all([getVariable('viewRange'), getVariable('convert_to_primary', false)]).then((values) => {
+        getVariables(['convert_to_primary']).then((values) => {
             // console.log('boxes after promises');
             afterPromises = true;
-            this.convertToPrimary = values[1];
+            this.convertToPrimary = values[0];
             this.loadBoxes();
         });
         window.store.observe('end', () => {

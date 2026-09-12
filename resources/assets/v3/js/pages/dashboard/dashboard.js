@@ -21,9 +21,8 @@
 import '../../boot/bootstrap.js';
 import sidebar from '../../pages/shared/sidebar.js';
 import dates from '../shared/dates.js';
-
-
 import boxes from './boxes.js';
+import Alpine from "alpinejs";
 
 let index = function () {
     return {

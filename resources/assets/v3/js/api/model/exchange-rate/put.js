@@ -20,13 +20,9 @@
 
 import {api} from "../../../boot/axios";
 
-export default class Post {
-    triggerTransaction(webhook, transaction) {
-        return api.post('./api/v1/webhooks/' + webhook + '/trigger-transaction/' + transaction, {});
-    }
-
-    post(submission) {
-        let url = '/api/v1/webhooks/';
-        return api.post(url, submission);
+export default class Put {
+    put(submission, params) {
+        let url = '/api/v1/exchange-rates/' + parseInt(params.id);
+        return api.put(url, submission);
     }
 }

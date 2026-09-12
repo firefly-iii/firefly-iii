@@ -18,15 +18,11 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-import {api} from "../../../boot/axios";
+import {api} from "../../boot/axios";
 
-export default class Post {
-    triggerTransaction(webhook, transaction) {
-        return api.post('./api/v1/webhooks/' + webhook + '/trigger-transaction/' + transaction, {});
-    }
-
-    post(submission) {
-        let url = '/api/v1/webhooks/';
-        return api.post(url, submission);
+export default class Put {
+    put(submission, params) {
+        let url = '/api/v1/user-groups/' + parseInt(params.id);
+        return api.put(url, submission);
     }
 }

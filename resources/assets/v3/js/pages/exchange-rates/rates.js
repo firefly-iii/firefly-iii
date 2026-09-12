@@ -24,6 +24,12 @@ import sidebar from '../../pages/shared/sidebar.js';
 import dates from '../shared/dates.js';
 import format from "date-fns/format";
 import i18next from "i18next";
+import Post from '../../api/model/exchange-rate/post.js';
+import Put from '../../api/model/exchange-rate/put.js';
+import Delete from '../../api/model/exchange-rate/delete.js';
+import Get from '../../api/model/currency/get.js';
+import GetRate from '../../api/model/exchange-rate/get.js';
+import Alpine from 'alpinejs';
 
 let rates = function () {
     return {
@@ -66,8 +72,7 @@ let rates = function () {
         submitRate: function (e) {
             if (e) e.preventDefault();
             this.posting = true;
-
-            axios.post("./api/v1/exchange-rates", {
+            (new Post).post({
                 from: this.from_code,
                 to: this.to_code,
                 rate: this.newRate,
@@ -97,7 +102,7 @@ let rates = function () {
                 this.updating = true;
                 if (0 === parseInt(this.rates[index].rate_id)) {
                     console.log('[a] POST, not PUT.');
-                    axios.post('./api/v1/exchange-rates',
+                    (new Post).post(
                         {
                             from: this.from_code,
                             to: this.to_code,
@@ -110,7 +115,7 @@ let rates = function () {
                 }
                 if (0 !== parseInt(this.rates[index].rate_id)) {
                     console.log('[a] PUT, not POST.');
-                    axios.put('./api/v1/exchange-rates/' + this.rates[index].rate_id, {rate: this.rates[index].rate})
+                    (new Put).put({rate: this.rates[index].rate}, {id: this.rates[index].rate_id})
                         .then(() => {
                             this.updating = false;
                         });
@@ -122,7 +127,7 @@ let rates = function () {
                 if (0 === parseInt(this.rates[index].inverse_id)) {
                     console.log('[b] POST, not PUT.');
                     // post, not put
-                    axios.post('./api/v1/exchange-rates',
+                    (new Post).post(
                         {
                             // remember, this is in reverse.
                             from: this.to_code,
@@ -136,7 +141,7 @@ let rates = function () {
                 }
                 if (0 !== parseInt(this.rates[index].inverse_id)) {
                     console.log('[b] PUT, not POST.');
-                    axios.put('./api/v1/exchange-rates/' + this.rates[index].inverse_id, {rate: this.rates[index].inverse})
+                    (new Put).put({rate: this.rates[index].inverse}, {id: this.rates[index].inverse_id})
                         .then(() => {
                             this.updating = false;
                         });
@@ -154,10 +159,10 @@ let rates = function () {
             let inverseId = parseInt(this.rates[index].inverse_id);
             // delete A to B
             if (rateId > 0) {
-                axios.delete('./api/v1/exchange-rates/' + rateId);
+                (new Delete).delete(rateId);
             }
             if (inverseId > 0) {
-                axios.delete('./api/v1/exchange-rates/' + inverseId);
+                (new Delete).delete(inverseId);
             }
 
             this.rates.splice(index, 1);
@@ -181,14 +186,14 @@ let rates = function () {
         downloadCurrencies: function () {
             console.log('Now downloading currencies.');
             this.loading = true;
-            axios.get("./api/v1/currencies/" + this.from_code).then((response) => {
+            (new Get).get(this.from_code).then((response) => {
                 this.from = {
                     id: response.data.data.id,
                     code: response.data.data.attributes.code,
                     name: response.data.data.attributes.name,
                 }
             });
-            axios.get("./api/v1/currencies/" + this.to_code).then((response) => {
+            (new Get).get(this.to_code).then((response) => {
                 // console.log(response.data.data);
                 this.to = {
                     id: response.data.data.id,
@@ -201,9 +206,9 @@ let rates = function () {
             this.tempRates = {};
             this.loading = true;
             console.log('Now downloading rates.', page);
-            axios.get('./api/v1/exchange-rates/' + this.from_code + '/' + this.to_code + '?page=' + page).then((response) => {
+            (new GetRate).get(this.from_code, this.to_code, {page:page}).then((response) => {
                 for (let i in response.data.data) {
-                    if (response.data.data.hasOwnProperty(i)) {
+                    if (Object.hasOwn(response.data.data, i)) {
                         console.log('Downloaded entry #' + i);
                         let current = response.data.data[i];
                         let date = new Date(current.attributes.date);
@@ -228,7 +233,7 @@ let rates = function () {
                             console.log('Key updated to "' + key + '"');
                         }
 
-                        if (!this.tempRates.hasOwnProperty(key)) {
+                        if (!Object.hasOwn(this.tempRates, key)) {
                             console.log('New entry stored');
                             this.tempRates[key] = {
                                 key: key,
@@ -243,12 +248,12 @@ let rates = function () {
                         }
 
                         // inverse is not "" and existing inverse is ""?
-                        if (this.tempRates.hasOwnProperty(key) && inverse !== '' && this.tempRates[key].inverse === '') {
+                        if (Object.hasOwn(this.tempRates, key) && inverse !== '' && this.tempRates[key].inverse === '') {
                             this.tempRates[key].inverse = inverse;
                             this.tempRates[key].inverse_id = inverse_id;
                         }
                         // rate is not "" and existing rate is ""?
-                        if (this.tempRates.hasOwnProperty(key) && rate !== '' && this.tempRates[key].rate === '') {
+                        if (Object.hasOwn(this.tempRates, key) && rate !== '' && this.tempRates[key].rate === '') {
                             this.tempRates[key].rate = rate;
                             this.tempRates[key].rate_id = rate_id;
                         }

@@ -1,6 +1,6 @@
 /*
- * post.js
- * Copyright (c) 2023 james@firefly-iii.org
+ * list.js
+ * Copyright (c) 2022 james@firefly-iii.org
  *
  * This file is part of Firefly III (https://github.com/firefly-iii).
  *
@@ -20,13 +20,10 @@
 
 import {api} from "../../../boot/axios";
 
-export default class Post {
-    triggerTransaction(webhook, transaction) {
-        return api.post('./api/v1/webhooks/' + webhook + '/trigger-transaction/' + transaction, {});
+export default class Get {
+
+    get(from, to, params) {
+        return api.get('/api/v1/exchange-rates/' + from + '/' + to , {params: params});
     }
 
-    post(submission) {
-        let url = '/api/v1/webhooks/';
-        return api.post(url, submission);
-    }
 }

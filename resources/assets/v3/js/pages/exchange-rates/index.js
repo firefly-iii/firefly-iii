@@ -23,6 +23,8 @@ import '../../boot/bootstrap.js';
 import sidebar from '../../pages/shared/sidebar.js';
 import dates from '../shared/dates.js';
 import i18next from "i18next";
+import Alpine from 'alpinejs';
+import Get from '../../api/model/currency/get.js';
 
 let index = function () {
     return {
@@ -39,9 +41,9 @@ let index = function () {
             this.downloadCurrencies(1);
         },
         downloadCurrencies: function (page) {
-            axios.get("./api/v1/currencies?enabled=1&page=" + page).then((response) => {
+            (new Get).list({enabled: 1, page: page}).then((response) => {
                 for (let i in response.data.data) {
-                    if (response.data.data.hasOwnProperty(i)) {
+                    if (Object.hasOwn(response.data.data, i)) {
                         let current = response.data.data[i];
                         if (current.attributes.enabled) {
                             let currency = {

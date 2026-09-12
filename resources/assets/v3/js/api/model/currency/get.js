@@ -30,5 +30,8 @@ export default class Get {
     list(params) {
         return api.get('/api/v1/currencies', {params: params});
     }
+    get(code) {
+        return api.get('/api/v1/currencies/' + code);
+    }
 
 }

@@ -23,6 +23,9 @@ import sidebar from '../../pages/shared/sidebar.js';
 import dates from '../shared/dates.js';
 import i18next from "i18next";
 import Get from '../../api/model/currency/get.js';
+import GetUserGroup from '../../api/user-group/get.js';
+import Put from '../../api/user-group/put.js';
+import Alpine from "alpinejs";
 
 let edit = function () {
     return {
@@ -47,8 +50,7 @@ let edit = function () {
             this.downloadAdministration(administrationId);
         },
         downloadAdministration: function (id) {
-            // TODO use API code.
-            axios.get("./api/v1/user-groups/" + id).then((response) => {
+            (new GetUserGroup).get(id, {}).then((response) => {
                 let current = response.data.data;
                 this.administration = {
                     id: current.id,
@@ -79,8 +81,7 @@ let edit = function () {
                 currency_id: [],
             };
 
-            // disable button
-            $('#submitButton').prop("disabled", true);
+            document.getElementById('submitButton').disabled = true;
 
             // collect data
             let data = {
@@ -89,8 +90,7 @@ let edit = function () {
             };
 
             // post!
-            // TODO use API code.
-            axios.put('./api/v1/user-groups/' + this.administration.id, data).then((response) => {
+            (new Put).put(data, {id: this.administration.id}).then((response) => {
                 let administrationId = parseInt(response.data.data.id);
                 window.location.href = './administrations?user_group_id=' + administrationId + '&message=updated';
             }).catch((error) => {
@@ -100,7 +100,7 @@ let edit = function () {
                 this.errors.primary_currency_id = error.response.data.errors.primary_currency_id;
 
                 // enable button again
-                $('#submitButton').prop("disabled", false);
+                document.getElementById('submitButton').disabled = false;
 
             });
             if (e) {

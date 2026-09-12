@@ -22,6 +22,8 @@
 import '../../boot/bootstrap.js';
 import sidebar from '../../pages/shared/sidebar.js';
 import dates from '../shared/dates.js';
+import Get from '../../api/user-group/get.js';
+import Alpine from "alpinejs";
 
 let index = function () {
     return {
@@ -35,8 +37,7 @@ let index = function () {
         },
 
         downloadAdministrations: function (page) {
-            // TODO use API endpoint.
-            axios.get("./api/v1/user-groups?page=" + page).then((response) => {
+            (new Get).list({page: page}).then((response) => {
                 for (let i in response.data.data) {
                     if (Object.hasOwn(response.data.data, i)) {
                         let current = response.data.data[i];
@@ -51,7 +52,7 @@ let index = function () {
                 }
 
                 if (response.data.meta.pagination.current_page < response.data.meta.pagination.total_pages) {
-                    this.downloadAdministrations(response.data.meta.pagination.current_page + 1);
+                    this.downloadAdministrations(parseInt(response.data.meta.pagination.current_page) + 1);
                 }
             });
         },

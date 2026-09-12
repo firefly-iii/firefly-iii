@@ -1,5 +1,5 @@
 /*
- * post.js
+ * get.js
  * Copyright (c) 2023 james@firefly-iii.org
  *
  * This file is part of Firefly III (https://github.com/firefly-iii).
@@ -18,15 +18,15 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-import {api} from "../../../boot/axios";
 
-export default class Post {
-    triggerTransaction(webhook, transaction) {
-        return api.post('./api/v1/webhooks/' + webhook + '/trigger-transaction/' + transaction, {});
+import {api} from "../../boot/axios";
+
+export default class Get {
+
+    list(params) {
+        return api.get('/api/v1/user-groups', {params: params});
     }
-
-    post(submission) {
-        let url = '/api/v1/webhooks/';
-        return api.post(url, submission);
+    get(id, params) {
+        return api.get('/api/v1/user-groups/' + parseInt(id), {params: params});
     }
 }

@@ -99,10 +99,10 @@ getFreshVariable('lastActivity').then((serverValue) => {
                     }
                 });
                 // cancel or complete
-                tour.on('cancel', (eventOptions) => {
+                tour.on('cancel', () => {
                     site.post(window.routeForFinishedTour);
                 });
-                tour.on('complete', (eventOptions) => {
+                tour.on('complete', () => {
                     site.post(window.routeForFinishedTour);
                 });
 
