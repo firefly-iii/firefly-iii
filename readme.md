@@ -30,10 +30,19 @@ Firefly III should give you **insight** into and **control** over your finances.
 
 But you get the idea: this is your money. These are your expenses. Stop them from controlling you. I built this tool because I started to dislike money. Having money, not having money, paying bills with money, you get the idea. But no more. I want to feel "safe", whatever my balance is. And I hope this tool can help you. I know it helps me.
 
+---
+
+<p>
+<img style="padding:5px;" align="left" src=".github/assets/img/europe.png" alt="Flag of Europe" height="50"> Billionaires and fascists are breaking democracies and international alliances. Their profits are costing us our safety. (Digital) sovereignty is more important than ever. <strong>Firefly III</strong> is free open source software and originates from, and lives in the European Union (🇳🇱). Support your local software developer for a free and open society.
+</p>
+
+---
+
 [![Packagist][packagist-shield]][packagist-url]
 [![License][license-shield]][license-url]
 [![Stargazers][stars-shield]][stars-url]
 [![Donate][donate-shield]][donate-url]
+
 
 ## Important information
 
