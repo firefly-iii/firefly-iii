@@ -12,7 +12,6 @@ Please find below all the people who contributed to the Firefly III code. Their 
 - Daniel Holøien
 - Matthew Grove
 - Cinnamon Pyro
-- R1DEN
 - RiDEN
 - Khoa Nguyen
 - Nick Huang
@@ -124,7 +123,6 @@ Please find below all the people who contributed to the Firefly III code. Their 
 - Calum Smith
 - Agraphie
 - Tomer Shvueli
-- Tomer S
 
 ## 2019
 - Pascal Jungblut

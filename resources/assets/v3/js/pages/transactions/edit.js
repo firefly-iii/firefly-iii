@@ -254,9 +254,12 @@ let transactions = function () {
                     // set amountCurrency.
                     for (let i in this.formData.enabledCurrencies) {
                         if (Object.hasOwn(this.formData.enabledCurrencies, i)) {
-                            if (this.formData.enabledCurrencies[i].code === this.entries[0].currency_code
+                            if (
+                                this.formData.enabledCurrencies[i].code ===
+                                this.entries[0].currency_code
                             ) {
-                                this.formData.amountCurrency = this.formData.enabledCurrencies[i];
+                                this.formData.amountCurrency =
+                                    this.formData.enabledCurrencies[i];
                             }
                         }
                     }

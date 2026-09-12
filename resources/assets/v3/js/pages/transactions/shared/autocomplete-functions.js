@@ -23,12 +23,12 @@ export function changeCategory(item, ac) {
     if (typeof item !== "undefined" && item.name) {
         document.querySelector("#form")._x_dataStack[0].$data.entries[
             index
-            ].category_name = item.name;
+        ].category_name = item.name;
         return;
     }
     document.querySelector("#form")._x_dataStack[0].$data.entries[
         index
-        ].category_name = ac._searchInput.value;
+    ].category_name = ac._searchInput.value;
 }
 
 export function changeDescription(item, ac) {
@@ -36,19 +36,21 @@ export function changeDescription(item, ac) {
     if (typeof item !== "undefined" && item.description) {
         document.querySelector("#form")._x_dataStack[0].$data.entries[
             index
-            ].description = item.description;
+        ].description = item.description;
         return;
     }
     document.querySelector("#form")._x_dataStack[0].$data.entries[
         index
-        ].description = ac._searchInput.value;
+    ].description = ac._searchInput.value;
 }
 
 export function changeDestinationAccount(item, ac) {
     if (typeof item === "object") {
         // changed account but did not select.
         const index = parseInt(ac._searchInput.attributes["data-index"].value);
-        document.querySelector("#form")._x_dataStack[0].$data.entries[index].destination_account = {
+        document.querySelector("#form")._x_dataStack[0].$data.entries[
+            index
+        ].destination_account = {
             id: item.id,
             name: item.name,
             alpine_name: item.name,
@@ -61,21 +63,26 @@ export function changeDestinationAccount(item, ac) {
     }
     if (typeof item === "undefined") {
         const index = parseInt(ac._searchInput.attributes["data-index"].value);
-        let destination = document.querySelector("#form")._x_dataStack[0].$data.entries[index].destination_account;
+        let destination =
+            document.querySelector("#form")._x_dataStack[0].$data.entries[index]
+                .destination_account;
         if (destination.name === ac._searchInput.value) {
             console.warn(
                 'Ignore hallucinated destination account name change to "' +
-                ac._searchInput.value +
-                '"',
+                    ac._searchInput.value +
+                    '"',
             );
             return;
         }
-        document.querySelector("#form")._x_dataStack[0].$data.entries[index].destination_account =
-            {
-                name: ac._searchInput.value,
-                alpine_name: ac._searchInput.value,
-            };
-        document.querySelector("#form")._x_dataStack[0].changedDestinationAccount();
+        document.querySelector("#form")._x_dataStack[0].$data.entries[
+            index
+        ].destination_account = {
+            name: ac._searchInput.value,
+            alpine_name: ac._searchInput.value,
+        };
+        document
+            .querySelector("#form")
+            ._x_dataStack[0].changedDestinationAccount();
     }
 }
 
@@ -90,28 +97,25 @@ export function selectDestinationAccount(item, ac) {
     };
     document.querySelector("#form")._x_dataStack[0].$data.entries[
         index
-        ].destination_account = newAccount;
-    document
-        .querySelector("#form")
-        ._x_dataStack[0].changedDestinationAccount();
+    ].destination_account = newAccount;
+    document.querySelector("#form")._x_dataStack[0].changedDestinationAccount();
 }
 
 export function changeSourceAccount(item, ac) {
     if (typeof item === "object") {
         // changed account but did not select.
         const index = parseInt(ac._searchInput.attributes["data-index"].value);
-        document.querySelector("#form")._x_dataStack[0].$data.entries[index].source_account = {
+        document.querySelector("#form")._x_dataStack[0].$data.entries[
+            index
+        ].source_account = {
             id: item.id,
             name: item.name,
             alpine_name: item.name,
             type: item.type,
             currency_code: item.currency_code,
         };
-        document
-            .querySelector("#form")
-            ._x_dataStack[0].changedSourceAccount();
+        document.querySelector("#form")._x_dataStack[0].changedSourceAccount();
     }
-
 
     if (typeof item === "undefined") {
         const index = parseInt(ac._searchInput.attributes["data-index"].value);
@@ -123,7 +127,7 @@ export function changeSourceAccount(item, ac) {
         }
         document.querySelector("#form")._x_dataStack[0].$data.entries[
             index
-            ].source_account = {
+        ].source_account = {
             name: ac._searchInput.value,
             alpine_name: ac._searchInput.value,
         };
@@ -137,7 +141,7 @@ export function selectSourceAccount(item, ac) {
     const index = parseInt(ac._searchInput.attributes["data-index"].value);
     document.querySelector("#form")._x_dataStack[0].$data.entries[
         index
-        ].source_account = {
+    ].source_account = {
         id: item.id,
         name: item.name,
         alpine_name: item.name,
