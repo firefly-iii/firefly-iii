@@ -30,7 +30,10 @@
                                             </h3>
                                         </div>
                                         <div class="col text-end">
-                                            <a class="btn btn-default" tabindex="-1" @click="showCreateClientForm">
+                                            <a
+                                                data-bs-toggle="modal" data-bs-target="#modal-create-client"
+                                                class="btn btn-secondary"
+                                                tabindex="-1">
                                                 {{ __('firefly.profile_oauth_create_new_client') }}
                                             </a>
                                         </div>
@@ -98,7 +101,9 @@
                                     </template>
                                 </div>
                                 <div class="card-footer text-end">
-                                    <a class="btn btn-default" tabindex="-1" @click="showCreateClientForm">
+                                    <a
+                                        data-bs-toggle="modal" data-bs-target="#modal-create-client"
+                                        class="btn btn-secondary" tabindex="-1">
                                         {{ __('firefly.profile_oauth_create_new_client') }}
                                     </a>
                                 </div>
@@ -112,10 +117,7 @@
                                             <h5 class="modal-title">
                                                 {{ __('firefly.profile_oauth_create_client') }}
                                             </h5>
-
-                                            <button aria-hidden="true" class="close" data-bs-dismiss="modal"
-                                                    type="button">&times;
-                                            </button>
+                                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="{{ __('firefly.close') }}"></button>
                                         </div>
 
                                         <div class="modal-body">
@@ -216,10 +218,7 @@
                                             <h5 class="modal-title">
                                                 {{ __('firefly.profile_oauth_edit_client') }}
                                             </h5>
-
-                                            <button aria-hidden="true" class="close" data-bs-dismiss="modal"
-                                                    type="button">&times;
-                                            </button>
+                                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="{{ __('firefly.close') }}"></button>
                                         </div>
 
                                         <div class="modal-body">
@@ -302,18 +301,14 @@
                                             <h5 class="modal-title">
                                                 {{ __('firefly.profile_oauth_client_secret_title') }}
                                             </h5>
-
-                                            <button aria-hidden="true" class="close" data-bs-dismiss="modal"
-                                                    type="button">&times;
-                                            </button>
+                                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="{{ __('firefly.close') }}"></button>
                                         </div>
 
                                         <div class="modal-body">
                                             <p>
                                                 {{ __('firefly.profile_oauth_client_secret_expl') }}
                                             </p>
-                                            <input id="secret_box" x-model="clientSecret" class="form-control"
-                                                   type="text" spellcheck="false">
+                                            <input id="secret_box" x-model="clientSecret" class="form-control" type="text" spellcheck="false">
                                         </div>
 
                                         <!-- Modal Actions -->
@@ -338,7 +333,7 @@
                                         <h3 class="card-title">{{ __('firefly.profile_personal_access_tokens') }}</h3>
                                     </div>
                                     <div class="col text-end">
-                                        <a class="btn btn-default " tabindex="-1" @click="showCreateTokenForm">
+                                        <a class="btn btn-secondary" tabindex="-1" @click="showCreateTokenForm">
                                             {{ __('firefly.profile_create_new_token') }}
                                         </a>
                                     </div>
@@ -391,7 +386,7 @@
                                 </template>
                             </div>
                             <div class="card-footer text-end">
-                                <a class="btn btn-default" tabindex="-1" @click="showCreateTokenForm">
+                                <a class="btn btn-secondary" tabindex="-1" @click="showCreateTokenForm">
                                     {{ __('firefly.profile_create_new_token') }}
                                 </a>
                             </div>
@@ -406,10 +401,7 @@
                                     <h5 class="modal-title">
                                         {{ __('firefly.profile_create_token') }}
                                     </h5>
-
-                                    <button aria-hidden="true" class="close" data-bs-dismiss="modal" type="button">
-                                        &times;
-                                    </button>
+                                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="{{ __('firefly.close') }}"></button>
                                 </div>
 
                                 <div class="modal-body">
@@ -487,10 +479,7 @@
                                     <h5 class="modal-title">
                                         {{ __('firefly.profile_personal_access_token') }}
                                     </h5>
-
-                                    <button aria-hidden="true" class="close" data-bs-dismiss="modal" type="button">
-                                        &times;
-                                    </button>
+                                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="{{ __('firefly.close') }}"></button>
                                 </div>
 
                                 <div class="modal-body">

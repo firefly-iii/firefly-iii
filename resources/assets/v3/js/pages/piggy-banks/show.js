@@ -24,6 +24,7 @@ import dates from '../shared/dates.js';
 import i18next from "i18next";
 import {drawSingleCurrencyChart} from '../../shared/draw-chart.js';
 import {getVariable} from "../../store/get-variable.js";
+import Alpine from "alpinejs";
 
 window.enableDates = false;
 
@@ -39,7 +40,7 @@ let show = function () {
             });
 
         },
-        confirmHistoryRemoval(e) {
+        confirmHistoryRemoval() {
             if(confirm(i18next.t('firefly.reset_history_confirm'))) {
                 document.getElementById('reset-form').submit()
             }

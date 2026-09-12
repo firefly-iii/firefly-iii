@@ -22,6 +22,9 @@ import '../../boot/bootstrap.js';
 import sidebar from '../../pages/shared/sidebar.js';
 import dates from '../shared/dates.js';
 import i18next from "i18next";
+import {api} from "../../boot/axios";
+import {Modal} from 'bootstrap';
+import Alpine from 'alpinejs';
 
 let index = function () {
     return {
@@ -56,21 +59,25 @@ let index = function () {
         // showCreateTokenForm
 
 
-
         init() {
             this.i18next = i18next;
             this.getClients();
             this.getTokens();
-
-            $('#modal-create-token').on('shown.bs.modal', () => {
-                $('#create-token-name').focus();
+            document.getElementById('modal-create-token').addEventListener('shown.bs.modal', () => {
+                document.getElementById('create-token-name').focus();
             });
-            $('#modal-create-client').on('shown.bs.modal', () => {
-                $('#create-client-name').focus();
+            document.getElementById('modal-create-client').addEventListener('shown.bs.modal', () => {
+                document.getElementById('create-client-name').focus();
+            });
+            document.getElementById('modal-client-secret').addEventListener('shown.bs.modal', () => {
+                setTimeout(() => {
+                    document.getElementById('secret_box').focus();
+                }, 100);
+
             });
 
-            $('#modal-edit-client').on('shown.bs.modal', () => {
-                $('#edit-client-name').focus();
+            document.getElementById('modal-edit-client').addEventListener('shown.bs.modal', () => {
+                document.getElementById('edit-client-name').focus();
             });
             const textBox = document.getElementById("secret_box");
             textBox.onfocus = function () {
@@ -101,7 +108,7 @@ let index = function () {
          */
         getTokens() {
             console.log('getTokens()');
-            axios.get('./oauth/personal-access-tokens')
+            api.get('./oauth/personal-access-tokens')
                 .then(response => {
                     console.log(response.data);
                     this.tokens = response.data;
@@ -113,7 +120,7 @@ let index = function () {
          */
         showCreateTokenForm() {
             console.log('showCreateTokenForm()');
-            $('#modal-create-token').modal('show');
+            new Modal(document.getElementById('modal-create-token'), {}).show();
         },
 
         /**
@@ -125,7 +132,7 @@ let index = function () {
 
             this.form.errors = [];
 
-            axios.post('./oauth/personal-access-tokens', this.form)
+            api.post('./oauth/personal-access-tokens', this.form)
                 .then(response => {
                     console.log('Successful POST new token, reset form content.');
                     this.form.name = '';
@@ -137,9 +144,14 @@ let index = function () {
 
                 })
                 .catch(error => {
-                    console.warn('Bad POST new token, show error.');
+                    console.warn('Bad POST new token, show error.', error);
+                    this.form.errors = [];
                     if (typeof error.response.data === 'object') {
-                        this.form.errors = _.flatten(_.toArray(error.response.data.errors));
+                        for (let i in error.response.data.errors) {
+                            if (Object.hasOwn(error.response.data.errors, i)) {
+                                this.form.errors.push(error.response.data.errors[i]);
+                            }
+                        }
                     } else {
                         this.form.errors = ['Something went wrong. Please try again.'];
                     }
@@ -152,21 +164,21 @@ let index = function () {
          */
         showAccessToken(accessToken) {
             console.log('showAccessToken');
-            $('#modal-create-token').modal('hide');
+            new Modal(document.getElementById('modal-create-token'), {}).hide();
 
             this.accessToken = accessToken;
 
-            $('#modal-access-token').modal('show');
+            new Modal(document.getElementById('modal-access-token'), {}).show();
         },
         getClients() {
-            axios.get('./oauth/clients')
+            api.get('./oauth/clients')
                 .then(response => {
                     console.log(response.data);
                     this.clients = response.data;
                 });
         },
         showCreateClientForm() {
-            $('#modal-create-client').modal('show');
+            new Modal(document.getElementById('modal-create-client'), {}).show();
         },
         /**
          * Persist the client to storage using the given form.
@@ -174,7 +186,7 @@ let index = function () {
         persistClient(method, uri, form, modal) {
             form.errors = [];
 
-            axios[method](uri, form)
+            api[method](uri, form)
                 .then(response => {
                     this.getClients();
 
@@ -182,14 +194,13 @@ let index = function () {
                     form.redirect_uris = '';
                     form.errors = [];
 
-                    $(modal).modal('hide');
+                    new Modal(document.querySelector(modal), {}).hide();
 
                     if (response.data.plainSecret) {
                         this.showClientSecret(response.data.plainSecret);
                     }
                 })
                 .catch(error => {
-
                     if (typeof error.response.data === 'object') {
                         for (const [key, value] of Object.entries(error.response.data.errors)) {
                             console.log(`${key}: ${value}`);
@@ -205,8 +216,8 @@ let index = function () {
          * Revoke the given token.
          */
         revoke(token) {
-            axios.delete('./oauth/personal-access-tokens/' + token.id)
-                .then(response => {
+            api.delete('./oauth/personal-access-tokens/' + token.id)
+                .then(() => {
                     this.getTokens();
                 });
         },
@@ -216,15 +227,13 @@ let index = function () {
          */
         showClientSecret(clientSecret) {
             this.clientSecret = clientSecret;
-
-            $('#modal-client-secret').modal('show');
+            new Modal(document.getElementById('modal-client-secret'), {}).show();
         },
         regenerateSecret(client) {
-            axios.post('./oauth/clients/regenerate/' + client.id)
+            api.post('./oauth/clients/regenerate/' + client.id)
                 .then(response => {
                     this.clientSecret = response.data.plainSecret;
-
-                    $('#modal-client-secret').modal('show');
+                    new Modal(document.getElementById('modal-client-secret'), {}).show();
                 });
 
         },
@@ -233,8 +242,8 @@ let index = function () {
          * Destroy the given client.
          */
         destroy(client) {
-            axios.delete('./oauth/clients/' + client.id)
-                .then(response => {
+            api.delete('./oauth/clients/' + client.id)
+                .then(() => {
                     this.getClients();
                 });
         },
@@ -257,7 +266,7 @@ let index = function () {
             this.editForm.name = client.name;
             this.editForm.redirect_uris = client.redirect_uris.join(',');
 
-            $('#modal-edit-client').modal('show');
+            new Modal(document.getElementById('modal-edit-client'), {}).show();
         },
 
         /**
