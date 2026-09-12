@@ -1,6 +1,6 @@
 /*
- * load-responses.js
- * Copyright (c) 2026 james@firefly-iii.org
+ * post.js
+ * Copyright (c) 2023 james@firefly-iii.org
  *
  * This file is part of Firefly III (https://github.com/firefly-iii).
  *
@@ -18,27 +18,11 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-import i18next from "i18next";
-import Get from "../../../api/configuration/get.js";
+import {api} from "../../../boot/axios";
 
-function loadResponses() {
-    let result = [];
-    return (new Get).getByName('webhook.responses').then(response => {
-        for (let key in response.data.data.value) {
-            if(Object.hasOwn(response.data.data.value, key)) {
-                result.push(
-                    {
-                        id: key,
-                        name: i18next.t('firefly.webhook_response_' + key),
-                    }
-                );
-            }
-        }
-        return result;
-    }).catch((error) => {
-        console.error(error);
-        return result;
-    });
+export default class Post {
+    triggerTransaction(webhook, transaction) {
+        let url = '/api/v1/webhooks';
+        return api.post('./api/v1/webhooks/' + webhook + '/trigger-transaction/' + transaction, {});
+    }
 }
-
-export {loadResponses};

@@ -23,6 +23,10 @@ import sidebar from '../../pages/shared/sidebar.js';
 import dates from '../shared/dates.js';
 import format from "date-fns/format";
 import i18next from "i18next";
+import Post from '../../api/model/webhook/post.js';
+import Get from  '../../api/model/webhook/get.js';
+import Put from  '../../api/model/webhook/put.js';
+import Alpine from 'alpinejs'
 
 window.enableDates = false;
 
@@ -70,17 +74,9 @@ let show = function () {
             }
             let journalId = parseInt(prompt('Enter a transaction ID'));
             if (journalId !== null && journalId > 0 && journalId <= 16777216) {
-                // console.log('OK 1');
                 this.disabledTrigger = true;
-                // disable button. Add informative message.
-                //let button = $('#triggerButton');
-                //button.prop('disabled', true).addClass('disabled');
-
-                this.success_message = this.$t('firefly.webhook_was_triggered');
-                // TODO actually trigger the webhook.
-                axios.post('./api/v1/webhooks/' + this.id + '/trigger-transaction/' + journalId, {});
-                //button.prop('disabled', false).removeClass('disabled');
-                // console.log('OK 2');
+                this.success_message = i18next.t('firefly.webhook_was_triggered');
+                (new Post).triggerTransaction(this.id, journalId);
 
                 // set a time-outs.
                 this.loading = true;
@@ -96,8 +92,7 @@ let show = function () {
         },
 
         downloadWebhook: function () {
-            axios.get('./api/v1/webhooks/' + this.id).then(response => {
-                // console.log(response.data.data.attributes);
+            (new Get).show(this.id).then(response => {
                 this.edit_url = './webhooks/edit/' + this.id;
                 this.delete_url = './webhooks/delete/' + this.id;
                 this.title = response.data.data.attributes.title;
@@ -106,9 +101,6 @@ let show = function () {
                 this.triggers = response.data.data.attributes.triggers;
                 this.responses = response.data.data.attributes.responses;
                 this.deliveries = response.data.data.attributes.deliveries;
-
-                console.log(response.data.data);
-
                 this.active = response.data.data.attributes.active;
                 this.url = response.data.data.attributes.url;
             }).catch(error => {
@@ -117,13 +109,13 @@ let show = function () {
         },
         downloadWebhookMessages: function () {
             this.messages = [];
-            axios.get('./api/v1/webhooks/' + this.id + '/messages').then(response => {
+            (new Get).messages(this.id, {}).then(response => {
                 for (let i in response.data.data) {
-                    if (response.data.data.hasOwnProperty(i)) {
+                    if (Object.hasOwn(response.data.data,i)) {
                         let current = response.data.data[i];
                         this.messages.push({
                             id: current.id,
-                            created_at: format(new Date(current.attributes.created_at), this.$t('config.date_time_fns')),
+                            created_at: format(new Date(current.attributes.created_at), i18next.t('config.date_time_fns')),
                             uuid: current.attributes.uuid,
                             success: current.attributes.sent && !current.attributes.errored,
                             message: current.attributes.message,
@@ -134,27 +126,26 @@ let show = function () {
             });
         },
         resetSecret: function () {
-            axios.put('./api/v1/webhooks/' + this.id, {secret: 'anything'}).then(() => {
+            (new Put).put({secret: 'anything'}, {id: this.id}).then(() => {
                 this.downloadWebhook();
             });
         },
 
         showWebhookMessage: function (id) {
-            axios.get('./api/v1/webhooks/' + this.id + '/messages/' + id).then(response => {
-                $('#messageModal').modal('show');
+            (new Get).message(this.id, id, {}).then(response => {
                 this.message_content = response.data.data.attributes.message;
             });
         },
         showWebhookAttempts: function (id) {
+            console.log('showWebhookAttempts', id);
             this.message_attempts = [];
-            axios.get('./api/v1/webhooks/' + this.id + '/messages/' + id + '/attempts').then(response => {
-                $('#attemptModal').modal('show');
+            (new Get).attempts(this.id, id, {}).then(response => {
                 for (let i in response.data.data) {
-                    if (response.data.data.hasOwnProperty(i)) {
+                    if (Object.hasOwn(response.data.data,i)) {
                         let current = response.data.data[i];
                         this.message_attempts.push({
                             id: current.id,
-                            created_at: format(new Date(current.attributes.created_at), this.$t('config.date_time_fns')),
+                            created_at: format(new Date(current.attributes.created_at), i18next.t('config.date_time_fns')),
                             logs: current.attributes.logs,
                             status_code: current.attributes.status_code,
                             response: current.attributes.response,
@@ -163,7 +154,6 @@ let show = function () {
                 }
             });
         },
-
     }
 };
 
@@ -179,7 +169,7 @@ function loadPage(comps) {
     Object.keys(comps).forEach(comp => {
         let data = comps[comp]();
         Alpine.data(comp, () => data);
-        console.log(comp);
+        //console.log(comp);
     });
     Alpine.start();
 }

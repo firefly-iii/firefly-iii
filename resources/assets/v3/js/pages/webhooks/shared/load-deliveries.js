@@ -19,20 +19,20 @@
  */
 
 import i18next from "i18next";
+import Get from "../../../api/configuration/get.js";
 
 function loadDeliveries() {
     let result = [];
-    return axios.get('./api/v1/configuration/webhook.deliveries').then((response) => {
+    return (new Get).getByName('webhook.deliveries').then(response => {
         for (let key in response.data.data.value) {
-            if (!response.data.data.value.hasOwnProperty(key)) {
-                continue;
+            if(Object.hasOwn(response.data.data.value, key)) {
+                result.push(
+                    {
+                        id: key,
+                        name: i18next.t('firefly.webhook_delivery_' + key),
+                    }
+                );
             }
-            result.push(
-                {
-                    id: key,
-                    name: i18next.t('firefly.webhook_delivery_' + key),
-                }
-            );
         }
         return result;
     }).catch((error) => {
