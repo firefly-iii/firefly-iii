@@ -109,20 +109,20 @@ class Steam
             $pcVirtualBalance     = '0';
             if (!$convertToPrimary) {
                 $return['balance'] = bcadd($return['balance'], $virtualBalance);
-                Log::debug(sprintf('ADD virtual balance (%s) to "balance"', $virtualBalance), $return);
+                // Log::debug(sprintf('ADD virtual balance (%s) to "balance"', $virtualBalance), $return);
             }
             if ($convertToPrimary) {
                 // the primary currency balance is combined with a converted virtual_balance:
                 $converter            = new ExchangeRateConverter();
                 $pcVirtualBalance     = $converter->convert($currency, $primary, $date, $virtualBalance);
-                Log::debug(sprintf('ADD converted virtual balance (%s) to "pc_balance"', $pcVirtualBalance));
+                // Log::debug(sprintf('ADD converted virtual balance (%s) to "pc_balance"', $pcVirtualBalance));
                 $return['pc_balance'] = bcadd($pcVirtualBalance, $return['pc_balance']);
             }
 
             // second array
             $accountSums          = array_filter($arrayOfSums, static fn (array $entry): bool => $entry['account_id'] === $account->id);
             if (0 === count($accountSums)) {
-                Log::debug('No sums in transactions, so return whatever we have now.', $return);
+                // Log::debug('No sums in transactions, so return whatever we have now.', $return);
                 $result[$account->id] = $return;
 
                 continue;
