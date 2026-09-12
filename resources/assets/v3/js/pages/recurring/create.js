@@ -38,22 +38,22 @@ import {respondToRepetitionEnd} from './shared/respond-to-repetition-end.js';
 import 'fullcalendar/skeleton.css'; // ALWAYS NEED SKELETON
 import 'fullcalendar/themes/monarch/theme.css'; // YOUR THEME
 import 'fullcalendar/themes/monarch/palettes/purple.css'; // YOUR THEME'S PALETTE
-
+import Alpine from 'alpinejs';
 
 let create = function () {
     return {
         calendar: null,
         eventSource: null,
+        repetitionType:null,
+        respondToFirstDateChange: respondToFirstDateChange,
         init() {
             createTagField('ffInput_tags');
             createAutocomplete('ffInput_category', './api/v1/autocomplete/categories');
             createButtonSwitcher();
             switchTransactionType('withdrawal');
-            let type = document.getElementById('repetitionType').value;
-            let suggestUrl = document.getElementById('suggestUrl').value;
-            respondToFirstDateChange(type, suggestUrl);
+            this.respondToFirstDateChange();
             respondToRepetitionEnd();
-            document.getElementById('ffInput_first_date').addEventListener('change', respondToFirstDateChange.bind(this));
+            document.getElementById('ffInput_first_date').addEventListener('change', this.respondToFirstDateChange);
             document.getElementById('ffInput_repetition_end').addEventListener('change', respondToRepetitionEnd.bind(this));
 
 
@@ -83,7 +83,7 @@ let create = function () {
             let eventSource = new EventSource(newEventsUrl);
             this.calendar.removeAllEventSources();
             this.calendar.addEventSource(eventSource);
-            $('#calendarModal').modal('show');
+            // $('#calendarModal').modal('show');
 
             return false;
         }

@@ -33,7 +33,7 @@ export function loadBudgets(includeInactive) {
         }];
 
         for (let i in response.data.data) {
-            if (response.data.data.hasOwnProperty(i)) {
+            if (Object.hasOwn(response.data.data, i)) {
                 let current = response.data.data[i];
                 if(true === current.attributes.active) {
                     let obj = {

@@ -23,7 +23,7 @@ export function changedAmount(e) {
     this.entries[index].amount = parseFloat(e.target.value);
     this.groupProperties.totalAmount = 0;
     for (let i in this.entries) {
-        if (this.entries.hasOwnProperty(i)) {
+        if (Object.hasOwn(this.entries, i)) {
             this.groupProperties.totalAmount = this.groupProperties.totalAmount + parseFloat(this.entries[i].amount);
         }
     }

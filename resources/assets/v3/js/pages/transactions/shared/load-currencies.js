@@ -38,7 +38,7 @@ export function loadCurrencies() {
             id: 0, name: '(no foreign currency)', code: '__NO_CODE__', default: false, symbol: '', decimal_places: 2,
         });
         for (let i in response.data.data) {
-            if (response.data.data.hasOwnProperty(i)) {
+            if (Object.hasOwn(response.data.data, i)) {
                 let current = response.data.data[i];
                 if (current.attributes.enabled) {
                     let obj =

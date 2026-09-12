@@ -22,7 +22,7 @@ export function determineAmountCurrency(code) {
     let list = [];
     let currency;
     for (let i in this.formData.enabledCurrencies) {
-        if (this.formData.enabledCurrencies.hasOwnProperty(i)) {
+        if (Object.hasOwn(this.formData.enabledCurrencies, i)) {
             let current = this.formData.enabledCurrencies[i];
             if (current.code === code) {
                 currency = current;
@@ -34,7 +34,7 @@ export function determineAmountCurrency(code) {
         this.formData.amountCurrency = list[0];
         // this also forces the currency_code on ALL entries.
         for (let i in this.entries) {
-            if (this.entries.hasOwnProperty(i)) {
+            if (Object.hasOwn(this.entries, i)) {
                 this.entries[i].currency_code = code;
             }
         }

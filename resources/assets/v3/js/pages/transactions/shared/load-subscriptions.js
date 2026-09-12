@@ -35,7 +35,7 @@ export function loadSubscriptions(includeInactive) {
             }
         };
         for (let i in response.data.data) {
-            if (response.data.data.hasOwnProperty(i)) {
+            if (Object.hasOwn(response.data.data, i)) {
                 let current = response.data.data[i];
                 let objectGroupId = current.attributes.object_group_id ?? '0';
                 let objectGroupTitle = current.attributes.object_group_title ?? '(no group)';
@@ -48,7 +48,7 @@ export function loadSubscriptions(includeInactive) {
                     // skip over inactive items.
                     continue;
                 }
-                if (!subscriptions.hasOwnProperty(objectGroupId)) {
+                if (!Object.hasOwn(subscriptions, objectGroupId)) {
                     subscriptions[objectGroupId] = {
                         id: objectGroupId,
                         name: objectGroupTitle,

@@ -31,7 +31,9 @@
                             <div class="input-group has-validation">
                                 <label for="inputEmail3" class="col-sm-3 col-form-label">{{ trans('form.calendar') }}</label>
                                 <div class="col-sm-9">
-                                    <button class="btn btn-outline-secondary" type="button" id="calendar-link">{{ __('firefly.click_for_calendar') }}</button>
+                                    <button
+                                        data-bs-toggle="modal" data-bs-target="#calendarModal"
+                                        class="btn btn-outline-secondary" type="button" id="calendar-link">{{ __('firefly.click_for_calendar') }}</button>
                                 </div>
                             </div>
                         </div>

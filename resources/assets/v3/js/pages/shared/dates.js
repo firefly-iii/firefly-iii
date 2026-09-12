@@ -26,9 +26,9 @@ export default () => ({
         start: null, end: null
     },
     eventListeners: {
-        ['@CustomEvents.change'](event) {
-            console.log('I heard that! (dashboard/dates)');
-        }
+        // ['@CustomEvents.change'](event) {
+        //     console.log('I heard that! (dashboard/dates)');
+        // }
     },
     updateDates(e) {
         let split = e.originalTarget._props.value.split('/');

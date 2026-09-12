@@ -24,7 +24,7 @@ import {format} from "date-fns";
 export function parseDownloadedSplits(downloads, groupId) {
     let returnArray = [];
     for (let i in downloads) {
-        if (downloads.hasOwnProperty(i)) {
+        if (Object.hasOwn(downloads, i)) {
             // we have at least all default values!
             let download = downloads[i];
             let current = createEmptySplit();

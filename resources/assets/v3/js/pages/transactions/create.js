@@ -64,6 +64,7 @@ import {addTabListener} from "./shared/add-tab-listener.js";
 import {autoStep} from "./shared/auto-step.js";
 import {respondToTabSwitch} from "./shared/respond-to-tab-switch.js";
 import {loadTransactionLinks} from './shared/load-transaction-links.js';
+import Alpine from 'alpinejs';
 
 window.enableDates = false;
 
@@ -153,19 +154,19 @@ let create = function () {
         },
 
         // events in the form
-        changedDateTime(event) {
+        changedDateTime() {
             console.warn('changedDateTime, event is not used');
         },
 
-        changedDescription(event) {
+        changedDescription() {
             console.warn('changedDescription, event is not used');
         },
 
-        changedDestinationAccount(event) {
+        changedDestinationAccount() {
             this.detectTransactionType();
         },
 
-        changedSourceAccount(event) {
+        changedSourceAccount() {
             this.detectTransactionType();
         },
         // shared functions with edit/create transaction.
@@ -208,7 +209,7 @@ let create = function () {
             let list = [];
             let currency;
             for (let i in this.formData.enabledCurrencies) {
-                if (this.formData.enabledCurrencies.hasOwnProperty(i)) {
+                if (Object.hasOwn(this.formData.enabledCurrencies,i)) {
                     let current = this.formData.enabledCurrencies[i];
                     if (current.code === code) {
                         currency = current;
@@ -229,7 +230,7 @@ let create = function () {
 
             // this also forces the currency_code on ALL entries.
             for (let i in this.entries) {
-                if (this.entries.hasOwnProperty(i)) {
+                if (Object.hasOwn(this.entries,i)) {
                     this.entries[i].foreign_currency_code = code;
                 }
             }
@@ -241,7 +242,7 @@ let create = function () {
             this.formStates.loadingTransaction = false;
         },
 
-        processUpload(event) {
+        processUpload() {
             console.log('Now in processUpload()');
             this.formStates.storedAttachments = true;
             this.showMessageOrRedirectUser();
@@ -296,9 +297,9 @@ let create = function () {
             });
 
 
-            document.addEventListener('upload-success', (event) => {
+            document.addEventListener('upload-success', () => {
                 console.log('Now in event listener "upload-success"');
-                this.processUpload(event);
+                this.processUpload();
                 document.querySelectorAll("input[type=file]").forEach(input => input.value = "");
             });
 
@@ -321,7 +322,7 @@ let create = function () {
             this.formStates.isSubmitting = true;
 
             for (let i in this.entries) {
-                if (this.entries.hasOwnProperty(i)) {
+                if (Object.hasOwn(this.entries,i)) {
                     this.entries[i].errors = defaultErrorSet();
                 }
             }
@@ -355,7 +356,7 @@ let create = function () {
                 // submit all transaction links, based on the order of the transaction IDs
                 let transactions = [];
                 for (let i = 0; i < group.attributes.transactions.length; i++) {
-                    if (group.attributes.transactions.hasOwnProperty(i)) {
+                    if (Object.hasOwn(group.attributes.transactions,i)) {
                         transactions.push(parseInt(group.attributes.transactions[i].transaction_journal_id));
                     }
                 }

@@ -22,6 +22,7 @@ import '../../boot/bootstrap.js';
 import sidebar from '../../pages/shared/sidebar.js';
 import dates from '../shared/dates.js';
 import {addAutocomplete} from "./shared/add-autocomplete.js";
+import Alpine from 'alpinejs'
 
 window.enableDates = false;
 

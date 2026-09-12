@@ -8,7 +8,7 @@ export function loadLinkTypes() {
     return getter.list(params).then((response) => {
         let set = [];
         for (let i in response.data.data) {
-            if (response.data.data.hasOwnProperty(i)) {
+            if (Object.hasOwn(response.data.data, i)) {
                 let current = response.data.data[i];
                 let entry = {
                     id: current.id,

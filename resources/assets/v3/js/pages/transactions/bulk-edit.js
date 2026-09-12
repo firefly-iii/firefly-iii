@@ -25,6 +25,7 @@ import dates from '../shared/dates.js';
 import Tags from "bootstrap5-tags";
 import i18next from 'i18next';
 import {addAutocomplete} from "./shared/add-autocomplete.js";
+import Alpine from 'alpinejs';
 
 window.enableDates = false;
 
@@ -42,7 +43,7 @@ let edit = function () {
                 document.querySelector('input[name="ignore_budget"]').checked = false;
             }
         },
-        detectTagChange(e) {
+        detectTagChange() {
             let count = 0;
             let options = document.querySelector('select[name="tags"]').options;
             for(let i = 0; i < options.length; i ++){

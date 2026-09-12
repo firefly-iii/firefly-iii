@@ -25,12 +25,12 @@ import {loadLinkTypes} from "./load-link-types.js";
 
 export function autoStep() {
     // check if custom field "links" is enabled and if so, load the link types and save them in formData.
-    if (null === this.formStates.loadingLinks && this.formBehaviour.customFields.hasOwnProperty('links') && true === this.formBehaviour.customFields.links) {
+    if (null === this.formStates.loadingLinks && Object.hasOwn(this.formBehaviour.customFields, 'links') && true === this.formBehaviour.customFields.links) {
         this.formStates.loadingLinks = true;
         loadLinkTypes().then(data => {
             console.log('done loadLinkTypes()');
             for (let i = 0; i < data.length; i++) {
-                if (data.hasOwnProperty(i)) {
+                if (Object.hasOwn(data, i)) {
                     let current = data[i];
                     current.id = parseInt(current.id);
                     this.formData.linkTypes.push(current);
@@ -41,14 +41,14 @@ export function autoStep() {
 
         });
     }
-    if (this.formBehaviour.customFields.hasOwnProperty('links') && false === this.formBehaviour.customFields.links) {
+    if (Object.hasOwn(this.formBehaviour.customFields, 'links') && false === this.formBehaviour.customFields.links) {
         this.formStates.storedLinks = true;
         this.formStates.loadingLinks = false;
     }
     // check if the transaction is loaded and also the transaction links AND the field is enabled, then load the autocomplete for links.
-    if (false === this.formStates.loadingTransaction && false === this.formStates.loadingLinks && this.formBehaviour.customFields.hasOwnProperty('links') && true === this.formBehaviour.customFields.links) {
+    if (false === this.formStates.loadingTransaction && false === this.formStates.loadingLinks && Object.hasOwn(this.formBehaviour.customFields, 'links') && true === this.formBehaviour.customFields.links) {
         for(let i = 0; i < this.entries.length; i++) {
-            if(this.entries.hasOwnProperty(i)) {
+            if(Object.hasOwn(this.entries, i)) {
                 this.createLinkAutocomplete('links_modal_search_' + i, 'api/v1/autocomplete/transactions-with-meta');
                 if(0 !== parseInt(this.entries[i].transaction_journal_id) && !isNaN(parseInt(this.entries[i].transaction_journal_id))) {
                     // load the links for this transaction journal.

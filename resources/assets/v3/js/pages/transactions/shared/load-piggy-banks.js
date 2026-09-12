@@ -35,14 +35,14 @@ export function loadPiggyBanks() {
         };
 
         for (let i in response.data.data) {
-            if (response.data.data.hasOwnProperty(i)) {
+            if (Object.hasOwn(response.data.data, i)) {
                 let current = response.data.data[i];
                 let objectGroupId = current.attributes.object_group_id ?? '0';
                 let objectGroupTitle = current.attributes.object_group_title ?? '(no group)';
                 let piggyBank = {
                     id: current.id, name: current.attributes.name, order: current.attributes.order,
                 };
-                if (!piggyBanks.hasOwnProperty(objectGroupId)) {
+                if (!Object.hasOwn(piggyBanks, objectGroupId)) {
                     piggyBanks[objectGroupId] = {
                         id: objectGroupId,
                         name: objectGroupTitle,

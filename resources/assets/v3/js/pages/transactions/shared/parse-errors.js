@@ -29,7 +29,7 @@ export function parseErrors(data) {
     this.formStates.isSubmitting = false;
     this.notifications.error.text = this.i18next.t('firefly.errors_submission_v2', {errorMessage: data.message});
 
-    if (data.hasOwnProperty('errors')) {
+    if (Object.hasOwn(data, 'errors')) {
         this.entries = spliceErrorsIntoTransactions(data.errors, this.entries);
     }
 }

@@ -67,6 +67,7 @@ import {redirectAfterTransactionLinks} from "./shared/redirect-after-transaction
 import {addTabListener} from "./shared/add-tab-listener.js";
 import {autoStep} from "./shared/auto-step.js";
 import {respondToTabSwitch} from "./shared/respond-to-tab-switch.js";
+import Alpine from 'alpinejs'
 
 const urls = getUrls();
 window.enableDates = false;
@@ -191,19 +192,19 @@ let transactions = function () {
 
         // part of the account selection auto-complete
 
-        changedDateTime(event) {
+        changedDateTime() {
             console.warn('changedDateTime, event is not used');
         },
 
-        changedDescription(event) {
+        changedDescription() {
             console.warn('changedDescription, event is not used');
         },
 
-        changedDestinationAccount(event) {
+        changedDestinationAccount() {
             console.warn('changedDestinationAccount, event is not used');
         },
 
-        changedSourceAccount(event) {
+        changedSourceAccount() {
             console.warn('changedSourceAccount, event is not used');
         },
 
@@ -231,7 +232,7 @@ let transactions = function () {
 
                 // set amountCurrency.
                 for (let i in this.formData.enabledCurrencies) {
-                    if (this.formData.enabledCurrencies.hasOwnProperty(i)) {
+                    if (Object.hasOwn(this.formData.enabledCurrencies, i)) {
                         if (this.formData.enabledCurrencies[i].code === this.entries[0].currency_code) {
                             this.formData.amountCurrency = this.formData.enabledCurrencies[i];
                         }
@@ -241,7 +242,7 @@ let transactions = function () {
                 if ('transfer' === this.groupProperties.transactionType) {
                     this.formData.foreignCurrencies = [];
                     for (let i in this.formData.enabledCurrencies) {
-                        if (this.formData.enabledCurrencies.hasOwnProperty(i)) {
+                        if (Object.hasOwn(this.formData.enabledCurrencies, i)) {
                             if (this.formData.enabledCurrencies[i].code === this.entries[0].forein_currency_code) {
                                 this.formData.foreignCurrencies.push(this.formData.enabledCurrencies[i]);
                             }
@@ -254,7 +255,7 @@ let transactions = function () {
             }).then(() => {
                 this.groupProperties.totalAmount = 0;
                 for (let i in this.entries) {
-                    if (this.entries.hasOwnProperty(i)) {
+                    if (Object.hasOwn(this.entries, i)) {
                         this.groupProperties.totalAmount = this.groupProperties.totalAmount + parseFloat(this.entries[i].amount);
                     }
                 }
@@ -329,8 +330,8 @@ let transactions = function () {
             });
 
             // add some event listeners
-            document.addEventListener('upload-success', (event) => {
-                this.processUpload(event);
+            document.addEventListener('upload-success', () => {
+                this.processUpload();
                 document.querySelectorAll("input[type=file]").forEach(input => input.value = "");
             });
 
@@ -341,7 +342,7 @@ let transactions = function () {
 
 
         // TODO is a duplicate
-        processUpload(event) {
+        processUpload() {
             this.showMessageOrRedirectUser();
         },
 
@@ -355,7 +356,7 @@ let transactions = function () {
 
             // reset all errors in the entries array:
             for (let i in this.entries) {
-                if (this.entries.hasOwnProperty(i)) {
+                if (Object.hasOwn(this.entries, i)) {
                     this.entries[i].errors = defaultErrorSet();
                 }
             }
@@ -390,7 +391,7 @@ let transactions = function () {
                 // submit all transaction links, based on the order of the transaction IDs
                 let transactions = [];
                 for (let i = 0; i < group.attributes.transactions.length; i++) {
-                    if (group.attributes.transactions.hasOwnProperty(i)) {
+                    if (Object.hasOwn(group.attributes.transactions, i)) {
                         transactions.push(parseInt(group.attributes.transactions[i].transaction_journal_id));
                     }
                 }

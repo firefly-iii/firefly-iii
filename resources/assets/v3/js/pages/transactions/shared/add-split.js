@@ -19,7 +19,6 @@
  */
 
 import {createEmptySplit} from "./create-empty-split.js";
-import {addAllAutocompleteToForm} from "./add-autocomplete.js";
 
 export function addSplit() {
     this.entries.push(createEmptySplit());

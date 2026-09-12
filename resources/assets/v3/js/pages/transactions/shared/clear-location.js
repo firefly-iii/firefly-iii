@@ -26,7 +26,7 @@ export function clearLocation(e) {
     this.entries[index].longitude = null;
     this.entries[index].zoom_level = null;
 
-    if(this.markers.hasOwnProperty(index)) {
+    if(Object.hasOwn(this.markers, index)) {
         this.maps[index].removeLayer(this.markers[index]);
     }
 }

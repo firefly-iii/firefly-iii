@@ -55,7 +55,7 @@ function addPointToMap(e) {
     }
 }
 
-function saveZoomOfMap(e) {
+function saveZoomOfMap() {
     //let index = parseInt(e.sourceTarget._container.attributes['data-index'].value);
     let index = 0;
     const zoomEvent = new CustomEvent('location-zoom', {

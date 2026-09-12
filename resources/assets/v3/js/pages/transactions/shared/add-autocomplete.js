@@ -68,7 +68,7 @@ export function addAllAutocompleteToForm() {
     setTimeout(() => {
         // addedSplit, is called from the HTML
         // for source account
-        const renderAccount = function (item, b, c) {
+        const renderAccount = function (item) {
             return item.name_with_balance + '<br><small class="text-muted">' + i18next.t('firefly.account_type_' + item.type) + '</small>';
         };
 

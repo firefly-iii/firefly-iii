@@ -33,6 +33,7 @@ import themePlugin from "fullcalendar/themes/monarch";
 import dayGridPlugin from "fullcalendar/daygrid";
 import timeGridPlugin from "fullcalendar/timegrid";
 import listPlugin from "fullcalendar/list";
+import Alpine from 'alpinejs';
 
 // stylesheets
 import 'fullcalendar/skeleton.css'; // ALWAYS NEED SKELETON
@@ -41,17 +42,17 @@ import 'fullcalendar/themes/monarch/palettes/purple.css'; // YOUR THEME'S PALETT
 
 let edit = function () {
     return {
+        type: null,
+        respondToFirstDateChange: respondToFirstDateChange,
         init() {
             createTagField('ffInput_tags');
             createAutocomplete('ffInput_category','./api/v1/autocomplete/categories');
             createButtonSwitcher();
             switchTransactionType(document.getElementsByName('transaction_type')[0].value);
-
-            let type = document.getElementById('repetitionType').value;
-            let suggestUrl = document.getElementById('suggestUrl').value;
-            respondToFirstDateChange(type, suggestUrl);
+            this.type = document.getElementById('repetitionType').value;
+            this.respondToFirstDateChange();
             respondToRepetitionEnd();
-            document.getElementById('ffInput_first_date').addEventListener('change', respondToFirstDateChange.bind(this));
+            document.getElementById('ffInput_first_date').addEventListener('change', this.respondToFirstDateChange);
             document.getElementById('ffInput_repetition_end').addEventListener('change', respondToRepetitionEnd.bind(this));
 
             let calendarEl = document.getElementById('recurring_calendar');
@@ -81,7 +82,7 @@ let edit = function () {
             let eventSource = new EventSource(newEventsUrl);
             this.calendar.removeAllEventSources();
             this.calendar.addEventSource(eventSource);
-            $('#calendarModal').modal('show');
+            //$('#calendarModal').modal('show');
 
             return false;
         }

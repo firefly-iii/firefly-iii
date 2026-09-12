@@ -25,7 +25,7 @@ import {format} from "date-fns";
 export function createLinkAutocomplete(fieldIdentifier, url) {
     let token = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
 
-    const renderJournal = function (item, b, c) {
+    const renderJournal = function (item) {
         return item.description + '<br><small class="text-muted">' + formatMoney(item.amount, item.currency_code) + ' @ ' + format(new Date(item.date), this.i18next.t('config.date_time_fns')) + '</small>';
     };
     Autocomplete.init('#' + fieldIdentifier, {

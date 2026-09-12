@@ -28,9 +28,9 @@ export function parseFromEntries(entries, originals, transactionType) {
             const entry = entries[i];
             let compare = false;
             let original = {};
-            if (originals !== null && originals.hasOwnProperty(i)) {
+            if (originals !== null && Object.hasOwn(originals, i)) {
                 compare = true;
-                let original = originals[i];
+                // let original = originals[i];
             }
             let current = {};
 

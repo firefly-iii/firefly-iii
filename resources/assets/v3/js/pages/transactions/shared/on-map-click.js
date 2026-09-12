@@ -41,7 +41,7 @@ export function onMapClick(event) {
     this.entries[index].zoom_level = this.maps[index].getZoom();
 
     // add marker.
-    if(this.markers.hasOwnProperty(index)) {
+    if(Object.hasOwn(this.markers, index)) {
         this.maps[index].removeLayer(this.markers[index]);
     }
     this.markers[index] = L.marker(event.latlng);
