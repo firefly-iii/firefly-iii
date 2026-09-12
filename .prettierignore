@@ -1,0 +1,14 @@
+# Ignore artifacts:
+app
+bootstrap
+config
+database
+public
+resources/assets/v1
+resources/lang
+resources/locales
+resources/views
+routes
+storage
+tests
+vendor

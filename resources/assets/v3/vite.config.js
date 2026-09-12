@@ -18,91 +18,94 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-import {defineConfig} from 'vite';
-import laravel from 'laravel-vite-plugin';
-import manifestSRI from 'vite-plugin-manifest-sri';
+import { defineConfig } from "vite";
+import laravel from "laravel-vite-plugin";
+import manifestSRI from "vite-plugin-manifest-sri";
 import fs from "fs";
 
-export default defineConfig(({command}) => {
+export default defineConfig(({ command }) => {
     let https = null;
-    if (command === 'serve') {
+    if (command === "serve") {
         https = {
-            key: fs.readFileSync(`/vagrant/tls-certificates/wildcard.sd.internal.key`),
-            cert: fs.readFileSync(`/vagrant/tls-certificates/wildcard.sd.internal.crt`),
+            key: fs.readFileSync(
+                `/vagrant/tls-certificates/wildcard.sd.internal.key`,
+            ),
+            cert: fs.readFileSync(
+                `/vagrant/tls-certificates/wildcard.sd.internal.crt`,
+            ),
         };
     }
 
     return {
-        base: './',
+        base: "./",
         plugins: [
             laravel({
                 input: [
                     // CSS for entire app
-                    'sass/app.scss',
+                    "sass/app.scss",
 
                     // dashboard
-                    'js/pages/dashboard/boxes.js',
-                    'js/pages/dashboard/dashboard.js',
+                    "js/pages/dashboard/boxes.js",
+                    "js/pages/dashboard/dashboard.js",
 
                     // generic
-                    'js/pages/generic.js',
-                    'js/pages/generic-nodates.js',
-                    'js/pages/blank.js', // small bootstrap
-                    'js/pages/flush.js',
+                    "js/pages/generic.js",
+                    "js/pages/generic-nodates.js",
+                    "js/pages/blank.js", // small bootstrap
+                    "js/pages/flush.js",
 
                     // accounts
-                    'js/pages/accounts/create.js',
-                    'js/pages/accounts/edit.js',
+                    "js/pages/accounts/create.js",
+                    "js/pages/accounts/edit.js",
 
                     // administrations
-                    'js/pages/administrations/index.js',
-                    'js/pages/administrations/edit.js',
+                    "js/pages/administrations/index.js",
+                    "js/pages/administrations/edit.js",
 
                     // categories
 
                     // budgets
 
                     // exchange rates
-                    'js/pages/exchange-rates/index.js',
-                    'js/pages/exchange-rates/rates.js',
+                    "js/pages/exchange-rates/index.js",
+                    "js/pages/exchange-rates/rates.js",
 
                     // export
 
                     // object groups
 
                     // piggy banks
-                    'js/pages/piggy-banks/show.js',
+                    "js/pages/piggy-banks/show.js",
 
                     // profile
-                    'js/pages/profile/oauth.js',
+                    "js/pages/profile/oauth.js",
 
                     // rules
 
                     // recurring transactions
-                    'js/pages/recurring/create.js',
-                    'js/pages/recurring/edit.js',
+                    "js/pages/recurring/create.js",
+                    "js/pages/recurring/edit.js",
 
                     // subscriptions
 
                     // transaction currencies
 
                     // transactions
-                    'js/pages/transactions/create.js',
-                    'js/pages/transactions/edit.js',
-                    'js/pages/transactions/bulk-edit.js',
-                    'js/pages/transactions/mass-edit.js',
-                    'js/pages/transactions/show.js',
+                    "js/pages/transactions/create.js",
+                    "js/pages/transactions/edit.js",
+                    "js/pages/transactions/bulk-edit.js",
+                    "js/pages/transactions/mass-edit.js",
+                    "js/pages/transactions/show.js",
 
                     // tags
 
                     // webhooks
-                    'js/pages/webhooks/create.js',
-                    'js/pages/webhooks/edit.js',
-                    'js/pages/webhooks/show.js',
-                    'js/pages/webhooks/index.js',
-
+                    "js/pages/webhooks/create.js",
+                    "js/pages/webhooks/edit.js",
+                    "js/pages/webhooks/show.js",
+                    "js/pages/webhooks/index.js",
                 ],
-                buildDirectory: '../../../../public/build',
+                buildDirectory: "../../../../public/build",
                 // publicDirectory: '../../../public',
                 refresh: true,
                 fonts: [],
@@ -111,12 +114,12 @@ export default defineConfig(({command}) => {
         ],
         server: {
             watch: {
-                ignored: ['**/storage/framework/views/**'],
+                ignored: ["**/storage/framework/views/**"],
                 usePolling: true,
             },
             cors: true,
             // make sure this IP matches the IP of the dev machine.
-            origin: 'https://192.168.96.169:5173',
+            origin: "https://192.168.96.169:5173",
             port: 5173,
             host: true,
             // hmr: {
@@ -124,5 +127,5 @@ export default defineConfig(({command}) => {
             // },
             https: https,
         },
-    }
+    };
 });
