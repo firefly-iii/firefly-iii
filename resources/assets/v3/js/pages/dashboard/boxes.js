@@ -32,6 +32,7 @@ export default () => ({
     leftBox: { left: [], perDay: [] },
     netBox: { net: [] },
     convertToPrimary: false,
+    noMoneyLeft: false,
     loading: false,
     boxData: null,
     boxOptions: null,
@@ -86,7 +87,7 @@ export default () => ({
         this.leftBox = { left: [], perDay: [] };
         this.netBox = { net: [] };
         let subtitles = {};
-
+        let sumMoneyLeft = 0;
         // process new content:
         for (const i in data) {
             if (Object.hasOwn(data, i)) {
@@ -156,6 +157,7 @@ export default () => ({
                     continue;
                 }
                 if (key.startsWith("left-to-spend-in-")) {
+                    sumMoneyLeft = sumMoneyLeft + parseFloat(current.monetary_value);
                     this.leftBox.left.push(
                         formatMoney(
                             current.monetary_value,
@@ -183,6 +185,8 @@ export default () => ({
                 }
             }
         }
+
+        this.noMoneyLeft = sumMoneyLeft <= 0;
         for (let i in subtitles) {
             if (Object.hasOwn(subtitles, i)) {
                 this.balanceBox.subtitles.push(subtitles[i]);

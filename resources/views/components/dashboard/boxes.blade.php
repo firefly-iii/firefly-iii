@@ -15,9 +15,9 @@
                 </h4>
                 <template x-if="loading">
                     <p class="d-none d-xs-block">
-                        <div class="spinner-border spinner-border-sm" role="status">
-  <span class="visually-hidden">{{ __('firefly.thinking') }}</span>
-</div>
+                    <div class="spinner-border spinner-border-sm" role="status">
+                        <span class="visually-hidden">{{ __('firefly.thinking') }}</span>
+                    </div>
                     </p>
                 </template>
                 <template x-if="!loading && 0 !== balanceBox.amounts.length">
@@ -27,7 +27,7 @@
                 </template>
                 <template x-if="!loading && 0 === balanceBox.amounts.length">
                     <p class="d-none d-sm-block">
-                        TODO (no money in or out)
+                        &nbsp;
                     </p>
                 </template>
             </div>
@@ -50,9 +50,9 @@
         <!--end::Small Box Widget 1-->
     </div>
     <!--end::Col-->
-    <div class="col-xl-3 col-lg-6 col-md-6 col-sm-6"  style="flex-grow: 1;">
+    <div class="col-xl-3 col-lg-6 col-md-6 col-sm-6" style="flex-grow: 1;">
         <!--begin::Small Box Widget 2-->
-        <div class="small-box text-bg-success">
+        <div class="small-box text-bg-warning">
             <div class="inner">
                 <template x-if="0 === billBox.unpaid.length">
                     <h4>&nbsp;</h4>
@@ -69,13 +69,14 @@
                 </template>
                 <template x-if="loading">
                     <p class="d-none d-sm-block">
-                        <div class="spinner-border spinner-border-sm" role="status">
-  <span class="visually-hidden">{{ __('firefly.thinking') }}</span>
-</div>
+                    <div class="spinner-border spinner-border-sm" role="status">
+                        <span class="visually-hidden">{{ __('firefly.thinking') }}</span>
+                    </div>
                     </p>
                 </template>
                 <template x-if="!loading && billBox.unpaid.length > 0">
-                    <p class="d-none d-sm-block"><a href="{{ route('subscriptions.index') }}">{{ __('firefly.bills_to_pay') }}</a></p>
+                    <p class="d-none d-sm-block"><a
+                            href="{{ route('subscriptions.index') }}">{{ __('firefly.bills_to_pay') }}</a></p>
                 </template>
                 <template x-if="0 === billBox.unpaid.length && !loading">
                     <p class="d-none d-sm-block"><em>{{ __('firefly.no_waiting') }}</p>
@@ -104,9 +105,9 @@
         <!--end::Small Box Widget 2-->
     </div>
     <!--end::Col-->
-    <div class="col-xl-3 col-lg-6 col-md-6 col-sm-6"  style="flex-grow: 1;">
+    <div class="col-xl-3 col-lg-6 col-md-6 col-sm-6" style="flex-grow: 1;">
         <!--begin::Small Box Widget 3-->
-        <div class="small-box text-bg-warning">
+        <div x-bind:class="{'small-box': true, 'text-bg-success': !noMoneyLeft, 'text-bg-danger': noMoneyLeft}">
             <div class="inner">
                 <h4 class="hover-expand">
                     <template x-if="0 === leftBox.left.length">
@@ -122,13 +123,14 @@
 
                 <template x-if="loading">
                     <p class="d-none d-sm-block">
-                        <div class="spinner-border spinner-border-sm" role="status">
-  <span class="visually-hidden">{{ __('firefly.thinking') }}</span>
-</div>
+                    <div class="spinner-border spinner-border-sm" role="status">
+                        <span class="visually-hidden">{{ __('firefly.thinking') }}</span>
+                    </div>
                     </p>
                 </template>
                 <template x-if="!loading && 0 !== leftBox.left.length">
-                    <p class="d-none d-sm-block"><a href="{{ route('budgets.index') }}">{{ __('firefly.left_to_spend') }}</a></p>
+                    <p class="d-none d-sm-block"><a
+                            href="{{ route('budgets.index') }}">{{ __('firefly.left_to_spend') }}</a></p>
                 </template>
                 <template x-if="!loading && 0 === leftBox.left.length">
                     <p class="d-none d-sm-block"><em>{{ __('firefly.box_no_budgeted') }}</em></p>
@@ -157,7 +159,7 @@
     <!--end::Col-->
     <div class="col-xl-3 col-lg-6 col-md-6 col-sm-6" style="flex-grow: 1;">
         <!--begin::Small Box Widget 4-->
-        <div class="small-box text-bg-danger">
+        <div class="small-box text-bg-primary">
             <div class="inner">
                 <h4 class="hover-expand">
                     <template x-for="(amount, index) in netBox.net" :key="index">
@@ -170,9 +172,9 @@
 
                 <template x-if="loading">
                     <p class="d-none d-sm-block">
-                        <div class="spinner-border spinner-border-sm" role="status">
-  <span class="visually-hidden">{{ __('firefly.thinking') }}</span>
-</div>
+                    <div class="spinner-border spinner-border-sm" role="status">
+                        <span class="visually-hidden">{{ __('firefly.thinking') }}</span>
+                    </div>
                     </p>
                 </template>
                 <template x-if="!loading">
