@@ -126,7 +126,7 @@
 
 @endsection
 @section('scripts')
-    @vite(['js/pages/generic.js'])
+    @vite(['js/pages/generic-nodates.js'])
     @include('rules.partials.test-trigger-modal')
 
     {{-- new auto complete --}}

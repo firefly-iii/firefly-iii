@@ -55,6 +55,5 @@
 
 @endsection
 @section('scripts')
-    <script type="text/javascript" src="v1/js/ff/rule-groups/edit.js?v={{ $FF_BUILD_TIME }}"
-            nonce="{{ $JS_NONCE }}"></script>
+    @vite(['js/pages/generic-nodates.js'])
 @endsection

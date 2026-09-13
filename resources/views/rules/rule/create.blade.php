@@ -142,7 +142,7 @@
 
 @endsection
 @section('scripts')
-    @vite(['js/pages/generic.js'])
+    @vite(['js/pages/generic-nodates.js'])
     {{-- new auto complete --}}
     <script type="text/javascript" src="v1/js/lib/bootstrap-simple-autocomplete.js?v={{ $FF_BUILD_TIME }}" nonce="{{ $JS_NONCE }}"></script>
     <script type="text/javascript" nonce="{{ $JS_NONCE }}">

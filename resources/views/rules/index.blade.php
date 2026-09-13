@@ -173,7 +173,7 @@
 
 @endsection
 @section('scripts')
-    @vite(['js/pages/generic.js'])
+    @vite(['js/pages/generic-nodates.js'])
     <script type="text/javascript" nonce="{{ $JS_NONCE }}">
         var moveRuleGroupUrl = '{{ route('rule-groups.move') }}';
         var duplicateRuleUrl = '{{ route('rules.duplicate') }}';
