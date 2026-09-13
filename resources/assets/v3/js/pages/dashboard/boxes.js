@@ -157,7 +157,8 @@ export default () => ({
                     continue;
                 }
                 if (key.startsWith("left-to-spend-in-")) {
-                    sumMoneyLeft = sumMoneyLeft + parseFloat(current.monetary_value);
+                    sumMoneyLeft =
+                        sumMoneyLeft + parseFloat(current.monetary_value);
                     this.leftBox.left.push(
                         formatMoney(
                             current.monetary_value,
