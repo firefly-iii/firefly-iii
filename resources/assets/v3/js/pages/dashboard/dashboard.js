@@ -44,6 +44,7 @@ let index = function () {
                     "api/v1/chart/account/overview?period=1D&start=" + format(start,"yyyy-LL-dd") + "&end=" + format(end,"yyyy-LL-dd"),
                     "accounts-chart",
                     value,
+                    true
                 );
             });
         },

@@ -68,6 +68,7 @@ return [
                 'withdrawal',
                 'i_owe_amount',
                 'intro_next_label',
+                'today',
                 'intro_prev_label',
                 'intro_done_label',
                 'i_am_owed_amount',
