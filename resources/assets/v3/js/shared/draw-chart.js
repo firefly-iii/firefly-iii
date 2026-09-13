@@ -21,11 +21,10 @@
 import Chart from "chart.js/auto";
 import formatMoney from "../util/format-money.js";
 import i18next from "i18next";
-import format from '../util/format.js';
-import annotationPlugin from 'chartjs-plugin-annotation';
+import format from "../util/format.js";
+import annotationPlugin from "chartjs-plugin-annotation";
 
 Chart.register(annotationPlugin);
-
 
 let defaultChartOptions = {
     elements: {
@@ -58,7 +57,13 @@ let defaultChartOptions = {
     },
 };
 
-export function drawMultiCurrencyChart(type, url, holder, anonymous, drawTodayMarker) {
+export function drawMultiCurrencyChart(
+    type,
+    url,
+    holder,
+    anonymous,
+    drawTodayMarker,
+) {
     if ("line" === type) {
         drawMultiCurrencyLineChart(url, holder, anonymous, drawTodayMarker);
     }
@@ -72,64 +77,41 @@ export function drawSingleCurrencyChart(type, url, holder, anonymous) {
 
 function drawMultiCurrencyLineChart(url, holder, anonymous, drawTodayMarker) {
     document.getElementById(holder).classList.remove("general-chart-error");
-    window.axios.get(url).then((response) => {
-        let all = response.data;
-        let options = {...defaultChartOptions};
-        let today = new Date();
-        let firstScale = ''; // used for today marker.
-        let drawTodayIndex = '';
-        let data = {
-            datasets: [],
-            labels: [],
-        };
-        let axes = {};
-        // collect all Y axes from the data.
-        for (let i = 0; i < all.length; i++) {
-            if (Object.hasOwn(all, i)) {
-                let current = all[i];
-                // take the labels from index 0.
-                if (0 === i) {
-                    for (let j in current.entries) {
-                        if (Object.hasOwn(current.entries, j)) {
-                            let date = new Date(j);
-                            if (drawTodayMarker && isSameDay(date, today)) {
-                                console.log('Today is ', j, date);
-                                drawTodayIndex = j;
-                            }
-                            data.labels.push(format(date, i18next.t('config.month_and_day_fns')));
-                        }
-                    }
-                    firstScale = 'y' + current.currency_code;
-                }
-                // add the dataset.
-                let dataset = {
-                    label: current.label,
-                    currency_code: current.currency_code,
-                    data: [],
-                    yAxisID: 'y' + current.currency_code,
-                };
-                for (let j in current.entries) {
-                    if (Object.hasOwn(current.entries, j)) {
-                        dataset.data.push(current.entries[j]);
-                    }
-                }
-                data.datasets.push(dataset);
-
-                let currencyCode = current.currency_code;
-                let axisId = 'y' + currencyCode;
-                if (!Object.hasOwn(axes, axisId)) {
-                    axes[axisId] = {
-                        id: axisId,
-                        type: "linear",
-                        position: Object.keys(axes).length < 1 ? "left" : 'right',
-                        ticks: {
-                            callback: function (value) {
-                                if (anonymous) {
-                                    value = "0";
+    window.axios
+        .get(url)
+        .then((response) => {
+            let all = response.data;
+            let options = { ...defaultChartOptions };
+            let today = new Date();
+            let firstScale = ""; // used for today marker.
+            let drawTodayIndex = "";
+            let data = {
+                datasets: [],
+                labels: [],
+            };
+            let axes = {};
+            // collect all Y axes from the data.
+            for (let i = 0; i < all.length; i++) {
+                if (Object.hasOwn(all, i)) {
+                    let current = all[i];
+                    // take the labels from index 0.
+                    if (0 === i) {
+                        for (let j in current.entries) {
+                            if (Object.hasOwn(current.entries, j)) {
+                                let date = new Date(j);
+                                if (drawTodayMarker && isSameDay(date, today)) {
+                                    console.log("Today is ", j, date);
+                                    drawTodayIndex = j;
                                 }
-                                return formatMoney(value, currencyCode);
+                                data.labels.push(
+                                    format(
+                                        date,
+                                        i18next.t("config.month_and_day_fns"),
+                                    ),
+                                );
                             }
                         }
+                        firstScale = "y" + current.currency_code;
                     }
                     // add the dataset.
                     let dataset = {
@@ -162,78 +144,120 @@ function drawMultiCurrencyLineChart(url, holder, anonymous, drawTodayMarker) {
                                 },
                             },
                         };
-                    }
-                }
-            }
-        }
-        delete options.scales.y;
-        options.scales = {...options.scales, ...axes};
+                        // add the dataset.
+                        let dataset = {
+                            label: current.label,
+                            currency_code: current.currency_code,
+                            data: [],
+                            yAxisID: "y" + current.currency_code,
+                        };
+                        for (let j in current.entries) {
+                            if (Object.hasOwn(current.entries, j)) {
+                                dataset.data.push(current.entries[j]);
+                            }
+                        }
+                        data.datasets.push(dataset);
 
-        let labelCallback = function (tooltipItem) {
-            "use strict";
-            let index = tooltipItem.dataIndex;
-            let amount = tooltipItem.dataset.data[index];
-
-            let string = formatMoney(amount, tooltipItem.dataset.currency_code);
-            if (anonymous) {
-                string = formatMoney("0", tooltipItem.dataset.currency_code);
-            }
-            return tooltipItem.dataset.label + ": " + string;
-        };
-
-        options.plugins.tooltip.callbacks.label = labelCallback;
-
-        if (
-            typeof data === "undefined" ||
-            0 === data.length ||
-            (typeof data === "object" &&
-                typeof data.labels === "object" &&
-                0 === data.labels.length)
-        ) {
-            let el = document.getElementById(holder).parentElement;
-            el.innerHTML = "";
-            el.classList.add("general-chart-error");
-            el.innerText = i18next.t("firefly.no_data_for_chart");
-            return;
-        }
-
-        // TODO colorize data?
-        // if (colorData) {
-        //     data = colorizeData(data);
-        // }
-        if (drawTodayMarker && '' !== drawTodayIndex) {
-            let markDate = format(new Date(drawTodayIndex), i18next.t('config.month_and_day_fns'));
-            // draw line using annotation plugin.
-            options.plugins.annotation = {
-                annotations: {
-                    line1: {
-                        type: 'line',
-                        xScaleID: 'x',
-                        yScaleID: firstScale,
-                        xMin: markDate,
-                        xMax: markDate,
-                        display: true,
-                        borderColor: 'rgb(255, 0, 0)',
-                        borderWidth: 1,
-                        label: {
-                            content: i18next.t('firefly.today'),
-                            enabled: true,
-                            display: true,
-                            position: 'center'
+                        let currencyCode = current.currency_code;
+                        let axisId = "y" + currencyCode;
+                        if (!Object.hasOwn(axes, axisId)) {
+                            axes[axisId] = {
+                                id: axisId,
+                                type: "linear",
+                                position:
+                                    Object.keys(axes).length < 1
+                                        ? "left"
+                                        : "right",
+                                ticks: {
+                                    callback: function (value) {
+                                        if (anonymous) {
+                                            value = "0";
+                                        }
+                                        return formatMoney(value, currencyCode);
+                                    },
+                                },
+                            };
                         }
                     }
                 }
+            }
+            delete options.scales.y;
+            options.scales = { ...options.scales, ...axes };
+
+            let labelCallback = function (tooltipItem) {
+                "use strict";
+                let index = tooltipItem.dataIndex;
+                let amount = tooltipItem.dataset.data[index];
+
+                let string = formatMoney(
+                    amount,
+                    tooltipItem.dataset.currency_code,
+                );
+                if (anonymous) {
+                    string = formatMoney(
+                        "0",
+                        tooltipItem.dataset.currency_code,
+                    );
+                }
+                return tooltipItem.dataset.label + ": " + string;
             };
-        }
-        console.log(options);
-        // lineChart
-        const ctx = document.getElementById(holder).getContext("2d");
-        new Chart(ctx, {
-            type: "line",
-            data: data,
-            options: options,
-        });
-    })
+
+            options.plugins.tooltip.callbacks.label = labelCallback;
+
+            if (
+                typeof data === "undefined" ||
+                0 === data.length ||
+                (typeof data === "object" &&
+                    typeof data.labels === "object" &&
+                    0 === data.labels.length)
+            ) {
+                let el = document.getElementById(holder).parentElement;
+                el.innerHTML = "";
+                el.classList.add("general-chart-error");
+                el.innerText = i18next.t("firefly.no_data_for_chart");
+                return;
+            }
+
+            // TODO colorize data?
+            // if (colorData) {
+            //     data = colorizeData(data);
+            // }
+            if (drawTodayMarker && "" !== drawTodayIndex) {
+                let markDate = format(
+                    new Date(drawTodayIndex),
+                    i18next.t("config.month_and_day_fns"),
+                );
+                // draw line using annotation plugin.
+                options.plugins.annotation = {
+                    annotations: {
+                        line1: {
+                            type: "line",
+                            xScaleID: "x",
+                            yScaleID: firstScale,
+                            xMin: markDate,
+                            xMax: markDate,
+                            display: true,
+                            borderColor: "rgb(255, 0, 0)",
+                            borderWidth: 1,
+                            label: {
+                                content: i18next.t("firefly.today"),
+                                enabled: true,
+                                display: true,
+                                position: "center",
+                            },
+                        },
+                    },
+                };
+            }
+            console.log(options);
+            // lineChart
+            const ctx = document.getElementById(holder).getContext("2d");
+            new Chart(ctx, {
+                type: "line",
+                data: data,
+                options: options,
+            });
+        })
         .catch((error) => {
             let el = document.getElementById(holder).parentElement;
             el.innerHTML = "";
@@ -270,7 +294,7 @@ function drawSingleCurrencyLineChart(url, holder, anonymous) {
                 return label + ": " + string;
             };
 
-            let options = {...defaultChartOptions};
+            let options = { ...defaultChartOptions };
             options.scales.y.ticks.callback = yAxisCallback;
             options.plugins.tooltip.callbacks.label = labelCallback;
 
@@ -310,10 +334,11 @@ function drawSingleCurrencyLineChart(url, holder, anonymous) {
         });
 }
 
-
 // https://stackoverflow.com/questions/43855166/how-to-tell-if-two-dates-are-in-the-same-day-or-in-the-same-hour
 function isSameDay(d1, d2) {
-    return d1.getFullYear() === d2.getFullYear() &&
+    return (
+        d1.getFullYear() === d2.getFullYear() &&
         d1.getMonth() === d2.getMonth() &&
-        d1.getDate() === d2.getDate();
+        d1.getDate() === d2.getDate()
+    );
 }
