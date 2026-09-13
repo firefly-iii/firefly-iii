@@ -14,7 +14,9 @@
                     </div>
                 </div>
                 <div class="card-body">
-                    <canvas id="accounts-chart" class="wide-chart" height="400" width="100%"></canvas>
+                    <div>
+                        <canvas id="accounts-chart" class="wide-chart" height="400" width="100%"></canvas>
+                    </div>
                 </div>
                 <div class="card-footer text-end">
                     <a href="{{ route('accounts.index',['asset']) }}" class="btn btn-primary btn-sm"><span

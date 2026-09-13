@@ -29,7 +29,7 @@ $(function () {
 
 function drawChart() {
     "use strict";
-    lineChart(accountFrontpageUrl, 'accounts-chart');
+    // lineChart(accountFrontpageUrl, 'accounts-chart');
 
     if (billCount > 0) {
         multiCurrencyPieChart('chart/bill/frontpage', 'bills-chart');
