@@ -563,7 +563,6 @@
     @vite(['js/pages/transactions/show.js'])
     <script type="text/javascript" nonce="{{ $JS_NONCE }}">
         var modalDialogURL = '{{ route('transactions.link.modal', ['%JOURNAL%']) }}';
-        var acURL = '{{ route('api.v1.autocomplete.transactions-with-id') }}';
         var groupURL = '{{ route('transactions.show',['%GROUP%']) }}';
         var cloneGroupUrl = '{{ route('transactions.clone') }}';
         var cloneAndEditUrl = '{{ route('transactions.clone') }}?redirect=edit';
