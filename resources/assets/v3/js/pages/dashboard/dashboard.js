@@ -23,12 +23,47 @@ import sidebar from "../../pages/shared/sidebar.js";
 import dates from "../shared/dates.js";
 import boxes from "./boxes.js";
 import Alpine from "alpinejs";
+import Get from '../../api/model/piggy-bank/get.js';
+import formatMoney from "../../util/format-money.js";
 
 let index = function () {
     return {
+        piggyBanks: [],
+        loadingPiggyBanks: true,
         init() {
+            this.loadPiggyBanks();
             console.log("Dashboard");
         },
+        loadPiggyBanks() {
+            this.downloadPiggyBanks(1);
+        },
+        downloadPiggyBanks(page) {
+            (new Get).list({page: page}).then((response) => {
+                for(let i =0;i<response.data.data.length;i++){
+                    if(Object.hasOwn(response.data.data, i)){
+                        let current = response.data.data[i];
+                        let piggy = {
+                            id: current.id,
+                            name: current.attributes.name,
+                            percentage: null === current.attributes.percentage ? 0 : parseInt(current.attributes.percentage),
+                            amount: formatMoney(current.attributes.current_amount, current.attributes.currency_code)  + ' / ' + formatMoney(current.attributes.target_amount, current.attributes.currency_code)
+                        };
+                        if(null === current.attributes.target_amount) {
+                            piggy.amount = formatMoney(current.attributes.current_amount, current.attributes.currency_code)  + ' / ∞';
+                        }
+
+                        this.piggyBanks.push(piggy);
+                    }
+                }
+
+                let totalPages = parseInt(response.data.meta.pagination.total_pages);
+                if(totalPages > page) {
+                    this.downloadPiggyBanks(page + 1);
+                    return;
+                }
+                this.loadingPiggyBanks = false;
+            });
+        }
     };
 };
 

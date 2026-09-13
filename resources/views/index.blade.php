@@ -154,7 +154,50 @@
 
             <!--box for piggy bank data (JSON) -->
             <div id="piggy_bank_overview">
-
+                <div class="card mb-4">
+                    <div class="card-header">
+                        <div class="card-title"><a href="{{ route('piggy-banks.index') }}"
+                                                   title="{{ __('firefly.go_to_piggies') }}">{{ __('firefly.piggyBanks') }}</a>
+                        </div>
+                    </div>
+                    <div class="card-body">
+                        <template x-if="loadingPiggyBanks">
+                            <div class="text-center">
+                                <div class="spinner-border spinner-border-sm" role="status">
+                                    <span class="visually-hidden">{{ __('firefly.thinking') }}</span>
+                                </div>
+                            </div>
+                        </template>
+                        <template x-if="!loadingPiggyBanks && piggyBanks.length === 0">
+                            <p><em>{{ __('firefly.no_piggies_intro_default') }}</em></p>
+                        </template>
+                        <template x-for="piggyBank in piggyBanks" :key="piggyBank.id">
+                            <div>
+                                <a :href="'./piggy-banks/show/' + piggyBank.id" :title="piggyBank.name"><strong
+                                    x-text="piggyBank.name"></strong></a><br>
+                                <div class="progress">
+                                    <div class="progress-bar progress-bar-striped" role="progressbar"
+                                         :class="'w-'+piggyBank.percentage" :aria-valuenow="piggyBank.percentage"
+                                         aria-valuemin="0" aria-valuemax="100">
+                                        <template x-if="piggyBank.percentage > 50">
+                                        <span x-text="piggyBank.amount"></span>
+                                        </template>
+                                    </div>
+                                    <template x-if="piggyBank.percentage <= 50">
+                                        <span>&nbsp;
+                                            <span class="ml-1" x-text="piggyBank.amount"></span>
+                                        </span>
+                                    </template>
+                                </div>
+                            </div>
+                        </template>
+                    </div>
+                    <div class="card-footer text-end">
+                        <a href="{{ route('piggy-banks.index') }}" title="{{ __('firefly.go_to_piggies') }}"
+                           class="btn btn-primary btn-sm"><span
+                                class="bi bi-bullseye"></span> {{ __('firefly.go_to_piggies') }}</a>
+                    </div>
+                </div>
             </div>
         </div>
     </div>
@@ -214,7 +257,7 @@
         var piggyInfoUrl = '{{ route('json.fp.piggy-banks') }}';
         var drawVerticalLine = '';
         {{-- render vertical line with text "today"  --}}
-        @if($start->lte($today) && $end->gte($today))
+            @if($start->lte($today) && $end->gte($today))
             drawVerticalLine = '{{ $today->isoFormat($monthAndDayFormat) }}';
         @endif
     </script>
