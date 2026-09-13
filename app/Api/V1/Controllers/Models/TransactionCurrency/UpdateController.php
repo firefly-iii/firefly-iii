@@ -81,16 +81,16 @@ final class UpdateController extends Controller
         }
 
         /** @var User $user */
-        $user        = auth()->user();
+        $user = auth()->user();
         $this->repository->disable($currency);
-        $manager     = $this->getManager();
+        $manager = $this->getManager();
 
         $currency->refreshForUser($user);
 
         /** @var CurrencyTransformer $transformer */
         $transformer = app(CurrencyTransformer::class);
 
-        $resource    = new Item($currency, $transformer, 'currencies');
+        $resource = new Item($currency, $transformer, 'currencies');
 
         return response()->json($manager->createData($resource)->toArray())->header('Content-Type', self::CONTENT_TYPE);
     }
@@ -104,10 +104,10 @@ final class UpdateController extends Controller
     public function enable(TransactionCurrency $currency): JsonResponse
     {
         $this->repository->enable($currency);
-        $manager     = $this->getManager();
+        $manager = $this->getManager();
 
         /** @var User $user */
-        $user        = auth()->user();
+        $user = auth()->user();
 
         $currency->refreshForUser($user);
 
@@ -115,7 +115,7 @@ final class UpdateController extends Controller
         $transformer = app(CurrencyTransformer::class);
         $transformer->setParameters($this->parameters);
 
-        $resource    = new Item($currency, $transformer, 'currencies');
+        $resource = new Item($currency, $transformer, 'currencies');
 
         return response()->json($manager->createData($resource)->toArray())->header('Content-Type', self::CONTENT_TYPE);
     }
@@ -123,20 +123,20 @@ final class UpdateController extends Controller
     public function makePrimary(TransactionCurrency $currency): JsonResponse
     {
         /** @var User $user */
-        $user        = auth()->user();
+        $user = auth()->user();
         $this->repository->enable($currency);
         $this->repository->makePrimary($currency);
 
         Preferences::mark();
 
-        $manager     = $this->getManager();
+        $manager = $this->getManager();
         $currency->refreshForUser($user);
 
         /** @var CurrencyTransformer $transformer */
         $transformer = app(CurrencyTransformer::class);
         $transformer->setParameters($this->parameters);
 
-        $resource    = new Item($currency, $transformer, 'currencies');
+        $resource = new Item($currency, $transformer, 'currencies');
 
         return response()->json($manager->createData($resource)->toArray())->header('Content-Type', self::CONTENT_TYPE);
     }
@@ -151,13 +151,13 @@ final class UpdateController extends Controller
      */
     public function update(UpdateRequest $request, TransactionCurrency $currency): JsonResponse
     {
-        $data        = $request->getAll();
+        $data = $request->getAll();
 
         /** @var User $user */
-        $user        = auth()->user();
+        $user = auth()->user();
 
         // safety catch on currency disablement.
-        $set         = $this->repository->get();
+        $set = $this->repository->get();
         if (array_key_exists('enabled', $data) && false === $data['enabled'] && 1 === count($set) && $set->first()->id === $currency->id) {
             return response()->json([], 409);
         }
@@ -166,17 +166,22 @@ final class UpdateController extends Controller
             return response()->json([], 409);
         }
 
-        $currency    = $this->repository->update($currency, $data);
+        // if the user is not an admin, quietly drop fields they are not allowed to change.
+        if (!$user->hasRole('owner')) {
+            unset($data['code'], $data['name'], $data['symbol'], $data['decimal_places']);
+        }
+
+        $currency = $this->repository->update($currency, $data);
 
         Preferences::mark();
 
-        $manager     = $this->getManager();
+        $manager = $this->getManager();
         $currency->refreshForUser($user);
 
         /** @var CurrencyTransformer $transformer */
         $transformer = app(CurrencyTransformer::class);
 
-        $resource    = new Item($currency, $transformer, 'currencies');
+        $resource = new Item($currency, $transformer, 'currencies');
 
         return response()->json($manager->createData($resource)->toArray())->header('Content-Type', self::CONTENT_TYPE);
     }

@@ -629,7 +629,6 @@ Route::group(
 );
 
 // Transaction currency API routes:
-// TODO validate API documentation.
 Route::group(
     [
         'namespace' => 'FireflyIII\Api\V1\Controllers\Models\TransactionCurrency',
@@ -659,7 +658,6 @@ Route::group(
 );
 
 // Transaction currency API routes that require admin rights:
-// TODO validate API documentation.
 Route::group(
     [
         'namespace'  => 'FireflyIII\Api\V1\Controllers\Models\TransactionCurrency',
