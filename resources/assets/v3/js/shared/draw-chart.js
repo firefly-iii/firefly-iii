@@ -157,6 +157,7 @@ function drawMultiCurrencyLineChart(url, holder, anonymous, drawTodayMarker) {
                             }
                         }
                         data.datasets.push(dataset);
+
                     }
                 }
             }
