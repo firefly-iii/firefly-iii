@@ -673,7 +673,6 @@ Route::group(
 
 
 // Transaction Links API routes:
-// TODO validate API documentation.
 Route::group(
     [
         'namespace' => 'FireflyIII\Api\V1\Controllers\Models\TransactionLink',
@@ -690,7 +689,6 @@ Route::group(
 );
 
 // Transaction Link Type API routes:
-// TODO validate API documentation.
 Route::group(
     [
         'namespace' => 'FireflyIII\Api\V1\Controllers\Models\TransactionLinkType',
@@ -705,7 +703,6 @@ Route::group(
 );
 
 // Transaction Link Type API routes that need admin rights.
-// TODO validate API documentation.
 Route::group(
     [
         'namespace'  => 'FireflyIII\Api\V1\Controllers\Models\TransactionLinkType',
@@ -721,7 +718,6 @@ Route::group(
 );
 
 // SEARCH ENDPOINTS
-// TODO validate API documentation.
 Route::group(
     [
         'namespace' => 'FireflyIII\Api\V1\Controllers\Search',
@@ -737,7 +733,6 @@ Route::group(
 
 // SYSTEM END POINTS
 // About Firefly III API routes:
-// TODO validate API documentation.
 Route::group(
     [
         'namespace' => 'FireflyIII\Api\V1\Controllers\System',
@@ -750,7 +745,6 @@ Route::group(
     }
 );
 // Configuration API routes
-// TODO validate API documentation.
 Route::group(
     [
         'namespace'  => 'FireflyIII\Api\V1\Controllers\System',
@@ -764,7 +758,6 @@ Route::group(
 );
 
 // Configuration API routes that need admin rights
-// TODO validate API documentation.
 Route::group(
     [
         'namespace'  => 'FireflyIII\Api\V1\Controllers\System',
@@ -778,7 +771,6 @@ Route::group(
 );
 
 // Users API routes:
-// TODO validate API documentation.
 Route::group(
     [
         'namespace'  => 'FireflyIII\Api\V1\Controllers\System',
@@ -796,7 +788,6 @@ Route::group(
 );
 
 // Batch API routes:
-// TODO validate API documentation.
 Route::group(
     [
         'namespace'  => 'FireflyIII\Api\V1\Controllers\System',
@@ -811,7 +802,6 @@ Route::group(
 // USER
 
 // Preference API routes:
-// TODO validate API documentation.
 Route::group(
     [
         'namespace' => 'FireflyIII\Api\V1\Controllers\User',
@@ -821,14 +811,12 @@ Route::group(
     static function (): void {
         Route::get('', ['uses' => 'PreferencesController@index', 'as' => 'index']);
         Route::post('', ['uses' => 'PreferencesController@store', 'as' => 'store']);
-        // Route::get('{preferenceList}', ['uses' => 'PreferencesController@showList', 'as' => 'show-list'])->where('preferenceList', ',+');
         Route::get('{preferenceName}', ['uses' => 'PreferencesController@show', 'as' => 'show']);
         Route::put('{preferenceName}', ['uses' => 'PreferencesController@update', 'as' => 'update']);
     }
 );
 
 // Preference API routes:
-// TODO validate API documentation.
 Route::group(
     [
         'namespace' => 'FireflyIII\Api\V1\Controllers\User',
@@ -845,7 +833,6 @@ Route::group(
 );
 
 // Webhook API routes:
-// TODO validate API documentation.
 Route::group(
     [
         'namespace' => 'FireflyIII\Api\V1\Controllers\Webhook',

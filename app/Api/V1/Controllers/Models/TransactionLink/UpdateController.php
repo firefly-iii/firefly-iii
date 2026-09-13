@@ -76,7 +76,6 @@ final class UpdateController extends Controller
 
         /** @var TransactionLinkTransformer $transformer */
         $transformer = app(TransactionLinkTransformer::class);
-        $transformer->setParameters($this->parameters);
 
         $resource    = new Item($journalLink, $transformer, 'transaction_links');
 
