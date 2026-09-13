@@ -254,7 +254,6 @@
         var accountFrontpageUrl = '{{ route('chart.account.frontpage') }}';
         var accountRevenueUrl = '{{ route('chart.account.revenue') }}';
         var accountExpenseUrl = '{{ route('chart.account.expense') }}';
-        var piggyInfoUrl = '{{ route('json.fp.piggy-banks') }}';
         var drawVerticalLine = '';
         {{-- render vertical line with text "today"  --}}
             @if($start->lte($today) && $end->gte($today))
