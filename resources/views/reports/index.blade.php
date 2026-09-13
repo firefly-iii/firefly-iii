@@ -179,7 +179,6 @@
 @endsection
 
 @section('styles')
-    <link href="v1/css/bootstrap-multiselect.css?v={{ $FF_BUILD_TIME }}" rel="stylesheet" type="text/css" nonce="{{ $JS_NONCE }}">
 @endsection
 
 @section('scripts')
