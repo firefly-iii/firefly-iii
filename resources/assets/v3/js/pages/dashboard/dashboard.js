@@ -25,8 +25,8 @@ import boxes from "./boxes.js";
 import Alpine from "alpinejs";
 import Get from "../../api/model/piggy-bank/get.js";
 import formatMoney from "../../util/format-money.js";
-import {getVariable} from "../../store/get-variable.js";
-import {drawMultiCurrencyChart} from "../../shared/draw-chart.js";
+import { getVariable } from "../../store/get-variable.js";
+import { drawMultiCurrencyChart } from "../../shared/draw-chart.js";
 import format from "../../util/format.js";
 
 let index = function () {
@@ -37,11 +37,14 @@ let index = function () {
             this.loadPiggyBanks();
             console.log("Dashboard");
             getVariable("anonymous").then((value) => {
-                let start = new Date(window.store.get('start'));
-                let end = new Date(window.store.get('end'));
+                let start = new Date(window.store.get("start"));
+                let end = new Date(window.store.get("end"));
                 drawMultiCurrencyChart(
                     "line",
-                    "api/v1/chart/account/overview?period=1D&start=" + format(start,"yyyy-LL-dd") + "&end=" + format(end,"yyyy-LL-dd"),
+                    "api/v1/chart/account/overview?period=1D&start=" +
+                        format(start, "yyyy-LL-dd") +
+                        "&end=" +
+                        format(end, "yyyy-LL-dd"),
                     "accounts-chart",
                     value,
                 );
@@ -55,17 +58,38 @@ let index = function () {
                 for (let i = 0; i < response.data.data.length; i++) {
                     if (Object.hasOwn(response.data.data, i)) {
                         let current = response.data.data[i];
-                        let currentAmount = null === current.attributes.current_amount ? '0': current.attributes.current_amount;
-                        let targetAmount = null === current.attributes.target_amount ? '0': current.attributes.target_amount;
+                        let currentAmount =
+                            null === current.attributes.current_amount
+                                ? "0"
+                                : current.attributes.current_amount;
+                        let targetAmount =
+                            null === current.attributes.target_amount
+                                ? "0"
+                                : current.attributes.target_amount;
                         let piggy = {
                             id: current.id,
                             name: current.attributes.name,
-                            percentage: null === current.attributes.percentage ? 0 : parseInt(current.attributes.percentage),
-                            amount: formatMoney(currentAmount, current.attributes.currency_code)  + ' / ' + formatMoney(targetAmount, current.attributes.currency_code)
+                            percentage:
+                                null === current.attributes.percentage
+                                    ? 0
+                                    : parseInt(current.attributes.percentage),
+                            amount:
+                                formatMoney(
+                                    currentAmount,
+                                    current.attributes.currency_code,
+                                ) +
+                                " / " +
+                                formatMoney(
+                                    targetAmount,
+                                    current.attributes.currency_code,
+                                ),
                         };
-                        if(null === current.attributes.target_amount) {
-                            piggy.amount = formatMoney(currentAmount, current.attributes.currency_code)  + ' / ∞';
-
+                        if (null === current.attributes.target_amount) {
+                            piggy.amount =
+                                formatMoney(
+                                    currentAmount,
+                                    current.attributes.currency_code,
+                                ) + " / ∞";
                         }
 
                         this.piggyBanks.push(piggy);

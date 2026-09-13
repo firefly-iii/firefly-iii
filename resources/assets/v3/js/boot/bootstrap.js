@@ -78,7 +78,12 @@ getFreshVariable("lastActivity")
             window.__localeId__ = values.locale;
             store.set("language", values.language);
             store.set("locale", values.locale);
-            console.log('Language is ' + values.language + ', locale is ' + values.locale);
+            console.log(
+                "Language is " +
+                    values.language +
+                    ", locale is " +
+                    values.locale,
+            );
             loadTranslations(values.locale).then(() => {
                 const event = new Event("firefly-iii-bootstrapped");
                 document.dispatchEvent(event);
