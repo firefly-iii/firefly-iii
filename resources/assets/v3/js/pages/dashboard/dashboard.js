@@ -47,7 +47,7 @@ let index = function () {
                         format(end, "yyyy-LL-dd"),
                     "accounts-chart",
                     value,
-                    true
+                    true,
                 );
             });
         },
