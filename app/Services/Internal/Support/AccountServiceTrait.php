@@ -539,7 +539,7 @@ trait AccountServiceTrait
             // use default currency:
             $currency = Amount::getPrimaryCurrencyByUserGroup($this->user->userGroup);
         }
-        $currency->enabled = true;
+        $currency->enabled = false;
         $currency->save();
 
         return $currency;

@@ -56,7 +56,7 @@ class BillUpdateService
             ) ?? Amount::getPrimaryCurrencyByUserGroup($bill->user->userGroup);
 
             // enable the currency if it isn't.
-            $currency->enabled             = true;
+            $currency->enabled             = false;
             $currency->save();
             $bill->transaction_currency_id = $currency->id;
             $bill->save();

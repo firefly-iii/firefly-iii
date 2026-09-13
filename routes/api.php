@@ -53,7 +53,6 @@ Route::group(
 );
 
 // Autocomplete controllers
-// TODO validate API documentation.
 Route::group(
     [
         'namespace' => 'FireflyIII\Api\V1\Controllers\Autocomplete',
@@ -81,7 +80,6 @@ Route::group(
 );
 
 // exchange rates
-// TODO validate API documentation.
 Route::group(
     [
         'namespace' => 'FireflyIII\Api\V1\Controllers\Models\CurrencyExchangeRate',
@@ -114,7 +112,6 @@ Route::group(
 );
 
 // CHART ROUTES
-// TODO validate API documentation.
 Route::group(
     [
         'namespace' => 'FireflyIII\Api\V1\Controllers\Chart',
@@ -127,7 +124,6 @@ Route::group(
 );
 
 // Chart accounts
-// TODO validate API documentation.
 Route::group(
     [
         'namespace' => 'FireflyIII\Api\V1\Controllers\Chart',
@@ -139,7 +135,6 @@ Route::group(
     }
 );
 
-// TODO validate API documentation.
 Route::group(
     [
         'namespace' => 'FireflyIII\Api\V1\Controllers\Chart',
@@ -151,7 +146,6 @@ Route::group(
     }
 );
 
-// TODO validate API documentation.
 Route::group(
     [
         'namespace' => 'FireflyIII\Api\V1\Controllers\Chart',
@@ -166,7 +160,6 @@ Route::group(
 
 // DATA ROUTES
 // Export data API routes
-// TODO validate API documentation.
 Route::group(
     [
         'namespace' => 'FireflyIII\Api\V1\Controllers\Data\Export',
@@ -188,7 +181,6 @@ Route::group(
 );
 
 // Destroy data API route
-// TODO validate API documentation.
 Route::group(
     [
         'namespace' => 'FireflyIII\Api\V1\Controllers\Data',
@@ -200,7 +192,6 @@ Route::group(
     }
 );
 
-// TODO validate API documentation.
 Route::group(
     [
         'namespace' => 'FireflyIII\Api\V1\Controllers\Data',
@@ -213,7 +204,6 @@ Route::group(
 );
 
 // Bulk update API routes
-// TODO validate API documentation.
 Route::group(
     [
         'namespace' => 'FireflyIII\Api\V1\Controllers\Data\Bulk',
@@ -228,7 +218,6 @@ Route::group(
 // INSIGHTS ROUTES
 
 // Insight in expenses:
-// TODO validate API documentation.
 Route::group(
     [
         'namespace' => 'FireflyIII\Api\V1\Controllers\Insight\Expense',
@@ -242,6 +231,8 @@ Route::group(
         Route::get('total', ['uses' => 'PeriodController@total', 'as' => 'total']);
         Route::get('bill', ['uses' => 'BillController@bill', 'as' => 'bill']);
         Route::get('no-bill', ['uses' => 'BillController@noBill', 'as' => 'no-bill']);
+        Route::get('subscription', ['uses' => 'BillController@bill', 'as' => 'subscription']);
+        Route::get('no-subscription', ['uses' => 'BillController@noBill', 'as' => 'no-subscription']);
         Route::get('budget', ['uses' => 'BudgetController@budget', 'as' => 'budget']);
         Route::get('no-budget', ['uses' => 'BudgetController@noBudget', 'as' => 'no-budget']);
         Route::get('category', ['uses' => 'CategoryController@category', 'as' => 'category']);
@@ -256,7 +247,6 @@ Route::group(
     }
 );
 // insight in income
-// TODO validate API documentation.
 Route::group(
     [
         'namespace' => 'FireflyIII\Api\V1\Controllers\Insight\Income',
@@ -302,7 +292,6 @@ Route::group(
 );
 // SUMMARY CONTROLLER
 // BASIC
-// TODO validate API documentation.
 Route::group(
     [
         'namespace' => 'FireflyIII\Api\V1\Controllers\Summary',
@@ -316,7 +305,6 @@ Route::group(
 
 // MODELS
 // Accounts API routes:
-// TODO validate API documentation.
 Route::group(
     [
         'namespace' => 'FireflyIII\Api\V1\Controllers\Models\Account',
@@ -337,7 +325,6 @@ Route::group(
 );
 
 // Attachment API routes:
-// TODO validate API documentation.
 Route::group(
     [
         'namespace' => 'FireflyIII\Api\V1\Controllers\Models\Attachment',
@@ -356,7 +343,6 @@ Route::group(
 );
 
 // User group API routes.
-// TODO validate API documentation.
 Route::group(
     [
         'namespace'  => 'FireflyIII\Api\V1\Controllers\Models\UserGroup',
@@ -376,7 +362,6 @@ Route::group(
 );
 
 // Bills API routes:
-// TODO validate API documentation.
 Route::group(
     [
         'namespace' => 'FireflyIII\Api\V1\Controllers\Models\Bill',
@@ -396,7 +381,6 @@ Route::group(
     }
 );
 
-// TODO validate API documentation.
 Route::group(
     [
         'namespace' => 'FireflyIII\Api\V1\Controllers\Models\Bill',
@@ -417,7 +401,6 @@ Route::group(
 );
 
 // Available Budget API routes:
-// TODO validate API documentation.
 Route::group(
     [
         'namespace' => 'FireflyIII\Api\V1\Controllers\Models\AvailableBudget',
@@ -434,7 +417,6 @@ Route::group(
 );
 
 // Budget and Budget Limit API routes:
-// TODO validate API documentation.
 Route::group(
     [
         'namespace' => 'FireflyIII\Api\V1\Controllers\Models',
@@ -463,7 +445,6 @@ Route::group(
 );
 
 // separate route for budget limits without referring to the budget.
-// TODO validate API documentation.
 Route::group(
     [
         'namespace' => 'FireflyIII\Api\V1\Controllers\Models\BudgetLimit',
@@ -476,7 +457,6 @@ Route::group(
 );
 
 // Category API routes:
-// TODO validate API documentation.
 Route::group(
     [
         'namespace' => 'FireflyIII\Api\V1\Controllers\Models\Category',
@@ -496,7 +476,6 @@ Route::group(
 );
 
 // Object Group API routes:
-// TODO validate API documentation.
 Route::group(
     [
         'namespace' => 'FireflyIII\Api\V1\Controllers\Models\ObjectGroup',
@@ -515,7 +494,6 @@ Route::group(
 );
 
 // Piggy Bank API routes:
-// TODO validate API documentation.
 Route::group(
     [
         'namespace' => 'FireflyIII\Api\V1\Controllers\Models\PiggyBank',
@@ -536,7 +514,6 @@ Route::group(
 );
 
 // Recurrence API routes:
-// TODO validate API documentation.
 Route::group(
     [
         'namespace' => 'FireflyIII\Api\V1\Controllers\Models\Recurrence',
@@ -559,7 +536,6 @@ Route::group(
 );
 
 // Rules API routes:
-// TODO validate API documentation.
 Route::group(
     [
         'namespace' => 'FireflyIII\Api\V1\Controllers\Models\Rule',
@@ -582,7 +558,6 @@ Route::group(
 );
 
 // Rules API routes:
-// TODO validate API documentation.
 Route::group(
     [
         'namespace' => 'FireflyIII\Api\V1\Controllers\Models\RuleGroup',
@@ -603,7 +578,6 @@ Route::group(
 );
 
 // Tag API routes:
-// TODO validate API documentation.
 Route::group(
     [
         'namespace' => 'FireflyIII\Api\V1\Controllers\Models\Tag',
@@ -622,7 +596,6 @@ Route::group(
     }
 );
 // Transaction API routes:
-// TODO validate API documentation.
 Route::group(
     [
         'namespace' => 'FireflyIII\Api\V1\Controllers\Models\Transaction',
@@ -641,7 +614,6 @@ Route::group(
     }
 );
 
-// TODO validate API documentation.
 Route::group(
     [
         'namespace' => 'FireflyIII\Api\V1\Controllers\Models\Transaction',

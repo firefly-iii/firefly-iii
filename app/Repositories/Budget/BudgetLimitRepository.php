@@ -304,7 +304,7 @@ class BudgetLimitRepository implements BudgetLimitRepositoryInterface, UserGroup
         if (null === $currency) {
             $currency = Amount::getPrimaryCurrencyByUserGroup($this->user->userGroup);
         }
-        $currency->enabled              = true;
+        $currency->enabled              = false;
         $currency->save();
 
         // find the budget:
@@ -387,7 +387,7 @@ class BudgetLimitRepository implements BudgetLimitRepositoryInterface, UserGroup
         if (null === $currency) {
             $currency = $budgetLimit->transactionCurrency ?? Amount::getPrimaryCurrencyByUserGroup($this->user->userGroup);
         }
-        $currency->enabled                    = true;
+        $currency->enabled                    = false;
         $currency->save();
 
         // this is a lame trick to communicate with the observer.
