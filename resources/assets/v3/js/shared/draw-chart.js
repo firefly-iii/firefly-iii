@@ -157,27 +157,6 @@ function drawMultiCurrencyLineChart(url, holder, anonymous, drawTodayMarker) {
                             }
                         }
                         data.datasets.push(dataset);
-
-                        let currencyCode = current.currency_code;
-                        let axisId = "y" + currencyCode;
-                        if (!Object.hasOwn(axes, axisId)) {
-                            axes[axisId] = {
-                                id: axisId,
-                                type: "linear",
-                                position:
-                                    Object.keys(axes).length < 1
-                                        ? "left"
-                                        : "right",
-                                ticks: {
-                                    callback: function (value) {
-                                        if (anonymous) {
-                                            value = "0";
-                                        }
-                                        return formatMoney(value, currencyCode);
-                                    },
-                                },
-                            };
-                        }
                     }
                 }
             }
@@ -259,6 +238,7 @@ function drawMultiCurrencyLineChart(url, holder, anonymous, drawTodayMarker) {
             });
         })
         .catch((error) => {
+            console.error(error);
             let el = document.getElementById(holder).parentElement;
             el.innerHTML = "";
             el.classList.add("general-chart-error");
