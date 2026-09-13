@@ -25,7 +25,6 @@ declare(strict_types=1);
 namespace FireflyIII\Api\V1\Controllers\Autocomplete;
 
 use FireflyIII\Api\V1\Controllers\Controller;
-use FireflyIII\Api\V1\Requests\Autocomplete\AutocompleteApiRequest;
 use FireflyIII\Api\V1\Requests\Autocomplete\AutocompleteTransactionApiRequest;
 use FireflyIII\Enums\UserRoleEnum;
 use FireflyIII\Models\TransactionGroup;
@@ -88,8 +87,6 @@ final class TransactionController extends Controller
 
         return response()->api($array);
     }
-
-
 
     public function transactionsWithMeta(AutocompleteTransactionApiRequest $request): JsonResponse
     {

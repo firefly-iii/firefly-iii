@@ -40,9 +40,11 @@ class AutoBudgetCronjob extends AbstractCronjob
     public function fire(): void
     {
         Log::debug('AutoBudgetCronjob::fire()');
+
         /** @var User $user */
         foreach ($this->users as $user) {
             Log::debug(sprintf('Now at user #%d ("%s")', $user->id, $user->email));
+
             /** @var Configuration $config */
             $config        = AppConfiguration::get(sprintf('last_ab_job_%d', $user->id), 0);
             $lastTime      = (int) $config->data;

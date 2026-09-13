@@ -25,8 +25,6 @@ declare(strict_types=1);
 namespace FireflyIII\Api\V1\Controllers\Autocomplete;
 
 use FireflyIII\Api\V1\Controllers\Controller;
-use FireflyIII\Api\V1\Requests\Autocomplete\AutocompleteApiRequest;
-use FireflyIII\Api\V1\Requests\Autocomplete\AutocompleteCategoryApiRequest;
 use FireflyIII\Api\V1\Requests\Autocomplete\AutocompleteGenericApiRequest;
 use FireflyIII\Enums\UserRoleEnum;
 use FireflyIII\Models\Category;
