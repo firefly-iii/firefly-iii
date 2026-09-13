@@ -37,8 +37,8 @@ let index = function () {
             this.loadPiggyBanks();
             console.log("Dashboard");
             getVariable("anonymous").then((value) => {
-                let start = new Date(store.get('start'));
-                let end = new Date(store.get('end'));
+                let start = new Date(window.store.get('start'));
+                let end = new Date(window.store.get('end'));
                 drawMultiCurrencyChart(
                     "line",
                     "api/v1/chart/account/overview?period=1D&start=" + format(start,"yyyy-LL-dd") + "&end=" + format(end,"yyyy-LL-dd"),

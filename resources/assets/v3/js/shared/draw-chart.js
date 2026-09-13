@@ -21,7 +21,7 @@
 import Chart from "chart.js/auto";
 import formatMoney from "../util/format-money.js";
 import i18next from "i18next";
-import format from "date-fns/format";
+import format from '../util/format.js';
 
 let defaultChartOptions = {
     elements: {
