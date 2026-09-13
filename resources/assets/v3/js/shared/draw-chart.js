@@ -21,7 +21,7 @@
 import Chart from "chart.js/auto";
 import formatMoney from "../util/format-money.js";
 import i18next from "i18next";
-import format from '../util/format.js';
+import format from "../util/format.js";
 
 let defaultChartOptions = {
     elements: {
@@ -67,72 +67,86 @@ export function drawSingleCurrencyChart(type, url, holder, anonymous) {
 
 function drawMultiCurrencyLineChart(url, holder, anonymous) {
     document.getElementById(holder).classList.remove("general-chart-error");
-    window.axios.get(url).then((response) => {
+    window.axios
+        .get(url)
+        .then((response) => {
             let all = response.data;
-        let options = { ...defaultChartOptions };
-        let data = {
-            datasets: [],
-            labels: [],
-        };
-        let axes = {};
+            let options = { ...defaultChartOptions };
+            let data = {
+                datasets: [],
+                labels: [],
+            };
+            let axes = {};
             // collect all Y axes from the data.
-        for (let i = 0; i < all.length; i++) {
-            if(Object.hasOwn(all, i)) {
-                let current = all[i];
-                // take the labels from index 0.
-                if(0 === i) {
-                    for(let j in current.entries) {
-                        if(Object.hasOwn(current.entries, j)) {
-                            let date = new Date(j);
-                            data.labels.push(format(date,i18next.t('config.month_and_day_fns')));
-                        }
-                    }
-                }
-                // add the dataset.
-                let dataset = {
-                    label: current.label,
-                    currency_code: current.currency_code,
-                    data: [],
-                    yAxisID: 'y' + current.currency_code,
-                };
-                for(let j in current.entries) {
-                    if(Object.hasOwn(current.entries, j)) {
-                        dataset.data.push(current.entries[j]);
-                    }
-                }
-                data.datasets.push(dataset);
-
-                let currencyCode = current.currency_code;
-                let axisId = 'y' + currencyCode;
-                if(!Object.hasOwn(axes, axisId)) {
-                    axes[axisId] = {
-                        id: axisId,
-                        type: "linear",
-                        position: Object.keys(axes).length < 1 ? "left": 'right',
-                        ticks: {
-                            callback: function (value) {
-                                if (anonymous) {
-                                    value = "0";
-                                }
-                                return formatMoney(value, currencyCode);
+            for (let i = 0; i < all.length; i++) {
+                if (Object.hasOwn(all, i)) {
+                    let current = all[i];
+                    // take the labels from index 0.
+                    if (0 === i) {
+                        for (let j in current.entries) {
+                            if (Object.hasOwn(current.entries, j)) {
+                                let date = new Date(j);
+                                data.labels.push(
+                                    format(
+                                        date,
+                                        i18next.t("config.month_and_day_fns"),
+                                    ),
+                                );
                             }
                         }
                     }
+                    // add the dataset.
+                    let dataset = {
+                        label: current.label,
+                        currency_code: current.currency_code,
+                        data: [],
+                        yAxisID: "y" + current.currency_code,
+                    };
+                    for (let j in current.entries) {
+                        if (Object.hasOwn(current.entries, j)) {
+                            dataset.data.push(current.entries[j]);
+                        }
+                    }
+                    data.datasets.push(dataset);
+
+                    let currencyCode = current.currency_code;
+                    let axisId = "y" + currencyCode;
+                    if (!Object.hasOwn(axes, axisId)) {
+                        axes[axisId] = {
+                            id: axisId,
+                            type: "linear",
+                            position:
+                                Object.keys(axes).length < 1 ? "left" : "right",
+                            ticks: {
+                                callback: function (value) {
+                                    if (anonymous) {
+                                        value = "0";
+                                    }
+                                    return formatMoney(value, currencyCode);
+                                },
+                            },
+                        };
+                    }
                 }
             }
-        }
-        console.log(data);
-        delete options.scales.y;
-        options.scales = { ...options.scales, ...axes };
+            console.log(data);
+            delete options.scales.y;
+            options.scales = { ...options.scales, ...axes };
 
             let labelCallback = function (tooltipItem) {
                 "use strict";
                 let index = tooltipItem.dataIndex;
                 let amount = tooltipItem.dataset.data[index];
 
-                let string = formatMoney(amount, tooltipItem.dataset.currency_code);
+                let string = formatMoney(
+                    amount,
+                    tooltipItem.dataset.currency_code,
+                );
                 if (anonymous) {
-                    string = formatMoney("0", tooltipItem.dataset.currency_code);
+                    string = formatMoney(
+                        "0",
+                        tooltipItem.dataset.currency_code,
+                    );
                 }
                 return tooltipItem.dataset.label + ": " + string;
             };
