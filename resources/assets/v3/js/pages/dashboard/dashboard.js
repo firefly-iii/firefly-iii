@@ -23,7 +23,7 @@ import sidebar from "../../pages/shared/sidebar.js";
 import dates from "../shared/dates.js";
 import boxes from "./boxes.js";
 import Alpine from "alpinejs";
-import Get from '../../api/model/piggy-bank/get.js';
+import Get from "../../api/model/piggy-bank/get.js";
 import formatMoney from "../../util/format-money.js";
 import {getVariable} from "../../store/get-variable.js";
 import {drawMultiCurrencyChart} from "../../shared/draw-chart.js";
@@ -51,9 +51,9 @@ let index = function () {
             this.downloadPiggyBanks(1);
         },
         downloadPiggyBanks(page) {
-            (new Get).list({page: page}).then((response) => {
-                for(let i =0;i<response.data.data.length;i++){
-                    if(Object.hasOwn(response.data.data, i)){
+            new Get().list({ page: page }).then((response) => {
+                for (let i = 0; i < response.data.data.length; i++) {
+                    if (Object.hasOwn(response.data.data, i)) {
                         let current = response.data.data[i];
                         let currentAmount = null === current.attributes.current_amount ? '0': current.attributes.current_amount;
                         let targetAmount = null === current.attributes.target_amount ? '0': current.attributes.target_amount;
@@ -65,20 +65,23 @@ let index = function () {
                         };
                         if(null === current.attributes.target_amount) {
                             piggy.amount = formatMoney(currentAmount, current.attributes.currency_code)  + ' / ∞';
+
                         }
 
                         this.piggyBanks.push(piggy);
                     }
                 }
 
-                let totalPages = parseInt(response.data.meta.pagination.total_pages);
-                if(totalPages > page) {
+                let totalPages = parseInt(
+                    response.data.meta.pagination.total_pages,
+                );
+                if (totalPages > page) {
                     this.downloadPiggyBanks(page + 1);
                     return;
                 }
                 this.loadingPiggyBanks = false;
             });
-        }
+        },
     };
 };
 
