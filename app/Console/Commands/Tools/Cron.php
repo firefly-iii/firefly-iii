@@ -89,6 +89,8 @@ class Cron extends Command
         }
         $force       = (bool) $this->option('force');
 
+        Log::debug(sprintf('Force is %s', $force ? 'true' : 'false'));
+
         // Fire exchange rates cron job.
         if (true === AppConfiguration::get('enable_external_rates', config('cer.download_enabled'))->data && ($doAll || $this->option('download-cer'))) {
             try {

@@ -11,18 +11,23 @@ export function processTransactionLinks(transactions) {
                     let link = this.links[i][j];
                     let left = journalId;
                     let right = parseInt(link.journal_id);
+                    console.log('Left is now' + left + ' and right is now ' + right + ' and existing ID is ' + link.id);
+
                     if ("inward" === link.link_type_direction) {
                         left = parseInt(link.journal_id);
                         right = journalId;
+                        console.log('Switched because inward: left is now' + left + ' and right is now ' + right);
                     }
-                    new PostLink()
-                        .post(link.link_type_id, left, right, null)
-                        .then(() => {
-                            this.redirectAfterTransactionLinks(i, j);
-                        })
-                        .catch(function (e) {
-                            console.error(e);
-                        });
+                    if(0 === link.id) {
+                        new PostLink()
+                            .post(link.link_type_id, left, right, null)
+                            .then(() => {
+                                this.redirectAfterTransactionLinks(i, j);
+                            })
+                            .catch(function (e) {
+                                console.error(e);
+                            });
+                    }
                 }
             }
         }

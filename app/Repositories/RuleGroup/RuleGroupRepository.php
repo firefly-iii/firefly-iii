@@ -324,7 +324,7 @@ class RuleGroupRepository implements RuleGroupRepositoryInterface, UserGroupInte
         }
         $search->orderBy('rule_groups.order', 'ASC')->orderBy('rule_groups.title', 'ASC');
 
-        return $search->take($limit)->get(['id', 'title', 'description']);
+        return $search->take($limit)->get(['id', 'title', 'description','active']);
     }
 
     public function setOrder(RuleGroup $ruleGroup, int $newOrder): void

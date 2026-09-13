@@ -253,7 +253,7 @@ class RuleRepository implements RuleRepositoryInterface, UserGroupInterface
         }
         $search->orderBy('rules.order', 'ASC')->orderBy('rules.title', 'ASC');
 
-        return $search->take($limit)->get(['id', 'title', 'description']);
+        return $search->take($limit)->get(['id', 'title', 'description','active']);
     }
 
     public function setOrder(Rule $rule, int $newOrder): void

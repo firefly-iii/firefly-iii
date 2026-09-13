@@ -26,6 +26,8 @@ namespace FireflyIII\Api\V1\Controllers\Autocomplete;
 
 use FireflyIII\Api\V1\Controllers\Controller;
 use FireflyIII\Api\V1\Requests\Autocomplete\AutocompleteApiRequest;
+use FireflyIII\Api\V1\Requests\Autocomplete\AutocompleteGenericApiRequest;
+use FireflyIII\Api\V1\Requests\Autocomplete\AutocompleteObjectGroupApiRequest;
 use FireflyIII\Enums\UserRoleEnum;
 use FireflyIII\Models\ObjectGroup;
 use FireflyIII\Repositories\ObjectGroup\ObjectGroupRepositoryInterface;
@@ -62,7 +64,7 @@ final class ObjectGroupController extends Controller
      * Documentation for this endpoint is at:
      * https://api-docs.firefly-iii.org/?urls.primaryName=2.0.0%20(v1)#/autocomplete/getObjectGroupsAC
      */
-    public function objectGroups(AutocompleteApiRequest $request): JsonResponse
+    public function objectGroups(AutocompleteGenericApiRequest $request): JsonResponse
     {
         $return = [];
         $result = $this->repository->search($request->attributes->get('query'), $request->attributes->get('limit'));

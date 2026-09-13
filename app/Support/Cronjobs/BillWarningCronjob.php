@@ -66,7 +66,7 @@ class BillWarningCronjob extends AbstractCronjob
                     $this->jobErrored   = false;
                     $this->jobSucceeded = false;
 
-                    return;
+                    continue;
                 }
 
                 Log::info(sprintf('Execution of the bill notification cron-job has been FORCED for user #%d.', $user->id));

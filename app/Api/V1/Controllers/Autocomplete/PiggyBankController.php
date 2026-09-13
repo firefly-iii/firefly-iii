@@ -72,32 +72,6 @@ final class PiggyBankController extends Controller
 
         /** @var PiggyBank $piggy */
         foreach ($piggies as $piggy) {
-            $currency    = $piggy->transactionCurrency;
-            $objectGroup = $piggy->objectGroups()->first();
-            $response[]  = [
-                'id'                      => (string) $piggy->id,
-                'name'                    => $piggy->name,
-                'currency_id'             => (string) $currency->id,
-                'currency_name'           => $currency->name,
-                'currency_code'           => $currency->code,
-                'currency_symbol'         => $currency->symbol,
-                'currency_decimal_places' => $currency->decimal_places,
-                'object_group_id'         => null === $objectGroup ? null : (string) $objectGroup->id,
-                'object_group_title'      => $objectGroup?->title,
-                'object_group_order'      => $objectGroup?->order,
-            ];
-        }
-
-        return response()->api($response);
-    }
-
-    public function piggyBanksWithBalance(AutocompleteApiRequest $request): JsonResponse
-    {
-        $piggies  = $this->piggyRepository->searchPiggyBank($request->attributes->get('query'), $request->attributes->get('limit'));
-        $response = [];
-
-        /** @var PiggyBank $piggy */
-        foreach ($piggies as $piggy) {
             /** @var TransactionCurrency $currency */
             $currency      = $piggy->transactionCurrency;
             $currentAmount = $this->piggyRepository->getCurrentAmount($piggy);

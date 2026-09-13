@@ -66,7 +66,7 @@ class WebhookCronjob extends AbstractCronjob
                     $this->jobErrored   = false;
                     $this->jobSucceeded = false;
 
-                    return;
+                    continue;
                 }
 
                 Log::info(sprintf('Execution of the webhook cron-job has been FORCED for user #%d.', $user->id));

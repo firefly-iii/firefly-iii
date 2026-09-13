@@ -70,7 +70,7 @@ class RecurringCronjob extends AbstractCronjob
                     $this->jobErrored   = false;
                     $this->jobSucceeded = false;
 
-                    return;
+                    continue;
                 }
                 Log::info(sprintf('Execution of the recurring transaction cron-job has been FORCED for user #%d.', $user->id));
             }

@@ -12,40 +12,26 @@ export function loadTransactionLinks(index, journalId) {
         for (let i = 0; i < links.length; i++) {
             if (Object.hasOwn(links, i)) {
                 let current = links[i];
-                console.log(current);
-                console.log(this.formData.linkTypes);
-                let direction =
-                    parseInt(journalId) ===
-                    parseInt(current.attributes.inward_id)
-                        ? "inward"
-                        : "outward";
+                let direction = parseInt(journalId) === parseInt(current.attributes.inward_id) ? "inward" : "outward";
                 let otherJournal = parseInt(current.attributes.inward_id);
-                if (
-                    parseInt(journalId) ===
-                    parseInt(current.attributes.inward_id)
+                if (parseInt(journalId) === parseInt(current.attributes.inward_id)
                 ) {
                     otherJournal = parseInt(current.attributes.outward_id);
                 }
                 new Get().showJournal(otherJournal).then((response) => {
                     let group = response.data.data;
                     let foundJournal = null;
-                    for (
-                        let j = 0;
-                        j < group.attributes.transactions.length;
-                        j++
-                    ) {
+                    for (let j = 0; j < group.attributes.transactions.length; j++) {
                         if (Object.hasOwn(group.attributes.transactions, j)) {
                             let journal = group.attributes.transactions[j];
-                            if (
-                                parseInt(journal.transaction_journal_id) ===
-                                otherJournal
-                            ) {
+                            if (parseInt(journal.transaction_journal_id) === otherJournal) {
                                 foundJournal = journal;
                             }
                         }
                     }
                     if (null !== foundJournal) {
-                        console.log("showJournal");
+                        //console.log('Found other journal ',  parseInt(foundJournal.transaction_journal_id));
+                        console.log('Current link is', parseInt(current.id));
                         this.links[index].push({
                             id: parseInt(current.id),
                             link_type:
@@ -61,7 +47,7 @@ export function loadTransactionLinks(index, journalId) {
                                     link.id ===
                                     parseInt(current.attributes.link_type_id),
                             )[direction],
-                            journal_id: parseInt(journalId),
+                            journal_id: parseInt(foundJournal.transaction_journal_id),
                             group_id: parseInt(group.id),
                             journal_description: foundJournal.description,
                             editMode: false,

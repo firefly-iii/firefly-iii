@@ -531,7 +531,7 @@ class RecurringRepository implements RecurringRepositoryInterface, UserGroupInte
         }
         $search->orderBy('recurrences.title', 'ASC');
 
-        return $search->take($limit)->get(['id', 'title', 'description']);
+        return $search->take($limit)->get(['id', 'title', 'description','active']);
     }
 
     #[Override]
