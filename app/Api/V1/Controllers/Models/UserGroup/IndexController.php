@@ -52,14 +52,14 @@ final class IndexController extends Controller
 
     public function index(PaginationRequest $request): JsonResponse
     {
-        $administrations = $this->repository->get();
+        $administrations                                          = $this->repository->get();
         ['page' => $page, 'limit' => $limit, 'offset' => $offset] = $request->attributes->all();
-        $count           = $administrations->count();
-        $transformer     = new UserGroupTransformer();
-        $administrations = $administrations->slice($offset, $limit);
-        $administrations = $transformer->collectMetaData($administrations);
+        $count                                                    = $administrations->count();
+        $transformer                                              = new UserGroupTransformer();
+        $administrations                                          = $administrations->slice($offset, $limit);
+        $administrations                                          = $transformer->collectMetaData($administrations);
 
-        $paginator = new LengthAwarePaginator($administrations, $count, $limit, $page);
+        $paginator                                                = new LengthAwarePaginator($administrations, $count, $limit, $page);
 
         return response()->json($this->jsonApiList(self::RESOURCE_KEY, $paginator, $transformer))->header('Content-Type', self::CONTENT_TYPE);
     }

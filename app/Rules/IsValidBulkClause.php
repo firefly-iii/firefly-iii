@@ -80,7 +80,7 @@ class IsValidBulkClause implements ValidationRule
 
                 return false;
             }
-            if(is_string($array[$clause])) {
+            if (is_string($array[$clause])) {
                 $this->error = (string) trans(sprintf('validation.invalid_%s_key', $clause));
 
                 return false;
@@ -91,7 +91,7 @@ class IsValidBulkClause implements ValidationRule
              * @var mixed  $arrayValue
              */
             foreach ($array[$clause] as $arrayKey => $arrayValue) {
-                if(is_string($arrayValue)) {
+                if (is_string($arrayValue)) {
                     $this->error = (string) trans(sprintf('validation.invalid_%s_key', $clause));
 
                     return false;

@@ -109,6 +109,7 @@ class Steam
             $pcVirtualBalance     = '0';
             if (!$convertToPrimary) {
                 $return['balance'] = bcadd($return['balance'], $virtualBalance);
+
                 // Log::debug(sprintf('ADD virtual balance (%s) to "balance"', $virtualBalance), $return);
             }
             if ($convertToPrimary) {
