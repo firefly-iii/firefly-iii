@@ -57,7 +57,13 @@ let defaultChartOptions = {
     },
 };
 
-export function drawMultiCurrencyChart(type, url, holder, anonymous, drawTodayMarker,) {
+export function drawMultiCurrencyChart(
+    type,
+    url,
+    holder,
+    anonymous,
+    drawTodayMarker,
+) {
     if ("line" === type) {
         drawMultiCurrencyLineChart(url, holder, anonymous, drawTodayMarker);
         return;
@@ -87,8 +93,7 @@ function drawMultiCurrencyStackedColumnChart(url, holder, anonymous) {
             let all = response.data;
             let axes = {};
             let data = {
-                datasets: [
-                ],
+                datasets: [],
                 labels: [],
             };
 
@@ -105,16 +110,20 @@ function drawMultiCurrencyStackedColumnChart(url, holder, anonymous) {
 
                     // there are four possible data sets for this chart
                     // TODO this is very much hard coded.
-                    let keys = ['budgeted','spent','left','overspent'];
-                    for(let i in keys) {
-                        let key =  keys[i] + current.currency_code;
+                    let keys = ["budgeted", "spent", "left", "overspent"];
+                    for (let i in keys) {
+                        let key = keys[i] + current.currency_code;
                         if (!Object.hasOwn(datasets, key)) {
                             datasets[key] = {
-                                label: i18next.t('firefly.' + keys[i]) + ' (' + current.currency_code + ')',
+                                label:
+                                    i18next.t("firefly." + keys[i]) +
+                                    " (" +
+                                    current.currency_code +
+                                    ")",
                                 currency_code: current.currency_code,
                                 data: [],
                                 yAxisID: "y" + current.currency_code,
-                            }
+                            };
                         }
                     }
 
@@ -123,35 +132,41 @@ function drawMultiCurrencyStackedColumnChart(url, holder, anonymous) {
 
                     // add spent and left to the dataset, if they exist.
                     // console.log('current', current);
-                    if(parseFloat(current.entries.spent) * -1 < parseFloat(current.entries.budgeted)) {
-                        let key = 'budgeted' + current.currency_code;
+                    if (
+                        parseFloat(current.entries.spent) * -1 <
+                        parseFloat(current.entries.budgeted)
+                    ) {
+                        let key = "budgeted" + current.currency_code;
                         datasets[key].data.push(0);
 
                         // user has not overspent.
-                        key = 'spent' + current.currency_code;
+                        key = "spent" + current.currency_code;
                         let value = parseFloat(current.entries.spent) * -1;
                         datasets[key].data.push(value);
 
-                        key = 'left' + current.currency_code;
+                        key = "left" + current.currency_code;
                         value = parseFloat(current.entries.left);
                         datasets[key].data.push(value);
 
-                        key = 'overspent' + current.currency_code;
+                        key = "overspent" + current.currency_code;
                         datasets[key].data.push(0);
                     }
-                    if(parseFloat(current.entries.spent) * -1 >= parseFloat(current.entries.budgeted)) {
-                        let key = 'budgeted' + current.currency_code;
+                    if (
+                        parseFloat(current.entries.spent) * -1 >=
+                        parseFloat(current.entries.budgeted)
+                    ) {
+                        let key = "budgeted" + current.currency_code;
                         datasets[key].data.push(0);
 
                         // user has overspent.
-                        key = 'spent' + current.currency_code;
+                        key = "spent" + current.currency_code;
                         let value = parseFloat(current.entries.spent) * -1;
                         datasets[key].data.push(value);
 
-                        key = 'left' + current.currency_code;
+                        key = "left" + current.currency_code;
                         datasets[key].data.push(0);
 
-                        key = 'overspent' + current.currency_code;
+                        key = "overspent" + current.currency_code;
                         value = parseFloat(current.entries.overspent);
                         datasets[key].data.push(value);
                     }
@@ -184,7 +199,10 @@ function drawMultiCurrencyStackedColumnChart(url, holder, anonymous) {
                             id: axisId,
                             type: "linear",
                             stacked: true,
-                            position: 0 === Object.keys(axes).length % 2 ? "left" : "right",
+                            position:
+                                0 === Object.keys(axes).length % 2
+                                    ? "left"
+                                    : "right",
                             ticks: {
                                 callback: function (value) {
                                     if (anonymous) {
@@ -202,7 +220,7 @@ function drawMultiCurrencyStackedColumnChart(url, holder, anonymous) {
             options.scales.x.stacked = true;
             // options.scales.y.stacked = true;
             // add the new axes.
-            options.scales = {...options.scales, ...axes};
+            options.scales = { ...options.scales, ...axes };
             // console.log(options);
             // console.log(data);
 
@@ -226,7 +244,13 @@ function drawMultiCurrencyStackedColumnChart(url, holder, anonymous) {
             };
 
             // safety catch in case there is no data.
-            if (typeof data === "undefined" || 0 === data.length || (typeof data === "object" && typeof data.labels === "object" && 0 === data.labels.length)) {
+            if (
+                typeof data === "undefined" ||
+                0 === data.length ||
+                (typeof data === "object" &&
+                    typeof data.labels === "object" &&
+                    0 === data.labels.length)
+            ) {
                 let el = document.getElementById(holder).parentElement;
                 el.innerHTML = "";
                 el.classList.add("general-chart-error");
@@ -259,13 +283,11 @@ function drawMultiCurrencyStackedColumnChart(url, holder, anonymous) {
         });
 }
 
-
 function drawMultiCurrencyLineChart(url, holder, anonymous, drawTodayMarker) {
     document.getElementById(holder).classList.remove("general-chart-error");
     window.axios
         .get(url)
         .then((response) => {
-
             // prep some chart variables first.
             let all = response.data;
             let axes = {};
@@ -282,7 +304,7 @@ function drawMultiCurrencyLineChart(url, holder, anonymous, drawTodayMarker) {
             let firstScale = ""; // used for today marker.
             let drawTodayLabel = "";
             let drawTodayIndex = 0;
-            let labelCount ;
+            let labelCount;
 
             // loop all collected data.
             for (let i = 0; i < all.length; i++) {
@@ -304,7 +326,12 @@ function drawMultiCurrencyLineChart(url, holder, anonymous, drawTodayMarker) {
                                     drawTodayIndex = labelCount;
                                 }
                                 // add the label to the array
-                                data.labels.push(format(date, i18next.t("config.month_and_day_fns"),),);
+                                data.labels.push(
+                                    format(
+                                        date,
+                                        i18next.t("config.month_and_day_fns"),
+                                    ),
+                                );
                             }
                         }
                     }
@@ -333,7 +360,9 @@ function drawMultiCurrencyLineChart(url, holder, anonymous, drawTodayMarker) {
                             id: axisId,
                             type: "linear",
                             position:
-                                0 === Object.keys(axes).length % 2 ? "left" : "right",
+                                0 === Object.keys(axes).length % 2
+                                    ? "left"
+                                    : "right",
                             ticks: {
                                 callback: function (value) {
                                     if (anonymous) {
@@ -350,7 +379,7 @@ function drawMultiCurrencyLineChart(url, holder, anonymous, drawTodayMarker) {
             delete options.scales.y;
             // options.scales.y.stacked = true;
             // add the new axes.
-            options.scales = {...options.scales, ...axes};
+            options.scales = { ...options.scales, ...axes };
 
             // add a callback for the label.
             options.plugins.tooltip.callbacks.label = function (tooltipItem) {
@@ -372,7 +401,13 @@ function drawMultiCurrencyLineChart(url, holder, anonymous, drawTodayMarker) {
             };
 
             // safety catch in case there is no data.
-            if (typeof data === "undefined" || 0 === data.length || (typeof data === "object" && typeof data.labels === "object" && 0 === data.labels.length)) {
+            if (
+                typeof data === "undefined" ||
+                0 === data.length ||
+                (typeof data === "object" &&
+                    typeof data.labels === "object" &&
+                    0 === data.labels.length)
+            ) {
                 let el = document.getElementById(holder).parentElement;
                 el.innerHTML = "";
                 el.classList.add("general-chart-error");
@@ -467,7 +502,7 @@ function drawSingleCurrencyLineChart(url, holder, anonymous) {
                 return label + ": " + string;
             };
 
-            let options = {...defaultChartOptions};
+            let options = { ...defaultChartOptions };
             options.scales.y.ticks.callback = yAxisCallback;
             options.plugins.tooltip.callbacks.label = labelCallback;
 

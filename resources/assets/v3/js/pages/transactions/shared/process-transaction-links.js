@@ -40,11 +40,15 @@ export function processTransactionLinks(transactions) {
                     if (link.id > 0) {
                         // console.log('Link.id = ' + link.id + ' so we will PUT link ' + link.id + ' with inwardId = ' + inwardId + ' and outwardId = ' + outwardId);
                         new PutLink()
-                            .put({
-                                'link_type_id': link.link_type_id,
-                                'inward_id': inwardId,
-                                'outward_id': outwardId,
-                            }, {id: link.id}, null)
+                            .put(
+                                {
+                                    link_type_id: link.link_type_id,
+                                    inward_id: inwardId,
+                                    outward_id: outwardId,
+                                },
+                                { id: link.id },
+                                null,
+                            )
                             .then(() => {
                                 this.redirectAfterTransactionLinks(i, j);
                             })
