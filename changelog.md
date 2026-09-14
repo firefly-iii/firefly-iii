@@ -3,7 +3,7 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
-## v6.7.0 - 2026-09-17
+## v6.7.0 - 2026-09-15
 
 <!-- summary: This release introduces a new layout and fixes many bugs and security issues. -->
 
@@ -24,6 +24,7 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 - Introduced a new version of the AdminLTE template.
 - Introduces new forms for creating and editing transactions
 - Switched from Font Awesome to Bootstrap Icons
+- Login page now no longer advertises it's Firefly III
 - Cron jobs are now per user, only users with the "owner" role can force the cron job or run it for different users.
 
 ### Removed
@@ -58,11 +59,11 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 
 ### Security
 
-If you believe your credits are missing, please let  me know.
+If you believe your credits are missing, please let me know.
 
 - [PR 12497](https://github.com/firefly-iii/firefly-iii/pull/12497) (ci: pin github-action-get-latest-release to a full commit SHA) reported by @kobihikri
 - A variety of security findings by Alwen Roselio, Don Werner Salas and Allan Glenn Aceres touching CSV export, installer security and many more.
-- User "@1diot9" discovered that you can overwrite arbitrary preferences. This means you can also overwrite security sensitive preferences, like your email reset code.
+- User "@1diot9" discovered that you can overwrite arbitrary preferences. This means you can also overwrite security sensitive preferences, like your email reset code. [GHSA-3wcx-g7jc-h9vc](https://github.com/firefly-iii/firefly-iii/security/advisories/GHSA-3wcx-g7jc-h9vc)
 - Removed security sensitive info from the debug page.
 - Removed identifying information from the login and registration pages.
 - It was possible to brute force 2FA code attempts.
@@ -85,6 +86,7 @@ If you believe your credits are missing, please let  me know.
 - You can still use the webhooks API to connect to arbitrary and weird URLs and internal IPs.
 - You will still delete everybody's purged notes when you delete your own purged notes.
 - The (static) cron job token is still part of the URL if you call it over the web.
+- Other issues please get in touch.
 
 ### API
 
