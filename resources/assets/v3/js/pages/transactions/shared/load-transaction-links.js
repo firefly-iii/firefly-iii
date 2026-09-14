@@ -14,7 +14,9 @@ export function loadTransactionLinks(index, journalId) {
             if (Object.hasOwn(links, i)) {
                 let current = links[i];
                 // console.log('Get link info for link #' + current.id);
-                let direction = parseInt(journalId) === parseInt(current.attributes.inward_id)
+                let direction =
+                    parseInt(journalId) ===
+                    parseInt(current.attributes.inward_id)
                         ? "outward"
                         : "inward";
                 let otherJournal = parseInt(current.attributes.inward_id);

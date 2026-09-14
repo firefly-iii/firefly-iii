@@ -213,7 +213,9 @@ let index = function () {
                 })
                 .catch((error) => {
                     if (typeof error.response.data === "object") {
-                        for (const value of Object.entries(error.response.data.errors,)) {
+                        for (const value of Object.entries(
+                            error.response.data.errors,
+                        )) {
                             form.errors.push(value);
                         }
                     } else {

@@ -51,9 +51,7 @@ class FireflySessionProvider extends ServiceProvider
      */
     protected function registerSessionDriver(): void
     {
-        $this->app->singleton(
-            'session.store',
-            static fn ($app)
+        $this->app->singleton('session.store', static fn ($app)
             // First, we will create the session manager which is responsible for the
             // creation of the various session drivers when they are needed by the
             // application instance, and will resolve them on a lazy load basis.
