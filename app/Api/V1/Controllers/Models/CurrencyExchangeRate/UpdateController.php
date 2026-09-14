@@ -36,6 +36,7 @@ use FireflyIII\Support\Http\Api\ValidatesUserGroupTrait;
 use FireflyIII\Transformers\ExchangeRateTransformer;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
+use Override;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 final class UpdateController extends Controller
@@ -44,6 +45,7 @@ final class UpdateController extends Controller
 
     public const string RESOURCE_KEY = 'exchange-rates';
 
+    #[Override]
     protected array $acceptedRoles   = [UserRoleEnum::OWNER];
     private ExchangeRateRepositoryInterface $repository;
 

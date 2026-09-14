@@ -36,6 +36,7 @@ use FireflyIII\Repositories\Journal\JournalRepositoryInterface;
 use FireflyIII\Repositories\Recurring\RecurringRepositoryInterface;
 use FireflyIII\Repositories\TransactionGroup\TransactionGroupRepositoryInterface;
 use FireflyIII\Support\Facades\Preferences;
+use FireflyIII\User;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
@@ -64,6 +65,7 @@ class CreateRecurringTransactions implements ShouldQueue
     private JournalRepositoryInterface $journalRepository;
     private Collection $recurrences;
     private RecurringRepositoryInterface $repository;
+    private User $user;
 
     /**
      * Create a new job instance.
@@ -110,7 +112,8 @@ class CreateRecurringTransactions implements ShouldQueue
         }
         if (0 === count($this->recurrences)) {
             Log::debug('Grab all recurrences from the database.');
-            $this->recurrences = $this->repository->getAll();
+            $this->repository->setUser($this->user);
+            $this->recurrences = $this->repository->get();
         }
 
         $result          = [];
@@ -169,6 +172,11 @@ class CreateRecurringTransactions implements ShouldQueue
     public function setRecurrences(Collection $recurrences): void
     {
         $this->recurrences = $recurrences;
+    }
+
+    public function setUser(User $user): void
+    {
+        $this->user = $user;
     }
 
     /**

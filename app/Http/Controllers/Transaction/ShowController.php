@@ -36,8 +36,8 @@ use FireflyIII\Transformers\TransactionGroupTransformer;
 use FireflyIII\User;
 use Illuminate\Contracts\View\Factory;
 use Illuminate\Http\JsonResponse;
+use Illuminate\Http\RedirectResponse;
 use Illuminate\View\View;
-use Symfony\Component\HttpFoundation\ParameterBag;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 /**
@@ -61,7 +61,7 @@ final class ShowController extends Controller
             $this->aleRepository = app(ALERepositoryInterface::class);
 
             app('view')->share('title', (string) trans('firefly.transactions'));
-            app('view')->share('mainTitleIcon', 'fa-exchange');
+            app('view')->share('mainTitleIcon', 'bi-shuffle');
 
             return $next($request);
         });
@@ -73,6 +73,11 @@ final class ShowController extends Controller
     public function debugShow(TransactionGroup $transactionGroup)
     {
         return response()->json($this->repository->expandGroup($transactionGroup));
+    }
+
+    public function redirectToGroup(TransactionJournal $journal): RedirectResponse
+    {
+        return redirect(route('transactions.show', [$journal->transaction_group_id]));
     }
 
     /**
@@ -122,7 +127,6 @@ final class ShowController extends Controller
 
         /** @var TransactionGroupTransformer $transformer */
         $transformer     = app(TransactionGroupTransformer::class);
-        $transformer->setParameters(new ParameterBag());
         $groupArray      = $transformer->transformObject($transactionGroup);
 
         // do some calculations:

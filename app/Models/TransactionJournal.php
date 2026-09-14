@@ -110,6 +110,8 @@ class TransactionJournal extends Model
             if (null !== $journal) {
                 return $journal;
             }
+
+            throw new NotFoundHttpException();
         }
 
         throw new AuthenticationException();

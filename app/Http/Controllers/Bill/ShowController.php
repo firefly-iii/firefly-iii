@@ -66,7 +66,7 @@ final class ShowController extends Controller
 
         $this->middleware(function ($request, $next) {
             app('view')->share('title', (string) trans('firefly.bills'));
-            app('view')->share('mainTitleIcon', 'fa-calendar-o');
+            app('view')->share('mainTitleIcon', 'bi-calendar');
             $this->repository = app(BillRepositoryInterface::class);
 
             return $next($request);
@@ -129,7 +129,8 @@ final class ShowController extends Controller
         /** @var Carbon $end */
         $end                        = session('end');
         $year                       = $start->year;
-        $page                       = (int) $request->get('page');
+        $page                       = (int) $request->input('page');
+        $page                       = clamp($page, 1, 2 ** 16);
         $pageSize                   = (int) Preferences::get('listPageSize', 50)->data;
         $yearAverage                = $this->repository->getYearAverage($bill, $start);
         $overallAverage             = $this->repository->getOverallAverage($bill);

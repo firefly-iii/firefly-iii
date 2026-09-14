@@ -64,6 +64,8 @@ class WebhookMessage extends Model
             if (null !== $message && $message->webhook->user_id === $user->id) {
                 return $message;
             }
+
+            throw new NotFoundHttpException();
         }
 
         throw new AuthenticationException();

@@ -59,7 +59,7 @@ final class IndexController extends Controller
 
         $this->middleware(function ($request, $next) {
             app('view')->share('title', (string) trans('firefly.bills'));
-            app('view')->share('mainTitleIcon', 'fa-calendar-o');
+            app('view')->share('mainTitleIcon', 'bi-calendar');
             $this->repository = app(BillRepositoryInterface::class);
 
             return $next($request);
@@ -152,8 +152,8 @@ final class IndexController extends Controller
      */
     public function setOrder(Request $request, Bill $bill): JsonResponse
     {
-        $objectGroupTitle = (string) $request->get('objectGroupTitle');
-        $newOrder         = (int) $request->get('order');
+        $objectGroupTitle = (string) $request->input('objectGroupTitle');
+        $newOrder         = (int) $request->input('order');
         $this->repository->setOrder($bill, $newOrder);
         if ('' !== $objectGroupTitle) {
             $this->repository->setObjectGroup($bill, $objectGroupTitle);
@@ -253,23 +253,23 @@ final class IndexController extends Controller
                     // only fill in total_left_to_pay when bill is not yet paid.
                     // #11474 and when it is expected in the current period
                     if (count($bill['paid_dates']) < count($bill['pay_dates'])) {
-                        $count = count($bill['pay_dates']) - count($bill['paid_dates']);
-                        if ($count > 0) {
-                            $avg                                                 = bcdiv(
-                                bcadd((string) $bill['amount_min'], (string) $bill['amount_max']),
-                                '2'
-                            );
-                            $avg                                                 = bcmul($avg, (string) $count);
-                            $sums[$groupOrder][$currencyId]['total_left_to_pay'] = bcadd($sums[$groupOrder][$currencyId]['total_left_to_pay'], $avg);
-                            Log::debug(
-                                sprintf(
-                                    'Bill has %d dates that need payment, total left to pay is now %s',
-                                    $count,
-                                    $sums[$groupOrder][$currencyId]['total_left_to_pay']
-                                ),
-                                $bill['pay_dates']
-                            );
-                        }
+                        // #12468 the count does not need to subtract paid_dates, that is already accounted for.
+                        // $count = count($bill['pay_dates']) - count($bill['paid_dates']);
+                        $count                                               = count($bill['pay_dates']);
+                        //                        if ($count > 0) {
+                        $avg                                                 = bcdiv(bcadd((string) $bill['amount_min'], (string) $bill['amount_max']), '2');
+                        $avg                                                 = bcmul($avg, (string) $count);
+                        $sums[$groupOrder][$currencyId]['total_left_to_pay'] = bcadd($sums[$groupOrder][$currencyId]['total_left_to_pay'], $avg);
+                        Log::debug(
+                            sprintf(
+                                'Bill has %d dates that need payment, total left to pay is now %s',
+                                $count,
+                                $sums[$groupOrder][$currencyId]['total_left_to_pay']
+                            ),
+                            $bill['pay_dates']
+                        );
+
+                        //                        }
                     }
                 }
 

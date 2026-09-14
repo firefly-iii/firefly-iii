@@ -1,7 +1,5 @@
 <?php
 
-declare(strict_types=1);
-
 /*
  * ProcessesNewTransactionGroup.php
  * Copyright (c) 2026 james@firefly-iii.org
@@ -22,6 +20,8 @@ declare(strict_types=1);
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
+declare(strict_types=1);
+
 namespace FireflyIII\Listeners\Model\TransactionGroup;
 
 use FireflyIII\Enums\WebhookTrigger;
@@ -40,7 +40,7 @@ class ProcessesNewTransactionGroup implements ShouldQueue
     {
         Log::debug(sprintf('Running event handler for %s', get_class($event)));
 
-        $setting    = AppConfiguration::get('enable_batch_processing', false)->data;
+        $setting    = AppConfiguration::get('enable_batch_processing', true)->data;
         if (true === $event->flags->batchSubmission && true === $setting) {
             Log::debug('Will do nothing for event because it is part of a batch.');
 

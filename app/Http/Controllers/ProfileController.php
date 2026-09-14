@@ -73,7 +73,7 @@ final class ProfileController extends Controller
 
         $this->middleware(static function ($request, $next) {
             app('view')->share('title', (string) trans('firefly.profile'));
-            app('view')->share('mainTitleIcon', 'fa-user');
+            app('view')->share('mainTitleIcon', 'bi-person');
 
             return $next($request);
         });
@@ -98,7 +98,7 @@ final class ProfileController extends Controller
         $title        = auth()->user()->email;
         $email        = auth()->user()->email;
         $subTitle     = (string) trans('firefly.change_your_email');
-        $subTitleIcon = 'fa-envelope';
+        $subTitleIcon = 'bi-envelope';
 
         return view('profile.change-email', ['title' => $title, 'subTitle' => $subTitle, 'subTitleIcon' => $subTitleIcon, 'email' => $email]);
     }
@@ -118,7 +118,7 @@ final class ProfileController extends Controller
 
         $title        = auth()->user()->email;
         $subTitle     = (string) trans('firefly.change_your_password');
-        $subTitleIcon = 'fa-key';
+        $subTitleIcon = 'bi-key';
 
         return view('profile.change-password', ['title' => $title, 'subTitle' => $subTitle, 'subTitleIcon' => $subTitleIcon]);
     }
@@ -137,6 +137,8 @@ final class ProfileController extends Controller
         // find preference with this token value.
         /** @var Collection $set */
         $set  = Preferences::findByName('email_change_confirm_token');
+
+        /** @var null|User $user */
         $user = null;
 
         /** @var Preference $preference */
@@ -147,11 +149,14 @@ final class ProfileController extends Controller
         }
         // update user to clear blocked and blocked_code.
         if (null === $user) {
-            throw new FireflyException('Invalid token.');
+            throw new FireflyException('[a] Invalid token.');
+        }
+        if ('email_changed' !== $user->blocked_code) {
+            throw new FireflyException('[b] Invalid token.');
         }
         $repository->unblockUser($user);
         // also remove the "remote_guard_alt_email" preference.
-        Preferences::deleteForUser($user, 'remote_guard_alt_email');
+        Preferences::deleteForUser($user, 'remote_guard_alt_email', true);
 
         // return to log in.
         session()->flash('success', (string) trans('firefly.login_with_new_email'));
@@ -171,7 +176,7 @@ final class ProfileController extends Controller
         }
         $title        = auth()->user()->email;
         $subTitle     = (string) trans('firefly.delete_account');
-        $subTitleIcon = 'fa-trash';
+        $subTitleIcon = 'bi-trash';
 
         return view('profile.delete-account', ['title' => $title, 'subTitle' => $subTitle, 'subTitleIcon' => $subTitleIcon]);
     }
@@ -192,7 +197,7 @@ final class ProfileController extends Controller
         $subTitle       = $user->email;
         $userId         = $user->id;
         $enabled2FA     = null !== $user->mfa_secret;
-        $recoveryData   = Preferences::get('mfa_recovery', [])->data;
+        $recoveryData   = Preferences::get('mfa_recovery', [], true)->data;
         if (!is_array($recoveryData)) {
             $recoveryData = [];
         }
@@ -209,7 +214,7 @@ final class ProfileController extends Controller
         $accessToken    = Preferences::get('access_token');
         if (null === $accessToken) {
             $token       = $user->generateAccessToken();
-            $accessToken = Preferences::set('access_token', $token);
+            $accessToken = Preferences::set('access_token', $token, true);
         }
 
         return view('profile.index', [
@@ -289,8 +294,8 @@ final class ProfileController extends Controller
         }
 
         // the request has already validated both new passwords must be equal.
-        $current = $request->get('current_password');
-        $new     = $request->get('new_password');
+        $current = $request->input('current_password');
+        $new     = $request->input('new_password');
 
         /** @var User $user */
         $user    = auth()->user();
@@ -303,7 +308,7 @@ final class ProfileController extends Controller
             return redirect(route('profile.change-password'));
         }
 
-        $repository->changePassword($user, $request->get('new_password'));
+        $repository->changePassword($user, $request->input('new_password'));
         session()->flash('success', (string) trans('firefly.password_changed'));
 
         return redirect(route('profile.index'));
@@ -320,7 +325,7 @@ final class ProfileController extends Controller
             return redirect(route('profile.index'));
         }
 
-        if (!Hash::check($request->get('password'), auth()->user()->password)) {
+        if (!Hash::check($request->input('password'), auth()->user()->password)) {
             session()->flash('error', (string) trans('firefly.invalid_password'));
 
             return redirect(route('profile.delete-account'));
@@ -347,9 +352,9 @@ final class ProfileController extends Controller
 
             return redirect(route('profile.index'));
         }
-        $creds = ['email' => auth()->user()->email, 'password' => $request->get('password')];
+        $creds = ['email' => auth()->user()->email, 'password' => $request->input('password')];
         if (Auth::once($creds)) {
-            Auth::logoutOtherDevices($request->get('password'));
+            Auth::logoutOtherDevices($request->input('password'));
             session()->flash('info', (string) trans('firefly.other_sessions_logged_out'));
 
             return redirect(route('profile.index'));
@@ -375,7 +380,7 @@ final class ProfileController extends Controller
         /** @var User $user */
         $user  = auth()->user();
         $token = $user->generateAccessToken();
-        Preferences::set('access_token', $token);
+        Preferences::set('access_token', $token, true);
         session()->flash('success', (string) trans('firefly.token_regenerated'));
 
         return redirect(route('profile.index'));

@@ -1,7 +1,5 @@
 <?php
 
-declare(strict_types=1);
-
 /*
  * ConvertsAmountToPrimaryAmount.php
  * Copyright (c) 2026 james@firefly-iii.org
@@ -21,6 +19,8 @@ declare(strict_types=1);
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
+
+declare(strict_types=1);
 
 namespace FireflyIII\Handlers\ExchangeRate;
 
@@ -86,7 +86,7 @@ class ConvertsAmountToPrimaryAmount
         $converter                            = new ExchangeRateConverter();
         $converter->setUserGroup($params->user->userGroup);
         $converter->setIgnoreSettings(true);
-        $newAmount                            = $converter->convert($params->originalCurrency, $primaryCurrency, now(), $amount);
+        $newAmount                            = $converter->convert($params->originalCurrency, $primaryCurrency, $params->date, $amount);
         $params->model->{$primaryAmountField} = $newAmount;
         $params->model->saveQuietly();
         Log::debug(sprintf(

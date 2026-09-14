@@ -31,8 +31,8 @@ function startSearch(query) {
 }
 
 function searchFailure() {
-    $('.result_row').hide();
-    $('.error_row').removeClass('hidden');
+    $('.result_row').addClass('d-none');
+    $('.error_row').removeClass('d-none');
 }
 
 function presentSearchResults(data) {
@@ -40,9 +40,9 @@ function presentSearchResults(data) {
         searchFailure();
         return;
     }
-    $('.search_ongoing').hide();
+    $('.search_ongoing').addClass('d-none');
     $('.search_box').find('.overlay').remove();
-    $('.search_results').html(data.html).removeClass('hidden');
+    $('.search_results').html(data.html).removeClass('d-none');
 
 
     updateListButtons();

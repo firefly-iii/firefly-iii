@@ -17,7 +17,6 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
-/** global: token */
 var fixPiggyHelper = function (e, tr) {
     "use strict";
     var $originals = tr.children();
@@ -34,7 +33,7 @@ $(function () {
     $('.addMoney').on('click', addMoney);
     $('.removeMoney').on('click', removeMoney);
 
-    $('#piggy-sortable').find('tbody').sortable(
+    $('table.piggy-sortable').find('tbody').sortable(
         {
             helper: fixPiggyHelper,
             stop: stopSorting,
@@ -84,9 +83,9 @@ function removeMoney(e) {
 
 function stopSorting() {
     "use strict";
-    $('.loadSpin').addClass('fa fa-refresh fa-spin');
+    $('.loadSpin').addClass('bi bi-hourglass');
 
-    $.each($('#piggy-sortable>tbody>tr.piggy-sortable'), function (i, v) {
+    $.each($('.piggy-sortable>tbody>tr.piggy-sortable'), function (i, v) {
         var holder = $(v);
         var parentBody = holder.parent();
         var objectGroupTitle = parentBody.data('title');
@@ -112,6 +111,6 @@ function stopSorting() {
 
         $.post('piggy-banks/set-order/' + id, {order: newOrder, objectGroupTitle: objectGroupTitle, _token: token})
     });
-    $('.loadSpin').removeClass('fa fa-refresh fa-spin');
+    $('.loadSpin').removeClass('bi bi-hourglass');
 
 }

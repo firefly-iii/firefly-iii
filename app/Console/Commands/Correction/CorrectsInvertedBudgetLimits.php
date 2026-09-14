@@ -1,10 +1,8 @@
 <?php
 
-declare(strict_types=1);
-
 /*
- * CorrectsInversedBudgetLimits.php
- * Copyright (c) 2025 james@firefly-iii.org
+ * CorrectsInvertedBudgetLimits.php
+ * Copyright (c) 2026 james@firefly-iii.org
  *
  * This file is part of Firefly III (https://github.com/firefly-iii).
  *
@@ -22,6 +20,8 @@ declare(strict_types=1);
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
+declare(strict_types=1);
+
 namespace FireflyIII\Console\Commands\Correction;
 
 use FireflyIII\Console\Commands\ShowsFriendlyMessages;
@@ -35,18 +35,18 @@ class CorrectsInvertedBudgetLimits extends Command
     use ShowsFriendlyMessages;
 
     /**
-     * The name and signature of the console command.
-     *
-     * @var string
-     */
-    protected $signature   = 'correction:corrects-inverted-budget-limits';
-
-    /**
      * The console command description.
      *
      * @var string
      */
     protected $description = 'Reverse budget limits where the dates are inverted.';
+
+    /**
+     * The name and signature of the console command.
+     *
+     * @var string
+     */
+    protected $signature   = 'correction:corrects-inverted-budget-limits';
 
     /**
      * Execute the console command.

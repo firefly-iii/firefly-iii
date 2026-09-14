@@ -42,12 +42,12 @@ if (false !== $databaseUrl) {
 }
 
 // Get SSL parameters from .env file.
-$mysql_ssl_ca_dir  = env('MYSQL_SSL_CAPATH');
-$mysql_ssl_ca_file = env('MYSQL_SSL_CA');
-$mysql_ssl_cert    = env('MYSQL_SSL_CERT');
-$mysql_ssl_key     = env('MYSQL_SSL_KEY');
-$mysql_ssl_ciphers = env('MYSQL_SSL_CIPHER');
-$mysql_ssl_verify  = env('MYSQL_SSL_VERIFY_SERVER_CERT');
+$mysql_ssl_ca_dir  = env_default_when_empty(env('MYSQL_SSL_CAPATH'));
+$mysql_ssl_ca_file = env_default_when_empty(env('MYSQL_SSL_CA'));
+$mysql_ssl_cert    = env_default_when_empty(env('MYSQL_SSL_CERT'));
+$mysql_ssl_key     = env_default_when_empty(env('MYSQL_SSL_KEY'));
+$mysql_ssl_ciphers = env_default_when_empty(env('MYSQL_SSL_CIPHER'));
+$mysql_ssl_verify  = env_default_when_empty(env('MYSQL_SSL_VERIFY_SERVER_CERT'));
 
 $mySqlSSLOptions   = [];
 $useSSL            = env_default_when_empty(env('MYSQL_USE_SSL'), false);

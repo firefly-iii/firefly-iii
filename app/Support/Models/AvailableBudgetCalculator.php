@@ -1,7 +1,5 @@
 <?php
 
-declare(strict_types=1);
-
 /*
  * AvailableBudgetCalculator.php
  * Copyright (c) 2026 james@firefly-iii.org
@@ -21,6 +19,8 @@ declare(strict_types=1);
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
+
+declare(strict_types=1);
 
 namespace FireflyIII\Support\Models;
 
@@ -73,8 +73,16 @@ class AvailableBudgetCalculator
         Log::debug(sprintf('Limit period is from %s to %s', $start->format('Y-m-d'), $end->format('Y-m-d')));
 
         // from the start until the end of the budget limit, need to loop!
+        $count       = 0;
+        $max         = 14_600; // 40 years in days.
         $current     = clone $start;
         while ($current <= $end) {
+            if ($count > $max) {
+                Log::error(sprintf('Count %d is greater than max %d, stop.', $count, $max));
+
+                return;
+            }
+            ++$count;
             $this->refreshAvailableBudget($current);
             $current = Navigation::addPeriod($current, $this->viewRange);
         }

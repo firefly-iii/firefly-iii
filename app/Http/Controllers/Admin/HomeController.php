@@ -58,7 +58,7 @@ final class HomeController extends Controller
     {
         Log::channel('audit')->info('User visits admin index.');
         $title         = (string) trans('firefly.system_settings');
-        $mainTitleIcon = 'fa-hand-spock-o';
+        $mainTitleIcon = 'bi-cpu';
         $email         = auth()->user()->email;
         $pref          = Preferences::get('remote_guard_alt_email');
         if (null !== $pref && is_string($pref->data)) {

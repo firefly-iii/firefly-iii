@@ -223,12 +223,14 @@ class Amount
      * Experimental function to see if we can quickly and quietly get the amount from a journal.
      * This depends on the user's default currency and the wish to have it converted.
      */
-    public function getAmountFromJournalObject(TransactionJournal $journal): string
+    public function getAmountFromJournalObject(TransactionJournal $journal, bool $forceNormalAmount = false): string
     {
         // Log::debug(sprintf('Get amount from journal #%d', $journal->id));
         $convertToPrimary  = $this->convertToPrimary();
         $currency          = $this->getPrimaryCurrency();
-        $field             = $convertToPrimary && $currency->id !== $journal->transaction_currency_id ? 'native_amount' : 'amount';
+        $field             = false === $forceNormalAmount && $convertToPrimary && $currency->id !== $journal->transaction_currency_id
+            ? 'native_amount'
+            : 'amount';
 
         /** @var null|Transaction $sourceTransaction */
         $sourceTransaction = $journal->transactions()->where('amount', '<', 0)->first();
@@ -255,6 +257,17 @@ class Amount
         $user = auth()->user();
 
         return $user->currencies()->orderBy('code', 'ASC')->get();
+    }
+
+    public function getCurrencyFromJournal(TransactionJournal $journal): TransactionCurrency
+    {
+        /** @var null|Transaction $first */
+        $first = $journal->transactions->first();
+        if (null === $first) {
+            return $this->getPrimaryCurrency();
+        }
+
+        return $first->transactionCurrency;
     }
 
     /**
@@ -297,8 +310,6 @@ class Amount
         $cache->addProperty('getPrimaryCurrencyByGroup');
         $cache->addProperty($userGroup->id);
         if ($cache->has()) {
-            Log::debug(sprintf('getPrimaryCurrencyByUserGroup(#%d, "%s") = %s', $userGroup->id, $userGroup->title, $cache->get()->code));
-
             return $cache->get();
         }
 
@@ -311,6 +322,7 @@ class Amount
             $userGroup->currencies()->sync([$primary->id => ['group_default' => true]]);
         }
         $cache->store($primary);
+        Log::debug(sprintf('getPrimaryCurrencyByUserGroup(#%d, "%s") = %s', $userGroup->id, $userGroup->title, $cache->get()->code));
 
         return $primary;
     }

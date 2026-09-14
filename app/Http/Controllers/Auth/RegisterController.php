@@ -75,7 +75,7 @@ final class RegisterController extends Controller
     public function register(Request $request): RedirectResponse
     {
         $allowRegistration = $this->allowedToRegister();
-        $inviteCode        = (string) $request->get('invite_code');
+        $inviteCode        = (string) $request->input('invite_code');
         $repository        = app(UserRepositoryInterface::class);
         $validCode         = $repository->validateInviteCode($inviteCode);
 

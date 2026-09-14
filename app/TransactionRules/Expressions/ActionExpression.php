@@ -25,8 +25,8 @@ declare(strict_types=1);
 namespace FireflyIII\TransactionRules\Expressions;
 
 use FireflyIII\Exceptions\FireflyException;
+use FireflyIII\TransactionRules\Engine\CustomExpressionLanguage;
 use Illuminate\Support\Facades\Log;
-use Symfony\Component\ExpressionLanguage\ExpressionLanguage;
 use Symfony\Component\ExpressionLanguage\SyntaxError;
 
 class ActionExpression
@@ -83,14 +83,14 @@ class ActionExpression
         //        'destination_transaction_id',
         'notes',
     ];
-    private readonly ExpressionLanguage $expressionLanguage;
+    private readonly CustomExpressionLanguage $expressionLanguage;
     private readonly bool $isExpression;
     private readonly ?SyntaxError $validationError;
 
     public function __construct(
         private readonly string $expr
     ) {
-        $this->expressionLanguage = app(ExpressionLanguage::class);
+        $this->expressionLanguage = app(CustomExpressionLanguage::class);
 
         $this->isExpression       = $this->isExpression($this->expr);
         $this->validationError    = $this->validate();

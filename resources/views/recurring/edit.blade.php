@@ -1,0 +1,210 @@
+@extends('layout.v3.session')
+@section('content')
+
+    <form method="post" action="{{ route('recurring.update', $recurrence->id) }}" class="form-horizontal"
+          accept-charset="UTF-8"
+          enctype="multipart/form-data" x-data="edit">
+        <input type="hidden" name="_token" value="{{ csrf_token() }}"/>
+        <input type="hidden" name="transaction_type" value="{{ $preFilled['transaction_type'] }}"/>
+        {{-- row with recurrence information --}}
+        <div class="row">
+
+            <div class="col-lg-6 col-md-6 col-sm-12">
+                {{-- mandatory recurrence stuff --}}
+                <div class="card mb-2">
+                    <div class="card-header">
+                        <h3 class="card-title">{{ __('firefly.mandatory_for_recurring') }}</h3>
+                    </div>
+                    <div class="card-body">
+                        <input type="hidden" name="id" value="{{ $array['id'] }}"/>
+                        {!! ExpandedForm::text('title', $array['title']) !!}
+                        {!! ExpandedForm::date('first_date',$array['first_date'], ['helpText' => trans('firefly.help_first_date_no_past')]) !!}
+                        {!! ExpandedForm::select('repetition_type', [], null, ['helpText' => trans('firefly.change_date_other_options')]) !!}
+                        {!! ExpandedForm::integer('skip', $array['repetitions'][0]['skip'], ['helpText' => trans('firefly.skip_help_text')]) !!}
+                        {!! ExpandedForm::select('weekend', $weekendResponses, $array['repetitions'][0]['weekend'], ['helpText' => trans('firefly.help_weekend')]) !!}
+                        {!! ExpandedForm::select('repetition_end', $repetitionEnds, $repetitionEnd) !!}
+                        {!! ExpandedForm::date('repeat_until',$array['repeat_until']) !!}
+                        {!! ExpandedForm::integer('repetitions', $array['nr_of_repetitions']) !!}
+
+                        {{-- calendar in popup --}}
+                        <div class="row mb-3">
+                            <div class="input-group has-validation">
+                                <label for="inputEmail3" class="col-sm-3 col-form-label">{{ trans('form.calendar') }}</label>
+                                <div class="col-sm-9">
+                                    <button
+                                        data-bs-toggle="modal" data-bs-target="#calendarModal"
+                                        class="btn btn-outline-secondary" type="button" id="calendar-link">{{ __('firefly.click_for_calendar') }}</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-lg-6 col-md-6 col-sm-12">
+                {{-- optional recurrence stuff --}}
+                <div class="card mb-2">
+                    <div class="card-header">
+                        <h3 class="card-title">{{ __('firefly.optional_for_recurring') }}</h3>
+                    </div>
+                    <div class="card-body">
+                        {!! ExpandedForm::textarea('recurring_description',$array['description']) !!}
+
+                        {{-- only correct way to do active checkbox --}}
+                        {!! ExpandedForm::checkbox('active', 1, $preFilled['active']) !!}
+                        {!! ExpandedForm::checkbox('apply_rules', 1, $preFilled['apply_rules']) !!}
+                        {!! ExpandedForm::file('attachments[]', ['multiple' => 'multiple','helpText' => trans('firefly.upload_max_file_size', ['size' => print_nice_filesize($uploadSize)])]) !!}
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-lg-6 col-md-6 col-sm-12">
+                {{-- mandatory transaction information --}}
+                <div class="card mb-2">
+                    <div class="card-header">
+                        <h3 class="card-title">{{ __('firefly.mandatory_for_transaction') }}</h3>
+                    </div>
+                    <div class="card-body">
+                        <p><em>{{ __('firefly.mandatory_fields_for_tranaction') }}</em></p>
+                        {{-- three buttons to distinguish type of transaction --}}
+                        <div class="row mb-3" id="transaction_type_holder">
+                            <div class="input-group">
+                                <label for="ffInput_transaction_type" class="col-sm-3 col-form-label has-validation">{{ trans('form.transaction_type') }}</label>
+
+                                <div class="col-sm-9 pt-1">
+                                    <div class="btn-group btn-group-sm">
+                                        <button type="button" class="btn btn-secondary switch-button"
+                                                data-value="withdrawal">{{ __('firefly.withdrawal') }}</button>
+                                        <button type="button" class="btn btn-secondary switch-button"
+                                                data-value="deposit">{{ __('firefly.deposit') }}</button>
+                                        <button type="button" class="btn btn-secondary switch-button"
+                                                data-value="transfer">{{ __('firefly.transfer') }}</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        {{-- end of three buttons --}}
+                        {!! ExpandedForm::text('transaction_description', $array['transactions'][0]['description']) !!}
+                        {{-- transaction information (mandatory) --}}
+                        {!! CurrencyForm::currencyList('transaction_currency_id', $array['transactions'][0]['currency_id']) !!}
+                        {!! ExpandedForm::amountNoCurrency('amount', $array['transactions'][0]['amount']) !!}
+
+                        {{-- source account if withdrawal, or if transfer: --}}
+                        {!! AccountForm::longAccountList('source_id', $array['transactions'][0]['source_id'], ['label' => trans('form.asset_source_account')]) !!}
+
+                        {{-- NEW for deposits, a drop down with revenue accounts, loan debt cash and mortgage --}}
+                        {!! AccountForm::activeDepositDestinations('deposit_source_id', $preFilled['deposit_source_id'], ['label' => trans('form.deposit_source_id')]) !!}
+
+                        {{-- destination if deposit or transfer: --}}
+                        {!! AccountForm::longAccountList('destination_id', $array['transactions'][0]['destination_id'], ['label' => trans('form.asset_destination_account')]) !!}
+
+                        {{-- NEW for withdrawals, also a drop down with expense accounts, loans, debts, mortgages or (cash). --}}
+                        {!! AccountForm::activeWithdrawalDestinations('withdrawal_destination_id', $preFilled['withdrawal_destination_id'], ['label' => trans('form.withdrawal_destination_id')]) !!}
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-lg-6 col-md-6 col-sm-12">
+                {{-- optional transaction information --}}
+                <div class="card mb-2">
+                    <div class="card-header">
+                        <h3 class="card-title">{{ __('firefly.optional_for_transaction') }}</h3>
+                    </div>
+                    <div class="card-body">
+                        {{-- transaction information (optional) --}}
+                        {!! CurrencyForm::currencyListEmpty('foreign_currency_id', $array['transactions'][0]['foreign_currency_id']) !!}
+                        {!! ExpandedForm::amountNoCurrency('foreign_amount', $array['transactions'][0]['foreign_amount']) !!}
+
+                        {{-- BUDGET ONLY WHEN CREATING A WITHDRAWAL --}}
+                        @if(count($budgets) > 0)
+                            {!! ExpandedForm::select('budget_id', $budgets, $array['transactions'][0]['budget_id']) !!}
+                        @else
+                            {!! ExpandedForm::select('budget_id', $budgets, $array['transactions'][0]['budget_id'], ['helpText' => trans('firefly.no_budget_pointer', ['link' => route('budgets.index')])]) !!}
+                            {{-- budgets --}}
+                        @endif
+
+                        {{-- CATEGORY ALWAYS --}}
+                        {!! ExpandedForm::text('category',$array['transactions'][0]['category_name']) !!}
+
+                        {{-- BILL ONLY WHEN CREATING A WITHDRAWAL --}}
+                        @if(count($bills) > 0)
+                            {!! ExpandedForm::select('bill_id', $bills, $array['transactions'][0]['subscription_id']) !!}
+                        @else
+                            {!! ExpandedForm::select('bill_id', $bills, $array['transactions'][0]['subscription_id'], ['helpText' => trans('firefly.no_bill_pointer', ['link' => route('subscriptions.index')])]) !!}
+                        @endif
+
+                        {{-- TAGS --}}
+                        {!! ExpandedForm::multiSelect('tags', $array['transactions'][0]['tags'],null) !!}
+
+                        {{-- RELATE THIS TRANSFER TO A PIGGY BANK --}}
+                        {!! PiggyBankForm::piggyBankList('piggy_bank_id',$array['transactions'][0]['piggy_bank_id'])  !!}
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        {{-- row with submit stuff. --}}
+        <div class="row">
+            <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
+                <div class="card mb-2">
+                    <div class="card-header">
+                        <h3 class="card-title">{{ __('firefly.options') }}</h3>
+                    </div>
+                    <div class="card-body">
+                        {!! ExpandedForm::optionsList('update','recurrence') !!}
+                    </div>
+                    <div class="card-footer text-end">
+                        <button type="submit" class="btn btn-success">
+                            {{ __('firefly.update_recurrence') }}
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        {{--
+        <div class="row">
+            <div class="card mb-2">
+                <div class="card-header">
+                    <h3 class="card-title">{{ __('firefly.expected_repetitions') }}</h3>
+                </div>
+                <div class="card-body">
+                    Here.
+                </div>
+            </div>
+        </div>
+    </div>
+    </div>
+        --}}
+    </form>
+
+    {{-- calendar modal --}}
+    <div class="modal fade" id="calendarModal" tabindex="-1" role="dialog">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">{{ __('firefly.recurring_calendar_view') }}</h5>
+                </div>
+                <div class="modal-body">
+                    <div id="recurring_calendar"  class="calendar-display">
+
+                    </div>
+
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <input type="hidden" id="repetitionType" value="{{ $currentRepType}}" />
+    <input type="hidden" id="suggestUrl" value = "{{ route('recurring.suggest') }}" />
+    <input type="hidden" id="eventsUrl" value = "{{ route('recurring.events') }}" />
+@endsection
+@section('scripts')
+    @vite(['js/pages/recurring/edit.js'])
+@endsection
+
+@section('styles')
+@endsection

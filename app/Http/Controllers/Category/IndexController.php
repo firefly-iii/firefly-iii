@@ -53,7 +53,7 @@ final class IndexController extends Controller
 
         $this->middleware(function ($request, $next) {
             app('view')->share('title', (string) trans('firefly.categories'));
-            app('view')->share('mainTitleIcon', 'fa-bookmark');
+            app('view')->share('mainTitleIcon', 'bi-bookmark');
             $this->repository = app(CategoryRepositoryInterface::class);
 
             return $next($request);
@@ -70,7 +70,8 @@ final class IndexController extends Controller
      */
     public function index(Request $request): Factory|\Illuminate\Contracts\View\View
     {
-        $page       = 0 === (int) $request->get('page') ? 1 : (int) $request->get('page');
+        $page       = 0 === (int) $request->input('page') ? 1 : (int) $request->input('page');
+        $page       = clamp($page, 1, 2 ** 16);
         $pageSize   = (int) Preferences::get('listPageSize', 50)->data;
         $collection = $this->repository->getCategories();
         $total      = $collection->count();
@@ -84,6 +85,6 @@ final class IndexController extends Controller
         $categories = new LengthAwarePaginator($collection, $total, $pageSize, $page);
         $categories->setPath(route('categories.index'));
 
-        return view('categories.index', ['categories' => $categories]);
+        return view('categories.index', ['categories' => $categories, 'page' => $page]);
     }
 }

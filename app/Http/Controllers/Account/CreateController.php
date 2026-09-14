@@ -56,7 +56,7 @@ final class CreateController extends Controller
 
         // translations:
         $this->middleware(function ($request, $next) {
-            app('view')->share('mainTitleIcon', 'fa-credit-card');
+            app('view')->share('mainTitleIcon', 'bi-credit-card');
             app('view')->share('title', (string) trans('firefly.accounts'));
 
             $this->repository  = app(AccountRepositoryInterface::class);
@@ -76,6 +76,7 @@ final class CreateController extends Controller
         $subTitleIcon        = config(sprintf('firefly.subIconsByIdentifier.%s', $objectType));
         $subTitle            = (string) trans(sprintf('firefly.make_new_%s_account', $objectType));
         $roles               = $this->getRoles();
+        $from                = $request->input('_from', '');
         $liabilityTypes      = $this->getLiabilityTypes();
         $hasOldInput         = null !== $request->old('_token');
         $locations           = [
@@ -94,7 +95,7 @@ final class CreateController extends Controller
             $interestPeriods[$period] = trans(sprintf('firefly.interest_calc_%s', $period));
         }
 
-        // pre fill some data
+        // prefill some data
         $request->session()->flash('preFilled', [
             'currency_id'       => $this->primaryCurrency->id,
             'include_net_worth' => !$hasOldInput || (bool) $request->old('include_net_worth'),
@@ -114,6 +115,7 @@ final class CreateController extends Controller
 
         return view('accounts.create', [
             'subTitleIcon'        => $subTitleIcon,
+            'from'                => $from,
             'liabilityDirections' => $liabilityDirections,
             'showNetWorth'        => $showNetWorth,
             'locations'           => $locations,
@@ -160,8 +162,9 @@ final class CreateController extends Controller
         }
 
         // redirect to previous URL.
-        $redirect  = redirect($this->getPreviousUrl('accounts.create.url'));
-        if (1 === (int) $request->get('create_another')) {
+        $from      = $request->input('_from', '');
+        $redirect  = redirect(route('index').$from);
+        if (1 === (int) $request->input('create_another')) {
             // set value so create routine will not overwrite URL:
             $request->session()->put('accounts.create.fromStore', true);
 

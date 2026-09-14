@@ -446,10 +446,12 @@ final class TagController extends Controller
      */
     public function topExpenses(Collection $accounts, Collection $tags, Carbon $start, Carbon $end)
     {
-        $spent   = $this->opsRepository->listExpenses($start, $end, $accounts, $tags);
-        $result  = [];
+        $spent           = $this->opsRepository->listExpenses($start, $end, $accounts, $tags);
+        $result          = [];
+        $incomeTopLength = 0;
         foreach ($spent as $currency) {
             foreach ($currency['tags'] as $tag) {
+                ++$incomeTopLength;
                 foreach ($tag['transaction_journals'] as $journal) {
                     $result[] = [
                         'description'              => $journal['description'],
@@ -472,11 +474,11 @@ final class TagController extends Controller
         }
         // sort by amount_float
         // sort temp array by amount.
-        $amounts = array_column($result, 'amount_float');
+        $amounts         = array_column($result, 'amount_float');
         array_multisort($amounts, SORT_ASC, $result);
 
         try {
-            $result = view('reports.tag.partials.top-expenses', ['result' => $result])->render();
+            $result = view('reports.tag.partials.top-expenses', ['result' => $result, 'incomeTopLength' => $incomeTopLength])->render();
         } catch (Throwable $e) {
             Log::debug(sprintf('Could not render reports.partials.budget-period: %s', $e->getMessage()));
             $result = sprintf('Could not render view: %s', $e->getMessage());

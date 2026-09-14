@@ -53,13 +53,13 @@ $(function () {
         if (reconcileStarted) {
             //console.log('Reconcile has started.');
             // hide original instructions.
-            $('.select_transactions_instruction').addClass('hidden');
+            $('.select_transactions_instruction').addClass('d-none');
 
             // show date-change warning
-            $('.date_change_warning').removeClass('hidden');
+            $('.date_change_warning').removeClass('d-none');
 
             // show update button
-            $('.change_date_button').removeClass('hidden');
+            $('.change_date_button').removeClass('d-none');
         }
     });
 
@@ -194,7 +194,7 @@ function calculateBalanceDifference() {
 function getTransactionsForRange() {
     console.log('in getTransactionsForRange()');
     // clear out the box:
-    $('#transactions_holder').empty().append($('<p>').addClass('text-center').html('<span class="fa fa-fw fa-spin fa-spinner"></span>'));
+    $('#transactions_holder').empty().append($('<p>').addClass('text-center').html('<span class="bi bi-hourglass"></span>'));
     var url = transactionsUrl.replace('%start%', $('input[name="start_date"]').val()).replace('%end%', $('input[name="end_date"]').val());
     var index = indexUrl.replace('%start%', $('input[name="start_date"]').val()).replace('%end%', $('input[name="end_date"]').val());
     window.history.pushState('object or string', "Reconcile account", index);

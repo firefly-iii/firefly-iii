@@ -55,9 +55,11 @@ final class IndexController extends Controller
         $administrations                                          = $this->repository->get();
         ['page' => $page, 'limit' => $limit, 'offset' => $offset] = $request->attributes->all();
         $count                                                    = $administrations->count();
-        $administrations                                          = $administrations->slice($offset, $limit);
-        $paginator                                                = new LengthAwarePaginator($administrations, $count, $limit, $page);
         $transformer                                              = new UserGroupTransformer();
+        $administrations                                          = $administrations->slice($offset, $limit);
+        $administrations                                          = $transformer->collectMetaData($administrations);
+
+        $paginator                                                = new LengthAwarePaginator($administrations, $count, $limit, $page);
 
         return response()->json($this->jsonApiList(self::RESOURCE_KEY, $paginator, $transformer))->header('Content-Type', self::CONTENT_TYPE);
     }

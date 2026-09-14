@@ -31,6 +31,7 @@ use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Support\Export\ExportDataGenerator;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response as LaravelResponse;
+use Override;
 use Safe\Exceptions\DatetimeException;
 
 use function Safe\date;
@@ -40,8 +41,9 @@ use function Safe\date;
  */
 final class ExportController extends Controller
 {
-    private ExportDataGenerator $exporter;
+    #[Override]
     protected array $acceptedRoles = [UserRoleEnum::READ_ONLY];
+    private ExportDataGenerator $exporter;
 
     /**
      * ExportController constructor.

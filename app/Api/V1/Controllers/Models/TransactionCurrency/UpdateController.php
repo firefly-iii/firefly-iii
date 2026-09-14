@@ -89,7 +89,6 @@ final class UpdateController extends Controller
 
         /** @var CurrencyTransformer $transformer */
         $transformer = app(CurrencyTransformer::class);
-        $transformer->setParameters($this->parameters);
 
         $resource    = new Item($currency, $transformer, 'currencies');
 
@@ -165,6 +164,11 @@ final class UpdateController extends Controller
         // second safety catch on currency disable.
         if (array_key_exists('enabled', $data) && false === $data['enabled'] && $this->repository->currencyInUse($currency)) {
             return response()->json([], 409);
+        }
+
+        // if the user is not an admin, quietly drop fields they are not allowed to change.
+        if (!$user->hasRole('owner')) {
+            unset($data['code'], $data['name'], $data['symbol'], $data['decimal_places']);
         }
 
         $currency    = $this->repository->update($currency, $data);

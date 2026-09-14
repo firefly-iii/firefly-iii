@@ -31,14 +31,16 @@ use FireflyIII\Models\Recurrence;
 use FireflyIII\Repositories\Recurring\RecurringRepositoryInterface;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
+use Override;
 
 /**
  * Class RecurrenceController
  */
 final class RecurrenceController extends Controller
 {
-    private RecurringRepositoryInterface $repository;
+    #[Override]
     protected array $acceptedRoles = [UserRoleEnum::READ_RECURRING];
+    private RecurringRepositoryInterface $repository;
 
     /**
      * RecurrenceController constructor.

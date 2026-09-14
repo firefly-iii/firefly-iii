@@ -63,18 +63,17 @@ abstract class Controller extends BaseController
     use ValidatesRequests;
     use ValidatesUserGroupTrait;
 
-    protected array $acceptedRoles           = [];
-
     protected const string CONTENT_TYPE      = 'application/vnd.api+json';
     protected const string JSON_CONTENT_TYPE = 'application/json';
 
+    protected array $acceptedRoles           = [];
     protected array $accepts                 = ['application/json', 'application/vnd.api+json'];
 
     protected bool $convertToPrimary         = false;
-    protected TransactionCurrency $primaryCurrency;
 
     /** @deprecated use Request classes */
     protected ParameterBag $parameters;
+    protected TransactionCurrency $primaryCurrency;
 
     /**
      * Controller constructor.
@@ -171,9 +170,6 @@ abstract class Controller extends BaseController
         return $manager->createData($resource)->toArray();
     }
 
-    /**
-     * @deprecated
-     */
     #[Deprecated(message: <<<'TXT'
         use Request classes
          Method to grab all parameters from the URL
@@ -182,7 +178,7 @@ abstract class Controller extends BaseController
     {
         $bag      = new ParameterBag();
         $page     = (int) request()->get('page');
-        $page     = min(max(1, $page), 2 ** 16);
+        $page     = clamp(value: $page, min: 1, max: 2 ** 16);
         $bag->set('page', $page);
 
         // some date fields:
@@ -224,7 +220,7 @@ abstract class Controller extends BaseController
             }
             if (null !== $value) {
                 $value = (int) $value;
-                $value = min(max(1, $value), 2 ** 16);
+                $value = clamp($value, 1, 2 ** 16);
                 $bag->set($integer, $value);
             }
             // && 'limit' === $integer

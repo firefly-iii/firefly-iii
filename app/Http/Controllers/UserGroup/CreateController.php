@@ -39,7 +39,7 @@ final class CreateController extends Controller
     {
         $title         = (string) trans('firefly.administrations_page_title');
         $subTitle      = (string) trans('firefly.administrations_page_create_sub_title');
-        $mainTitleIcon = 'fa-book';
+        $mainTitleIcon = 'bi-book';
         Log::debug(sprintf('Now at %s', __METHOD__));
 
         return view('administrations.create')->with(['title' => $title, 'subTitle' => $subTitle, 'mainTitleIcon' => $mainTitleIcon]);

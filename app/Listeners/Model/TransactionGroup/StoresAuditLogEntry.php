@@ -1,7 +1,5 @@
 <?php
 
-declare(strict_types=1);
-
 /*
  * StoresAuditLogEntry.php
  * Copyright (c) 2026 james@firefly-iii.org
@@ -22,6 +20,8 @@ declare(strict_types=1);
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
+declare(strict_types=1);
+
 namespace FireflyIII\Listeners\Model\TransactionGroup;
 
 use Carbon\Carbon;
@@ -41,6 +41,17 @@ class StoresAuditLogEntry implements ShouldQueue
             'before'    => $event->before,
             'after'     => $event->after,
         ];
+        if (!is_array($event->before) && !is_array($event->after) && '' === trim((string) $event->before) && '' === trim((string) $event->after)) {
+            Log::debug('Will not store event log because before and after are both empty.');
+
+            return;
+        }
+        // both empty arrays:
+        if (is_array($event->before) && is_array($event->after) && 0 === count($event->before) && 0 === count($event->after)) {
+            Log::debug('Will not store event log because before and after are both empty array.');
+
+            return;
+        }
 
         if ($event->before === $event->after) {
             Log::debug('Will not store event log because before and after are the same.');

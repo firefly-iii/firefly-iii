@@ -1,5 +1,25 @@
 <?php
 
+/*
+ * IsValidWebhookUrl.php
+ * Copyright (c) 2026 james@firefly-iii.org
+ *
+ * This file is part of Firefly III (https://github.com/firefly-iii).
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Affero General Public License as
+ * published by the Free Software Foundation, either version 3 of the
+ * License, or (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU Affero General Public License for more details.
+ *
+ * You should have received a copy of the GNU Affero General Public License
+ * along with this program.  If not, see <https://www.gnu.org/licenses/>.
+ */
+
 declare(strict_types=1);
 
 namespace FireflyIII\Rules\Webhook;
@@ -20,7 +40,11 @@ class IsValidWebhookUrl implements ValidationRule
     public function validate(string $attribute, mixed $value, Closure $fail): void
     {
         $value          = (string) $value;
-        $resolved       = gethostbyname(parse_url($value, PHP_URL_HOST));
+        $parsed         = parse_url($value, PHP_URL_HOST);
+        if (!is_string($parsed)) {
+            $fail('validation.bad_url')->translate();
+        }
+        $resolved       = gethostbyname($parsed);
         Log::debug(sprintf('Now validating URL "%s" with IP "%s".', $value, $resolved));
 
         /*
@@ -46,8 +70,9 @@ class IsValidWebhookUrl implements ValidationRule
         $validProtocols = AppConfiguration::get('valid_url_protocols', config('firefly.valid_url_protocols'))->data;
         $parts          = explode(',', $validProtocols);
         $valid          = false;
+        $scheme         = parse_url($value, PHP_URL_SCHEME);
         foreach ($parts as $part) {
-            if (str_starts_with($value, $part)) {
+            if (is_string($scheme) && str_starts_with($scheme, $part)) {
                 $valid = true;
             }
         }

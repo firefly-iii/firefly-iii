@@ -48,7 +48,7 @@ class CronRequest extends FormRequest
      */
     public function getAll(): array
     {
-        $data = ['force' => false, 'date' => today(config('app.timezone'))];
+        $data = ['force' => false, 'date' => now(config('app.timezone'))];
         if ($this->has('force')) {
             $data['force'] = $this->boolean('force');
         }
@@ -57,7 +57,7 @@ class CronRequest extends FormRequest
         }
         // catch NULL.
         if (!$data['date'] instanceof Carbon) {
-            $data['date'] = today(config('app.timezone'));
+            $data['date'] = now(config('app.timezone'));
         }
 
         return $data;

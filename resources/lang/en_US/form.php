@@ -48,6 +48,7 @@ return [
     'auto_budget_currency_id'     => 'Currency',
     'external_ip'                 => 'Your server\'s external IP',
     'attachments'                 => 'Attachments',
+    'enable_expression_engine'    => 'Enable expression engine',
     'BIC'                         => 'BIC',
     'verify_password'             => 'Verify password security',
     'source_account'              => 'Source account',
@@ -117,8 +118,8 @@ return [
     'tag'                         => 'Tag',
 
     // exchange rates
-    'from_currency_to_currency'   => '{from} &rarr; {to}',
-    'to_currency_from_currency'   => '{to} &rarr; {from}',
+    'from_currency_to_currency'   => '{{from}} &rarr; {{to}}',
+    'to_currency_from_currency'   => '{{to}} &rarr; {{from}}',
     'rate'                        => 'Rate',
 
     'under'                       => 'Under',
@@ -136,6 +137,7 @@ return [
     'mime'                        => 'Mime type',
     'size'                        => 'Size',
     'trigger'                     => 'Trigger',
+    'triggers'                    => 'Triggers',
     'stop_processing'             => 'Stop processing',
     'end_date'                    => 'End date',
     'enddate'                     => 'End date',
@@ -268,7 +270,9 @@ return [
     'key'                         => 'Key',
     'value'                       => 'Content of record',
     'webhook_delivery'            => 'Delivery',
+    'deliveries'                  => 'Deliveries',
     'webhook_response'            => 'Response',
+    'responses'                   => 'Responses',
     'webhook_trigger'             => 'Trigger',
     'pushover_app_token'          => 'Pushover app token',
     'pushover_user_token'         => 'Pushover user token',

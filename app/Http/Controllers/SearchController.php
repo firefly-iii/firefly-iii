@@ -46,7 +46,7 @@ final class SearchController extends Controller
         parent::__construct();
         app('view')->share('showCategory', true);
         $this->middleware(static function ($request, $next) {
-            app('view')->share('mainTitleIcon', 'fa-search');
+            app('view')->share('mainTitleIcon', 'bi-search');
             app('view')->share('title', (string) trans('firefly.search'));
 
             return $next($request);
@@ -61,13 +61,15 @@ final class SearchController extends Controller
     public function index(Request $request, SearchInterface $searcher): Factory|\Illuminate\Contracts\View\View
     {
         // search params:
-        $fullQuery        = $request->get('search');
-        if (is_array($request->get('search'))) {
+        $fullQuery        = (string) $request->input('search');
+        $fullQuery        = substr($fullQuery, 0, 500);
+        if (is_array($request->input('search'))) {
             $fullQuery = '';
         }
         $fullQuery        = (string) $fullQuery;
-        $page             = 0 === (int) $request->get('page') ? 1 : (int) $request->get('page');
-        $ruleId           = (int) $request->get('rule');
+        $page             = 0 === (int) $request->input('page') ? 1 : (int) $request->input('page');
+        $page             = clamp(value: $page, min: 1, max: 2 ** 16);
+        $ruleId           = (int) $request->input('rule');
         $ruleChanged      = false;
 
         // find rule, check if query is different, offer to update.
@@ -110,12 +112,13 @@ final class SearchController extends Controller
      */
     public function search(Request $request, SearchInterface $searcher): JsonResponse
     {
-        $entry      = $request->get('query');
+        $entry      = $request->input('query');
         if (!is_scalar($entry)) {
             $entry = '';
         }
         $fullQuery  = (string) $entry;
-        $page       = 0 === (int) $request->get('page') ? 1 : (int) $request->get('page');
+        $page       = 0 === (int) $request->input('page') ? 1 : (int) $request->input('page');
+        $page       = clamp(value: $page, min: 1, max: 2 ** 16);
 
         $searcher->parseQuery($fullQuery);
 
@@ -132,7 +135,7 @@ final class SearchController extends Controller
         } catch (Throwable $e) {
             Log::error(sprintf('Cannot render search.search: %s', $e->getMessage()));
             Log::error($e->getTraceAsString());
-            $html = 'Could not render view.';
+            $html = sprintf('Could not render view: %s', $e->getMessage());
 
             throw new FireflyException($html, 0, $e);
         }

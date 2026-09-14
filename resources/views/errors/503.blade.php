@@ -1,4 +1,4 @@
-@extends('layout.v2.error')
+@extends('layout.v3.blank')
 @section('status_code','503')
 @section('status','Service Unavailable')
 @section('sub_title', trans('errors.maintenance_mode'))
@@ -13,9 +13,6 @@
         </p>
     </div>
 </div>
-</body>
-</html>
-
 
 @endsection
 

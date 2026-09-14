@@ -65,9 +65,16 @@ class Preferences
         return Preference::query()->where('user_id', $user->id)->whereLike('name', $value)->get();
     }
 
-    public function delete(string $name): bool
+    public function delete(string $name, bool $overrule = false): bool
     {
-        $fullName = sprintf('preference%s%s', auth()->user()->id, $name);
+        $systemPreferences = config('firefly.system_preference_keys');
+        if (
+            false === $overrule
+            && (in_array($name, $systemPreferences, true) || array_any($systemPreferences, fn (string $arrayValue) => str_starts_with($name, $arrayValue)))
+        ) {
+            throw new FireflyException(sprintf('Function delete() cannot be used to delete preference "%s"', $name));
+        }
+        $fullName          = sprintf('preference%s%s', auth()->user()->id, $name);
         if (Cache::has($fullName)) {
             Cache::forget($fullName);
         }
@@ -76,9 +83,16 @@ class Preferences
         return true;
     }
 
-    public function deleteForUser(User $user, string $name): bool
+    public function deleteForUser(User $user, string $name, bool $overrule = false): bool
     {
-        $fullName = sprintf('preference%s%s', auth()->user()->id, $name);
+        $systemPreferences = config('firefly.system_preference_keys');
+        if (
+            false === $overrule
+            && (in_array($name, $systemPreferences, true) || array_any($systemPreferences, fn (string $arrayValue) => str_starts_with($name, $arrayValue)))
+        ) {
+            throw new FireflyException(sprintf('Function deleteForUser() cannot be used to delete preference "%s"', $name));
+        }
+        $fullName          = sprintf('preference%s%s', $user->id, $name);
         if (Cache::has($fullName)) {
             Cache::forget($fullName);
         }
@@ -102,7 +116,7 @@ class Preferences
         Cache::put($key, '', 5);
     }
 
-    public function get(string $name, array|bool|int|string|null $default = null): ?Preference
+    public function get(string $name, array|bool|int|string|null $default = null, bool $overrule = false): ?Preference
     {
         /** @var null|User $user */
         $user = auth()->user();
@@ -113,7 +127,7 @@ class Preferences
             return $preference;
         }
 
-        return $this->getForUser($user, $name, $default);
+        return $this->getForUser($user, $name, $default, $overrule);
     }
 
     public function getArrayForUser(User $user, array $list): array
@@ -193,7 +207,7 @@ class Preferences
         return $result;
     }
 
-    public function getForUser(User $user, string $name, array|bool|int|string|null $default = null): ?Preference
+    public function getForUser(User $user, string $name, array|bool|int|string|null $default = null, bool $overrule = false): ?Preference
     {
         // Log::debug(sprintf('getForUser(#%d, "%s")', $user->id, $name));
         // don't care about user group ID, except for some specific preferences.
@@ -225,7 +239,7 @@ class Preferences
             return null;
         }
 
-        return $this->setForUser($user, $name, $default);
+        return $this->setForUser($user, $name, $default, $overrule);
     }
 
     public function getFresh(string $name, array|bool|int|string|null $default = null): ?Preference
@@ -239,7 +253,7 @@ class Preferences
             return $preference;
         }
 
-        return $this->getForUser($user, $name, $default);
+        return $this->getForUser($user, $name, $default, false);
     }
 
     public function lastActivity(): string
@@ -273,10 +287,18 @@ class Preferences
         Session::forget('first');
     }
 
-    public function set(string $name, array|bool|int|string|null $value): Preference
+    public function set(string $name, array|bool|int|string|null $value, bool $overrule = false): Preference
     {
+        $systemPreferences = config('firefly.system_preference_keys');
+        if (
+            false === $overrule
+            && (in_array($name, $systemPreferences, true) || array_any($systemPreferences, fn (string $arrayValue) => str_starts_with($name, $arrayValue)))
+        ) {
+            throw new FireflyException(sprintf('Function set() cannot be used to set preference "%s"', $name));
+        }
+
         /** @var null|User $user */
-        $user = auth()->user();
+        $user              = auth()->user();
         if (null === $user) {
             // make new preference, return it:
             $pref       = new Preference();
@@ -286,11 +308,19 @@ class Preferences
             return $pref;
         }
 
-        return $this->setForUser($user, $name, $value);
+        return $this->setForUser($user, $name, $value, $overrule);
     }
 
-    public function setEncrypted(string $name, mixed $value): Preference
+    public function setEncrypted(string $name, mixed $value, bool $overrule = false): Preference
     {
+        $systemPreferences = config('firefly.system_preference_keys');
+        if (
+            false === $overrule
+            && (in_array($name, $systemPreferences, true) || array_any($systemPreferences, fn (string $arrayValue) => str_starts_with($name, $arrayValue)))
+        ) {
+            throw new FireflyException(sprintf('Function setEncrypted() cannot be used to set preference "%s"', $name));
+        }
+
         try {
             $encrypted = encrypt($value);
         } catch (EncryptException $e) {
@@ -299,24 +329,31 @@ class Preferences
             throw new FireflyException(sprintf('Could not encrypt preference "%s". Cowardly refuse to continue.', $name));
         }
 
-        return $this->set($name, $encrypted);
+        return $this->set($name, $encrypted, $overrule);
     }
 
-    public function setForUser(User $user, string $name, array|bool|int|string|null $value): Preference
+    public function setForUser(User $user, string $name, array|bool|int|string|null $value, bool $overrule = false): Preference
     {
-        $fullName         = sprintf('preference%s%s', $user->id, $name);
-        $userGroupId      = $this->getUserGroupId($user, $name);
-        $userGroupId      = 0 === (int) $userGroupId ? null : (int) $userGroupId;
+        $systemPreferences = config('firefly.system_preference_keys');
+        if (
+            false === $overrule
+            && (in_array($name, $systemPreferences, true) || array_any($systemPreferences, fn (string $arrayValue) => str_starts_with($name, $arrayValue)))
+        ) {
+            throw new FireflyException(sprintf('Function setForUser() cannot be used to set preference "%s"', $name));
+        }
+        $fullName          = sprintf('preference%s%s', $user->id, $name);
+        $userGroupId       = $this->getUserGroupId($user, $name);
+        $userGroupId       = 0 === (int) $userGroupId ? null : (int) $userGroupId;
 
         Cache::forget($fullName);
 
-        $query            = Preference::query()->where('user_id', $user->id)->where('name', $name);
+        $query             = Preference::query()->where('user_id', $user->id)->where('name', $name);
         if (null !== $userGroupId) {
             Log::debug('Include user group ID in query');
             $query->where('user_group_id', $userGroupId);
         }
 
-        $preference       = $query->first(['id', 'user_id', 'user_group_id', 'name', 'data', 'updated_at', 'created_at']);
+        $preference        = $query->first(['id', 'user_id', 'user_group_id', 'name', 'data', 'updated_at', 'created_at']);
 
         if (null !== $preference && null === $value) {
             $preference->delete();
@@ -332,7 +369,7 @@ class Preferences
             $preference->user_group_id = $userGroupId;
             $preference->name          = $name;
         }
-        $preference->data = $value;
+        $preference->data  = $value;
         $preference->save();
         Cache::forever($fullName, $preference);
 

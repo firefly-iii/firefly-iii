@@ -1,0 +1,63 @@
+@extends('layout.v3.session')
+@section('content')
+    @if(0 === count($objectGroups))
+        <x-empty-page :route="''" type="object-groups" object-type="default" />
+    @endif
+
+    @if(count($objectGroups) > 0)
+    <div class="row">
+        <div class="col-lg-12 col-md-12 col-sm-12">
+            <div class="card mb-2">
+                <x-elements.card-header-with-menu :cardTitle="__('firefly.object_groups')" :route="''" :linkTitle="''"/>
+                    <div class="card-body p-0">
+                        <table class="table table-sm" id="sortable">
+                            <thead>
+                            <tr>
+                                <th>&nbsp;</th>
+                                <th>
+                                    {{ __('firefly.object_group_title') }}
+                                </th>
+                                <th>
+                                    &nbsp;
+                                </th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            @foreach($objectGroups as $objectGroup)
+                                <tr class="group-sortable" data-id="{{ $objectGroup['id'] }}" data-name="{{ e($objectGroup['title']) }}" data-order="{{ $objectGroup['order'] }}">
+                                    <td><span class="btn btn-sm bi bi-list group-handle"></span></td>
+                                    <td>
+                                        <strong>{{ $objectGroup['title'] }}</strong><br/>
+                                        @foreach($objectGroup['piggyBanks'] as $piggyBank)
+                                            - {{ __('firefly.piggy_bank') }}: <a href="{{ route('piggy-banks.show', [$piggyBank['id']]) }}">{{ $piggyBank['name'] }}</a><br>
+                                        @endforeach
+                                        @foreach($objectGroup['bills'] as $subscription)
+                                            - {{ __('firefly.bill') }}: <a href="{{ route('subscriptions.show', [$subscription['id']]) }}">{{ $subscription['name'] }}</a><br>
+                                        @endforeach
+                                    </td>
+                                    <td class="text-end">
+                                        <div class="dropdown">
+                                            <button class="btn btn-sm btn-outline-secondary dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                                {{ __('firefly.actions') }}
+                                            </button>
+                                            <ul class="dropdown-menu">
+                                                <li><a class="dropdown-item" href="{{ route('object-groups.edit', [$objectGroup['id']]) }}?_from={{ urlencode($FF3_FROM) }}"><span class="bi bi-pencil"></span> {{ __('firefly.edit') }}</a></li>
+                                                <li><a class="dropdown-item text-danger" href="{{ route('object-groups.delete', [$objectGroup['id']]) }}?_from={{ urlencode($FF3_FROM) }}"><span class="bi bi-trash"></span> {{ __('firefly.delete') }}</a></li>
+                                            </ul>
+                                        </div>
+                                    </td>
+                                </tr>
+                            @endforeach
+                            </tbody>
+                        </table>
+                    </div>
+            </div>
+        </div>
+    </div>
+    @endif
+@endsection
+@section('scripts')
+    @vite(['js/pages/generic.js'])
+    <script src="v1/js/lib/jquery-ui.min.js?v={{ $FF_BUILD_TIME }}" type="text/javascript" nonce="{{ $JS_NONCE }}"></script>
+    <script type="text/javascript" src="v1/js/ff/object-groups/index.js?v={{ $FF_BUILD_TIME }}" nonce="{{ $JS_NONCE }}"></script>
+@endsection

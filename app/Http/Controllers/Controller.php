@@ -24,7 +24,9 @@ declare(strict_types=1);
 namespace FireflyIII\Http\Controllers;
 
 use FireflyIII\Events\Model\Webhook\WebhookMessagesRequestSending;
+use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Models\TransactionCurrency;
+use FireflyIII\Rules\System\IsValidOriginUrl;
 use FireflyIII\Support\Facades\Amount;
 use FireflyIII\Support\Facades\AppConfiguration;
 use FireflyIII\Support\Facades\Preferences;
@@ -38,9 +40,11 @@ use Illuminate\Routing\Controller as BaseController;
 use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Route;
+use Illuminate\Support\Facades\URL;
 use Illuminate\Support\Facades\View;
 
 use function Safe\ini_get;
+use function Safe\parse_url;
 use function Safe\realpath;
 
 /**
@@ -65,6 +69,7 @@ abstract class Controller extends BaseController
     protected string $monthAndDayFormat;
     protected string $monthFormat;
     protected string $redirectUrl    = '/';
+    protected string $from           = '';
 
     /**
      * Controller constructor.
@@ -72,17 +77,25 @@ abstract class Controller extends BaseController
     public function __construct()
     {
         // is site a demo site?
-        $isDemoSiteConfig = AppConfiguration::get('is_demo_site', config('firefly.configuration.is_demo_site', false));
-        $isDemoSite       = (bool) $isDemoSiteConfig->data;
+        try {
+            $isDemoSiteConfig = AppConfiguration::get('is_demo_site', config('firefly.configuration.is_demo_site', false));
+        } catch (FireflyException $e) {
+            // if this breaks, just stop right here.
+            Log::error($e->getMessage());
+
+            return;
+        }
+        $isDemoSite  = (bool) $isDemoSiteConfig->data;
         View::share('IS_DEMO_SITE', $isDemoSite);
         View::share('DEMO_USERNAME', config('firefly.demo_username'));
         View::share('DEMO_PASSWORD', config('firefly.demo_password'));
         View::share('FF_VERSION', config('firefly.version'));
         View::share('FF_BUILD_TIME', config('firefly.build_time'));
-
+        $this->from  = $this->getFromUrl();
+        View::share('FF3_FROM', $this->from);
         // this breaks when running < PHP 8.5 and is totally intentional.
-        $input            = ' James is cool';
-        $output           = $input
+        $input       = ' James is cool';
+        $output      = $input
             |> trim(...)
             |> (fn (string $string) => str_replace(' ', '-', $string))
             |> (fn (string $string) => str_replace(['.', '/', '…'], '', $string))
@@ -93,10 +106,12 @@ abstract class Controller extends BaseController
             'featuringWebhooks',
             true === config('firefly.feature_flags.webhooks') && true === AppConfiguration::get('allow_webhooks', config('firefly.allow_webhooks'))->data
         );
+        // is currency exchange enabled?
+        View::share('featuringCer', true === AppConfiguration::get('enable_exchange_rates', config('cer.enabled'))->data);
 
         // share custom auth guard info.
-        $authGuard        = config('firefly.authentication_guard');
-        $logoutUrl        = config('firefly.custom_logout_url');
+        $authGuard   = config('firefly.authentication_guard');
+        $logoutUrl   = config('firefly.custom_logout_url');
 
         // overrule v2 layout back to v1.
 
@@ -110,15 +125,15 @@ abstract class Controller extends BaseController
         View::share('logoutUrl', $logoutUrl);
 
         // upload size
-        $maxFileSize      = Steam::phpBytes(ini_get('upload_max_filesize'));
-        $maxPostSize      = Steam::phpBytes(ini_get('post_max_size'));
-        $uploadSize       = min($maxFileSize, $maxPostSize);
+        $maxFileSize = Steam::phpBytes(ini_get('upload_max_filesize'));
+        $maxPostSize = Steam::phpBytes(ini_get('post_max_size'));
+        $uploadSize  = min($maxFileSize, $maxPostSize);
         View::share('uploadSize', $uploadSize);
 
         // share is alpha, is beta
-        $isAlpha          = false;
-        $isBeta           = false;
-        $isDevelop        = false;
+        $isAlpha     = false;
+        $isBeta      = false;
+        $isDevelop   = false;
         if (str_contains((string) config('firefly.version'), 'alpha')) {
             $isAlpha = true;
         }
@@ -171,5 +186,31 @@ abstract class Controller extends BaseController
 
             return $next($request);
         });
+    }
+
+    private function getFromUrl(): string
+    {
+        $current   = parse_url(URL::full());
+        $from      = '';
+        if (array_key_exists('path', $current)) {
+            $from = $current['path'];
+        }
+        if (array_key_exists('query', $current) && '' !== $current['query']) {
+            // parse query and remove existing _from.
+            $parts = [];
+            parse_str($current['query'], $parts);
+            unset($parts['_from']);
+            $from .= '?'.http_build_query($parts);
+        }
+        if (array_key_exists('fragment', $current) && '' !== $current['fragment']) {
+            $from .= '#'.$current['fragment'];
+        }
+        // validate query, and give error if invalid.
+        $validator = validator(['_from' => $from], ['nullable', 'max:255', new IsValidOriginUrl()]);
+        if ($validator->fails()) {
+            throw new FireflyException(trans('validation.bad_url_parts'));
+        }
+
+        return $from;
     }
 }

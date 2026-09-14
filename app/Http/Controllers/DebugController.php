@@ -39,6 +39,7 @@ use FireflyIII\Support\Facades\Preferences;
 use FireflyIII\Support\Facades\Steam;
 use FireflyIII\Support\Http\Controllers\GetConfigurationData;
 use FireflyIII\Support\Models\AccountBalanceCalculator;
+use FireflyIII\Support\System\IsOldVersion;
 use FireflyIII\User;
 use Illuminate\Contracts\View\Factory;
 use Illuminate\Http\RedirectResponse;
@@ -65,6 +66,7 @@ use const PHP_SAPI;
 final class DebugController extends Controller
 {
     use GetConfigurationData;
+    use IsOldVersion;
 
     /**
      * DebugController constructor.
@@ -104,8 +106,11 @@ final class DebugController extends Controller
      *
      * @throws FireflyException
      */
-    public function flush(Request $request): RedirectResponse
+    public function flush(Request $request): View
     {
+        if ($this->hasNoTables() || $this->isOldVersionInstalled()) {
+            throw new FireflyException('This is not the moment.');
+        }
         Preferences::mark();
         $request->session()->forget(['start', 'end', '_previous', 'viewRange', 'range', 'is_custom_range', 'temp-mfa-secret', 'temp-mfa-codes']);
 
@@ -122,15 +127,11 @@ final class DebugController extends Controller
             AccountBalanceCalculator::recalculateAll(false);
         }
 
-        try {
-            Artisan::call('twig:clean');
-        } catch (Exception $e) { // intentional generic exception
-            throw new FireflyException($e->getMessage(), 0, $e);
-        }
-
         Artisan::call('view:clear');
 
-        return redirect(route('index'));
+        return view('flush');
+
+        // return redirect(route('index'));
     }
 
     /**
@@ -145,23 +146,26 @@ final class DebugController extends Controller
         $table      = $this->generateTable();
         $table      = str_replace(["\n", "\t", '  '], '', $table);
         $now        = now(config('app.timezone'))->format('Y-m-d H:i:s');
-
-        // get latest log file:
-        $logger     = Log::driver();
-        // PHPstan doesn't recognize the method because of its polymorphic nature.
-        $handlers   = $logger->getHandlers();
         $logContent = '';
-        foreach ($handlers as $handler) {
-            if ($handler instanceof RotatingFileHandler) {
-                $logFile = $handler->getUrl();
-                if (null !== $logFile && file_exists($logFile)) {
-                    $logContent = file_get_contents($logFile);
+
+        if (auth()->check() && auth()->user()->hasRole('owner')) {
+            // get latest log file:
+            $logger   = Log::driver();
+            // PHPstan doesn't recognize the method because of its polymorphic nature.
+            $handlers = $logger->getHandlers();
+
+            foreach ($handlers as $handler) {
+                if ($handler instanceof RotatingFileHandler) {
+                    $logFile = $handler->getUrl();
+                    if (null !== $logFile && file_exists($logFile)) {
+                        $logContent = file_get_contents($logFile);
+                    }
                 }
             }
-        }
-        if ('' !== $logContent) {
-            // last few lines
-            $logContent = 'Truncated from this point <----|'.substr($logContent, -16_384);
+            if ('' !== $logContent) {
+                // last few lines
+                $logContent = 'Truncated from this point <----|'.substr($logContent, -16_384);
+            }
         }
 
         return view('debug', ['table' => $table, 'now' => $now, 'logContent' => $logContent]);
@@ -176,7 +180,7 @@ final class DebugController extends Controller
         /** @var iterable $routes */
         $routes = Route::getRoutes();
 
-        if ('true' === $request->get('api')) {
+        if ('true' === $request->input('api')) {
             $collection = [];
             $i          = 0;
 

@@ -49,7 +49,7 @@ class UpgradesRuleActions extends Command
 
             return 0;
         }
-        if (false === config('firefly.feature_flags.expression_engine')) {
+        if (false === AppConfiguration::get('enable_expression_engine', false)->data) {
             $this->friendlyInfo('Expression engine is not enabled. Nothing to do.');
 
             return 0;

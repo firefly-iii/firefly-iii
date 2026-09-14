@@ -63,7 +63,7 @@ final class ShowController extends Controller
         parent::__construct();
         $this->middleware(function ($request, $next) {
             app('view')->share('title', (string) trans('firefly.budgets'));
-            app('view')->share('mainTitleIcon', 'fa-pie-chart');
+            app('view')->share('mainTitleIcon', 'bi-pie-chart');
             $this->journalRepos = app(JournalRepositoryInterface::class);
             $this->repository   = app(BudgetRepositoryInterface::class);
 
@@ -96,7 +96,8 @@ final class ShowController extends Controller
         $first     = $this->journalRepos->firstNull();
         $firstDate = $first instanceof TransactionJournal ? $first->date : $start;
         $periods   = $this->getNoModelPeriodOverview('budget', $firstDate, $end);
-        $page      = (int) $request->get('page');
+        $page      = (int) $request->input('page');
+        $page      = clamp($page, 1, 2 ** 16);
         $pageSize  = (int) Preferences::get('listPageSize', 50)->data;
 
         /** @var GroupCollectorInterface $collector */
@@ -130,7 +131,8 @@ final class ShowController extends Controller
         $first     = $this->journalRepos->firstNull();
         $start     = $first instanceof TransactionJournal ? $first->date : new Carbon();
         $end       = today(config('app.timezone'));
-        $page      = (int) $request->get('page');
+        $page      = (int) $request->input('page');
+        $page      = clamp($page, 1, 2 ** 16);
         $pageSize  = (int) Preferences::get('listPageSize', 50)->data;
 
         /** @var GroupCollectorInterface $collector */
@@ -163,7 +165,8 @@ final class ShowController extends Controller
         /** @var Carbon $allStart */
         $allStart    = session('first', today(config('app.timezone'))->startOfYear());
         $allEnd      = today();
-        $page        = (int) $request->get('page');
+        $page        = (int) $request->input('page');
+        $page        = clamp($page, 1, 2 ** 16);
         $pageSize    = (int) Preferences::get('listPageSize', 50)->data;
         $limits      = $this->getLimits($budget, $allStart, $allEnd);
         $repetition  = null;
@@ -190,6 +193,7 @@ final class ShowController extends Controller
             'limits'      => $limits,
             'attachments' => $attachments,
             'budget'      => $budget,
+            'budgetLimit' => null,
             'repetition'  => $repetition,
             'groups'      => $groups,
             'subTitle'    => $subTitle,
@@ -212,7 +216,8 @@ final class ShowController extends Controller
         }
 
         $currencySymbol = $budgetLimit->transactionCurrency->symbol;
-        $page           = (int) $request->get('page');
+        $page           = (int) $request->input('page');
+        $page           = clamp($page, 1, 2 ** 16);
         $pageSize       = (int) Preferences::get('listPageSize', 50)->data;
         $subTitle       = trans('firefly.budget_in_period', [
             'name'     => $budget->name,

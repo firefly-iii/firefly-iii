@@ -1,0 +1,185 @@
+@extends('layout.v3.session')
+@section('content')
+    <form method="POST" action="{{ route('transactions.bulk.update') }}" accept-charset="UTF-8" class="form-horizontal" id="update" x-data="edit">
+        <input name="_token" type="hidden" value="{{ csrf_token() }}">
+
+        <div class="row">
+            <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                <div class="card mb-2">
+                    <div class="card-header">
+                        <h3 class="card-title">{{ __('firefly.mass_bulk_journals') }}</h3>
+                    </div>
+
+                    <div class="card-body">
+                        <p>
+                            {{ __('firefly.mass_bulk_journals_explain') }}
+                        </p>
+
+                        <div class="row">
+                            <div class="col-lg-8 col-md-12 col-sm-12 col-xs-12">
+                                <table class="table table-striped table-sm">
+                                    <thead>
+                                    <tr>
+                                        <th>{{ trans('list.description') }}</th>
+                                        <th>{{ trans('list.amount') }}</th>
+                                        <th>{{ trans('list.date') }}</th>
+                                        <th>{{ trans('list.category') }}</th>
+                                        <th>{{ trans('list.budget') }}</th>
+                                        <th>{{ trans('list.tags') }}</th>
+                                        <th>&nbsp;</th>
+                                    </tr>
+                                    </thead>
+                                    <tbody>
+                                    @foreach($journals as $journal)
+                                        <input type="hidden" name="journals[]" value="{{ $journal['transaction_journal_id'] }}"/>
+                                        <tr>
+                                            <td>
+                                                <a href="{{ route('transactions.show', [$journal['transaction_group_id']]) }}">
+                                                    {{ $journal['description'] }}</a></td>
+                                            <td>
+                                                @if($journal['transaction_type_type'] == 'Deposit')
+                                                    {!! format_amount_by_symbol($journal['amount']*-1, $journal['currency_symbol'], $journal['currency_decimal_places']) !!}
+                                                    @if(null != $journal['foreign_amount'])
+                                                        ({!! format_amount_by_symbol($journal['foreign_amount']*-1, $journal['foreign_currency_symbol'], $journal['foreign_currency_decimal_places']) !!})
+                                                    @endif
+                                                @elseif($journal['transaction_type_type'] == 'Transfer')
+                                                    <span class="text-info money-transfer">
+                                                        {!! format_amount_by_symbol($journal['amount']*-1, $journal['currency_symbol'], $journal['currency_decimal_places'], false) !!}
+                                                        @if(null != $journal['foreign_amount'])
+                                                            ({!! format_amount_by_symbol($journal['foreign_amount']*-1, $journal['foreign_currency_symbol'], $journal['foreign_currency_decimal_places'], false) !!})
+                                                        @endif
+                                                    </span>
+                                                @else
+                                                    {!! format_amount_by_symbol($journal['amount'], $journal['currency_symbol'], $journal['currency_decimal_places']) !!}
+                                                    @if(null != $journal['foreign_amount'])
+                                                        ({!! format_amount_by_symbol($journal['foreign_amount'], $journal['foreign_currency_symbol'], $journal['foreign_currency_decimal_places']) !!})
+                                                    @endif
+                                                @endif
+
+
+                                            </td>
+                                            <td>{{ $journal['date']->isoFormat($monthAndDayFormat) }}</td>
+                                            <td>
+                                                @if($journal['category_id'] != null)
+                                                    <a href="{{ route('categories.show', [$journal['category_id']]) }}" title="{{ $journal['category_name'] }}">{{ $journal['category_name'] }}</a>
+                                                @endif
+                                            </td>
+                                            <td>
+                                                @if($journal['budget_id'] != null)
+                                                    <a href="{{ route('budgets.show', [$journal['budget_id']]) }}" title="{{ $journal['budget_name'] }}">{{ $journal['budget_name'] }}</a>
+                                                @endif
+                                            </td>
+                                            <td>
+                                                @foreach($journal['tags'] as $tag)
+                                                    @if(0 !== $tag['id'])
+                                                        <span class="inline"><a class="badge text-bg-success" href="{{ route('tags.show', [$tag['id']]) }}">
+                                                        <span class="bi bi-tag"></span>{{ $tag['name'] }}</a></span>
+                                                    @endif
+                                                @endforeach
+                                            </td>
+                                            <td>
+                                                @if($journal['journals_in_group'] > 1)
+                                                    <span title="{{ __('firefly.part_of_split') }}" class="text-danger bi bi-exclamation-triangle"></span>
+                                                @endif
+                                            </td>
+                                        </tr>
+                                    @endforeach
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                        <p>
+                            {{__('firefly.bulk_set_new_values') }}
+                        </p>
+                        <div class="row">
+                            <div class="col-lg-8 col-md-12 col-sm-12 col-xs-12">
+                                <table class="table table-striped table-sm">
+                                    <tr>
+                                        <th class="quarter">{{ trans('list.category') }}</th>
+                                        <td>
+                                            <input @change="detectCategoryChange" class="form-control ac-category" placeholder="" name="category" autocomplete="off" type="text" value="" spellcheck="false">
+                                        </td>
+                                        <td>
+                                            <div class="checkbox">
+                                                <label>
+                                                    <input name="ignore_category" type="checkbox" value="1" checked>
+                                                    {{ __('firefly.no_bulk_category') }}
+                                                </label>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <th>{{ trans('list.budget') }}</th>
+                                        <td>
+                                            <select @change="detectBudgetChange" class="form-select" name="budget_id">
+                                                @foreach($budgetList as $id => $budget)
+                                                    <option value="{{ $id }}" label="{{ $budget }}">{{ $budget }}</option>
+                                                @endforeach
+                                            </select>
+                                        </td>
+                                        <td>
+                                            <div class="checkbox">
+                                                <label>
+                                                    <input name="ignore_budget" type="checkbox" value="1" checked>
+                                                    {{ __('firefly.no_bulk_budget') }}
+                                                </label>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <th>{{ trans('list.tags') }}</th>
+                                        <td>
+                                            <select @change="detectTagChange"
+                                                class="form-select ac-tags"
+                                                name="tags"
+                                                multiple>
+                                                <option value="">{{ __('firefly.select_tag') }}</option>
+                                            </select>
+                                        </td>
+                                        <td>
+                                            <div class="radio">
+                                                <label>
+                                                    <input type="radio" name="tags_action" id="tags_action_do_nothing" value="no_nothing" checked/>
+                                                    {{ __('firefly.no_bulk_tags') }}
+                                                </label>
+                                            </div>
+                                            <div class="radio">
+                                                <label>
+                                                    <input type="radio" name="tags_action" id="tags_action_do_replace" value="do_replace"/>
+                                                    {{ __('firefly.replace_with_these_tags') }}
+                                                </label>
+                                            </div>
+                                            <div class="radio">
+                                                <label>
+                                                    <input type="radio" name="tags_action" id="tags_action_do_append" value="do_append"/>
+                                                    {{ __('firefly.append_these_tags') }}
+                                                </label>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                </table>
+
+                            </div>
+                        </div>
+
+                    </div>
+
+                    <div class="card-footer text-end">
+                        <a href="{{ route('index') }}" class="btn-outline-secondary btn">{{ trans('form.cancel') }}</a>
+                        <input type="submit" name="submit" value="{{ trans('form.update_all_journals') }}" class="btn btn-success "/>
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </form>
+@endsection
+@section('scripts')
+    @vite(['js/pages/transactions/bulk-edit.js'])
+@endsection
+@section('styles')
+
+@endsection

@@ -622,7 +622,7 @@ class BillRepository implements BillRepositoryInterface, UserGroupInterface
                 'decimal_places' => $currency->decimal_places,
                 'sum'            => '0',
             ];
-            // Log::debug(sprintf('Created a new array for currency #%d', $currency->id));
+            Log::debug(sprintf('Created a new array for currency #%d', $currency->id));
 
             /** @var TransactionJournal $transactionJournal */
             foreach ($set as $transactionJournal) {
@@ -637,9 +637,9 @@ class BillRepository implements BillRepositoryInterface, UserGroupInterface
                     'decimal_places' => $transactionCurrency->decimal_places,
                     'sum'            => '0',
                 ];
-                $amountFromJournal          = Amount::getAmountFromJournalObject($transactionJournal);
-                // Log::debug(sprintf('Created a (new) array for currency #%d', $currencyId));
-                // Log::debug(sprintf('Amount to add is %s', $amountFromJournal));
+                $amountFromJournal          = Amount::getAmountFromJournalObject($transactionJournal, true);
+                Log::debug(sprintf('Created a (new) array for currency #%d', $currencyId));
+                Log::debug(sprintf('Amount to add is %s', $amountFromJournal));
                 // get currency from transaction as well.
                 $return[$currencyId]['sum'] = bcadd($return[$currencyId]['sum'], $amountFromJournal);
             }

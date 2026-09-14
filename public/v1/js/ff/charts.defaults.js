@@ -18,9 +18,6 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-/** global: accounting */
-
-
 /**
  * Takes a string phrase and breaks it into separate phrases no bigger than 'maxwidth', breaks are made at complete words.
  * https://stackoverflow.com/questions/21409717/chart-js-and-long-labels

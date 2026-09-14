@@ -36,6 +36,7 @@ use FireflyIII\Support\Http\Api\CleansChartData;
 use FireflyIII\Support\Http\Api\CollectsAccountsFromFilter;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
+use Override;
 
 /**
  * Class BalanceController
@@ -45,6 +46,7 @@ final class BalanceController extends Controller
     use CleansChartData;
     use CollectsAccountsFromFilter;
 
+    #[Override]
     protected array $acceptedRoles = [UserRoleEnum::READ_ONLY];
 
     private array $chartData       = [];

@@ -794,12 +794,6 @@ Route::group(
         Route::get('trigger', ['uses' => 'Json\RuleController@trigger', 'as' => 'trigger']);
         Route::get('action', ['uses' => 'Json\RuleController@action', 'as' => 'action']);
 
-        // front page
-        Route::get('frontpage/piggy-banks', ['uses' => 'Json\FrontpageController@piggyBanks', 'as' => 'fp.piggy-banks']);
-
-        // currency conversion:
-        // Route::get('rate/{fromCurrencyCode}/{toCurrencyCode}/{date}', ['uses' => 'Json\ExchangeController@getRate', 'as' => 'rate']);
-
         // intro things:
         Route::post('intro/finished/{route}/{specificPage?}', ['uses' => 'Json\IntroController@postFinished', 'as' => 'intro.finished']);
         Route::post('intro/enable/{route}/{specificPage?}', ['uses' => 'Json\IntroController@postEnable', 'as' => 'intro.enable']);
@@ -1327,6 +1321,7 @@ Route::group(
         Route::post('unreconcile/{tj}', ['uses' => 'Transaction\EditController@unreconcile', 'as' => 'unreconcile']);
 
         Route::get('show/{transactionGroup?}', ['uses' => 'Transaction\ShowController@show', 'as' => 'show']);
+        Route::get('show-by-journal/{tj}', ['uses' => 'Transaction\ShowController@redirectToGroup', 'as' => 'show-by-journal']);
         Route::get('debug/{transactionGroup}', ['uses' => 'Transaction\ShowController@debugShow', 'as' => 'debug']);
     }
 );

@@ -195,7 +195,7 @@ class ForcesDecimalSize extends Command
      */
     private function correctAmountsByCurrency(): void
     {
-        $enabled = TransactionCurrency::whereEnabled(1)->get();
+        $enabled = TransactionCurrency::query()->get();
 
         /** @var TransactionCurrency $currency */
         foreach ($enabled as $currency) {

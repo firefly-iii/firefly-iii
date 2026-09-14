@@ -42,6 +42,7 @@ class RecurrenceTransaction extends Model
     protected $fillable = [
         'recurrence_id',
         'transaction_currency_id',
+        'transaction_type_id',
         'foreign_currency_id',
         'source_id',
         'destination_id',

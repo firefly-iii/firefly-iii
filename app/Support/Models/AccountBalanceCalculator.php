@@ -60,7 +60,7 @@ class AccountBalanceCalculator
             // this order is the same as GroupCollector
             ->orderBy('transaction_journals.date', 'DESC')
             ->orderBy('transaction_journals.order', 'ASC')
-            ->orderBy('transaction_journals.id', 'DESC')
+            ->orderBy('transaction_journals.id', 'ASC')
             ->orderBy('transaction_journals.description', 'DESC')
             ->orderBy('transactions.amount', 'DESC')
             ->where('transactions.account_id', $accountId)
@@ -113,7 +113,7 @@ class AccountBalanceCalculator
             // this order is the same as GroupCollector, but in the exact reverse.
             ->orderBy('transaction_journals.date', 'asc')
             ->orderBy('transaction_journals.order', 'desc')
-            ->orderBy('transaction_journals.id', 'asc')
+            ->orderBy('transaction_journals.id', 'asc') // ASC, because it must be reversed.
             ->orderBy('transaction_journals.description', 'asc')
             ->orderBy('transactions.amount', 'asc')
         ;
@@ -139,14 +139,14 @@ class AccountBalanceCalculator
 
         /** @var Transaction $entry */
         foreach ($set as $entry) {
-            Log::debug(sprintf(
-                '[%s] Processing transaction #%d on acount #%d with currency #%d and amount %s',
-                $entry->date,
-                $entry->id,
-                $entry->account_id,
-                $entry->transaction_currency_id,
-                Steam::bcround($entry->amount, 2)
-            ));
+            //            Log::debug(sprintf(
+            //                '[%s] Processing transaction #%d on acount #%d with currency #%d and amount %s',
+            //                $entry->date,
+            //                $entry->id,
+            //                $entry->account_id,
+            //                $entry->transaction_currency_id,
+            //                Steam::bcround($entry->amount, 2)
+            //            ));
             // start with empty array:
             $entry->account_id                                             = (int) $entry->account_id;
             $entry->transaction_currency_id                                = (int) $entry->transaction_currency_id;

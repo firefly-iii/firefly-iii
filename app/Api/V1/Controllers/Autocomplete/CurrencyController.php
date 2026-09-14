@@ -33,14 +33,16 @@ use FireflyIII\Models\TransactionCurrency;
 use FireflyIII\Repositories\Currency\CurrencyRepositoryInterface;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
+use Override;
 
 /**
  * Class CurrencyController
  */
 final class CurrencyController extends Controller
 {
-    private CurrencyRepositoryInterface $repository;
+    #[Override]
     protected array $acceptedRoles = [UserRoleEnum::READ_ONLY];
+    private CurrencyRepositoryInterface $repository;
 
     /**
      * CurrencyController constructor.

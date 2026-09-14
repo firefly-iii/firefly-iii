@@ -35,6 +35,7 @@ use Illuminate\Contracts\View\Factory;
 use Illuminate\Contracts\View\View;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Log;
 use PragmaRX\Google2FALaravel\Support\Authenticator;
 use Psr\Container\ContainerExceptionInterface;
@@ -65,8 +66,8 @@ final class TwoFactorController extends Controller
     public function submitMFA(Request $request): RedirectResponse
     {
         /** @var array $mfaHistory */
-        $mfaHistory    = Preferences::get('mfa_history', [])->data;
-        $mfaCode       = (string) $request->get('one_time_password');
+        $mfaHistory    = Preferences::get('mfa_history', [], true)->data;
+        $mfaCode       = (string) $request->input('one_time_password');
 
         // is in history? then refuse to use it.
         if ($this->inMFAHistory($mfaCode, $mfaHistory)) {
@@ -88,6 +89,13 @@ final class TwoFactorController extends Controller
                 // do not reset MFA failure counter, but DO send a warning to the user.
                 Log::channel('audit')->info(sprintf('User "%s" has had %d failed MFA attempts.', $user->email, $counter));
                 event(new UserKeepsFailingMFA($user, $counter));
+            }
+            if ($counter > 20) {
+                // if the user keeps failing MFA, log them out.
+                Log::channel('audit')->info(sprintf('User "%s" has had %d failed MFA attempts. Logging them out.', $user->email, $counter));
+                Auth::guard()->logout();
+                $request->session()->invalidate();
+                $request->session()->regenerateToken();
             }
             unset($user);
         }
@@ -127,20 +135,24 @@ final class TwoFactorController extends Controller
 
     private function addToMFAFailureCounter(): void
     {
-        $preference = (int) Preferences::get('mfa_failure_count', 0)->data;
+        $preference = (int) Preferences::get('mfa_failure_count', 0, true)->data;
         ++$preference;
         Log::channel('audit')->info(sprintf('MFA failure count is set to %d.', $preference));
-        Preferences::set('mfa_failure_count', $preference);
+        Preferences::set('mfa_failure_count', $preference, true);
+        $preference = clamp($preference, 2, 4);
+        $count      = 2 ** $preference;
+        Log::debug(sprintf('Sleeping for %d seconds to slow down brute force attacks.', $count));
+        sleep($count);
     }
 
     private function addToMFAHistory(string $mfaCode): void
     {
         /** @var array $mfaHistory */
-        $mfaHistory   = Preferences::get('mfa_history', [])->data;
+        $mfaHistory   = Preferences::get('mfa_history', [], true)->data;
         $entry        = ['time' => Carbon::now()->getTimestamp(), 'code' => $mfaCode];
         $mfaHistory[] = $entry;
 
-        Preferences::set('mfa_history', $mfaHistory);
+        Preferences::set('mfa_history', $mfaHistory, true);
         $this->filterMFAHistory();
     }
 
@@ -150,7 +162,7 @@ final class TwoFactorController extends Controller
     private function filterMFAHistory(): void
     {
         /** @var array $mfaHistory */
-        $mfaHistory = Preferences::get('mfa_history', [])->data;
+        $mfaHistory = Preferences::get('mfa_history', [], true)->data;
         $newHistory = [];
         $now        = Carbon::now()->getTimestamp();
         foreach ($mfaHistory as $entry) {
@@ -160,12 +172,12 @@ final class TwoFactorController extends Controller
                 $newHistory[] = ['time' => $time, 'code' => $code];
             }
         }
-        Preferences::set('mfa_history', $newHistory);
+        Preferences::set('mfa_history', $newHistory, true);
     }
 
     private function getMFAFailureCounter(): int
     {
-        $value = (int) Preferences::get('mfa_failure_count', 0)->data;
+        $value = (int) Preferences::get('mfa_failure_count', 0, true)->data;
         Log::channel('audit')->info(sprintf('MFA failure count is %d.', $value));
 
         return $value;
@@ -194,7 +206,7 @@ final class TwoFactorController extends Controller
      */
     private function isBackupCode(string $mfaCode): bool
     {
-        $list = Preferences::get('mfa_recovery', [])->data;
+        $list = Preferences::get('mfa_recovery', [], true)->data;
         if (!is_array($list)) {
             $list = [];
         }
@@ -207,7 +219,7 @@ final class TwoFactorController extends Controller
      */
     private function removeFromBackupCodes(string $mfaCode): void
     {
-        $list    = Preferences::get('mfa_recovery', [])->data;
+        $list    = Preferences::get('mfa_recovery', [], true)->data;
         if (!is_array($list)) {
             $list = [];
         }
@@ -226,12 +238,12 @@ final class TwoFactorController extends Controller
             event(new UserHasNoMFABackupCodesLeft($user));
         }
 
-        Preferences::set('mfa_recovery', $newList);
+        Preferences::set('mfa_recovery', $newList, true);
     }
 
     private function resetMFAFailureCounter(): void
     {
-        Preferences::set('mfa_failure_count', 0);
+        Preferences::set('mfa_failure_count', 0, true);
         Log::channel('audit')->info('MFA failure count is set to zero.');
     }
 }

@@ -1,0 +1,448 @@
+/*
+ * create.js
+ * Copyright (c) 2023 james@firefly-iii.org
+ *
+ * This file is part of Firefly III (https://github.com/firefly-iii).
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Affero General Public License as
+ * published by the Free Software Foundation, either version 3 of the
+ * License, or (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU Affero General Public License for more details.
+ *
+ * You should have received a copy of the GNU Affero General Public License
+ * along with this program.  If not, see <https://www.gnu.org/licenses/>.
+ */
+
+import "../../boot/bootstrap.js";
+import sidebar from "../../pages/shared/sidebar.js";
+import dates from "../shared/dates.js";
+import { defaultErrorSet } from "./shared/create-empty-split.js";
+import { parseFromEntries } from "./shared/parse-from-entries.js";
+import Post from "../../api/model/transaction/post.js";
+import { loadCurrencies } from "./shared/load-currencies.js";
+import { loadBudgets } from "./shared/load-budgets.js";
+import { loadPiggyBanks } from "./shared/load-piggy-banks.js";
+import { loadSubscriptions } from "./shared/load-subscriptions.js";
+import { addAllAutocompleteToForm } from "./shared/add-autocomplete.js";
+import { processAttachments } from "./shared/process-attachments.js";
+import { disableSplitAccounts } from "./shared/disable-split-accounts.js";
+import { parseTotalAmount } from "./shared/parse-total-amount.js";
+import { keyUpFromCategory } from "./shared/keyup-from-category.js";
+import { changedAmount } from "./shared/changed-amount.js";
+import { changedForeignAmount } from "./shared/changed-foreign-amount.js";
+import { parseErrors } from "./shared/parse-errors.js";
+import i18next from "i18next";
+import { processUploadError } from "./shared/process-upload-error.js";
+import { showMessageOrRedirectUser } from "./shared/show-message-or-redirect.js";
+import { addSplit } from "./shared/add-split.js";
+import {
+    clearDestinationAccount,
+    clearSourceAccount,
+} from "./shared/clear-fields.js";
+import { detectTransactionType } from "./shared/detect-transaction-type.js";
+import { determineAmountCurrency } from "./shared/determine-amount-currency.js";
+import { loadCustomFields } from "./shared/load-custom-fields.js";
+import { loadDefaultCoordinates } from "./shared/load-default-coordinates.js";
+import "leaflet/dist/leaflet.css";
+import { displayMap } from "./shared/display-map.js";
+import { renderMap } from "./shared/render-map.js";
+import { onMapClick } from "./shared/on-map-click.js";
+import { onMapZoom } from "./shared/on-map-zoom.js";
+import { clearLocation } from "./shared/clear-location.js";
+import { removeSplit } from "./shared/remove-split.js";
+import { createLinkAutocomplete } from "./shared/create-link-autocomplete.js";
+import { editLink } from "./shared/edit-link.js";
+import { switchLink } from "./shared/switch-link.js";
+import { removeLink } from "./shared/remove-link.js";
+import { saveEditedLink } from "./shared/save-edited-link.js";
+import { saveNewLink } from "./shared/save-new-link.js";
+import { redirectAfterTransactionLinks } from "./shared/redirect-after-transaction-links.js";
+import { processTransactionLinks } from "./shared/process-transaction-links.js";
+import { addTabListener } from "./shared/add-tab-listener.js";
+import { autoStep } from "./shared/auto-step.js";
+import { respondToTabSwitch } from "./shared/respond-to-tab-switch.js";
+import { loadTransactionLinks } from "./shared/load-transaction-links.js";
+import Alpine from "alpinejs";
+
+window.enableDates = false;
+
+let create = function () {
+    return {
+        // needed for translations.
+        i18next: null,
+
+        // transactions are stored in "entries":
+        entries: [],
+
+        // links are stored in "links" for each transaction journal.
+        links: [],
+        preparedLinks: [],
+
+        // maps are stored in this array so they can be referred to.
+        maps: [],
+        markers: [],
+
+        // properties for the entire transaction group
+        groupProperties: {
+            transactionType: "unknown",
+            titleErrors: [],
+            title: null,
+            id: null,
+            totalAmount: 0,
+        },
+
+        // state of the form is stored in formState:
+        formStates: {
+            loadingCurrencies: true,
+            loadingBudgets: true,
+            loadingLinks: null,
+            loadingPiggyBanks: true,
+            loadingSubscriptions: true,
+            loadingTransaction: true,
+            isSubmitting: false,
+            returnHereButton: false,
+            saveAsNewButton: false, // edit form only
+            resetButton: false,
+            rulesButton: true,
+            webhooksButton: true,
+            categorySelectVisible: false,
+            // some properties that must all be true before the user can be redirected safely.
+            storedGroup: false,
+            storedLinks: false,
+            storedAttachments: false,
+        },
+
+        // form behavior during transaction, for shared components.
+        formBehaviour: {
+            formType: "create",
+            foreignCurrencyEnabled: true,
+            customFields: {},
+            defaultCoordinates: {
+                loaded: false,
+                latitude: 30,
+                longitude: 20,
+                zoom_level: 9,
+            },
+        },
+
+        // form data (except transactions) is stored in formData
+        formData: {
+            // primaryCurrency: null,
+            // defaultCurrency: null,
+            amountCurrency: null, // this is the currency of the amount field
+            enabledCurrencies: [],
+            primaryCurrencies: [], // TODO this list is not being used.
+            foreignCurrencies: [], // this is the select list for foreign currencies.
+            budgets: [],
+            piggyBanks: [],
+            subscriptions: [],
+            linkTypes: [],
+        },
+
+        // notifications
+        notifications: {
+            error: {
+                show: false,
+                text: "",
+                url: "",
+            },
+            success: {
+                show: false,
+                text: "",
+                url: "",
+            },
+            wait: {
+                show: false,
+                text: "",
+            },
+        },
+
+        // events in the form
+        changedDateTime() {
+            console.warn("changedDateTime, event is not used");
+        },
+
+        changedDescription() {
+            console.warn("changedDescription, event is not used");
+        },
+
+        changedDestinationAccount() {
+            this.detectTransactionType();
+        },
+
+        changedSourceAccount() {
+            this.detectTransactionType();
+        },
+        // shared functions with edit/create transaction.
+        disableSplitAccounts: disableSplitAccounts,
+        parseTotalAmount: parseTotalAmount,
+        processUploadError: processUploadError,
+        keyUpFromCategory: keyUpFromCategory,
+        changedAmount: changedAmount,
+        changedForeignAmount: changedForeignAmount,
+        showMessageOrRedirectUser: showMessageOrRedirectUser,
+        parseErrors: parseErrors,
+        addSplit: addSplit,
+        removeSplit: removeSplit,
+        clearSourceAccount: clearSourceAccount,
+        clearDestinationAccount: clearDestinationAccount,
+        detectTransactionType: detectTransactionType,
+        determineAmountCurrency: determineAmountCurrency,
+        addAllAutocompleteToForm: addAllAutocompleteToForm,
+        loadCustomFields: loadCustomFields,
+        loadDefaultCoordinates: loadDefaultCoordinates,
+        displayMap: displayMap,
+        renderMap: renderMap,
+        onMapClick: onMapClick,
+        onMapZoom: onMapZoom,
+        clearLocation: clearLocation,
+        createLinkAutocomplete: createLinkAutocomplete,
+        editLink: editLink,
+        switchLink: switchLink,
+        removeLink: removeLink,
+        saveEditedLink: saveEditedLink,
+        saveNewLink: saveNewLink,
+        processTransactionLinks: processTransactionLinks,
+        redirectAfterTransactionLinks: redirectAfterTransactionLinks,
+        addTabListener: addTabListener,
+        autoStep: autoStep,
+        respondToTabSwitch: respondToTabSwitch,
+        loadTransactionLinks: loadTransactionLinks,
+
+        filterForeignCurrencies(code) {
+            let list = [];
+            let currency;
+            for (let i in this.formData.enabledCurrencies) {
+                if (Object.hasOwn(this.formData.enabledCurrencies, i)) {
+                    let current = this.formData.enabledCurrencies[i];
+                    if (current.code === code) {
+                        currency = current;
+                    }
+                }
+            }
+            list.push(currency);
+            this.formData.foreignCurrencies = list;
+            // is he source account currency anyway:
+            if (
+                1 === list.length &&
+                list[0].code === this.entries[0].source_account.currency_code
+            ) {
+                // console.log(
+                //     "Foreign currency is same as source currency. Disable foreign amount.",
+                // );
+                this.formBehaviour.foreignCurrencyEnabled = false;
+            }
+            if (
+                1 === list.length &&
+                list[0].code !== this.entries[0].source_account.currency_code
+            ) {
+                // console.log(
+                //     "Foreign currency is NOT same as source currency. Enable foreign amount.",
+                // );
+                this.formBehaviour.foreignCurrencyEnabled = true;
+            }
+
+            // this also forces the currency_code on ALL entries.
+            for (let i in this.entries) {
+                if (Object.hasOwn(this.entries, i)) {
+                    this.entries[i].foreign_currency_code = code;
+                }
+            }
+        },
+
+        addedSplit() {
+            this.addAllAutocompleteToForm();
+            this.addTabListener();
+            this.formStates.loadingTransaction = false;
+        },
+
+        processUpload() {
+            // console.log("Now in processUpload()");
+            this.formStates.storedAttachments = true;
+            this.showMessageOrRedirectUser();
+        },
+        clearDescription(index) {
+            this.entries[index].description = "";
+        },
+        clearCategory(index) {
+            this.entries[index].category_name = "";
+        },
+
+        init() {
+            this.i18next = i18next;
+            this.addSplit();
+
+            // load currencies and save in form data.
+            loadCurrencies().then((data) => {
+                this.formStates.loadingCurrencies = false;
+                this.formData.amountCurrency = data.primaryCurrency;
+                this.formData.enabledCurrencies = data.enabledCurrencies;
+                this.formData.primaryCurrencies = data.primaryCurrencies;
+                this.formData.foreignCurrencies = data.foreignCurrencies;
+                this.autoStep();
+            });
+
+            loadBudgets(false).then((data) => {
+                this.formData.budgets = data;
+                this.formStates.loadingBudgets = false;
+                this.autoStep();
+            });
+            loadPiggyBanks().then((data) => {
+                this.formData.piggyBanks = data;
+                this.formStates.loadingPiggyBanks = false;
+                this.autoStep();
+            });
+            loadSubscriptions(false).then((data) => {
+                this.formData.subscriptions = data;
+                this.formStates.loadingSubscriptions = false;
+                this.autoStep();
+            });
+
+            // load custom field preference and enable/disable those fields.
+            this.loadCustomFields().then((data) => {
+                this.formBehaviour.customFields = data;
+                this.autoStep();
+            });
+
+            document.addEventListener("upload-success", () => {
+                // console.log('Now in event listener "upload-success"');
+                this.processUpload();
+                document
+                    .querySelectorAll("input[type=file]")
+                    .forEach((input) => (input.value = ""));
+            });
+
+            document.addEventListener("upload-error", (event) => {
+                // console.log('Now in event listener "upload-error"');
+                this.processUploadError(event);
+            });
+            document.addEventListener("upload-failed", (event) => {
+                // console.log('Now in event listener "upload-failed"');
+                this.processUploadError(event);
+            });
+        },
+
+        save() {
+            this.notifications.error.show = false;
+            this.notifications.success.show = false;
+            this.notifications.wait.show = false;
+            this.formStates.isSubmitting = true;
+
+            for (let i in this.entries) {
+                if (Object.hasOwn(this.entries, i)) {
+                    this.entries[i].errors = defaultErrorSet();
+                }
+            }
+
+            // final check on transaction type.
+            this.detectTransactionType();
+
+            // parse transaction:
+            let transactions = parseFromEntries(
+                this.entries,
+                null,
+                this.groupProperties.transactionType,
+            );
+            let submission = {
+                group_title: this.groupProperties.title,
+                fire_webhooks: this.formStates.webhooksButton,
+                apply_rules: this.formStates.rulesButton,
+                transactions: transactions,
+            };
+
+            // catch for group title:
+            if (
+                transactions.length > 1 &&
+                ("" === submission.group_title ||
+                    null === submission.group_title)
+            ) {
+                submission.group_title = transactions[0].description;
+            }
+
+            // submit the transaction. Multi-stage process thing going on here!
+            let poster = new Post();
+            poster
+                .post(submission)
+                .then((response) => {
+                    this.formStates.storedGroup = true;
+                    const group = response.data.data;
+                    // submission was a success!
+                    this.groupProperties.id = parseInt(group.id);
+                    this.groupProperties.title =
+                        group.attributes.group_title ??
+                        group.attributes.transactions[0].description;
+
+                    // submit all transaction links, based on the order of the transaction IDs
+                    let transactions = [];
+                    for (
+                        let i = 0;
+                        i < group.attributes.transactions.length;
+                        i++
+                    ) {
+                        if (Object.hasOwn(group.attributes.transactions, i)) {
+                            transactions.push(
+                                parseInt(
+                                    group.attributes.transactions[i]
+                                        .transaction_journal_id,
+                                ),
+                            );
+                        }
+                    }
+                    // console.log("Go to process transactions", transactions);
+                    this.processTransactionLinks(transactions);
+                    // console.log("Done with process transactions", transactions);
+                    // process attachments, if any:
+                    const attachmentCount = processAttachments(
+                        this.groupProperties.id,
+                        group.attributes.transactions,
+                    );
+                    if (0 === attachmentCount) {
+                        this.formStates.storedAttachments = true;
+                    }
+                    if (attachmentCount > 0) {
+                        // if count is more than zero, system is processing transactions in the background.
+                        this.notifications.wait.show = true;
+                        this.notifications.wait.text = i18next.t(
+                            "firefly.wait_attachments",
+                        );
+                        return;
+                    }
+
+                    this.showMessageOrRedirectUser();
+                })
+                .catch((error) => {
+                    this.formStates.isSubmitting = true;
+                    if (typeof error.response !== "undefined") {
+                        this.parseErrors(error.response.data);
+                    }
+                });
+        },
+    };
+};
+
+let comps = { create, sidebar, dates };
+
+function loadPage() {
+    Object.keys(comps).forEach((comp) => {
+        // console.log(`Loading page component "${comp}"`);
+        let data = comps[comp]();
+        Alpine.data(comp, () => data);
+    });
+    Alpine.start();
+}
+
+// wait for load until bootstrapped event is received.
+document.addEventListener("firefly-iii-bootstrapped", () => {
+    console.log("Loaded through event listener.");
+    loadPage();
+});
+// or is bootstrapped before event is triggered.
+if (window.bootstrapped) {
+    console.log("Loaded through window variable.");
+    loadPage();
+}

@@ -35,6 +35,13 @@ class SendTestEmail extends Command
     use VerifiesAccessToken;
 
     /**
+     * The console command description.
+     *
+     * @var string
+     */
+    protected $description = 'Send test email';
+
+    /**
      * The name and signature of the console command.
      *
      * @var string
@@ -42,13 +49,6 @@ class SendTestEmail extends Command
     protected $signature   = 'firefly-iii:send-test-email
                             {--user=1 : The user ID.}
                             {--token= : The user\'s access token.}';
-
-    /**
-     * The console command description.
-     *
-     * @var string
-     */
-    protected $description = 'Send test email';
 
     /**
      * Execute the console command.

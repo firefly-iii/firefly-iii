@@ -69,45 +69,66 @@ final class RecurrenceController extends Controller
     {
         $occurrences                   = [];
         $return                        = [];
-        $start                         = Carbon::createFromFormat('Y-m-d', $request->get('start'));
-        $end                           = Carbon::createFromFormat('Y-m-d', $request->get('end'));
-        $firstDate                     = Carbon::createFromFormat('Y-m-d', $request->get('first_date'));
-        $endDate                       = '' !== (string) $request->get('end_date') ? Carbon::createFromFormat('Y-m-d', $request->get('end_date')) : null;
-        $endsAt                        = (string) $request->get('ends');
-        $repetitionType                = explode(',', (string) $request->get('type'))[0];
-        $repetitions                   = (int) $request->get('reps');
-        $weekend                       = (int) $request->get('weekend');
+        $start                         = null;
+        $end                           = null;
+        $firstDate                     = null;
+
+        try {
+            $start = Carbon::createFromFormat('Y-m-d', $request->input('start'));
+        } catch (InvalidFormatException $e) {
+            Log::debug($e->getMessage()); // not that interesting
+        }
+
+        try {
+            $end = Carbon::createFromFormat('Y-m-d', $request->input('end'));
+        } catch (InvalidFormatException $e) {
+            Log::debug($e->getMessage()); // not that interesting
+        }
+
+        try {
+            $firstDate = Carbon::createFromFormat('Y-m-d', $request->input('first_date'));
+        } catch (InvalidFormatException $e) {
+            Log::debug($e->getMessage()); // not that interesting
+        }
+        $endDate                       = '' !== (string) $request->input('end_date') ? Carbon::createFromFormat('Y-m-d', $request->input('end_date')) : null;
+        $endsAt                        = (string) $request->input('ends');
+        $repetitionType                = explode(',', (string) $request->input('type'))[0];
+        $repetitions                   = (int) $request->input('reps');
+        $repetitions                   = clamp($repetitions, 1, 100);
+        $weekend                       = (int) $request->input('weekend');
         $repetitionMoment              = '';
-        $skip                          = (int) $request->get('skip');
-        $skip                          = $skip < 0 || $skip > 31 ? 0 : $skip;
-        $weekend                       = $weekend < 1 || $weekend > 4 ? 1 : $weekend;
+        $skip                          = (int) $request->input('skip');
+        $skip                          = clamp($skip, 0, 31);
+        $weekend                       = clamp($weekend, 1, 4);
+
+        $start                         = session()->get('start');
 
         if (!$endDate instanceof Carbon) {
             // safety catch:
             $endDate = now()->addYear();
         }
 
-        if (!$start instanceof Carbon || !$end instanceof Carbon || !$firstDate instanceof Carbon) {
+        if (!$start instanceof Carbon || !$firstDate instanceof Carbon) {
             return response()->json();
         }
 
         $start->startOfDay();
 
         // if $firstDate is beyond $end, simply return an empty array.
-        if ($firstDate->gt($end)) {
+        if ($firstDate->gt($endDate)) {
             return response()->json();
         }
         // if $firstDate is beyond start, use that one:
         $actualStart                   = clone $firstDate;
 
         if ('weekly' === $repetitionType || 'monthly' === $repetitionType) {
-            $repetitionMoment = explode(',', (string) $request->get('type'))[1] ?? '1';
+            $repetitionMoment = explode(',', (string) $request->input('type'))[1] ?? '1';
         }
         if ('ndom' === $repetitionType) {
-            $repetitionMoment = str_ireplace('ndom,', '', $request->get('type'));
+            $repetitionMoment = str_ireplace('ndom,', '', $request->input('type'));
         }
         if ('yearly' === $repetitionType) {
-            $repetitionMoment = explode(',', (string) $request->get('type'))[1] ?? '2025-01-01';
+            $repetitionMoment = explode(',', (string) $request->input('type'))[1] ?? '2025-01-01';
         }
         $actualStart->startOfDay();
         $repetition                    = new RecurrenceRepetition();
@@ -115,7 +136,7 @@ final class RecurrenceController extends Controller
         $repetition->repetition_moment = $repetitionMoment;
         $repetition->repetition_skip   = $skip;
         $repetition->weekend           = $weekend;
-        $actualEnd                     = clone $end;
+        $actualEnd                     = clone $endDate;
 
         if ('until_date' === $endsAt) {
             $actualEnd   = $endDate;
@@ -153,7 +174,7 @@ final class RecurrenceController extends Controller
      */
     public function suggest(Request $request): JsonResponse
     {
-        $string      = '' === (string) $request->get('date') ? Carbon::now()->format('Y-m-d') : (string) $request->get('date');
+        $string      = '' === (string) $request->input('date') ? Carbon::now()->format('Y-m-d') : (string) $request->input('date');
         $today       = today(config('app.timezone'))->startOfDay();
 
         try {
@@ -165,14 +186,14 @@ final class RecurrenceController extends Controller
             return response()->json();
         }
         $date->startOfDay();
-        $preSelected = (string) $request->get('pre_select');
+        $preSelected = (string) $request->input('pre_select');
         $locale      = Steam::getLocale();
 
         Log::debug(sprintf('date = %s, today = %s. date > today? %s', $date->toAtomString(), $today->toAtomString(), var_export($date > $today, true)));
-        Log::debug(sprintf('past = true? %s', var_export('true' === (string) $request->get('past'), true)));
+        Log::debug(sprintf('past = true? %s', var_export('true' === (string) $request->input('past'), true)));
 
         $result      = [];
-        if ($date > $today || 'true' === (string) $request->get('past')) {
+        if ($date > $today || 'true' === (string) $request->input('past')) {
             Log::debug('Will fill dropdown.');
             $weekly     = sprintf('weekly,%s', $date->dayOfWeekIso);
             $monthly    = sprintf('monthly,%s', $date->day);

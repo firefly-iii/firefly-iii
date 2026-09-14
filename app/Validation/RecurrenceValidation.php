@@ -166,31 +166,9 @@ trait RecurrenceValidation
     {
         $data             = $validator->getData();
 
-        $transactionType  = $data['type'] ?? 'invalid';
-
-        // grab model from parameter and try to set the transaction type from it
-        if ('invalid' === $transactionType) {
-            Log::debug('Type is invalid but we will search for it.');
-
-            /** @var null|Recurrence $recurrence */
-            $recurrence = $this->route()?->parameter('recurrence');
-            if (null !== $recurrence) {
-                Log::debug('There is a recurrence in the route.');
-
-                // ok so we have a recurrence should be able to extract type somehow.
-                /** @var null|RecurrenceTransaction $first */
-                $first = $recurrence->recurrenceTransactions()->first();
-                if (null !== $first) {
-                    $transactionType = null !== $first->transactionType ? $first->transactionType->type : 'withdrawal';
-                    Log::debug(sprintf('Determined type to be %s.', $transactionType));
-                }
-                if (null === $first) {
-                    Log::warning('Just going to assume type is a withdrawal.');
-                    $transactionType = 'withdrawal';
-                }
-            }
-        }
-
+        /** @var null|Recurrence $recurrence */
+        $recurrence       = $this->route()?->parameter('recurrence');
+        $transactionType  = $this->getRecurrenceType($data, $recurrence);
         $transactions     = $data['transactions'] ?? [];
 
         /** @var AccountValidator $accountValidator */
@@ -198,20 +176,20 @@ trait RecurrenceValidation
 
         Log::debug(sprintf('Going to loop %d transaction(s)', count($transactions)));
         foreach ($transactions as $index => $transaction) {
-            $transactionType  = $transaction['type'] ?? $transactionType;
-            $accountValidator->setTransactionType($transactionType);
+            $currentType      = $transaction['type'] ?? $transactionType;
+            $accountValidator->setTransactionType($currentType);
 
-            if (
-                !array_key_exists('source_id', $transaction)
-                && !array_key_exists('destination_id', $transaction)
-                && !array_key_exists('source_name', $transaction)
-                && !array_key_exists('destination_name', $transaction)
-            ) {
+            $hasSource        = array_key_exists('source_id', $transaction) || array_key_exists('source_name', $transaction);
+            $hasDestination   = array_key_exists('destination_id', $transaction) || array_key_exists('destination_name', $transaction);
+            if (!$hasSource && !$hasDestination) {
                 continue;
             }
+
+            $original         = $this->getOriginalRecurrenceTransaction($recurrence, $transaction);
+
             // validate source account.
-            $sourceId         = array_key_exists('source_id', $transaction) ? (int) $transaction['source_id'] : null;
-            $sourceName       = $transaction['source_name'] ?? null;
+            $sourceId         = $hasSource ? (int) ($transaction['source_id'] ?? 0) : $original?->source_id;
+            $sourceName       = $hasSource ? $transaction['source_name'] ?? null : null;
             $validSource      = $accountValidator->validateSource(['id' => $sourceId, 'name' => $sourceName]);
 
             // do something with result:
@@ -222,8 +200,8 @@ trait RecurrenceValidation
                 return;
             }
             // validate destination account
-            $destinationId    = array_key_exists('destination_id', $transaction) ? (int) $transaction['destination_id'] : null;
-            $destinationName  = $transaction['destination_name'] ?? null;
+            $destinationId    = $hasDestination ? (int) ($transaction['destination_id'] ?? 0) : $original?->destination_id;
+            $destinationName  = $hasDestination ? $transaction['destination_name'] ?? null : null;
             $validDestination = $accountValidator->validateDestination(['id' => $destinationId, 'name' => $destinationName]);
             // do something with result:
             if (false === $validDestination) {
@@ -403,5 +381,54 @@ trait RecurrenceValidation
             Log::debug(sprintf('Invalid argument for Carbon: %s', $e->getMessage()));
             $validator->errors()->add(sprintf('repetitions.%d.moment', $index), (string) trans('validation.valid_recurrence_rep_moment'));
         }
+    }
+
+    private function getOriginalRecurrenceTransaction(?Recurrence $recurrence, array $transaction): ?RecurrenceTransaction
+    {
+        if (!$recurrence instanceof Recurrence) {
+            return null;
+        }
+        $collection = $recurrence->recurrenceTransactions;
+        $id         = (int) ($transaction['id'] ?? 0);
+        // without an ID it is only unambiguous when the recurrence has exactly one transaction.
+        if (0 === $id && 1 !== $collection->count()) {
+            return null;
+        }
+        $result     = 0 === $id ? $collection->first() : $collection->firstWhere('id', $id);
+
+        return $result instanceof RecurrenceTransaction ? $result : null;
+    }
+
+    /**
+     * Determine the transaction type to validate the submitted accounts against: the submitted type wins, then the
+     * type of the recurrence itself.
+     */
+    private function getRecurrenceType(array $data, ?Recurrence $recurrence): string
+    {
+        $transactionType = $data['type'] ?? 'invalid';
+        if ('invalid' !== $transactionType && in_array(ucfirst($transactionType), array_keys(config('firefly.transactionTypesToShort')), true)) {
+            return (string) $transactionType;
+        }
+
+        if (!$recurrence instanceof Recurrence) {
+            Log::warning('No recurrence in the route, assume withdrawal.');
+
+            return 'withdrawal';
+        }
+        $transactionType = (string) $recurrence->transactionType?->type;
+
+        /** @var null|RecurrenceTransaction $first */
+        $first           = $recurrence->recurrenceTransactions()->first();
+        if (null !== $first?->transactionType) {
+            $transactionType = (string) $first->transactionType->type;
+        }
+
+        if ('' === $transactionType) {
+            Log::warning('Just going to assume type is a withdrawal.');
+            $transactionType = 'withdrawal';
+        }
+        Log::debug(sprintf('Determined type to be %s.', $transactionType));
+
+        return $transactionType;
     }
 }

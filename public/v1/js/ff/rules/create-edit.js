@@ -18,27 +18,28 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-/** global: triggerCount, actionCount */
+
+var autocompletes = {};
 
 $(function () {
     "use strict";
     $(".content-wrapper form input:enabled:visible:first").first().focus().select();
     if (triggerCount > 0) {
-        console.log('trigger count is larger than zero, call onAddNewTrigger.');
+        //console.log('trigger count is larger than zero, call onAddNewTrigger.');
         onAddNewTrigger();
     }
 
     if (actionCount > 0) {
-        console.log('action count is larger than zero, call onAddNewAction.');
+        //console.log('action count is larger than zero, call onAddNewAction.');
         onAddNewAction();
     }
 
     if (triggerCount === 0) {
-        console.log('trigger count is zero, add trigger.');
+        //console.log('trigger count is zero, add trigger.');
         addNewTrigger();
     }
     if (actionCount === 0) {
-        console.log('action count is zero, add action.');
+        //console.log('action count is zero, add action.');
         addNewAction();
     }
     makeRuleStrict();
@@ -52,7 +53,7 @@ $(function () {
 
 function makeRuleStrict() {
     var value = $('#ffInput_strict').is(':checked');
-    if(value) {
+    if (value) {
         // is checked, stop processing triggers is not relevant.
         $('.trigger-stop-processing').prop('checked', false);
         $('.trigger-stop-processing').prop('disabled', true);
@@ -174,7 +175,7 @@ function onAddNewAction() {
     "use strict";
     console.log('Now in onAddNewAction()');
 
-    var selectQuery  = 'select[name^="actions["][name$="][type]"]';
+    var selectQuery = 'select[name^="actions["][name$="][type]"]';
     var selectResult = $(selectQuery);
 
     console.log('Select query is "' + selectQuery + '" and the result length is ' + selectResult.length);
@@ -203,7 +204,7 @@ function onAddNewTrigger() {
     "use strict";
     console.log('Now in onAddNewTrigger()');
 
-    var selectQuery  = 'select[name^="triggers["][name$="][type]"]';
+    var selectQuery = 'select[name^="triggers["][name$="][type]"]';
     var selectResult = $(selectQuery);
 
     console.log('Select query is "' + selectQuery + '" and the result length is ' + selectResult.length);
@@ -231,9 +232,9 @@ function onAddNewTrigger() {
 function updateActionInput(selectList) {
     console.log('Now in updateActionInput() for a select list, currently with value "' + selectList.val() + '".');
     // the actual row this select list is in:
-    var parent      = selectList.parent().parent();
+    var parent = selectList.parent().parent();
     // the text input we're looking for:
-    var inputQuery  = 'input[name^="actions["][name$="][value]"]';
+    var inputQuery = 'input[name^="actions["][name$="][value]"]';
     var inputResult = parent.find(inputQuery);
 
     console.log('Searching for children in this row with query "' + inputQuery + '" resulted in ' + inputResult.length + ' results.');
@@ -258,7 +259,10 @@ function updateActionInput(selectList) {
         case 'remove_all_tags':
             console.log('Select list value is ' + selectList.val() + ', so input needs to be disabled.');
             inputResult.prop('disabled', true);
-            inputResult.typeahead('destroy');
+            if (autocompletes[inputResult[0].name] !== undefined) {
+                console.log('Must destroy AC at ', inputResult[0].name);
+                autocompletes[inputResult[0].name].destroy();
+            }
             break;
         case 'set_budget':
             console.log('Select list value is ' + selectList.val() + ', so input needs auto complete.');
@@ -300,7 +304,10 @@ function updateActionInput(selectList) {
             break;
         default:
             console.log('Select list value is ' + selectList.val() + ', destroy auto complete, do nothing else.');
-            inputResult.typeahead('destroy');
+            if (autocompletes[inputResult[0].name] !== undefined) {
+                console.log('Must destroy AC at ', inputResult[0].name);
+                autocompletes[inputResult[0].name].destroy();
+            }
             break;
     }
 }
@@ -313,9 +320,9 @@ function updateActionInput(selectList) {
 function updateTriggerInput(selectList) {
     console.log('Now in updateTriggerInput() for a select list, currently with value "' + selectList.val() + '".');
     // the actual row this select list is in:
-    var parent      = selectList.parent().parent();
+    var parent = selectList.parent().parent();
     // the text input we're looking for:
-    var inputQuery  = 'input[name^="triggers["][name$="][value]"]';
+    var inputQuery = 'input[name^="triggers["][name$="][value]"]';
     var inputResult = parent.find(inputQuery);
 
     console.log('Searching for children in this row with query "' + inputQuery + '" resulted in ' + inputResult.length + ' results.');
@@ -386,7 +393,10 @@ function updateTriggerInput(selectList) {
         case 'any_external_url':
             console.log('Select list value is ' + selectList.val() + ', so input needs to be disabled.');
             inputResult.prop('disabled', true);
-            inputResult.typeahead('destroy');
+            if (autocompletes[inputResult[0].name] !== undefined) {
+                console.log('Must destroy AC at ', inputResult[0].name);
+                autocompletes[inputResult[0].name].destroy();
+            }
             break;
         case 'currency_is':
         case 'foreign_currency_is':
@@ -402,7 +412,10 @@ function updateTriggerInput(selectList) {
             break;
         default:
             console.log('Select list value is ' + selectList.val() + ', destroy auto complete, do nothing else.');
-            inputResult.typeahead('destroy');
+            if (autocompletes[inputResult[0].name] !== undefined) {
+                console.log('Must destroy AC at ', inputResult[0].name);
+                autocompletes[inputResult[0].name].destroy();
+            }
             break;
     }
 }
@@ -413,66 +426,58 @@ function updateTriggerInput(selectList) {
  * @param URL
  */
 function createAutoComplete(input, URL) {
-    console.log('Now in createAutoComplete("' + URL + '").');
-    input.typeahead('destroy');
+
+    var inputItem = document.getElementsByName(input.prop('name'))[0];
+    console.log('Create AC at "' + inputItem.name + '".');
 
     // append URL:
-    var lastChar      = URL[URL.length - 1];
+    var lastChar = URL[URL.length - 1];
     var urlParamSplit = '?';
     if ('&' === lastChar) {
         urlParamSplit = '';
     }
-    var source = new Bloodhound({
-                                    datumTokenizer: Bloodhound.tokenizers.obj.whitespace('name'),
-                                    queryTokenizer: Bloodhound.tokenizers.whitespace,
-                                    prefetch: {
-                                        url: URL + urlParamSplit + 'uid=' + uid,
-                                        filter: function (list) {
-                                            return $.map(list, function (item) {
-                                                if (item.hasOwnProperty('active') && item.active === true) {
-                                                    return {name: item.name};
-                                                }
-                                                if (item.hasOwnProperty('active') && item.active === false) {
-                                                    return;
-                                                }
-                                                if (item.hasOwnProperty('active')) {
-                                                    console.log(item.active);
-                                                }
-                                                return {name: item.name};
-                                            });
-                                        }
-                                    },
-                                    remote: {
-                                        url: URL + urlParamSplit + 'query=%QUERY&uid=' + uid,
-                                        wildcard: '%QUERY',
-                                        filter: function (list) {
-                                            return $.map(list, function (item) {
-                                                if (item.hasOwnProperty('active') && item.active === true) {
-                                                    return {name: item.name};
-                                                }
-                                                if (item.hasOwnProperty('active') && item.active === false) {
-                                                    return;
-                                                }
-                                                if (item.hasOwnProperty('active')) {
-                                                    console.log(item.active);
-                                                }
-                                                return {name: item.name};
-                                            });
-                                        }
-                                    }
-                                });
-    source.initialize();
-    input.typeahead({hint: true, highlight: true,}, {source: source, displayKey: 'name', autoSelect: false});
+
+    var finalURL = URL + urlParamSplit + 'query=';
+
+    autocompletes[inputItem.name] = new BootstrapSimpleAutocomplete(inputItem, {
+        fetchFunction: function (query) {
+            // Custom data fetching logic
+            return fetch(finalURL + encodeURIComponent(query),
+                {
+                    method: 'GET',
+                    credentials: 'include',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Accept': 'application/json',
+                        'X-CSRF-TOKEN': token
+                    },
+                }
+            )
+                .then((response) => response.json())
+                .then((data) => {
+                    var result = [];
+                    for (var i in data) {
+                        if (data.hasOwnProperty(i)) {
+                            result.push(data[i].name);
+                        }
+                    }
+                    // Process data if needed
+                    return result;
+                });
+        },
+    });
+    console.log('Number of ACs:', Object.keys(autocompletes).length);
+
 }
 
 function testRuleTriggers() {
     "use strict";
-
+    console.log('testRuleTriggers');
     // find the button:
     var button = $('.test_rule_triggers');
 
     // replace with spinner. fa-spin fa-spinner
-    button.html('<span class="fa fa-spin fa-spinner"></span> ' + testRuleTriggersText);
+    button.html('<span class="bi bi-hourglass"></span> ' + testRuleTriggersText);
     button.attr('disabled', 'disabled');
 
     // Serialize all trigger data
@@ -487,7 +492,6 @@ function testRuleTriggers() {
 
         // Set title and body
         modal.find(".transactions-list").html(data.html);
-        button.attr('disabled', '');
         // Show warning if appropriate
         if (data.warning) {
             modal.find(".transaction-warning .warning-contents").text(data.warning);
@@ -495,10 +499,10 @@ function testRuleTriggers() {
         } else {
             modal.find(".transaction-warning").hide();
         }
-        button.removeAttr('disabled');
-        button.html('<span class="fa fa-flask"></span> ' + testRuleTriggersText);
+        button.html('<span class="bi bi-flask"></span> ' + testRuleTriggersText).attr('disabled', false);
         // Show the modal dialog
-        modal.modal();
+        console.log('Show modal');
+        modal.show();
     }).fail(function () {
         alert('Cannot get transactions for given triggers.');
     });

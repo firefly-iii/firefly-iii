@@ -1,0 +1,65 @@
+@extends('layout.v3.session')
+@section('content')
+    <div class="row">
+        <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+            <div class="card mb-2">
+                <div class="card-header">
+                    <h3 class="card-title">{{ __('firefly.journal_link_configuration') }}</h3>
+                </div>
+                <div class="card-body p-0">
+                    <table class="table table-hover sortable">
+                        <thead>
+                        <tr>
+                            <th data-defaultsort="disabled">&nbsp;</th>
+                            <th data-defaultsign="az">{{ trans('list.name') }}</th>
+                            <th data-defaultsign="az">{{ trans('list.inward') }}</th>
+                            <th data-defaultsign="az">{{ trans('list.outward') }}</th>
+                            <th data-defaultsign="_19">{{ trans('list.number_of_transactions') }}</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        @foreach($linkTypes as $linkType)
+                            <tr>
+                                <td>
+                                    @if($linkType->editable)
+                                        <div class="btn-group btn-group-sm">
+                                            <a class="btn btn-outline-secondary btn-sm" href="{{ route('settings.links.edit',$linkType->id) }}?_from={{ urlencode($FF3_FROM) }}"><span
+                                                    class="bi bi-pencil"></span></a>
+                                            <a class="btn btn-danger btn-sm" href="{{ route('settings.links.delete',$linkType->id) }}?_from={{ urlencode($FF3_FROM) }}"><span
+                                                    class="bi bi-trash"></span></a>
+                                        </div>
+                                    @endif
+                                </td>
+                                <td>
+                                    <strong>{{ journal_link_translation('name', $linkType->name) }}</strong>
+                                </td>
+                                <td>
+                                    {{ journal_link_translation('inward', $linkType->inward) }}
+                                </td>
+                                <td>
+                                    {{ journal_link_translation('outward', $linkType->outward) }}
+                                </td>
+                                <td data-value="{{ $linkType->journalCount }}">
+                                    <a href="{{ route('settings.links.show', [$linkType->id]) }}">{{ $linkType->journalCount }}</a>
+                                </td>
+                            </tr>
+                        @endforeach
+                        </tbody>
+                    </table>
+                </div>
+                <div class="card-footer">
+                    <a href="{{ route('settings.links.create') }}" class="btn btn-success">{{ __('firefly.create_new_link_type') }}</a>
+                </div>
+            </div>
+        </div>
+    </div>
+@endsection
+
+@section('scripts')
+    @vite(['js/pages/generic.js'])
+    <script type="text/javascript" src="v1/js/lib/bootstrap-sortable.js?v={{ $FF_BUILD_TIME }}" nonce="{{ $JS_NONCE }}"></script>
+@endsection
+
+@section('styles')
+    <link rel="stylesheet" href="v1/css/bootstrap-sortable.css?v={{ $FF_BUILD_TIME }}" type="text/css" media="all" nonce="{{ $JS_NONCE }}">
+@endsection

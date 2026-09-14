@@ -39,7 +39,6 @@ use Illuminate\Pagination\LengthAwarePaginator;
 use Illuminate\View\View;
 use Psr\Container\ContainerExceptionInterface;
 use Psr\Container\NotFoundExceptionInterface;
-use Symfony\Component\HttpFoundation\ParameterBag;
 
 /**
  * Class IndexController
@@ -59,7 +58,7 @@ final class IndexController extends Controller
 
         // translations:
         $this->middleware(function ($request, $next) {
-            app('view')->share('mainTitleIcon', 'fa-paint-brush');
+            app('view')->share('mainTitleIcon', 'bi-paint-bucket');
             app('view')->share('title', (string) trans('firefly.recurrences'));
 
             $this->repository = app(RecurringRepositoryInterface::class);
@@ -80,7 +79,8 @@ final class IndexController extends Controller
      */
     public function index(Request $request): Factory|\Illuminate\Contracts\View\View
     {
-        $page        = 0 === (int) $request->get('page') ? 1 : (int) $request->get('page');
+        $page        = 0 === (int) $request->input('page') ? 1 : (int) $request->input('page');
+        $page        = clamp($page, 1, 2 ** 16);
         $pageSize    = (int) Preferences::get('listPageSize', 50)->data;
         $collection  = $this->repository->get();
         $today       = today(config('app.timezone'));
@@ -99,7 +99,6 @@ final class IndexController extends Controller
 
         /** @var RecurrenceTransformer $transformer */
         $transformer = app(RecurrenceTransformer::class);
-        $transformer->setParameters(new ParameterBag());
 
         $recurring   = [];
 

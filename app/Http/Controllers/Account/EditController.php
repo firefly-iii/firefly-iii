@@ -59,7 +59,7 @@ final class EditController extends Controller
 
         // translations:
         $this->middleware(function ($request, $next) {
-            app('view')->share('mainTitleIcon', 'fa-credit-card');
+            app('view')->share('mainTitleIcon', 'bi-credit-card');
             app('view')->share('title', (string) trans('firefly.accounts'));
 
             $this->repository  = app(AccountRepositoryInterface::class);
@@ -84,7 +84,7 @@ final class EditController extends Controller
         if (!$this->isEditableAccount($account)) {
             return $this->redirectAccountToAccount($account);
         }
-
+        $from                 = $request->input('_from', '');
         $objectType           = config('firefly.shortNamesByFullName')[$account->accountType->type];
         $subTitle             = (string) trans(sprintf('firefly.edit_%s_account', $objectType), ['name' => $account->name]);
         $subTitleIcon         = config(sprintf('firefly.subIconsByIdentifier.%s', $objectType));
@@ -139,11 +139,12 @@ final class EditController extends Controller
         // code to handle active-checkboxes
         $hasOldInput          = null !== $request->old('_token');
         $virtualBalance       = $account->virtual_balance ?? '0';
+        $paymentDate          = $repository->getMetaValue($account, 'cc_monthly_payment_date');
         $preFilled            = [
             'account_number'          => $repository->getMetaValue($account, 'account_number'),
             'account_role'            => $repository->getMetaValue($account, 'account_role'),
             'cc_type'                 => $repository->getMetaValue($account, 'cc_type'),
-            'cc_monthly_payment_date' => $repository->getMetaValue($account, 'cc_monthly_payment_date'),
+            'cc_monthly_payment_date' => null === $paymentDate ? null : substr($paymentDate, 0, 10),
             'BIC'                     => $repository->getMetaValue($account, 'BIC'),
             'opening_balance_date'    => substr((string) $openingBalanceDate, 0, 10),
             'liability_type_id'       => $account->account_type_id,
@@ -164,6 +165,7 @@ final class EditController extends Controller
         $request->session()->flash('preFilled', $preFilled);
 
         return view('accounts.edit', [
+            'from'                => $from,
             'account'             => $account,
             'currency'            => $currency,
             'canEditCurrency'     => $canEditCurrency,
@@ -212,8 +214,10 @@ final class EditController extends Controller
         }
 
         // redirect
-        $redirect = redirect($this->getPreviousUrl('accounts.edit.url'));
-        if (1 === (int) $request->get('return_to_edit')) {
+        $from     = $request->input('_from', '');
+        $redirect = redirect(route('index').$from);
+
+        if (1 === (int) $request->input('return_to_edit')) {
             // set value so edit routine will not overwrite URL:
             $request->session()->put('accounts.edit.fromUpdate', true);
 

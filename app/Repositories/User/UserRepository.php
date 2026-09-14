@@ -51,6 +51,11 @@ class UserRepository implements UserRepositoryInterface
         return User::query()->orderBy('id', 'DESC')->get(['users.*']);
     }
 
+    public function allAvailable(): Collection
+    {
+        return User::query()->orderBy('id', 'DESC')->where('users.blocked', false)->get(['users.*']);
+    }
+
     public function attachRole(User $user, string $role): bool
     {
         $roleObject = Role::query()->where('name', $role)->first();
@@ -83,12 +88,12 @@ class UserRepository implements UserRepositoryInterface
         $oldEmail           = $user->email;
 
         // save old email as pref
-        Preferences::setForUser($user, 'previous_email_latest', $oldEmail);
-        Preferences::setForUser($user, 'previous_email_'.Carbon::now()->format('Y-m-d-H-i-s'), $oldEmail);
+        Preferences::setForUser($user, 'previous_email_latest', $oldEmail, true);
+        Preferences::setForUser($user, 'previous_email_'.Carbon::now()->format('Y-m-d-H-i-s'), $oldEmail, true);
 
         // set undo and confirm token:
-        Preferences::setForUser($user, 'email_change_undo_token', bin2hex(random_bytes(16)));
-        Preferences::setForUser($user, 'email_change_confirm_token', bin2hex(random_bytes(16)));
+        Preferences::setForUser($user, 'email_change_undo_token', bin2hex(random_bytes(16)), true);
+        Preferences::setForUser($user, 'email_change_confirm_token', bin2hex(random_bytes(16)), true);
         // update user
 
         $user->email        = $newEmail;
@@ -274,6 +279,15 @@ class UserRepository implements UserRepositoryInterface
         return $collection;
     }
 
+    public function getUsersByRole(string $role): Collection
+    {
+        return User::leftJoin('role_user', 'role_user.user_id', '=', 'users.id')
+            ->leftJoin('roles', 'roles.id', 'role_user.role_id')
+            ->where('roles.name', $role)
+            ->get()
+        ;
+    }
+
     public function hasRole(Authenticatable|User|null $user, string $role): bool
     {
         if (!$user instanceof Authenticatable) {
@@ -401,8 +415,8 @@ class UserRepository implements UserRepositoryInterface
         $oldEmail    = $user->email;
 
         // save old email as pref
-        Preferences::setForUser($user, 'admin_previous_email_latest', $oldEmail);
-        Preferences::setForUser($user, 'admin_previous_email_'.Carbon::now()->format('Y-m-d-H-i-s'), $oldEmail);
+        Preferences::setForUser($user, 'admin_previous_email_latest', $oldEmail, true);
+        Preferences::setForUser($user, 'admin_previous_email_'.Carbon::now()->format('Y-m-d-H-i-s'), $oldEmail, true);
 
         $user->email = $newEmail;
         $user->save();

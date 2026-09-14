@@ -18,7 +18,6 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-/** global: hideable */
 
 $(function () {
     "use strict";
@@ -48,6 +47,7 @@ $(function () {
 
 function clickColumnOption() {
     "use strict";
+    console.log('clickColumnOption');
     var newArr = readCheckboxes();
     showOnlyColumns(newArr);
     storeCheckboxes(newArr);

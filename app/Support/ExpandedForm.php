@@ -66,7 +66,7 @@ class ExpandedForm
             ])->render();
         } catch (Throwable $e) {
             Log::error(sprintf('Could not render amountNoCurrency(): %s', $e->getMessage()));
-            $html = 'Could not render amountNoCurrency.';
+            $html = sprintf('Could not render amountNoCurrency: %s', $e->getMessage());
 
             throw new FireflyException($html, 0, $e);
         }
@@ -94,16 +94,18 @@ class ExpandedForm
         $options            = $this->expandOptionArray($name, $label, $options);
         $classes            = $this->getHolderClasses($name);
         $value              = $this->fillFieldValue($name, $value);
+        $inputClasses       = $this->getErrorClassesForCheckbox($name);
 
         unset($options['placeholder'], $options['autocomplete'], $options['class']);
 
         try {
             $html = view('form.checkbox', [
-                'classes' => $classes,
-                'name'    => $name,
-                'label'   => $label,
-                'value'   => $value,
-                'options' => $options,
+                'classes'      => $classes,
+                'name'         => $name,
+                'label'        => $label,
+                'value'        => $value,
+                'options'      => $options,
+                'inputClasses' => $inputClasses,
             ])->render();
         } catch (Throwable $e) {
             Log::debug(sprintf('Could not render checkbox(): %s', $e->getMessage()));
@@ -132,7 +134,7 @@ class ExpandedForm
             $html = view('form.date', ['classes' => $classes, 'name' => $name, 'label' => $label, 'value' => $value, 'options' => $options])->render();
         } catch (Throwable $e) {
             Log::debug(sprintf('Could not render date(): %s', $e->getMessage()));
-            $html = 'Could not render date.';
+            $html = sprintf('Could not render date: %s', $e->getMessage());
 
             throw new FireflyException($html, 0, $e);
         }
@@ -154,7 +156,24 @@ class ExpandedForm
             $html = view('form.file', ['classes' => $classes, 'name' => $name, 'label' => $label, 'options' => $options])->render();
         } catch (Throwable $e) {
             Log::debug(sprintf('Could not render file(): %s', $e->getMessage()));
-            $html = 'Could not render file.';
+            $html = sprintf('Could not render file-element: %s', $e->getMessage());
+
+            throw new FireflyException($html, 0, $e);
+        }
+
+        return $html;
+    }
+
+    /**
+     * @throws FireflyException
+     */
+    public function hidden(string $name, mixed $value): string
+    {
+        try {
+            $html = view('form.hidden', ['name' => $name, 'value' => $value])->render();
+        } catch (Throwable $e) {
+            Log::debug(sprintf('Could not render hidden(): %s', $e->getMessage()));
+            $html = sprintf('Could not render hidden: %s', $e->getMessage());
 
             throw new FireflyException($html, 0, $e);
         }
@@ -267,7 +286,7 @@ class ExpandedForm
         }
 
         try {
-            $html = view('form.object_group', [
+            $html = view('form.object-group', [
                 'classes' => $classes,
                 'name'    => $name,
                 'label'   => $label,
@@ -314,7 +333,7 @@ class ExpandedForm
             $html = view('form.password', ['classes' => $classes, 'name' => $name, 'label' => $label, 'options' => $options])->render();
         } catch (Throwable $e) {
             Log::debug(sprintf('Could not render password(): %s', $e->getMessage()));
-            $html = 'Could not render password.';
+            $html = sprintf('Could not render password: %s', $e->getMessage());
 
             throw new FireflyException($html, 0, $e);
         }
@@ -375,7 +394,7 @@ class ExpandedForm
             ])->render();
         } catch (Throwable $e) {
             Log::debug(sprintf('Could not render percentage(): %s', $e->getMessage()));
-            $html = 'Could not render percentage.';
+            $html = sprintf('Could not render percentage: %s', $e->getMessage());
 
             throw new FireflyException($html, 0, $e);
         }

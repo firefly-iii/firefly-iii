@@ -53,7 +53,7 @@ final class CreateController extends Controller
         parent::__construct();
         $this->middleware(function ($request, $next) {
             app('view')->share('title', (string) trans('firefly.budgets'));
-            app('view')->share('mainTitleIcon', 'fa-pie-chart');
+            app('view')->share('mainTitleIcon', 'bi-pie-chart');
             $this->repository  = app(BudgetRepositoryInterface::class);
             $this->attachments = app(AttachmentHelperInterface::class);
 
@@ -136,7 +136,7 @@ final class CreateController extends Controller
 
         $redirect = redirect($this->getPreviousUrl('budgets.create.url'));
 
-        if (1 === (int) $request->get('create_another')) {
+        if (1 === (int) $request->input('create_another')) {
             $request->session()->put('budgets.create.fromStore', true);
 
             $redirect = redirect(route('budgets.create'))->withInput();

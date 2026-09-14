@@ -31,7 +31,7 @@ use FireflyIII\Repositories\Account\AccountRepositoryInterface;
 use FireflyIII\User;
 use Illuminate\Support\Facades\Log;
 use Laravel\Passport\Passport;
-use phpseclib3\Crypt\RSA;
+use phpseclib4\Crypt\RSA;
 
 use function Safe\file_put_contents;
 
@@ -48,7 +48,7 @@ trait CreateStuff
         /** @var AccountRepositoryInterface $repository */
         $repository   = app(AccountRepositoryInterface::class);
         $assetAccount = [
-            'name'                 => $request->get('bank_name'),
+            'name'                 => $request->input('bank_name'),
             'iban'                 => null,
             'account_type_name'    => 'asset',
             'virtual_balance'      => 0,
@@ -117,7 +117,7 @@ trait CreateStuff
         /** @var AccountRepositoryInterface $repository */
         $repository     = app(AccountRepositoryInterface::class);
         $savingsAccount = [
-            'name'                 => (string) trans('firefly.new_savings_account', ['bank_name' => $request->get('bank_name')], $language),
+            'name'                 => (string) trans('firefly.new_savings_account', ['bank_name' => $request->input('bank_name')], $language),
             'iban'                 => null,
             'account_type_name'    => 'asset',
             'account_type_id'      => null,

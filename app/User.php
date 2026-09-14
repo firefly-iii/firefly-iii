@@ -71,6 +71,7 @@ use Illuminate\Support\Str;
 use Laravel\Passport\Contracts\OAuthenticatable;
 use Laravel\Passport\HasApiTokens;
 use NotificationChannels\Pushover\PushoverReceiver;
+use Override;
 use SensitiveParameter;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
@@ -84,8 +85,11 @@ class User extends Authenticatable implements OAuthenticatable
     use Notifiable;
     use ReturnsIntegerIdTrait;
 
+    #[Override]
     protected $fillable = ['email', 'password', 'blocked', 'blocked_code', 'user_group_id'];
-    protected $hidden   = ['password', 'remember_token'];
+    #[Override]
+    protected $hidden   = ['password', 'remember_token', 'mfa_secret', 'reset'];
+    #[Override]
     protected $table    = 'users';
 
     /**
@@ -102,6 +106,8 @@ class User extends Authenticatable implements OAuthenticatable
             if (null !== $user) {
                 return $user;
             }
+
+            throw new NotFoundHttpException();
         }
 
         throw new NotFoundHttpException();
@@ -402,6 +408,7 @@ class User extends Authenticatable implements OAuthenticatable
      *
      * @param string $token
      */
+    #[Override]
     public function sendPasswordResetNotification(#[SensitiveParameter] $token): void
     {
         $ipAddress = Request::ip();
@@ -476,6 +483,7 @@ class User extends Authenticatable implements OAuthenticatable
         return $this->hasMany(Webhook::class);
     }
 
+    #[Override]
     protected function casts(): array
     {
         return ['created_at' => 'datetime', 'updated_at' => 'datetime', 'blocked' => 'boolean'];

@@ -60,7 +60,7 @@ final class CreateController extends Controller
 
         // translations:
         $this->middleware(function ($request, $next) {
-            app('view')->share('mainTitleIcon', 'fa-paint-brush');
+            app('view')->share('mainTitleIcon', 'bi-paint-bucket');
             app('view')->share('title', (string) trans('firefly.recurrences'));
             app('view')->share('subTitle', (string) trans('firefly.create_new_recurrence'));
 
@@ -257,7 +257,7 @@ final class CreateController extends Controller
         }
 
         $redirect = redirect($this->getPreviousUrl('recurring.create.url'));
-        if (1 === (int) $request->get('create_another')) {
+        if (1 === (int) $request->input('create_another')) {
             // set value so create routine will not overwrite URL:
             $request->session()->put('recurring.create.fromStore', true);
 

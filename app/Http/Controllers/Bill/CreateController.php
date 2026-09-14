@@ -53,7 +53,7 @@ final class CreateController extends Controller
 
         $this->middleware(function ($request, $next) {
             app('view')->share('title', (string) trans('firefly.bills'));
-            app('view')->share('mainTitleIcon', 'fa-calendar-o');
+            app('view')->share('mainTitleIcon', 'bi-calendar');
             $this->attachments = app(AttachmentHelperInterface::class);
             $this->repository  = app(BillRepositoryInterface::class);
 
@@ -120,6 +120,15 @@ final class CreateController extends Controller
             $request->session()->flash('info', $this->attachments->getMessages()->get('attachments'));
         }
 
-        return redirect(route('rules.create-from-bill', [$bill->id]));
+        // redirect to previous URL.
+        $redirect           = redirect($this->getPreviousUrl('bills.create.url'));
+        if (1 === (int) $request->input('create_another')) {
+            // set value so create routine will not overwrite URL:
+            $request->session()->put('bills.create.fromStore', true);
+
+            $redirect = redirect(route('bills.create'))->withInput();
+        }
+
+        return $redirect;
     }
 }

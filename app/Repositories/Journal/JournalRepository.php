@@ -136,7 +136,11 @@ class JournalRepository implements JournalRepositoryInterface, UserGroupInterfac
     #[Override]
     public function getAllUncompletedJournals(): Collection
     {
-        return TransactionJournal::query()->where('completed', false)->get(['transaction_journals.*']);
+        if (null === $this->userGroup) {
+            return TransactionJournal::query()->where('completed', false)->get(['transaction_journals.*']);
+        }
+
+        return $this->userGroup->transactionJournals()->where('completed', false)->get(['transaction_journals.*']);
     }
 
     public function getDestinationAccount(TransactionJournal $journal): Account

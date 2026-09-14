@@ -56,7 +56,7 @@ final class EditController extends Controller
 
         $this->middleware(function ($request, $next) {
             app('view')->share('title', (string) trans('firefly.budgets'));
-            app('view')->share('mainTitleIcon', 'fa-pie-chart');
+            app('view')->share('mainTitleIcon', 'bi-pie-chart');
             $this->repository  = app(BudgetRepositoryInterface::class);
             $this->attachments = app(AttachmentHelperInterface::class);
 
@@ -73,6 +73,7 @@ final class EditController extends Controller
     {
         $subTitle          = (string) trans('firefly.edit_budget', ['name' => $budget->name]);
         $autoBudget        = $this->repository->getAutoBudget($budget);
+        $preFilled         = [];
 
         // auto budget types
         $autoBudgetTypes   = [
@@ -115,6 +116,7 @@ final class EditController extends Controller
 
         return view('budgets.edit', [
             'budget'            => $budget,
+            'preFilled'         => $preFilled,
             'subTitle'          => $subTitle,
             'autoBudgetTypes'   => $autoBudgetTypes,
             'autoBudgetPeriods' => $autoBudgetPeriods,
@@ -153,7 +155,7 @@ final class EditController extends Controller
             $request->session()->flash('info', $this->attachments->getMessages()->get('attachments'));
         }
 
-        if (1 === (int) $request->get('return_to_edit')) {
+        if (1 === (int) $request->input('return_to_edit')) {
             $request->session()->put('budgets.edit.fromUpdate', true);
 
             $redirect = redirect(route('budgets.edit', [$budget->id]))->withInput(['return_to_edit' => 1]);

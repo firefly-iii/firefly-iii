@@ -32,6 +32,7 @@ use FireflyIII\Http\Requests\PreferencesRequest;
 use FireflyIII\Models\Account;
 use FireflyIII\Models\Preference;
 use FireflyIII\Repositories\Account\AccountRepositoryInterface;
+use FireflyIII\Support\Facades\AppConfiguration;
 use FireflyIII\Support\Facades\Navigation;
 use FireflyIII\Support\Facades\Preferences;
 use FireflyIII\Support\Facades\Steam;
@@ -62,7 +63,7 @@ final class PreferencesController extends Controller
 
         $this->middleware(static function ($request, $next) {
             app('view')->share('title', (string) trans('firefly.preferences'));
-            app('view')->share('mainTitleIcon', 'fa-gear');
+            app('view')->share('mainTitleIcon', 'bi-gear-wide-connected');
 
             return $next($request);
         });
@@ -125,6 +126,12 @@ final class PreferencesController extends Controller
         }
         $fiscalYearStart                = sprintf('%s-%s', Carbon::now()->format('Y'), (string) $fiscalYearStartStr);
         $tjOptionalFields               = Preferences::get('transaction_journal_optional_fields', [])->data;
+
+        // missing fields will give an error unless set, so:
+        $tjOptionalFields['external_url'] ??= false;
+        $tjOptionalFields['location']     ??= false;
+        $tjOptionalFields['links']        ??= false;
+
         $availableDarkModes             = config('firefly.available_dark_modes');
 
         // notifications settings
@@ -187,9 +194,12 @@ final class PreferencesController extends Controller
             $ntfyPass          = '';
         }
 
+        $mapEnabled                     = true === AppConfiguration::get('enable_external_map', config('firefly.enable_external_map', false))->data;
+
         return view('preferences.index', [
             'anonymous'          => $anonymous,
             'language'           => $language,
+            'mapEnabled'         => $mapEnabled,
             'pushoverAppToken'   => $pushoverAppToken,
             'pushoverUserToken'  => $pushoverUserToken,
             'ntfyServer'         => $ntfyServer,

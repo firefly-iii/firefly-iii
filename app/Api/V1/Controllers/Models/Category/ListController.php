@@ -98,7 +98,7 @@ final class ListController extends Controller
     public function transactions(Request $request, Category $category): JsonResponse
     {
         $pageSize     = $this->parameters->get('limit');
-        $type         = $request->get('type') ?? 'default';
+        $type         = $request->input('type') ?? 'default';
         $this->parameters->set('type', $type);
 
         $types        = $this->mapTransactionTypes($this->parameters->get('type'));

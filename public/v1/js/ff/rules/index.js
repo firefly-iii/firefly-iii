@@ -17,7 +17,6 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
-/** global: token */
 var fixHelper = function (e, tr) {
     "use strict";
     var $originals = tr.children();
@@ -100,29 +99,29 @@ $(function () {
       // show rule triggers
       $('.rule-triggers-show').click(function (e) {
           var obj = $(e.currentTarget);
-          $('.rule-trigger-list[data-id="' + obj.data('id') + '"]').removeClass('hidden');
-          $('.rule-triggers-show[data-id="' + obj.data('id') + '"]').addClass('hidden');
+          $('.rule-trigger-list[data-id="' + obj.data('id') + '"]').removeClass('d-none');
+          $('.rule-triggers-show[data-id="' + obj.data('id') + '"]').addClass('d-none');
       });
 
       $('.rule-trigger-list').each(function(i,v) {
           var obj = $(v);
           if(obj.data('count') > 2) {
-              obj.addClass('hidden');
-              $('.rule-triggers-show[data-id="' + obj.data('id') + '"]').removeClass('hidden');
+              obj.addClass('d-none');
+              $('.rule-triggers-show[data-id="' + obj.data('id') + '"]').removeClass('d-none');
           }
       });
     // show rule actions
     $('.rule-actions-show').click(function (e) {
         var obj = $(e.currentTarget);
-        $('.rule-action-list[data-id="' + obj.data('id') + '"]').removeClass('hidden');
-        $('.rule-actions-show[data-id="' + obj.data('id') + '"]').addClass('hidden');
+        $('.rule-action-list[data-id="' + obj.data('id') + '"]').removeClass('d-none');
+        $('.rule-actions-show[data-id="' + obj.data('id') + '"]').addClass('d-none');
     });
 
     $('.rule-action-list').each(function(i,v) {
         var obj = $(v);
         if(obj.data('count') > 1) {
-            obj.addClass('hidden');
-            $('.rule-actions-show[data-id="' + obj.data('id') + '"]').removeClass('hidden');
+            obj.addClass('d-none');
+            $('.rule-actions-show[data-id="' + obj.data('id') + '"]').removeClass('d-none');
         }
     });
 
@@ -176,7 +175,7 @@ function testRuleTriggers(e) {
         icon = $('span', obj);
     }
     // change icon:
-    icon.addClass('fa-spinner fa-spin').removeClass('fa-flask');
+    icon.addClass('bi bi-hourglass').removeClass('bi-flask');
 
     var modal = $("#testTriggerModal");
     // respond to modal:
@@ -194,9 +193,9 @@ function testRuleTriggers(e) {
         // Show warning if appropriate
         if (data.warning) {
             modal.find(".transaction-warning .warning-contents").text(data.warning);
-            modal.find(".transaction-warning").removeClass('hidden');
+            modal.find(".transaction-warning").removeClass('d-none');
         } else {
-            modal.find(".transaction-warning").addClass('hidden');
+            modal.find(".transaction-warning").addClass('d-none');
         }
 
         // Show the modal dialog
@@ -210,7 +209,7 @@ function testRuleTriggers(e) {
 }
 
 function disableRuleSpinners() {
-    $('i.test_rule_triggers').removeClass('fa-spin fa-spinner').addClass('fa-flask');
+    $('i.test_rule_triggers').removeClass('bi bi-hourglass').addClass('bi-flask');
 }
 
 

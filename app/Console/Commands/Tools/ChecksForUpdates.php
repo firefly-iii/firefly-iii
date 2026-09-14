@@ -1,7 +1,5 @@
 <?php
 
-declare(strict_types=1);
-
 /*
  * ChecksForUpdates.php
  * Copyright (c) 2026 james@firefly-iii.org
@@ -22,6 +20,8 @@ declare(strict_types=1);
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
+declare(strict_types=1);
+
 namespace FireflyIII\Console\Commands\Tools;
 
 use Carbon\Carbon;
@@ -35,18 +35,18 @@ class ChecksForUpdates extends Command
     use ShowsFriendlyMessages;
 
     /**
-     * The name and signature of the console command.
-     *
-     * @var string
-     */
-    protected $signature   = 'firefly-iii:check-for-updates {--force}';
-
-    /**
      * The console command description.
      *
      * @var string
      */
     protected $description = 'Checks for Firefly III updates';
+
+    /**
+     * The name and signature of the console command.
+     *
+     * @var string
+     */
+    protected $signature   = 'firefly-iii:check-for-updates {--force}';
 
     /**
      * Execute the console command.

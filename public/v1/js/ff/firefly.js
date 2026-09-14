@@ -17,9 +17,6 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
-/** global: moment, token, dateRangeMeta,dateRangeConfig, accountingConfig, accounting, currencySymbol, mon_decimal_point, frac_digits, showFullList, showOnlyTop, mon_thousands_sep */
-
-
 $.ajaxSetup({
     headers: {
         'X-CSRF-Token': $('meta[name="csrf-token"]').attr('content')
@@ -57,8 +54,11 @@ $(function () {
     });
 
     // save sidebar collapsed state when page loads.
-    $('[data-toggle="push-menu"]').click(function () {
-        localStorage.setItem('ff3_sidebar_collapsed', (!$('body').hasClass('sidebar-collapse')).toString());
+    $('[data-lte-toggle="sidebar"]').click(function () {
+        var res =  !($('body').hasClass('sidebar-collapse'));
+        console.log('Click on sidebar, new setting is ', res);
+
+        localStorage.setItem('ff3_sidebar_collapsed',res);
     });
 
 
@@ -71,49 +71,48 @@ $(function () {
 
     // when you click on a currency, this happens:
     $('.currency-option').on('click', currencySelect);
-
     // build the data range:
-    $('#daterange').text(dateRangeMeta.title).daterangepicker(
-        {
-            ranges: dateRangeConfig.ranges,
-            opens: 'left',
-            locale: {
-                applyLabel: dateRangeMeta.labels.apply,
-                cancelLabel: dateRangeMeta.labels.cancel,
-                fromLabel: dateRangeMeta.labels.from,
-                toLabel: dateRangeMeta.labels.to,
-                weekLabel: 'W',
-                customRangeLabel: dateRangeMeta.labels.customRange,
-                daysOfWeek: moment.weekdaysMin(),
-                monthNames: moment.monthsShort(),
-                firstDay: moment.localeData()._week.dow
-            },
-            format: 'YYYY-MM-DD',
-            startDate: dateRangeConfig.startDate,
-            endDate: dateRangeConfig.endDate
-        },
-        function (start, end, label) {
-
-            // send post.
-            $.ajax({
-                url: dateRangeMeta.url,
-                data: {
-                    start: start.format('YYYY-MM-DD'),
-                    end: end.format('YYYY-MM-DD'),
-                    label: label
-                },
-                type: 'POST',
-                headers: {
-                    'X-CSRF-Token': $('meta[name="csrf-token"]').attr('content'),
-                    'Content-Type': 'application/x-www-form-urlencoded'
-                }
-            }).done(function () {
-                window.location.reload(true);
-            }).fail(function () {
-                console.error('Could not change date range');
-            });
-        }
-    );
+    // $('#daterange').text(dateRangeMeta.title).daterangepicker(
+    //     {
+    //         ranges: dateRangeConfig.ranges,
+    //         opens: 'left',
+    //         locale: {
+    //             applyLabel: dateRangeMeta.labels.apply,
+    //             cancelLabel: dateRangeMeta.labels.cancel,
+    //             fromLabel: dateRangeMeta.labels.from,
+    //             toLabel: dateRangeMeta.labels.to,
+    //             weekLabel: 'W',
+    //             customRangeLabel: dateRangeMeta.labels.customRange,
+    //             daysOfWeek: moment.weekdaysMin(),
+    //             monthNames: moment.monthsShort(),
+    //             firstDay: moment.localeData()._week.dow
+    //         },
+    //         format: 'YYYY-MM-DD',
+    //         startDate: dateRangeConfig.startDate,
+    //         endDate: dateRangeConfig.endDate
+    //     },
+    //     function (start, end, label) {
+    //
+    //         // send post.
+    //         $.ajax({
+    //             url: dateRangeMeta.url,
+    //             data: {
+    //                 start: start.format('YYYY-MM-DD'),
+    //                 end: end.format('YYYY-MM-DD'),
+    //                 label: label
+    //             },
+    //             type: 'POST',
+    //             headers: {
+    //                 'X-CSRF-Token': $('meta[name="csrf-token"]').attr('content'),
+    //                 'Content-Type': 'application/x-www-form-urlencoded'
+    //             }
+    //         }).done(function () {
+    //             window.location.reload(true);
+    //         }).fail(function () {
+    //             console.error('Could not change date range');
+    //         });
+    //     }
+    // );
 
 
     // trigger list thing
@@ -163,8 +162,8 @@ function currencySelect(e) {
 }
 
 function configAccounting(customCurrency) {
-
-// Settings object that controls default parameters for library methods:
+    // console.log('configAccounting');
+    // Settings object that controls default parameters for library methods:
     accounting.settings = {
         currency: {
             symbol: customCurrency,   // default currency symbol is '$'

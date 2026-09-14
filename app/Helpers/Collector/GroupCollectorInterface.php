@@ -295,10 +295,14 @@ interface GroupCollectorInterface
      */
     public function hasAttachments(): self;
 
+    public function hasForeignCurrencyId(): self;
+
     /**
      * Has no attachments
      */
     public function hasNoAttachments(): self;
+
+    public function hasNoForeignCurrencyId(): self;
 
     public function internalReferenceContains(string $internalReference): self;
 

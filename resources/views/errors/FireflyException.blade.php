@@ -1,4 +1,4 @@
-@extends('layout.v2.error')
+@extends('layout.v3.blank')
 @section('status_code','500')
 @section('status','Internal Server Error')
 @section('sub_title', trans('errors.error_occurred'))
@@ -66,7 +66,7 @@
                 <h4>
                     {{ trans('errors.stacktrace') }}
                 </h4>
-                <div class="monospace">
+                <div class="font-monospace small">
                     {!!  nl2br($exception->getTraceAsString())  !!}
                 </div>
             </div>

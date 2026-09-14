@@ -27,6 +27,7 @@ namespace FireflyIII\Console\Commands\Tools;
 use Carbon\Carbon;
 use FireflyIII\Console\Commands\ShowsFriendlyMessages;
 use FireflyIII\Exceptions\FireflyException;
+use FireflyIII\Repositories\User\UserRepositoryInterface;
 use FireflyIII\Support\Cronjobs\AutoBudgetCronjob;
 use FireflyIII\Support\Cronjobs\BillWarningCronjob;
 use FireflyIII\Support\Cronjobs\ExchangeRatesCronjob;
@@ -34,7 +35,9 @@ use FireflyIII\Support\Cronjobs\RecurringCronjob;
 use FireflyIII\Support\Cronjobs\UpdateCheckCronjob;
 use FireflyIII\Support\Cronjobs\WebhookCronjob;
 use FireflyIII\Support\Facades\AppConfiguration;
+use FireflyIII\User;
 use Illuminate\Console\Command;
+use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Log;
 use InvalidArgumentException;
 
@@ -55,23 +58,38 @@ class Cron extends Command
         {--send-webhook-messages : Sends any stray webhook messages (with a maximum of 5).}
         ';
 
+    private Collection $users;
+
     public function handle(): int
     {
+        /** @var UserRepositoryInterface $repository */
+        $repository  = app(UserRepositoryInterface::class);
+        $this->users = $repository->all();
+
+        /** @var null|User $admin */
+        $admin       = $repository->getUsersByRole('owner')->first();
+        if (null === $admin) {
+            $this->friendlyError('There is no user in the system with the "owner"-role, cannot continue.');
+
+            return 1;
+        }
         $doAll
-               = !$this->option('download-cer')
+                     = !$this->option('download-cer')
             && !$this->option('create-recurring')
             && !$this->option('create-auto-budgets')
             && !$this->option('send-subscription-warnings')
             && !$this->option('check-version')
             && !$this->option('send-webhook-messages');
-        $date  = null;
+        $date        = null;
 
         try {
             $date = new Carbon($this->option('date'));
         } catch (InvalidArgumentException $e) {
             $this->friendlyError(sprintf('"%s" is not a valid date', $this->option('date')));
         }
-        $force = (bool) $this->option('force');
+        $force       = (bool) $this->option('force');
+
+        Log::debug(sprintf('Force is %s', $force ? 'true' : 'false'));
 
         // Fire exchange rates cron job.
         if (true === AppConfiguration::get('enable_external_rates', config('cer.download_enabled'))->data && ($doAll || $this->option('download-cer'))) {
@@ -147,6 +165,7 @@ class Cron extends Command
     {
         $autoBudget = new AutoBudgetCronjob();
         $autoBudget->setForce($force);
+        $autoBudget->setUsers($this->users);
         // set date in cron job:
         if ($date instanceof Carbon) {
             $autoBudget->setDate($date);
@@ -169,6 +188,7 @@ class Cron extends Command
     {
         $updateCheck = new UpdateCheckCronjob();
         $updateCheck->setForce($force);
+        $updateCheck->setUsers($this->users);
         $updateCheck->fire();
 
         if ($updateCheck->jobErrored) {
@@ -187,6 +207,7 @@ class Cron extends Command
         Log::debug(sprintf('Created new ExchangeRateConverter in %s', __METHOD__));
         $exchangeRates = new ExchangeRatesCronjob();
         $exchangeRates->setForce($force);
+        $exchangeRates->setUsers($this->users);
         // set date in cron job:
         if ($date instanceof Carbon) {
             $exchangeRates->setDate($date);
@@ -212,6 +233,7 @@ class Cron extends Command
     {
         $recurring = new RecurringCronjob();
         $recurring->setForce($force);
+        $recurring->setUsers($this->users);
 
         // set date in cron job:
         if ($date instanceof Carbon) {
@@ -237,6 +259,7 @@ class Cron extends Command
     {
         $subscriptionWarningJob = new BillWarningCronjob();
         $subscriptionWarningJob->setForce($force);
+        $subscriptionWarningJob->setUsers($this->users);
         // set date in cron job:
         if ($date instanceof Carbon) {
             $subscriptionWarningJob->setDate($date);
@@ -259,6 +282,7 @@ class Cron extends Command
     {
         $webhook = new WebhookCronjob();
         $webhook->setForce($force);
+        $webhook->setUsers($this->users);
         // set date in cron job:
         if ($date instanceof Carbon) {
             $webhook->setDate($date);

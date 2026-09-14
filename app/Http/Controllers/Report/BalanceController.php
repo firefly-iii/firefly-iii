@@ -135,12 +135,14 @@ final class BalanceController extends Controller
             // get transactions in budget
         }
 
+        //        echo '<pre>';
+        //        print_r($report);exit;
         try {
             $result = view('reports.partials.balance', ['report' => $report])->render();
         } catch (Throwable $e) {
             Log::error(sprintf('Could not render reports.partials.balance: %s', $e->getMessage()));
             Log::error($e->getTraceAsString());
-            $result = 'Could not render view.';
+            $result = sprintf('Could not render view: %s', $e->getMessage());
 
             throw new FireflyException($result, 0, $e);
         }

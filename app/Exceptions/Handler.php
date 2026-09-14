@@ -184,7 +184,6 @@ class Handler extends ExceptionHandler
                 'exception' => 'UndisclosedException',
             ], $errorCode);
         }
-
         if ($e instanceof NotFoundHttpException) {
             Log::debug('Refer to GracefulNotFoundHandler');
             $handler = app(GracefulNotFoundHandler::class);
@@ -240,7 +239,23 @@ class Handler extends ExceptionHandler
             $userData['email'] = auth()->user()->email;
         }
 
+        // remove sensitive info from POST.
+        $post            = '';
+        if ('PUT' === request()->method() || 'POST' === request()->method()) {
+            $sensitive = ['password', 'password_confirmation', 'secret', 'token', 'api_key', 'client_secret'];
+            // @mago-expect lint:no-request-all
+            $content   = request()->all();
+            foreach ($sensitive as $field) {
+                if (array_key_exists($field, $content)) {
+                    $content[$field] = '(removed)';
+                }
+            }
+            $post      = json_encode($content);
+        }
+
+        // remove specific headers
         $headers         = request()->headers->all();
+        unset($headers['authorization'], $headers['cookie'], $headers['x-csrf-token']);
 
         $data            = [
             'class'        => $e::class,
@@ -256,8 +271,7 @@ class Handler extends ExceptionHandler
             'json'         => request()->acceptsJson(),
             'method'       => request()->method(),
             'headers'      => $headers,
-            // @mago-expect lint:no-request-all
-            'post'         => 'PUT' === request()->method() || 'POST' === request()->method() ? json_encode(request()->all()) : '',
+            'post'         => $post,
         ];
 
         // create job that will mail.

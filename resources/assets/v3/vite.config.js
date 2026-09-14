@@ -1,0 +1,131 @@
+/*
+ * vite.config.js
+ * Copyright (c) 2026 james@firefly-iii.org
+ *
+ * This file is part of Firefly III (https://github.com/firefly-iii).
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Affero General Public License as
+ * published by the Free Software Foundation, either version 3 of the
+ * License, or (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU Affero General Public License for more details.
+ *
+ * You should have received a copy of the GNU Affero General Public License
+ * along with this program.  If not, see <https://www.gnu.org/licenses/>.
+ */
+
+import { defineConfig } from "vite";
+import laravel from "laravel-vite-plugin";
+import manifestSRI from "vite-plugin-manifest-sri";
+import fs from "fs";
+
+export default defineConfig(({ command }) => {
+    let https = null;
+    if (command === "serve") {
+        https = {
+            key: fs.readFileSync(
+                `/vagrant/tls-certificates/wildcard.sd.internal.key`,
+            ),
+            cert: fs.readFileSync(
+                `/vagrant/tls-certificates/wildcard.sd.internal.crt`,
+            ),
+        };
+    }
+
+    return {
+        base: "./",
+        plugins: [
+            laravel({
+                input: [
+                    // CSS for entire app
+                    "sass/app.scss",
+
+                    // dashboard
+                    "js/pages/dashboard/boxes.js",
+                    "js/pages/dashboard/dashboard.js",
+
+                    // generic
+                    "js/pages/generic.js",
+                    "js/pages/generic-nodates.js",
+                    "js/pages/blank.js", // small bootstrap
+                    "js/pages/flush.js",
+
+                    // accounts
+                    "js/pages/accounts/create.js",
+                    "js/pages/accounts/edit.js",
+
+                    // administrations
+                    "js/pages/administrations/index.js",
+                    "js/pages/administrations/edit.js",
+
+                    // categories
+
+                    // budgets
+
+                    // exchange rates
+                    "js/pages/exchange-rates/index.js",
+                    "js/pages/exchange-rates/rates.js",
+
+                    // export
+
+                    // object groups
+
+                    // piggy banks
+                    "js/pages/piggy-banks/show.js",
+
+                    // profile
+                    "js/pages/profile/oauth.js",
+
+                    // rules
+
+                    // recurring transactions
+                    "js/pages/recurring/create.js",
+                    "js/pages/recurring/edit.js",
+
+                    // subscriptions
+
+                    // transaction currencies
+
+                    // transactions
+                    "js/pages/transactions/create.js",
+                    "js/pages/transactions/edit.js",
+                    "js/pages/transactions/bulk-edit.js",
+                    "js/pages/transactions/mass-edit.js",
+                    "js/pages/transactions/show.js",
+
+                    // tags
+
+                    // webhooks
+                    "js/pages/webhooks/create.js",
+                    "js/pages/webhooks/edit.js",
+                    "js/pages/webhooks/show.js",
+                    "js/pages/webhooks/index.js",
+                ],
+                buildDirectory: "../../../../public/build",
+                // publicDirectory: '../../../public',
+                refresh: true,
+                fonts: [],
+            }),
+            manifestSRI(),
+        ],
+        server: {
+            watch: {
+                ignored: ["**/storage/framework/views/**"],
+                usePolling: true,
+            },
+            cors: true,
+            // make sure this IP matches the IP of the dev machine.
+            origin: "https://192.168.96.169:5173",
+            port: 5173,
+            host: true,
+            // hmr: {
+            //     protocol: 'wss',
+            // },
+            https: https,
+        },
+    };
+});

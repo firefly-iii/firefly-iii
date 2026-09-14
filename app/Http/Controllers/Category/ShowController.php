@@ -59,7 +59,7 @@ final class ShowController extends Controller
 
         $this->middleware(function ($request, $next) {
             app('view')->share('title', (string) trans('firefly.categories'));
-            app('view')->share('mainTitleIcon', 'fa-bookmark');
+            app('view')->share('mainTitleIcon', 'bi-bookmark');
             $this->repository = app(CategoryRepositoryInterface::class);
 
             return $next($request);
@@ -82,8 +82,9 @@ final class ShowController extends Controller
 
         /** @var Carbon $start */
         /** @var Carbon $end */
-        $subTitleIcon = 'fa-bookmark';
-        $page         = (int) $request->get('page');
+        $subTitleIcon = 'bi-bookmark';
+        $page         = (int) $request->input('page');
+        $page         = clamp($page, 1, 2 ** 16);
         $attachments  = $this->repository->getAttachments($category);
         $pageSize     = (int) Preferences::get('listPageSize', 50)->data;
         $oldest       = $this->repository->firstUseDate($category) ?? today(config('app.timezone'))->startOfYear();
@@ -133,8 +134,9 @@ final class ShowController extends Controller
     public function showAll(Request $request, Category $category): Factory|\Illuminate\Contracts\View\View
     {
         // default values:
-        $subTitleIcon = 'fa-bookmark';
-        $page         = (int) $request->get('page');
+        $subTitleIcon = 'bi-bookmark';
+        $page         = (int) $request->input('page');
+        $page         = clamp($page, 1, 2 ** 16);
         $pageSize     = (int) Preferences::get('listPageSize', 50)->data;
         $start        = null;
         $end          = null;

@@ -61,7 +61,7 @@ final class TagController extends Controller
 
         $this->middleware(function ($request, $next) {
             app('view')->share('title', (string) trans('firefly.tags'));
-            app('view')->share('mainTitleIcon', 'fa-tag');
+            app('view')->share('mainTitleIcon', 'bi-tags');
 
             $this->attachmentsHelper = app(AttachmentHelperInterface::class);
             $this->repository        = app(TagRepositoryInterface::class);
@@ -78,7 +78,7 @@ final class TagController extends Controller
     public function create(Request $request): Factory|\Illuminate\Contracts\View\View
     {
         $subTitle     = (string) trans('firefly.new_tag');
-        $subTitleIcon = 'fa-tag';
+        $subTitleIcon = 'bi-tag';
 
         // location info:
         $hasOldInput  = null !== $request->old('_token');
@@ -137,7 +137,7 @@ final class TagController extends Controller
     public function edit(Tag $tag): Factory|\Illuminate\Contracts\View\View
     {
         $subTitle     = (string) trans('firefly.edit_tag', ['tag' => $tag->tag]);
-        $subTitleIcon = 'fa-tag';
+        $subTitleIcon = 'bi-tag';
 
         $location     = $this->repository->getLocation($tag);
         $latitude     = $location instanceof Location ? $location->latitude : config('firefly.default_location.latitude');
@@ -196,7 +196,7 @@ final class TagController extends Controller
 
     public function massDestroy(Request $request): RedirectResponse
     {
-        $tags  = $request->get('tags');
+        $tags  = $request->input('tags');
         if (null === $tags || !is_array($tags)) {
             session()->flash('info', (string) trans('firefly.select_tags_to_delete'));
 
@@ -228,7 +228,7 @@ final class TagController extends Controller
     public function show(Request $request, Tag $tag, ?Carbon $start = null, ?Carbon $end = null): Factory|\Illuminate\Contracts\View\View
     {
         // default values:
-        $subTitleIcon = 'fa-tag';
+        $subTitleIcon = 'bi-tag';
         $page         = (int) $request->input('page');
         $pageSize     = (int) Preferences::get('listPageSize', 50)->data;
         $start       ??= session('start');
@@ -296,8 +296,9 @@ final class TagController extends Controller
     public function showAll(Request $request, Tag $tag): Factory|\Illuminate\Contracts\View\View
     {
         // default values:
-        $subTitleIcon = 'fa-tag';
-        $page         = (int) $request->get('page');
+        $subTitleIcon = 'bi-tag';
+        $page         = (int) $request->input('page');
+        $page         = clamp(value: $page, min: 1, max: 2 ** 16);
         $pageSize     = (int) Preferences::get('listPageSize', 50)->data;
         $periods      = [];
         $subTitle     = (string) trans('firefly.all_journals_for_tag', ['tag' => $tag->tag]);
@@ -376,7 +377,7 @@ final class TagController extends Controller
             $request->session()->flash('error', $this->attachmentsHelper->getErrors()->get('attachments'));
         }
         $redirect = redirect($this->getPreviousUrl('tags.create.url'));
-        if (1 === (int) $request->get('create_another')) {
+        if (1 === (int) $request->input('create_another')) {
             session()->put('tags.create.fromStore', true);
 
             $redirect = redirect(route('tags.create'))->withInput();
@@ -414,7 +415,7 @@ final class TagController extends Controller
             $request->session()->flash('error', $this->attachmentsHelper->getErrors()->get('attachments'));
         }
         $redirect = redirect($this->getPreviousUrl('tags.edit.url'));
-        if (1 === (int) $request->get('return_to_edit')) {
+        if (1 === (int) $request->input('return_to_edit')) {
             session()->put('tags.edit.fromUpdate', true);
 
             $redirect = redirect(route('tags.edit', [$tag->id]))->withInput(['return_to_edit' => 1]);

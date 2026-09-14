@@ -139,6 +139,19 @@ trait FormSupport
         return today(config('app.timezone'));
     }
 
+    protected function getErrorClassesForCheckbox(string $name): string
+    {
+        // Get errors from session:
+        /** @var null|MessageBag $errors */
+        $errors = session('errors');
+
+        if (null !== $errors && $errors->has($name)) {
+            return 'form-check-input is-invalid';
+        }
+
+        return 'form-check-input';
+    }
+
     protected function getHolderClasses(string $name): string
     {
         // Get errors from session:
@@ -146,10 +159,10 @@ trait FormSupport
         $errors = session('errors');
 
         if (null !== $errors && $errors->has($name)) {
-            return 'form-group has-error has-feedback';
+            return 'has-error has-feedback';
         }
 
-        return 'form-group';
+        return 'has-error has-feedback';
     }
 
     protected function label(string $name, ?array $options = null): string

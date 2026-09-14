@@ -20,66 +20,12 @@
 
 $(function () {
     "use strict";
-    $('.link-modal').click(getLinkModal);
     $('.clone-transaction').click(cloneTransaction);
     $('.clone-transaction-and-edit').click(cloneTransactionAndEdit);
-    $('#linkJournalModal').on('shown.bs.modal', function () {
-        makeAutoComplete();
-    })
     $('[data-toggle="tooltip"]').tooltip();
 });
 
-function getLinkModal(e) {
-    var button = $(e.currentTarget);
-    var journalId = parseInt(button.data('journal'));
-    var url = modalDialogURL.replace('%JOURNAL%', journalId);
-    console.log(url);
-    $.get(url).done(function (data) {
-        $('#linkJournalModal').html(data).modal('show');
 
-    }).fail(function () {
-        alert('Could not load the data to link journals. Sorry :(');
-        button.prop('disabled', true);
-    });
-
-    return false;
-}
-
-function makeAutoComplete() {
-
-    // input link-journal
-    var source = new Bloodhound({
-        datumTokenizer: Bloodhound.tokenizers.obj.whitespace('name'),
-        queryTokenizer: Bloodhound.tokenizers.whitespace,
-        prefetch: {
-            url: acURL + '?uid=' + uid,
-            filter: function (list) {
-                return $.map(list, function (item) {
-                    return item;
-                });
-            }
-        },
-        remote: {
-            url: acURL + '?query=%QUERY&uid=' + uid,
-            wildcard: '%QUERY',
-            filter: function (list) {
-                return $.map(list, function (item) {
-                    return item;
-                });
-            }
-        }
-    });
-    source.initialize();
-    $('.link-journal').typeahead({hint: true, highlight: true,}, {source: source, displayKey: 'name', autoSelect: false})
-        .on('typeahead:select', selectedJournal);
-}
-
-function selectedJournal(event, journal) {
-    $('#journal-selector').hide();
-    $('#journal-selection').show();
-    $('#selected-journal').html('<a href="' + groupURL.replace('%GROUP%', journal.transaction_group_id) + '">' + journal.description + '</a>').show();
-    $('input[name="opposing"]').val(journal.id);
-}
 
 function cloneTransaction(e) {
     var button = $(e.currentTarget);

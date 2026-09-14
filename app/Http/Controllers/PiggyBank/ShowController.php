@@ -52,7 +52,7 @@ final class ShowController extends Controller
 
         $this->middleware(function ($request, $next) {
             app('view')->share('title', (string) trans('firefly.piggyBanks'));
-            app('view')->share('mainTitleIcon', 'fa-bullseye');
+            app('view')->share('mainTitleIcon', 'bi-target');
 
             $this->piggyRepos = app(PiggyBankRepositoryInterface::class);
 
@@ -86,7 +86,6 @@ final class ShowController extends Controller
 
         /** @var PiggyBankTransformer $transformer */
         $transformer = app(PiggyBankTransformer::class);
-        $transformer->setParameters($parameters);
         $piggy       = $transformer->transform($piggyBank);
         $events      = $this->piggyRepos->getEvents($piggyBank);
         $subTitle    = $piggyBank->name;

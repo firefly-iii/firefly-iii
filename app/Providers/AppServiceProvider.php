@@ -23,9 +23,11 @@ declare(strict_types=1);
 
 namespace FireflyIII\Providers;
 
-use Illuminate\Support\Facades\Blade;
+use FireflyIII\Support\Authentication\RemoteUserGuard;
+use FireflyIII\Support\Authentication\RemoteUserProvider;
+use Illuminate\Contracts\Foundation\Application;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Response;
-use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Schema;
 use Illuminate\Support\ServiceProvider;
 use Laravel\Passport\Passport;
@@ -47,6 +49,7 @@ class AppServiceProvider extends ServiceProvider
         Passport::$validateKeyPermissions = false;
 
         Schema::defaultStringLength(191);
+
         Response::macro('api', function (array $value) {
             $headers = ['Cache-Control' => 'no-store'];
             $uuid    = (string) request()->header('X-Trace-Id');
@@ -57,27 +60,15 @@ class AppServiceProvider extends ServiceProvider
             return response()->json($value)->withHeaders($headers);
         });
 
-        // blade extension
-        Blade::directive('activeXRoutePartial', function (string $route): string {
-            $name = Route::getCurrentRoute()->getName() ?? '';
-            if (str_contains($name, $route)) {
-                return 'menu-open';
-            }
-
-            return '';
+        Auth::extend('remote_user_guard', function (Application $app, string $name, array $config): RemoteUserGuard {
+            return new RemoteUserGuard(Auth::createUserProvider($config['provider']));
         });
-        Blade::if('partialroute', function (string $route, string $firstParam = ''): bool {
-            $name       = Route::getCurrentRoute()->getName() ?? '';
-            if ('' === $firstParam && str_contains($name, $route)) {
-                return true;
-            }
 
-            /** @var null|array $params */
-            $params     = Route::getCurrentRoute()->parameters();
-            $params ??= [];
-            $objectType = $params['objectType'] ?? '';
+        // new code for authorization.
+        Passport::authorizationView('auth.oauth.authorize');
 
-            return $objectType === $firstParam && str_contains($name, $route);
+        Auth::provider('remote_user_provider', function (Application $app, array $config): RemoteUserProvider {
+            return new RemoteUserProvider();
         });
     }
 

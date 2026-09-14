@@ -36,18 +36,18 @@ class ResetsErrorMailLimit extends Command
     use ShowsFriendlyMessages;
 
     /**
-     * The name and signature of the console command.
-     *
-     * @var string
-     */
-    protected $signature   = 'firefly-iii:reset-error-mail-limit';
-
-    /**
      * The console command description.
      *
      * @var string
      */
     protected $description = 'Resets the number of error mails sent.';
+
+    /**
+     * The name and signature of the console command.
+     *
+     * @var string
+     */
+    protected $signature   = 'firefly-iii:reset-error-mail-limit';
 
     /**
      * Execute the console command.

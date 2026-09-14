@@ -4,13 +4,14 @@ Over time, many people have contributed to Firefly III. Their efforts are not al
 Please find below all the people who contributed to the Firefly III code. Their names are mentioned in the year of their first contribution.
 
 ## 2026
+- George Garside
+- kobihikri
 - iaohkut
 - tasnim0tantawi
 - Joe Longendyke
 - Daniel Holøien
 - Matthew Grove
 - Cinnamon Pyro
-- R1DEN
 - RiDEN
 - Khoa Nguyen
 - Nick Huang
@@ -122,7 +123,6 @@ Please find below all the people who contributed to the Firefly III code. Their 
 - Calum Smith
 - Agraphie
 - Tomer Shvueli
-- Tomer S
 
 ## 2019
 - Pascal Jungblut

@@ -3,6 +3,96 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
+## v6.7.0 - 2026-09-15
+
+<!-- summary: This release introduces a new layout and fixes many bugs and security issues. -->
+
+### Known issues
+- Editing and creating split transactions may sometimes mix up the order of the splits. The data itself is never mixed up however.
+- Some user managed to get a PR co-authored by Claude past my eagle eyes. Sorry about that. Luckily just a small fix.
+- Many small and large usability issues still exist in the new layout. My humble apologies. I could not catch them all (sad Pikachu face).
+
+### Added
+
+- Added a view for all transactions.
+
+### Changed
+
+- oAuth tokens are now on a separate page.
+- The rule engine features an "expression engine". It is now disabled by default and must be turned on again in `/settings`.
+- Switched from Twig template engine to Blade.
+- Introduced a new version of the AdminLTE template.
+- Introduces new forms for creating and editing transactions
+- Switched from Font Awesome to Bootstrap Icons
+- Login page now no longer advertises it's Firefly III
+- Cron jobs are now per user, only users with the "owner" role can force the cron job or run it for different users.
+
+### Removed
+
+- Old forms, old code, old images.
+
+### Fixed
+
+- [Issue 10652](https://github.com/firefly-iii/firefly-iii/issues/10652) (Handling split transactions has some issues (user interface)) reported by @jgmm81
+- [Issue 11161](https://github.com/firefly-iii/firefly-iii/issues/11161) (Can't select autocomplete when using a screen reader) reported by @hamiltlr
+- [Issue 11802](https://github.com/firefly-iii/firefly-iii/issues/11802) (Some attachment uploads fail silently) reported by @JC5
+- [Issue 12435](https://github.com/firefly-iii/firefly-iii/issues/12435) (The "Related piggy banks" info card assigns the native currency symbol when dealing with a foreign currency) reported by @jgmm81
+- [Issue 12453](https://github.com/firefly-iii/firefly-iii/issues/12453) (Subscriptions: Return to form checkbox doesn't work) reported by @SteffoSpieler
+- [Issue 12455](https://github.com/firefly-iii/firefly-iii/issues/12455) (native_amount conversion uses now() instead of transaction date) reported by @tarzan77cz
+- [Issue 12468](https://github.com/firefly-iii/firefly-iii/issues/12468) (Weekly subscription not accounted to be paid if there were already a payment on that month) reported by @brunofontes
+- [Issue 12500](https://github.com/firefly-iii/firefly-iii/issues/12500) (Subscriptions widget  show incorrect numbers.) reported by @wascarreyes01
+- [Discussion 12559](https://github.com/orgs/firefly-iii/discussions/12559) (Credit Card Balance vs Available Credit) started by @SWellock
+- [Issue 12577](https://github.com/firefly-iii/firefly-iii/issues/12577) (API: /accounts endpoint never returns credit_card_type / monthly_payment_date (missing from AccountEnrichment allowlist)) reported by @chigia001
+- [Issue 12578](https://github.com/firefly-iii/firefly-iii/issues/12578) (API PUT/POST /accounts stores monthly_payment_date in a format incompatible with the web UI's date input) reported by @chigia001
+- [Discussion 12583](https://github.com/orgs/firefly-iii/discussions/12583) (How to search for non-foreign currency transactions) started by @skogsvik
+- [Issue 12607](https://github.com/firefly-iii/firefly-iii/issues/12607) (Foreign amount can be added but not removed from transaction) reported by @RyanMcClean
+- [Issue 12608](https://github.com/firefly-iii/firefly-iii/issues/12608) (Add a Search icon (and function) near top of collapsed menu list) reported by @PAS-BC
+- [Issue 12626](https://github.com/firefly-iii/firefly-iii/issues/12626) (MySQL/MariaDB SSL options not checked for empty strings) reported by @hhhuut
+- [Issue 12639](https://github.com/firefly-iii/firefly-iii/issues/12639) (Test rules endpoint always returns no results unless optional accounts argument is passed) reported by @grgar
+- [PR 12642](https://github.com/firefly-iii/firefly-iii/pull/12642) (Fix [Issue 12639](https://github.com/firefly-iii/firefly-iii/issues/12639) (Test rules endpoint always returns no results unless optional accounts argument is passed) reported by @grgar: match accounts arg of rule trigger & test) reported by @grgar
+- [Issue 12662](https://github.com/firefly-iii/firefly-iii/issues/12662) (A Search for Tags returns more page groups than required) reported by @PAS-BC
+- [Issue 12687](https://github.com/firefly-iii/firefly-iii/issues/12687) (Changing budgeted amount in a budget deletes notes.) reported by @rdesbo
+- [Issue 12692](https://github.com/firefly-iii/firefly-iii/issues/12692) (Updating accounts of a deposit recurrence via API is rejected because the validator assumes "withdrawal") reported by @Toshik1978
+- [Issue 12694](https://github.com/firefly-iii/firefly-iii/issues/12694) (Updating an amount in transaction doesn't make it discoverable in search using `updated_at_after:`) reported by @Toshik1978
+- [Issue 12710](https://github.com/firefly-iii/firefly-iii/issues/12710) (Last row in CSV import imported as duplicate) reported by @sabbath4294
+- Setting an invalid language would break your account.
+
+### Security
+
+If you believe your credits are missing, please let me know.
+
+- [PR 12497](https://github.com/firefly-iii/firefly-iii/pull/12497) (ci: pin github-action-get-latest-release to a full commit SHA) reported by @kobihikri
+- A variety of security findings by Alwen Roselio, Don Werner Salas and Allan Glenn Aceres touching CSV export, installer security and many more.
+- User "@1diot9" discovered that you can overwrite arbitrary preferences. This means you can also overwrite security sensitive preferences, like your email reset code. [GHSA-3wcx-g7jc-h9vc](https://github.com/firefly-iii/firefly-iii/security/advisories/GHSA-3wcx-g7jc-h9vc)
+- Removed security sensitive info from the debug page.
+- Removed identifying information from the login and registration pages.
+- It was possible to brute force 2FA code attempts.
+- URL validation could be circumvented.
+- Flushing the cache would reset some timeouts.
+- A stolen password against a 2FA-protected account could lead to remote code execution, found by Adam K.
+- A budget limit spanning centuries was accepted, and then recalculated day by day, found by Adam K.
+- Five bad logins would let anyone take the app offline, found by Adam K.
+- A small search query could cost the server many seconds of CPU, found by Adam K.
+- A 2.5 KB search query could exhaust the PHP memory limit, found by Adam K.
+- One GET request could make the server compute tens of thousands of dates, found by Adam K.
+- Account search could return every user's bank accounts (unconfirmed but measures taken), found by Adam K.
+- One search query could return every user's transactions (unconfirmed but measures taken), found by Adam K.
+- State-changing requests woyld execute before the two-factor check decides to reject them, found by Adam K.
+- Any logged-in user could run shell commands on the server through a rule action, found by Adam K.
+- The audit logger would your your MFA secret, which is a potential security issue, found by Mathias K.
+
+#### Unresolved security issues
+
+- You can still use the webhooks API to connect to arbitrary and weird URLs and internal IPs.
+- You will still delete everybody's purged notes when you delete your own purged notes.
+- The (static) cron job token is still part of the URL if you call it over the web.
+- Other issues please get in touch.
+
+### API
+
+- [Issue 12689](https://github.com/firefly-iii/firefly-iii/issues/12689) (Unable to update monthly_payment_date via API) reported by @Toshik1978
+- See https://api-docs.firefly-iii.org/
+
 ## v6.6.6 - 2026-07-01
 
 <!-- summary: This release fixes a bug in v6.6.5 that will remove foreign currency information from deposits. -->

@@ -25,6 +25,7 @@ declare(strict_types=1);
 namespace FireflyIII\Support\Cronjobs;
 
 use Carbon\Carbon;
+use Illuminate\Support\Collection;
 
 /**
  * Class AbstractCronjob
@@ -38,13 +39,15 @@ abstract class AbstractCronjob
     public int     $timeBetweenRuns = 43_200;
     protected Carbon $date;
     protected bool $force           = false;
+    protected Collection $users;
 
     /**
      * AbstractCronjob constructor.
      */
     public function __construct()
     {
-        $this->date = today(config('app.timezone'));
+        $this->users = new Collection();
+        $this->date  = today(config('app.timezone'));
     }
 
     abstract public function fire(): void;
@@ -58,5 +61,10 @@ abstract class AbstractCronjob
     final public function setForce(bool $force): void
     {
         $this->force = $force;
+    }
+
+    final public function setUsers(Collection $users): void
+    {
+        $this->users = $users;
     }
 }

@@ -1,7 +1,5 @@
 <?php
 
-declare(strict_types=1);
-
 /*
  * StoresNewIpAddress.php
  * Copyright (c) 2026 james@firefly-iii.org
@@ -21,6 +19,8 @@ declare(strict_types=1);
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
+
+declare(strict_types=1);
 
 namespace FireflyIII\Listeners\Security\User;
 
@@ -45,7 +45,7 @@ class StoresNewIpAddress implements ShouldQueue
         }
 
         /** @var array $preference */
-        $preference = Preferences::getForUser($user, 'login_ip_history', [])->data;
+        $preference = Preferences::getForUser($user, 'login_ip_history', [], true)->data;
         $inArray    = false;
         $ip         = request()->ip();
         Log::debug(sprintf('User logging in from IP address %s', $ip));
@@ -72,7 +72,7 @@ class StoresNewIpAddress implements ShouldQueue
 
         /** @var bool $send */
         $send       = Preferences::getForUser($user, 'notification_user_login', true)->data;
-        Preferences::setForUser($user, 'login_ip_history', $preference);
+        Preferences::setForUser($user, 'login_ip_history', $preference, true);
 
         if (false === $inArray && true === $send) {
             event(new UserLoggedInFromNewIpAddress($user));

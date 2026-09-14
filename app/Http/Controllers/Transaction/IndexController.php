@@ -56,7 +56,7 @@ final class IndexController extends Controller
         app('view')->share('showCategory', true);
         // translations:
         $this->middleware(function ($request, $next) {
-            app('view')->share('mainTitleIcon', 'fa-exchange');
+            app('view')->share('mainTitleIcon', 'bi-shuffle');
             app('view')->share('title', (string) trans('firefly.transactions'));
 
             $this->repository = app(JournalRepositoryInterface::class);
@@ -82,7 +82,7 @@ final class IndexController extends Controller
 
         $subTitleIcon  = config('firefly.transactionIconsByType.'.$objectType);
         $types         = config('firefly.transactionTypesByType.'.$objectType);
-        $page          = (int) $request->get('page');
+        $page          = (int) $request->input('page');
         $pageSize      = (int) Preferences::get('listPageSize', 50)->data;
 
         if (!$start instanceof Carbon) {
@@ -151,7 +151,8 @@ final class IndexController extends Controller
     {
         $subTitleIcon = config('firefly.transactionIconsByType.'.$objectType);
         $types        = config('firefly.transactionTypesByType.'.$objectType);
-        $page         = (int) $request->get('page');
+        $page         = (int) $request->input('page');
+        $page         = clamp($page, 1, 2 ** 16);
         $pageSize     = (int) Preferences::get('listPageSize', 50)->data;
         $path         = route('transactions.index.all', [$objectType]);
         $first        = $this->repository->firstNull();
@@ -180,6 +181,7 @@ final class IndexController extends Controller
             'subTitle'     => $subTitle,
             'objectType'   => $objectType,
             'subTitleIcon' => $subTitleIcon,
+            'periods'      => [],
             'groups'       => $groups,
             'start'        => $start,
             'end'          => $end,

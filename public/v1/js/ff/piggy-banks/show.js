@@ -17,23 +17,22 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
-/** global: piggyBankID, lineChart */
 
 $(function () {
     "use strict";
-    if (typeof(lineChart) === 'function' && typeof(piggyBankID) !== 'undefined') {
+    if (false && typeof(lineChart) === 'function' && typeof(piggyBankID) !== 'undefined') {
         lineChart('chart/piggy-bank/' + piggyBankID, 'piggy-bank-history');
     }
 
-    $('.confirm-history-delete').click(function() {
-            return confirm(confirmText);
-    });
+    // $('.confirm-history-delete').click(function() {
+    //         return confirm(confirmText);
+    // });
 
     // on submit of logout button:
-    $('.reset-link').click(function(e) {
-        console.log('here we are');
-        e.preventDefault();
-        document.getElementById('reset-form').submit();
-        return false;
-    });
+    // $('.reset-link').click(function(e) {
+    //     console.log('here we are');
+    //     e.preventDefault();
+    //     document.getElementById('reset-form').submit();
+    //     return false;
+    // });
 });

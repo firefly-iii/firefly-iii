@@ -26,6 +26,7 @@ declare(strict_types=1);
 namespace FireflyIII\Rules;
 
 use Closure;
+use FireflyIII\Support\Facades\AppConfiguration;
 use FireflyIII\TransactionRules\Expressions\ActionExpression;
 use Illuminate\Contracts\Validation\ValidationRule;
 use Illuminate\Translation\PotentiallyTranslatedString;
@@ -41,7 +42,7 @@ class IsValidActionExpression implements ValidationRule
      */
     public function validate(string $attribute, mixed $value, Closure $fail): void
     {
-        if (false === config('firefly.feature_flags.expression_engine')) {
+        if (false === AppConfiguration::get('enable_expression_engine', false)->data) {
             return;
         }
         $value ??= '';

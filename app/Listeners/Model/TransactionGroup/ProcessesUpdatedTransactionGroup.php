@@ -1,7 +1,5 @@
 <?php
 
-declare(strict_types=1);
-
 /*
  * ProcessesUpdatedTransactionGroup.php
  * Copyright (c) 2026 james@firefly-iii.org
@@ -21,6 +19,8 @@ declare(strict_types=1);
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
+
+declare(strict_types=1);
 
 namespace FireflyIII\Listeners\Model\TransactionGroup;
 
@@ -94,7 +94,7 @@ class ProcessesUpdatedTransactionGroup
     private function unifyAccountsForGroup(TransactionGroup $group): int
     {
         if (1 === $group->transactionJournals->count()) {
-            Log::debug('Nothing to do in unifyAccounts()');
+            // Log::debug('Nothing to do in unifyAccounts()');
 
             return 0;
         }
@@ -118,11 +118,21 @@ class ProcessesUpdatedTransactionGroup
 
         $all           = $group->transactionJournals()->get()->pluck('id')->toArray();
 
-        /** @var Account $sourceAccount */
-        $sourceAccount = $first->transactions()->where('amount', '<', '0')->first()->account;
+        /** @var null|Account $sourceAccount */
+        $sourceAccount = $first->transactions()->where('amount', '<', '0')->first()?->account;
 
-        /** @var Account $destAccount */
-        $destAccount   = $first->transactions()->where('amount', '>', '0')->first()->account;
+        /** @var null|Account $destAccount */
+        $destAccount   = $first->transactions()->where('amount', '>', '0')->first()?->account;
+        if (null === $destAccount) {
+            Log::warning(sprintf('Group #%d (journal #%d) has no destination account. Break.', $group->id, $first->id));
+
+            return 0;
+        }
+        if (null === $sourceAccount) {
+            Log::warning(sprintf('Group #%d (journal #%d) has no source account. Break.', $group->id, $first->id));
+
+            return 0;
+        }
 
         $type          = $first->transactionType->type;
         $effect        = 0;
@@ -145,7 +155,7 @@ class ProcessesUpdatedTransactionGroup
             ;
         }
         if (0 === $effect) {
-            Log::debug(sprintf('Had nothing to do in unifyAccounts(#%d)', $group->id));
+            // Log::debug(sprintf('Had nothing to do in unifyAccounts(#%d)', $group->id));
 
             return 0;
         }

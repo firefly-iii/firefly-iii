@@ -65,7 +65,7 @@ final class OperationsController extends Controller
     public function expenses(Collection $accounts, Carbon $start, Carbon $end)
     {
         // chart properties for cache:
-        $cache  = new CacheProperties();
+        $cache           = new CacheProperties();
         $cache->addProperty($start);
         $cache->addProperty($end);
         $cache->addProperty('expense-report');
@@ -73,15 +73,16 @@ final class OperationsController extends Controller
         if ($cache->has()) {
             return $cache->get();
         }
-        $report = $this->tasker->getExpenseReport($start, $end, $accounts);
-        $type   = 'expense-entry';
+        $report          = $this->tasker->getExpenseReport($start, $end, $accounts);
+        $type            = 'expense-entry';
+        $incomeTopLength = count($report['accounts']);
 
         try {
-            $result = view('reports.partials.income-expenses', ['report' => $report, 'type' => $type])->render();
+            $result = view('reports.partials.income-expenses', ['report' => $report, 'type' => $type, 'incomeTopLength' => $incomeTopLength])->render();
         } catch (Throwable $e) {
             Log::error(sprintf('Could not render reports.partials.income-expense: %s', $e->getMessage()));
             Log::error($e->getTraceAsString());
-            $result = 'Could not render view.';
+            $result = sprintf('Could not render view: %s', $e->getMessage());
 
             throw new FireflyException($result, 0, $e);
         }
@@ -99,7 +100,7 @@ final class OperationsController extends Controller
     public function income(Collection $accounts, Carbon $start, Carbon $end): string
     {
         // chart properties for cache:
-        $cache  = new CacheProperties();
+        $cache           = new CacheProperties();
         $cache->addProperty($start);
         $cache->addProperty($end);
         $cache->addProperty('income-report');
@@ -107,15 +108,16 @@ final class OperationsController extends Controller
         if ($cache->has()) {
             return $cache->get();
         }
-        $report = $this->tasker->getIncomeReport($start, $end, $accounts);
-        $type   = 'income-entry';
+        $report          = $this->tasker->getIncomeReport($start, $end, $accounts);
+        $type            = 'income-entry';
+        $incomeTopLength = count($report['accounts']);
 
         try {
-            $result = view('reports.partials.income-expenses', ['report' => $report, 'type' => $type])->render();
+            $result = view('reports.partials.income-expenses', ['report' => $report, 'type' => $type, 'incomeTopLength' => $incomeTopLength])->render();
         } catch (Throwable $e) {
             Log::error(sprintf('Could not render reports.partials.income-expenses: %s', $e->getMessage()));
             Log::error($e->getTraceAsString());
-            $result = 'Could not render view.';
+            $result = sprintf('Could not render view: %s', $e->getMessage());
 
             throw new FireflyException($result, 0, $e);
         }
@@ -170,7 +172,7 @@ final class OperationsController extends Controller
         } catch (Throwable $e) {
             Log::error(sprintf('Could not render reports.partials.operations: %s', $e->getMessage()));
             Log::error($e->getTraceAsString());
-            $result = 'Could not render view.';
+            $result = sprintf('Could not render view: %s', $e->getMessage());
 
             throw new FireflyException($result, 0, $e);
         }

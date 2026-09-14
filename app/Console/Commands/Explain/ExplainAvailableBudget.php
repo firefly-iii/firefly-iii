@@ -1,7 +1,5 @@
 <?php
 
-declare(strict_types=1);
-
 /*
  * ExplainAvailableBudget.php
  * Copyright (c) 2026 james@firefly-iii.org
@@ -22,6 +20,8 @@ declare(strict_types=1);
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
+declare(strict_types=1);
+
 namespace FireflyIII\Console\Commands\Explain;
 
 use Carbon\Carbon;
@@ -36,6 +36,13 @@ class ExplainAvailableBudget extends Command
     use VerifiesAccessToken;
 
     /**
+     * The console command description.
+     *
+     * @var string
+     */
+    protected $description = 'Explains why the available budget amount is what it is.';
+
+    /**
      * The name and signature of the console command.
      *
      * @var string
@@ -45,13 +52,6 @@ class ExplainAvailableBudget extends Command
                                 {--user=1 : The user ID.}
                                 {--token= : The user\'s access token.}
    ';
-
-    /**
-     * The console command description.
-     *
-     * @var string
-     */
-    protected $description = 'Explains why the available budget amount is what it is.';
 
     /**
      * Execute the console command.

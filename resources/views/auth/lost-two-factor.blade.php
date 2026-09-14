@@ -1,4 +1,4 @@
-@extends('layout.v2.error')
+@extends('layout.v3.blank')
 @section('status_code','')
 @section('status','2FA')
 @section('sub_title', __('firefly.two_factor_lost_header'))

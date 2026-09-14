@@ -56,7 +56,7 @@ final class IndexController extends Controller
 
         // translations:
         $this->middleware(function ($request, $next) {
-            app('view')->share('mainTitleIcon', 'fa-credit-card');
+            app('view')->share('mainTitleIcon', 'bi-credit-card');
             app('view')->share('title', (string) trans('firefly.accounts'));
 
             $this->repository = app(AccountRepositoryInterface::class);
@@ -79,9 +79,11 @@ final class IndexController extends Controller
         $types                         = config(sprintf('firefly.accountTypesByIdentifier.%s', $objectType));
         $collection                    = $this->repository->getInactiveAccountsByType($types);
         $total                         = $collection->count();
-        $page                          = 0 === (int) $request->get('page') ? 1 : (int) $request->get('page');
+        $page                          = 0 === (int) $request->input('page') ? 1 : (int) $request->input('page');
+        $page                          = clamp($page, 1, 2 ** 16);
         $pageSize                      = (int) Preferences::get('listPageSize', 50)->data;
         $accounts                      = $collection->slice(($page - 1) * $pageSize, $pageSize);
+        $inactiveCount                 = $this->repository->getInactiveAccountsByType($types)->count();
         unset($collection);
 
         /** @var Carbon $start */
@@ -114,12 +116,13 @@ final class IndexController extends Controller
         $accounts->setPath(route('accounts.inactive.index', [$objectType]));
 
         return view('accounts.index', [
-            'objectType'   => $objectType,
-            'inactivePage' => $inactivePage,
-            'subTitleIcon' => $subTitleIcon,
-            'subTitle'     => $subTitle,
-            'page'         => $page,
-            'accounts'     => $accounts,
+            'objectType'    => $objectType,
+            'inactivePage'  => $inactivePage,
+            'inactiveCount' => $inactiveCount,
+            'subTitleIcon'  => $subTitleIcon,
+            'subTitle'      => $subTitle,
+            'page'          => $page,
+            'accounts'      => $accounts,
         ]);
     }
 
@@ -134,6 +137,7 @@ final class IndexController extends Controller
     public function index(Request $request, string $objectType): Factory|\Illuminate\Contracts\View\View
     {
         Log::debug(sprintf('Now at %s', __METHOD__));
+        $inactivePage                  = false;
         $subTitle                      = (string) trans(sprintf('firefly.%s_accounts', $objectType));
         $subTitleIcon                  = config(sprintf('firefly.subIconsByIdentifier.%s', $objectType));
         $types                         = config(sprintf('firefly.accountTypesByIdentifier.%s', $objectType));
@@ -142,7 +146,8 @@ final class IndexController extends Controller
 
         $collection                    = $this->repository->getActiveAccountsByType($types);
         $total                         = $collection->count();
-        $page                          = 0 === (int) $request->get('page') ? 1 : (int) $request->get('page');
+        $page                          = 0 === (int) $request->input('page') ? 1 : (int) $request->input('page');
+        $page                          = clamp($page, 1, 2 ** 16);
         $pageSize                      = (int) Preferences::get('listPageSize', 50)->data;
         $accounts                      = $collection->slice(($page - 1) * $pageSize, $pageSize);
         $inactiveCount                 = $this->repository->getInactiveAccountsByType($types)->count();
@@ -198,6 +203,7 @@ final class IndexController extends Controller
         return view('accounts.index', [
             'objectType'    => $objectType,
             'inactiveCount' => $inactiveCount,
+            'inactivePage'  => $inactivePage,
             'subTitleIcon'  => $subTitleIcon,
             'subTitle'      => $subTitle,
             'page'          => $page,

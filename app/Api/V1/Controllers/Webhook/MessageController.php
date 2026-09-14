@@ -117,7 +117,6 @@ final class MessageController extends Controller
 
         /** @var WebhookMessageTransformer $transformer */
         $transformer = app(WebhookMessageTransformer::class);
-        $transformer->setParameters($this->parameters);
         $resource    = new Item($message, $transformer, self::RESOURCE_KEY);
 
         return response()->json($manager->createData($resource)->toArray())->header('Content-Type', self::CONTENT_TYPE);

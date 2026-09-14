@@ -140,8 +140,9 @@ class Navigation
 
     public function diffInPeriods(string $period, int $skip, Carbon $beginning, Carbon $end): int
     {
+        [$beginning, $end] = $beginning->lt($end) ? [$beginning, $end] : [$end, $beginning];
         Log::debug(sprintf('diffInPeriods: %s (skip: %d), between %s and %s.', $period, $skip, $beginning->format('Y-m-d'), $end->format('Y-m-d')));
-        $map       = [
+        $map               = [
             'daily'     => 'diffInDays',
             'weekly'    => 'diffInWeeks',
             'monthly'   => 'diffInMonths',
@@ -154,9 +155,9 @@ class Navigation
 
             return 1;
         }
-        $func      = $map[$period];
+        $func              = $map[$period];
         // first do the diff
-        $floatDiff = $beginning->{$func}($end, true);
+        $floatDiff         = $beginning->{$func}($end, true);
 
         // then correct for quarterly or half-year
         if ('quarterly' === $period) {
@@ -169,7 +170,7 @@ class Navigation
         }
 
         // then do ceil()
-        $diff      = ceil($floatDiff);
+        $diff              = ceil($floatDiff);
 
         Log::debug(sprintf('Diff is %f periods (%d rounded up)', $floatDiff, $diff));
 

@@ -60,7 +60,7 @@ final class EditController extends Controller
 
         $this->middleware(function ($request, $next) {
             app('view')->share('title', (string) trans('firefly.rules'));
-            app('view')->share('mainTitleIcon', 'fa-random');
+            app('view')->share('mainTitleIcon', 'bi-shuffle');
 
             $this->ruleRepos = app(RuleRepositoryInterface::class);
 
@@ -83,7 +83,7 @@ final class EditController extends Controller
         $oldTriggers    = [];
 
         // build triggers from query, if present.
-        $query          = (string) $request->get('from_query');
+        $query          = (string) $request->input('from_query');
         if ('' !== $query) {
             $search        = app(SearchInterface::class);
             $search->parseQuery($query);
@@ -169,7 +169,7 @@ final class EditController extends Controller
             return redirect(route('rules.select-transactions', [$rule->id]));
         }
 
-        if (1 === (int) $request->get('return_to_edit')) {
+        if (1 === (int) $request->input('return_to_edit')) {
             session()->put('rules.edit.fromUpdate', true);
 
             $redirect = redirect(route('rules.edit', [$rule->id]))->withInput(['return_to_edit' => 1]);
@@ -198,11 +198,12 @@ final class EditController extends Controller
         foreach ($submittedOperators as $operator) {
             try {
                 $renderedEntries[] = view('rules.partials.trigger', [
-                    'oldTrigger' => OperatorQuerySearch::getRootOperator($operator['type']),
-                    'oldValue'   => $operator['value'],
-                    'oldChecked' => false,
-                    'count'      => $index + 1,
-                    'triggers'   => $triggers,
+                    'oldTrigger'    => OperatorQuerySearch::getRootOperator($operator['type']),
+                    'oldValue'      => $operator['value'],
+                    'oldChecked'    => false,
+                    'oldProhibited' => null,
+                    'count'         => $index + 1,
+                    'triggers'      => $triggers,
                 ])->render();
             } catch (Throwable $e) {
                 $message = sprintf('Throwable was thrown in getPreviousTriggers(): %s', $e->getMessage());

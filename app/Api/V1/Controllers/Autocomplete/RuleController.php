@@ -31,14 +31,16 @@ use FireflyIII\Models\Rule;
 use FireflyIII\Repositories\Rule\RuleRepositoryInterface;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
+use Override;
 
 /**
  * Class RuleController
  */
 final class RuleController extends Controller
 {
-    private RuleRepositoryInterface $repository;
+    #[Override]
     protected array $acceptedRoles = [UserRoleEnum::READ_RULES];
+    private RuleRepositoryInterface $repository;
 
     /**
      * RuleController constructor.

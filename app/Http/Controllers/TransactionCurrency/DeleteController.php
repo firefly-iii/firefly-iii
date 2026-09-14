@@ -54,7 +54,7 @@ final class DeleteController extends Controller
 
         $this->middleware(function ($request, $next) {
             app('view')->share('title', (string) trans('firefly.currencies'));
-            app('view')->share('mainTitleIcon', 'fa-usd');
+            app('view')->share('mainTitleIcon', 'bi-currency-euro');
             $this->repository     = app(CurrencyRepositoryInterface::class);
             $this->userRepository = app(UserRepositoryInterface::class);
 

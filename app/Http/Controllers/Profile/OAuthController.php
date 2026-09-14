@@ -52,7 +52,7 @@ final class OAuthController extends Controller
 
         $this->middleware(static function ($request, $next) {
             app('view')->share('title', (string) trans('firefly.oauth_tokens'));
-            app('view')->share('mainTitleIcon', 'fa-user');
+            app('view')->share('mainTitleIcon', 'bi-person');
 
             return $next($request);
         });

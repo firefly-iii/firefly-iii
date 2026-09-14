@@ -79,6 +79,8 @@ class Attachment extends Model
             if (null !== $attachment) {
                 return $attachment;
             }
+
+            throw new NotFoundHttpException();
         }
 
         throw new AuthenticationException();

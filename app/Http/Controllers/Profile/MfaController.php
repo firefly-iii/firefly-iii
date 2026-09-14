@@ -70,7 +70,7 @@ final class MfaController extends Controller
 
         $this->middleware(static function ($request, $next) {
             app('view')->share('title', (string) trans('firefly.profile'));
-            app('view')->share('mainTitleIcon', 'fa-user');
+            app('view')->share('mainTitleIcon', 'bi-person');
 
             return $next($request);
         });
@@ -116,7 +116,7 @@ final class MfaController extends Controller
         $recoveryCodes = $recovery->lowercase()->setCount(8)->setBlocks(2)->setChars(6)->toArray(); // Generate 8 codes // Every code must have 2 blocks // Each block must have 6 chars
         $codes         = implode("\r\n", $recoveryCodes);
 
-        Preferences::set('mfa_recovery', $recoveryCodes);
+        Preferences::set('mfa_recovery', $recoveryCodes, true);
         Preferences::mark();
 
         // send user notification.
@@ -141,7 +141,7 @@ final class MfaController extends Controller
             return redirect(route('profile.index'));
         }
         $subTitle     = (string) trans('firefly.mfa_index_title');
-        $subTitleIcon = 'fa-calculator';
+        $subTitleIcon = 'bi-calculator';
 
         return view('profile.mfa.disable-mfa')->with(['subTitle' => $subTitle, 'subTitleIcon' => $subTitleIcon, 'enabledMFA' => $enabledMFA]);
     }
@@ -163,8 +163,8 @@ final class MfaController extends Controller
         /** @var User $user */
         $user       = auth()->user();
 
-        Preferences::delete('temp-mfa-secret');
-        Preferences::delete('temp-mfa-codes');
+        Preferences::delete('temp-mfa-secret', true);
+        Preferences::delete('temp-mfa-codes', true);
         $repository->setMFACode($user, null);
         Preferences::mark();
 
@@ -209,7 +209,7 @@ final class MfaController extends Controller
         $secret     = Google2FA::generateSecretKey();
         $image      = Google2FA::getQRCodeInline($domain, auth()->user()->email, $secret);
 
-        Preferences::set('temp-mfa-secret', $secret);
+        Preferences::set('temp-mfa-secret', $secret, true);
 
         return view('profile.mfa.enable-mfa', ['image' => $image, 'secret' => $secret]);
     }
@@ -232,7 +232,7 @@ final class MfaController extends Controller
         $user       = auth()->user();
 
         // verify password.
-        $password   = $request->get('password');
+        $password   = $request->input('password');
         if (!auth()->validate(['email' => $user->email, 'password' => $password])) {
             session()->flash('error', 'Bad user pw, no MFA for you!');
 
@@ -249,13 +249,13 @@ final class MfaController extends Controller
 
         $repository->setMFACode($user, $secret);
 
-        Preferences::delete('temp-mfa-secret');
+        Preferences::delete('temp-mfa-secret', true);
 
         session()->flash('success', (string) trans('firefly.saved_preferences'));
         Preferences::mark();
 
         // also save the code so replay attack is prevented.
-        $mfaCode    = $request->get('code');
+        $mfaCode    = $request->input('code');
         $this->addToMFAHistory($mfaCode);
 
         // make sure MFA is logged out.
@@ -282,7 +282,7 @@ final class MfaController extends Controller
         }
 
         $subTitle     = (string) trans('firefly.mfa_index_title');
-        $subTitleIcon = 'fa-calculator';
+        $subTitleIcon = 'bi-calculator';
         $enabledMFA   = null !== auth()->user()->mfa_secret;
 
         return view('profile.mfa.index')->with(['subTitle' => $subTitle, 'subTitleIcon' => $subTitleIcon, 'enabledMFA' => $enabledMFA]);
@@ -297,11 +297,11 @@ final class MfaController extends Controller
     private function addToMFAHistory(string $mfaCode): void
     {
         /** @var array $mfaHistory */
-        $mfaHistory   = Preferences::get('mfa_history', [])->data;
+        $mfaHistory   = Preferences::get('mfa_history', [], true)->data;
         $entry        = ['time' => Carbon::now()->getTimestamp(), 'code' => $mfaCode];
         $mfaHistory[] = $entry;
 
-        Preferences::set('mfa_history', $mfaHistory);
+        Preferences::set('mfa_history', $mfaHistory, true);
         $this->filterMFAHistory();
     }
 
@@ -311,7 +311,7 @@ final class MfaController extends Controller
     private function filterMFAHistory(): void
     {
         /** @var array $mfaHistory */
-        $mfaHistory = Preferences::get('mfa_history', [])->data;
+        $mfaHistory = Preferences::get('mfa_history', [], true)->data;
         $newHistory = [];
         $now        = Carbon::now()->getTimestamp();
         foreach ($mfaHistory as $entry) {
@@ -321,6 +321,6 @@ final class MfaController extends Controller
                 $newHistory[] = ['time' => $time, 'code' => $code];
             }
         }
-        Preferences::set('mfa_history', $newHistory);
+        Preferences::set('mfa_history', $newHistory, true);
     }
 }

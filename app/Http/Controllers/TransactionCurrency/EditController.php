@@ -53,7 +53,7 @@ final class EditController extends Controller
 
         $this->middleware(function ($request, $next) {
             app('view')->share('title', (string) trans('firefly.currencies'));
-            app('view')->share('mainTitleIcon', 'fa-usd');
+            app('view')->share('mainTitleIcon', 'bi-currency-euro');
             $this->repository     = app(CurrencyRepositoryInterface::class);
             $this->userRepository = app(UserRepositoryInterface::class);
 
@@ -77,7 +77,7 @@ final class EditController extends Controller
             return redirect(route('currencies.index'));
         }
 
-        $subTitleIcon     = 'fa-pencil';
+        $subTitleIcon     = 'bi-pencil';
         $subTitle         = (string) trans('breadcrumbs.edit_currency', ['name' => $currency->name]);
         $currency->symbol = htmlentities($currency->symbol);
 
@@ -127,7 +127,7 @@ final class EditController extends Controller
         $request->session()->flash('success', (string) trans('firefly.updated_currency', ['name' => $currency->name]));
         Preferences::mark();
 
-        if (1 === (int) $request->get('return_to_edit')) {
+        if (1 === (int) $request->input('return_to_edit')) {
             $request->session()->put('currencies.edit.fromUpdate', true);
 
             return redirect(route('currencies.edit', [$currency->id]));

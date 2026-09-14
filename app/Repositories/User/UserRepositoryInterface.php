@@ -50,6 +50,11 @@ interface UserRepositoryInterface
     public function all(): Collection;
 
     /**
+     * All users that are not blocked.
+     */
+    public function allAvailable(): Collection;
+
+    /**
      * Gives a user a role.
      */
     public function attachRole(User $user, string $role): bool;
@@ -105,6 +110,8 @@ interface UserRepositoryInterface
     public function getUserData(User $user): array;
 
     public function getUserGroups(User $user): Collection;
+
+    public function getUsersByRole(string $role): Collection;
 
     public function hasRole(Authenticatable|User|null $user, string $role): bool;
 

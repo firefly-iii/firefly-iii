@@ -36,6 +36,7 @@ use FireflyIII\Repositories\ExchangeRate\ExchangeRateRepositoryInterface;
 use FireflyIII\Support\Http\Api\ValidatesUserGroupTrait;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
+use Override;
 
 final class DestroyController extends Controller
 {
@@ -43,6 +44,7 @@ final class DestroyController extends Controller
 
     public const string RESOURCE_KEY = 'exchange-rates';
 
+    #[Override]
     protected array $acceptedRoles   = [UserRoleEnum::OWNER];
     private ExchangeRateRepositoryInterface $repository;
 

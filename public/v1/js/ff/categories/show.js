@@ -18,7 +18,6 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-/** global: everything, current, specific */
 
 $(function () {
     "use strict";

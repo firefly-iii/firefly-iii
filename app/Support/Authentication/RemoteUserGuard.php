@@ -75,7 +75,7 @@ class RemoteUserGuard implements Guard
         }
 
         // test value for development
-        // $userID = 'james@firefly';
+        // $userID = 'james@firefly-iii.org';
 
         if (null === $userID || '' === $userID) {
             Log::error(sprintf('No user in header "%s".', $header));
@@ -97,11 +97,11 @@ class RemoteUserGuard implements Guard
             $preference   = Preferences::getForUser($retrievedUser, 'remote_guard_alt_email');
 
             if ('' !== $emailAddress && null === $preference && $emailAddress !== $userID) {
-                Preferences::setForUser($retrievedUser, 'remote_guard_alt_email', $emailAddress);
+                Preferences::setForUser($retrievedUser, 'remote_guard_alt_email', $emailAddress, true);
             }
             // if the pref isn't null and the object returned isn't null, update the email address.
             if ('' !== $emailAddress && null !== $preference && $emailAddress !== $preference->data) {
-                Preferences::setForUser($retrievedUser, 'remote_guard_alt_email', $emailAddress);
+                Preferences::setForUser($retrievedUser, 'remote_guard_alt_email', $emailAddress, true);
             }
         }
 

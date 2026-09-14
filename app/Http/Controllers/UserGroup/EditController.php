@@ -40,7 +40,7 @@ final class EditController extends Controller
     {
         $title         = (string) trans('firefly.administrations_page_title');
         $subTitle      = (string) trans('firefly.administrations_page_edit_sub_title', ['title' => $userGroup->title]);
-        $mainTitleIcon = 'fa-book';
+        $mainTitleIcon = 'bi-book';
         Log::debug(sprintf('Now at %s', __METHOD__));
 
         return view('administrations.edit', ['title' => $title, 'subTitle' => $subTitle, 'mainTitleIcon' => $mainTitleIcon]);

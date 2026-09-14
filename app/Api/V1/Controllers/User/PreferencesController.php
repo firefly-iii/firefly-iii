@@ -33,9 +33,12 @@ use FireflyIII\Support\Facades\Preferences;
 use FireflyIII\Transformers\PreferenceTransformer;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Pagination\LengthAwarePaginator;
+use Illuminate\Support\Collection;
 use League\Fractal\Pagination\IlluminatePaginatorAdapter;
 use League\Fractal\Resource\Collection as FractalCollection;
 use League\Fractal\Resource\Item;
+
+use function Safe\preg_match;
 
 /**
  * Class PreferencesController
@@ -96,6 +99,25 @@ final class PreferencesController extends Controller
         return response()->json($manager->createData($resource)->toArray())->header('Content-Type', self::CONTENT_TYPE);
     }
 
+    public function showList(Collection $preferenceList): JsonResponse
+    {
+        $manager     = $this->getManager();
+        $count       = $preferenceList->count();
+        $names       = implode(',', $preferenceList->pluck('name')->toArray());
+
+        // make paginator:
+        $paginator   = new LengthAwarePaginator($preferenceList, $count, 31_337, 1);
+        $paginator->setPath(route('api.v1.preferences-list.show', [$names]).$this->buildParams());
+
+        /** @var PreferenceTransformer $transformer */
+        $transformer = app(PreferenceTransformer::class);
+
+        $resource    = new FractalCollection($preferenceList, $transformer, self::RESOURCE_KEY);
+        $resource->setPaginator(new IlluminatePaginatorAdapter($paginator));
+
+        return response()->json($manager->createData($resource)->toArray())->header('Content-Type', self::CONTENT_TYPE);
+    }
+
     /**
      * This endpoint is documented at:
      * https://api-docs.firefly-iii.org/?urls.primaryName=2.0.0%20(v1)#/preferences/storePreference
@@ -110,12 +132,17 @@ final class PreferencesController extends Controller
         if ('currencyPreference' === $data['name']) {
             throw new FireflyException('Please use api/v1/currencies/default instead.');
         }
+        if ('language' === $data['name'] && !in_array($data['data'], array_keys(config('firefly.languages')), true)) {
+            throw new FireflyException('Invalid language specified.');
+        }
+        if ('locale' === $data['name'] && 'equal' !== $data['data'] && 0 === preg_match('/^[A-Za-z0-9_.@-]+$/', $data['data'])) {
+            throw new FireflyException('Invalid locale specified.');
+        }
 
         $pref        = Preferences::set($data['name'], $data['data']);
 
         /** @var PreferenceTransformer $transformer */
         $transformer = app(PreferenceTransformer::class);
-        $transformer->setParameters($this->parameters);
 
         $resource    = new Item($pref, $transformer, 'preferences');
 

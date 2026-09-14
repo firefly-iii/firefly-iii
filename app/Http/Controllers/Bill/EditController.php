@@ -54,7 +54,7 @@ final class EditController extends Controller
 
         $this->middleware(function ($request, $next) {
             app('view')->share('title', (string) trans('firefly.bills'));
-            app('view')->share('mainTitleIcon', 'fa-calendar-o');
+            app('view')->share('mainTitleIcon', 'bi-calendar');
             $this->attachments = app(AttachmentHelperInterface::class);
             $this->repository  = app(BillRepositoryInterface::class);
 
@@ -134,7 +134,7 @@ final class EditController extends Controller
         }
         $redirect = redirect($this->getPreviousUrl('bills.edit.url'));
 
-        if (1 === (int) $request->get('return_to_edit')) {
+        if (1 === (int) $request->input('return_to_edit')) {
             $request->session()->put('bills.edit.fromUpdate', true);
 
             $redirect = redirect(route('bills.edit', [$bill->id]))->withInput(['return_to_edit' => 1]);

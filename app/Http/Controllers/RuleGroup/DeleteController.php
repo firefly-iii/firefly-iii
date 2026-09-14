@@ -50,7 +50,7 @@ final class DeleteController extends Controller
 
         $this->middleware(function ($request, $next) {
             app('view')->share('title', (string) trans('firefly.rules'));
-            app('view')->share('mainTitleIcon', 'fa-random');
+            app('view')->share('mainTitleIcon', 'bi-shuffle');
 
             $this->repository = app(RuleGroupRepositoryInterface::class);
 
@@ -81,7 +81,7 @@ final class DeleteController extends Controller
         $title  = $ruleGroup->title;
 
         /** @var RuleGroup $moveTo */
-        $moveTo = $this->repository->find((int) $request->get('move_rules_before_delete'));
+        $moveTo = $this->repository->find((int) $request->input('move_rules_before_delete'));
         $this->repository->destroy($ruleGroup, $moveTo);
 
         session()->flash('success', (string) trans('firefly.deleted_rule_group', ['title' => $title]));

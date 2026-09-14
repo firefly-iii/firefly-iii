@@ -1,4 +1,0 @@
-var accountInfo = [];
-{% for id, account in accounts %}
-    accountInfo[{{ id }}] = {preferredCurrency: {{ account.preferredCurrency }}, name: "{{ account.name }}"};
-{% endfor %}

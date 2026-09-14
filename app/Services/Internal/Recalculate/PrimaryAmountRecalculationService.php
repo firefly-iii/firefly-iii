@@ -1,9 +1,7 @@
 <?php
 
-declare(strict_types=1);
-
 /*
- * RecalculatesPrimaryAmounts.php
+ * PrimaryAmountRecalculationService.php
  * Copyright (c) 2026 james@firefly-iii.org
  *
  * This file is part of Firefly III (https://github.com/firefly-iii).
@@ -21,6 +19,8 @@ declare(strict_types=1);
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
+
+declare(strict_types=1);
 
 namespace FireflyIII\Services\Internal\Recalculate;
 
@@ -143,7 +143,7 @@ class PrimaryAmountRecalculationService
         TransactionObserver::$recalculate = false;
         Log::debug(sprintf('Count of set is %d', $set->count()));
         foreach ($set as $item) {
-            Log::debug(sprintf('Touch transaction #%d', $item->id));
+            // Log::debug(sprintf('Touch transaction #%d', $item->id));
 
             // here we are.
             /** @var null|Transaction $transaction */
@@ -177,7 +177,7 @@ class PrimaryAmountRecalculationService
         TransactionObserver::$recalculate = false;
         Log::debug(sprintf('Count of set is %d', $set->count()));
         foreach ($set as $item) {
-            Log::debug(sprintf('Touch transaction #%d', $item->id));
+            // Log::debug(sprintf('Touch transaction #%d', $item->id));
 
             // here we are.
             /** @var null|Transaction $transaction */

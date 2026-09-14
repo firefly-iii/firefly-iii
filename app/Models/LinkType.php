@@ -53,6 +53,8 @@ class LinkType extends Model
             if (null !== $linkType) {
                 return $linkType;
             }
+
+            throw new NotFoundHttpException();
         }
 
         throw new AuthenticationException();

@@ -69,6 +69,8 @@ class Category extends Model
             if (null !== $category) {
                 return $category;
             }
+
+            throw new NotFoundHttpException();
         }
 
         throw new AuthenticationException();

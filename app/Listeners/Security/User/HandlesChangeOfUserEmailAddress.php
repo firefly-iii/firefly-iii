@@ -1,7 +1,5 @@
 <?php
 
-declare(strict_types=1);
-
 /*
  * HandlesChangeOfUserEmailAddress.php
  * Copyright (c) 2026 james@firefly-iii.org
@@ -21,6 +19,8 @@ declare(strict_types=1);
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
+
+declare(strict_types=1);
 
 namespace FireflyIII\Listeners\Security\User;
 
@@ -53,7 +53,7 @@ class HandlesChangeOfUserEmailAddress implements ShouldQueue
         $newEmail = $event->newEmail;
         $oldEmail = $event->oldEmail;
         $user     = $event->user;
-        $token    = Preferences::getForUser($user, 'email_change_confirm_token', 'invalid');
+        $token    = Preferences::getForUser($user, 'email_change_confirm_token', 'invalid', true);
         $url      = route('profile.confirm-email-change', [$token->data]);
 
         try {
@@ -77,7 +77,7 @@ class HandlesChangeOfUserEmailAddress implements ShouldQueue
         $newEmail = $event->newEmail;
         $oldEmail = $event->oldEmail;
         $user     = $event->user;
-        $token    = Preferences::getForUser($user, 'email_change_undo_token', 'invalid');
+        $token    = Preferences::getForUser($user, 'email_change_undo_token', 'invalid', true);
         $hashed   = hash('sha256', sprintf('%s%s', (string) config('app.key'), $oldEmail));
         $url      = route('profile.undo-email-change', [$token->data, $hashed]);
 

@@ -41,6 +41,7 @@ use FireflyIII\Services\Internal\Update\CurrencyUpdateService;
 use FireflyIII\Support\Facades\Amount;
 use FireflyIII\Support\Repositories\UserGroup\UserGroupInterface;
 use FireflyIII\Support\Repositories\UserGroup\UserGroupTrait;
+use Illuminate\Database\QueryException;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Log;
 use Override;
@@ -398,7 +399,7 @@ class CurrencyRepository implements CurrencyRepositoryInterface, UserGroupInterf
 
     public function searchCurrency(string $search, int $limit): Collection
     {
-        $query = TransactionCurrency::query()->where('enabled', true)->orderBy('code', 'ASC');
+        $query = TransactionCurrency::query()->orderBy('code', 'ASC');
         if ('' !== $search) {
             $query->whereLike('name', sprintf('%%%s%%', $search));
         }
@@ -411,15 +412,42 @@ class CurrencyRepository implements CurrencyRepositoryInterface, UserGroupInterf
      */
     public function setExchangeRate(TransactionCurrency $fromCurrency, TransactionCurrency $toCurrency, Carbon $date, float $rate): CurrencyExchangeRate
     {
-        return CurrencyExchangeRate::create([
-            'user_id'          => $this->user->id,
-            'user_group_id'    => $this->userGroup->id,
-            'from_currency_id' => $fromCurrency->id,
-            'to_currency_id'   => $toCurrency->id,
-            'date'             => $date,
-            'date_tz'          => $date->format('e'),
-            'rate'             => $rate,
-        ]);
+        $res = new CurrencyExchangeRate();
+
+        try {
+            $res = CurrencyExchangeRate::create([
+                'user_id'          => $this->user->id,
+                'user_group_id'    => $this->userGroup->id,
+                'from_currency_id' => $fromCurrency->id,
+                'to_currency_id'   => $toCurrency->id,
+                'date'             => $date,
+                'date_tz'          => $date->format('e'),
+                'rate'             => $rate,
+            ]);
+        } catch (QueryException $e) {
+            $message = $e->getMessage();
+            Log::error(sprintf('Could not save exchange rate: %s', $message));
+            if (str_contains($message, 'Integrity constraint violation')) {
+                Log::warning(sprintf('Currency exchange rate already exists, so return existing one: %s', $message));
+                $res = CurrencyExchangeRate::query()
+                    ->where('user_id', $this->user->id)
+                    ->where('user_group_id', $this->userGroup->id)
+                    ->where('from_currency_id', $fromCurrency->id)
+                    ->where('to_currency_id', $toCurrency->id)
+                    ->where('date', $date)
+                    ->first()
+                ;
+                if (null === $res) {
+                    Log::warning('Could not find currency exchange rate, throw exception.');
+
+                    throw new FireflyException('Could not save new currency exchange rate, and returned null when trying to find existing one.');
+                }
+
+                return $res;
+            }
+        }
+
+        return $res;
     }
 
     /**

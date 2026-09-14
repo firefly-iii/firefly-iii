@@ -29,7 +29,6 @@ use FireflyIII\Models\TransactionGroup;
 use FireflyIII\Repositories\Account\AccountRepositoryInterface;
 use FireflyIII\Repositories\TransactionGroup\TransactionGroupRepositoryInterface;
 use FireflyIII\Services\Internal\Update\GroupCloneService;
-use FireflyIII\Support\Facades\AppConfiguration;
 use FireflyIII\Support\Facades\Preferences;
 use Illuminate\Contracts\View\Factory;
 use Illuminate\Contracts\View\View;
@@ -57,7 +56,7 @@ final class CreateController extends Controller
 
         $this->middleware(function ($request, $next) {
             app('view')->share('title', (string) trans('firefly.transactions'));
-            app('view')->share('mainTitleIcon', 'fa-exchange');
+            app('view')->share('mainTitleIcon', 'bi-shuffle');
             $this->repository = app(TransactionGroupRepositoryInterface::class);
 
             return $next($request);
@@ -66,7 +65,7 @@ final class CreateController extends Controller
 
     public function cloneGroup(Request $request): JsonResponse
     {
-        $groupId = (int) $request->get('id');
+        $groupId = (int) $request->input('id');
         if (0 !== $groupId) {
             $group = $this->repository->find($groupId);
             if ($group instanceof TransactionGroup) {
@@ -81,7 +80,7 @@ final class CreateController extends Controller
                 session()->flash('success', trans('firefly.stored_journal', ['description' => $title]));
                 session()->flash('success_url', $link);
 
-                if ('edit' === $request->get('redirect')) {
+                if ('edit' === $request->input('redirect')) {
                     return response()->json(['redirect' => route('transactions.edit', [$newGroup->id])]);
                 }
 
@@ -103,59 +102,39 @@ final class CreateController extends Controller
     {
         Preferences::mark();
 
-        $sourceId                   = (int) request()->get('source');
-        $destinationId              = (int) request()->get('destination');
+        $sourceId             = (int) request()->get('source');
+        $destinationId        = (int) request()->get('destination');
 
         /** @var AccountRepositoryInterface $accountRepository */
-        $accountRepository          = app(AccountRepositoryInterface::class);
-        $cash                       = $accountRepository->getCashAccount();
-        $preFilled                  = session()->has('preFilled') ? session('preFilled') : [];
-        $subTitle                   = (string) trans(sprintf('breadcrumbs.create_%s', strtolower((string) $objectType)));
-        $subTitleIcon               = 'fa-plus';
+        $accountRepository    = app(AccountRepositoryInterface::class);
+        $cash                 = $accountRepository->getCashAccount();
+        $preFilled            = session()->has('preFilled') ? session('preFilled') : [];
+        $subTitle             = (string) trans(sprintf('breadcrumbs.create_%s', strtolower((string) $objectType)));
+        $subTitleIcon         = 'bi-plus';
 
-        /** @var null|array $optionalFields */
-        $optionalFields             = Preferences::get('transaction_journal_optional_fields', [])->data;
-        $allowedOpposingTypes       = config('firefly.allowed_opposing_types');
-        $accountToTypes             = config('firefly.account_to_transaction');
-        $previousUrl                = $this->rememberPreviousUrl('transactions.create.url');
-        $parts                      = parse_url((string) $previousUrl);
-        $search                     = sprintf('?%s', $parts['query'] ?? '');
-        $previousUrl                = str_replace($search, '', $previousUrl);
-        if (!is_array($optionalFields)) {
-            $optionalFields = [];
-        }
-        // not really a fan of this, but meh.
-        $optionalDateFields         = [
-            'interest_date' => $optionalFields['interest_date'] ?? false,
-            'book_date'     => $optionalFields['book_date'] ?? false,
-            'process_date'  => $optionalFields['process_date'] ?? false,
-            'due_date'      => $optionalFields['due_date'] ?? false,
-            'payment_date'  => $optionalFields['payment_date'] ?? false,
-            'invoice_date'  => $optionalFields['invoice_date'] ?? false,
-        ];
-        $optionalFields['external_url'] ??= false;
-        $optionalFields['location']     ??= false;
-        $optionalFields['location'] = $optionalFields['location']
-        && true === AppConfiguration::get('enable_external_map', config('firefly.enable_external_map'))->data;
+        $allowedOpposingTypes = config('firefly.allowed_opposing_types');
+        $accountToTypes       = config('firefly.account_to_transaction');
+        $previousUrl          = $this->rememberPreviousUrl('transactions.create.url');
+        $parts                = parse_url((string) $previousUrl);
+        $search               = sprintf('?%s', $parts['query'] ?? '');
+        $previousUrl          = str_replace($search, '', $previousUrl);
 
         // map info:
-        $longitude                  = config('firefly.default_location.longitude');
-        $latitude                   = config('firefly.default_location.latitude');
-        $zoomLevel                  = config('firefly.default_location.zoom_level');
+        $longitude            = config('firefly.default_location.longitude');
+        $latitude             = config('firefly.default_location.latitude');
+        $zoomLevel            = config('firefly.default_location.zoom_level');
 
         session()->put('preFilled', $preFilled);
 
         return view('transactions.create', [
             'subTitleIcon'         => $subTitleIcon,
             'cash'                 => $cash,
-            'longitude'            => $longitude,
-            'latitude'             => $latitude,
-            'zoomLevel'            => $zoomLevel,
+            //            'longitude'            => $longitude,
+            //            'latitude'             => $latitude,
+            //            'zoomLevel'            => $zoomLevel,
             'objectType'           => $objectType,
-            'optionalDateFields'   => $optionalDateFields,
             'subTitle'             => $subTitle,
             'previousUrl'          => $previousUrl,
-            'optionalFields'       => $optionalFields,
             'preFilled'            => $preFilled,
             'allowedOpposingTypes' => $allowedOpposingTypes,
             'accountToTypes'       => $accountToTypes,

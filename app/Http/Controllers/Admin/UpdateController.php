@@ -48,7 +48,7 @@ final class UpdateController extends Controller
         parent::__construct();
         $this->middleware(static function ($request, $next) {
             app('view')->share('title', (string) trans('firefly.system_settings'));
-            app('view')->share('mainTitleIcon', 'fa-hand-spock-o');
+            app('view')->share('mainTitleIcon', 'bi-cpu');
 
             return $next($request);
         });
@@ -63,7 +63,7 @@ final class UpdateController extends Controller
     public function index(): Factory|\Illuminate\Contracts\View\View
     {
         $subTitle        = (string) trans('firefly.update_check_title');
-        $subTitleIcon    = 'fa-star';
+        $subTitleIcon    = 'bi-star';
         $permission      = AppConfiguration::get('permission_update_check', -1);
         $channel         = AppConfiguration::get('update_channel', 'stable');
         $selected        = $permission->data;
@@ -95,8 +95,8 @@ final class UpdateController extends Controller
      */
     public function post(Request $request): RedirectResponse
     {
-        $checkForUpdates = (int) $request->get('check_for_updates');
-        $channel         = $request->get('update_channel');
+        $checkForUpdates = (int) $request->input('check_for_updates');
+        $channel         = $request->input('update_channel');
         $channel         = in_array($channel, ['stable', 'beta', 'alpha'], true) ? $channel : 'stable';
 
         AppConfiguration::set('permission_update_check', $checkForUpdates);

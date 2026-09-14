@@ -531,7 +531,7 @@ class AccountRepository implements AccountRepositoryInterface, UserGroupInterfac
             ->orderBy('transaction_journals.date', 'ASC')
             ->orderBy('transaction_journals.order', 'DESC')
             ->where('transaction_journals.user_id', $this->user->id)
-            ->orderBy('transaction_journals.id', 'ASC')
+            ->orderBy('transaction_journals.id', 'ASC') // ASC, because the oldest must come FIRST
             ->first(['transaction_journals.id'])
         ;
         if (null !== $first) {

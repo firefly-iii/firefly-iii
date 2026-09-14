@@ -14,7 +14,7 @@ body:
       description: AI agents like Claude and CoPilot are not reliable tools. Do not use them.
       options:
         - label: I'm a real person and wrote this bug without assistance from AI.
-          required: true
+          required: false
 
   - type: checkboxes
     attributes:

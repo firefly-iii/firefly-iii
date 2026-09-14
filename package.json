@@ -3,13 +3,17 @@
         "postinstall": "patch-package --error-on-fail"
     },
     "workspaces": [
-        "resources/assets/v1",
-        "resources/assets/v2"
+        "resources/assets/v3"
     ],
-    "devDependencies": {
-        "postcss": "^8.5.23"
-    },
     "dependencies": {
         "patch-package": "^8.0.1"
+    },
+    "allowScripts": {
+        "@parcel/watcher@2.6.0": true
+    },
+    "devDependencies": {
+        "@eslint/js": "^10.0.1",
+        "eslint": "^10.10.0",
+        "globals": "^17.12.0"
     }
 }

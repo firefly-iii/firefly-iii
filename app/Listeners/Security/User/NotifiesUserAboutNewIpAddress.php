@@ -1,7 +1,5 @@
 <?php
 
-declare(strict_types=1);
-
 /*
  * NotifiesUserAboutNewIpAddress.php
  * Copyright (c) 2026 james@firefly-iii.org
@@ -22,6 +20,8 @@ declare(strict_types=1);
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
+declare(strict_types=1);
+
 namespace FireflyIII\Listeners\Security\User;
 
 use FireflyIII\Events\Security\User\UserLoggedInFromNewIpAddress;
@@ -41,7 +41,7 @@ class NotifiesUserAboutNewIpAddress implements ShouldQueue
         }
 
         /** @var null|array $list */
-        $list = Preferences::getForUser($user, 'login_ip_history', [])->data;
+        $list = Preferences::getForUser($user, 'login_ip_history', [], true)->data;
         if (!is_array($list)) {
             $list = [];
         }
@@ -54,6 +54,6 @@ class NotifiesUserAboutNewIpAddress implements ShouldQueue
             $list[$index]['notified'] = true;
         }
 
-        Preferences::setForUser($user, 'login_ip_history', $list);
+        Preferences::setForUser($user, 'login_ip_history', $list, true);
     }
 }

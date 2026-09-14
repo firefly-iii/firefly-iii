@@ -36,6 +36,7 @@ use FireflyIII\Repositories\Bill\BillRepositoryInterface;
 use FireflyIII\Support\Facades\Preferences;
 use FireflyIII\User;
 use Illuminate\Http\JsonResponse;
+use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Log;
@@ -52,7 +53,7 @@ final class HomeController extends Controller
     {
         parent::__construct();
         app('view')->share('title', 'Firefly III');
-        app('view')->share('mainTitleIcon', 'fa-fire');
+        app('view')->share('mainTitleIcon', 'bi-fire');
         $this->middleware(Installer::class);
     }
 
@@ -61,22 +62,22 @@ final class HomeController extends Controller
      *
      * @throws Exception
      */
-    public function dateRange(Request $request): JsonResponse
+    public function dateRange(Request $request): JsonResponse|RedirectResponse
     {
         $stringStart   = '';
         $stringEnd     = '';
 
         try {
-            $stringStart = e((string) $request->get('start'));
-            $start       = Carbon::createFromFormat('Y-m-d', $stringStart);
+            $stringStart = e((string) $request->input('start'));
+            $start       = Carbon::createFromFormat('!Y-m-d', $stringStart);
         } catch (InvalidFormatException) {
             Log::error(sprintf('Start: could not parse date string "%s" so ignore it.', $stringStart));
             $start = Carbon::now()->startOfMonth();
         }
 
         try {
-            $stringEnd = e((string) $request->get('end'));
-            $end       = Carbon::createFromFormat('Y-m-d', $stringEnd);
+            $stringEnd = e((string) $request->input('end'));
+            $end       = Carbon::createFromFormat('!Y-m-d', $stringEnd);
         } catch (InvalidFormatException) {
             Log::error(sprintf('End could not parse date string "%s" so ignore it.', $stringEnd));
             $end = Carbon::now()->endOfMonth();
@@ -87,11 +88,12 @@ final class HomeController extends Controller
         if (null === $end) {
             $end = Carbon::now()->endOfMonth();
         }
-
-        $label         = $request->get('label');
+        $end->endOfDay();
+        $end->setMilli(0);
+        $label         = $request->input('label');
         $isCustomRange = false;
 
-        Log::debug('dateRange: Received dateRange', ['start' => $stringStart, 'end' => $stringEnd, 'label' => $request->get('label')]);
+        Log::debug('dateRange: Received dateRange', ['start' => $stringStart, 'end' => $stringEnd, 'label' => $request->input('label')]);
         // check if the label is "everything" or "Custom range" which will betray
         // a possible problem with the budgets.
         if ($label === (string) trans('firefly.everything') || $label === (string) trans('firefly.customRange')) {
@@ -111,6 +113,9 @@ final class HomeController extends Controller
         Log::debug(sprintf('Set start to %s', $start->format('Y-m-d H:i:s')));
         $request->session()->put('end', $end);
         Log::debug(sprintf('Set end to %s', $end->format('Y-m-d H:i:s')));
+        if ('true' === $request->input('redirect')) {
+            return redirect(route('home'));
+        }
 
         return response()->json(['ok' => 'ok']);
     }
@@ -125,19 +130,12 @@ final class HomeController extends Controller
         $types = config('firefly.accountTypesByIdentifier.asset');
         $count = $repository->count($types);
         Log::channel('audit')->info('User visits homepage.');
-
         if (0 === $count) {
             return redirect(route('new-user.index'));
         }
 
-        if ('v1' === (string) config('view.layout')) {
-            return $this->indexV1($repository);
-        }
-        if ('v2' === (string) config('view.layout')) {
-            return $this->indexV2();
-        }
-
-        throw new FireflyException('Invalid layout configuration');
+        // ignore v2.
+        return $this->indexV1($repository);
     }
 
     private function indexV1(AccountRepositoryInterface $repository): mixed
@@ -146,6 +144,7 @@ final class HomeController extends Controller
         $pageTitle      = (string) trans('firefly.main_dashboard_page_title');
         $count          = $repository->count($types);
         $subTitle       = (string) trans('firefly.welcome_back');
+        $subTitleIcon   = 'bi-piggy-bank';
         $transactions   = [];
         $frontpage      = Preferences::getFresh('frontpageAccounts', $repository->getAccountsByType([AccountTypeEnum::ASSET->value])->pluck('id')->toArray());
         $frontpageArray = $frontpage->data;
@@ -182,6 +181,7 @@ final class HomeController extends Controller
 
         return view('index', [
             'count'        => $count,
+            'subTitleIcon' => $subTitleIcon,
             'subTitle'     => $subTitle,
             'transactions' => $transactions,
             'billCount'    => $billCount,
@@ -190,20 +190,5 @@ final class HomeController extends Controller
             'today'        => $today,
             'pageTitle'    => $pageTitle,
         ]);
-    }
-
-    private function indexV2(): mixed
-    {
-        $subTitle  = (string) trans('firefly.welcome_back');
-        $pageTitle = (string) trans('firefly.main_dashboard_page_title');
-
-        $start     = session('start', today(config('app.timezone'))->startOfMonth());
-        $end       = session('end', today(config('app.timezone'))->endOfMonth());
-
-        /** @var User $user */
-        $user      = auth()->user();
-        event(new SystemRequestedVersionCheck($user));
-
-        return view('index', ['subTitle' => $subTitle, 'start' => $start, 'end' => $end, 'pageTitle' => $pageTitle]);
     }
 }

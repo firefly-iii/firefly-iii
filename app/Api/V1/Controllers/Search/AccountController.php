@@ -60,9 +60,9 @@ final class AccountController extends Controller
     public function search(Request $request): JsonResponse|Response
     {
         $manager     = $this->getManager();
-        $query       = trim((string) $request->get('query'));
-        $field       = trim((string) $request->get('field'));
-        $type        = $request->get('type') ?? 'all';
+        $query       = trim((string) $request->input('query'));
+        $field       = trim((string) $request->input('field'));
+        $type        = $request->input('type') ?? 'all';
         if ('' === $query || !in_array($field, $this->validFields, strict: true)) {
             return response(null, 422);
         }

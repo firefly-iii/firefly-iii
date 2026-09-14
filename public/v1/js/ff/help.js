@@ -17,7 +17,6 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
-/** global: token, helpPageTitle, anonymous */
 $(function () {
     "use strict";
     $('#help').click(showHelp);
@@ -55,14 +54,18 @@ function changeAnonymity(e) {
 
 function showHelp(e) {
     "use strict";
-    var target = $(e.target);
+    console.log('showHelp');
+    var target = $(e.currentTarget);
     var route = target.data('route');
     var specialPage = target.data('extra');
+    console.log('route', route);
 
     if (typeof specialPage === 'undefined') {
         specialPage = '';
     }
-    $('#helpBody').html('<span class="fa fa-refresh fa-spin"></span>');
+    console.log('route', route);
+    console.log('special page', specialPage);
+    $('#helpBody').html('<span class="bi bi-hourglass"></span>');
     $('#helpModal').modal('show');
     $('#helpTitle').html(helpPageTitle);
     $('#helpBody').html(helpPageBody);

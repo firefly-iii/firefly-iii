@@ -17,14 +17,14 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - id: ff3version
-        uses: pozetroninc/github-action-get-latest-release@master
+        uses: pozetroninc/github-action-get-latest-release@53d33d213ee71c72360e3c829caf7cee94ec21e2 # pins @master
         with:
           owner: firefly-iii
           repo: firefly-iii
           excludes: prerelease, draft
           token: ${{ secrets.GITHUB_TOKEN }}
       - id: importerversion
-        uses: pozetroninc/github-action-get-latest-release@master
+        uses: pozetroninc/github-action-get-latest-release@53d33d213ee71c72360e3c829caf7cee94ec21e2 # pins @master
         with:
           owner: firefly-iii
           repo: data-importer

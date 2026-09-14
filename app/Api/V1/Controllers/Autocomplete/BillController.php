@@ -31,14 +31,16 @@ use FireflyIII\Models\Bill;
 use FireflyIII\Repositories\Bill\BillRepositoryInterface;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
+use Override;
 
 /**
  * Class BillController
  */
 final class BillController extends Controller
 {
-    private BillRepositoryInterface $repository;
+    #[Override]
     protected array $acceptedRoles = [UserRoleEnum::READ_SUBSCRIPTIONS];
+    private BillRepositoryInterface $repository;
 
     /**
      * BillController constructor.

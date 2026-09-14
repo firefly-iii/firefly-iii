@@ -48,15 +48,7 @@ Route::group(
         'as'         => 'api.v1.cron.',
     ],
     static function (): void {
-        Route::get('cron/{cliToken}', ['uses' => 'CronController@cron', 'as' => 'index'])
-            ->withoutMiddleware(['api'])
-        ;
-        Route::get(
-            'cron/{cliToken}',
-            [CronController::class, 'cron']
-        )->name('index')
-            ->withoutMiddleware(['api'])
-        ;
+        Route::get('cron/{cliToken}', [CronController::class, 'cron'])->name('index')->withoutMiddleware(['api']);
     }
 );
 
@@ -75,16 +67,14 @@ Route::group(
         Route::get('budgets', ['uses' => 'BudgetController@budgets', 'as' => 'budgets']);
         Route::get('categories', ['uses' => 'CategoryController@categories', 'as' => 'categories']);
         Route::get('currencies', ['uses' => 'CurrencyController@currencies', 'as' => 'currencies']);
-        Route::get('currencies-with-code', ['uses' => 'CurrencyController@currenciesWithCode', 'as' => 'currencies-with-code']);
         Route::get('object-groups', ['uses' => 'ObjectGroupController@objectGroups', 'as' => 'object-groups']);
         Route::get('piggy-banks', ['uses' => 'PiggyBankController@piggyBanks', 'as' => 'piggy-banks']);
-        Route::get('piggy-banks-with-balance', ['uses' => 'PiggyBankController@piggyBanksWithBalance', 'as' => 'piggy-banks-with-balance']);
         Route::get('recurring', ['uses' => 'RecurrenceController@recurring', 'as' => 'recurring']);
         Route::get('rules', ['uses' => 'RuleController@rules', 'as' => 'rules']);
         Route::get('rule-groups', ['uses' => 'RuleGroupController@ruleGroups', 'as' => 'rule-groups']);
         Route::get('tags', ['uses' => 'TagController@tags', 'as' => 'tags']);
         Route::get('transactions', ['uses' => 'TransactionController@transactions', 'as' => 'transactions']);
-        Route::get('transactions-with-id', ['uses' => 'TransactionController@transactionsWithID', 'as' => 'transactions-with-id']);
+        Route::get('transactions-with-meta', ['uses' => 'TransactionController@transactionsWithMeta', 'as' => 'transactions-with-meta']);
         Route::get('transaction-types', ['uses' => 'TransactionTypeController@transactionTypes', 'as' => 'transaction-types']);
     }
 );
@@ -189,6 +179,7 @@ Route::group(
         Route::get('transactions', ['uses' => 'ExportController@transactions', 'as' => 'transactions']);
     }
 );
+
 // Destroy data API route
 Route::group(
     [
@@ -200,6 +191,7 @@ Route::group(
         Route::delete('', ['uses' => 'DestroyController@destroy', 'as' => 'destroy']);
     }
 );
+
 Route::group(
     [
         'namespace' => 'FireflyIII\Api\V1\Controllers\Data',
@@ -239,6 +231,8 @@ Route::group(
         Route::get('total', ['uses' => 'PeriodController@total', 'as' => 'total']);
         Route::get('bill', ['uses' => 'BillController@bill', 'as' => 'bill']);
         Route::get('no-bill', ['uses' => 'BillController@noBill', 'as' => 'no-bill']);
+        Route::get('subscription', ['uses' => 'BillController@bill', 'as' => 'subscription']);
+        Route::get('no-subscription', ['uses' => 'BillController@noBill', 'as' => 'no-subscription']);
         Route::get('budget', ['uses' => 'BudgetController@budget', 'as' => 'budget']);
         Route::get('no-budget', ['uses' => 'BudgetController@noBudget', 'as' => 'no-budget']);
         Route::get('category', ['uses' => 'CategoryController@category', 'as' => 'category']);
@@ -278,6 +272,7 @@ Route::group(
 );
 
 // Insight in transfers
+// TODO validate API documentation.
 Route::group(
     [
         'namespace' => 'FireflyIII\Api\V1\Controllers\Insight\Transfer',
@@ -385,6 +380,7 @@ Route::group(
         Route::get('{bill}/transactions', ['uses' => 'ListController@transactions', 'as' => 'transactions']);
     }
 );
+
 Route::group(
     [
         'namespace' => 'FireflyIII\Api\V1\Controllers\Models\Bill',
@@ -815,9 +811,24 @@ Route::group(
     static function (): void {
         Route::get('', ['uses' => 'PreferencesController@index', 'as' => 'index']);
         Route::post('', ['uses' => 'PreferencesController@store', 'as' => 'store']);
-        // Route::get('{preferenceList}', ['uses' => 'PreferencesController@showList', 'as' => 'show-list'])->where('preferenceList', ',+');
         Route::get('{preferenceName}', ['uses' => 'PreferencesController@show', 'as' => 'show']);
         Route::put('{preferenceName}', ['uses' => 'PreferencesController@update', 'as' => 'update']);
+    }
+);
+
+// Preference API routes:
+Route::group(
+    [
+        'namespace' => 'FireflyIII\Api\V1\Controllers\User',
+        'prefix'    => 'v1/preferences-list',
+        'as'        => 'api.v1.preferences-list.',
+    ],
+    static function (): void {
+        //        Route::get('', ['uses' => 'PreferencesController@index', 'as' => 'index']);
+        //        Route::post('', ['uses' => 'PreferencesController@store', 'as' => 'store']);
+        // Route::get('{preferenceList}', ['uses' => 'PreferencesController@showList', 'as' => 'show-list'])->where('preferenceList', ',+');
+        Route::get('{preferenceList}', ['uses' => 'PreferencesController@showList', 'as' => 'show']);
+        //        Route::put('{preferenceName}', ['uses' => 'PreferencesController@update', 'as' => 'update']);
     }
 );
 

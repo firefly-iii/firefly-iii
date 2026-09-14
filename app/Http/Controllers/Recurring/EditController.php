@@ -64,7 +64,7 @@ final class EditController extends Controller
 
         // translations:
         $this->middleware(function ($request, $next) {
-            app('view')->share('mainTitleIcon', 'fa-paint-brush');
+            app('view')->share('mainTitleIcon', 'bi-paint-bucket');
             app('view')->share('title', (string) trans('firefly.recurrences'));
             app('view')->share('subTitle', (string) trans('firefly.recurrences'));
 
@@ -150,7 +150,11 @@ final class EditController extends Controller
         ];
         $array['first_date']                = substr((string) $array['first_date'], 0, 10);
         $array['repeat_until']              = substr((string) $array['repeat_until'], 0, 10);
-        $array['transactions'][0]['tags']   = implode(',', $array['transactions'][0]['tags'] ?? []);
+        $tags                               = [];
+        foreach ($array['transactions'][0]['tags'] as $tag) {
+            $tags[$tag] = $tag;
+        }
+        $array['transactions'][0]['tags']   = $tags;
         $array['transactions'][0]['amount'] = round((float) $array['transactions'][0]['amount'], $array['transactions'][0]['currency_decimal_places']);
         if (null !== $array['transactions'][0]['foreign_amount'] && '' !== $array['transactions'][0]['foreign_amount']) {
             $array['transactions'][0]['foreign_amount'] = round(
@@ -183,7 +187,6 @@ final class EditController extends Controller
     {
         $data       = $request->getAll();
         $recurrence = $this->repository->update($recurrence, $data);
-
         $request->session()->flash('success', (string) trans('firefly.updated_recurrence', ['title' => $recurrence->title]));
         Log::channel('audit')->info(sprintf('Updated recurrence #%d.', $recurrence->id), $data);
 
@@ -203,7 +206,7 @@ final class EditController extends Controller
         }
         Preferences::mark();
         $redirect   = redirect($this->getPreviousUrl('recurrences.edit.url'));
-        if (1 === (int) $request->get('return_to_edit')) {
+        if (1 === (int) $request->input('return_to_edit')) {
             // set value so edit routine will not overwrite URL:
             $request->session()->put('recurrences.edit.fromUpdate', true);
 

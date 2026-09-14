@@ -53,8 +53,8 @@ class CorrectsAmounts extends Command
 
     protected $description = 'This command makes sure positive and negative amounts are recorded correctly.';
     protected $signature   = 'correction:amounts';
-    private JournalDestroyService $service;
     private GenericDestroyService $genericService;
+    private JournalDestroyService $service;
 
     public function handle(): int
     {

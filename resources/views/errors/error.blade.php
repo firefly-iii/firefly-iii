@@ -1,4 +1,4 @@
-@extends('layout.v2.error')
+@extends('layout.v3.blank')
 @section('status_code','')
 @section('status','Error message')
 @section('sub_title', trans('errors.error_occurred'))

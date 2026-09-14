@@ -93,6 +93,8 @@ class Recurrence extends Model
             if (null !== $recurrence) {
                 return $recurrence;
             }
+
+            throw new NotFoundHttpException();
         }
 
         throw new AuthenticationException();

@@ -1,0 +1,70 @@
+@extends('layout.v3.session')
+@section('content')
+    <div class="row">
+        <div class="col-lg-12 col-md-12 col-sm-12">
+            <div class="card mb-2">
+                <div class="card-header">
+                    <h3 class="card-title">
+                        {{ __('firefly.list_all_attachments') }}
+                    </h3>
+                </div>
+                <div class="card-body p-0">
+                    <table class="table table-striped sortable">
+                        <thead>
+                        <tr>
+                            <th data-defaultsign="_19">&nbsp;</th>
+                            <th data-defaultsign="az">{{ trans('list.file_name') }}</th>
+                            <th data-defaultsign="_19">{{ trans('list.file_size') }}</th>
+                            <th data-defaultsign="az">{{ trans('list.file_type') }}</th>
+                            <th data-defaultsign="az">{{ trans('list.attached_to') }}</th>
+                            <th data-defaultsign="_19">{{ trans('list.file_exists') }}</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        @foreach($set as $att)
+                            <tr>
+                                <td data-value="{{ $att->id }}">
+                                    <div class="btn-group btn-group-sm">
+                                        <a href="{{ route('attachments.edit', $att->id) }}?_from={{ urlencode($FF3_FROM) }}" class="btn btn-outline-secondary"><span class="bi bi-pencil"></span></a>
+                                        <a href="{{ route('attachments.delete', $att->id) }}?_from={{ urlencode($FF3_FROM) }}" class="btn btn-outline-danger"><span class="bi bi-trash"></span></a>
+                                        <a href="{{ route('attachments.download', $att->id) }}?_from={{ urlencode($FF3_FROM) }}" class="btn btn-outline-secondary"><span class="bi bi-download"></span></a>
+                                    </div>
+                                </td>
+                                <td data-value="{{ $att->filename }}">
+                                    <a href="{{ route('attachments.view', $att->id) }}" title="{{ $att->filename }}">
+                                        {{ $att->filename }}
+                                    </a>
+                                </td>
+                                <td data-value="{{ $att->size }}">{{ print_nice_filesize($att->size) }}</td>
+                                <td data-value="{{ $att->mime }}">{{ $att->mime }}</td>
+                                <td data-value="{{ $att->attachable_type }}_{{ $att->attachable_id }}">
+                                    @if($att->attachable_type === 'FireflyIII\\Models\\TransactionJournal')
+                                        <a href="{{ route('transactions.show', [$att->attachable_id]) }}">
+                                            {{ $att->attachable?->description }}
+                                        </a>
+                                    @else
+                                        {{ $att->attachable_type }}
+                                    @endif
+                                </td>
+                                <td data-value=" @if($att->file_exists)1 @else 0 @endif ">
+                                    @if($att->file_exists)
+                                        <span class="bi bi-check text-success"></span>
+                                    @else
+                                        <span class="bi bi-exclamation-triangle text-danger"></span>
+                                    @endif
+                                </td>
+                            </tr>
+                        @endforeach
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+@endsection
+@section('scripts')
+@endsection
+
+@section('styles')
+@endsection
+

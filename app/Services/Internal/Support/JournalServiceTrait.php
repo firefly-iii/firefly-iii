@@ -231,6 +231,7 @@ trait JournalServiceTrait
 
         try {
             $journal->tags()->sync($set);
+            $journal->touch();
         } catch (UniqueConstraintViolationException $e) {
             Log::error(sprintf('Firefly III could not sync tags: %s', $e->getMessage()));
         }

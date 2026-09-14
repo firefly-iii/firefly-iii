@@ -1,10 +1,8 @@
 <?php
 
-declare(strict_types=1);
-
 /*
  * IsOldVersion.php
- * Copyright (c) 2025 james@firefly-iii.org
+ * Copyright (c) 2026 james@firefly-iii.org
  *
  * This file is part of Firefly III (https://github.com/firefly-iii).
  *
@@ -21,6 +19,8 @@ declare(strict_types=1);
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
+
+declare(strict_types=1);
 
 namespace FireflyIII\Support\System;
 
@@ -77,7 +77,7 @@ trait IsOldVersion
         $dbTime          = Carbon::createFromTimestamp($dbBuildTime, config('app.timezone'));
         if ($dbBuildTime < $configBuildTime) {
             Log::warning(sprintf(
-                'Your database was last managed by an older version of Firefly III (I see %s, I expect %s). Redirect to migrate routine.',
+                'Your database was last managed by an older version of Firefly III (I see %s, I expect %s).',
                 $dbTime->format('Y-m-d H:i:s'),
                 $configTime->format('Y-m-d H:i:s')
             ));
@@ -104,7 +104,7 @@ trait IsOldVersion
      */
     private function hasNoTables(): bool
     {
-        // Log::debug('Now in routine hasNoTables()');
+        Log::debug('Now in routine hasNoTables()');
 
         try {
             DB::table('users')->count();
@@ -128,8 +128,16 @@ trait IsOldVersion
             throw new FireflyException(sprintf('Could not access the database: %s', $message), 0, $e);
         }
 
-        // Log::debug('Everything seems OK with the tables.');
+        Log::debug('Everything seems OK with the tables.');
 
         return false;
+    }
+
+    /**
+     * Is access denied error.
+     */
+    private function isAccessDenied(string $message): bool
+    {
+        return false !== stripos($message, 'Access denied');
     }
 }

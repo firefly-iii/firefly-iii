@@ -78,8 +78,8 @@ return [
         'running_balance_column' => (bool)env_default_when_empty(env('USE_RUNNING_BALANCE'), true), // this is only the default value, is not used.
         // see cer.php for exchange rates feature flag.
     ],
-'version' => '6.6.6',
-'build_time' => 1782932920,
+'version' => '6.7.0',
+'build_time' => 1789406653,
     'api_version'                          => '2.1.0', // field is no longer used.
     'db_version'                           => 28, // field is no longer used.
 
@@ -96,7 +96,6 @@ return [
 
     // tokens and keys
     'fixer_api_key'                        => env('FIXER_API_KEY', ''),
-    'ipinfo_token'                         => env('IPINFO_TOKEN', ''),
     'static_cron_token'                    => env('STATIC_CRON_TOKEN'),
 
     // flags
@@ -118,6 +117,21 @@ return [
     // static config (cannot be changed by user)
     'update_endpoint'                      => 'https://version.firefly-iii.org/index.json',
     'update_minimum_age'                   => 7,
+
+    // system preference keys.
+    // cannot be set or overruled by the user, despite being in the preferences table
+    'system_preference_keys'               => [
+        'email_change_undo_token',
+        'email_change_confirm_token',
+        'access_token',
+        'login_ip_history',
+        'previous_email_latest',
+        'previous_email_',
+        'remote_guard_alt_email',
+        'mfa_failure_count',
+        'mfa_history',
+        'mfa_recovery',
+        'temp-mfa-secret'],
 
 
     // enabled languages
@@ -334,18 +348,18 @@ return [
         'liability'   => 'Liabilities',
     ],
     'subIconsByIdentifier'                 => [
-        'asset'                             => 'fa-money',
-        AccountTypeEnum::ASSET->value       => 'fa-money',
-        AccountTypeEnum::DEFAULT->value     => 'fa-money',
-        AccountTypeEnum::CASH->value        => 'fa-money',
-        'expense'                           => 'fa-shopping-cart',
-        AccountTypeEnum::EXPENSE->value     => 'fa-shopping-cart',
-        AccountTypeEnum::BENEFICIARY->value => 'fa-shopping-cart',
-        'revenue'                           => 'fa-download',
-        AccountTypeEnum::REVENUE->value     => 'fa-download',
-        'import'                            => 'fa-download',
-        AccountTypeEnum::IMPORT->value      => 'fa-download',
-        'liabilities'                       => 'fa-ticket',
+        'asset'                             => 'bi-cash',
+        AccountTypeEnum::ASSET->value       => 'bi-cash',
+        AccountTypeEnum::DEFAULT->value     => 'bi-cash',
+        AccountTypeEnum::CASH->value        => 'bi-cash',
+        'expense'                           => 'bi-cart',
+        AccountTypeEnum::EXPENSE->value     => 'bi-cart',
+        AccountTypeEnum::BENEFICIARY->value => 'bi-cart',
+        'revenue'                           => 'bi-box-arrow-down',
+        AccountTypeEnum::REVENUE->value     => 'bi-box-arrow-down',
+        'import'                            => 'bi-box-arrow-down',
+        AccountTypeEnum::IMPORT->value      => 'bi-box-arrow-down',
+        'liabilities'                       => 'bi-ticket-detailed',
     ],
     'accountTypesByIdentifier'             => [
         'asset'       => [AccountTypeEnum::DEFAULT->value, AccountTypeEnum::ASSET->value],
@@ -390,6 +404,7 @@ return [
         AccountTypeEnum::MORTGAGE->value   => AccountTypeEnum::MORTGAGE->value,
     ],
     'transactionTypesByType'               => [
+        'all'        => [TransactionTypeEnum::WITHDRAWAL->value, TransactionTypeEnum::DEPOSIT->value, TransactionTypeEnum::TRANSFER->value],
         'expenses'   => ['Withdrawal'],
         'withdrawal' => ['Withdrawal'],
         'revenue'    => ['Deposit'],
@@ -405,12 +420,12 @@ return [
         'Reconciliation'  => 'reconciliation',
     ],
     'transactionIconsByType'               => [
-        'expenses'   => 'fa-long-arrow-left',
-        'withdrawal' => 'fa-long-arrow-left',
-        'revenue'    => 'fa-long-arrow-right',
-        'deposit'    => 'fa-long-arrow-right',
-        'transfer'   => 'fa-exchange',
-        'transfers'  => 'fa-exchange',
+        'expenses'   => 'bi-arrow-left',
+        'withdrawal' => 'bi-arrow-left',
+        'revenue'    => 'bi-arrow-right',
+        'deposit'    => 'bi-arrow-right',
+        'transfer'   => 'bi-arrow-left-right',
+        'transfers'  => 'bi-arrow-left-right',
     ],
 
 

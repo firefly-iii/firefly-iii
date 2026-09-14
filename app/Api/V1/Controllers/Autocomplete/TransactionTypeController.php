@@ -31,14 +31,16 @@ use FireflyIII\Models\TransactionType;
 use FireflyIII\Repositories\TransactionType\TransactionTypeRepositoryInterface;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
+use Override;
 
 /**
  * Class TransactionTypeController
  */
 final class TransactionTypeController extends Controller
 {
-    private TransactionTypeRepositoryInterface $repository;
+    #[Override]
     protected array $acceptedRoles = [UserRoleEnum::READ_ONLY];
+    private TransactionTypeRepositoryInterface $repository;
 
     /**
      * TransactionTypeController constructor.

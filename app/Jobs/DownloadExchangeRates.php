@@ -25,10 +25,11 @@ declare(strict_types=1);
 namespace FireflyIII\Jobs;
 
 use Carbon\Carbon;
+use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Models\CurrencyExchangeRate;
 use FireflyIII\Models\TransactionCurrency;
 use FireflyIII\Repositories\Currency\CurrencyRepositoryInterface;
-use FireflyIII\Repositories\User\UserRepositoryInterface;
+use FireflyIII\User;
 use GuzzleHttp\Client;
 use GuzzleHttp\Exception\ConnectException;
 use GuzzleHttp\Exception\GuzzleException;
@@ -38,7 +39,6 @@ use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Queue\SerializesModels;
-use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Log;
 use Safe\Exceptions\JsonException;
 
@@ -57,7 +57,7 @@ class DownloadExchangeRates implements ShouldQueue
     private array $active = [];
     private Carbon $date;
     private CurrencyRepositoryInterface $repository;
-    private Collection $users;
+    private User $user;
 
     /**
      * Create a new job instance.
@@ -65,11 +65,6 @@ class DownloadExchangeRates implements ShouldQueue
     public function __construct(?Carbon $date)
     {
         $this->repository = app(CurrencyRepositoryInterface::class);
-
-        // get all users:
-        /** @var UserRepositoryInterface $userRepository */
-        $userRepository   = app(UserRepositoryInterface::class);
-        $this->users      = $userRepository->all();
 
         if ($date instanceof Carbon) {
             $newDate    = clone $date;
@@ -98,6 +93,12 @@ class DownloadExchangeRates implements ShouldQueue
         $newDate    = clone $date;
         $newDate->startOfDay();
         $this->date = $newDate;
+        Log::debug(sprintf('Date overruled to be %s', $newDate->format('Y-m-d')));
+    }
+
+    public function setUser(User $user): void
+    {
+        $this->user = $user;
     }
 
     /**
@@ -168,14 +169,17 @@ class DownloadExchangeRates implements ShouldQueue
 
     private function saveRate(TransactionCurrency $from, TransactionCurrency $to, Carbon $date, float $rate): void
     {
-        foreach ($this->users as $user) {
-            $this->repository->setUser($user);
-            $this->repository->setUserGroup($user->userGroup);
-            if ($this->repository->isEnabled($from) && $this->repository->isEnabled($to)) {
-                $existing = $this->repository->getExchangeRate($from, $to, $date);
-                if (!$existing instanceof CurrencyExchangeRate) {
-                    Log::debug(sprintf('Saved rate from %s to %s for user #%d.', $from->code, $to->code, $user->id));
+        $this->repository->setUser($this->user);
+        $this->repository->setUserGroup($this->user->userGroup);
+        if ($this->repository->isEnabled($from) && $this->repository->isEnabled($to)) {
+            $existing = $this->repository->getExchangeRate($from, $to, $date);
+            if (!$existing instanceof CurrencyExchangeRate) {
+                Log::debug(sprintf('Saved rate from %s to %s for user #%d.', $from->code, $to->code, $this->user->id));
+
+                try {
                     $this->repository->setExchangeRate($from, $to, $date, $rate);
+                } catch (FireflyException $e) {
+                    Log::warning(sprintf('Could not set exchange rate, but ignore this: %s', $e->getMessage()));
                 }
             }
         }

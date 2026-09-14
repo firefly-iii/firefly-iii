@@ -66,7 +66,7 @@ final class NewUserController extends Controller
     public function index(): Factory|\Illuminate\Contracts\View\View|Redirector|RedirectResponse
     {
         app('view')->share('title', (string) trans('firefly.welcome'));
-        app('view')->share('mainTitleIcon', 'fa-fire');
+        app('view')->share('mainTitleIcon', 'bi-fire');
 
         $types     = config('firefly.accountTypesByIdentifier.asset');
         $count     = $this->repository->count($types);
@@ -76,8 +76,9 @@ final class NewUserController extends Controller
         if ($count > 0) {
             return redirect(route('index'));
         }
+        $language  = config('firefly.default_language') ?? config('firefly.default_preferences.language');
 
-        return view('new-user.index', ['languages' => $languages]);
+        return view('new-user.index', ['languages' => $languages, 'language' => $language]);
     }
 
     /**

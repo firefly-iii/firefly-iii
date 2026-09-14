@@ -31,6 +31,7 @@ use FireflyIII\Repositories\Account\AccountRepositoryInterface;
 use FireflyIII\Services\Internal\Destroy\AccountDestroyService;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
+use Override;
 
 /**
  * Class TransactionController
@@ -44,9 +45,9 @@ use Illuminate\Http\Request;
  */
 final class TransactionController extends Controller
 {
-    private AccountRepositoryInterface $repository;
-
+    #[Override]
     protected array $acceptedRoles = [UserRoleEnum::MANAGE_TRANSACTIONS];
+    private AccountRepositoryInterface $repository;
 
     public function __construct()
     {

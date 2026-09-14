@@ -1,0 +1,54 @@
+<table class="table table-hover sortable">
+    <thead>
+    <tr>
+        <th data-defaultsort="disabled">{{ __('firefly.description') }}</th>
+        <th data-defaultsign="month">{{ __('firefly.date') }}</th>
+        <th data-defaultsign="az">{{ __('firefly.account') }}</th>
+        <th data-defaultsign="az">{{ __('firefly.tag') }}</th>
+        <th data-defaultsign="_19" class="text-end">{{ __('firefly.amount') }}</th>
+    </tr>
+    </thead>
+    <tbody>
+    @foreach($result as $row)
+        @if($loop->index > $listLength)
+            <tr class="overListLength">
+        @else
+            <tr>
+        @endif
+        <td data-sortable="false">
+            <a href="{{ route('transactions.show', $row['transaction_group_id']) }}">
+                {{ $row['description'] }}
+            </a>
+        </td>
+        <td data-value="{{ $row['date_sort'] }}">
+            {{ $row['date'] }}
+        </td>
+
+        <td data-sortable="false">
+            <a href="{{ route('accounts.show', $row['destination_account_id']) }}">
+                {{ $row['destination_account_name'] }}
+            </a>
+        </td>
+        <td data-sortable="false">
+            <a href="{{ route('tags.show', [$row['tag_id']]) }}">
+                {{ $row['tag_name'] }}
+            </a>
+        </td>
+
+        <td data-value="{{ $row['amount'] }}" class="text-end">
+            {!! format_amount_by_symbol($row['amount'], $row['currency_symbol'], $row['currency_decimal_places']) !!}
+        </td>
+
+        </tr>
+    @endforeach
+    </tbody>
+    <tfoot>
+    @if(count($result) > $listLength)
+        <tr>
+            <td colspan="5" class="active">
+                <a href="#" class="listLengthTrigger">{{ trans('firefly.show_full_list',['number' => $incomeTopLength]) }}</a>
+            </td>
+        </tr>
+    @endif
+    </tfoot>
+</table>

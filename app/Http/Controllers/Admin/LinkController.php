@@ -52,7 +52,7 @@ final class LinkController extends Controller
 
         $this->middleware(function ($request, $next) {
             app('view')->share('title', (string) trans('firefly.system_settings'));
-            app('view')->share('mainTitleIcon', 'fa-hand-spock-o');
+            app('view')->share('mainTitleIcon', 'bi-cpu');
             $this->repository = app(LinkTypeRepositoryInterface::class);
 
             return $next($request);
@@ -70,7 +70,7 @@ final class LinkController extends Controller
         Log::channel('audit')->info('User visits link index.');
 
         $subTitle     = (string) trans('firefly.create_new_link_type');
-        $subTitleIcon = 'fa-link';
+        $subTitleIcon = 'bi-link';
 
         // put previous url in session if not redirect from store (not "create another").
         if (true !== session('link-types.create.fromStore')) {
@@ -120,7 +120,7 @@ final class LinkController extends Controller
     {
         Log::channel('audit')->info(sprintf('User destroyed link type #%d', $linkType->id));
         $name   = $linkType->name;
-        $moveTo = $this->repository->find((int) $request->get('move_link_type_before_delete'));
+        $moveTo = $this->repository->find((int) $request->input('move_link_type_before_delete'));
         $this->repository->destroy($linkType, $moveTo);
 
         $request->session()->flash('success', (string) trans('firefly.deleted_link_type', ['name' => $name]));
@@ -142,7 +142,7 @@ final class LinkController extends Controller
             return redirect(route('settings.links.index'));
         }
         $subTitle     = (string) trans('firefly.edit_link_type', ['name' => $linkType->name]);
-        $subTitleIcon = 'fa-link';
+        $subTitleIcon = 'bi-link';
 
         Log::channel('audit')->info(sprintf('User wants to edit link type #%d', $linkType->id));
 
@@ -163,7 +163,7 @@ final class LinkController extends Controller
     public function index(): Factory|\Illuminate\Contracts\View\View
     {
         $subTitle     = (string) trans('firefly.journal_link_configuration');
-        $subTitleIcon = 'fa-link';
+        $subTitleIcon = 'bi-link';
         $linkTypes    = $this->repository->get();
 
         Log::channel('audit')->info('User on index of link types in admin.');
@@ -182,7 +182,7 @@ final class LinkController extends Controller
     public function show(LinkType $linkType): Factory|\Illuminate\Contracts\View\View
     {
         $subTitle     = (string) trans('firefly.overview_for_link', ['name' => $linkType->name]);
-        $subTitleIcon = 'fa-link';
+        $subTitleIcon = 'bi-link';
         $links        = $this->repository->getJournalLinks($linkType);
 
         Log::channel('audit')->info(sprintf('User viewing link type #%d', $linkType->id));
@@ -213,7 +213,7 @@ final class LinkController extends Controller
 
         $request->session()->flash('success', (string) trans('firefly.stored_new_link_type', ['name' => $linkType->name]));
         $redirect = redirect($this->getPreviousUrl('link-types.create.url'));
-        if (1 === (int) $request->get('create_another')) {
+        if (1 === (int) $request->input('create_another')) {
             // set value so create routine will not overwrite URL:
             $request->session()->put('link-types.create.fromStore', true);
 
@@ -245,7 +245,7 @@ final class LinkController extends Controller
         $request->session()->flash('success', (string) trans('firefly.updated_link_type', ['name' => $linkType->name]));
         Preferences::mark();
         $redirect = redirect($this->getPreviousUrl('link-types.edit.url'));
-        if (1 === (int) $request->get('return_to_edit')) {
+        if (1 === (int) $request->input('return_to_edit')) {
             // set value so edit routine will not overwrite URL:
             $request->session()->put('link-types.edit.fromUpdate', true);
 

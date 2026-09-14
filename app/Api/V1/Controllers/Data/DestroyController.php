@@ -50,15 +50,16 @@ use FireflyIII\Support\Facades\Preferences;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
+use Override;
 
 /**
  * Class DestroyController
  */
 final class DestroyController extends Controller
 {
-    private bool $unused;
-
+    #[Override]
     protected array $acceptedRoles = [UserRoleEnum::FULL];
+    private bool $unused;
 
     public function __construct()
     {

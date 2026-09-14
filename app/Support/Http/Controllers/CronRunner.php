@@ -26,22 +26,34 @@ namespace FireflyIII\Support\Http\Controllers;
 
 use Carbon\Carbon;
 use FireflyIII\Exceptions\FireflyException;
+use FireflyIII\Repositories\User\UserRepositoryInterface;
 use FireflyIII\Support\Cronjobs\AutoBudgetCronjob;
 use FireflyIII\Support\Cronjobs\BillWarningCronjob;
 use FireflyIII\Support\Cronjobs\ExchangeRatesCronjob;
 use FireflyIII\Support\Cronjobs\RecurringCronjob;
 use FireflyIII\Support\Cronjobs\WebhookCronjob;
+use FireflyIII\User;
+use Illuminate\Support\Collection;
 
 /**
  * Trait CronRunner
  */
 trait CronRunner
 {
-    protected function billWarningCronJob(bool $force, Carbon $date): array
+    protected UserRepositoryInterface $repository;
+
+    protected function billWarningCronJob(User $user, bool $force, Carbon $date): array
     {
         /** @var BillWarningCronjob $billWarning */
         $billWarning = app(BillWarningCronjob::class);
         $billWarning->setForce($force);
+        // if the user is owner, run for all users.
+        $users       = new Collection([$user]);
+        if ($user->hasRole('owner')) {
+            $this->repository = app(UserRepositoryInterface::class);
+            $users            = $this->repository->allAvailable();
+        }
+        $billWarning->setUsers($users);
         $billWarning->setDate($date);
 
         try {
@@ -55,14 +67,23 @@ trait CronRunner
             'job_succeeded' => $billWarning->jobSucceeded,
             'job_errored'   => $billWarning->jobErrored,
             'message'       => $billWarning->message,
+            'user'          => (string) $user->id,
         ];
     }
 
-    protected function exchangeRatesCronJob(bool $force, Carbon $date): array
+    protected function exchangeRatesCronJob(User $user, bool $force, Carbon $date): array
     {
         /** @var ExchangeRatesCronjob $exchangeRates */
         $exchangeRates = app(ExchangeRatesCronjob::class);
         $exchangeRates->setForce($force);
+
+        // if the user is owner, run for all users.
+        $users         = new Collection([$user]);
+        if ($user->hasRole('owner')) {
+            $this->repository = app(UserRepositoryInterface::class);
+            $users            = $this->repository->allAvailable();
+        }
+        $exchangeRates->setUsers($users);
         $exchangeRates->setDate($date);
 
         try {
@@ -76,14 +97,22 @@ trait CronRunner
             'job_succeeded' => $exchangeRates->jobSucceeded,
             'job_errored'   => $exchangeRates->jobErrored,
             'message'       => $exchangeRates->message,
+            'user'          => (string) $user->id,
         ];
     }
 
-    protected function runAutoBudget(bool $force, Carbon $date): array
+    protected function runAutoBudget(User $user, bool $force, Carbon $date): array
     {
         /** @var AutoBudgetCronjob $autoBudget */
         $autoBudget = app(AutoBudgetCronjob::class);
         $autoBudget->setForce($force);
+        // if the user is owner, run for all users.
+        $users      = new Collection([$user]);
+        if ($user->hasRole('owner')) {
+            $this->repository = app(UserRepositoryInterface::class);
+            $users            = $this->repository->allAvailable();
+        }
+        $autoBudget->setUsers($users);
         $autoBudget->setDate($date);
 
         try {
@@ -97,14 +126,23 @@ trait CronRunner
             'job_succeeded' => $autoBudget->jobSucceeded,
             'job_errored'   => $autoBudget->jobErrored,
             'message'       => $autoBudget->message,
+            'user'          => (string) $user->id,
         ];
     }
 
-    protected function runRecurring(bool $force, Carbon $date): array
+    protected function runRecurring(User $user, bool $force, Carbon $date): array
     {
         /** @var RecurringCronjob $recurring */
         $recurring = app(RecurringCronjob::class);
         $recurring->setForce($force);
+
+        // if the user is owner, run for all users.
+        $users     = new Collection([$user]);
+        if ($user->hasRole('owner')) {
+            $this->repository = app(UserRepositoryInterface::class);
+            $users            = $this->repository->allAvailable();
+        }
+        $recurring->setUsers($users);
         $recurring->setDate($date);
 
         try {
@@ -118,14 +156,22 @@ trait CronRunner
             'job_succeeded' => $recurring->jobSucceeded,
             'job_errored'   => $recurring->jobErrored,
             'message'       => $recurring->message,
+            'user'          => (string) $user->id,
         ];
     }
 
-    protected function webhookCronJob(bool $force, Carbon $date): array
+    protected function webhookCronJob(User $user, bool $force, Carbon $date): array
     {
         /** @var WebhookCronjob $webhook */
         $webhook = app(WebhookCronjob::class);
         $webhook->setForce($force);
+        // if the user is owner, run for all users.
+        $users   = new Collection([$user]);
+        if ($user->hasRole('owner')) {
+            $this->repository = app(UserRepositoryInterface::class);
+            $users            = $this->repository->allAvailable();
+        }
+        $webhook->setUsers($users);
         $webhook->setDate($date);
 
         try {
@@ -139,6 +185,7 @@ trait CronRunner
             'job_succeeded' => $webhook->jobSucceeded,
             'job_errored'   => $webhook->jobErrored,
             'message'       => $webhook->message,
+            'user'          => (string) $user->id,
         ];
     }
 }

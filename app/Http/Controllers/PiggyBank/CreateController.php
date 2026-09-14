@@ -53,7 +53,7 @@ final class CreateController extends Controller
 
         $this->middleware(function ($request, $next) {
             app('view')->share('title', (string) trans('firefly.piggyBanks'));
-            app('view')->share('mainTitleIcon', 'fa-bullseye');
+            app('view')->share('mainTitleIcon', 'bi-target');
 
             $this->attachments = app(AttachmentHelperInterface::class);
             $this->piggyRepos  = app(PiggyBankRepositoryInterface::class);
@@ -70,7 +70,7 @@ final class CreateController extends Controller
     public function create(Request $request): Factory|\Illuminate\Contracts\View\View
     {
         $subTitle     = (string) trans('firefly.new_piggy_bank');
-        $subTitleIcon = 'fa-plus';
+        $subTitleIcon = 'bi-plus';
         $request->old('_token');
         $preFilled    = $request->old();
         if (!array_key_exists('transaction_currency_id', $preFilled)) {
@@ -122,7 +122,7 @@ final class CreateController extends Controller
         }
         $redirect  = redirect($this->getPreviousUrl('piggy-banks.create.url'));
 
-        if (1 === (int) $request->get('create_another')) {
+        if (1 === (int) $request->input('create_another')) {
             session()->put('piggy-banks.create.fromStore', true);
 
             $redirect = redirect(route('piggy-banks.create'))->withInput();

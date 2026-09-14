@@ -41,7 +41,7 @@ final class IndexController extends Controller
     {
         $title         = (string) trans('firefly.administrations_page_title');
         $subTitle      = (string) trans('firefly.administrations_page_sub_title');
-        $mainTitleIcon = 'fa-book';
+        $mainTitleIcon = 'bi-book';
         Log::debug(sprintf('Now at %s', __METHOD__));
 
         return view('administrations.index')->with(['title' => $title, 'subTitle' => $subTitle, 'mainTitleIcon' => $mainTitleIcon]);

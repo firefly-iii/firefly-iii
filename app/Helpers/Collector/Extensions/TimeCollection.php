@@ -26,6 +26,7 @@ namespace FireflyIII\Helpers\Collector\Extensions;
 
 use Carbon\Carbon;
 use FireflyIII\Helpers\Collector\GroupCollectorInterface;
+use Illuminate\Database\Eloquent\Builder as EloquentBuilder;
 
 /**
  * Trait TimeCollection
@@ -106,9 +107,10 @@ trait TimeCollection
         }
         $startStr = $start->format('Y-m-d 00:00:00');
         $endStr   = $end->format('Y-m-d 23:59:59');
-
-        $this->query->where('transaction_journals.date', '<', $startStr);
-        $this->query->orWhere('transaction_journals.date', '>', $endStr);
+        $this->query->where(function (EloquentBuilder $q) use ($startStr, $endStr): void {
+            $q->where('transaction_journals.date', '<', $startStr);
+            $q->orWhere('transaction_journals.date', '>', $endStr);
+        });
 
         return $this;
     }

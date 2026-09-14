@@ -42,6 +42,7 @@ use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Pagination\LengthAwarePaginator;
 use Illuminate\Support\Collection;
+use Override;
 
 final class StoreController extends Controller
 {
@@ -49,6 +50,7 @@ final class StoreController extends Controller
 
     public const string RESOURCE_KEY = 'exchange-rates';
 
+    #[Override]
     protected array $acceptedRoles   = [UserRoleEnum::OWNER];
     private ExchangeRateRepositoryInterface $repository;
 

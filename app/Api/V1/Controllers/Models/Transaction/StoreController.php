@@ -42,6 +42,7 @@ use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Validation\ValidationException;
 use League\Fractal\Resource\Item;
+use Override;
 use Symfony\Component\HttpKernel\Exception\GoneHttpException;
 use Symfony\Component\HttpKernel\Exception\HttpException;
 
@@ -52,6 +53,7 @@ final class StoreController extends Controller
 {
     use TransactionFilter;
 
+    #[Override]
     protected array $acceptedRoles = [UserRoleEnum::MANAGE_TRANSACTIONS];
     private TransactionGroupRepositoryInterface $groupRepository;
 

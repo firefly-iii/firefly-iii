@@ -1,0 +1,176 @@
+@extends('layout.v3.session')
+@section('content')
+    <form method="POST" action="{{ route('transactions.mass.update') }}" accept-charset="UTF-8" class="form-horizontal" x-data="edit">
+        <input name="_token" type="hidden" value="{{ csrf_token() }}">
+
+        <div class="row">
+            <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                <div class="card mb-2">
+                    <div class="card-header">
+                        <h3 class="card-title">{{ __('firefly.mass_edit_journals') }}</h3>
+                    </div>
+                    <div class="card-body">
+                        <p>
+                            {{ __('firefly.cannot_edit_other_fields') }}
+                            <span class="text-danger">{{ __('firefly.cannot_change_amount_reconciled') }}</span>
+                        </p>
+
+                        <table class="table table-striped table-sm">
+                            <tr>
+                                <th class="">&nbsp;</th>
+                                <th class="col-lg-2 col-md-2 col-sm-2">{{ trans('list.description') }}</th>
+                                <th class="col-lg-1 col-md-1 col-sm-1">{{ trans('list.amount') }}</th>
+                                <th class="col-lg-1 col-md-1 col-sm-1">{{ trans('list.date') }}</th>
+                                <th class="col-lg-2 col-md-2 col-sm-2">{{ trans('list.from') }}</th>
+                                <th class="col-lg-2 col-md-2 col-sm-2">{{ trans('list.to') }}</th>
+                                <th class="col-lg-2 col-md-2 col-sm-2">{{ trans('list.category') }}</th>
+                                <th class="col-lg-2 col-md-2 col-sm-2">{{ trans('list.budget') }}</th>
+                            </tr>
+                            @foreach($journals as $journal)
+                                <tr>
+                                    <td>
+                                        {{-- LINK TO EDIT FORM --}}
+                                        <a href="{{ route('transactions.edit', $journal['transaction_group_id']) }}?_from={{ urlencode($FF3_FROM) }}" class="btn btn-sm btn-outline-secondary"><span
+                                                class="bi bi-pencil"></span></a>
+                                        <input type="hidden" name="journals[]" value="{{ $journal['transaction_journal_id']  }}"/>
+                                    </td>
+                                    <td>
+                                        {{-- DESCRIPTION --}}
+                                        <input class="form-control form-control-sm ac-description" autocomplete="off"
+                                               placeholder="{{ $journal['description']  }}" name="description[{{ $journal['transaction_journal_id']  }}]"
+                                               type="text" value="{{ $journal['description']  }}">
+                                    </td>
+                                    {{-- AMOUNT --}}
+                                    <td>
+                                        @if(false === $journal['reconciled'])
+                                            <div class="input-group input-group-sm">
+                                                <span class="input-group-text" id="basic-addon1">{{ $journal['currency_symbol'] }}</span>
+                                                <input name="amount[{{ $journal['transaction_journal_id']  }}]" class="form-control" autocomplete="off" step="any" type="number" value="{{ $journal['amount']  }}">
+                                                <input type="hidden" name="transaction_currency_id[{{ $journal['transaction_journal_id']  }}]" value="{{ $journal['currency_id']  }}">
+                                            </div>
+                                            @if(null !== $journal['foreign_amount'])
+                                                {{-- insert foreign data --}}
+                                                <div class="input-group input-group-sm">
+                                                    <span class="input-group-text">{{ $journal['foreign_currency_symbol']  }}</span>
+                                                    <input name="foreign_amount[{{ $journal['transaction_journal_id']  }}]" class="form-control" autocomplete="off"
+                                                           step="any" type="number" value="{{ $journal['foreign_amount']  }}">
+                                                    <input type="hidden" name="foreign_currency_id[{{ $journal['transaction_journal_id']  }}]"
+                                                           value="{{ $journal['foreign_currency_id']  }}">
+                                                </div>
+                                            @endif
+                                        @endif
+                                        <span class="text-sm">
+                                        @if(false !== $journal['reconciled'])
+                                                @if('Deposit' === $journal['transaction_type_type'])
+                                                    {!! format_amount_by_symbol($journal['amount']*-1, $journal['currency_symbol'], $journal['currency_decimal_places']) !!}
+                                                    @if(null !== $journal['foreign_amount'])
+                                                        ({!! format_amount_by_symbol($journal['foreign_amount']*-1, $journal['foreign_currency_symbol'], $journal['foreign_currency_decimal_places']) !!})
+                                                   @endif
+                                               @elseif('Transfer' === $journal['transaction_type_type'])
+                                                    <span class="text-info money-transfer">
+                                                        {!! format_amount_by_symbol($journal['amount']*-1, $journal['currency_symbol'], $journal['currency_decimal_places'], false) !!}
+                                                    @if(null !== $journal['foreign_amount'])
+                                                        ({!! format_amount_by_symbol($journal['foreign_amount']*-1, $journal['foreign_currency_symbol'], $journal['foreign_currency_decimal_places'], false) !!})
+                                                    @endif
+                                                </span>
+                                            @else
+                                                {!! format_amount_by_symbol($journal['amount'], $journal['currency_symbol'], $journal['currency_decimal_places'])!!}
+                                                @if(null !== $journal['foreign_amount'])
+                                                    ({!! format_amount_by_symbol($journal['foreign_amount'], $journal['foreign_currency_symbol'], $journal['foreign_currency_decimal_places']) !!})
+                                                @endif
+                                            @endif
+                                        @endif
+                                        </span>
+                                    </td>
+                                    <td>
+                                        {{-- DATE --}}
+                                        <input class="form-control form-control-sm" autocomplete="off"
+                                               name="date[{{ $journal['transaction_journal_id']  }}]" type="datetime-local" value="{{ $journal['date']  }}">
+                                    </td>
+                                    <!-- {{ $journal['transaction_type_type']  }} -->
+                                    <!-- Source: {{ $journal['source_account_name']  }} ({{ $journal['source_account_id']  }}) -->
+                                    <!-- Destination: {{ $journal['destination_account_name']  }} ({{ $journal['destination_account_id']  }}) -->
+                                    <td class="position-relative">
+                                        @if(true === $journal['reconciled'])
+                                            <a href="{{ route('accounts.show', [$journal['source_account_id']]) }}">{{ $journal['source_account_name'] }}</a>
+                                        @endif
+                                        @if(false === $journal['reconciled'])
+                                        {{-- SOURCE ACCOUNT ID FOR TRANSFER OR WITHDRAWAL --}}
+                                        @if($journal['transaction_type_type'] == 'Transfer' or $journal['transaction_type_type'] == 'Withdrawal')
+                                            <select class="form-select form-select-sm" name="source_id[{{ $journal['transaction_journal_id'] }}]">
+                                                @foreach($withdrawalSources as $account)
+                                                    <option value="{{ $account->id }}" @if($account->id === $journal['source_account_id']) selected @endif
+                                                            label="{{ $account->name }}">{{ $account->name }}</option>
+                                                @endforeach
+                                            </select>
+
+                                        @endif
+
+                                        {{-- SOURCE ACCOUNT NAME FOR DEPOSIT --}}
+                                        @if($journal['transaction_type_type'] == 'Deposit')
+                                            <input class="form-control ac-account form-control-sm" spellcheck="false"
+                                                   placeholder="@if($journal['source_account_type'] !== 'Cash account'){{ $journal['source_account_name'] }}@endif"
+                                                   autocomplete="off"
+                                                   name="source_name[{{ $journal['transaction_journal_id'] }}]" type="text"
+                                                   value="@if($journal['source_account_type'] !== 'Cash account'){{ $journal['source_account_name'] }}@endif">
+                                        @endif
+                                        @endif
+                                    </td>
+                                    <td class="position-relative">
+                                        @if(true === $journal['reconciled'])
+                                            <a href="{{ route('accounts.show', [$journal['destination_account_id']]) }}">{{ $journal['destination_account_name'] }}</a>
+                                        @endif
+                                        @if(false === $journal['reconciled'])
+                                        {{-- DESTINATION ACCOUNT NAME FOR TRANSFER AND DEPOSIT --}}
+                                        @if($journal['transaction_type_type'] == 'Transfer' || $journal['transaction_type_type'] == 'Deposit')
+                                            <select class="form-select form-select-sm" name="destination_id[{{ $journal['transaction_journal_id'] }}]">
+                                                @foreach($depositDestinations as $account)
+                                                    <option value="{{ $account->id }}" @if($account->id === $journal['destination_account_id']) selected="selected" @endif
+                                                            label="{{ $account->name }}">{{ $account->name }}</option>
+                                                @endforeach
+                                            </select>
+                                        @endif
+
+                                        {{-- DESTINATION ACCOUNT NAME FOR WITHDRAWAL --}}
+                                        @if($journal['transaction_type_type'] === 'Withdrawal')
+                                            <input class="form-control form-control-sm ac-account" spellcheck="false"
+                                                   placeholder="@if(array_key_exists('destination_account_type', $journal) && $journal['destination_account_type'] !== 'Cash account'){{ $journal['destination_account_name'] }}@endif"
+                                                   name="destination_name[{{ $journal['transaction_journal_id'] }}]" type="text" autocomplete="off"
+                                                   value="@if(array_key_exists('destination_account_type', $journal) && $journal['destination_account_type'] !== 'Cash account') {{ $journal['destination_account_name'] }}@endif">
+                                        @endif
+                                        @endif
+                                    </td>
+                                    {{-- category --}}
+                                    <td class="position-relative">
+                                        <input class="form-control ac-category form-control-sm" placeholder="{{ $journal['category_name'] }}" autocomplete="off" spellcheck="false"
+                                               name="category[{{ $journal['transaction_journal_id'] }}]" type="text" value="{{ $journal['category_name'] }}">
+                                    </td>
+                                    {{-- budget --}}
+                                    <td>
+                                        @if($journal['transaction_type_type'] === 'Withdrawal')
+                                            <select class="form-select form-select-sm" name="budget_id[{{ $journal['transaction_journal_id'] }}]">
+                                                <option value="0" label="({{ __('firefly.no_budget') }})"
+                                                        @if($journal['budget_id'] === 0) selected="selected" @endif>{{ __('firefly.no_budget') }}</option>
+                                                @foreach($budgets as $budget)
+                                                    <option value="{{ $budget->id }}"@if($budget->id ===  $journal['budget_id']) selected="selected"@endif
+                                                            label="{{ $budget->name }}">{{ $budget->name }}</option>
+                                                @endforeach
+                                            </select>
+                                        @endif
+                                    </td>
+                                </tr>
+                            @endforeach
+                        </table>
+                    </div>
+                    <div class="card-footer text-end">
+                        <a href="{{ route('index') }}" class="btn-outline-secondary btn">{{ trans('form.cancel') }}</a>
+                        <input type="submit" name="submit" value="{{ trans('form.update_all_journals') }}" class="btn btn-success "/>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </form>
+@endsection
+@section('scripts')
+    @vite(['js/pages/transactions/mass-edit.js'])
+@endsection

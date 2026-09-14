@@ -24,9 +24,7 @@ declare(strict_types=1);
 
 return [
     'home'                   => 'Home',
-    'budgets'                => 'Budgets',
     'subscriptions'          => 'Subscriptions',
-    'transactions'           => 'Transactions',
     'title_expenses'         => 'Expenses',
     'title_withdrawal'       => 'Expenses',
     'title_revenue'          => 'Revenue / income',
@@ -49,6 +47,7 @@ return [
     'reports'                => 'Reports',
     'search_result'          => 'Search results for ":query"',
     'withdrawal_list'        => 'Expenses',
+    'all_list'               => 'All transactions',
     'Withdrawal_list'        => 'Expenses',
     'deposit_list'           => 'Revenue, income and deposits',
     'transfer_list'          => 'Transfers',

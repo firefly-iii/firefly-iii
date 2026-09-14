@@ -22,11 +22,84 @@
 
 declare(strict_types=1);
 
+use Carbon\Carbon;
+use Carbon\CarbonInterface;
+use FireflyIII\Enums\AccountTypeEnum;
+use FireflyIII\Enums\TransactionTypeEnum;
 use FireflyIII\Exceptions\FireflyException;
+use FireflyIII\Models\Account;
+use FireflyIII\Models\Transaction;
+use FireflyIII\Models\TransactionCurrency;
+use FireflyIII\Models\TransactionJournal;
+use FireflyIII\Models\TransactionJournalMeta;
+use FireflyIII\Repositories\Account\AccountRepositoryInterface;
+use FireflyIII\Support\Facades\Amount;
+use FireflyIII\Support\Facades\AppConfiguration;
+use FireflyIII\Support\Facades\Steam;
+use FireflyIII\Support\Search\OperatorQuerySearch;
+use Illuminate\Support\Collection;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Route;
+use League\CommonMark\GithubFlavoredMarkdownConverter;
 
+use function Safe\json_decode;
 use function Safe\mb_ord;
 use function Safe\preg_match;
 use function Safe\preg_replace_callback;
+
+if (!function_exists('escape_for_js')) {
+    function escape_for_js(string $string): string
+    {
+        // escape all non-alphanumeric characters
+        // into their \x or \uHHHH representations
+
+        if (0 === preg_match('//u', $string)) {
+            throw new FireflyException('The string to escape is not a valid UTF-8 string.');
+        }
+
+        return preg_replace_callback(
+            '#[^a-zA-Z0-9,\._]#Su',
+            static function ($matches) {
+                $char      = $matches[0];
+
+                /*
+                 * A few characters have short escape sequences in JSON and JavaScript.
+                 * Escape sequences supported only by JavaScript, not JSON, are omitted.
+                 * \" is also supported but omitted, because the resulting string is not HTML safe.
+                 */
+                $short     = match ($char) {
+                    '\\'    => '\\\\',
+                    '/'     => '\/',
+                    "\x08"  => '\b',
+                    "\x0C"  => '\f',
+                    "\x0A"  => '\n',
+                    "\x0D"  => '\r',
+                    "\x09"  => '\t',
+                    default => false
+                };
+
+                if ($short) {
+                    return $short;
+                }
+
+                $codepoint = mb_ord($char, 'UTF-8');
+                if (0x1_0000 > $codepoint) {
+                    return \sprintf('\u%04X', $codepoint);
+                }
+
+                // Split characters outside the BMP into surrogate pairs
+                // https://tools.ietf.org/html/rfc2781.html#section-2.1
+                $u         = $codepoint - 0x1_0000;
+                $high      = 0xD800 | ($u >> 10);
+                $low       = 0xDC00 | ($u & 0x3FF);
+
+                return \sprintf('\u%04X\u%04X', $high, $low);
+            },
+            $string
+        );
+    }
+}
 
 if (!function_exists('env_default_when_empty')) {
     /**
@@ -45,10 +118,453 @@ if (!function_exists('env_default_when_empty')) {
     }
 }
 
+if (!function_exists('sign_amount')) {
+    function sign_amount(string $amount, string $transactionType, string $sourceType): string
+    {
+        // withdrawals stay negative
+        if (TransactionTypeEnum::WITHDRAWAL->value !== $transactionType) {
+            $amount = bcmul($amount, '-1');
+        }
+
+        // opening balance and it comes from initial balance? its expense.
+        if (TransactionTypeEnum::OPENING_BALANCE->value === $transactionType && AccountTypeEnum::INITIAL_BALANCE->value !== $sourceType) {
+            $amount = bcmul($amount, '-1');
+        }
+
+        // reconciliation and it comes from reconciliation?
+        if (TransactionTypeEnum::RECONCILIATION->value === $transactionType && AccountTypeEnum::RECONCILIATION->value !== $sourceType) {
+            return bcmul($amount, '-1');
+        }
+
+        return $amount;
+    }
+}
+if (!function_exists('normal_journal_object_amount')) {
+    function normal_journal_object_amount(TransactionJournal $journal): string
+    {
+        $type       = $journal->transactionType->type;
+
+        /** @var Transaction $first */
+        $first      = $journal->transactions()->where('amount', '<', 0)->first();
+        $currency   = $journal->transactionCurrency;
+        $amount     = $first->amount ?? '0';
+        $colored    = true;
+        $sourceType = $first->account->accountType()->first()->type;
+
+        $amount     = sign_amount($amount, $type, $sourceType);
+
+        if (TransactionTypeEnum::TRANSFER->value === $type) {
+            $colored = false;
+        }
+        $result     = Amount::formatFlat($currency->symbol, $currency->decimal_places, $amount, $colored);
+        if (TransactionTypeEnum::TRANSFER->value === $type) {
+            return sprintf('<span class="text-info money-transfer">%s</span>', $result);
+        }
+
+        return $result;
+    }
+}
+
+if (!function_exists('journal_object_has_foreign')) {
+    function journal_object_has_foreign(TransactionJournal $journal): bool
+    {
+        /** @var Transaction $first */
+        $first = $journal->transactions()->where('amount', '<', 0)->first();
+
+        return '' !== $first->foreign_amount;
+    }
+}
+
+if (function_exists('foreign_journal_object_amount')) {
+    function foreign_journal_object_amount(TransactionJournal $journal): string
+    {
+        $type       = $journal->transactionType->type;
+
+        /** @var Transaction $first */
+        $first      = $journal->transactions()->where('amount', '<', 0)->first();
+        $currency   = $first->foreignCurrency;
+        $amount     = '' === $first->foreign_amount ? '0' : $first->foreign_amount;
+        $colored    = true;
+        $sourceType = $first->account->accountType()->first()->type;
+
+        $amount     = sign_amount($amount, $type, $sourceType);
+
+        if (TransactionTypeEnum::TRANSFER->value === $type) {
+            $colored = false;
+        }
+        $result     = Amount::formatFlat($currency->symbol, $currency->decimal_places, $amount, $colored);
+        if (TransactionTypeEnum::TRANSFER->value === $type) {
+            return sprintf('<span class="text-info money-transfer">%s</span>', $result);
+        }
+
+        return $result;
+    }
+}
+
+if (!function_exists('journal_object_amount')) {
+    function journal_object_amount(TransactionJournal $journal): string
+    {
+        $result = normal_journal_object_amount($journal);
+
+        // now append foreign amount, if any.
+        if (journal_object_has_foreign($journal)) {
+            $foreign = foreign_journal_object_amount($journal);
+            $result  = sprintf('%s (%s)', $result, $foreign);
+        }
+
+        return $result;
+    }
+}
+
+if (!function_exists('journal_link_translation')) {
+    function journal_link_translation(string $direction, string $original): string
+    {
+        $key         = sprintf('firefly.%s_%s', $original, $direction);
+        $translation = (string) trans($key);
+        if ($key === $translation) {
+            return $original;
+        }
+
+        return $translation;
+    }
+}
+
+if (!function_exists('all_journal_triggers')) {
+    function all_journal_triggers(): array
+    {
+        return [
+            'store-journal'     => (string) trans('firefly.rule_trigger_store_journal'),
+            'update-journal'    => (string) trans('firefly.rule_trigger_update_journal'),
+            'manual-activation' => (string) trans('firefly.rule_trigger_manual'),
+        ];
+    }
+}
+
+if (!function_exists('all_rule_actions')) {
+    function all_rule_actions(): array
+    {
+        // array of valid values for actions
+        $ruleActions     = array_keys(config('firefly.rule-actions'));
+        $possibleActions = [];
+        foreach ($ruleActions as $key) {
+            $possibleActions[$key] = (string) trans('firefly.rule_action_'.$key.'_choice');
+        }
+        unset($ruleActions);
+        asort($possibleActions);
+
+        return $possibleActions;
+    }
+}
+
+if (!function_exists('all_journal_triggers')) {
+    function all_journal_triggers(): array
+    {
+        return [
+            'store-journal'     => (string) trans('firefly.rule_trigger_store_journal'),
+            'update-journal'    => (string) trans('firefly.rule_trigger_update_journal'),
+            'manual-activation' => (string) trans('firefly.rule_trigger_manual'),
+        ];
+    }
+}
+
+if (!function_exists('mime_icon')) {
+    function mime_icon(string $file): string
+    {
+        return match ($file) {
+            'application/pdf'                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                           => 'bi-file-earmark-pdf',
+            'image/webp',
+            'image/png',
+            'image/jpeg',
+            'image/svg+xml',
+            'image/heic',
+            'image/heic-sequence',
+            'application/vnd.oasis.opendocument.image'                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                  => 'bi-file-earmark-image',
+            'application/msword',
+            'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
+            'application/vnd.openxmlformats-officedocument.wordprocessingml.template',
+            'application/x-iwork-pages-sffpages',
+            'application/vnd.sun.xml.writer',
+            'application/vnd.sun.xml.writer.template',
+            'application/vnd.sun.xml.writer.global',
+            'application/vnd.stardivision.writer',
+            'application/vnd.stardivision.writer-global',
+            'application/vnd.oasis.opendocument.text',
+            'application/vnd.oasis.opendocument.text-template',
+            'application/vnd.oasis.opendocument.text-web',
+            'application/vnd.oasis.opendocument.text-master'                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            => 'bi-file-earmark-word',
+            'application/vnd.ms-excel',
+            'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
+            'application/vnd.openxmlformats-officedocument.spreadsheetml.template',
+            'application/vnd.sun.xml.calc',
+            'application/vnd.sun.xml.calc.template',
+            'application/vnd.stardivision.calc',
+            'application/vnd.oasis.opendocument.spreadsheet',
+            'application/vnd.oasis.opendocument.spreadsheet-template'                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                   => 'bi-file-earmark-excel',
+            'application/vnd.ms-powerpoint',
+            'application/vnd.openxmlformats-officedocument.presentationml.presentation',
+            'application/vnd.openxmlformats-officedocument.presentationml.template',
+            'application/vnd.openxmlformats-officedocument.presentationml.slideshow',
+            'application/vnd.sun.xml.impress',
+            'application/vnd.sun.xml.impress.template',
+            'application/vnd.stardivision.impress',
+            'application/vnd.oasis.opendocument.presentation',
+            'application/vnd.oasis.opendocument.presentation-template'                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                  => 'bi-file-earmark-slides',
+            'application/vnd.sun.xml.draw',
+            'application/vnd.sun.xml.draw.template',
+            'application/vnd.stardivision.draw',
+            'application/vnd.oasis.opendocument.chart'                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                  => 'bi-file-earmark-easel',
+            'application/vnd.oasis.opendocument.graphics',
+            'application/vnd.oasis.opendocument.graphics-template',
+            'application/vnd.sun.xml.math',
+            'application/vnd.stardivision.math',
+            'application/vnd.oasis.opendocument.formula',
+            'application/vnd.oasis.opendocument.database'                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                               => 'bi-file-earmark-rules',
+            default                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                     => 'bi-file-earmark'
+        };
+    }
+}
+
+if (!function_exists('parse_markdown')) {
+    function parse_markdown(string $string): string
+    {
+        $converter = new GithubFlavoredMarkdownConverter(['allow_unsafe_links' => false, 'max_nesting_level' => 5, 'html_input' => 'escape']);
+
+        return (string) $converter->convert($string);
+    }
+}
+
+if (!function_exists('get_root_search_operator')) {
+    function get_root_search_operator(string $operator): string
+    {
+        $result = OperatorQuerySearch::getRootOperator($operator);
+
+        return str_replace('-', 'not_', $result);
+    }
+}
+
+if (!function_exists('get_app_configuration')) {
+    function get_app_configuration(string $name, mixed $default = null): mixed
+    {
+        try {
+            return AppConfiguration::get($name, $default)?->data;
+        } catch (FireflyException) {
+            return null;
+        }
+    }
+}
+
+if (!function_exists('format_amount_by_symbol')) {
+    function format_amount_by_symbol(?string $amount, ?string $symbol = null, ?int $decimalPlaces = null, ?bool $coloured = null): string
+    {
+        $amount = null === $amount ? '0' : $amount;
+
+        return Steam::formatAmountBySymbol($amount, $symbol, $decimalPlaces, $coloured);
+    }
+}
+
+if (!function_exists('account_get_meta_field')) {
+    function account_get_meta_field(Account $account, string $field): string
+    {
+        /** @var AccountRepositoryInterface $repository */
+        $repository = app(AccountRepositoryInterface::class);
+        $result     = $repository->getMetaValue($account, $field);
+        if (null === $result) {
+            return '';
+        }
+
+        return $result;
+    }
+}
+if (!function_exists('menu_sub_item_active')) {
+    function menu_sub_item_active(string $route, string $objectType): string
+    {
+        $name = Route::getCurrentRoute()->getName() ?? '';
+        Log::debug(sprintf('menuSubItemActive("%s" = "%s","%s" = "%s")', $route, $name, $objectType, Route::getCurrentRoute()->parameter('objectType')));
+        if ($name === $route && $objectType === Route::getCurrentRoute()->parameter('objectType')) {
+            return 'active';
+        }
+
+        return '';
+    }
+}
+
+if (!function_exists('menu_item_active_partial')) {
+    function menu_item_active_partial(string $route): string
+    {
+        $name = Route::getCurrentRoute()->getName() ?? '';
+        Log::debug(sprintf('menuItemActivePartial("%s" starts with "%s")', $name, $route));
+        if (str_starts_with($name, $route)) {
+            return 'active';
+        }
+
+        return '';
+    }
+}
+
+if (!function_exists('menu_open_partial')) {
+    function menu_open_partial(string $route): string
+    {
+        $name = Route::getCurrentRoute()->getName() ?? '';
+        Log::debug(sprintf('menuOpenPartial("%s" starts with "%s")', $name, $route));
+        if (str_starts_with($name, $route)) {
+            return 'menu-open';
+        }
+
+        return '';
+    }
+}
+
+if (!function_exists('carbonize')) {
+    function carbonize(string $date): Carbon
+    {
+        return new Carbon($date, config('app.timezone'));
+    }
+}
+
+if (!function_exists('account_balance')) {
+    function account_balance(Account $account): string
+    {
+        /** @var Carbon $date */
+        $date             = now();
+
+        // get the date from the current session. If it's in the future, keep `now()`.
+        /** @var Carbon $session */
+        $session          = clone session('end', today(config('app.timezone'))->endOfMonth());
+        if ($session->lt($date)) {
+            $date = $session->copy();
+            $date->endOfDay();
+        }
+        Log::debug(sprintf('twig balance: Call finalAccountBalance with date/time "%s"', $date->toIso8601String()));
+
+        // 2025-10-08 replace finalAccountBalance with accountsBalancesOptimized.
+        $info             = Steam::accountsBalancesOptimized(new Collection()->push($account), $date)[$account->id];
+        // $info             = Steam::finalAccountBalance($account, $date);
+        $currency         = Steam::getAccountCurrency($account);
+        $primary          = Amount::getPrimaryCurrency();
+        $convertToPrimary = Amount::convertToPrimary();
+        $usePrimary       = $convertToPrimary && $primary->id !== $currency->id;
+        $currency ??= $primary;
+        $strings          = [];
+        foreach ($info as $key => $balance) {
+            if ('balance' === $key) {
+                // balance in account currency.
+                if (!$usePrimary) {
+                    $strings[] = Amount::formatAnything($currency, $balance, false);
+                }
+
+                continue;
+            }
+            if ('pc_balance' === $key) {
+                // balance in primary currency.
+                if ($usePrimary) {
+                    $strings[] = Amount::formatAnything($primary, $balance, false);
+                }
+
+                continue;
+            }
+            // for multi currency accounts.
+            if ($usePrimary && $key !== $primary->code) {
+                $strings[] = Amount::formatAnything(Amount::getTransactionCurrencyByCode($key), $balance, false);
+            }
+        }
+
+        return implode(', ', $strings);
+    }
+}
+
 if (!function_exists('string_is_equal')) {
     function string_is_equal(string $left, string $right): bool
     {
         return $left === $right;
+    }
+}
+
+if (!function_exists('format_amount_by_code')) {
+    function format_amount_by_code(string $amount, string $code, ?bool $coloured = null): string
+    {
+        $coloured ??= true;
+
+        try {
+            $currency = Amount::getTransactionCurrencyByCode($code);
+        } catch (FireflyException) {
+            Log::error(sprintf('Could not find currency with code "%s". Fallback to primary currency.', $code));
+            $currency = Amount::getPrimaryCurrency();
+            Log::error(sprintf('Fallback currency is "%s".', $currency->code));
+        }
+
+        return Amount::formatAnything($currency, $amount, $coloured);
+    }
+}
+
+if (!function_exists('format_amount_by_currency')) {
+    function format_amount_by_currency(TransactionCurrency $currency, string $amount, ?bool $coloured = null): string
+    {
+        $coloured ??= true;
+
+        return Amount::formatAnything($currency, $amount, $coloured);
+    }
+}
+
+if (!function_exists('print_nice_filesize')) {
+    function print_nice_filesize(int $size): string
+    {
+        // less than one GB, more than one MB
+        if ($size < (1024 * 1024 * 2014) && $size >= (1024 * 1024)) {
+            return round($size / (1024 * 1024), 2).' MB';
+        }
+
+        // less than one MB
+        if ($size < (1024 * 1024)) {
+            return round($size / 1024, 2).' KB';
+        }
+
+        return $size.' bytes';
+    }
+}
+
+if (!function_exists('journal_has_meta')) {
+    function journal_has_meta(int $journalId, string $metaField): bool
+    {
+        $count = DB::table('journal_meta')->where('name', $metaField)->where('transaction_journal_id', $journalId)->whereNull('deleted_at')->count();
+
+        return 1 === $count;
+    }
+}
+if (!function_exists('journal_get_meta_field')) {
+    function journal_get_meta_field(int $journalId, string $metaField): mixed
+    {
+        /** @var null|TransactionJournalMeta $entry */
+        $entry = DB::table('journal_meta')->where('name', $metaField)->where('transaction_journal_id', $journalId)->whereNull('deleted_at')->first();
+        if (null === $entry) {
+            return '';
+        }
+
+        return json_decode((string) $entry->data, true);
+    }
+}
+if (!function_exists('journal_get_meta_date')) {
+    function journal_get_meta_date(int $journalId, string $metaField): Carbon|CarbonInterface
+    {
+        /** @var null|TransactionJournalMeta $entry */
+        $entry = DB::table('journal_meta')->where('name', $metaField)->where('transaction_journal_id', $journalId)->whereNull('deleted_at')->first();
+        if (null === $entry) {
+            return today(config('app.timezone'));
+        }
+
+        return new Carbon(json_decode((string) $entry->data, false));
+    }
+}
+
+if (!function_exists('format_amount_by_account')) {
+    function format_amount_by_account(Account $account, string $amount, ?bool $coloured = null): string
+    {
+        $coloured ??= true;
+
+        /** @var AccountRepositoryInterface $accountRepos */
+        $accountRepos = app(AccountRepositoryInterface::class);
+        $currency     = $accountRepos->getAccountCurrency($account) ?? Amount::getPrimaryCurrency();
+
+        return Amount::formatAnything($currency, $amount, $coloured);
     }
 }
 

@@ -69,6 +69,8 @@ class BudgetLimit extends Model
             if (null !== $budgetLimit) {
                 return $budgetLimit;
             }
+
+            throw new NotFoundHttpException();
         }
 
         throw new AuthenticationException();

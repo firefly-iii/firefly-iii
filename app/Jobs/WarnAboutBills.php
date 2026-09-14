@@ -50,6 +50,7 @@ class WarnAboutBills implements ShouldQueue
 
     private Carbon $date;
     private bool $force;
+    private User $user;
 
     /**
      * Create a new job instance.
@@ -77,28 +78,27 @@ class WarnAboutBills implements ShouldQueue
     public function handle(): void
     {
         Log::debug(sprintf('Now at start of WarnAboutBills() job for %s.', $this->date->format('D d M Y')));
-        foreach (User::all() as $user) {
-            $bills   = $user->bills()->where('active', true)->get();
-            $overdue = [];
 
-            /** @var Bill $bill */
-            foreach ($bills as $bill) {
-                Log::debug(sprintf('Now checking bill #%d ("%s")', $bill->id, $bill->name));
-                $dates = $this->getDates($bill);
-                if ($this->needsOverdueAlert($dates)) {
-                    $overdue[] = ['bill' => $bill, 'dates' => $dates];
+        $bills   = $this->user->bills()->where('active', true)->get();
+        $overdue = [];
+
+        /** @var Bill $bill */
+        foreach ($bills as $bill) {
+            Log::debug(sprintf('Now checking bill #%d ("%s")', $bill->id, $bill->name));
+            $dates = $this->getDates($bill);
+            if ($this->needsOverdueAlert($dates)) {
+                $overdue[] = ['bill' => $bill, 'dates' => $dates];
+            }
+            if ($this->hasDateFields($bill)) {
+                if ($this->needsWarning($bill, 'end_date')) {
+                    $this->sendWarning($bill, 'end_date');
                 }
-                if ($this->hasDateFields($bill)) {
-                    if ($this->needsWarning($bill, 'end_date')) {
-                        $this->sendWarning($bill, 'end_date');
-                    }
-                    if ($this->needsWarning($bill, 'extension_date')) {
-                        $this->sendWarning($bill, 'extension_date');
-                    }
+                if ($this->needsWarning($bill, 'extension_date')) {
+                    $this->sendWarning($bill, 'extension_date');
                 }
             }
-            $this->sendOverdueAlerts($user, $overdue);
         }
+        $this->sendOverdueAlerts($this->user, $overdue);
         Log::debug('Done with handle()');
     }
 
@@ -112,6 +112,11 @@ class WarnAboutBills implements ShouldQueue
     public function setForce(bool $force): void
     {
         $this->force = $force;
+    }
+
+    public function setUser(User $user): void
+    {
+        $this->user = $user;
     }
 
     private function getDates(Bill $bill): array

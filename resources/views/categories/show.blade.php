@@ -1,0 +1,118 @@
+@extends('layout.v3.session')
+@section('content')
+    <div class="row">
+        @if(Route::getCurrentRoute()->getName() == 'categories.show')
+            {{-- both charts --}}
+            <div class="@if($attachments->count() == 0) col-lg-6 col-md-12 col-sm-12 col-xs-12 @else col-lg-4 col-md-12 col-sm-12 col-xs-12 @endif ">
+                <div class="card mb-2">
+                    <div class="card-header">
+                        <h3 class="card-title">
+                            {{ trans('firefly.chart_category_in_period', ['name' => $category->name, 'start' => $start->isoFormat($monthAndDayFormat), 'end' => $end->isoFormat($monthAndDayFormat)]) }}
+                        </h3>
+                    </div>
+                    <div class="card-body">
+                        <canvas id="specific-period" class="wide-chart" height="400" width="100%"></canvas>
+                    </div>
+                </div>
+            </div>
+            <div class="@if(0 === $attachments->count()) col-lg-6 col-md-12 col-sm-12 col-xs-12 @else col-lg-4 col-md-12 col-sm-12 col-xs-12 @endif ">
+                <div class="card mb-2">
+                    <div class="card-header">
+                        <h3 class="card-title">
+                            {{ trans('firefly.chart_category_all', ['name' => $category->name]) }}
+                        </h3>
+                    </div>
+                    <div class="card-body">
+                        <canvas id="category-everything" class="wide-chart" height="400" width="100%"></canvas>
+                    </div>
+                </div>
+            </div>
+        @endif
+        @if(Route::getCurrentRoute()->getName() == 'categories.show.all')
+            {{-- all chart --}}
+            <div class="@if(0 === $attachments->count()) col-lg-12 col-md-12 col-sm-12 col-xs-12 @else col-lg-8 col-md-12 col-sm-12 col-xs-12 @endif ">
+                <div class="card mb-2">
+                    <div class="card-header">
+                        <h3 class="card-title">
+                            {{ trans('firefly.chart_category_all', ['name' => $category->name ]) }}
+                        </h3>
+                    </div>
+                    <div class="card-body">
+                        <canvas id="category-everything" class="wide-chart" height="400" width="100%"></canvas>
+                    </div>
+                </div>
+            </div>
+        @endif
+        @if($attachments->count() > 0)
+            <div class="col-lg-4 col-md-12 col-sm-12 col-xs-12">
+                <div class="card mb-2">
+                    <div class="card-header">
+                        <h3 class="card-title">
+                            {{ __('firefly.attachments') }}
+                        </h3>
+                    </div>
+                    <div class="card-body p-0">
+                        <x-lists.attachments attachments="$attachments" />
+                    </div>
+                </div>
+            </div>
+        @endif
+    </div>
+    @if(count($periods) > 0)
+        <div class="row">
+            <div class="offset-lg-10 offset-lg-10 col-lg-2 offset-md-10 col-md-2 col-sm-12 col-xs-12">
+                <p class="small text-center"><a href="{{ route('categories.show.all',[$category->id]) }}">{{ __('firefly.showEverything') }}</a></p>
+            </div>
+        </div>
+    @endif
+
+    <div class="row">
+        <div class="@if(count($periods) > 0)col-lg-10 col-md-8 col-sm-12 col-xs-12 @else col-lg-12 col-md-12 col-sm-12 col-xs-12 @endif ">
+
+            <div class="card mb-2">
+                <div class="card-header">
+                    <h3 class="card-title">{{ __('firefly.transactions') }}</h3>
+                </div>
+                <div class="card-body">
+                    @if(count($periods) > 0)
+                        <x-lists.groups-large :groups="$groups" />
+                        <p>
+                            <span class="bi bi-calendar"></span>
+                            <a href="{{ route('categories.show.all', [$category->id]) }}">
+                                {{ __('firefly.show_all_no_filter') }}
+                            </a>
+                        </p>
+                    @else
+                        <x-lists.groups-large :groups="$groups" />
+                        <p>
+                            <span class="bi bi-calendar"></span>
+                            <a href="{{ route('categories.show', [$category->id]) }}">
+                                {{ __('firefly.show_the_current_period_and_overview') }}
+                            </a>
+                        </p>
+                    @endif
+                </div>
+            </div>
+        </div>
+        @if(count($periods) > 0)
+            <div class="col-lg-2 col-md-4 col-sm-12 col-xs-12">
+                <x-lists.periods :periods="$periods" />
+            </div>
+        @endif
+    </div>
+
+@endsection
+@section('scripts')
+    @vite(['js/pages/generic.js'])
+    <script type="text/javascript" nonce="{{ $JS_NONCE }}">
+        var current = '{{ route('chart.category.current', [$category->id]) }}';
+        var everything = '{{ route('chart.category.all', [$category->id]) }}';
+        var specific = '{{ route('chart.category.specific', [$category->id, $start->format('Ymd')]) }}';
+    </script>
+    <script type="text/javascript" src="v1/js/lib/Chart.bundle.min.js?v={{ $FF_BUILD_TIME }}" nonce="{{ $JS_NONCE }}"></script>
+    <script type="text/javascript" src="v1/js/ff/charts.defaults.js?v={{ $FF_BUILD_TIME }}" nonce="{{ $JS_NONCE }}"></script>
+    <script type="text/javascript" src="v1/js/ff/charts.js?v={{ $FF_BUILD_TIME }}" nonce="{{ $JS_NONCE }}"></script>
+    <script type="text/javascript" src="v1/js/ff/categories/show.js?v={{ $FF_BUILD_TIME }}" nonce="{{ $JS_NONCE }}"></script>
+    {{-- required for groups.twig --}}
+    <script type="text/javascript" src="v1/js/ff/list/groups.js?v={{ $FF_BUILD_TIME }}" nonce="{{ $JS_NONCE }}"></script>
+@endsection

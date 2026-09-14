@@ -31,14 +31,16 @@ use FireflyIII\Models\Tag;
 use FireflyIII\Repositories\Tag\TagRepositoryInterface;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
+use Override;
 
 /**
  * Class TagController
  */
 final class TagController extends Controller
 {
-    private TagRepositoryInterface $repository;
+    #[Override]
     protected array $acceptedRoles = [UserRoleEnum::READ_ONLY];
+    private TagRepositoryInterface $repository;
 
     /**
      * TagController constructor.

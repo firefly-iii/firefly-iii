@@ -42,9 +42,6 @@ use Illuminate\Validation\ValidationException;
 final class ConfigurationController extends Controller
 {
     /**
-     * This endpoint is documented at:
-     * https://api-docs.firefly-iii.org/?urls.primaryName=2.0.0%20(v1)#/configuration/getConfiguration
-     *
      * @throws FireflyException
      */
     public function index(): JsonResponse
@@ -157,7 +154,7 @@ final class ConfigurationController extends Controller
         $enableExternalMap     = AppConfiguration::get('enable_external_map', false);
         $enableExternalRates   = AppConfiguration::get('enable_external_rates', false);
         $allowWebhooks         = AppConfiguration::get('allow_webhooks', false);
-        $enableBatchProcessing = AppConfiguration::get('enable_batch_processing', false);
+        $enableBatchProcessing = AppConfiguration::get('enable_batch_processing', true);
         $validUrlProtocols     = AppConfiguration::get('valid_url_protocols', config('firefly.valid_url_protocols'));
 
         return [

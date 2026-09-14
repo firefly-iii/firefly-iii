@@ -53,7 +53,7 @@ final class EditController extends Controller
 
         $this->middleware(function ($request, $next) {
             app('view')->share('title', (string) trans('firefly.piggyBanks'));
-            app('view')->share('mainTitleIcon', 'fa-bullseye');
+            app('view')->share('mainTitleIcon', 'bi-target');
 
             $this->attachments = app(AttachmentHelperInterface::class);
             $this->piggyRepos  = app(PiggyBankRepositoryInterface::class);
@@ -70,7 +70,7 @@ final class EditController extends Controller
     public function edit(PiggyBank $piggyBank): Factory|\Illuminate\Contracts\View\View
     {
         $subTitle     = (string) trans('firefly.update_piggy_title', ['name' => $piggyBank->name]);
-        $subTitleIcon = 'fa-pencil';
+        $subTitleIcon = 'bi-pencil';
         $note         = $piggyBank->notes()->first();
         // Flash some data to fill the form.
         $targetDate   = $piggyBank->target_date?->format('Y-m-d');
@@ -143,7 +143,7 @@ final class EditController extends Controller
         }
         $redirect  = redirect($this->getPreviousUrl('piggy-banks.edit.url'));
 
-        if (1 === (int) $request->get('return_to_edit')) {
+        if (1 === (int) $request->input('return_to_edit')) {
             session()->put('piggy-banks.edit.fromUpdate', true);
 
             $redirect = redirect(route('piggy-banks.edit', [$piggyBank->id]));

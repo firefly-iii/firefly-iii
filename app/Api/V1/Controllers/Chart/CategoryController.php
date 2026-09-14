@@ -41,6 +41,7 @@ use FireflyIII\Support\Http\Api\ValidatesUserGroupTrait;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
+use Override;
 
 /**
  * Class BudgetController
@@ -50,6 +51,7 @@ final class CategoryController extends Controller
     use CleansChartData;
     use ValidatesUserGroupTrait;
 
+    #[Override]
     protected array $acceptedRoles = [UserRoleEnum::READ_ONLY];
 
     private AccountRepositoryInterface $accountRepos;

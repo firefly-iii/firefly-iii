@@ -46,8 +46,8 @@ final class EditController extends Controller
 
         // translations:
         $this->middleware(static function ($request, $next) {
-            app('view')->share('mainTitleIcon', 'fa-bolt');
-            app('view')->share('subTitleIcon', 'fa-pencil');
+            app('view')->share('mainTitleIcon', 'bi-lightning');
+            app('view')->share('subTitleIcon', 'bi-pencil');
             app('view')->share('title', (string) trans('firefly.webhooks'));
 
             return $next($request);

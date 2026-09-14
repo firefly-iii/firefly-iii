@@ -1,5 +1,25 @@
 <?php
 
+/*
+ * TransactionGroupEventObjects.php
+ * Copyright (c) 2026 james@firefly-iii.org
+ *
+ * This file is part of Firefly III (https://github.com/firefly-iii).
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Affero General Public License as
+ * published by the Free Software Foundation, either version 3 of the
+ * License, or (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU Affero General Public License for more details.
+ *
+ * You should have received a copy of the GNU Affero General Public License
+ * along with this program.  If not, see <https://www.gnu.org/licenses/>.
+ */
+
 declare(strict_types=1);
 
 namespace FireflyIII\Events\Model\TransactionGroup;
@@ -48,13 +68,13 @@ class TransactionGroupEventObjects
 
     public function appendFromTransactionGroup(TransactionGroup $transactionGroup): void
     {
-        Log::debug(sprintf('Appended transaction group #%d', $transactionGroup->id));
+        // Log::debug(sprintf('Appended transaction group #%d', $transactionGroup->id));
         $this->transactionGroups->push($transactionGroup);
 
         /** @var TransactionJournal $journal */
         foreach ($transactionGroup->transactionJournals as $journal) {
             $journal->refresh();
-            Log::debug(sprintf('Appended transaction journal #%d (%s)', $journal->id, $journal->date->format('Y-m-d H:i:s')));
+            // Log::debug(sprintf('Appended transaction journal #%d (%s)', $journal->id, $journal->date->format('Y-m-d H:i:s')));
             $this->transactionJournals->put($journal->id, $journal);
             $this->budgets    = $this->budgets->merge($journal->budgets);
             $this->categories = $this->categories->merge($journal->categories);
@@ -62,7 +82,7 @@ class TransactionGroupEventObjects
 
             /** @var Transaction $transaction */
             foreach ($journal->transactions as $transaction) {
-                Log::debug(sprintf('Appended account #%d', $transaction->account->id));
+                // Log::debug(sprintf('Appended account #%d', $transaction->account->id));
                 $this->accounts->push($transaction->account);
             }
         }

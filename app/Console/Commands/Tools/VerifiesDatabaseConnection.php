@@ -1,7 +1,5 @@
 <?php
 
-declare(strict_types=1);
-
 /*
  * VerifiesDatabaseConnection.php
  * Copyright (c) 2026 james@firefly-iii.org
@@ -22,6 +20,8 @@ declare(strict_types=1);
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
+declare(strict_types=1);
+
 namespace FireflyIII\Console\Commands\Tools;
 
 use FireflyIII\Console\Commands\ShowsFriendlyMessages;
@@ -33,18 +33,18 @@ class VerifiesDatabaseConnection extends Command
     use VerifiesDatabaseConnectionTrait;
 
     /**
-     * The name and signature of the console command.
-     *
-     * @var string
-     */
-    protected $signature   = 'firefly-iii:verify-database-connection';
-
-    /**
      * The console command description.
      *
      * @var string
      */
     protected $description = 'This command tries to connect to the database.';
+
+    /**
+     * The name and signature of the console command.
+     *
+     * @var string
+     */
+    protected $signature   = 'firefly-iii:verify-database-connection';
 
     /**
      * Execute the console command.

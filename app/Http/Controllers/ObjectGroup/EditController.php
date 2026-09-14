@@ -48,7 +48,7 @@ final class EditController extends Controller
         parent::__construct();
 
         $this->middleware(function ($request, $next) {
-            app('view')->share('mainTitleIcon', 'fa-envelope-o');
+            app('view')->share('mainTitleIcon', 'bi-envelope');
             app('view')->share('title', (string) trans('firefly.object_groups_page_title'));
 
             $this->repository = app(ObjectGroupRepositoryInterface::class);
@@ -63,7 +63,7 @@ final class EditController extends Controller
     public function edit(ObjectGroup $objectGroup): Factory|View
     {
         $subTitle     = (string) trans('firefly.edit_object_group', ['title' => $objectGroup->title]);
-        $subTitleIcon = 'fa-pencil';
+        $subTitleIcon = 'bi-pencil';
 
         if (true !== session('object-groups.edit.fromUpdate')) {
             $this->rememberPreviousUrl('object-groups.edit.url');
@@ -86,7 +86,7 @@ final class EditController extends Controller
 
         $redirect  = redirect($this->getPreviousUrl('object-groups.edit.url'));
 
-        if (1 === (int) $request->get('return_to_edit')) {
+        if (1 === (int) $request->input('return_to_edit')) {
             session()->put('object-groups.edit.fromUpdate', true);
 
             $redirect = redirect(route('object-groups.edit', [$piggyBank->id]));

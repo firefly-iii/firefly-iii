@@ -1,8 +1,0 @@
-
-{{ trans('email.closing')|raw }}
-
-{{ trans('email.signature')|raw }}
-
-{% if '' != ipAddress %}
-{{ trans('email.footer_ps', {ipAddress: ipAddress})|raw }}
-{% endif %}

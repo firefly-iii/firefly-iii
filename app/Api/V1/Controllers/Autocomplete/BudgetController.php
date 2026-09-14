@@ -31,14 +31,16 @@ use FireflyIII\Models\Budget;
 use FireflyIII\Repositories\Budget\BudgetRepositoryInterface;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
+use Override;
 
 /**
  * Class BudgetController
  */
 final class BudgetController extends Controller
 {
-    private BudgetRepositoryInterface $repository;
+    #[Override]
     protected array $acceptedRoles = [UserRoleEnum::READ_BUDGETS];
+    private BudgetRepositoryInterface $repository;
 
     /**
      * BudgetController constructor.

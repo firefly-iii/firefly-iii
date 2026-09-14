@@ -61,7 +61,7 @@ final class CreateController extends Controller
 
         $this->middleware(function ($request, $next) {
             app('view')->share('title', (string) trans('firefly.rules'));
-            app('view')->share('mainTitleIcon', 'fa-random');
+            app('view')->share('mainTitleIcon', 'bi-shuffle');
 
             $this->ruleRepos = app(RuleRepositoryInterface::class);
 
@@ -84,7 +84,7 @@ final class CreateController extends Controller
         $oldActions   = [];
 
         // build triggers from query, if present.
-        $query        = (string) $request->get('from_query');
+        $query        = (string) $request->input('from_query');
         if ('' !== $query) {
             $search        = app(SearchInterface::class);
             $search->parseQuery($query);
@@ -115,7 +115,7 @@ final class CreateController extends Controller
 
         $triggerCount = count($oldTriggers);
         $actionCount  = count($oldActions);
-        $subTitleIcon = 'fa-clone';
+        $subTitleIcon = 'bi-copy';
 
         // title depends on whether or not there is a rule group:
         $subTitle     = (string) trans('firefly.make_new_rule_no_group');
@@ -176,7 +176,7 @@ final class CreateController extends Controller
 
         $triggerCount = count($oldTriggers);
         $actionCount  = count($oldActions);
-        $subTitleIcon = 'fa-clone';
+        $subTitleIcon = 'bi-copy';
 
         // title depends on whether there is a rule group:
         $subTitle     = (string) trans('firefly.make_new_rule_no_group');
@@ -196,6 +196,7 @@ final class CreateController extends Controller
             'preFilled'    => $preFilled,
             'oldActions'   => $oldActions,
             'triggerCount' => $triggerCount,
+            'ruleGroup'    => null,
             'actionCount'  => $actionCount,
             'subTitle'     => $subTitle,
         ]);
@@ -208,7 +209,7 @@ final class CreateController extends Controller
     {
         $request->session()->flash('info', (string) trans('firefly.instructions_rule_from_journal', ['name' => e($journal->description)]));
 
-        $subTitleIcon = 'fa-clone';
+        $subTitleIcon = 'bi-copy';
         $subTitle     = (string) trans('firefly.make_new_rule_no_group');
 
         // get triggers and actions for journal.
@@ -248,6 +249,7 @@ final class CreateController extends Controller
             'preFilled'    => $preFilled,
             'oldActions'   => $oldActions,
             'triggerCount' => $triggerCount,
+            'ruleGroup'    => null,
             'actionCount'  => $actionCount,
             'subTitle'     => $subTitle,
         ]);
@@ -255,7 +257,7 @@ final class CreateController extends Controller
 
     public function duplicate(Request $request): JsonResponse
     {
-        $ruleId = (int) $request->get('id');
+        $ruleId = (int) $request->input('id');
         $rule   = $this->ruleRepos->find($ruleId);
         if ($rule instanceof Rule) {
             $this->ruleRepos->duplicate($rule);
@@ -278,12 +280,12 @@ final class CreateController extends Controller
         Preferences::mark();
 
         // redirect to show bill.
-        if ('true' === $request->get('return_to_bill') && (int) $request->get('bill_id') > 0) {
-            return redirect(route('bills.show', [(int) $request->get('bill_id')]));
+        if ('true' === $request->input('return_to_bill') && (int) $request->input('bill_id') > 0) {
+            return redirect(route('bills.show', [(int) $request->input('bill_id')]));
         }
 
         // redirect to new bill creation.
-        if ((int) $request->get('bill_id') > 0) {
+        if ((int) $request->input('bill_id') > 0) {
             return redirect($this->getPreviousUrl('bills.create.url'));
         }
         if (true === $data['run_after_form']) {
@@ -292,7 +294,7 @@ final class CreateController extends Controller
 
         $redirect = redirect($this->getPreviousUrl('rules.create.url'));
 
-        if (1 === (int) $request->get('create_another')) {
+        if (1 === (int) $request->input('create_another')) {
             session()->put('rules.create.fromStore', true);
             $redirect = redirect(route('rules.create', [$data['rule_group_id']]))->withInput();
         }

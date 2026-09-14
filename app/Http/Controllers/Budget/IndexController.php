@@ -73,7 +73,7 @@ final class IndexController extends Controller
 
         $this->middleware(function ($request, $next) {
             app('view')->share('title', (string) trans('firefly.budgets'));
-            app('view')->share('mainTitleIcon', 'fa-pie-chart');
+            app('view')->share('mainTitleIcon', 'bi-pie-chart');
             $this->repository         = app(BudgetRepositoryInterface::class);
             $this->opsRepository      = app(OperationsRepositoryInterface::class);
             $this->abRepository       = app(AvailableBudgetRepositoryInterface::class);
@@ -165,7 +165,7 @@ final class IndexController extends Controller
     public function reorder(Request $request, BudgetRepositoryInterface $repository): JsonResponse
     {
         $this->abRepository->cleanup();
-        $budgetIds = $request->get('budgetIds');
+        $budgetIds = $request->input('budgetIds');
 
         foreach ($budgetIds as $index => $budgetId) {
             $budgetId = (int) $budgetId;
@@ -284,10 +284,7 @@ final class IndexController extends Controller
 
                 if (array_key_exists($currency->id, $spentArr) && array_key_exists('sum', $spentArr[$currency->id])) {
                     $array['spent'][$currency->id]['spent']                   = $spentArr[$currency->id]['sum'];
-                    $array['spent'][$currency->id]['spent_outside']           = Steam::negative(bcsub(
-                        $spentInLimits[$currency->id],
-                        $spentArr[$currency->id]['sum']
-                    ));
+                    $array['spent'][$currency->id]['spent_outside']           = Steam::negative(bcsub($spentInLimits[$currency->id], $spentArr[$currency->id]['sum']));
                     $array['spent'][$currency->id]['currency_id']             = $currency->id;
                     $array['spent'][$currency->id]['currency_symbol']         = $currency->symbol;
                     $array['spent'][$currency->id]['currency_decimal_places'] = $currency->decimal_places;
