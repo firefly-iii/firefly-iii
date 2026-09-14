@@ -213,10 +213,7 @@ let index = function () {
                 })
                 .catch((error) => {
                     if (typeof error.response.data === "object") {
-                        for (const [key, value] of Object.entries(
-                            error.response.data.errors,
-                        )) {
-                            // console.log(`${key}: ${value}`);
+                        for (const value of Object.entries(error.response.data.errors,)) {
                             form.errors.push(value);
                         }
                     } else {

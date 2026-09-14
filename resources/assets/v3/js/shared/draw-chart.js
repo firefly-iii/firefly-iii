@@ -282,7 +282,7 @@ function drawMultiCurrencyLineChart(url, holder, anonymous, drawTodayMarker) {
             let firstScale = ""; // used for today marker.
             let drawTodayLabel = "";
             let drawTodayIndex = 0;
-            let labelCount = 0;
+            let labelCount ;
 
             // loop all collected data.
             for (let i = 0; i < all.length; i++) {

@@ -23,7 +23,6 @@ export function saveNewLink(e) {
 
     let linkSelect = document.getElementById("link_type_id_" + index);
     let linkType = linkSelect.value;
-    let linkLabel = linkSelect.options[linkSelect.selectedIndex].innerHTML;
     let searchBox = document.getElementById("links_modal_search_" + index);
     let hiddenField = searchBox.parentNode.querySelector(
         'input[name="search"]',
