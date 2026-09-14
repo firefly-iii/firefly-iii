@@ -7,7 +7,7 @@
         <input type="text" class="form-control ac-description"
                :id="'description_' + index"
                @change="changedDescription"
-               @keyup.enter="submitTransaction()"
+               @keyup.enter="save()"
                x-model="transaction.description"
                :class="{'is-invalid': transaction.errors.description.length > 0, 'form-control': true}"
                :data-index="index"

@@ -8,7 +8,7 @@
         <input type="text" class="form-control ac-group-title"
                id="group-title"
                @change="changedGroupTitle"
-               @keyup.enter="submitTransaction()"
+               @keyup.enter="save()"
                x-model="groupProperties.title"
                :disabled="index > 0"
                :class="{'is-invalid': groupProperties.titleErrors.length > 0, 'form-control': true}"

@@ -32,7 +32,12 @@
                     </div>
                 </div>
                 <div class="card-body">
-                    <canvas id="budgets-chart" class="wide-chart" height="400" width="100%"></canvas>
+                    <div>
+                        <canvas id="budgets-chart" class="wide-chart" height="400" width="100%"></canvas>
+                    </div>
+                    <div>
+                        <canvas id="budgets-two-chart" class="wide-chart" height="400" width="100%"></canvas>
+                    </div>
                 </div>
                 <div class="card-footer text-end">
                     <a href="{{ route('budgets.index') }}" class="btn btn-primary btn-sm">
@@ -176,13 +181,13 @@
                         <template x-for="piggyBank in piggyBanks" :key="piggyBank.id">
                             <div>
                                 <a :href="'./piggy-banks/show/' + piggyBank.id" :title="piggyBank.name"><strong
-                                    x-text="piggyBank.name"></strong></a><br>
+                                        x-text="piggyBank.name"></strong></a><br>
                                 <div class="progress">
                                     <div class="progress-bar progress-bar-striped" role="progressbar"
                                          :class="'w-'+piggyBank.percentage" :aria-valuenow="piggyBank.percentage"
                                          aria-valuemin="0" aria-valuemax="100">
                                         <template x-if="piggyBank.percentage > 50">
-                                        <span x-text="piggyBank.amount"></span>
+                                            <span x-text="piggyBank.amount"></span>
                                         </template>
                                     </div>
                                     <template x-if="piggyBank.percentage <= 50">
@@ -253,14 +258,8 @@
             lineTextColor = '#bec5cb';
         }
         var billCount = {{ $billCount }};
-        var accountFrontpageUrl = '{{ route('chart.account.frontpage') }}';
         var accountRevenueUrl = '{{ route('chart.account.revenue') }}';
         var accountExpenseUrl = '{{ route('chart.account.expense') }}';
-        var drawVerticalLine = '';
-        {{-- render vertical line with text "today"  --}}
-            @if($start->lte($today) && $end->gte($today))
-            drawVerticalLine = '{{ $today->isoFormat($monthAndDayFormat) }}';
-        @endif
     </script>
 
     <script type="text/javascript" src="v1/js/lib/Chart.bundle.min.js?v={{ $FF_BUILD_TIME }}"

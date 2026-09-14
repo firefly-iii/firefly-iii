@@ -10,7 +10,7 @@
                :data-index="index"
                :class="{'is-invalid': transaction.errors.amount.length > 0, 'input-mask' : true, 'form-control': true}"
                x-model="transaction.amount"
-               @keyup.enter="submitTransaction()"
+               @keyup.enter="save()"
                @change="changedAmount"
                placeholder="0.00">
         <template x-if="transaction.errors.amount.length > 0">

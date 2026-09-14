@@ -15,7 +15,7 @@
             <template x-if="!formStates.loadingPiggyBanks">
                 <select class="form-select"
                         :id="'piggy_bank_id_' + index"
-                        @keyup.enter="submitTransaction()"
+                        @keyup.enter="save()"
                         x-model="transaction.piggy_bank_id">
                     <template x-for="group in formData.piggyBanks">
                         <optgroup :label="group.name">

@@ -14,7 +14,7 @@
             <template x-if="!formStates.loadingSubscriptions">
                 <select class="form-select"
                         :id="'bill_id_' + index"
-                        @keyup.enter="submitTransaction()"
+                        @keyup.enter="save()"
                         x-model="transaction.bill_id">
                     <template x-for="group in formData.subscriptions">
                         <optgroup :label="group.name">

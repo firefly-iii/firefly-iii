@@ -5,7 +5,7 @@
     <div class="col-sm-10">
         <input type="datetime-local" class="form-control" :id="'date_' + index"
                @change="changedDateTime"
-               @keyup.enter="submitTransaction()"
+               @keyup.enter="save()"
                x-model="transaction.date"
         >
     </div>
