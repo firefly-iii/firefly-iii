@@ -113,9 +113,9 @@ let index = function () {
          * Get all of the personal access tokens for the user.
          */
         getTokens() {
-            console.log("getTokens()");
+            // console.log("getTokens()");
             api.get("./oauth/personal-access-tokens").then((response) => {
-                console.log(response.data);
+                // console.log(response.data);
                 this.tokens = response.data;
             });
         },
@@ -124,7 +124,7 @@ let index = function () {
          * Show the form for creating new tokens.
          */
         showCreateTokenForm() {
-            console.log("showCreateTokenForm()");
+            // console.log("showCreateTokenForm()");
             new Modal(document.getElementById("modal-create-token"), {}).show();
         },
 
@@ -132,16 +132,16 @@ let index = function () {
          * Create a new personal access token.
          */
         storePat() {
-            console.log("storePat()");
+            // console.log("storePat()");
             this.accessToken = null;
 
             this.form.errors = [];
 
             api.post("./oauth/personal-access-tokens", this.form)
                 .then((response) => {
-                    console.log(
-                        "Successful POST new token, reset form content.",
-                    );
+                    // console.log(
+                    //     "Successful POST new token, reset form content.",
+                    // );
                     this.form.name = "";
                     this.form.scopes = [];
                     this.form.errors = [];
@@ -172,7 +172,7 @@ let index = function () {
          * Show the given access token to the user.
          */
         showAccessToken(accessToken) {
-            console.log("showAccessToken");
+            // console.log("showAccessToken");
             new Modal(document.getElementById("modal-create-token"), {}).hide();
 
             this.accessToken = accessToken;
@@ -181,7 +181,7 @@ let index = function () {
         },
         getClients() {
             api.get("./oauth/clients").then((response) => {
-                console.log(response.data);
+                // console.log(response.data);
                 this.clients = response.data;
             });
         },
@@ -216,7 +216,7 @@ let index = function () {
                         for (const [key, value] of Object.entries(
                             error.response.data.errors,
                         )) {
-                            console.log(`${key}: ${value}`);
+                            // console.log(`${key}: ${value}`);
                             form.errors.push(value);
                         }
                     } else {
@@ -224,7 +224,7 @@ let index = function () {
                             "Something went wrong. Please try again.",
                         ];
                     }
-                    console.log(form.errors);
+                    //console.log(form.errors);
                 });
         },
         /**
@@ -311,11 +311,11 @@ const comps = {
 };
 
 function loadPage(comps) {
-    console.log("loadPage");
+    // console.log("loadPage");
     Object.keys(comps).forEach((comp) => {
         let data = comps[comp]();
         Alpine.data(comp, () => data);
-        console.log(comp);
+        // console.log(comp);
     });
     Alpine.start();
 }

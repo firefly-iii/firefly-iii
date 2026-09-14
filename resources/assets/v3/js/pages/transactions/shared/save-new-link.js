@@ -40,17 +40,17 @@ export function saveNewLink(e) {
     }
 
     // add entry to temporary table.
-    console.log(
-        "Link " +
-            linkType +
-            ' ("' +
-            linkLabel +
-            '") to transaction #' +
-            hiddenField.value +
-            '("' +
-            searchBox.value +
-            '")',
-    );
+    // console.log(
+    //     "Link " +
+    //         linkType +
+    //         ' ("' +
+    //         linkLabel +
+    //         '") to transaction #' +
+    //         hiddenField.value +
+    //         '("' +
+    //         searchBox.value +
+    //         '")',
+    // );
 
     this.links[index].push({
         id: 0,

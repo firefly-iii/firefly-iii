@@ -132,7 +132,7 @@ export function spliceErrorsIntoTransactions(errors, transactions) {
             }
         }
     }
-    console.log(transactions[0].errors);
+    // console.log(transactions[0].errors);
 
     return transactions;
 }

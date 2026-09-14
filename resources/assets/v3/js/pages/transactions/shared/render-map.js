@@ -29,7 +29,7 @@ export function renderMap(index, useDefault) {
     let longitude = parseFloat(this.formBehaviour.defaultCoordinates.longitude);
     let zoomLevel = parseInt(this.formBehaviour.defaultCoordinates.zoom_level);
     if (!useDefault) {
-        console.log("Using coordinates from data attributes");
+        // console.log("Using coordinates from data attributes");
         latitude = parseFloat(el.dataset.latitude);
         longitude = parseFloat(el.dataset.longitude);
         zoomLevel = parseInt(el.dataset.zoomLevel);

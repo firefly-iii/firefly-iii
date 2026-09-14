@@ -32,9 +32,11 @@
                     </div>
                 </div>
                 <div class="card-body">
+                    <!--
                     <div>
                         <canvas id="budgets-chart" class="wide-chart" height="400" width="100%"></canvas>
                     </div>
+                    -->
                     <div>
                         <canvas id="budgets-two-chart" class="wide-chart" height="400" width="100%"></canvas>
                     </div>

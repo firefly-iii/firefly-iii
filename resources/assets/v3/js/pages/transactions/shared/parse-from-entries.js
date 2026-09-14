@@ -91,20 +91,20 @@ export function parseFromEntries(entries, originals, transactionType) {
                 "" !== entry.foreign_currency_code.toString()
             ) {
                 current.foreign_currency_code = entry.foreign_currency_code;
-                console.log(
-                    "There is a foreign currency code set, ",
-                    current.foreign_currency_code,
-                );
+                // console.log(
+                //     "There is a foreign currency code set, ",
+                //     current.foreign_currency_code,
+                // );
                 if (
                     typeof entry.foreign_amount !== "undefined" &&
                     "" !== entry.foreign_amount.toString() &&
                     0.0 !== entry.foreign_amount
                 ) {
                     current.foreign_amount = entry.foreign_amount;
-                    console.log(
-                        "There is also a foreign amount set, ",
-                        current.foreign_amount,
-                    );
+                    // console.log(
+                    //     "There is also a foreign amount set, ",
+                    //     current.foreign_amount,
+                    // );
                 }
             }
             if (
@@ -146,7 +146,7 @@ export function parseFromEntries(entries, originals, transactionType) {
                     current.destination_id = returnArray[0].destination_id;
                     current.destination_name = returnArray[0].destination_name;
                 }
-                console.log("Overrule depending on ", transactionType);
+                // console.log("Overrule depending on ", transactionType);
             }
 
             current.type = transactionType;

@@ -36,15 +36,15 @@ export function detectTransactionType() {
         ["Asset account", "Loan", "Debt", "Mortgage"].includes(sourceType)
     ) {
         this.groupProperties.transactionType = "transfer";
-        console.log(
-            'Transaction type is detected to be "' +
-                this.groupProperties.transactionType +
-                '".',
-        );
+        // console.log(
+        //     'Transaction type is detected to be "' +
+        //         this.groupProperties.transactionType +
+        //         '".',
+        // );
 
         // this also locks the amount into the amount of the source account
         // and the foreign amount (if different) in that of the destination account.
-        console.log("filter down currencies for transfer.");
+        // console.log("filter down currencies for transfer.");
         this.determineAmountCurrency(
             this.entries[0].source_account.currency_code,
         );
@@ -60,11 +60,11 @@ export function detectTransactionType() {
         ["Expense account", "Debt", "Loan", "Mortgage"].includes(destType)
     ) {
         this.groupProperties.transactionType = "withdrawal";
-        console.log(
-            '[a] Transaction type is detected to be "' +
-                this.groupProperties.transactionType +
-                '".',
-        );
+        // console.log(
+        //     '[a] Transaction type is detected to be "' +
+        //         this.groupProperties.transactionType +
+        //         '".',
+        // );
         this.determineAmountCurrency(
             this.entries[0].source_account.currency_code,
         );
@@ -73,11 +73,11 @@ export function detectTransactionType() {
     }
     if ("Asset account" === sourceType && "unknown" === destType) {
         this.groupProperties.transactionType = "withdrawal";
-        console.log(
-            '[b] Transaction type is detected to be "' +
-                this.groupProperties.transactionType +
-                '".',
-        );
+        // console.log(
+        //     '[b] Transaction type is detected to be "' +
+        //         this.groupProperties.transactionType +
+        //         '".',
+        // );
         this.determineAmountCurrency(
             this.entries[0].source_account.currency_code,
         );
@@ -89,11 +89,11 @@ export function detectTransactionType() {
         "Expense account" === destType
     ) {
         this.groupProperties.transactionType = "withdrawal";
-        console.log(
-            '[c] Transaction type is detected to be "' +
-                this.groupProperties.transactionType +
-                '".',
-        );
+        // console.log(
+        //     '[c] Transaction type is detected to be "' +
+        //         this.groupProperties.transactionType +
+        //         '".',
+        // );
         this.determineAmountCurrency(
             this.entries[0].source_account.currency_code,
         );
@@ -107,11 +107,11 @@ export function detectTransactionType() {
         ["Asset account", "Debt", "Loan", "Mortgage"].includes(destType)
     ) {
         this.groupProperties.transactionType = "deposit";
-        console.log(
-            'Transaction type is detected to be "' +
-                this.groupProperties.transactionType +
-                '".',
-        );
+        // console.log(
+        //     'Transaction type is detected to be "' +
+        //         this.groupProperties.transactionType +
+        //         '".',
+        // );
         this.disableSplitAccounts();
         this.determineAmountCurrency(
             this.entries[0].destination_account.currency_code,
@@ -123,11 +123,11 @@ export function detectTransactionType() {
         ["Asset account", "Debt", "Loan", "Mortgage"].includes(destType)
     ) {
         this.groupProperties.transactionType = "deposit";
-        console.log(
-            'Transaction type is detected to be "' +
-                this.groupProperties.transactionType +
-                '".',
-        );
+        // console.log(
+        //     'Transaction type is detected to be "' +
+        //         this.groupProperties.transactionType +
+        //         '".',
+        // );
         this.determineAmountCurrency(
             this.entries[0].destination_account.currency_code,
         );
@@ -156,11 +156,11 @@ export function detectTransactionType() {
         "Asset account" === destType
     ) {
         this.groupProperties.transactionType = "deposit";
-        console.log(
-            'Transaction type is detected to be "' +
-                this.groupProperties.transactionType +
-                '".',
-        );
+        // console.log(
+        //     'Transaction type is detected to be "' +
+        //         this.groupProperties.transactionType +
+        //         '".',
+        // );
         this.determineAmountCurrency(
             this.entries[0].destination_account.currency_code,
         );

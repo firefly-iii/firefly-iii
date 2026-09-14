@@ -32,7 +32,7 @@ export function switchLink(e) {
     linkTypeDirection = "inward" === linkTypeDirection ? "outward" : "inward";
     if (typeof linkType === "undefined") {
         console.error("Link type not found for id " + linkTypeId);
-        console.log(this.formData.linkTypes);
+        // console.log(this.formData.linkTypes);
         return;
     }
     this.links[index][rowIndex].link_type =

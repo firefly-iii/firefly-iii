@@ -232,18 +232,18 @@ let create = function () {
                 1 === list.length &&
                 list[0].code === this.entries[0].source_account.currency_code
             ) {
-                console.log(
-                    "Foreign currency is same as source currency. Disable foreign amount.",
-                );
+                // console.log(
+                //     "Foreign currency is same as source currency. Disable foreign amount.",
+                // );
                 this.formBehaviour.foreignCurrencyEnabled = false;
             }
             if (
                 1 === list.length &&
                 list[0].code !== this.entries[0].source_account.currency_code
             ) {
-                console.log(
-                    "Foreign currency is NOT same as source currency. Enable foreign amount.",
-                );
+                // console.log(
+                //     "Foreign currency is NOT same as source currency. Enable foreign amount.",
+                // );
                 this.formBehaviour.foreignCurrencyEnabled = true;
             }
 
@@ -262,7 +262,7 @@ let create = function () {
         },
 
         processUpload() {
-            console.log("Now in processUpload()");
+            // console.log("Now in processUpload()");
             this.formStates.storedAttachments = true;
             this.showMessageOrRedirectUser();
         },
@@ -310,7 +310,7 @@ let create = function () {
             });
 
             document.addEventListener("upload-success", () => {
-                console.log('Now in event listener "upload-success"');
+                // console.log('Now in event listener "upload-success"');
                 this.processUpload();
                 document
                     .querySelectorAll("input[type=file]")
@@ -318,11 +318,11 @@ let create = function () {
             });
 
             document.addEventListener("upload-error", (event) => {
-                console.log('Now in event listener "upload-error"');
+                // console.log('Now in event listener "upload-error"');
                 this.processUploadError(event);
             });
             document.addEventListener("upload-failed", (event) => {
-                console.log('Now in event listener "upload-failed"');
+                // console.log('Now in event listener "upload-failed"');
                 this.processUploadError(event);
             });
         },
@@ -393,9 +393,9 @@ let create = function () {
                             );
                         }
                     }
-                    console.log("Go to process transactions", transactions);
+                    // console.log("Go to process transactions", transactions);
                     this.processTransactionLinks(transactions);
-                    console.log("Done with process transactions", transactions);
+                    // console.log("Done with process transactions", transactions);
                     // process attachments, if any:
                     const attachmentCount = processAttachments(
                         this.groupProperties.id,
@@ -429,7 +429,7 @@ let comps = { create, sidebar, dates };
 
 function loadPage() {
     Object.keys(comps).forEach((comp) => {
-        console.log(`Loading page component "${comp}"`);
+        // console.log(`Loading page component "${comp}"`);
         let data = comps[comp]();
         Alpine.data(comp, () => data);
     });

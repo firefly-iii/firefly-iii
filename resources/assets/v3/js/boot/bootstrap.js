@@ -43,7 +43,7 @@ window.axios.defaults.headers.common["X-Requested-With"] = "XMLHttpRequest";
 getFreshVariable("lastActivity")
     .then((serverValue) => {
         if (null === serverValue) {
-            console.log("Server value is null in getFreshVariable.");
+            // console.log("Server value is null in getFreshVariable.");
             throw new Error("401 in getFreshVariable.");
         }
         const localValue = store.get("lastActivity");
@@ -78,12 +78,12 @@ getFreshVariable("lastActivity")
             window.__localeId__ = values.locale;
             store.set("language", values.language);
             store.set("locale", values.locale);
-            console.log(
-                "Language is " +
-                    values.language +
-                    ", locale is " +
-                    values.locale,
-            );
+            // console.log(
+            //     "Language is " +
+            //         values.language +
+            //         ", locale is " +
+            //         values.locale,
+            // );
             loadTranslations(values.locale).then(() => {
                 const event = new Event("firefly-iii-bootstrapped");
                 document.dispatchEvent(event);
@@ -141,7 +141,7 @@ getFreshVariable("lastActivity")
                                 });
                             }
                             if (i === hints.length - 1) {
-                                console.log("Add complete");
+                                // console.log("Add complete");
                                 buttons.push({
                                     text: i18next.t("firefly.intro_done_label"),
                                     action: tour.complete,

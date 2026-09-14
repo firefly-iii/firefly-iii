@@ -122,7 +122,7 @@ function drawMultiCurrencyStackedColumnChart(url, holder, anonymous) {
                     // add the data to the dataset.
 
                     // add spent and left to the dataset, if they exist.
-                    console.log('current', current);
+                    // console.log('current', current);
                     if(parseFloat(current.entries.spent) * -1 < parseFloat(current.entries.budgeted)) {
                         let key = 'budgeted' + current.currency_code;
                         datasets[key].data.push(0);
@@ -170,8 +170,8 @@ function drawMultiCurrencyStackedColumnChart(url, holder, anonymous) {
                     //         datasets[key].data.push(value);
                     //     }
                     // }
-                    console.log('All generatred datasets.')
-                    console.log(datasets);
+                    // console.log('All generatred datasets.')
+                    // console.log(datasets);
                     // add it to the dataset collection.
                     //data.datasets.push(dataset);
                     data.datasets = Object.values(datasets);
@@ -203,8 +203,8 @@ function drawMultiCurrencyStackedColumnChart(url, holder, anonymous) {
             // options.scales.y.stacked = true;
             // add the new axes.
             options.scales = {...options.scales, ...axes};
-            console.log(options);
-            console.log(data);
+            // console.log(options);
+            // console.log(data);
 
             // add a callback for the label.
             options.plugins.tooltip.callbacks.label = function (tooltipItem) {

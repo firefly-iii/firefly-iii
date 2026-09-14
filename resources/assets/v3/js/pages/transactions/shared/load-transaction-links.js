@@ -1,22 +1,22 @@
 import Get from "../../../api/model/transaction/get.js";
 
 export function loadTransactionLinks(index, journalId) {
-    console.log(
-        "Get transaction links for index #" +
-            index +
-            " and journal #" +
-            journalId,
-    );
+    // console.log(
+    //     "Get transaction links for index #" +
+    //         index +
+    //         " and journal #" +
+    //         journalId,
+    // );
     new Get().transactionLinks(journalId).then((data) => {
         let links = data.data.data;
+        // console.log('Get link info for links.');
         for (let i = 0; i < links.length; i++) {
             if (Object.hasOwn(links, i)) {
                 let current = links[i];
-                let direction =
-                    parseInt(journalId) ===
-                    parseInt(current.attributes.inward_id)
-                        ? "inward"
-                        : "outward";
+                // console.log('Get link info for link #' + current.id);
+                let direction = parseInt(journalId) === parseInt(current.attributes.inward_id)
+                        ? "outward"
+                        : "inward";
                 let otherJournal = parseInt(current.attributes.inward_id);
                 if (
                     parseInt(journalId) ===
@@ -44,7 +44,7 @@ export function loadTransactionLinks(index, journalId) {
                     }
                     if (null !== foundJournal) {
                         //console.log('Found other journal ',  parseInt(foundJournal.transaction_journal_id));
-                        console.log("Current link is", parseInt(current.id));
+                        // console.log("Current link is, found opposing. ", parseInt(current.id));
                         this.links[index].push({
                             id: parseInt(current.id),
                             link_type:
@@ -72,5 +72,6 @@ export function loadTransactionLinks(index, journalId) {
                 });
             }
         }
+        // console.log('Done, link list is now', this.links);
     });
 }

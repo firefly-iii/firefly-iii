@@ -49,7 +49,7 @@ let index = function () {
                     value,
                     true,
                 );
-                
+
                 // drawMultiCurrencyChart(
                 //     "stacked-column",
                 //     "api/v1/chart/budget/overview?start=" +

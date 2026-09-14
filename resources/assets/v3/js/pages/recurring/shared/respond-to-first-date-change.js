@@ -27,9 +27,9 @@ function parseRepetitionSuggestions(response) {
     let opt;
     for (var k in data) {
         if (Object.hasOwn(data, k)) {
-            console.log(
-                "label: " + data[k].label + ", selected: " + data[k].selected,
-            );
+            // console.log(
+            //     "label: " + data[k].label + ", selected: " + data[k].selected,
+            // );
             opt = document.createElement("option");
             opt.value = k;
             opt.label = data[k].label;

@@ -104,12 +104,12 @@ let rates = function () {
             if (0 === parts.length) {
                 return;
             }
-            console.log("These are the parts", parts);
+            // console.log("These are the parts", parts);
             if ("" !== this.rates[index].rate) {
                 //console.log('[a] Rate info is', this.rates[index]);
                 this.updating = true;
                 if (0 === parseInt(this.rates[index].rate_id)) {
-                    console.log("[a] POST, not PUT.");
+                    // console.log("[a] POST, not PUT.");
                     new Post()
                         .post({
                             from: this.from_code,
@@ -122,7 +122,7 @@ let rates = function () {
                         });
                 }
                 if (0 !== parseInt(this.rates[index].rate_id)) {
-                    console.log("[a] PUT, not POST.");
+                    // console.log("[a] PUT, not POST.");
                     new Put()
                         .put(
                             { rate: this.rates[index].rate },
@@ -137,7 +137,7 @@ let rates = function () {
                 //console.log('[b] Rate info is', this.rates[index]);
                 this.updating = true;
                 if (0 === parseInt(this.rates[index].inverse_id)) {
-                    console.log("[b] POST, not PUT.");
+                    // console.log("[b] POST, not PUT.");
                     // post, not put
                     new Post()
                         .post({
@@ -152,7 +152,7 @@ let rates = function () {
                         });
                 }
                 if (0 !== parseInt(this.rates[index].inverse_id)) {
-                    console.log("[b] PUT, not POST.");
+                    // console.log("[b] PUT, not POST.");
                     new Put()
                         .put(
                             { rate: this.rates[index].inverse },
@@ -200,7 +200,7 @@ let rates = function () {
             };
         },
         downloadCurrencies: function () {
-            console.log("Now downloading currencies.");
+            // console.log("Now downloading currencies.");
             this.loading = true;
             new Get().get(this.from_code).then((response) => {
                 this.from = {
@@ -221,13 +221,13 @@ let rates = function () {
         downloadRates: function (page) {
             this.tempRates = {};
             this.loading = true;
-            console.log("Now downloading rates.", page);
+            // console.log("Now downloading rates.", page);
             new GetRate()
                 .get(this.from_code, this.to_code, { page: page })
                 .then((response) => {
                     for (let i in response.data.data) {
                         if (Object.hasOwn(response.data.data, i)) {
-                            console.log("Downloaded entry #" + i);
+                            // console.log("Downloaded entry #" + i);
                             let current = response.data.data[i];
                             let date = new Date(current.attributes.date);
                             let from_code =
@@ -244,7 +244,7 @@ let rates = function () {
                                 to_code +
                                 "_" +
                                 format(date, "yyyy-MM-dd");
-                            console.log('Key is now "' + key + '"');
+                            // console.log('Key is now "' + key + '"');
 
                             // perhaps the returned rate is actually the inverse rate.
                             if (
@@ -263,11 +263,11 @@ let rates = function () {
                                 rate_id = "0";
                                 inverse = current.attributes.rate;
                                 inverse_id = current.id;
-                                console.log('Key updated to "' + key + '"');
+                                // console.log('Key updated to "' + key + '"');
                             }
 
                             if (!Object.hasOwn(this.tempRates, key)) {
-                                console.log("New entry stored");
+                                // console.log("New entry stored");
                                 this.tempRates[key] = {
                                     key: key,
                                     date: date,
@@ -305,12 +305,12 @@ let rates = function () {
                                 this.tempRates[key].rate = rate;
                                 this.tempRates[key].rate_id = rate_id;
                             }
-                            console.log(
-                                "Found exchange rate #" +
-                                    this.tempRates[key].rate_id +
-                                    " with inverse #" +
-                                    this.tempRates[key].inverse_id,
-                            );
+                            // console.log(
+                            //     "Found exchange rate #" +
+                            //         this.tempRates[key].rate_id +
+                            //         " with inverse #" +
+                            //         this.tempRates[key].inverse_id,
+                            // );
                         }
                     }
                     this.totalPages = parseInt(
@@ -331,11 +331,11 @@ const comps = {
 };
 
 function loadPage(comps) {
-    console.log("loadPage");
+    // console.log("loadPage");
     Object.keys(comps).forEach((comp) => {
         let data = comps[comp]();
         Alpine.data(comp, () => data);
-        console.log(comp);
+        // console.log(comp);
     });
     Alpine.start();
 }

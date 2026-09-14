@@ -91,7 +91,7 @@ let create = function () {
                 this.options.deliveries = result;
                 this.form.deliveries.loading = false;
             });
-            console.log("Create webhook page.");
+            // console.log("Create webhook page.");
         },
 
         submit: function (e) {
@@ -153,7 +153,7 @@ let create = function () {
                         }
                     }
 
-                    console.log(this.errors);
+                    // console.log(this.errors);
 
                     // enable button again
                     document.getElementById("submitButton").disabled = false;
@@ -172,11 +172,11 @@ const comps = {
 };
 
 function loadPage(comps) {
-    console.log("loadPage");
+    // console.log("loadPage");
     Object.keys(comps).forEach((comp) => {
         let data = comps[comp]();
         Alpine.data(comp, () => data);
-        console.log(comp);
+        // console.log(comp);
     });
     Alpine.start();
 }

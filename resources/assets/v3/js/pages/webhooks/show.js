@@ -146,7 +146,7 @@ let show = function () {
             });
         },
         showWebhookAttempts: function (id) {
-            console.log("showWebhookAttempts", id);
+            // console.log("showWebhookAttempts", id);
             this.message_attempts = [];
             new Get().attempts(this.id, id, {}).then((response) => {
                 for (let i in response.data.data) {
@@ -176,7 +176,7 @@ const comps = {
 };
 
 function loadPage(comps) {
-    console.log("loadPage");
+    // console.log("loadPage");
     Object.keys(comps).forEach((comp) => {
         let data = comps[comp]();
         Alpine.data(comp, () => data);

@@ -22,7 +22,7 @@ export function respondToTabSwitch(event) {
     // event.target // newly activated tab
     // event.relatedTarget // previous active tab
     let index = parseInt(event.currentTarget.dataset.index);
-    console.log(this);
+    // console.log(this);
     if (Object.hasOwn(this.maps, index)) {
         this.maps[index].invalidateSize();
     }

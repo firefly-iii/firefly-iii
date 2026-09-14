@@ -1,6 +1,6 @@
 /*
- * create-button-switcher.js
- * Copyright (c) 2026 james@firefly-iii.org
+ * post.js
+ * Copyright (c) 2023 james@firefly-iii.org
  *
  * This file is part of Firefly III (https://github.com/firefly-iii).
  *
@@ -18,18 +18,11 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-import { switchTransactionType } from "./switch-transaction-type.js";
+import { api } from "../../../boot/axios";
 
-function createButtonSwitcher() {
-    let list = document.getElementsByClassName("switch-button");
-    for (let i = 0; i < list.length; i++) {
-        list[i].addEventListener("click", (event) => {
-            let transactionType = event.currentTarget.dataset.value;
-            // console.log("Clicked value is " + transactionType);
-            switchTransactionType(transactionType);
-            return false;
-        });
+export default class Put {
+    put(submission, params) {
+        let url = "/api/v1/transaction-links/" + parseInt(params.id);
+        return api.put(url, submission);
     }
 }
-
-export { createButtonSwitcher };

@@ -479,7 +479,7 @@ let transactions = function () {
                     this.showMessageOrRedirectUser();
                 })
                 .catch((error) => {
-                    console.log(error);
+                    console.error(error);
                     this.formStates.isSubmitting = false;
                     if (typeof error.response !== "undefined") {
                         this.parseErrors(error.response.data);
@@ -500,7 +500,7 @@ let comps = { transactions, sidebar, dates };
 
 function loadPage() {
     Object.keys(comps).forEach((comp) => {
-        console.log(`Loading page component "${comp}"`);
+        // console.log(`Loading page component "${comp}"`);
         let data = comps[comp]();
         Alpine.data(comp, () => data);
     });

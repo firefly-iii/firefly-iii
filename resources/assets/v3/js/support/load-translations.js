@@ -28,7 +28,7 @@ let loaded = false;
 function loadTranslations(locale) {
     // console.log('loadTranslations(' + locale + ')');
     if (false === loaded) {
-        console.log("Not yet loaded");
+        // console.log("Not yet loaded");
         const replacedLocale = locale.replace("-", "_");
         loaded = true;
         const expireTime =

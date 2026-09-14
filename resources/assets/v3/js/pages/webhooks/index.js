@@ -144,11 +144,11 @@ const comps = {
 };
 
 function loadPage(comps) {
-    console.log("loadPage");
+    // console.log("loadPage");
     Object.keys(comps).forEach((comp) => {
         let data = comps[comp]();
         Alpine.data(comp, () => data);
-        console.log(comp);
+        // console.log(comp);
     });
     Alpine.start();
 }

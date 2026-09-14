@@ -40,8 +40,8 @@ export default () => ({
     },
     updateDates(e) {
         let split = e.originalTarget._props.value.split("/");
-        console.log("Start is now " + split[0]);
-        console.log("End is now   " + split[1]);
+        // console.log("Start is now " + split[0]);
+        // console.log("End is now   " + split[1]);
         window.store.set("start", split[0]);
         window.store.set("end", split[1]);
         this.submitForm();
@@ -67,7 +67,7 @@ export default () => ({
 
     init() {
         if (false === window.enableDates) {
-            console.log("Date selection is disabled on this page.");
+            // console.log("Date selection is disabled on this page.");
             document.getElementById("date-dropdown").style.display = "none";
         }
 
@@ -223,7 +223,7 @@ export default () => ({
     },
 
     changeDateRange(e) {
-        console.log("changeDateRange");
+        // console.log("changeDateRange");
         e.preventDefault();
         let target = e.currentTarget;
 

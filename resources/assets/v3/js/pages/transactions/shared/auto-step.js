@@ -32,7 +32,7 @@ export function autoStep() {
     ) {
         this.formStates.loadingLinks = true;
         loadLinkTypes().then((data) => {
-            console.log("done loadLinkTypes()");
+            // console.log("done loadLinkTypes()");
             for (let i = 0; i < data.length; i++) {
                 if (Object.hasOwn(data, i)) {
                     let current = data[i];
