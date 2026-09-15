@@ -415,15 +415,14 @@ let transactions = function () {
             };
 
             // catch for group title:
-            if (
-                null === this.groupProperties.title &&
-                transactions.length > 1
-            ) {
+            if (null === this.groupProperties.title && transactions.length > 1) {
                 submission.group_title = transactions[0].description;
             }
             if (1 === transactions.length) {
                 submission.group_title = null;
             }
+
+
 
             // submit the transaction. Multi-stage process thing going on here!
             let putter = new Put();
