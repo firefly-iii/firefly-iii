@@ -49,7 +49,7 @@ jobs:
           # user includes debug info, and the current version.
 
           # first test: user includes no debug info at all, and does not mention current version.
-          if [[ $ISSUE_BODY == *"MZ2udTpin6FL"* && $ISSUE_BODY != *"Debug information generated at"* && $ISSUE_BODY != *${{ steps.ff3version.outputs.release }}* && $ISSUE_BODY != *${{ steps.importerversion.outputs.release }}* && $ISSUE_BODY != *$FFNOV* && $ISSUE_BODY != *$DDNOV* ]]; then
+          if [[ $ISSUE_BODY == *"MZ2udTpin6FL"* && $ISSUE_BODY != *"N/A"* && $ISSUE_BODY != *"Debug information generated at"* && $ISSUE_BODY != *${{ steps.ff3version.outputs.release }}* && $ISSUE_BODY != *${{ steps.importerversion.outputs.release }}* && $ISSUE_BODY != *$FFNOV* && $ISSUE_BODY != *$DDNOV* ]]; then
             MESSAGE="Hi there!
 
           This is an automated reply. \`Share and enjoy\`
