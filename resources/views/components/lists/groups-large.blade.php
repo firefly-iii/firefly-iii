@@ -90,8 +90,8 @@
                 <ul class="dropdown-menu" aria-labelledby="group_menu_{{ $group['id'] }}">
                     <li><a class="dropdown-item" href="{{ route('transactions.edit', [$group['id']]) }}?_from={{ urlencode($FF3_FROM) }}"><span class="bi bi-pencil"></span> {{ __('firefly.edit') }}</a></li>
                     <li><a class="dropdown-item" href="{{ route('transactions.delete', [$group['id']]) }}?_from={{ urlencode($FF3_FROM) }}"><span class="text-danger bi bi-trash"></span> {{ __('firefly.delete') }}</a></li>
-                    <li><a class="dropdown-item" href="#" data-id="{{ $group['id'] }}" class="clone-transaction"><span class="bi bi-copy"></span> {{ __('firefly.clone') }}</a></li>
-                    <li><a class="dropdown-item" href="#" data-id="{{ $group['id'] }}" class="clone-transaction-and-edit"><span class="bi bi-copy"></span> {{ __('firefly.clone_and_edit') }}</a></li>
+                    <li><a class="dropdown-item clone-transaction" href="#" data-id="{{ $group['id'] }}"><span class="bi bi-copy"></span> {{ __('firefly.clone') }}</a></li>
+                    <li><a class="dropdown-item clone-transaction-and-edit" href="#" data-id="{{ $group['id'] }}"><span class="bi bi-copy"></span> {{ __('firefly.clone_and_edit') }}</a></li>
                 </ul>
             </div>
         </td>
@@ -191,8 +191,8 @@
                         <li><a class="dropdown-item" href="{{ route('transactions.delete', [$group['id']]) }}?_from={{ urlencode($FF3_FROM) }}"><span class="text-danger bi bi-trash"></span> {{ __('firefly.delete') }}</a></li>
                     @endif
                     @if($transaction['transaction_type_type'] !== 'Reconciliation' and $transaction['transaction_type_type'] !== 'Opening balance' and $transaction['transaction_type_type'] !== 'Liability credit')
-                        <li><a class="dropdown-item" href="#" data-id="{{ $group['id'] }}" class="clone-transaction"><span class="bi bi-copy"></span> {{ __('firefly.clone') }}</a></li>
-                        <li><a class="dropdown-item" href="#" data-id="{{ $group['id'] }}" class="clone-transaction-and-edit"><span class="bi bi-copy"></span> {{ __('firefly.clone_and_edit') }}</a></li>
+                        <li><a class="dropdown-item clone-transaction" href="#" data-id="{{ $group['id'] }}"><span class="bi bi-copy"></span> {{ __('firefly.clone') }}</a></li>
+                        <li><a class="dropdown-item clone-transaction-and-edit" href="#" data-id="{{ $group['id'] }}"><span class="bi bi-copy"></span> {{ __('firefly.clone_and_edit') }}</a></li>
                         <li><a class="dropdown-item" href="{{ route('rules.create-from-journal', [$transaction['transaction_journal_id']]) }}"><span class="bi bi-shuffle"></span> {{ __('firefly.create_rule_from_transaction') }}</a></li>
                     @endif
                 </ul>
@@ -253,3 +253,10 @@
     </tr>
     </tfoot>
 </table>
+@section('scripts')
+    @parent
+    <script nonce="{{ $JS_NONCE }}">
+        var cloneGroupUrl = '{{ route('transactions.clone') }}';
+        var cloneAndEditUrl = '{{ route('transactions.clone') }}?redirect=edit';
+    </script>
+    @endsection

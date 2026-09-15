@@ -109,8 +109,6 @@
     {{--  required for groups.twig --}}
     <script type="text/javascript" nonce="{{ $JS_NONCE }}">
         var showAll = @if(is_countable($periods) && count($periods) > 0) false @else true @endif;
-        var cloneGroupUrl = '{{ route('transactions.clone') }}';
-        var cloneAndEditUrl = '{{ route('transactions.clone') }}?redirect=edit';
         var categoryChartUrl = '{{ route('chart.transactions.categories', [$objectType, $start->format('Y-m-d'), $end->format('Y-m-d')]) }}';
         var budgetChartUrl = '{{ route('chart.transactions.budgets', [$start->format('Y-m-d'), $end->format('Y-m-d')]) }}';
         var destinationChartUrl = '{{ route('chart.transactions.destinationAccounts', [$objectType, $start->format('Y-m-d'), $end->format('Y-m-d')]) }}';

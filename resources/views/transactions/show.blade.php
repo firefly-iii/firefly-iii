@@ -560,8 +560,6 @@
     <script type="text/javascript" nonce="{{ $JS_NONCE }}">
         var modalDialogURL = '{{ route('transactions.link.modal', ['%JOURNAL%']) }}';
         var groupURL = '{{ route('transactions.show',['%GROUP%']) }}';
-        var cloneGroupUrl = '{{ route('transactions.clone') }}';
-        var cloneAndEditUrl = '{{ route('transactions.clone') }}?redirect=edit';
         var switchLinkUrl = '{{ route('transactions.link.switch') }}';
 
     </script>
