@@ -32,13 +32,14 @@ import format from "../../util/format.js";
 let index = function () {
     return {
         piggyBanks: [],
+        anonymous: false,
         loadingPiggyBanks: true,
         init() {
-            this.loadPiggyBanks();
-            console.log("Dashboard");
             getVariable("anonymous").then((value) => {
                 let start = new Date(window.store.get("start"));
                 let end = new Date(window.store.get("end"));
+                this.anonymous = value;
+                this.loadPiggyBanks();
                 drawMultiCurrencyChart(
                     "line",
                     "api/v1/chart/account/overview?period=1D&start=" +
@@ -101,6 +102,9 @@ let index = function () {
                                     currentAmount,
                                     current.attributes.currency_code,
                                 ) + " / ∞";
+                        }
+                        if(this.anonymous) {
+                            piggy.amount = '- / -';
                         }
 
                         this.piggyBanks.push(piggy);
