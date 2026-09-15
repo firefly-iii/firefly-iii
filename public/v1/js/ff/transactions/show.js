@@ -20,17 +20,49 @@
 
 $(function () {
     "use strict";
-    $('.clone-transaction').click(cloneTransaction);
-    $('.clone-transaction-and-edit').click(cloneTransactionAndEdit);
-    $('[data-toggle="tooltip"]').tooltip();
+    $('.clone-transaction').on('click', cloneTransaction);
+    $('.clone-transaction-and-edit').on('click', cloneTransactionAndEdit);
+    // $('[data-toggle="tooltip"]').tooltip();
+
+    $('.switch-link').on('click', switchLink);
+    $('.reconcile-button').on('click', unreconcile);
+
 });
 
 
+function unreconcile(e) {
+    e.preventDefault();
+    var obj = $(e.currentTarget);
+    $.post(obj.attr('href'), {
+        _token: token
+    }).done(function () {
+        location.reload();
+    }).fail(function () {
+        console.error('I failed :(');
+    });
+
+    return false
+}
+
+function switchLink(e) {
+    e.preventDefault();
+    var obj = $(e.currentTarget);
+    $.post(switchLinkUrl, {
+        _token: token,
+        id: obj.data('id')
+    }).done(function () {
+        location.reload();
+    }).fail(function () {
+        console.error('I failed :(');
+    });
+
+    return false
+}
 
 function cloneTransaction(e) {
+    e.preventDefault();
     var button = $(e.currentTarget);
     var groupId = parseInt(button.data('id'));
-
     $.post(cloneGroupUrl, {
         id: groupId
     }).done(function (data) {
@@ -43,6 +75,7 @@ function cloneTransaction(e) {
 }
 
 function cloneTransactionAndEdit(e) {
+    e.preventDefault();
     var button = $(e.currentTarget);
     var groupId = parseInt(button.data('id'));
 

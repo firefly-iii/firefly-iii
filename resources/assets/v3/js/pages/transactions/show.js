@@ -23,8 +23,9 @@ import sidebar from "../../pages/shared/sidebar.js";
 import dates from "../shared/dates.js";
 import i18next from "i18next";
 import Get from "../../api/model/transaction/get.js";
-import { format } from "date-fns";
+import {format} from "date-fns";
 import Alpine from "alpinejs";
+import "bootstrap";
 
 window.enableDates = false;
 
@@ -43,7 +44,7 @@ let show = function () {
             const page = window.location.href.split("/");
             this.group.id = parseInt(page[page.length - 1]);
             this.downloadTransactionGroup();
-            // console.log('Generic JS for page with few features.');
+
         },
         downloadTransactionGroup() {
             new Get().show(this.group.id).then((response) => {
