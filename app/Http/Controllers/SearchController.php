@@ -32,6 +32,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
 use Illuminate\View\View;
 use Throwable;
+
 use function Safe\mb_convert_encoding;
 
 /**
@@ -48,7 +49,7 @@ final class SearchController extends Controller
         app('view')->share('showCategory', true);
         $this->middleware(static function ($request, $next) {
             app('view')->share('mainTitleIcon', 'bi-search');
-            app('view')->share('title', (string)trans('firefly.search'));
+            app('view')->share('title', (string) trans('firefly.search'));
 
             return $next($request);
         });
@@ -59,24 +60,25 @@ final class SearchController extends Controller
      *
      * @return Factory|View
      */
-    public function index(Request $request, SearchInterface $searcher): Factory | \Illuminate\Contracts\View\View
+    public function index(Request $request, SearchInterface $searcher): Factory|\Illuminate\Contracts\View\View
     {
         // search params:
-        $fullQuery = (string)$request->input('search');
-        $fullQuery = substr($fullQuery, 0, 500);
+        $fullQuery        = (string) $request->input('search');
+        $fullQuery        = substr($fullQuery, 0, 500);
         if (is_array($request->input('search'))) {
             $fullQuery = '';
         }
-        $fullQuery = (string)$fullQuery;
-        $fullQuery = mb_convert_encoding($fullQuery, 'UTF-8', 'UTF-8');;
-        $page        = 0 === (int)$request->input('page') ? 1 : (int)$request->input('page');
-        $page        = clamp(value: $page, min: 1, max: 2 ** 16);
-        $ruleId      = (int)$request->input('rule');
-        $ruleChanged = false;
+        $fullQuery        = (string) $fullQuery;
+        $fullQuery        = mb_convert_encoding($fullQuery, 'UTF-8', 'UTF-8');
+
+        $page             = 0 === (int) $request->input('page') ? 1 : (int) $request->input('page');
+        $page             = clamp(value: $page, min: 1, max: 2 ** 16);
+        $ruleId           = (int) $request->input('rule');
+        $ruleChanged      = false;
 
         // find rule, check if query is different, offer to update.
-        $ruleRepository = app(RuleRepositoryInterface::class);
-        $rule           = $ruleRepository->find($ruleId);
+        $ruleRepository   = app(RuleRepositoryInterface::class);
+        $rule             = $ruleRepository->find($ruleId);
         if (null !== $rule) {
             $originalQuery = $ruleRepository->getSearchQuery($rule);
             if ($originalQuery !== $fullQuery) {
@@ -91,9 +93,9 @@ final class SearchController extends Controller
         $excludedWords    = $searcher->getExcludedWords();
         $operators        = $searcher->getOperators();
         $invalidOperators = $searcher->getInvalidOperators();
-        $subTitle         = (string)trans('breadcrumbs.search_result', ['query' => $fullQuery]);
+        $subTitle         = (string) trans('breadcrumbs.search_result', ['query' => $fullQuery]);
 
-        $res = view('search.index', [
+        return view('search.index', [
             'words'            => $words,
             'excludedWords'    => $excludedWords,
             'operators'        => $operators,
@@ -105,7 +107,6 @@ final class SearchController extends Controller
             'ruleChanged'      => $ruleChanged,
             'invalidOperators' => $invalidOperators,
         ]);
-        return $res;
     }
 
     /**
@@ -115,13 +116,13 @@ final class SearchController extends Controller
      */
     public function search(Request $request, SearchInterface $searcher): JsonResponse
     {
-        $entry = $request->input('query');
+        $entry      = $request->input('query');
         if (!is_scalar($entry)) {
             $entry = '';
         }
-        $fullQuery = (string)$entry;
-        $page      = 0 === (int)$request->input('page') ? 1 : (int)$request->input('page');
-        $page      = clamp(value: $page, min: 1, max: 2 ** 16);
+        $fullQuery  = (string) $entry;
+        $page       = 0 === (int) $request->input('page') ? 1 : (int) $request->input('page');
+        $page       = clamp(value: $page, min: 1, max: 2 ** 16);
 
         $searcher->parseQuery($fullQuery);
 
@@ -130,7 +131,7 @@ final class SearchController extends Controller
         $hasPages   = $groups->hasPages();
         $searchTime = round($searcher->searchTime(), 3); // in seconds
         $parameters = ['search' => $fullQuery];
-        $url        = route('search.index') . '?' . http_build_query($parameters);
+        $url        = route('search.index').'?'.http_build_query($parameters);
         $groups->setPath($url);
 
         try {

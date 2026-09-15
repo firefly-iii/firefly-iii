@@ -20,7 +20,7 @@
 
 // JS
 // Supports weights 100-900
-import '@fontsource/roboto/300.css';
+import "@fontsource/roboto/300.css";
 import "bootstrap";
 import "admin-lte";
 import Alpine from "alpinejs";

@@ -19,11 +19,11 @@
  */
 
 @use "bootstrap-icons/font/bootstrap-icons.css";
-@use '@fontsource/roboto/300.css' as roboto300;
+@use "@fontsource/roboto/300.css" as roboto300;
 
 $color-mode-type: data;
 $link-decoration: none;
-$font-family-sans-serif: 'Roboto', sans-serif;
+$font-family-sans-serif: "Roboto", sans-serif;
 
 // colors are for light mode.
 $danger: #cd5029; // original
