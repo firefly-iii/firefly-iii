@@ -427,7 +427,7 @@ function drawMultiCurrencyLineChart(url, holder, anonymous, drawTodayMarker) {
                     i18next.t("config.month_and_day_fns"),
                 );
                 let today = i18next.t("firefly.today");
-                let xAdjust = today.length * 4;
+                let xAdjust = 0;
                 if (drawTodayIndex < 3) {
                     xAdjust = today.length * 4;
                 }
