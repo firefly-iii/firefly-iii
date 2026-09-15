@@ -74,7 +74,7 @@
                                                         ({{ strtolower(trans('firefly.recurring_skips_one')) }}).
                                                     @endif
                                                     @if($rep['skip'] > 1)
-                                                        ({{ strtolower(trans('firefly.recurring_skips_more', ['count' => $rep['repetition_skip']])) }}).
+                                                        ({{ strtolower(trans('firefly.recurring_skips_more', ['count' => $rep['skip']])) }}).
                                                     @endif
                                                     @if(3 === $rep['weekend'])
                                                         <br>{{ __('firefly.will_jump_friday') }}

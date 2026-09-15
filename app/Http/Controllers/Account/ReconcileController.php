@@ -143,6 +143,9 @@ final class ReconcileController extends Controller
         $transactionsUrl = route('accounts.reconcile.transactions', [$account->id, '%start%', '%end%']);
         $overviewUrl     = route('accounts.reconcile.overview', [$account->id, '%start%', '%end%']);
         $indexUrl        = route('accounts.reconcile', [$account->id, '%start%', '%end%']);
+        $transactionsUrl = str_replace('%25', '%', $transactionsUrl);
+        $overviewUrl     = str_replace('%25', '%', $overviewUrl);
+        $indexUrl        = str_replace('%25', '%', $indexUrl);
         $objectType      = 'asset';
 
         return view('accounts.reconcile.index', [

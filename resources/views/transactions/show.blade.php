@@ -20,7 +20,7 @@
                         </div>
                         <div class="col text-end">
                             <button class="btn btn-sm btn-secondary-outline dropdown-toggle" type="button" id="card_header_menu" data-bs-toggle="dropdown" aria-expanded="false">{{ __('firefly.actions') }} <span class="caret"></span></button>
-                            <ul class="dropdown-menu" aria-labelledby="card_header_menu">
+                            <ul class="dropdown-menu journal-options" aria-labelledby="card_header_menu">
                                     {{-- edit + delete --}}
                                     <li><a class="dropdown-item" href="{{ route('transactions.edit', [$transactionGroup->id]) }}?_from={{ urlencode($FF3_FROM) }}"><span
                                                 class="bi bi-pencil"></span> {{ __('firefly.edit') }}</a></li>
@@ -54,9 +54,9 @@
                                         {{--  clone --}}
                                         @if($groupArray['transactions'][0]['type'] !== 'opening balance' && $groupArray['transactions'][0]['type'] !== 'reconciliation')
                                             <li role="separator" class="divider"></li>
-                                            <li><a class="dropdown-item" href="#" class="clone-transaction" data-id="{{ $transactionGroup->id }}"><span
+                                            <li><a class="dropdown-item clone-transaction" href="#" data-id="{{ $transactionGroup->id }}"><span
                                                         class="bi bi-copy"></span> {{ __('firefly.clone') }}</a></li>
-                                            <li><a class="dropdown-item" href="#" class="clone-transaction-and-edit" data-id="{{ $transactionGroup->id }}"><span
+                                            <li><a class="dropdown-item clone-transaction-and-edit" href="#" data-id="{{ $transactionGroup->id }}"><span
                                                         class="bi bi-copy"></span> {{ __('firefly.clone_and_edit') }}</a></li>
                                         @endif
                                     @endif
@@ -223,7 +223,7 @@
                             </div>
                             <div class="col text-end">
                                 <button class="btn btn-sm btn-secondary-outline dropdown-toggle" type="button" id="menu_journal_{{ $journal['transaction_journal_id'] }}" data-bs-toggle="dropdown" aria-expanded="false">{{ __('firefly.actions') }} <span class="caret"></span></button>
-                                <ul class="dropdown-menu" aria-labelledby="menu_journal_{{ $journal['transaction_journal_id'] }}">
+                                <ul class="dropdown-menu journal-options" aria-labelledby="menu_journal_{{ $journal['transaction_journal_id'] }}">
                                         {{-- edit + delete --}}
                                         <li><a class="dropdown-item" href="{{ route('transactions.edit', [$transactionGroup->id]) }}?_from={{ urlencode($FF3_FROM) }}"><span
                                                     class="bi bi-pencil"></span> {{ __('firefly.edit') }}</a></li>
@@ -262,15 +262,12 @@
                                             {{--  clone --}}
                                             @if($groupArray['transactions'][0]['type'] !== 'opening balance' && $groupArray['transactions'][0]['type'] !== 'reconciliation')
                                                 <li role="separator" class="divider"></li>
-                                                <li><a class="dropdown-item" href="#" data-id="{{ $transactionGroup->id }}" class="clone-transaction"><span
+                                                <li><a class="dropdown-item clone-transaction" href="#" data-id="{{ $transactionGroup->id }}"><span
                                                             class="bi bi-copy"></span> {{ __('firefly.clone') }}</a></li>
-                                                <li><a class="dropdown-item" href="#" data-id="{{ $transactionGroup->id }}" class="clone-transaction-and-edit"><span
+                                                <li><a class="dropdown-item clone-transaction-and-edit" href="#" data-id="{{ $transactionGroup->id }}"><span
                                                             class="bi bi-copy"></span> {{ __('firefly.clone_and_edit') }}</a></li>
                                             @endif
 
-                                            <li><a class="dropdown-item link-modal" href="#"
-                                                   data-journal="{{ $journal['transaction_journal_id'] }}"><span
-                                                        class="bi bi-link"></span>{{ __('firefly.link_transaction') }}</a></li>
                                             <li role="separator" class="divider"></li>
                                             <li>
                                                 <a class="dropdown-item" href="{{ route('rules.create-from-journal', [$journal['transaction_journal_id']]) }}"><span
@@ -560,49 +557,17 @@
 
 @endsection
 @section('scripts')
-    @vite(['js/pages/transactions/show.js'])
     <script type="text/javascript" nonce="{{ $JS_NONCE }}">
         var modalDialogURL = '{{ route('transactions.link.modal', ['%JOURNAL%']) }}';
         var groupURL = '{{ route('transactions.show',['%GROUP%']) }}';
         var cloneGroupUrl = '{{ route('transactions.clone') }}';
         var cloneAndEditUrl = '{{ route('transactions.clone') }}?redirect=edit';
-
-
-        $('.switch-link').on('click', switchLink);
-        $('.reconcile-button').on('click', unreconcile);
         var switchLinkUrl = '{{ route('transactions.link.switch') }}';
 
-        function unreconcile(e) {
-            e.preventDefault();
-            var obj = $(e.currentTarget);
-            $.post(obj.attr('href'), {
-                _token: token
-            }).done(function () {
-                location.reload();
-            }).fail(function () {
-                console.error('I failed :(');
-            });
-
-            return false
-        }
-
-        function switchLink(e) {
-            e.preventDefault();
-            var obj = $(e.currentTarget);
-            $.post(switchLinkUrl, {
-                _token: token,
-                id: obj.data('id')
-            }).done(function () {
-                location.reload();
-            }).fail(function () {
-                console.error('I failed :(');
-            });
-
-            //alert(obj.data('id'));
-
-            return false
-        }
     </script>
+
+    @vite(['js/pages/transactions/show.js'])
+
     {{-- new auto complete --}}
     <script type="text/javascript" src="v1/js/lib/bootstrap-simple-autocomplete.js?v={{ $FF_BUILD_TIME }}"
             nonce="{{ $JS_NONCE }}"></script>

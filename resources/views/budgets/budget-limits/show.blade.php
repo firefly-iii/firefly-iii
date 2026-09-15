@@ -8,7 +8,7 @@
         </div>
             <div class="modal-body">
                 <div>
-                    {!! parse_markdown($notes) !!}
+                    {!! parse_markdown($notes ?? '') !!}
                 </div>
             </div>
         <div class="modal-footer">

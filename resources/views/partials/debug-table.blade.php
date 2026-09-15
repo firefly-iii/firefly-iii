@@ -24,7 +24,7 @@
         <td>{{ $system['php_version'] }} ({{ $system['bits'] }}bits) / {{ $system['interface'] }} / {{ $system['php_os'] }} {{ $system['uname'] }}</td>
     </tr>
     <tr>
-        <td>BCscale</td>
+        <td>BCscale <!-- MZ2udTpin6FL --></td>
         <td>{{ $system['bcscale'] }}</td>
     </tr>
     <tr>

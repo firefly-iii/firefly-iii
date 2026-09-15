@@ -149,7 +149,7 @@
                                         {{ $invitee->expires->format('H:i') }}
                                     </td>
                                     <td>
-                                        {{ $invitee->$user->email }}
+                                        {{ $invitee->user->email }}
                                     </td>
                                     <td>
                                         @if($invitee->redeemed)
