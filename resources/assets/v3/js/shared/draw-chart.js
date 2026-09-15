@@ -326,7 +326,12 @@ function drawMultiCurrencyLineChart(url, holder, anonymous, drawTodayMarker) {
                                     drawTodayIndex = labelCount;
                                 }
                                 // add the label to the array
-                                data.labels.push(format(date, i18next.t("config.month_and_day_fns"),),);
+                                data.labels.push(
+                                    format(
+                                        date,
+                                        i18next.t("config.month_and_day_fns"),
+                                    ),
+                                );
                             }
                         }
                     }
@@ -554,13 +559,13 @@ function formatLabel(str, maxwidth) {
 
     words.forEach(function (item, index) {
         if (temp.length > 0) {
-            let concat = temp + ' ' + item;
+            let concat = temp + " " + item;
 
             if (concat.length > maxwidth) {
                 sections.push(temp);
                 temp = "";
             } else {
-                if (index === (words.length - 1)) {
+                if (index === words.length - 1) {
                     sections.push(concat);
                     return;
                 } else {
@@ -570,7 +575,7 @@ function formatLabel(str, maxwidth) {
             }
         }
 
-        if (index === (words.length - 1)) {
+        if (index === words.length - 1) {
             sections.push(item);
             return;
         }
@@ -580,7 +585,6 @@ function formatLabel(str, maxwidth) {
         } else {
             sections.push(item);
         }
-
     });
 
     return sections;
