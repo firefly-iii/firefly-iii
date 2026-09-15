@@ -32,6 +32,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
 use Illuminate\View\View;
 use Throwable;
+use function Safe\mb_convert_encoding;
 
 /**
  * Class SearchController.

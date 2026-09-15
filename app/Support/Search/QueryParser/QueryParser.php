@@ -29,6 +29,7 @@ use LogicException;
 use Safe\Exceptions\PcreException;
 use SensitiveParameter;
 use function Safe\preg_split;
+use function Safe\mb_convert_encoding;
 
 /**
  * Single-pass parser that processes query strings into structured nodes.
