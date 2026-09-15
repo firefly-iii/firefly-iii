@@ -56,6 +56,8 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 - [Issue 12694](https://github.com/firefly-iii/firefly-iii/issues/12694) (Updating an amount in transaction doesn't make it discoverable in search using `updated_at_after:`) reported by @Toshik1978
 - [Issue 12710](https://github.com/firefly-iii/firefly-iii/issues/12710) (Last row in CSV import imported as duplicate) reported by @sabbath4294
 - #12743
+- #12744
+- #12745
 - Setting an invalid language would break your account.
 
 ### Security
