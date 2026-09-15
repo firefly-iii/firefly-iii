@@ -122,10 +122,10 @@
                                             {{ __('firefly.pref_custom_fiscal_year_help') }}
                                         </p>
                                         @php
-                                            $isCustomFiscalYear = $customFiscalYear === 1;
+                                            $isCustomFiscalYear = true === $customFiscalYear;
                                         @endphp
-                                        {!! ExpandedForm::checkbox('customFiscalYear','1',1 === $customFiscalYear,['label' => __('firefly.pref_custom_fiscal_year_label') ]) !!}
-                                        {!! ExpandedForm::date('fiscalYearStart',1 === $customFiscalYear,['label' => __('firefly.pref_fiscal_year_start_label') ]) !!}
+                                        {!! ExpandedForm::checkbox('customFiscalYear','1',true=== $customFiscalYear,['label' => __('firefly.pref_custom_fiscal_year_label') ]) !!}
+                                        {!! ExpandedForm::date('fiscalYearStart', $fiscalYearStart,['label' => __('firefly.pref_fiscal_year_start_label') ]) !!}
                                     </div>
                                 </div>
 
