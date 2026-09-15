@@ -28,8 +28,9 @@ use Illuminate\Support\Facades\Log;
 use LogicException;
 use Safe\Exceptions\PcreException;
 use SensitiveParameter;
-use function Safe\preg_split;
+
 use function Safe\mb_convert_encoding;
+use function Safe\preg_split;
 
 /**
  * Single-pass parser that processes query strings into structured nodes.
@@ -38,28 +39,30 @@ use function Safe\mb_convert_encoding;
  */
 class QueryParser implements QueryParserInterface
 {
-    private int $position = 0;
-    private int $depth    = 0;
+    private int $position       = 0;
+    private int $depth          = 0;
 
     private const int MAX_DEPTH = 32;
 
     // private string $query;
-    private array $chrArray = [];
-    private int   $count    = 0;
+    private array $chrArray     = [];
+    private int   $count        = 0;
 
     public function parse(string $query): NodeGroup
     {
         // Log::debug(sprintf('Parsing query in QueryParser: "%s"', $query));
         // $this->query    = $query;
         $this->position = 0;
+
         try {
-            $query = mb_convert_encoding($query, 'UTF-8', 'UTF-8');;
+            $query          = mb_convert_encoding($query, 'UTF-8', 'UTF-8');
+
             $this->chrArray = preg_split('//u', $query, -1, PREG_SPLIT_NO_EMPTY);
         } catch (PcreException $e) {
             Log::error($e->getMessage());
             $this->chrArray = [];
         }
-        $this->count = count($this->chrArray);
+        $this->count    = count($this->chrArray);
 
         return $this->buildNodeGroup(false);
     }
@@ -81,7 +84,7 @@ class QueryParser implements QueryParserInterface
                 if ('\\' === $char && '"' === $nextChar && '\\' !== $prevChar) {
                     // Log::debug('Found a backslash and the next one is a double quote.');
                     // escaped quote, pretend it's a normal char and continue two places (skipping the actual character).
-                    $tokenUnderConstruction .= '\\' . $nextChar;
+                    $tokenUnderConstruction .= '\\'.$nextChar;
                     $this->position         += 2;
 
                     continue;
@@ -164,7 +167,7 @@ class QueryParser implements QueryParserInterface
                     if ('' === $tokenUnderConstruction) {
                         // In any other location, it's just a normal character
                         $tokenUnderConstruction .= $char;
-                        $skipNext               = true;
+                        $skipNext = true;
                     }
                     if ('' !== $tokenUnderConstruction && !$skipNext) {
                         // Log::debug(sprintf('Turns out that "%s" is a field name. Reset the token.', $tokenUnderConstruction));
@@ -192,7 +195,7 @@ class QueryParser implements QueryParserInterface
             ++$this->position;
         }
 
-        $finalNode = '' !== $tokenUnderConstruction || '' !== $fieldName ? $this->createNode($tokenUnderConstruction, $fieldName, $prohibited) : null;
+        $finalNode              = '' !== $tokenUnderConstruction || '' !== $fieldName ? $this->createNode($tokenUnderConstruction, $fieldName, $prohibited) : null;
 
         return new NodeResult($finalNode, true);
     }
@@ -203,7 +206,7 @@ class QueryParser implements QueryParserInterface
         $nodeResult = $this->buildNextNode($isSubquery);
 
         while ($nodeResult->node instanceof Node) {
-            $nodes[] = $nodeResult->node;
+            $nodes[]    = $nodeResult->node;
             if ($nodeResult->isSubqueryEnd) {
                 break;
             }
