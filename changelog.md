@@ -59,6 +59,7 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 - #12744
 - #12745
 - #12748
+- #12749
 - Setting an invalid language would break your account.
 
 ### Security
