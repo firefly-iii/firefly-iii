@@ -103,8 +103,8 @@ let index = function () {
                                     current.attributes.currency_code,
                                 ) + " / ∞";
                         }
-                        if(this.anonymous) {
-                            piggy.amount = '- / -';
+                        if (this.anonymous) {
+                            piggy.amount = "- / -";
                         }
 
                         this.piggyBanks.push(piggy);

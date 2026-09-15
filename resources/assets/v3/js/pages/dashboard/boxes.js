@@ -99,7 +99,11 @@ export default () => ({
                 let key = current.key;
                 // console.log('NOT PRIMARY CURRENCY');
                 if (key.startsWith("balance-in-")) {
-                    this.balanceBox.amounts.push(formatMoney(this.anonymous ? 0 : current.monetary_value, current.currency_code,),
+                    this.balanceBox.amounts.push(
+                        formatMoney(
+                            this.anonymous ? 0 : current.monetary_value,
+                            current.currency_code,
+                        ),
                     );
                     continue;
                 }
@@ -110,7 +114,12 @@ export default () => ({
                         subtitles[current.currency_code] = "";
                     }
                     // append the amount spent.
-                    subtitles[current.currency_code] = subtitles[current.currency_code] + formatMoney(this.anonymous ? 0 : current.monetary_value, current.currency_code,);
+                    subtitles[current.currency_code] =
+                        subtitles[current.currency_code] +
+                        formatMoney(
+                            this.anonymous ? 0 : current.monetary_value,
+                            current.currency_code,
+                        );
                     continue;
                 }
                 // earned info is used in subtitle:
@@ -120,29 +129,61 @@ export default () => ({
                         subtitles[current.currency_code] = "";
                     }
                     // prepend the amount earned.
-                    subtitles[current.currency_code] = formatMoney(this.anonymous ? 0 : current.monetary_value, current.currency_code,) + " + " + subtitles[current.currency_code];
+                    subtitles[current.currency_code] =
+                        formatMoney(
+                            this.anonymous ? 0 : current.monetary_value,
+                            current.currency_code,
+                        ) +
+                        " + " +
+                        subtitles[current.currency_code];
                     continue;
                 }
 
                 if (key.startsWith("bills-unpaid-in-")) {
-                    this.billBox.unpaid.push(formatMoney(this.anonymous ? 0 : current.monetary_value, current.currency_code,),);
+                    this.billBox.unpaid.push(
+                        formatMoney(
+                            this.anonymous ? 0 : current.monetary_value,
+                            current.currency_code,
+                        ),
+                    );
                     continue;
                 }
                 if (key.startsWith("bills-paid-in-")) {
-                    this.billBox.paid.push(formatMoney(this.anonymous ? 0 : current.monetary_value, current.currency_code,),);
+                    this.billBox.paid.push(
+                        formatMoney(
+                            this.anonymous ? 0 : current.monetary_value,
+                            current.currency_code,
+                        ),
+                    );
                     continue;
                 }
                 if (key.startsWith("left-to-spend-in-")) {
-                    sumMoneyLeft = sumMoneyLeft + parseFloat(current.monetary_value);
-                    this.leftBox.left.push(formatMoney(this.anonymous ? 0 : current.monetary_value, current.currency_code,),);
+                    sumMoneyLeft =
+                        sumMoneyLeft + parseFloat(current.monetary_value);
+                    this.leftBox.left.push(
+                        formatMoney(
+                            this.anonymous ? 0 : current.monetary_value,
+                            current.currency_code,
+                        ),
+                    );
                     continue;
                 }
                 if (key.startsWith("left-per-day-to-spend-in-")) {
-                    this.leftBox.perDay.push(formatMoney(this.anonymous ? 0 : current.monetary_value, current.currency_code,),);
+                    this.leftBox.perDay.push(
+                        formatMoney(
+                            this.anonymous ? 0 : current.monetary_value,
+                            current.currency_code,
+                        ),
+                    );
                     continue;
                 }
                 if (key.startsWith("net-worth-in-")) {
-                    this.netBox.net.push(formatMoney(this.anonymous ? 0 : current.monetary_value, current.currency_code,),);
+                    this.netBox.net.push(
+                        formatMoney(
+                            this.anonymous ? 0 : current.monetary_value,
+                            current.currency_code,
+                        ),
+                    );
                 }
             }
         }
@@ -176,7 +217,6 @@ export default () => ({
             this.convertToPrimary = values.convert_to_primary;
             this.anonymous = values.anonymous;
             this.loadBoxes();
-
         });
         window.store.observe("end", () => {
             if (!afterPromises) {
