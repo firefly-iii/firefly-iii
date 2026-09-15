@@ -11,6 +11,9 @@
             x-model="transaction.tags"
             multiple>
             <option value="">{{ __('firefly.select_tag') }}</option>
+            <template x-for="(tag, index) in transaction.tags" :key="index">
+                <option :value="tag" x-text="tag" selected="selected"></option>
+            </template>
         </select>
 
     </div>

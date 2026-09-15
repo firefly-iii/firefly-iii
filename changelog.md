@@ -9,6 +9,7 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 - [Issue 12757](https://github.com/firefly-iii/firefly-iii/issues/12757) (Transaction List - "Clone" and "Clone and Edit" button doesn't work) reported by @fabienfitoussi
 - [Issue 12758](https://github.com/firefly-iii/firefly-iii/issues/12758) (Dashboard shows transactions values when value hiding is enabled) reported by @ppslim
 - [Issue 12761](https://github.com/firefly-iii/firefly-iii/issues/12761) (Fiscal year start date not showing it settings) reported by @ppslim
+- #12755
 
 ## v6.7.1 - 2026-09-15
 
