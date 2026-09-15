@@ -21,12 +21,14 @@
     </div>
 </template>
 <!-- CLONE INSTEAD OF EDIT CURRENT TRANSACTION -->
+<!--
 <template x-if="'edit' === formBehaviour.formType">
     <div class="form-check">
         <input class="form-check-input" x-model="formStates.saveAsNewButton" type="checkbox" id="saveAsNewButton">
         <label class="form-check-label" for="saveAsNewButton">{{ __('firefly.store_as_new') }}</label>
     </div>
 </template>
+-->
 
 <div class="form-check">
     <input class="form-check-input" type="checkbox" id="rulesButton" :checked="formStates.rulesButton">
