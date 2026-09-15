@@ -1,4 +1,4 @@
-<table class="table" aria-label="Table">
+<table class="table table-sm" aria-label="Table">
     <thead>
     <tr>
         <td colspan="3"><em>{{ __('firefly.incomplete_ale') }}</em></td>

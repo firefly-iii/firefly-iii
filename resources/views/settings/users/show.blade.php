@@ -7,7 +7,7 @@
                     <h3 class="card-title">{{ __('firefly.user_information') }}</h3>
                 </div>
                 <div class="card-body p-0">
-                    <table class="table table-striped table-bordered table-responsive">
+                    <table class="table table-sm table-bordered table-responsive">
                         <tbody>
                         <tr>
                             <td>{{ trans('list.id') }}</td>
@@ -70,7 +70,7 @@
                     <h3 class="card-title">{{ __('firefly.user_data_information') }}</h3>
                 </div>
                 <div class="card-body p-0">
-                    <table class="table table-striped table-bordered table-responsive">
+                    <table class="table table-sm table-bordered table-responsive">
                         <tr>
                             <td>{{ trans('list.accounts_count') }}</td>
                             <td>{{ $information['accounts'] }}</td>

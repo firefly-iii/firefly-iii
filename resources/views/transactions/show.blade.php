@@ -19,7 +19,7 @@
                             <h3 class="card-title">{{ __('firefly.transaction_journal_information') }}</h3>
                         </div>
                         <div class="col text-end">
-                            <button class="btn btn-sm btn-secondary-outline dropdown-toggle" type="button" id="card_header_menu" data-bs-toggle="dropdown" aria-expanded="false">{{ __('firefly.actions') }} <span class="caret"></span></button>
+                            <button class="btn btn-sm btn-outline-secondary dropdown-toggle" type="button" id="card_header_menu" data-bs-toggle="dropdown" aria-expanded="false">{{ __('firefly.actions') }} <span class="caret"></span></button>
                             <ul class="dropdown-menu journal-options" aria-labelledby="card_header_menu">
                                     {{-- edit + delete --}}
                                     <li><a class="dropdown-item" href="{{ route('transactions.edit', [$transactionGroup->id]) }}?_from={{ urlencode($FF3_FROM) }}"><span
@@ -66,7 +66,7 @@
                     </div>
                 </div>
                 <div class="card-body p-0">
-                    <table class="table table-hover">
+                    <table class="table table-sm table-hover">
                         <tbody>
                         <tr>
                             <td class="forty">{{ trans('list.id') }}</td>
@@ -119,7 +119,7 @@
                     <h3 class="card-title">{{ __('firefly.transaction_journal_meta') }}</h3>
                 </div>
                 <div class="card-body p-0">
-                    <table class="table table-hover">
+                    <table class="table table-sm table-hover">
                         <tbody>
                         @if($first['transaction_type_type'] !== 'Withdrawal' || $splits === 1)
                             <tr>
@@ -222,7 +222,7 @@
                                 </h3>
                             </div>
                             <div class="col text-end">
-                                <button class="btn btn-sm btn-secondary-outline dropdown-toggle" type="button" id="menu_journal_{{ $journal['transaction_journal_id'] }}" data-bs-toggle="dropdown" aria-expanded="false">{{ __('firefly.actions') }} <span class="caret"></span></button>
+                                <button class="btn btn-sm btn-outline-secondary dropdown-toggle" type="button" id="menu_journal_{{ $journal['transaction_journal_id'] }}" data-bs-toggle="dropdown" aria-expanded="false">{{ __('firefly.actions') }} <span class="caret"></span></button>
                                 <ul class="dropdown-menu journal-options" aria-labelledby="menu_journal_{{ $journal['transaction_journal_id'] }}">
                                         {{-- edit + delete --}}
                                         <li><a class="dropdown-item" href="{{ route('transactions.edit', [$transactionGroup->id]) }}?_from={{ urlencode($FF3_FROM) }}"><span
@@ -283,7 +283,7 @@
                         </div>
                     </div>
                     <div class="card-body p-0">
-                        <table class="table">
+                        <table class="table table-hover table-sm">
                             <tr>
                                 <td colspan="2">
                                     @if('Cash account' === $journal['source_account_type'])
@@ -468,7 +468,7 @@
                             </h3>
                         </div>
                         <div class="card-body p-0">
-                            <table class="table">
+                            <table class="table table-hover table-sm">
                                 @foreach($links[$journal['transaction_journal_id']] as $link)
                                     <tr>
                                         <td class="onetwenty">
@@ -522,7 +522,7 @@
                             <h3 class="card-title">{{ __('firefly.piggy_events') }}</h3>
                         </div>
                         <div class="card-body p-0">
-                            <table class="table table-hover">
+                            <table class="table table-hover table-sm">
                                 @foreach($events[$journal['transaction_journal_id']] as $event)
                                     <tr>
                                         <td class="thirty">{!! $event['amount'] !!}</td>

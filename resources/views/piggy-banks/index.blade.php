@@ -12,7 +12,7 @@
                         <h3 class="card-title">{{ __('firefly.account_status') }}</h3>
                     </div>
                     <div class="card-body p-0">
-                        <table class="table table-hover" id="accountStatus">
+                        <table class="table table-hover table-sm" id="accountStatus">
                             <thead>
                             <tr>
                                 <th>{{ __('firefly.account') }}</th>

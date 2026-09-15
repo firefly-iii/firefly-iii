@@ -1,4 +1,4 @@
-<table class="table table-hover sortable">
+<table class="table table-sm table-hover sortable">
     <thead>
     <tr>
         <th data-defaultsign="az">{{ __('firefly.budget') }}</th>

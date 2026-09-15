@@ -52,7 +52,7 @@
                         </nav>
                         </template>
 
-                        <table class="table table-responsive table-hover">
+                        <table class="table table-responsive table-hover table-sm">
                             <thead>
                             <tr>
                                 <th>{{ __('form.date') }}</th>

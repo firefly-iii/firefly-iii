@@ -15,7 +15,7 @@
                             </h3>
                         </div>
                         <div class="col text-end">
-                            <button class="btn btn-sm btn-secondary-outline dropdown-toggle" type="button" id="card_header_menu" data-bs-toggle="dropdown" aria-expanded="false">
+                            <button class="btn btn-sm btn-outline-secondary dropdown-toggle" type="button" id="card_header_menu" data-bs-toggle="dropdown" aria-expanded="false">
                                 <span class="bi bi-list"></span>
                             </button>
                             <ul class="dropdown-menu" aria-labelledby="card_header_menu">
@@ -142,14 +142,14 @@
         @if(count($limits) > 0)
             <div class="col-lg-3 col-md-3 col-sm-12 col-xs-12">
                 @foreach($limits as $limit)
-                    <div class="card @if(null !== $budgetLimit && $limit->start_date === $budgetLimit->start_date) card-primary card-outline @endif">
+                    <div class="card mb-3 @if(null !== $budgetLimit && $limit->start_date === $budgetLimit->start_date) card-primary card-outline @endif">
                         <div class="card-header">
                             <h3 class="card-title"><a href="{{ route('budgets.show.limit',[$budget->id,$limit->id]) }}">{{ $limit->start_date->isoFormat($monthAndDayFormat) }} &mdash;{{ $limit->end_date->isoFormat($monthAndDayFormat) }}
                                 </a>
                             </h3>
                         </div>
                         <div class="card-body p-0">
-                            <table class="table table-hover">
+                            <table class="table table-hover table-sm">
                                 <tr>
                                     <td class="third">{{ __('firefly.amount') }}</td>
                                     <td>

@@ -1,4 +1,4 @@
-<table class="table table-responsive table-hover">
+<table class="table table-responsive table-hover table-sm">
     @foreach($attachments as $attachment)
     <tr>
         <td class="onetwenty">

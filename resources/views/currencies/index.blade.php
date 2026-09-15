@@ -14,7 +14,7 @@
                         <div class="m-2">
                             {{ $currencies->links('pagination.bootstrap-4') }}
                         </div>
-                        <table class="table table-striped table-hover">
+                        <table class="table table-hover table-sm">
                             <thead>
                             <tr>
                                 <th>{{ __('firefly.currency') }}</th>

@@ -53,7 +53,7 @@
                             @endif
                         </p>
 
-                        <table class="table">
+                        <table class="table table-sm">
                             <tr>
                                 <th class="ten">ID</th>
                                 <th class="quarter">Description</th>

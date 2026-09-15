@@ -20,7 +20,7 @@
                         <h3 class="card-title"><span x-text="title"></span></h3>
                     </div>
                     <div class="card-body p-0">
-                        <table class="table table-hover" aria-label="A table">
+                        <table class="table table-sm table-hover" aria-label="A table">
                             <tbody>
                             <tr>
                                 <td style="width:40%;"><strong>{{ __('list.title') }}</strong></td>
@@ -92,7 +92,7 @@
                         <h3 class="card-title">{{ __('firefly.meta_data') }}</h3>
                     </div>
                     <div class="card-body p-0">
-                        <table class="table table-hover">
+                        <table class="table table-sm table-hover">
                             <tbody>
                             <tr>
                                 <td style="width:40%;"><strong>{{ __('list.url') }}</strong></td>
@@ -160,7 +160,7 @@
                     </template>
                     <template x-if="messages.length > 0 && !loading">
                         <div class="card-body p-0">
-                            <table class="table table-hover">
+                            <table class="table table-sm table-hover">
                                 <thead>
                                 <tr>
                                     <th>

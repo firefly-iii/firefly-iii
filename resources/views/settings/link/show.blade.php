@@ -7,7 +7,7 @@
                     <h3 class="card-title">{{ trans('firefly.overview_for_link', ['name' => journal_link_translation('name', $linkType->name)]) }}</h3>
                 </div>
                 <div class="card-body p-0">
-                    <table class="table table-hover sortable">
+                    <table class="table table-sm table-hover sortable">
                         <thead>
                         <tr>
                             <th>&nbsp;</th>

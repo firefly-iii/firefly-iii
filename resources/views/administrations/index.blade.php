@@ -43,7 +43,7 @@
                                     <span x-text="administration.currency_name"></span> (<span x-text="administration.currency_code"></span>)
                                 </td>
                                 <td>
-                                    <button class="btn btn-sm btn-secondary-outline dropdown-toggle" type="button" :id="'card_header_' + administration.id" data-bs-toggle="dropdown" aria-expanded="false">
+                                    <button class="btn btn-sm btn-outline-secondary dropdown-toggle" type="button" :id="'card_header_' + administration.id" data-bs-toggle="dropdown" aria-expanded="false">
                                             {{ __('firefly.actions') }} <span class="caret"></span></button>
                                     <ul class="dropdown-menu" :aria-labelledby="'card_header_' + administration.id">
                                             <li><a class="dropdown-item" :href="'./administrations/edit/' + administration.id"><span class="bi bi-pencil"></span>

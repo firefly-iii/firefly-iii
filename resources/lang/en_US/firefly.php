@@ -1839,6 +1839,7 @@ return [
     'yearly_budgets'                                      => 'Yearly budgets',
     'other_budgets'                                       => 'Custom timed budgets',
     'budget_limit_not_in_range'                           => 'This amount applies from :start to :end:',
+    'totals' => 'Totals',
     'total_available_budget'                              => 'Total available budget (between :start and :end)',
     'total_available_budget_in_currency'                  => 'Total available budget in :currency',
     'see_below'                                           => 'see below',

@@ -9,7 +9,7 @@
                             <h3 class="card-title">{{ $object['data']['name'] }}</h3>
                         </div>
                         <div class="col text-end">
-                            <button class="btn btn-sm btn-secondary-outline dropdown-toggle" type="button" id="card_header_menu" data-bs-toggle="dropdown" aria-expanded="false">
+                            <button class="btn btn-sm btn-outline-secondary dropdown-toggle" type="button" id="card_header_menu" data-bs-toggle="dropdown" aria-expanded="false">
                                     <span class="bi bi-list"></span></button>
                             <ul class="dropdown-menu" aria-labelledby="card_header_menu">
                                         <li><a class="dropdown-item" href="{{ route('subscriptions.edit', $object['data']['id']) }}?_from={{ urlencode($FF3_FROM) }}"><span class="bi bi-pencil"></span> {{ __('firefly.edit') }}</a></li>
@@ -19,7 +19,7 @@
                     </div>
                 </div>
                 <div class="card-body p-0">
-                    <table class="table table-striped">
+                    <table class="table table-striped table-sm">
                         <tr>
                             <td colspan="2">
                                 @php
