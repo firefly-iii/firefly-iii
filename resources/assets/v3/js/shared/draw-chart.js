@@ -106,7 +106,7 @@ function drawMultiCurrencyStackedColumnChart(url, holder, anonymous) {
                 if (Object.hasOwn(all, i)) {
                     let current = all[i];
                     // add the name as a label
-                    data.labels.push(current.label);
+                    data.labels.push(formatLabel(current.label, 20));
 
                     // there are four possible data sets for this chart
                     // TODO this is very much hard coded.
@@ -326,12 +326,7 @@ function drawMultiCurrencyLineChart(url, holder, anonymous, drawTodayMarker) {
                                     drawTodayIndex = labelCount;
                                 }
                                 // add the label to the array
-                                data.labels.push(
-                                    format(
-                                        date,
-                                        i18next.t("config.month_and_day_fns"),
-                                    ),
-                                );
+                                data.labels.push(format(date, i18next.t("config.month_and_day_fns"),),);
                             }
                         }
                     }
@@ -549,4 +544,44 @@ function isSameDay(d1, d2) {
         d1.getMonth() === d2.getMonth() &&
         d1.getDate() === d2.getDate()
     );
+}
+
+function formatLabel(str, maxwidth) {
+    let sections = [];
+    str = String(str);
+    let words = str.split(" ");
+    let temp = "";
+
+    words.forEach(function (item, index) {
+        if (temp.length > 0) {
+            let concat = temp + ' ' + item;
+
+            if (concat.length > maxwidth) {
+                sections.push(temp);
+                temp = "";
+            } else {
+                if (index === (words.length - 1)) {
+                    sections.push(concat);
+                    return;
+                } else {
+                    temp = concat;
+                    return;
+                }
+            }
+        }
+
+        if (index === (words.length - 1)) {
+            sections.push(item);
+            return;
+        }
+
+        if (item.length < maxwidth) {
+            temp = item;
+        } else {
+            sections.push(item);
+        }
+
+    });
+
+    return sections;
 }
