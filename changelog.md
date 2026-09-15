@@ -55,11 +55,11 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 - [Issue 12692](https://github.com/firefly-iii/firefly-iii/issues/12692) (Updating accounts of a deposit recurrence via API is rejected because the validator assumes "withdrawal") reported by @Toshik1978
 - [Issue 12694](https://github.com/firefly-iii/firefly-iii/issues/12694) (Updating an amount in transaction doesn't make it discoverable in search using `updated_at_after:`) reported by @Toshik1978
 - [Issue 12710](https://github.com/firefly-iii/firefly-iii/issues/12710) (Last row in CSV import imported as duplicate) reported by @sabbath4294
-- #12743
-- #12744
-- #12745
-- #12748
-- #12749
+- [Issue 12743](https://github.com/firefly-iii/firefly-iii/issues/12743) (ViewException on /settings/users) reported by @GunoH
+- [Issue 12744](https://github.com/firefly-iii/firefly-iii/issues/12744) (Cloning transactions doesn't work) reported by @Insprill
+- [Issue 12745](https://github.com/firefly-iii/firefly-iii/issues/12745) (500 error when viewing recurring transactions) reported by @Insprill
+- [Issue 12748](https://github.com/firefly-iii/firefly-iii/issues/12748) (500 Internal Server Error when visiting `/rules` page) reported by @gthbusrr
+- [Issue 12749](https://github.com/firefly-iii/firefly-iii/issues/12749) (Unable to reconcile accounts) reported by @gthbusrr
 - Setting an invalid language would break your account.
 
 ### Security
