@@ -24,6 +24,8 @@
 $color-mode-type: data;
 $link-decoration: none;
 $font-family-sans-serif: "Roboto", sans-serif;
+$font-size-base: 0.9rem;
+
 
 // colors are for light mode.
 $danger: #cd5029; // original
@@ -45,7 +47,8 @@ $success: #64b624; // original
     $font-family-sans-serif: $font-family-sans-serif,
     $danger: $danger,
     $primary: $primary,
-    $success: $success
+    $success: $success,
+    $font-size-base: $font-size-base
 );
 // for light mode, different money colors are used.
 html[data-bs-theme="light"] .money-negative {

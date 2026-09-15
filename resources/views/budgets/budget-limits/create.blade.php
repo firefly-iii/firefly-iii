@@ -14,17 +14,17 @@
                 <input type="hidden" name="start" value="{{ $start->format('Y-m-d') }}"/>
                 <input type="hidden" name="end" value="{{ $end->format('Y-m-d') }}"/>
                 <input type="hidden" name="budget_id" value="{{ $budget->id }}"/>
-                <div class="form-group mb-3">
+                <div class="form-group mb-2">
                     <select class="form-select" name="transaction_currency_id">
                         @foreach($currencies as $currency)
                             <option label="{{ $currency->name }}" value="{{ $currency->id }}">{{ $currency->name }}</option>
                         @endforeach
                     </select>
                 </div>
-                <div class="form-group mb-3">
+                <div class="form-group mb-2">
                     <input step="any" class="form-control" id="amount" value="" autocomplete="off" name="amount" type="number"/>
                 </div>
-                <div class="form-group mb-3">
+                <div class="form-group mb-2">
                     <textarea name="notes" class="form-control" rows="3" placeholder="{{ __('firefly.notes') }}"></textarea>
                     <span class="help-block">{!! trans('firefly.field_supports_markdown')!!} </span>
                 </div>

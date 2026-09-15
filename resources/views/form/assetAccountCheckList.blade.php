@@ -1,5 +1,5 @@
 @foreach($grouped as $groupName => $accounts)
-    <div class="mb-3">
+    <div class="mb-2">
         <div class="row" id="{{ $name }}_holder">
             <div class="col-sm-3">{{ $groupName }}</div>
             <div class="col-sm-9">

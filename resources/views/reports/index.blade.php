@@ -10,7 +10,7 @@
                             {{ __('firefly.more_info_help') }}
                         </p>
                         <input type="hidden" name="_token" value="{{ csrf_token() }}"/>
-                        <div class="row mb-3">
+                        <div class="row mb-2">
                             <label for="inputReportType" class="col-sm-3 col-form-label">{{ __('firefly.report_type') }}</label>
                             <div class="col-sm-9">
                                 <select name="report_type" class="form-select" id="inputReportType">
@@ -23,7 +23,7 @@
                                 </select>
                             </div>
                         </div>
-                        <div class="row mb-3">
+                        <div class="row mb-2">
                             <label for="inputAccounts" class="col-sm-3 col-form-label">{{ __('firefly.report_included_accounts') }}</label>
                             <div class="col-sm-9" id="inputAccountsSelect">
                                 <select id="inputAccounts" name="accounts[]" multiple class="form-select">
@@ -42,7 +42,7 @@
                             </div>
                         </div>
 
-                        <div class="row mb-3">
+                        <div class="row mb-2">
                             <label for="inputDateRange" class="col-sm-3 col-form-label">{{ __('firefly.report_date_range') }}</label>
                             <div class="col-sm-4">
                                 <input type="date" value="{{ session('start')->format('Y-m-d') }}" class="date-select form-control" name="start" id="dateRange-start" />
@@ -54,7 +54,7 @@
                                 <input type="date"  value="{{ session('end')->format('Y-m-d') }}" class="date-select form-control" name="end" id="dateRange-end" />
                             </div>
                         </div>
-                        <div class="row mb-3">
+                        <div class="row mb-2">
                             <label for="__none__" class="col-sm-3 col-form-label">{{ __('firefly.report_preset_ranges') }}</label>
 
                             <div class="col-sm-9">

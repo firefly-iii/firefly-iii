@@ -1,4 +1,4 @@
-<div class="row mb-3">
+<div class="row mb-2">
     <label :for="'dest_' + index"
            class="col-sm-1 col-form-label d-none d-sm-block">
         <em title="{{ __('firefly.destination_account') }}" class="bi bi-arrow-right"></em>

@@ -1,4 +1,4 @@
-<div class="mb-3">
+<div class="mb-2">
     <div class="row" id="{{ $id }}">
         <div class="col-sm-9 offset-sm-3">
             <div class="form-check has-validation">

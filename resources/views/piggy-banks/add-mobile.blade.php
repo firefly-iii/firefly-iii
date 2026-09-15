@@ -11,7 +11,7 @@
                     <div class="card-body">
                         @if($total > 0)
                             @foreach($accounts as $account)
-                                <div class="mb-3">
+                                <div class="mb-2">
                                     <label for="basic-url" class="form-label">{{ $account['account']->name }} ({{ __('firefly.max_amount_add') }}: {!! format_amount_by_currency($piggyBank->transactionCurrency, $account['max_amount']) !!})</label>
                                     <div class="input-group">
                                         <span class="input-group-text" id="basic-addon3">{{ $piggyBank->transactionCurrency->symbol }}</span>

@@ -1,4 +1,4 @@
-<div class="row mb-3">
+<div class="row mb-2">
     <label :for="'tags_' + index"
            class="col-sm-1 col-form-label d-none d-sm-block">
         <em title="{{ __('firefly.tags') }}" class="bi bi-tag"></em>

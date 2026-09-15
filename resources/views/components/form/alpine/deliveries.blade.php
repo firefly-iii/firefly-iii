@@ -1,12 +1,12 @@
 <template x-if="form.deliveries.loading">
-    <div class="row mb-3 text-center">
+    <div class="row mb-2 text-center">
             <span class="form-control-plaintext"><div class="spinner-border spinner-border-sm" role="status">
                 <span class="visually-hidden">{{ __('firefly.thinking') }}</span>
             </div></span>
     </div>
 </template>
 <template x-if="!form.deliveries.loading">
-    <div class="row mb-3">
+    <div class="row mb-2">
         <label for="form_deliveries" class="col-sm-3 col-form-label has-validation">{{ __('form.deliveries') }}</label>
         <div class="col-sm-9">
             <select

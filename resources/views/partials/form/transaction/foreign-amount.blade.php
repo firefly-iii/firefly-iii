@@ -1,5 +1,5 @@
 <template x-if="formBehaviour.foreignCurrencyEnabled">
-    <div class="row mb-3">
+    <div class="row mb-2">
         <div class="col-sm-3">
             <label class="form-label">&nbsp;</label>
             <template x-if="formStates.loadingCurrencies">

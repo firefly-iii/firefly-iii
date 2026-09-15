@@ -158,14 +158,14 @@
                             <h3 class="box-title">{{ __('firefly.add_new_rate') }}</h3>
                         </div>
                         <div class="card-body">
-                            <div class="row mb-3" id="name_holder">
+                            <div class="row mb-2" id="name_holder">
                                 <div class="input-group has-validation">
                                     <label for="ffInput_date" class="col-sm-3 col-form-label has-validation" x-text="i18next.t('form.date')"></label>
                                 <div class="col-sm-9">
                                     <input class="form-control" type="date" name="date" id="ffInput_date" :disabled="posting" autocomplete="off" spellcheck="false" x-model="newDate"></div>
                                 </div>
                             </div>
-                            <div class="row mb-3" id="name_holder">
+                            <div class="row mb-2" id="name_holder">
                                 <div class="input-group has-validation">
                                 <label for="ffInput_rate" class="col-sm-3 col-form-label" x-text="i18next.t('form.rate')"></label>
                                     <div class="col-sm-9">

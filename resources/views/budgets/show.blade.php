@@ -142,7 +142,7 @@
         @if(count($limits) > 0)
             <div class="col-lg-3 col-md-3 col-sm-12 col-xs-12">
                 @foreach($limits as $limit)
-                    <div class="card mb-3 @if(null !== $budgetLimit && $limit->start_date === $budgetLimit->start_date) card-primary card-outline @endif">
+                    <div class="card mb-2 @if(null !== $budgetLimit && $limit->start_date === $budgetLimit->start_date) card-primary card-outline @endif">
                         <div class="card-header">
                             <h3 class="card-title"><a href="{{ route('budgets.show.limit',[$budget->id,$limit->id]) }}">{{ $limit->start_date->isoFormat($monthAndDayFormat) }} &mdash;{{ $limit->end_date->isoFormat($monthAndDayFormat) }}
                                 </a>

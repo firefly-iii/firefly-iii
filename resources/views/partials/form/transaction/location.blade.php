@@ -1,6 +1,6 @@
 
 <template x-if="true === formBehaviour.customFields.location">
-    <div class="row mb-3">
+    <div class="row mb-2">
         <label :for="'map_' + index" class="col-sm-1 col-form-label d-none d-sm-block">
             <em title="{{ __('firefly.location') }}" class="bi bi-globe-europe-africa"></em>
         </label>

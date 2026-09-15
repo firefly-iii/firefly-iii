@@ -16,14 +16,14 @@
                     </p>
                     {{-- search form --}}
                     <form class="form-horizontal" action="{{ route('search.index') }}" method="get">
-                        <div class="row mb-3">
+                        <div class="row mb-2">
                             <label for="inputEmail3" class="col-sm-2 col-form-label">{{ __('firefly.search_query') }}</label>
                             <div class="col-sm-10">
                                 <input autocomplete="off" type="text" name="search" id="query" value="{{ $fullQuery }}" class="form-control" spellcheck="false"
                                        placeholder="{{ $fullQuery }}">
                             </div>
                         </div>
-                        <div class="row mb-3">
+                        <div class="row mb-2">
                             <div class="offset-md-2 col-sm-10">
                                 <div class="btn-group">
                                 <button type="submit" class="btn btn-info"><span class="bi bi-search"></span> {{ __('firefly.search') }}</button>

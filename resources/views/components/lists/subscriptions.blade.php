@@ -238,9 +238,9 @@
 
 @if(count($totals) > 0)
 
-    <h5 class="m-3">{{ __('firefly.totals') }}</h5>
+    <h5 class="m-2">{{ __('firefly.totals') }}</h5>
 
-    <table class="table table-bordered table-sm table-hover mb-3">
+    <table class="table table-bordered table-sm table-hover mb-2">
         <tbody>
         @foreach($totals as $sum)
             @if('0' !== $sum['avg'])

@@ -1,4 +1,4 @@
-<div class="row mb-3">
+<div class="row mb-2">
     <label :for="'date_' + index" class="col-sm-1 col-form-label d-none d-sm-block">
         <em title="{{ __('firefly.date_and_time') }}" class="bi bi-calendar"></em>
     </label>

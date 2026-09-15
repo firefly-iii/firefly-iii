@@ -11,7 +11,7 @@
             <div class="modal-body">
                 @foreach($accounts as $account)
 
-                    <div class="mb-3">
+                    <div class="mb-2">
                         <label for="basic-url" class="form-label">{{ $account['account']->name }} ({{ __('firefly.max_amount_remove') }}: {!! format_amount_by_currency($piggyBank->transactionCurrency, $account['saved_so_far']) !!})</label>
                         <div class="input-group">
                             <span class="input-group-text" id="basic-addon3">{{ $piggyBank->transactionCurrency->symbol }}</span>

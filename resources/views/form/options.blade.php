@@ -1,5 +1,5 @@
 @if('create' === $type)
-    <div class="row mb-3" id="{{ $name }}_holder">
+    <div class="row mb-2" id="{{ $name }}_holder">
         <div class="col-sm-9 offset-sm-3">
             <div class="form-check has-validation">
                 {{ Html::checkbox('create_another')->class('form-check-input')->id($name . '_return_to_form') }}
@@ -11,7 +11,7 @@
     </div>
 @endif
 @if('update' === $type)
-    <div class="row mb-3" id="{{ $name }}_holder">
+    <div class="row mb-2" id="{{ $name }}_holder">
         <div class="col-sm-9 offset-sm-3">
             <div class="form-check has-validation">
                 {{ Html::checkbox('create_another')->class('form-check-input')->id($name . '_return_to_edit') }}

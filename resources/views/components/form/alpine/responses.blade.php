@@ -1,4 +1,4 @@
-<div class="mb-3">
+<div class="mb-2">
     <template x-if="form.responses.loading">
         <div class="row">
             <div class="text-center">

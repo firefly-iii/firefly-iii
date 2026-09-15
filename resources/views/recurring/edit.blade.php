@@ -27,7 +27,7 @@
                         {!! ExpandedForm::integer('repetitions', $array['nr_of_repetitions']) !!}
 
                         {{-- calendar in popup --}}
-                        <div class="row mb-3">
+                        <div class="row mb-2">
                             <div class="input-group has-validation">
                                 <label for="inputEmail3" class="col-sm-3 col-form-label">{{ trans('form.calendar') }}</label>
                                 <div class="col-sm-9">
@@ -69,7 +69,7 @@
                     <div class="card-body">
                         <p><em>{{ __('firefly.mandatory_fields_for_tranaction') }}</em></p>
                         {{-- three buttons to distinguish type of transaction --}}
-                        <div class="row mb-3" id="transaction_type_holder">
+                        <div class="row mb-2" id="transaction_type_holder">
                             <div class="input-group">
                                 <label for="ffInput_transaction_type" class="col-sm-3 col-form-label has-validation">{{ trans('form.transaction_type') }}</label>
 
