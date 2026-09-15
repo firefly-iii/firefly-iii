@@ -75,7 +75,7 @@ final class CreateController extends Controller
 
                 Preferences::mark();
 
-                $title    = '' === (string) $newGroup->title ? $newGroup->transactionJournals()->first()->description: $newGroup->title;
+                $title    = '' === (string) $newGroup->title ? $newGroup->transactionJournals()->first()->description : $newGroup->title;
                 $link     = route('transactions.show', [$newGroup->id]);
                 session()->flash('success', trans('firefly.stored_journal', ['description' => $title]));
                 session()->flash('success_url', $link);
