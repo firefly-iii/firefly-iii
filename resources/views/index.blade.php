@@ -32,14 +32,14 @@
                     </div>
                 </div>
                 <div class="card-body">
-                    <!--
                     <div>
                         <canvas id="budgets-chart" class="wide-chart" height="400" width="100%"></canvas>
                     </div>
-                    -->
+                    <!--
                     <div>
                         <canvas id="budgets-two-chart" class="wide-chart" height="400" width="100%"></canvas>
                     </div>
+                    -->
                 </div>
                 <div class="card-footer text-end">
                     <a href="{{ route('budgets.index') }}" class="btn btn-primary btn-sm">

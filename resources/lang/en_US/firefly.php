@@ -1827,6 +1827,7 @@ return [
     'spent_this_period'                                   => 'Spent on this budget',
     'spent_this_period_per_day'                           => 'Spent on this budget per day (:days day(s))',
     'spent_in_budget_limit_outside_period'                => 'Spent on this budget, but NOT in this period',
+    'spent_outside_chart' => '(outside of pre-set budget amounts)',
     'spent_in_budget_limit_outside_period_per_day'        => 'Spent on this budget, but NOT in this period per day (:days day(s))',
     'left_in_budget_limit_overview'                       => 'Left in this budget',
     'left_in_budget_limit_per_day'                        => 'Left in this budget per day (:days day(s))',
