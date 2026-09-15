@@ -89,7 +89,7 @@
 <!-- tussen -->
 
 <!--begin::App Wrapper-->
-<div class="app-wrapper">
+<div class="app-wrapper compact-mode">
     <!--begin::Header-->
     <nav class="app-header navbar navbar-expand bg-body">
         <!--begin::Container-->
