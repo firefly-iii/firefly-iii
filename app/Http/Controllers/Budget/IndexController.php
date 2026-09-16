@@ -100,17 +100,8 @@ final class IndexController extends Controller
         // collect some basic vars:
         $range            = Navigation::getViewRange(true);
         $isCustomRange    = session('is_custom_range', false);
-        if (false === $isCustomRange) {
-            $start ??= session('start', today(config('app.timezone'))->startOfMonth());
-            $end   ??= Navigation::endOfPeriod($start, $range);
-        }
-
-        // overrule start and end if necessary:
-        if (true === $isCustomRange) {
-            $start ??= session('start', today(config('app.timezone'))->startOfMonth());
-            $end   ??= session('end', today(config('app.timezone'))->endOfMonth());
-        }
-
+        $start ??= Navigation::startOfPeriod(session('start', today(config('app.timezone'))), $range);
+        $end   ??= Navigation::endOfPeriod($start, $range);
         $currencies       = $this->currencyRepository->get();
         $budgeted         = '0';
         $spent            = '0';
@@ -128,9 +119,6 @@ final class IndexController extends Controller
         $availableBudgets = $this->getAllAvailableBudgets($start, $end);
         // get all active budgets:
         $budgets          = $this->getAllBudgets($start, $end, $currencies, $this->primaryCurrency);
-
-        //        echo '<pre>';
-        //        var_dump($budgets[0]);exit;
         $sums             = $this->getSums($budgets);
 
         // get budgeted for default currency:
@@ -284,7 +272,10 @@ final class IndexController extends Controller
 
                 if (array_key_exists($currency->id, $spentArr) && array_key_exists('sum', $spentArr[$currency->id])) {
                     $array['spent'][$currency->id]['spent']                   = $spentArr[$currency->id]['sum'];
-                    $array['spent'][$currency->id]['spent_outside']           = Steam::negative(bcsub($spentInLimits[$currency->id], $spentArr[$currency->id]['sum']));
+                    $array['spent'][$currency->id]['spent_outside']           = Steam::negative(bcsub(
+                        $spentInLimits[$currency->id],
+                        $spentArr[$currency->id]['sum']
+                    ));
                     $array['spent'][$currency->id]['currency_id']             = $currency->id;
                     $array['spent'][$currency->id]['currency_symbol']         = $currency->symbol;
                     $array['spent'][$currency->id]['currency_decimal_places'] = $currency->decimal_places;

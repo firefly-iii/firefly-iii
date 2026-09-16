@@ -19,10 +19,12 @@
  */
 
 @use "bootstrap-icons/font/bootstrap-icons.css";
+@use "@fontsource/roboto/300.css" as roboto300;
 
 $color-mode-type: data;
 $link-decoration: none;
 $font-family-sans-serif: "Roboto", sans-serif;
+$font-size-base: 0.9rem;
 
 // colors are for light mode.
 $danger: #cd5029; // original
@@ -37,13 +39,15 @@ $success: #64b624; // original
 //$primary: #000;
 //$success: #000;
 
+@use "admin-lte/src/scss/adminlte-colors";
 @use "admin-lte/src/scss/adminlte" with (
     $color-mode-type: $color-mode-type,
     $link-decoration: $link-decoration,
     $font-family-sans-serif: $font-family-sans-serif,
     $danger: $danger,
     $primary: $primary,
-    $success: $success
+    $success: $success,
+    $font-size-base: $font-size-base
 );
 // for light mode, different money colors are used.
 html[data-bs-theme="light"] .money-negative {
@@ -101,12 +105,15 @@ ul.nav:nth-child(1) > li:nth-child(2) .piggy-handle {
 }
 .object-handle {
     cursor: move;
+    touch-action: none;
 }
 .rule-handle {
     cursor: move;
+    touch-action: none;
 }
 .bill-handle {
     cursor: move;
+    touch-action: none;
 }
 
 body.waiting * {

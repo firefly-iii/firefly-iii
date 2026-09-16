@@ -10,6 +10,7 @@
                     <input type="date"
                            class="form-control"
                            :id="key + '_' + index"
+                           @keyup.enter="save()"
                            x-model="transaction[key]"
                            :data-index="index"
                            placeholder="">

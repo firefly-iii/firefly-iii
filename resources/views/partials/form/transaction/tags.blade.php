@@ -1,4 +1,4 @@
-<div class="row mb-3">
+<div class="row mb-2">
     <label :for="'tags_' + index"
            class="col-sm-1 col-form-label d-none d-sm-block">
         <em title="{{ __('firefly.tags') }}" class="bi bi-tag"></em>
@@ -11,6 +11,9 @@
             x-model="transaction.tags"
             multiple>
             <option value="">{{ __('firefly.select_tag') }}</option>
+            <template x-for="(tag, index) in transaction.tags" :key="index">
+                <option :value="tag" x-text="tag" selected="selected"></option>
+            </template>
         </select>
 
     </div>

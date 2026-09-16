@@ -24,9 +24,12 @@ declare(strict_types=1);
 
 namespace FireflyIII\Support\Search\QueryParser;
 
+use Illuminate\Support\Facades\Log;
 use LogicException;
+use Safe\Exceptions\PcreException;
 use SensitiveParameter;
 
+use function Safe\mb_convert_encoding;
 use function Safe\preg_split;
 
 /**
@@ -50,7 +53,15 @@ class QueryParser implements QueryParserInterface
         // Log::debug(sprintf('Parsing query in QueryParser: "%s"', $query));
         // $this->query    = $query;
         $this->position = 0;
-        $this->chrArray = preg_split('//u', $query, -1, PREG_SPLIT_NO_EMPTY);
+
+        try {
+            $query          = mb_convert_encoding($query, 'UTF-8', 'UTF-8');
+
+            $this->chrArray = preg_split('//u', $query, -1, PREG_SPLIT_NO_EMPTY);
+        } catch (PcreException $e) {
+            Log::error($e->getMessage());
+            $this->chrArray = [];
+        }
         $this->count    = count($this->chrArray);
 
         return $this->buildNodeGroup(false);

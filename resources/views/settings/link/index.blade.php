@@ -7,7 +7,7 @@
                     <h3 class="card-title">{{ __('firefly.journal_link_configuration') }}</h3>
                 </div>
                 <div class="card-body p-0">
-                    <table class="table table-hover sortable">
+                    <table class="table table-sm table-hover sortable">
                         <thead>
                         <tr>
                             <th data-defaultsort="disabled">&nbsp;</th>

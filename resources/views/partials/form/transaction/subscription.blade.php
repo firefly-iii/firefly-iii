@@ -1,5 +1,5 @@
 <template x-if="groupProperties.transactionType != 'transfer' && groupProperties.transactionType != 'deposit'">
-    <div class="row mb-3">
+    <div class="row mb-2">
         <label :for="'bill_id_' + index" class="col-sm-1 col-form-label d-none d-sm-block">
             <em title="{{ __('firefly.subscription') }}" class="bi bi-calendar"></em>
         </label>

@@ -33,7 +33,7 @@
                         <p class="mb-1">
                             {{ __('firefly.set_preferred_language') }}
                         </p>
-                        <div id="language_holder" class="row mb-3">
+                        <div id="language_holder" class="row mb-2">
                             <div class="input-group">
                             <label for="language_holder_select" class="col-sm-3 col-form-label">{{ __('firefly.language') }}</label>
                             <div class="col-sm-9">

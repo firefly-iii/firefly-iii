@@ -1,5 +1,5 @@
 <template x-if="true === formBehaviour.customFields.external_url">
-    <div class="row mb-3">
+    <div class="row mb-2">
     <label :for="'external_url_' + index"
            class="col-sm-1 col-form-label d-none d-sm-block">
         <em title="{{ __('firefly.external_url') }}" class="bi bi-link"></em>

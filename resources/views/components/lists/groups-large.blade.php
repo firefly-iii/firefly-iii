@@ -1,7 +1,7 @@
 <table class="table table-sm">
     <thead>
     <tr>
-        @if(($showCategory ?? false) || ($showBudget ?? false))
+        @if($showCategory || $showBudget)
             <td colspan="8">
                 @if(method_exists($groups, 'links'))
                     {{ $groups->links('pagination.bootstrap-4') }}
@@ -41,10 +41,10 @@
         <th>{{ trans('list.date') }}</th>
         <th>{{ trans('list.source_account') }}</th>
         <th>{{ trans('list.destination_account') }}</th>
-        @if(($showCategory ?? false))
+        @if($showCategory)
             <th class="d-xs-none">{{ trans('list.category') }}</th>
         @endif
-        @if($showBudget ?? false)
+        @if($showBudget)
             <th class="d-xs-none">{{ trans('list.budget') }}</th>
         @endif
         <th class="d-xs-none">&nbsp;</th><!-- actions -->
@@ -79,7 +79,7 @@
                 @endforeach
             </td>
             <!-- column to span accounts + extra fields -->
-            @if(($showCategory ?? false) || $showBudget ?? false)
+            @if($showCategory || $showBudget)
                 <td colspan="5" class="top-light-border">&nbsp;</td>
             @else
                 <td colspan="4" class="top-light-border">&nbsp;</td>
@@ -90,8 +90,8 @@
                 <ul class="dropdown-menu" aria-labelledby="group_menu_{{ $group['id'] }}">
                     <li><a class="dropdown-item" href="{{ route('transactions.edit', [$group['id']]) }}?_from={{ urlencode($FF3_FROM) }}"><span class="bi bi-pencil"></span> {{ __('firefly.edit') }}</a></li>
                     <li><a class="dropdown-item" href="{{ route('transactions.delete', [$group['id']]) }}?_from={{ urlencode($FF3_FROM) }}"><span class="text-danger bi bi-trash"></span> {{ __('firefly.delete') }}</a></li>
-                    <li><a class="dropdown-item" href="#" data-id="{{ $group['id'] }}" class="clone-transaction"><span class="bi bi-copy"></span> {{ __('firefly.clone') }}</a></li>
-                    <li><a class="dropdown-item" href="#" data-id="{{ $group['id'] }}" class="clone-transaction-and-edit"><span class="bi bi-copy"></span> {{ __('firefly.clone_and_edit') }}</a></li>
+                    <li><a class="dropdown-item clone-transaction" href="#" data-id="{{ $group['id'] }}"><span class="bi bi-copy"></span> {{ __('firefly.clone') }}</a></li>
+                    <li><a class="dropdown-item clone-transaction-and-edit" href="#" data-id="{{ $group['id'] }}"><span class="bi bi-copy"></span> {{ __('firefly.clone_and_edit') }}</a></li>
                 </ul>
             </div>
         </td>
@@ -166,14 +166,14 @@
                 <a href="{{ route('accounts.show', [$transaction['destination_account_id'] ?? 1]) }}" title="{{ $transaction['destination_account_iban'] ?? $transaction['destination_account_name'] }}">{{ $transaction['destination_account_name'] }}</a>
             @endif
         </td>
-        @if($showCategory ?? false)
+        @if($showCategory)
             <td class="d-xs-none {{ $className }}">
                 @if(null !== $transaction['category_id'])
                     <a href="{{ route('categories.show', [$transaction['category_id']]) }}" title="{{ $transaction['category_name'] }}">{{ $transaction['category_name'] }}</a>
                 @endif
             </td>
         @endif
-        @if($showBudget ?? false)
+        @if($showBudget)
             <td class="d-xs-none {{ $className }}">
                 @if(null !== $transaction['budget_id'])
                 <a href="{{ route('budgets.show', [$transaction['budget_id']]) }}"
@@ -191,8 +191,8 @@
                         <li><a class="dropdown-item" href="{{ route('transactions.delete', [$group['id']]) }}?_from={{ urlencode($FF3_FROM) }}"><span class="text-danger bi bi-trash"></span> {{ __('firefly.delete') }}</a></li>
                     @endif
                     @if($transaction['transaction_type_type'] !== 'Reconciliation' and $transaction['transaction_type_type'] !== 'Opening balance' and $transaction['transaction_type_type'] !== 'Liability credit')
-                        <li><a class="dropdown-item" href="#" data-id="{{ $group['id'] }}" class="clone-transaction"><span class="bi bi-copy"></span> {{ __('firefly.clone') }}</a></li>
-                        <li><a class="dropdown-item" href="#" data-id="{{ $group['id'] }}" class="clone-transaction-and-edit"><span class="bi bi-copy"></span> {{ __('firefly.clone_and_edit') }}</a></li>
+                        <li><a class="dropdown-item clone-transaction" href="#" data-id="{{ $group['id'] }}"><span class="bi bi-copy"></span> {{ __('firefly.clone') }}</a></li>
+                        <li><a class="dropdown-item clone-transaction-and-edit" href="#" data-id="{{ $group['id'] }}"><span class="bi bi-copy"></span> {{ __('firefly.clone_and_edit') }}</a></li>
                         <li><a class="dropdown-item" href="{{ route('rules.create-from-journal', [$transaction['transaction_journal_id']]) }}"><span class="bi bi-shuffle"></span> {{ __('firefly.create_rule_from_transaction') }}</a></li>
                     @endif
                 </ul>
@@ -237,7 +237,7 @@
 
     </tr>
     <tr>
-        @if(($showCategory ?? false) || ($showBudget ?? false))
+        @if($showCategory || $showBudget)
             <td colspan="8">
                 @if(method_exists($groups, 'links'))
                     {{ $groups->links('pagination.bootstrap-4') }}
@@ -253,3 +253,10 @@
     </tr>
     </tfoot>
 </table>
+@section('scripts')
+    @parent
+    <script nonce="{{ $JS_NONCE }}">
+        var cloneGroupUrl = '{{ route('transactions.clone') }}';
+        var cloneAndEditUrl = '{{ route('transactions.clone') }}?redirect=edit';
+    </script>
+    @endsection

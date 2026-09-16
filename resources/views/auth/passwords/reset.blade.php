@@ -27,17 +27,17 @@
                 <input type="hidden" name="_token" value="{{ csrf_token() }}">
                 <input type="hidden" name="token" value="{{ $token }}">
 
-                <div class="input-group mb-3">
+                <div class="input-group mb-2">
                     <input type="email" name="email" required autofocus class="form-control" value="{{ old('email') }}"
                            placeholder="{{ trans('form.email') }}"/>
                     <div class="input-group-text"> <em class="bi bi-envelope"></em> </div>
                 </div>
-                <div class="input-group mb-3">
+                <div class="input-group mb-2">
                     <input type="password" class="form-control" required placeholder="{{ trans('form.password') }}"
                            name="password"/>
                     <div class="input-group-text"> <em class="bi bi-lock"></em> </div>
                 </div>
-                <div class="input-group mb-3">
+                <div class="input-group mb-2">
                     <input type="password" class="form-control" required placeholder="{{ trans('form.password_confirmation') }}"
                            name="password_confirmation"/>
                     <div class="input-group-text"> <em class="bi bi-lock"></em> </div>

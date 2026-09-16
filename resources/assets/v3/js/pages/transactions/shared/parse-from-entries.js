@@ -42,6 +42,16 @@ export function parseFromEntries(entries, originals, transactionType) {
                 current.description = entry.description;
             }
 
+            // original transaction journal id.
+            if (
+                Object.hasOwn(entry, "transaction_journal_id") &&
+                parseInt(entry.transaction_journal_id) > 0
+            ) {
+                current.transaction_journal_id = parseInt(
+                    entry.transaction_journal_id,
+                );
+            }
+
             // source and destination NAME
             current.source_name = entry.source_account.name;
             current.destination_name = entry.destination_account.name;
@@ -52,6 +62,16 @@ export function parseFromEntries(entries, originals, transactionType) {
 
             // dates
             current.date = entry.date;
+            if (i > 0 && !!returnArray[0]) {
+                console.log(
+                    "Overrule date for entry ",
+                    i,
+                    " with ",
+                    returnArray[0].date,
+                );
+                current.date = returnArray[0].date;
+            }
+
             current.interest_date = entry.interest_date;
             current.book_date = entry.book_date;
             current.process_date = entry.process_date;

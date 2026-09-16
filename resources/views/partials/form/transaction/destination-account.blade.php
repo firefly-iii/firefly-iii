@@ -1,4 +1,4 @@
-<div class="row mb-3">
+<div class="row mb-2">
     <label :for="'dest_' + index"
            class="col-sm-1 col-form-label d-none d-sm-block">
         <em title="{{ __('firefly.destination_account') }}" class="bi bi-arrow-right"></em>
@@ -10,6 +10,7 @@
                :id="'dest_' + index"
                x-model="transaction.destination_account.alpine_name"
                :data-index="index"
+               @keyup="keyUpFromDestination"
                @changed="changedDestinationAccount"
                x-bind:disabled="true===transaction.destination_account.disabled"
                x-bind:readonly="true===transaction.destination_account.disabled"

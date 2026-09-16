@@ -8,4 +8,4 @@
     @endif
 </p>
 
-<x-lists.groups-large :groups="$groups" />
+<x-lists.groups-large :groups="$groups" :show-category="true" :show-budget="true" />

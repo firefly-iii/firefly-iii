@@ -22,8 +22,8 @@ var count = 0;
 
 $(document).ready(function () {
     updateListButtons();
-    $('.clone-transaction').click(cloneTransaction);
-    $('.clone-transaction-and-edit').click(cloneTransactionAndEdit);
+    $('.clone-transaction').on('click', cloneTransaction);
+    $('.clone-transaction-and-edit').on('click', cloneTransactionAndEdit);
 });
 
 
@@ -147,11 +147,10 @@ function updateActionButtons() {
 }
 
 function cloneTransaction(e) {
+    e.preventDefault();
     var button = $(e.currentTarget);
     var groupId = parseInt(button.data('id'));
-
     $.post(cloneGroupUrl, {
-        _token: token,
         id: groupId
     }).done(function (data) {
         // lame but it works
@@ -163,6 +162,7 @@ function cloneTransaction(e) {
 }
 
 function cloneTransactionAndEdit(e) {
+    e.preventDefault();
     var button = $(e.currentTarget);
     var groupId = parseInt(button.data('id'));
 

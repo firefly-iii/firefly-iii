@@ -18,7 +18,7 @@
                         <div class="pl-2">
                             {{ $paginator->links('pagination.bootstrap-4') }}
                         </div>
-                        <table class="table table-responsive  table-hover sortable">
+                        <table class="table table-responsive table-sm table-hover sortable">
                             <thead>
                             <tr>
                                 <th class="w-25" data-defaultsign="az">{{ trans('list.title') }}</th>

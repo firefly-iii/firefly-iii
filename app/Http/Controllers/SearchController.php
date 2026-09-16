@@ -33,6 +33,8 @@ use Illuminate\Support\Facades\Log;
 use Illuminate\View\View;
 use Throwable;
 
+use function Safe\mb_convert_encoding;
+
 /**
  * Class SearchController.
  */
@@ -67,6 +69,8 @@ final class SearchController extends Controller
             $fullQuery = '';
         }
         $fullQuery        = (string) $fullQuery;
+        $fullQuery        = mb_convert_encoding($fullQuery, 'UTF-8', 'UTF-8');
+
         $page             = 0 === (int) $request->input('page') ? 1 : (int) $request->input('page');
         $page             = clamp(value: $page, min: 1, max: 2 ** 16);
         $ruleId           = (int) $request->input('rule');

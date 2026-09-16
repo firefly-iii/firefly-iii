@@ -3,6 +3,25 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
+## v6.7.2 - 2026-09-16
+
+### Changed
+
+- Use font Roboto again
+- Smaller text, less white space
+
+### Fixed
+- [Issue 12757](https://github.com/firefly-iii/firefly-iii/issues/12757) (Transaction List - "Clone" and "Clone and Edit" button doesn't work) reported by @fabienfitoussi
+- [Issue 12758](https://github.com/firefly-iii/firefly-iii/issues/12758) (Dashboard shows transactions values when value hiding is enabled) reported by @ppslim
+- [Issue 12761](https://github.com/firefly-iii/firefly-iii/issues/12761) (Fiscal year start date not showing it settings) reported by @ppslim
+- [Issue 12755](https://github.com/firefly-iii/firefly-iii/issues/12755) (Tags are not visible when editing transactions) reported by @fabienfitoussi
+- [Issue 12768](https://github.com/firefly-iii/firefly-iii/issues/12768) (redundant shadow for session logo) reported by @zhiiwg
+- [Issue 12765](https://github.com/firefly-iii/firefly-iii/issues/12765) (Transaction Group Title not Showing on `/transactions/show/<id>` (& some tagged-along questions)) reported by @gthbusrr
+- [Issue 12766](https://github.com/firefly-iii/firefly-iii/issues/12766) (Transaction Journals in the same Transaction Group have different `dates`) reported by @gthbusrr
+- [Issue 12740](https://github.com/firefly-iii/firefly-iii/issues/12740) (Custom date range does not work) reported by @JC5
+- [Issue 12764](https://github.com/firefly-iii/firefly-iii/issues/12764) (Restore Categories in transaction view) reported by @CountMurphy
+- [Issue 12776](https://github.com/firefly-iii/firefly-iii/issues/12776) (Validating new transaction title suggestion with Enter key submits the form) reported by @ThibaultNocchi
+
 ## v6.7.1 - 2026-09-15
 
 <!-- summary: This release introduces a new layout and fixes many bugs and security issues. -->

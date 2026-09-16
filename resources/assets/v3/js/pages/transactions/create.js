@@ -30,7 +30,7 @@ import { loadPiggyBanks } from "./shared/load-piggy-banks.js";
 import { loadSubscriptions } from "./shared/load-subscriptions.js";
 import { addAllAutocompleteToForm } from "./shared/add-autocomplete.js";
 import { processAttachments } from "./shared/process-attachments.js";
-import { disableSplitAccounts } from "./shared/disable-split-accounts.js";
+import { disableSplitInputs } from "./shared/disable-split-inputs.js";
 import { parseTotalAmount } from "./shared/parse-total-amount.js";
 import { keyUpFromCategory } from "./shared/keyup-from-category.js";
 import { changedAmount } from "./shared/changed-amount.js";
@@ -68,6 +68,9 @@ import { autoStep } from "./shared/auto-step.js";
 import { respondToTabSwitch } from "./shared/respond-to-tab-switch.js";
 import { loadTransactionLinks } from "./shared/load-transaction-links.js";
 import Alpine from "alpinejs";
+import { keyUpFromSource } from "./shared/keyup-from-source.js";
+import { keyUpFromDestination } from "./shared/keyup-from-destination.js";
+import { keyUpFromDescription } from "./shared/keyup-from-description.js";
 
 window.enableDates = false;
 
@@ -111,6 +114,9 @@ let create = function () {
             rulesButton: true,
             webhooksButton: true,
             categorySelectVisible: false,
+            descriptionSelectVisible: false,
+            sourceSelectVisible: false,
+            destinationSelectVisible: false,
             // some properties that must all be true before the user can be redirected safely.
             storedGroup: false,
             storedLinks: false,
@@ -174,15 +180,21 @@ let create = function () {
         changedDestinationAccount() {
             this.detectTransactionType();
         },
+        changedGroupTitle() {
+            console.warn("changedGroupTitle: event is not used.");
+        },
 
         changedSourceAccount() {
             this.detectTransactionType();
         },
         // shared functions with edit/create transaction.
-        disableSplitAccounts: disableSplitAccounts,
+        disableSplitInputs: disableSplitInputs,
         parseTotalAmount: parseTotalAmount,
         processUploadError: processUploadError,
         keyUpFromCategory: keyUpFromCategory,
+        keyUpFromSource: keyUpFromSource,
+        keyUpFromDestination: keyUpFromDestination,
+        keyUpFromDescription: keyUpFromDescription,
         changedAmount: changedAmount,
         changedForeignAmount: changedForeignAmount,
         showMessageOrRedirectUser: showMessageOrRedirectUser,

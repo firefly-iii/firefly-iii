@@ -1,4 +1,4 @@
-<table class="table table-hover table-responsive">
+<table class="table table-hover table-responsive table-sm">
     <tr>
         @if($showPiggyBank)
            <th>{{ trans('list.piggy_bank') }}</th>

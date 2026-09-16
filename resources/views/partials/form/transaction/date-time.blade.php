@@ -1,4 +1,4 @@
-<div class="row mb-3">
+<div class="row mb-2">
     <label :for="'date_' + index" class="col-sm-1 col-form-label d-none d-sm-block">
         <em title="{{ __('firefly.date_and_time') }}" class="bi bi-calendar"></em>
     </label>
@@ -6,6 +6,8 @@
         <input type="datetime-local" class="form-control" :id="'date_' + index"
                @change="changedDateTime"
                @keyup.enter="save()"
+               x-bind:disabled="true===transaction.date_disabled"
+               x-bind:readonly="true===transaction.date_disabled"
                x-model="transaction.date"
         >
     </div>

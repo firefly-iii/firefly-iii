@@ -23,5 +23,5 @@ import { createEmptySplit } from "./create-empty-split.js";
 export function addSplit() {
     this.entries.push(createEmptySplit());
     this.links.push([]);
-    this.disableSplitAccounts();
+    this.disableSplitInputs();
 }

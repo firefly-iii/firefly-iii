@@ -638,6 +638,7 @@ class JournalUpdateService
      */
     private function updateField(string $fieldName): void
     {
+        Log::debug(sprintf('Now in updateField("%s")', $fieldName));
         if (null === $this->transactionJournal) {
             return;
         }

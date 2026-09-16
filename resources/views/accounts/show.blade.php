@@ -29,7 +29,7 @@
                         </div>
                         <div class="col text-end">
                             <div class="dropdown">
-                                <button class="btn btn-sm btn-secondary-outline dropdown-toggle" type="button" id="card_header_menu" data-bs-toggle="dropdown" aria-expanded="false">
+                                <button class="btn btn-sm btn-outline-secondary dropdown-toggle" type="button" id="card_header_menu" data-bs-toggle="dropdown" aria-expanded="false">
                                     <span class="bi bi-list"></span>
                                 </button>
                                 <ul class="dropdown-menu" aria-labelledby="card_header_menu">
@@ -173,7 +173,7 @@
                         @endphp
                     @endif
 
-                    <x-lists.groups-large :groups="$groups" :account="$account" />
+                    <x-lists.groups-large :groups="$groups" :account="$account" :show-category="true" :show-budget="true" />
 
                     <p>
                         <span class="bi bi-calendar"></span>

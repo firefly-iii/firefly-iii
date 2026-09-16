@@ -1,4 +1,4 @@
-<div class="row mb-3" id="{{ $name }}_holder">
+<div class="row mb-2" id="{{ $name }}_holder">
     <div class="col-sm-9 offset-sm-3">
         <div class="form-check has-validation">
             {{ Html::checkbox($name, $options['checked'], $value)->disabled($options['disabled'] ?? false)->class($inputClasses)->id($options['id']) }}

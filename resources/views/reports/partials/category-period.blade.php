@@ -1,4 +1,4 @@
-<table class="table table-hover sortable table-sm">
+<table class="table table-sm table-hover sortable table-sm">
     <thead>
     <tr>
         <th data-defaultsign="az" colspan="2">{{ __('firefly.category') }}</th>

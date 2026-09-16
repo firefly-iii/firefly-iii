@@ -19,11 +19,12 @@
  */
 
 export function keyUpFromCategory(e) {
+    let target = e.currentTarget.nextSibling;
+    setTimeout(() => {
+        this.formStates.categorySelectVisible =
+            target.classList.contains("show");
+    }, 600);
     if (e.key === "Enter" && false === this.formStates.categorySelectVisible) {
         this.save();
-        return;
     }
-    this.formStates.categorySelectVisible = document
-        .querySelector("input.ac-category")
-        .nextSibling.classList.contains("show");
 }

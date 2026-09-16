@@ -23,7 +23,7 @@
                     </div>
                 </div>
                 <div class="card-body p-0">
-                    <table class="table table-bordered">
+                    <table class="table table-sm">
                         @if(null !==$tag->description)
                             <tr>
                                 <td>

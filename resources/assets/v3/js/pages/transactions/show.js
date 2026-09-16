@@ -48,6 +48,7 @@ let show = function () {
         downloadTransactionGroup() {
             new Get().show(this.group.id).then((response) => {
                 const info = response.data.data;
+                this.group.group_title = info.attributes.group_title;
                 this.group.transactions = [];
                 for (let i = 0; i < info.attributes.transactions.length; i++) {
                     if (Object.hasOwn(info.attributes.transactions, i)) {

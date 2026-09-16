@@ -1,4 +1,4 @@
-<div class="mb-3">
+<div class="mb-2">
     <div class="row">
         <label for="form_url" class="col-sm-3 col-form-label has-validation">{{ __('form.url') }}</label>
         <div class="col-sm-9">

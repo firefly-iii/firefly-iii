@@ -89,7 +89,7 @@
 <!-- tussen -->
 
 <!--begin::App Wrapper-->
-<div class="app-wrapper">
+<div class="app-wrapper compact-mode">
     <!--begin::Header-->
     <nav class="app-header navbar navbar-expand bg-body">
         <!--begin::Container-->
@@ -226,7 +226,7 @@
                 <img
                     src="./images/logo-session.png"
                     alt="Firefly III"
-                    class="brand-image opacity-75 shadow"
+                    class="brand-image opacity-75"
                 />
                 <!--end::Brand Image-->
                 <!--begin::Brand Text-->
@@ -508,7 +508,7 @@
                     </style>
                     <div class="row">
                         <div class="col" style="width:100%;display:flex;justify-content:center;">
-                            <calendar-range months="2" x-on:change="updateDates">
+                            <calendar-range months="2" id="customDateRangeCalendar">
                                 <svg
                                     aria-label="Previous"
                                     slot="previous"

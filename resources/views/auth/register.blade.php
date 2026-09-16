@@ -32,17 +32,17 @@
             <form action="{{ route('register') }}" method="post">
                 <input type="hidden" name="_token" value="{{ csrf_token() }}">
                 <input type="hidden" name="invite_code" value="{{ $inviteCode ?? '' }}">
-                <div class="input-group mb-3">
+                <div class="input-group mb-2">
                     <input type="email" name="email" autofocus required value="{{ $email }}" class="form-control"
                            placeholder="{{ trans('form.email') }}"/>
                     <div class="input-group-text"> <em class="bi bi-envelope"></em> </div>
                 </div>
-                <div class="input-group mb-3">
+                <div class="input-group mb-2">
                     <input type="password" autocomplete="new-password" required class="form-control"
                            placeholder="{{ trans('form.password') }}" minlength="16" name="password"/>
                     <div class="input-group-text"> <em class="bi bi-lock"></em> </div>
                 </div>
-                <div class="input-group mb-3">
+                <div class="input-group mb-2">
                     <input type="password" autocomplete="new-password" minlength="16" required class="form-control"
                            placeholder="{{ trans('form.password_confirmation') }}" name="password_confirmation"/>
                     <div class="input-group-text"> <em class="bi bi-lock"></em> </div>

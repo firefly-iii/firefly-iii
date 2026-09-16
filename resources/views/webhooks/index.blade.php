@@ -23,7 +23,7 @@
                             </div>
                         </template>
                         <template x-if="webhooks.length > 0 && !loading">
-                        <table class="table table-responsive table-hover" aria-label="A table.">
+                        <table class="table table-sm table-responsive table-hover" aria-label="A table.">
                             <thead>
                             <tr>
                                 <th>{{ __('list.title') }}</th>
@@ -88,7 +88,7 @@
                                 </td>
                                 <td class="text-end">
                                     <div class="dropdown">
-                                        <button class="btn btn-sm btn-secondary-outline dropdown-toggle" type="button" :id="'webhook_menu_' +  webhook.id" data-bs-toggle="dropdown" aria-expanded="false">
+                                        <button class="btn btn-sm btn-outline-secondary dropdown-toggle" type="button" :id="'webhook_menu_' +  webhook.id" data-bs-toggle="dropdown" aria-expanded="false">
                                             {{ __('firefly.actions') }}
                                         </button>
                                         <ul class="dropdown-menu" :aria-labelledby="'webhook_menu_' +  webhook.id">

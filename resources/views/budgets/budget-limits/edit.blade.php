@@ -12,7 +12,7 @@
                 <input type="hidden" name="_token" value="{{ csrf_token() }}"/>
                 <input type="hidden" name="redirect" value="true"/>
                 <input type="hidden" name="amount" value="{{ $budgetLimit->amount }}"/>
-                <div class="form-group mb-3">
+                <div class="form-group mb-2">
                     <textarea name="notes" class="form-control" rows="3" placeholder="{{ __('firefly.notes') }}">{{ $notes }}</textarea>
                     <span class="help-block">{!! trans('firefly.field_supports_markdown') !!}</span>
                 </div>

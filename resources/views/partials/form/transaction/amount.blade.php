@@ -1,4 +1,4 @@
-<div class="row mb-3">
+<div class="row mb-2">
     <!-- text label for currency -->
     <label :for="'amount_' + index"
            class="col-sm-3 col-form-label d-none d-sm-block" x-text="formData.amountCurrency ? formData.amountCurrency.name : ''">

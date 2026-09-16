@@ -191,7 +191,7 @@
                 <div class="card mb-2">
                     <x-elements.card-header-with-menu :cardTitle="__('firefly.budgets')" :route="route('budgets.create')" :linkTitle="__('firefly.createBudget')" />
                     <div class="card-body p-0">
-                        <table class="table sortable-table table-striped sortable" id="budgetList">
+                        <table class="table sortable-table table-striped sortable table-sm" id="budgetList">
                             <thead>
                             <tr>
                                 <th class="ten">&nbsp;</th>

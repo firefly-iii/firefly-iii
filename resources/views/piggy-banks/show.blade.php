@@ -21,7 +21,7 @@
                             </div>
                             <div class="col text-end">
                                 <div class="dropdown">
-                                    <button class="btn btn-sm btn-secondary-outline dropdown-toggle" type="button"
+                                    <button class="btn btn-sm btn-outline-secondary dropdown-toggle" type="button"
                                             id="card_header_menu" data-bs-toggle="dropdown" aria-expanded="false">
                                         <span class="bi bi-list"></span>
                                     </button>
@@ -38,7 +38,7 @@
                         </div>
                     </div>
                     <div class="card-body p-0">
-                        <table class="table table-responsive table-hover" id="piggyDetails">
+                        <table class="table table-responsive table-hover table-sm" id="piggyDetails">
                             <tr>
                                 <td class="forty">{{ __('firefly.saveOnAccounts') }}</td>
                                 <td>

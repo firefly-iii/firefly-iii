@@ -18,7 +18,7 @@
                     <input type="hidden" name="journals[]" value="{{ $id }}"/>
                 @endforeach
 
-                <table class="table table-striped table-bordered">
+                <table class="table table-striped table-sm">
                     <tr>
                         <td>{{ __('firefly.submitted_start_balance') }} ({{ $start->isoFormat($monthAndDayFormat) }})</td>
                         <td>{!! format_amount_by_account($account, $startBalance) !!} </td>

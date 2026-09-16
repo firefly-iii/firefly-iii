@@ -1,5 +1,5 @@
 <template x-if="entries.length > 1">
-<div class="row mb-3">
+<div class="row mb-2">
     <label for="group-title" class="col-sm-1 col-form-label d-none d-sm-block">
         <em title="{{ __('firefly.group-title') }}" class="bi bi-body-text"></em>
     </label>

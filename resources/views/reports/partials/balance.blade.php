@@ -1,4 +1,4 @@
-<table class="table table-hover">
+<table class="table table-sm table-hover">
     <thead>
     <tr>
         <th>{{ __('firefly.budgets') }}</th>

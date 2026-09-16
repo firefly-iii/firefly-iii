@@ -55,7 +55,7 @@
                                         </p>
                                     </template>
                                     <template x-if="clients.length > 0">
-                                        <table class="table table-responsive table-borderless mb-0">
+                                        <table class="table table-responsive table-sm table-borderless mb-0">
                                             <thead>
                                             <tr>
                                                 <th class="width-30"
@@ -352,7 +352,7 @@
 
                                 <!-- Personal Access Tokens -->
                                 <template x-if="tokens.length > 0">
-                                    <table class="table table-responsive table-borderless mb-0">
+                                    <table class="table table-responsive table-sm table-borderless mb-0">
                                         <thead>
                                         <tr>
                                             <th scope="col">{{ __('firefly.name') }}</th>

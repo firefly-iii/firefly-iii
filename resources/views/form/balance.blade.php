@@ -1,8 +1,8 @@
-<div class="row mb-3" id="{{ $name }}_holder">
+<div class="row mb-2" id="{{ $name }}_holder">
     <div class="input-group has-validation">
         <label for="{{ $options['id'] }}" class="col-sm-3 col-form-label has-validation">{{ $label }}</label>
         <div class="col-sm-9">
-            <div class="input-group mb-3">
+            <div class="input-group mb-2">
             <button class="btn btn-outline-secondary dropdown-toggle currency-dropdown" id="currency_dropdown_{{ $name }}" type="button" data-bs-toggle="dropdown" aria-expanded="false"><span id="currency_select_symbol_{{ $name }}">{{ $primaryCurrency->symbol }}</span></button>
             <ul class="dropdown-menu currency-dropdown-menu">
                 @foreach($currencies as $currency)

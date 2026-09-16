@@ -36,6 +36,7 @@ export default () => ({
     loading: false,
     boxData: null,
     boxOptions: null,
+    anonymous: false,
     eventListeners: {
         ["@convert-to-primary.window"](event) {
             this.convertToPrimary = event.detail;
@@ -100,7 +101,7 @@ export default () => ({
                 if (key.startsWith("balance-in-")) {
                     this.balanceBox.amounts.push(
                         formatMoney(
-                            current.monetary_value,
+                            this.anonymous ? 0 : current.monetary_value,
                             current.currency_code,
                         ),
                     );
@@ -116,7 +117,7 @@ export default () => ({
                     subtitles[current.currency_code] =
                         subtitles[current.currency_code] +
                         formatMoney(
-                            current.monetary_value,
+                            this.anonymous ? 0 : current.monetary_value,
                             current.currency_code,
                         );
                     continue;
@@ -130,7 +131,7 @@ export default () => ({
                     // prepend the amount earned.
                     subtitles[current.currency_code] =
                         formatMoney(
-                            current.monetary_value,
+                            this.anonymous ? 0 : current.monetary_value,
                             current.currency_code,
                         ) +
                         " + " +
@@ -141,7 +142,7 @@ export default () => ({
                 if (key.startsWith("bills-unpaid-in-")) {
                     this.billBox.unpaid.push(
                         formatMoney(
-                            current.monetary_value,
+                            this.anonymous ? 0 : current.monetary_value,
                             current.currency_code,
                         ),
                     );
@@ -150,7 +151,7 @@ export default () => ({
                 if (key.startsWith("bills-paid-in-")) {
                     this.billBox.paid.push(
                         formatMoney(
-                            current.monetary_value,
+                            this.anonymous ? 0 : current.monetary_value,
                             current.currency_code,
                         ),
                     );
@@ -161,7 +162,7 @@ export default () => ({
                         sumMoneyLeft + parseFloat(current.monetary_value);
                     this.leftBox.left.push(
                         formatMoney(
-                            current.monetary_value,
+                            this.anonymous ? 0 : current.monetary_value,
                             current.currency_code,
                         ),
                     );
@@ -170,7 +171,7 @@ export default () => ({
                 if (key.startsWith("left-per-day-to-spend-in-")) {
                     this.leftBox.perDay.push(
                         formatMoney(
-                            current.monetary_value,
+                            this.anonymous ? 0 : current.monetary_value,
                             current.currency_code,
                         ),
                     );
@@ -179,7 +180,7 @@ export default () => ({
                 if (key.startsWith("net-worth-in-")) {
                     this.netBox.net.push(
                         formatMoney(
-                            current.monetary_value,
+                            this.anonymous ? 0 : current.monetary_value,
                             current.currency_code,
                         ),
                     );
@@ -188,6 +189,7 @@ export default () => ({
         }
 
         this.noMoneyLeft = sumMoneyLeft <= 0;
+        this.noMoneyLeft = this.anonymous ? true : this.noMoneyLeft;
         for (let i in subtitles) {
             if (Object.hasOwn(subtitles, i)) {
                 this.balanceBox.subtitles.push(subtitles[i]);
@@ -210,12 +212,10 @@ export default () => ({
 
     // Getter
     init() {
-        // console.log('boxes init');
-        // TODO can be replaced by "getVariables"
-        getVariables(["convert_to_primary"]).then((values) => {
-            // console.log('boxes after promises');
+        getVariables(["convert_to_primary", "anonymous"]).then((values) => {
             afterPromises = true;
-            this.convertToPrimary = values[0];
+            this.convertToPrimary = values.convert_to_primary;
+            this.anonymous = values.anonymous;
             this.loadBoxes();
         });
         window.store.observe("end", () => {
@@ -232,6 +232,14 @@ export default () => ({
             }
             // console.log('boxes observe convertToPrimary');
             this.convertToPrimary = newValue;
+            this.loadBoxes();
+        });
+        window.store.observe("anonymous", (newValue) => {
+            if (!afterPromises) {
+                return;
+            }
+            // console.log('boxes observe convertToPrimary');
+            this.anonymous = newValue;
             this.loadBoxes();
         });
     },

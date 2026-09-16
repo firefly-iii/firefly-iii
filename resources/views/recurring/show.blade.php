@@ -81,7 +81,7 @@
                             @endif
                         </strong>
                     </p>
-                    <table class="table" aria-label="Table">
+                    <table class="table table-sm" aria-label="Table">
                         <tbody>
                         @foreach($rep['occurrences'] as $occ)
                             <tr>
@@ -122,7 +122,7 @@
                 </h3>
             </div>
             <div class="card-body p-0">
-                <table class="table table-hover sortable">
+                <table class="table table-sm table-hover sortable">
                     <thead>
                     <tr>
                         <th data-defaultsign="az">{{ trans('list.description') }}</th>
@@ -202,7 +202,7 @@
                     </h3>
                 </div>
                 <div class="card-body">
-                    <x-lists.groups-large :groups="$groups" />
+                    <x-lists.groups-large :groups="$groups" :show-category="true" :show-budget="true" />
                 </div>
             </div>
         </div>
