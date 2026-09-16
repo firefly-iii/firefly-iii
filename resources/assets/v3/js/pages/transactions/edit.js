@@ -77,6 +77,7 @@ import { addTabListener } from "./shared/add-tab-listener.js";
 import { autoStep } from "./shared/auto-step.js";
 import { respondToTabSwitch } from "./shared/respond-to-tab-switch.js";
 import Alpine from "alpinejs";
+import focusFirstInput from "../../shared/focus-first-input.js";
 
 const urls = getUrls();
 window.enableDates = false;
@@ -302,6 +303,7 @@ let transactions = function () {
                     this.notifications.wait.show = false;
                 })
                 .then(() => {
+                    focusFirstInput();
                     this.groupProperties.totalAmount = 0;
                     for (let i in this.entries) {
                         if (Object.hasOwn(this.entries, i)) {

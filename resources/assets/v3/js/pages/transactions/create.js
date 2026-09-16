@@ -71,6 +71,7 @@ import Alpine from "alpinejs";
 import { keyUpFromSource } from "./shared/keyup-from-source.js";
 import { keyUpFromDestination } from "./shared/keyup-from-destination.js";
 import { keyUpFromDescription } from "./shared/keyup-from-description.js";
+import focusFirstInput from "../../shared/focus-first-input.js";
 
 window.enableDates = false;
 
@@ -297,6 +298,7 @@ let create = function () {
                 this.formData.primaryCurrencies = data.primaryCurrencies;
                 this.formData.foreignCurrencies = data.foreignCurrencies;
                 this.autoStep();
+                focusFirstInput();
             });
 
             loadBudgets(false).then((data) => {

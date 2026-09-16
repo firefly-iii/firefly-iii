@@ -7,6 +7,8 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 
 ### Changed 
 - #12782
+- #12783
+- #12784
 
 ## v6.7.2 - 2026-09-16
 
