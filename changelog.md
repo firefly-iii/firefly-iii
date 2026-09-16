@@ -5,6 +5,11 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 
 ## v6.7.2 - 2026-09-16
 
+### Changed
+
+- Use font Roboto again
+- Smaller text, less white space
+
 ### Fixed
 - [Issue 12757](https://github.com/firefly-iii/firefly-iii/issues/12757) (Transaction List - "Clone" and "Clone and Edit" button doesn't work) reported by @fabienfitoussi
 - [Issue 12758](https://github.com/firefly-iii/firefly-iii/issues/12758) (Dashboard shows transactions values when value hiding is enabled) reported by @ppslim
