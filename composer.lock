@@ -10208,16 +10208,16 @@
         },
         {
             "name": "carthage-software/mago",
-            "version": "1.48.1",
+            "version": "1.49.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/carthage-software/mago.git",
-                "reference": "4b833d559b9fc21da7c49a2458d0d057d9b2227a"
+                "reference": "bbdaf378e69114f5d9c580862c8533dd3f01c050"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/carthage-software/mago/zipball/4b833d559b9fc21da7c49a2458d0d057d9b2227a",
-                "reference": "4b833d559b9fc21da7c49a2458d0d057d9b2227a",
+                "url": "https://api.github.com/repos/carthage-software/mago/zipball/bbdaf378e69114f5d9c580862c8533dd3f01c050",
+                "reference": "bbdaf378e69114f5d9c580862c8533dd3f01c050",
                 "shasum": ""
             },
             "require": {
@@ -10259,7 +10259,7 @@
             ],
             "support": {
                 "issues": "https://github.com/carthage-software/mago/issues",
-                "source": "https://github.com/carthage-software/mago/tree/1.48.1"
+                "source": "https://github.com/carthage-software/mago/tree/1.49.0"
             },
             "funding": [
                 {
@@ -10267,7 +10267,7 @@
                     "type": "github"
                 }
             ],
-            "time": "2026-09-11T05:32:18+00:00"
+            "time": "2026-09-16T05:38:39+00:00"
         },
         {
             "name": "cloudcreativity/json-api-testing",

@@ -71,6 +71,7 @@ class StoresAuditLogEntry implements ShouldQueue
             Log::debug(sprintf('Converted "after" to "%s".', $event->after));
         }
         Log::debug(sprintf('Will now store event log for event "%s"', $array['action']));
+
         /** @var ALERepositoryInterface $repository */
         $repository = app(ALERepositoryInterface::class);
         $repository->store($array);

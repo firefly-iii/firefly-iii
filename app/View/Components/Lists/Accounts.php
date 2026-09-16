@@ -33,7 +33,7 @@ class Accounts extends Component
 {
     public LengthAwarePaginator $accounts;
     public string $objectType = '';
-    public int $page = 1;
+    public int    $page       = 1;
 
     /**
      * Create a new component instance.
