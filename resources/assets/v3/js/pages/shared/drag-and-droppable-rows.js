@@ -88,7 +88,7 @@ export function addDrag() {
         setTimeout(() => draggedRow.classList.add('is-dragging'), 0);
     });
 
-    tbody.addEventListener('dragend', (e) => {
+    tbody.addEventListener('dragend', () => {
         if (draggedRow) {
             draggedRow.removeAttribute('draggable');
             draggedRow.classList.remove('is-dragging');
