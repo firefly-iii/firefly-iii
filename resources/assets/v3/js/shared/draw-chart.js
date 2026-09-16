@@ -706,5 +706,5 @@ function formatLabel(str, maxWidth) {
         }
     });
 
-    return sections.join("X"); // temp value "X"
+    return sections.join("\n"); // temp value "X"
 }
