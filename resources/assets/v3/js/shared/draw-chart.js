@@ -592,5 +592,5 @@ function formatLabel(str, maxWidth) {
         }
     });
 
-    return sections.join("\n"); // temp value "X"
+    return sections;
 }
