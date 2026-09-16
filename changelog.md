@@ -6,9 +6,9 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 ## v6.7.3 - 2026-09-17
 
 ### Changed 
-- #12782
-- #12783
-- #12784
+- [Issue 12782](https://github.com/firefly-iii/firefly-iii/issues/12782) (accounts with attachement in show page returns 500 error page) reported by @SL1c3R57
+- [Issue 12783](https://github.com/firefly-iii/firefly-iii/issues/12783) (Clone / Clone & Edit doesn't work) reported by @gthbusrr
+- [Issue 12784](https://github.com/firefly-iii/firefly-iii/issues/12784) (Creating a transaction doesn't put the focus into the title field) reported by @ThibaultNocchi
 
 ## v6.7.2 - 2026-09-16
 
