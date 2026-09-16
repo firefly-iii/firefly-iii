@@ -319,10 +319,9 @@ final class BasicController extends Controller
 
         // to get the right available budget, correct the user's view period to whatever makes most sense (see als the "budget" page)
         // and use that instead.
-        $range            = Navigation::getViewRange(true);
-        $abStart = Navigation::startOfPeriod($start, $range);
-        $abEnd = Navigation::endOfPeriod($abStart, $range);
-
+        $range      = Navigation::getViewRange(true);
+        $abStart    = Navigation::startOfPeriod($start, $range);
+        $abEnd      = Navigation::endOfPeriod($abStart, $range);
 
         $available  = $this->abRepository->getAvailableBudgetWithCurrency($abStart, $abEnd);
         $budgets    = $this->budgetRepository->getActiveBudgets();

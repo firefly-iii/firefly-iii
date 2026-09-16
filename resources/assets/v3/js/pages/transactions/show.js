@@ -54,8 +54,12 @@ let show = function () {
                     if (Object.hasOwn(info.attributes.transactions, i)) {
                         let current = info.attributes.transactions[i];
                         current.dateObject = new Date(current.date);
-                        current.dateFormatted = format(current.dateObject, this.i18next.t("config.date_time_fns"),{locale: 'nl-NL'});
-                        console.log('Date formatted is', current.dateFormatted);
+                        current.dateFormatted = format(
+                            current.dateObject,
+                            this.i18next.t("config.date_time_fns"),
+                            { locale: "nl-NL" },
+                        );
+                        console.log("Date formatted is", current.dateFormatted);
                         this.group.transactions.push(current);
                     }
                 }

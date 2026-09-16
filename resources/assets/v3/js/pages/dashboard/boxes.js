@@ -105,7 +105,12 @@ export default () => ({
                             current.currency_code,
                         ),
                     );
-                    console.log(formatMoney(this.anonymous ? 0 : current.monetary_value, current.currency_code,));
+                    console.log(
+                        formatMoney(
+                            this.anonymous ? 0 : current.monetary_value,
+                            current.currency_code,
+                        ),
+                    );
                     continue;
                 }
                 // spent info is used in subtitle:
