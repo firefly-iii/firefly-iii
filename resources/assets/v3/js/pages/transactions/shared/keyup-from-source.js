@@ -18,12 +18,12 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-export function keyUpFromCategory(e) {
+export function keyUpFromSource(e) {
     let target = e.currentTarget.nextSibling;
     setTimeout(() => {
-        this.formStates.categorySelectVisible = target.classList.contains("show");
+        this.formStates.sourceSelectVisible = target.classList.contains("show");
     }, 600);
-    if (e.key === "Enter" && false === this.formStates.categorySelectVisible) {
+    if (e.key === "Enter" && false === this.formStates.sourceSelectVisible) {
         this.save();
     }
 }

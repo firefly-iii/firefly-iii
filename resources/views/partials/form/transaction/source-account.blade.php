@@ -10,6 +10,7 @@
                :id="'source_' + index"
                x-model="transaction.source_account.alpine_name"
                :data-index="index"
+               @keyup="keyUpFromSource"
                x-bind:disabled="true===transaction.source_account.disabled"
                x-bind:readonly="true===transaction.source_account.disabled"
                @changed="changedSourceAccount"
