@@ -104,10 +104,7 @@ function drawMultiCurrencyStackedColumnChart(url, holder, anonymous) {
             for (let i = 0; i < all.length; i++) {
                 if (Object.hasOwn(all, i)) {
                     let current = all[i];
-                    let label = formatLabel(
-                        current.label + " (" + current.currency_code + ")",
-                        20,
-                    );
+                    let label = current.label + " (" + current.currency_code + ")";
 
                     // if there is NOTHING in this budget, skip it.
                     if (
@@ -120,7 +117,7 @@ function drawMultiCurrencyStackedColumnChart(url, holder, anonymous) {
                     }
 
                     // add the name as a label
-                    data.labels.push(label);
+                    data.labels.push(formatLabel(label, 25));
                     let labelIndex = data.labels.length - 1;
 
                     current.entries.spent = parseFloat(current.entries.spent);
@@ -244,6 +241,12 @@ function drawMultiCurrencyStackedColumnChart(url, holder, anonymous) {
             // console.log(options);
             // console.log(data);
 
+            // add a callback for the title of the label:
+            options.plugins.tooltip.callbacks.title = function (tooltipItems) {
+                "use strict";
+                return tooltipItems[0].label.replaceAll(","," ");
+            }
+
             // add a callback for the label.
             options.plugins.tooltip.callbacks.label = function (tooltipItem) {
                 "use strict";
@@ -259,6 +262,18 @@ function drawMultiCurrencyStackedColumnChart(url, holder, anonymous) {
                         "0",
                         tooltipItem.dataset.currency_code,
                     );
+                }
+                if(tooltipItem.dataset.label.startsWith("budgeted")){
+                    return i18next.t("firefly.budgeted") + ": " + string;
+                }
+                if(tooltipItem.dataset.label.startsWith("spent")){
+                    return i18next.t("firefly.spent") + ": " + string;
+                }
+                if(tooltipItem.dataset.label.startsWith("overspent")){
+                    return i18next.t("firefly.overspent") + ": " + string;
+                }
+                if(tooltipItem.dataset.label.startsWith("left")){
+                    return i18next.t("firefly.left") + ": " + string;
                 }
                 return tooltipItem.dataset.label + ": " + string;
             };
