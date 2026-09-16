@@ -143,6 +143,7 @@ Route::group(
     ],
     static function (): void {
         Route::get('overview', ['uses' => 'BudgetController@overview', 'as' => 'overview']);
+        Route::get('overview-with-limits', ['uses' => 'BudgetController@overviewWithBudgetLimits', 'as' => 'overview-with-limits']);
     }
 );
 

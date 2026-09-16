@@ -62,6 +62,7 @@ abstract class Controller extends BaseController
     use DispatchesJobs;
     use ValidatesRequests;
     use ValidatesUserGroupTrait;
+    protected string $monthAndDayFormat;
 
     protected const string CONTENT_TYPE      = 'application/vnd.api+json';
     protected const string JSON_CONTENT_TYPE = 'application/json';
@@ -87,6 +88,8 @@ abstract class Controller extends BaseController
                 $language               = Steam::getLanguage();
                 $this->convertToPrimary = Amount::convertToPrimary();
                 $this->primaryCurrency  = Amount::getPrimaryCurrency();
+                $locale                  = Steam::getLocale();
+                $this->monthAndDayFormat = (string) trans('config.month_and_day_js', [], $locale);
                 app()->setLocale($language);
             }
 
