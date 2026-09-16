@@ -173,7 +173,7 @@
                         @endphp
                     @endif
 
-                    <x-lists.groups-large :groups="$groups" :account="$account" />
+                    <x-lists.groups-large :groups="$groups" :account="$account" :show-category="true" :show-budget="true" />
 
                     <p>
                         <span class="bi bi-calendar"></span>

@@ -127,7 +127,7 @@
                     <h3 class="card-title">{{ __('firefly.transactions') }}</h3>
                 </div>
                 <div class="card-body">
-                    <x-lists.groups-large :groups="$groups" />
+                    <x-lists.groups-large :groups="$groups"  :show-category="true" :show-budget="false"/>
                     @if(null !== ($budgetLimit ?? null))
                         <p>
                             <span class="bi bi-calendar"></span>

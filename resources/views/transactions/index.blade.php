@@ -66,7 +66,7 @@
             <div class="card mb-2">
                 <x-elements.card-header-with-menu :cardTitle="$subTitle" :route="route('transactions.create', [$objectType])" :linkTitle="__('firefly.create_new_transaction')" />
                 <div class="card-body p-0">
-                    <x-lists.groups-large :groups="$groups" :account="null" />
+                    <x-lists.groups-large :groups="$groups" :account="null" :show-category="true" :show-budget="true" />
                 </div>
                 <div class="card-footer">
                     {{-- links for other views --}}

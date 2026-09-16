@@ -19,13 +19,13 @@
                 <div class="card-body">
 
                     @if(null !== ($periods ?? null) && count($periods) > 0)
-                        <x-lists.groups-large :groups="$groups" />
+                        <x-lists.groups-large :groups="$groups"  :show-category="true" :show-budget="false" />
                         <p>
                             <span class="bi bi-calendar"></span>
                             <a href="{{ route('budgets.no-budget-all') }}">{{ __('firefly.show_all_no_filter') }}</a>
                         </p>
                     @else
-                        <x-lists.groups-large :groups="$groups" />
+                        <x-lists.groups-large :groups="$groups"  :show-category="true" :show-budget="false" />
                         <p>
                             <span class="bi bi-calendar"></span>
                             <a href="{{ route('budgets.no-budget') }}">{{ __('firefly.show_the_current_period_and_overview') }}</a>

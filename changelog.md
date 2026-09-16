@@ -13,6 +13,8 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 - [Issue 12768](https://github.com/firefly-iii/firefly-iii/issues/12768) (redundant shadow for session logo) reported by @zhiiwg
 - [Issue 12765](https://github.com/firefly-iii/firefly-iii/issues/12765) (Transaction Group Title not Showing on `/transactions/show/<id>` (& some tagged-along questions)) reported by @gthbusrr
 - [Issue 12766](https://github.com/firefly-iii/firefly-iii/issues/12766) (Transaction Journals in the same Transaction Group have different `dates`) reported by @gthbusrr
+- #12740
+- #12764
 
 ## v6.7.1 - 2026-09-15
 
