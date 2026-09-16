@@ -26,7 +26,9 @@ export default function focusFirstInput() {
         list[0].focus();
         return;
     }
-    list = document.querySelectorAll('div.app-content input[type="text"]:enabled');
+    list = document.querySelectorAll(
+        'div.app-content input[type="text"]:enabled',
+    );
     if (list.length > 0) {
         list[0].focus();
     }
