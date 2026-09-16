@@ -39,7 +39,7 @@ import Put from "../../api/model/transaction/put.js";
 import { showMessageOrRedirectUser } from "./shared/show-message-or-redirect.js";
 import { processAttachments } from "./shared/process-attachments.js";
 import sidebar from "../shared/sidebar.js";
-import { disableSplitAccounts } from "./shared/disable-split-accounts.js";
+import { disableSplitInputs } from "./shared/disable-split-inputs.js";
 import { parseTotalAmount } from "./shared/parse-total-amount.js";
 import { keyUpFromCategory } from "./shared/keyup-from-category.js";
 import { changedAmount } from "./shared/changed-amount.js";
@@ -169,7 +169,7 @@ let transactions = function () {
 
         // shared functions between edit/create
         parseTotalAmount: parseTotalAmount,
-        disableSplitAccounts: disableSplitAccounts,
+        disableSplitInputs: disableSplitInputs,
         processUploadError: processUploadError,
         keyUpFromCategory: keyUpFromCategory,
         changedAmount: changedAmount,
@@ -489,7 +489,7 @@ let transactions = function () {
 
         // exclusive to edit form, used to initialize splits.
         addedSplit() {
-            this.disableSplitAccounts();
+            this.disableSplitInputs();
             this.addAllAutocompleteToForm();
             this.addTabListener();
         },

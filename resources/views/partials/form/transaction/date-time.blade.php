@@ -6,6 +6,8 @@
         <input type="datetime-local" class="form-control" :id="'date_' + index"
                @change="changedDateTime"
                @keyup.enter="save()"
+               x-bind:disabled="true===transaction.date_disabled"
+               x-bind:readonly="true===transaction.date_disabled"
                x-model="transaction.date"
         >
     </div>

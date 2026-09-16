@@ -107,6 +107,7 @@ export function createEmptySplit() {
 
         // date and time
         date: formatted,
+        date_disabled: false,
         interest_date: "",
         book_date: "",
         process_date: "",

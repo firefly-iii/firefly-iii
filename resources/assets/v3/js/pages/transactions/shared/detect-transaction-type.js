@@ -26,7 +26,7 @@ export function detectTransactionType() {
         console.warn(
             "Cannot infer transaction type from two unknown accounts.",
         );
-        this.disableSplitAccounts();
+        this.disableSplitInputs();
         return;
     }
 
@@ -51,7 +51,7 @@ export function detectTransactionType() {
         this.filterForeignCurrencies(
             this.entries[0].destination_account.currency_code,
         );
-        this.disableSplitAccounts();
+        this.disableSplitInputs();
         return;
     }
     // withdrawals:
@@ -68,7 +68,7 @@ export function detectTransactionType() {
         this.determineAmountCurrency(
             this.entries[0].source_account.currency_code,
         );
-        this.disableSplitAccounts();
+        this.disableSplitInputs();
         return;
     }
     if ("Asset account" === sourceType && "unknown" === destType) {
@@ -81,7 +81,7 @@ export function detectTransactionType() {
         this.determineAmountCurrency(
             this.entries[0].source_account.currency_code,
         );
-        this.disableSplitAccounts();
+        this.disableSplitInputs();
         return;
     }
     if (
@@ -97,7 +97,7 @@ export function detectTransactionType() {
         this.determineAmountCurrency(
             this.entries[0].source_account.currency_code,
         );
-        this.disableSplitAccounts();
+        this.disableSplitInputs();
         return;
     }
 
@@ -112,7 +112,7 @@ export function detectTransactionType() {
         //         this.groupProperties.transactionType +
         //         '".',
         // );
-        this.disableSplitAccounts();
+        this.disableSplitInputs();
         this.determineAmountCurrency(
             this.entries[0].destination_account.currency_code,
         );
@@ -131,7 +131,7 @@ export function detectTransactionType() {
         this.determineAmountCurrency(
             this.entries[0].destination_account.currency_code,
         );
-        this.disableSplitAccounts();
+        this.disableSplitInputs();
         return;
     }
     if (
@@ -148,7 +148,7 @@ export function detectTransactionType() {
         this.determineAmountCurrency(
             this.entries[0].destination_account.currency_code,
         );
-        this.disableSplitAccounts();
+        this.disableSplitInputs();
         return;
     }
     if (
@@ -164,7 +164,7 @@ export function detectTransactionType() {
         this.determineAmountCurrency(
             this.entries[0].destination_account.currency_code,
         );
-        this.disableSplitAccounts();
+        this.disableSplitInputs();
         return;
     }
     console.warn(
@@ -174,5 +174,5 @@ export function detectTransactionType() {
             destType +
             '".',
     );
-    this.disableSplitAccounts();
+    this.disableSplitInputs();
 }

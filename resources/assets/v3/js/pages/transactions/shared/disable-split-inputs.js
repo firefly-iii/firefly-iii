@@ -19,12 +19,15 @@
  */
 
 // what happens when a user adds more than one split?
-export function disableSplitAccounts() {
-    //console.log('Call disableSplitAccounts');
+export function disableSplitInputs() {
+    //console.log('Call disableSplitInputs');
     if (this.entries.length > 1) {
-        //console.log('Activate disableSplitAccounts');
+        //console.log('Activate disableSplitInputs');
         // disable source and/or destination, based on account type.
         for (let i = 1; i < this.entries.length; i++) {
+            // disable dates
+            this.entries[i].date_disabled = true;
+
             // disable source when withdrawal or transfer
             if (
                 "transfer" === this.groupProperties.transactionType ||

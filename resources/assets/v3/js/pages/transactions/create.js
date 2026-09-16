@@ -30,7 +30,7 @@ import { loadPiggyBanks } from "./shared/load-piggy-banks.js";
 import { loadSubscriptions } from "./shared/load-subscriptions.js";
 import { addAllAutocompleteToForm } from "./shared/add-autocomplete.js";
 import { processAttachments } from "./shared/process-attachments.js";
-import { disableSplitAccounts } from "./shared/disable-split-accounts.js";
+import { disableSplitInputs } from "./shared/disable-split-inputs.js";
 import { parseTotalAmount } from "./shared/parse-total-amount.js";
 import { keyUpFromCategory } from "./shared/keyup-from-category.js";
 import { changedAmount } from "./shared/changed-amount.js";
@@ -179,7 +179,7 @@ let create = function () {
             this.detectTransactionType();
         },
         // shared functions with edit/create transaction.
-        disableSplitAccounts: disableSplitAccounts,
+        disableSplitInputs: disableSplitInputs,
         parseTotalAmount: parseTotalAmount,
         processUploadError: processUploadError,
         keyUpFromCategory: keyUpFromCategory,
