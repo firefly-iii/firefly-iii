@@ -75,6 +75,7 @@ export function createEmptySplit() {
     let now = new Date();
     let formatted = format(now, "yyyy-MM-dd HH:mm");
     return {
+        transaction_journal_id: 0,
         description: "",
 
         // amount information:

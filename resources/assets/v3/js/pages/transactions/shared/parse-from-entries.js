@@ -42,6 +42,11 @@ export function parseFromEntries(entries, originals, transactionType) {
                 current.description = entry.description;
             }
 
+            // original transaction journal id.
+            if(Object.hasOwn(entry, 'transaction_journal_id') && parseInt(entry.transaction_journal_id) > 0) {
+                current.transaction_journal_id = parseInt(entry.transaction_journal_id);
+            }
+
             // source and destination NAME
             current.source_name = entry.source_account.name;
             current.destination_name = entry.destination_account.name;

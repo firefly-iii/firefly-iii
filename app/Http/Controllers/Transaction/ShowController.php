@@ -149,6 +149,8 @@ final class ShowController extends Controller
         $attachments     = $this->repository->getAttachments($transactionGroup);
         $links           = $this->repository->getLinks($transactionGroup);
 
+        $selectedGroup['transactions'] = array_reverse($selectedGroup['transactions'], true);
+
         return view('transactions.show', [
             'transactionGroup' => $transactionGroup,
             'amounts'          => $amounts,

@@ -174,6 +174,9 @@ let create = function () {
         changedDestinationAccount() {
             this.detectTransactionType();
         },
+        changedGroupTitle() {
+            console.warn('changedGroupTitle: event is not used.')
+        },
 
         changedSourceAccount() {
             this.detectTransactionType();

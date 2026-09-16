@@ -208,6 +208,9 @@ let transactions = function () {
         changedDateTime() {
             console.warn("changedDateTime, event is not used");
         },
+        changedGroupTitle() {
+            console.warn('changedGroupTitle: event is not used.')
+        },
 
         changedDescription() {
             console.warn("changedDescription, event is not used");

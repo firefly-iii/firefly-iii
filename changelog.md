@@ -11,6 +11,7 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 - [Issue 12761](https://github.com/firefly-iii/firefly-iii/issues/12761) (Fiscal year start date not showing it settings) reported by @ppslim
 - [Issue 12755](https://github.com/firefly-iii/firefly-iii/issues/12755) (Tags are not visible when editing transactions) reported by @fabienfitoussi
 - #12768
+- #12765
 - #12766
 
 ## v6.7.1 - 2026-09-15
