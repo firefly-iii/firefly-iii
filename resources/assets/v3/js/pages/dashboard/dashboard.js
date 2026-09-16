@@ -51,15 +51,15 @@ let index = function () {
                     true,
                 );
 
-                // drawMultiCurrencyChart(
-                //     "stacked-column",
-                //     "api/v1/chart/budget/overview?start=" +
-                //     format(start, "yyyy-LL-dd") +
-                //     "&end=" +
-                //     format(end, "yyyy-LL-dd"),
-                //     "budgets-chart",
-                //     value, false
-                // );
+                drawMultiCurrencyChart(
+                    "stacked-column",
+                    "api/v1/chart/budget/overview?start=" +
+                    format(start, "yyyy-LL-dd") +
+                    "&end=" +
+                    format(end, "yyyy-LL-dd"),
+                    "budgets-chart",
+                    value, false
+                );
             });
         },
         loadPiggyBanks() {

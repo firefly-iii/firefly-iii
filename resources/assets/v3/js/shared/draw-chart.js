@@ -100,96 +100,101 @@ function drawMultiCurrencyStackedColumnChart(url, holder, anonymous) {
             // make custom options set.
             let options = structuredClone(defaultChartOptions);
             let datasets = {};
-
+            console.log('All data is', all);
             // loop all collected data.
             for (let i = 0; i < all.length; i++) {
                 if (Object.hasOwn(all, i)) {
                     let current = all[i];
-                    // add the name as a label
-                    data.labels.push(formatLabel(current.label, 20));
+                    let label = formatLabel(current.label + " (" + current.currency_code + ")", 20);
 
-                    // there are four possible data sets for this chart
-                    // TODO this is very much hard coded.
+                    // if there is NOTHING in this budget, skip it.
+                    if (0 === parseFloat(current.entries.budgeted) && 0 === parseFloat(current.entries.spent) && 0 === parseFloat(current.entries.left) && 0 === parseFloat(current.entries.overspent)) {
+                        console.log('SKIP', current.entries);
+                        continue;
+                    }
+
+                    // add the name as a label
+                    data.labels.push(label);
+                    let labelIndex = data.labels.length - 1;
+
+                    /*
+                    ok dus je hebt al zes labels voor alle zes de budget/currency combinaties
+                    dus je moet nu vier datasets maken. Die elk 6 entries hebben.
+                     */
                     let keys = ["budgeted", "spent", "left", "overspent"];
                     for (let i in keys) {
                         let key = keys[i] + current.currency_code;
                         if (!Object.hasOwn(datasets, key)) {
                             datasets[key] = {
-                                label:
-                                    i18next.t("firefly." + keys[i]) +
-                                    " (" +
-                                    current.currency_code +
-                                    ")",
-                                currency_code: current.currency_code,
+                                label: key,
                                 data: [],
+                                currency_code: current.currency_code,
                                 yAxisID: "y" + current.currency_code,
                             };
+                            // make sure that data set is all zeroes when we start:
+                            for (let j = 0; j < all.length; j++) {
+                                datasets[key].data.push(0);
+                            }
+                        }
+                        let multiplier = 1;
+                        if ("spent" === keys[i]) {
+                            multiplier = -1;
+                        }
+                        // then set the current value:
+                        //if(0 === parseFloat(current.entries[keys[i]])) {
+                        // console.log('Budget "'+current.label+'" has no amount for "'+keys[i]+'" in '+current.currency_code+' so we skip it.', current.entries[keys[i]]);
+                        //console.log('EMPTY What to choose from ['+i+'] (label "'+label+'" is index: '+labelIndex+') (i: '+i+', keys[i]: '+keys[i]+')?', current.entries[keys[i]]);
+                        //}
+                        if (0 !== parseFloat(current.entries[keys[i]])) {
+                            console.log('Budget "' + current.label + '" has amount for "' + keys[i] + '" in ' + current.currency_code + ' so we skip it.', current.entries[keys[i]]);
+                            // console.log('What to choose from ['+i+'] (label "'+label+'" is index: '+labelIndex+') (i: '+i+', keys[i]: '+keys[i]+')?', current.entries[keys[i]]);
+                            datasets[key].data[labelIndex] = parseFloat(current.entries[keys[i]]) * multiplier;
                         }
                     }
-
-                    // for the first and all other datasets, create a new dataset object.
-                    // add the data to the dataset.
-
-                    // add spent and left to the dataset, if they exist.
-                    // console.log('current', current);
-                    if (
-                        parseFloat(current.entries.spent) * -1 <
-                        parseFloat(current.entries.budgeted)
-                    ) {
-                        let key = "budgeted" + current.currency_code;
-                        datasets[key].data.push(0);
-
+                    if (parseFloat(current.entries.spent) * -1 < parseFloat(current.entries.budgeted)) {
                         // user has not overspent.
-                        key = "spent" + current.currency_code;
-                        let value = parseFloat(current.entries.spent) * -1;
-                        datasets[key].data.push(value);
-
-                        key = "left" + current.currency_code;
-                        value = parseFloat(current.entries.left);
-                        datasets[key].data.push(value);
-
-                        key = "overspent" + current.currency_code;
-                        datasets[key].data.push(0);
-                    }
-                    if (
-                        parseFloat(current.entries.spent) * -1 >=
-                        parseFloat(current.entries.budgeted)
-                    ) {
                         let key = "budgeted" + current.currency_code;
-                        datasets[key].data.push(0);
+                        datasets[key].data[labelIndex] = 0;// parseFloat(current.entries.budgeted);
 
-                        // user has overspent.
                         key = "spent" + current.currency_code;
-                        let value = parseFloat(current.entries.spent) * -1;
-                        datasets[key].data.push(value);
+                        datasets[key].data[labelIndex] = parseFloat(current.entries.spent) * -1
 
                         key = "left" + current.currency_code;
-                        datasets[key].data.push(0);
+                        datasets[key].data[labelIndex] = parseFloat(current.entries.left);
 
                         key = "overspent" + current.currency_code;
-                        value = parseFloat(current.entries.overspent);
-                        datasets[key].data.push(value);
+                        datasets[key].data[labelIndex] = 0;
                     }
-                    // console.log('Current entries:')
-                    // console.log(current.entries);
-                    //
-                    //
-                    // for (let j in current.entries) {
-                    //     // j =  "spent" or earned or whatever.
-                    //     let key = j + current.currency_code;
-                    //     if (Object.hasOwn(datasets, key)) {
-                    //         let value = parseFloat(current.entries[j]);
-                    //         if(value < 0) {
-                    //             value = value * -1;
-                    //         }
-                    //         datasets[key].data.push(value);
-                    //     }
-                    // }
-                    // console.log('All generatred datasets.')
-                    // console.log(datasets);
-                    // add it to the dataset collection.
-                    //data.datasets.push(dataset);
-                    data.datasets = Object.values(datasets);
+                    if (parseFloat(current.entries.spent) * -1 >= parseFloat(current.entries.budgeted) && 0 !== parseFloat(current.entries.budgeted)) {
+                        // user has overspent!
+                        let key = "budgeted" + current.currency_code;
+                        datasets[key].data[labelIndex] = parseFloat(current.entries.budgeted);
+
+                        key = "spent" + current.currency_code;
+                        datasets[key].data[labelIndex] = 0;
+
+                        key = "left" + current.currency_code;
+                        datasets[key].data[labelIndex] = 0;
+
+                        key = "overspent" + current.currency_code;
+                        datasets[key].data[labelIndex] = parseFloat(current.entries.overspent);
+                    }
+
+                    if (parseFloat(current.entries.spent) * -1 >= parseFloat(current.entries.budgeted) && 0 === parseFloat(current.entries.budgeted)) {
+                        // user has no budget set.
+                        let key = "budgeted" + current.currency_code;
+                        datasets[key].data[labelIndex] = 0;
+
+                        key = "spent" + current.currency_code;
+                        datasets[key].data[labelIndex] = parseFloat(current.entries.spent) * -1;
+
+                        key = "left" + current.currency_code;
+                        datasets[key].data[labelIndex] = 0;
+
+                        key = "overspent" + current.currency_code;
+                        datasets[key].data[labelIndex] = 0;
+                    }
+
 
                     // if there is no axis yet for this currency, create one.
                     let currencyCode = current.currency_code;
@@ -213,14 +218,127 @@ function drawMultiCurrencyStackedColumnChart(url, holder, anonymous) {
                             },
                         };
                     }
+
                 }
             }
+
+
+            // loop all collected data.
+            for (let i = 0; i < all.length; i++) {
+                if (Object.hasOwn(all, i)) {
+                    // let current = all[i];
+                    // let label = formatLabel(current.label + " (" + current.currency_code + ")", 20);
+                    // console.log('Now processing "' + label + '"');
+                    // // add the name as a label
+                    // data.labels.push(label);
+
+
+                    // wil je dan niet eerst de labels + currencies maken in objectjes.
+
+                    // each data set is per budget (so per label):
+                    // if (!Object.hasOwn(datasets, label)) {
+                    //     datasets[label] = {
+                    //         label: label,
+                    //         currency_code: current.currency_code,
+                    //         budget_name: current.label,
+                    //         data: [],
+                    //         yAxisID: "y" + current.currency_code,
+                    //     };
+                    // }
+
+                    // there must be 4 data sets with a length of X budgets * currencies.
+
+
+                    // there are four possible data sets for this chart
+                    // // TODO this is very much hard coded.
+                    // let keys = ["budgeted", "spent", "left", "overspent"];
+                    // for (let i in keys) {
+                    //     let key = keys[i] + current.currency_code;
+                    //     if (!Object.hasOwn(datasets, key)) {
+                    //         datasets[key] = {
+                    //             label: i18next.t("firefly." + keys[i]) + " (" + current.currency_code + ")",
+                    //             currency_code: current.currency_code,
+                    //             budget_name: current.label,
+                    //             data: [],
+                    //             yAxisID: "y" + current.currency_code,
+                    //         };
+                    //     }
+                    // }
+
+                    // for the first and all other datasets, create a new dataset object.
+                    // add the data to the dataset.
+
+                    // // add spent and left to the dataset, if they exist.
+                    // // console.log('current', current);
+                    // if (parseFloat(current.entries.spent) * -1 < parseFloat(current.entries.budgeted)) {
+                    //     let key = "budgeted" + current.currency_code;
+                    //     datasets[label].data.push(0);
+                    //
+                    //     // user has not overspent.
+                    //     key = "spent" + current.currency_code;
+                    //     let value = parseFloat(current.entries.spent) * -1;
+                    //     datasets[label].data.push(value);
+                    //
+                    //     key = "left" + current.currency_code;
+                    //     value = parseFloat(current.entries.left);
+                    //     datasets[label].data.push(value);
+                    //
+                    //     key = "overspent" + current.currency_code;
+                    //     datasets[label].data.push(0);
+                    // }
+                    // if (parseFloat(current.entries.spent) * -1 >= parseFloat(current.entries.budgeted)) {
+                    //     let key = "budgeted" + current.currency_code;
+                    //     datasets[label].data.push(0);
+                    //
+                    //     // user has overspent.
+                    //     key = "spent" + current.currency_code;
+                    //     let value = parseFloat(current.entries.spent) * -1;
+                    //     datasets[label].data.push(value);
+                    //
+                    //     key = "left" + current.currency_code;
+                    //     datasets[label].data.push(0);
+                    //
+                    //     key = "overspent" + current.currency_code;
+                    //     value = parseFloat(current.entries.overspent);
+                    //     datasets[label].data.push(value);
+                    // }
+                    // console.log('Current entries:')
+                    // console.log(current.entries);
+                    //
+                    //
+                    // for (let j in current.entries) {
+                    //     // j =  "spent" or earned or whatever.
+                    //     let key = j + current.currency_code;
+                    //     if (Object.hasOwn(datasets, key)) {
+                    //         let value = parseFloat(current.entries[j]);
+                    //         if(value < 0) {
+                    //             value = value * -1;
+                    //         }
+                    //         datasets[key].data.push(value);
+                    //     }
+                    // }
+                    // console.log('All generatred datasets.')
+                    // console.log(datasets);
+                    // add it to the dataset collection.
+                    //data.datasets.push(dataset);
+
+
+                }
+            }
+            console.log('All labels are', data.labels);
+            console.log('All datasets are', datasets);
+            console.log('All scales are', axes);
+            // do a proper conversion so its in the right order?
+
+
+            data.datasets = Object.values(datasets);
+            console.log('Final datasets are', data.datasets);
             // remove the standard y-axis, do not need it.
             delete options.scales.y;
             options.scales.x.stacked = true;
             // options.scales.y.stacked = true;
             // add the new axes.
-            options.scales = { ...options.scales, ...axes };
+            options.scales = {...options.scales, ...axes};
             // console.log(options);
             // console.log(data);
 
@@ -379,7 +497,7 @@ function drawMultiCurrencyLineChart(url, holder, anonymous, drawTodayMarker) {
             delete options.scales.y;
             // options.scales.y.stacked = true;
             // add the new axes.
-            options.scales = { ...options.scales, ...axes };
+            options.scales = {...options.scales, ...axes};
 
             // add a callback for the label.
             options.plugins.tooltip.callbacks.label = function (tooltipItem) {
@@ -502,7 +620,7 @@ function drawSingleCurrencyLineChart(url, holder, anonymous) {
                 return label + ": " + string;
             };
 
-            let options = { ...defaultChartOptions };
+            let options = {...defaultChartOptions};
             options.scales.y.ticks.callback = yAxisCallback;
             options.plugins.tooltip.callbacks.label = labelCallback;
 
@@ -551,7 +669,7 @@ function isSameDay(d1, d2) {
     );
 }
 
-function formatLabel(str, maxwidth) {
+function formatLabel(str, maxWidth) {
     let sections = [];
     str = String(str);
     let words = str.split(" ");
@@ -561,7 +679,7 @@ function formatLabel(str, maxwidth) {
         if (temp.length > 0) {
             let concat = temp + " " + item;
 
-            if (concat.length > maxwidth) {
+            if (concat.length > maxWidth) {
                 sections.push(temp);
                 temp = "";
             } else {
@@ -580,12 +698,12 @@ function formatLabel(str, maxwidth) {
             return;
         }
 
-        if (item.length < maxwidth) {
+        if (item.length < maxWidth) {
             temp = item;
         } else {
             sections.push(item);
         }
     });
 
-    return sections;
+    return sections.join('X'); // temp value "X"
 }

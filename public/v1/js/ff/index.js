@@ -34,7 +34,7 @@ function drawChart() {
     if (billCount > 0) {
         multiCurrencyPieChart('chart/bill/frontpage', 'bills-chart');
     }
-    stackedColumnChart('chart/budget/frontpage', 'budgets-two-chart');
+    // stackedColumnChart('chart/budget/frontpage', 'budgets-two-chart');
     columnChart('chart/category/frontpage', 'categories-chart');
     columnChart(accountExpenseUrl, 'expense-accounts-chart');
     columnChart(accountRevenueUrl, 'revenue-accounts-chart');
