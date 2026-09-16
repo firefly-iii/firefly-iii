@@ -124,26 +124,26 @@ class AvailableBudgetCalculator
 
     private function correctViewRange(string $viewRange): string
     {
-        $week = ['last7']; // 'last7'
-        if(in_array($viewRange, $week, true)) {
+        $week    = ['last7']; // 'last7'
+        if (in_array($viewRange, $week, true)) {
             Log::debug(sprintf('Overrule %s to 1W', $viewRange));
 
             return '1W';
         }
-        $month = ['MTD','custom','last30'];
-        if(in_array($viewRange, $month, true)) {
+        $month   = ['MTD', 'custom', 'last30'];
+        if (in_array($viewRange, $month, true)) {
             Log::debug(sprintf('Overrule %s to 1M', $viewRange));
 
             return '1M';
         }
-        $quarter = ['QTD','last90'];
-        if(in_array($viewRange, $quarter, true)) {
+        $quarter = ['QTD', 'last90'];
+        if (in_array($viewRange, $quarter, true)) {
             Log::debug(sprintf('Overrule %s to 3M', $viewRange));
 
             return '3M';
         }
-        $year = ['YTD','last365'];
-        if(in_array($viewRange, $year, true)) {
+        $year    = ['YTD', 'last365'];
+        if (in_array($viewRange, $year, true)) {
             Log::debug(sprintf('Overrule %s to 1Y', $viewRange));
 
             return '1Y';

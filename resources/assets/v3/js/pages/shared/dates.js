@@ -67,15 +67,18 @@ export default () => ({
     language: "en_US",
 
     init() {
-
         if (false === window.enableDates) {
             // console.log("Date selection is disabled on this page.");
             document.getElementById("date-dropdown").style.display = "none";
         }
-        document.getElementById("customDateRangeCalendar").addEventListener("change", (e) => {
-            console.log('responding to change event in customDateRangeCalendar');
-            this.updateDatesNoSubmit(e);
-        });
+        document
+            .getElementById("customDateRangeCalendar")
+            .addEventListener("change", (e) => {
+                console.log(
+                    "responding to change event in customDateRangeCalendar",
+                );
+                this.updateDatesNoSubmit(e);
+            });
 
         let end = new Date(window.store.get("end"));
         let start = new Date(window.store.get("start"));
@@ -177,8 +180,6 @@ export default () => ({
         element = document.getElementsByClassName("daterange-ytd")[0];
         element.setAttribute("data-start", format(ytd.start, "yyyy-MM-dd"));
         element.setAttribute("data-end", format(ytd.end, "yyyy-MM-dd"));
-
-
     },
 
     getNextRange() {

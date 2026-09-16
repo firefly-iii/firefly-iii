@@ -148,8 +148,8 @@ function drawMultiCurrencyStackedColumnChart(url, holder, anonymous) {
                         //console.log('EMPTY What to choose from ['+i+'] (label "'+label+'" is index: '+labelIndex+') (i: '+i+', keys[i]: '+keys[i]+')?', current.entries[keys[i]]);
                         //}
                         // if (0 !== parseFloat(current.entries[keys[i]])) {
-                            // console.log('What to choose from ['+i+'] (label "'+label+'" is index: '+labelIndex+') (i: '+i+', keys[i]: '+keys[i]+')?', current.entries[keys[i]]);
-                            // datasets[key].data[labelIndex] = parseFloat(current.entries[keys[i]]) * multiplier;
+                        // console.log('What to choose from ['+i+'] (label "'+label+'" is index: '+labelIndex+') (i: '+i+', keys[i]: '+keys[i]+')?', current.entries[keys[i]]);
+                        // datasets[key].data[labelIndex] = parseFloat(current.entries[keys[i]]) * multiplier;
                         // }
                     }
                     if (
