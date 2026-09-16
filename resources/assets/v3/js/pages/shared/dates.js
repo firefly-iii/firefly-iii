@@ -39,7 +39,7 @@ export default () => ({
         // }
     },
     updateDatesNoSubmit(e) {
-        let split = e.originalTarget._props.value.split("/");
+        let split = e.currentTarget._props.value.split("/");
         console.log("Start is now " + split[0]);
         console.log("End is now   " + split[1]);
         document.getElementById("customStart").value = split[0];
