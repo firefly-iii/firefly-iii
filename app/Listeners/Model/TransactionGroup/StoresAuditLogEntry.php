@@ -34,6 +34,7 @@ class StoresAuditLogEntry implements ShouldQueue
 {
     public function handle(TransactionGroupRequestsAuditLogEntry $event): void
     {
+        Log::debug('Now in StoresAuditLogEntry::handle()');
         $array      = [
             'auditable' => $event->auditable,
             'changer'   => $event->changer,
@@ -69,7 +70,7 @@ class StoresAuditLogEntry implements ShouldQueue
             Log::debug(sprintf('Converted "before" to "%s".', $event->before));
             Log::debug(sprintf('Converted "after" to "%s".', $event->after));
         }
-
+        Log::debug(sprintf('Will now store event log for event "%s"', $array['action']));
         /** @var ALERepositoryInterface $repository */
         $repository = app(ALERepositoryInterface::class);
         $repository->store($array);

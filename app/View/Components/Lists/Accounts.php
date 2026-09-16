@@ -33,14 +33,16 @@ class Accounts extends Component
 {
     public LengthAwarePaginator $accounts;
     public string $objectType = '';
+    public int $page = 1;
 
     /**
      * Create a new component instance.
      */
-    public function __construct(LengthAwarePaginator $accounts, string $objectType)
+    public function __construct(LengthAwarePaginator $accounts, string $objectType, int $page)
     {
         $this->accounts   = $accounts;
         $this->objectType = $objectType;
+        $this->page       = $page;
     }
 
     /**

@@ -1,14 +1,14 @@
 <div class="m-2">
     {{ $accounts->links('pagination.bootstrap-4') }}
 </div>
-<table class="table table-sm table-hover" id="sortable-table">
+
+<table class="table table-sm table-hover sortable">
     <thead>
     <tr>
         <th class="w-5">&nbsp;</th>
         <th class="w-20">{{ trans('list.name') }}</th>
         @if('asset' === $objectType)
-
-        <th {{-- hide on LG and smaller. --}} class="d-lg-table-cell d-none">{{ trans('list.role') }}</th>
+            <th {{-- hide on LG and smaller. --}} class="d-lg-table-cell d-none">{{ trans('list.role') }}</th>
         @endif
         @if('liabilities' === $objectType)
             <th>{{ trans('list.liability_type') }}</th>
@@ -35,9 +35,11 @@
     </thead>
     <tbody>
     @foreach($accounts as $account)
-    <tr class="sortable-object" data-id="{{ $account->id }}" data-order="{{ $account->order }}" data-position="{{ $loop->index }}">
+    <tr class="sortable-object" data-page="{{$page}}" data-current-order="{{ $account->order }}" data-id="{{ $account->id }}" data-order="{{ $account->order }}" data-position="{{ $loop->index }}">
         <td>
-            <span class="btn btn-sm bi bi-list object-handle"></span>
+            @if(('asset' === $objectType || 'liabilities' === $objectType) && $accounts->count() > 1)
+                <span class="btn btn-outline-secondary btn-sm bi bi-list object-handle"></span>
+            @endif
         </td>
         <td>
             <a href="{{ route('accounts.show',$account->id) }}">{{ $account->name }}</a>

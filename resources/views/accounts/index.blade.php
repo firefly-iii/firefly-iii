@@ -1,12 +1,12 @@
 @extends('layout.v3.session')
 @section('content')
     @if(count($accounts) > 0)
-        <div class="row">
+        <div class="row" x-data="index">
             <div class="col-lg-12 col-md-12 col-sm-12">
                 <div class="card" id="account-index-{{ $objectType }}">
                     <x-elements.card-header-with-menu :cardTitle="trans('firefly.'.$objectType.'_accounts')" :route="route('accounts.create', $objectType) . '?_from=' . urlencode($FF3_FROM)" :linkTitle="__('firefly.make_new_'. $objectType . '_account')"/>
                     <div class="card-body p-0">
-                        <x-lists.accounts :accounts="$accounts" :objectType="$objectType" />
+                        <x-lists.accounts :accounts="$accounts" :objectType="$objectType" :page="$page ?? 1" />
                     </div>
                     <x-elements.card-footer-with-menu :route="route('accounts.create', $objectType) . '?_from=' . urlencode($FF3_FROM)" :linkTitle="__('firefly.make_new_'. $objectType . '_account')" />
                 </div>
@@ -51,13 +51,7 @@
         @endif
 
     @endif
-
 @endsection
 @section('scripts')
-    @vite(['js/pages/generic.js'])
-    <script type="text/javascript" nonce="{{ $JS_NONCE }}">
-        var objectType = '{{ e($objectType) }}';
-    </script>
-    <script src="v1/js/lib/jquery-ui.min.js?v={{ $FF_BUILD_TIME }}" type="text/javascript" nonce="{{ $JS_NONCE }}"></script>
-    <script type="text/javascript" nonce="{{ $JS_NONCE }}" src="v1/js/ff/accounts/index.js?v={{ $FF_BUILD_TIME }}"></script>
+    @vite(['js/pages/accounts/index.js'])
 @endsection

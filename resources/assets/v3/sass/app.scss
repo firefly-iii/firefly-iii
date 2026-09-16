@@ -105,12 +105,15 @@ ul.nav:nth-child(1) > li:nth-child(2) .piggy-handle {
 }
 .object-handle {
     cursor: move;
+    touch-action: none;
 }
 .rule-handle {
     cursor: move;
+    touch-action: none;
 }
 .bill-handle {
     cursor: move;
+    touch-action: none;
 }
 
 body.waiting * {

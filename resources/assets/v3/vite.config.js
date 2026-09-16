@@ -57,6 +57,7 @@ export default defineConfig(({ command }) => {
                     // accounts
                     "js/pages/accounts/create.js",
                     "js/pages/accounts/edit.js",
+                    "js/pages/accounts/index.js",
 
                     // administrations
                     "js/pages/administrations/index.js",
