@@ -54,7 +54,7 @@ class TransactionGroupTransformer extends AbstractTransformer
      */
     public function __construct()
     {
-        Log::debug('TransactionGroupTransformer constructor.');
+        // Log::debug('TransactionGroupTransformer constructor.');
         $this->groupRepos     = app(TransactionGroupRepositoryInterface::class);
         $this->metaFields     = [
             'sepa_cc',

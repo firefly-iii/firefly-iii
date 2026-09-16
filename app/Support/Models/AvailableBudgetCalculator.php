@@ -124,7 +124,7 @@ class AvailableBudgetCalculator
 
     private function correctViewRange(string $viewRange): string
     {
-        $week = []; // 'last7'
+        $week = ['last7']; // 'last7'
         if(in_array($viewRange, $week, true)) {
             Log::debug(sprintf('Overrule %s to 1W', $viewRange));
 
