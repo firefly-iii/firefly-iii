@@ -226,7 +226,7 @@
                 <img
                     src="./images/logo-session.png"
                     alt="Firefly III"
-                    class="brand-image opacity-75 shadow"
+                    class="brand-image opacity-75"
                 />
                 <!--end::Brand Image-->
                 <!--begin::Brand Text-->
