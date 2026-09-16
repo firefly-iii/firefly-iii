@@ -2,7 +2,7 @@
     {{ $accounts->links('pagination.bootstrap-4') }}
 </div>
 
-<table class="table table-sm table-hover sortable">
+<table class="table table-valign-middle table-sm table-hover sortable">
     <thead>
     <tr>
         <th class="w-5">&nbsp;</th>

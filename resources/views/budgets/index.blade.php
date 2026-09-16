@@ -208,7 +208,7 @@
                             @foreach($budgets as $budget)
                                 <tr data-id="{{ $budget['id'] }}">
                                     <td>
-                                        <a href="#" class="handle object-handle btn btn-sm"><span class="bi bi-list"></span></a>
+                                        <a href="#" class="handle object-handle btn btn-outline-secondary btn-sm"><span class="bi bi-list"></span></a>
                                     </td>
                                     <td>
                                         @if(0 === count($budget['budgeted']))

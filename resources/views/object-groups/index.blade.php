@@ -10,7 +10,7 @@
             <div class="card mb-2">
                 <x-elements.card-header-with-menu :cardTitle="__('firefly.object_groups')" :route="''" :linkTitle="''"/>
                     <div class="card-body p-0">
-                        <table class="table table-sm" id="sortable">
+                        <table class="table table-valign-middle table-sm" id="sortable">
                             <thead>
                             <tr>
                                 <th>&nbsp;</th>

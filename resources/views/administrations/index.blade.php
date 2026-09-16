@@ -25,7 +25,7 @@
                     </div>
                     <div class="card-body p-0">
                         <template x-if="administrations.length > 0">
-                        <table class="table table-responsive table-hover" aria-label="A table.">
+                        <table class="table table-md table-valign-middle table-responsive table-hover" aria-label="A table.">
                             <thead>
                             <tr>
                                 <th>{{ __('list.title') }}</th>

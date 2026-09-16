@@ -34,7 +34,6 @@ export default function (amount, currencyCode) {
         return "";
     }
     let locale = window.__localeId__.replace("_", "-");
-
     return Intl.NumberFormat(locale, {
         style: "currency",
         currency: currencyCode,

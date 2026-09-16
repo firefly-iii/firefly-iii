@@ -1,4 +1,4 @@
-<table class="table table-sm table-hover sortable">
+<table class="table table-valign-middle table-sm table-hover sortable">
     <thead>
     <tr>
         <th data-defaultsign="az">{{ __('firefly.currency') }}</th>

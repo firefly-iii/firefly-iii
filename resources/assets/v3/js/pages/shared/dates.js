@@ -93,7 +93,7 @@ export default () => ({
         this.language = window.store.get("language");
         this.locale = window.store.get("locale");
         this.locale = "equal" === this.locale ? this.language : this.locale;
-        window.__localeId__ = this.language;
+        window.__localeId__ = this.locale;
         this.buildDateRange();
 
         window.store.observe("start", (newValue) => {
