@@ -19,13 +19,13 @@
  */
 
 export function addDrag() {
-    const tbody = document.querySelector('.sortable tbody');
+    const tbody = document.querySelector(".sortable tbody");
     let draggedRow = null;
 
     // animation Helper
     function getRowOffsets() {
         const map = new Map();
-        tbody.querySelectorAll('tr').forEach(row => {
+        tbody.querySelectorAll("tr").forEach((row) => {
             map.set(row, row.getBoundingClientRect().top);
         });
         return map;
@@ -33,9 +33,13 @@ export function addDrag() {
 
     // swap logic
     function handleRowSwap(clientY, targetElement) {
-        const targetRow = targetElement.closest('tr');
+        const targetRow = targetElement.closest("tr");
 
-        if (targetRow && targetRow !== draggedRow && targetRow.parentNode === tbody) {
+        if (
+            targetRow &&
+            targetRow !== draggedRow &&
+            targetRow.parentNode === tbody
+        ) {
             const rect = targetRow.getBoundingClientRect();
             const next = (clientY - rect.top) / (rect.bottom - rect.top) > 0.5;
             const nextSibling = next ? targetRow.nextSibling : targetRow;
@@ -47,18 +51,18 @@ export function addDrag() {
 
                 const lastPositions = getRowOffsets();
 
-                tbody.querySelectorAll('tr').forEach(row => {
+                tbody.querySelectorAll("tr").forEach((row) => {
                     const firstTop = firstPositions.get(row);
                     const lastTop = lastPositions.get(row);
                     const deltaY = firstTop - lastTop;
 
                     if (deltaY !== 0) {
                         row.style.transform = `translateY(${deltaY}px)`;
-                        row.style.transition = 'none';
+                        row.style.transition = "none";
 
                         requestAnimationFrame(() => {
-                            row.style.transform = '';
-                            row.style.transition = 'transform 0.2s ease-out';
+                            row.style.transform = "";
+                            row.style.transition = "transform 0.2s ease-out";
                         });
                     }
                 });
@@ -68,30 +72,30 @@ export function addDrag() {
 
     function getRowOrder() {
         let index = 1;
-        return Array.from(tbody.querySelectorAll('tr')).map(row => ({
-            id: row.getAttribute('data-id'),
+        return Array.from(tbody.querySelectorAll("tr")).map((row) => ({
+            id: row.getAttribute("data-id"),
             order: index++,
-            currentOrder: parseInt(row.getAttribute('data-current-order')),
-            page: parseInt(row.getAttribute('data-page')),
+            currentOrder: parseInt(row.getAttribute("data-current-order")),
+            page: parseInt(row.getAttribute("data-page")),
         }));
     }
 
     // add events
-    tbody.addEventListener('mousedown', (e) => {
-        if (e.target.classList.contains('object-handle')) {
-            e.target.closest('tr').setAttribute('draggable', 'true');
+    tbody.addEventListener("mousedown", (e) => {
+        if (e.target.classList.contains("object-handle")) {
+            e.target.closest("tr").setAttribute("draggable", "true");
         }
     });
 
-    tbody.addEventListener('dragstart', (e) => {
-        draggedRow = e.target.closest('tr');
-        setTimeout(() => draggedRow.classList.add('is-dragging'), 0);
+    tbody.addEventListener("dragstart", (e) => {
+        draggedRow = e.target.closest("tr");
+        setTimeout(() => draggedRow.classList.add("is-dragging"), 0);
     });
 
-    tbody.addEventListener('dragend', () => {
+    tbody.addEventListener("dragend", () => {
         if (draggedRow) {
-            draggedRow.removeAttribute('draggable');
-            draggedRow.classList.remove('is-dragging');
+            draggedRow.removeAttribute("draggable");
+            draggedRow.classList.remove("is-dragging");
             draggedRow = null;
             const currentOrder = getRowOrder();
             const event = new CustomEvent("firefly-iii-drag-complete", {
@@ -101,35 +105,46 @@ export function addDrag() {
         }
     });
 
-    tbody.addEventListener('dragover', (e) => {
+    tbody.addEventListener("dragover", (e) => {
         e.preventDefault();
         handleRowSwap(e.clientY, e.target);
     });
 
-    tbody.addEventListener('touchstart', (e) => {
-        if (e.target.classList.contains('object-handle')) {
-            draggedRow = e.target.closest('tr');
-            draggedRow.classList.add('is-dragging');
-        }
-    }, { passive: true });
+    tbody.addEventListener(
+        "touchstart",
+        (e) => {
+            if (e.target.classList.contains("object-handle")) {
+                draggedRow = e.target.closest("tr");
+                draggedRow.classList.add("is-dragging");
+            }
+        },
+        { passive: true },
+    );
 
-    tbody.addEventListener('touchmove', (e) => {
-        if (!draggedRow) return;
+    tbody.addEventListener(
+        "touchmove",
+        (e) => {
+            if (!draggedRow) return;
 
-        // Get finger coordinates
-        const touch = e.touches[0];
+            // Get finger coordinates
+            const touch = e.touches[0];
 
-        // Find what element is currently underneath the user's finger
-        const elementUnderFinger = document.elementFromPoint(touch.clientX, touch.clientY);
+            // Find what element is currently underneath the user's finger
+            const elementUnderFinger = document.elementFromPoint(
+                touch.clientX,
+                touch.clientY,
+            );
 
-        if (elementUnderFinger) {
-            handleRowSwap(touch.clientY, elementUnderFinger);
-        }
-    }, { passive: true });
+            if (elementUnderFinger) {
+                handleRowSwap(touch.clientY, elementUnderFinger);
+            }
+        },
+        { passive: true },
+    );
 
-    tbody.addEventListener('touchend', () => {
+    tbody.addEventListener("touchend", () => {
         if (draggedRow) {
-            draggedRow.classList.remove('is-dragging');
+            draggedRow.classList.remove("is-dragging");
             draggedRow = null;
             const currentOrder = getRowOrder();
             const event = new CustomEvent("firefly-iii-drag-complete", {

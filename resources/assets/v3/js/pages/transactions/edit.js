@@ -209,7 +209,7 @@ let transactions = function () {
             console.warn("changedDateTime, event is not used");
         },
         changedGroupTitle() {
-            console.warn('changedGroupTitle: event is not used.')
+            console.warn("changedGroupTitle: event is not used.");
         },
 
         changedDescription() {

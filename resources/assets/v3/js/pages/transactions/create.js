@@ -175,7 +175,7 @@ let create = function () {
             this.detectTransactionType();
         },
         changedGroupTitle() {
-            console.warn('changedGroupTitle: event is not used.')
+            console.warn("changedGroupTitle: event is not used.");
         },
 
         changedSourceAccount() {

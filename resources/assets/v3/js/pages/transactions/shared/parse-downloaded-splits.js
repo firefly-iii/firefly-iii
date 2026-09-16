@@ -30,7 +30,9 @@ export function parseDownloadedSplits(downloads, groupId) {
             let current = createEmptySplit();
 
             // meta data
-            current.transaction_journal_id = parseInt(download.transaction_journal_id);
+            current.transaction_journal_id = parseInt(
+                download.transaction_journal_id,
+            );
             current.transaction_group_id = groupId;
             current.bill_id = download.bill_id;
             current.bill_name = download.bill_name;

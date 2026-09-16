@@ -104,10 +104,18 @@ function drawMultiCurrencyStackedColumnChart(url, holder, anonymous) {
             for (let i = 0; i < all.length; i++) {
                 if (Object.hasOwn(all, i)) {
                     let current = all[i];
-                    let label = formatLabel(current.label + " (" + current.currency_code + ")", 20);
+                    let label = formatLabel(
+                        current.label + " (" + current.currency_code + ")",
+                        20,
+                    );
 
                     // if there is NOTHING in this budget, skip it.
-                    if (0 === parseFloat(current.entries.budgeted) && 0 === parseFloat(current.entries.spent) && 0 === parseFloat(current.entries.left) && 0 === parseFloat(current.entries.overspent)) {
+                    if (
+                        0 === parseFloat(current.entries.budgeted) &&
+                        0 === parseFloat(current.entries.spent) &&
+                        0 === parseFloat(current.entries.left) &&
+                        0 === parseFloat(current.entries.overspent)
+                    ) {
                         continue;
                     }
 
@@ -148,24 +156,36 @@ function drawMultiCurrencyStackedColumnChart(url, holder, anonymous) {
                             // datasets[key].data[labelIndex] = parseFloat(current.entries[keys[i]]) * multiplier;
                         // }
                     }
-                    if (parseFloat(current.entries.spent) * -1 < parseFloat(current.entries.budgeted)) {
+                    if (
+                        parseFloat(current.entries.spent) * -1 <
+                        parseFloat(current.entries.budgeted)
+                    ) {
                         // user has not overspent.
                         let key = "budgeted" + current.currency_code;
-                        datasets[key].data[labelIndex] = 0;// parseFloat(current.entries.budgeted);
+                        datasets[key].data[labelIndex] = 0; // parseFloat(current.entries.budgeted);
 
                         key = "spent" + current.currency_code;
-                        datasets[key].data[labelIndex] = parseFloat(current.entries.spent) * -1
+                        datasets[key].data[labelIndex] =
+                            parseFloat(current.entries.spent) * -1;
 
                         key = "left" + current.currency_code;
-                        datasets[key].data[labelIndex] = parseFloat(current.entries.left);
+                        datasets[key].data[labelIndex] = parseFloat(
+                            current.entries.left,
+                        );
 
                         key = "overspent" + current.currency_code;
                         datasets[key].data[labelIndex] = 0;
                     }
-                    if (parseFloat(current.entries.spent) * -1 >= parseFloat(current.entries.budgeted) && 0 !== parseFloat(current.entries.budgeted)) {
+                    if (
+                        parseFloat(current.entries.spent) * -1 >=
+                            parseFloat(current.entries.budgeted) &&
+                        0 !== parseFloat(current.entries.budgeted)
+                    ) {
                         // user has overspent!
                         let key = "budgeted" + current.currency_code;
-                        datasets[key].data[labelIndex] = parseFloat(current.entries.budgeted);
+                        datasets[key].data[labelIndex] = parseFloat(
+                            current.entries.budgeted,
+                        );
 
                         key = "spent" + current.currency_code;
                         datasets[key].data[labelIndex] = 0;
@@ -174,16 +194,23 @@ function drawMultiCurrencyStackedColumnChart(url, holder, anonymous) {
                         datasets[key].data[labelIndex] = 0;
 
                         key = "overspent" + current.currency_code;
-                        datasets[key].data[labelIndex] = parseFloat(current.entries.overspent);
+                        datasets[key].data[labelIndex] = parseFloat(
+                            current.entries.overspent,
+                        );
                     }
 
-                    if (parseFloat(current.entries.spent) * -1 >= parseFloat(current.entries.budgeted) && 0 === parseFloat(current.entries.budgeted)) {
+                    if (
+                        parseFloat(current.entries.spent) * -1 >=
+                            parseFloat(current.entries.budgeted) &&
+                        0 === parseFloat(current.entries.budgeted)
+                    ) {
                         // user has no budget set.
                         let key = "budgeted" + current.currency_code;
                         datasets[key].data[labelIndex] = 0;
 
                         key = "spent" + current.currency_code;
-                        datasets[key].data[labelIndex] = parseFloat(current.entries.spent) * -1;
+                        datasets[key].data[labelIndex] =
+                            parseFloat(current.entries.spent) * -1;
 
                         key = "left" + current.currency_code;
                         datasets[key].data[labelIndex] = 0;
@@ -191,7 +218,6 @@ function drawMultiCurrencyStackedColumnChart(url, holder, anonymous) {
                         key = "overspent" + current.currency_code;
                         datasets[key].data[labelIndex] = 0;
                     }
-
 
                     // if there is no axis yet for this currency, create one.
                     let currencyCode = current.currency_code;
@@ -215,10 +241,8 @@ function drawMultiCurrencyStackedColumnChart(url, holder, anonymous) {
                             },
                         };
                     }
-
                 }
             }
-
 
             // loop all collected data.
             for (let i = 0; i < all.length; i++) {
@@ -228,10 +252,7 @@ function drawMultiCurrencyStackedColumnChart(url, holder, anonymous) {
                     // console.log('Now processing "' + label + '"');
                     // // add the name as a label
                     // data.labels.push(label);
-
-
                     // wil je dan niet eerst de labels + currencies maken in objectjes.
-
                     // each data set is per budget (so per label):
                     // if (!Object.hasOwn(datasets, label)) {
                     //     datasets[label] = {
@@ -242,10 +263,7 @@ function drawMultiCurrencyStackedColumnChart(url, holder, anonymous) {
                     //         yAxisID: "y" + current.currency_code,
                     //     };
                     // }
-
                     // there must be 4 data sets with a length of X budgets * currencies.
-
-
                     // there are four possible data sets for this chart
                     // // TODO this is very much hard coded.
                     // let keys = ["budgeted", "spent", "left", "overspent"];
@@ -261,10 +279,8 @@ function drawMultiCurrencyStackedColumnChart(url, holder, anonymous) {
                     //         };
                     //     }
                     // }
-
                     // for the first and all other datasets, create a new dataset object.
                     // add the data to the dataset.
-
                     // // add spent and left to the dataset, if they exist.
                     // // console.log('current', current);
                     // if (parseFloat(current.entries.spent) * -1 < parseFloat(current.entries.budgeted)) {
@@ -318,12 +334,8 @@ function drawMultiCurrencyStackedColumnChart(url, holder, anonymous) {
                     // console.log(datasets);
                     // add it to the dataset collection.
                     //data.datasets.push(dataset);
-
-
                 }
             }
-            // do a proper conversion so its in the right order?
-
 
             data.datasets = Object.values(datasets);
             // remove the standard y-axis, do not need it.
@@ -331,7 +343,7 @@ function drawMultiCurrencyStackedColumnChart(url, holder, anonymous) {
             options.scales.x.stacked = true;
             // options.scales.y.stacked = true;
             // add the new axes.
-            options.scales = {...options.scales, ...axes};
+            options.scales = { ...options.scales, ...axes };
             // console.log(options);
             // console.log(data);
 
@@ -490,7 +502,7 @@ function drawMultiCurrencyLineChart(url, holder, anonymous, drawTodayMarker) {
             delete options.scales.y;
             // options.scales.y.stacked = true;
             // add the new axes.
-            options.scales = {...options.scales, ...axes};
+            options.scales = { ...options.scales, ...axes };
 
             // add a callback for the label.
             options.plugins.tooltip.callbacks.label = function (tooltipItem) {
@@ -613,7 +625,7 @@ function drawSingleCurrencyLineChart(url, holder, anonymous) {
                 return label + ": " + string;
             };
 
-            let options = {...defaultChartOptions};
+            let options = { ...defaultChartOptions };
             options.scales.y.ticks.callback = yAxisCallback;
             options.plugins.tooltip.callbacks.label = labelCallback;
 
@@ -698,5 +710,5 @@ function formatLabel(str, maxWidth) {
         }
     });
 
-    return sections.join('X'); // temp value "X"
+    return sections.join("X"); // temp value "X"
 }
