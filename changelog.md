@@ -20,7 +20,7 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 - [Issue 12766](https://github.com/firefly-iii/firefly-iii/issues/12766) (Transaction Journals in the same Transaction Group have different `dates`) reported by @gthbusrr
 - [Issue 12740](https://github.com/firefly-iii/firefly-iii/issues/12740) (Custom date range does not work) reported by @JC5
 - [Issue 12764](https://github.com/firefly-iii/firefly-iii/issues/12764) (Restore Categories in transaction view) reported by @CountMurphy
-- #12776
+- [Issue 12776](https://github.com/firefly-iii/firefly-iii/issues/12776) (Validating new transaction title suggestion with Enter key submits the form) reported by @ThibaultNocchi
 
 ## v6.7.1 - 2026-09-15
 
