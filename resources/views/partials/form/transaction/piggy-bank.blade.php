@@ -1,4 +1,4 @@
-<template x-if="groupProperties.transactionType != 'deposit' && groupProperties.transactionType != 'withdrawal'">
+<template x-if="'edit' !== formBehaviour.formType && groupProperties.transactionType != 'deposit' && groupProperties.transactionType != 'withdrawal'">
     <div class="row mb-2">
         <label :for="'piggy_bank_id_' + index"
                class="col-sm-1 col-form-label d-none d-sm-block">

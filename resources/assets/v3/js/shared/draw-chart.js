@@ -100,7 +100,6 @@ function drawMultiCurrencyStackedColumnChart(url, holder, anonymous) {
             // make custom options set.
             let options = structuredClone(defaultChartOptions);
             let datasets = {};
-            console.log('All data is', all);
             // loop all collected data.
             for (let i = 0; i < all.length; i++) {
                 if (Object.hasOwn(all, i)) {
@@ -109,7 +108,6 @@ function drawMultiCurrencyStackedColumnChart(url, holder, anonymous) {
 
                     // if there is NOTHING in this budget, skip it.
                     if (0 === parseFloat(current.entries.budgeted) && 0 === parseFloat(current.entries.spent) && 0 === parseFloat(current.entries.left) && 0 === parseFloat(current.entries.overspent)) {
-                        console.log('SKIP', current.entries);
                         continue;
                     }
 
@@ -145,11 +143,10 @@ function drawMultiCurrencyStackedColumnChart(url, holder, anonymous) {
                         // console.log('Budget "'+current.label+'" has no amount for "'+keys[i]+'" in '+current.currency_code+' so we skip it.', current.entries[keys[i]]);
                         //console.log('EMPTY What to choose from ['+i+'] (label "'+label+'" is index: '+labelIndex+') (i: '+i+', keys[i]: '+keys[i]+')?', current.entries[keys[i]]);
                         //}
-                        if (0 !== parseFloat(current.entries[keys[i]])) {
-                            console.log('Budget "' + current.label + '" has amount for "' + keys[i] + '" in ' + current.currency_code + ' so we skip it.', current.entries[keys[i]]);
+                        // if (0 !== parseFloat(current.entries[keys[i]])) {
                             // console.log('What to choose from ['+i+'] (label "'+label+'" is index: '+labelIndex+') (i: '+i+', keys[i]: '+keys[i]+')?', current.entries[keys[i]]);
-                            datasets[key].data[labelIndex] = parseFloat(current.entries[keys[i]]) * multiplier;
-                        }
+                            // datasets[key].data[labelIndex] = parseFloat(current.entries[keys[i]]) * multiplier;
+                        // }
                     }
                     if (parseFloat(current.entries.spent) * -1 < parseFloat(current.entries.budgeted)) {
                         // user has not overspent.
@@ -325,14 +322,10 @@ function drawMultiCurrencyStackedColumnChart(url, holder, anonymous) {
 
                 }
             }
-            console.log('All labels are', data.labels);
-            console.log('All datasets are', datasets);
-            console.log('All scales are', axes);
             // do a proper conversion so its in the right order?
 
 
             data.datasets = Object.values(datasets);
-            console.log('Final datasets are', data.datasets);
             // remove the standard y-axis, do not need it.
             delete options.scales.y;
             options.scales.x.stacked = true;

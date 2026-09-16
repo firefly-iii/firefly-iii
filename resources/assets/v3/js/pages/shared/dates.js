@@ -28,6 +28,10 @@ import {
 } from "date-fns";
 import format from "../../util/format";
 
+function updateDates(e) {
+    console.log('here in updatedate');
+}
+
 export default () => ({
     range: {
         start: null,
@@ -40,11 +44,22 @@ export default () => ({
     },
     updateDates(e) {
         let split = e.originalTarget._props.value.split("/");
-        // console.log("Start is now " + split[0]);
-        // console.log("End is now   " + split[1]);
+        console.log("Start is now " + split[0]);
+        console.log("End is now   " + split[1]);
+        document.getElementById("customStart").value = split[0];
+        document.getElementById("customEnd").value = split[1];
         window.store.set("start", split[0]);
         window.store.set("end", split[1]);
         this.submitForm();
+    },
+    updateDatesNoSubmit(e) {
+        let split = e.originalTarget._props.value.split("/");
+        console.log("Start is now " + split[0]);
+        console.log("End is now   " + split[1]);
+        document.getElementById("customStart").value = split[0];
+        document.getElementById("customEnd").value = split[1];
+        window.store.set("start", split[0]);
+        window.store.set("end", split[1]);
     },
     defaultRange: {
         start: null,
@@ -66,10 +81,15 @@ export default () => ({
     language: "en_US",
 
     init() {
+
         if (false === window.enableDates) {
             // console.log("Date selection is disabled on this page.");
             document.getElementById("date-dropdown").style.display = "none";
         }
+        document.getElementById("customDateRangeCalendar").addEventListener("change", (e) => {
+            console.log('responding to change event in customDateRangeCalendar');
+            this.updateDatesNoSubmit(e);
+        });
 
         let end = new Date(window.store.get("end"));
         let start = new Date(window.store.get("start"));
@@ -172,22 +192,7 @@ export default () => ({
         element.setAttribute("data-start", format(ytd.start, "yyyy-MM-dd"));
         element.setAttribute("data-end", format(ytd.end, "yyyy-MM-dd"));
 
-        // // custom range.
-        // // console.log('MainApp: buildDateRange end');
-        // new TempusDominus(document.getElementById('datetimepicker1'), {
-        //     dateRange: true,
-        //     display: {
-        //         components: {
-        //             decades: false,
-        //             year: true,
-        //             month: true,
-        //             date: true,
-        //             hours: false,
-        //             minutes: false,
-        //             seconds: false
-        //         }
-        //     }
-        // });
+
     },
 
     getNextRange() {
