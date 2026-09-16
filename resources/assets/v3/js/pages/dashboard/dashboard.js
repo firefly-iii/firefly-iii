@@ -54,11 +54,12 @@ let index = function () {
                 drawMultiCurrencyChart(
                     "stacked-column",
                     "api/v1/chart/budget/overview-with-limits?start=" +
-                    format(start, "yyyy-LL-dd") +
-                    "&end=" +
-                    format(end, "yyyy-LL-dd"),
+                        format(start, "yyyy-LL-dd") +
+                        "&end=" +
+                        format(end, "yyyy-LL-dd"),
                     "budgets-chart",
-                    value, false
+                    value,
+                    false,
                 );
             });
         },
