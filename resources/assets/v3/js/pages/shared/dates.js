@@ -28,10 +28,6 @@ import {
 } from "date-fns";
 import format from "../../util/format";
 
-function updateDates(e) {
-    console.log('here in updatedate');
-}
-
 export default () => ({
     range: {
         start: null,
@@ -41,16 +37,6 @@ export default () => ({
         // ['@CustomEvents.change'](event) {
         //     console.log('I heard that! (dashboard/dates)');
         // }
-    },
-    updateDates(e) {
-        let split = e.originalTarget._props.value.split("/");
-        console.log("Start is now " + split[0]);
-        console.log("End is now   " + split[1]);
-        document.getElementById("customStart").value = split[0];
-        document.getElementById("customEnd").value = split[1];
-        window.store.set("start", split[0]);
-        window.store.set("end", split[1]);
-        this.submitForm();
     },
     updateDatesNoSubmit(e) {
         let split = e.originalTarget._props.value.split("/");

@@ -142,10 +142,6 @@ function drawMultiCurrencyStackedColumnChart(url, holder, anonymous) {
                                 datasets[key].data.push(0);
                             }
                         }
-                        let multiplier = 1;
-                        if ("spent" === keys[i]) {
-                            multiplier = -1;
-                        }
                         // then set the current value:
                         //if(0 === parseFloat(current.entries[keys[i]])) {
                         // console.log('Budget "'+current.label+'" has no amount for "'+keys[i]+'" in '+current.currency_code+' so we skip it.', current.entries[keys[i]]);
