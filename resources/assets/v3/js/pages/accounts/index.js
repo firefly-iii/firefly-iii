@@ -18,14 +18,13 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-
 import "../../boot/bootstrap.js";
 import sidebar from "../shared/sidebar.js";
 import dates from "../shared/dates.js";
-import {addDrag} from "../shared/drag-and-droppable-rows.js";
+import { addDrag } from "../shared/drag-and-droppable-rows.js";
 import Alpine from "alpinejs";
-import {getVariable} from "../../store/get-variable.js";
-import Put from '../../api/model/account/put.js';
+import { getVariable } from "../../store/get-variable.js";
+import Put from "../../api/model/account/put.js";
 
 window.enableDates = false;
 
@@ -33,26 +32,33 @@ let index = function () {
     return {
         listPageSize: 50,
         init() {
-        getVariable("listPageSize").then((listPageSize) => {
-            console.log(listPageSize);
-            this.listPageSize = listPageSize;
-            addDrag();
-            document.addEventListener("firefly-iii-drag-complete", (e) => {
-                for(let i = 0; i < e.detail.length; i++) {
-                    if(Object.hasOwn(e.detail, i)) {
-                        let item = e.detail[i];
-                        if(item.order !== item.currentOrder) {
-                            // PUT new order to system.
-                            (new Put).put({order: item.order}, {id: item.id});
-                            // save new order as current order in the row.
-                            document.querySelector(`tr[data-id="${item.id}"]`).setAttribute('data-current-order', item.order);
+            getVariable("listPageSize").then((listPageSize) => {
+                console.log(listPageSize);
+                this.listPageSize = listPageSize;
+                addDrag();
+                document.addEventListener("firefly-iii-drag-complete", (e) => {
+                    for (let i = 0; i < e.detail.length; i++) {
+                        if (Object.hasOwn(e.detail, i)) {
+                            let item = e.detail[i];
+                            if (item.order !== item.currentOrder) {
+                                // PUT new order to system.
+                                new Put().put(
+                                    { order: item.order },
+                                    { id: item.id },
+                                );
+                                // save new order as current order in the row.
+                                document
+                                    .querySelector(`tr[data-id="${item.id}"]`)
+                                    .setAttribute(
+                                        "data-current-order",
+                                        item.order,
+                                    );
+                            }
                         }
                     }
-                }
-                console.log(e.detail);
+                    console.log(e.detail);
+                });
             });
-
-        });
         },
     };
 };
