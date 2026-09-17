@@ -113,14 +113,6 @@ abstract class Controller extends BaseController
         $authGuard   = config('firefly.authentication_guard');
         $logoutUrl   = config('firefly.custom_logout_url');
 
-        // overrule v2 layout back to v1.
-
-        if ('true' === request()->get('force_default_layout') && 'v2' === config('view.layout')) {
-            // config('view.layout','v1');
-            Config::set('view.layout', 'v1');
-            View::getFinder()->setPaths([realpath(base_path('resources/views'))]);
-        }
-
         View::share('authGuard', $authGuard);
         View::share('logoutUrl', $logoutUrl);
 
