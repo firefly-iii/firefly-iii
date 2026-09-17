@@ -78,7 +78,9 @@ html[data-bs-theme="dark"] .money-transfer {
     a[href]::after {
         content: none !important;
     }
-    * { box-shadow: none !important; }
+    * {
+        box-shadow: none !important;
+    }
 }
 
 // custom Firefly III CSS
