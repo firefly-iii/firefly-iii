@@ -53,9 +53,6 @@ $(function () {
     if (startStr !== null && endStr !== null && startStr.length === 8 && endStr.length === 8) {
         var startDate = moment(startStr, "YYYY-MM-DD").format('YYYY-MM-DD');
         var endDate = moment(endStr, "YYYY-MM-DD").format('YYYY-MM-DD');
-        console.log('start date',startDate);
-        console.log('start date',endDate);
-
         document.getElementById('dateRange-start').value = startDate;
         document.getElementById('dateRange-end').value = endDate;
     }
