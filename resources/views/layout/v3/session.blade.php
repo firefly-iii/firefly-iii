@@ -437,6 +437,7 @@
 <div class="modal fade" tabindex="-1" role="dialog" id="customDateRangeModal" aria-hidden="true">
     <div class="modal-dialog modal-lg">
         <form action="{{ route('daterange') }}?redirect=true" method="POST" id="daterange-form">
+            @csrf
             <input type="hidden" name="start" value="" id="customStart"/>
             <input type="hidden" name="end" value="" id="customEnd"/>
             <div class="modal-content">

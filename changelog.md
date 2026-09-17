@@ -12,6 +12,7 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 - [Issue 12789](https://github.com/firefly-iii/firefly-iii/issues/12789) (Text in table cells is vertically off-center) reported by @davidschlachter
 - [Issue 12795](https://github.com/firefly-iii/firefly-iii/issues/12795) (Clicking dates in reporting section with mouse always reset both dateboxes to "gg/mm/yyyy".) reported by @no-coders
 - #12794
+- #12760
 
 ## v6.7.2 - 2026-09-16
 
