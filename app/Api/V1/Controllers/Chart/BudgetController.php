@@ -320,9 +320,13 @@ final class BudgetController extends Controller
         // is always an array
         $return      = [];
         foreach ($rows as $row) {
-
-            $label = sprintf('%s (%s - %s)', $budget->name, $row['start']->isoFormat($this->monthAndDayFormat), $row['end']->isoFormat($this->monthAndDayFormat));
-            if($row['start']->isSameDay($start) && $row['end']->isSameDay($end)) {
+            $label    = sprintf(
+                '%s (%s - %s)',
+                $budget->name,
+                $row['start']->isoFormat($this->monthAndDayFormat),
+                $row['end']->isoFormat($this->monthAndDayFormat)
+            );
+            if ($row['start']->isSameDay($start) && $row['end']->isSameDay($end)) {
                 $label = $budget->name;
             }
 
