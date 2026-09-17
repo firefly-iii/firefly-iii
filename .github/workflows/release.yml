@@ -129,14 +129,14 @@ jobs:
           echo "Will now run Mago Format"
           ./vendor/bin/mago format
           sudo chown -R runner:docker resources/lang
-          echo "Will now run PHPCS"
+          echo "Will now run PHPCS twice"
+          .ci/phpcs.sh
           .ci/phpcs.sh
 
           # lint and check
           echo "Will now run Mago Lint"
           ./vendor/bin/mago lint
-          echo "Will now run PHPstan TWICE"
-          .ci/phpstan.sh
+          echo "Will now run PHPstan"
           .ci/phpstan.sh
           rm .env
         env:
