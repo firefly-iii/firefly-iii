@@ -136,7 +136,7 @@ jobs:
           # lint and check
           echo "Will now run Mago Lint"
           ./vendor/bin/mago lint
-          echo "Will now run PHPstan TWICE"
+          echo "Will now run PHPstan"
           .ci/phpstan.sh
           rm .env
         env:
