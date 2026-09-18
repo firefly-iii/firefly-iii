@@ -19,13 +19,29 @@
  */
 
 export default function focusFirstInput() {
-    let list = document.querySelectorAll('div.app-content form input[type="text"]:enabled');
+    let list = document.querySelectorAll('div.app-content form input[type="search"]:enabled');
     if (list.length > 0) {
         list[0].focus();
+        console.log('[a] Focus on first search.');
+        return;
+    }
+    list = document.querySelectorAll('div.app-content input[type="search"]:enabled');
+    if (list.length > 0) {
+        list[0].focus();
+        console.log('[b] Focus on first search.');
+
+        return;
+    }
+    list = document.querySelectorAll('div.app-content form input[type="text"]:enabled');
+    if (list.length > 0) {
+        list[0].focus();
+        console.log('[c] Focus on first text.');
         return;
     }
     list = document.querySelectorAll('div.app-content input[type="text"]:enabled');
     if (list.length > 0) {
         list[0].focus();
+        console.log('[d] Focus on first text.');
     }
+
 }

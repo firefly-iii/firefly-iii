@@ -170,26 +170,26 @@
                                             {{ __('firefly.pref_optional_fields_transaction_help') }}
                                         </p>
                                         <h4>{{ __('firefly.optional_tj_date_fields') }}</h4>
-                                        {!! ExpandedForm::checkbox('tj[interest_date]','1', $tjOptionalFields['interest_date'],['label' => __('firefly.pref_optional_tj_interest_date')]) !!}
-                                        {!! ExpandedForm::checkbox('tj[book_date]','1', $tjOptionalFields['book_date'],['label' => __('firefly.pref_optional_tj_book_date')]) !!}
-                                        {!! ExpandedForm::checkbox('tj[process_date]','1', $tjOptionalFields['process_date'],['label' => __('firefly.pref_optional_tj_process_date')]) !!}
-                                        {!! ExpandedForm::checkbox('tj[due_date]','1', $tjOptionalFields['due_date'],['label' => __('firefly.pref_optional_tj_due_date')]) !!}
-                                        {!! ExpandedForm::checkbox('tj[payment_date]','1', $tjOptionalFields['payment_date'],['label' => __('firefly.pref_optional_tj_payment_date')]) !!}
-                                        {!! ExpandedForm::checkbox('tj[invoice_date]','1', $tjOptionalFields['invoice_date'],['label' => __('firefly.pref_optional_tj_invoice_date')]) !!}
+                                        {!! ExpandedForm::checkbox('tj[interest_date]','1', $tjOptionalFields['interest_date'] ?? false,['label' => __('firefly.pref_optional_tj_interest_date')]) !!}
+                                        {!! ExpandedForm::checkbox('tj[book_date]','1', $tjOptionalFields['book_date'] ?? false,['label' => __('firefly.pref_optional_tj_book_date')]) !!}
+                                        {!! ExpandedForm::checkbox('tj[process_date]','1', $tjOptionalFields['process_date'] ?? false,['label' => __('firefly.pref_optional_tj_process_date')]) !!}
+                                        {!! ExpandedForm::checkbox('tj[due_date]','1', $tjOptionalFields['due_date'] ?? false,['label' => __('firefly.pref_optional_tj_due_date')]) !!}
+                                        {!! ExpandedForm::checkbox('tj[payment_date]','1', $tjOptionalFields['payment_date'] ?? false,['label' => __('firefly.pref_optional_tj_payment_date')]) !!}
+                                        {!! ExpandedForm::checkbox('tj[invoice_date]','1', $tjOptionalFields['invoice_date'] ?? false,['label' => __('firefly.pref_optional_tj_invoice_date')]) !!}
 
                                         <h4>{{ __('firefly.optional_tj_other_fields') }}</h4>
-                                        {!! ExpandedForm::checkbox('tj[internal_reference]','1', $tjOptionalFields['internal_reference'],['label' => __('firefly.pref_optional_tj_internal_reference')]) !!}
-                                        {!! ExpandedForm::checkbox('tj[external_url]','1', $tjOptionalFields['external_url'],['label' => __('firefly.pref_optional_tj_external_url')]) !!}
-                                        {!! ExpandedForm::checkbox('tj[notes]','1', $tjOptionalFields['notes'],['label' => __('firefly.pref_optional_tj_notes')]) !!}
+                                        {!! ExpandedForm::checkbox('tj[internal_reference]','1', $tjOptionalFields['internal_reference'] ?? false,['label' => __('firefly.pref_optional_tj_internal_reference')]) !!}
+                                        {!! ExpandedForm::checkbox('tj[external_url]','1', $tjOptionalFields['external_url'] ?? false,['label' => __('firefly.pref_optional_tj_external_url')]) !!}
+                                        {!! ExpandedForm::checkbox('tj[notes]','1', $tjOptionalFields['notes'] ?? false,['label' => __('firefly.pref_optional_tj_notes')]) !!}
                                         @if($mapEnabled)
-                                            {!! ExpandedForm::checkbox('tj[location]','1', $tjOptionalFields['location'],['label' => __('firefly.pref_optional_tj_location')]) !!}
+                                            {!! ExpandedForm::checkbox('tj[location]','1', $tjOptionalFields['location'] ?? false,['label' => __('firefly.pref_optional_tj_location')]) !!}
                                         @else
                                             {!! ExpandedForm::checkbox('__DISABLED__','1', false, ['disabled' => true, 'helpText'=> __('firefly.no_external_map_disabled'),'label' => __('firefly.pref_optional_tj_location')]) !!}
                                         @endif
-                                        {!! ExpandedForm::checkbox('tj[links]','1', $tjOptionalFields['links'],['label' => __('firefly.pref_optional_tj_links')]) !!}
+                                        {!! ExpandedForm::checkbox('tj[links]','1', $tjOptionalFields['links'] ?? false,['label' => __('firefly.pref_optional_tj_links')]) !!}
 
                                         <h4>{{ __('firefly.optional_tj_attachment_fields') }}</h4>
-                                        {!! ExpandedForm::checkbox('tj[attachments]','1', $tjOptionalFields['attachments'], ['label' => __('firefly.pref_optional_tj_attachments')]) !!}
+                                        {!! ExpandedForm::checkbox('tj[attachments]','1', $tjOptionalFields['attachments'] ?? false, ['label' => __('firefly.pref_optional_tj_attachments')]) !!}
                                     </div>
 
                                 </div>

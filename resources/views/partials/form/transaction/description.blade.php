@@ -4,7 +4,7 @@
     </label>
     <div class="col-sm-10">
         <div class="input-group">
-        <input type="text" class="form-control ac-description"
+        <input type="search" class="form-control ac-description"
                :id="'description_' + index"
                @change="changedDescription"
                @keyup="keyUpFromDescription"
