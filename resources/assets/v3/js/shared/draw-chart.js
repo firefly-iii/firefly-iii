@@ -37,6 +37,9 @@ let defaultChartOptions = {
             display: false,
         },
         tooltip: {
+            interaction: {
+                mode: 'x'
+            },
             callbacks: {},
         },
     },
@@ -99,6 +102,14 @@ function drawMultiCurrencyStackedColumnChart(url, holder, anonymous) {
 
             // make custom options set.
             let options = structuredClone(defaultChartOptions);
+
+            //             interaction: {
+            //                 mode: 'x'
+            //             },
+            options.plugins.tooltip.interaction.mode = 'nearest';
+            // options.plugins.tooltip.interaction.mode = 'index';
+            // options.plugins.tooltip.interaction.axis = 'y';
+
             let datasets = {};
             // loop all collected data.
             for (let i = 0; i < all.length; i++) {
@@ -106,13 +117,22 @@ function drawMultiCurrencyStackedColumnChart(url, holder, anonymous) {
                     let current = all[i];
                     let label =
                         current.label + " (" + current.currency_code + ")";
+                    console.log('Now processing', label);
+
+                    current.entries.spent = parseFloat(current.entries.spent);
+                    current.entries.budgeted = parseFloat(current.entries.budgeted);
+                    current.entries.left = parseFloat(current.entries.left);
+                    current.entries.overspent = parseFloat(current.entries.overspent);
+                    if (current.entries.spent < 0) {
+                        current.entries.spent = current.entries.spent * -1;
+                    }
 
                     // if there is NOTHING in this budget, skip it.
                     if (
-                        0 === parseFloat(current.entries.budgeted) &&
-                        0 === parseFloat(current.entries.spent) &&
-                        0 === parseFloat(current.entries.left) &&
-                        0 === parseFloat(current.entries.overspent)
+                        0 === current.entries.budgeted &&
+                        0 === current.entries.spent &&
+                        0 === current.entries.left &&
+                        0 === current.entries.overspent
                     ) {
                         continue;
                     }
@@ -120,11 +140,6 @@ function drawMultiCurrencyStackedColumnChart(url, holder, anonymous) {
                     // add the name as a label
                     data.labels.push(formatLabel(label, 25));
                     let labelIndex = data.labels.length - 1;
-
-                    current.entries.spent = parseFloat(current.entries.spent);
-                    if (current.entries.spent < 0) {
-                        current.entries.spent = current.entries.spent * -1;
-                    }
 
                     /*
                     ok dus je hebt al zes labels voor alle zes de budget/currency combinaties
@@ -146,11 +161,9 @@ function drawMultiCurrencyStackedColumnChart(url, holder, anonymous) {
                             }
                         }
                     }
-                    if (
-                        current.entries.spent <
-                        parseFloat(current.entries.budgeted)
-                    ) {
-                        // user has not overspent.
+                    // user has not overspent, and there was a budget set.
+                    if (current.entries.spent < current.entries.budgeted  && 0 !== current.entries.budgeted) {
+                        // console.log('A: Is not overspent, and there was a budget', current.entries.spent, current.entries.budgeted);
                         let key = "budgeted" + current.currency_code;
                         datasets[key].data[labelIndex] = 0; // parseFloat(current.entries.budgeted);
 
@@ -158,23 +171,16 @@ function drawMultiCurrencyStackedColumnChart(url, holder, anonymous) {
                         datasets[key].data[labelIndex] = current.entries.spent;
 
                         key = "left" + current.currency_code;
-                        datasets[key].data[labelIndex] = parseFloat(
-                            current.entries.left,
-                        );
+                        datasets[key].data[labelIndex] = current.entries.left;
 
                         key = "overspent" + current.currency_code;
                         datasets[key].data[labelIndex] = 0;
                     }
-                    if (
-                        current.entries.spent >=
-                            parseFloat(current.entries.budgeted) &&
-                        0 !== parseFloat(current.entries.budgeted)
-                    ) {
-                        // user has overspent!
+                    // user has overspent and there was a budget set.
+                    if (current.entries.spent >= current.entries.budgeted && 0 !== current.entries.budgeted) {
+                        // console.log('B: Is overspent, and there was a budget', current.entries.spent, current.entries.budgeted);
                         let key = "budgeted" + current.currency_code;
-                        datasets[key].data[labelIndex] = parseFloat(
-                            current.entries.budgeted,
-                        );
+                        datasets[key].data[labelIndex] = current.entries.budgeted;
 
                         key = "spent" + current.currency_code;
                         datasets[key].data[labelIndex] = 0;
@@ -183,16 +189,10 @@ function drawMultiCurrencyStackedColumnChart(url, holder, anonymous) {
                         datasets[key].data[labelIndex] = 0;
 
                         key = "overspent" + current.currency_code;
-                        datasets[key].data[labelIndex] = parseFloat(
-                            current.entries.overspent,
-                        );
+                        datasets[key].data[labelIndex] = current.entries.overspent;
                     }
 
-                    if (
-                        current.entries.spent >=
-                            parseFloat(current.entries.budgeted) &&
-                        0 === parseFloat(current.entries.budgeted)
-                    ) {
+                    if (current.entries.spent >= current.entries.budgeted && 0 === current.entries.budgeted) {
                         // user has no budget set.
                         let key = "budgeted" + current.currency_code;
                         datasets[key].data[labelIndex] = 0;
