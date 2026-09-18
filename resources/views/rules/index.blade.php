@@ -22,7 +22,11 @@
                                 </h3>
                             </div>
                             <div class="col text-end">
-                                <div class="dropdown">
+                                <div class="btn-group">
+                                    <a href="{{ route('rules.create', $ruleGroup->id) }}?_from={{ urlencode($FF3_FROM) }}" class="btn btn-sm btn-outline-success">
+                                        <span class="bi bi-plus-circle"></span> {{ __('firefly.new_rule') }}
+                                    </a>
+                                <div class="btn-group">
                                     <button class="btn btn-sm btn-outline-secondary dropdown-toggle" type="button" id="card_header_{{ $ruleGroup->id }}" data-bs-toggle="dropdown" aria-expanded="false">
                                         <span class="bi bi-list"></span>
                                     </button>
@@ -46,6 +50,7 @@
                                                 </a></li>
                                         @endif
                                     </ul>
+                                </div>
                                 </div>
                             </div>
                         </div>

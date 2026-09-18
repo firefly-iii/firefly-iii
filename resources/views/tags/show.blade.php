@@ -9,15 +9,12 @@
 
                     <div class="box-tools text-end">
                         <div class="btn-group">
-                            <button class="btn btn-box-tool dropdown-toggle" data-toggle="dropdown"><span
-                                    class="bi bi-list"></span></button>
-                            <ul class="dropdown-menu" role="menu">
-                                <li><a href="{{ route('tags.edit',$tag->id) }}?_from={{ urlencode($FF3_FROM) }}"><span
-                                            class="bi bi-pencil"></span> {{ trans('firefly.edit_tag',['tag' => $tag->tag]) }}
-                                    </a></li>
-                                <li><a href="{{ route('tags.delete',$tag->id) }}?_from={{ urlencode($FF3_FROM) }}"><span
-                                            class="bi bi-trash"></span> {{ trans('firefly.delete_tag',['tag' => $tag->tag]) }}
-                                    </a></li>
+                            <button class="btn btn-sm btn-outline-secondary dropdown-toggle" type="button" id="card_header_meta" data-bs-toggle="dropdown" aria-expanded="false">
+                                <span class="bi bi-list"></span>
+                            </button>
+                            <ul class="dropdown-menu" aria-labelledby="card_header_meta">
+                                <li><a class="dropdown-item" href="{{ route('tags.edit',$tag->id) }}?_from={{ urlencode($FF3_FROM) }}"><span class="bi bi-pencil"></span> {{ trans('firefly.edit_tag',['tag' => $tag->tag]) }}</a></li>
+                                <li><a class="dropdown-item" href="{{ route('tags.delete',$tag->id) }}?_from={{ urlencode($FF3_FROM) }}"><span class="bi bi-trash"></span> {{ trans('firefly.delete_tag',['tag' => $tag->tag]) }}</a></li>
                             </ul>
                         </div>
                     </div>
@@ -183,15 +180,12 @@
                     <h3 class="card-title">{{ __('firefly.location') }}</h3>
                     <div class="box-tools text-end">
                         <div class="btn-group">
-                            <button class="btn btn-box-tool dropdown-toggle" data-toggle="dropdown"><span
-                                    class="bi bi-list"></span></button>
-                            <ul class="dropdown-menu" role="menu">
-                                <li><a href="{{ route('tags.edit',$tag->id) }}?_from={{ urlencode($FF3_FROM) }}"><span
-                                            class="bi bi-pencil"></span> {{ trans('firefly.edit_tag',['tag' => $tag->tag]) }}
-                                    </a></li>
-                                <li><a href="{{ route('tags.delete',$tag->id) }}?_from={{ urlencode($FF3_FROM) }}"><span
-                                            class="bi bi-trash"></span> {{ trans('firefly.delete_tag',['tag' => $tag->tag]) }}
-                                    </a></li>
+                            <button class="btn btn-sm btn-outline-secondary dropdown-toggle" type="button" id="card_header_meta" data-bs-toggle="dropdown" aria-expanded="false">
+                                <span class="bi bi-list"></span>
+                            </button>
+                            <ul class="dropdown-menu" aria-labelledby="card_header_meta">
+                                <li><a class="dropdown-item" href="{{ route('tags.edit',$tag->id) }}?_from={{ urlencode($FF3_FROM) }}"><span class="bi bi-pencil"></span> {{ trans('firefly.edit_tag',['tag' => $tag->tag]) }}</a></li>
+                                <li><a class="dropdown-item" href="{{ route('tags.delete',$tag->id) }}?_from={{ urlencode($FF3_FROM) }}"><span class="bi bi-trash"></span> {{ trans('firefly.delete_tag',['tag' => $tag->tag]) }}</a></li>
                             </ul>
                         </div>
                     </div>
@@ -240,15 +234,12 @@
 
                     <div class="box-tools text-end">
                         <div class="btn-group">
-                            <button class="btn btn-box-tool dropdown-toggle" data-toggle="dropdown"><span
-                                    class="bi bi-list"></span></button>
-                            <ul class="dropdown-menu" role="menu">
-                                <li><a href="{{ route('tags.edit',$tag->id) }}?_from={{ urlencode($FF3_FROM) }}"><span
-                                            class="bi bi-pencil"></span> {{ trans('firefly.edit_tag',['tag' => $tag->tag]) }}
-                                    </a></li>
-                                <li><a href="{{ route('tags.delete',$tag->id) }}?_from={{ urlencode($FF3_FROM) }}"><span
-                                            class="bi bi-trash"></span> {{ trans('firefly.delete_tag',['tag' => $tag->tag]) }}
-                                    </a></li>
+                            <button class="btn btn-sm btn-outline-secondary dropdown-toggle" type="button" id="card_header_meta" data-bs-toggle="dropdown" aria-expanded="false">
+                                <span class="bi bi-list"></span>
+                            </button>
+                            <ul class="dropdown-menu" aria-labelledby="card_header_meta">
+                                <li><a class="dropdown-item" href="{{ route('tags.edit',$tag->id) }}?_from={{ urlencode($FF3_FROM) }}"><span class="bi bi-pencil"></span> {{ trans('firefly.edit_tag',['tag' => $tag->tag]) }}</a></li>
+                                <li><a class="dropdown-item" href="{{ route('tags.delete',$tag->id) }}?_from={{ urlencode($FF3_FROM) }}"><span class="bi bi-trash"></span> {{ trans('firefly.delete_tag',['tag' => $tag->tag]) }}</a></li>
                             </ul>
                         </div>
                     </div>

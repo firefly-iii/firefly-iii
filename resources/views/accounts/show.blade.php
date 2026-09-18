@@ -28,7 +28,11 @@
                             </h3>
                         </div>
                         <div class="col text-end">
-                            <div class="dropdown">
+                            <div class="btn-group">
+                            <a href="{{ route('transactions.create', ['withdrawal']) }}?source={{ $account->id }}" class="btn btn-sm btn-outline-success">
+                                <span class="bi bi-plus-circle"></span> {{ __('firefly.create_new_transaction') }}
+                            </a>
+                            <div class="btn-group">
                                 <button class="btn btn-sm btn-outline-secondary dropdown-toggle" type="button" id="card_header_menu" data-bs-toggle="dropdown" aria-expanded="false">
                                     <span class="bi bi-list"></span>
                                 </button>
@@ -42,6 +46,7 @@
                                         </li>
                                     </ul>
                                 </div>
+                            </div>
                         </div>
                     </div>
 
