@@ -177,7 +177,7 @@ export function addAutocomplete(options) {
             },
         },
         queryParam: "query",
-        hiddenInput: true,
+        hiddenInput: false,
         // preventBrowserAutocomplete: true,
         highlightTyped: true,
         liveServer: true,
