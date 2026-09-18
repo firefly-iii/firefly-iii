@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="{{ __('config.html_language') }}">
+<html lang="{{ __('config.html_language') }}" data-lte-print="plain">
 <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
     <meta charset="UTF-8">
