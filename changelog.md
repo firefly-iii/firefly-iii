@@ -3,7 +3,39 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
-## v6.7.3 - 2026-09-17
+## v6.7.4 - 2026-09-xx
+
+<!-- summary: This release fixes ... If you can read this I forgot to update the summary! -->
+
+### Added
+
+- Initial release.
+
+### Changed
+
+- Initial release.
+
+### Deprecated
+
+- Initial release.
+
+### Removed
+
+- Initial release.
+
+### Fixed
+
+- #12819
+
+### Security
+
+- Initial release.
+
+### API
+
+- Initial release.
+
+## v6.7.3 - 2026-09-18
 
 ### Fixed 
 - [Discussion 12760](https://github.com/orgs/firefly-iii/discussions/12760) (419 Page expired when selecting a different date range) started by @wecoyote5

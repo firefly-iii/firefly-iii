@@ -52,7 +52,7 @@
                         </h3>
                     </div>
                     <div class="card-body p-0">
-                        <x-lists.attachments attachments="$attachments" />
+                        <x-lists.attachments :attachments="$attachments" />
                     </div>
                 </div>
             </div>
