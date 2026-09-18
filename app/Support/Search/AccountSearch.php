@@ -29,6 +29,7 @@ use FireflyIII\User;
 use Illuminate\Contracts\Auth\Authenticatable;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Support\Collection;
+
 use function Safe\json_encode;
 
 /**
@@ -36,20 +37,20 @@ use function Safe\json_encode;
  */
 class AccountSearch implements GenericSearchInterface
 {
-    public const string SEARCH_ALL = 'all';
+    public const string SEARCH_ALL    = 'all';
 
-    public const string SEARCH_IBAN = 'iban';
+    public const string SEARCH_IBAN   = 'iban';
 
-    public const string SEARCH_ID = 'id';
+    public const string SEARCH_ID     = 'id';
 
-    public const string SEARCH_NAME = 'name';
+    public const string SEARCH_NAME   = 'name';
 
     public const string SEARCH_NUMBER = 'number';
 
-    private string    $field;
-    private string    $query;
-    private array     $types = [];
-    private User      $user;
+    private string $field;
+    private string $query;
+    private array $types              = [];
+    private User $user;
     private UserGroup $userGroup;
 
     public function search(): Collection
@@ -83,7 +84,7 @@ class AccountSearch implements GenericSearchInterface
                 break;
 
             case self::SEARCH_ID:
-                $searchQuery->where('accounts.id', '=', (int)$originalQuery);
+                $searchQuery->where('accounts.id', '=', (int) $originalQuery);
 
                 break;
 
@@ -126,7 +127,7 @@ class AccountSearch implements GenericSearchInterface
         $this->types = $types;
     }
 
-    public function setUser(Authenticatable | User | null $user): void
+    public function setUser(Authenticatable|User|null $user): void
     {
         if ($user instanceof User) {
             $this->user      = $user;
