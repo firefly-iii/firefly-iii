@@ -89,6 +89,7 @@ class AccountUpdateService
         $this->accountRepository->setUserGroup($account->userGroup);
         $this->user                = $account->user;
         $this->userGroup           = $account->userGroup;
+        $this->userGroup->toArray();
         $oldData                   = $account->toArray();
         $oldData['account_number'] = $this->accountRepository->getMetaValue($account, 'account_number');
         $account                   = $this->updateAccount($account, $data);

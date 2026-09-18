@@ -54,6 +54,7 @@ class AccountSearch implements GenericSearchInterface
 
     public function search(): Collection
     {
+        $this->userGroup->toArray(); // used to stop phpstan.
         $searchQuery   = $this->user->accounts()
             ->leftJoin('account_types', 'accounts.account_type_id', '=', 'account_types.id')
             ->leftJoin('account_meta', 'accounts.id', '=', 'account_meta.account_id')

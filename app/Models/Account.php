@@ -46,6 +46,7 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 /**
  * @property AccountType $accountType
  * @property User        $user
+ * @property UserGroup $userGroup
  */
 #[ObservedBy([DeletedAccountObserver::class])]
 class Account extends Model
