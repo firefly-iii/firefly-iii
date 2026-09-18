@@ -144,7 +144,6 @@ export function addAllAutocompleteToForm() {
             onSelectItem: changeDescription,
         });
     }, 100);
-
 }
 
 export function addAutocomplete(options) {
@@ -174,25 +173,25 @@ export function addAutocomplete(options) {
     if (typeof options.onRenderItem !== "undefined" && null !== options.onRenderItem) {
         params.onRenderItem = options.onRenderItem;
     }
-    if (Object.hasOwn(options, 'valueField')) {
+    if (Object.hasOwn(options, "valueField")) {
         params.valueField = options.valueField;
     }
-    if (Object.hasOwn(options, 'suggestionsThreshold')) {
+    if (Object.hasOwn(options, "suggestionsThreshold")) {
         params.suggestionsThreshold = options.suggestionsThreshold;
     }
-    if (Object.hasOwn(options, 'debounceTime')) {
+    if (Object.hasOwn(options, "debounceTime")) {
         params.debounceTime = options.debounceTime;
     }
-    if (Object.hasOwn(options, 'labelField')) {
+    if (Object.hasOwn(options, "labelField")) {
         params.labelField = options.labelField;
     }
-    if (Object.hasOwn(options, 'onSelectItem')) {
+    if (Object.hasOwn(options, "onSelectItem")) {
         params.onSelectItem = options.onSelectItem;
     }
-    if (Object.hasOwn(options, 'onChange')) {
+    if (Object.hasOwn(options, "onChange")) {
         params.onChange = options.onChange;
     }
-    if (Object.hasOwn(options, 'hiddenValue')) {
+    if (Object.hasOwn(options, "hiddenValue")) {
         params.hiddenValue = options.hiddenValue;
     }
 
