@@ -14,6 +14,7 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 - [Issue 12794](https://github.com/firefly-iii/firefly-iii/issues/12794) (Mobile layout: Budget and Spending chart is not displayed) reported by @MaxMapo
 - [Discussion 12760](https://github.com/orgs/firefly-iii/discussions/12760) (419 Page expired when selecting a different date range) started by @wecoyote5
 - #12803
+- #12781
 
 ## v6.7.2 - 2026-09-16
 

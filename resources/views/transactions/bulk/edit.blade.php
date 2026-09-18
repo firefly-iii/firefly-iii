@@ -131,7 +131,7 @@
                                         <td>
                                             <select @change="detectTagChange"
                                                 class="form-select ac-tags"
-                                                name="tags"
+                                                name="tags[]"
                                                 multiple>
                                                 <option value="">{{ __('firefly.select_tag') }}</option>
                                             </select>
