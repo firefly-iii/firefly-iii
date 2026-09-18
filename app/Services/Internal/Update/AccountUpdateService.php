@@ -30,6 +30,7 @@ use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Models\Account;
 use FireflyIII\Models\AccountType;
 use FireflyIII\Models\Location;
+use FireflyIII\Models\UserGroup;
 use FireflyIII\Repositories\Account\AccountRepositoryInterface;
 use FireflyIII\Services\Internal\Support\AccountServiceTrait;
 use FireflyIII\Support\Facades\Preferences;
@@ -51,6 +52,7 @@ class AccountUpdateService
     protected array $validFields;
     private array $canHaveOpeningBalance;
     private User $user;
+    private UserGroup $userGroup;
 
     /**
      * Constructor.
@@ -67,6 +69,12 @@ class AccountUpdateService
     public function setUser(User $user): void
     {
         $this->user = $user;
+        $this->userGroup = $user->userGroup;
+    }
+
+    public function setUserGroup(UserGroup $userGroup): void
+    {
+        $this->userGroup = $userGroup;
     }
 
     /**
@@ -78,7 +86,9 @@ class AccountUpdateService
     {
         Log::debug(sprintf('Now in %s', __METHOD__));
         $this->accountRepository->setUser($account->user);
+        $this->accountRepository->setUserGroup($account->userGroup);
         $this->user                = $account->user;
+        $this->userGroup           = $account->userGroup;
         $oldData                   = $account->toArray();
         $oldData['account_number'] = $this->accountRepository->getMetaValue($account, 'account_number');
         $account                   = $this->updateAccount($account, $data);
