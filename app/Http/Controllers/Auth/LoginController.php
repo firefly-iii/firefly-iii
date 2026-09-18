@@ -283,7 +283,7 @@ final class LoginController extends Controller
         return $request->wantsJson() ? new JsonResponse([], 204) : redirect()->to($path);
     }
 
-    protected function throttleKey(Request $request)
+    protected function throttleKey(Request $request): string
     {
         return Str::transliterate($request->ip());
     }
