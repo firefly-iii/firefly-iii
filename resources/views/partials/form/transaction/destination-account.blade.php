@@ -5,9 +5,11 @@
     </label>
     <div class="col-sm-10">
         <template x-if="transaction.destination_account.loading">
+            <span class="form-control-plaintext">
             <div class="spinner-border spinner-border-sm" role="status">
                 <span class="visually-hidden">{{ __('firefly.thinking') }}</span>
             </div>
+            </span>
         </template>
         <template x-if="!transaction.destination_account.loading">
         <div class="input-group">
