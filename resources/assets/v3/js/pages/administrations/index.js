@@ -44,23 +44,15 @@ let index = function () {
                         let administration = {
                             id: current.id,
                             title: current.attributes.title,
-                            currency_code:
-                                current.attributes.primary_currency_code,
-                            currency_name:
-                                current.attributes.primary_currency_name,
+                            currency_code: current.attributes.primary_currency_code,
+                            currency_name: current.attributes.primary_currency_name,
                         };
                         this.administrations.push(administration);
                     }
                 }
 
-                if (
-                    response.data.meta.pagination.current_page <
-                    response.data.meta.pagination.total_pages
-                ) {
-                    this.downloadAdministrations(
-                        parseInt(response.data.meta.pagination.current_page) +
-                            1,
-                    );
+                if (response.data.meta.pagination.current_page < response.data.meta.pagination.total_pages) {
+                    this.downloadAdministrations(parseInt(response.data.meta.pagination.current_page) + 1);
                 }
             });
         },

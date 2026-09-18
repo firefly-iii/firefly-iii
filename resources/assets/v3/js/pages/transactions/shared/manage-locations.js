@@ -35,9 +35,7 @@ function addPointToMap(e) {
     // index is always 0.
     // let index = parseInt(e.originalEvent.currentTarget.attributes['data-index'].value);
     let index = 0;
-    let hasLocation =
-        document.querySelector("#form")._x_dataStack[0].$data.entries[index]
-            .hasLocation;
+    let hasLocation = document.querySelector("#form")._x_dataStack[0].$data.entries[index].hasLocation;
 
     if (false === hasLocation) {
         markers[index] = new L.marker(e.latlng, { draggable: true });
@@ -102,8 +100,7 @@ export function addLocation(index) {
 
             L.tileLayer("https://tile.openstreetmap.org/{z}/{x}/{y}.png", {
                 maxZoom: 19,
-                attribution:
-                    '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>',
+                attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>',
             }).addTo(maps[index]);
             maps[index].on("click", addPointToMap);
             maps[index].on("zoomend", saveZoomOfMap);

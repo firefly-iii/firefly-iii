@@ -19,9 +19,7 @@
  */
 import Tags from "bootstrap5-tags";
 function createTagField(fieldIdentifier) {
-    let token = document
-        .querySelector('meta[name="csrf-token"]')
-        .getAttribute("content");
+    let token = document.querySelector('meta[name="csrf-token"]').getAttribute("content");
     Tags.init("#" + fieldIdentifier, {
         allowNew: true,
         allowClear: true,

@@ -59,12 +59,9 @@ let rates = function () {
             this.from_code = parts[parts.length - 2].toUpperCase();
             this.to_code = parts[parts.length - 1].toUpperCase();
 
-            const params = new Proxy(
-                new URLSearchParams(window.location.search),
-                {
-                    get: (searchParams, prop) => searchParams.get(prop),
-                },
-            );
+            const params = new Proxy(new URLSearchParams(window.location.search), {
+                get: (searchParams, prop) => searchParams.get(prop),
+            });
             this.page = parseInt(params.page ?? 1);
 
             this.downloadCurrencies();
@@ -93,11 +90,7 @@ let rates = function () {
             return false;
         },
         saveButtonDisabled: function (index) {
-            return (
-                ("" === this.rates[index].rate &&
-                    "" === this.rates[index].inverse) ||
-                this.updating
-            );
+            return ("" === this.rates[index].rate && "" === this.rates[index].inverse) || this.updating;
         },
         updateRate: function (index) {
             let parts = this.spliceKey(this.rates[index].key);
@@ -123,14 +116,9 @@ let rates = function () {
                 }
                 if (0 !== parseInt(this.rates[index].rate_id)) {
                     // console.log("[a] PUT, not POST.");
-                    new Put()
-                        .put(
-                            { rate: this.rates[index].rate },
-                            { id: this.rates[index].rate_id },
-                        )
-                        .then(() => {
-                            this.updating = false;
-                        });
+                    new Put().put({ rate: this.rates[index].rate }, { id: this.rates[index].rate_id }).then(() => {
+                        this.updating = false;
+                    });
                 }
             }
             if ("" !== this.rates[index].inverse) {
@@ -154,10 +142,7 @@ let rates = function () {
                 if (0 !== parseInt(this.rates[index].inverse_id)) {
                     // console.log("[b] PUT, not POST.");
                     new Put()
-                        .put(
-                            { rate: this.rates[index].inverse },
-                            { id: this.rates[index].inverse_id },
-                        )
+                        .put({ rate: this.rates[index].inverse }, { id: this.rates[index].inverse_id })
                         .then(() => {
                             this.updating = false;
                         });
@@ -222,104 +207,74 @@ let rates = function () {
             this.tempRates = {};
             this.loading = true;
             // console.log("Now downloading rates.", page);
-            new GetRate()
-                .get(this.from_code, this.to_code, { page: page })
-                .then((response) => {
-                    for (let i in response.data.data) {
-                        if (Object.hasOwn(response.data.data, i)) {
-                            // console.log("Downloaded entry #" + i);
-                            let current = response.data.data[i];
-                            let date = new Date(current.attributes.date);
-                            let from_code =
-                                current.attributes.from_currency_code.toUpperCase();
-                            let to_code =
-                                current.attributes.to_currency_code.toUpperCase();
-                            let rate = current.attributes.rate;
-                            let inverse = "";
-                            let rate_id = current.id;
-                            let inverse_id = "0";
-                            let key =
-                                from_code +
-                                "_" +
-                                to_code +
-                                "_" +
-                                format(date, "yyyy-MM-dd");
-                            // console.log('Key is now "' + key + '"');
+            new GetRate().get(this.from_code, this.to_code, { page: page }).then((response) => {
+                for (let i in response.data.data) {
+                    if (Object.hasOwn(response.data.data, i)) {
+                        // console.log("Downloaded entry #" + i);
+                        let current = response.data.data[i];
+                        let date = new Date(current.attributes.date);
+                        let from_code = current.attributes.from_currency_code.toUpperCase();
+                        let to_code = current.attributes.to_currency_code.toUpperCase();
+                        let rate = current.attributes.rate;
+                        let inverse = "";
+                        let rate_id = current.id;
+                        let inverse_id = "0";
+                        let key = from_code + "_" + to_code + "_" + format(date, "yyyy-MM-dd");
+                        // console.log('Key is now "' + key + '"');
 
-                            // perhaps the returned rate is actually the inverse rate.
-                            if (
-                                from_code === this.to_code &&
-                                to_code === this.from_code
-                            ) {
-                                // console.log('Inverse rate found!');
-                                key =
-                                    to_code +
-                                    "_" +
-                                    from_code +
-                                    "_" +
-                                    format(date, "yyyy-MM-dd");
-                                rate = "";
-                                // new: set rate id to zero.
-                                rate_id = "0";
-                                inverse = current.attributes.rate;
-                                inverse_id = current.id;
-                                // console.log('Key updated to "' + key + '"');
-                            }
-
-                            if (!Object.hasOwn(this.tempRates, key)) {
-                                // console.log("New entry stored");
-                                this.tempRates[key] = {
-                                    key: key,
-                                    date: date,
-                                    rate_id: rate_id,
-                                    inverse_id: inverse_id,
-                                    date_formatted: format(
-                                        date,
-                                        this.i18next.t("config.date_time_fns"),
-                                    ),
-                                    date_field:
-                                        current.attributes.date.substring(
-                                            0,
-                                            10,
-                                        ),
-                                    rate: rate,
-                                    inverse: "",
-                                };
-                            }
-
-                            // inverse is not "" and existing inverse is ""?
-                            if (
-                                Object.hasOwn(this.tempRates, key) &&
-                                inverse !== "" &&
-                                this.tempRates[key].inverse === ""
-                            ) {
-                                this.tempRates[key].inverse = inverse;
-                                this.tempRates[key].inverse_id = inverse_id;
-                            }
-                            // rate is not "" and existing rate is ""?
-                            if (
-                                Object.hasOwn(this.tempRates, key) &&
-                                rate !== "" &&
-                                this.tempRates[key].rate === ""
-                            ) {
-                                this.tempRates[key].rate = rate;
-                                this.tempRates[key].rate_id = rate_id;
-                            }
-                            // console.log(
-                            //     "Found exchange rate #" +
-                            //         this.tempRates[key].rate_id +
-                            //         " with inverse #" +
-                            //         this.tempRates[key].inverse_id,
-                            // );
+                        // perhaps the returned rate is actually the inverse rate.
+                        if (from_code === this.to_code && to_code === this.from_code) {
+                            // console.log('Inverse rate found!');
+                            key = to_code + "_" + from_code + "_" + format(date, "yyyy-MM-dd");
+                            rate = "";
+                            // new: set rate id to zero.
+                            rate_id = "0";
+                            inverse = current.attributes.rate;
+                            inverse_id = current.id;
+                            // console.log('Key updated to "' + key + '"');
                         }
+
+                        if (!Object.hasOwn(this.tempRates, key)) {
+                            // console.log("New entry stored");
+                            this.tempRates[key] = {
+                                key: key,
+                                date: date,
+                                rate_id: rate_id,
+                                inverse_id: inverse_id,
+                                date_formatted: format(date, this.i18next.t("config.date_time_fns")),
+                                date_field: current.attributes.date.substring(0, 10),
+                                rate: rate,
+                                inverse: "",
+                            };
+                        }
+
+                        // inverse is not "" and existing inverse is ""?
+                        if (
+                            Object.hasOwn(this.tempRates, key) &&
+                            inverse !== "" &&
+                            this.tempRates[key].inverse === ""
+                        ) {
+                            this.tempRates[key].inverse = inverse;
+                            this.tempRates[key].inverse_id = inverse_id;
+                        }
+                        // rate is not "" and existing rate is ""?
+                        if (Object.hasOwn(this.tempRates, key) && rate !== "" && this.tempRates[key].rate === "") {
+                            this.tempRates[key].rate = rate;
+                            this.tempRates[key].rate_id = rate_id;
+                        }
+                        // console.log(
+                        //     "Found exchange rate #" +
+                        //         this.tempRates[key].rate_id +
+                        //         " with inverse #" +
+                        //         this.tempRates[key].inverse_id,
+                        // );
                     }
-                    this.totalPages = parseInt(
-                        response.data.meta.pagination.total_pages,
-                    );
-                    this.loading = false;
-                    this.rates = Object.values(this.tempRates);
-                    // console.log('Do not download more pages. Now on page ' + this.page + ' of ' + this.totalPages);
-                });
+                }
+                this.totalPages = parseInt(response.data.meta.pagination.total_pages);
+                this.loading = false;
+                this.rates = Object.values(this.tempRates);
+                // console.log('Do not download more pages. Now on page ' + this.page + ' of ' + this.totalPages);
+            });
         },
     };
 };

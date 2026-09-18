@@ -44,10 +44,7 @@ export function autoStep() {
             this.autoStep(); // yes, recurring.
         });
     }
-    if (
-        Object.hasOwn(this.formBehaviour.customFields, "links") &&
-        false === this.formBehaviour.customFields.links
-    ) {
+    if (Object.hasOwn(this.formBehaviour.customFields, "links") && false === this.formBehaviour.customFields.links) {
         this.formStates.storedLinks = true;
         this.formStates.loadingLinks = false;
     }
@@ -60,19 +57,13 @@ export function autoStep() {
     ) {
         for (let i = 0; i < this.entries.length; i++) {
             if (Object.hasOwn(this.entries, i)) {
-                this.createLinkAutocomplete(
-                    "links_modal_search_" + i,
-                    "api/v1/autocomplete/transactions-with-meta",
-                );
+                this.createLinkAutocomplete("links_modal_search_" + i, "api/v1/autocomplete/transactions-with-meta");
                 if (
                     0 !== parseInt(this.entries[i].transaction_journal_id) &&
                     !isNaN(parseInt(this.entries[i].transaction_journal_id))
                 ) {
                     // load the links for this transaction journal.
-                    this.loadTransactionLinks(
-                        i,
-                        parseInt(this.entries[i].transaction_journal_id),
-                    );
+                    this.loadTransactionLinks(i, parseInt(this.entries[i].transaction_journal_id));
                 }
             }
         }

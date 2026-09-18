@@ -21,13 +21,9 @@
 export function keyUpFromDestination(e) {
     let target = e.currentTarget.nextSibling;
     setTimeout(() => {
-        this.formStates.destinationSelectVisible =
-            target.classList.contains("show");
+        this.formStates.destinationSelectVisible = target.classList.contains("show");
     }, 600);
-    if (
-        e.key === "Enter" &&
-        false === this.formStates.destinationSelectVisible
-    ) {
+    if (e.key === "Enter" && false === this.formStates.destinationSelectVisible) {
         this.save();
     }
 }

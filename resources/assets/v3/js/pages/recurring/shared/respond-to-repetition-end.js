@@ -23,23 +23,17 @@ function respondToRepetitionEnd() {
     var value = obj.value;
     switch (value) {
         case "forever":
-            document.getElementById("repeat_until_holder").style.display =
-                "none";
-            document.getElementById("repetitions_holder").style.display =
-                "none";
+            document.getElementById("repeat_until_holder").style.display = "none";
+            document.getElementById("repetitions_holder").style.display = "none";
             break;
         case "until_date":
-            document.getElementById("repeat_until_holder").style.display =
-                "block";
-            document.getElementById("repetitions_holder").style.display =
-                "none";
+            document.getElementById("repeat_until_holder").style.display = "block";
+            document.getElementById("repetitions_holder").style.display = "none";
 
             break;
         case "times":
-            document.getElementById("repeat_until_holder").style.display =
-                "none";
-            document.getElementById("repetitions_holder").style.display =
-                "block";
+            document.getElementById("repeat_until_holder").style.display = "none";
+            document.getElementById("repetitions_holder").style.display = "block";
             break;
     }
 }

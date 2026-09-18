@@ -24,8 +24,5 @@ export function parseTotalAmount() {
     if (this.entries.length === 0) {
         return formatMoney(this.groupProperties.totalAmount, "EUR");
     }
-    return formatMoney(
-        this.groupProperties.totalAmount,
-        this.entries[0].currency_code ?? "EUR",
-    );
+    return formatMoney(this.groupProperties.totalAmount, this.entries[0].currency_code ?? "EUR");
 }

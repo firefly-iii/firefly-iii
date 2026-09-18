@@ -24,10 +24,6 @@ export function addTabListener() {
     // console.log('tabEl length is now', tabEl.length);
     for (let i = 0; i < tabEl.length; i++) {
         tabEl[i].removeEventListener("shown.bs.tab", this.respondToTabSwitch);
-        tabEl[i].addEventListener(
-            "shown.bs.tab",
-            this.respondToTabSwitch.bind(this),
-            true,
-        );
+        tabEl[i].addEventListener("shown.bs.tab", this.respondToTabSwitch.bind(this), true);
     }
 }

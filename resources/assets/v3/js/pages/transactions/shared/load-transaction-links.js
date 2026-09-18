@@ -14,32 +14,18 @@ export function loadTransactionLinks(index, journalId) {
             if (Object.hasOwn(links, i)) {
                 let current = links[i];
                 // console.log('Get link info for link #' + current.id);
-                let direction =
-                    parseInt(journalId) ===
-                    parseInt(current.attributes.inward_id)
-                        ? "outward"
-                        : "inward";
+                let direction = parseInt(journalId) === parseInt(current.attributes.inward_id) ? "outward" : "inward";
                 let otherJournal = parseInt(current.attributes.inward_id);
-                if (
-                    parseInt(journalId) ===
-                    parseInt(current.attributes.inward_id)
-                ) {
+                if (parseInt(journalId) === parseInt(current.attributes.inward_id)) {
                     otherJournal = parseInt(current.attributes.outward_id);
                 }
                 new Get().showJournal(otherJournal).then((response) => {
                     let group = response.data.data;
                     let foundJournal = null;
-                    for (
-                        let j = 0;
-                        j < group.attributes.transactions.length;
-                        j++
-                    ) {
+                    for (let j = 0; j < group.attributes.transactions.length; j++) {
                         if (Object.hasOwn(group.attributes.transactions, j)) {
                             let journal = group.attributes.transactions[j];
-                            if (
-                                parseInt(journal.transaction_journal_id) ===
-                                otherJournal
-                            ) {
+                            if (parseInt(journal.transaction_journal_id) === otherJournal) {
                                 foundJournal = journal;
                             }
                         }
@@ -49,22 +35,13 @@ export function loadTransactionLinks(index, journalId) {
                         // console.log("Current link is, found opposing. ", parseInt(current.id));
                         this.links[index].push({
                             id: parseInt(current.id),
-                            link_type:
-                                parseInt(current.attributes.link_type_id) +
-                                "_" +
-                                direction,
-                            link_type_id: parseInt(
-                                current.attributes.link_type_id,
-                            ),
+                            link_type: parseInt(current.attributes.link_type_id) + "_" + direction,
+                            link_type_id: parseInt(current.attributes.link_type_id),
                             link_type_direction: direction,
                             link_type_label: this.formData.linkTypes.find(
-                                (link) =>
-                                    link.id ===
-                                    parseInt(current.attributes.link_type_id),
+                                (link) => link.id === parseInt(current.attributes.link_type_id),
                             )[direction],
-                            journal_id: parseInt(
-                                foundJournal.transaction_journal_id,
-                            ),
+                            journal_id: parseInt(foundJournal.transaction_journal_id),
                             group_id: parseInt(group.id),
                             journal_description: foundJournal.description,
                             editMode: false,

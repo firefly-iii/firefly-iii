@@ -45,8 +45,7 @@ export function renderMap(index, useDefault) {
     L.tileLayer("https://tile.openstreetmap.org/{z}/{x}/{y}.png", {
         maxZoom: 19,
         referrerPolicy: "origin-when-cross-origin",
-        attribution:
-            '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>',
+        attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>',
     }).addTo(this.maps[index]);
 
     if ("true" === el.dataset.addMarker) {

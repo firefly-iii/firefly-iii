@@ -72,37 +72,21 @@ let index = function () {
                     if (Object.hasOwn(response.data.data, i)) {
                         let current = response.data.data[i];
                         let currentAmount =
-                            null === current.attributes.current_amount
-                                ? "0"
-                                : current.attributes.current_amount;
+                            null === current.attributes.current_amount ? "0" : current.attributes.current_amount;
                         let targetAmount =
-                            null === current.attributes.target_amount
-                                ? "0"
-                                : current.attributes.target_amount;
+                            null === current.attributes.target_amount ? "0" : current.attributes.target_amount;
                         let piggy = {
                             id: current.id,
                             name: current.attributes.name,
                             percentage:
-                                null === current.attributes.percentage
-                                    ? 0
-                                    : parseInt(current.attributes.percentage),
+                                null === current.attributes.percentage ? 0 : parseInt(current.attributes.percentage),
                             amount:
-                                formatMoney(
-                                    currentAmount,
-                                    current.attributes.currency_code,
-                                ) +
+                                formatMoney(currentAmount, current.attributes.currency_code) +
                                 " / " +
-                                formatMoney(
-                                    targetAmount,
-                                    current.attributes.currency_code,
-                                ),
+                                formatMoney(targetAmount, current.attributes.currency_code),
                         };
                         if (null === current.attributes.target_amount) {
-                            piggy.amount =
-                                formatMoney(
-                                    currentAmount,
-                                    current.attributes.currency_code,
-                                ) + " / ∞";
+                            piggy.amount = formatMoney(currentAmount, current.attributes.currency_code) + " / ∞";
                         }
                         if (this.anonymous) {
                             piggy.amount = "- / -";
@@ -112,9 +96,7 @@ let index = function () {
                     }
                 }
 
-                let totalPages = parseInt(
-                    response.data.meta.pagination.total_pages,
-                );
+                let totalPages = parseInt(response.data.meta.pagination.total_pages);
                 if (totalPages > page) {
                     this.downloadPiggyBanks(page + 1);
                     return;

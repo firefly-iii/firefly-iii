@@ -23,9 +23,7 @@ import formatMoney from "../../../util/format-money.js";
 import { format } from "date-fns";
 
 export function createLinkAutocomplete(fieldIdentifier, url) {
-    let token = document
-        .querySelector('meta[name="csrf-token"]')
-        .getAttribute("content");
+    let token = document.querySelector('meta[name="csrf-token"]').getAttribute("content");
 
     const renderJournal = function (item) {
         return (
@@ -33,10 +31,7 @@ export function createLinkAutocomplete(fieldIdentifier, url) {
             '<br><small class="text-muted">' +
             formatMoney(item.amount, item.currency_code) +
             " @ " +
-            format(
-                new Date(item.date),
-                this.i18next.t("config.date_time_fns"),
-            ) +
+            format(new Date(item.date), this.i18next.t("config.date_time_fns")) +
             "</small>"
         );
     };

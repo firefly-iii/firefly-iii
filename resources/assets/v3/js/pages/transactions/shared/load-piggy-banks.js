@@ -46,8 +46,7 @@ export function loadPiggyBanks() {
             if (Object.hasOwn(response.data.data, i)) {
                 let current = response.data.data[i];
                 let objectGroupId = current.attributes.object_group_id ?? "0";
-                let objectGroupTitle =
-                    current.attributes.object_group_title ?? "(no group)";
+                let objectGroupTitle = current.attributes.object_group_title ?? "(no group)";
                 let piggyBank = {
                     id: current.id,
                     name: current.attributes.name,
@@ -62,9 +61,7 @@ export function loadPiggyBanks() {
                     };
                 }
                 piggyBanks[objectGroupId].piggyBanks.push(piggyBank);
-                piggyBanks[objectGroupId].piggyBanks.sort(
-                    (a, b) => a.order - b.order,
-                );
+                piggyBanks[objectGroupId].piggyBanks.sort((a, b) => a.order - b.order);
             }
         }
         //tempObject.sort((a,b) => a.order - b.order);

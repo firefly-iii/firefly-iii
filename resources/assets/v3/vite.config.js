@@ -27,12 +27,8 @@ export default defineConfig(({ command }) => {
     let https = null;
     if (command === "serve") {
         https = {
-            key: fs.readFileSync(
-                `/vagrant/tls-certificates/wildcard.sd.internal.key`,
-            ),
-            cert: fs.readFileSync(
-                `/vagrant/tls-certificates/wildcard.sd.internal.crt`,
-            ),
+            key: fs.readFileSync(`/vagrant/tls-certificates/wildcard.sd.internal.key`),
+            cert: fs.readFileSync(`/vagrant/tls-certificates/wildcard.sd.internal.crt`),
         };
     }
 

@@ -45,9 +45,7 @@ export function spliceErrorsIntoTransactions(errors, transactions) {
             fieldName = key.split(".")[2];
             errorArray = cleanupErrors(key, fieldName, errors[key]);
             if (!Object.hasOwn(transactions, transactionIndex)) {
-                console.error(
-                    "Cannot handle errors in index #" + transactionIndex,
-                );
+                console.error("Cannot handle errors in index #" + transactionIndex);
                 continue;
             }
             switch (fieldName) {
@@ -73,62 +71,41 @@ export function spliceErrorsIntoTransactions(errors, transactions) {
                 case "bill_id":
                 case "description":
                 case "tags":
-                    transactions[transactionIndex].errors[fieldName] =
-                        errorArray;
+                    transactions[transactionIndex].errors[fieldName] = errorArray;
                     break;
                 case "source_name":
                 case "source_id":
                     transactions[transactionIndex].errors.source_account =
-                        transactions[
-                            transactionIndex
-                        ].errors.source_account.concat(errorArray);
+                        transactions[transactionIndex].errors.source_account.concat(errorArray);
                     break;
                 case "type":
                     // add custom error to source and destination account
-                    transactions[transactionIndex].errors.source_account =
-                        transactions[
-                            transactionIndex
-                        ].errors.source_account.concat([
-                            i18next.t("validation.bad_type_source"),
-                        ]);
-                    transactions[transactionIndex].errors.destination_account =
-                        transactions[
-                            transactionIndex
-                        ].errors.destination_account.concat([
-                            i18next.t("validation.bad_type_destination"),
-                        ]);
+                    transactions[transactionIndex].errors.source_account = transactions[
+                        transactionIndex
+                    ].errors.source_account.concat([i18next.t("validation.bad_type_source")]);
+                    transactions[transactionIndex].errors.destination_account = transactions[
+                        transactionIndex
+                    ].errors.destination_account.concat([i18next.t("validation.bad_type_destination")]);
                     break;
                 case "destination_name":
                 case "destination_id":
                     transactions[transactionIndex].errors.destination_account =
-                        transactions[
-                            transactionIndex
-                        ].errors.destination_account.concat(errorArray);
+                        transactions[transactionIndex].errors.destination_account.concat(errorArray);
                     break;
                 case "foreign_amount":
                 case "foreign_currency_id":
                     transactions[transactionIndex].errors.foreign_amount =
-                        transactions[
-                            transactionIndex
-                        ].errors.foreign_amount.concat(errorArray);
+                        transactions[transactionIndex].errors.foreign_amount.concat(errorArray);
                     break;
             }
             // unique some errors.
             if (typeof transactions[transactionIndex] !== "undefined") {
-                transactions[transactionIndex].errors.source_account =
-                    Array.from(
-                        new Set(
-                            transactions[transactionIndex].errors
-                                .source_account,
-                        ),
-                    );
-                transactions[transactionIndex].errors.destination_account =
-                    Array.from(
-                        new Set(
-                            transactions[transactionIndex].errors
-                                .destination_account,
-                        ),
-                    );
+                transactions[transactionIndex].errors.source_account = Array.from(
+                    new Set(transactions[transactionIndex].errors.source_account),
+                );
+                transactions[transactionIndex].errors.destination_account = Array.from(
+                    new Set(transactions[transactionIndex].errors.destination_account),
+                );
             }
         }
     }

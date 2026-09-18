@@ -30,9 +30,7 @@ export function parseDownloadedSplits(downloads, groupId) {
             let current = createEmptySplit();
 
             // meta data
-            current.transaction_journal_id = parseInt(
-                download.transaction_journal_id,
-            );
+            current.transaction_journal_id = parseInt(download.transaction_journal_id);
             current.transaction_group_id = groupId;
             current.bill_id = download.bill_id;
             current.bill_name = download.bill_name;
@@ -58,15 +56,13 @@ export function parseDownloadedSplits(downloads, groupId) {
             current.tags = download.tags;
 
             // amount
-            current.amount = parseFloat(download.amount).toFixed(
-                download.currency_decimal_places,
-            );
+            current.amount = parseFloat(download.amount).toFixed(download.currency_decimal_places);
             current.currency_code = download.currency_code;
             if (null !== download.foreign_amount) {
                 current.foreign_currency_code = download.foreign_currency_code;
-                current.foreign_amount = parseFloat(
-                    download.foreign_amount,
-                ).toFixed(download.foreign_currency_decimal_places);
+                current.foreign_amount = parseFloat(download.foreign_amount).toFixed(
+                    download.foreign_currency_decimal_places,
+                );
             }
 
             // date and description

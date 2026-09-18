@@ -21,13 +21,9 @@
 export function switchLink(e) {
     let rowIndex = parseInt(e.currentTarget.dataset.rowIndex);
     let index = parseInt(e.currentTarget.dataset.index);
-    let linkTypeId = parseInt(
-        this.links[index][rowIndex].link_type.split("_")[0],
-    );
+    let linkTypeId = parseInt(this.links[index][rowIndex].link_type.split("_")[0]);
     let linkTypeDirection = this.links[index][rowIndex].link_type.split("_")[1];
-    let linkType = this.formData.linkTypes.find(
-        (link) => link.id === linkTypeId,
-    );
+    let linkType = this.formData.linkTypes.find((link) => link.id === linkTypeId);
     // switch link type.
     linkTypeDirection = "inward" === linkTypeDirection ? "outward" : "inward";
     if (typeof linkType === "undefined") {
@@ -35,8 +31,7 @@ export function switchLink(e) {
         // console.log(this.formData.linkTypes);
         return;
     }
-    this.links[index][rowIndex].link_type =
-        linkType.id + "_" + linkTypeDirection;
+    this.links[index][rowIndex].link_type = linkType.id + "_" + linkTypeDirection;
     this.links[index][rowIndex].link_type_label = linkType[linkTypeDirection];
     this.links[index][rowIndex].link_type_direction = linkTypeDirection;
 }
