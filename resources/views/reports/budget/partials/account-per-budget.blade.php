@@ -1,4 +1,4 @@
-<table class="table table-hover sortable table-sm">
+<table class="table table-valign-middle table-hover sortable table-sm">
     <thead>
     <tr>
         <th data-defaultsign="az">{{ __('firefly.name') }}</th>

@@ -1,4 +1,4 @@
-<table class="table table-striped table-sm">
+<table class="table table-valign-middle table-striped table-sm">
     <thead>
     <tr class="ignore">
         <th class="hidden-xs" colspan="2">&nbsp;</th>

@@ -36,12 +36,7 @@ let show = function () {
             getVariable("anonymous").then((value) => {
                 const page = window.location.href.split("/");
                 const piggyBankID = parseInt(page[page.length - 1]);
-                drawSingleCurrencyChart(
-                    "line",
-                    "chart/piggy-bank/" + piggyBankID,
-                    "piggy-bank-history",
-                    value,
-                );
+                drawSingleCurrencyChart("line", "chart/piggy-bank/" + piggyBankID, "piggy-bank-history", value);
             });
         },
         confirmHistoryRemoval() {

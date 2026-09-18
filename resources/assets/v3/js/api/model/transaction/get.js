@@ -40,9 +40,6 @@ export default class Get {
         });
     }
     transactionLinks(id, params) {
-        return api.get(
-            "/api/v1/transaction-journals/" + parseInt(id) + "/links",
-            { params: params },
-        );
+        return api.get("/api/v1/transaction-journals/" + parseInt(id) + "/links", { params: params });
     }
 }

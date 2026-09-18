@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="{{ __('config.html_language') }}">
+<html lang="{{ __('config.html_language') }}" data-lte-print="plain">
 <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
     <meta charset="UTF-8">
@@ -437,6 +437,7 @@
 <div class="modal fade" tabindex="-1" role="dialog" id="customDateRangeModal" aria-hidden="true">
     <div class="modal-dialog modal-lg">
         <form action="{{ route('daterange') }}?redirect=true" method="POST" id="daterange-form">
+            <input name="_token" type="hidden" value="{{ csrf_token() }}">
             <input type="hidden" name="start" value="" id="customStart"/>
             <input type="hidden" name="end" value="" id="customEnd"/>
             <div class="modal-content">

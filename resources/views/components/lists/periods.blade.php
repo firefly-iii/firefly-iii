@@ -5,7 +5,7 @@
         </h3>
     </div>
     <div class="card-body p-0">
-        <table class="table table-sm">
+        <table class="table table-valign-middle table-sm">
             @if($period['total_transactions'] > 0)
                 <tr>
                     <td class="third">{{ __('firefly.transactions') }}</td>

@@ -56,14 +56,8 @@ let index = function () {
                     }
                 }
 
-                if (
-                    response.data.meta.pagination.current_page <
-                    response.data.meta.pagination.total_pages
-                ) {
-                    this.downloadCurrencies(
-                        parseInt(response.data.meta.pagination.current_page) +
-                            1,
-                    );
+                if (response.data.meta.pagination.current_page < response.data.meta.pagination.total_pages) {
+                    this.downloadCurrencies(parseInt(response.data.meta.pagination.current_page) + 1);
                 }
             });
         },

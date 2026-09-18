@@ -1,7 +1,7 @@
 <div class="pl-3">
     {{ $categories->links('pagination.bootstrap-4') }}
 </div>
-<table class="table table-sm table-hover sortable">
+<table class="table table-valign-middle table-sm table-hover sortable">
     <thead>
     <tr>
         <th data-defaultsign="az">{{ trans('list.name') }}</th>

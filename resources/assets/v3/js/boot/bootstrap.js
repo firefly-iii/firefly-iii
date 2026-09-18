@@ -56,118 +56,112 @@ getFreshVariable("lastActivity")
         // console.log('Cache valid:  ' + (localValue === serverValue));
     })
     .then(() => {
-        Promise.resolve(
-            getVariables([
-                "viewRange",
-                "darkMode",
-                "locale",
-                "language",
-                "convert_to_primary",
-            ]),
-        ).then((values) => {
-            if (!store.get("start") || !store.get("end")) {
-                // calculate new start and end, and store them.
-                const range = getViewRange(values.viewRange, new Date());
-                store.set("start", range.start);
-                store.set("end", range.end);
-            }
-            //
-            if ("equal" === values.locale) {
-                values.locale = values.language;
-            }
-
-            // save local in window.__ something
-            window.__localeId__ = values.locale;
-            store.set("language", values.language);
-            store.set("locale", values.locale);
-            // console.log(
-            //     "Language is " +
-            //         values.language +
-            //         ", locale is " +
-            //         values.locale,
-            // );
-            loadTranslations(values.locale).then(() => {
-                const event = new Event("firefly-iii-bootstrapped");
-                document.dispatchEvent(event);
-                window.bootstrapped = true;
-                // console.log('Bootstrapped!');
-
-                // page may have an introduction necessary to be played.
-                if (!window.showTour) {
-                    return;
+        Promise.resolve(getVariables(["viewRange", "darkMode", "locale", "language", "convert_to_primary"])).then(
+            (values) => {
+                if (!store.get("start") || !store.get("end")) {
+                    // calculate new start and end, and store them.
+                    const range = getViewRange(values.viewRange, new Date());
+                    store.set("start", range.start);
+                    store.set("end", range.end);
                 }
-                const url = "/";
-                let site = axios.create({
-                    baseURL: url,
-                    withCredentials: true,
-                });
-                axios.defaults.withCredentials = true;
-                axios.defaults.baseURL = url;
+                //
+                if ("equal" === values.locale) {
+                    values.locale = values.language;
+                }
 
-                site.get(window.routeStepsUrl).then(function (data) {
-                    let hints = data.data;
+                // save local in window.__ something
+                window.__localeId__ = values.locale;
+                store.set("language", values.language);
+                store.set("locale", values.locale);
+                // console.log(
+                //     "Language is " +
+                //         values.language +
+                //         ", locale is " +
+                //         values.locale,
+                // );
+                loadTranslations(values.locale).then(() => {
+                    const event = new Event("firefly-iii-bootstrapped");
+                    document.dispatchEvent(event);
+                    window.bootstrapped = true;
+                    // console.log('Bootstrapped!');
 
-                    const tour = new Shepherd.Tour({
-                        useModalOverlay: true,
-                        defaultStepOptions: {
-                            // classes: 'shadow-md bg-purple-dark',
-                            scrollTo: true,
-                            cancelIcon: {
-                                enabled: true,
-                            },
-                        },
-                    });
-                    // cancel or complete
-                    tour.on("cancel", () => {
-                        site.post(window.routeForFinishedTour);
-                    });
-                    tour.on("complete", () => {
-                        site.post(window.routeForFinishedTour);
-                    });
-
-                    for (let i = 0; i < hints.length; i++) {
-                        if (Object.hasOwn(hints, i)) {
-                            let hint = hints[i];
-
-                            let buttons = [];
-                            if (i > 0) {
-                                buttons.push({
-                                    text: i18next.t("firefly.intro_prev_label"),
-                                    action: tour.back,
-                                });
-                            }
-                            if (i < hints.length - 1) {
-                                buttons.push({
-                                    text: i18next.t("firefly.intro_next_label"),
-                                    action: tour.next,
-                                });
-                            }
-                            if (i === hints.length - 1) {
-                                // console.log("Add complete");
-                                buttons.push({
-                                    text: i18next.t("firefly.intro_done_label"),
-                                    action: tour.complete,
-                                });
-                            }
-
-                            let step = {
-                                // id: 'example-step',
-                                text: hint.text,
-                                buttons: buttons,
-                            };
-                            if (Object.hasOwn(hint, "element")) {
-                                step.attachTo = {
-                                    element: hint.element,
-                                    on: hint.position,
-                                };
-                            }
-                            tour.addStep(step);
-                        }
+                    // page may have an introduction necessary to be played.
+                    if (!window.showTour) {
+                        return;
                     }
-                    tour.start();
+                    const url = "/";
+                    let site = axios.create({
+                        baseURL: url,
+                        withCredentials: true,
+                    });
+                    axios.defaults.withCredentials = true;
+                    axios.defaults.baseURL = url;
+
+                    site.get(window.routeStepsUrl).then(function (data) {
+                        let hints = data.data;
+
+                        const tour = new Shepherd.Tour({
+                            useModalOverlay: true,
+                            defaultStepOptions: {
+                                // classes: 'shadow-md bg-purple-dark',
+                                scrollTo: true,
+                                cancelIcon: {
+                                    enabled: true,
+                                },
+                            },
+                        });
+                        // cancel or complete
+                        tour.on("cancel", () => {
+                            site.post(window.routeForFinishedTour);
+                        });
+                        tour.on("complete", () => {
+                            site.post(window.routeForFinishedTour);
+                        });
+
+                        for (let i = 0; i < hints.length; i++) {
+                            if (Object.hasOwn(hints, i)) {
+                                let hint = hints[i];
+
+                                let buttons = [];
+                                if (i > 0) {
+                                    buttons.push({
+                                        text: i18next.t("firefly.intro_prev_label"),
+                                        action: tour.back,
+                                    });
+                                }
+                                if (i < hints.length - 1) {
+                                    buttons.push({
+                                        text: i18next.t("firefly.intro_next_label"),
+                                        action: tour.next,
+                                    });
+                                }
+                                if (i === hints.length - 1) {
+                                    // console.log("Add complete");
+                                    buttons.push({
+                                        text: i18next.t("firefly.intro_done_label"),
+                                        action: tour.complete,
+                                    });
+                                }
+
+                                let step = {
+                                    // id: 'example-step',
+                                    text: hint.text,
+                                    buttons: buttons,
+                                };
+                                if (Object.hasOwn(hint, "element")) {
+                                    step.attachTo = {
+                                        element: hint.element,
+                                        on: hint.position,
+                                    };
+                                }
+                                tour.addStep(step);
+                            }
+                        }
+                        tour.start();
+                    });
                 });
-            });
-        });
+            },
+        );
     })
     .catch((error) => {
         console.error("Error while bootstrapping: " + error);

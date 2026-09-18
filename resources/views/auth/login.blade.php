@@ -60,6 +60,8 @@
                     <input type="password" id="password" name="password" class="form-control" placeholder="{{ trans('form.password') }}" @if(true===$IS_DEMO_SITE)value="{{ $DEMO_PASSWORD }}"@endif autocomplete="current-password">
                     <div class="input-group-text">
                         <em class="bi bi-lock"></em>
+                    </div>
+                    <div class="input-group-text">
                         <em class="bi bi-eye-slash" id="togglePassword"></em>
                     </div>
                 </div> <!--begin::Row-->

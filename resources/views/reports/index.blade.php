@@ -45,13 +45,13 @@
                         <div class="row mb-2">
                             <label for="inputDateRange" class="col-sm-3 col-form-label">{{ __('firefly.report_date_range') }}</label>
                             <div class="col-sm-4">
-                                <input type="date" value="{{ session('start')->format('Y-m-d') }}" class="date-select form-control" name="start" id="dateRange-start" />
+                                <input type="date" value="{{ session('start')->format('Y-m-d') }}" class="form-control" name="start" id="dateRange-start" />
                             </div>
                             <div class="col-sm-1">
                                 &nbsp;
                             </div>
                             <div class="col-sm-4">
-                                <input type="date"  value="{{ session('end')->format('Y-m-d') }}" class="date-select form-control" name="end" id="dateRange-end" />
+                                <input type="date"  value="{{ session('end')->format('Y-m-d') }}" class="form-control" name="end" id="dateRange-end" />
                             </div>
                         </div>
                         <div class="row mb-2">

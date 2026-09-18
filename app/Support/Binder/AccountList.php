@@ -47,6 +47,7 @@ class AccountList implements BinderInterface
                     ->user()
                     ->accounts()
                     ->leftJoin('account_types', 'account_types.id', '=', 'accounts.account_type_id')
+                    ->where('accounts.active', true)
                     ->whereIn('account_types.type', [
                         AccountTypeEnum::ASSET->value,
                         AccountTypeEnum::LOAN->value,

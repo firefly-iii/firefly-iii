@@ -24,15 +24,11 @@ export function saveNewLink(e) {
     let linkSelect = document.getElementById("link_type_id_" + index);
     let linkType = linkSelect.value;
     let searchBox = document.getElementById("links_modal_search_" + index);
-    let hiddenField = searchBox.parentNode.querySelector(
-        'input[name="search"]',
-    );
+    let hiddenField = searchBox.parentNode.querySelector('input[name="search"]');
 
     let linkTypeId = parseInt(linkType.split("_")[0]);
     let linkTypeDirection = linkType.split("_")[1];
-    let linkTypeObj = this.formData.linkTypes.find(
-        (link) => link.id === linkTypeId,
-    );
+    let linkTypeObj = this.formData.linkTypes.find((link) => link.id === linkTypeId);
 
     if ("" === linkType || "" === hiddenField.value || "" === searchBox.value) {
         return;

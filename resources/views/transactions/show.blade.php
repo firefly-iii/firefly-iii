@@ -561,9 +561,9 @@
         var modalDialogURL = '{{ route('transactions.link.modal', ['%JOURNAL%']) }}';
         var groupURL = '{{ route('transactions.show',['%GROUP%']) }}';
         var switchLinkUrl = '{{ route('transactions.link.switch') }}';
-
+        var cloneGroupUrl = '{{ route('transactions.clone') }}';
+        var cloneAndEditUrl = '{{ route('transactions.clone') }}?redirect=edit';
     </script>
-
     @vite(['js/pages/transactions/show.js'])
 
     {{-- new auto complete --}}

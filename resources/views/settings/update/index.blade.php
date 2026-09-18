@@ -46,7 +46,7 @@
                             {{ __('firefly.admin_update_check_now_explain') }}
                         </p>
                         <p>
-                            <a href="{{ route('settings.update-check.manual') }}" class="btn btn-info">{{ _('firefly.check_for_updates_button') }}</a>
+                            <a href="{{ route('settings.update-check.manual') }}" class="btn btn-info">{{ __('firefly.check_for_updates_button') }}</a>
                         </p>
                     </div>
                 </div>

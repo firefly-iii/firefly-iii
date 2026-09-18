@@ -7,7 +7,7 @@
                                                   :route="route('subscriptions.create')"
                                                   :linkTitle="__('firefly.create_new_bill')"/>
                 <div class="card-body p-0">
-                    <table class="table table-hover table-sm" id="bill-sortable">
+                    <table class="table table-valign-middle table-hover table-sm" id="bill-sortable">
                         <thead>
                         <tr>
                             <th class="w-5">&nbsp;</th>

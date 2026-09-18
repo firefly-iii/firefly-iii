@@ -28,19 +28,13 @@ export function getVariable(name, defaultValue = null) {
     // to make things available quicker than if the store has to grab it through the API.
     // then again, it's not that slow.
     if (validCache && Object.hasOwn(window, name)) {
-        console.log(
-            'Returning "' + name + '" from window with value: ',
-            window[name],
-        );
+        console.log('Returning "' + name + '" from window with value: ', window[name]);
         return Promise.resolve(window[name]);
     }
     // load from store2, if it's present.
     const fromStore = window.store.get(name);
     if (validCache && typeof fromStore !== "undefined") {
-        console.log(
-            'Returning "' + name + '" from store with value: ',
-            fromStore,
-        );
+        console.log('Returning "' + name + '" from store with value: ', fromStore);
         return Promise.resolve(fromStore);
     }
     let getter = new Get();
@@ -48,10 +42,7 @@ export function getVariable(name, defaultValue = null) {
     return getter
         .getByName(name)
         .then((response) => {
-            console.log(
-                'Returning "' + name + '" from server with value: ',
-                parseResponse(name, response),
-            );
+            console.log('Returning "' + name + '" from server with value: ', parseResponse(name, response));
             return Promise.resolve(parseResponse(name, response));
         })
         .catch((error) => {
@@ -64,10 +55,7 @@ export function getVariable(name, defaultValue = null) {
             // POST it and then return it anyway.
             let poster = new Post();
             return poster.post(name, defaultValue).then((response) => {
-                console.log(
-                    'Returning "' + name + '" from POST with value: ',
-                    parseResponse(name, response),
-                );
+                console.log('Returning "' + name + '" from POST with value: ', parseResponse(name, response));
                 return Promise.resolve(parseResponse(name, response));
             });
         });

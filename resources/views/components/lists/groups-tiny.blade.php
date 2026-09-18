@@ -1,4 +1,4 @@
-<table class="table table-sm table-hover">
+<table class="table table-valign-middle table-sm table-hover">
     @foreach($transactions as $transaction)
 <tr>
     <td class="w-10">

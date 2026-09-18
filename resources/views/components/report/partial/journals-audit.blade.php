@@ -1,4 +1,4 @@
-<table class="table table-hover table-sm table-responsive ">
+<table class="table table-valign-middle table-hover table-sm table-responsive ">
     <thead>
     <tr class="ignore">
         <th class="hide-buttons">&nbsp;</th>

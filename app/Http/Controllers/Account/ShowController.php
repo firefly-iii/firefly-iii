@@ -162,7 +162,6 @@ final class ShowController extends Controller
         Log::debug('End collect transactions');
         $timer->stop('collection');
         $groups->setPath(route('accounts.show', [$account->id, $start->format('Y-m-d'), $end->format('Y-m-d')]));
-        $showAll          = false;
         $now              = now();
         if ($now->gt($end) || $now->lt($start)) {
             $now = $end;
@@ -174,7 +173,7 @@ final class ShowController extends Controller
 
         return view('accounts.show', [
             'account'      => $account,
-            'showAll'      => $showAll,
+            'showAll'      => false,
             'objectType'   => $objectType,
             'currency'     => $currency,
             'today'        => $today,

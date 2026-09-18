@@ -24,6 +24,7 @@ import dates from "../shared/dates.js";
 import { defaultErrorSet } from "./shared/create-empty-split.js";
 import { parseFromEntries } from "./shared/parse-from-entries.js";
 import Post from "../../api/model/transaction/post.js";
+import Get from "../../api/model/account/get.js";
 import { loadCurrencies } from "./shared/load-currencies.js";
 import { loadBudgets } from "./shared/load-budgets.js";
 import { loadPiggyBanks } from "./shared/load-piggy-banks.js";
@@ -40,10 +41,7 @@ import i18next from "i18next";
 import { processUploadError } from "./shared/process-upload-error.js";
 import { showMessageOrRedirectUser } from "./shared/show-message-or-redirect.js";
 import { addSplit } from "./shared/add-split.js";
-import {
-    clearDestinationAccount,
-    clearSourceAccount,
-} from "./shared/clear-fields.js";
+import { clearDestinationAccount, clearSourceAccount } from "./shared/clear-fields.js";
 import { detectTransactionType } from "./shared/detect-transaction-type.js";
 import { determineAmountCurrency } from "./shared/determine-amount-currency.js";
 import { loadCustomFields } from "./shared/load-custom-fields.js";
@@ -71,6 +69,7 @@ import Alpine from "alpinejs";
 import { keyUpFromSource } from "./shared/keyup-from-source.js";
 import { keyUpFromDestination } from "./shared/keyup-from-destination.js";
 import { keyUpFromDescription } from "./shared/keyup-from-description.js";
+import focusFirstInput from "../../shared/focus-first-input.js";
 
 window.enableDates = false;
 
@@ -240,19 +239,13 @@ let create = function () {
             list.push(currency);
             this.formData.foreignCurrencies = list;
             // is he source account currency anyway:
-            if (
-                1 === list.length &&
-                list[0].code === this.entries[0].source_account.currency_code
-            ) {
+            if (1 === list.length && list[0].code === this.entries[0].source_account.currency_code) {
                 // console.log(
                 //     "Foreign currency is same as source currency. Disable foreign amount.",
                 // );
                 this.formBehaviour.foreignCurrencyEnabled = false;
             }
-            if (
-                1 === list.length &&
-                list[0].code !== this.entries[0].source_account.currency_code
-            ) {
+            if (1 === list.length && list[0].code !== this.entries[0].source_account.currency_code) {
                 // console.log(
                 //     "Foreign currency is NOT same as source currency. Enable foreign amount.",
                 // );
@@ -284,6 +277,43 @@ let create = function () {
         clearCategory(index) {
             this.entries[index].category_name = "";
         },
+        fillSourceAccount() {
+            this.fillAccount("source", "source_account");
+        },
+        fillDestinationAccount() {
+            this.fillAccount("destination", "destination_account");
+        },
+        fillAccount(direction, field) {
+            this.entries[0][field].loading = true;
+            const urlParams = new URLSearchParams(window.location.search);
+            const accountId = parseInt(urlParams.get(direction));
+            if (accountId > 0) {
+                new Get().get(accountId).then((response) => {
+                    // source ID must be asset account or liabilities.
+                    let account = response.data.data;
+                    let attributes = response.data.data.attributes;
+                    if ("asset" !== attributes.type && "liabilities" !== attributes.type) {
+                        return;
+                    }
+                    let type = "Asset account";
+                    if ("liabilities" === attributes.type) {
+                        type =
+                            String(attributes.liability_type).charAt(0).toUpperCase() +
+                            String(attributes.liability_type).slice(1);
+                    }
+                    this.entries[0][field] = {
+                        id: account.id,
+                        loading: false,
+                        name: attributes.name,
+                        type: type,
+                        alpine_name: attributes.name,
+                        disabled: false,
+                    };
+                });
+                return;
+            }
+            this.entries[0][field].loading = false;
+        },
 
         init() {
             this.i18next = i18next;
@@ -297,6 +327,9 @@ let create = function () {
                 this.formData.primaryCurrencies = data.primaryCurrencies;
                 this.formData.foreignCurrencies = data.foreignCurrencies;
                 this.autoStep();
+                focusFirstInput();
+                this.fillSourceAccount();
+                this.fillDestinationAccount();
             });
 
             loadBudgets(false).then((data) => {
@@ -324,9 +357,7 @@ let create = function () {
             document.addEventListener("upload-success", () => {
                 // console.log('Now in event listener "upload-success"');
                 this.processUpload();
-                document
-                    .querySelectorAll("input[type=file]")
-                    .forEach((input) => (input.value = ""));
+                document.querySelectorAll("input[type=file]").forEach((input) => (input.value = ""));
             });
 
             document.addEventListener("upload-error", (event) => {
@@ -355,11 +386,7 @@ let create = function () {
             this.detectTransactionType();
 
             // parse transaction:
-            let transactions = parseFromEntries(
-                this.entries,
-                null,
-                this.groupProperties.transactionType,
-            );
+            let transactions = parseFromEntries(this.entries, null, this.groupProperties.transactionType);
             let submission = {
                 group_title: this.groupProperties.title,
                 fire_webhooks: this.formStates.webhooksButton,
@@ -368,11 +395,7 @@ let create = function () {
             };
 
             // catch for group title:
-            if (
-                transactions.length > 1 &&
-                ("" === submission.group_title ||
-                    null === submission.group_title)
-            ) {
+            if (transactions.length > 1 && ("" === submission.group_title || null === submission.group_title)) {
                 submission.group_title = transactions[0].description;
             }
 
@@ -386,42 +409,27 @@ let create = function () {
                     // submission was a success!
                     this.groupProperties.id = parseInt(group.id);
                     this.groupProperties.title =
-                        group.attributes.group_title ??
-                        group.attributes.transactions[0].description;
+                        group.attributes.group_title ?? group.attributes.transactions[0].description;
 
                     // submit all transaction links, based on the order of the transaction IDs
                     let transactions = [];
-                    for (
-                        let i = 0;
-                        i < group.attributes.transactions.length;
-                        i++
-                    ) {
+                    for (let i = 0; i < group.attributes.transactions.length; i++) {
                         if (Object.hasOwn(group.attributes.transactions, i)) {
-                            transactions.push(
-                                parseInt(
-                                    group.attributes.transactions[i]
-                                        .transaction_journal_id,
-                                ),
-                            );
+                            transactions.push(parseInt(group.attributes.transactions[i].transaction_journal_id));
                         }
                     }
                     // console.log("Go to process transactions", transactions);
                     this.processTransactionLinks(transactions);
                     // console.log("Done with process transactions", transactions);
                     // process attachments, if any:
-                    const attachmentCount = processAttachments(
-                        this.groupProperties.id,
-                        group.attributes.transactions,
-                    );
+                    const attachmentCount = processAttachments(this.groupProperties.id, group.attributes.transactions);
                     if (0 === attachmentCount) {
                         this.formStates.storedAttachments = true;
                     }
                     if (attachmentCount > 0) {
                         // if count is more than zero, system is processing transactions in the background.
                         this.notifications.wait.show = true;
-                        this.notifications.wait.text = i18next.t(
-                            "firefly.wait_attachments",
-                        );
+                        this.notifications.wait.text = i18next.t("firefly.wait_attachments");
                         return;
                     }
 

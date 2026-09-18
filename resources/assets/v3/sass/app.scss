@@ -49,6 +49,8 @@ $success: #64b624; // original
     $success: $success,
     $font-size-base: $font-size-base
 );
+@import "shepherd.js/dist/css/shepherd.css";
+
 // for light mode, different money colors are used.
 html[data-bs-theme="light"] .money-negative {
     color: #993b1e !important;
@@ -71,7 +73,15 @@ html[data-bs-theme="dark"] .money-transfer {
     color: #0bc1e5 !important;
 }
 
-@import "shepherd.js/dist/css/shepherd.css";
+// some print rules
+@media print {
+    a[href]::after {
+        content: none !important;
+    }
+    * {
+        box-shadow: none !important;
+    }
+}
 
 // custom Firefly III CSS
 .general-chart-error {

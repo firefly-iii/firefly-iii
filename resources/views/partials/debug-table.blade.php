@@ -80,10 +80,6 @@
         <td>{{ config('app.env') }}, debug: {{ $app['debug'] }}</td>
     </tr>
     <tr>
-        <td>Layout</td>
-        <td>{{ config('view.layout') }}</td>
-    </tr>
-    <tr>
         <td>Logging</td>
         <td>{{ config('logging.level') }}, {{ config('logging.default') }} / {{ $app['audit_log_channel'] }}</td>
     </tr>

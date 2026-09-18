@@ -61,9 +61,7 @@ function respondToFirstDateChange() {
         .then(parseRepetitionSuggestions)
         .catch(function () {
             console.error("Could not load repetition suggestions");
-            alert(
-                "Could not load repetition suggestions. Please enter a valid date.",
-            );
+            alert("Could not load repetition suggestions. Please enter a valid date.");
         });
 }
 

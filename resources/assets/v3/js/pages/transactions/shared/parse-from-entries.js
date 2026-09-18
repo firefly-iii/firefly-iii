@@ -35,21 +35,13 @@ export function parseFromEntries(entries, originals, transactionType) {
             let current = {};
 
             // fields for transaction
-            if (
-                (compare && original.description !== entry.description) ||
-                !compare
-            ) {
+            if ((compare && original.description !== entry.description) || !compare) {
                 current.description = entry.description;
             }
 
             // original transaction journal id.
-            if (
-                Object.hasOwn(entry, "transaction_journal_id") &&
-                parseInt(entry.transaction_journal_id) > 0
-            ) {
-                current.transaction_journal_id = parseInt(
-                    entry.transaction_journal_id,
-                );
+            if (Object.hasOwn(entry, "transaction_journal_id") && parseInt(entry.transaction_journal_id) > 0) {
+                current.transaction_journal_id = parseInt(entry.transaction_journal_id);
             }
 
             // source and destination NAME
@@ -63,12 +55,7 @@ export function parseFromEntries(entries, originals, transactionType) {
             // dates
             current.date = entry.date;
             if (i > 0 && !!returnArray[0]) {
-                console.log(
-                    "Overrule date for entry ",
-                    i,
-                    " with ",
-                    returnArray[0].date,
-                );
+                console.log("Overrule date for entry ", i, " with ", returnArray[0].date);
                 current.date = returnArray[0].date;
             }
 
@@ -106,10 +93,7 @@ export function parseFromEntries(entries, originals, transactionType) {
             // if foreign amount currency code is set:
             current.foreign_amount = null;
             current.foreign_currency_code = null;
-            if (
-                typeof entry.foreign_currency_code !== "undefined" &&
-                "" !== entry.foreign_currency_code.toString()
-            ) {
+            if (typeof entry.foreign_currency_code !== "undefined" && "" !== entry.foreign_currency_code.toString()) {
                 current.foreign_currency_code = entry.foreign_currency_code;
                 // console.log(
                 //     "There is a foreign currency code set, ",
@@ -127,25 +111,16 @@ export function parseFromEntries(entries, originals, transactionType) {
                     // );
                 }
             }
-            if (
-                null === current.foreign_amount ||
-                null === current.foreign_currency_code
-            ) {
+            if (null === current.foreign_amount || null === current.foreign_currency_code) {
                 current.foreign_amount = "0";
                 current.foreign_currency_code = "";
             }
 
             // if ID is set:
-            if (
-                typeof entry.source_account.id !== "undefined" &&
-                "" !== entry.source_account.id.toString()
-            ) {
+            if (typeof entry.source_account.id !== "undefined" && "" !== entry.source_account.id.toString()) {
                 current.source_id = entry.source_account.id;
             }
-            if (
-                typeof entry.destination_account.id !== "undefined" &&
-                "" !== entry.destination_account.id.toString()
-            ) {
+            if (typeof entry.destination_account.id !== "undefined" && "" !== entry.destination_account.id.toString()) {
                 current.destination_id = entry.destination_account.id;
             }
             if (i > 0) {

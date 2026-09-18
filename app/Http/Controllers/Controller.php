@@ -37,7 +37,6 @@ use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 use Illuminate\Foundation\Bus\DispatchesJobs;
 use Illuminate\Foundation\Validation\ValidatesRequests;
 use Illuminate\Routing\Controller as BaseController;
-use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\URL;
@@ -45,7 +44,6 @@ use Illuminate\Support\Facades\View;
 
 use function Safe\ini_get;
 use function Safe\parse_url;
-use function Safe\realpath;
 
 /**
  * Class Controller.
@@ -112,14 +110,6 @@ abstract class Controller extends BaseController
         // share custom auth guard info.
         $authGuard   = config('firefly.authentication_guard');
         $logoutUrl   = config('firefly.custom_logout_url');
-
-        // overrule v2 layout back to v1.
-
-        if ('true' === request()->get('force_default_layout') && 'v2' === config('view.layout')) {
-            // config('view.layout','v1');
-            Config::set('view.layout', 'v1');
-            View::getFinder()->setPaths([realpath(base_path('resources/views'))]);
-        }
 
         View::share('authGuard', $authGuard);
         View::share('logoutUrl', $logoutUrl);

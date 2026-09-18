@@ -47,29 +47,19 @@ let create = function () {
         respondToFirstDateChange: respondToFirstDateChange,
         init() {
             createTagField("ffInput_tags");
-            createAutocomplete(
-                "ffInput_category",
-                "./api/v1/autocomplete/categories",
-            );
+            createAutocomplete("ffInput_category", "./api/v1/autocomplete/categories");
             createButtonSwitcher();
             switchTransactionType("withdrawal");
             this.respondToFirstDateChange();
             respondToRepetitionEnd();
-            document
-                .getElementById("ffInput_first_date")
-                .addEventListener("change", this.respondToFirstDateChange);
+            document.getElementById("ffInput_first_date").addEventListener("change", this.respondToFirstDateChange);
             document
                 .getElementById("ffInput_repetition_end")
                 .addEventListener("change", respondToRepetitionEnd.bind(this));
 
             let calendarEl = document.getElementById("recurring_calendar");
             this.calendar = new Calendar(calendarEl, {
-                plugins: [
-                    themePlugin,
-                    dayGridPlugin,
-                    timeGridPlugin,
-                    listPlugin,
-                ],
+                plugins: [themePlugin, dayGridPlugin, timeGridPlugin, listPlugin],
                 initialView: "dayGridMonth",
                 headerToolbar: {
                     left: "prev,next today",
@@ -77,32 +67,18 @@ let create = function () {
                 },
             });
             this.calendar.render();
-            document
-                .getElementById("calendar-link")
-                .addEventListener("click", this.showRepCalendar.bind(this));
+            document.getElementById("calendar-link").addEventListener("click", this.showRepCalendar.bind(this));
         },
         showRepCalendar() {
             let eventsUrl = document.getElementById("eventsUrl").value;
             // pre-append URL with repetition info:
-            let newEventsUrl =
-                eventsUrl +
-                "?type=" +
-                document.getElementById("ffInput_repetition_type").value;
-            newEventsUrl +=
-                "&skip=" + document.getElementById("ffInput_skip").value;
-            newEventsUrl +=
-                "&ends=" +
-                document.getElementById("ffInput_repetition_end").value;
-            newEventsUrl +=
-                "&end_date=" +
-                document.getElementById("ffInput_repeat_until").value;
-            newEventsUrl +=
-                "&reps=" + document.getElementById("ffInput_repetitions").value;
-            newEventsUrl +=
-                "&first_date=" +
-                document.getElementById("ffInput_first_date").value;
-            newEventsUrl +=
-                "&weekend=" + document.getElementById("ffInput_weekend").value;
+            let newEventsUrl = eventsUrl + "?type=" + document.getElementById("ffInput_repetition_type").value;
+            newEventsUrl += "&skip=" + document.getElementById("ffInput_skip").value;
+            newEventsUrl += "&ends=" + document.getElementById("ffInput_repetition_end").value;
+            newEventsUrl += "&end_date=" + document.getElementById("ffInput_repeat_until").value;
+            newEventsUrl += "&reps=" + document.getElementById("ffInput_repetitions").value;
+            newEventsUrl += "&first_date=" + document.getElementById("ffInput_first_date").value;
+            newEventsUrl += "&weekend=" + document.getElementById("ffInput_weekend").value;
 
             let eventSource = new EventSource(newEventsUrl);
             this.calendar.removeAllEventSources();

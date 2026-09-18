@@ -1,5 +1,5 @@
 /*
- * load-custom-fields.js
+ * focus-first-input.js
  * Copyright (c) 2026 james@firefly-iii.org
  *
  * This file is part of Firefly III (https://github.com/firefly-iii).
@@ -18,10 +18,14 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-import Preferences from "../../../api/preferences/index.js";
-
-export function loadCustomFields() {
-    return new Preferences().getByName("transaction_journal_optional_fields").then((data) => {
-        return data.data.data.attributes.data;
-    });
+export default function focusFirstInput() {
+    let list = document.querySelectorAll('div.app-content form input[type="text"]:enabled');
+    if (list.length > 0) {
+        list[0].focus();
+        return;
+    }
+    list = document.querySelectorAll('div.app-content input[type="text"]:enabled');
+    if (list.length > 0) {
+        list[0].focus();
+    }
 }

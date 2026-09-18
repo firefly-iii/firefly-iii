@@ -44,21 +44,9 @@ export function addAllAutocompleteToForm() {
     // part of the account selection auto-complete
     let filters = {
         // source can never be expense account
-        source: [
-            "Asset account",
-            "Loan",
-            "Debt",
-            "Mortgage",
-            "Revenue account",
-        ],
+        source: ["Asset account", "Loan", "Debt", "Mortgage", "Revenue account"],
         // destination can never be revenue account
-        destination: [
-            "Expense account",
-            "Loan",
-            "Debt",
-            "Mortgage",
-            "Asset account",
-        ],
+        destination: ["Expense account", "Loan", "Debt", "Mortgage", "Asset account"],
     };
     // depending on the type of the transaction,
     // the filters are changed. For edit form, this means
@@ -106,9 +94,7 @@ export function addAllAutocompleteToForm() {
             noCache: true,
             fetchOptions: {
                 headers: {
-                    "X-CSRF-TOKEN": document.head.querySelector(
-                        'meta[name="csrf-token"]',
-                    ).content,
+                    "X-CSRF-TOKEN": document.head.querySelector('meta[name="csrf-token"]').content,
                 },
             },
         });
@@ -171,27 +157,19 @@ export function addAutocomplete(options) {
             headers: {
                 "Content-Type": "application/json",
                 Accept: "application/json",
-                "X-CSRF-TOKEN": document.head.querySelector(
-                    'meta[name="csrf-token"]',
-                ).content,
+                "X-CSRF-TOKEN": document.head.querySelector('meta[name="csrf-token"]').content,
             },
         },
         queryParam: "query",
-        hiddenInput: true,
+        hiddenInput: false,
         // preventBrowserAutocomplete: true,
         highlightTyped: true,
         liveServer: true,
     };
-    if (
-        typeof options.account_types !== "undefined" &&
-        options.account_types.length > 0
-    ) {
+    if (typeof options.account_types !== "undefined" && options.account_types.length > 0) {
         params.serverParams["types"] = options.account_types;
     }
-    if (
-        typeof options.onRenderItem !== "undefined" &&
-        null !== options.onRenderItem
-    ) {
+    if (typeof options.onRenderItem !== "undefined" && null !== options.onRenderItem) {
         params.onRenderItem = options.onRenderItem;
     }
     if (options.valueField) {

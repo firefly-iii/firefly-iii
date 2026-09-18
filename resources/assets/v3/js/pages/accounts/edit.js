@@ -27,9 +27,7 @@ import Alpine from "alpinejs";
 let edit = function () {
     return {
         init() {
-            let list = document.querySelectorAll(
-                'div.app-content form input[type="text"]:enabled',
-            );
+            let list = document.querySelectorAll('div.app-content form input[type="text"]:enabled');
             if (list.length > 0) {
                 list[0].focus();
             }
@@ -38,27 +36,23 @@ let edit = function () {
                 el.addEventListener("change", (event) => {
                     let direction = event.target.value;
                     if ("credit" === direction) {
-                        document.querySelector(
-                            'label[for="ffInput_opening_balance"]',
-                        ).textContent = i18next.t("firefly.i_am_owed_amount");
+                        document.querySelector('label[for="ffInput_opening_balance"]').textContent =
+                            i18next.t("firefly.i_am_owed_amount");
                     }
                     if ("debit" === direction) {
-                        document.querySelector(
-                            'label[for="ffInput_opening_balance"]',
-                        ).textContent = i18next.t("firefly.i_owe_amount");
+                        document.querySelector('label[for="ffInput_opening_balance"]').textContent =
+                            i18next.t("firefly.i_owe_amount");
                     }
                 });
                 // also change it the first time around
                 let direction = el.value;
                 if ("credit" === direction) {
-                    document.querySelector(
-                        'label[for="ffInput_opening_balance"]',
-                    ).textContent = i18next.t("firefly.i_am_owed_amount");
+                    document.querySelector('label[for="ffInput_opening_balance"]').textContent =
+                        i18next.t("firefly.i_am_owed_amount");
                 }
                 if ("debit" === direction) {
-                    document.querySelector(
-                        'label[for="ffInput_opening_balance"]',
-                    ).textContent = i18next.t("firefly.i_owe_amount");
+                    document.querySelector('label[for="ffInput_opening_balance"]').textContent =
+                        i18next.t("firefly.i_owe_amount");
                 }
             }
         },

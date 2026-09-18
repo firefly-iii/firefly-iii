@@ -95,7 +95,6 @@ export default function (date, formatStr = "PP") {
     let locale = window.__localeId__.replace("_", "");
     // console.log("Locale is " + locale);
     return format(date, formatStr, {
-        locale:
-            locales[locale] ?? locales[locale.slice(0, 2)] ?? locales["enUS"], // or global.__localeId__
+        locale: locales[locale] ?? locales[locale.slice(0, 2)] ?? locales["enUS"], // or global.__localeId__
     });
 }

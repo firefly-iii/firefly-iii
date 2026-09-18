@@ -1,4 +1,4 @@
-<table class="table table-sm table-hover">
+<table class="table table-valign-middle table-sm table-hover">
     <thead>
     <tr>
         <th>{{ __('firefly.budgets') }}</th>

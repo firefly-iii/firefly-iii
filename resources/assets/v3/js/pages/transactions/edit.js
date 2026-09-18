@@ -22,10 +22,7 @@ import "../../boot/bootstrap.js";
 import dates from "../../pages/shared/dates.js";
 import Get from "../../api/model/transaction/get.js";
 import { parseDownloadedSplits } from "./shared/parse-downloaded-splits.js";
-import {
-    addAllAutocompleteToForm,
-    getUrls,
-} from "./shared/add-autocomplete.js";
+import { addAllAutocompleteToForm, getUrls } from "./shared/add-autocomplete.js";
 import { loadCurrencies } from "./shared/load-currencies.js";
 import { loadBudgets } from "./shared/load-budgets.js";
 import { loadPiggyBanks } from "./shared/load-piggy-banks.js";
@@ -49,10 +46,7 @@ import { changedAmount } from "./shared/changed-amount.js";
 import { changedForeignAmount } from "./shared/changed-foreign-amount.js";
 import { parseErrors } from "./shared/parse-errors.js";
 import { addSplit } from "./shared/add-split.js";
-import {
-    clearDestinationAccount,
-    clearSourceAccount,
-} from "./shared/clear-fields.js";
+import { clearDestinationAccount, clearSourceAccount } from "./shared/clear-fields.js";
 import { detectTransactionType } from "./shared/detect-transaction-type.js";
 import { determineAmountCurrency } from "./shared/determine-amount-currency.js";
 import { loadCustomFields } from "./shared/load-custom-fields.js";
@@ -77,6 +71,7 @@ import { addTabListener } from "./shared/add-tab-listener.js";
 import { autoStep } from "./shared/auto-step.js";
 import { respondToTabSwitch } from "./shared/respond-to-tab-switch.js";
 import Alpine from "alpinejs";
+import focusFirstInput from "../../shared/focus-first-input.js";
 
 const urls = getUrls();
 window.enableDates = false;
@@ -249,15 +244,10 @@ let transactions = function () {
                     const data = response.data.data;
                     this.formStates.loadingTransaction = false;
                     this.groupProperties.id = parseInt(data.id);
-                    this.groupProperties.transactionType =
-                        data.attributes.transactions[0].type.toLowerCase();
+                    this.groupProperties.transactionType = data.attributes.transactions[0].type.toLowerCase();
                     this.groupProperties.title =
-                        data.attributes.group_title ??
-                        data.attributes.transactions[0].description;
-                    this.entries = parseDownloadedSplits(
-                        data.attributes.transactions,
-                        parseInt(data.id),
-                    );
+                        data.attributes.group_title ?? data.attributes.transactions[0].description;
+                    this.entries = parseDownloadedSplits(data.attributes.transactions, parseInt(data.id));
 
                     // set empty arrays
                     for (let i = 0; i < this.entries.length; i++) {
@@ -267,12 +257,8 @@ let transactions = function () {
                     // set amountCurrency.
                     for (let i in this.formData.enabledCurrencies) {
                         if (Object.hasOwn(this.formData.enabledCurrencies, i)) {
-                            if (
-                                this.formData.enabledCurrencies[i].code ===
-                                this.entries[0].currency_code
-                            ) {
-                                this.formData.amountCurrency =
-                                    this.formData.enabledCurrencies[i];
+                            if (this.formData.enabledCurrencies[i].code === this.entries[0].currency_code) {
+                                this.formData.amountCurrency = this.formData.enabledCurrencies[i];
                             }
                         }
                     }
@@ -280,19 +266,9 @@ let transactions = function () {
                     if ("transfer" === this.groupProperties.transactionType) {
                         this.formData.foreignCurrencies = [];
                         for (let i in this.formData.enabledCurrencies) {
-                            if (
-                                Object.hasOwn(
-                                    this.formData.enabledCurrencies,
-                                    i,
-                                )
-                            ) {
-                                if (
-                                    this.formData.enabledCurrencies[i].code ===
-                                    this.entries[0].foreign_currency_code
-                                ) {
-                                    this.formData.foreignCurrencies.push(
-                                        this.formData.enabledCurrencies[i],
-                                    );
+                            if (Object.hasOwn(this.formData.enabledCurrencies, i)) {
+                                if (this.formData.enabledCurrencies[i].code === this.entries[0].foreign_currency_code) {
+                                    this.formData.foreignCurrencies.push(this.formData.enabledCurrencies[i]);
                                 }
                             }
                         }
@@ -302,12 +278,12 @@ let transactions = function () {
                     this.notifications.wait.show = false;
                 })
                 .then(() => {
+                    focusFirstInput();
                     this.groupProperties.totalAmount = 0;
                     for (let i in this.entries) {
                         if (Object.hasOwn(this.entries, i)) {
                             this.groupProperties.totalAmount =
-                                this.groupProperties.totalAmount +
-                                parseFloat(this.entries[i].amount);
+                                this.groupProperties.totalAmount + parseFloat(this.entries[i].amount);
                         }
                     }
                     setTimeout(() => {
@@ -329,9 +305,7 @@ let transactions = function () {
                             noCache: true,
                             fetchOptions: {
                                 headers: {
-                                    "X-CSRF-TOKEN": document.head.querySelector(
-                                        'meta[name="csrf-token"]',
-                                    ).content,
+                                    "X-CSRF-TOKEN": document.head.querySelector('meta[name="csrf-token"]').content,
                                 },
                             },
                         });
@@ -344,9 +318,7 @@ let transactions = function () {
             this.i18next = i18next;
             // download translations and get the transaction group.
             this.notifications.wait.show = true;
-            this.notifications.wait.text = i18next.t(
-                "firefly.wait_loading_transaction",
-            );
+            this.notifications.wait.text = i18next.t("firefly.wait_loading_transaction");
 
             // load meta data.
             loadCurrencies().then((data) => {
@@ -385,9 +357,7 @@ let transactions = function () {
             // add some event listeners
             document.addEventListener("upload-success", () => {
                 this.processUpload();
-                document
-                    .querySelectorAll("input[type=file]")
-                    .forEach((input) => (input.value = ""));
+                document.querySelectorAll("input[type=file]").forEach((input) => (input.value = ""));
             });
 
             document.addEventListener("upload-error", (event) => {
@@ -415,11 +385,7 @@ let transactions = function () {
                 }
             }
             // parse transaction:
-            let transactions = parseFromEntries(
-                this.entries,
-                this.originals,
-                this.groupProperties.transactionType,
-            );
+            let transactions = parseFromEntries(this.entries, this.originals, this.groupProperties.transactionType);
             let submission = {
                 group_title: this.groupProperties.title,
                 fire_webhooks: this.formStates.webhooksButton,
@@ -428,10 +394,7 @@ let transactions = function () {
             };
 
             // catch for group title:
-            if (
-                null === this.groupProperties.title &&
-                transactions.length > 1
-            ) {
+            if (null === this.groupProperties.title && transactions.length > 1) {
                 submission.group_title = transactions[0].description;
             }
             if (1 === transactions.length) {
@@ -449,42 +412,27 @@ let transactions = function () {
                     // submission was a success!
                     this.groupProperties.id = parseInt(group.id);
                     this.groupProperties.title =
-                        group.attributes.group_title ??
-                        group.attributes.transactions[0].description;
+                        group.attributes.group_title ?? group.attributes.transactions[0].description;
 
                     // process transaction links
                     // submit all transaction links, based on the order of the transaction IDs
                     let transactions = [];
-                    for (
-                        let i = 0;
-                        i < group.attributes.transactions.length;
-                        i++
-                    ) {
+                    for (let i = 0; i < group.attributes.transactions.length; i++) {
                         if (Object.hasOwn(group.attributes.transactions, i)) {
-                            transactions.push(
-                                parseInt(
-                                    group.attributes.transactions[i]
-                                        .transaction_journal_id,
-                                ),
-                            );
+                            transactions.push(parseInt(group.attributes.transactions[i].transaction_journal_id));
                         }
                     }
                     this.processTransactionLinks(transactions);
 
                     // process attachments, if any:
-                    const attachmentCount = processAttachments(
-                        this.groupProperties.id,
-                        group.attributes.transactions,
-                    );
+                    const attachmentCount = processAttachments(this.groupProperties.id, group.attributes.transactions);
                     if (0 === attachmentCount) {
                         this.formStates.storedAttachments = true;
                     }
                     if (attachmentCount > 0) {
                         // if count is more than zero, system is processing transactions in the background.
                         this.notifications.wait.show = true;
-                        this.notifications.wait.text = i18next.t(
-                            "firefly.wait_attachments",
-                        );
+                        this.notifications.wait.text = i18next.t("firefly.wait_attachments");
                         return;
                     }
 

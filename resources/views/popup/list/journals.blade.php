@@ -5,7 +5,7 @@ $hideBudget = $hideBudget ?? false;
 $hideCategory = $hideCategory ?? false;
 @endphp
 
-    <table class="table table-hover table-sm">
+    <table class="table table-valign-middle table-hover table-sm">
     <thead>
     <tr>
         <th>&nbsp;</th>

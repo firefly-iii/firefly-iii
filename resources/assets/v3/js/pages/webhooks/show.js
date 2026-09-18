@@ -75,9 +75,7 @@ let show = function () {
             let journalId = parseInt(prompt("Enter a transaction ID"));
             if (journalId !== null && journalId > 0 && journalId <= 16777216) {
                 this.disabledTrigger = true;
-                this.success_message = i18next.t(
-                    "firefly.webhook_was_triggered",
-                );
+                this.success_message = i18next.t("firefly.webhook_was_triggered");
                 new Post().triggerTransaction(this.id, journalId);
 
                 // set a time-outs.
@@ -124,9 +122,7 @@ let show = function () {
                                 i18next.t("config.date_time_fns"),
                             ),
                             uuid: current.attributes.uuid,
-                            success:
-                                current.attributes.sent &&
-                                !current.attributes.errored,
+                            success: current.attributes.sent && !current.attributes.errored,
                             message: current.attributes.message,
                         });
                     }

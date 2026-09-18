@@ -31,10 +31,7 @@ function loadTranslations(locale) {
         // console.log("Not yet loaded");
         const replacedLocale = locale.replace("-", "_");
         loaded = true;
-        const expireTime =
-            import.meta.env.MODE === "development"
-                ? 1
-                : 7 * 24 * 60 * 60 * 1000;
+        const expireTime = import.meta.env.MODE === "development" ? 1 : 7 * 24 * 60 * 60 * 1000;
         // console.log('Will load language "'+replacedLocale+'"');
         return i18next.use(ChainedBackend).init({
             load: "languageOnly",

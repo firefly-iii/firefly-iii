@@ -18,14 +18,7 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-import {
-    addMonths,
-    endOfMonth,
-    startOfMonth,
-    startOfYear,
-    subDays,
-    subMonths,
-} from "date-fns";
+import { addMonths, endOfMonth, startOfMonth, startOfYear, subDays, subMonths } from "date-fns";
 import format from "../../util/format";
 
 export default () => ({
@@ -39,7 +32,7 @@ export default () => ({
         // }
     },
     updateDatesNoSubmit(e) {
-        let split = e.originalTarget._props.value.split("/");
+        let split = e.currentTarget._props.value.split("/");
         console.log("Start is now " + split[0]);
         console.log("End is now   " + split[1]);
         document.getElementById("customStart").value = split[0];
@@ -54,14 +47,8 @@ export default () => ({
     submitForm() {
         // console.log('submitForm', format(window.store.get('start'), 'yyyy-MM-dd'), format(window.store.get('end'), 'yyyy-MM-dd'));
         // save form and submit for v1.
-        document.getElementById("customStart").value = format(
-            window.store.get("start"),
-            "yyyy-MM-dd",
-        );
-        document.getElementById("customEnd").value = format(
-            window.store.get("end"),
-            "yyyy-MM-dd",
-        );
+        document.getElementById("customStart").value = format(window.store.get("start"), "yyyy-MM-dd");
+        document.getElementById("customEnd").value = format(window.store.get("end"), "yyyy-MM-dd");
         document.getElementById("daterange-form").submit();
     },
     language: "en_US",
@@ -71,14 +58,10 @@ export default () => ({
             // console.log("Date selection is disabled on this page.");
             document.getElementById("date-dropdown").style.display = "none";
         }
-        document
-            .getElementById("customDateRangeCalendar")
-            .addEventListener("change", (e) => {
-                console.log(
-                    "responding to change event in customDateRangeCalendar",
-                );
-                this.updateDatesNoSubmit(e);
-            });
+        document.getElementById("customDateRangeCalendar").addEventListener("change", (e) => {
+            console.log("responding to change event in customDateRangeCalendar");
+            this.updateDatesNoSubmit(e);
+        });
 
         let end = new Date(window.store.get("end"));
         let start = new Date(window.store.get("start"));
@@ -93,7 +76,7 @@ export default () => ({
         this.language = window.store.get("language");
         this.locale = window.store.get("locale");
         this.locale = "equal" === this.locale ? this.language : this.locale;
-        window.__localeId__ = this.language;
+        window.__localeId__ = this.locale;
         this.buildDateRange();
 
         window.store.observe("start", (newValue) => {
@@ -118,47 +101,26 @@ export default () => ({
 
         // set the title:
         let element = document.getElementsByClassName("daterange-holder")[0];
-        element.textContent =
-            format(this.range.start) + " - " + format(this.range.end);
-        element.setAttribute(
-            "data-start",
-            format(this.range.start, "yyyy-MM-dd"),
-        );
+        element.textContent = format(this.range.start) + " - " + format(this.range.end);
+        element.setAttribute("data-start", format(this.range.start, "yyyy-MM-dd"));
         element.setAttribute("data-end", format(this.range.end, "yyyy-MM-dd"));
 
         // set the current one
         element = document.getElementsByClassName("daterange-current")[0];
-        element.textContent =
-            format(this.defaultRange.start) +
-            " - " +
-            format(this.defaultRange.end);
-        element.setAttribute(
-            "data-start",
-            format(this.defaultRange.start, "yyyy-MM-dd"),
-        );
-        element.setAttribute(
-            "data-end",
-            format(this.defaultRange.end, "yyyy-MM-dd"),
-        );
+        element.textContent = format(this.defaultRange.start) + " - " + format(this.defaultRange.end);
+        element.setAttribute("data-start", format(this.defaultRange.start, "yyyy-MM-dd"));
+        element.setAttribute("data-end", format(this.defaultRange.end, "yyyy-MM-dd"));
         //
         // // generate next range
         element = document.getElementsByClassName("daterange-next")[0];
-        element.textContent =
-            format(nextRange.start) + " - " + format(nextRange.end);
-        element.setAttribute(
-            "data-start",
-            format(nextRange.start, "yyyy-MM-dd"),
-        );
+        element.textContent = format(nextRange.start) + " - " + format(nextRange.end);
+        element.setAttribute("data-start", format(nextRange.start, "yyyy-MM-dd"));
         element.setAttribute("data-end", format(nextRange.end, "yyyy-MM-dd"));
         //
         // // previous range.
         element = document.getElementsByClassName("daterange-prev")[0];
-        element.textContent =
-            format(prevRange.start) + " - " + format(prevRange.end);
-        element.setAttribute(
-            "data-start",
-            format(prevRange.start, "yyyy-MM-dd"),
-        );
+        element.textContent = format(prevRange.start) + " - " + format(prevRange.end);
+        element.setAttribute("data-start", format(prevRange.start, "yyyy-MM-dd"));
         element.setAttribute("data-end", format(prevRange.end, "yyyy-MM-dd"));
         //
         // // last 7

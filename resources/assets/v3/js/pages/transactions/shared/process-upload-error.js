@@ -28,9 +28,7 @@ export function processUploadError(event) {
     this.notifications.error.text = this.i18next.t("firefly.errors_upload");
     // console.error(event.detail.error.response.status);
     if (413 === event.detail.error.response.status) {
-        this.notifications.error.text = this.i18next.t(
-            "firefly.upload_too_large",
-        );
+        this.notifications.error.text = this.i18next.t("firefly.upload_too_large");
     }
     if ("create" === this.formBehaviour.formType) {
         // delete transaction and let user try again.
