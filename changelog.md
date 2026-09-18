@@ -5,17 +5,22 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 
 ## v6.7.3 - 2026-09-17
 
-### Changed 
+### Fixed 
+- [Discussion 12760](https://github.com/orgs/firefly-iii/discussions/12760) (419 Page expired when selecting a different date range) started by @wecoyote5
+- #12779
+- [Issue 12781](https://github.com/firefly-iii/firefly-iii/issues/12781) (When mass editing transactions, only the last tag is kept) reported by @bertille-ddp
 - [Issue 12782](https://github.com/firefly-iii/firefly-iii/issues/12782) (accounts with attachement in show page returns 500 error page) reported by @SL1c3R57
 - [Issue 12783](https://github.com/firefly-iii/firefly-iii/issues/12783) (Clone / Clone & Edit doesn't work) reported by @gthbusrr
 - [Issue 12784](https://github.com/firefly-iii/firefly-iii/issues/12784) (Creating a transaction doesn't put the focus into the title field) reported by @ThibaultNocchi
 - [Issue 12789](https://github.com/firefly-iii/firefly-iii/issues/12789) (Text in table cells is vertically off-center) reported by @davidschlachter
-- [Issue 12795](https://github.com/firefly-iii/firefly-iii/issues/12795) (Clicking dates in reporting section with mouse always reset both dateboxes to "gg/mm/yyyy".) reported by @no-coders
 - [Issue 12794](https://github.com/firefly-iii/firefly-iii/issues/12794) (Mobile layout: Budget and Spending chart is not displayed) reported by @MaxMapo
-- [Discussion 12760](https://github.com/orgs/firefly-iii/discussions/12760) (419 Page expired when selecting a different date range) started by @wecoyote5
+- [Issue 12795](https://github.com/firefly-iii/firefly-iii/issues/12795) (Clicking dates in reporting section with mouse always reset both dateboxes to "gg/mm/yyyy".) reported by @no-coders
 - [Issue 12803](https://github.com/firefly-iii/firefly-iii/issues/12803) (Error "The description.xxxxxx field is required." when mass updating transactions) reported by @andyesten
-- [Issue 12781](https://github.com/firefly-iii/firefly-iii/issues/12781) (When mass editing transactions, only the last tag is kept) reported by @bertille-ddp
-- #12779
+- #12815
+- References to layout `v2` will no longer break Firefly III.
+- The show/hide password button is separated from the password field more clearly.
+- Login throttle is a little more strict.
+- Improved budget chart on the home page.
 
 ## v6.7.2 - 2026-09-16
 
