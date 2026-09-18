@@ -125,31 +125,22 @@ let create = function () {
                 .post(data)
                 .then((response) => {
                     let webhookId = parseInt(response.data.data.id);
-                    window.location.href =
-                        window.previousUrl +
-                        "?webhook_id=" +
-                        webhookId +
-                        "&message=created";
+                    window.location.href = window.previousUrl + "?webhook_id=" + webhookId + "&message=created";
                 })
                 .catch((error) => {
                     //console.log(error.response.data);
                     this.error_message = error.response.data.message;
                     this.errors.title = error.response.data.errors.title ?? [];
-                    this.errors.triggers =
-                        error.response.data.errors.triggers ?? [];
-                    this.errors.responses =
-                        error.response.data.errors.responses ?? [];
-                    this.errors.deliveries =
-                        error.response.data.errors.deliveries ?? [];
+                    this.errors.triggers = error.response.data.errors.triggers ?? [];
+                    this.errors.responses = error.response.data.errors.responses ?? [];
+                    this.errors.deliveries = error.response.data.errors.deliveries ?? [];
                     this.errors.url = error.response.data.errors.url ?? [];
 
                     // if there is a key that ends with a dot and a number, include it in the array:
                     for (let key in error.response.data.errors) {
                         if (key.includes(".")) {
                             let newKey = key.replace(/\.\d+$/, "");
-                            this.errors[newKey] = this.errors[newKey].concat(
-                                error.response.data.errors[key],
-                            );
+                            this.errors[newKey] = this.errors[newKey].concat(error.response.data.errors[key]);
                         }
                     }
 

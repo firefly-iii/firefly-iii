@@ -42,17 +42,11 @@ let index = function () {
                             let item = e.detail[i];
                             if (item.order !== item.currentOrder) {
                                 // PUT new order to system.
-                                new Put().put(
-                                    { order: item.order },
-                                    { id: item.id },
-                                );
+                                new Put().put({ order: item.order }, { id: item.id });
                                 // save new order as current order in the row.
                                 document
                                     .querySelector(`tr[data-id="${item.id}"]`)
-                                    .setAttribute(
-                                        "data-current-order",
-                                        item.order,
-                                    );
+                                    .setAttribute("data-current-order", item.order);
                             }
                         }
                     }

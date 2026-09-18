@@ -98,8 +98,7 @@ let edit = function () {
                     this.id = parseInt(response.data.data.id);
                     this.triggers = response.data.data.attributes.triggers;
                     this.responses = response.data.data.attributes.responses[0];
-                    this.deliveries =
-                        response.data.data.attributes.deliveries[0];
+                    this.deliveries = response.data.data.attributes.deliveries[0];
                     this.active = response.data.data.attributes.active;
                     this.url = response.data.data.attributes.url;
                 })
@@ -138,19 +137,14 @@ let edit = function () {
                 .put(data, { id: this.id })
                 .then((response) => {
                     let webhookId = parseInt(response.data.data.id);
-                    window.location.href =
-                        window.previousUrl +
-                        "?webhook_id=" +
-                        webhookId +
-                        "&message=updated";
+                    window.location.href = window.previousUrl + "?webhook_id=" + webhookId + "&message=updated";
                 })
                 .catch((error) => {
                     this.error_message = error.response.data.message;
                     this.errors.title = error.response.data.errors.title;
                     this.errors.triggers = error.response.data.errors.trigger;
                     this.errors.responses = error.response.data.errors.response;
-                    this.errors.deliveries =
-                        error.response.data.errors.deliveries;
+                    this.errors.deliveries = error.response.data.errors.deliveries;
                     this.errors.url = error.response.data.errors.url;
 
                     // enable button again

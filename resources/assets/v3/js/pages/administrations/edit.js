@@ -55,9 +55,7 @@ let edit = function () {
                 this.administration = {
                     id: current.id,
                     title: current.attributes.title,
-                    currency_id: parseInt(
-                        current.attributes.primary_currency_id,
-                    ),
+                    currency_id: parseInt(current.attributes.primary_currency_id),
                     currency_code: current.attributes.primary_currency_code,
                     currency_name: current.attributes.primary_currency_name,
                 };
@@ -96,16 +94,12 @@ let edit = function () {
                 .put(data, { id: this.administration.id })
                 .then((response) => {
                     let administrationId = parseInt(response.data.data.id);
-                    window.location.href =
-                        "./administrations?user_group_id=" +
-                        administrationId +
-                        "&message=updated";
+                    window.location.href = "./administrations?user_group_id=" + administrationId + "&message=updated";
                 })
                 .catch((error) => {
                     this.error_message = error.response.data.message;
                     this.errors.title = error.response.data.errors.title;
-                    this.errors.primary_currency_id =
-                        error.response.data.errors.primary_currency_id;
+                    this.errors.primary_currency_id = error.response.data.errors.primary_currency_id;
 
                     // enable button again
                     document.getElementById("submitButton").disabled = false;

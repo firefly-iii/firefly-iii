@@ -21,9 +21,7 @@
 import Autocomplete from "bootstrap5-autocomplete";
 
 function createAutocomplete(fieldIdentifier, url) {
-    let token = document
-        .querySelector('meta[name="csrf-token"]')
-        .getAttribute("content");
+    let token = document.querySelector('meta[name="csrf-token"]').getAttribute("content");
     Autocomplete.init("#" + fieldIdentifier, {
         server: url + "?_token=" + token,
         labelField: "name",

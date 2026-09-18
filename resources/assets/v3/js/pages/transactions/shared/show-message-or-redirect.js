@@ -41,18 +41,14 @@ export function showMessageOrRedirectUser() {
     if (this.formStates.returnHereButton) {
         this.formStates.isSubmitting = false;
         this.notifications.success.show = true;
-        this.notifications.success.url =
-            "transactions/show/" + parseInt(this.groupProperties.id);
+        this.notifications.success.url = "transactions/show/" + parseInt(this.groupProperties.id);
 
         // title depends on form role.
         if ("create" === this.formBehaviour.formType) {
-            this.notifications.success.text = i18next.t(
-                "firefly.stored_journal_js",
-                {
-                    description: this.groupProperties.title,
-                    interpolation: { escapeValue: false },
-                },
-            );
+            this.notifications.success.text = i18next.t("firefly.stored_journal_js", {
+                description: this.groupProperties.title,
+                interpolation: { escapeValue: false },
+            });
             this.groupProperties.title = null;
 
             // reset the form.
@@ -67,10 +63,7 @@ export function showMessageOrRedirectUser() {
             if ("" === title) {
                 title = this.entries[0].description;
             }
-            this.notifications.success.text = i18next.t(
-                "firefly.updated_journal_js",
-                { description: title },
-            );
+            this.notifications.success.text = i18next.t("firefly.updated_journal_js", { description: title });
         }
 
         return;
@@ -108,19 +101,11 @@ export function showMessageOrRedirectUser() {
     if ("" !== from) {
         if ("edit" === this.formBehaviour.formType) {
             window.location =
-                finalFrom +
-                separator +
-                "transaction_group_id=" +
-                this.groupProperties.id +
-                "&message=updated";
+                finalFrom + separator + "transaction_group_id=" + this.groupProperties.id + "&message=updated";
             return;
         }
         window.location =
-            finalFrom +
-            separator +
-            "transaction_group_id=" +
-            this.groupProperties.id +
-            "&message=created";
+            finalFrom + separator + "transaction_group_id=" + this.groupProperties.id + "&message=created";
         return;
     }
     if ("edit" === this.formBehaviour.formType) {

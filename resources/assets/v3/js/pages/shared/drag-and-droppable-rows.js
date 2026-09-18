@@ -35,11 +35,7 @@ export function addDrag() {
     function handleRowSwap(clientY, targetElement) {
         const targetRow = targetElement.closest("tr");
 
-        if (
-            targetRow &&
-            targetRow !== draggedRow &&
-            targetRow.parentNode === tbody
-        ) {
+        if (targetRow && targetRow !== draggedRow && targetRow.parentNode === tbody) {
             const rect = targetRow.getBoundingClientRect();
             const next = (clientY - rect.top) / (rect.bottom - rect.top) > 0.5;
             const nextSibling = next ? targetRow.nextSibling : targetRow;
@@ -130,10 +126,7 @@ export function addDrag() {
             const touch = e.touches[0];
 
             // Find what element is currently underneath the user's finger
-            const elementUnderFinger = document.elementFromPoint(
-                touch.clientX,
-                touch.clientY,
-            );
+            const elementUnderFinger = document.elementFromPoint(touch.clientX, touch.clientY);
 
             if (elementUnderFinger) {
                 handleRowSwap(touch.clientY, elementUnderFinger);

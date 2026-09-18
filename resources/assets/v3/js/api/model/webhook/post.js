@@ -22,13 +22,7 @@ import { api } from "../../../boot/axios";
 
 export default class Post {
     triggerTransaction(webhook, transaction) {
-        return api.post(
-            "./api/v1/webhooks/" +
-                webhook +
-                "/trigger-transaction/" +
-                transaction,
-            {},
-        );
+        return api.post("./api/v1/webhooks/" + webhook + "/trigger-transaction/" + transaction, {});
     }
 
     post(submission) {

@@ -34,22 +34,11 @@ export default class Get {
         });
     }
     message(webhook, message, params) {
-        return api.get(
-            "/api/v1/webhooks/" +
-                parseInt(webhook) +
-                "/messages/" +
-                parseInt(message),
-            { params: params },
-        );
+        return api.get("/api/v1/webhooks/" + parseInt(webhook) + "/messages/" + parseInt(message), { params: params });
     }
     attempts(webhook, message, params) {
-        return api.get(
-            "/api/v1/webhooks/" +
-                parseInt(webhook) +
-                "/messages/" +
-                parseInt(message) +
-                "/attempts",
-            { params: params },
-        );
+        return api.get("/api/v1/webhooks/" + parseInt(webhook) + "/messages/" + parseInt(message) + "/attempts", {
+            params: params,
+        });
     }
 }

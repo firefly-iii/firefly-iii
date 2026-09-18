@@ -100,10 +100,7 @@ export default () => ({
                 // console.log('NOT PRIMARY CURRENCY');
                 if (key.startsWith("balance-in-")) {
                     this.balanceBox.amounts.push(
-                        formatMoney(
-                            this.anonymous ? 0 : current.monetary_value,
-                            current.currency_code,
-                        ),
+                        formatMoney(this.anonymous ? 0 : current.monetary_value, current.currency_code),
                     );
                     continue;
                 }
@@ -116,10 +113,7 @@ export default () => ({
                     // append the amount spent.
                     subtitles[current.currency_code] =
                         subtitles[current.currency_code] +
-                        formatMoney(
-                            this.anonymous ? 0 : current.monetary_value,
-                            current.currency_code,
-                        );
+                        formatMoney(this.anonymous ? 0 : current.monetary_value, current.currency_code);
                     continue;
                 }
                 // earned info is used in subtitle:
@@ -130,10 +124,7 @@ export default () => ({
                     }
                     // prepend the amount earned.
                     subtitles[current.currency_code] =
-                        formatMoney(
-                            this.anonymous ? 0 : current.monetary_value,
-                            current.currency_code,
-                        ) +
+                        formatMoney(this.anonymous ? 0 : current.monetary_value, current.currency_code) +
                         " + " +
                         subtitles[current.currency_code];
                     continue;
@@ -141,48 +132,32 @@ export default () => ({
 
                 if (key.startsWith("bills-unpaid-in-")) {
                     this.billBox.unpaid.push(
-                        formatMoney(
-                            this.anonymous ? 0 : current.monetary_value,
-                            current.currency_code,
-                        ),
+                        formatMoney(this.anonymous ? 0 : current.monetary_value, current.currency_code),
                     );
                     continue;
                 }
                 if (key.startsWith("bills-paid-in-")) {
                     this.billBox.paid.push(
-                        formatMoney(
-                            this.anonymous ? 0 : current.monetary_value,
-                            current.currency_code,
-                        ),
+                        formatMoney(this.anonymous ? 0 : current.monetary_value, current.currency_code),
                     );
                     continue;
                 }
                 if (key.startsWith("left-to-spend-in-")) {
-                    sumMoneyLeft =
-                        sumMoneyLeft + parseFloat(current.monetary_value);
+                    sumMoneyLeft = sumMoneyLeft + parseFloat(current.monetary_value);
                     this.leftBox.left.push(
-                        formatMoney(
-                            this.anonymous ? 0 : current.monetary_value,
-                            current.currency_code,
-                        ),
+                        formatMoney(this.anonymous ? 0 : current.monetary_value, current.currency_code),
                     );
                     continue;
                 }
                 if (key.startsWith("left-per-day-to-spend-in-")) {
                     this.leftBox.perDay.push(
-                        formatMoney(
-                            this.anonymous ? 0 : current.monetary_value,
-                            current.currency_code,
-                        ),
+                        formatMoney(this.anonymous ? 0 : current.monetary_value, current.currency_code),
                     );
                     continue;
                 }
                 if (key.startsWith("net-worth-in-")) {
                     this.netBox.net.push(
-                        formatMoney(
-                            this.anonymous ? 0 : current.monetary_value,
-                            current.currency_code,
-                        ),
+                        formatMoney(this.anonymous ? 0 : current.monetary_value, current.currency_code),
                     );
                 }
             }

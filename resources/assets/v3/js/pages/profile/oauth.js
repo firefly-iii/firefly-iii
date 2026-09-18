@@ -62,29 +62,21 @@ let index = function () {
             this.i18next = i18next;
             this.getClients();
             this.getTokens();
-            document
-                .getElementById("modal-create-token")
-                .addEventListener("shown.bs.modal", () => {
-                    document.getElementById("create-token-name").focus();
-                });
-            document
-                .getElementById("modal-create-client")
-                .addEventListener("shown.bs.modal", () => {
-                    document.getElementById("create-client-name").focus();
-                });
-            document
-                .getElementById("modal-client-secret")
-                .addEventListener("shown.bs.modal", () => {
-                    setTimeout(() => {
-                        document.getElementById("secret_box").focus();
-                    }, 100);
-                });
+            document.getElementById("modal-create-token").addEventListener("shown.bs.modal", () => {
+                document.getElementById("create-token-name").focus();
+            });
+            document.getElementById("modal-create-client").addEventListener("shown.bs.modal", () => {
+                document.getElementById("create-client-name").focus();
+            });
+            document.getElementById("modal-client-secret").addEventListener("shown.bs.modal", () => {
+                setTimeout(() => {
+                    document.getElementById("secret_box").focus();
+                }, 100);
+            });
 
-            document
-                .getElementById("modal-edit-client")
-                .addEventListener("shown.bs.modal", () => {
-                    document.getElementById("edit-client-name").focus();
-                });
+            document.getElementById("modal-edit-client").addEventListener("shown.bs.modal", () => {
+                document.getElementById("edit-client-name").focus();
+            });
             const textBox = document.getElementById("secret_box");
             textBox.onfocus = function () {
                 textBox.select();
@@ -155,15 +147,11 @@ let index = function () {
                     if (typeof error.response.data === "object") {
                         for (let i in error.response.data.errors) {
                             if (Object.hasOwn(error.response.data.errors, i)) {
-                                this.form.errors.push(
-                                    error.response.data.errors[i],
-                                );
+                                this.form.errors.push(error.response.data.errors[i]);
                             }
                         }
                     } else {
-                        this.form.errors = [
-                            "Something went wrong. Please try again.",
-                        ];
+                        this.form.errors = ["Something went wrong. Please try again."];
                     }
                 });
         },
@@ -186,10 +174,7 @@ let index = function () {
             });
         },
         showCreateClientForm() {
-            new Modal(
-                document.getElementById("modal-create-client"),
-                {},
-            ).show();
+            new Modal(document.getElementById("modal-create-client"), {}).show();
         },
         /**
          * Persist the client to storage using the given form.
@@ -213,15 +198,11 @@ let index = function () {
                 })
                 .catch((error) => {
                     if (typeof error.response.data === "object") {
-                        for (const value of Object.entries(
-                            error.response.data.errors,
-                        )) {
+                        for (const value of Object.entries(error.response.data.errors)) {
                             form.errors.push(value);
                         }
                     } else {
-                        form.errors = [
-                            "Something went wrong. Please try again.",
-                        ];
+                        form.errors = ["Something went wrong. Please try again."];
                     }
                     //console.log(form.errors);
                 });
@@ -230,11 +211,9 @@ let index = function () {
          * Revoke the given token.
          */
         revoke(token) {
-            api.delete("./oauth/personal-access-tokens/" + token.id).then(
-                () => {
-                    this.getTokens();
-                },
-            );
+            api.delete("./oauth/personal-access-tokens/" + token.id).then(() => {
+                this.getTokens();
+            });
         },
 
         /**
@@ -242,21 +221,13 @@ let index = function () {
          */
         showClientSecret(clientSecret) {
             this.clientSecret = clientSecret;
-            new Modal(
-                document.getElementById("modal-client-secret"),
-                {},
-            ).show();
+            new Modal(document.getElementById("modal-client-secret"), {}).show();
         },
         regenerateSecret(client) {
-            api.post("./oauth/clients/regenerate/" + client.id).then(
-                (response) => {
-                    this.clientSecret = response.data.plainSecret;
-                    new Modal(
-                        document.getElementById("modal-client-secret"),
-                        {},
-                    ).show();
-                },
-            );
+            api.post("./oauth/clients/regenerate/" + client.id).then((response) => {
+                this.clientSecret = response.data.plainSecret;
+                new Modal(document.getElementById("modal-client-secret"), {}).show();
+            });
         },
 
         /**
@@ -271,12 +242,7 @@ let index = function () {
          * Create a new OAuth client for the user.
          */
         store() {
-            this.persistClient(
-                "post",
-                "./oauth/clients",
-                this.createForm,
-                "#modal-create-client",
-            );
+            this.persistClient("post", "./oauth/clients", this.createForm, "#modal-create-client");
         },
         /**
          * Edit the given client.
@@ -293,12 +259,7 @@ let index = function () {
          * Update the client being edited.
          */
         update() {
-            this.persistClient(
-                "put",
-                "./oauth/clients/" + this.editForm.id,
-                this.editForm,
-                "#modal-edit-client",
-            );
+            this.persistClient("put", "./oauth/clients/" + this.editForm.id, this.editForm, "#modal-edit-client");
         },
     };
 };

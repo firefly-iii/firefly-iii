@@ -29,9 +29,7 @@ let index = function () {
     return {
         init() {
             (function () {
-                let list = document.querySelectorAll(
-                    'div.app-content form input[type="text"]:enabled',
-                );
+                let list = document.querySelectorAll('div.app-content form input[type="text"]:enabled');
                 if (list.length > 0) {
                     list[0].focus();
                 }

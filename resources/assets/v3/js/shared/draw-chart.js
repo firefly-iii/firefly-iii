@@ -60,13 +60,7 @@ let defaultChartOptions = {
     },
 };
 
-export function drawMultiCurrencyChart(
-    type,
-    url,
-    holder,
-    anonymous,
-    drawTodayMarker,
-) {
+export function drawMultiCurrencyChart(type, url, holder, anonymous, drawTodayMarker) {
     if ("line" === type) {
         drawMultiCurrencyLineChart(url, holder, anonymous, drawTodayMarker);
         return;
@@ -115,18 +109,13 @@ function drawMultiCurrencyStackedColumnChart(url, holder, anonymous) {
             for (let i = 0; i < all.length; i++) {
                 if (Object.hasOwn(all, i)) {
                     let current = all[i];
-                    let label =
-                        current.label + " (" + current.currency_code + ")";
+                    let label = current.label + " (" + current.currency_code + ")";
                     console.log("Now processing", label);
 
                     current.entries.spent = parseFloat(current.entries.spent);
-                    current.entries.budgeted = parseFloat(
-                        current.entries.budgeted,
-                    );
+                    current.entries.budgeted = parseFloat(current.entries.budgeted);
                     current.entries.left = parseFloat(current.entries.left);
-                    current.entries.overspent = parseFloat(
-                        current.entries.overspent,
-                    );
+                    current.entries.overspent = parseFloat(current.entries.overspent);
                     if (current.entries.spent < 0) {
                         current.entries.spent = current.entries.spent * -1;
                     }
@@ -166,10 +155,7 @@ function drawMultiCurrencyStackedColumnChart(url, holder, anonymous) {
                         }
                     }
                     // user has not overspent, and there was a budget set.
-                    if (
-                        current.entries.spent < current.entries.budgeted &&
-                        0 !== current.entries.budgeted
-                    ) {
+                    if (current.entries.spent < current.entries.budgeted && 0 !== current.entries.budgeted) {
                         // console.log('A: Is not overspent, and there was a budget', current.entries.spent, current.entries.budgeted);
                         let key = "budgeted" + current.currency_code;
                         datasets[key].data[labelIndex] = 0; // parseFloat(current.entries.budgeted);
@@ -184,14 +170,10 @@ function drawMultiCurrencyStackedColumnChart(url, holder, anonymous) {
                         datasets[key].data[labelIndex] = 0;
                     }
                     // user has overspent and there was a budget set.
-                    if (
-                        current.entries.spent >= current.entries.budgeted &&
-                        0 !== current.entries.budgeted
-                    ) {
+                    if (current.entries.spent >= current.entries.budgeted && 0 !== current.entries.budgeted) {
                         // console.log('B: Is overspent, and there was a budget', current.entries.spent, current.entries.budgeted);
                         let key = "budgeted" + current.currency_code;
-                        datasets[key].data[labelIndex] =
-                            current.entries.budgeted;
+                        datasets[key].data[labelIndex] = current.entries.budgeted;
 
                         key = "spent" + current.currency_code;
                         datasets[key].data[labelIndex] = 0;
@@ -200,14 +182,10 @@ function drawMultiCurrencyStackedColumnChart(url, holder, anonymous) {
                         datasets[key].data[labelIndex] = 0;
 
                         key = "overspent" + current.currency_code;
-                        datasets[key].data[labelIndex] =
-                            current.entries.overspent;
+                        datasets[key].data[labelIndex] = current.entries.overspent;
                     }
 
-                    if (
-                        current.entries.spent >= current.entries.budgeted &&
-                        0 === current.entries.budgeted
-                    ) {
+                    if (current.entries.spent >= current.entries.budgeted && 0 === current.entries.budgeted) {
                         // user has no budget set.
                         let key = "budgeted" + current.currency_code;
                         datasets[key].data[labelIndex] = 0;
@@ -230,10 +208,7 @@ function drawMultiCurrencyStackedColumnChart(url, holder, anonymous) {
                             id: axisId,
                             type: "linear",
                             stacked: true,
-                            position:
-                                0 === Object.keys(axes).length % 2
-                                    ? "left"
-                                    : "right",
+                            position: 0 === Object.keys(axes).length % 2 ? "left" : "right",
                             ticks: {
                                 callback: function (value) {
                                     if (anonymous) {
@@ -269,15 +244,9 @@ function drawMultiCurrencyStackedColumnChart(url, holder, anonymous) {
                 let index = tooltipItem.dataIndex;
                 let amount = tooltipItem.dataset.data[index];
 
-                let string = formatMoney(
-                    amount,
-                    tooltipItem.dataset.currency_code,
-                );
+                let string = formatMoney(amount, tooltipItem.dataset.currency_code);
                 if (anonymous) {
-                    string = formatMoney(
-                        "0",
-                        tooltipItem.dataset.currency_code,
-                    );
+                    string = formatMoney("0", tooltipItem.dataset.currency_code);
                 }
                 if (tooltipItem.dataset.label.startsWith("budgeted")) {
                     return i18next.t("firefly.budgeted") + ": " + string;
@@ -298,9 +267,7 @@ function drawMultiCurrencyStackedColumnChart(url, holder, anonymous) {
             if (
                 typeof data === "undefined" ||
                 0 === data.length ||
-                (typeof data === "object" &&
-                    typeof data.labels === "object" &&
-                    0 === data.labels.length)
+                (typeof data === "object" && typeof data.labels === "object" && 0 === data.labels.length)
             ) {
                 let el = document.getElementById(holder).parentElement;
                 el.innerHTML = "";
@@ -329,8 +296,7 @@ function drawMultiCurrencyStackedColumnChart(url, holder, anonymous) {
             let el = document.getElementById(holder).parentElement;
             el.innerHTML = "";
             el.classList.add("general-chart-error");
-            el.innerText =
-                i18next.t("firefly.could_not_load_chart") + " " + error;
+            el.innerText = i18next.t("firefly.could_not_load_chart") + " " + error;
         });
 }
 
@@ -377,12 +343,7 @@ function drawMultiCurrencyLineChart(url, holder, anonymous, drawTodayMarker) {
                                     drawTodayIndex = labelCount;
                                 }
                                 // add the label to the array
-                                data.labels.push(
-                                    format(
-                                        date,
-                                        i18next.t("config.month_and_day_fns"),
-                                    ),
-                                );
+                                data.labels.push(format(date, i18next.t("config.month_and_day_fns")));
                             }
                         }
                     }
@@ -410,10 +371,7 @@ function drawMultiCurrencyLineChart(url, holder, anonymous, drawTodayMarker) {
                         axes[axisId] = {
                             id: axisId,
                             type: "linear",
-                            position:
-                                0 === Object.keys(axes).length % 2
-                                    ? "left"
-                                    : "right",
+                            position: 0 === Object.keys(axes).length % 2 ? "left" : "right",
                             ticks: {
                                 callback: function (value) {
                                     if (anonymous) {
@@ -438,15 +396,9 @@ function drawMultiCurrencyLineChart(url, holder, anonymous, drawTodayMarker) {
                 let index = tooltipItem.dataIndex;
                 let amount = tooltipItem.dataset.data[index];
 
-                let string = formatMoney(
-                    amount,
-                    tooltipItem.dataset.currency_code,
-                );
+                let string = formatMoney(amount, tooltipItem.dataset.currency_code);
                 if (anonymous) {
-                    string = formatMoney(
-                        "0",
-                        tooltipItem.dataset.currency_code,
-                    );
+                    string = formatMoney("0", tooltipItem.dataset.currency_code);
                 }
                 return tooltipItem.dataset.label + ": " + string;
             };
@@ -455,9 +407,7 @@ function drawMultiCurrencyLineChart(url, holder, anonymous, drawTodayMarker) {
             if (
                 typeof data === "undefined" ||
                 0 === data.length ||
-                (typeof data === "object" &&
-                    typeof data.labels === "object" &&
-                    0 === data.labels.length)
+                (typeof data === "object" && typeof data.labels === "object" && 0 === data.labels.length)
             ) {
                 let el = document.getElementById(holder).parentElement;
                 el.innerHTML = "";
@@ -473,10 +423,7 @@ function drawMultiCurrencyLineChart(url, holder, anonymous, drawTodayMarker) {
 
             // add a marker to the chart if defined.
             if (drawTodayMarker && "" !== drawTodayLabel) {
-                let markDate = format(
-                    new Date(drawTodayLabel),
-                    i18next.t("config.month_and_day_fns"),
-                );
+                let markDate = format(new Date(drawTodayLabel), i18next.t("config.month_and_day_fns"));
                 let today = i18next.t("firefly.today");
                 let xAdjust = 0;
                 if (drawTodayIndex < 3) {
@@ -521,8 +468,7 @@ function drawMultiCurrencyLineChart(url, holder, anonymous, drawTodayMarker) {
             let el = document.getElementById(holder).parentElement;
             el.innerHTML = "";
             el.classList.add("general-chart-error");
-            el.innerText =
-                i18next.t("firefly.could_not_load_chart") + " " + error;
+            el.innerText = i18next.t("firefly.could_not_load_chart") + " " + error;
         });
 }
 
@@ -560,9 +506,7 @@ function drawSingleCurrencyLineChart(url, holder, anonymous) {
             if (
                 typeof data === "undefined" ||
                 0 === data.length ||
-                (typeof data === "object" &&
-                    typeof data.labels === "object" &&
-                    0 === data.labels.length)
+                (typeof data === "object" && typeof data.labels === "object" && 0 === data.labels.length)
             ) {
                 let el = document.getElementById(holder).parentElement;
                 el.innerHTML = "";
@@ -588,18 +532,13 @@ function drawSingleCurrencyLineChart(url, holder, anonymous) {
             let el = document.getElementById(holder).parentElement;
             el.innerHTML = "";
             el.classList.add("general-chart-error");
-            el.innerText =
-                i18next.t("firefly.could_not_load_chart") + " " + error;
+            el.innerText = i18next.t("firefly.could_not_load_chart") + " " + error;
         });
 }
 
 // https://stackoverflow.com/questions/43855166/how-to-tell-if-two-dates-are-in-the-same-day-or-in-the-same-hour
 function isSameDay(d1, d2) {
-    return (
-        d1.getFullYear() === d2.getFullYear() &&
-        d1.getMonth() === d2.getMonth() &&
-        d1.getDate() === d2.getDate()
-    );
+    return d1.getFullYear() === d2.getFullYear() && d1.getMonth() === d2.getMonth() && d1.getDate() === d2.getDate();
 }
 
 function formatLabel(str, maxWidth) {

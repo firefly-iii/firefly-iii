@@ -46,16 +46,12 @@ export function loadSubscriptions(includeInactive) {
             if (Object.hasOwn(response.data.data, i)) {
                 let current = response.data.data[i];
                 let objectGroupId = current.attributes.object_group_id ?? "0";
-                let objectGroupTitle =
-                    current.attributes.object_group_title ?? "(no group)";
+                let objectGroupTitle = current.attributes.object_group_title ?? "(no group)";
                 let subscription = {
                     id: current.id,
                     name: current.attributes.active
                         ? current.attributes.name
-                        : current.attributes.name +
-                          " (" +
-                          i18next.t("firefly.inactive").toLowerCase() +
-                          ")",
+                        : current.attributes.name + " (" + i18next.t("firefly.inactive").toLowerCase() + ")",
                     order: current.attributes.order,
                 };
                 if (!includeInactive && false === current.attributes.active) {
@@ -71,9 +67,7 @@ export function loadSubscriptions(includeInactive) {
                     };
                 }
                 subscriptions[objectGroupId].subscriptions.push(subscription);
-                subscriptions[objectGroupId].subscriptions.sort(
-                    (a, b) => a.order - b.order,
-                );
+                subscriptions[objectGroupId].subscriptions.sort((a, b) => a.order - b.order);
             }
         }
         return Object.keys(subscriptions)

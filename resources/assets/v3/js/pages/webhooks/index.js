@@ -64,21 +64,14 @@ let index = function () {
                             show_secret: false,
                         };
                         if (current.attributes.url.length > 20) {
-                            webhook.url =
-                                current.attributes.url.slice(0, 20) + "...";
+                            webhook.url = current.attributes.url.slice(0, 20) + "...";
                         }
                         this.webhooks.push(webhook);
                     }
                 }
 
-                if (
-                    response.data.meta.pagination.current_page <
-                    response.data.meta.pagination.total_pages
-                ) {
-                    this.downloadWebhooks(
-                        parseInt(response.data.meta.pagination.current_page) +
-                            1,
-                    );
+                if (response.data.meta.pagination.current_page < response.data.meta.pagination.total_pages) {
+                    this.downloadWebhooks(parseInt(response.data.meta.pagination.current_page) + 1);
                     return;
                 }
                 this.loading = false;
@@ -90,9 +83,7 @@ let index = function () {
                 .then((response) => {
                     for (let key in response.data.data.value) {
                         if (Object.hasOwn(response.data.data.value, key)) {
-                            this.triggers[key] = i18next.t(
-                                "firefly.webhook_trigger_" + key,
-                            );
+                            this.triggers[key] = i18next.t("firefly.webhook_trigger_" + key);
                         }
                     }
                 })
@@ -101,12 +92,8 @@ let index = function () {
                         .getByName("webhook.responses")
                         .then((response) => {
                             for (let key in response.data.data.value) {
-                                if (
-                                    Object.hasOwn(response.data.data.value, key)
-                                ) {
-                                    this.responses[key] = i18next.t(
-                                        "firefly.webhook_response_" + key,
-                                    );
+                                if (Object.hasOwn(response.data.data.value, key)) {
+                                    this.responses[key] = i18next.t("firefly.webhook_response_" + key);
                                 }
                             }
                         })
@@ -115,16 +102,8 @@ let index = function () {
                                 .getByName("webhook.deliveries")
                                 .then((response) => {
                                     for (let key in response.data.data.value) {
-                                        if (
-                                            Object.hasOwn(
-                                                response.data.data.value,
-                                                key,
-                                            )
-                                        ) {
-                                            this.deliveries[key] = i18next.t(
-                                                "firefly.webhook_delivery_" +
-                                                    key,
-                                            );
+                                        if (Object.hasOwn(response.data.data.value, key)) {
+                                            this.deliveries[key] = i18next.t("firefly.webhook_delivery_" + key);
                                         }
                                     }
                                 })

@@ -33,16 +33,13 @@ let edit = function () {
         detectCategoryChange(e) {
             if ("" !== e.target.value) {
                 // tags_action_do_nothing
-                document.querySelector(
-                    'input[name="ignore_category"]',
-                ).checked = false;
+                document.querySelector('input[name="ignore_category"]').checked = false;
             }
         },
         detectBudgetChange(e) {
             if (0 !== parseInt(e.target.value)) {
                 // tags_action_do_nothing
-                document.querySelector('input[name="ignore_budget"]').checked =
-                    false;
+                document.querySelector('input[name="ignore_budget"]').checked = false;
             }
         },
         detectTagChange() {
@@ -53,15 +50,9 @@ let edit = function () {
                     count++;
                 }
             }
-            if (
-                count > 0 &&
-                true ===
-                    document.getElementById("tags_action_do_nothing").checked
-            ) {
-                document.getElementById("tags_action_do_nothing").checked =
-                    false;
-                document.getElementById("tags_action_do_replace").checked =
-                    true;
+            if (count > 0 && true === document.getElementById("tags_action_do_nothing").checked) {
+                document.getElementById("tags_action_do_nothing").checked = false;
+                document.getElementById("tags_action_do_replace").checked = true;
             }
         },
         init() {
@@ -86,9 +77,7 @@ let edit = function () {
                 noCache: true,
                 fetchOptions: {
                     headers: {
-                        "X-CSRF-TOKEN": document.head.querySelector(
-                            'meta[name="csrf-token"]',
-                        ).content,
+                        "X-CSRF-TOKEN": document.head.querySelector('meta[name="csrf-token"]').content,
                     },
                 },
             });

@@ -39,9 +39,7 @@ function getCacheKey(string, params) {
             newParams[key] = params[key];
         }
     }
-    return (
-        "dcx_" + md5(JSON.stringify(newParams)).substring(0, 12) + lastActivity
-    );
+    return "dcx_" + md5(JSON.stringify(newParams)).substring(0, 12) + lastActivity;
 }
 
 //  Formatted version of a popular md5 implementation
@@ -53,10 +51,7 @@ function md5(inputString) {
     function rh(n) {
         var j,
             s = "";
-        for (j = 0; j <= 3; j++)
-            s +=
-                hc.charAt((n >> (j * 8 + 4)) & 0x0f) +
-                hc.charAt((n >> (j * 8)) & 0x0f);
+        for (j = 0; j <= 3; j++) s += hc.charAt((n >> (j * 8 + 4)) & 0x0f) + hc.charAt((n >> (j * 8)) & 0x0f);
         return s;
     }
     function ad(x, y) {
@@ -87,8 +82,7 @@ function md5(inputString) {
         var nblk = ((x.length + 8) >> 6) + 1;
         var blks = new Array(nblk * 16);
         for (i = 0; i < nblk * 16; i++) blks[i] = 0;
-        for (i = 0; i < x.length; i++)
-            blks[i >> 2] |= x.charCodeAt(i) << ((i % 4) * 8);
+        for (i = 0; i < x.length; i++) blks[i >> 2] |= x.charCodeAt(i) << ((i % 4) * 8);
         blks[i >> 2] |= 0x80 << ((i % 4) * 8);
         blks[nblk * 16 - 2] = x.length * 8;
         return blks;

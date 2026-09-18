@@ -49,11 +49,7 @@ export function loadBudgets(includeInactive) {
                 if (includeInactive && false === current.attributes.active) {
                     let obj = {
                         id: current.id,
-                        name:
-                            current.attributes.name +
-                            " (" +
-                            i18next.t("firefly.inactive").toLowerCase() +
-                            ")",
+                        name: current.attributes.name + " (" + i18next.t("firefly.inactive").toLowerCase() + ")",
                     };
                     returnData.push(obj);
                 }
