@@ -46,8 +46,8 @@ class BulkEditJournalRequest extends FormRequest
     {
         // fixed
         return [
-            'journals.*' => ['required', 'belongsToUser:transaction_journals,id'],
-            'tags_action' => 'in:no_nothing,do_replace,do_append'
+            'journals.*'  => ['required', 'belongsToUser:transaction_journals,id'],
+            'tags_action' => 'in:no_nothing,do_replace,do_append',
         ];
     }
 
