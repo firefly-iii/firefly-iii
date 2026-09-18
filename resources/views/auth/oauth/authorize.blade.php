@@ -35,7 +35,7 @@
                     <div class="col">
                         <!-- Authorize Button -->
                         <form method="post" class="form-inline" action="{{ route('passport.authorizations.approve') }}">
-                            @csrf
+                            <input name="_token" type="hidden" value="{{ csrf_token() }}">
                             <input type="hidden" name="state" value="{{ $request->state }}">
                             <input type="hidden" name="client_id" value="{{ $client->getKey() }}">
                             <input type="hidden" name="auth_token" value="{{ $authToken }}">
@@ -47,7 +47,7 @@
                     <div class="col">
                         <!-- Cancel Button -->
                         <form method="post" action="{{ route('passport.authorizations.deny') }}">
-                            @csrf
+                            <input name="_token" type="hidden" value="{{ csrf_token() }}">
                             @method('DELETE')
 
                             <input type="hidden" name="state" value="{{ $request->state }}">
