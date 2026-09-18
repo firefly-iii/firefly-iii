@@ -4,6 +4,12 @@
         <em title="{{ __('firefly.source_account') }}" class="bi bi-arrow-left"></em>
     </label>
     <div class="col-sm-10">
+        <template x-if="transaction.source_account.loading">
+            <div class="spinner-border spinner-border-sm" role="status">
+                <span class="visually-hidden">{{ __('firefly.thinking') }}</span>
+            </div>
+        </template>
+        <template x-if="!transaction.source_account.loading">
         <div class="input-group">
         <input type="text"
                :class="{'is-invalid': transaction.errors.source_account.length > 0, 'form-control': true, 'ac-source': true}"
@@ -17,6 +23,8 @@
                placeholder="{{ __('firefly.source_account')  }}">
             <button tabindex="-1" class="btn btn-outline-secondary" type="button" @click="clearSourceAccount(index)"><em class="bi bi-trash"></em></button>
         </div>
+        </template>
+
         <template x-if="true===transaction.source_account.disabled">
             <div class="small form-control-feedback">
                 {{ __('firefly.disabled_split_account_src') }}

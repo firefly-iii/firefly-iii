@@ -15,6 +15,7 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 - [Discussion 12760](https://github.com/orgs/firefly-iii/discussions/12760) (419 Page expired when selecting a different date range) started by @wecoyote5
 - [Issue 12803](https://github.com/firefly-iii/firefly-iii/issues/12803) (Error "The description.xxxxxx field is required." when mass updating transactions) reported by @andyesten
 - [Issue 12781](https://github.com/firefly-iii/firefly-iii/issues/12781) (When mass editing transactions, only the last tag is kept) reported by @bertille-ddp
+- #12779
 
 ## v6.7.2 - 2026-09-16
 

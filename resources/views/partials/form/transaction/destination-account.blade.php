@@ -4,6 +4,12 @@
         <em title="{{ __('firefly.destination_account') }}" class="bi bi-arrow-right"></em>
     </label>
     <div class="col-sm-10">
+        <template x-if="transaction.destination_account.loading">
+            <div class="spinner-border spinner-border-sm" role="status">
+                <span class="visually-hidden">{{ __('firefly.thinking') }}</span>
+            </div>
+        </template>
+        <template x-if="!transaction.destination_account.loading">
         <div class="input-group">
         <input type="text"
                :class="{'is-invalid': transaction.errors.destination_account.length > 0, 'form-control': true, 'ac-dest': true}"
@@ -17,6 +23,7 @@
                placeholder="{{ __('firefly.destination_account')  }}">
             <button tabindex="-1" class="btn btn-outline-secondary" type="button" @click="clearDestinationAccount(index)"><em class="bi bi-trash"></em></button>
         </div>
+        </template>
         <template x-if="true===transaction.destination_account.disabled">
             <div class="small form-control-feedback">
                 {{ __('firefly.disabled_split_account_dest') }}

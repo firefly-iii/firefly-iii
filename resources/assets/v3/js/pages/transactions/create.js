@@ -21,56 +21,54 @@
 import "../../boot/bootstrap.js";
 import sidebar from "../../pages/shared/sidebar.js";
 import dates from "../shared/dates.js";
-import { defaultErrorSet } from "./shared/create-empty-split.js";
-import { parseFromEntries } from "./shared/parse-from-entries.js";
+import {defaultErrorSet} from "./shared/create-empty-split.js";
+import {parseFromEntries} from "./shared/parse-from-entries.js";
 import Post from "../../api/model/transaction/post.js";
-import { loadCurrencies } from "./shared/load-currencies.js";
-import { loadBudgets } from "./shared/load-budgets.js";
-import { loadPiggyBanks } from "./shared/load-piggy-banks.js";
-import { loadSubscriptions } from "./shared/load-subscriptions.js";
-import { addAllAutocompleteToForm } from "./shared/add-autocomplete.js";
-import { processAttachments } from "./shared/process-attachments.js";
-import { disableSplitInputs } from "./shared/disable-split-inputs.js";
-import { parseTotalAmount } from "./shared/parse-total-amount.js";
-import { keyUpFromCategory } from "./shared/keyup-from-category.js";
-import { changedAmount } from "./shared/changed-amount.js";
-import { changedForeignAmount } from "./shared/changed-foreign-amount.js";
-import { parseErrors } from "./shared/parse-errors.js";
+import Get from "../../api/model/account/get.js";
+import {loadCurrencies} from "./shared/load-currencies.js";
+import {loadBudgets} from "./shared/load-budgets.js";
+import {loadPiggyBanks} from "./shared/load-piggy-banks.js";
+import {loadSubscriptions} from "./shared/load-subscriptions.js";
+import {addAllAutocompleteToForm} from "./shared/add-autocomplete.js";
+import {processAttachments} from "./shared/process-attachments.js";
+import {disableSplitInputs} from "./shared/disable-split-inputs.js";
+import {parseTotalAmount} from "./shared/parse-total-amount.js";
+import {keyUpFromCategory} from "./shared/keyup-from-category.js";
+import {changedAmount} from "./shared/changed-amount.js";
+import {changedForeignAmount} from "./shared/changed-foreign-amount.js";
+import {parseErrors} from "./shared/parse-errors.js";
 import i18next from "i18next";
-import { processUploadError } from "./shared/process-upload-error.js";
-import { showMessageOrRedirectUser } from "./shared/show-message-or-redirect.js";
-import { addSplit } from "./shared/add-split.js";
-import {
-    clearDestinationAccount,
-    clearSourceAccount,
-} from "./shared/clear-fields.js";
-import { detectTransactionType } from "./shared/detect-transaction-type.js";
-import { determineAmountCurrency } from "./shared/determine-amount-currency.js";
-import { loadCustomFields } from "./shared/load-custom-fields.js";
-import { loadDefaultCoordinates } from "./shared/load-default-coordinates.js";
+import {processUploadError} from "./shared/process-upload-error.js";
+import {showMessageOrRedirectUser} from "./shared/show-message-or-redirect.js";
+import {addSplit} from "./shared/add-split.js";
+import {clearDestinationAccount, clearSourceAccount,} from "./shared/clear-fields.js";
+import {detectTransactionType} from "./shared/detect-transaction-type.js";
+import {determineAmountCurrency} from "./shared/determine-amount-currency.js";
+import {loadCustomFields} from "./shared/load-custom-fields.js";
+import {loadDefaultCoordinates} from "./shared/load-default-coordinates.js";
 import "leaflet/dist/leaflet.css";
-import { displayMap } from "./shared/display-map.js";
-import { renderMap } from "./shared/render-map.js";
-import { onMapClick } from "./shared/on-map-click.js";
-import { onMapZoom } from "./shared/on-map-zoom.js";
-import { clearLocation } from "./shared/clear-location.js";
-import { removeSplit } from "./shared/remove-split.js";
-import { createLinkAutocomplete } from "./shared/create-link-autocomplete.js";
-import { editLink } from "./shared/edit-link.js";
-import { switchLink } from "./shared/switch-link.js";
-import { removeLink } from "./shared/remove-link.js";
-import { saveEditedLink } from "./shared/save-edited-link.js";
-import { saveNewLink } from "./shared/save-new-link.js";
-import { redirectAfterTransactionLinks } from "./shared/redirect-after-transaction-links.js";
-import { processTransactionLinks } from "./shared/process-transaction-links.js";
-import { addTabListener } from "./shared/add-tab-listener.js";
-import { autoStep } from "./shared/auto-step.js";
-import { respondToTabSwitch } from "./shared/respond-to-tab-switch.js";
-import { loadTransactionLinks } from "./shared/load-transaction-links.js";
+import {displayMap} from "./shared/display-map.js";
+import {renderMap} from "./shared/render-map.js";
+import {onMapClick} from "./shared/on-map-click.js";
+import {onMapZoom} from "./shared/on-map-zoom.js";
+import {clearLocation} from "./shared/clear-location.js";
+import {removeSplit} from "./shared/remove-split.js";
+import {createLinkAutocomplete} from "./shared/create-link-autocomplete.js";
+import {editLink} from "./shared/edit-link.js";
+import {switchLink} from "./shared/switch-link.js";
+import {removeLink} from "./shared/remove-link.js";
+import {saveEditedLink} from "./shared/save-edited-link.js";
+import {saveNewLink} from "./shared/save-new-link.js";
+import {redirectAfterTransactionLinks} from "./shared/redirect-after-transaction-links.js";
+import {processTransactionLinks} from "./shared/process-transaction-links.js";
+import {addTabListener} from "./shared/add-tab-listener.js";
+import {autoStep} from "./shared/auto-step.js";
+import {respondToTabSwitch} from "./shared/respond-to-tab-switch.js";
+import {loadTransactionLinks} from "./shared/load-transaction-links.js";
 import Alpine from "alpinejs";
-import { keyUpFromSource } from "./shared/keyup-from-source.js";
-import { keyUpFromDestination } from "./shared/keyup-from-destination.js";
-import { keyUpFromDescription } from "./shared/keyup-from-description.js";
+import {keyUpFromSource} from "./shared/keyup-from-source.js";
+import {keyUpFromDestination} from "./shared/keyup-from-destination.js";
+import {keyUpFromDescription} from "./shared/keyup-from-description.js";
 import focusFirstInput from "../../shared/focus-first-input.js";
 
 window.enableDates = false;
@@ -285,6 +283,41 @@ let create = function () {
         clearCategory(index) {
             this.entries[index].category_name = "";
         },
+        fillSourceAccount() {
+            this.fillAccount('source', 'source_account');
+        },
+        fillDestinationAccount() {
+            this.fillAccount('destination', 'destination_account');
+        },
+        fillAccount(direction, field) {
+            this.entries[0][field].loading = true;
+            const urlParams = new URLSearchParams(window.location.search);
+            const accountId = parseInt(urlParams.get(direction));
+            if (accountId > 0) {
+                (new Get).get(accountId).then((response) => {
+                    // source ID must be asset account or liabilities.
+                    let account = response.data.data;
+                    let attributes = response.data.data.attributes;
+                    if ('asset' !== attributes.type && 'liabilities' !== attributes.type) {
+                        return;
+                    }
+                    let type = 'Asset account';
+                    if ('liabilities' === attributes.type) {
+                        type = String(attributes.liability_type).charAt(0).toUpperCase() + String(attributes.liability_type).slice(1);
+                    }
+                    this.entries[0][field] = {
+                        id: account.id,
+                        loading: false,
+                        name: attributes.name,
+                        type: type,
+                        alpine_name: attributes.name,
+                        disabled: false,
+                    };
+                });
+                return;
+            }
+            this.entries[0][field].loading = false;
+        },
 
         init() {
             this.i18next = i18next;
@@ -299,6 +332,8 @@ let create = function () {
                 this.formData.foreignCurrencies = data.foreignCurrencies;
                 this.autoStep();
                 focusFirstInput();
+                this.fillSourceAccount();
+                this.fillDestinationAccount();
             });
 
             loadBudgets(false).then((data) => {
@@ -439,7 +474,7 @@ let create = function () {
     };
 };
 
-let comps = { create, sidebar, dates };
+let comps = {create, sidebar, dates};
 
 function loadPage() {
     Object.keys(comps).forEach((comp) => {
