@@ -135,7 +135,7 @@ class AccountFactory
 
     public function setUser(User $user): void
     {
-        $this->user = $user;
+        $this->user      = $user;
         $this->userGroup = $user->userGroup;
         $this->accountRepository->setUser($user);
         $this->accountRepository->setUserGroup($this->userGroup);
