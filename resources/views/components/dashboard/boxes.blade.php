@@ -3,9 +3,6 @@
         <div class="small-box text-bg-primary">
             <div class="inner balance-box">
                 <h4 class="hover-expand">
-                    <template x-if="0 === balanceBox.amounts.length">
-                        <span>&nbsp;</span>
-                    </template>
                     <template x-for="(amount, index) in balanceBox.amounts" :key="index">
                         <span>
                             <span x-text="amount"></span><span
@@ -50,13 +47,10 @@
         <!--end::Small Box Widget 1-->
     </div>
     <!--end::Col-->
-    <div class="col-xl-3 col-lg-6 col-md-6 col-sm-6" style="flex-grow: 1;">
+    <div class="col-xl-3 col-lg-6 col-md-6 col-sm-6" >
         <!--begin::Small Box Widget 2-->
         <div class="small-box text-bg-warning">
             <div class="inner">
-                <template x-if="0 === billBox.unpaid.length">
-                    <h4>&nbsp;</h4>
-                </template>
                 <template x-if="billBox.unpaid.length > 0">
                     <h4 class="hover-expand">
                         <template x-for="(amount, index) in billBox.unpaid" :key="index">
@@ -105,14 +99,11 @@
         <!--end::Small Box Widget 2-->
     </div>
     <!--end::Col-->
-    <div class="col-xl-3 col-lg-6 col-md-6 col-sm-6" style="flex-grow: 1;">
+    <div class="col-xl-3 col-lg-6 col-md-6 col-sm-6">
         <!--begin::Small Box Widget 3-->
         <div x-bind:class="{'small-box': true, 'text-bg-success': !noMoneyLeft, 'text-bg-danger': noMoneyLeft}">
             <div class="inner">
                 <h4 class="hover-expand">
-                    <template x-if="0 === leftBox.left.length">
-                        <span>&nbsp;</span>
-                    </template>
                     <template x-for="(amount, index) in leftBox.left" :key="index">
                         <span>
                             <span x-text="amount"></span><span
@@ -157,7 +148,7 @@
         <!--end::Small Box Widget 3-->
     </div>
     <!--end::Col-->
-    <div class="col-xl-3 col-lg-6 col-md-6 col-sm-6" style="flex-grow: 1;">
+    <div class="col-xl-3 col-lg-6 col-md-6 col-sm-6">
         <!--begin::Small Box Widget 4-->
         <div class="small-box text-bg-primary">
             <div class="inner">
