@@ -44,7 +44,7 @@
             document.documentElement.style.colorScheme = resolved;
 
             // bonus: overrule local storage with session data:
-            console.warn('Temporary overrule local storage until everything uses the API.');
+            console.warn('Temporary overrule local storage until everything uses the API.', '{{ session()->get('start')->format('c') }}', '{{ session()->get('end')->format('c') }}');
             localStorage.setItem('start', '{{ session()->get('start')->format('c') }}');
             localStorage.setItem('end', '{{ session()->get('end')->format('c') }}');
         })();

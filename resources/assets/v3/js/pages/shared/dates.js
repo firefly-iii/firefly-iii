@@ -18,7 +18,7 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-import { addMonths, endOfMonth, startOfMonth, startOfYear, subDays, subMonths } from "date-fns";
+import {addMonths, endOfDay, endOfMonth, startOfMonth, startOfYear, subDays, subMonths} from "date-fns";
 import format from "../../util/format";
 
 export default () => ({
@@ -33,8 +33,8 @@ export default () => ({
     },
     updateDatesNoSubmit(e) {
         let split = e.currentTarget._props.value.split("/");
-        console.log("Start is now " + split[0]);
-        console.log("End is now   " + split[1]);
+        // console.log("Start is now " + split[0]);
+        // console.log("End is now   " + split[1]);
         document.getElementById("customStart").value = split[0];
         document.getElementById("customEnd").value = split[1];
         window.store.set("start", split[0]);
@@ -47,22 +47,27 @@ export default () => ({
     submitForm() {
         // console.log('submitForm', format(window.store.get('start'), 'yyyy-MM-dd'), format(window.store.get('end'), 'yyyy-MM-dd'));
         // save form and submit for v1.
-        document.getElementById("customStart").value = format(window.store.get("start"), "yyyy-MM-dd");
-        document.getElementById("customEnd").value = format(window.store.get("end"), "yyyy-MM-dd");
+        document.getElementById("customStart").value = format(window.store.get("start"), this.preferredFormat);
+        document.getElementById("customEnd").value = format(window.store.get("end"), this.preferredFormat);
         document.getElementById("daterange-form").submit();
     },
     language: "en_US",
+    // Mon Aug 31 2026 19:00:00 GMT-0500
+    // 2026-08-31T19:00:00-05:00
+    preferredFormat: "eee LLL dd yyyy HH:mm:ss 'GMT'xxx",
 
     init() {
         if (false === window.enableDates) {
             // console.log("Date selection is disabled on this page.");
             document.getElementById("date-dropdown").style.display = "none";
+            return;
         }
         document.getElementById("customDateRangeCalendar").addEventListener("change", (e) => {
-            console.log("responding to change event in customDateRangeCalendar");
+            console.log("Responding to change event in customDateRangeCalendar");
             this.updateDatesNoSubmit(e);
         });
-
+        // console.log('From store: start=', window.store.get("start"));
+        // console.log('From store: end=', window.store.get("end"));
         let end = new Date(window.store.get("end"));
         let start = new Date(window.store.get("start"));
         this.range = {
@@ -89,7 +94,7 @@ export default () => ({
     },
 
     buildDateRange() {
-        //console.log('Dates buildDateRange');
+        // console.log('Dates buildDateRange');
 
         // generate ranges
         let nextRange = this.getNextRange();
@@ -102,87 +107,90 @@ export default () => ({
         // set the title:
         let element = document.getElementsByClassName("daterange-holder")[0];
         element.textContent = format(this.range.start) + " - " + format(this.range.end);
-        element.setAttribute("data-start", format(this.range.start, "yyyy-MM-dd"));
-        element.setAttribute("data-end", format(this.range.end, "yyyy-MM-dd"));
+        element.setAttribute("data-start", format(this.range.start, this.preferredFormat, "en-US"));
+        element.setAttribute("data-end", format(this.range.end, this.preferredFormat, "en-US"));
 
         // set the current one
         element = document.getElementsByClassName("daterange-current")[0];
         element.textContent = format(this.defaultRange.start) + " - " + format(this.defaultRange.end);
-        element.setAttribute("data-start", format(this.defaultRange.start, "yyyy-MM-dd"));
-        element.setAttribute("data-end", format(this.defaultRange.end, "yyyy-MM-dd"));
-        //
-        // // generate next range
+        element.setAttribute("data-start", format(this.defaultRange.start, this.preferredFormat, "en-US"));
+        element.setAttribute("data-end", format(this.defaultRange.end, this.preferredFormat, "en-US"));
+
+        // generate next range
         element = document.getElementsByClassName("daterange-next")[0];
         element.textContent = format(nextRange.start) + " - " + format(nextRange.end);
-        element.setAttribute("data-start", format(nextRange.start, "yyyy-MM-dd"));
-        element.setAttribute("data-end", format(nextRange.end, "yyyy-MM-dd"));
-        //
-        // // previous range.
+        element.setAttribute("data-start", format(nextRange.start, this.preferredFormat, "en-US"));
+        element.setAttribute("data-end", format(nextRange.end, this.preferredFormat, "en-US"));
+
+        // previous range.
         element = document.getElementsByClassName("daterange-prev")[0];
         element.textContent = format(prevRange.start) + " - " + format(prevRange.end);
-        element.setAttribute("data-start", format(prevRange.start, "yyyy-MM-dd"));
-        element.setAttribute("data-end", format(prevRange.end, "yyyy-MM-dd"));
-        //
-        // // last 7
+        element.setAttribute("data-start", format(prevRange.start, this.preferredFormat, "en-US"));
+        element.setAttribute("data-end", format(prevRange.end, this.preferredFormat, "en-US"));
+
+        // last 7
         element = document.getElementsByClassName("daterange-7d")[0];
-        element.setAttribute("data-start", format(last7.start, "yyyy-MM-dd"));
-        element.setAttribute("data-end", format(last7.end, "yyyy-MM-dd"));
-        //
-        // // last 30
+        element.setAttribute("data-start", format(last7.start, this.preferredFormat, "en-US"));
+        element.setAttribute("data-end", format(last7.end, this.preferredFormat, "en-US"));
+
+        // last 30
         element = document.getElementsByClassName("daterange-30d")[0];
-        element.setAttribute("data-start", format(last30.start, "yyyy-MM-dd"));
-        element.setAttribute("data-end", format(last30.end, "yyyy-MM-dd"));
-        //
-        // // MTD
+        element.setAttribute("data-start", format(last30.start, this.preferredFormat, "en-US"));
+        element.setAttribute("data-end", format(last30.end, this.preferredFormat, "en-US"));
+
+        // MTD
         element = document.getElementsByClassName("daterange-mtd")[0];
-        element.setAttribute("data-start", format(mtd.start, "yyyy-MM-dd"));
-        element.setAttribute("data-end", format(mtd.end, "yyyy-MM-dd"));
-        //
-        // // YTD
+        element.setAttribute("data-start", format(mtd.start, this.preferredFormat, "en-US"));
+        element.setAttribute("data-end", format(mtd.end, this.preferredFormat, "en-US"));
+
+        // YTD
         element = document.getElementsByClassName("daterange-ytd")[0];
-        element.setAttribute("data-start", format(ytd.start, "yyyy-MM-dd"));
-        element.setAttribute("data-end", format(ytd.end, "yyyy-MM-dd"));
+        element.setAttribute("data-start", format(ytd.start, this.preferredFormat, "en-US"));
+        element.setAttribute("data-end", format(ytd.end, this.preferredFormat, "en-US"));
     },
 
     getNextRange() {
         let start = startOfMonth(this.range.start);
         let nextMonth = addMonths(start, 1);
         let end = endOfMonth(nextMonth);
-        return { start: nextMonth, end: end };
+        return {start: nextMonth, end: end};
     },
 
     getPrevRange() {
         let start = startOfMonth(this.range.start);
         let prevMonth = subMonths(start, 1);
         let end = endOfMonth(prevMonth);
-        return { start: prevMonth, end: end };
+        return {start: prevMonth, end: end};
     },
 
     ytd() {
-        let end = new Date();
+        let end = endOfDay(new Date())
         let start = startOfYear(this.range.start);
-        return { start: start, end: end };
+        return {start: start, end: end};
     },
 
     mtd() {
-        let end = new Date();
+        let end = endOfDay(new Date())
         let start = startOfMonth(this.range.start);
-        return { start: start, end: end };
+        return {start: start, end: end};
     },
 
     lastDays(days) {
-        let end = new Date();
+        let end = endOfDay(new Date());
         let start = subDays(end, days);
-        return { start: start, end: end };
+        return {start: start, end: end};
     },
 
     changeDateRange(e) {
         // console.log("changeDateRange");
         e.preventDefault();
         let target = e.currentTarget;
-
-        let start = new Date(target.getAttribute("data-start"));
-        let end = new Date(target.getAttribute("data-end"));
+        // console.log('Start is', target.getAttribute("data-start"));
+        // console.log('End is', target.getAttribute("data-end"));
+        let start = new Date(Date.parse(target.getAttribute("data-start")));
+        let end = new Date(Date.parse(target.getAttribute("data-end")));
+        // console.log('Start date is', start);
+        // console.log('End date is', end);
         window.store.set("start", start);
         window.store.set("end", end);
         this.submitForm();

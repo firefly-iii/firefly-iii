@@ -110,7 +110,7 @@ function drawMultiCurrencyStackedColumnChart(url, holder, anonymous) {
                 if (Object.hasOwn(all, i)) {
                     let current = all[i];
                     let label = current.label + " (" + current.currency_code + ")";
-                    console.log("Now processing", label);
+                    //console.log("Now processing", label);
 
                     current.entries.spent = parseFloat(current.entries.spent);
                     current.entries.budgeted = parseFloat(current.entries.budgeted);
