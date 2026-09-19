@@ -27,6 +27,7 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 
 - [Issue 12819](https://github.com/firefly-iii/firefly-iii/issues/12819) (Suscriptions with attachement in show page returns 500 error page) reported by @jsaneu
 - #12822
+- #12823
 
 ### Security
 
