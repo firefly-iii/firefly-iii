@@ -53,6 +53,7 @@ use Illuminate\Support\Facades\Log;
  */
 final class BasicController extends Controller
 {
+    protected array $acceptedRoles = [];
     private AvailableBudgetRepositoryInterface $abRepository;
     private AccountRepositoryInterface $accountRepository;
     private BillRepositoryInterface $billRepository;

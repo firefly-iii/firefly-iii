@@ -105,10 +105,18 @@ class AccountRepository implements AccountRepositoryInterface, UserGroupInterfac
         return $result;
     }
 
+    /**
+     * @deprecated
+     */
     public function find(int $accountId): ?Account
     {
         /** @var null|Account */
         return $this->user->accounts()->find($accountId);
+    }
+    public function findForGroup(int $accountId): ?Account
+    {
+        /** @var null|Account */
+        return $this->userGroup->accounts()->find($accountId);
     }
 
     public function findByAccountNumber(string $number, array $types): ?Account
@@ -200,6 +208,20 @@ class AccountRepository implements AccountRepositoryInterface, UserGroupInterfac
         return $query->get(['accounts.*']);
     }
 
+    public function getAccountsByIdForGroup(array $accountIds): Collection
+    {
+        $query = $this->userGroup->accounts();
+
+        if (0 !== count($accountIds)) {
+            $query->whereIn('accounts.id', $accountIds);
+        }
+        $query->orderBy('accounts.order', 'ASC');
+        $query->orderBy('accounts.active', 'DESC');
+        $query->orderBy('accounts.name', 'ASC');
+
+        return $query->get(['accounts.*']);
+    }
+
     public function getAccountsByType(array $types, ?array $sort = []): Collection
     {
         $res   = array_intersect([
@@ -209,6 +231,44 @@ class AccountRepository implements AccountRepositoryInterface, UserGroupInterfac
                                      AccountTypeEnum::DEBT->value,
                                  ], $types);
         $query = $this->user->accounts();
+        if (0 !== count($types)) {
+            $query->accountTypeIn($types);
+        }
+
+        // add sort parameters
+        $allowed = config('firefly.allowed_db_sort_parameters.Account', []);
+        $sorted  = 0;
+        if (0 !== count($sort)) {
+            foreach ($sort as $param) {
+                if (in_array($param[0], $allowed, true)) {
+                    $query->orderBy($param[0], $param[1]);
+                    ++$sorted;
+                }
+            }
+        }
+
+        if (0 === $sorted) {
+            if (0 !== count($res)) {
+                $query->orderBy('accounts.order', 'ASC');
+            }
+            $query->orderBy('accounts.active', 'DESC');
+            $query->orderBy('accounts.name', 'ASC');
+            $query->orderBy('accounts.account_type_id', 'ASC');
+            $query->orderBy('accounts.id', 'ASC');
+        }
+
+        return $query->get(['accounts.*']);
+    }
+
+    public function getAccountsByTypeForGroup(array $types, ?array $sort = []): Collection
+    {
+        $res   = array_intersect([
+                                     AccountTypeEnum::ASSET->value,
+                                     AccountTypeEnum::MORTGAGE->value,
+                                     AccountTypeEnum::LOAN->value,
+                                     AccountTypeEnum::DEBT->value,
+                                 ], $types);
+        $query = $this->userGroup->accounts();
         if (0 !== count($types)) {
             $query->accountTypeIn($types);
         }

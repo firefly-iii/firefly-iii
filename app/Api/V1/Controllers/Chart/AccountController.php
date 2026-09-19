@@ -77,7 +77,8 @@ final class AccountController extends Controller
     public function overview(ChartRequest $request): JsonResponse
     {
         $queryParameters = $request->getParameters();
-        $accounts        = $this->getAccountList($queryParameters);
+        $accounts        = $this->getAccountListForGroup($queryParameters);
+
 
         // move date to end of day
         $queryParameters['start']->startOfDay();
