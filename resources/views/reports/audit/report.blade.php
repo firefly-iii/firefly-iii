@@ -4,7 +4,7 @@
 
 @endsection
 @section('content')
-    <div class="row no-print">
+    <div class="row d-print-none">
         <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
             <div class="card mb-2" id="optionsBox">
                 <div class="card-header">

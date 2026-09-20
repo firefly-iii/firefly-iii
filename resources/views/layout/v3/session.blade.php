@@ -302,7 +302,7 @@
             <!--begin::Container-->
             <div class="container-fluid">
                 @if($IS_DEMO_SITE)
-                    <div class="row no-print">
+                    <div class="row d-print-none">
                         <div class="col-lg-12">
                             <div class="alert alert-info" role="alert">
                                 @includeFirst(['demo.' . Route::getCurrentRoute()->getName(), 'demo.no-demo-text'])
