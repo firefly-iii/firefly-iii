@@ -18,7 +18,7 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-import {addMonths, endOfDay, endOfMonth, startOfMonth, startOfYear, subDays, subMonths} from "date-fns";
+import { addMonths, endOfDay, endOfMonth, startOfMonth, startOfYear, subDays, subMonths } from "date-fns";
 import format from "../../util/format";
 
 export default () => ({
@@ -153,32 +153,32 @@ export default () => ({
         let start = startOfMonth(this.range.start);
         let nextMonth = addMonths(start, 1);
         let end = endOfMonth(nextMonth);
-        return {start: nextMonth, end: end};
+        return { start: nextMonth, end: end };
     },
 
     getPrevRange() {
         let start = startOfMonth(this.range.start);
         let prevMonth = subMonths(start, 1);
         let end = endOfMonth(prevMonth);
-        return {start: prevMonth, end: end};
+        return { start: prevMonth, end: end };
     },
 
     ytd() {
-        let end = endOfDay(new Date())
+        let end = endOfDay(new Date());
         let start = startOfYear(this.range.start);
-        return {start: start, end: end};
+        return { start: start, end: end };
     },
 
     mtd() {
-        let end = endOfDay(new Date())
+        let end = endOfDay(new Date());
         let start = startOfMonth(this.range.start);
-        return {start: start, end: end};
+        return { start: start, end: end };
     },
 
     lastDays(days) {
         let end = endOfDay(new Date());
         let start = subDays(end, days);
-        return {start: start, end: end};
+        return { start: start, end: end };
     },
 
     changeDateRange(e) {

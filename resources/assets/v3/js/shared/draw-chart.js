@@ -403,7 +403,9 @@ function drawMultiCurrencyLineChart(url, holder, anonymous, drawTodayMarker, col
             };
 
             // safety catch in case there is no data.
-            if (typeof data === "undefined" || 0 === data.length ||
+            if (
+                typeof data === "undefined" ||
+                0 === data.length ||
                 (typeof data === "object" && typeof data.labels === "object" && 0 === data.labels.length)
             ) {
                 let el = document.getElementById(holder).parentElement;
@@ -532,23 +534,22 @@ function drawSingleCurrencyLineChart(url, holder, anonymous) {
         });
 }
 
-
 function colorizeAllData(data) {
-    for(let i in data.datasets) {
-        if(Object.hasOwn(data.datasets, i)) {
-            if(data.datasets[i].label.startsWith('budgeted')) {
+    for (let i in data.datasets) {
+        if (Object.hasOwn(data.datasets, i)) {
+            if (data.datasets[i].label.startsWith("budgeted")) {
                 // data.datasets[i].backgroundColor = 'rgba(13, 110, 253, 0.8)'; // bg-primary
-                data.datasets[i].backgroundColor = 'rgba(18, 124, 175, 0.8)'; // bg-sky
+                data.datasets[i].backgroundColor = "rgba(18, 124, 175, 0.8)"; // bg-sky
             }
-            if(data.datasets[i].label.startsWith('overspent')) {
-                data.datasets[i].backgroundColor = 'rgba(200, 78, 16, 0.6)'; // bg-orange
+            if (data.datasets[i].label.startsWith("overspent")) {
+                data.datasets[i].backgroundColor = "rgba(200, 78, 16, 0.6)"; // bg-orange
             }
-            if(data.datasets[i].label.startsWith('spent')) {
-                data.datasets[i].backgroundColor = 'rgba(200, 78, 16, 0.6)'; // bg-orange
+            if (data.datasets[i].label.startsWith("spent")) {
+                data.datasets[i].backgroundColor = "rgba(200, 78, 16, 0.6)"; // bg-orange
             }
-            if(data.datasets[i].label.startsWith('left')) {
+            if (data.datasets[i].label.startsWith("left")) {
                 // data.datasets[i].backgroundColor = 'rgba(20, 107, 66, 0.8)'; // bg-success
-                data.datasets[i].backgroundColor = 'rgba(18, 130, 125, 0.8)'; // bg-teal
+                data.datasets[i].backgroundColor = "rgba(18, 130, 125, 0.8)"; // bg-teal
             }
         }
     }
