@@ -49,6 +49,7 @@ let index = function () {
                     "accounts-chart",
                     value,
                     true,
+                    true,
                 );
 
                 drawMultiCurrencyChart(
@@ -60,6 +61,7 @@ let index = function () {
                     "budgets-chart",
                     value,
                     false,
+                    true,
                 );
             });
         },

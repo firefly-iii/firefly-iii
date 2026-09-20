@@ -60,13 +60,13 @@ let defaultChartOptions = {
     },
 };
 
-export function drawMultiCurrencyChart(type, url, holder, anonymous, drawTodayMarker) {
+export function drawMultiCurrencyChart(type, url, holder, anonymous, drawTodayMarker, colorData) {
     if ("line" === type) {
-        drawMultiCurrencyLineChart(url, holder, anonymous, drawTodayMarker);
+        drawMultiCurrencyLineChart(url, holder, anonymous, drawTodayMarker, colorData);
         return;
     }
     if ("stacked-column" === type) {
-        drawMultiCurrencyStackedColumnChart(url, holder, anonymous);
+        drawMultiCurrencyStackedColumnChart(url, holder, anonymous, colorData);
         return;
     }
 
@@ -81,7 +81,7 @@ export function drawSingleCurrencyChart(type, url, holder, anonymous) {
     console.error('Cannot draw a "' + type + '" chart yet :(');
 }
 
-function drawMultiCurrencyStackedColumnChart(url, holder, anonymous) {
+function drawMultiCurrencyStackedColumnChart(url, holder, anonymous, colorData) {
     document.getElementById(holder).classList.remove("general-chart-error");
     window.axios
         .get(url)
@@ -276,10 +276,9 @@ function drawMultiCurrencyStackedColumnChart(url, holder, anonymous) {
                 return;
             }
 
-            // TODO colorize data?
-            // if (colorData) {
-            //     data = colorizeData(data);
-            // }
+            if (colorData) {
+                data = colorizeAllData(data);
+            }
 
             // add a marker to the chart if defined.
 
@@ -300,7 +299,7 @@ function drawMultiCurrencyStackedColumnChart(url, holder, anonymous) {
         });
 }
 
-function drawMultiCurrencyLineChart(url, holder, anonymous, drawTodayMarker) {
+function drawMultiCurrencyLineChart(url, holder, anonymous, drawTodayMarker, colorData) {
     document.getElementById(holder).classList.remove("general-chart-error");
     window.axios
         .get(url)
@@ -404,9 +403,7 @@ function drawMultiCurrencyLineChart(url, holder, anonymous, drawTodayMarker) {
             };
 
             // safety catch in case there is no data.
-            if (
-                typeof data === "undefined" ||
-                0 === data.length ||
+            if (typeof data === "undefined" || 0 === data.length ||
                 (typeof data === "object" && typeof data.labels === "object" && 0 === data.labels.length)
             ) {
                 let el = document.getElementById(holder).parentElement;
@@ -416,10 +413,9 @@ function drawMultiCurrencyLineChart(url, holder, anonymous, drawTodayMarker) {
                 return;
             }
 
-            // TODO colorize data?
-            // if (colorData) {
-            //     data = colorizeData(data);
-            // }
+            if (colorData) {
+                data = colorizeAllData(data);
+            }
 
             // add a marker to the chart if defined.
             if (drawTodayMarker && "" !== drawTodayLabel) {
@@ -534,6 +530,29 @@ function drawSingleCurrencyLineChart(url, holder, anonymous) {
             el.classList.add("general-chart-error");
             el.innerText = i18next.t("firefly.could_not_load_chart") + " " + error;
         });
+}
+
+
+function colorizeAllData(data) {
+    for(let i in data.datasets) {
+        if(Object.hasOwn(data.datasets, i)) {
+            if(data.datasets[i].label.startsWith('budgeted')) {
+                // data.datasets[i].backgroundColor = 'rgba(13, 110, 253, 0.8)'; // bg-primary
+                data.datasets[i].backgroundColor = 'rgba(18, 124, 175, 0.8)'; // bg-sky
+            }
+            if(data.datasets[i].label.startsWith('overspent')) {
+                data.datasets[i].backgroundColor = 'rgba(200, 78, 16, 0.6)'; // bg-orange
+            }
+            if(data.datasets[i].label.startsWith('spent')) {
+                data.datasets[i].backgroundColor = 'rgba(200, 78, 16, 0.6)'; // bg-orange
+            }
+            if(data.datasets[i].label.startsWith('left')) {
+                // data.datasets[i].backgroundColor = 'rgba(20, 107, 66, 0.8)'; // bg-success
+                data.datasets[i].backgroundColor = 'rgba(18, 130, 125, 0.8)'; // bg-teal
+            }
+        }
+    }
+    return data;
 }
 
 // https://stackoverflow.com/questions/43855166/how-to-tell-if-two-dates-are-in-the-same-day-or-in-the-same-hour

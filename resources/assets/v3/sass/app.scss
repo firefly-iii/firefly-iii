@@ -27,11 +27,11 @@ $font-family-sans-serif: "Roboto", sans-serif;
 $font-size-base: 0.9rem;
 
 // colors are for light mode.
-$danger: #cd5029; // original
+//$danger: #cd5029; // original
 //$danger: #993B1E; // slightly darker for WCAG on white bg
 $primary: #1e6581; // original
 //$primary: #1C5E78; // slightly darker for WCAG test on white bg
-$success: #64b624; // original
+//$success: #64b624; // original
 //$success: #356114; // darker for WCAG pass
 //$info: #065E6F;
 
@@ -44,9 +44,9 @@ $success: #64b624; // original
     $color-mode-type: $color-mode-type,
     $link-decoration: $link-decoration,
     $font-family-sans-serif: $font-family-sans-serif,
-    $danger: $danger,
+    //$danger: $danger,
     $primary: $primary,
-    $success: $success,
+    //$success: $success,
     $font-size-base: $font-size-base
 );
 @import "shepherd.js/dist/css/shepherd.css";

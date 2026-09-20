@@ -1,6 +1,6 @@
 <div class="row mb-2" x-data="boxes" id="box_out_holder">
     <div class="col-xl-3 col-lg-6 col-md-6 col-sm-6">
-        <div class="small-box text-bg-primary">
+        <div class="small-box text-bg-indigo">
             <div class="inner balance-box">
                 <h4 class="hover-expand">
                     <template x-for="(amount, index) in balanceBox.amounts" :key="index">
@@ -49,7 +49,7 @@
     <!--end::Col-->
     <div class="col-xl-3 col-lg-6 col-md-6 col-sm-6" >
         <!--begin::Small Box Widget 2-->
-        <div class="small-box text-bg-warning">
+        <div class="small-box text-bg-sky">
             <div class="inner">
                 <template x-if="billBox.unpaid.length > 0">
                     <h4 class="hover-expand">
@@ -101,7 +101,7 @@
     <!--end::Col-->
     <div class="col-xl-3 col-lg-6 col-md-6 col-sm-6">
         <!--begin::Small Box Widget 3-->
-        <div x-bind:class="{'small-box': true, 'text-bg-success': !noMoneyLeft, 'text-bg-danger': noMoneyLeft}">
+        <div x-bind:class="{'small-box': true, 'text-bg-teal': !noMoneyLeft, 'text-bg-orange': noMoneyLeft}">
             <div class="inner">
                 <h4 class="hover-expand">
                     <template x-for="(amount, index) in leftBox.left" :key="index">
@@ -150,7 +150,7 @@
     <!--end::Col-->
     <div class="col-xl-3 col-lg-6 col-md-6 col-sm-6">
         <!--begin::Small Box Widget 4-->
-        <div class="small-box text-bg-primary">
+        <div class="small-box text-bg-fuchsia">
             <div class="inner">
                 <h4 class="hover-expand">
                     <template x-for="(amount, index) in netBox.net" :key="index">
