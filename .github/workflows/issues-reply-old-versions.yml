@@ -1,4 +1,4 @@
-name: 'Issues - Respond to old versions'
+name: 'Issues - Old version / missing debug info'
 
 # the workflow to execute on is comments that are newly created
 on:
@@ -41,7 +41,7 @@ jobs:
           DDNOV="${DDNOV:1}"
 
           echo "Firefly III version is ${{ steps.ff3version.outputs.release }}, without v is $FFNOV"
-          echo "Data importer version is ${{ steps.ff3version.outputs.release }}, without v is $DDNOV"
+          echo "Data importer version is ${{ steps.importerversion.outputs.release }}, without v is $DDNOV"
 
           # user includes no debug info at all, and does not mention current version.
           # user includes no debug info at all, but does mention current version
@@ -106,7 +106,7 @@ jobs:
           Thank you for running the latest version of Firefly III (or the data importer)."
 
             # gh issue comment "$NUMBER" --body "$MESSAGE"
-            echo "Triggered on fourth test"
+            echo "Triggered on fourth test. Will NOT reply."
             exit 0
           fi
         env:
