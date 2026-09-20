@@ -19,17 +19,26 @@
  */
 
 import {
-    addDays, addMonths, addQuarters, addWeeks, addYears,
+    addDays,
+    addMonths,
+    addQuarters,
+    addWeeks,
+    addYears,
     endOfDay,
     endOfMonth,
     endOfQuarter,
-    endOfWeek, format,
+    endOfWeek,
+    format,
     startOfDay,
     startOfMonth,
     startOfQuarter,
     startOfWeek,
     startOfYear,
-    subDays, subMonths, subQuarters, subWeeks, subYears,
+    subDays,
+    subMonths,
+    subQuarters,
+    subWeeks,
+    subYears,
 } from "date-fns";
 
 function getViewRange(viewRange, today) {
@@ -216,8 +225,13 @@ function addPeriod(date, viewRange) {
             nextPeriodStart = endOfDay(nextPeriodStart);
             break;
     }
-    console.log('addPeriod (' + viewRange+ '): ' + format(date,'yyyy-MM-dd HH:mm:ss'));
-    console.log('To:   ', format(nextPeriodStart,'yyyy-MM-dd HH:mm:ss'), ' - ', format(nextPeriodEnd,'yyyy-MM-dd HH:mm:ss'));
+    console.log("addPeriod (" + viewRange + "): " + format(date, "yyyy-MM-dd HH:mm:ss"));
+    console.log(
+        "To:   ",
+        format(nextPeriodStart, "yyyy-MM-dd HH:mm:ss"),
+        " - ",
+        format(nextPeriodEnd, "yyyy-MM-dd HH:mm:ss"),
+    );
     return {
         start: nextPeriodStart,
         end: nextPeriodEnd,
@@ -318,8 +332,13 @@ function subtractPeriod(date, viewRange) {
             prevPeriodStart = endOfDay(prevPeriodStart);
             break;
     }
-    console.log('subtractPeriod (' + viewRange+ '): ' + format(date,'yyyy-MM-dd HH:mm:ss'));
-    console.log('To:   ', format(prevPeriodStart,'yyyy-MM-dd HH:mm:ss'), ' - ', format(prevPeriodEnd,'yyyy-MM-dd HH:mm:ss'));
+    console.log("subtractPeriod (" + viewRange + "): " + format(date, "yyyy-MM-dd HH:mm:ss"));
+    console.log(
+        "To:   ",
+        format(prevPeriodStart, "yyyy-MM-dd HH:mm:ss"),
+        " - ",
+        format(prevPeriodEnd, "yyyy-MM-dd HH:mm:ss"),
+    );
     return {
         start: prevPeriodStart,
         end: prevPeriodEnd,

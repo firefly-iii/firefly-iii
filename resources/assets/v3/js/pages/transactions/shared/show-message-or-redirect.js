@@ -75,14 +75,13 @@ export function showMessageOrRedirectUser() {
 
     // find parts
     let parts = URL.parse(params, "https://example.com/");
-    let from = '';
+    let from = "";
     let separator = "?";
     if ("" === parts.search) {
         let fromParam = urlParams.get("_from");
-        if(null !== fromParam) {
+        if (null !== fromParam) {
             from = fromParam.toString();
         }
-
     }
     if ("" !== parts.search) {
         let obj = new URLSearchParams(parts.search);

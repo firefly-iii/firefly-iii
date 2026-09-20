@@ -18,10 +18,10 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-import {  endOfDay, startOfMonth, startOfYear, subDays } from "date-fns";
+import { endOfDay, startOfMonth, startOfYear, subDays } from "date-fns";
 import format from "../../util/format";
-import i18next from 'i18next';
-import {addPeriod, subtractPeriod} from '../../support/get-viewrange.js';
+import i18next from "i18next";
+import { addPeriod, subtractPeriod } from "../../support/get-viewrange.js";
 
 export default () => ({
     range: {
@@ -49,12 +49,12 @@ export default () => ({
     submitForm() {
         // console.log('submitForm', format(window.store.get('start'), 'yyyy-MM-dd'), format(window.store.get('end'), 'yyyy-MM-dd'));
         // save form and submit for v1.
-        document.getElementById("customStart").value = format(window.store.get("start"), 'yyyy-MM-dd');
-        document.getElementById("customEnd").value = format(window.store.get("end"), 'yyyy-MM-dd');
+        document.getElementById("customStart").value = format(window.store.get("start"), "yyyy-MM-dd");
+        document.getElementById("customEnd").value = format(window.store.get("end"), "yyyy-MM-dd");
         document.getElementById("daterange-form").submit();
     },
     language: "en_US",
-    viewRange: '1M',
+    viewRange: "1M",
     i18next: null,
     // Mon Aug 31 2026 19:00:00 GMT-0500
     // 2026-08-31T19:00:00-05:00
@@ -62,7 +62,7 @@ export default () => ({
 
     init() {
         this.i18next = i18next;
-        this.viewRange = window.store.get('viewRange');
+        this.viewRange = window.store.get("viewRange");
         if (false === window.enableDates) {
             // console.log("Date selection is disabled on this page.");
             document.getElementById("date-dropdown").style.display = "none";
@@ -125,7 +125,7 @@ export default () => ({
 
         // generate next range
         element = document.getElementsByClassName("daterange-next")[0];
-        element.textContent =  format(nextRange.start) + " - " + format(nextRange.end);
+        element.textContent = format(nextRange.start) + " - " + format(nextRange.end);
         element.setAttribute("data-start", format(nextRange.start, this.preferredFormat, "en-US"));
         element.setAttribute("data-end", format(nextRange.end, this.preferredFormat, "en-US"));
 
@@ -137,7 +137,7 @@ export default () => ({
 
         // generate the default range ("Today")
         element = document.getElementsByClassName("daterange-today")[0];
-        element.textContent =  this.i18next.t('firefly.today');
+        element.textContent = this.i18next.t("firefly.today");
         element.setAttribute("data-start", format(todayRange.start, this.preferredFormat, "en-US"));
         element.setAttribute("data-end", format(todayRange.end, this.preferredFormat, "en-US"));
 
@@ -163,7 +163,7 @@ export default () => ({
     },
 
     getNextRange() {
-        return addPeriod(this.range.start, this.viewRange)
+        return addPeriod(this.range.start, this.viewRange);
     },
 
     getPrevRange() {
@@ -171,8 +171,8 @@ export default () => ({
     },
 
     getTodayRange() {
-        let start = window.store.get('defaultStart');
-        let end = window.store.get('defaultEnd');
+        let start = window.store.get("defaultStart");
+        let end = window.store.get("defaultEnd");
         return { start: start, end: end };
     },
 
@@ -197,8 +197,8 @@ export default () => ({
     changeDateRange(e) {
         e.preventDefault();
         let target = e.currentTarget;
-        console.log('changeDateRange: start is', target.getAttribute("data-start"));
-        console.log('changeDateRange: end is', target.getAttribute("data-end"));
+        console.log("changeDateRange: start is", target.getAttribute("data-start"));
+        console.log("changeDateRange: end is", target.getAttribute("data-end"));
         let start = new Date(Date.parse(target.getAttribute("data-start")));
         let end = new Date(Date.parse(target.getAttribute("data-end")));
         // console.log('Start date is', start);

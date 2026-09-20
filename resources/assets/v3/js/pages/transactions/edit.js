@@ -21,54 +21,54 @@
 import "../../boot/bootstrap.js";
 import dates from "../../pages/shared/dates.js";
 import Get from "../../api/model/transaction/get.js";
-import {parseDownloadedSplits} from "./shared/parse-downloaded-splits.js";
-import {addAllAutocompleteToForm} from "./shared/add-autocomplete.js";
-import {loadCurrencies} from "./shared/load-currencies.js";
-import {loadBudgets} from "./shared/load-budgets.js";
-import {loadPiggyBanks} from "./shared/load-piggy-banks.js";
-import {processUploadError} from "./shared/process-upload-error.js";
-import {loadSubscriptions} from "./shared/load-subscriptions.js";
+import { parseDownloadedSplits } from "./shared/parse-downloaded-splits.js";
+import { addAllAutocompleteToForm } from "./shared/add-autocomplete.js";
+import { loadCurrencies } from "./shared/load-currencies.js";
+import { loadBudgets } from "./shared/load-budgets.js";
+import { loadPiggyBanks } from "./shared/load-piggy-banks.js";
+import { processUploadError } from "./shared/process-upload-error.js";
+import { loadSubscriptions } from "./shared/load-subscriptions.js";
 import i18next from "i18next";
-import {defaultErrorSet} from "./shared/create-empty-split.js";
-import {parseFromEntries} from "./shared/parse-from-entries.js";
+import { defaultErrorSet } from "./shared/create-empty-split.js";
+import { parseFromEntries } from "./shared/parse-from-entries.js";
 import Put from "../../api/model/transaction/put.js";
-import {showMessageOrRedirectUser} from "./shared/show-message-or-redirect.js";
-import {processAttachments} from "./shared/process-attachments.js";
+import { showMessageOrRedirectUser } from "./shared/show-message-or-redirect.js";
+import { processAttachments } from "./shared/process-attachments.js";
 import sidebar from "../shared/sidebar.js";
-import {disableSplitInputs} from "./shared/disable-split-inputs.js";
-import {parseTotalAmount} from "./shared/parse-total-amount.js";
-import {keyUpFromCategory} from "./shared/keyup-from-category.js";
-import {keyUpFromSource} from "./shared/keyup-from-source.js";
-import {keyUpFromDestination} from "./shared/keyup-from-destination.js";
-import {keyUpFromDescription} from "./shared/keyup-from-description.js";
-import {changedAmount} from "./shared/changed-amount.js";
-import {changedForeignAmount} from "./shared/changed-foreign-amount.js";
-import {parseErrors} from "./shared/parse-errors.js";
-import {addSplit} from "./shared/add-split.js";
-import {clearDestinationAccount, clearSourceAccount} from "./shared/clear-fields.js";
-import {detectTransactionType} from "./shared/detect-transaction-type.js";
-import {determineAmountCurrency} from "./shared/determine-amount-currency.js";
-import {loadCustomFields} from "./shared/load-custom-fields.js";
-import {displayMap} from "./shared/display-map.js";
-import {loadDefaultCoordinates} from "./shared/load-default-coordinates.js";
-import {renderMap} from "./shared/render-map.js";
+import { disableSplitInputs } from "./shared/disable-split-inputs.js";
+import { parseTotalAmount } from "./shared/parse-total-amount.js";
+import { keyUpFromCategory } from "./shared/keyup-from-category.js";
+import { keyUpFromSource } from "./shared/keyup-from-source.js";
+import { keyUpFromDestination } from "./shared/keyup-from-destination.js";
+import { keyUpFromDescription } from "./shared/keyup-from-description.js";
+import { changedAmount } from "./shared/changed-amount.js";
+import { changedForeignAmount } from "./shared/changed-foreign-amount.js";
+import { parseErrors } from "./shared/parse-errors.js";
+import { addSplit } from "./shared/add-split.js";
+import { clearDestinationAccount, clearSourceAccount } from "./shared/clear-fields.js";
+import { detectTransactionType } from "./shared/detect-transaction-type.js";
+import { determineAmountCurrency } from "./shared/determine-amount-currency.js";
+import { loadCustomFields } from "./shared/load-custom-fields.js";
+import { displayMap } from "./shared/display-map.js";
+import { loadDefaultCoordinates } from "./shared/load-default-coordinates.js";
+import { renderMap } from "./shared/render-map.js";
 import "leaflet/dist/leaflet.css";
-import {onMapClick} from "./shared/on-map-click.js";
-import {onMapZoom} from "./shared/on-map-zoom.js";
-import {clearLocation} from "./shared/clear-location.js";
-import {removeSplit} from "./shared/remove-split.js";
-import {loadTransactionLinks} from "./shared/load-transaction-links.js";
-import {createLinkAutocomplete} from "./shared/create-link-autocomplete.js";
-import {editLink} from "./shared/edit-link.js";
-import {switchLink} from "./shared/switch-link.js";
-import {removeLink} from "./shared/remove-link.js";
-import {saveEditedLink} from "./shared/save-edited-link.js";
-import {saveNewLink} from "./shared/save-new-link.js";
-import {processTransactionLinks} from "./shared/process-transaction-links.js";
-import {redirectAfterTransactionLinks} from "./shared/redirect-after-transaction-links.js";
-import {addTabListener} from "./shared/add-tab-listener.js";
-import {autoStep} from "./shared/auto-step.js";
-import {respondToTabSwitch} from "./shared/respond-to-tab-switch.js";
+import { onMapClick } from "./shared/on-map-click.js";
+import { onMapZoom } from "./shared/on-map-zoom.js";
+import { clearLocation } from "./shared/clear-location.js";
+import { removeSplit } from "./shared/remove-split.js";
+import { loadTransactionLinks } from "./shared/load-transaction-links.js";
+import { createLinkAutocomplete } from "./shared/create-link-autocomplete.js";
+import { editLink } from "./shared/edit-link.js";
+import { switchLink } from "./shared/switch-link.js";
+import { removeLink } from "./shared/remove-link.js";
+import { saveEditedLink } from "./shared/save-edited-link.js";
+import { saveNewLink } from "./shared/save-new-link.js";
+import { processTransactionLinks } from "./shared/process-transaction-links.js";
+import { redirectAfterTransactionLinks } from "./shared/redirect-after-transaction-links.js";
+import { addTabListener } from "./shared/add-tab-listener.js";
+import { autoStep } from "./shared/auto-step.js";
+import { respondToTabSwitch } from "./shared/respond-to-tab-switch.js";
 import Alpine from "alpinejs";
 import focusFirstInput from "../../shared/focus-first-input.js";
 
@@ -281,22 +281,23 @@ let transactions = function () {
                     this.groupProperties.totalAmount = 0;
                     for (let i in this.entries) {
                         if (Object.hasOwn(this.entries, i)) {
-                            this.groupProperties.totalAmount = this.groupProperties.totalAmount + parseFloat(this.entries[i].amount);
+                            this.groupProperties.totalAmount =
+                                this.groupProperties.totalAmount + parseFloat(this.entries[i].amount);
                             // add the tags. This is not done in Alpine itself because the combination between
                             // the Autocomplete library and Alpine breaks for some reason.
-                            tagSelect = document.getElementById('tags_' + i);
+                            tagSelect = document.getElementById("tags_" + i);
                             if (null !== tagSelect) {
-                                console.log('Is not null.');
+                                console.log("Is not null.");
                                 for (let j in this.entries[i].tags) {
                                     if (Object.hasOwn(this.entries[i].tags, j)) {
-                                        tagSelect.options.add(new Option(this.entries[i].tags[j], this.entries[i].tags[j], true, true));
+                                        tagSelect.options.add(
+                                            new Option(this.entries[i].tags[j], this.entries[i].tags[j], true, true),
+                                        );
                                     }
                                 }
                             }
-
                         }
                     }
-
 
                     this.autoStep();
                 });
@@ -392,7 +393,7 @@ let transactions = function () {
             // submit the transaction. Multi-stage process thing going on here!
             let putter = new Put();
             putter
-                .put(submission, {id: this.groupProperties.id})
+                .put(submission, { id: this.groupProperties.id })
                 .then((response) => {
                     this.formStates.storedGroup = true;
                     const group = response.data.data;
@@ -445,7 +446,7 @@ let transactions = function () {
     };
 };
 
-let comps = {transactions, sidebar, dates};
+let comps = { transactions, sidebar, dates };
 
 function loadPage() {
     Object.keys(comps).forEach((comp) => {
