@@ -449,7 +449,7 @@
                                     <td>
                                         @foreach($journal['tags'] as $tag)
                                             @if(null !== $tag['id'] && '' !== $tag['id'])
-                                                <h4 class="inline"><a class="badge text-bg-success" href="{{ route('tags.show', [$tag['id']]) }}"><span class="bi bi-tag"></span>{{ $tag['tag'] }}</a></h4>
+                                                <h5 class="d-inline"><a class="badge text-bg-success" href="{{ route('tags.show', [$tag['id']]) }}"><span class="bi bi-tag"></span>{{ $tag['tag'] }}</a></h5>
                                             @endif
                                         @endforeach
                                     </td>

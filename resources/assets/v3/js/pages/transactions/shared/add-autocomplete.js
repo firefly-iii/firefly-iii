@@ -76,8 +76,8 @@ export function addAllAutocompleteToForm() {
                 "</small>"
             );
         };
-
-        // render tags:
+        //
+        // // render tags:
         Tags.init("select.ac-tags", {
             allowClear: true,
             server: urls.tag,
