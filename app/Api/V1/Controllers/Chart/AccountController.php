@@ -79,7 +79,6 @@ final class AccountController extends Controller
         $queryParameters = $request->getParameters();
         $accounts        = $this->getAccountListForGroup($queryParameters);
 
-
         // move date to end of day
         $queryParameters['start']->startOfDay();
         $queryParameters['end']->endOfDay();

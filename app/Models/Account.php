@@ -56,7 +56,7 @@ class Account extends Model
     use ReturnsIntegerUserIdTrait;
     use SoftDeletes;
 
-    protected $fillable              = ['user_id', 'user_group_id', 'account_type_id', 'name', 'active', 'virtual_balance', 'iban', 'native_virtual_balance','order'];
+    protected $fillable              = ['user_id', 'user_group_id', 'account_type_id', 'name', 'active', 'virtual_balance', 'iban', 'native_virtual_balance', 'order'];
 
     protected $hidden                = ['encrypted'];
     private bool $joinedAccountTypes = false;

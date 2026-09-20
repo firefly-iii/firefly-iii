@@ -98,7 +98,7 @@ final class BulkController extends Controller
         $tagsAction     = $request->input('tags_action');
         $collection     = new Collection();
         $count          = 0;
-        $tags = null === $request->input('tags') ? [] : $request->input('tags');
+        $tags           = null === $request->input('tags') ? [] : $request->input('tags');
 
         foreach ($journalIds as $journalId) {
             $journalId = (int) $journalId;
