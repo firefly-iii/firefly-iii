@@ -18,10 +18,10 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-import { endOfDay, startOfMonth, startOfYear, subDays } from "date-fns";
+import {endOfDay, startOfMonth, startOfYear, subDays} from "date-fns";
 import format from "../../util/format";
 import i18next from "i18next";
-import { addPeriod, subtractPeriod } from "../../support/get-viewrange.js";
+import {addPeriod, subtractPeriod} from "../../support/get-viewrange.js";
 
 export default () => ({
     range: {
@@ -137,7 +137,9 @@ export default () => ({
 
         // generate the default range ("Today")
         element = document.getElementsByClassName("daterange-today")[0];
-        element.textContent = this.i18next.t("firefly.today");
+        let todayString = this.i18next.t("firefly.today");
+        todayString = String(todayString).charAt(0).toUpperCase() + String(todayString).slice(1);
+        element.textContent = todayString;
         element.setAttribute("data-start", format(todayRange.start, this.preferredFormat, "en-US"));
         element.setAttribute("data-end", format(todayRange.end, this.preferredFormat, "en-US"));
 
@@ -173,25 +175,25 @@ export default () => ({
     getTodayRange() {
         let start = window.store.get("defaultStart");
         let end = window.store.get("defaultEnd");
-        return { start: start, end: end };
+        return {start: start, end: end};
     },
 
     ytd() {
         let end = endOfDay(new Date());
         let start = startOfYear(this.range.start);
-        return { start: start, end: end };
+        return {start: start, end: end};
     },
 
     mtd() {
         let end = endOfDay(new Date());
         let start = startOfMonth(this.range.start);
-        return { start: start, end: end };
+        return {start: start, end: end};
     },
 
     lastDays(days) {
         let end = endOfDay(new Date());
         let start = subDays(end, days);
-        return { start: start, end: end };
+        return {start: start, end: end};
     },
 
     changeDateRange(e) {
