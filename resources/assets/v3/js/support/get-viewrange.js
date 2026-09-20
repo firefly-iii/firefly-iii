@@ -31,7 +31,6 @@ import {
     startOfYear,
     subDays, subMonths, subQuarters, subWeeks, subYears,
 } from "date-fns";
-import * as today from "date-fns";
 
 function getViewRange(viewRange, today) {
     let start;

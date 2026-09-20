@@ -22,7 +22,7 @@ import "../../boot/bootstrap.js";
 import dates from "../../pages/shared/dates.js";
 import Get from "../../api/model/transaction/get.js";
 import {parseDownloadedSplits} from "./shared/parse-downloaded-splits.js";
-import {addAllAutocompleteToForm, getUrls} from "./shared/add-autocomplete.js";
+import {addAllAutocompleteToForm} from "./shared/add-autocomplete.js";
 import {loadCurrencies} from "./shared/load-currencies.js";
 import {loadBudgets} from "./shared/load-budgets.js";
 import {loadPiggyBanks} from "./shared/load-piggy-banks.js";
@@ -72,7 +72,6 @@ import {respondToTabSwitch} from "./shared/respond-to-tab-switch.js";
 import Alpine from "alpinejs";
 import focusFirstInput from "../../shared/focus-first-input.js";
 
-const urls = getUrls();
 window.enableDates = false;
 
 let transactions = function () {

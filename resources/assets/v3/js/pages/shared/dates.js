@@ -18,7 +18,7 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-import { addMonths, endOfDay, endOfMonth, startOfMonth, startOfYear, subDays, subMonths } from "date-fns";
+import {  endOfDay, startOfMonth, startOfYear, subDays } from "date-fns";
 import format from "../../util/format";
 import i18next from 'i18next';
 import {addPeriod, subtractPeriod} from '../../support/get-viewrange.js';
