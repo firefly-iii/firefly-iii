@@ -98,13 +98,14 @@ final class BulkController extends Controller
         $tagsAction     = $request->input('tags_action');
         $collection     = new Collection();
         $count          = 0;
+        $tags = null === $request->input('tags') ? [] : $request->input('tags');
 
         foreach ($journalIds as $journalId) {
             $journalId = (int) $journalId;
             $journal   = $this->repository->find($journalId);
             if (null !== $journal) {
                 $resultA = $this->updateJournalBudget($journal, $ignoreBudget, $request->integer('budget_id'));
-                $resultB = $this->updateJournalTags($journal, $tagsAction, $request->input('tags'));
+                $resultB = $this->updateJournalTags($journal, $tagsAction, $tags);
                 $resultC = $this->updateJournalCategory($journal, $ignoreCategory, $request->convertString('category'));
                 if ($resultA || $resultB || $resultC) {
                     ++$count;
