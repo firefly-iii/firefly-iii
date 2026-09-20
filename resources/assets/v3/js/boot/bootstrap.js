@@ -58,12 +58,16 @@ getFreshVariable("lastActivity")
     .then(() => {
         Promise.resolve(getVariables(["viewRange", "darkMode", "locale", "language", "convert_to_primary"])).then(
             (values) => {
+                const range = getViewRange(values.viewRange, new Date());
                 if (!store.get("start") || !store.get("end")) {
                     // calculate new start and end, and store them.
-                    const range = getViewRange(values.viewRange, new Date());
                     store.set("start", range.start);
                     store.set("end", range.end);
                 }
+                // always set defaultStart and defaultEnd
+                store.set("viewRange", values.viewRange);
+                store.set("defaultStart", range.start);
+                store.set("defaultEnd", range.end);
                 //
                 if ("equal" === values.locale) {
                     values.locale = values.language;

@@ -26,6 +26,9 @@
             <a href="#" class="dropdown-item daterange-prev" @click="changeDateRange">prev</a>
         </li>
         <li>
+            <a href="#" class="dropdown-item daterange-today" @click="changeDateRange">today</a>
+        </li>
+        <li>
             <a href="#" class="dropdown-item daterange-7d" @click="changeDateRange">{{ __('firefly.last_seven_days') }}</a>
         </li>
         <li>
