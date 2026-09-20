@@ -264,13 +264,14 @@ final class TagController extends Controller
                 }
             }
         }
+        $incomeTopLength = count($result);
         // sort by amount_float
         // sort temp array by amount.
         $amounts = array_column($result, 'avg_float');
         array_multisort($amounts, SORT_ASC, $result);
 
         try {
-            $result = view('reports.tag.partials.avg-expenses', ['result' => $result])->render();
+            $result = view('reports.tag.partials.avg-expenses', ['incomeTopLength' => $incomeTopLength, 'result' => $result])->render();
         } catch (Throwable $e) {
             Log::debug(sprintf('Could not render reports.partials.budget-period: %s', $e->getMessage()));
             $result = sprintf('Could not render view: %s', $e->getMessage());
@@ -293,6 +294,7 @@ final class TagController extends Controller
         foreach ($spent as $currency) {
             foreach ($currency['tags'] as $tag) {
                 foreach ($tag['transaction_journals'] as $journal) {
+
                     $sourceId                  = $journal['source_account_id'];
                     $key                       = sprintf('%d-%d', $sourceId, $currency['currency_id']);
                     $result[$key] ??= [
@@ -318,9 +320,9 @@ final class TagController extends Controller
         // sort temp array by amount.
         $amounts = array_column($result, 'avg_float');
         array_multisort($amounts, SORT_DESC, $result);
-
+        $incomeTopLength = count($result);
         try {
-            $result = view('reports.tag.partials.avg-income', ['result' => $result])->render();
+            $result = view('reports.tag.partials.avg-income', ['result' => $result, 'incomeTopLength' => $incomeTopLength])->render();
         } catch (Throwable $e) {
             Log::debug(sprintf('Could not render reports.partials.budget-period: %s', $e->getMessage()));
             $result = sprintf('Could not render view: %s', $e->getMessage());
