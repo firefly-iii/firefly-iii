@@ -29,7 +29,9 @@ policy. If you can find a spot where Firefly III or the associated tools render 
 issue unless you can show me an actual attack that gets that data into the system.
 3. There are (end)points where one (non-admin) user can affect all other users. For example, browsing to `/flush` will 
 also clear out other user's cached data. Purging deleted records may also remove other user's soft-deleted data.
-4. Any issue that is not true. AI models have already *hallucinated* security issues in Firefly III. They've 
+4. Any Insecure Direct Object Reference (IDOR)-related issue that is not accompanied by a working example. 
+The [demo website](https://demo.firefly-iii.org/) features a second, hidden user. It has a full compliment of user data
+5. Any issue that is not true. AI models have already *hallucinated* security issues in Firefly III. They've 
 referred to **non-existing** functions, templates and files. Including line numbers and code excerpts. Validate your 
 findings before you report them to me.
 
@@ -39,7 +41,7 @@ not disclose them in this policy.
 
 ## Supported versions
 
-Only the latest Firefly III release is maintained. Applicable fixes, including security fixes, will not be backported to
+Only the latest Firefly III release is maintained. Applicable fixes, including security fixes, will not be back ported to
 older release branches. Please refer to [releases.md](https://github.com/firefly-iii/firefly-iii/blob/main/releases.md) for details.
 
 ## Reporting a vulnerability - private disclosure process
@@ -66,7 +68,7 @@ Use [GitHub issues](https://github.com/firefly-iii/firefly-iii/issues/new/choose
 Provide a descriptive subject line and in the body of the email include the following information:
 
 * Basic identity information, such as your name and your affiliation or company.
-* Detailed steps to reproduce the vulnerability  (POC scripts, screenshots, and compressed packet captures are all
+* Detailed steps to reproduce the vulnerability  (PoC scripts, screenshots, and compressed packet captures are all
   helpful to us).
 * Description of the effects of the vulnerability on Firefly III and the related hardware and software configurations,
   so that the developer can reproduce it.
