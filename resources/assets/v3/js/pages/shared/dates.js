@@ -180,13 +180,13 @@ export default () => ({
 
     ytd() {
         let end = endOfDay(new Date());
-        let start = startOfYear(this.range.start);
+        let start = startOfYear(end);
         return {start: start, end: end};
     },
 
     mtd() {
         let end = endOfDay(new Date());
-        let start = startOfMonth(this.range.start);
+        let start = startOfMonth(end);
         return {start: start, end: end};
     },
 

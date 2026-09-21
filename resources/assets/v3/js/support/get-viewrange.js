@@ -130,6 +130,7 @@ function getViewRange(viewRange, today) {
             end = endOfDay(end);
             break;
     }
+    console.log('getViewRange("'+viewRange+'", "'+format(today, "yyyy-MM-dd HH:mm:ss")+'") = "'+format(start, "yyyy-MM-dd HH:mm:ss")+'" to "'+format(end, "yyyy-MM-dd HH:mm:ss")+'".');
     return { start: start, end: end };
 }
 
