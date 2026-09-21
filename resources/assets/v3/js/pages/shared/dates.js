@@ -181,13 +181,13 @@ export default () => ({
     ytd() {
         let end = endOfDay(new Date());
         let start = startOfYear(end);
-        return {start: start, end: end};
+        return { start: start, end: end };
     },
 
     mtd() {
         let end = endOfDay(new Date());
         let start = startOfMonth(end);
-        return {start: start, end: end};
+        return { start: start, end: end };
     },
 
     lastDays(days) {

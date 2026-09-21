@@ -2515,16 +2515,16 @@
         },
         {
             "name": "league/commonmark",
-            "version": "2.10.1",
+            "version": "2.10.3",
             "source": {
                 "type": "git",
                 "url": "https://github.com/thephpleague/commonmark.git",
-                "reference": "9d489ab67a02960fd8ffe624d93f751daf95439e"
+                "reference": "6efbd9c472b91db0a3350fcd601c8332c2382e1f"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/thephpleague/commonmark/zipball/9d489ab67a02960fd8ffe624d93f751daf95439e",
-                "reference": "9d489ab67a02960fd8ffe624d93f751daf95439e",
+                "url": "https://api.github.com/repos/thephpleague/commonmark/zipball/6efbd9c472b91db0a3350fcd601c8332c2382e1f",
+                "reference": "6efbd9c472b91db0a3350fcd601c8332c2382e1f",
                 "shasum": ""
             },
             "require": {
@@ -2618,7 +2618,7 @@
                     "type": "tidelift"
                 }
             ],
-            "time": "2026-09-07T13:44:26+00:00"
+            "time": "2026-09-21T13:07:34+00:00"
         },
         {
             "name": "league/config",
@@ -10206,16 +10206,16 @@
         },
         {
             "name": "carthage-software/mago",
-            "version": "1.49.0",
+            "version": "1.50.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/carthage-software/mago.git",
-                "reference": "bbdaf378e69114f5d9c580862c8533dd3f01c050"
+                "reference": "74c48ba74d708f38259c6325a4f12ff443fb19bf"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/carthage-software/mago/zipball/bbdaf378e69114f5d9c580862c8533dd3f01c050",
-                "reference": "bbdaf378e69114f5d9c580862c8533dd3f01c050",
+                "url": "https://api.github.com/repos/carthage-software/mago/zipball/74c48ba74d708f38259c6325a4f12ff443fb19bf",
+                "reference": "74c48ba74d708f38259c6325a4f12ff443fb19bf",
                 "shasum": ""
             },
             "require": {
@@ -10257,7 +10257,7 @@
             ],
             "support": {
                 "issues": "https://github.com/carthage-software/mago/issues",
-                "source": "https://github.com/carthage-software/mago/tree/1.49.0"
+                "source": "https://github.com/carthage-software/mago/tree/1.50.0"
             },
             "funding": [
                 {
@@ -10265,7 +10265,7 @@
                     "type": "github"
                 }
             ],
-            "time": "2026-09-16T05:38:39+00:00"
+            "time": "2026-09-21T11:41:07+00:00"
         },
         {
             "name": "cloudcreativity/json-api-testing",

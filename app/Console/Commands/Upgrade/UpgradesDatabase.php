@@ -31,7 +31,6 @@ use Illuminate\Console\Command;
 use Illuminate\Support\Facades\Log;
 use Safe\Exceptions\InfoException;
 
-
 use function Safe\set_time_limit;
 
 try {
@@ -42,8 +41,9 @@ try {
 
 class UpgradesDatabase extends Command
 {
-    use ShowsFriendlyMessages;
     use GeneratesInstallationId;
+    use ShowsFriendlyMessages;
+
     protected $description = 'Upgrades the database to the latest version.';
     protected $signature   = 'firefly-iii:upgrade-database {--F|force : Force all upgrades.}';
 
