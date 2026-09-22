@@ -19,9 +19,9 @@
  */
 
 export function keyUpFromCategory(e) {
-    let target = e.currentTarget.nextSibling;
+    let target = null === e.currentTarget ? null : e.currentTarget.nextSibling;
     setTimeout(() => {
-        this.formStates.categorySelectVisible = target.classList.contains("show");
+        this.formStates.categorySelectVisible = null !== target && Object.hasOwn(target, 'classList') &&   target.classList.contains("show");
     }, 600);
     if (e.key === "Enter" && false === this.formStates.categorySelectVisible) {
         this.save();

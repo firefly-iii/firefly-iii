@@ -27,6 +27,7 @@ export function detectTransactionType() {
         this.disableSplitInputs();
         return;
     }
+    console.log('Detect transaction type of "'+sourceType+'" vs "'+destType+'"');
 
     // transfer: both are the same and in strict set of account types
     if (sourceType === destType && ["Asset account", "Loan", "Debt", "Mortgage"].includes(sourceType)) {
@@ -44,23 +45,15 @@ export function detectTransactionType() {
     // withdrawals:
     if ("Asset account" === sourceType && ["Expense account", "Debt", "Loan", "Mortgage"].includes(destType)) {
         this.groupProperties.transactionType = "withdrawal";
-        // console.log(
-        //     '[a] Transaction type is detected to be "' +
-        //         this.groupProperties.transactionType +
-        //         '".',
-        // );
-        this.determineAmountCurrency(this.entries[0].source_account.currency_code);
+        console.log('[a] Transaction type is detected to be "' + this.groupProperties.transactionType + '".',);
+        this.determineAmountCurrency(this.entries[0].source_account.account_currency_code);
         this.disableSplitInputs();
         return;
     }
     if ("Asset account" === sourceType && "unknown" === destType) {
         this.groupProperties.transactionType = "withdrawal";
-        // console.log(
-        //     '[b] Transaction type is detected to be "' +
-        //         this.groupProperties.transactionType +
-        //         '".',
-        // );
-        this.determineAmountCurrency(this.entries[0].source_account.currency_code);
+        console.log('[b] Transaction type is detected to be "' + this.groupProperties.transactionType + '".',);
+        this.determineAmountCurrency(this.entries[0].source_account.account_currency_code);
         this.disableSplitInputs();
         return;
     }
@@ -71,7 +64,7 @@ export function detectTransactionType() {
         //         this.groupProperties.transactionType +
         //         '".',
         // );
-        this.determineAmountCurrency(this.entries[0].source_account.currency_code);
+        this.determineAmountCurrency(this.entries[0].source_account.account_currency_code);
         this.disableSplitInputs();
         return;
     }
@@ -85,7 +78,7 @@ export function detectTransactionType() {
         //         '".',
         // );
         this.disableSplitInputs();
-        this.determineAmountCurrency(this.entries[0].destination_account.currency_code);
+        this.determineAmountCurrency(this.entries[0].destination_account.account_currency_code);
         return;
     }
     if ("unknown" === sourceType && ["Asset account", "Debt", "Loan", "Mortgage"].includes(destType)) {
@@ -95,7 +88,7 @@ export function detectTransactionType() {
         //         this.groupProperties.transactionType +
         //         '".',
         // );
-        this.determineAmountCurrency(this.entries[0].destination_account.currency_code);
+        this.determineAmountCurrency(this.entries[0].destination_account.account_currency_code);
         this.disableSplitInputs();
         return;
     }
@@ -103,7 +96,7 @@ export function detectTransactionType() {
         this.groupProperties.transactionType = "deposit";
         console.warn('FORCE transaction type to be "' + this.groupProperties.transactionType + '".');
         this.entries[0].source_account.id = "";
-        this.determineAmountCurrency(this.entries[0].destination_account.currency_code);
+        this.determineAmountCurrency(this.entries[0].destination_account.account_currency_code);
         this.disableSplitInputs();
         return;
     }
@@ -114,7 +107,7 @@ export function detectTransactionType() {
         //         this.groupProperties.transactionType +
         //         '".',
         // );
-        this.determineAmountCurrency(this.entries[0].destination_account.currency_code);
+        this.determineAmountCurrency(this.entries[0].destination_account.account_currency_code);
         this.disableSplitInputs();
         return;
     }

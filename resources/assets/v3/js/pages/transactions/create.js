@@ -285,7 +285,7 @@ let create = function () {
             this.fillAccount("destination", "destination_account");
         },
         fillAccount(direction, field) {
-            this.entries[0][field].loading = true;
+            // this.entries[0][field].loading = true;
             const urlParams = new URLSearchParams(window.location.search);
             const accountId = parseInt(urlParams.get(direction));
             if (accountId > 0) {
@@ -306,10 +306,14 @@ let create = function () {
                         id: account.id,
                         loading: false,
                         name: attributes.name,
+                        account_currency_code: attributes.currency_code,
+                        currency_code: attributes.primary_currency_code,
                         type: type,
                         alpine_name: attributes.name,
-                        disabled: false,
+                        // disabled: false,
                     };
+                    console.log('Now detect', field, this.entries[0][field]);
+                    this.detectTransactionType();
                 });
                 return;
             }

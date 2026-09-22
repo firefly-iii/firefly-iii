@@ -19,9 +19,9 @@
  */
 
 export function keyUpFromDestination(e) {
-    let target = e.currentTarget.nextSibling;
+    let target = null === e.currentTarget ? null : e.currentTarget.nextSibling;
     setTimeout(() => {
-        this.formStates.destinationSelectVisible = target.classList.contains("show");
+        this.formStates.destinationSelectVisible = null !== target && Object.hasOwn(target, 'classList') &&   target.classList.contains("show");
     }, 600);
     if (e.key === "Enter" && false === this.formStates.destinationSelectVisible) {
         this.save();
