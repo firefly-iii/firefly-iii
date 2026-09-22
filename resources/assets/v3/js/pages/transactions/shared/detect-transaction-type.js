@@ -31,17 +31,13 @@ export function detectTransactionType() {
     // transfer: both are the same and in strict set of account types
     if (sourceType === destType && ["Asset account", "Loan", "Debt", "Mortgage"].includes(sourceType)) {
         this.groupProperties.transactionType = "transfer";
-        // console.log(
-        //     'Transaction type is detected to be "' +
-        //         this.groupProperties.transactionType +
-        //         '".',
-        // );
+        console.log('Transaction type is detected to be "' + this.groupProperties.transactionType + '".',);
 
         // this also locks the amount into the amount of the source account
         // and the foreign amount (if different) in that of the destination account.
-        // console.log("filter down currencies for transfer.");
-        this.determineAmountCurrency(this.entries[0].source_account.currency_code);
-        this.filterForeignCurrencies(this.entries[0].destination_account.currency_code);
+        console.log("filter down currencies for transfer:");
+        this.determineAmountCurrency(this.entries[0].source_account.account_currency_code);
+        this.filterForeignCurrencies(this.entries[0].destination_account.account_currency_code);
         this.disableSplitInputs();
         return;
     }
