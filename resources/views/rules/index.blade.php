@@ -76,7 +76,7 @@
                                     <tr class="single-rule" data-order="{{ $rule->order }}" data-id="{{ $rule->id }}" data-group-id="{{ $ruleGroup->id }}" data-position="{{ $loop->index }}">
                                         <td>
                                             <div class="btn-group btn-group-sm prio_buttons">
-                                                <a class="btn btn-sm bi bi-list rule-handle"></a>
+                                                <a class="btn btn-sm btn-outline-secondary bi bi-list rule-handle"></a>
                                             </div>
                                         </td>
 

@@ -26,7 +26,7 @@
                                 <tr class="bill-sortable" data-id="{{ $entry['id'] }}" data-name="{{ $entry['name'] }}"
                                     data-order="{{ $entry['order'] }}" data-position="{{ $loop->index }}">
                                     <td>
-                                        <a class="btn btn-sm bi bi-list bill-handle"></a>
+                                        <a class="btn btn-sm btn-outline-secondary bi bi-list bill-handle"></a>
                                     </td>
                                     <td>
                                         @if(!$entry['active'])

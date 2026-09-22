@@ -27,7 +27,7 @@
     @foreach($objectGroup['piggy_banks'] as $piggy)
     <tr class="piggy-sortable" data-id="{{ $piggy['id'] }}" data-name="{{ $piggy['name'] }}" data-order="{{ $piggy['order'] }}">
         <td class="">
-            <a class="btn btn-sm bi bi-list piggy-handle"></a>
+            <a class="btn btn-outline-secondary btn-sm bi bi-list piggy-handle"></a>
             <span class="loadSpin"></span>
         </td>
         <td class="d-lg-none"> <!-- mobile buttons -->
