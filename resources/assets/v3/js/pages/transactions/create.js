@@ -312,7 +312,7 @@ let create = function () {
                         alpine_name: attributes.name,
                         // disabled: false,
                     };
-                    console.log('Now detect', field, this.entries[0][field]);
+                    console.log("Now detect", field, this.entries[0][field]);
                     this.detectTransactionType();
                 });
                 return;
