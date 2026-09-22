@@ -300,8 +300,6 @@ function drawMultiCurrencyStackedColumnChart(url, holder, anonymous, colorData) 
 }
 
 function drawMultiCurrencyLineChart(url, holder, anonymous, drawTodayMarker, colorData) {
-
-
     document.getElementById(holder).classList.remove("general-chart-error");
     window.axios
         .get(url)
@@ -329,12 +327,14 @@ function drawMultiCurrencyLineChart(url, holder, anonymous, drawTodayMarker, col
                 if (Object.hasOwn(all, i)) {
                     let current = all[i];
                     let currentCurrencyCode = current.currency_code;
-                    let currentEntryKey = 'entries';
-                    if(window.store.get('convert_to_primary') && current.currency_code !== current.primary_currency_code) {
+                    let currentEntryKey = "entries";
+                    if (
+                        window.store.get("convert_to_primary") &&
+                        current.currency_code !== current.primary_currency_code
+                    ) {
                         currentCurrencyCode = current.primary_currency_code;
-                        currentEntryKey = 'pc_entries';
+                        currentEntryKey = "pc_entries";
                     }
-
 
                     // first dataset, use the labels from that one
                     // find the place to set the "today" marker, and get FIRST y-axis ID.

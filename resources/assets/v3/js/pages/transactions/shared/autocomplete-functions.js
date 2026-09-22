@@ -46,7 +46,7 @@ export function changeDestinationAccount(item, ac) {
             alpine_name: item.name,
             type: item.type,
             currency_code: item.currency_code,
-            account_currency_code: item.account_currency_code
+            account_currency_code: item.account_currency_code,
         };
         document.querySelector("#form")._x_dataStack[0].changedDestinationAccount();
     }
@@ -73,7 +73,7 @@ export function selectDestinationAccount(item, ac) {
         alpine_name: item.name,
         type: item.type,
         currency_code: item.currency_code,
-        account_currency_code: item.account_currency_code
+        account_currency_code: item.account_currency_code,
     };
     document.querySelector("#form")._x_dataStack[0].changedDestinationAccount();
 }
@@ -88,7 +88,7 @@ export function changeSourceAccount(item, ac) {
             alpine_name: item.name,
             type: item.type,
             currency_code: item.currency_code,
-            account_currency_code: item.account_currency_code
+            account_currency_code: item.account_currency_code,
         };
         document.querySelector("#form")._x_dataStack[0].changedSourceAccount();
     }
@@ -115,7 +115,7 @@ export function selectSourceAccount(item, ac) {
         alpine_name: item.name,
         type: item.type,
         currency_code: item.currency_code,
-        account_currency_code: item.account_currency_code
+        account_currency_code: item.account_currency_code,
     };
     document.querySelector("#form")._x_dataStack[0].changedSourceAccount(index);
 }
