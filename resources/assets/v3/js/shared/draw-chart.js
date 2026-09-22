@@ -300,6 +300,8 @@ function drawMultiCurrencyStackedColumnChart(url, holder, anonymous, colorData) 
 }
 
 function drawMultiCurrencyLineChart(url, holder, anonymous, drawTodayMarker, colorData) {
+
+
     document.getElementById(holder).classList.remove("general-chart-error");
     window.axios
         .get(url)
@@ -326,13 +328,21 @@ function drawMultiCurrencyLineChart(url, holder, anonymous, drawTodayMarker, col
             for (let i = 0; i < all.length; i++) {
                 if (Object.hasOwn(all, i)) {
                     let current = all[i];
+                    let currentCurrencyCode = current.currency_code;
+                    let currentEntryKey = 'entries';
+                    if(window.store.get('convert_to_primary') && current.currency_code !== current.primary_currency_code) {
+                        currentCurrencyCode = current.primary_currency_code;
+                        currentEntryKey = 'pc_entries';
+                    }
+
+
                     // first dataset, use the labels from that one
                     // find the place to set the "today" marker, and get FIRST y-axis ID.
-                    firstScale = "y" + current.currency_code;
+                    firstScale = "y" + currentCurrencyCode;
                     labelCount = 0;
                     if (0 === i) {
-                        for (let j in current.entries) {
-                            if (Object.hasOwn(current.entries, j)) {
+                        for (let j in current[currentEntryKey]) {
+                            if (Object.hasOwn(current[currentEntryKey], j)) {
                                 labelCount++;
 
                                 // is the marker to be set on this date?
@@ -350,22 +360,22 @@ function drawMultiCurrencyLineChart(url, holder, anonymous, drawTodayMarker, col
                     // for the first and all other datasets, create a new dataset object.
                     let dataset = {
                         label: current.label,
-                        currency_code: current.currency_code,
+                        currency_code: currentCurrencyCode,
                         data: [],
-                        yAxisID: "y" + current.currency_code,
+                        yAxisID: "y" + currentCurrencyCode,
                     };
                     // add the data to the dataset.
-                    for (let j in current.entries) {
-                        if (Object.hasOwn(current.entries, j)) {
-                            dataset.data.push(current.entries[j]);
+                    for (let j in current[currentEntryKey]) {
+                        if (Object.hasOwn(current[currentEntryKey], j)) {
+                            dataset.data.push(current[currentEntryKey][j]);
                         }
                     }
                     // add it to the dataset collection.
                     data.datasets.push(dataset);
 
                     // if there is no axis yet for this currency, create one.
-                    let currencyCode = current.currency_code;
-                    let axisId = "y" + currencyCode;
+                    //let currencyCode = current.currency_code;
+                    let axisId = "y" + currentCurrencyCode;
                     if (!Object.hasOwn(axes, axisId)) {
                         axes[axisId] = {
                             id: axisId,
@@ -376,7 +386,7 @@ function drawMultiCurrencyLineChart(url, holder, anonymous, drawTodayMarker, col
                                     if (anonymous) {
                                         value = "0";
                                     }
-                                    return formatMoney(value, currencyCode);
+                                    return formatMoney(value, currentCurrencyCode);
                                 },
                             },
                         };
