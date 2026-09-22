@@ -6,7 +6,54 @@
                 <div class="card" id="account-index-{{ $objectType }}">
                     <x-elements.card-header-with-menu :cardTitle="trans('firefly.'.$objectType.'_accounts')" :route="route('accounts.create', $objectType) . '?_from=' . urlencode($FF3_FROM)" :linkTitle="__('firefly.make_new_'. $objectType . '_account')"/>
                     <div class="card-body p-0">
+                        {{--
                         <x-lists.accounts :accounts="$accounts" :objectType="$objectType" :page="$page ?? 1" />
+                        --}}
+                        <div class="m-2">
+                            TODO Pagination be here.
+                        </div>
+                        <table class="table table-valign-middle table-sm table-hover sortable">
+                            <thead>
+                            <tr>
+                                <th class="w-5">&nbsp;</th>
+                                <th class="w-20">{{ trans('list.name') }}</th>
+                                <template x-if="'asset' === objectType">
+                                    <th {{-- hide on LG and smaller. --}} class="d-lg-table-cell d-none">{{ trans('list.role') }}</th>
+                                </template>
+                                <template x-if="'liabilities' === objectType">
+                                    <th>{{ trans('list.liability_type') }}</th>
+                                </template>
+                                <template x-if="'liabilities' === objectType">
+                                    <th>{{ trans('form.liability_direction') }}</th>
+                                </template>
+                                <template x-if="'liabilities' === objectType">
+                                    <th>{{ trans('list.interest') }} ({{ trans('list.interest_period') }})</th>
+                                </template>
+                                <th>{{ trans('form.account_number') }}</th>
+                                <template x-if="'liabilities' === objectType">
+                                    <th class="text-end">{{ trans('list.currentBalance') }}</th>
+                                </template>
+                                <template x-if="'liabilities' === objectType">
+                                    <th class="text-end">
+                                        {{ trans('firefly.left_in_debt') }}
+                                    </th>
+                                </template>
+                                <th {{-- hide on SM --}} class="d-md-table-cell d-none">{{ trans('list.active') }}</th>
+                                {{-- hide last activity to make room for other stuff --}}
+                                <template x-if="'liabilities' !== objectType">
+                                    <th {{-- hide on LG and smaller. --}} class="d-lg-table-cell d-none">{{ trans('list.lastActivity') }}</th>
+                                </template>
+                                <th  {{-- hide on SM --}} class="w-15 d-md-table-cell d-none text-end">{{ trans('list.balanceDiff') }}</th>
+                                <th>&nbsp;</th>
+                            </tr>
+                            </thead>
+                        </table>
+
+
+                        <div class="m-2">
+                            TODO Pagination be here.
+                        </div>
+
                     </div>
                     <x-elements.card-footer-with-menu :route="route('accounts.create', $objectType) . '?_from=' . urlencode($FF3_FROM)" :linkTitle="__('firefly.make_new_'. $objectType . '_account')" />
                 </div>

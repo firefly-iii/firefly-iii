@@ -122,7 +122,7 @@ final class IndexController extends Controller
             'subTitleIcon'  => $subTitleIcon,
             'subTitle'      => $subTitle,
             'page'          => $page,
-            'accounts'      => $accounts,
+            // 'accounts'      => $accounts,
         ]);
     }
 

@@ -31,7 +31,12 @@ window.enableDates = false;
 let index = function () {
     return {
         listPageSize: 50,
+        objectType: 'invalid',
         init() {
+            const page = window.location.href.split("/");
+            this.objectType = page[page.length - 1].substring(0, 15);
+
+
             getVariable("listPageSize").then((listPageSize) => {
                 console.log(listPageSize);
                 this.listPageSize = listPageSize;
