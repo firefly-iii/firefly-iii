@@ -226,7 +226,7 @@ let create = function () {
         loadTransactionLinks: loadTransactionLinks,
 
         filterForeignCurrencies(code) {
-            console.log('filterForeignCurrencies("'+code+'")');
+            console.log('filterForeignCurrencies("' + code + '")');
             let list = [];
             let currency;
             for (let i in this.formData.enabledCurrencies) {
