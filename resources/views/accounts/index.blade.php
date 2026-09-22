@@ -15,8 +15,8 @@
                         <table class="table table-valign-middle table-sm table-hover sortable">
                             <thead>
                             <tr>
-                                <th class="w-5">&nbsp;</th>
-                                <th class="w-20">{{ trans('list.name') }}</th>
+                                <th data-column="order" :class="{'w-5' : true,'sortable': true, 'sortable_sorted': 'order' === sortColumn, 'sortable_sorted_asc': 'asc' === sortDirection, 'sortable_sorted_desc': 'desc' === sortDirection }">&nbsp;</th>
+                                <th data-column="name"  :class="{'w-20' : true,'sortable': true, 'sortable_sorted': 'name' === sortColumn, 'sortable_sorted_asc': 'asc' === sortDirection, 'sortable_sorted_desc': 'desc' === sortDirection }">{{ trans('list.name') }}</th>
                                 <template x-if="'asset' === objectType">
                                     <th {{-- hide on LG and smaller. --}} class="d-lg-table-cell d-none">{{ trans('list.role') }}</th>
                                 </template>

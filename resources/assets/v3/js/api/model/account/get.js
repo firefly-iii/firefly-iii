@@ -26,4 +26,7 @@ export default class Get {
     get(id) {
         return api.get(`/api/v1/accounts/${id}`);
     }
+    list(params) {
+        return api.get("/api/v1/accounts", { params: params });
+    }
 }

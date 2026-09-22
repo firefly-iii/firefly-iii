@@ -21,10 +21,10 @@
 import "../../boot/bootstrap.js";
 import sidebar from "../shared/sidebar.js";
 import dates from "../shared/dates.js";
-import { addDrag } from "../shared/drag-and-droppable-rows.js";
 import Alpine from "alpinejs";
 import { getVariable } from "../../store/get-variable.js";
 import Put from "../../api/model/account/put.js";
+import Get from "../../api/model/account/get.js";
 
 window.enableDates = false;
 
@@ -32,15 +32,49 @@ let index = function () {
     return {
         listPageSize: 50,
         objectType: 'invalid',
+        sortColumn: 'order',
+        sortDirection: 'asc',
         init() {
             const page = window.location.href.split("/");
             this.objectType = page[page.length - 1].substring(0, 15);
+            const params = new Proxy(new URLSearchParams(window.location.search), {
+                get: (searchParams, prop) => searchParams.get(prop),
+            });
+            this.sortColumn = params.column ?? 'order';
+            this.sortDirection = params.direction ?? 'asc';
+            console.log('Sort "'+this.sortColumn+'" in direction "'+this.sortDirection+'"');
+
+            // grab the account list.
+
+            let sort = 'asc' === this.sortDirection ? this.sortColumn : '-' + this.sortColumn;
+            
+            (new Get).list({sort: sort}).then((response) => {
+                console.log(response.data);
+            });
+
+            // get accounts by initial sort.
+            document.querySelectorAll('table.sortable th').forEach((el) => {
+                console.log('El', el);
+                el.addEventListener('click', (event) => {
+                    let newColumn = event.currentTarget.dataset.column;
+                    if(newColumn === this.sortColumn) {
+                        this.sortDirection = 'asc' === this.sortDirection ? 'desc' : 'asc';
+                    }
+                    if(newColumn !== this.sortColumn) {
+                        this.sortColumn = newColumn;
+                    }
+                    console.log('Will now sort on column', newColumn, 'direction', this.sortDirection);
+                    if (history.pushState) {
+                        let newurl = window.location.protocol + "//" + window.location.host + window.location.pathname + '?column=' + this.sortColumn + '&direction=' + this.sortDirection;
+                        window.history.pushState({path:newurl},'',newurl);
+                    }
+                });
+            });
 
 
             getVariable("listPageSize").then((listPageSize) => {
-                console.log(listPageSize);
                 this.listPageSize = listPageSize;
-                addDrag();
+                //addDrag();
                 document.addEventListener("firefly-iii-drag-complete", (e) => {
                     for (let i = 0; i < e.detail.length; i++) {
                         if (Object.hasOwn(e.detail, i)) {
@@ -55,7 +89,7 @@ let index = function () {
                             }
                         }
                     }
-                    console.log(e.detail);
+                    // console.log(e.detail);
                 });
             });
         },
