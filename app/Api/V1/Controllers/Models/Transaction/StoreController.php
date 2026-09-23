@@ -90,9 +90,6 @@ final class StoreController extends Controller
         $data               = $request->getAll();
         $data['user']       = auth()->user();
         $data['user_group'] = $this->userGroup;
-
-        Log::channel('audit')->info('Store new transaction over API.', $data);
-
         try {
             $transactionGroup = $this->groupRepository->store($data);
         } catch (DuplicateTransactionException $e) {

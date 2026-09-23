@@ -29,6 +29,7 @@ use FireflyIII\Models\Transaction;
 use FireflyIII\Models\TransactionJournal;
 use FireflyIII\Support\Facades\AppConfiguration;
 use FireflyIII\Support\Facades\Steam;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Log;
 
@@ -53,6 +54,7 @@ class AccountBalanceCalculator
 
             return '0';
         }
+        /** @var Builder $query */
         $query   = Transaction::leftJoin('transaction_journals', 'transaction_journals.id', '=', 'transactions.transaction_journal_id')
             ->whereNull('transactions.deleted_at')
             ->where('transactions.transaction_currency_id', $currencyId)
@@ -60,7 +62,7 @@ class AccountBalanceCalculator
             // this order is the same as GroupCollector
             ->orderBy('transaction_journals.date', 'DESC')
             ->orderBy('transaction_journals.order', 'ASC')
-            ->orderBy('transaction_journals.id', 'ASC')
+            ->orderBy('transaction_journals.id', 'DESC') // from ASC to DESC to fix #12862
             ->orderBy('transaction_journals.description', 'DESC')
             ->orderBy('transactions.amount', 'DESC')
             ->where('transactions.account_id', $accountId)
@@ -84,12 +86,9 @@ class AccountBalanceCalculator
         }
 
         $balance = (string) ($first->balance_after ?? '0');
-        Log::debug(sprintf(
-            'getLatestBalance: found balance: %s in transaction #%d on moment %s',
-            Steam::bcround($balance, 2),
-            $first->id ?? 0,
-            $notBefore->format('Y-m-d H:i:s')
-        ));
+        Log::debug(sprintf('getLatestBalance: found balance: %s in transaction #%d on moment %s', Steam::bcround($balance, 2), $first->id ?? 0, $notBefore->format('Y-m-d H:i:s')));
+//        Log::debug($query->toSql());
+//        Log::debug($query->toRawSql());
 
         return $balance;
     }
@@ -139,14 +138,7 @@ class AccountBalanceCalculator
 
         /** @var Transaction $entry */
         foreach ($set as $entry) {
-            //            Log::debug(sprintf(
-            //                '[%s] Processing transaction #%d on acount #%d with currency #%d and amount %s',
-            //                $entry->date,
-            //                $entry->id,
-            //                $entry->account_id,
-            //                $entry->transaction_currency_id,
-            //                Steam::bcround($entry->amount, 2)
-            //            ));
+
             // start with empty array:
             $entry->account_id                                             = (int) $entry->account_id;
             $entry->transaction_currency_id                                = (int) $entry->transaction_currency_id;
