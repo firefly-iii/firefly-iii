@@ -50,7 +50,7 @@ export function detectTransactionType() {
         this.disableSplitInputs();
         return;
     }
-    if ("Asset account" === sourceType && "unknown" === destType) {
+    if (["Asset account", "Loan", "Debt", "Mortgage"].includes(sourceType) && "unknown" === destType) {
         this.groupProperties.transactionType = "withdrawal";
         console.log('[b] Transaction type is detected to be "' + this.groupProperties.transactionType + '".');
         this.determineAmountCurrency(this.entries[0].source_account.account_currency_code);
