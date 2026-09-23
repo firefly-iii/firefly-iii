@@ -15,5 +15,6 @@ export function redirectAfterTransactionLinks(oldI, oldJ) {
     if (true === completed) {
         this.formStates.storedLinks = completed;
         this.showMessageOrRedirectUser();
+        this.notifications.wait.show = false;
     }
 }

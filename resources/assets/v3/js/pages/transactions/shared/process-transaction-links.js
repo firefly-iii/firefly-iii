@@ -2,6 +2,8 @@ import PostLink from "../../../api/model/transaction-link/post.js";
 import PutLink from "../../../api/model/transaction-link/put.js";
 
 export function processTransactionLinks(transactions) {
+    this.notifications.wait.show = true;
+    this.notifications.wait.text = i18next.t('firefly.save_links_working');
     let count = 0;
     for (let i = 0; i < transactions.length; i++) {
         if (Object.hasOwn(transactions, i) && Object.hasOwn(this.links, i)) {

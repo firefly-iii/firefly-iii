@@ -378,7 +378,8 @@ let create = function () {
         save() {
             this.notifications.error.show = false;
             this.notifications.success.show = false;
-            this.notifications.wait.show = false;
+            this.notifications.wait.show = true;
+            this.notifications.wait.text = i18next.t("firefly.save_transaction_working");
             this.formStates.isSubmitting = true;
 
             for (let i in this.entries) {

@@ -65,6 +65,8 @@ return [
                 'you_create_withdrawal',
                 'you_create_deposit',
                 'wait_loading_page',
+                'save_transaction_working',
+                'save_links_working',
                 'withdrawal',
                 'i_owe_amount',
                 'intro_next_label',

@@ -240,6 +240,8 @@ return [
     'expected_total'                                      => 'expected total',
     'reconciliation_account_name'                         => ':name reconciliation (:currency)',
     'saved'                                               => 'Saved',
+    'save_transaction_working' => 'Firefly III is storing your transaction. Please wait.',
+    'save_links_working' => 'Firefly III is storing your transaction links. Please wait.',
     'save'                                                => 'Save',
     'advanced_options'                                    => 'Advanced options',
     'advanced_options_explain'                            => 'Some pages in Firefly III have advanced options hidden behind this button. This page doesn\'t have anything fancy here, but do check out the others!',

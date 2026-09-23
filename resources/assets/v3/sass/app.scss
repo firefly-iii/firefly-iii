@@ -86,6 +86,9 @@ html[data-bs-theme="dark"] .money-transfer {
     color: #0bc1e5 !important;
 }
 
+// move over the sub menu things.
+.sub-nav-item {padding-left:1em;}
+
 // some print rules
 @media print {
     a[href]::after {

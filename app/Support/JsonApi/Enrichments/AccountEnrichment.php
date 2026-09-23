@@ -195,6 +195,7 @@ class AccountEnrichment implements EnrichmentInterface
             if (array_key_exists($id, $this->locations)) {
                 $meta['location'] = $this->locations[$id];
             }
+
             if (array_key_exists($id, $this->meta)) {
                 foreach ($this->meta[$id] as $name => $value) {
                     $meta[$name] = $value;
@@ -349,8 +350,7 @@ class AccountEnrichment implements EnrichmentInterface
             ])
             ->whereIn('account_id', $this->ids)
             ->get(['account_meta.id', 'account_meta.account_id', 'account_meta.name', 'account_meta.data'])
-            ->toArray()
-        ;
+            ->toArray();
 
         /** @var array $entry */
         foreach ($set as $entry) {

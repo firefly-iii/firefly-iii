@@ -27,12 +27,12 @@ let loaded = false;
 
 function loadTranslations(language, locale) {
     if (false === loaded) {
-        console.log('Will load languages', language, locale);
-        let devMode = true;
+        // console.log('Will load languages', language, locale);
+        let devMode = false;
         loaded = true;
         const expireTime = devMode ? 1 : 7 * 24 * 60 * 60 * 1000;
         let unique = [...new Set([language, locale, "en-US"])];
-        console.log('Set of languages', unique);
+        // console.log('Set of languages', unique);
         let options = {
             supportedLngs: unique,
             load: "all",
@@ -53,7 +53,7 @@ function loadTranslations(language, locale) {
                 ],
             },
         };
-        console.log(options);
+        // console.log(options);
 
         return i18next.use(ChainedBackend).init(options);
     }
