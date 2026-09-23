@@ -352,7 +352,7 @@ function drawMultiCurrencyLineChart(url, holder, anonymous, drawTodayMarker, col
                                     drawTodayIndex = labelCount;
                                 }
                                 // add the label to the array
-                                data.labels.push(format(date, i18next.t("config.month_and_day_fns")));
+                                data.labels.push(format(date, window.i18next.t("config.month_and_day_fns", {lng: window.store.get('locale')})));
                             }
                         }
                     }
@@ -431,8 +431,11 @@ function drawMultiCurrencyLineChart(url, holder, anonymous, drawTodayMarker, col
 
             // add a marker to the chart if defined.
             if (drawTodayMarker && "" !== drawTodayLabel) {
-                let markDate = format(new Date(drawTodayLabel), i18next.t("config.month_and_day_fns"));
-                let today = i18next.t("firefly.today");
+                let locale = window.store.get('locale');
+                let language = window.store.get('language');
+                console.log('is init here B', window.i18next.isInitialized,window.i18next.languages);
+                let markDate = format(new Date(drawTodayLabel), window.i18next.t("config.month_and_day_fns", {lng: locale}), locale);
+                let today = window.i18next.t("firefly.today", {lng: language});
                 let xAdjust = 0;
                 if (drawTodayIndex < 3) {
                     xAdjust = today.length * 4;

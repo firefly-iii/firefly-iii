@@ -130,17 +130,17 @@ function getViewRange(viewRange, today) {
             end = endOfDay(end);
             break;
     }
-    console.log(
-        'getViewRange("' +
-            viewRange +
-            '", "' +
-            format(today, "yyyy-MM-dd HH:mm:ss") +
-            '") = "' +
-            format(start, "yyyy-MM-dd HH:mm:ss") +
-            '" to "' +
-            format(end, "yyyy-MM-dd HH:mm:ss") +
-            '".',
-    );
+    // console.log(
+    //     'getViewRange("' +
+    //         viewRange +
+    //         '", "' +
+    //         format(today, "yyyy-MM-dd HH:mm:ss") +
+    //         '") = "' +
+    //         format(start, "yyyy-MM-dd HH:mm:ss") +
+    //         '" to "' +
+    //         format(end, "yyyy-MM-dd HH:mm:ss") +
+    //         '".',
+    // );
     return { start: start, end: end };
 }
 
@@ -236,13 +236,13 @@ function addPeriod(date, viewRange) {
             nextPeriodStart = endOfDay(nextPeriodStart);
             break;
     }
-    console.log("addPeriod (" + viewRange + "): " + format(date, "yyyy-MM-dd HH:mm:ss"));
-    console.log(
-        "To:   ",
-        format(nextPeriodStart, "yyyy-MM-dd HH:mm:ss"),
-        " - ",
-        format(nextPeriodEnd, "yyyy-MM-dd HH:mm:ss"),
-    );
+    // console.log("addPeriod (" + viewRange + "): " + format(date, "yyyy-MM-dd HH:mm:ss"));
+    // console.log(
+    //     "To:   ",
+    //     format(nextPeriodStart, "yyyy-MM-dd HH:mm:ss"),
+    //     " - ",
+    //     format(nextPeriodEnd, "yyyy-MM-dd HH:mm:ss"),
+    // );
     return {
         start: nextPeriodStart,
         end: nextPeriodEnd,
@@ -343,13 +343,13 @@ function subtractPeriod(date, viewRange) {
             prevPeriodStart = endOfDay(prevPeriodStart);
             break;
     }
-    console.log("subtractPeriod (" + viewRange + "): " + format(date, "yyyy-MM-dd HH:mm:ss"));
-    console.log(
-        "To:   ",
-        format(prevPeriodStart, "yyyy-MM-dd HH:mm:ss"),
-        " - ",
-        format(prevPeriodEnd, "yyyy-MM-dd HH:mm:ss"),
-    );
+    // console.log("subtractPeriod (" + viewRange + "): " + format(date, "yyyy-MM-dd HH:mm:ss"));
+    // console.log(
+    //     "To:   ",
+    //     format(prevPeriodStart, "yyyy-MM-dd HH:mm:ss"),
+    //     " - ",
+    //     format(prevPeriodEnd, "yyyy-MM-dd HH:mm:ss"),
+    // );
     return {
         start: prevPeriodStart,
         end: prevPeriodEnd,

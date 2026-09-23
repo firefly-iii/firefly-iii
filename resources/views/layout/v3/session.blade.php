@@ -277,7 +277,7 @@
                             {{ $pageTitle ?? $title ?? '(no title)' }}
 
                             @if($subTitle ?? false)
-                                <small class="text-xs text-muted">@if(isset($subTitleIcon))
+                                <small id="test-box" class="text-xs text-muted">@if(isset($subTitleIcon))
                                         <em class="bi {{ $subTitleIcon }}"></em>
                                     @endif{{$subTitle}}</small>
                             @endif
