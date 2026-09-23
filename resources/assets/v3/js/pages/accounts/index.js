@@ -22,9 +22,11 @@ import "../../boot/bootstrap.js";
 import sidebar from "../shared/sidebar.js";
 import dates from "../shared/dates.js";
 import Alpine from "alpinejs";
-import { getVariable } from "../../store/get-variable.js";
+import {getVariable} from "../../store/get-variable.js";
 import Put from "../../api/model/account/put.js";
 import Get from "../../api/model/account/get.js";
+import {format} from "date-fns";
+import formatMoney from "../../util/format-money.js";
 
 window.enableDates = false;
 
@@ -33,41 +35,40 @@ let index = function () {
         listPageSize: 50,
         objectType: 'invalid',
         sortColumn: 'order',
+        accounts: [],
         sortDirection: 'asc',
+        page: 1,
         init() {
-            const page = window.location.href.split("/");
+            const page = window.location.href.split('?')[0].split("/");
             this.objectType = page[page.length - 1].substring(0, 15);
             const params = new Proxy(new URLSearchParams(window.location.search), {
                 get: (searchParams, prop) => searchParams.get(prop),
             });
             this.sortColumn = params.column ?? 'order';
             this.sortDirection = params.direction ?? 'asc';
-            console.log('Sort "'+this.sortColumn+'" in direction "'+this.sortDirection+'"');
+            this.page = parseInt(params.page) || 1;
 
             // grab the account list.
+            this.downloadAccounts();
 
-            let sort = 'asc' === this.sortDirection ? this.sortColumn : '-' + this.sortColumn;
-            
-            (new Get).list({sort: sort}).then((response) => {
-                console.log(response.data);
-            });
 
             // get accounts by initial sort.
             document.querySelectorAll('table.sortable th').forEach((el) => {
                 console.log('El', el);
                 el.addEventListener('click', (event) => {
                     let newColumn = event.currentTarget.dataset.column;
-                    if(newColumn === this.sortColumn) {
+                    if (newColumn === this.sortColumn) {
                         this.sortDirection = 'asc' === this.sortDirection ? 'desc' : 'asc';
                     }
-                    if(newColumn !== this.sortColumn) {
+                    if (newColumn !== this.sortColumn) {
                         this.sortColumn = newColumn;
                     }
                     console.log('Will now sort on column', newColumn, 'direction', this.sortDirection);
                     if (history.pushState) {
                         let newurl = window.location.protocol + "//" + window.location.host + window.location.pathname + '?column=' + this.sortColumn + '&direction=' + this.sortDirection;
-                        window.history.pushState({path:newurl},'',newurl);
+                        window.history.pushState({path: newurl}, '', newurl);
                     }
+                    this.downloadAccounts();
                 });
             });
 
@@ -81,7 +82,7 @@ let index = function () {
                             let item = e.detail[i];
                             if (item.order !== item.currentOrder) {
                                 // PUT new order to system.
-                                new Put().put({ order: item.order }, { id: item.id });
+                                new Put().put({order: item.order}, {id: item.id});
                                 // save new order as current order in the row.
                                 document
                                     .querySelector(`tr[data-id="${item.id}"]`)
@@ -93,6 +94,59 @@ let index = function () {
                 });
             });
         },
+        downloadAccounts() {
+            let sort = 'asc' === this.sortDirection ? this.sortColumn : '-' + this.sortColumn;
+            let start = window.store.get("start");
+            let end = window.store.get("end");
+            let active = true;
+            (new Get).list({
+                active: active,
+                sort: sort,
+                type: this.objectType,
+                start: start,
+                end: end
+            }).then((response) => {
+                this.accounts = [];
+                for (let i = 1; i < response.data.data.length; i++) {
+                    if (Object.hasOwn(response.data.data, i)) {
+                        let current = response.data.data[i];
+                        let balanceDifference = formatMoney(current.attributes.balance_difference, current.attributes.currency_code, true);
+                        let balanceDiffFloat = parseFloat(current.attributes.balance_difference);
+                        if (window.store.get('convert_to_primary')) {
+                            balanceDifference = formatMoney(current.attributes.pc_balance_difference, current.attributes.primary_currency_code, true);
+                            balanceDiffFloat = parseFloat(current.attributes.pc_balance_difference);
+                        }
+                        console.log(current);
+                        let account = {
+                            id: parseInt(current.id),
+                            name: current.attributes.name,
+                            location: null !== current.attributes.longitude && null !== current.attributes.latitude,
+                            has_attachments: current.attributes.has_attachments,
+                            role: current.attributes.account_role,
+                            iban: this.addSpaces(current.attributes.iban),
+                            account_number: current.attributes.account_number,
+                            active: current.attributes.active,
+                            last_activity: this.formatDate(current.attributes.last_activity),
+                            balance_difference: balanceDifference,
+                            balance_difference_float: balanceDiffFloat,
+                        };
+                        this.accounts.push(account);
+                    }
+                }
+            });
+        },
+        addSpaces(iban) {
+            if (null === iban) {
+                return '';
+            }
+            return iban.match(/.{1,4}/g).join(' ');
+        },
+        formatDate(date) {
+            if (null === date) {
+                return '';
+            }
+            return format(new Date(date), i18next.t('config.date_time_fns_short', {lng: window.store.get('locale')}));
+        }
     };
 };
 

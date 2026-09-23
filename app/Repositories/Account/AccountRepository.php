@@ -225,7 +225,7 @@ class AccountRepository implements AccountRepositoryInterface, UserGroupInterfac
         return $query->get(['accounts.*']);
     }
 
-    public function getAccountsByType(array $types, ?array $sort = []): Collection
+    public function getAccountsByType(array $types, ?array $sort = [], ?bool $filterActive = null): Collection
     {
         $res     = array_intersect([
             AccountTypeEnum::ASSET->value,
@@ -236,6 +236,9 @@ class AccountRepository implements AccountRepositoryInterface, UserGroupInterfac
         $query   = $this->user->accounts();
         if (0 !== count($types)) {
             $query->accountTypeIn($types);
+        }
+        if(null !== $filterActive) {
+            $query->where('accounts.active', $filterActive);
         }
 
         // add sort parameters

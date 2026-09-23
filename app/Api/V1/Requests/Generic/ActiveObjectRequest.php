@@ -1,8 +1,7 @@
 <?php
 
 /*
- * ShowRequest.php
- * Copyright (c) 2026 james@firefly-iii.org
+ * Copyright (c) 2025 https://github.com/ctrl-f5
  *
  * This file is part of Firefly III (https://github.com/firefly-iii).
  *
@@ -22,26 +21,30 @@
 
 declare(strict_types=1);
 
-namespace FireflyIII\Api\V1\Requests\Models\Account;
+namespace FireflyIII\Api\V1\Requests\Generic;
 
-use FireflyIII\Api\V1\Requests\AggregateFormRequest;
-use FireflyIII\Api\V1\Requests\DateRangeRequest;
-use FireflyIII\Api\V1\Requests\DateRequest;
-use FireflyIII\Api\V1\Requests\Generic\ActiveObjectRequest;
-use FireflyIII\Api\V1\Requests\PaginationRequest;
-use FireflyIII\Models\Account;
+use FireflyIII\Api\V1\Requests\ApiRequest;
+use FireflyIII\Rules\IsBoolean;
+use Illuminate\Contracts\Validation\Validator;
 
-class ShowRequest extends AggregateFormRequest
+class ActiveObjectRequest extends ApiRequest
 {
-    protected function getRequests(): array
+    public function rules(): array
     {
         return [
-            [PaginationRequest::class, 'sort_class' => Account::class],
-            DateRangeRequest::class,
-            ActiveObjectRequest::class,
-            DateRequest::class,
-            AccountTypeApiRequest::class,
-            // [ObjectTypeApiRequest::class, 'object_type' => Account::class],
+            'active' => ['nullable', new IsBoolean()],
         ];
+    }
+
+    public function withValidator(Validator $validator): void
+    {
+        $validator->after(function (Validator $validator): void {
+            $active = null;
+            if($this->has('active')) {
+                $active = $this->boolean('active', null);
+            }
+
+            $this->attributes->set('active', $active);
+        });
     }
 }
