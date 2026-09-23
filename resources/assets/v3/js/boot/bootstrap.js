@@ -81,11 +81,9 @@ getFreshVariable("lastActivity")
                 store.set("locale", replacedLocale);
                 console.log('Ready with bootstrap for this page.');
                 loadTranslations(replacedLanguage, replacedLocale)
-                    .then(function (t) {
-                        console.log('T is', t);
+                    .then(function () {
                         window.i18next = i18next;
                         document.getElementById('test-box').innerText = i18next.t("config.html_language", {lng: 'nl-NL'});
-                        console.log('is init here A', i18next.isInitialized,i18next.languages);
                         const event = new Event("firefly-iii-bootstrapped");
                         document.dispatchEvent(event);
                         window.bootstrapped = true;

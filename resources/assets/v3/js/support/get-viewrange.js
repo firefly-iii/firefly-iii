@@ -28,7 +28,6 @@ import {
     endOfMonth,
     endOfQuarter,
     endOfWeek,
-    format,
     startOfDay,
     startOfMonth,
     startOfQuarter,

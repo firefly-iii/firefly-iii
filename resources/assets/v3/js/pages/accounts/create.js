@@ -37,11 +37,11 @@ let create = function () {
                     let direction = event.target.value;
                     if ("credit" === direction) {
                         document.querySelector('label[for="ffInput_opening_balance"]').textContent =
-                            i18next.t("firefly.i_am_owed_amount");
+                            window.i18next.t("firefly.i_am_owed_amount");
                     }
                     if ("debit" === direction) {
                         document.querySelector('label[for="ffInput_opening_balance"]').textContent =
-                            i18next.t("firefly.i_owe_amount");
+                            window.i18next.t("firefly.i_owe_amount");
                     }
                 });
                 // also change it the first time around
