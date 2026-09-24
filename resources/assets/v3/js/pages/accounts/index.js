@@ -41,9 +41,11 @@ let index = function () {
         sortDirection: 'asc',
         page: 1,
         totalPages: 1,
+        pageNavUrl: './accounts/',
         init() {
             const page = window.location.href.split('?')[0].split("/");
             this.objectType = page[page.length - 1].substring(0, 15);
+            this.pageNavUrl = './accounts/' + this.objectType;
             const params = new Proxy(new URLSearchParams(window.location.search), {
                 get: (searchParams, prop) => searchParams.get(prop),
             });

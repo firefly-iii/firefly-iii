@@ -6,42 +6,7 @@
                 <div class="card" id="account-index-{{ $objectType }}">
                     <x-elements.card-header-with-menu :cardTitle="trans('firefly.'.$objectType.'_accounts')" :route="route('accounts.create', $objectType) . '?_from=' . urlencode($FF3_FROM)" :linkTitle="__('firefly.make_new_'. $objectType . '_account')"/>
                     <div class="card-body p-0">
-                        <template x-if="totalPages > 1">
-                            <div class="m-2">
-                                <nav>
-                                    <ul class="pagination">
-                                        <li :class="{'page-item': true, 'disabled': 1 === page}" aria-disabled="true" aria-label="{{ __('pagination.previous') }}">
-                                            <template x-if="1 === page">
-                                                <span class="page-link" aria-hidden="true">‹</span>
-                                            </template>
-                                            <template x-if="page > 1">
-                                                <a class="page-link" :href="'./accounts/'+objectType+'?page=' + (page - 1)" rel="prev" aria-label="{{ __('pagination.previous') }}">‹</a>
-                                            </template>
-                                        </li>
-                                        <template x-for="current in totalPages" :key="current">
-                                            <li class="page-item" :class="{'page-item': true, 'active': current === page}">
-                                                <template x-if="current !== page">
-                                                    <a class="page-link" :href="'./accounts/'+objectType+'?page=' + current" x-text="current" :aria-label="current"></a>
-                                                </template>
-                                                <template x-if="current === page">
-                                                    <span class="page-link" x-text="current"></span>
-                                                </template>
-                                            </li>
-                                        </template>
-
-                                        <li class="page-item">
-                                            <template x-if="totalPages === page">
-                                                <span class="page-link" aria-hidden="true">›</span>
-                                            </template>
-                                            <template x-if="totalPages > page">
-                                                <a class="page-link" :href="'./accounts/'+objectType+'?page=' + (page +1)" rel="next" aria-label="{{ __('pagination.next') }}">›</a>
-                                            </template>
-
-                                        </li>
-                                    </ul>
-                                </nav>
-                            </div>
-                        </template>
+                        <x-elements.alpine.page-navigation />
                         <table class="table table-valign-middle table-sm table-hover sortable">
                             <thead>
                             <tr>
@@ -200,9 +165,7 @@
                             </tbody>
                         </table>
                         <template x-if="totalPages > 1">
-                            <div class="m-2">
-                                TODO Pagination be here.
-                            </div>
+                            <x-elements.alpine.page-navigation />
                         </template>
                     </div>
                     <x-elements.card-footer-with-menu :route="route('accounts.create', $objectType) . '?_from=' . urlencode($FF3_FROM)" :linkTitle="__('firefly.make_new_'. $objectType . '_account')" />
