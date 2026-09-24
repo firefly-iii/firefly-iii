@@ -54,7 +54,7 @@
 @endsection
 @section('scripts')
     @vite(['js/pages/generic.js'])
-    <script type="text/javascript" src="v1/js/lib/bootstrap-sortable.js?v={{ $FF_BUILD_TIME }}" nonce="{{ $JS_NONCE }}"></script>
+     <script src="v1/js/lib/bootstrap-sortable.js?v={{ $FF_BUILD_TIME }}" nonce="{{ $JS_NONCE }}"></script>
     <script nonce="{{ $JS_NONCE }}">
         $('.switch-link').on('click', switchLink);
         var switchLinkUrl = '{{ route('transactions.link.switch') }}';

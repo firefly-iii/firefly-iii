@@ -12,9 +12,9 @@
                 </h4>
                 <template x-if="loading">
                     <p class="d-none d-xs-block">
-                    <div class="spinner-border spinner-border-sm" role="status">
+                    <span class="spinner-border spinner-border-sm" role="status">
                         <span class="visually-hidden">{{ __('firefly.thinking') }}</span>
-                    </div>
+                    </span>
                     </p>
                 </template>
                 <template x-if="!loading && 0 !== balanceBox.amounts.length">
@@ -63,9 +63,9 @@
                 </template>
                 <template x-if="loading">
                     <p class="d-none d-sm-block">
-                    <div class="spinner-border spinner-border-sm" role="status">
+                    <span class="spinner-border spinner-border-sm" role="status">
                         <span class="visually-hidden">{{ __('firefly.thinking') }}</span>
-                    </div>
+                    </span>
                     </p>
                 </template>
                 <template x-if="!loading && billBox.unpaid.length > 0">
@@ -73,7 +73,7 @@
                             href="{{ route('subscriptions.index') }}">{{ __('firefly.bills_to_pay') }}</a></p>
                 </template>
                 <template x-if="0 === billBox.unpaid.length && !loading">
-                    <p class="d-none d-sm-block"><em>{{ __('firefly.no_waiting') }}</p>
+                    <p class="d-none d-sm-block"><em>{{ __('firefly.no_waiting') }}</em></p>
                 </template>
             </div>
             <span class="small-box-icon d-none d-lg-block d-xl-block d-xxl-block">
@@ -114,9 +114,9 @@
 
                 <template x-if="loading">
                     <p class="d-none d-sm-block">
-                    <div class="spinner-border spinner-border-sm" role="status">
+                    <span class="spinner-border spinner-border-sm" role="status">
                         <span class="visually-hidden">{{ __('firefly.thinking') }}</span>
-                    </div>
+                    </span>
                     </p>
                 </template>
                 <template x-if="!loading && 0 !== leftBox.left.length">
@@ -163,9 +163,9 @@
 
                 <template x-if="loading">
                     <p class="d-none d-sm-block">
-                    <div class="spinner-border spinner-border-sm" role="status">
+                    <span class="spinner-border spinner-border-sm" role="status">
                         <span class="visually-hidden">{{ __('firefly.thinking') }}</span>
-                    </div>
+                    </span>
                     </p>
                 </template>
                 <template x-if="!loading">

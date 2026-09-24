@@ -72,9 +72,9 @@
 @endsection
 @section('scripts')
     @vite(['js/pages/generic.js'])
-    <script type="text/javascript" nonce="{{ $JS_NONCE }}">
+     <script nonce="{{ $JS_NONCE }}">
         var redirectUrl = "{{ route('currencies.index') }}";
         var updateCurrencyUrl = "{{ route('api.v1.currencies.update', ['']) }}";
     </script>
-    <script type="text/javascript" src="v1/js/ff/currencies/index.js?v={{ $FF_BUILD_TIME }}" nonce="{{ $JS_NONCE }}"></script>
+     <script src="v1/js/ff/currencies/index.js?v={{ $FF_BUILD_TIME }}" nonce="{{ $JS_NONCE }}"></script>
 @endsection

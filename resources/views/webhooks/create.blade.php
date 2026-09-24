@@ -68,7 +68,7 @@
     </div>
 @endsection
 @section('scripts')
-    <script type="text/javascript" nonce="{{ $JS_NONCE }}">
+     <script nonce="{{ $JS_NONCE }}">
         var previousUrl = '{{ $previousUrl }}';
     </script>
     @vite(['js/pages/webhooks/create.js'])

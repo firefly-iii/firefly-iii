@@ -47,7 +47,7 @@
             </a>
         </li>
         <li>
-            <a href="#" type="button" class="dropdown-item" data-bs-toggle="modal" data-bs-target="#customDateRangeModal">
+            <a href="#" class="dropdown-item" data-bs-toggle="modal" data-bs-target="#customDateRangeModal">
                 {{ __('firefly.customRange') }}
             </a>
         </li>

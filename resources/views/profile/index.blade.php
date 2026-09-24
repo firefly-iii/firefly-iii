@@ -252,7 +252,7 @@
 @endsection
 @section('scripts')
     @vite(['js/pages/generic.js'])
-    <script type="text/javascript" nonce="{{ $JS_NONCE }}">
+     <script nonce="{{ $JS_NONCE }}">
         var postUrl = "{{ route('preferences.test-notification') }}";
 
         $(document).ready(function () {

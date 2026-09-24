@@ -13,7 +13,7 @@
                 <div class="col-auto">
                     <div class="input-group mb-2">
                     <label class="sr-only" for="searchInput">{{ trans('firefly.searchPlaceholder') }}</label>
-                    <input autocomplete="off" type="text" id="searchInput" name="search" class="form-control" placeholder="{{ trans('firefly.searchPlaceholder') }}" value="{{ $query ?? '' }}" spellcheck="false"/>
+                    <input autocomplete="off" type="text" id="searchInput" name="search" class="form-control" placeholder="{{ trans('firefly.searchPlaceholder') }}" value="{{ $query ?? '' }}" spellcheck="false">
                         <div class="input-group-append">
                             <button type='submit' name='go' id='search-btn' class="btn btn-outline-secondary"><span class="bi bi-search"></span></button>
                         </div>
