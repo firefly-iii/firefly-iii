@@ -112,9 +112,23 @@ let index = function () {
                         let current = response.data.data[i];
                         let balanceDifference = formatMoney(current.attributes.balance_difference, current.attributes.currency_code, true);
                         let balanceDiffFloat = parseFloat(current.attributes.balance_difference);
+                        let currentBalance = formatMoney(current.attributes.current_balance, current.attributes.currency_code);
+                        let currentBalanceFloat = parseFloat(current.attributes.current_balance);
+                        let currentDebt = formatMoney(current.attributes.debt_amount, current.attributes.currency_code);
+                        let currentDebtFloat = parseFloat(current.attributes.debt_amount);
                         if (window.store.get('convert_to_primary')) {
                             balanceDifference = formatMoney(current.attributes.pc_balance_difference, current.attributes.primary_currency_code, true);
                             balanceDiffFloat = parseFloat(current.attributes.pc_balance_difference);
+                            currentBalance = formatMoney(current.attributes.pc_current_balance, current.attributes.primary_currency_code);
+                            currentBalanceFloat = parseFloat(current.attributes.pc_current_balance);
+                            currentDebt = formatMoney(current.attributes.pc_debt_amount, current.attributes.primary_currency_code);
+                            currentDebtFloat = parseFloat(current.attributes.pc_debt_amount);
+                        }
+                        let lastActivity = this.formatDate(current.attributes.last_activity);
+                        let noLastActivity = false;
+                        if('' === lastActivity) {
+                            lastActivity = i18next.t('firefly.never');
+                            noLastActivity = true;
                         }
                         console.log(current);
                         let account = {
@@ -125,10 +139,19 @@ let index = function () {
                             role: current.attributes.account_role,
                             iban: this.addSpaces(current.attributes.iban),
                             account_number: current.attributes.account_number,
+                            current_balance: currentBalance,
+                            current_balance_float: currentBalanceFloat,
                             active: current.attributes.active,
-                            last_activity: this.formatDate(current.attributes.last_activity),
+                            last_activity: lastActivity,
+                            no_last_activity: noLastActivity,
                             balance_difference: balanceDifference,
                             balance_difference_float: balanceDiffFloat,
+                            liability_type: i18next.t('firefly.account_type_' + current.attributes.liability_type),
+                            liability_direction: i18next.t('firefly.liability_direction_' + current.attributes.liability_direction + '_short'),
+                            liability_interest: current.attributes.interest,
+                            liability_interest_period: i18next.t('firefly.interest_calc_' + current.attributes.interest_period).toLowerCase(),
+                            current_debt: currentDebt,
+                            current_debt_float: currentDebtFloat,
                         };
                         this.accounts.push(account);
                     }

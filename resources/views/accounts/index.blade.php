@@ -30,7 +30,7 @@
                                     <th>{{ trans('list.interest') }} ({{ trans('list.interest_period') }})</th>
                                 </template>
                                 <th>{{ trans('form.account_number') }}</th>
-                                <template x-if="'liabilities' === objectType">
+                                <template x-if="'liabilities' !== objectType">
                                     <th class="text-end">{{ trans('list.currentBalance') }}</th>
                                 </template>
                                 <template x-if="'liabilities' === objectType">
@@ -76,17 +76,18 @@
                                     </template>
                                     <template x-if="'liabilities' === objectType">
                                     <td>
-                                        TODO liabilitie type
+                                        <span x-text="account.liability_type"></span>
                                     </td>
                                     </template>
                                     <template x-if="'liabilities' === objectType">
                                     <td>
-                                        TODO liabilitie dir
+                                        <span x-text="account.liability_direction"></span>
                                     </td>
                                     </template>
                                     <template x-if="'liabilities' === objectType">
                                     <td>
-                                        TODO interest
+                                        <span x-text="account.liability_interest"></span>%
+                                        (<span x-text="account.liability_interest_period"></span>)
                                     </td>
                                     </template>
                                     <td>
@@ -95,14 +96,30 @@
                                             <span x-text="account.account_number"></span>
                                         </template>
                                     </td>
-                                    <template x-if="'liabilities' === objectType">
-                                    <td>
-                                        TODO current blaance
+                                    <template x-if="'liabilities' !== objectType">
+                                    <td class="text-end">
+                                        <template x-if="0.0 === account.current_balance_float">
+                                            <span class="money-neutral" x-text="account.current_balance"></span>
+                                        </template>
+                                        <template x-if="account.current_balance_float > 0.0">
+                                            <span class="money-positive" x-text="account.current_balance"></span>
+                                        </template>
+                                        <template x-if="account.current_balance_float < 0.0">
+                                            <span class="money-negative" x-text="account.current_balance"></span>
+                                        </template>
                                     </td>
                                     </template>
                                     <template x-if="'liabilities' === objectType">
-                                    <td>
-                                        TODO left in debt
+                                    <td class="text-end">
+                                        <template x-if="0.0 === account.current_debt_float">
+                                            <span class="money-neutral" x-text="account.current_debt"></span>
+                                        </template>
+                                        <template x-if="account.current_debt_float > 0.0">
+                                            <span class="money-positive" x-text="account.current_debt"></span>
+                                        </template>
+                                        <template x-if="account.current_debt_float < 0.0">
+                                            <span class="money-negative" x-text="account.current_debt"></span>
+                                        </template>
                                     </td>
                                     </template>
                                     <td class="d-md-table-cell d-none">
@@ -115,10 +132,15 @@
                                     </td>
                                     <template x-if="'liabilities' !== objectType">
                                     <td>
-                                        <span x-text="account.last_activity"></span>
+                                        <template x-if="true === account.no_last_activity">
+                                            <em class="text-muted" x-text="account.last_activity"></em>
+                                        </template>
+                                        <template x-if="false === account.no_last_activity">
+                                            <span x-text="account.last_activity"></span>
+                                        </template>
                                     </td>
                                     </template>
-                                    <td>
+                                    <td class="text-end">
                                         <template x-if="0.0 === account.balance_difference_float">
                                             <span class="money-neutral" x-text="account.balance_difference"></span>
                                         </template>
