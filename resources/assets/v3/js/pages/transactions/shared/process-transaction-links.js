@@ -1,5 +1,6 @@
 import PostLink from "../../../api/model/transaction-link/post.js";
 import PutLink from "../../../api/model/transaction-link/put.js";
+import i18next from "i18next";
 
 export function processTransactionLinks(transactions) {
     this.notifications.wait.show = true;
