@@ -237,7 +237,7 @@ class AccountRepository implements AccountRepositoryInterface, UserGroupInterfac
         if (0 !== count($types)) {
             $query->accountTypeIn($types);
         }
-        if(null !== $filterActive) {
+        if (null !== $filterActive) {
             $query->where('accounts.active', $filterActive);
         }
 

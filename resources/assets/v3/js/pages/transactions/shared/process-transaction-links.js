@@ -4,7 +4,7 @@ import i18next from "i18next";
 
 export function processTransactionLinks(transactions) {
     this.notifications.wait.show = true;
-    this.notifications.wait.text = i18next.t('firefly.save_links_working');
+    this.notifications.wait.text = i18next.t("firefly.save_links_working");
     let count = 0;
     for (let i = 0; i < transactions.length; i++) {
         if (Object.hasOwn(transactions, i) && Object.hasOwn(this.links, i)) {

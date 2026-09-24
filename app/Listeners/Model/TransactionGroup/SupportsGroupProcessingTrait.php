@@ -95,6 +95,7 @@ trait SupportsGroupProcessingTrait
         }
         if (0 === $objects->accounts->count()) {
             Log::debug('Count is zero, do not continue.');
+
             return;
         }
         $earliest = today()->subDays(2);

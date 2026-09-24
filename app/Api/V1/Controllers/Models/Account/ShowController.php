@@ -77,7 +77,7 @@ final class ShowController extends Controller
             'sort'   => $sort,
             'start'  => $start,
             'end'    => $end,
-            'active'    => $active,
+            'active' => $active,
             'date'   => $date,
         ]            = $request->attributes->all();
         // get list of accounts. Count it and split it.
