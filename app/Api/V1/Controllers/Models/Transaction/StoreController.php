@@ -90,6 +90,7 @@ final class StoreController extends Controller
         $data               = $request->getAll();
         $data['user']       = auth()->user();
         $data['user_group'] = $this->userGroup;
+
         try {
             $transactionGroup = $this->groupRepository->store($data);
         } catch (DuplicateTransactionException $e) {

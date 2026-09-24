@@ -54,6 +54,7 @@ class AccountBalanceCalculator
 
             return '0';
         }
+
         /** @var Builder $query */
         $query   = Transaction::leftJoin('transaction_journals', 'transaction_journals.id', '=', 'transactions.transaction_journal_id')
             ->whereNull('transactions.deleted_at')
@@ -86,9 +87,14 @@ class AccountBalanceCalculator
         }
 
         $balance = (string) ($first->balance_after ?? '0');
-        Log::debug(sprintf('getLatestBalance: found balance: %s in transaction #%d on moment %s', Steam::bcround($balance, 2), $first->id ?? 0, $notBefore->format('Y-m-d H:i:s')));
-//        Log::debug($query->toSql());
-//        Log::debug($query->toRawSql());
+        Log::debug(sprintf(
+            'getLatestBalance: found balance: %s in transaction #%d on moment %s',
+            Steam::bcround($balance, 2),
+            $first->id ?? 0,
+            $notBefore->format('Y-m-d H:i:s')
+        ));
+        //        Log::debug($query->toSql());
+        //        Log::debug($query->toRawSql());
 
         return $balance;
     }
@@ -138,7 +144,6 @@ class AccountBalanceCalculator
 
         /** @var Transaction $entry */
         foreach ($set as $entry) {
-
             // start with empty array:
             $entry->account_id                                             = (int) $entry->account_id;
             $entry->transaction_currency_id                                = (int) $entry->transaction_currency_id;

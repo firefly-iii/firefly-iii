@@ -24,14 +24,14 @@ import { format } from "date-fns";
 
 export function createLinkAutocomplete(fieldIdentifier, url) {
     let token = document.querySelector('meta[name="csrf-token"]').getAttribute("content");
-    let locale = window.store.get('locale');
+    let locale = window.store.get("locale");
     const renderJournal = function (item) {
         return (
             item.description +
             '<br><small class="text-muted">' +
             formatMoney(item.amount, item.currency_code) +
             " @ " +
-            format(new Date(item.date), window.i18next.t("config.date_time_fns", {lng: locale}), locale) +
+            format(new Date(item.date), window.i18next.t("config.date_time_fns", { lng: locale }), locale) +
             "</small>"
         );
     };

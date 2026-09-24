@@ -350,7 +350,8 @@ class AccountEnrichment implements EnrichmentInterface
             ])
             ->whereIn('account_id', $this->ids)
             ->get(['account_meta.id', 'account_meta.account_id', 'account_meta.name', 'account_meta.data'])
-            ->toArray();
+            ->toArray()
+        ;
 
         /** @var array $entry */
         foreach ($set as $entry) {
