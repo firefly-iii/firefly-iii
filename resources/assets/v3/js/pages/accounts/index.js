@@ -27,8 +27,10 @@ import Put from "../../api/model/account/put.js";
 import Get from "../../api/model/account/get.js";
 import {format} from "date-fns";
 import formatMoney from "../../util/format-money.js";
+import i18next from "i18next";
 
 window.enableDates = false;
+
 
 let index = function () {
     return {
@@ -38,6 +40,7 @@ let index = function () {
         accounts: [],
         sortDirection: 'asc',
         page: 1,
+        totalPages: 1,
         init() {
             const page = window.location.href.split('?')[0].split("/");
             this.objectType = page[page.length - 1].substring(0, 15);
@@ -54,7 +57,7 @@ let index = function () {
 
             // get accounts by initial sort.
             document.querySelectorAll('table.sortable th').forEach((el) => {
-                console.log('El', el);
+                // console.log('El', el);
                 el.addEventListener('click', (event) => {
                     let newColumn = event.currentTarget.dataset.column;
                     if (newColumn === this.sortColumn) {
@@ -102,11 +105,13 @@ let index = function () {
             (new Get).list({
                 active: active,
                 sort: sort,
+                page: this.page,
                 type: this.objectType,
                 start: start,
                 end: end
             }).then((response) => {
                 this.accounts = [];
+                this.totalPages = parseInt(response.data.meta.pagination.total_pages);
                 for (let i = 1; i < response.data.data.length; i++) {
                     if (Object.hasOwn(response.data.data, i)) {
                         let current = response.data.data[i];
@@ -130,7 +135,7 @@ let index = function () {
                             lastActivity = i18next.t('firefly.never');
                             noLastActivity = true;
                         }
-                        console.log(current);
+                        //console.log(current);
                         let account = {
                             id: parseInt(current.id),
                             name: current.attributes.name,

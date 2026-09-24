@@ -83,7 +83,6 @@ getFreshVariable("lastActivity")
                 loadTranslations(replacedLanguage, replacedLocale)
                     .then(function () {
                         window.i18next = i18next;
-                        document.getElementById('test-box').innerText = i18next.t("config.html_language", {lng: 'nl-NL'});
                         const event = new Event("firefly-iii-bootstrapped");
                         document.dispatchEvent(event);
                         window.bootstrapped = true;
