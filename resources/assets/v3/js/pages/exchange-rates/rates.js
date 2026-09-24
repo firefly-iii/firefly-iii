@@ -22,7 +22,7 @@
 import "../../boot/bootstrap.js";
 import sidebar from "../../pages/shared/sidebar.js";
 import dates from "../shared/dates.js";
-import {format} from "date-fns/format";
+import { format } from "date-fns/format";
 import i18next from "i18next";
 import Post from "../../api/model/exchange-rate/post.js";
 import Put from "../../api/model/exchange-rate/put.js";
@@ -241,7 +241,11 @@ let rates = function () {
                                 date: date,
                                 rate_id: rate_id,
                                 inverse_id: inverse_id,
-                                date_formatted: format(date, window.i18next.t("config.date_time_fns", {lng: window.store.get('locale')}), window.store.get('locale')),
+                                date_formatted: format(
+                                    date,
+                                    window.i18next.t("config.date_time_fns", { lng: window.store.get("locale") }),
+                                    window.store.get("locale"),
+                                ),
                                 date_field: current.attributes.date.substring(0, 10),
                                 rate: rate,
                                 inverse: "",

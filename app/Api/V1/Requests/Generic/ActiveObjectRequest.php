@@ -40,7 +40,7 @@ class ActiveObjectRequest extends ApiRequest
     {
         $validator->after(function (Validator $validator): void {
             $active = null;
-            if($this->has('active')) {
+            if ($this->has('active')) {
                 $active = $this->boolean('active', null);
             }
 

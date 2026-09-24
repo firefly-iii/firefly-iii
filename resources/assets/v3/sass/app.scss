@@ -52,12 +52,14 @@ $primary: #1e6581; // original
 @import "shepherd.js/dist/css/shepherd.css";
 
 // for sortable tables
-table.sortable thead th.sortable {cursor:pointer;}
+table.sortable thead th.sortable {
+    cursor: pointer;
+}
 table.sortable th.sortable.sortable_sorted.sortable_sorted_asc:after {
-    content: " \25B4"
+    content: " \25B4";
 }
 table.sortable th.sortable.sortable_sorted.sortable_sorted_desc:after {
-    content: " \25BE"
+    content: " \25BE";
 }
 
 // for light mode, different money colors are used.
@@ -87,7 +89,9 @@ html[data-bs-theme="dark"] .money-transfer {
 }
 
 // move over the sub menu things.
-.sub-nav-item {padding-left:1em;}
+.sub-nav-item {
+    padding-left: 1em;
+}
 
 // some print rules
 @media print {
