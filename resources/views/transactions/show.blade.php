@@ -232,7 +232,7 @@
                                                         class="bi bi-trash"></span> {{ __('firefly.delete') }}</a></li>
                                         @endif
                                         @if($journal['reconciled'])
-                                            <li><a class="dropdown-item" class="reconcile-button" href="{{ route('transactions.unreconcile', [$journal['transaction_journal_id']]) }}"><span
+                                            <li><a class="dropdown-item reconcile-button" href="{{ route('transactions.unreconcile', [$journal['transaction_journal_id']]) }}"><span
                                                         class="bi bi-clock-history"></span> {{ __('firefly.unreconcile') }}</a></li>
                                         @endif
                                         @if($groupArray['transactions'][0]['type'] !== 'reconciliation' && $groupArray['transactions'][0]['type'] !== 'opening balance' && $groupArray['transactions'][0]['type'] !== 'liability credit')
