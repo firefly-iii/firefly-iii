@@ -1,8 +1,20 @@
 @extends('layout.v3.session')
 @section('content')
-    @if(count($accounts) > 0)
         <div class="row" x-data="index">
-            <div class="col-lg-12 col-md-12 col-sm-12">
+            <template x-if="true === loading">
+            <div class="col-lg-12 text-center">
+                <div id="status-box" class="p-3 install-box-border">
+                    <div class="spinner-border spinner-border-sm" role="status">
+                        <span class="visually-hidden">{{ __('firefly.thinking') }}</span>
+                    </div>
+                </div>
+            </div>
+            </template>
+            <template x-if="true">
+                <div class="blabla"></div>
+            </template>
+
+            <div class="col-lg-12 col-md-12 col-sm-12 data-holder">
                 <div class="card" id="account-index-{{ $objectType }}">
                     <x-elements.card-header-with-menu :cardTitle="trans('firefly.'.$objectType.'_accounts')" :route="route('accounts.create', $objectType) . '?_from=' . urlencode($FF3_FROM)" :linkTitle="__('firefly.make_new_'. $objectType . '_account')"/>
                     <div class="card-body p-0">
@@ -164,53 +176,50 @@
                             </template>
                             </tbody>
                         </table>
+
                         <template x-if="totalPages > 1">
                             <x-elements.alpine.page-navigation />
                         </template>
                     </div>
                     <x-elements.card-footer-with-menu :route="route('accounts.create', $objectType) . '?_from=' . urlencode($FF3_FROM)" :linkTitle="__('firefly.make_new_'. $objectType . '_account')" />
                 </div>
-                @if($inactiveCount > 0 && !$inactivePage)
-                    <p class="m-2"><small>
-                            <em>
-                                <a href="{{ route('accounts.inactive.index', $objectType) }}" class="text-muted">
-                                    {{ trans_choice('firefly.inactive_account_link', $inactiveCount) }}
-                                </a>
-                            </em>
-                        </small>
-                    </p>
-                @endif
-                @if($inactivePage)
-                    <p class="m-2"><small class="text-muted">
-                            <em>
-                                {{ trans('firefly.all_accounts_inactive') }}
-                                <a href="{{ route('accounts.index', $objectType) }}">
-                                    {{ trans('firefly.active_account_link', ['count' => $inactiveCount]) }}
-                                </a>
-                            </em>
-                        </small>
-                    </p>
-                @endif
             </div>
+            <template x-if="0 === accounts.length && true === active && false === loading">
+                <x-empty-page :route="route('accounts.create', [$objectType]) . '?_from=' . urlencode($FF3_FROM)" type="accounts" :object-type="$objectType" />
+            </template>
+            <template x-if="0 === accounts.length && true === active">
+                <p class="text-center"><small>
+                        <em>
+                            <span x-text="i18next.t('firefly.may_inactive_accounts_link', {url: '{{ route('accounts.inactive.index', $objectType) }}'})"></span>
+                        </em>
+                    </small>
+                </p>
+            </template>
+            <template x-if="0 !== accounts.length && true === active">
+                <p class="text-center"><small>
+                        <em>
+                            <span x-text="i18next.t('firefly.inactive_account_link_js')"></span>
+                        </em>
+                    </small>
+                </p>
+            </template>
+            <template x-if="0 !== accounts.length && false === active">
+                <p class="text-center"><small>
+                        <em>
+                            <a href="{{ route('accounts.index', $objectType) }}"><span x-text="i18next.t('firefly.active_account_link')"></span></a>
+                        </em>
+                    </small>
+                </p>
+            </template>
+            <template x-if="0 === accounts.length && false === active">
+                <p class="text-center"><small>
+                        <em>
+                            <span x-text="i18next.t('firefly.no_inactive_accounts', {url: '{{ route('accounts.index', $objectType) }}'})"></span>
+                        </em>
+                    </small>
+                </p>
+            </template>
         </div>
-    @endif
-    @if(0 === count($accounts) && 1 === $page)
-        @php
-            $shownDemo = true
-        @endphp
-        <x-empty-page :route="route('accounts.create', [$objectType]) . '?_from=' . urlencode($FF3_FROM)" type="accounts" :object-type="$objectType" />
-        @if($inactiveCount > 0)
-            <p class="text-center"><small>
-                    <em>
-                        <a href="{{ route('accounts.inactive.index', $objectType) }}" class="text-muted">
-                            {{ trans_choice('firefly.inactive_account_link', $inactiveCount) }}
-                        </a>
-                    </em>
-                </small>
-            </p>
-        @endif
-
-    @endif
 @endsection
 @section('scripts')
     @vite(['js/pages/accounts/index.js'])

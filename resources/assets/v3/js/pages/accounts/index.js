@@ -40,9 +40,23 @@ let index = function () {
         sortDirection: "asc",
         page: 1,
         totalPages: 1,
+        loading: true,
+        active: true,
         pageNavUrl: "./accounts/",
+
+        updateHistory() {
+            if (history.pushState) {
+                let newUrl = window.location.protocol + "//" + window.location.host + window.location.pathname + "?page="+this.page+"&column=" + this.sortColumn + "&direction=" + this.sortDirection;
+                window.history.pushState({ path: newUrl }, "", newUrl);
+            }
+        },
         init() {
             const page = window.location.href.split("?")[0].split("/");
+            if('inactive-accounts' === page[page.length -2]) {
+                this.active = false;
+            }
+
+
             this.objectType = page[page.length - 1].substring(0, 15);
             this.pageNavUrl = "./accounts/" + this.objectType;
             const params = new Proxy(new URLSearchParams(window.location.search), {
@@ -57,7 +71,6 @@ let index = function () {
 
             // get accounts by initial sort.
             document.querySelectorAll("table.sortable th").forEach((el) => {
-                // console.log('El', el);
                 el.addEventListener("click", (event) => {
                     let newColumn = event.currentTarget.dataset.column;
                     if (newColumn === this.sortColumn) {
@@ -66,19 +79,7 @@ let index = function () {
                     if (newColumn !== this.sortColumn) {
                         this.sortColumn = newColumn;
                     }
-                    console.log("Will now sort on column", newColumn, "direction", this.sortDirection);
-                    if (history.pushState) {
-                        let newurl =
-                            window.location.protocol +
-                            "//" +
-                            window.location.host +
-                            window.location.pathname +
-                            "?column=" +
-                            this.sortColumn +
-                            "&direction=" +
-                            this.sortDirection;
-                        window.history.pushState({ path: newurl }, "", newurl);
-                    }
+                    this.updateHistory();
                     this.downloadAccounts();
                 });
             });
@@ -100,7 +101,6 @@ let index = function () {
                             }
                         }
                     }
-                    // console.log(e.detail);
                 });
             });
         },
@@ -108,10 +108,9 @@ let index = function () {
             let sort = "asc" === this.sortDirection ? this.sortColumn : "-" + this.sortColumn;
             let start = window.store.get("start");
             let end = window.store.get("end");
-            let active = true;
             new Get()
                 .list({
-                    active: active,
+                    active: this.active,
                     sort: sort,
                     page: this.page,
                     type: this.objectType,
@@ -164,7 +163,6 @@ let index = function () {
                                 lastActivity = i18next.t("firefly.never");
                                 noLastActivity = true;
                             }
-                            //console.log(current);
                             let account = {
                                 id: parseInt(current.id),
                                 name: current.attributes.name,
@@ -194,6 +192,12 @@ let index = function () {
                             this.accounts.push(account);
                         }
                     }
+                    this.loading = false;
+                    if(0 === this.accounts.length) {
+                        document.querySelectorAll('.data-holder').forEach((el) => {
+                            el.classList.add('d-none');
+                        })
+                    }
                 });
         },
         addSpaces(iban) {
@@ -208,6 +212,23 @@ let index = function () {
             }
             return format(new Date(date), i18next.t("config.date_time_fns_short", { lng: window.store.get("locale") }));
         },
+        capturePageNavigation() {
+            document.querySelectorAll('a.page-link').forEach((el) => {
+                el.addEventListener('click', (e) => {
+                    let link = e.currentTarget;
+                    let page = parseInt(link.dataset.page);
+                    if (isNaN(page)) {
+                        e.preventDefault();
+                        return false;
+                    }
+                    this.page = page;
+                    this.updateHistory();
+                    this.downloadAccounts();
+                    e.preventDefault();
+                    return false;
+                });
+            });
+        }
     };
 };
 
@@ -218,22 +239,18 @@ const comps = {
 };
 
 function loadPage(comps) {
-    // console.log('loadPage');
     Object.keys(comps).forEach((comp) => {
         let data = comps[comp]();
         Alpine.data(comp, () => data);
-        // console.log(comp);
     });
     Alpine.start();
 }
 
 // wait for load until bootstrapped event is received.
 document.addEventListener("firefly-iii-bootstrapped", () => {
-    // console.log('Loaded through event listener.');
     loadPage(comps);
 });
 // or is bootstrapped before event is triggered.
 if (window.bootstrapped) {
-    // console.log('Loaded through window variable.');
     loadPage(comps);
 }

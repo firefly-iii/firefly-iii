@@ -123,6 +123,8 @@ return [
                 'administration_role_mng_rules',
                 'administration_role_mng_recurring',
                 'administration_role_mng_webhooks',
+                'may_inactive_accounts_link',
+                'no_inactive_accounts',
                 'administration_role_mng_currencies',
                 'administration_role_view_reports',
                 'administration_role_full',
