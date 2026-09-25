@@ -571,19 +571,19 @@ function colorizeAllData(data) {
             let index = i % colors.length;
             if (data.datasets[i].label.startsWith("budgeted")) {
                 index = 0;
-                transparency =0.5;
+                transparency = 0.5;
             }
             if (data.datasets[i].label.startsWith("overspent")) {
                 index = 5;
-                transparency =0.5;
+                transparency = 0.5;
             }
             if (data.datasets[i].label.startsWith("spent")) {
                 index = 5;
-                transparency =0.5;
+                transparency = 0.5;
             }
             if (data.datasets[i].label.startsWith("left")) {
                 index = 2;
-                transparency =0.5;
+                transparency = 0.5;
             }
             let color = colors[index];
             // grab color from colors, use modulo to make sure we don't go out of bounds.
