@@ -25,6 +25,7 @@ declare(strict_types=1);
 namespace FireflyIII\Http\Controllers\UserGroup;
 
 use FireflyIII\Http\Controllers\Controller;
+use FireflyIII\Http\Middleware\IsDemoUser;
 use Illuminate\Contracts\View\Factory;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
@@ -32,6 +33,18 @@ use Illuminate\View\View;
 
 final class IndexController extends Controller
 {
+    public function __construct()
+    {
+        parent::__construct();
+
+        // translations:
+        $this->middleware(function ($request, $next) {
+            $this->middleware(IsDemoUser::class)->except(['index']);
+
+            return $next($request);
+        });
+    }
+
     /**
      * Show all administrations.
      *
