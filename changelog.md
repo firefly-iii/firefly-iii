@@ -3,6 +3,36 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
+## v6.7.5 - 2026-09-xx
+
+### Added
+
+- Initial release.
+
+### Changed
+
+- Initial release.
+
+### Deprecated
+
+- Initial release.
+
+### Removed
+
+- Initial release.
+
+### Fixed
+
+- #12878
+
+### Security
+
+- Initial release.
+
+### API
+
+- Initial release.
+
 ## v6.7.4 - 2026-09-26
 
 <!-- summary: This release fixes various bugs in the new layout, but also leaves some open. Please read the release notes :-) -->
