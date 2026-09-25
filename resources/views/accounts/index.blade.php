@@ -10,9 +10,6 @@
                 </div>
             </div>
             </template>
-            <template x-if="true">
-                <div class="blabla"></div>
-            </template>
 
             <div class="col-lg-12 col-md-12 col-sm-12 data-holder">
                 <div class="card" id="account-index-{{ $objectType }}">
@@ -56,7 +53,7 @@
                             </thead>
                             <tbody>
                             <template x-for="account in accounts" :key="account.id">
-                                <tr>
+                                <tr :data-id="account.id">
                                     <td>
                                         <template x-if="('asset' === objectType || 'liabilities' === objectType) && 'asc' === sortDirection && 'order' === sortColumn && accounts.length > 1">
                                             <span class="btn btn-outline-secondary btn-sm bi bi-list object-handle"></span>

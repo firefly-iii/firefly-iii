@@ -13,7 +13,7 @@
                 <template x-for="current in totalPages" :key="current">
                     <li class="page-item" :class="{'page-item': true, 'active': current === page}">
                         <template x-if="current !== page">
-                            <a class="page-link" :data-page="(current)" :href="pageNavUrl+'?page=' + current" x-text="current" :aria-label="current"></a>
+                            <a class="page-link" :data-page="current" :href="pageNavUrl+'?page=' + current" x-text="current" :aria-label="current"></a>
                         </template>
                         <template x-if="current === page">
                             <span class="page-link" x-text="current"></span>
@@ -22,7 +22,8 @@
                 </template>
                 <li class="{'page-item': true, 'disabled': totalPages === page" :aria-disabled="totalPages === page ? 'true' : 'false'" aria-label="{!! __('pagination.next')  !!}">
                     <template x-if="totalPages > page">
-                        <a class="page-link"  :data-page="(page+1)" :href="pageNavUrl+'?page=' + (page +1)" rel="next" aria-label="{!! __('pagination.next')  !!}" title="{!! __('pagination.next')  !!}">›</a>
+                        <a class="page-link" :data-page="(page+1)" :href="pageNavUrl+'?page=' + (page +1)" rel="next" aria-label="{!! __('pagination.next')  !!}" title="{!! __('pagination.next')  !!}">
+                            ›</a>
                     </template>
                     <template x-if="totalPages === page">
                         <span class="page-link" aria-hidden="true">›</span>
