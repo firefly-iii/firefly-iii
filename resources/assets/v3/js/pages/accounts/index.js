@@ -22,14 +22,14 @@ import "../../boot/bootstrap.js";
 import sidebar from "../shared/sidebar.js";
 import dates from "../shared/dates.js";
 import Alpine from "alpinejs";
-import {getVariable} from "../../store/get-variable.js";
+import { getVariable } from "../../store/get-variable.js";
 import Put from "../../api/model/account/put.js";
 import Get from "../../api/model/account/get.js";
-import {format} from "date-fns";
+import { format } from "date-fns";
 import formatMoney from "../../util/format-money.js";
 import i18next from "i18next";
-import {addDrag} from "../shared/drag-and-droppable-rows.js";
-import {nextTick} from "alpinejs/src/nextTick.js";
+import { addDrag } from "../shared/drag-and-droppable-rows.js";
+import { nextTick } from "alpinejs/src/nextTick.js";
 
 window.enableDates = false;
 
@@ -47,20 +47,28 @@ let index = function () {
         pageNavUrl: "./accounts/",
         handleFunc: null,
 
-
         updateHistory() {
             if (history.pushState) {
-                let newUrl = window.location.protocol + "//" + window.location.host + window.location.pathname + "?page=" + this.page + "&column=" + this.sortColumn + "&direction=" + this.sortDirection;
-                window.history.pushState({path: newUrl}, "", newUrl);
+                let newUrl =
+                    window.location.protocol +
+                    "//" +
+                    window.location.host +
+                    window.location.pathname +
+                    "?page=" +
+                    this.page +
+                    "&column=" +
+                    this.sortColumn +
+                    "&direction=" +
+                    this.sortDirection;
+                window.history.pushState({ path: newUrl }, "", newUrl);
             }
         },
         init() {
             this.handleFunc = this.handlePageClick.bind(this);
             const page = window.location.href.split("?")[0].split("/");
-            if ('inactive-accounts' === page[page.length - 2]) {
+            if ("inactive-accounts" === page[page.length - 2]) {
                 this.active = false;
             }
-
 
             this.objectType = page[page.length - 1].substring(0, 15);
             this.pageNavUrl = "./accounts/" + this.objectType;
@@ -96,7 +104,7 @@ let index = function () {
                             let item = e.detail[i];
                             if (item.order !== item.currentOrder) {
                                 // PUT new order to system.
-                                new Put().put({order: item.order}, {id: item.id});
+                                new Put().put({ order: item.order }, { id: item.id });
                                 // save new order as current order in the row.
                                 document
                                     .querySelector(`tr[data-id="${item.id}"]`)
@@ -195,12 +203,12 @@ let index = function () {
                             this.accounts.push(account);
                         }
                     }
-                    console.log('Count of accounts', this.accounts.length);
+                    console.log("Count of accounts", this.accounts.length);
                     this.loading = false;
                     if (0 === this.accounts.length) {
-                        document.querySelectorAll('.data-holder').forEach((el) => {
-                            el.classList.add('d-none');
-                        })
+                        document.querySelectorAll(".data-holder").forEach((el) => {
+                            el.classList.add("d-none");
+                        });
                     }
                 });
         },
@@ -214,19 +222,19 @@ let index = function () {
             if (null === date) {
                 return "";
             }
-            return format(new Date(date), i18next.t("config.date_time_fns_short", {lng: window.store.get("locale")}));
+            return format(new Date(date), i18next.t("config.date_time_fns_short", { lng: window.store.get("locale") }));
         },
         handlePageClick(e) {
             let link = e.currentTarget;
 
             let page = parseInt(link.dataset.page);
-            console.log('Click detected requested page ', page);
+            console.log("Click detected requested page ", page);
             if (isNaN(page)) {
                 e.preventDefault();
                 return false;
             }
             this.page = page;
-            console.log('Page set to ', this.page);
+            console.log("Page set to ", this.page);
             this.updateHistory();
             this.downloadAccounts();
             e.preventDefault();
@@ -236,11 +244,11 @@ let index = function () {
             return false;
         },
         capturePageNavigation() {
-            document.querySelectorAll('a.page-link').forEach((el) => {
-                el.removeEventListener('click', this.handleFunc);
-                el.addEventListener('click', this.handleFunc);
+            document.querySelectorAll("a.page-link").forEach((el) => {
+                el.removeEventListener("click", this.handleFunc);
+                el.addEventListener("click", this.handleFunc);
             });
-        }
+        },
     };
 };
 
