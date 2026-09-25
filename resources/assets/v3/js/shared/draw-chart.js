@@ -60,13 +60,13 @@ let defaultChartOptions = {
     },
 };
 
-export function drawMultiCurrencyChart(type, url, holder, anonymous, drawTodayMarker) {
+export function drawMultiCurrencyChart(type, url, holder, anonymous, drawTodayMarker, colorData) {
     if ("line" === type) {
-        drawMultiCurrencyLineChart(url, holder, anonymous, drawTodayMarker);
+        drawMultiCurrencyLineChart(url, holder, anonymous, drawTodayMarker, colorData);
         return;
     }
     if ("stacked-column" === type) {
-        drawMultiCurrencyStackedColumnChart(url, holder, anonymous);
+        drawMultiCurrencyStackedColumnChart(url, holder, anonymous, colorData);
         return;
     }
 
@@ -81,7 +81,7 @@ export function drawSingleCurrencyChart(type, url, holder, anonymous) {
     console.error('Cannot draw a "' + type + '" chart yet :(');
 }
 
-function drawMultiCurrencyStackedColumnChart(url, holder, anonymous) {
+function drawMultiCurrencyStackedColumnChart(url, holder, anonymous, colorData) {
     document.getElementById(holder).classList.remove("general-chart-error");
     window.axios
         .get(url)
@@ -110,7 +110,7 @@ function drawMultiCurrencyStackedColumnChart(url, holder, anonymous) {
                 if (Object.hasOwn(all, i)) {
                     let current = all[i];
                     let label = current.label + " (" + current.currency_code + ")";
-                    console.log("Now processing", label);
+                    //console.log("Now processing", label);
 
                     current.entries.spent = parseFloat(current.entries.spent);
                     current.entries.budgeted = parseFloat(current.entries.budgeted);
@@ -276,10 +276,9 @@ function drawMultiCurrencyStackedColumnChart(url, holder, anonymous) {
                 return;
             }
 
-            // TODO colorize data?
-            // if (colorData) {
-            //     data = colorizeData(data);
-            // }
+            if (colorData) {
+                data = colorizeAllData(data);
+            }
 
             // add a marker to the chart if defined.
 
@@ -300,7 +299,7 @@ function drawMultiCurrencyStackedColumnChart(url, holder, anonymous) {
         });
 }
 
-function drawMultiCurrencyLineChart(url, holder, anonymous, drawTodayMarker) {
+function drawMultiCurrencyLineChart(url, holder, anonymous, drawTodayMarker, colorData) {
     document.getElementById(holder).classList.remove("general-chart-error");
     window.axios
         .get(url)
@@ -327,13 +326,24 @@ function drawMultiCurrencyLineChart(url, holder, anonymous, drawTodayMarker) {
             for (let i = 0; i < all.length; i++) {
                 if (Object.hasOwn(all, i)) {
                     let current = all[i];
+                    let currentCurrencyCode = current.currency_code;
+                    let currentEntryKey = "entries";
+                    if (
+                        window.store.get("convert_to_primary") &&
+                        current.currency_code !== current.primary_currency_code
+                    ) {
+                        currentCurrencyCode = current.primary_currency_code;
+                        currentEntryKey = "pc_entries";
+                    }
+
                     // first dataset, use the labels from that one
                     // find the place to set the "today" marker, and get FIRST y-axis ID.
-                    firstScale = "y" + current.currency_code;
+                    firstScale = "y" + currentCurrencyCode;
                     labelCount = 0;
+                    let locale = window.store.get("locale");
                     if (0 === i) {
-                        for (let j in current.entries) {
-                            if (Object.hasOwn(current.entries, j)) {
+                        for (let j in current[currentEntryKey]) {
+                            if (Object.hasOwn(current[currentEntryKey], j)) {
                                 labelCount++;
 
                                 // is the marker to be set on this date?
@@ -343,7 +353,9 @@ function drawMultiCurrencyLineChart(url, holder, anonymous, drawTodayMarker) {
                                     drawTodayIndex = labelCount;
                                 }
                                 // add the label to the array
-                                data.labels.push(format(date, i18next.t("config.month_and_day_fns")));
+                                data.labels.push(
+                                    format(date, i18next.t("config.month_and_day_fns", { lng: locale }), locale),
+                                );
                             }
                         }
                     }
@@ -351,22 +363,22 @@ function drawMultiCurrencyLineChart(url, holder, anonymous, drawTodayMarker) {
                     // for the first and all other datasets, create a new dataset object.
                     let dataset = {
                         label: current.label,
-                        currency_code: current.currency_code,
+                        currency_code: currentCurrencyCode,
                         data: [],
-                        yAxisID: "y" + current.currency_code,
+                        yAxisID: "y" + currentCurrencyCode,
                     };
                     // add the data to the dataset.
-                    for (let j in current.entries) {
-                        if (Object.hasOwn(current.entries, j)) {
-                            dataset.data.push(current.entries[j]);
+                    for (let j in current[currentEntryKey]) {
+                        if (Object.hasOwn(current[currentEntryKey], j)) {
+                            dataset.data.push(current[currentEntryKey][j]);
                         }
                     }
                     // add it to the dataset collection.
                     data.datasets.push(dataset);
 
                     // if there is no axis yet for this currency, create one.
-                    let currencyCode = current.currency_code;
-                    let axisId = "y" + currencyCode;
+                    //let currencyCode = current.currency_code;
+                    let axisId = "y" + currentCurrencyCode;
                     if (!Object.hasOwn(axes, axisId)) {
                         axes[axisId] = {
                             id: axisId,
@@ -377,7 +389,7 @@ function drawMultiCurrencyLineChart(url, holder, anonymous, drawTodayMarker) {
                                     if (anonymous) {
                                         value = "0";
                                     }
-                                    return formatMoney(value, currencyCode);
+                                    return formatMoney(value, currentCurrencyCode);
                                 },
                             },
                         };
@@ -416,15 +428,20 @@ function drawMultiCurrencyLineChart(url, holder, anonymous, drawTodayMarker) {
                 return;
             }
 
-            // TODO colorize data?
-            // if (colorData) {
-            //     data = colorizeData(data);
-            // }
+            if (colorData) {
+                data = colorizeAllData(data);
+            }
 
             // add a marker to the chart if defined.
             if (drawTodayMarker && "" !== drawTodayLabel) {
-                let markDate = format(new Date(drawTodayLabel), i18next.t("config.month_and_day_fns"));
-                let today = i18next.t("firefly.today");
+                let locale = window.store.get("locale");
+                let language = window.store.get("language");
+                let markDate = format(
+                    new Date(drawTodayLabel),
+                    i18next.t("config.month_and_day_fns", { lng: locale }),
+                    locale,
+                );
+                let today = i18next.t("firefly.today", { lng: language });
                 let xAdjust = 0;
                 if (drawTodayIndex < 3) {
                     xAdjust = today.length * 4;
@@ -534,6 +551,47 @@ function drawSingleCurrencyLineChart(url, holder, anonymous) {
             el.classList.add("general-chart-error");
             el.innerText = i18next.t("firefly.could_not_load_chart") + " " + error;
         });
+}
+
+const colors = [
+    [18, 124, 175], // bg-sky, 0
+    [179, 71, 190], // fuchsia, 1
+    [18, 130, 125], // bg-teal, 2
+    [165, 103, 16], // bg-amber, 3
+    [95, 127, 15], // bg-olive, 4
+    [200, 78, 16], // bg-orange, 5
+    [111, 96, 234], // indigo, 6
+    [205, 56, 141], // bg-pink, 7
+];
+
+function colorizeAllData(data) {
+    let transparency = 0.8;
+    for (let i in data.datasets) {
+        if (Object.hasOwn(data.datasets, i)) {
+            let index = i % colors.length;
+            if (data.datasets[i].label.startsWith("budgeted")) {
+                index = 0;
+                transparency = 0.5;
+            }
+            if (data.datasets[i].label.startsWith("overspent")) {
+                index = 5;
+                transparency = 0.5;
+            }
+            if (data.datasets[i].label.startsWith("spent")) {
+                index = 5;
+                transparency = 0.5;
+            }
+            if (data.datasets[i].label.startsWith("left")) {
+                index = 2;
+                transparency = 0.5;
+            }
+            let color = colors[index];
+            // grab color from colors, use modulo to make sure we don't go out of bounds.
+            data.datasets[i].backgroundColor = "rgba(" + color.join(",") + ", " + transparency + ")";
+            data.datasets[i].borderColor = "rgba(" + color.join(",") + ", 1)";
+        }
+    }
+    return data;
 }
 
 // https://stackoverflow.com/questions/43855166/how-to-tell-if-two-dates-are-in-the-same-day-or-in-the-same-hour

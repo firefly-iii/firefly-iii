@@ -132,7 +132,7 @@
 @endsection
 @section('scripts')
     @vite(['js/pages/generic.js'])
-    <script type="text/javascript" nonce="{{ $JS_NONCE }}">
+     <script nonce="{{ $JS_NONCE }}">
 
         var searchQuery = "{!! escape_for_js($fullQuery) !!}";
         var searchUrl = "{{ route('search.search') }}?page={{ $page }}";
@@ -141,7 +141,7 @@
         var cloneAndEditUrl = '{{ route('transactions.clone') }}?redirect=edit';
     </script>
     {{-- required for groups.twig --}}
-    <script type="text/javascript" src="v1/js/ff/list/groups.js?v={{ $FF_BUILD_TIME }}" nonce="{{ $JS_NONCE }}"></script>
-    <script type="text/javascript" src="v1/js/ff/search/index.js?v={{ $FF_BUILD_TIME }}" nonce="{{ $JS_NONCE }}"></script>
+     <script src="v1/js/ff/list/groups.js?v={{ $FF_BUILD_TIME }}" nonce="{{ $JS_NONCE }}"></script>
+     <script src="v1/js/ff/search/index.js?v={{ $FF_BUILD_TIME }}" nonce="{{ $JS_NONCE }}"></script>
 
 @endsection

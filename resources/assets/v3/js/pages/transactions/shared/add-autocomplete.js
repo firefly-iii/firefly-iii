@@ -63,6 +63,7 @@ export function addAllAutocompleteToForm() {
             filters.destination = [this.entries[0].source_account.type];
         }
     }
+    console.log("Filters for autocomplete: ", filters);
 
     const urls = getUrls();
     setTimeout(() => {
@@ -76,13 +77,13 @@ export function addAllAutocompleteToForm() {
                 "</small>"
             );
         };
-
-        // render tags:
+        //
+        // // render tags:
         Tags.init("select.ac-tags", {
             allowClear: true,
             server: urls.tag,
             liveServer: true,
-            suggestionsThreshold: 3,
+            suggestionsThreshold: 0,
             debounceTime: 200,
             clearEnd: true,
             labelField: "tag",
@@ -103,8 +104,8 @@ export function addAllAutocompleteToForm() {
             serverUrl: urls.account,
             account_types: filters.source,
             onRenderItem: renderAccount,
-            suggestionsThreshold: 3,
-            debounceTime: 200,
+            suggestionsThreshold: 0,
+            debounceTime: 100,
             valueField: "id",
             labelField: "name",
             onChange: changeSourceAccount,
@@ -115,8 +116,8 @@ export function addAllAutocompleteToForm() {
             serverUrl: urls.account,
             valueField: "id",
             labelField: "name",
-            suggestionsThreshold: 3,
-            debounceTime: 200,
+            suggestionsThreshold: 0,
+            debounceTime: 100,
             autoselectFirst: true,
             account_types: filters.destination,
             onRenderItem: renderAccount,
@@ -127,8 +128,8 @@ export function addAllAutocompleteToForm() {
             selector: "input.ac-category",
             serverUrl: urls.category,
             valueField: "id",
-            suggestionsThreshold: 3,
-            debounceTime: 200,
+            suggestionsThreshold: 0,
+            debounceTime: 100,
             labelField: "name",
             onChange: changeCategory,
             onSelectItem: changeCategory,
@@ -137,13 +138,13 @@ export function addAllAutocompleteToForm() {
             selector: "input.ac-description",
             serverUrl: urls.description,
             valueField: "id",
-            suggestionsThreshold: 3,
-            debounceTime: 200,
+            suggestionsThreshold: 0,
+            debounceTime: 100,
             labelField: "name",
             onChange: changeDescription,
             onSelectItem: changeDescription,
         });
-    }, 150);
+    }, 100);
 }
 
 export function addAutocomplete(options) {
@@ -161,6 +162,7 @@ export function addAutocomplete(options) {
             },
         },
         queryParam: "query",
+        showAllSuggestions: true,
         hiddenInput: false,
         // preventBrowserAutocomplete: true,
         highlightTyped: true,
@@ -172,19 +174,25 @@ export function addAutocomplete(options) {
     if (typeof options.onRenderItem !== "undefined" && null !== options.onRenderItem) {
         params.onRenderItem = options.onRenderItem;
     }
-    if (options.valueField) {
+    if (Object.hasOwn(options, "valueField")) {
         params.valueField = options.valueField;
     }
-    if (options.labelField) {
+    if (Object.hasOwn(options, "suggestionsThreshold")) {
+        params.suggestionsThreshold = options.suggestionsThreshold;
+    }
+    if (Object.hasOwn(options, "debounceTime")) {
+        params.debounceTime = options.debounceTime;
+    }
+    if (Object.hasOwn(options, "labelField")) {
         params.labelField = options.labelField;
     }
-    if (options.onSelectItem) {
+    if (Object.hasOwn(options, "onSelectItem")) {
         params.onSelectItem = options.onSelectItem;
     }
-    if (options.onChange) {
+    if (Object.hasOwn(options, "onChange")) {
         params.onChange = options.onChange;
     }
-    if (options.hiddenValue) {
+    if (Object.hasOwn(options, "hiddenValue")) {
         params.hiddenValue = options.hiddenValue;
     }
 

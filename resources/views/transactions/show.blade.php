@@ -232,7 +232,7 @@
                                                         class="bi bi-trash"></span> {{ __('firefly.delete') }}</a></li>
                                         @endif
                                         @if($journal['reconciled'])
-                                            <li><a class="dropdown-item" class="reconcile-button" href="{{ route('transactions.unreconcile', [$journal['transaction_journal_id']]) }}"><span
+                                            <li><a class="dropdown-item reconcile-button" href="{{ route('transactions.unreconcile', [$journal['transaction_journal_id']]) }}"><span
                                                         class="bi bi-clock-history"></span> {{ __('firefly.unreconcile') }}</a></li>
                                         @endif
                                         @if($groupArray['transactions'][0]['type'] !== 'reconciliation' && $groupArray['transactions'][0]['type'] !== 'opening balance' && $groupArray['transactions'][0]['type'] !== 'liability credit')
@@ -449,7 +449,7 @@
                                     <td>
                                         @foreach($journal['tags'] as $tag)
                                             @if(null !== $tag['id'] && '' !== $tag['id'])
-                                                <h4 class="inline"><a class="badge text-bg-success" href="{{ route('tags.show', [$tag['id']]) }}"><span class="bi bi-tag"></span>{{ $tag['tag'] }}</a></h4>
+                                                <h5 class="d-inline"><a class="badge text-bg-success" href="{{ route('tags.show', [$tag['id']]) }}"><span class="bi bi-tag"></span>{{ $tag['tag'] }}</a></h5>
                                             @endif
                                         @endforeach
                                     </td>
@@ -557,7 +557,7 @@
 
 @endsection
 @section('scripts')
-    <script type="text/javascript" nonce="{{ $JS_NONCE }}">
+     <script nonce="{{ $JS_NONCE }}">
         var modalDialogURL = '{{ route('transactions.link.modal', ['%JOURNAL%']) }}';
         var groupURL = '{{ route('transactions.show',['%GROUP%']) }}';
         var switchLinkUrl = '{{ route('transactions.link.switch') }}';
@@ -567,9 +567,9 @@
     @vite(['js/pages/transactions/show.js'])
 
     {{-- new auto complete --}}
-    <script type="text/javascript" src="v1/js/lib/bootstrap-simple-autocomplete.js?v={{ $FF_BUILD_TIME }}"
+     <script src="v1/js/lib/bootstrap-simple-autocomplete.js?v={{ $FF_BUILD_TIME }}"
             nonce="{{ $JS_NONCE }}"></script>
-    <script type="text/javascript" src="v1/js/ff/transactions/show.js?v={{ $FF_BUILD_TIME }}"
+     <script src="v1/js/ff/transactions/show.js?v={{ $FF_BUILD_TIME }}"
             nonce="{{ $JS_NONCE }}"></script>
 @endsection
 

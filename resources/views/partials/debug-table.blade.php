@@ -15,6 +15,10 @@
         <td>{!! $FF_IS_DEVELOP ? '<!-- .Z9JBCmw64Zkx1pQw -->' : 'v' !!}{{ $FF_VERSION }}</td>
     </tr>
     <tr>
+        <td>Installation ID</td>
+        <td>{{ $system['installation_id'] }}</td>
+    </tr>
+    <tr>
         <td>Build time</td>
         <td>{{ $system['build_time_nice'] }} ({{ $system['build_time'] }})</td>
     </tr>

@@ -67,7 +67,7 @@ export function addDrag() {
     }
 
     function getRowOrder() {
-        let index = 1;
+        let index = 0;
         return Array.from(tbody.querySelectorAll("tr")).map((row) => ({
             id: row.getAttribute("data-id"),
             order: index++,

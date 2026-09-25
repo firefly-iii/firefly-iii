@@ -1,4 +1,4 @@
-<table class="table table-valign-middle table-sm">
+<table class="table table-valign-middle table-sm table-hover">
     <thead>
     <tr>
         @if($showCategory || $showBudget)

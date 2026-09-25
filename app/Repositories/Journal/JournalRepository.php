@@ -258,7 +258,7 @@ class JournalRepository implements JournalRepositoryInterface, UserGroupInterfac
      */
     public function searchJournalDescriptions(string $search, int $limit): Collection
     {
-        $query = $this->user->transactionJournals()->orderBy('date', 'DESC')->orderBy('description', 'ASC');
+        $query = $this->user->transactionJournals()->orderBy('date', 'DESC')->orderBy('id', 'DESC')->orderBy('description', 'ASC');
         if ('' !== $search) {
             $query->whereLike('description', sprintf('%%%s%%', $search));
         }

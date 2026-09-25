@@ -25,6 +25,10 @@ declare(strict_types=1);
 return [
     '404_header'                    => 'Firefly III cannot find this page.',
     '404_page_does_not_exist'       => 'The page you have requested does not exist. Please check that you have not entered the wrong URL. Did you make a typo perhaps?',
+
+    '405_header'                    => 'Firefly III does not allow this method.',
+    '405_page_does_not_exist'       => 'You cannot use this request method on this page. Please check that you have not entered the wrong URL. Did you make a typo perhaps?',
+    '405_github_link'               => 'If you are sure this page should work, please open a ticket on <strong><a href="https://github.com/firefly-iii/firefly-iii/issues">GitHub</a></strong>.',
     '404_send_error'                => 'If you were redirected to this page automatically, please accept my apologies. There is a mention of this error in your log files and I would be grateful if you sent me the error to me.',
     '404_github_link'               => 'If you are sure this page should exist, please open a ticket on <strong><a href="https://github.com/firefly-iii/firefly-iii/issues">GitHub</a></strong>.',
     'note_not_found_account'        => 'Account ":name" has been deleted and can no longer be viewed. Please enjoy this overview of all other accounts of the same type.',

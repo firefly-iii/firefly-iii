@@ -215,8 +215,8 @@
     @endsection
 
     @section('scripts')
-        <script type="text/javascript" src="v1/js/lib/bootstrap-sortable.js?v={{ $FF_BUILD_TIME }}"
+         <script src="v1/js/lib/bootstrap-sortable.js?v={{ $FF_BUILD_TIME }}"
                 nonce="{{ $JS_NONCE }}"></script>
         {{-- required for groups.twig --}}
-        <script type="text/javascript" src="v1/js/ff/list/groups.js?v={{ $FF_BUILD_TIME }}" nonce="{{ $JS_NONCE }}"></script>
+         <script src="v1/js/ff/list/groups.js?v={{ $FF_BUILD_TIME }}" nonce="{{ $JS_NONCE }}"></script>
     @endsection

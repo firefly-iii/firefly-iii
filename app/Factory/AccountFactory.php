@@ -29,6 +29,7 @@ use FireflyIII\Events\Model\Account\CreatedNewAccount;
 use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Models\Account;
 use FireflyIII\Models\AccountType;
+use FireflyIII\Models\UserGroup;
 use FireflyIII\Repositories\Account\AccountRepositoryInterface;
 use FireflyIII\Services\Internal\Support\AccountServiceTrait;
 use FireflyIII\Services\Internal\Support\LocationServiceTrait;
@@ -53,6 +54,7 @@ class AccountFactory
     private array $canHaveOpeningBalance;
     private array $canHaveVirtual;
     private User $user;
+    private UserGroup $userGroup;
 
     /**
      * AccountFactory constructor.
@@ -133,8 +135,16 @@ class AccountFactory
 
     public function setUser(User $user): void
     {
-        $this->user = $user;
+        $this->user      = $user;
+        $this->userGroup = $user->userGroup;
         $this->accountRepository->setUser($user);
+        $this->accountRepository->setUserGroup($this->userGroup);
+    }
+
+    public function setUserGroup(UserGroup $userGroup): void
+    {
+        $this->userGroup = $userGroup;
+        $this->accountRepository->setUserGroup($userGroup);
     }
 
     /**

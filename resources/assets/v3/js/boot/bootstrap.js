@@ -58,28 +58,30 @@ getFreshVariable("lastActivity")
     .then(() => {
         Promise.resolve(getVariables(["viewRange", "darkMode", "locale", "language", "convert_to_primary"])).then(
             (values) => {
+                const range = getViewRange(values.viewRange, new Date());
                 if (!store.get("start") || !store.get("end")) {
                     // calculate new start and end, and store them.
-                    const range = getViewRange(values.viewRange, new Date());
                     store.set("start", range.start);
                     store.set("end", range.end);
                 }
+                // always set defaultStart and defaultEnd
+                store.set("viewRange", values.viewRange);
+                store.set("defaultStart", range.start);
+                store.set("defaultEnd", range.end);
                 //
                 if ("equal" === values.locale) {
                     values.locale = values.language;
                 }
+                const replacedLocale = values.locale.replace("_", "-");
+                const replacedLanguage = values.language.replace("_", "-");
 
                 // save local in window.__ something
-                window.__localeId__ = values.locale;
-                store.set("language", values.language);
-                store.set("locale", values.locale);
-                // console.log(
-                //     "Language is " +
-                //         values.language +
-                //         ", locale is " +
-                //         values.locale,
-                // );
-                loadTranslations(values.locale).then(() => {
+                window.__localeId__ = replacedLocale;
+                store.set("language", replacedLanguage);
+                store.set("locale", replacedLocale);
+                console.log("Ready with bootstrap for this page.");
+                loadTranslations(replacedLanguage, replacedLocale).then(function () {
+                    window.i18next = i18next;
                     const event = new Event("firefly-iii-bootstrapped");
                     document.dispatchEvent(event);
                     window.bootstrapped = true;
@@ -162,7 +164,4 @@ getFreshVariable("lastActivity")
                 });
             },
         );
-    })
-    .catch((error) => {
-        console.error("Error while bootstrapping: " + error);
     });

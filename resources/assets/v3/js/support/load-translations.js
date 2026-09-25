@@ -25,34 +25,38 @@ import LocalStorageBackend from "i18next-localstorage-backend";
 
 let loaded = false;
 
-function loadTranslations(locale) {
-    // console.log('loadTranslations(' + locale + ')');
+function loadTranslations(language, locale) {
     if (false === loaded) {
-        // console.log("Not yet loaded");
-        const replacedLocale = locale.replace("-", "_");
+        // console.log('Will load languages', language, locale);
+        let devMode = false;
         loaded = true;
-        const expireTime = import.meta.env.MODE === "development" ? 1 : 7 * 24 * 60 * 60 * 1000;
-        // console.log('Will load language "'+replacedLocale+'"');
-        return i18next.use(ChainedBackend).init({
-            load: "languageOnly",
-            fallbackLng: "en",
-            lng: replacedLocale,
-            debug: import.meta.env.MODE === "development",
+        const expireTime = devMode ? 1 : 7 * 24 * 60 * 60 * 1000;
+        let unique = [...new Set([language, locale, "en-US"])];
+        // console.log('Set of languages', unique);
+        let options = {
+            supportedLngs: unique,
+            load: "all",
+            preload: unique,
+            fallbackLng: ["en-US"],
+            lng: language,
+            debug: devMode,
             backend: {
                 backends: [LocalStorageBackend, HttpBackend],
                 backendOptions: [
                     {
-                        load: "languageOnly",
                         expirationTime: expireTime,
+                        loadPath: "./v3/i18n/{{lng}}.json",
                     },
                     {
                         loadPath: "./v3/i18n/{{lng}}.json",
                     },
                 ],
             },
-        });
+        };
+        // console.log(options);
+
+        return i18next.use(ChainedBackend).init(options);
     }
-    console.warn("Loading translations skipped.");
     return Promise.resolve();
 }
 

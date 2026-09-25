@@ -25,7 +25,7 @@
                             <tbody>
                             @foreach($objectGroups as $objectGroup)
                                 <tr class="group-sortable" data-id="{{ $objectGroup['id'] }}" data-name="{{ e($objectGroup['title']) }}" data-order="{{ $objectGroup['order'] }}">
-                                    <td><span class="btn btn-sm bi bi-list group-handle"></span></td>
+                                    <td><span class="btn btn-sm btn-outline-secondary bi bi-list group-handle"></span></td>
                                     <td>
                                         <strong>{{ $objectGroup['title'] }}</strong><br/>
                                         @foreach($objectGroup['piggyBanks'] as $piggyBank)
@@ -59,5 +59,5 @@
 @section('scripts')
     @vite(['js/pages/generic.js'])
     <script src="v1/js/lib/jquery-ui.min.js?v={{ $FF_BUILD_TIME }}" type="text/javascript" nonce="{{ $JS_NONCE }}"></script>
-    <script type="text/javascript" src="v1/js/ff/object-groups/index.js?v={{ $FF_BUILD_TIME }}" nonce="{{ $JS_NONCE }}"></script>
+     <script src="v1/js/ff/object-groups/index.js?v={{ $FF_BUILD_TIME }}" nonce="{{ $JS_NONCE }}"></script>
 @endsection

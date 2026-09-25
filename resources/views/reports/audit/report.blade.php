@@ -4,7 +4,7 @@
 
 @endsection
 @section('content')
-    <div class="row no-print">
+    <div class="row d-print-none">
         <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
             <div class="card mb-2" id="optionsBox">
                 <div class="card-header">
@@ -79,9 +79,9 @@
 @endsection
 @section('scripts')
     @vite(['js/pages/generic.js'])
-    <script type="text/javascript" nonce="{{ $JS_NONCE }}">
+     <script nonce="{{ $JS_NONCE }}">
         var hideable = {!! json_encode($hideable) !!};
     </script>
-    <script type="text/javascript" src="v1/js/ff/reports/all.js?v={{ $FF_BUILD_TIME }}" nonce="{{ $JS_NONCE }}"></script>
-    <script type="text/javascript" src="v1/js/ff/reports/audit/all.js?v={{ $FF_BUILD_TIME }}" nonce="{{ $JS_NONCE }}"></script>
+     <script src="v1/js/ff/reports/all.js?v={{ $FF_BUILD_TIME }}" nonce="{{ $JS_NONCE }}"></script>
+     <script src="v1/js/ff/reports/audit/all.js?v={{ $FF_BUILD_TIME }}" nonce="{{ $JS_NONCE }}"></script>
 @endsection

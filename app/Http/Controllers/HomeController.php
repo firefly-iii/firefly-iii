@@ -146,7 +146,10 @@ final class HomeController extends Controller
         $subTitle       = (string) trans('firefly.welcome_back');
         $subTitleIcon   = 'bi-piggy-bank';
         $transactions   = [];
-        $frontpage      = Preferences::getFresh('frontpageAccounts', $repository->getAccountsByType([AccountTypeEnum::ASSET->value])->pluck('id')->toArray());
+        $frontpage      = Preferences::getFresh(
+            'frontpageAccounts',
+            $repository->getAccountsByTypeForGroup([AccountTypeEnum::ASSET->value])->pluck('id')->toArray()
+        );
         $frontpageArray = $frontpage->data;
         if (!is_array($frontpageArray)) {
             $frontpageArray = [];

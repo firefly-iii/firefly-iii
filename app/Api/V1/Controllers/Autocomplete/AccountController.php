@@ -129,13 +129,13 @@ final class AccountController extends Controller
         }
 
         // custom order.
-        usort($return, static function (array $left, array $right): int {
-            $order = [AccountTypeEnum::ASSET->value, AccountTypeEnum::REVENUE->value, AccountTypeEnum::EXPENSE->value];
-            $posA  = (int) array_search($left['type'], $order, true);
-            $posB  = (int) array_search($right['type'], $order, true);
-
-            return $posA - $posB;
-        });
+        //        usort($return, static function (array $left, array $right): int {
+        //            $order = [AccountTypeEnum::ASSET->value, AccountTypeEnum::REVENUE->value, AccountTypeEnum::EXPENSE->value];
+        //            $posA  = (int) array_search($left['type'], $order, true);
+        //            $posB  = (int) array_search($right['type'], $order, true);
+        //
+        //            return $posA - $posB;
+        //        });
 
         return response()->api($return);
     }

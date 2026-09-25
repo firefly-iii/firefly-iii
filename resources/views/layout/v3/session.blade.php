@@ -1,8 +1,7 @@
 <!doctype html>
-<html lang="{{ __('config.html_language') }}" data-lte-print="plain">
+<html lang="{{ __('config.html_language') }}" data-lte-print="plain" data-lte-contrast="aa">
 <head>
-    <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
-    <meta charset="UTF-8">
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="csrf-token" content="{{ csrf_token() }}">
     <meta name="robots" content="noindex, nofollow, noarchive, noodp, NoImageIndex, noydir">
@@ -44,7 +43,7 @@
             document.documentElement.style.colorScheme = resolved;
 
             // bonus: overrule local storage with session data:
-            console.warn('Temporary overrule local storage until everything uses the API.');
+            console.warn('Temporary overrule local storage until everything uses the API.', '{{ session()->get('start')->format('c') }}', '{{ session()->get('end')->format('c') }}');
             localStorage.setItem('start', '{{ session()->get('start')->format('c') }}');
             localStorage.setItem('end', '{{ session()->get('end')->format('c') }}');
         })();
@@ -52,9 +51,9 @@
     <!--end::Theme Init-->
 
     <!--begin::Accessibility Meta Tags-->
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes"/>
-    <meta name="theme-color" content="#007bff" media="(prefers-color-scheme: light)"/>
-    <meta name="theme-color" content="#1a1a1a" media="(prefers-color-scheme: dark)"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+    <meta name="theme-color" content="#007bff" media="(prefers-color-scheme: light)">
+    <meta name="theme-color" content="#1a1a1a" media="(prefers-color-scheme: dark)">
     <!--end::Accessibility Meta Tags-->
 
     <!--begin::Accessibility Features-->
@@ -227,7 +226,7 @@
                     src="./images/logo-session.png"
                     alt="Firefly III"
                     class="brand-image opacity-75"
-                />
+                >
                 <!--end::Brand Image-->
                 <!--begin::Brand Text-->
                 <span class="brand-text fw-light">Firefly III</span>
@@ -277,7 +276,7 @@
                             {{ $pageTitle ?? $title ?? '(no title)' }}
 
                             @if($subTitle ?? false)
-                                <small class="text-xs text-muted">@if(isset($subTitleIcon))
+                                <small id="test-box" class="text-xs text-muted">@if(isset($subTitleIcon))
                                         <em class="bi {{ $subTitleIcon }}"></em>
                                     @endif{{$subTitle}}</small>
                             @endif
@@ -302,7 +301,7 @@
             <!--begin::Container-->
             <div class="container-fluid">
                 @if($IS_DEMO_SITE)
-                    <div class="row no-print">
+                    <div class="row d-print-none">
                         <div class="col-lg-12">
                             <div class="alert alert-info" role="alert">
                                 @includeFirst(['demo.' . Route::getCurrentRoute()->getName(), 'demo.no-demo-text'])
@@ -348,7 +347,7 @@
 
 {{-- introduction --}}
 @if(!$shownDemo)
-    <script type="text/javascript" nonce="{{ $JS_NONCE }}">
+     <script nonce="{{ $JS_NONCE }}">
         window.showTour = true;
         // var routeForTour = "{{ $current_route_name }}";
         window.routeStepsUrl = "{{ route('json.intro', [$current_route_name, $objectType ?? '']) }}";
@@ -356,7 +355,7 @@
     </script>
 @endif
 @if($shownDemo)
-    <script type="text/javascript" nonce="{{ $JS_NONCE }}">
+     <script nonce="{{ $JS_NONCE }}">
         window.showTour = false;
     </script>
 @endif
@@ -569,7 +568,7 @@
 @if('' !== config('firefly.tracker_site_id') && '' !== config('firefly.tracker_url'))
     <!-- This tracker tag is only here because this instance of Firefly III was purposefully configured to include it -->
     <!-- Your own installation will NOT include it, unless you explicitly configure it to have it. -->
-    <script type="text/javascript" nonce="{{ $JS_NONCE }}">
+     <script nonce="{{ $JS_NONCE }}">
         var _paq = window._paq || [];
         _paq.push(['trackPageView']);
         _paq.push(['enableLinkTracking']);

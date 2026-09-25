@@ -26,6 +26,7 @@ namespace FireflyIII\Console\Commands\Upgrade;
 
 use FireflyIII\Console\Commands\ShowsFriendlyMessages;
 use FireflyIII\Support\Facades\AppConfiguration;
+use FireflyIII\Support\System\GeneratesInstallationId;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\Log;
 use Safe\Exceptions\InfoException;
@@ -40,6 +41,7 @@ try {
 
 class UpgradesDatabase extends Command
 {
+    use GeneratesInstallationId;
     use ShowsFriendlyMessages;
 
     protected $description = 'Upgrades the database to the latest version.';
@@ -88,6 +90,7 @@ class UpgradesDatabase extends Command
         }
         // index will set FF3 version.
         AppConfiguration::set('ff3_build_time', (int) config('firefly.build_time'));
+        $this->generateInstallationId();
 
         return 0;
     }

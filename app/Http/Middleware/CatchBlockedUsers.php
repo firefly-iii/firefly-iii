@@ -24,7 +24,7 @@ class CatchBlockedUsers
         if (auth()->check()) {
             $user = auth()->user();
             if (null !== $user) {
-                if (false !== $user->blocked || '' !== (string) $user->blocked_code) {
+                if (true === $user->blocked) {
                     throw new AuthenticationException(sprintf('User is not allowed to use the API ("%s")', $user->blocked_code));
                 }
             }

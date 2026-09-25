@@ -46,6 +46,7 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 /**
  * @property AccountType $accountType
  * @property User        $user
+ * @property UserGroup   $userGroup
  */
 #[ObservedBy([DeletedAccountObserver::class])]
 class Account extends Model
@@ -55,7 +56,7 @@ class Account extends Model
     use ReturnsIntegerUserIdTrait;
     use SoftDeletes;
 
-    protected $fillable              = ['user_id', 'user_group_id', 'account_type_id', 'name', 'active', 'virtual_balance', 'iban', 'native_virtual_balance'];
+    protected $fillable              = ['user_id', 'user_group_id', 'account_type_id', 'name', 'active', 'virtual_balance', 'iban', 'native_virtual_balance', 'order'];
 
     protected $hidden                = ['encrypted'];
     private bool $joinedAccountTypes = false;

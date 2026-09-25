@@ -45,7 +45,7 @@
 @section('scripts')
     @vite(['js/pages/generic.js'])
 
-    <script type="text/javascript" nonce="{{ $JS_NONCE }}">
+     <script nonce="{{ $JS_NONCE }}">
         $(function () {
             "use strict";
 

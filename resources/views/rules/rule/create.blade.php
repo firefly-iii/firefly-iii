@@ -144,13 +144,13 @@
 @section('scripts')
     @vite(['js/pages/generic-nodates.js'])
     {{-- new auto complete --}}
-    <script type="text/javascript" src="v1/js/lib/bootstrap-simple-autocomplete.js?v={{ $FF_BUILD_TIME }}" nonce="{{ $JS_NONCE }}"></script>
-    <script type="text/javascript" nonce="{{ $JS_NONCE }}">
+     <script src="v1/js/lib/bootstrap-simple-autocomplete.js?v={{ $FF_BUILD_TIME }}" nonce="{{ $JS_NONCE }}"></script>
+     <script nonce="{{ $JS_NONCE }}">
         var triggerCount = {{ $triggerCount }};
         var actionCount = {{ $actionCount }};
         var testRuleTriggersText = '{{ __('firefly.test_rule_triggers') }}';
     </script>
-    <script type="text/javascript" src="v1/js/ff/rules/create-edit.js?v={{ $FF_BUILD_TIME }}" nonce="{{ $JS_NONCE }}"></script>
+     <script src="v1/js/ff/rules/create-edit.js?v={{ $FF_BUILD_TIME }}" nonce="{{ $JS_NONCE }}"></script>
 
 @endsection
 @section('styles')

@@ -77,11 +77,12 @@ final class ShowController extends Controller
             'sort'   => $sort,
             'start'  => $start,
             'end'    => $end,
+            'active' => $active,
             'date'   => $date,
         ]            = $request->attributes->all();
         // get list of accounts. Count it and split it.
         $this->repository->resetAccountOrder();
-        $collection  = $this->repository->getAccountsByType($types, $sort);
+        $collection  = $this->repository->getAccountsByType($types, $sort, $active);
         $count       = $collection->count();
 
         // continue sort:

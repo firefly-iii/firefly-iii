@@ -1,6 +1,7 @@
+<?php
+
 /*
- * list.js
- * Copyright (c) 2022 james@firefly-iii.org
+ * Copyright (c) 2025 https://github.com/ctrl-f5
  *
  * This file is part of Firefly III (https://github.com/firefly-iii).
  *
@@ -18,15 +19,32 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-import { api } from "../../../boot/axios";
-export default class Get {
-    /**
-     * @returns {Promise<AxiosResponse<any>>}
-     */
-    get(id) {
-        return api.get(`/api/v1/accounts/${id}`);
+declare(strict_types=1);
+
+namespace FireflyIII\Api\V1\Requests\Generic;
+
+use FireflyIII\Api\V1\Requests\ApiRequest;
+use FireflyIII\Rules\IsBoolean;
+use Illuminate\Contracts\Validation\Validator;
+
+class ActiveObjectRequest extends ApiRequest
+{
+    public function rules(): array
+    {
+        return [
+            'active' => ['nullable', new IsBoolean()],
+        ];
     }
-    list(params) {
-        return api.get("/api/v1/accounts", { params: params });
+
+    public function withValidator(Validator $validator): void
+    {
+        $validator->after(function (Validator $validator): void {
+            $active = null;
+            if ($this->has('active')) {
+                $active = $this->boolean('active', null);
+            }
+
+            $this->attributes->set('active', $active);
+        });
     }
 }

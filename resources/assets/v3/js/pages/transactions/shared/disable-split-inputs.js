@@ -19,28 +19,67 @@
  */
 
 // what happens when a user adds more than one split?
+import Autocomplete from "bootstrap5-autocomplete";
+
 export function disableSplitInputs() {
-    //console.log('Call disableSplitInputs');
-    if (this.entries.length > 1) {
-        //console.log('Activate disableSplitInputs');
-        // disable source and/or destination, based on account type.
-        for (let i = 1; i < this.entries.length; i++) {
+    let isTransferOrWithdrawal =
+        "transfer" === this.groupProperties.transactionType || "withdrawal" === this.groupProperties.transactionType;
+    let isTransferOrDeposit =
+        "transfer" === this.groupProperties.transactionType || "deposit" === this.groupProperties.transactionType;
+    //console.log('Activate disableSplitInputs');
+    // disable source and/or destination, based on account type.
+    for (let i = 0; i < this.entries.length; i++) {
+        // is withdrawal? limit destination types to expense, loan debt mortgage
+        if ("withdrawal" === this.groupProperties.transactionType) {
+            const el = document.getElementById("dest_" + i);
+            const inst = Autocomplete.getInstance(el);
+            if (null !== inst) {
+                let params = inst.getConfig("serverParams");
+                params.types = ["Expense account", "Loan", "Debt", "Mortgage"];
+                inst.setConfig("serverParams", params);
+            }
+        }
+        // is deposit? limit destination types.
+        if ("deposit" === this.groupProperties.transactionType) {
+            const el = document.getElementById("dest_" + i);
+            const inst = Autocomplete.getInstance(el);
+            if (null !== inst) {
+                let params = inst.getConfig("serverParams");
+                params.types = ["Asset account", "Loan", "Debt", "Mortgage"];
+                inst.setConfig("serverParams", params);
+            }
+        }
+        // is transfer? No limit to source types.
+        if (
+            "deposit" !== this.groupProperties.transactionType &&
+            "withdrawal" === this.groupProperties.transactionType
+        ) {
+            const el = document.getElementById("dest_" + i);
+            const inst = Autocomplete.getInstance(el);
+            if (null !== inst) {
+                let params = inst.getConfig("serverParams");
+                params.types = [];
+                inst.setConfig("serverParams", params);
+            }
+        }
+
+        if (i > 0) {
             // disable dates
             this.entries[i].date_disabled = true;
 
+            // if is withdrawal, pre-fill the destination account with the first entry's destination account.
+            if ("withdrawal" === this.groupProperties.transactionType) {
+                this.entries[i].destination_account = this.entries[i - 1].destination_account;
+            }
+
             // disable source when withdrawal or transfer
-            if (
-                "transfer" === this.groupProperties.transactionType ||
-                "withdrawal" === this.groupProperties.transactionType
-            ) {
+            if (isTransferOrWithdrawal) {
                 this.entries[i].source_account.disabled = true;
                 // console.log('Disable source account #' + i + 1);
             }
+
             // disable destination when deposit or transfer
-            if (
-                "transfer" === this.groupProperties.transactionType ||
-                "deposit" === this.groupProperties.transactionType
-            ) {
+            if (isTransferOrDeposit) {
                 this.entries[i].destination_account.disabled = true;
                 // console.log('Disable destination account #' + i + 1);
             }

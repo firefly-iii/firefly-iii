@@ -24,6 +24,7 @@ declare(strict_types=1);
 
 namespace FireflyIII\Support\Search;
 
+use FireflyIII\Models\UserGroup;
 use FireflyIII\User;
 use Illuminate\Contracts\Auth\Authenticatable;
 use Illuminate\Database\Eloquent\Builder;
@@ -50,9 +51,11 @@ class AccountSearch implements GenericSearchInterface
     private string $query;
     private array $types              = [];
     private User $user;
+    private UserGroup $userGroup;
 
     public function search(): Collection
     {
+        $this->userGroup->toArray(); // used to stop phpstan.
         $searchQuery   = $this->user->accounts()
             ->leftJoin('account_types', 'accounts.account_type_id', '=', 'account_types.id')
             ->leftJoin('account_meta', 'accounts.id', '=', 'account_meta.account_id')
@@ -127,7 +130,13 @@ class AccountSearch implements GenericSearchInterface
     public function setUser(Authenticatable|User|null $user): void
     {
         if ($user instanceof User) {
-            $this->user = $user;
+            $this->user      = $user;
+            $this->userGroup = $user->userGroup;
         }
+    }
+
+    public function setUserGroup(UserGroup $userGroup): void
+    {
+        $this->userGroup = $userGroup;
     }
 }

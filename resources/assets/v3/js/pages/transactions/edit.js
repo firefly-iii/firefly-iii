@@ -22,13 +22,12 @@ import "../../boot/bootstrap.js";
 import dates from "../../pages/shared/dates.js";
 import Get from "../../api/model/transaction/get.js";
 import { parseDownloadedSplits } from "./shared/parse-downloaded-splits.js";
-import { addAllAutocompleteToForm, getUrls } from "./shared/add-autocomplete.js";
+import { addAllAutocompleteToForm } from "./shared/add-autocomplete.js";
 import { loadCurrencies } from "./shared/load-currencies.js";
 import { loadBudgets } from "./shared/load-budgets.js";
 import { loadPiggyBanks } from "./shared/load-piggy-banks.js";
 import { processUploadError } from "./shared/process-upload-error.js";
 import { loadSubscriptions } from "./shared/load-subscriptions.js";
-import Tags from "bootstrap5-tags";
 import i18next from "i18next";
 import { defaultErrorSet } from "./shared/create-empty-split.js";
 import { parseFromEntries } from "./shared/parse-from-entries.js";
@@ -73,7 +72,6 @@ import { respondToTabSwitch } from "./shared/respond-to-tab-switch.js";
 import Alpine from "alpinejs";
 import focusFirstInput from "../../shared/focus-first-input.js";
 
-const urls = getUrls();
 window.enableDates = false;
 
 let transactions = function () {
@@ -279,37 +277,28 @@ let transactions = function () {
                 })
                 .then(() => {
                     focusFirstInput();
+                    let tagSelect;
                     this.groupProperties.totalAmount = 0;
                     for (let i in this.entries) {
                         if (Object.hasOwn(this.entries, i)) {
                             this.groupProperties.totalAmount =
                                 this.groupProperties.totalAmount + parseFloat(this.entries[i].amount);
+                            // add the tags. This is not done in Alpine itself because the combination between
+                            // the Autocomplete library and Alpine breaks for some reason.
+                            tagSelect = document.getElementById("tags_" + i);
+                            if (null !== tagSelect) {
+                                console.log("Is not null.");
+                                for (let j in this.entries[i].tags) {
+                                    if (Object.hasOwn(this.entries[i].tags, j)) {
+                                        tagSelect.options.add(
+                                            new Option(this.entries[i].tags[j], this.entries[i].tags[j], true, true),
+                                        );
+                                    }
+                                }
+                            }
                         }
                     }
-                    setTimeout(() => {
-                        // send event that transaction group is loaded.
-                        // document.dispatchEvent(new CustomEvent('transaction-group-loaded'));
 
-                        // TODO should not be on a timeout.
-                        // render tags:
-                        Tags.init("select.ac-tags", {
-                            allowClear: true,
-                            server: urls.tag,
-                            liveServer: true,
-                            clearEnd: true,
-                            allowNew: true,
-                            labelField: "title",
-                            valueField: "id",
-                            queryParam: "filter[query]",
-                            notFoundMessage: i18next.t("firefly.nothing_found"),
-                            noCache: true,
-                            fetchOptions: {
-                                headers: {
-                                    "X-CSRF-TOKEN": document.head.querySelector('meta[name="csrf-token"]').content,
-                                },
-                            },
-                        });
-                    }, 150);
                     this.autoStep();
                 });
         },

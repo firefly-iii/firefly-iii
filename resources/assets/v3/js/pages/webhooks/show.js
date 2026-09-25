@@ -21,7 +21,7 @@
 import "../../boot/bootstrap.js";
 import sidebar from "../../pages/shared/sidebar.js";
 import dates from "../shared/dates.js";
-import format from "date-fns/format";
+import { format } from "date-fns/format";
 import i18next from "i18next";
 import Post from "../../api/model/webhook/post.js";
 import Get from "../../api/model/webhook/get.js";
@@ -110,6 +110,7 @@ let show = function () {
                 });
         },
         downloadWebhookMessages: function () {
+            let locale = window.store.get("locale");
             this.messages = [];
             new Get().messages(this.id, {}).then((response) => {
                 for (let i in response.data.data) {
@@ -119,7 +120,8 @@ let show = function () {
                             id: current.id,
                             created_at: format(
                                 new Date(current.attributes.created_at),
-                                i18next.t("config.date_time_fns"),
+                                i18next.t("config.date_time_fns", { lng: locale }),
+                                locale,
                             ),
                             uuid: current.attributes.uuid,
                             success: current.attributes.sent && !current.attributes.errored,

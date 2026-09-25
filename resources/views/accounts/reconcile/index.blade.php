@@ -119,7 +119,7 @@
 @section('scripts')
     @vite(['js/pages/generic.js'])
 
-    <script type="text/javascript" nonce="{{ $JS_NONCE }}">
+     <script nonce="{{ $JS_NONCE }}">
         currencySymbol = "{{ $currency->symbol }}";
         var accountID = {{ $account->id }};
         var startBalance = {{ $startBalance }};

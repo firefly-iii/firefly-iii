@@ -195,6 +195,7 @@ class AccountEnrichment implements EnrichmentInterface
             if (array_key_exists($id, $this->locations)) {
                 $meta['location'] = $this->locations[$id];
             }
+
             if (array_key_exists($id, $this->meta)) {
                 foreach ($this->meta[$id] as $name => $value) {
                     $meta[$name] = $value;

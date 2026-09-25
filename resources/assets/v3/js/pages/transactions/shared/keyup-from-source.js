@@ -19,9 +19,10 @@
  */
 
 export function keyUpFromSource(e) {
-    let target = e.currentTarget.nextSibling;
+    let target = null === e.currentTarget ? null : e.currentTarget.nextSibling;
     setTimeout(() => {
-        this.formStates.sourceSelectVisible = target.classList.contains("show");
+        this.formStates.sourceSelectVisible =
+            null !== target && Object.hasOwn(target, "classList") && target.classList.contains("show");
     }, 600);
     if (e.key === "Enter" && false === this.formStates.sourceSelectVisible) {
         this.save();

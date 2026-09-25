@@ -63,6 +63,9 @@ interface AccountRepositoryInterface
      */
     public function expandWithDoubles(Collection $accounts): Collection;
 
+    /**
+     * @deprecated
+     */
     public function find(int $accountId): ?Account;
 
     public function findByAccountNumber(string $number, array $types): ?Account;
@@ -71,14 +74,25 @@ interface AccountRepositoryInterface
 
     public function findByName(string $name, array $types): ?Account;
 
+    public function findForGroup(int $accountId): ?Account;
+
     public function getAccountCurrency(Account $account): ?TransactionCurrency;
 
+    /**
+     * @deprecated
+     */
     public function getAccountsById(array $accountIds): Collection;
+
+    public function getAccountsByIdForGroup(array $accountIds): Collection;
 
     /**
      * @param array<int, int|string> $types
+     *
+     * @deprecated
      */
-    public function getAccountsByType(array $types, ?array $sort = []): Collection;
+    public function getAccountsByType(array $types, ?array $sort = [], ?bool $filterActive = null): Collection;
+
+    public function getAccountsByTypeForGroup(array $types, ?array $sort = []): Collection;
 
     /**
      * Return account type or null if not found.

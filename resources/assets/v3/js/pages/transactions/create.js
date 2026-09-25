@@ -226,6 +226,7 @@ let create = function () {
         loadTransactionLinks: loadTransactionLinks,
 
         filterForeignCurrencies(code) {
+            console.log('filterForeignCurrencies("' + code + '")');
             let list = [];
             let currency;
             for (let i in this.formData.enabledCurrencies) {
@@ -284,7 +285,7 @@ let create = function () {
             this.fillAccount("destination", "destination_account");
         },
         fillAccount(direction, field) {
-            this.entries[0][field].loading = true;
+            // this.entries[0][field].loading = true;
             const urlParams = new URLSearchParams(window.location.search);
             const accountId = parseInt(urlParams.get(direction));
             if (accountId > 0) {
@@ -305,10 +306,14 @@ let create = function () {
                         id: account.id,
                         loading: false,
                         name: attributes.name,
+                        account_currency_code: attributes.currency_code,
+                        currency_code: attributes.primary_currency_code,
                         type: type,
                         alpine_name: attributes.name,
-                        disabled: false,
+                        // disabled: false,
                     };
+                    console.log("Now detect", field, this.entries[0][field]);
+                    this.detectTransactionType();
                 });
                 return;
             }
@@ -373,7 +378,8 @@ let create = function () {
         save() {
             this.notifications.error.show = false;
             this.notifications.success.show = false;
-            this.notifications.wait.show = false;
+            this.notifications.wait.show = true;
+            this.notifications.wait.text = i18next.t("firefly.save_transaction_working");
             this.formStates.isSubmitting = true;
 
             for (let i in this.entries) {

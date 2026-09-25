@@ -3,7 +3,40 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
-## v6.7.3 - 2026-09-17
+## v6.7.4 - 2026-09-26
+
+<!-- summary: This release fixes various bugs in the new layout, but also leaves some open. Please read the release notes :-) -->
+
+Many issues fixed with [some lingering issues](https://github.com/firefly-iii/firefly-iii/issues?q=is%3Aissue%20is%3Aopen%20type%3ABug%20-label%3Afixed%20milestone%3Afirefly-iii-v6.7.5) still on my list. 
+
+### Added
+
+- Improved fonts.
+- Ability to sort account list on a limited number of fields.
+
+### Fixed
+
+- Many issues from [Discussion 12746](https://github.com/orgs/firefly-iii/discussions/12746) (New UI feedback) started by @Insprill
+- [Issue 12793](https://github.com/firefly-iii/firefly-iii/issues/12793) (v6.7: Printing Reports to PDF creates huge files (40 MB), blank first page and artefacts) reported by @tofublock
+- [Issue 12819](https://github.com/firefly-iii/firefly-iii/issues/12819) (Suscriptions with attachment in show page returns 500 error page) reported by @jsaneu
+- [Issue 12822](https://github.com/firefly-iii/firefly-iii/issues/12822) (Dashboard - long text breaks alignment in top boxes) reported by @kirby0025
+- [Issue 12823](https://github.com/firefly-iii/firefly-iii/issues/12823) (Date range selector doesn't account for today's date) reported by @adam50hhh
+- [Issue 12824](https://github.com/firefly-iii/firefly-iii/issues/12824) (Can not create or modify any transaction) reported by @somethingGoneWrong
+- [Issue 12825](https://github.com/firefly-iii/firefly-iii/issues/12825) (Finish editing a post does not redirect) reported by @gthbusrr
+- [Issue 12827](https://github.com/firefly-iii/firefly-iii/issues/12827) (Bulk category change broken on 6.7.3) reported by @vitaliprenger
+- [Issue 12828](https://github.com/firefly-iii/firefly-iii/issues/12828) (Tag report: Average expense per destination account) reported by @marc22polo
+- [Issue 12848](https://github.com/firefly-iii/firefly-iii/issues/12848) (Dashboard graph - multi currency) reported by @marc22polo
+- [Issue 12851](https://github.com/firefly-iii/firefly-iii/issues/12851) (Date selector Month to Date start date inaccurate month selection) reported by @ppslim
+- [Issue 12855](https://github.com/firefly-iii/firefly-iii/issues/12855) (Currency exchange transfers missing foreign amount and foreign currency fields) reported by @absdjfh
+- [Issue 12859](https://github.com/firefly-iii/firefly-iii/issues/12859) (Using debt account as source account doesn't automatically get registered as withdrawal transaction on v6.7.x UI) reported by @CinnamonPyro
+- [Issue 12862](https://github.com/firefly-iii/firefly-iii/issues/12862) (Wrong running balance: new transaction on a later date uses the first transaction of the previous day as its previous balance) reported by @Jerem59
+- [Issue 12864](https://github.com/firefly-iii/firefly-iii/issues/12864) (Undoing reconciliation on v6.7.x UI causes 405 Method Not Allowed response) reported by @CinnamonPyro
+
+### API
+
+- There is a new filter for the `GET /api/v1/accounts` that allows you to select active or inactive accounts.
+
+## v6.7.3 - 2026-09-18
 
 ### Fixed 
 - [Discussion 12760](https://github.com/orgs/firefly-iii/discussions/12760) (419 Page expired when selecting a different date range) started by @wecoyote5

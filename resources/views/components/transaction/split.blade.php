@@ -125,7 +125,17 @@
                                             @click="removeSplit(index)">{{ __('firefly.transaction_remove_split') }}</button>
                                 </template>
                                 <button class="btn btn-success text-white" :disabled="formStates.isSubmitting"
-                                        @click="save()">{{ __('firefly.submit') }}</button>
+                                        @click="save()">
+                                    <template x-if="!formStates.isSubmitting">
+                                        <span>{{ __('firefly.submit') }}</span>
+                                    </template>
+                                    <template x-if="formStates.isSubmitting">
+                                        <div class="spinner-border spinner-border-sm" role="status">
+                                            <span class="visually-hidden">{{ __('firefly.thinking') }}</span>
+                                        </div>
+                                    </template>
+
+                                </button>
                             </div>
                         </div>
                     </div>

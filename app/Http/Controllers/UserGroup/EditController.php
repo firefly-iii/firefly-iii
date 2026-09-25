@@ -25,6 +25,7 @@ declare(strict_types=1);
 namespace FireflyIII\Http\Controllers\UserGroup;
 
 use FireflyIII\Http\Controllers\Controller;
+use FireflyIII\Http\Middleware\IsDemoUser;
 use FireflyIII\Models\UserGroup;
 use Illuminate\Contracts\View\Factory;
 use Illuminate\Contracts\View\View;
@@ -33,6 +34,18 @@ use Illuminate\Support\Facades\Log;
 
 final class EditController extends Controller
 {
+    public function __construct()
+    {
+        parent::__construct();
+
+        // translations:
+        $this->middleware(function ($request, $next) {
+            $this->middleware(IsDemoUser::class);
+
+            return $next($request);
+        });
+    }
+
     /**
      * @return Application|Factory|\Illuminate\Contracts\Foundation\Application|View
      */

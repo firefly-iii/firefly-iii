@@ -19,9 +19,10 @@
  */
 
 export function keyUpFromDescription(e) {
-    let target = e.currentTarget.nextSibling;
+    let target = null === e.currentTarget ? null : e.currentTarget.nextSibling;
     setTimeout(() => {
-        this.formStates.descriptionSelectVisible = target.classList.contains("show");
+        this.formStates.descriptionSelectVisible =
+            null !== target && Object.hasOwn(target, "classList") && target.classList.contains("show");
     }, 600);
     if (e.key === "Enter" && false === this.formStates.descriptionSelectVisible) {
         this.save();

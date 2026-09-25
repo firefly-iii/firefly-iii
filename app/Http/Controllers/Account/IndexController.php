@@ -113,7 +113,7 @@ final class IndexController extends Controller
 
         // make paginator:
         $accounts                      = new LengthAwarePaginator($accounts, $total, $pageSize, $page);
-        $accounts->setPath(route('accounts.inactive.index', [$objectType]));
+        $accounts->setPath(route('accounts.index', [$objectType]));
 
         return view('accounts.index', [
             'objectType'    => $objectType,
@@ -122,7 +122,8 @@ final class IndexController extends Controller
             'subTitleIcon'  => $subTitleIcon,
             'subTitle'      => $subTitle,
             'page'          => $page,
-            'accounts'      => $accounts,
+            'accounts'      => [],
+            // 'accounts'      => $accounts,
         ]);
     }
 
