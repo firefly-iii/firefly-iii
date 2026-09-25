@@ -82,6 +82,7 @@ return [
                 'deposit',
                 'transfer',
                 'could_not_load_chart',
+                'inactive_account_link_js',
                 'inactive',
                 'liability_direction_debit_short',
                 'liability_direction_credit_short',
