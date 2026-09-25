@@ -63,6 +63,7 @@ export function addAllAutocompleteToForm() {
             filters.destination = [this.entries[0].source_account.type];
         }
     }
+    console.log("Filters for autocomplete: ", filters);
 
     const urls = getUrls();
     setTimeout(() => {

@@ -553,23 +553,42 @@ function drawSingleCurrencyLineChart(url, holder, anonymous) {
         });
 }
 
+const colors = [
+    [18, 124, 175], // bg-sky, 0
+    [179, 71, 190], // fuchsia, 1
+    [18, 130, 125], // bg-teal, 2
+    [165, 103, 16], // bg-amber, 3
+    [95, 127, 15], // bg-olive, 4
+    [200, 78, 16], // bg-orange, 5
+    [111, 96, 234], // indigo, 6
+    [205, 56, 141], // bg-pink, 7
+];
+
 function colorizeAllData(data) {
+    let transparency = 0.8;
     for (let i in data.datasets) {
         if (Object.hasOwn(data.datasets, i)) {
+            let index = i % colors.length;
             if (data.datasets[i].label.startsWith("budgeted")) {
-                // data.datasets[i].backgroundColor = 'rgba(13, 110, 253, 0.8)'; // bg-primary
-                data.datasets[i].backgroundColor = "rgba(18, 124, 175, 0.8)"; // bg-sky
+                index = 0;
+                transparency =0.5;
             }
             if (data.datasets[i].label.startsWith("overspent")) {
-                data.datasets[i].backgroundColor = "rgba(200, 78, 16, 0.6)"; // bg-orange
+                index = 5;
+                transparency =0.5;
             }
             if (data.datasets[i].label.startsWith("spent")) {
-                data.datasets[i].backgroundColor = "rgba(200, 78, 16, 0.6)"; // bg-orange
+                index = 5;
+                transparency =0.5;
             }
             if (data.datasets[i].label.startsWith("left")) {
-                // data.datasets[i].backgroundColor = 'rgba(20, 107, 66, 0.8)'; // bg-success
-                data.datasets[i].backgroundColor = "rgba(18, 130, 125, 0.8)"; // bg-teal
+                index = 2;
+                transparency =0.5;
             }
+            let color = colors[index];
+            // grab color from colors, use modulo to make sure we don't go out of bounds.
+            data.datasets[i].backgroundColor = "rgba(" + color.join(",") + ", " + transparency + ")";
+            data.datasets[i].borderColor = "rgba(" + color.join(",") + ", 1)";
         }
     }
     return data;
