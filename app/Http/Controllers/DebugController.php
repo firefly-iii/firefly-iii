@@ -465,6 +465,7 @@ final class DebugController extends Controller
             'build_time'      => config('firefly.build_time'),
             'build_time_nice' => Carbon::parse(config('firefly.build_time'), 'Europe/Amsterdam')->setTimezone('Europe/Amsterdam')->format('Y-m-d H:i:s e'),
             'uname'           => php_uname('m'),
+            'installation_id' => AppConfiguration::get('installation_id', '(no ID)')->data,
             'interface'       => PHP_SAPI,
             'bits'            => PHP_INT_SIZE * 8,
             'bcscale'         => bcscale(),
