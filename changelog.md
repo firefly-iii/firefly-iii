@@ -3,46 +3,38 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
-## v6.7.4 - 2026-09-xx
+## v6.7.4 - 2026-09-26
 
-<!-- summary: This release fixes ... If you can read this I forgot to update the summary! -->
+<!-- summary: This release fixes various bugs in the new layout, but also leaves some open. Please read the release notes :-) -->
+
+Many issues fixed with [some lingering issues](https://github.com/firefly-iii/firefly-iii/issues?q=is%3Aissue%20is%3Aopen%20type%3ABug%20-label%3Afixed%20milestone%3Afirefly-iii-v6.7.5) still on my list. 
 
 ### Added
 
-- Initial release.
-
-### Changed
-
-- Initial release.
-
-### Deprecated
-
-- Initial release.
-
-### Removed
-
-- Initial release.
+- Improved fonts.
+- Ability to sort account list on a limited number of fields.
 
 ### Fixed
 
-- [Issue 12819](https://github.com/firefly-iii/firefly-iii/issues/12819) (Suscriptions with attachement in show page returns 500 error page) reported by @jsaneu
+- Many issues from #12746
+- #12793
+- [Issue 12819](https://github.com/firefly-iii/firefly-iii/issues/12819) (Suscriptions with attachment in show page returns 500 error page) reported by @jsaneu
 - #12822
 - #12823
-- #12828
-- #12827
 - #12824
 - #12825
+- #12827
+- #12828
+- #12848
 - #12851
+- #12855
 - #12859
+- #12862
 - #12864
-
-### Security
-
-- Initial release.
 
 ### API
 
-- Initial release.
+- There is a new filter for the `GET /api/v1/accounts` that allows you to select active or inactive accounts.
 
 ## v6.7.3 - 2026-09-18
 
