@@ -203,7 +203,9 @@
             <template x-if="0 !== accounts.length && true === active">
                 <p class="text-center"><small>
                         <em>
+                            <a href="{{ route('accounts.inactive.index', $objectType) }}">
                             <span x-text="i18next.t('firefly.inactive_account_link_js')"></span>
+                            </a>
                         </em>
                     </small>
                 </p>
