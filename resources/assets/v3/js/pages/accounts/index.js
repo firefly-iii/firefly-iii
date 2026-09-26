@@ -48,6 +48,9 @@ let index = function () {
         pageNavUrl: "./accounts/",
         handleFunc: null,
         storageKey: "",
+        sums: {},
+        debts: {},
+        formatMoney: formatMoney,
 
         updateHistory() {
             if (history.pushState) {
@@ -139,6 +142,7 @@ let index = function () {
             let sort = "asc" === this.sortDirection ? this.sortColumn : "-" + this.sortColumn;
             let start = window.store.get("start");
             let end = window.store.get("end");
+            let convertToPrimary =window.store.get("convert_to_primary");
             new Get()
                 .list({
                     active: this.active,
@@ -154,23 +158,28 @@ let index = function () {
                     for (let i = 0; i < response.data.data.length; i++) {
                         if (Object.hasOwn(response.data.data, i)) {
                             let current = response.data.data[i];
-                            let balanceDifference = formatMoney(
-                                current.attributes.balance_difference,
-                                current.attributes.currency_code,
-                                true,
-                            );
+
+                            // collect sums and debts for each account (in primary or not):
+                            this.sums[current.attributes.currency_code] = this.sums[current.attributes.currency_code] || 0;
+                            this.sums[current.attributes.primary_currency_code] = this.sums[current.attributes.primary_currency_code] || 0;
+                            this.debts[current.attributes.currency_code] = this.debts[current.attributes.currency_code] || 0;
+                            this.debts[current.attributes.primary_currency_code] = this.debts[current.attributes.primary_currency_code] || 0;
+
+                            let balanceDifference = formatMoney(current.attributes.balance_difference, current.attributes.currency_code, true,);
                             let balanceDiffFloat = parseFloat(current.attributes.balance_difference);
-                            let currentBalance = formatMoney(
-                                current.attributes.current_balance,
-                                current.attributes.currency_code,
-                            );
+                            let currentBalance = formatMoney(current.attributes.current_balance, current.attributes.currency_code,);
+
                             let currentBalanceFloat = parseFloat(current.attributes.current_balance);
-                            let currentDebt = formatMoney(
-                                current.attributes.debt_amount,
-                                current.attributes.currency_code,
-                            );
+                            let currentDebt = formatMoney(current.attributes.debt_amount, current.attributes.currency_code,);
                             let currentDebtFloat = parseFloat(current.attributes.debt_amount);
-                            if (window.store.get("convert_to_primary")) {
+
+                            // this.sums[current.attributes.currency_code] += currentBalanceFloat;
+                            if(!convertToPrimary) {
+                                this.sums[current.attributes.currency_code] += currentBalanceFloat;
+                                this.debts[current.attributes.currency_code] += currentDebtFloat;
+                            }
+                            if (convertToPrimary) {
+
                                 balanceDifference = formatMoney(
                                     current.attributes.pc_balance_difference,
                                     current.attributes.primary_currency_code,
@@ -187,6 +196,8 @@ let index = function () {
                                     current.attributes.primary_currency_code,
                                 );
                                 currentDebtFloat = parseFloat(current.attributes.pc_debt_amount);
+                                this.sums[current.attributes.primary_currency_code] += currentBalanceFloat;
+                                this.debts[current.attributes.primary_currency_code] += currentDebtFloat;
                             }
                             let lastActivity = this.formatDate(current.attributes.last_activity);
                             let noLastActivity = false;
