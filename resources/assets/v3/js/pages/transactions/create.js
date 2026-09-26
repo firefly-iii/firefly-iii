@@ -236,7 +236,7 @@ let create = function () {
         processUpload() {
             // console.log("Now in processUpload()");
             this.formStates.storedAttachments = true;
-            this.showMessageOrRedirectUser('create.js processUpload');
+            this.showMessageOrRedirectUser("create.js processUpload");
         },
         clearDescription(index) {
             this.entries[index].description = "";
@@ -405,7 +405,7 @@ let create = function () {
                         return;
                     }
 
-                    this.showMessageOrRedirectUser('save Post>then submission');
+                    this.showMessageOrRedirectUser("save Post>then submission");
                 })
                 .catch((error) => {
                     this.formStates.isSubmitting = true;

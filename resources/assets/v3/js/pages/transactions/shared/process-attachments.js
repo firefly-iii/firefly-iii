@@ -85,7 +85,11 @@ export function processAttachments(groupId, transactions) {
     for (const key in attachments) {
         if (Object.hasOwn(attachments, key) && /^0$|^[1-9]\d*$/.test(key) && key <= 4294967294) {
             for (const fileKey in attachments[key].files) {
-                if (Object.hasOwn(attachments[key].files, fileKey) && /^0$|^[1-9]\d*$/.test(fileKey) && fileKey <= 4294967294) {
+                if (
+                    Object.hasOwn(attachments[key].files, fileKey) &&
+                    /^0$|^[1-9]\d*$/.test(fileKey) &&
+                    fileKey <= 4294967294
+                ) {
                     // include journal thing.
                     toBeUploaded.push({
                         journal: transactions[key].transaction_journal_id,
