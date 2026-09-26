@@ -39,16 +39,18 @@
                                     <th data-column="current_balance" :class="{'text-end': true, 'sortable': true, 'sortable_sorted': 'current_balance' === sortColumn, 'sortable_sorted_asc': 'asc' === sortDirection, 'sortable_sorted_desc': 'desc' === sortDirection }">{{ trans('list.currentBalance') }}</th>
                                 </template>
                                 <template x-if="'liabilities' === objectType">
-                                    <th class="text-end">
+                                    <th data-column="debt_amount" :class="{'text-end': true, 'sortable': true, 'sortable_sorted': 'debt_amount' === sortColumn, 'sortable_sorted_asc': 'asc' === sortDirection, 'sortable_sorted_desc': 'desc' === sortDirection }">
                                         {{ trans('firefly.left_in_debt') }}
                                     </th>
                                 </template>
                                 <th {{-- hide on SM --}} class="d-md-table-cell d-none">{{ trans('list.active') }}</th>
                                 {{-- hide last activity to make room for other stuff --}}
                                 <template x-if="'liabilities' !== objectType">
-                                    <th {{-- hide on LG and smaller. --}} class="d-lg-table-cell d-none">{{ trans('list.lastActivity') }}</th>
+                                    {{-- hide on LG and smaller. --}}
+                                    <th data-column="last_activity" :class="{'d-lg-table-cell': true, 'd-none': true, 'sortable': true, 'sortable_sorted': 'last_activity' === sortColumn, 'sortable_sorted_asc': 'asc' === sortDirection, 'sortable_sorted_desc': 'desc' === sortDirection }">{{ trans('list.lastActivity') }}</th>
                                 </template>
-                                <th  {{-- hide on SM --}} class="w-15 d-md-table-cell d-none text-end">{{ trans('list.balanceDiff') }}</th>
+                                {{-- hide on SM --}}
+                                <th data-column="balance_difference" :class="{'w-15': true,'text-end': true, 'd-lg-table-cell': true, 'd-none': true, 'sortable': true, 'sortable_sorted': 'balance_difference' === sortColumn, 'sortable_sorted_asc': 'asc' === sortDirection, 'sortable_sorted_desc': 'desc' === sortDirection }">{{ trans('list.balanceDiff') }}</th>
                                 <th>&nbsp;</th>
                             </tr>
                             </thead>

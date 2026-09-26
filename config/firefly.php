@@ -861,6 +861,7 @@ return [
             'liability_interest',
             'active',
             'role',
+            'last_activity',
             'account_type_id',
             'current_balance',
             'pc_current_balance',

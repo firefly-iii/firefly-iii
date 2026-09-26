@@ -88,7 +88,7 @@ let index = function () {
             this.downloadAccounts();
             // get accounts by initial sort.
             document.addEventListener('alpine:initialized', () => {
-                document.querySelectorAll("table.sortable th").forEach((el) => {
+                document.querySelectorAll("table.sortable th.sortable").forEach((el) => {
                     el.addEventListener("click", (event) => {
                         let newColumn = event.currentTarget.dataset.column;
                         if (newColumn === this.sortColumn) {
