@@ -51,12 +51,14 @@
         <!--begin::Small Box Widget 2-->
         <div class="small-box text-bg-sky">
             <div class="inner">
+                <template x-if="0 === billBox.unpaid.length">
+                    <h4 class="hover-expand">&mdash;</h4>
+                </template>
                 <template x-if="billBox.unpaid.length > 0">
                     <h4 class="hover-expand">
                         <template x-for="(amount, index) in billBox.unpaid" :key="index">
                         <span>
-                            <span x-text="amount"></span><span
-                                :class="{ 'invisible': (billBox.unpaid.length == index+1) }">, </span>
+                            <span x-text="amount"></span><span :class="{ 'invisible': (billBox.unpaid.length == index+1) }">, </span>
                         </span>
                         </template>
                     </h4>
@@ -73,7 +75,7 @@
                             href="{{ route('subscriptions.index') }}">{{ __('firefly.bills_to_pay') }}</a></p>
                 </template>
                 <template x-if="0 === billBox.unpaid.length && !loading">
-                    <p class="d-none d-sm-block"><em>{{ __('firefly.no_waiting') }}</em></p>
+                        <p class="d-none d-sm-block"><em>{{ __('firefly.no_waiting') }}</em></p>
                 </template>
             </div>
             <span class="small-box-icon d-none d-lg-block d-xl-block d-xxl-block">
