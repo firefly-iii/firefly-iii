@@ -164,20 +164,36 @@ let index = function () {
                             let current = response.data.data[i];
 
                             // collect sums, debts and differences for each account (in primary or not):
-                            this.sums[current.attributes.currency_code] = this.sums[current.attributes.currency_code] || 0;
-                            this.sums[current.attributes.primary_currency_code] = this.sums[current.attributes.primary_currency_code] || 0;
-                            this.debts[current.attributes.currency_code] = this.debts[current.attributes.currency_code] || 0;
-                            this.debts[current.attributes.primary_currency_code] = this.debts[current.attributes.primary_currency_code] || 0;
-                            this.differences[current.attributes.currency_code] = this.differences[current.attributes.currency_code] || 0;
-                            this.differences[current.attributes.primary_currency_code] = this.differences[current.attributes.primary_currency_code] || 0;
+                            this.sums[current.attributes.currency_code] =
+                                this.sums[current.attributes.currency_code] || 0;
+                            this.sums[current.attributes.primary_currency_code] =
+                                this.sums[current.attributes.primary_currency_code] || 0;
+                            this.debts[current.attributes.currency_code] =
+                                this.debts[current.attributes.currency_code] || 0;
+                            this.debts[current.attributes.primary_currency_code] =
+                                this.debts[current.attributes.primary_currency_code] || 0;
+                            this.differences[current.attributes.currency_code] =
+                                this.differences[current.attributes.currency_code] || 0;
+                            this.differences[current.attributes.primary_currency_code] =
+                                this.differences[current.attributes.primary_currency_code] || 0;
 
-                            let balanceDifference = formatMoney(current.attributes.balance_difference, current.attributes.currency_code, true,);
+                            let balanceDifference = formatMoney(
+                                current.attributes.balance_difference,
+                                current.attributes.currency_code,
+                                true,
+                            );
                             let balanceDiffFloat = parseFloat(current.attributes.balance_difference);
 
-                            let currentBalance = formatMoney(current.attributes.current_balance, current.attributes.currency_code,);
+                            let currentBalance = formatMoney(
+                                current.attributes.current_balance,
+                                current.attributes.currency_code,
+                            );
                             let currentBalanceFloat = parseFloat(current.attributes.current_balance);
 
-                            let currentDebt = formatMoney(current.attributes.debt_amount, current.attributes.currency_code,);
+                            let currentDebt = formatMoney(
+                                current.attributes.debt_amount,
+                                current.attributes.currency_code,
+                            );
                             let currentDebtFloat = parseFloat(current.attributes.debt_amount);
 
                             // this.sums[current.attributes.currency_code] += currentBalanceFloat;
@@ -187,13 +203,23 @@ let index = function () {
                                 this.differences[current.attributes.currency_code] += balanceDiffFloat;
                             }
                             if (convertToPrimary) {
-                                balanceDifference = formatMoney(current.attributes.pc_balance_difference, current.attributes.primary_currency_code, true,);
+                                balanceDifference = formatMoney(
+                                    current.attributes.pc_balance_difference,
+                                    current.attributes.primary_currency_code,
+                                    true,
+                                );
                                 balanceDiffFloat = parseFloat(current.attributes.pc_balance_difference);
 
-                                currentBalance = formatMoney(current.attributes.pc_current_balance, current.attributes.primary_currency_code,);
+                                currentBalance = formatMoney(
+                                    current.attributes.pc_current_balance,
+                                    current.attributes.primary_currency_code,
+                                );
                                 currentBalanceFloat = parseFloat(current.attributes.pc_current_balance);
 
-                                currentDebt = formatMoney(current.attributes.pc_debt_amount, current.attributes.primary_currency_code,);
+                                currentDebt = formatMoney(
+                                    current.attributes.pc_debt_amount,
+                                    current.attributes.primary_currency_code,
+                                );
                                 currentDebtFloat = parseFloat(current.attributes.pc_debt_amount);
 
                                 this.sums[current.attributes.primary_currency_code] += currentBalanceFloat;
