@@ -42,7 +42,8 @@ let index = function () {
         sortDirection: "asc",
         page: 1,
         totalPages: 1,
-        loading: true,
+        loadingPage: true,
+        loadingNewSort: true,
         active: true,
         pageNavUrl: "./accounts/",
         handleFunc: null,
@@ -124,6 +125,7 @@ let index = function () {
             });
         },
         downloadAccounts() {
+            this.loadingNewSort = true;
             let sort = "asc" === this.sortDirection ? this.sortColumn : "-" + this.sortColumn;
             let start = window.store.get("start");
             let end = window.store.get("end");
@@ -211,7 +213,8 @@ let index = function () {
                             this.accounts.push(account);
                         }
                     }
-                    this.loading = false;
+                    this.loadingPage = false;
+                    this.loadingNewSort = false;
                     if (0 === this.accounts.length) {
                         document.querySelectorAll(".data-holder").forEach((el) => {
                             el.classList.add("d-none");

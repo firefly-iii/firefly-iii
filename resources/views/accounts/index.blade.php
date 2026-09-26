@@ -1,7 +1,7 @@
 @extends('layout.v3.session')
 @section('content')
         <div class="row" x-data="index">
-            <template x-if="true === loading">
+            <template x-if="true === loadingPage">
             <div class="col-lg-12 text-center">
                 <div id="status-box" class="p-3 install-box-border">
                     <div class="spinner-border spinner-border-sm" role="status">
@@ -16,6 +16,11 @@
                     <x-elements.card-header-with-menu :cardTitle="trans('firefly.'.$objectType.'_accounts')" :route="route('accounts.create', $objectType) . '?_from=' . urlencode($FF3_FROM)" :linkTitle="__('firefly.make_new_'. $objectType . '_account')"/>
                     <div class="card-body p-0">
                         <x-elements.alpine.page-navigation />
+                        <div class="p-3 text-center" x-show="true === loadingNewSort">
+                            <div class="spinner-border spinner-border-sm" role="status">
+                                <span class="visually-hidden">{{ __('firefly.thinking') }}</span>
+                            </div>
+                        </div>
                         <table class="table table-valign-middle table-sm table-hover sortable">
                             <thead>
                             <tr>
@@ -184,7 +189,7 @@
                     <x-elements.card-footer-with-menu :route="route('accounts.create', $objectType) . '?_from=' . urlencode($FF3_FROM)" :linkTitle="__('firefly.make_new_'. $objectType . '_account')" />
                 </div>
             </div>
-            <template x-if="0 === accounts.length && true === active && false === loading">
+            <template x-if="0 === accounts.length && true === active && false === loadingPage">
                 <x-empty-page :route="route('accounts.create', [$objectType]) . '?_from=' . urlencode($FF3_FROM)" type="accounts" :object-type="$objectType" />
             </template>
             <template x-if="0 === accounts.length && true === active">
