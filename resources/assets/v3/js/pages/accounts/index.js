@@ -47,11 +47,21 @@ let index = function () {
         active: true,
         pageNavUrl: "./accounts/",
         handleFunc: null,
-        storageKey: '',
+        storageKey: "",
 
         updateHistory() {
             if (history.pushState) {
-                let newUrl = window.location.protocol + "//" + window.location.host + window.location.pathname + "?page=" + this.page + "&column=" + this.sortColumn + "&direction=" + this.sortDirection;
+                let newUrl =
+                    window.location.protocol +
+                    "//" +
+                    window.location.host +
+                    window.location.pathname +
+                    "?page=" +
+                    this.page +
+                    "&column=" +
+                    this.sortColumn +
+                    "&direction=" +
+                    this.sortDirection;
                 window.history.pushState({ path: newUrl }, "", newUrl);
                 window.store.set(this.storageKey, { column: this.sortColumn, direction: this.sortDirection });
             }
@@ -63,9 +73,9 @@ let index = function () {
                 this.active = false;
             }
             let defaultSortColumn = "order";
-            let defaultSortDirection = 'asc';
+            let defaultSortDirection = "asc";
             this.objectType = page[page.length - 1].substring(0, 15);
-            this.storageKey = 'accounts-' + this.objectType + (this.active ? '-active' : '-inactive');
+            this.storageKey = "accounts-" + this.objectType + (this.active ? "-active" : "-inactive");
             this.pageNavUrl = "./accounts/" + this.objectType;
             const params = new Proxy(new URLSearchParams(window.location.search), {
                 get: (searchParams, prop) => searchParams.get(prop),
@@ -75,8 +85,8 @@ let index = function () {
                 defaultSortColumn = "name";
             }
             let fromStore = window.store.get(this.storageKey);
-            console.log('from store', fromStore);
-            if(fromStore) {
+            console.log("from store", fromStore);
+            if (fromStore) {
                 defaultSortColumn = fromStore.column;
                 defaultSortDirection = fromStore.direction;
             }
