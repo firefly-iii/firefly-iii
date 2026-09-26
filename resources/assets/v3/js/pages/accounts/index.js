@@ -87,7 +87,7 @@ let index = function () {
             // grab the account list.
             this.downloadAccounts();
             // get accounts by initial sort.
-            document.addEventListener('alpine:initialized', () => {
+            document.addEventListener("alpine:initialized", () => {
                 document.querySelectorAll("table.sortable th.sortable").forEach((el) => {
                     el.addEventListener("click", (event) => {
                         let newColumn = event.currentTarget.dataset.column;
@@ -97,7 +97,7 @@ let index = function () {
                         if (newColumn !== this.sortColumn) {
                             this.sortColumn = newColumn;
                         }
-                        console.log('New sort instructions', this.sortColumn, this.sortDirection)
+                        console.log("New sort instructions", this.sortColumn, this.sortDirection);
                         this.updateHistory();
                         this.downloadAccounts();
                     });
