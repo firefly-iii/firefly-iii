@@ -50,6 +50,7 @@ let index = function () {
         storageKey: "",
         sums: {},
         debts: {},
+        differences: {},
         formatMoney: formatMoney,
 
         updateHistory() {
@@ -154,6 +155,9 @@ let index = function () {
                 })
                 .then((response) => {
                     this.accounts = [];
+                    this.sums = {};
+                    this.debts = {};
+                    this.differences = {};
                     this.totalPages = parseInt(response.data.meta.pagination.total_pages);
                     for (let i = 0; i < response.data.data.length; i++) {
                         if (Object.hasOwn(response.data.data, i)) {
