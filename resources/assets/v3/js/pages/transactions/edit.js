@@ -248,7 +248,6 @@ let transactions = function () {
                     this.groupProperties.title =
                         data.attributes.group_title ?? data.attributes.transactions[0].description;
                     this.entries = parseDownloadedSplits(data.attributes.transactions, parseInt(data.id));
-
                     // set empty arrays
                     for (let i = 0; i < this.entries.length; i++) {
                         this.links[i] = []; // empty set of links.
