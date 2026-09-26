@@ -338,7 +338,7 @@
             <p class="text-center"><small>
                     <em>
                         <span
-                            x-text="i18next.t('firefly.no_inactive_accounts', {url: '{{ route('accounts.index', $objectType) }}'})"></span>
+                            x-html="i18next.t('firefly.no_inactive_accounts', {url: '{{ route('accounts.index', $objectType) }}'})"></span>
                     </em>
                 </small>
             </p>
