@@ -373,7 +373,7 @@
                                                     <input type="radio" name="darkMode"
                                                            value="{{ $mode }}"
                                                            @if($darkMode === $mode) checked @endif>
-                                                    {{ __('dark_mode_option_' . $mode) }}
+                                                    {{ __('firefly.dark_mode_option_' . $mode) }}
                                                 </label>
                                             </div>
                                         @endforeach

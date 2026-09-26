@@ -42,12 +42,12 @@ export function parseDownloadedSplits(downloads, groupId) {
             current.piggy_bank_name = download.piggy_bank_name;
 
             // meta dates
-            current.book_date = format(new Date(download.book_date), "yyyy-MM-dd");
-            current.due_date = format(new Date(download.due_date), "yyyy-MM-dd");
-            current.interest_date = format(new Date(download.interest_date), "yyyy-MM-dd");
-            current.invoice_date = format(new Date(download.invoice_date), "yyyy-MM-dd");
-            current.payment_date = format(new Date(download.payment_date), "yyyy-MM-dd");
-            current.process_date = format(new Date(download.process_date), "yyyy-MM-dd");
+            current.book_date = null === download.book_date ? '' : format(new Date(download.book_date), "yyyy-MM-dd");
+            current.due_date = null === download.due_date ? '' : format(new Date(download.due_date), "yyyy-MM-dd");
+            current.interest_date = null === download.interest_date ? '' : format(new Date(download.interest_date), "yyyy-MM-dd");
+            current.invoice_date = null === download.invoice_date ? '' : format(new Date(download.invoice_date), "yyyy-MM-dd");
+            current.payment_date = null === download.payment_date ? '' : format(new Date(download.payment_date), "yyyy-MM-dd");
+            current.process_date = null === download.process_date ? '' : format(new Date(download.process_date), "yyyy-MM-dd");
 
             // more meta
             current.external_url = download.external_url;
