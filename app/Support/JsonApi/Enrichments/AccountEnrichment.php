@@ -472,22 +472,55 @@ class AccountEnrichment implements EnrichmentInterface
             switch ($field) {
                 default:
                     throw new FireflyException(sprintf('Account enrichment cannot sort on field "%s"', $field));
+
                 case 'account_number':
                 case 'liability_direction':
-                    $this->collection = $this->collection->sortBy(static fn (Account $account) => $account->meta[$field] ?? '', SORT_REGULAR, 'desc' === $parameter[1]);
+                    $this->collection = $this->collection->sortBy(
+                        static fn (Account $account) => $account->meta[$field] ?? '',
+                        SORT_REGULAR,
+                        'desc' === $parameter[1]
+                    );
+
                     break;
+
                 case 'liability_interest':
-                    $this->collection = $this->collection->sortBy(static fn (Account $account) => (float) ($account->meta['interest'] ?? 0.0), SORT_NUMERIC, 'desc' === $parameter[1]);
+                    $this->collection = $this->collection->sortBy(
+                        static fn (Account $account) => (float) ($account->meta['interest'] ?? 0.0),
+                        SORT_NUMERIC,
+                        'desc' === $parameter[1]
+                    );
+
                     break;
+
                 case 'role':
-                    $this->collection = $this->collection->sortBy(static fn (Account $account) => $account->meta['account_role'] ?? '', SORT_REGULAR, 'desc' === $parameter[1]);
+                    $this->collection = $this->collection->sortBy(
+                        static fn (Account $account) => $account->meta['account_role'] ?? '',
+                        SORT_REGULAR,
+                        'desc' === $parameter[1]
+                    );
+
                     break;
+
                 case 'account_number_and_iban':
-                    $this->collection = $this->collection->sortBy(static fn (Account $account) => sprintf('%s-%s', $account->iban, $account->meta['account_number']), SORT_REGULAR, 'desc' === $parameter[1]);
+                    $this->collection = $this->collection->sortBy(
+                        static fn (Account $account) => sprintf('%s-%s', $account->iban, $account->meta['account_number']),
+                        SORT_REGULAR,
+                        'desc' === $parameter[1]
+                    );
+
                     break;
+
                 case 'last_activity':
-                    $this->collection = $this->collection->sortBy(static fn (Account $account) => null === $account->meta['last_activity'] ? '0000-00-00 00:00:00' : $account->meta['last_activity']->format('Y-m-d H:i:s'), SORT_REGULAR, 'desc' === $parameter[1]);
+                    $this->collection = $this->collection->sortBy(
+                        static fn (Account $account) => null === $account->meta['last_activity']
+                            ? '0000-00-00 00:00:00'
+                            : $account->meta['last_activity']->format('Y-m-d H:i:s'),
+                        SORT_REGULAR,
+                        'desc' === $parameter[1]
+                    );
+
                     break;
+
                 case 'current_balance':
                 case 'pc_current_balance':
                 case 'debt_amount':
