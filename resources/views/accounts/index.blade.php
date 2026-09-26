@@ -22,18 +22,19 @@
                                 <th data-column="order" :class="{'w-5' : true,'sortable': true, 'sortable_sorted': 'order' === sortColumn, 'sortable_sorted_asc': 'asc' === sortDirection, 'sortable_sorted_desc': 'desc' === sortDirection }">&nbsp;</th>
                                 <th data-column="name"  :class="{'w-20' : true,'sortable': true, 'sortable_sorted': 'name' === sortColumn, 'sortable_sorted_asc': 'asc' === sortDirection, 'sortable_sorted_desc': 'desc' === sortDirection }">{{ trans('list.name') }}</th>
                                 <template x-if="'asset' === objectType">
-                                    <th {{-- hide on LG and smaller. --}} class="d-lg-table-cell d-none">{{ trans('list.role') }}</th>
+                                    {{-- hide on LG and smaller. --}}
+                                    <th data-column="role" :class="{'d-lg-table-cell': true, 'd-none': true,'sortable': true, 'sortable_sorted': 'role' === sortColumn, 'sortable_sorted_asc': 'asc' === sortDirection, 'sortable_sorted_desc': 'desc' === sortDirection }">{{ trans('list.role') }}</th>
                                 </template>
                                 <template x-if="'liabilities' === objectType">
-                                    <th>{{ trans('list.liability_type') }}</th>
+                                    <th data-column="account_type_id" :class="{'sortable': true, 'sortable_sorted': 'account_type_id' === sortColumn, 'sortable_sorted_asc': 'asc' === sortDirection, 'sortable_sorted_desc': 'desc' === sortDirection }">{{ trans('list.liability_type') }}</th>
                                 </template>
                                 <template x-if="'liabilities' === objectType">
-                                    <th>{{ trans('form.liability_direction') }}</th>
+                                    <th data-column="liability_direction" :class="{'sortable': true, 'sortable_sorted': 'liability_direction' === sortColumn, 'sortable_sorted_asc': 'asc' === sortDirection, 'sortable_sorted_desc': 'desc' === sortDirection }">{{ trans('form.liability_direction') }}</th>
                                 </template>
                                 <template x-if="'liabilities' === objectType">
-                                    <th>{{ trans('list.interest') }} ({{ trans('list.interest_period') }})</th>
+                                    <th data-column="liability_interest" :class="{'sortable': true, 'sortable_sorted': 'liability_interest' === sortColumn, 'sortable_sorted_asc': 'asc' === sortDirection, 'sortable_sorted_desc': 'desc' === sortDirection }">{{ trans('list.interest') }} ({{ trans('list.interest_period') }})</th>
                                 </template>
-                                <th>{{ trans('form.account_number') }}</th>
+                                <th data-column="account_number_and_iban" :class="{'sortable': true, 'sortable_sorted': 'account_number_and_iban' === sortColumn, 'sortable_sorted_asc': 'asc' === sortDirection, 'sortable_sorted_desc': 'desc' === sortDirection }">{{ trans('form.account_number') }}</th>
                                 <template x-if="'liabilities' !== objectType">
                                     <th class="text-end">{{ trans('list.currentBalance') }}</th>
                                 </template>

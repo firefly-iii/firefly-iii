@@ -87,17 +87,20 @@ let index = function () {
             // grab the account list.
             this.downloadAccounts();
             // get accounts by initial sort.
-            document.querySelectorAll("table.sortable th").forEach((el) => {
-                el.addEventListener("click", (event) => {
-                    let newColumn = event.currentTarget.dataset.column;
-                    if (newColumn === this.sortColumn) {
-                        this.sortDirection = "asc" === this.sortDirection ? "desc" : "asc";
-                    }
-                    if (newColumn !== this.sortColumn) {
-                        this.sortColumn = newColumn;
-                    }
-                    this.updateHistory();
-                    this.downloadAccounts();
+            document.addEventListener('alpine:initialized', () => {
+                document.querySelectorAll("table.sortable th").forEach((el) => {
+                    el.addEventListener("click", (event) => {
+                        let newColumn = event.currentTarget.dataset.column;
+                        if (newColumn === this.sortColumn) {
+                            this.sortDirection = "asc" === this.sortDirection ? "desc" : "asc";
+                        }
+                        if (newColumn !== this.sortColumn) {
+                            this.sortColumn = newColumn;
+                        }
+                        console.log('New sort instructions', this.sortColumn, this.sortDirection)
+                        this.updateHistory();
+                        this.downloadAccounts();
+                    });
                 });
             });
             getVariable("listPageSize").then((listPageSize) => {

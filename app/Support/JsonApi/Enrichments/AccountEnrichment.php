@@ -467,10 +467,20 @@ class AccountEnrichment implements EnrichmentInterface
             if (in_array($parameter[0], $dbParams, true)) {
                 continue;
             }
+            $field = $parameter[0];
 
-            switch ($parameter[0]) {
+            switch ($field) {
                 default:
-                    throw new FireflyException(sprintf('Account enrichment cannot sort on field "%s"', $parameter[0]));
+                    throw new FireflyException(sprintf('Account enrichment cannot sort on field "%s"', $field));
+                case 'account_number':
+                    $this->collection = $this->collection->sortBy(static fn (Account $account) => $account->meta['account_number'] ?? '', SORT_REGULAR, 'desc' === $parameter[1]);
+                    break;
+                case 'role':
+                    $this->collection = $this->collection->sortBy(static fn (Account $account) => $account->meta['account_role'] ?? '', SORT_REGULAR, 'desc' === $parameter[1]);
+                    break;
+                case 'account_number_and_iban':
+                    $this->collection = $this->collection->sortBy(static fn (Account $account) => sprintf('%s-%s', $account->iban, $account->meta['account_number']), SORT_REGULAR, 'desc' === $parameter[1]);
+                    break;
 
                 case 'current_balance':
                 case 'pc_current_balance':
