@@ -87,9 +87,9 @@ final class IndexController extends Controller
         $pageSize      = (int) Preferences::get('listPageSize', 50)->data;
 
         if (!$start instanceof Carbon) {
-            $viewRange                      = Navigation::getViewRange(true);
-            $start = Navigation::startOfPeriod(today(), $viewRange);
-            $end = Navigation::endOfPeriod($start, $viewRange);
+            $viewRange = Navigation::getViewRange(true);
+            $start     = Navigation::startOfPeriod(today(), $viewRange);
+            $end       = Navigation::endOfPeriod($start, $viewRange);
         }
         if (null === $end) {
             // get last transaction ever?
