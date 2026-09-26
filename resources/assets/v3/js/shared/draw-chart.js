@@ -328,7 +328,10 @@ function drawMultiCurrencyLineChart(url, holder, anonymous, drawTodayMarker, col
                     let current = all[i];
                     let currentCurrencyCode = current.currency_code;
                     let currentEntryKey = "entries";
-                    if (window.store.get("convert_to_primary") && current.currency_code !== current.primary_currency_code) {
+                    if (
+                        window.store.get("convert_to_primary") &&
+                        current.currency_code !== current.primary_currency_code
+                    ) {
                         currentCurrencyCode = current.primary_currency_code;
                         currentEntryKey = "pc_entries";
                     }
@@ -350,7 +353,9 @@ function drawMultiCurrencyLineChart(url, holder, anonymous, drawTodayMarker, col
                                     drawTodayIndex = labelCount;
                                 }
                                 // add the label to the array
-                                data.labels.push(format(date, i18next.t("config.month_and_day_fns", { lng: locale }), locale),);
+                                data.labels.push(
+                                    format(date, i18next.t("config.month_and_day_fns", { lng: locale }), locale),
+                                );
                             }
                         }
                     }
