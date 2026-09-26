@@ -36,7 +36,7 @@
                                 </template>
                                 <th data-column="account_number_and_iban" :class="{'sortable': true, 'sortable_sorted': 'account_number_and_iban' === sortColumn, 'sortable_sorted_asc': 'asc' === sortDirection, 'sortable_sorted_desc': 'desc' === sortDirection }">{{ trans('form.account_number') }}</th>
                                 <template x-if="'liabilities' !== objectType">
-                                    <th class="text-end">{{ trans('list.currentBalance') }}</th>
+                                    <th data-column="current_balance" :class="{'text-end': true, 'sortable': true, 'sortable_sorted': 'current_balance' === sortColumn, 'sortable_sorted_asc': 'asc' === sortDirection, 'sortable_sorted_desc': 'desc' === sortDirection }">{{ trans('list.currentBalance') }}</th>
                                 </template>
                                 <template x-if="'liabilities' === objectType">
                                     <th class="text-end">
