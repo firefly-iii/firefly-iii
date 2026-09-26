@@ -24,6 +24,7 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 ### Fixed
 
 - [Issue 12878](https://github.com/firefly-iii/firefly-iii/issues/12878) (Reconciling Accounts directly from Assets Account page causes 404) reported by @DipeshAggarwal
+- #12860
 
 ### Security
 

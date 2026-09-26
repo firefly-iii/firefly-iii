@@ -55,7 +55,7 @@ export function parseFromEntries(entries, originals, transactionType) {
             // dates
             current.date = entry.date;
             if (i > 0 && !!returnArray[0]) {
-                console.log("Overrule date for entry ", i, " with ", returnArray[0].date);
+                // console.log("Overrule date for entry ", i, " with ", returnArray[0].date);
                 current.date = returnArray[0].date;
             }
 

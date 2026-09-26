@@ -21,6 +21,7 @@
 import AttachmentPost from "../../../api/model/attachment/post.js";
 
 let uploadFiles = function (fileData) {
+    // console.log('Now in uploadFiles');
     let count = fileData.length;
     let uploads = 0;
     let hasError = false;
@@ -84,17 +85,14 @@ export function processAttachments(groupId, transactions) {
     for (const key in attachments) {
         if (Object.hasOwn(attachments, key) && /^0$|^[1-9]\d*$/.test(key) && key <= 4294967294) {
             for (const fileKey in attachments[key].files) {
-                if (
-                    Object.hasOwn(attachments[key].files, fileKey) &&
-                    /^0$|^[1-9]\d*$/.test(fileKey) &&
-                    fileKey <= 4294967294
-                ) {
+                if (Object.hasOwn(attachments[key].files, fileKey) && /^0$|^[1-9]\d*$/.test(fileKey) && fileKey <= 4294967294) {
                     // include journal thing.
                     toBeUploaded.push({
                         journal: transactions[key].transaction_journal_id,
                         file: attachments[key].files[fileKey],
                     });
                     count++;
+                    // console.log('Add file to the upload array.', fileKey);
                 }
             }
         }

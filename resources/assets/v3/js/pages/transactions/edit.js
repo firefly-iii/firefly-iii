@@ -71,6 +71,7 @@ import { autoStep } from "./shared/auto-step.js";
 import { respondToTabSwitch } from "./shared/respond-to-tab-switch.js";
 import Alpine from "alpinejs";
 import focusFirstInput from "../../shared/focus-first-input.js";
+import filterForeignCurrencies from "./shared/filter-foreign-currencies.js";
 
 window.enableDates = false;
 
@@ -205,6 +206,7 @@ let transactions = function () {
         addTabListener: addTabListener,
         autoStep: autoStep,
         respondToTabSwitch: respondToTabSwitch,
+        filterForeignCurrencies: filterForeignCurrencies,
 
         // part of the account selection auto-complete
 
@@ -220,11 +222,11 @@ let transactions = function () {
         },
 
         changedDestinationAccount() {
-            console.warn("changedDestinationAccount, event is not used");
+            this.detectTransactionType();
         },
 
         changedSourceAccount() {
-            console.warn("changedSourceAccount, event is not used");
+            this.detectTransactionType();
         },
 
         getTags(index) {
@@ -287,7 +289,7 @@ let transactions = function () {
                             // the Autocomplete library and Alpine breaks for some reason.
                             tagSelect = document.getElementById("tags_" + i);
                             if (null !== tagSelect) {
-                                console.log("Is not null.");
+                                // console.log("Is not null.");
                                 for (let j in this.entries[i].tags) {
                                     if (Object.hasOwn(this.entries[i].tags, j)) {
                                         tagSelect.options.add(
@@ -345,6 +347,7 @@ let transactions = function () {
 
             // add some event listeners
             document.addEventListener("upload-success", () => {
+                // console.log('Trigger on event "upload-success"');
                 this.processUpload();
                 document.querySelectorAll("input[type=file]").forEach((input) => (input.value = ""));
             });
@@ -356,7 +359,8 @@ let transactions = function () {
 
         // TODO is a duplicate
         processUpload() {
-            this.showMessageOrRedirectUser();
+            this.formStates.storedAttachments = true;
+            this.showMessageOrRedirectUser('edit.js processUpload');
         },
 
         // submit the transaction form.
@@ -426,7 +430,7 @@ let transactions = function () {
                     }
 
                     // if not, respond to user options:
-                    this.showMessageOrRedirectUser();
+                    this.showMessageOrRedirectUser('edit.js save Put submission');
                 })
                 .catch((error) => {
                     console.error(error);

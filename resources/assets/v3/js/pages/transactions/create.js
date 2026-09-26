@@ -70,6 +70,7 @@ import { keyUpFromSource } from "./shared/keyup-from-source.js";
 import { keyUpFromDestination } from "./shared/keyup-from-destination.js";
 import { keyUpFromDescription } from "./shared/keyup-from-description.js";
 import focusFirstInput from "../../shared/focus-first-input.js";
+import filterForeignCurrencies from "./shared/filter-foreign-currencies.js";
 
 window.enableDates = false;
 
@@ -224,42 +225,7 @@ let create = function () {
         autoStep: autoStep,
         respondToTabSwitch: respondToTabSwitch,
         loadTransactionLinks: loadTransactionLinks,
-
-        filterForeignCurrencies(code) {
-            console.log('filterForeignCurrencies("' + code + '")');
-            let list = [];
-            let currency;
-            for (let i in this.formData.enabledCurrencies) {
-                if (Object.hasOwn(this.formData.enabledCurrencies, i)) {
-                    let current = this.formData.enabledCurrencies[i];
-                    if (current.code === code) {
-                        currency = current;
-                    }
-                }
-            }
-            list.push(currency);
-            this.formData.foreignCurrencies = list;
-            // is he source account currency anyway:
-            if (1 === list.length && list[0].code === this.entries[0].source_account.currency_code) {
-                // console.log(
-                //     "Foreign currency is same as source currency. Disable foreign amount.",
-                // );
-                this.formBehaviour.foreignCurrencyEnabled = false;
-            }
-            if (1 === list.length && list[0].code !== this.entries[0].source_account.currency_code) {
-                // console.log(
-                //     "Foreign currency is NOT same as source currency. Enable foreign amount.",
-                // );
-                this.formBehaviour.foreignCurrencyEnabled = true;
-            }
-
-            // this also forces the currency_code on ALL entries.
-            for (let i in this.entries) {
-                if (Object.hasOwn(this.entries, i)) {
-                    this.entries[i].foreign_currency_code = code;
-                }
-            }
-        },
+        filterForeignCurrencies: filterForeignCurrencies,
 
         addedSplit() {
             this.addAllAutocompleteToForm();
@@ -270,7 +236,7 @@ let create = function () {
         processUpload() {
             // console.log("Now in processUpload()");
             this.formStates.storedAttachments = true;
-            this.showMessageOrRedirectUser();
+            this.showMessageOrRedirectUser('create.js processUpload');
         },
         clearDescription(index) {
             this.entries[index].description = "";
@@ -312,7 +278,7 @@ let create = function () {
                         alpine_name: attributes.name,
                         // disabled: false,
                     };
-                    console.log("Now detect", field, this.entries[0][field]);
+                    // console.log("Now detect", field, this.entries[0][field]);
                     this.detectTransactionType();
                 });
                 return;
@@ -439,7 +405,7 @@ let create = function () {
                         return;
                     }
 
-                    this.showMessageOrRedirectUser();
+                    this.showMessageOrRedirectUser('save Post>then submission');
                 })
                 .catch((error) => {
                     this.formStates.isSubmitting = true;
