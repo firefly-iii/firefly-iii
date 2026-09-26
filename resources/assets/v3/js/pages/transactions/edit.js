@@ -359,7 +359,7 @@ let transactions = function () {
         // TODO is a duplicate
         processUpload() {
             this.formStates.storedAttachments = true;
-            this.showMessageOrRedirectUser('edit.js processUpload');
+            this.showMessageOrRedirectUser("edit.js processUpload");
         },
 
         // submit the transaction form.
@@ -429,7 +429,7 @@ let transactions = function () {
                     }
 
                     // if not, respond to user options:
-                    this.showMessageOrRedirectUser('edit.js save Put submission');
+                    this.showMessageOrRedirectUser("edit.js save Put submission");
                 })
                 .catch((error) => {
                     console.error(error);

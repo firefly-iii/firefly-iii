@@ -98,7 +98,9 @@ export default () => ({
                 }
                 let key = current.key;
                 if (key.startsWith("balance-in-")) {
-                    this.balanceBox.amounts.push(formatMoney(this.anonymous ? 0 : current.monetary_value, current.currency_code),);
+                    this.balanceBox.amounts.push(
+                        formatMoney(this.anonymous ? 0 : current.monetary_value, current.currency_code),
+                    );
                     continue;
                 }
                 // spent info is used in subtitle:
@@ -108,7 +110,9 @@ export default () => ({
                         subtitles[current.currency_code] = "";
                     }
                     // append the amount spent.
-                    subtitles[current.currency_code] = subtitles[current.currency_code] + formatMoney(this.anonymous ? 0 : current.monetary_value, current.currency_code);
+                    subtitles[current.currency_code] =
+                        subtitles[current.currency_code] +
+                        formatMoney(this.anonymous ? 0 : current.monetary_value, current.currency_code);
                     continue;
                 }
                 // earned info is used in subtitle:
@@ -118,12 +122,17 @@ export default () => ({
                         subtitles[current.currency_code] = "";
                     }
                     // prepend the amount earned.
-                    subtitles[current.currency_code] = formatMoney(this.anonymous ? 0 : current.monetary_value, current.currency_code) + " + " + subtitles[current.currency_code];
+                    subtitles[current.currency_code] =
+                        formatMoney(this.anonymous ? 0 : current.monetary_value, current.currency_code) +
+                        " + " +
+                        subtitles[current.currency_code];
                     continue;
                 }
 
                 if (key.startsWith("bills-unpaid-in-")) {
-                    this.billBox.unpaid.push(formatMoney(this.anonymous ? 0 : current.monetary_value, current.currency_code),);
+                    this.billBox.unpaid.push(
+                        formatMoney(this.anonymous ? 0 : current.monetary_value, current.currency_code),
+                    );
                     continue;
                 }
                 if (key.startsWith("bills-paid-in-")) {

@@ -60,7 +60,7 @@ export function detectTransactionType() {
     }
     if (["Debt", "Loan", "Mortgage"].includes(sourceType) && "Expense account" === destType) {
         this.groupProperties.transactionType = "withdrawal";
-        console.log('[c] Transaction type is detected to be "' + this.groupProperties.transactionType + '".',);
+        console.log('[c] Transaction type is detected to be "' + this.groupProperties.transactionType + '".');
         this.determineAmountCurrency(this.entries[0].source_account.account_currency_code);
         this.disableSplitInputs();
         return;
@@ -69,14 +69,14 @@ export function detectTransactionType() {
     // deposits:
     if ("Revenue account" === sourceType && ["Asset account", "Debt", "Loan", "Mortgage"].includes(destType)) {
         this.groupProperties.transactionType = "deposit";
-        console.log('Transaction type is detected to be "' + this.groupProperties.transactionType + '".',);
+        console.log('Transaction type is detected to be "' + this.groupProperties.transactionType + '".');
         this.disableSplitInputs();
         this.determineAmountCurrency(this.entries[0].destination_account.account_currency_code);
         return;
     }
     if ("unknown" === sourceType && ["Asset account", "Debt", "Loan", "Mortgage"].includes(destType)) {
         this.groupProperties.transactionType = "deposit";
-        console.log('Transaction type is detected to be "' + this.groupProperties.transactionType + '".',);
+        console.log('Transaction type is detected to be "' + this.groupProperties.transactionType + '".');
         this.determineAmountCurrency(this.entries[0].destination_account.account_currency_code);
         this.disableSplitInputs();
         return;
@@ -91,7 +91,7 @@ export function detectTransactionType() {
     }
     if (["Debt", "Loan", "Mortgage"].includes(sourceType) && "Asset account" === destType) {
         this.groupProperties.transactionType = "deposit";
-        console.log('Transaction type is detected to be "' + this.groupProperties.transactionType + '".',);
+        console.log('Transaction type is detected to be "' + this.groupProperties.transactionType + '".');
         this.determineAmountCurrency(this.entries[0].destination_account.account_currency_code);
         this.disableSplitInputs();
         return;

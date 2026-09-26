@@ -69,15 +69,15 @@ let index = function () {
             if ("inactive-accounts" === page[page.length - 2]) {
                 this.active = false;
             }
-            let defaultSortColumn = 'order';
+            let defaultSortColumn = "order";
             this.objectType = page[page.length - 1].substring(0, 15);
             this.pageNavUrl = "./accounts/" + this.objectType;
             const params = new Proxy(new URLSearchParams(window.location.search), {
                 get: (searchParams, prop) => searchParams.get(prop),
             });
 
-            if('expense' === this.objectType || 'revenue' === this.objectType) {
-                defaultSortColumn = 'name';
+            if ("expense" === this.objectType || "revenue" === this.objectType) {
+                defaultSortColumn = "name";
             }
 
             this.sortColumn = params.column ?? defaultSortColumn;
