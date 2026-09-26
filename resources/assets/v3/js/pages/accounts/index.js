@@ -69,13 +69,18 @@ let index = function () {
             if ("inactive-accounts" === page[page.length - 2]) {
                 this.active = false;
             }
-
+            let defaultSortColumn = 'order';
             this.objectType = page[page.length - 1].substring(0, 15);
             this.pageNavUrl = "./accounts/" + this.objectType;
             const params = new Proxy(new URLSearchParams(window.location.search), {
                 get: (searchParams, prop) => searchParams.get(prop),
             });
-            this.sortColumn = params.column ?? "order";
+
+            if('expense' === this.objectType || 'revenue' === this.objectType) {
+                defaultSortColumn = 'name';
+            }
+
+            this.sortColumn = params.column ?? defaultSortColumn;
             this.sortDirection = params.direction ?? "asc";
             this.page = parseInt(params.page) || 1;
 
@@ -203,7 +208,6 @@ let index = function () {
                             this.accounts.push(account);
                         }
                     }
-                    console.log("Count of accounts", this.accounts.length);
                     this.loading = false;
                     if (0 === this.accounts.length) {
                         document.querySelectorAll(".data-holder").forEach((el) => {
@@ -228,13 +232,11 @@ let index = function () {
             let link = e.currentTarget;
 
             let page = parseInt(link.dataset.page);
-            console.log("Click detected requested page ", page);
             if (isNaN(page)) {
                 e.preventDefault();
                 return false;
             }
             this.page = page;
-            console.log("Page set to ", this.page);
             this.updateHistory();
             this.downloadAccounts();
             e.preventDefault();
