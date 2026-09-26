@@ -26,6 +26,7 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 - [Issue 12878](https://github.com/firefly-iii/firefly-iii/issues/12878) (Reconciling Accounts directly from Assets Account page causes 404) reported by @DipeshAggarwal
 - [Issue 12860](https://github.com/firefly-iii/firefly-iii/issues/12860) (Not yet stored attachments, return false) reported by @Tealk
 - [Issue 12885](https://github.com/firefly-iii/firefly-iii/issues/12885) (Some fields on the Extra Information are blank when editing a transaction) reported by @rvelasq
+- #12889
 
 ### Security
 
