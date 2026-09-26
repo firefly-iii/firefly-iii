@@ -23,7 +23,7 @@
                             <span class="visually-hidden">{{ __('firefly.thinking') }}</span>
                         </div>
                     </div>
-                    <table class="table table-bordered table-valign-middle table-sm table-hover sortable">
+                    <table class="table table-valign-middle table-sm table-hover sortable">
                         <thead>
                         <tr>
                             <th data-column="order"
@@ -219,6 +219,7 @@
                                 <template x-if="'liabilities' === objectType">
                                     <td colspan="3">&nbsp;</td>
                                 </template>
+                                <template x-if="'liabilities' !== objectType">
                                 <td class="text-end">
                                     <template x-for="(sum, code) in sums">
                                         <span>
@@ -234,15 +235,58 @@
                                                     <br>
                                                 </span>
                                             </template>
-
+                                        </span>
+                                    </template>
+                                </td>
+                                </template>
+                                <template x-if="'liabilities' === objectType">
+                                    <td class="text-end">
+                                        <template x-for="(sum, code) in debts">
+                                        <span>
+                                            <template x-if="sum > 0">
+                                                <span>
+                                                <span class="money-positive" x-text="formatMoney(sum, code)"></span>
+                                                    <br>
+                                                </span>
+                                            </template>
+                                            <template x-if="sum < 0">
+                                                <span>
+                                                <span class="money-negative" x-text="formatMoney(sum, code)"></span>
+                                                    <br>
+                                                </span>
+                                            </template>
+                                        </span>
+                                        </template>
+                                    </td>
+                                </template>
+                                <td>&nbsp;</td> <!-- is active column -->
+                                <template x-if="'liabilities' !== objectType">
+                                    <td>&nbsp;</td> {{-- last activity column --}}
+                                </template>
+                                <td class="text-end">
+                                    <template x-for="(sum, code) in differences">
+                                        <span>
+                                            <template x-if="sum > 0">
+                                                <span>
+                                                <span class="money-positive" x-text="formatMoney(sum, code)"></span>
+                                                    <br>
+                                                </span>
+                                            </template>
+                                            <template x-if="sum < 0">
+                                                <span>
+                                                <span class="money-negative" x-text="formatMoney(sum, code)"></span>
+                                                    <br>
+                                                </span>
+                                            </template>
                                         </span>
                                     </template>
                                 </td>
                                 <template x-if="'liabilities' === objectType">
-                                    <td colspan="3">&nbsp;</td>
+                                    <td>&nbsp;</td>
                                 </template>
+
                                 <template x-if="'liabilities' !== objectType">
-                                    <td colspan="4">&nbsp;</td>
+                                    <td>&nbsp;</td>
                                 </template>
                             </tr>
                             </tfoot>
