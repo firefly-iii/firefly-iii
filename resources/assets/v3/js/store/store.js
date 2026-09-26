@@ -19,7 +19,7 @@
  */
 
 import engine from "store/src/store-engine";
-import storages from "store/storages/all";
 import plugins from "store/plugins/observe";
+import localStorage from "store/storages/localStorage";
 
-export default engine.createStore(storages, plugins);
+export default engine.createStore(localStorage, plugins);

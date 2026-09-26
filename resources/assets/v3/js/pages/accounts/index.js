@@ -47,21 +47,13 @@ let index = function () {
         active: true,
         pageNavUrl: "./accounts/",
         handleFunc: null,
+        storageKey: '',
 
         updateHistory() {
             if (history.pushState) {
-                let newUrl =
-                    window.location.protocol +
-                    "//" +
-                    window.location.host +
-                    window.location.pathname +
-                    "?page=" +
-                    this.page +
-                    "&column=" +
-                    this.sortColumn +
-                    "&direction=" +
-                    this.sortDirection;
+                let newUrl = window.location.protocol + "//" + window.location.host + window.location.pathname + "?page=" + this.page + "&column=" + this.sortColumn + "&direction=" + this.sortDirection;
                 window.history.pushState({ path: newUrl }, "", newUrl);
+                window.store.set(this.storageKey, { column: this.sortColumn, direction: this.sortDirection });
             }
         },
         init() {
@@ -71,7 +63,9 @@ let index = function () {
                 this.active = false;
             }
             let defaultSortColumn = "order";
+            let defaultSortDirection = 'asc';
             this.objectType = page[page.length - 1].substring(0, 15);
+            this.storageKey = 'accounts-' + this.objectType + (this.active ? '-active' : '-inactive');
             this.pageNavUrl = "./accounts/" + this.objectType;
             const params = new Proxy(new URLSearchParams(window.location.search), {
                 get: (searchParams, prop) => searchParams.get(prop),
@@ -80,9 +74,15 @@ let index = function () {
             if ("expense" === this.objectType || "revenue" === this.objectType) {
                 defaultSortColumn = "name";
             }
+            let fromStore = window.store.get(this.storageKey);
+            console.log('from store', fromStore);
+            if(fromStore) {
+                defaultSortColumn = fromStore.column;
+                defaultSortDirection = fromStore.direction;
+            }
 
             this.sortColumn = params.column ?? defaultSortColumn;
-            this.sortDirection = params.direction ?? "asc";
+            this.sortDirection = params.direction ?? defaultSortDirection;
             this.page = parseInt(params.page) || 1;
 
             // grab the account list.
