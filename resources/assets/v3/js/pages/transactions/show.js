@@ -53,7 +53,6 @@ let show = function () {
         },
         renderMaps() {
             document.querySelectorAll(".map-box").forEach((container) => {
-                const mapId = container.id;
                 const lat = parseFloat(container.dataset.latitude);
                 const lng = parseFloat(container.dataset.longitude);
                 const zoom = parseFloat(container.dataset.zoomLevel);
