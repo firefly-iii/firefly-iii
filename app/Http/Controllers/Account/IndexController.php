@@ -24,8 +24,6 @@ declare(strict_types=1);
 namespace FireflyIII\Http\Controllers\Account;
 
 use FireflyIII\Http\Controllers\Controller;
-use FireflyIII\Repositories\Account\AccountRepositoryInterface;
-use FireflyIII\Support\Http\Controllers\BasicDataSupport;
 use Illuminate\Contracts\View\Factory;
 use Illuminate\View\View;
 use Psr\Container\ContainerExceptionInterface;
@@ -36,9 +34,6 @@ use Psr\Container\NotFoundExceptionInterface;
  */
 final class IndexController extends Controller
 {
-    use BasicDataSupport;
-
-    private AccountRepositoryInterface $repository;
 
     /**
      * IndexController constructor.
@@ -51,8 +46,6 @@ final class IndexController extends Controller
         $this->middleware(function ($request, $next) {
             app('view')->share('mainTitleIcon', 'bi-credit-card');
             app('view')->share('title', (string)trans('firefly.accounts'));
-
-            $this->repository = app(AccountRepositoryInterface::class);
 
             return $next($request);
         });
@@ -93,15 +86,5 @@ final class IndexController extends Controller
             'subTitleIcon' => $subTitleIcon,
             'subTitle'     => $subTitle,
         ]);
-    }
-
-    private function subtract(array $startBalances, array $endBalances): array
-    {
-        $result = [];
-        foreach ($endBalances as $key => $value) {
-            $result[$key] = bcsub((string)$value, $startBalances[$key] ?? '0');
-        }
-
-        return $result;
     }
 }
