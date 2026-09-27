@@ -389,7 +389,9 @@
                                 <tr>
                                     <td class="w-30"> {{ __('firefly.location') }}</td>
                                     <td>
-                                        <div id="map_index_0">Map here</div>
+                                        <div class="map-box" style="height:250px;"  data-journal-id="{{ $journal['transaction_journal_id'] }}" data-zoom-level="{{ $journal['location']['zoom_level'] }}" data-latitude="{{ $journal['location']['latitude'] }}" data-longitude="{{ $journal['location']['longitude'] }}" id="map_index_{{ $journal['transaction_journal_id'] }}">
+
+                                        </div>
                                     </td>
                                 </tr>
                             @endif

@@ -38,7 +38,7 @@ let defaultChartOptions = {
         },
         tooltip: {
             interaction: {
-                mode: "x",
+                mode: "index",
             },
             callbacks: {},
         },

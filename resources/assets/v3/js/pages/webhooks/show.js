@@ -53,6 +53,7 @@ let show = function () {
         edit_url: "#",
         delete_url: "#",
         success_message: "",
+        error_message: "",
         disabledTrigger: false,
         init() {
             this.i18next = i18next;
@@ -75,15 +76,22 @@ let show = function () {
             let journalId = parseInt(prompt("Enter a transaction ID"));
             if (journalId !== null && journalId > 0 && journalId <= 16777216) {
                 this.disabledTrigger = true;
-                this.success_message = i18next.t("firefly.webhook_was_triggered");
-                new Post().triggerTransaction(this.id, journalId);
-
-                // set a time-outs.
                 this.loading = true;
-                setTimeout(() => {
-                    this.getWebhook();
-                    this.disabledTrigger = false;
-                }, 2000);
+                new Post()
+                    .triggerTransaction(this.id, journalId)
+                    .then(() => {
+                        this.success_message = i18next.t("firefly.webhook_was_triggered");
+                        this.getWebhook();
+                        this.loading = false;
+                        this.disabledTrigger = false;
+                    })
+                    .catch((e) => {
+                        this.getWebhook();
+                        this.loading = false;
+                        this.error_message = i18next.t("firefly.webhook_triggered_error") + " " + e;
+                        this.disabledTrigger = false;
+                    });
+
                 // console.log('OK 3');
             }
 

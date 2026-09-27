@@ -41,11 +41,18 @@ let index = function () {
         accounts: [],
         sortDirection: "asc",
         page: 1,
+        anonymous: false,
         totalPages: 1,
-        loading: true,
+        loadingPage: true,
+        loadingNewSort: true,
         active: true,
         pageNavUrl: "./accounts/",
         handleFunc: null,
+        storageKey: "",
+        sums: {},
+        debts: {},
+        differences: {},
+        formatMoney: formatMoney,
 
         updateHistory() {
             if (history.pushState) {
@@ -61,43 +68,56 @@ let index = function () {
                     "&direction=" +
                     this.sortDirection;
                 window.history.pushState({ path: newUrl }, "", newUrl);
+                window.store.set(this.storageKey, { column: this.sortColumn, direction: this.sortDirection });
             }
         },
         init() {
+            this.anonymous = window.store.get("anonymous");
             this.handleFunc = this.handlePageClick.bind(this);
             const page = window.location.href.split("?")[0].split("/");
             if ("inactive-accounts" === page[page.length - 2]) {
                 this.active = false;
             }
-            let defaultSortColumn = 'order';
+            let defaultSortColumn = "order";
+            let defaultSortDirection = "asc";
             this.objectType = page[page.length - 1].substring(0, 15);
+            this.storageKey = "accounts-" + this.objectType + (this.active ? "-active" : "-inactive");
             this.pageNavUrl = "./accounts/" + this.objectType;
             const params = new Proxy(new URLSearchParams(window.location.search), {
                 get: (searchParams, prop) => searchParams.get(prop),
             });
 
-            if('expense' === this.objectType || 'revenue' === this.objectType) {
-                defaultSortColumn = 'name';
+            if ("expense" === this.objectType || "revenue" === this.objectType) {
+                defaultSortColumn = "name";
+            }
+            let fromStore = window.store.get(this.storageKey);
+            console.log("from store", fromStore);
+            if (fromStore) {
+                defaultSortColumn = fromStore.column;
+                defaultSortDirection = fromStore.direction;
             }
 
             this.sortColumn = params.column ?? defaultSortColumn;
-            this.sortDirection = params.direction ?? "asc";
+            this.sortDirection = params.direction ?? defaultSortDirection;
             this.page = parseInt(params.page) || 1;
 
             // grab the account list.
             this.downloadAccounts();
             // get accounts by initial sort.
-            document.querySelectorAll("table.sortable th").forEach((el) => {
-                el.addEventListener("click", (event) => {
-                    let newColumn = event.currentTarget.dataset.column;
-                    if (newColumn === this.sortColumn) {
-                        this.sortDirection = "asc" === this.sortDirection ? "desc" : "asc";
-                    }
-                    if (newColumn !== this.sortColumn) {
-                        this.sortColumn = newColumn;
-                    }
-                    this.updateHistory();
-                    this.downloadAccounts();
+            document.addEventListener("alpine:initialized", () => {
+                document.querySelectorAll("table.sortable th.sortable").forEach((el) => {
+                    el.addEventListener("click", (event) => {
+                        let newColumn = event.currentTarget.dataset.column;
+                        if (newColumn === this.sortColumn) {
+                            this.sortDirection = "asc" === this.sortDirection ? "desc" : "asc";
+                        }
+                        if (newColumn !== this.sortColumn) {
+                            this.sortColumn = newColumn;
+                        }
+                        console.log("New sort instructions", this.sortColumn, this.sortDirection);
+                        this.updateHistory();
+                        this.downloadAccounts();
+                    });
                 });
             });
             getVariable("listPageSize").then((listPageSize) => {
@@ -121,9 +141,11 @@ let index = function () {
             });
         },
         downloadAccounts() {
+            this.loadingNewSort = true;
             let sort = "asc" === this.sortDirection ? this.sortColumn : "-" + this.sortColumn;
             let start = window.store.get("start");
             let end = window.store.get("end");
+            let convertToPrimary = window.store.get("convert_to_primary");
             new Get()
                 .list({
                     active: this.active,
@@ -135,43 +157,86 @@ let index = function () {
                 })
                 .then((response) => {
                     this.accounts = [];
+                    this.sums = {};
+                    this.debts = {};
+                    this.differences = {};
                     this.totalPages = parseInt(response.data.meta.pagination.total_pages);
                     for (let i = 0; i < response.data.data.length; i++) {
                         if (Object.hasOwn(response.data.data, i)) {
                             let current = response.data.data[i];
+
+                            // collect sums, debts and differences for each account (in primary or not):
+                            this.sums[current.attributes.currency_code] =
+                                this.sums[current.attributes.currency_code] || 0;
+                            this.sums[current.attributes.primary_currency_code] =
+                                this.sums[current.attributes.primary_currency_code] || 0;
+                            this.debts[current.attributes.currency_code] =
+                                this.debts[current.attributes.currency_code] || 0;
+                            this.debts[current.attributes.primary_currency_code] =
+                                this.debts[current.attributes.primary_currency_code] || 0;
+                            this.differences[current.attributes.currency_code] =
+                                this.differences[current.attributes.currency_code] || 0;
+                            this.differences[current.attributes.primary_currency_code] =
+                                this.differences[current.attributes.primary_currency_code] || 0;
+
+                            // overrule some amounts, set them to zero when "this.anonymous" is true.
+                            if (this.anonymous) {
+                                current.attributes.balance_difference = "0";
+                                current.attributes.current_balance = "0";
+                                current.attributes.debt_amount = "0";
+                                current.attributes.pc_balance_difference = "0";
+                                current.attributes.pc_current_balance = "0";
+                                current.attributes.pc_debt_amount = "0";
+                            }
+
                             let balanceDifference = formatMoney(
                                 current.attributes.balance_difference,
                                 current.attributes.currency_code,
                                 true,
                             );
                             let balanceDiffFloat = parseFloat(current.attributes.balance_difference);
+
                             let currentBalance = formatMoney(
                                 current.attributes.current_balance,
                                 current.attributes.currency_code,
                             );
                             let currentBalanceFloat = parseFloat(current.attributes.current_balance);
+
                             let currentDebt = formatMoney(
                                 current.attributes.debt_amount,
                                 current.attributes.currency_code,
                             );
                             let currentDebtFloat = parseFloat(current.attributes.debt_amount);
-                            if (window.store.get("convert_to_primary")) {
+
+                            // this.sums[current.attributes.currency_code] += currentBalanceFloat;
+                            if (!convertToPrimary) {
+                                this.sums[current.attributes.currency_code] += currentBalanceFloat;
+                                this.debts[current.attributes.currency_code] += currentDebtFloat;
+                                this.differences[current.attributes.currency_code] += balanceDiffFloat;
+                            }
+                            if (convertToPrimary) {
                                 balanceDifference = formatMoney(
                                     current.attributes.pc_balance_difference,
                                     current.attributes.primary_currency_code,
                                     true,
                                 );
                                 balanceDiffFloat = parseFloat(current.attributes.pc_balance_difference);
+
                                 currentBalance = formatMoney(
                                     current.attributes.pc_current_balance,
                                     current.attributes.primary_currency_code,
                                 );
                                 currentBalanceFloat = parseFloat(current.attributes.pc_current_balance);
+
                                 currentDebt = formatMoney(
                                     current.attributes.pc_debt_amount,
                                     current.attributes.primary_currency_code,
                                 );
                                 currentDebtFloat = parseFloat(current.attributes.pc_debt_amount);
+
+                                this.sums[current.attributes.primary_currency_code] += currentBalanceFloat;
+                                this.debts[current.attributes.primary_currency_code] += currentDebtFloat;
+                                this.differences[current.attributes.primary_currency_code] += balanceDiffFloat;
                             }
                             let lastActivity = this.formatDate(current.attributes.last_activity);
                             let noLastActivity = false;
@@ -208,7 +273,8 @@ let index = function () {
                             this.accounts.push(account);
                         }
                     }
-                    this.loading = false;
+                    this.loadingPage = false;
+                    this.loadingNewSort = false;
                     if (0 === this.accounts.length) {
                         document.querySelectorAll(".data-holder").forEach((el) => {
                             el.classList.add("d-none");

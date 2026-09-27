@@ -20,17 +20,18 @@
 
 import i18next from "i18next";
 
-export function showMessageOrRedirectUser() {
+export function showMessageOrRedirectUser(sourceOfCall) {
+    console.log('Called showMessageOrRedirectUser("' + sourceOfCall + '")');
     if (false === this.formStates.storedGroup) {
-        console.error("Not yet stored group, return false.");
+        console.warn("The transaction group is not yet stored, return and do nothing.");
         return;
     }
     if (false === this.formStates.storedAttachments) {
-        console.error("Not yet stored attachments, return false.");
+        console.warn("Attachment(s) is/are not yet stored, return and do nothing.");
         return;
     }
     if (false === this.formStates.storedLinks) {
-        console.error("Not yet stored links, return false.");
+        console.warn("The transaction link(s) is/are not yet stored, return and do nothing.");
         return;
     }
     // disable all messages:

@@ -45,10 +45,10 @@ export function loadSubscriptions(includeInactive) {
         for (let i in response.data.data) {
             if (Object.hasOwn(response.data.data, i)) {
                 let current = response.data.data[i];
-                let objectGroupId = current.attributes.object_group_id ?? "0";
+                let objectGroupId = parseInt(current.attributes.object_group_id ?? "0");
                 let objectGroupTitle = current.attributes.object_group_title ?? "(no group)";
                 let subscription = {
-                    id: current.id,
+                    id: parseInt(current.id),
                     name: current.attributes.active
                         ? current.attributes.name
                         : current.attributes.name + " (" + i18next.t("firefly.inactive").toLowerCase() + ")",

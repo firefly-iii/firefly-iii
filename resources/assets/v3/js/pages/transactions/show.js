@@ -26,6 +26,11 @@ import Get from "../../api/model/transaction/get.js";
 import { format } from "date-fns";
 import Alpine from "alpinejs";
 import "bootstrap";
+import L from "leaflet";
+import "leaflet/dist/leaflet.css";
+import markerIcon from "leaflet/dist/images/marker-icon.png";
+import markerRetinaIcon from "leaflet/dist/images/marker-icon-2x.png";
+import shadow from "leaflet/dist/images/marker-shadow.png";
 
 window.enableDates = false;
 
@@ -44,6 +49,34 @@ let show = function () {
             const page = window.location.href.split("/");
             this.group.id = parseInt(page[page.length - 1]);
             this.downloadTransactionGroup();
+            this.renderMaps();
+        },
+        renderMaps() {
+            document.querySelectorAll(".map-box").forEach((container) => {
+                const lat = parseFloat(container.dataset.latitude);
+                const lng = parseFloat(container.dataset.longitude);
+                const zoom = parseFloat(container.dataset.zoomLevel);
+
+                const map = L.map(container).setView([lat, lng], zoom);
+
+                L.tileLayer("https://tile.openstreetmap.org/{z}/{x}/{y}.png", {
+                    maxZoom: 19,
+                    referrerPolicy: "origin-when-cross-origin",
+                    attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>',
+                }).addTo(map);
+
+                L.Marker.prototype.setIcon(
+                    L.icon({
+                        iconUrl: markerIcon,
+                        iconRetinaIcon: markerRetinaIcon,
+                        shadowUrl: shadow,
+                        iconSize: [25, 41],
+                        iconAnchor: [12, 41],
+                    }),
+                );
+
+                L.marker([lat, lng]).addTo(map);
+            });
         },
         downloadTransactionGroup() {
             let locale = window.store.get("locale");

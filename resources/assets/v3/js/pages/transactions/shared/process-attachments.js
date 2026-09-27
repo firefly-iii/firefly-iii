@@ -21,6 +21,7 @@
 import AttachmentPost from "../../../api/model/attachment/post.js";
 
 let uploadFiles = function (fileData) {
+    // console.log('Now in uploadFiles');
     let count = fileData.length;
     let uploads = 0;
     let hasError = false;
@@ -95,6 +96,7 @@ export function processAttachments(groupId, transactions) {
                         file: attachments[key].files[fileKey],
                     });
                     count++;
+                    // console.log('Add file to the upload array.', fileKey);
                 }
             }
         }

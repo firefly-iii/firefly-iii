@@ -84,11 +84,11 @@ final class ShowController extends Controller
         $this->repository->resetAccountOrder();
         $collection  = $this->repository->getAccountsByType($types, $sort, $active);
         $count       = $collection->count();
-
-        // continue sort:
-        // TODO if the user sorts on DB dependent field there must be no slice before enrichment, only after.
-        // TODO still need to figure out how to do this easily.
-        $accounts    = $collection->slice($offset, $limit);
+        $dbFields    = $this->isAllDatabaseSort($sort, 'Account');
+        $accounts    = $collection;
+        if ($dbFields) {
+            $accounts = $collection->slice($offset, $limit);
+        }
 
         // enrich
         /** @var User $admin */
@@ -100,6 +100,11 @@ final class ShowController extends Controller
         $enrichment->setEnd($end);
         $enrichment->setUser($admin);
         $accounts    = $enrichment->enrich($accounts);
+
+        if (!$dbFields) {
+            // now do the slicing.
+            $accounts = $accounts->slice($offset, $limit);
+        }
 
         // make paginator:
         $paginator   = new LengthAwarePaginator($accounts, $count, $limit, $page);
@@ -143,5 +148,24 @@ final class ShowController extends Controller
         $resource                                           = new Item($account, $transformer, self::RESOURCE_KEY);
 
         return response()->json($manager->createData($resource)->toArray())->header('Content-Type', self::CONTENT_TYPE);
+    }
+
+    private function isAllDatabaseSort(array $instructions, string $model): bool
+    {
+        if (0 === count($instructions)) {
+            return true;
+        }
+        $config = config(sprintf('firefly.allowed_db_sort_parameters.%s', $model));
+        if (null === $config) {
+            return true;
+        }
+        foreach ($instructions as $item) {
+            $field = $item[0];
+            if (!in_array($field, $config, true)) {
+                return false;
+            }
+        }
+
+        return true;
     }
 }
