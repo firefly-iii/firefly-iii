@@ -34,7 +34,6 @@ use Psr\Container\NotFoundExceptionInterface;
  */
 final class IndexController extends Controller
 {
-
     /**
      * IndexController constructor.
      */
@@ -45,7 +44,7 @@ final class IndexController extends Controller
         // translations:
         $this->middleware(function ($request, $next) {
             app('view')->share('mainTitleIcon', 'bi-credit-card');
-            app('view')->share('title', (string)trans('firefly.accounts'));
+            app('view')->share('title', (string) trans('firefly.accounts'));
 
             return $next($request);
         });
@@ -57,9 +56,9 @@ final class IndexController extends Controller
      * @throws ContainerExceptionInterface
      * @throws NotFoundExceptionInterface
      */
-    public function inactive(string $objectType): Factory | \Illuminate\Contracts\View\View
+    public function inactive(string $objectType): Factory|\Illuminate\Contracts\View\View
     {
-        $subTitle     = (string)trans(sprintf('firefly.%s_accounts_inactive', $objectType));
+        $subTitle     = (string) trans(sprintf('firefly.%s_accounts_inactive', $objectType));
         $subTitleIcon = config(sprintf('firefly.subIconsByIdentifier.%s', $objectType));
 
         return view('accounts.index', [
@@ -77,10 +76,11 @@ final class IndexController extends Controller
      * @throws ContainerExceptionInterface
      * @throws NotFoundExceptionInterface
      */
-    public function index(string $objectType): Factory | \Illuminate\Contracts\View\View
+    public function index(string $objectType): Factory|\Illuminate\Contracts\View\View
     {
-        $subTitle     = (string)trans(sprintf('firefly.%s_accounts', $objectType));
+        $subTitle     = (string) trans(sprintf('firefly.%s_accounts', $objectType));
         $subTitleIcon = config(sprintf('firefly.subIconsByIdentifier.%s', $objectType));
+
         return view('accounts.index', [
             'objectType'   => $objectType,
             'subTitleIcon' => $subTitleIcon,

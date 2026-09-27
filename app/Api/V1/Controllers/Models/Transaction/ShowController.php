@@ -122,7 +122,8 @@ final class ShowController extends Controller
             // all info needed for the API:
             ->withAPIInformation()
         ;
-        /** @var TransactionGroup|null $selectedGroup */
+
+        /** @var null|TransactionGroup $selectedGroup */
         $selectedGroup = $collector->getGroups()->first();
         if (null === $selectedGroup) {
             throw new NotFoundHttpException();

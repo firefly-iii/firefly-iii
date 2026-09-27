@@ -13,7 +13,7 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 - [Issue 12860](https://github.com/firefly-iii/firefly-iii/issues/12860) (Not yet stored attachments, return false) reported by @Tealk
 - [Issue 12885](https://github.com/firefly-iii/firefly-iii/issues/12885) (Some fields on the Extra Information are blank when editing a transaction) reported by @rvelasq
 - [Issue 12889](https://github.com/firefly-iii/firefly-iii/issues/12889) (Dashboard 'Your Accounts' graph repeats accounts) reported by @PAS-BC
-- #12897 
+- [Issue 12897](https://github.com/firefly-iii/firefly-iii/issues/12897) (Edit transaction form shows the first subscription, when the transaction has no subscription.) reported by @dfensom 
 
 ### Security
 
