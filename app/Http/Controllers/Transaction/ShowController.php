@@ -105,7 +105,6 @@ final class ShowController extends Controller
         $enrichment                    = new TransactionGroupEnrichment();
         $enrichment->setUser($admin);
         $selectedGroup                 = $enrichment->enrichSingle($selectedGroup);
-
         $splits                        = count($selectedGroup['transactions']);
         $keys                          = array_keys($selectedGroup['transactions']);
         $first                         = $selectedGroup['transactions'][array_shift($keys)];

@@ -122,7 +122,7 @@ final class ShowController extends Controller
             // all info needed for the API:
             ->withAPIInformation()
         ;
-
+        /** @var TransactionGroup|null $selectedGroup */
         $selectedGroup = $collector->getGroups()->first();
         if (null === $selectedGroup) {
             throw new NotFoundHttpException();
@@ -135,7 +135,6 @@ final class ShowController extends Controller
 
         /** @var TransactionGroupTransformer $transformer */
         $transformer   = app(TransactionGroupTransformer::class);
-        $transformer->setParameters($this->parameters);
         $resource      = new Item($selectedGroup, $transformer, 'transactions');
 
         return response()->json($manager->createData($resource)->toArray())->header('Content-Type', self::CONTENT_TYPE);
