@@ -41,6 +41,7 @@ let index = function () {
         accounts: [],
         sortDirection: "asc",
         page: 1,
+        anonymous: false,
         totalPages: 1,
         loadingPage: true,
         loadingNewSort: true,
@@ -71,6 +72,7 @@ let index = function () {
             }
         },
         init() {
+            this.anonymous = window.store.get('anonymous');
             this.handleFunc = this.handlePageClick.bind(this);
             const page = window.location.href.split("?")[0].split("/");
             if ("inactive-accounts" === page[page.length - 2]) {
@@ -164,36 +166,32 @@ let index = function () {
                             let current = response.data.data[i];
 
                             // collect sums, debts and differences for each account (in primary or not):
-                            this.sums[current.attributes.currency_code] =
-                                this.sums[current.attributes.currency_code] || 0;
-                            this.sums[current.attributes.primary_currency_code] =
-                                this.sums[current.attributes.primary_currency_code] || 0;
-                            this.debts[current.attributes.currency_code] =
-                                this.debts[current.attributes.currency_code] || 0;
-                            this.debts[current.attributes.primary_currency_code] =
-                                this.debts[current.attributes.primary_currency_code] || 0;
-                            this.differences[current.attributes.currency_code] =
-                                this.differences[current.attributes.currency_code] || 0;
-                            this.differences[current.attributes.primary_currency_code] =
-                                this.differences[current.attributes.primary_currency_code] || 0;
+                            this.sums[current.attributes.currency_code] = this.sums[current.attributes.currency_code] || 0;
+                            this.sums[current.attributes.primary_currency_code] = this.sums[current.attributes.primary_currency_code] || 0;
+                            this.debts[current.attributes.currency_code] = this.debts[current.attributes.currency_code] || 0;
+                            this.debts[current.attributes.primary_currency_code] = this.debts[current.attributes.primary_currency_code] || 0;
+                            this.differences[current.attributes.currency_code] = this.differences[current.attributes.currency_code] || 0;
+                            this.differences[current.attributes.primary_currency_code] = this.differences[current.attributes.primary_currency_code] || 0;
 
-                            let balanceDifference = formatMoney(
-                                current.attributes.balance_difference,
-                                current.attributes.currency_code,
-                                true,
-                            );
+                            // overrule some amounts, set them to zero when "this.anonymous" is true.
+                            if (this.anonymous) {
+                                current.attributes.balance_difference = '0';
+                                current.attributes.current_balance = '0';
+                                current.attributes.debt_amount = '0';
+                                current.attributes.pc_balance_difference = '0';
+                                current.attributes.pc_current_balance = '0';
+                                current.attributes.pc_debt_amount = '0';
+                            }
+
+
+
+                            let balanceDifference = formatMoney(current.attributes.balance_difference, current.attributes.currency_code, true,);
                             let balanceDiffFloat = parseFloat(current.attributes.balance_difference);
 
-                            let currentBalance = formatMoney(
-                                current.attributes.current_balance,
-                                current.attributes.currency_code,
-                            );
+                            let currentBalance = formatMoney(current.attributes.current_balance, current.attributes.currency_code,);
                             let currentBalanceFloat = parseFloat(current.attributes.current_balance);
 
-                            let currentDebt = formatMoney(
-                                current.attributes.debt_amount,
-                                current.attributes.currency_code,
-                            );
+                            let currentDebt = formatMoney(current.attributes.debt_amount, current.attributes.currency_code,);
                             let currentDebtFloat = parseFloat(current.attributes.debt_amount);
 
                             // this.sums[current.attributes.currency_code] += currentBalanceFloat;

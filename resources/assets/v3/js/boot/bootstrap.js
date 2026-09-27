@@ -56,7 +56,7 @@ getFreshVariable("lastActivity")
         // console.log('Cache valid:  ' + (localValue === serverValue));
     })
     .then(() => {
-        Promise.resolve(getVariables(["viewRange", "darkMode", "locale", "language", "convert_to_primary"])).then(
+        Promise.resolve(getVariables(["viewRange","anonymous", "darkMode", "locale", "language", "convert_to_primary"])).then(
             (values) => {
                 const range = getViewRange(values.viewRange, new Date());
                 if (!store.get("start") || !store.get("end")) {
@@ -68,6 +68,7 @@ getFreshVariable("lastActivity")
                 store.set("viewRange", values.viewRange);
                 store.set("defaultStart", range.start);
                 store.set("defaultEnd", range.end);
+                store.set("anonymous", values.anonymous);
                 //
                 if ("equal" === values.locale) {
                     values.locale = values.language;
