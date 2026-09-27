@@ -3,23 +3,9 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
-## v6.7.5 - 2026-09-xx
+## v6.7.5 - 2026-09-28
 
-### Added
-
-- Initial release.
-
-### Changed
-
-- Initial release.
-
-### Deprecated
-
-- Initial release.
-
-### Removed
-
-- Initial release.
+<!-- summary: This release fixes various bugs in the new layout and picks up a security fix for  possible MFA bypass -->
 
 ### Fixed
 
@@ -27,14 +13,11 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 - [Issue 12860](https://github.com/firefly-iii/firefly-iii/issues/12860) (Not yet stored attachments, return false) reported by @Tealk
 - [Issue 12885](https://github.com/firefly-iii/firefly-iii/issues/12885) (Some fields on the Extra Information are blank when editing a transaction) reported by @rvelasq
 - [Issue 12889](https://github.com/firefly-iii/firefly-iii/issues/12889) (Dashboard 'Your Accounts' graph repeats accounts) reported by @PAS-BC
+- #12897 
 
 ### Security
 
-- Initial release.
-
-### API
-
-- Initial release.
+- If you have a username password combination AND a client ID, you can bypass the MFA, found by Muhamad Luis Zaenudin.
 
 ## v6.7.4 - 2026-09-26
 

@@ -32,7 +32,7 @@ export function parseDownloadedSplits(downloads, groupId) {
             // meta data
             current.transaction_journal_id = parseInt(download.transaction_journal_id);
             current.transaction_group_id = groupId;
-            current.bill_id = download.bill_id;
+            current.bill_id = null === download.bill_id ? 0 : parseInt(download.bill_id);
             current.bill_name = download.bill_name;
             current.budget_id = download.budget_id;
             current.budget_name = download.budget_name;

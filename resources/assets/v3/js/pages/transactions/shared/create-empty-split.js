@@ -93,7 +93,7 @@ export function createEmptySplit() {
         budget_id: null,
         category_name: "",
         piggy_bank_id: null,
-        bill_id: null,
+        bill_id: 0,
         tags: [],
         notes: "",
 
