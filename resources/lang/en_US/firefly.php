@@ -285,7 +285,7 @@ return [
     'edit_webhook_js'                                     => 'Edit webhook "{title}"',
     'show_webhook'                                        => 'Webhook ":title"',
     'webhook_was_triggered'                               => 'The webhook was triggered on the indicated transaction. Please wait for results to appear.',
-    'webhook_triggered_error' => 'The webhook could not be triggered.',
+    'webhook_triggered_error'                             => 'The webhook could not be triggered.',
     'webhook_messages'                                    => 'Webhook message',
     'view_message'                                        => 'View message',
     'view_attempts'                                       => 'View failed attempts',

@@ -76,7 +76,6 @@ let show = function () {
                 );
 
                 L.marker([lat, lng]).addTo(map);
-
             });
         },
         downloadTransactionGroup() {
