@@ -3,6 +3,14 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
+## v6.7.6 - 2026-09-28
+
+### Fixed
+
+- #12908
+
+
+
 ## v6.7.5 - 2026-09-28
 
 <!-- summary: This release fixes various bugs in the new layout and picks up a security fix for  possible MFA bypass -->

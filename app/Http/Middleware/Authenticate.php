@@ -86,7 +86,6 @@ class Authenticate
                 Log::debug('User is authenticated.');
                 $user = auth()->user();
                 $this->validateBlockedUser($user, $guards);
-
                 return;
             }
             // @noinspection PhpUndefinedMethodInspection
