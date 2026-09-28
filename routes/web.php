@@ -35,11 +35,12 @@ Route::group(
         'as'         => 'passport.',
         'prefix'     => 'oauth',
         'middleware' => ['2fa-check'],
-        'namespace' => 'Laravel\Passport\Http\Controllers',
-        ],
-        function (): void {
-            Route::get('/authorize', ['uses' => 'AuthorizationController@authorize', 'as' => 'authorizations.authorize']);
-        });
+        'namespace'  => 'Laravel\Passport\Http\Controllers',
+    ],
+    function (): void {
+        Route::get('/authorize', ['uses' => 'AuthorizationController@authorize', 'as' => 'authorizations.authorize']);
+    }
+);
 
 
 Route::group(
@@ -51,7 +52,7 @@ Route::group(
     ],
     function (): void {
         // routes with no extra middleware
-//         Route::post('/token', ['uses' => '\Laravel\Passport\Http\Controllers\AccessTokenController@issueToken', 'as' => 'token', 'middleware' => 'throttle']);
+        //         Route::post('/token', ['uses' => '\Laravel\Passport\Http\Controllers\AccessTokenController@issueToken', 'as' => 'token', 'middleware' => 'throttle']);
 
         // personal access tokens:
         Route::post('/personal-access-tokens', ['uses' => 'FireflyIII\Http\Controllers\Profile\OAuthController@storePersonalAccessToken', 'as'   => 'personal.tokens.store']);

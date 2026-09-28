@@ -7,7 +7,7 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 
 ### Fixed
 
-- #12908
+- [Issue 12908](https://github.com/firefly-iii/firefly-iii/issues/12908) (OAuth redirect breaks due to broken function call) reported by @OutOfSpoons
 
 ## v6.7.5 - 2026-09-28
 
