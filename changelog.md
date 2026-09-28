@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
+## v6.7.6 - 2026-09-28
+
+### Fixed
+
+- [Issue 12908](https://github.com/firefly-iii/firefly-iii/issues/12908) (OAuth redirect breaks due to broken function call) reported by @OutOfSpoons
+
 ## v6.7.5 - 2026-09-28
 
 <!-- summary: This release fixes various bugs in the new layout and picks up a security fix for  possible MFA bypass -->

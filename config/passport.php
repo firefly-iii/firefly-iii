@@ -58,7 +58,7 @@ return [
         'secret' => env('PASSPORT_PERSONAL_ACCESS_CLIENT_SECRET'),
     ],
 
-    'middleware'             => ['web', 'user-full-auth'],
+    'middleware'             => [],
     'connection'             => env('PASSPORT_CONNECTION'),
 
 ];

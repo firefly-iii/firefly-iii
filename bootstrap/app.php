@@ -65,7 +65,6 @@ use PragmaRX\Google2FALaravel\Middleware as MFAMiddleware;
 bcscale(12);
 
 
-
 $app = Application::configure(basePath: dirname(__DIR__))
                   ->withRouting(
                       web     : __DIR__ . '/../routes/web.php',
@@ -114,7 +113,7 @@ $app = Application::configure(basePath: dirname(__DIR__))
                                              'auth:api',
                                              Binder::class,
                                              CatchBlockedUsers::class,
-                          ]
+                                         ]
                       );
                       $middleware->appendToGroup('api_basic', [AcceptHeaders::class, Binder::class]);
 
@@ -135,6 +134,10 @@ $app = Application::configure(basePath: dirname(__DIR__))
                           Range::class,
                           InterestingMessage::class,
                       ]);
+                      $middleware->appendToGroup('2fa-check', [
+                          Authenticate::class,
+                          MFAMiddleware::class,
+                      ]);
                       // This middleware is added to ensure that the user is not only logged in and
                       // authenticated (with MFA and everything), but also admin.
                       $middleware->appendToGroup('api-admin', [
@@ -143,7 +146,7 @@ $app = Application::configure(basePath: dirname(__DIR__))
                       $middleware->appendToGroup('admin', [
                           IsAdmin::class,
                           Range::class,
-                          InterestingMessage::class
+                          InterestingMessage::class,
                       ]);
 
                       // if the user is not logged in, this group applies.
