@@ -52,7 +52,10 @@ $primary: #1e6581; // original
 @import "shepherd.js/dist/css/shepherd.css";
 
 // for sortable tables
-table.sortable thead th.sortable {
+table.sortable thead th.sortable span {
+    cursor: pointer;
+}
+.search-button {
     cursor: pointer;
 }
 table.sortable th.sortable.sortable_sorted.sortable_sorted_asc:after {

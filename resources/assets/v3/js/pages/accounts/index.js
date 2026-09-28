@@ -22,14 +22,14 @@ import "../../boot/bootstrap.js";
 import sidebar from "../shared/sidebar.js";
 import dates from "../shared/dates.js";
 import Alpine from "alpinejs";
-import { getVariable } from "../../store/get-variable.js";
+import {getVariable} from "../../store/get-variable.js";
 import Put from "../../api/model/account/put.js";
 import Get from "../../api/model/account/get.js";
-import { format } from "date-fns";
+import {format} from "date-fns";
 import formatMoney from "../../util/format-money.js";
 import i18next from "i18next";
-import { addDrag } from "../shared/drag-and-droppable-rows.js";
-import { nextTick } from "alpinejs/src/nextTick.js";
+import {addDrag} from "../shared/drag-and-droppable-rows.js";
+import {nextTick} from "alpinejs/src/nextTick.js";
 
 window.enableDates = false;
 
@@ -67,8 +67,8 @@ let index = function () {
                     this.sortColumn +
                     "&direction=" +
                     this.sortDirection;
-                window.history.pushState({ path: newUrl }, "", newUrl);
-                window.store.set(this.storageKey, { column: this.sortColumn, direction: this.sortDirection });
+                window.history.pushState({path: newUrl}, "", newUrl);
+                window.store.set(this.storageKey, {column: this.sortColumn, direction: this.sortDirection});
             }
         },
         init() {
@@ -105,9 +105,11 @@ let index = function () {
             this.downloadAccounts();
             // get accounts by initial sort.
             document.addEventListener("alpine:initialized", () => {
-                document.querySelectorAll("table.sortable th.sortable").forEach((el) => {
+                // add sortable click events.
+                document.querySelectorAll("table.sortable th.sortable span.title").forEach((el) => {
                     el.addEventListener("click", (event) => {
-                        let newColumn = event.currentTarget.dataset.column;
+                        let parent = event.currentTarget.parentNode;
+                        let newColumn = parent.dataset.column;
                         if (newColumn === this.sortColumn) {
                             this.sortDirection = "asc" === this.sortDirection ? "desc" : "asc";
                         }
@@ -119,7 +121,43 @@ let index = function () {
                         this.downloadAccounts();
                     });
                 });
+
+                // hide search again
+                document.querySelectorAll("table.sortable .hide-button").forEach((el) => {
+                    el.addEventListener("click", (event) => {
+                        let column = el.dataset.column;
+                        // show search input again
+                        document.querySelector(`span.title[data-column="${column}"]`).classList.remove('d-none');
+                        document.querySelector(`span.search-spacer[data-column="${column}"]`).classList.remove('d-none');
+                        document.querySelector(`em.search-button[data-column="${column}"]`).classList.remove('d-none');
+                        document.querySelector(`div.search-filter[data-column="${column}"] input`).value = '';
+
+                        let input = document.querySelector(`div.search-filter[data-column="${column}"]`);
+                        input.classList.add('d-none');
+
+                        // TODO also clear the search filter!!!!
+                    });
+                });
+
+                // add filterable click events.
+                document.querySelectorAll("table.sortable .search-button").forEach((el) => {
+                        el.addEventListener("click", (event) => {
+                        let column = el.dataset.column;
+                        // hide search buttons etc.
+                        el.classList.add('d-none');
+                        document.querySelector(`span.title[data-column="${column}"]`).classList.add('d-none');
+                        document.querySelector(`span.search-spacer[data-column="${column}"]`).classList.add('d-none');
+
+                        // show search input
+                        let input = document.querySelector(`div.search-filter[data-column="${column}"]`);
+                        input.classList.remove('d-none');
+                        input.querySelector('input').focus();
+                    });
+                });
+
             });
+
+
             getVariable("listPageSize").then((listPageSize) => {
                 this.listPageSize = listPageSize;
                 addDrag();
@@ -129,7 +167,7 @@ let index = function () {
                             let item = e.detail[i];
                             if (item.order !== item.currentOrder) {
                                 // PUT new order to system.
-                                new Put().put({ order: item.order }, { id: item.id });
+                                new Put().put({order: item.order}, {id: item.id});
                                 // save new order as current order in the row.
                                 document
                                     .querySelector(`tr[data-id="${item.id}"]`)
@@ -292,7 +330,7 @@ let index = function () {
             if (null === date) {
                 return "";
             }
-            return format(new Date(date), i18next.t("config.date_time_fns_short", { lng: window.store.get("locale") }));
+            return format(new Date(date), i18next.t("config.date_time_fns_short", {lng: window.store.get("locale")}));
         },
         handlePageClick(e) {
             let link = e.currentTarget;
