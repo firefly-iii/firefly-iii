@@ -124,7 +124,7 @@ let index = function () {
 
                 // hide search again
                 document.querySelectorAll("table.sortable .hide-button").forEach((el) => {
-                    el.addEventListener("click", (event) => {
+                    el.addEventListener("click", () => {
                         let column = el.dataset.column;
                         // show search input again
                         document.querySelector(`span.title[data-column="${column}"]`).classList.remove('d-none');
@@ -141,7 +141,7 @@ let index = function () {
 
                 // add filterable click events.
                 document.querySelectorAll("table.sortable .search-button").forEach((el) => {
-                        el.addEventListener("click", (event) => {
+                        el.addEventListener("click", () => {
                         let column = el.dataset.column;
                         // hide search buttons etc.
                         el.classList.add('d-none');
