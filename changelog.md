@@ -9,8 +9,6 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 
 - #12908
 
-
-
 ## v6.7.5 - 2026-09-28
 
 <!-- summary: This release fixes various bugs in the new layout and picks up a security fix for  possible MFA bypass -->
