@@ -62,6 +62,5 @@ class IsValidFilterInstruction implements ValidationRule
                 return;
             }
         }
-
     }
 }
