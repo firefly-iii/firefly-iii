@@ -23,7 +23,7 @@
                x-bind:disabled="true===transaction.destination_account.disabled"
                x-bind:readonly="true===transaction.destination_account.disabled"
                placeholder="{{ __('firefly.destination_account')  }}">
-            <button tabindex="-1" class="btn btn-outline-secondary" type="button" @click="clearDestinationAccount(index)"><em class="bi bi-trash"></em></button>
+            <button x-bind:disabled="true===transaction.destination_account.disabled" tabindex="-1" class="btn btn-outline-secondary" type="button" @click="clearDestinationAccount(index)"><em class="bi bi-trash"></em></button>
         </div>
         </template>
         <template x-if="true===transaction.destination_account.disabled">

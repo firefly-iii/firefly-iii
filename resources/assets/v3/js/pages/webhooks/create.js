@@ -53,7 +53,7 @@ let create = function () {
             },
         },
         triggers: ["ANY"],
-        responses: ["RELEVANT"],
+        responses: "RELEVANT",
         deliveries: ["JSON"],
         active: true,
         url: "",
@@ -114,7 +114,7 @@ let create = function () {
             let data = {
                 title: this.title,
                 triggers: this.triggers,
-                responses: this.responses,
+                responses: [this.responses],
                 deliveries: this.deliveries,
                 url: this.url,
                 active: this.active,

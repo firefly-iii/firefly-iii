@@ -37,9 +37,11 @@ export function changeDescription(item, ac) {
 }
 
 export function changeDestinationAccount(item, ac) {
+    console.log('changeDestinationAccount', item, ac);
     if (typeof item === "object") {
         // changed account but did not select.
-        const index = parseInt(ac._searchInput.attributes["data-index"].value);
+        const index = parseInt(ac._searchInput.dataset.index);
+        console.log('changeDestinationAccount X', document.querySelector("#form"));
         document.querySelector("#form")._x_dataStack[0].$data.entries[index].destination_account = {
             id: item.id,
             name: item.name,
@@ -51,7 +53,7 @@ export function changeDestinationAccount(item, ac) {
         document.querySelector("#form")._x_dataStack[0].changedDestinationAccount();
     }
     if (typeof item === "undefined") {
-        const index = parseInt(ac._searchInput.attributes["data-index"].value);
+        const index = parseInt(ac._searchInput.dataset.index);
         let destination = document.querySelector("#form")._x_dataStack[0].$data.entries[index].destination_account;
         if (destination.name === ac._searchInput.value) {
             console.warn('Ignore hallucinated destination account name change to "' + ac._searchInput.value + '"');
@@ -67,6 +69,7 @@ export function changeDestinationAccount(item, ac) {
 
 export function selectDestinationAccount(item, ac) {
     const index = parseInt(ac._searchInput.attributes["data-index"].value);
+    console.log('selectDestinationAccount', index);
     document.querySelector("#form")._x_dataStack[0].$data.entries[index].destination_account = {
         id: item.id,
         name: item.name,

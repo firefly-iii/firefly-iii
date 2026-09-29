@@ -22,7 +22,6 @@
                     x-bind:class="{'form-select': true, 'is-invalid': errors.responses.length > 0}"
                     name="responses[]"
                     @input="handleInput">
-                    <option value="invlaid">bla</option>
                     <template x-for="response in options.responses">
                         <option :label="response.name" :selected="responses.includes(response.id)" :value="response.id"
                                 x-text="response.name"></option>

@@ -169,9 +169,10 @@ final class BudgetController extends Controller
         // sort temp array by amount.
         $amounts = array_column($result, 'avg_float');
         array_multisort($amounts, SORT_ASC, $result);
+        $incomeTopLength = count(array_keys($result));
 
         try {
-            $result = view('reports.budget.partials.avg-expenses', ['result' => $result])->render();
+            $result = view('reports.budget.partials.avg-expenses', ['result' => $result, 'incomeTopLength' => $incomeTopLength])->render();
         } catch (Throwable $e) {
             Log::error(sprintf('Could not render reports.partials.budget-period: %s', $e->getMessage()));
             $result = sprintf('Could not render view: %s', $e->getMessage());
