@@ -19,7 +19,7 @@
                 <div class="row">
                     <div class="col-lg-12">
                         <div class="alert alert-success alert-dismissible" role="alert">
-                            <strong>{{ __("firefly.flash_success") }}</strong> <span x-html="success_message"></span>
+                            <strong>{{ __("firefly.flash_success") }}</strong> <span x-text="success_message"></span>
                             <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="{{ __('firefly.close') }}"></button>
                         </div>
                     </div>
@@ -56,7 +56,7 @@
                                 <p class="text-success" x-text="success_message"></p>
                             </template>
                             <template x-if="'' !== error_message">
-                            <p class="text-danger" x-html="error_message"></p>
+                            <p class="text-danger" x-text="error_message"></p>
                             </template>
                         </div>
                     </div>

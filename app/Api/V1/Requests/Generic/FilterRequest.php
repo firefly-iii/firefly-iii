@@ -64,22 +64,8 @@ class FilterRequest extends ApiRequest
                 return;
             }
         });
-
-
-        return;
-        $validator->after(function (Validator $validator): void {
-            if (count($validator->failed()) > 0) {
-                return;
-            }
-
-            $filter = $this->convertToFilter('');
-            $this->attributes->set('filter', $filter);
-        });
     }
-    private function convertToFilter(string $value): array {
-        return [];
-//        var_dump($value);
-//        exit;
+//    private function convertToFilter(string $value): array {
 //        return [];
-    }
+//    }
 }

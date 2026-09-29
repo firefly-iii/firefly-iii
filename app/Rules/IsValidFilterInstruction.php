@@ -1,4 +1,6 @@
 <?php
+
+declare(strict_types=1);
 /*
  * IsValidFilterInstructions.php
  * Copyright (c) 2026 james@firefly-iii.org
@@ -47,7 +49,7 @@ class IsValidFilterInstruction implements ValidationRule
             return;
         }
         foreach($value as $key => $search) {
-            if(!in_array($key, $validParameters)) {
+            if(!in_array($key, $validParameters, true)) {
                 $fail('validation.no_filter_instructions')->translate(['object' => $shortClass]);
                 return;
             }

@@ -190,9 +190,6 @@ trait ConvertsDataTypes
     {
         $parameter      = request()->query->all($field);
 
-        if(!is_array($parameter)) {
-            return [];
-        }
         if(0 === count($parameter)) {
             return [];
         }
@@ -200,7 +197,7 @@ trait ConvertsDataTypes
         $validParameters = config(sprintf('firefly.allowed_filter_parameters.%s', $shortClass));
         $return = [];
         foreach($parameter as $key => $search) {
-            if(in_array($key, $validParameters) && strlen((string)$search) <= 50) {
+            if(in_array($key, $validParameters, true) && strlen((string)$search) <= 50) {
                 $return[$key] = trim((string)$search);
             }
         }

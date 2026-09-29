@@ -40,6 +40,7 @@ let index = function () {
         accounts: [],
         sortDirection: "asc",
         page: 1,
+        i18next:null,
         anonymous: false,
         totalPages: 1,
         loadingPage: true,
@@ -57,7 +58,7 @@ let index = function () {
         formatMoney: formatMoney,
         objectToQueryString(obj, prefix) {
             return Object.keys(obj).map(objKey => {
-                if (obj.hasOwnProperty(objKey)) {
+                if (Object.hasOwn(obj, objKey)) {
                     const key = prefix ? `${prefix}[${objKey}]` : objKey;
                     const value = obj[objKey];
 
@@ -72,15 +73,14 @@ let index = function () {
 
         updateHistory() {
             if (history.pushState) {
-// TODO fix this.
+                // TODO fix this.
                 let obj = {
                     page: this.page,
                     column: this.sortColumn,
                     direction: this.sortDirection,
                     filter: this.filter
                 };
-                let string = new URLSearchParams(obj).toString();
-                string = this.objectToQueryString(obj);
+                let string = this.objectToQueryString(obj);
                 let newUrl =
                     window.location.protocol +
                     "//" +
@@ -98,6 +98,9 @@ let index = function () {
             this.downloadAccounts();
         },
         init() {
+            this.$watch('filter.name', (value) => this.updateFilterValue('name', value));
+
+            this.i18next = i18next;
             this.anonymous = window.store.get("anonymous");
             this.handleFunc = this.handlePageClick.bind(this);
             const page = window.location.href.split("?")[0].split("/");

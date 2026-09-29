@@ -31,7 +31,7 @@
                                 <span data-column="name" class="title">{{ trans('list.name') }}</span>
                                 <span data-column="name" class="search-spacer">&nbsp;</span><em data-column="name" class="search-button search-button-name bi bi-search"></em>
                                 <div data-column="name" class="search-filter search-filter-name d-none input-group">
-                                    <input type="search" x-model="filter.name" x-init="$watch('filter.name', (value) => updateFilterValue('name', value))" class="filter-input form-control form-control-sm" placeholder="Filter name...">
+                                    <input type="search" x-model="filter.name" class="filter-input form-control form-control-sm" placeholder="Filter name...">
                                     <button class="btn btn-outline-secondary btn-sm hide-button" data-column="name" type="button"><em class="bi bi-x text-danger"></em></button>
                                 </div>
                             </th>
@@ -323,7 +323,7 @@
             <p class="text-center"><small>
                     <em>
                         <span
-                            x-html="i18next.t('firefly.may_inactive_accounts_link', {url: '{{ route('accounts.inactive.index', $objectType) }}'})"></span>
+                            x-text="i18next.t('firefly.may_inactive_accounts_link', {url: '{{ route('accounts.inactive.index', $objectType) }}'})"></span>
                     </em>
                 </small>
             </p>
@@ -351,7 +351,7 @@
             <p class="text-center"><small>
                     <em>
                         <span
-                            x-html="i18next.t('firefly.no_inactive_accounts', {url: '{{ route('accounts.index', $objectType) }}'})"></span>
+                            x-text="i18next.t('firefly.no_inactive_accounts', {url: '{{ route('accounts.index', $objectType) }}'})"></span>
                     </em>
                 </small>
             </p>

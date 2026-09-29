@@ -28,6 +28,7 @@ import formatMoney from "../../util/format-money.js";
 import { getVariable } from "../../store/get-variable.js";
 import { drawMultiCurrencyChart } from "../../shared/draw-chart.js";
 import format from "../../util/format.js";
+import i18next from "i18next";
 
 let index = function () {
     return {
