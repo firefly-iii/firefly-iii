@@ -139,8 +139,8 @@ final class BudgetController extends Controller
      */
     public function avgExpenses(Collection $accounts, Collection $budgets, Carbon $start, Carbon $end)
     {
-        $spent   = $this->opsRepository->listExpenses($start, $end, $accounts, $budgets);
-        $result  = [];
+        $spent           = $this->opsRepository->listExpenses($start, $end, $accounts, $budgets);
+        $result          = [];
         foreach ($spent as $currency) {
             foreach ($currency['budgets'] as $budget) {
                 foreach ($budget['transaction_journals'] as $journal) {
@@ -167,7 +167,7 @@ final class BudgetController extends Controller
         }
         // sort by amount_float
         // sort temp array by amount.
-        $amounts = array_column($result, 'avg_float');
+        $amounts         = array_column($result, 'avg_float');
         array_multisort($amounts, SORT_ASC, $result);
         $incomeTopLength = count(array_keys($result));
 

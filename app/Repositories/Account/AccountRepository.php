@@ -244,8 +244,8 @@ class AccountRepository implements AccountRepositoryInterface, UserGroupInterfac
         // add sort parameters
         $allowed = config('firefly.allowed_db_sort_parameters.Account', []);
         $sorted  = 0;
-        $sort = $sort ?? [];
-        $filter = $filter ?? [];
+        $sort   ??= [];
+        $filter ??= [];
         if (0 !== count($sort)) {
             foreach ($sort as $param) {
                 if (in_array($param[0], $allowed, true)) {
@@ -259,7 +259,7 @@ class AccountRepository implements AccountRepositoryInterface, UserGroupInterfac
         if (0 !== count($filter)) {
             foreach ($filter as $field => $search) {
                 if (in_array($field, $allowed, true)) {
-                    if('' !== (string) $search) {
+                    if ('' !== (string) $search) {
                         $query->whereLike($field, sprintf('%%%s%%', $search));
                     }
                 }

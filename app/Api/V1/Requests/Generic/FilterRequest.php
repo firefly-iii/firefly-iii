@@ -26,7 +26,6 @@ namespace FireflyIII\Api\V1\Requests\Generic;
 
 use FireflyIII\Api\V1\Requests\ApiRequest;
 use FireflyIII\Rules\IsValidFilterInstruction;
-use FireflyIII\Rules\IsValidSortInstruction;
 use FireflyIII\Support\Request\ChecksLogin;
 use FireflyIII\Support\Request\ConvertsDataTypes;
 use Illuminate\Contracts\Validation\Validator;
@@ -36,6 +35,7 @@ class FilterRequest extends ApiRequest
 {
     use ChecksLogin;
     use ConvertsDataTypes;
+
     private ?string $filterClass = null;
 
     public function handleConfig(array $config): void
@@ -45,7 +45,7 @@ class FilterRequest extends ApiRequest
         $this->filterClass = $config['filter_class'] ?? null;
 
         if (null === $this->filterClass) {
-            //throw new RuntimeException('FilterRequest requires a filter_class config');
+            // throw new RuntimeException('FilterRequest requires a filter_class config');
             $this->filterClass = 'Account';
         }
     }
@@ -53,7 +53,7 @@ class FilterRequest extends ApiRequest
     public function rules(): array
     {
         return [
-            'filter' => ['min:0','max:255', $this->required, new IsValidFilterInstruction((string) $this->filterClass)],
+            'filter' => ['min:0', 'max:255', $this->required, new IsValidFilterInstruction((string) $this->filterClass)],
         ];
     }
 
@@ -65,7 +65,8 @@ class FilterRequest extends ApiRequest
             }
         });
     }
-//    private function convertToFilter(string $value): array {
-//        return [];
-//    }
+
+    //    private function convertToFilter(string $value): array {
+    //        return [];
+    //    }
 }

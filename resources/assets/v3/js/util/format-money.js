@@ -20,7 +20,7 @@
 
 export default function (amount, currencyCode) {
     if ((typeof amount !== "number" && typeof amount !== "string") || isNaN(amount)) {
-        if(null !== amount) {
+        if (null !== amount) {
             console.warn("format-money: amount is not a number:", amount);
         }
         return "";

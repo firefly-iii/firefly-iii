@@ -18,10 +18,9 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-
 export function keyUpFromDescription(e) {
     let target = null === e.currentTarget ? null : e.currentTarget.nextSibling;
-    if ("Enter" === e.key && 'UL' === target.nodeName && !target.classList.contains("show")) {
+    if ("Enter" === e.key && "UL" === target.nodeName && !target.classList.contains("show")) {
         this.save();
     }
 }

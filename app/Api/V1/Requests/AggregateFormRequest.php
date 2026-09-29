@@ -53,7 +53,7 @@ abstract class AggregateFormRequest extends ApiRequest
         parent::initialize($query, $request, $attributes, $cookies, $files, $server, $content);
 
         // instantiate all subrequests and share current requests' bags with them
-         Log::debug('Initializing AggregateFormRequest.');
+        Log::debug('Initializing AggregateFormRequest.');
 
         /** @var array|string $config */
         foreach ($this->getRequests() as $config) {
@@ -62,7 +62,7 @@ abstract class AggregateFormRequest extends ApiRequest
             if (!is_a($requestClass, Request::class, true)) {
                 throw new RuntimeException('getRequests() must return class-strings of subclasses of Request');
             }
-             Log::debug(sprintf('Initializing subrequest %s', $requestClass));
+            Log::debug(sprintf('Initializing subrequest %s', $requestClass));
 
             $instance             = new $requestClass();
             $this->requests[]     = $instance;
@@ -97,7 +97,7 @@ abstract class AggregateFormRequest extends ApiRequest
         // register all subrequests' validators
         foreach ($this->requests as $request) {
             if (method_exists($request, 'withValidator')) {
-                 Log::debug(sprintf('Process withValidator from class %s', $request::class));
+                Log::debug(sprintf('Process withValidator from class %s', $request::class));
                 $request->withValidator($validator);
             }
         }
