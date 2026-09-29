@@ -186,6 +186,27 @@ trait ConvertsDataTypes
         return $sortParameters;
     }
 
+    public function convertFilterParameters(string $field, string $class): array
+    {
+        $parameter      = request()->query->all($field);
+
+        if(!is_array($parameter)) {
+            return [];
+        }
+        if(0 === count($parameter)) {
+            return [];
+        }
+        $shortClass      = str_replace('FireflyIII\Models\\', '', $class);
+        $validParameters = config(sprintf('firefly.allowed_filter_parameters.%s', $shortClass));
+        $return = [];
+        foreach($parameter as $key => $search) {
+            if(in_array($key, $validParameters) && strlen($search) <= 50) {
+                $return[$key] = trim($search);
+            }
+        }
+        return $return;
+    }
+
     /**
      * Return string value.
      */

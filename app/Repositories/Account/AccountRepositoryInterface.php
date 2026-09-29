@@ -90,7 +90,7 @@ interface AccountRepositoryInterface
      *
      * @deprecated
      */
-    public function getAccountsByType(array $types, ?array $sort = [], ?bool $filterActive = null): Collection;
+    public function getAccountsByType(array $types, ?array $sort = [], ?array $filter = [], ?bool $filterActive = null): Collection;
 
     public function getAccountsByTypeForGroup(array $types, ?array $sort = []): Collection;
 

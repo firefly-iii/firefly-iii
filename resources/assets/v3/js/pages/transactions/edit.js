@@ -344,6 +344,11 @@ let transactions = function () {
                 this.autoStep();
             });
 
+            document.addEventListener("upload-failed", (event) => {
+                console.log('Now in event listener "upload-failed"');
+                this.processUploadError(event);
+            });
+
             // add some event listeners
             document.addEventListener("upload-success", () => {
                 // console.log('Trigger on event "upload-success"');

@@ -848,7 +848,11 @@ return [
 
     // dynamic date ranges are as follows:
     'dynamic_date_ranges'                  => ['last7', 'last30', 'last90', 'last365', 'MTD', 'QTD', 'YTD'],
-
+    'allowed_filter_parameters' => [
+        'Account' => [
+            'name'
+        ],
+    ],
     'allowed_sort_parameters'              => [
         'Account' => [
             'id',

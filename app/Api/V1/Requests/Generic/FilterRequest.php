@@ -45,14 +45,15 @@ class FilterRequest extends ApiRequest
         $this->filterClass = $config['filter_class'] ?? null;
 
         if (null === $this->filterClass) {
-            throw new RuntimeException('FilterRequest requires a filter_class config');
+            //throw new RuntimeException('FilterRequest requires a filter_class config');
+            $this->filterClass = 'Account';
         }
     }
 
     public function rules(): array
     {
         return [
-            'filter.*' => ['min:0','max:255', $this->required, new IsValidFilterInstruction((string) $this->filterClass)],
+            'filter' => ['min:0','max:255', $this->required, new IsValidFilterInstruction((string) $this->filterClass)],
         ];
     }
 
@@ -62,14 +63,23 @@ class FilterRequest extends ApiRequest
             if (count($validator->failed()) > 0) {
                 return;
             }
-            var_dump($this->input('filter'));exit;
-            $filter = $this->convertToFilter();
+        });
+
+
+        return;
+        $validator->after(function (Validator $validator): void {
+            if (count($validator->failed()) > 0) {
+                return;
+            }
+
+            $filter = $this->convertToFilter('');
             $this->attributes->set('filter', $filter);
         });
     }
     private function convertToFilter(string $value): array {
-        var_dump($value);
-        exit;
         return [];
+//        var_dump($value);
+//        exit;
+//        return [];
     }
 }

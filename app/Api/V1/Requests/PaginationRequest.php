@@ -23,6 +23,7 @@ declare(strict_types=1);
 
 namespace FireflyIII\Api\V1\Requests;
 
+use FireflyIII\Rules\IsValidFilterInstruction;
 use FireflyIII\Rules\IsValidSortInstruction;
 use FireflyIII\Support\Facades\Preferences;
 use FireflyIII\User;
@@ -50,6 +51,7 @@ class PaginationRequest extends ApiRequest
     {
         return [
             'sort'  => ['nullable', new IsValidSortInstruction((string) $this->sortClass)],
+            'filter'  => ['nullable', new IsValidFilterInstruction((string)$this->sortClass)],
             'limit' => ['numeric', 'min:1', 'max:131337'],
             'page'  => ['numeric', 'min:1', 'max:131337'],
         ];
@@ -57,24 +59,29 @@ class PaginationRequest extends ApiRequest
 
     public function withValidator(Validator $validator): void
     {
+
         $validator->after(function (Validator $validator): void {
             if (count($validator->failed()) > 0) {
                 return;
             }
+            $data = $validator->getData();
+            $limit  = $this->integerFromValue($data['limit'] ?? null);
 
-            $limit  = $this->convertInteger('limit');
             if (0 === $limit) {
                 // get default for user:
                 /** @var User $user */
                 $user  = auth()->user();
                 $limit = (int) Preferences::getForUser($user, 'listPageSize', 50)->data;
             }
-            $page   = $this->convertInteger('page');
+            $page   = $this->integerFromValue($data['page'] ?? '1');
+
             $page   = clamp(value: $page, min: 1, max: 2 ** 16);
             $offset = ($page - 1) * $limit;
-            $sort   = null !== $this->sortClass ? $this->convertSortParameters('sort', $this->sortClass) : $this->get('sort');
+            $sort   = null !== $this->sortClass ? $this->convertSortParameters('sort', $this->sortClass) : '';
+            $filter   = null !== $this->sortClass ? $this->convertFilterParameters('filter', $this->sortClass) : [];
             $this->attributes->set('limit', $limit);
             $this->attributes->set('sort', $sort);
+            $this->attributes->set('filter', $filter);
             $this->attributes->set('page', $page);
             $this->attributes->set('offset', $offset);
         });

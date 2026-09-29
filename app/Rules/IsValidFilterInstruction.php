@@ -33,11 +33,29 @@ class IsValidFilterInstruction implements ValidationRule
     #[\Override]
     public function validate(string $attribute, mixed $value, Closure $fail): void
     {
-        if('' === (string)$value) {
+        if(!is_array($value)) {
             return;
         }
-        var_dump($attribute);
-        var_dump($value);
-        // TODO: Implement validate() method.
+        if(0 === count($value)) {
+            return;
+        }
+        $shortClass      = str_replace('FireflyIII\Models\\', '', $this->class);
+        $validParameters = config(sprintf('firefly.allowed_filter_parameters.%s', $shortClass));
+        if (!is_array($validParameters)) {
+            $fail('validation.no_filter_instructions')->translate(['object' => $shortClass]);
+
+            return;
+        }
+        foreach($value as $key => $search) {
+            if(!in_array($key, $validParameters)) {
+                $fail('validation.no_filter_instructions')->translate(['object' => $shortClass]);
+                return;
+            }
+            if(strlen($search) > 50) {
+                $fail('validation.no_filter_instructions')->translate(['object' => $shortClass]);
+                return;
+            }
+        }
+        return;
     }
 }

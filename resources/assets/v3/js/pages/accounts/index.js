@@ -25,7 +25,7 @@ import Alpine from "alpinejs";
 import {getVariable} from "../../store/get-variable.js";
 import Put from "../../api/model/account/put.js";
 import Get from "../../api/model/account/get.js";
-import {format} from "date-fns";
+import format from '../../util/format.js';
 import formatMoney from "../../util/format-money.js";
 import i18next from "i18next";
 import {addDrag} from "../shared/drag-and-droppable-rows.js";
@@ -52,21 +52,42 @@ let index = function () {
         sums: {},
         debts: {},
         differences: {},
+        filter: {
+            name: 'chec',
+        },
         formatMoney: formatMoney,
+        objectToQueryString(obj, prefix) {
+            return Object.keys(obj).map(objKey => {
+                if (obj.hasOwnProperty(objKey)) {
+                    const key = prefix ? `${prefix}[${objKey}]` : objKey;
+                    const value = obj[objKey];
+
+                    return typeof value === "object" ?
+                        this.objectToQueryString(value, key) :
+                        `${encodeURIComponent(key)}=${encodeURIComponent(value)}`;
+                }
+
+                return null;
+            }).join("&");
+        },
 
         updateHistory() {
             if (history.pushState) {
+// TODO fix this.
+let obj = {
+    page: this.page,
+    column: this.sortColumn,
+    direction: this.sortDirection,
+    filter: this.filter
+};
+                let string = new URLSearchParams(obj).toString();
+                string = this.objectToQueryString(obj);
                 let newUrl =
                     window.location.protocol +
                     "//" +
                     window.location.host +
                     window.location.pathname +
-                    "?page=" +
-                    this.page +
-                    "&column=" +
-                    this.sortColumn +
-                    "&direction=" +
-                    this.sortDirection;
+                    "?" +string;
                 window.history.pushState({path: newUrl}, "", newUrl);
                 window.store.set(this.storageKey, {column: this.sortColumn, direction: this.sortDirection});
             }
@@ -135,7 +156,9 @@ let index = function () {
                         let input = document.querySelector(`div.search-filter[data-column="${column}"]`);
                         input.classList.add('d-none');
 
-                        // TODO also clear the search filter!!!!
+                        // TODO hardcoded!!
+                        this.filter.name = '';
+
                     });
                 });
 
@@ -191,6 +214,7 @@ let index = function () {
                     page: this.page,
                     type: this.objectType,
                     start: start,
+                    filter: this.filter,
                     end: end,
                 })
                 .then((response) => {
@@ -330,7 +354,7 @@ let index = function () {
             if (null === date) {
                 return "";
             }
-            return format(new Date(date), i18next.t("config.date_time_fns_short", {lng: window.store.get("locale")}));
+            return format(new Date(date), i18next.t("config.date_time_fns_short", {lng: window.store.get("locale")}), window.store.get("locale"));
         },
         handlePageClick(e) {
             let link = e.currentTarget;

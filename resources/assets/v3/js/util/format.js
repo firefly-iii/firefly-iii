@@ -95,8 +95,12 @@ export default function (date, formatStr = "PP", locale) {
     if (typeof locale === "undefined") {
         locale = window.__localeId__.replace("_", "");
     }
+    let res = '(DATE ERROR)';
+    try {
+        res = format(date, formatStr, {locale: locales[locale] ?? locales[locale.slice(0, 2)] ?? locales["enUS"],});
+    } catch(error) {
+        console.warn('Could not format date: ', error);
+    }
     // console.log("Locale is " + locale);
-    return format(date, formatStr, {
-        locale: locales[locale] ?? locales[locale.slice(0, 2)] ?? locales["enUS"], // or global.__localeId__
-    });
+    return res;
 }

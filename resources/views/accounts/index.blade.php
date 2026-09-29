@@ -35,7 +35,7 @@
                                 <span data-column="name" class="title">{{ trans('list.name') }}</span>
                                 <span data-column="name" class="search-spacer">&nbsp;</span><em data-column="name" class="search-button search-button-name bi bi-search"></em>
                                 <div data-column="name" class="search-filter search-filter-name d-none input-group">
-                                    <input type="search" class="form-control form-control-sm" placeholder="Filter name...">
+                                    <input type="search" x-model="filter.name" class="form-control form-control-sm" placeholder="Filter name...">
                                     <button class="btn btn-outline-secondary btn-sm hide-button" data-column="name" type="button"><em class="bi bi-x text-danger"></em></button>
                                 </div>
                             </th>

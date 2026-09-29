@@ -75,14 +75,16 @@ final class ShowController extends Controller
             'limit'  => $limit,
             'offset' => $offset,
             'sort'   => $sort,
+            'filter' => $filter,
             'start'  => $start,
             'end'    => $end,
             'active' => $active,
             'date'   => $date,
         ]            = $request->attributes->all();
+
         // get list of accounts. Count it and split it.
         $this->repository->resetAccountOrder();
-        $collection  = $this->repository->getAccountsByType($types, $sort, $active);
+        $collection  = $this->repository->getAccountsByType($types, $sort, $filter, $active);
         $count       = $collection->count();
         $dbFields    = $this->isAllDatabaseSort($sort, 'Account');
         $accounts    = $collection;

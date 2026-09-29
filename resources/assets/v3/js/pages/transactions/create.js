@@ -336,7 +336,7 @@ let create = function () {
                 this.processUploadError(event);
             });
             document.addEventListener("upload-failed", (event) => {
-                // console.log('Now in event listener "upload-failed"');
+                console.log('Now in event listener "upload-failed"');
                 this.processUploadError(event);
             });
         },
