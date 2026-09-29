@@ -175,9 +175,10 @@ class AttachmentHelper implements AttachmentHelperInterface
         $parts                = explode('/', $attachment->fileName());
         $file                 = $parts[count($parts) - 1];
         Log::debug(sprintf('Write file to disk in file named "%s"', $file));
-        $res = $this->uploadDisk->put($file, $content);
-        if(false === $res) {
+        $res                  = $this->uploadDisk->put($file, $content);
+        if (false === $res) {
             Log::error('Could not write to disk.');
+
             return false;
         }
 

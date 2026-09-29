@@ -1,6 +1,7 @@
 <?php
 
 declare(strict_types=1);
+
 /*
  * IsValidFilterInstructions.php
  * Copyright (c) 2026 james@firefly-iii.org
@@ -25,6 +26,7 @@ namespace FireflyIII\Rules;
 
 use Closure;
 use Illuminate\Contracts\Validation\ValidationRule;
+use Override;
 
 class IsValidFilterInstruction implements ValidationRule
 {
@@ -32,13 +34,13 @@ class IsValidFilterInstruction implements ValidationRule
         private readonly string $class
     ) {}
 
-    #[\Override]
+    #[Override]
     public function validate(string $attribute, mixed $value, Closure $fail): void
     {
-        if(!is_array($value)) {
+        if (!is_array($value)) {
             return;
         }
-        if(0 === count($value)) {
+        if (0 === count($value)) {
             return;
         }
         $shortClass      = str_replace('FireflyIII\Models\\', '', $this->class);
@@ -48,16 +50,18 @@ class IsValidFilterInstruction implements ValidationRule
 
             return;
         }
-        foreach($value as $key => $search) {
-            if(!in_array($key, $validParameters, true)) {
+        foreach ($value as $key => $search) {
+            if (!in_array($key, $validParameters, true)) {
                 $fail('validation.no_filter_instructions')->translate(['object' => $shortClass]);
+
                 return;
             }
-            if(strlen($search) > 50) {
+            if (strlen($search) > 50) {
                 $fail('validation.no_filter_instructions')->translate(['object' => $shortClass]);
+
                 return;
             }
         }
-        return;
+
     }
 }

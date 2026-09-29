@@ -50,21 +50,20 @@ class PaginationRequest extends ApiRequest
     public function rules(): array
     {
         return [
-            'sort'  => ['nullable', new IsValidSortInstruction((string) $this->sortClass)],
-            'filter'  => ['nullable', new IsValidFilterInstruction((string)$this->sortClass)],
-            'limit' => ['numeric', 'min:1', 'max:131337'],
-            'page'  => ['numeric', 'min:1', 'max:131337'],
+            'sort'   => ['nullable', new IsValidSortInstruction((string) $this->sortClass)],
+            'filter' => ['nullable', new IsValidFilterInstruction((string) $this->sortClass)],
+            'limit'  => ['numeric', 'min:1', 'max:131337'],
+            'page'   => ['numeric', 'min:1', 'max:131337'],
         ];
     }
 
     public function withValidator(Validator $validator): void
     {
-
         $validator->after(function (Validator $validator): void {
             if (count($validator->failed()) > 0) {
                 return;
             }
-            $data = $validator->getData();
+            $data   = $validator->getData();
             $limit  = $this->integerFromValue($data['limit'] ?? null);
             if (0 === $limit || null === $limit) {
                 // get default for user:
@@ -77,7 +76,7 @@ class PaginationRequest extends ApiRequest
             $page   = clamp(value: $page, min: 1, max: 2 ** 16);
             $offset = ($page - 1) * $limit;
             $sort   = null !== $this->sortClass ? $this->convertSortParameters('sort', $this->sortClass) : '';
-            $filter   = null !== $this->sortClass ? $this->convertFilterParameters('filter', $this->sortClass) : [];
+            $filter = null !== $this->sortClass ? $this->convertFilterParameters('filter', $this->sortClass) : [];
             $this->attributes->set('limit', $limit);
             $this->attributes->set('sort', $sort);
             $this->attributes->set('filter', $filter);

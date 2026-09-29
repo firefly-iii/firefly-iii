@@ -22,13 +22,13 @@ import "../../boot/bootstrap.js";
 import sidebar from "../shared/sidebar.js";
 import dates from "../shared/dates.js";
 import Alpine from "@alpinejs/csp";
-import {getVariable} from "../../store/get-variable.js";
+import { getVariable } from "../../store/get-variable.js";
 import Put from "../../api/model/account/put.js";
 import Get from "../../api/model/account/get.js";
-import format from '../../util/format.js';
+import format from "../../util/format.js";
 import formatMoney from "../../util/format-money.js";
 import i18next from "i18next";
-import {addDrag} from "../shared/drag-and-droppable-rows.js";
+import { addDrag } from "../shared/drag-and-droppable-rows.js";
 
 window.enableDates = false;
 
@@ -40,7 +40,7 @@ let index = function () {
         accounts: [],
         sortDirection: "asc",
         page: 1,
-        i18next:null,
+        i18next: null,
         anonymous: false,
         totalPages: 1,
         loadingPage: true,
@@ -53,22 +53,24 @@ let index = function () {
         debts: {},
         differences: {},
         filter: {
-            name: '',
+            name: "",
         },
         formatMoney: formatMoney,
         objectToQueryString(obj, prefix) {
-            return Object.keys(obj).map(objKey => {
-                if (Object.hasOwn(obj, objKey)) {
-                    const key = prefix ? `${prefix}[${objKey}]` : objKey;
-                    const value = obj[objKey];
+            return Object.keys(obj)
+                .map((objKey) => {
+                    if (Object.hasOwn(obj, objKey)) {
+                        const key = prefix ? `${prefix}[${objKey}]` : objKey;
+                        const value = obj[objKey];
 
-                    return typeof value === "object" ?
-                        this.objectToQueryString(value, key) :
-                        `${encodeURIComponent(key)}=${encodeURIComponent(value)}`;
-                }
+                        return typeof value === "object"
+                            ? this.objectToQueryString(value, key)
+                            : `${encodeURIComponent(key)}=${encodeURIComponent(value)}`;
+                    }
 
-                return null;
-            }).join("&");
+                    return null;
+                })
+                .join("&");
         },
 
         updateHistory() {
@@ -78,27 +80,23 @@ let index = function () {
                     page: this.page,
                     column: this.sortColumn,
                     direction: this.sortDirection,
-                    filter: this.filter
+                    filter: this.filter,
                 };
                 let string = this.objectToQueryString(obj);
                 let newUrl =
-                    window.location.protocol +
-                    "//" +
-                    window.location.host +
-                    window.location.pathname +
-                    "?" + string;
-                window.history.pushState({path: newUrl}, "", newUrl);
-                window.store.set(this.storageKey, {column: this.sortColumn, direction: this.sortDirection});
+                    window.location.protocol + "//" + window.location.host + window.location.pathname + "?" + string;
+                window.history.pushState({ path: newUrl }, "", newUrl);
+                window.store.set(this.storageKey, { column: this.sortColumn, direction: this.sortDirection });
             }
         },
         updateFilterValue(field, newValue) {
-            console.log('Update', field, newValue);
+            console.log("Update", field, newValue);
             this.filter[field] = newValue;
             this.updateHistory();
             this.downloadAccounts();
         },
         init() {
-            this.$watch('filter.name', (value) => this.updateFilterValue('name', value));
+            this.$watch("filter.name", (value) => this.updateFilterValue("name", value));
 
             this.i18next = i18next;
             this.anonymous = window.store.get("anonymous");
@@ -156,17 +154,18 @@ let index = function () {
                     el.addEventListener("click", () => {
                         let column = el.dataset.column;
                         // show search input again
-                        document.querySelector(`span.title[data-column="${column}"]`).classList.remove('d-none');
-                        document.querySelector(`span.search-spacer[data-column="${column}"]`).classList.remove('d-none');
-                        document.querySelector(`em.search-button[data-column="${column}"]`).classList.remove('d-none');
-                        document.querySelector(`div.search-filter[data-column="${column}"] input`).value = '';
+                        document.querySelector(`span.title[data-column="${column}"]`).classList.remove("d-none");
+                        document
+                            .querySelector(`span.search-spacer[data-column="${column}"]`)
+                            .classList.remove("d-none");
+                        document.querySelector(`em.search-button[data-column="${column}"]`).classList.remove("d-none");
+                        document.querySelector(`div.search-filter[data-column="${column}"] input`).value = "";
 
                         let input = document.querySelector(`div.search-filter[data-column="${column}"]`);
-                        input.classList.add('d-none');
+                        input.classList.add("d-none");
 
                         // TODO hardcoded!!
-                        this.filter.name = '';
-
+                        this.filter.name = "";
                     });
                 });
 
@@ -175,19 +174,17 @@ let index = function () {
                     el.addEventListener("click", () => {
                         let column = el.dataset.column;
                         // hide search buttons etc.
-                        el.classList.add('d-none');
-                        document.querySelector(`span.title[data-column="${column}"]`).classList.add('d-none');
-                        document.querySelector(`span.search-spacer[data-column="${column}"]`).classList.add('d-none');
+                        el.classList.add("d-none");
+                        document.querySelector(`span.title[data-column="${column}"]`).classList.add("d-none");
+                        document.querySelector(`span.search-spacer[data-column="${column}"]`).classList.add("d-none");
 
                         // show search input
                         let input = document.querySelector(`div.search-filter[data-column="${column}"]`);
-                        input.classList.remove('d-none');
-                        input.querySelector('input').focus();
+                        input.classList.remove("d-none");
+                        input.querySelector("input").focus();
                     });
                 });
-
             });
-
 
             getVariable("listPageSize").then((listPageSize) => {
                 this.listPageSize = listPageSize;
@@ -198,7 +195,7 @@ let index = function () {
                             let item = e.detail[i];
                             if (item.order !== item.currentOrder) {
                                 // PUT new order to system.
-                                new Put().put({order: item.order}, {id: item.id});
+                                new Put().put({ order: item.order }, { id: item.id });
                                 // save new order as current order in the row.
                                 document
                                     .querySelector(`tr[data-id="${item.id}"]`)
@@ -362,7 +359,11 @@ let index = function () {
             if (null === date) {
                 return "";
             }
-            return format(new Date(date), i18next.t("config.date_time_fns_short", {lng: window.store.get("locale")}), window.store.get("locale"));
+            return format(
+                new Date(date),
+                i18next.t("config.date_time_fns_short", { lng: window.store.get("locale") }),
+                window.store.get("locale"),
+            );
         },
         handlePageClick(e) {
             let link = e.currentTarget;
