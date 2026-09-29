@@ -254,6 +254,7 @@ class AccountRepository implements AccountRepositoryInterface, UserGroupInterfac
                 }
             }
         }
+        // add filter parameters.
         $allowed = config('firefly.allowed_filter_parameters.Account', []);
         if (0 !== count($filter)) {
             foreach ($filter as $field => $search) {

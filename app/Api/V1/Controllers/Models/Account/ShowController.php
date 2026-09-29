@@ -107,7 +107,6 @@ final class ShowController extends Controller
             // now do the slicing.
             $accounts = $accounts->slice($offset, $limit);
         }
-
         // make paginator:
         $paginator   = new LengthAwarePaginator($accounts, $count, $limit, $page);
         $paginator->setPath(route('api.v1.accounts.index').$this->buildParams());

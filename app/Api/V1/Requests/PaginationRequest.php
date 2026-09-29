@@ -66,8 +66,7 @@ class PaginationRequest extends ApiRequest
             }
             $data = $validator->getData();
             $limit  = $this->integerFromValue($data['limit'] ?? null);
-
-            if (0 === $limit) {
+            if (0 === $limit || null === $limit) {
                 // get default for user:
                 /** @var User $user */
                 $user  = auth()->user();
