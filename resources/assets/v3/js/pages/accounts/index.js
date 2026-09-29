@@ -74,12 +74,12 @@ let index = function () {
         updateHistory() {
             if (history.pushState) {
 // TODO fix this.
-let obj = {
-    page: this.page,
-    column: this.sortColumn,
-    direction: this.sortDirection,
-    filter: this.filter
-};
+                let obj = {
+                    page: this.page,
+                    column: this.sortColumn,
+                    direction: this.sortDirection,
+                    filter: this.filter
+                };
                 let string = new URLSearchParams(obj).toString();
                 string = this.objectToQueryString(obj);
                 let newUrl =
@@ -87,10 +87,16 @@ let obj = {
                     "//" +
                     window.location.host +
                     window.location.pathname +
-                    "?" +string;
+                    "?" + string;
                 window.history.pushState({path: newUrl}, "", newUrl);
                 window.store.set(this.storageKey, {column: this.sortColumn, direction: this.sortDirection});
             }
+        },
+        updateFilterValue(field, newValue) {
+            console.log('Update', field, newValue);
+            this.filter[field] = newValue;
+            this.updateHistory();
+            this.downloadAccounts();
         },
         init() {
             this.anonymous = window.store.get("anonymous");
@@ -164,7 +170,7 @@ let obj = {
 
                 // add filterable click events.
                 document.querySelectorAll("table.sortable .search-button").forEach((el) => {
-                        el.addEventListener("click", () => {
+                    el.addEventListener("click", () => {
                         let column = el.dataset.column;
                         // hide search buttons etc.
                         el.classList.add('d-none');

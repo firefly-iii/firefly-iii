@@ -18,11 +18,7 @@
                                                   :linkTitle="__('firefly.make_new_'. $objectType . '_account')"/>
                 <div class="card-body p-0">
                     <x-elements.alpine.page-navigation/>
-                    <div class="p-3 text-center" x-show="true === loadingNewSort">
-                        <div class="spinner-border spinner-border-sm" role="status">
-                            <span class="visually-hidden">{{ __('firefly.thinking') }}</span>
-                        </div>
-                    </div>
+
                     <table class="table table-valign-middle table-sm table-hover sortable">
                         <thead>
                         <tr>
@@ -35,7 +31,7 @@
                                 <span data-column="name" class="title">{{ trans('list.name') }}</span>
                                 <span data-column="name" class="search-spacer">&nbsp;</span><em data-column="name" class="search-button search-button-name bi bi-search"></em>
                                 <div data-column="name" class="search-filter search-filter-name d-none input-group">
-                                    <input type="search" x-model="filter.name" class="form-control form-control-sm" placeholder="Filter name...">
+                                    <input type="search" x-model="filter.name" x-init="$watch('filter.name', (value) => updateFilterValue('name', value))" class="filter-input form-control form-control-sm" placeholder="Filter name...">
                                     <button class="btn btn-outline-secondary btn-sm hide-button" data-column="name" type="button"><em class="bi bi-x text-danger"></em></button>
                                 </div>
                             </th>
@@ -82,6 +78,15 @@
                             <th data-column="balance_difference"
                                 :class="{'w-15': true,'text-end': true, 'd-lg-table-cell': true, 'd-none': true, 'sortable': true, 'sortable_sorted': 'balance_difference' === sortColumn, 'sortable_sorted_asc': 'asc' === sortDirection, 'sortable_sorted_desc': 'desc' === sortDirection }"><span class="title">{{ trans('list.balanceDiff') }}</span></th>
                             <th>&nbsp;</th>
+                        </tr>
+                        <tr x-show="true === loadingNewSort">
+                            <th colspan="12">
+                                <div class="p-3 text-center">
+                                    <div class="spinner-border spinner-border-sm" role="status">
+                                        <span class="visually-hidden">{{ __('firefly.thinking') }}</span>
+                                    </div>
+                                </div>
+                            </th>
                         </tr>
                         </thead>
                         <tbody>
