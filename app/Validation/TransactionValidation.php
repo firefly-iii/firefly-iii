@@ -722,17 +722,9 @@ trait TransactionValidation
         switch ($type) {
             default:
             case 'withdrawal':
-                if (count($sources) > 1) {
-                    $validator->errors()->add('transactions.0.source_id', (string) trans('validation.all_accounts_equal'));
-                }
-
-                break;
-
             case 'deposit':
-                if (count($dests) > 1) {
-                    $validator->errors()->add('transactions.0.destination_id', (string) trans('validation.all_accounts_equal'));
-                }
-
+                // firefly-iii-multisource: withdrawals may have different source accounts,
+                // deposits may have different destination accounts.
                 break;
 
             case 'transfer':
@@ -762,6 +754,13 @@ trait TransactionValidation
             return;
         }
         $type         = $this->getTransactionType($transactionGroup, $transactions);
+
+        // firefly-iii-multisource: only transfers must keep equal accounts.
+        if ('transfer' !== $type) {
+            Log::debug(sprintf('multisource: skip equal-account check for "%s".', $type));
+
+            return;
+        }
 
         // compare source IDs, destination IDs, source names and destination names.
         // I think I can get away with one combination being equal, as long as the rest

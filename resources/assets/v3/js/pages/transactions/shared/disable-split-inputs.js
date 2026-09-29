@@ -22,10 +22,9 @@
 import Autocomplete from "bootstrap5-autocomplete";
 
 export function disableSplitInputs() {
-    let isTransferOrWithdrawal =
-        "transfer" === this.groupProperties.transactionType || "withdrawal" === this.groupProperties.transactionType;
-    let isTransferOrDeposit =
-        "transfer" === this.groupProperties.transactionType || "deposit" === this.groupProperties.transactionType;
+    // firefly-iii-multisource: only transfers lock source/destination on extra splits.
+    let isTransferOrWithdrawal = "transfer" === this.groupProperties.transactionType;
+    let isTransferOrDeposit = "transfer" === this.groupProperties.transactionType;
     //console.log('Activate disableSplitInputs');
     // disable source and/or destination, based on account type.
     for (let i = 0; i < this.entries.length; i++) {

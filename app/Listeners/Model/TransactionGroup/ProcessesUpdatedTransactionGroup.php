@@ -136,7 +136,8 @@ class ProcessesUpdatedTransactionGroup
 
         $type          = $first->transactionType->type;
         $effect        = 0;
-        if (TransactionTypeEnum::TRANSFER->value === $type || TransactionTypeEnum::WITHDRAWAL->value === $type) {
+        // firefly-iii-multisource: only unify transfers.
+        if (TransactionTypeEnum::TRANSFER->value === $type) {
             // set all source transactions to source account:
             $effect += Transaction::query()
                 ->whereIn('transaction_journal_id', $all)
@@ -145,7 +146,7 @@ class ProcessesUpdatedTransactionGroup
                 ->update(['account_id' => $sourceAccount->id])
             ;
         }
-        if (TransactionTypeEnum::TRANSFER->value === $type || TransactionTypeEnum::DEPOSIT->value === $type) {
+        if (TransactionTypeEnum::TRANSFER->value === $type) {
             // set all destination transactions to destination account:
             $effect += Transaction::query()
                 ->whereIn('transaction_journal_id', $all)

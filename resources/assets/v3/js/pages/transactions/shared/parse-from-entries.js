@@ -124,16 +124,7 @@ export function parseFromEntries(entries, originals, transactionType) {
                 current.destination_id = entry.destination_account.id;
             }
             if (i > 0) {
-                if ("withdrawal" === transactionType) {
-                    // overrule source
-                    current.source_id = returnArray[0].source_id;
-                    current.source_name = returnArray[0].source_name;
-                }
-                if ("deposit" === transactionType) {
-                    // overrule destination
-                    current.destination_id = returnArray[0].destination_id;
-                    current.destination_name = returnArray[0].destination_name;
-                }
+                // firefly-iii-multisource: withdrawals/deposits keep per-split accounts.
                 if ("transfer" === transactionType) {
                     // overrule both
                     current.source_id = returnArray[0].source_id;

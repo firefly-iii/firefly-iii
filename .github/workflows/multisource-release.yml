@@ -1,0 +1,149 @@
+name: Multisource - build release from upstream
+
+# Checks for new upstream Firefly III releases, applies .multisource/multisource.patch,
+# runs the regression test and publishes FireflyIII-multisource-<tag>.zip as a release
+# of this repository. If the patch no longer applies or the test fails, no release is made.
+
+on:
+  schedule:
+    - cron: "17 4 * * *"
+  workflow_dispatch:
+    inputs:
+      tag:
+        description: "Upstream tag to build (empty = latest upstream release)"
+        required: false
+      force:
+        description: "Rebuild even if the release already exists"
+        type: boolean
+        default: false
+
+permissions:
+  contents: write
+
+concurrency:
+  group: multisource-release
+  cancel-in-progress: false
+
+env:
+  UPSTREAM: firefly-iii/firefly-iii
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Determine upstream tag
+        id: tag
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          TAG="${{ github.event.inputs.tag }}"
+          if [ -z "$TAG" ]; then
+            TAG=$(gh api "repos/$UPSTREAM/releases/latest" --jq .tag_name)
+          fi
+          echo "upstream=$TAG" >> "$GITHUB_OUTPUT"
+          echo "release=$TAG-multisource" >> "$GITHUB_OUTPUT"
+          if gh release view "$TAG-multisource" -R "$GITHUB_REPOSITORY" >/dev/null 2>&1 && [ "${{ github.event.inputs.force }}" != "true" ]; then
+            echo "skip=true" >> "$GITHUB_OUTPUT"
+            echo "Release $TAG-multisource already exists, nothing to do."
+          else
+            echo "skip=false" >> "$GITHUB_OUTPUT"
+          fi
+
+      - name: Checkout fork tooling
+        if: steps.tag.outputs.skip == 'false'
+        uses: actions/checkout@v4
+        with:
+          path: fork
+
+      - name: Checkout upstream tag
+        if: steps.tag.outputs.skip == 'false'
+        uses: actions/checkout@v4
+        with:
+          repository: ${{ env.UPSTREAM }}
+          ref: ${{ steps.tag.outputs.upstream }}
+          path: app
+
+      - name: Apply multisource patch
+        if: steps.tag.outputs.skip == 'false'
+        working-directory: app
+        run: |
+          git apply --3way --whitespace=nowarn ../fork/.multisource/multisource.patch
+          if git diff --name-only --diff-filter=U | grep -q .; then
+            echo "::error::Patch conflicts with upstream ${{ steps.tag.outputs.upstream }} - manual rebase needed."
+            exit 1
+          fi
+          # Guard: the code paths the patch touches must still look the way we expect.
+          grep -q "firefly-iii-multisource" app/Validation/TransactionValidation.php
+          grep -q "firefly-iii-multisource" app/Listeners/Model/TransactionGroup/ProcessesUpdatedTransactionGroup.php
+          grep -q "firefly-iii-multisource" resources/assets/v3/js/pages/transactions/shared/parse-from-entries.js
+          grep -q "firefly-iii-multisource" resources/assets/v3/js/pages/transactions/shared/disable-split-inputs.js
+
+      - name: Warn about new code that may unify split accounts
+        if: steps.tag.outputs.skip == 'false'
+        working-directory: app
+        run: |
+          # Any new place that rewrites account_id of split groups would silently undo the feature.
+          HITS=$(grep -rln "all_accounts_equal\|unifyAccounts\|group-accounts" app | sort)
+          EXPECTED=$(printf '%s\n' \
+            app/Console/Commands/Correction/CorrectsDatabase.php \
+            app/Console/Commands/Correction/CorrectsGroupAccounts.php \
+            app/Listeners/Model/TransactionGroup/ProcessesUpdatedTransactionGroup.php \
+            app/Validation/TransactionValidation.php | sort)
+          if [ "$HITS" != "$EXPECTED" ]; then
+            echo "::error::Upstream code touching split-account unification changed. Review before releasing:"
+            diff <(echo "$EXPECTED") <(echo "$HITS") || true
+            exit 1
+          fi
+
+      - uses: shivammathur/setup-php@v2
+        if: steps.tag.outputs.skip == 'false'
+        with:
+          php-version: "8.5"
+          extensions: bcmath, intl, sqlite3, pdo_sqlite, gd, zip, mbstring
+          coverage: none
+
+      - uses: actions/setup-node@v4
+        if: steps.tag.outputs.skip == 'false'
+        with:
+          node-version: "22"
+
+      - name: Install PHP dependencies and run regression test
+        if: steps.tag.outputs.skip == 'false'
+        working-directory: app
+        run: |
+          composer install --no-interaction --no-progress --no-scripts
+          cp .env.example .env
+          php artisan key:generate --force
+          vendor/bin/phpunit --no-coverage --filter MultiSourceSplitTest tests/integration
+
+      - name: Build frontend (v3, like upstream)
+        if: steps.tag.outputs.skip == 'false'
+        working-directory: app
+        run: |
+          npm install
+          npm run build --workspace=v3
+
+      - name: Package release
+        if: steps.tag.outputs.skip == 'false'
+        working-directory: app
+        run: |
+          rm -f .env
+          rm -rf vendor
+          composer install --no-interaction --no-progress --no-scripts --no-dev --optimize-autoloader
+          echo "${{ steps.tag.outputs.release }}" > MULTISOURCE_VERSION
+          ZIP="FireflyIII-multisource-${{ steps.tag.outputs.upstream }}.zip"
+          zip -rq "../$ZIP" . -x "*.git*" "*.ci*" "*.github*" "*node_modules*" "*output.txt*" "*Procfile*" "*crowdin.yml*" "*sonar-project.properties*"
+          (cd .. && sha256sum "$ZIP" > "$ZIP.sha256")
+
+      - name: Publish release
+        if: steps.tag.outputs.skip == 'false'
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          REL="${{ steps.tag.outputs.release }}"
+          ZIP="FireflyIII-multisource-${{ steps.tag.outputs.upstream }}.zip"
+          gh release delete "$REL" -R "$GITHUB_REPOSITORY" --yes --cleanup-tag 2>/dev/null || true
+          gh release create "$REL" "$ZIP" "$ZIP.sha256" -R "$GITHUB_REPOSITORY" \
+            --target "${{ github.sha }}" \
+            --title "$REL" \
+            --notes "Firefly III ${{ steps.tag.outputs.upstream }} + multisource patch (split withdrawals with different source accounts, split deposits with different destination accounts). Upstream notes: https://github.com/${{ env.UPSTREAM }}/releases/tag/${{ steps.tag.outputs.upstream }}"

@@ -1,0 +1,222 @@
+diff --git a/app/Listeners/Model/TransactionGroup/ProcessesUpdatedTransactionGroup.php b/app/Listeners/Model/TransactionGroup/ProcessesUpdatedTransactionGroup.php
+index a9d7d46..d357526 100644
+--- a/app/Listeners/Model/TransactionGroup/ProcessesUpdatedTransactionGroup.php
++++ b/app/Listeners/Model/TransactionGroup/ProcessesUpdatedTransactionGroup.php
+@@ -136,7 +136,8 @@ private function unifyAccountsForGroup(TransactionGroup $group): int
+ 
+         $type          = $first->transactionType->type;
+         $effect        = 0;
+-        if (TransactionTypeEnum::TRANSFER->value === $type || TransactionTypeEnum::WITHDRAWAL->value === $type) {
++        // firefly-iii-multisource: only unify transfers.
++        if (TransactionTypeEnum::TRANSFER->value === $type) {
+             // set all source transactions to source account:
+             $effect += Transaction::query()
+                 ->whereIn('transaction_journal_id', $all)
+@@ -145,7 +146,7 @@ private function unifyAccountsForGroup(TransactionGroup $group): int
+                 ->update(['account_id' => $sourceAccount->id])
+             ;
+         }
+-        if (TransactionTypeEnum::TRANSFER->value === $type || TransactionTypeEnum::DEPOSIT->value === $type) {
++        if (TransactionTypeEnum::TRANSFER->value === $type) {
+             // set all destination transactions to destination account:
+             $effect += Transaction::query()
+                 ->whereIn('transaction_journal_id', $all)
+diff --git a/app/Validation/TransactionValidation.php b/app/Validation/TransactionValidation.php
+index ebb2bb4..72591ba 100644
+--- a/app/Validation/TransactionValidation.php
++++ b/app/Validation/TransactionValidation.php
+@@ -722,17 +722,9 @@ private function validateEqualAccounts(Validator $validator): void
+         switch ($type) {
+             default:
+             case 'withdrawal':
+-                if (count($sources) > 1) {
+-                    $validator->errors()->add('transactions.0.source_id', (string) trans('validation.all_accounts_equal'));
+-                }
+-
+-                break;
+-
+             case 'deposit':
+-                if (count($dests) > 1) {
+-                    $validator->errors()->add('transactions.0.destination_id', (string) trans('validation.all_accounts_equal'));
+-                }
+-
++                // firefly-iii-multisource: withdrawals may have different source accounts,
++                // deposits may have different destination accounts.
+                 break;
+ 
+             case 'transfer':
+@@ -763,6 +755,13 @@ private function validateEqualAccountsForUpdate(Validator $validator, Transactio
+         }
+         $type         = $this->getTransactionType($transactionGroup, $transactions);
+ 
++        // firefly-iii-multisource: only transfers must keep equal accounts.
++        if ('transfer' !== $type) {
++            Log::debug(sprintf('multisource: skip equal-account check for "%s".', $type));
++
++            return;
++        }
++
+         // compare source IDs, destination IDs, source names and destination names.
+         // I think I can get away with one combination being equal, as long as the rest
+         // of the code picks up on this as well.
+diff --git a/resources/assets/v3/js/pages/transactions/shared/disable-split-inputs.js b/resources/assets/v3/js/pages/transactions/shared/disable-split-inputs.js
+index 83c728d..0d743c5 100644
+--- a/resources/assets/v3/js/pages/transactions/shared/disable-split-inputs.js
++++ b/resources/assets/v3/js/pages/transactions/shared/disable-split-inputs.js
+@@ -22,10 +22,9 @@
+ import Autocomplete from "bootstrap5-autocomplete";
+ 
+ export function disableSplitInputs() {
+-    let isTransferOrWithdrawal =
+-        "transfer" === this.groupProperties.transactionType || "withdrawal" === this.groupProperties.transactionType;
+-    let isTransferOrDeposit =
+-        "transfer" === this.groupProperties.transactionType || "deposit" === this.groupProperties.transactionType;
++    // firefly-iii-multisource: only transfers lock source/destination on extra splits.
++    let isTransferOrWithdrawal = "transfer" === this.groupProperties.transactionType;
++    let isTransferOrDeposit = "transfer" === this.groupProperties.transactionType;
+     //console.log('Activate disableSplitInputs');
+     // disable source and/or destination, based on account type.
+     for (let i = 0; i < this.entries.length; i++) {
+diff --git a/resources/assets/v3/js/pages/transactions/shared/parse-from-entries.js b/resources/assets/v3/js/pages/transactions/shared/parse-from-entries.js
+index 696cf47..aa8005d 100644
+--- a/resources/assets/v3/js/pages/transactions/shared/parse-from-entries.js
++++ b/resources/assets/v3/js/pages/transactions/shared/parse-from-entries.js
+@@ -124,16 +124,7 @@ export function parseFromEntries(entries, originals, transactionType) {
+                 current.destination_id = entry.destination_account.id;
+             }
+             if (i > 0) {
+-                if ("withdrawal" === transactionType) {
+-                    // overrule source
+-                    current.source_id = returnArray[0].source_id;
+-                    current.source_name = returnArray[0].source_name;
+-                }
+-                if ("deposit" === transactionType) {
+-                    // overrule destination
+-                    current.destination_id = returnArray[0].destination_id;
+-                    current.destination_name = returnArray[0].destination_name;
+-                }
++                // firefly-iii-multisource: withdrawals/deposits keep per-split accounts.
+                 if ("transfer" === transactionType) {
+                     // overrule both
+                     current.source_id = returnArray[0].source_id;
+diff --git a/tests/integration/Api/Models/Transaction/MultiSourceSplitTest.php b/tests/integration/Api/Models/Transaction/MultiSourceSplitTest.php
+new file mode 100644
+index 0000000..26bfc76
+--- /dev/null
++++ b/tests/integration/Api/Models/Transaction/MultiSourceSplitTest.php
+@@ -0,0 +1,115 @@
++<?php
++
++/*
++ * MultiSourceSplitTest.php
++ * Part of firefly-iii-multisource, a fork of Firefly III.
++ * Licensed under the GNU Affero General Public License v3 or later.
++ */
++
++declare(strict_types=1);
++
++namespace Tests\integration\Api\Models\Transaction;
++
++use FireflyIII\Enums\AccountTypeEnum;
++use FireflyIII\Models\Account;
++use FireflyIII\Models\Transaction;
++use FireflyIII\Models\TransactionGroup;
++use FireflyIII\User;
++use Illuminate\Foundation\Testing\RefreshDatabase;
++use Illuminate\Support\Facades\Artisan;
++use Override;
++use Tests\integration\TestCase;
++
++/**
++ * Regression test for the one feature of this fork: split withdrawals with
++ * different source accounts (and split deposits with different destination
++ * accounts) must survive create, update and the upgrade/correction commands.
++ *
++ * @internal
++ *
++ * @coversNothing
++ */
++final class MultiSourceSplitTest extends TestCase
++{
++    use RefreshDatabase;
++
++    private Account $bank;
++    private Account $voucher;
++    private User    $user;
++
++    public function testWithdrawalKeepsDifferentSourceAccounts(): void
++    {
++        $groupId = $this->storeWithdrawal();
++        $this->assertSources($groupId, [$this->bank->id, $this->voucher->id]);
++
++        // update: change only the description, sources must stay as they are.
++        $group    = TransactionGroup::query()->findOrFail($groupId);
++        $journals = $group->transactionJournals()->orderBy('id')->get();
++        $response = $this->putJson(route('api.v1.transactions.update', ['transactionGroup' => $groupId]), [
++            'group_title'  => 'Einkauf (geändert)',
++            'transactions' => [
++                ['transaction_journal_id' => (string) $journals[0]->id, 'description' => 'Teil Girokonto'],
++                ['transaction_journal_id' => (string) $journals[1]->id, 'description' => 'Teil Gutschein'],
++            ],
++        ]);
++        $response->assertOk();
++        $this->assertSources($groupId, [$this->bank->id, $this->voucher->id]);
++
++        // the correction that runs during every upgrade must not unify them.
++        Artisan::call('correction:group-accounts');
++        $this->assertSources($groupId, [$this->bank->id, $this->voucher->id]);
++    }
++
++    public function testTransferStillRequiresEqualAccounts(): void
++    {
++        $other    = Account::factory()->for($this->user)->withType(AccountTypeEnum::ASSET)->create(['name' => 'Tagesgeld']);
++        $response = $this->postJson(route('api.v1.transactions.store'), [
++            'group_title'  => 'Umbuchung',
++            'transactions' => [
++                ['type' => 'transfer', 'date' => '2026-09-01', 'amount' => '10', 'description' => 'A', 'source_id' => (string) $this->bank->id, 'destination_id' => (string) $other->id],
++                ['type' => 'transfer', 'date' => '2026-09-01', 'amount' => '5', 'description' => 'B', 'source_id' => (string) $this->voucher->id, 'destination_id' => (string) $other->id],
++            ],
++        ]);
++        $response->assertUnprocessable();
++    }
++
++    #[Override]
++    protected function setUp(): void
++    {
++        parent::setUp();
++        $this->user    = $this->createAuthenticatedUser();
++        $this->actingAs($this->user);
++        $this->bank    = Account::factory()->for($this->user)->withType(AccountTypeEnum::ASSET)->create(['name' => 'Girokonto']);
++        $this->voucher = Account::factory()->for($this->user)->withType(AccountTypeEnum::ASSET)->create(['name' => 'Gutschein']);
++    }
++
++    private function storeWithdrawal(): int
++    {
++        $response = $this->postJson(route('api.v1.transactions.store'), [
++            'group_title'  => 'Einkauf',
++            'transactions' => [
++                ['type' => 'withdrawal', 'date' => '2026-09-01', 'amount' => '30', 'description' => 'Teil Girokonto', 'source_id' => (string) $this->bank->id, 'destination_name' => 'Laden'],
++                ['type' => 'withdrawal', 'date' => '2026-09-01', 'amount' => '20', 'description' => 'Teil Gutschein', 'source_id' => (string) $this->voucher->id, 'destination_name' => 'Laden'],
++            ],
++        ]);
++        $response->assertOk();
++
++        return (int) $response->json('data.id');
++    }
++
++    private function assertSources(int $groupId, array $expected): void
++    {
++        $journalIds = TransactionGroup::query()->findOrFail($groupId)->transactionJournals()->pluck('id')->all();
++        $actual     = Transaction::query()
++            ->whereIn('transaction_journal_id', $journalIds)
++            ->where('amount', '<', 0)
++            ->orderBy('transaction_journal_id')
++            ->pluck('account_id')
++            ->map(static fn ($id): int => (int) $id)
++            ->all()
++        ;
++        sort($expected);
++        sort($actual);
++        self::assertSame($expected, $actual, 'Source accounts of the split withdrawal were changed.');
++    }
++}
