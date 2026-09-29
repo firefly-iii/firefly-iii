@@ -24,7 +24,7 @@ import dates from "../shared/dates.js";
 import Tags from "bootstrap5-tags";
 import i18next from "i18next";
 import { addAutocomplete } from "./shared/add-autocomplete.js";
-import Alpine from "alpinejs";
+import Alpine from "@alpinejs/csp";
 
 window.enableDates = false;
 

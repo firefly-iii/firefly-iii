@@ -57,7 +57,7 @@ class SecureHeaders
         $csp                = [
             "default-src 'none'",
             "object-src 'none'",
-            sprintf("script-src 'unsafe-eval' 'strict-dynamic' 'nonce-%1s'", $nonce),
+            sprintf("script-src 'strict-dynamic' 'nonce-%1s'", $nonce),
             // sprintf("style-src 'self' 'nonce-%1s'", $nonce), // safe variant
             "style-src 'self' 'unsafe-inline'", // unsafe variant
             "base-uri 'self'",

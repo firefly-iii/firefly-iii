@@ -29,7 +29,7 @@ import Put from "../../api/model/exchange-rate/put.js";
 import Delete from "../../api/model/exchange-rate/delete.js";
 import Get from "../../api/model/currency/get.js";
 import GetRate from "../../api/model/exchange-rate/get.js";
-import Alpine from "alpinejs";
+import Alpine from "@alpinejs/csp";
 
 let rates = function () {
     return {

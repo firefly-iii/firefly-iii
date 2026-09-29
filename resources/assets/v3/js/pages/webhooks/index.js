@@ -24,7 +24,7 @@ import dates from "../shared/dates.js";
 import i18next from "i18next";
 import Get from "../../api/model/webhook/get.js";
 import GetConfig from "../../api/configuration/get.js";
-import Alpine from "alpinejs";
+import Alpine from "@alpinejs/csp";
 
 window.enableDates = false;
 let index = function () {

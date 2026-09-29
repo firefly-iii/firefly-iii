@@ -21,7 +21,7 @@
 import "../../boot/bootstrap.js";
 import sidebar from "../shared/sidebar.js";
 import dates from "../shared/dates.js";
-import Alpine from "alpinejs";
+import Alpine from "@alpinejs/csp";
 import {getVariable} from "../../store/get-variable.js";
 import Put from "../../api/model/account/put.js";
 import Get from "../../api/model/account/get.js";
@@ -29,7 +29,6 @@ import format from '../../util/format.js';
 import formatMoney from "../../util/format-money.js";
 import i18next from "i18next";
 import {addDrag} from "../shared/drag-and-droppable-rows.js";
-import {nextTick} from "alpinejs/src/nextTick.js";
 
 window.enableDates = false;
 
@@ -53,7 +52,7 @@ let index = function () {
         debts: {},
         differences: {},
         filter: {
-            name: 'chec',
+            name: '',
         },
         formatMoney: formatMoney,
         objectToQueryString(obj, prefix) {
@@ -374,7 +373,7 @@ let index = function () {
             this.updateHistory();
             this.downloadAccounts();
             e.preventDefault();
-            nextTick(() => {
+            queueMicrotask(() => {
                 this.capturePageNavigation();
             });
             return false;

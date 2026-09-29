@@ -58,10 +58,10 @@ table.sortable thead th.sortable span {
 .search-button {
     cursor: pointer;
 }
-table.sortable th.sortable.sortable_sorted.sortable_sorted_asc:after {
+table.sortable th.sortable.sortable_sorted.sortable_sorted_asc:before {
     content: " \25B4";
 }
-table.sortable th.sortable.sortable_sorted.sortable_sorted_desc:after {
+table.sortable th.sortable.sortable_sorted.sortable_sorted_desc:before {
     content: " \25BE";
 }
 

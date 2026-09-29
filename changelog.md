@@ -11,6 +11,7 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 
 - #12928
 - #12922
+- #12929
 
 ## v6.7.6 - 2026-09-28
 

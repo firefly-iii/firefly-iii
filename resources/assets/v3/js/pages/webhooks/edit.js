@@ -27,7 +27,7 @@ import { loadResponses } from "./shared/load-responses.js";
 import { loadDeliveries } from "./shared/load-deliveries.js";
 import Get from "../../api/model/webhook/get.js";
 import Put from "../../api/model/webhook/put.js";
-import Alpine from "alpinejs";
+import Alpine from "@alpinejs/csp";
 
 window.enableDates = false;
 let edit = function () {

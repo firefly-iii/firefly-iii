@@ -37,7 +37,7 @@ import { respondToRepetitionEnd } from "./shared/respond-to-repetition-end.js";
 import "fullcalendar/skeleton.css"; // ALWAYS NEED SKELETON
 import "fullcalendar/themes/monarch/theme.css"; // YOUR THEME
 import "fullcalendar/themes/monarch/palettes/purple.css"; // YOUR THEME'S PALETTE
-import Alpine from "alpinejs";
+import Alpine from "@alpinejs/csp";
 
 let create = function () {
     return {

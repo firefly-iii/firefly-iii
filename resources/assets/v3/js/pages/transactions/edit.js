@@ -69,7 +69,7 @@ import { redirectAfterTransactionLinks } from "./shared/redirect-after-transacti
 import { addTabListener } from "./shared/add-tab-listener.js";
 import { autoStep } from "./shared/auto-step.js";
 import { respondToTabSwitch } from "./shared/respond-to-tab-switch.js";
-import Alpine from "alpinejs";
+import Alpine from "@alpinejs/csp";
 import focusFirstInput from "../../shared/focus-first-input.js";
 import filterForeignCurrencies from "./shared/filter-foreign-currencies.js";
 

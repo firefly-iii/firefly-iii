@@ -32,7 +32,7 @@ import themePlugin from "fullcalendar/themes/monarch";
 import dayGridPlugin from "fullcalendar/daygrid";
 import timeGridPlugin from "fullcalendar/timegrid";
 import listPlugin from "fullcalendar/list";
-import Alpine from "alpinejs";
+import Alpine from "@alpinejs/csp";
 
 // stylesheets
 import "fullcalendar/skeleton.css"; // ALWAYS NEED SKELETON
