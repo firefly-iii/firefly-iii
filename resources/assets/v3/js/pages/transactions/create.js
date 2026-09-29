@@ -342,6 +342,7 @@ let create = function () {
         },
 
         save() {
+
             this.notifications.error.show = false;
             this.notifications.success.show = false;
             this.notifications.wait.show = true;

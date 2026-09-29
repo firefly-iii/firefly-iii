@@ -18,7 +18,7 @@
                :id="'dest_' + index"
                x-model="transaction.destination_account.alpine_name"
                :data-index="index"
-               @keyup="keyUpFromDestination"
+               @keydown="keyUpFromDestination"
                @changed="changedDestinationAccount"
                x-bind:disabled="true===transaction.destination_account.disabled"
                x-bind:readonly="true===transaction.destination_account.disabled"

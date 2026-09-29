@@ -7,7 +7,7 @@
             <input type="text"
                    class="form-control ac-category"
                    :id="'category_name_' + index"
-                   @keyup="keyUpFromCategory"
+                   @keydown="keyUpFromCategory"
                    x-model="transaction.category_name"
                    :data-index="index"
                    placeholder="{{ __('firefly.category')  }}">
