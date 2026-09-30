@@ -59,8 +59,8 @@ let index = function () {
         },
         formatMoney: formatMoney,
         objectToQueryString(obj, prefix) {
-            if(null === obj) {
-                return '';
+            if (null === obj) {
+                return "";
             }
             return Object.keys(obj)
                 .map((objKey) => {
@@ -236,7 +236,7 @@ let index = function () {
             });
         },
         prepareSumArrays(code) {
-            let keys = ['sums','differences','debts'];
+            let keys = ["sums", "differences", "debts"];
             for (let i = 0; i < keys.length; i++) {
                 if (Object.hasOwn(this, keys[i])) {
                     this[keys[i]][code] = this[keys[i]][code] || 0;
@@ -256,14 +256,14 @@ let index = function () {
             return account;
         },
         createParsedAndFloatingAmounts(account, code, prefix) {
-            let keys = ['balance_difference','current_balance','debt_amount'];
+            let keys = ["balance_difference", "current_balance", "debt_amount"];
             for (let i = 0; i < keys.length; i++) {
                 let key = keys[i];
                 account.attributes[prefix + key + "_formatted"] = formatMoney(account.attributes[key], code, true);
                 account.attributes[prefix + key + "_float"] = parseFloat(account.attributes[key]);
             }
             return account;
-    },
+        },
         downloadAccounts() {
             this.loadingNewSort = true;
             let sort = "asc" === this.sortDirection ? this.sortColumn : "-" + this.sortColumn;
@@ -296,8 +296,8 @@ let index = function () {
                             this.prepareSumArrays(pcc);
 
                             // add formatted amount property.
-                            current = this.createParsedAndFloatingAmounts(current, cc, '');
-                            current = this.createParsedAndFloatingAmounts(current, pcc, 'pc_');
+                            current = this.createParsedAndFloatingAmounts(current, cc, "");
+                            current = this.createParsedAndFloatingAmounts(current, pcc, "pc_");
 
                             if (!this.convertToPrimary) {
                                 this.sums[cc] += current.attributes.current_balance_float;
@@ -354,7 +354,6 @@ let index = function () {
                                 liability_interest_period: i18next
                                     .t("firefly.interest_calc_" + current.attributes.interest_period)
                                     .toLowerCase(),
-
                             };
                             this.accounts.push(account);
                         }
