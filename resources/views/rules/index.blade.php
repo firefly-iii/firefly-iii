@@ -9,7 +9,7 @@
 @foreach($ruleGroups as $ruleGroup)
     <div class="row mb-2">
         <div class="col-lg-12 col-md-12 col-sm-12">
-            <div class="card rules-box" data-group="{{ $ruleGroup->id }}">
+            <div class="card rules-card" id="rules-card-{{ $ruleGroup->id }}" data-group="{{ $ruleGroup->id }}">
                     <div class="card-header">
                         <div class="row">
                             <div class="col">
@@ -51,8 +51,14 @@
                                         @endif
                                     </ul>
                                 </div>
+                                    <button type="button" class="btn btn-tool collapse-button" data-lte-toggle="card-collapse" aria-label="Collapse card">
+                                        <em data-lte-icon="expand" class="bi bi-plus-lg"></em>
+                                        <em data-lte-icon="collapse" class="bi bi-dash-lg"></em>
+                                    </button>
                                 </div>
                             </div>
+                        </div>
+                        <div class="card-tools">
                         </div>
                     </div>
                     <div class="card-body">

@@ -87,6 +87,24 @@ function duplicateRule(e) {
 
 $(function () {
       "use strict";
+
+    //   // basic trigger on collapse button.
+    // $('.collapse-button').click(function (e) {
+    //     var box = $(e.currentTarget).closest('.rules-card');
+    //     //box.toggleClass('collapsed-box');
+    //     var groupId = parseInt(box.data('group'));
+    //     var cookieName = 'rule-card-collapse-' + groupId;
+    //     if (box.hasClass('collapsed-card')) {
+    //         createCookie(cookieName, 'collapsed', 90);
+    //         console.log('set cookie collapsed');
+    //     } else {
+    //         createCookie(cookieName, 'expanded', 90);
+    //         console.log('set cookie expanded');
+    //     }
+    // });
+
+
+
       $('.group-rules').find('tbody').sortable(
           {
               helper: fixHelper,
@@ -128,35 +146,47 @@ $(function () {
       $('.move-group').click(moveRuleGroup);
       $('.duplicate-rule').click(duplicateRule);
 
-      $('.rules-box').each(function (i, v) {
+      $('.rules-card').each(function (i, v) {
           var box = $(v);
           var groupId = box.data('group');
           var cookieName = 'rule-box-collapse-' + groupId;
           if ('collapsed' === readCookie(cookieName)) {
-              box.addClass('collapsed-box');
-              console.log('Box ' + groupId + ' is collapsed');
+              box.addClass('collapsed-card');
+              console.log('Card ' + groupId + ' is collapsed');
               return;
           }
-          console.log('Box ' + groupId + ' is not collapsed');
+          console.log('Card ' + groupId + ' is not collapsed');
       });
 
-      $('.rules-box').on('expanded.boxwidget', function (e) {
-          var box = $(e.currentTarget);
-          var groupId = box.data('group');
-          var cookieName = 'rule-box-collapse-' + groupId;
-          createCookie(cookieName, 'expanded', 90);
-          //console.log('Box ' + box.data('group') + ' is now expanded.');
-          //alert('hi!')
+      document.querySelectorAll('.rules-card').forEach(function (i) {
+          i.addEventListener('collapsed.lte.card-widget', function (e) {
+              var box = $(e.currentTarget);
+              console.log('Card ' + box.data('group') + ' is now collapsed.');
+              var groupId = box.data('group');
+              var cookieName = 'rule-box-collapse-' + groupId;
+              createCookie(cookieName, 'collapsed', 90);
+              //alert('ho!')
+          });
+          i.addEventListener('expanded.lte.card-widget', function (e) {
+              var box = $(e.currentTarget);
+              console.log('Card ' + box.data('group') + ' is now expanded.');
+              var groupId = box.data('group');
+              var cookieName = 'rule-box-collapse-' + groupId;
+              createCookie(cookieName, 'expanded', 90);
+              //alert('hi!')
+          });
       });
 
-      $('.rules-box').on('collapsed.boxwidget', function (e) {
-          var box = $(e.currentTarget);
-          var groupId = box.data('group');
-          var cookieName = 'rule-box-collapse-' + groupId;
-          createCookie(cookieName, 'collapsed', 90);
-          //console.log('Box ' + box.data('group') + ' is now collapsed.');
-          //alert('ho!')
-      });
+    // document.getElementById('rules-card-1').addEventListener('expanded.lte.card-widget', function (e) {
+    //     console.log(e);
+    // });
+    //   $('.rules-card').on('expanded.lte.card-widget', function (e) {
+      //
+      // });
+      //
+      // $('.rules-card').on('collapsed.lte.card-widget', function (e) {
+      //
+      // });
 
       //collapsed-box
 
