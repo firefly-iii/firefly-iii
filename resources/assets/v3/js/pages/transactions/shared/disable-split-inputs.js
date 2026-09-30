@@ -69,7 +69,9 @@ export function disableSplitInputs() {
 
             // if is withdrawal, pre-fill the destination account with the first entry's destination account.
             if ("withdrawal" === this.groupProperties.transactionType) {
-                this.entries[i].destination_account = JSON.parse(JSON.stringify(this.entries[i - 1].destination_account));//structuredClone();
+                this.entries[i].destination_account = JSON.parse(
+                    JSON.stringify(this.entries[i - 1].destination_account),
+                ); //structuredClone();
             }
 
             // disable source when withdrawal or transfer

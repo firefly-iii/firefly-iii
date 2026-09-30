@@ -18,7 +18,7 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-import {format} from 'date-fns/format';
+import { format } from "date-fns/format";
 
 /**
  *
@@ -55,7 +55,7 @@ export function parseFromEntries(entries, originals, transactionType) {
             current.currency_code = entry.currency_code;
 
             // dates
-            current.date = format(new Date(entry.date),"yyyy-MM-dd'T'HH:mm:ssxxx");
+            current.date = format(new Date(entry.date), "yyyy-MM-dd'T'HH:mm:ssxxx");
             // console.log('Full date thing', current.date);
             if (i > 0 && !!returnArray[0]) {
                 // console.log("Overrule date for entry ", i, " with ", returnArray[0].date);
