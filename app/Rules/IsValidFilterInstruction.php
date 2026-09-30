@@ -51,6 +51,7 @@ class IsValidFilterInstruction implements ValidationRule
             return;
         }
         foreach ($value as $key => $search) {
+            $search = trim((string) $search);
             if (!in_array($key, $validParameters, true)) {
                 $fail('validation.no_filter_instructions')->translate(['object' => $shortClass]);
 
