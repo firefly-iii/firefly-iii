@@ -41,7 +41,14 @@ import i18next from "i18next";
 import { processUploadError } from "./shared/process-upload-error.js";
 import { showMessageOrRedirectUser } from "./shared/show-message-or-redirect.js";
 import { addSplit } from "./shared/add-split.js";
-import { clearDestinationAccount, clearSourceAccount } from "./shared/clear-fields.js";
+import {
+    clearDestinationAccount,
+    clearSourceAccount,
+    clearCategory,
+    clearDescription,
+    clearAmount,
+    clearForeignAmount
+} from "./shared/clear-fields.js";
 import { detectTransactionType } from "./shared/detect-transaction-type.js";
 import { determineAmountCurrency } from "./shared/determine-amount-currency.js";
 import { loadCustomFields } from "./shared/load-custom-fields.js";
@@ -203,6 +210,10 @@ let create = function () {
         removeSplit: removeSplit,
         clearSourceAccount: clearSourceAccount,
         clearDestinationAccount: clearDestinationAccount,
+        clearCategory: clearCategory,
+        clearDescription: clearDescription,
+        clearAmount: clearAmount,
+        clearForeignAmount: clearForeignAmount,
         detectTransactionType: detectTransactionType,
         determineAmountCurrency: determineAmountCurrency,
         addAllAutocompleteToForm: addAllAutocompleteToForm,
@@ -238,12 +249,7 @@ let create = function () {
             this.formStates.storedAttachments = true;
             this.showMessageOrRedirectUser("create.js processUpload");
         },
-        clearDescription(index) {
-            this.entries[index].description = "";
-        },
-        clearCategory(index) {
-            this.entries[index].category_name = "";
-        },
+
         fillSourceAccount() {
             this.fillAccount("source", "source_account");
         },

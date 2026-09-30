@@ -2324,6 +2324,7 @@ return [
     'account_type_loan'                                   => 'Loan',
     'account_type_mortgage'                               => 'Mortgage',
     'account_type_Credit card'                            => 'Credit card',
+    'account_type_Cash account' => 'Cash account',
     'credit_card_type_monthlyFull'                        => 'Full payment every month',
     'liability_direction_credit'                          => 'I am owed this debt',
     'liability_direction_debit'                           => 'I owe this debt to somebody else',

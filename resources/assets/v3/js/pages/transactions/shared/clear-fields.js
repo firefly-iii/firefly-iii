@@ -29,3 +29,19 @@ export function clearDestinationAccount(index) {
     this.entries[index].destination_account = getAccount();
     this.detectTransactionType();
 }
+export function clearDescription(index) {
+    this.entries[index].description = "";
+}
+export function clearAmount(index) {
+    this.entries[index].amount = "";
+    this.changedAmount(null, index);
+}
+
+export function clearForeignAmount(index) {
+    this.entries[index].foreign_amount = "";
+    this.changedForeignAmount(null, index);
+}
+
+export function clearCategory(index) {
+    this.entries[index].category_name = "";
+};

@@ -18,13 +18,20 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-export function changedForeignAmount(e) {
-    const index = parseInt(e.target.dataset.index);
-    this.entries[index].foreign_amount = parseFloat(e.target.value);
-    //this.groupProperties.totalAmount = 0;
-    // for (let i in this.entries) {
-    //     if (this.entries.hasOwnProperty(i)) {
-    //         this.groupProperties.totalAmount = this.groupProperties.totalAmount + parseFloat(this.entries[i].amount);
-    //     }
-    // }
+export function changedForeignAmount(e, givenIndex) {
+    let index = 0;
+    if (null === e) {
+        index = parseInt(givenIndex);
+    }
+    if (null !== e) {
+        index = parseInt(e.target.dataset.index);
+        let value = e.target.value;
+        // switch commas for dots.
+        let len = (value.match(/,/g) || []).length;
+        if (1 === len) {
+            value = value.replace(',', '.');
+        }
+        this.entries[index].foreign_amount = parseFloat(value);
+    }
+
 }
