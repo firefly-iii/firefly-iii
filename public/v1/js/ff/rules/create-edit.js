@@ -474,11 +474,12 @@ function testRuleTriggers() {
     "use strict";
     console.log('testRuleTriggers');
     // find the button:
-    var button = $('.test_rule_triggers');
+    $('.test_rule_triggers em').removeClass('bi-flask').addClass('bi-hourglass');
+    // $('.test_rule_triggers span').text = testRuleTriggersText;
 
     // replace with spinner. fa-spin fa-spinner
-    button.html('<span class="bi bi-hourglass"></span> ' + testRuleTriggersText);
-    button.attr('disabled', 'disabled');
+    // button.html('<span class="bi bi-hourglass"></span> ' + testRuleTriggersText);
+    $('.test_rule_triggers').attr('disabled', 'disabled');
 
     // Serialize all trigger data
     var triggerData = $('.app-content').find("#ffInput_strict, .rule-trigger-tbody input[type=text], .rule-trigger-tbody input[type=number], .rule-trigger-tbody input[type=checkbox], .rule-trigger-tbody select").serializeArray();
@@ -489,6 +490,7 @@ function testRuleTriggers() {
     // Find a list of existing transactions that match these triggers
     $.get('rules/test', triggerData).done(function (data) {
         var modal = $("#testTriggerModal");
+        console.log('here we are');
 
         // Set title and body
         modal.find(".transactions-list").html(data.html);
@@ -499,10 +501,8 @@ function testRuleTriggers() {
         } else {
             modal.find(".transaction-warning").hide();
         }
-        button.html('<span class="bi bi-flask"></span> ' + testRuleTriggersText).attr('disabled', false);
-        // Show the modal dialog
-        console.log('Show modal');
-        modal.show();
+        $('.test_rule_triggers em').removeClass('bi-hourglass').addClass('bi-flask');
+        $('.test_rule_triggers').attr('disabled', false);
     }).fail(function () {
         alert('Cannot get transactions for given triggers.');
     });

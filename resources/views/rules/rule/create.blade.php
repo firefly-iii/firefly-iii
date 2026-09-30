@@ -79,7 +79,7 @@
                         <p>
                             <br/>
                             <button type="button" class="btn btn-outline-secondary add_rule_trigger">{{ __('firefly.add_rule_trigger') }}</button>
-                            <a href="#" class="btn btn-outline-secondary test_rule_triggers"><span class="bi bi-flask"></span> {{ __('firefly.test_rule_triggers') }}</a>
+                            <a href="#testTriggerModal" data-bs-toggle="modal" data-bs-target="#testTriggerModal" class="btn btn-outline-secondary test_rule_triggers"><em class="bi bi-flask"></em> <span>{{ __('firefly.test_rule_triggers') }}</span></a>
                         </p>
                     </div>
                 </div>
