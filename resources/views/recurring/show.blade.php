@@ -215,6 +215,7 @@
     @endsection
 
     @section('scripts')
+        @vite(['js/pages/generic-nodates.js'])
          <script src="v1/js/lib/bootstrap-sortable.js?v={{ $FF_BUILD_TIME }}"
                 nonce="{{ $JS_NONCE }}"></script>
         {{-- required for groups.twig --}}
