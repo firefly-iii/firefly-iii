@@ -36,7 +36,7 @@ class QueryRequest extends ApiRequest
 
     public function rules(): array
     {
-        return ['query' => sprintf('min:0|max:50|%s', $this->required)];
+        return ['query' => sprintf('min:0|max:1024|%s', $this->required)];
     }
 
     public function withValidator(Validator $validator): void
