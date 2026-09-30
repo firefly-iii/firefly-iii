@@ -148,7 +148,7 @@ final class AccountController extends Controller
         $rangeVals         = array_values($range);
         $rangeIdx          = 0;
         $rangeCount        = count($rangeDates);
-        $converter = new ExchangeRateConverter();
+        $converter         = new ExchangeRateConverter();
 
         while ($currentStart <= $params['end']) {
             $label                         = $currentStart->toAtomString();
@@ -157,15 +157,16 @@ final class AccountController extends Controller
             while ($rangeIdx < $rangeCount && $rangeDates[$rangeIdx] <= $currentStart) {
                 $previous = $rangeVals[$rangeIdx]['balance'];
                 if ($this->convertToPrimary) {
-                     $pcPrevious = $rangeVals[$rangeIdx]['balance'];
+                    $pcPrevious = $rangeVals[$rangeIdx]['balance'];
                 }
                 ++$rangeIdx;
             }
 
             $currentSet['entries'][$label] = $previous;
             if ($this->convertToPrimary) {
-                $pcPrevious = $converter->convert($currency, $this->primaryCurrency, $currentStart, $previous);
+                $pcPrevious                       = $converter->convert($currency, $this->primaryCurrency, $currentStart, $previous);
                 $currentSet['pc_entries'][$label] = $pcPrevious;
+
                 // convert for the current moment.
             }
 
