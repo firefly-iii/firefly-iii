@@ -115,8 +115,11 @@ let rates = function () {
                         });
                 }
                 if (0 !== parseInt(this.rates[index].rate_id)) {
-                    // console.log("[a] PUT, not POST.");
-                    new Put().put({ rate: this.rates[index].rate }, { id: this.rates[index].rate_id }).then(() => {
+                    // console.log("[a] PUT, not POST.", this.rates[index]);
+                    new Put().put({
+                        date: this.rates[index].date_field,
+                        rate: this.rates[index].rate
+                    }, { id: this.rates[index].rate_id }).then(() => {
                         this.updating = false;
                     });
                 }
@@ -140,9 +143,12 @@ let rates = function () {
                         });
                 }
                 if (0 !== parseInt(this.rates[index].inverse_id)) {
-                    // console.log("[b] PUT, not POST.");
+                    // console.log("[a] PUT, not POST.", this.rates[index]);
                     new Put()
-                        .put({ rate: this.rates[index].inverse }, { id: this.rates[index].inverse_id })
+                        .put({
+                            rate: this.rates[index].inverse,
+                            date: this.rates[index].date_field
+                        }, { id: this.rates[index].inverse_id })
                         .then(() => {
                             this.updating = false;
                         });

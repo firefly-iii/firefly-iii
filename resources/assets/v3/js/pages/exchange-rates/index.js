@@ -35,6 +35,10 @@ let index = function () {
             this.i18next = i18next;
             this.getCurrencies();
         },
+        notEqualIds(left, right) {
+            return parseInt(left) !== parseInt(right);
+        },
+
         getCurrencies: function () {
             this.currencies = [];
             // start with page one, loop for the rest.

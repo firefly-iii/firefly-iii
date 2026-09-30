@@ -83,7 +83,7 @@
                                     <td>
                                         <input
                                             ref="date"
-                                            :value="rate.date_field"
+                                            x-model="rate.date_field"
                                             autocomplete="off"
                                             class="form-control"
                                             name="date[]"
