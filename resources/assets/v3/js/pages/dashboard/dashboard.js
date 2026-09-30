@@ -36,9 +36,6 @@ let index = function () {
         anonymous: false,
         loadingPiggyBanks: true,
         init() {
-            console.log("I am translation");
-            console.log(i18next.t(format(new Date(), "d MMMM yyyy 'o' HH:mm")));
-
             getVariable("anonymous").then((value) => {
                 let start = new Date(window.store.get("start"));
                 let end = new Date(window.store.get("end"));

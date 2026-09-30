@@ -16,7 +16,7 @@
         <input type="text"
                :class="{'is-invalid': transaction.errors.destination_account.length > 0, 'form-control': true, 'ac-dest': true}"
                :id="'dest_' + index"
-               x-model="transaction.destination_account.alpine_name"
+               x-model="entries[index].destination_account.alpine_name"
                :data-index="index"
                @keydown="keyUpFromDestination"
                @changed="changedDestinationAccount"
