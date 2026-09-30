@@ -101,6 +101,5 @@ export default function (date, formatStr = "PP", locale) {
     } catch (error) {
         console.warn("Could not format date: ", error);
     }
-    console.log("Format with format: ", formatStr, " and locale: ", locale, " => ", res);
     return res;
 }

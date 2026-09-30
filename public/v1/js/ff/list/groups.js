@@ -151,7 +151,8 @@ function cloneTransaction(e) {
     var button = $(e.currentTarget);
     var groupId = parseInt(button.data('id'));
     $.post(cloneGroupUrl, {
-        id: groupId
+        id: groupId,
+        _from: button.data('from'),
     }).done(function (data) {
         // lame but it works
         location.href = data.redirect;
@@ -167,7 +168,8 @@ function cloneTransactionAndEdit(e) {
     var groupId = parseInt(button.data('id'));
 
     $.post(cloneAndEditUrl, {
-        id: groupId
+        id: groupId,
+        _from: button.data('from'),
     }).done(function (data) {
         // lame but it works
         location.href = data.redirect;

@@ -54,9 +54,9 @@
                                         {{--  clone --}}
                                         @if($groupArray['transactions'][0]['type'] !== 'opening balance' && $groupArray['transactions'][0]['type'] !== 'reconciliation')
                                             <li role="separator" class="divider"></li>
-                                            <li><a class="dropdown-item clone-transaction" href="#" data-id="{{ $transactionGroup->id }}"><span
+                                            <li><a class="dropdown-item clone-transaction" data-from="{{ $FF3_FROM }}" href="#" data-id="{{ $transactionGroup->id }}"><span
                                                         class="bi bi-copy"></span> {{ __('firefly.clone') }}</a></li>
-                                            <li><a class="dropdown-item clone-transaction-and-edit" href="#" data-id="{{ $transactionGroup->id }}"><span
+                                            <li><a class="dropdown-item clone-transaction-and-edit" data-from="{{ $FF3_FROM }}" href="#" data-id="{{ $transactionGroup->id }}"><span
                                                         class="bi bi-copy"></span> {{ __('firefly.clone_and_edit') }}</a></li>
                                         @endif
                                     @endif
