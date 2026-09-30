@@ -93,10 +93,10 @@ let index = function () {
         updateFilterValue(field, newValue) {
             console.log("Update", field, newValue);
             this.filter[field] = newValue;
-            if('' !== newValue) {
+            if ("" !== newValue) {
                 this.isFiltering = true;
             }
-            if('' === newValue) {
+            if ("" === newValue) {
                 this.isFiltering = false;
             }
             this.updateHistory();
@@ -122,8 +122,8 @@ let index = function () {
                 get: (searchParams, prop) => searchParams.get(prop),
             });
             // shitty solution but for now it works.
-            if('' !== params['filter[name]']) {
-                this.filter.name = params['filter[name]'];
+            if ("" !== params["filter[name]"]) {
+                this.filter.name = params["filter[name]"];
                 this.isFiltering = true;
             }
             if ("expense" === this.objectType || "revenue" === this.objectType) {
@@ -174,7 +174,9 @@ let index = function () {
                         document.querySelector(`div.search-filter[data-column="${column}"] input`).value = "";
 
                         // remove class from parent if was used to sort
-                        document.querySelector(`th.sortable_sorted[data-column="${column}"]`).classList.remove("is-searching");
+                        document
+                            .querySelector(`th.sortable_sorted[data-column="${column}"]`)
+                            .classList.remove("is-searching");
 
                         let input = document.querySelector(`div.search-filter[data-column="${column}"]`);
                         input.classList.add("d-none");
@@ -193,7 +195,9 @@ let index = function () {
                         document.querySelector(`span.title[data-column="${column}"]`).classList.add("d-none");
                         document.querySelector(`span.search-spacer[data-column="${column}"]`).classList.add("d-none");
                         // add class to parent if it's used to sort
-                        document.querySelector(`th.sortable_sorted[data-column="${column}"]`).classList.add("is-searching");
+                        document
+                            .querySelector(`th.sortable_sorted[data-column="${column}"]`)
+                            .classList.add("is-searching");
 
                         // show search input
                         let input = document.querySelector(`div.search-filter[data-column="${column}"]`);
