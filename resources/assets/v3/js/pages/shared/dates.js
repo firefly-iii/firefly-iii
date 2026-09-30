@@ -112,26 +112,28 @@ export default () => ({
         let ytd = this.ytd();
 
         // set the title:
+        let locale = window.store.get('locale');
+        let formatString = this.i18next.t('config.month_and_day_fns', {lng: locale});
         let element = document.getElementsByClassName("daterange-holder")[0];
-        element.textContent = format(this.range.start) + " - " + format(this.range.end);
+        element.textContent = format(this.range.start,formatString) + " - " + format(this.range.end,formatString);
         element.setAttribute("data-start", format(this.range.start, this.preferredFormat, "en-US"));
         element.setAttribute("data-end", format(this.range.end, this.preferredFormat, "en-US"));
 
         // set the current one
         element = document.getElementsByClassName("daterange-current")[0];
-        element.textContent = format(this.defaultRange.start) + " - " + format(this.defaultRange.end);
+        element.textContent = format(this.defaultRange.start, formatString) + " - " + format(this.defaultRange.end, formatString);
         element.setAttribute("data-start", format(this.defaultRange.start, this.preferredFormat, "en-US"));
         element.setAttribute("data-end", format(this.defaultRange.end, this.preferredFormat, "en-US"));
 
         // generate next range
         element = document.getElementsByClassName("daterange-next")[0];
-        element.textContent = format(nextRange.start) + " - " + format(nextRange.end);
+        element.textContent = format(nextRange.start, formatString) + " - " + format(nextRange.end, formatString);
         element.setAttribute("data-start", format(nextRange.start, this.preferredFormat, "en-US"));
         element.setAttribute("data-end", format(nextRange.end, this.preferredFormat, "en-US"));
 
         // previous range.
         element = document.getElementsByClassName("daterange-prev")[0];
-        element.textContent = format(prevRange.start) + " - " + format(prevRange.end);
+        element.textContent = format(prevRange.start, formatString) + " - " + format(prevRange.end, formatString);
         element.setAttribute("data-start", format(prevRange.start, this.preferredFormat, "en-US"));
         element.setAttribute("data-end", format(prevRange.end, this.preferredFormat, "en-US"));
 
