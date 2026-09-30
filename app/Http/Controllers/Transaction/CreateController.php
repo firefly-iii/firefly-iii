@@ -39,6 +39,7 @@ use Illuminate\Http\Request;
 use Psr\Container\ContainerExceptionInterface;
 use Psr\Container\NotFoundExceptionInterface;
 use Safe\Exceptions\UrlException;
+
 use function Safe\parse_url;
 
 /**
@@ -56,7 +57,7 @@ final class CreateController extends Controller
         parent::__construct();
 
         $this->middleware(function ($request, $next) {
-            app('view')->share('title', (string)trans('firefly.transactions'));
+            app('view')->share('title', (string) trans('firefly.transactions'));
             app('view')->share('mainTitleIcon', 'bi-shuffle');
             $this->repository = app(TransactionGroupRepositoryInterface::class);
 
@@ -71,9 +72,9 @@ final class CreateController extends Controller
         if ($validator->fails()) {
             throw new FireflyException(trans('validation.bad_url_parts'));
         }
-        $from = $request->input('_from');
+        $from      = $request->input('_from');
 
-        $groupId = (int)$request->input('id');
+        $groupId   = (int) $request->input('id');
         if (0 !== $groupId) {
             $group = $this->repository->find($groupId);
             if ($group instanceof TransactionGroup) {
@@ -83,20 +84,20 @@ final class CreateController extends Controller
 
                 Preferences::mark();
 
-                $title = '' === (string)$newGroup->title ? $newGroup->transactionJournals()->first()->description : $newGroup->title;
-                $link  = route('transactions.show', [$newGroup->id]);
+                $title    = '' === (string) $newGroup->title ? $newGroup->transactionJournals()->first()->description : $newGroup->title;
+                $link     = route('transactions.show', [$newGroup->id]);
                 session()->flash('success', trans('firefly.stored_journal', ['description' => $title]));
                 session()->flash('success_url', $link);
 
                 if ('edit' === $request->input('redirect')) {
-                    return response()->json(['redirect' => route('transactions.edit', [$newGroup->id]) . '?_from=' . urlencode($from)]);
+                    return response()->json(['redirect' => route('transactions.edit', [$newGroup->id]).'?_from='.urlencode($from)]);
                 }
 
-                return response()->json(['redirect' => route('index') . $from]);
+                return response()->json(['redirect' => route('index').$from]);
             }
         }
 
-        return response()->json(['redirect' => route('index') . $from]);
+        return response()->json(['redirect' => route('index').$from]);
     }
 
     /**
@@ -106,31 +107,31 @@ final class CreateController extends Controller
      * @throws NotFoundExceptionInterface
      * @throws UrlException
      */
-    public function create(?string $objectType): Factory | View
+    public function create(?string $objectType): Factory|View
     {
         Preferences::mark();
 
-        $sourceId      = (int)request()->get('source');
-        $destinationId = (int)request()->get('destination');
+        $sourceId             = (int) request()->get('source');
+        $destinationId        = (int) request()->get('destination');
 
         /** @var AccountRepositoryInterface $accountRepository */
-        $accountRepository = app(AccountRepositoryInterface::class);
-        $cash              = $accountRepository->getCashAccount();
-        $preFilled         = session()->has('preFilled') ? session('preFilled') : [];
-        $subTitle          = (string)trans(sprintf('breadcrumbs.create_%s', strtolower((string)$objectType)));
-        $subTitleIcon      = 'bi-plus';
+        $accountRepository    = app(AccountRepositoryInterface::class);
+        $cash                 = $accountRepository->getCashAccount();
+        $preFilled            = session()->has('preFilled') ? session('preFilled') : [];
+        $subTitle             = (string) trans(sprintf('breadcrumbs.create_%s', strtolower((string) $objectType)));
+        $subTitleIcon         = 'bi-plus';
 
         $allowedOpposingTypes = config('firefly.allowed_opposing_types');
         $accountToTypes       = config('firefly.account_to_transaction');
         $previousUrl          = $this->rememberPreviousUrl('transactions.create.url');
-        $parts                = parse_url((string)$previousUrl);
+        $parts                = parse_url((string) $previousUrl);
         $search               = sprintf('?%s', $parts['query'] ?? '');
         $previousUrl          = str_replace($search, '', $previousUrl);
 
         // map info:
-        $longitude = config('firefly.default_location.longitude');
-        $latitude  = config('firefly.default_location.latitude');
-        $zoomLevel = config('firefly.default_location.zoom_level');
+        $longitude            = config('firefly.default_location.longitude');
+        $latitude             = config('firefly.default_location.latitude');
+        $zoomLevel            = config('firefly.default_location.zoom_level');
 
         session()->put('preFilled', $preFilled);
 

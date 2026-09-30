@@ -1679,12 +1679,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/JC5/google2fa-laravel.git",
-                "reference": "81eb57e2883261cfd3b675e00eaf9e930e19a1da"
+                "reference": "bad5291cf4db21f9fbe79cfd4122362c18cf867f"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/JC5/google2fa-laravel/zipball/81eb57e2883261cfd3b675e00eaf9e930e19a1da",
-                "reference": "81eb57e2883261cfd3b675e00eaf9e930e19a1da",
+                "url": "https://api.github.com/repos/JC5/google2fa-laravel/zipball/bad5291cf4db21f9fbe79cfd4122362c18cf867f",
+                "reference": "bad5291cf4db21f9fbe79cfd4122362c18cf867f",
                 "shasum": ""
             },
             "require": {
@@ -1750,9 +1750,9 @@
             ],
             "support": {
                 "issues": "https://github.com/JC5/google2fa-laravel/issues",
-                "source": "https://github.com/JC5/google2fa-laravel/tree/main"
+                "source": "https://github.com/JC5/google2fa-laravel/tree/v2.0.14"
             },
-            "time": "2026-09-30T15:29:59+00:00"
+            "time": "2026-09-30T15:40:39+00:00"
         },
         {
             "name": "jc5/recovery",
