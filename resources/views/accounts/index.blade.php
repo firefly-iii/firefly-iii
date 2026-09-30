@@ -142,27 +142,79 @@
                                 </td>
                                 <template x-if="'liabilities' !== objectType">
                                     <td class="text-end">
-                                        <template x-if="0.0 === account.current_balance_float">
-                                            <span class="money-neutral" x-text="account.current_balance"></span>
+                                        <template x-if="!convertToPrimary || account.primary_currency_id === account.currency_id">
+                                            <span>
+                                                <template x-if="0.0 === account.current_balance_float">
+                                                    <span class="money-neutral" x-text="account.current_balance"></span>
+                                                </template>
+                                                <template x-if="account.current_balance_float > 0.0">
+                                                    <span class="money-positive" x-text="account.current_balance"></span>
+                                                </template>
+                                                <template x-if="account.current_balance_float < 0.0">
+                                                    <span class="money-negative" x-text="account.current_balance"></span>
+                                                </template>
+                                            </span>
                                         </template>
-                                        <template x-if="account.current_balance_float > 0.0">
-                                            <span class="money-positive" x-text="account.current_balance"></span>
-                                        </template>
-                                        <template x-if="account.current_balance_float < 0.0">
-                                            <span class="money-negative" x-text="account.current_balance"></span>
+                                        <template x-if="convertToPrimary && account.primary_currency_id !== account.currency_id">
+                                            <span>
+                                                <template x-if="0.0 === account.current_balance_float">
+                                                    <span>~ <span class="money-neutral" x-text="account.pc_current_balance"></span></span>
+                                                </template>
+                                                <template x-if="account.current_balance_float > 0.0">
+                                                    <span>~ <span class="money-positive" x-text="account.pc_current_balance"></span></span>
+                                                </template>
+                                                <template x-if="account.current_balance_float < 0.0">
+                                                    <span>~ <span class="money-negative" x-text="account.pc_current_balance"></span></span>
+                                                </template>
+                                                   <template x-if="0.0 === account.current_balance_float">
+                                                        <span>(<span class="money-neutral" x-text="account.current_balance"></span>)</span>
+                                                    </template>
+                                                    <template x-if="account.current_balance_float > 0.0">
+                                                        <span>(<span class="money-positive" x-text="account.current_balance"></span>)</span>
+                                                    </template>
+                                                    <template x-if="account.current_balance_float < 0.0">
+                                                        <span>(<span class="money-negative" x-text="account.current_balance"></span>)</span>
+                                                    </template>
+                                            </span>
                                         </template>
                                     </td>
                                 </template>
                                 <template x-if="'liabilities' === objectType">
                                     <td class="text-end">
-                                        <template x-if="0.0 === account.current_debt_float">
-                                            <span class="money-neutral" x-text="account.current_debt"></span>
+                                        <template x-if="!convertToPrimary || account.primary_currency_id === account.currency_id">
+                                            <span>
+                                                <template x-if="0.0 === account.current_debt_float">
+                                                    <span class="money-neutral" x-text="account.current_debt"></span>
+                                                </template>
+                                                <template x-if="account.current_debt_float > 0.0">
+                                                    <span class="money-positive" x-text="account.current_debt"></span>
+                                                </template>
+                                                <template x-if="account.current_debt_float < 0.0">
+                                                    <span class="money-negative" x-text="account.current_debt"></span>
+                                                </template>
+                                            </span>
                                         </template>
-                                        <template x-if="account.current_debt_float > 0.0">
-                                            <span class="money-positive" x-text="account.current_debt"></span>
-                                        </template>
-                                        <template x-if="account.current_debt_float < 0.0">
-                                            <span class="money-negative" x-text="account.current_debt"></span>
+                                        <template x-if="convertToPrimary && account.primary_currency_id !== account.currency_id">
+                                            <span>
+                                                <template x-if="0.0 === account.current_debt_float">
+                                                    <span>~ <span class="money-neutral" x-text="account.pc_current_debt"></span></span>
+                                                </template>
+                                                <template x-if="account.current_debt_float > 0.0">
+                                                    <span>~ <span class="money-positive" x-text="account.pc_current_debt"></span></span>
+                                                </template>
+                                                <template x-if="account.current_debt_float < 0.0">
+                                                    <span>~ <span class="money-negative" x-text="account.pc_current_debt"></span></span>
+                                                </template>
+                                                   <template x-if="0.0 === account.current_debt_float">
+                                                        <span>(<span class="money-neutral" x-text="account.current_debt"></span>)</span>
+                                                    </template>
+                                                    <template x-if="account.current_debt_float > 0.0">
+                                                        <span>(<span class="money-positive" x-text="account.current_debt"></span>)</span>
+                                                    </template>
+                                                    <template x-if="account.current_debt_float < 0.0">
+                                                        <span>(<span class="money-negative" x-text="account.current_debt"></span>)</span>
+                                                    </template>
+                                            </span>
                                         </template>
                                     </td>
                                 </template>
@@ -185,14 +237,40 @@
                                     </td>
                                 </template>
                                 <td class="text-end">
-                                    <template x-if="0.0 === account.balance_difference_float">
-                                        <span class="money-neutral" x-text="account.balance_difference"></span>
+                                    <template x-if="!convertToPrimary || account.primary_currency_id === account.currency_id">
+                                            <span>
+                                                <template x-if="0.0 === account.balance_difference_float">
+                                                    <span class="money-neutral" x-text="account.balance_difference"></span>
+                                                </template>
+                                                <template x-if="account.balance_difference_float > 0.0">
+                                                    <span class="money-positive" x-text="account.balance_difference"></span>
+                                                </template>
+                                                <template x-if="account.balance_difference_float < 0.0">
+                                                    <span class="money-negative" x-text="account.balance_difference"></span>
+                                                </template>
+                                            </span>
                                     </template>
-                                    <template x-if="account.balance_difference_float > 0.0">
-                                        <span class="money-positive" x-text="account.balance_difference"></span>
-                                    </template>
-                                    <template x-if="account.balance_difference_float < 0.0">
-                                        <span class="money-negative" x-text="account.balance_difference"></span>
+                                    <template x-if="convertToPrimary && account.primary_currency_id !== account.currency_id">
+                                            <span>
+                                                <template x-if="0.0 === account.balance_difference_float">
+                                                    <span>~ <span class="money-neutral" x-text="account.pc_balance_difference"></span></span>
+                                                </template>
+                                                <template x-if="account.balance_difference_float > 0.0">
+                                                    <span>~ <span class="money-positive" x-text="account.pc_balance_difference"></span></span>
+                                                </template>
+                                                <template x-if="account.balance_difference_float < 0.0">
+                                                    <span>~ <span class="money-negative" x-text="account.pc_balance_difference"></span></span>
+                                                </template>
+                                                   <template x-if="0.0 === account.balance_difference_float">
+                                                        <span>(<span class="money-neutral" x-text="account.balance_difference"></span>)</span>
+                                                    </template>
+                                                    <template x-if="account.balance_difference_float > 0.0">
+                                                        <span>(<span class="money-positive" x-text="account.balance_difference"></span>)</span>
+                                                    </template>
+                                                    <template x-if="account.balance_difference_float < 0.0">
+                                                        <span>(<span class="money-negative" x-text="account.balance_difference"></span>)</span>
+                                                    </template>
+                                            </span>
                                     </template>
                                 </td>
                                 <td class="justify-content-end">

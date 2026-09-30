@@ -44,6 +44,7 @@ let index = function () {
         anonymous: false,
         totalPages: 1,
         loadingPage: true,
+        convertToPrimary: false,
         loadingNewSort: true,
         active: true,
         pageNavUrl: "./accounts/",
@@ -58,6 +59,9 @@ let index = function () {
         },
         formatMoney: formatMoney,
         objectToQueryString(obj, prefix) {
+            if(null === obj) {
+                return '';
+            }
             return Object.keys(obj)
                 .map((objKey) => {
                     if (Object.hasOwn(obj, objKey)) {
@@ -233,12 +237,41 @@ let index = function () {
                 });
             });
         },
+        prepareSumArrays(code) {
+            let keys = ['sums','differences','debts'];
+            for (let i = 0; i < keys.length; i++) {
+                if (Object.hasOwn(this, keys[i])) {
+                    this[keys[i]][code] = this[keys[i]][code] || 0;
+                }
+            }
+        },
+        filterAmounts(account) {
+            // overrule some amounts, set them to zero when "this.anonymous" is true.
+            if (this.anonymous) {
+                account.attributes.balance_difference = "0";
+                account.attributes.current_balance = "0";
+                account.attributes.debt_amount = "0";
+                account.attributes.pc_balance_difference = "0";
+                account.attributes.pc_current_balance = "0";
+                account.attributes.pc_debt_amount = "0";
+            }
+            return account;
+        },
+        createParsedAndFloatingAmounts(account, code, prefix) {
+            let keys = ['balance_difference','current_balance','debt_amount'];
+            for (let i = 0; i < keys.length; i++) {
+                let key = keys[i];
+                account.attributes[prefix + key + "_formatted"] = formatMoney(account.attributes[key], code, true);
+                account.attributes[prefix + key + "_float"] = parseFloat(account.attributes[key]);
+            }
+            return account;
+    },
         downloadAccounts() {
             this.loadingNewSort = true;
             let sort = "asc" === this.sortDirection ? this.sortColumn : "-" + this.sortColumn;
             let start = window.store.get("start");
             let end = window.store.get("end");
-            let convertToPrimary = window.store.get("convert_to_primary");
+            this.convertToPrimary = window.store.get("convert_to_primary");
             new Get()
                 .list({
                     active: this.active,
@@ -254,83 +287,29 @@ let index = function () {
                     this.sums = {};
                     this.debts = {};
                     this.differences = {};
+
                     this.totalPages = parseInt(response.data.meta.pagination.total_pages);
                     for (let i = 0; i < response.data.data.length; i++) {
                         if (Object.hasOwn(response.data.data, i)) {
-                            let current = response.data.data[i];
+                            let current = this.filterAmounts(response.data.data[i]);
+                            let cc = current.attributes.currency_code;
+                            let pcc = current.attributes.primary_currency_code;
+                            this.prepareSumArrays(cc);
+                            this.prepareSumArrays(pcc);
 
-                            // collect sums, debts and differences for each account (in primary or not):
-                            this.sums[current.attributes.currency_code] =
-                                this.sums[current.attributes.currency_code] || 0;
-                            this.sums[current.attributes.primary_currency_code] =
-                                this.sums[current.attributes.primary_currency_code] || 0;
-                            this.debts[current.attributes.currency_code] =
-                                this.debts[current.attributes.currency_code] || 0;
-                            this.debts[current.attributes.primary_currency_code] =
-                                this.debts[current.attributes.primary_currency_code] || 0;
-                            this.differences[current.attributes.currency_code] =
-                                this.differences[current.attributes.currency_code] || 0;
-                            this.differences[current.attributes.primary_currency_code] =
-                                this.differences[current.attributes.primary_currency_code] || 0;
+                            // add formatted amount property.
+                            current = this.createParsedAndFloatingAmounts(current, cc, '');
+                            current = this.createParsedAndFloatingAmounts(current, pcc, 'pc_');
 
-                            // overrule some amounts, set them to zero when "this.anonymous" is true.
-                            if (this.anonymous) {
-                                current.attributes.balance_difference = "0";
-                                current.attributes.current_balance = "0";
-                                current.attributes.debt_amount = "0";
-                                current.attributes.pc_balance_difference = "0";
-                                current.attributes.pc_current_balance = "0";
-                                current.attributes.pc_debt_amount = "0";
+                            if (!this.convertToPrimary) {
+                                this.sums[cc] += current.attributes.current_balance_float;
+                                this.debts[cc] += current.attributes.debt_amount_float;
+                                this.differences[cc] += current.attributes.balance_difference_float;
                             }
-
-                            let balanceDifference = formatMoney(
-                                current.attributes.balance_difference,
-                                current.attributes.currency_code,
-                                true,
-                            );
-                            let balanceDiffFloat = parseFloat(current.attributes.balance_difference);
-
-                            let currentBalance = formatMoney(
-                                current.attributes.current_balance,
-                                current.attributes.currency_code,
-                            );
-                            let currentBalanceFloat = parseFloat(current.attributes.current_balance);
-
-                            let currentDebt = formatMoney(
-                                current.attributes.debt_amount,
-                                current.attributes.currency_code,
-                            );
-                            let currentDebtFloat = parseFloat(current.attributes.debt_amount);
-
-                            // this.sums[current.attributes.currency_code] += currentBalanceFloat;
-                            if (!convertToPrimary) {
-                                this.sums[current.attributes.currency_code] += currentBalanceFloat;
-                                this.debts[current.attributes.currency_code] += currentDebtFloat;
-                                this.differences[current.attributes.currency_code] += balanceDiffFloat;
-                            }
-                            if (convertToPrimary) {
-                                balanceDifference = formatMoney(
-                                    current.attributes.pc_balance_difference,
-                                    current.attributes.primary_currency_code,
-                                    true,
-                                );
-                                balanceDiffFloat = parseFloat(current.attributes.pc_balance_difference);
-
-                                currentBalance = formatMoney(
-                                    current.attributes.pc_current_balance,
-                                    current.attributes.primary_currency_code,
-                                );
-                                currentBalanceFloat = parseFloat(current.attributes.pc_current_balance);
-
-                                currentDebt = formatMoney(
-                                    current.attributes.pc_debt_amount,
-                                    current.attributes.primary_currency_code,
-                                );
-                                currentDebtFloat = parseFloat(current.attributes.pc_debt_amount);
-
-                                this.sums[current.attributes.primary_currency_code] += currentBalanceFloat;
-                                this.debts[current.attributes.primary_currency_code] += currentDebtFloat;
-                                this.differences[current.attributes.primary_currency_code] += balanceDiffFloat;
+                            if (this.convertToPrimary) {
+                                this.sums[pcc] += current.attributes.pc_current_balance_float;
+                                this.debts[pcc] += current.attributes.pc_debt_amount_float;
+                                this.differences[pcc] += current.attributes.pc_balance_difference_float;
                             }
                             let lastActivity = this.formatDate(current.attributes.last_activity);
                             let noLastActivity = false;
@@ -346,13 +325,29 @@ let index = function () {
                                 role: current.attributes.account_role,
                                 iban: this.addSpaces(current.attributes.iban),
                                 account_number: current.attributes.account_number,
-                                current_balance: currentBalance,
-                                current_balance_float: currentBalanceFloat,
+
+                                currency_id: parseInt(current.attributes.currency_id),
+                                primary_currency_id: parseInt(current.attributes.primary_currency_id),
+
                                 active: current.attributes.active,
                                 last_activity: lastActivity,
                                 no_last_activity: noLastActivity,
-                                balance_difference: balanceDifference,
-                                balance_difference_float: balanceDiffFloat,
+
+                                current_balance: current.attributes.current_balance_formatted,
+                                current_balance_float: current.attributes.current_balance_float,
+                                pc_current_balance: current.attributes.pc_current_balance_formatted,
+                                pc_current_balance_float: current.attributes.pc_current_balance_float,
+
+                                balance_difference: current.attributes.balance_difference_formatted,
+                                balance_difference_float: current.attributes.balance_difference_float,
+                                pc_balance_difference: current.attributes.pc_balance_difference_formatted,
+                                pc_balance_difference_float: current.attributes.pc_balance_difference_float,
+
+                                current_debt: current.attributes.debt_amount_formatted,
+                                current_debt_float: current.attributes.debt_amount_float,
+                                pc_current_debt: current.attributes.pc_debt_amount_formatted,
+                                pc_current_debt_float: current.attributes.pc_debt_amount_float,
+
                                 liability_type: i18next.t("firefly.account_type_" + current.attributes.liability_type),
                                 liability_direction: i18next.t(
                                     "firefly.liability_direction_" + current.attributes.liability_direction + "_short",
@@ -361,8 +356,7 @@ let index = function () {
                                 liability_interest_period: i18next
                                     .t("firefly.interest_calc_" + current.attributes.interest_period)
                                     .toLowerCase(),
-                                current_debt: currentDebt,
-                                current_debt_float: currentDebtFloat,
+
                             };
                             this.accounts.push(account);
                         }
