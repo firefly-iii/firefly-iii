@@ -34,12 +34,12 @@ export function clearDescription(index) {
 }
 export function clearAmount(index) {
     this.entries[index].amount = "";
-    this.changedAmount(null, index);
+    this.changedAmount(null);
 }
 
 export function clearForeignAmount(index) {
     this.entries[index].foreign_amount = "";
-    this.changedForeignAmount(null, index);
+    // this.changedForeignAmount(null);
 }
 
 export function clearCategory(index) {

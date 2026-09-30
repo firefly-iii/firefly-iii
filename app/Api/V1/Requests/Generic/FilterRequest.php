@@ -29,7 +29,6 @@ use FireflyIII\Rules\IsValidFilterInstruction;
 use FireflyIII\Support\Request\ChecksLogin;
 use FireflyIII\Support\Request\ConvertsDataTypes;
 use Illuminate\Contracts\Validation\Validator;
-use RuntimeException;
 
 class FilterRequest extends ApiRequest
 {
@@ -53,7 +52,7 @@ class FilterRequest extends ApiRequest
     public function rules(): array
     {
         return [
-            'filter' => ['min:0', 'max:255', $this->required, new IsValidFilterInstruction((string) $this->filterClass)],
+            'filter' => ['min:0', 'max:255', $this->required, new IsValidFilterInstruction((string)$this->filterClass)],
         ];
     }
 

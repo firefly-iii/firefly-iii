@@ -18,13 +18,9 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-export function changedAmount(e, givenIndex) {
-    let index = 0;
-    if (null === e) {
-        index = parseInt(givenIndex);
-    }
+export function changedAmount(e) {
     if (null !== e) {
-        index = parseInt(e.target.dataset.index);
+        let index = parseInt(e.target.dataset.index);
         let value = e.target.value;
         // switch commas for dots.
         let len = (value.match(/,/g) || []).length;
