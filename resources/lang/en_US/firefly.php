@@ -829,7 +829,7 @@ return [
     'edit_rule'                                           => 'Edit rule #:nr ":title"',
     'delete_rule'                                         => 'Delete rule ":title"',
     'update_rule'                                         => 'Update rule',
-    'matching_transactions_title' => 'Matching transactions',
+    'matching_transactions_title'                         => 'Matching transactions',
     'test_rule_triggers'                                  => 'See matching transactions',
     'warning_no_matching_transactions'                    => 'No matching transactions found.',
     'warning_no_valid_triggers'                           => 'No valid triggers provided.',
