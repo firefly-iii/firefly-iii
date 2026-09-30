@@ -52,6 +52,7 @@ let index = function () {
         sums: {},
         debts: {},
         differences: {},
+        isFiltering: false,
         filter: {
             name: "",
         },
@@ -92,9 +93,16 @@ let index = function () {
         updateFilterValue(field, newValue) {
             console.log("Update", field, newValue);
             this.filter[field] = newValue;
+            if('' !== newValue) {
+                this.isFiltering = true;
+            }
+            if('' === newValue) {
+                this.isFiltering = false;
+            }
             this.updateHistory();
             this.downloadAccounts();
         },
+
         init() {
             this.$watch("filter.name", (value) => this.updateFilterValue("name", value));
 
@@ -113,7 +121,11 @@ let index = function () {
             const params = new Proxy(new URLSearchParams(window.location.search), {
                 get: (searchParams, prop) => searchParams.get(prop),
             });
-
+            // shitty solution but for now it works.
+            if('' !== params['filter[name]']) {
+                this.filter.name = params['filter[name]'];
+                this.isFiltering = true;
+            }
             if ("expense" === this.objectType || "revenue" === this.objectType) {
                 defaultSortColumn = "name";
             }
@@ -161,6 +173,9 @@ let index = function () {
                         document.querySelector(`em.search-button[data-column="${column}"]`).classList.remove("d-none");
                         document.querySelector(`div.search-filter[data-column="${column}"] input`).value = "";
 
+                        // remove class from parent if was used to sort
+                        document.querySelector(`th.sortable_sorted[data-column="${column}"]`).classList.remove("is-searching");
+
                         let input = document.querySelector(`div.search-filter[data-column="${column}"]`);
                         input.classList.add("d-none");
 
@@ -177,6 +192,8 @@ let index = function () {
                         el.classList.add("d-none");
                         document.querySelector(`span.title[data-column="${column}"]`).classList.add("d-none");
                         document.querySelector(`span.search-spacer[data-column="${column}"]`).classList.add("d-none");
+                        // add class to parent if it's used to sort
+                        document.querySelector(`th.sortable_sorted[data-column="${column}"]`).classList.add("is-searching");
 
                         // show search input
                         let input = document.querySelector(`div.search-filter[data-column="${column}"]`);
@@ -342,7 +359,7 @@ let index = function () {
                     }
                     this.loadingPage = false;
                     this.loadingNewSort = false;
-                    if (0 === this.accounts.length) {
+                    if (0 === this.accounts.length && false === this.isFiltering) {
                         document.querySelectorAll(".data-holder").forEach((el) => {
                             el.classList.add("d-none");
                         });
