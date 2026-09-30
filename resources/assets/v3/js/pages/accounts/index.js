@@ -174,11 +174,10 @@ let index = function () {
                         document.querySelector(`div.search-filter[data-column="${column}"] input`).value = "";
 
                         // remove class from parent if was used to sort
-                        if(null !== document
-                            .querySelector(`th.sortable_sorted[data-column="${column}"]`)) {
-                        document
-                            .querySelector(`th.sortable_sorted[data-column="${column}"]`)
-                            .classList.remove("is-searching");
+                        if (null !== document.querySelector(`th.sortable_sorted[data-column="${column}"]`)) {
+                            document
+                                .querySelector(`th.sortable_sorted[data-column="${column}"]`)
+                                .classList.remove("is-searching");
                         }
 
                         let input = document.querySelector(`div.search-filter[data-column="${column}"]`);
@@ -198,12 +197,11 @@ let index = function () {
                         document.querySelector(`span.title[data-column="${column}"]`).classList.add("d-none");
                         document.querySelector(`span.search-spacer[data-column="${column}"]`).classList.add("d-none");
                         // add class to parent if it's used to sort
-                        if(null !== document.querySelector(`th.sortable_sorted[data-column="${column}"]`)) {
+                        if (null !== document.querySelector(`th.sortable_sorted[data-column="${column}"]`)) {
                             document
                                 .querySelector(`th.sortable_sorted[data-column="${column}"]`)
                                 .classList.add("is-searching");
                         }
-
 
                         // show search input
                         let input = document.querySelector(`div.search-filter[data-column="${column}"]`);

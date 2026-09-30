@@ -86,7 +86,9 @@ export function selectDestinationAccount(item, ac) {
     //     currency_code: item.currency_code,
     //     account_currency_code: item.account_currency_code,
     // };
-    document.querySelector("#form")._x_dataStack[0].changedDestinationAccount("selectDestinationAccount("+index+")");
+    document
+        .querySelector("#form")
+        ._x_dataStack[0].changedDestinationAccount("selectDestinationAccount(" + index + ")");
 }
 
 export function changeSourceAccount(item, ac) {
