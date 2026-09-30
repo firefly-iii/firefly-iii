@@ -1679,12 +1679,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/JC5/google2fa-laravel.git",
-                "reference": "1b24871853a032517cb522a7ba10a1f200c8cb21"
+                "reference": "81eb57e2883261cfd3b675e00eaf9e930e19a1da"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/JC5/google2fa-laravel/zipball/1b24871853a032517cb522a7ba10a1f200c8cb21",
-                "reference": "1b24871853a032517cb522a7ba10a1f200c8cb21",
+                "url": "https://api.github.com/repos/JC5/google2fa-laravel/zipball/81eb57e2883261cfd3b675e00eaf9e930e19a1da",
+                "reference": "81eb57e2883261cfd3b675e00eaf9e930e19a1da",
                 "shasum": ""
             },
             "require": {
@@ -1752,7 +1752,7 @@
                 "issues": "https://github.com/JC5/google2fa-laravel/issues",
                 "source": "https://github.com/JC5/google2fa-laravel/tree/main"
             },
-            "time": "2026-09-08T09:20:47+00:00"
+            "time": "2026-09-30T15:29:59+00:00"
         },
         {
             "name": "jc5/recovery",
@@ -11805,16 +11805,16 @@
         },
         {
             "name": "phpunit/php-code-coverage",
-            "version": "14.3.5",
+            "version": "14.4.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/sebastianbergmann/php-code-coverage.git",
-                "reference": "96af7aaa1e15561a67b2fa5b98906b063ebec9c2"
+                "reference": "9be27409ad7bedddd34ed3bc27561d47c6faea06"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/sebastianbergmann/php-code-coverage/zipball/96af7aaa1e15561a67b2fa5b98906b063ebec9c2",
-                "reference": "96af7aaa1e15561a67b2fa5b98906b063ebec9c2",
+                "url": "https://api.github.com/repos/sebastianbergmann/php-code-coverage/zipball/9be27409ad7bedddd34ed3bc27561d47c6faea06",
+                "reference": "9be27409ad7bedddd34ed3bc27561d47c6faea06",
                 "shasum": ""
             },
             "require": {
@@ -11833,7 +11833,7 @@
                 "theseer/tokenizer": "^2.0.1"
             },
             "require-dev": {
-                "phpunit/phpunit": "^13.3.4"
+                "phpunit/phpunit": "^13.3.6"
             },
             "suggest": {
                 "ext-pcov": "PHP extension that provides line coverage",
@@ -11842,7 +11842,7 @@
             "type": "library",
             "extra": {
                 "branch-alias": {
-                    "dev-main": "14.3.x-dev"
+                    "dev-main": "14.4.x-dev"
                 }
             },
             "autoload": {
@@ -11871,7 +11871,7 @@
             "support": {
                 "issues": "https://github.com/sebastianbergmann/php-code-coverage/issues",
                 "security": "https://github.com/sebastianbergmann/php-code-coverage/security/policy",
-                "source": "https://github.com/sebastianbergmann/php-code-coverage/tree/14.3.5"
+                "source": "https://github.com/sebastianbergmann/php-code-coverage/tree/14.4.0"
             },
             "funding": [
                 {
@@ -11891,7 +11891,7 @@
                     "type": "tidelift"
                 }
             ],
-            "time": "2026-09-25T08:28:49+00:00"
+            "time": "2026-09-30T12:46:01+00:00"
         },
         {
             "name": "phpunit/php-file-iterator",
