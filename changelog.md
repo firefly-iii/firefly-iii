@@ -12,6 +12,7 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 - [Issue 12928](https://github.com/firefly-iii/firefly-iii/issues/12928) (Webhook creation fails) reported by @Xav-v
 - [Issue 12922](https://github.com/firefly-iii/firefly-iii/issues/12922) (Undefined variable $incomeTopLength in category graphs) reported by @GunoH
 - [Issue 12929](https://github.com/firefly-iii/firefly-iii/issues/12929) (v6.7.6 Alpine.js requires 'unsafe-eval' in CSP – breaks behind strict proxies) reported by @37-b-j
+- #12934
 
 ## v6.7.6 - 2026-09-28
 
