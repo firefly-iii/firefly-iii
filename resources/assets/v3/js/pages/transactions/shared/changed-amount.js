@@ -24,12 +24,11 @@ export function changedAmount(e) {
         let value = e.target.value;
         // switch commas for dots.
         let len = (value.match(/,/g) || []).length;
-        if(1 === len) {
-            value = value.replace(',', '.');
+        if (1 === len) {
+            value = value.replace(",", ".");
         }
         this.entries[index].amount = parseFloat(value);
     }
-
 
     this.groupProperties.totalAmount = 0;
     for (let i in this.entries) {

@@ -50,7 +50,7 @@ export function detectTransactionType() {
         this.determineAmountCurrency(this.entries[0].source_account.account_currency_code);
         this.disableSplitInputs();
 
-        if("Expense account" !== destType) {
+        if ("Expense account" !== destType) {
             // in this particular case, the foreign amount input is also disabled when both accounts are
             // of the same currency.
             this.determineAmountCurrency(this.entries[0].source_account.account_currency_code);
@@ -106,8 +106,6 @@ export function detectTransactionType() {
         // of the same currency.
         this.determineAmountCurrency(this.entries[0].source_account.account_currency_code);
         this.filterForeignCurrencies(this.entries[0].destination_account.account_currency_code);
-
-
 
         return;
     }

@@ -25,7 +25,7 @@ export function changedForeignAmount(e) {
         // switch commas for dots.
         let len = (value.match(/,/g) || []).length;
         if (1 === len) {
-            value = value.replace(',', '.');
+            value = value.replace(",", ".");
         }
         this.entries[index].foreign_amount = parseFloat(value);
     }

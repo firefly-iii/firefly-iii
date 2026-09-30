@@ -112,16 +112,17 @@ export default () => ({
         let ytd = this.ytd();
 
         // set the title:
-        let locale = window.store.get('locale');
-        let formatString = this.i18next.t('config.month_and_day_fns', {lng: locale});
+        let locale = window.store.get("locale");
+        let formatString = this.i18next.t("config.month_and_day_fns", { lng: locale });
         let element = document.getElementsByClassName("daterange-holder")[0];
-        element.textContent = format(this.range.start,formatString) + " - " + format(this.range.end,formatString);
+        element.textContent = format(this.range.start, formatString) + " - " + format(this.range.end, formatString);
         element.setAttribute("data-start", format(this.range.start, this.preferredFormat, "en-US"));
         element.setAttribute("data-end", format(this.range.end, this.preferredFormat, "en-US"));
 
         // set the current one
         element = document.getElementsByClassName("daterange-current")[0];
-        element.textContent = format(this.defaultRange.start, formatString) + " - " + format(this.defaultRange.end, formatString);
+        element.textContent =
+            format(this.defaultRange.start, formatString) + " - " + format(this.defaultRange.end, formatString);
         element.setAttribute("data-start", format(this.defaultRange.start, this.preferredFormat, "en-US"));
         element.setAttribute("data-end", format(this.defaultRange.end, this.preferredFormat, "en-US"));
 

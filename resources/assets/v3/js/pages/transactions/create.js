@@ -47,7 +47,7 @@ import {
     clearCategory,
     clearDescription,
     clearAmount,
-    clearForeignAmount
+    clearForeignAmount,
 } from "./shared/clear-fields.js";
 import { detectTransactionType } from "./shared/detect-transaction-type.js";
 import { determineAmountCurrency } from "./shared/determine-amount-currency.js";

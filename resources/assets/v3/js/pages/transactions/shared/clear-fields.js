@@ -44,4 +44,4 @@ export function clearForeignAmount(index) {
 
 export function clearCategory(index) {
     this.entries[index].category_name = "";
-};
+}
