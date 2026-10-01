@@ -72,7 +72,11 @@ export function parseFromEntries(entries, originals, transactionType) {
             // meta
             current.budget_id = entry.budget_id;
             current.category_name = entry.category_name;
-            current.piggy_bank_id = entry.piggy_bank_id;
+            const piggyId = parseInt(entry.piggy_bank_id);
+            if(piggyId > 0) {
+                current.piggy_bank_id = piggyId;
+            }
+
             current.bill_id = entry.bill_id;
             current.tags = entry.tags;
             current.notes = entry.notes;
