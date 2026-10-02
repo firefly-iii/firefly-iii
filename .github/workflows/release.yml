@@ -129,8 +129,7 @@ jobs:
           echo "Will now run Mago Format"
           ./vendor/bin/mago format
           sudo chown -R runner:docker resources/lang
-          echo "Will now run PHPCS twice"
-          .ci/phpcs.sh
+          echo "Will now run PHPCS"
           .ci/phpcs.sh
 
           # lint and check
