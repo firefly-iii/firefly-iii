@@ -78,6 +78,7 @@ export function createEmptySplit() {
     return {
         transaction_journal_id: 0,
         description: "",
+        reconciled: false,
 
         // amount information:
         amount: "",

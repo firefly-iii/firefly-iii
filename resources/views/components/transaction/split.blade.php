@@ -1,5 +1,10 @@
 <div :class="{'tab-pane fade pt-2':true, 'show active': index ===0 }" :id="'split-'+index+'-pane'" role="tabpanel"
      :aria-labelledby="'split-'+index+'-tab'" tabindex="0" x-init="addedSplit()">
+    <template x-if="entries[0].reconciled">
+        <div class="alert alert-warning fade show" role="alert">
+            {{ __('firefly.is_reconciled_fields_dropped') }}
+        </div>
+    </template>
     <div class="row mb-2">
         <div class="col-xl-6 col-lg-6 col-md-12 col-xs-12 mb-2">
             <!-- BASIC TRANSACTION INFORMATION -->
@@ -46,7 +51,7 @@
             </div>
         </div>
         <!-- META DATA -->
-        <div class="col-xl-4 col-lg-6 col-md-12 col-xs-12 mb-2">
+        <div class="col-xl-6 col-lg-6 col-md-12 col-xs-12 mb-2">
             <div class="card mb-2">
                 <div class="card-header">
                     <h3 class="card-title">
@@ -76,7 +81,7 @@
 
         </div>
         <!-- EXTRA THINGS -->
-        <div class="col-xl-4 col-lg-6 col-md-12 col-xs-12 mb-2">
+        <div class="col-xl-6 col-lg-6 col-md-12 col-xs-12 mb-2">
             <div class="card mb-2">
                 <div class="card-header">
                     <h3 class="card-title">
@@ -104,6 +109,8 @@
                 </div>
             </div>
         </div>
+    </div>
+    <div class="row">
         <div class="col-xl-4 col-lg-6 col-md-12 col-xs-12 mb-2">
             <div class="card mb-2">
                 <div class="card-header">
