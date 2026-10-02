@@ -24,12 +24,10 @@ declare(strict_types=1);
 
 namespace FireflyIII\Http\Controllers\Transaction;
 
-use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Http\Controllers\Controller;
 use FireflyIII\Models\TransactionGroup;
 use FireflyIII\Repositories\Account\AccountRepositoryInterface;
 use FireflyIII\Repositories\TransactionGroup\TransactionGroupRepositoryInterface;
-use FireflyIII\Rules\System\IsValidOriginUrl;
 use FireflyIII\Services\Internal\Update\GroupCloneService;
 use FireflyIII\Support\Facades\Preferences;
 use Illuminate\Contracts\View\Factory;
@@ -67,7 +65,7 @@ final class CreateController extends Controller
 
     public function cloneGroup(Request $request): JsonResponse
     {
-        $groupId   = (int) $request->input('id');
+        $groupId = (int) $request->input('id');
         if (0 !== $groupId) {
             $group = $this->repository->find($groupId);
             if ($group instanceof TransactionGroup) {

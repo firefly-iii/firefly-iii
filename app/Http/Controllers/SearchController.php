@@ -30,8 +30,8 @@ use Illuminate\Contracts\View\Factory;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
-use Illuminate\View\View;
 use Illuminate\Support\Facades\View as ViewFacade;
+use Illuminate\View\View;
 use Throwable;
 
 use function Safe\mb_convert_encoding;

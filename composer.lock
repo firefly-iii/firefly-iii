@@ -682,16 +682,16 @@
         },
         {
             "name": "doctrine/lexer",
-            "version": "3.0.2",
+            "version": "3.0.3",
             "source": {
                 "type": "git",
                 "url": "https://github.com/doctrine/lexer.git",
-                "reference": "e96fe45e92a54233726014a7cc7340abf29bb14c"
+                "reference": "71d305eaa6480d3d3460c7d053d1da7749fa9cca"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/doctrine/lexer/zipball/e96fe45e92a54233726014a7cc7340abf29bb14c",
-                "reference": "e96fe45e92a54233726014a7cc7340abf29bb14c",
+                "url": "https://api.github.com/repos/doctrine/lexer/zipball/71d305eaa6480d3d3460c7d053d1da7749fa9cca",
+                "reference": "71d305eaa6480d3d3460c7d053d1da7749fa9cca",
                 "shasum": ""
             },
             "require": {
@@ -737,7 +737,7 @@
             ],
             "support": {
                 "issues": "https://github.com/doctrine/lexer/issues",
-                "source": "https://github.com/doctrine/lexer/tree/3.0.2"
+                "source": "https://github.com/doctrine/lexer/tree/3.0.3"
             },
             "funding": [
                 {
@@ -753,7 +753,7 @@
                     "type": "tidelift"
                 }
             ],
-            "time": "2026-06-14T20:44:06+00:00"
+            "time": "2026-10-01T06:59:29+00:00"
         },
         {
             "name": "dragonmantank/cron-expression",
@@ -10215,16 +10215,16 @@
         },
         {
             "name": "carthage-software/mago",
-            "version": "1.50.0",
+            "version": "1.51.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/carthage-software/mago.git",
-                "reference": "74c48ba74d708f38259c6325a4f12ff443fb19bf"
+                "reference": "9a62f0a1829490dcff31f62808589f7ab86779b5"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/carthage-software/mago/zipball/74c48ba74d708f38259c6325a4f12ff443fb19bf",
-                "reference": "74c48ba74d708f38259c6325a4f12ff443fb19bf",
+                "url": "https://api.github.com/repos/carthage-software/mago/zipball/9a62f0a1829490dcff31f62808589f7ab86779b5",
+                "reference": "9a62f0a1829490dcff31f62808589f7ab86779b5",
                 "shasum": ""
             },
             "require": {
@@ -10266,7 +10266,7 @@
             ],
             "support": {
                 "issues": "https://github.com/carthage-software/mago/issues",
-                "source": "https://github.com/carthage-software/mago/tree/1.50.0"
+                "source": "https://github.com/carthage-software/mago/tree/1.51.0"
             },
             "funding": [
                 {
@@ -10274,7 +10274,7 @@
                     "type": "github"
                 }
             ],
-            "time": "2026-09-21T11:41:07+00:00"
+            "time": "2026-10-01T20:37:34+00:00"
         },
         {
             "name": "cloudcreativity/json-api-testing",
@@ -12188,16 +12188,16 @@
         },
         {
             "name": "phpunit/phpunit",
-            "version": "13.3.6",
+            "version": "13.4.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/sebastianbergmann/phpunit.git",
-                "reference": "b7d0ee4ea89121cb963302b8708b1c09d9ebc7d6"
+                "reference": "ef714df238ae4d050e74efaa23f7c428bd01034e"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/sebastianbergmann/phpunit/zipball/b7d0ee4ea89121cb963302b8708b1c09d9ebc7d6",
-                "reference": "b7d0ee4ea89121cb963302b8708b1c09d9ebc7d6",
+                "url": "https://api.github.com/repos/sebastianbergmann/phpunit/zipball/ef714df238ae4d050e74efaa23f7c428bd01034e",
+                "reference": "ef714df238ae4d050e74efaa23f7c428bd01034e",
                 "shasum": ""
             },
             "require": {
@@ -12211,7 +12211,7 @@
                 "phar-io/manifest": "^2.0.4",
                 "phar-io/version": "^3.2.1",
                 "php": ">=8.4.1",
-                "phpunit/php-code-coverage": "^14.3.5",
+                "phpunit/php-code-coverage": "^14.4",
                 "phpunit/php-file-iterator": "^7.0.2",
                 "phpunit/php-invoker": "^7.0.0",
                 "phpunit/php-text-template": "^6.0.0",
@@ -12219,7 +12219,7 @@
                 "sebastian/cli-parser": "^5.0.1",
                 "sebastian/comparator": "^8.4",
                 "sebastian/diff": "^9.0.1",
-                "sebastian/environment": "^9.3.2",
+                "sebastian/environment": "^9.3.3",
                 "sebastian/exporter": "^8.2.1",
                 "sebastian/file-filter": "^1.0",
                 "sebastian/git-state": "^1.0",
@@ -12236,7 +12236,7 @@
             "type": "library",
             "extra": {
                 "branch-alias": {
-                    "dev-main": "13.3-dev"
+                    "dev-main": "13.4-dev"
                 }
             },
             "autoload": {
@@ -12268,7 +12268,7 @@
             "support": {
                 "issues": "https://github.com/sebastianbergmann/phpunit/issues",
                 "security": "https://github.com/sebastianbergmann/phpunit/security/policy",
-                "source": "https://github.com/sebastianbergmann/phpunit/tree/13.3.6"
+                "source": "https://github.com/sebastianbergmann/phpunit/tree/13.4.0"
             },
             "funding": [
                 {
@@ -12276,7 +12276,7 @@
                     "type": "other"
                 }
             ],
-            "time": "2026-09-29T12:12:05+00:00"
+            "time": "2026-10-02T03:20:44+00:00"
         },
         {
             "name": "rector/rector",
@@ -12719,23 +12719,23 @@
         },
         {
             "name": "sebastian/environment",
-            "version": "9.3.2",
+            "version": "9.3.3",
             "source": {
                 "type": "git",
                 "url": "https://github.com/sebastianbergmann/environment.git",
-                "reference": "6c9e487c9eb706a8d258102a1c0b0a3e53e86c2e"
+                "reference": "d4dd10267a11055066a2a78ae04583d8ddd4f595"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/sebastianbergmann/environment/zipball/6c9e487c9eb706a8d258102a1c0b0a3e53e86c2e",
-                "reference": "6c9e487c9eb706a8d258102a1c0b0a3e53e86c2e",
+                "url": "https://api.github.com/repos/sebastianbergmann/environment/zipball/d4dd10267a11055066a2a78ae04583d8ddd4f595",
+                "reference": "d4dd10267a11055066a2a78ae04583d8ddd4f595",
                 "shasum": ""
             },
             "require": {
                 "php": ">=8.4"
             },
             "require-dev": {
-                "phpunit/phpunit": "^13.1.11"
+                "phpunit/phpunit": "^13.3.6"
             },
             "suggest": {
                 "ext-posix": "*"
@@ -12771,7 +12771,7 @@
             "support": {
                 "issues": "https://github.com/sebastianbergmann/environment/issues",
                 "security": "https://github.com/sebastianbergmann/environment/security/policy",
-                "source": "https://github.com/sebastianbergmann/environment/tree/9.3.2"
+                "source": "https://github.com/sebastianbergmann/environment/tree/9.3.3"
             },
             "funding": [
                 {
@@ -12791,7 +12791,7 @@
                     "type": "tidelift"
                 }
             ],
-            "time": "2026-05-25T13:41:38+00:00"
+            "time": "2026-10-01T12:37:56+00:00"
         },
         {
             "name": "sebastian/exporter",

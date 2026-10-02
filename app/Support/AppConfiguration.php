@@ -83,10 +83,11 @@ class AppConfiguration
     {
         try {
             /** @var Collection $collection */
-            $collection = Configuration::query()->whereLike('name', sprintf('%s%%',$name))->get(['id', 'name', 'data']);
+            $collection = Configuration::query()->whereLike('name', sprintf('%s%%', $name))->get(['id', 'name', 'data']);
         } catch (Exception|FireflyException|QueryException $e) {
             throw new FireflyException(sprintf('Could not poll the database: %s', $e->getMessage()), 0, $e);
         }
+
         return $collection;
     }
 

@@ -73,7 +73,7 @@ export function parseFromEntries(entries, originals, transactionType) {
             current.budget_id = entry.budget_id;
             current.category_name = entry.category_name;
             const piggyId = parseInt(entry.piggy_bank_id);
-            if(piggyId > 0) {
+            if (piggyId > 0) {
                 current.piggy_bank_id = piggyId;
             }
 
