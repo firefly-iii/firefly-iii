@@ -41,7 +41,7 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v7
         with:
-          fetch-depth: 0
+          fetch-depth: 2
       - name: Switch and pull
         run: |
           # validate argument
