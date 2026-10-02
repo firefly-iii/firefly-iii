@@ -300,12 +300,12 @@ final class DebugController extends Controller
         $configs  = AppConfiguration::getByPrefix('last_rt_job');
         $cronJobs = [];
 
-        /** @var Configuration $config */
-        foreach ($configs as $config) {
-            if ('last_rt_job' === $config->name) {
+        /** @var Configuration $item */
+        foreach ($configs as $item) {
+            if ('last_rt_job' === $item->name) {
                 continue;
             }
-            $parts  = explode('_', $config->name);
+            $parts  = explode('_', $item->name);
             $userId = (int)$parts[count($parts) - 1];
             $time   = (int)$config->data;
             if ($time > 0) {
