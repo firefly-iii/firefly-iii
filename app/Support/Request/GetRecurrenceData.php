@@ -51,11 +51,11 @@ trait GetRecurrenceData
                 $return[$key] = $transaction[$key];
             }
         }
-        if(array_key_exists('tags', $return)) {
-            $filtered = [];
-            foreach($return['tags'] as $tag) {
-                if('' !== trim((string)$tag)) {
-                    $filtered[] = (string)$tag;
+        if (array_key_exists('tags', $return)) {
+            $filtered       = [];
+            foreach ($return['tags'] as $tag) {
+                if ('' !== trim((string) $tag)) {
+                    $filtered[] = (string) $tag;
                 }
             }
             $return['tags'] = $filtered;

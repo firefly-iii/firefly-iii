@@ -25,8 +25,8 @@ declare(strict_types=1);
 namespace FireflyIII\Api\V1\Requests\Summary;
 
 use FireflyIII\Api\V1\Requests\AggregateFormRequest;
-use FireflyIII\Api\V1\Requests\SameDateRangeRequest;
 use FireflyIII\Api\V1\Requests\Models\TransactionCurrency\CurrencyCodeRequest;
+use FireflyIII\Api\V1\Requests\SameDateRangeRequest;
 
 class BasicRequest extends AggregateFormRequest
 {
