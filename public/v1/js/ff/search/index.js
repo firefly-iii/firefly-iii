@@ -27,7 +27,7 @@ $(function () {
 });
 
 function startSearch(query) {
-    $.post(searchUrl, {query: query, _token: token}).done(presentSearchResults).fail(searchFailure);
+    $.post(searchUrl, {query: query, _token: token, _from: from}).done(presentSearchResults).fail(searchFailure);
 }
 
 function searchFailure() {
