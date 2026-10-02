@@ -19,8 +19,8 @@
                x-model="transaction.source_account.alpine_name"
                :data-index="index"
                @keydown="keyUpFromSource"
-               x-bind:disabled="true===transaction.source_account.disabled"
-               x-bind:readonly="true===transaction.source_account.disabled"
+               x-bind:disabled="true===transaction.source_account.disabled || transaction.reconciled"
+               x-bind:readonly="true===transaction.source_account.disabled || transaction.reconciled"
                @changed="changedSourceAccount"
                placeholder="{{ __('firefly.source_account')  }}">
             <button tabindex="-1" class="btn btn-outline-secondary" type="button" @click="clearSourceAccount(index)"><em class="bi bi-trash"></em></button>

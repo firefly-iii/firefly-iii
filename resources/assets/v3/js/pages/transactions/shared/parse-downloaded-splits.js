@@ -33,6 +33,7 @@ export function parseDownloadedSplits(downloads, groupId) {
             current.transaction_journal_id = parseInt(download.transaction_journal_id);
             current.transaction_group_id = groupId;
             current.reconciled = download.reconciled;
+            current.ogReconciled = download.reconciled;
             current.bill_id = null === download.bill_id ? 0 : parseInt(download.bill_id);
             current.bill_name = download.bill_name;
             current.budget_id = download.budget_id;

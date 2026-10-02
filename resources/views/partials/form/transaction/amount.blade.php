@@ -9,6 +9,8 @@
         <input type="number" step="any" min="0"
                :id="'amount_' + index"
                :data-index="index"
+               x-bind:disabled="transaction.reconciled"
+               x-bind:readonly="transaction.reconciled"
                :class="{'is-invalid': transaction.errors.amount.length > 0, 'input-mask' : true, 'form-control': true}"
                x-model="transaction.amount"
                @keyup.enter="save()"

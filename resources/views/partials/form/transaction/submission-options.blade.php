@@ -1,4 +1,10 @@
 <!-- RETURN HERE AFTER CREATE TRANSACTION -->
+<template x-if="true === transaction.ogReconciled">
+    <div class="form-check">
+        <input class="form-check-input" x-model="transaction.reconciled" type="checkbox" id="reconcileButton">
+        <label class="form-check-label" for="reconcileButton">{{ __('firefly.is_reconciled') }}</label>
+    </div>
+</template>
 <template x-if="'create' === formBehaviour.formType">
     <div class="form-check">
         <input class="form-check-input" x-model="formStates.returnHereButton" type="checkbox" id="returnButton">

@@ -29,6 +29,8 @@
             <input type="number" step="any" min="0"
                    :id="'foreign_amount_' + index"
                    :data-index="index"
+                   x-bind:disabled="transaction.reconciled"
+                   x-bind:readonly="transaction.reconciled"
                    :class="{'is-invalid': transaction.errors.foreign_amount.length > 0, 'input-mask' : true, 'form-control': true}"
                    x-model="transaction.foreign_amount"
                    @change="changedForeignAmount"

@@ -78,7 +78,6 @@
                     @include('partials.form.transaction.notes')
                 </div>
             </div>
-
         </div>
         <!-- EXTRA THINGS -->
         <div class="col-xl-6 col-lg-6 col-md-12 col-xs-12 mb-2">
@@ -111,7 +110,7 @@
         </div>
     </div>
     <div class="row">
-        <div class="col-xl-4 col-lg-6 col-md-12 col-xs-12 mb-2">
+        <div class="col-xl-6 col-lg-6 col-md-12 col-xs-12 mb-2">
             <div class="card mb-2">
                 <div class="card-header">
                     <h3 class="card-title">
