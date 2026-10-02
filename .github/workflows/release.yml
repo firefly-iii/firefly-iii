@@ -127,10 +127,10 @@ jobs:
           cp .env.example .env
           # format code.
           echo "Will now run Mago Format"
-          ./vendor/bin/mago format
+          ./vendor/bin/mago format > /dev/null
           sudo chown -R runner:docker resources/lang
           echo "Will now run PHPCS"
-          .ci/phpcs.sh
+          .ci/phpcs.sh > /dev/null
 
           # lint and check
           echo "Will now run Mago Lint"
