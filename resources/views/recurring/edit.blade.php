@@ -136,7 +136,7 @@
                         @endif
 
                         {{-- TAGS --}}
-                        {!! ExpandedForm::multiSelect('tags', $array['transactions'][0]['tags'],null) !!}
+                        {!! ExpandedForm::multiSelect('tags', $array['transactions'][0]['tags'],$array['transactions'][0]['tags']) !!}
 
                         {{-- RELATE THIS TRANSFER TO A PIGGY BANK --}}
                         {!! PiggyBankForm::piggyBankList('piggy_bank_id',$array['transactions'][0]['piggy_bank_id'])  !!}
