@@ -98,7 +98,9 @@
                     @include('partials.form.transaction.external-url')
 
                     <!-- LOCATION -->
-                    @include('partials.form.transaction.location')
+                    @if(true === get_app_configuration('enable_external_map', false))
+                        @include('partials.form.transaction.location')
+                    @endif
 
                     <!-- DATE FIELDS -->
                     @include('partials.form.transaction.date-fields')

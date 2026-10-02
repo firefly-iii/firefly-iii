@@ -385,7 +385,7 @@
                                     </td>
                                 </tr>
                             @endif
-                            @if(null !== $journal['location']['latitude'])
+                            @if(true === get_app_configuration('enable_external_map', false) && null !== $journal['location']['latitude'])
                                 <tr>
                                     <td class="w-30"> {{ __('firefly.location') }}</td>
                                     <td>
