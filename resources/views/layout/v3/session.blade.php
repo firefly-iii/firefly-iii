@@ -438,6 +438,7 @@
         <form action="{{ route('daterange') }}?redirect=true" method="POST" id="daterange-form">
             <input name="_token" type="hidden" value="{{ csrf_token() }}">
             <input type="hidden" name="start" value="" id="customStart"/>
+            <input type="hidden" name="_from" value="{{ $FF3_FROM }}" />
             <input type="hidden" name="end" value="" id="customEnd"/>
             <div class="modal-content">
                 <div class="modal-header">

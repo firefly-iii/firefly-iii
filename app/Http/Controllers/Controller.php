@@ -67,7 +67,8 @@ abstract class Controller extends BaseController
     protected string $monthAndDayFormat;
     protected string $monthFormat;
     protected string $redirectUrl    = '/';
-    protected string $from           = '';
+    protected string $from           = '/';
+    protected string $requestFrom    = '/';
 
     /**
      * Controller constructor.
@@ -90,6 +91,7 @@ abstract class Controller extends BaseController
         View::share('FF_VERSION', config('firefly.version'));
         View::share('FF_BUILD_TIME', config('firefly.build_time'));
         $this->from  = $this->getFromUrl();
+        $this->requestFrom = $this->getRequestFromUrl();
         View::share('FF3_FROM', $this->from);
         // this breaks when running < PHP 8.5 and is totally intentional.
         $input       = ' James is cool';
@@ -194,6 +196,21 @@ abstract class Controller extends BaseController
         }
         if (array_key_exists('fragment', $current) && '' !== $current['fragment']) {
             $from .= '#'.$current['fragment'];
+        }
+        // validate query, and give error if invalid.
+        $validator = validator(['_from' => $from], ['nullable', 'max:255', new IsValidOriginUrl()]);
+        if ($validator->fails()) {
+            throw new FireflyException(trans('validation.bad_url_parts'));
+        }
+
+        return $from;
+    }
+
+    private function getRequestFromUrl(): string
+    {
+        $from      = (string)request()->input('_from');
+        if('' === $from) {
+            return '/';
         }
         // validate query, and give error if invalid.
         $validator = validator(['_from' => $from], ['nullable', 'max:255', new IsValidOriginUrl()]);

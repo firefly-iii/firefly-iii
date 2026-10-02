@@ -67,13 +67,6 @@ final class CreateController extends Controller
 
     public function cloneGroup(Request $request): JsonResponse
     {
-        // validate query, and give error if invalid.
-        $validator = validator(['_from' => $request->input('_from')], ['nullable', 'max:255', new IsValidOriginUrl()]);
-        if ($validator->fails()) {
-            throw new FireflyException(trans('validation.bad_url_parts'));
-        }
-        $from      = $request->input('_from');
-
         $groupId   = (int) $request->input('id');
         if (0 !== $groupId) {
             $group = $this->repository->find($groupId);
@@ -90,14 +83,14 @@ final class CreateController extends Controller
                 session()->flash('success_url', $link);
 
                 if ('edit' === $request->input('redirect')) {
-                    return response()->json(['redirect' => route('transactions.edit', [$newGroup->id]).'?_from='.urlencode($from)]);
+                    return response()->json(['redirect' => route('transactions.edit', [$newGroup->id]).'?_from='.urlencode($this->requestFrom)]);
                 }
 
-                return response()->json(['redirect' => route('index').$from]);
+                return response()->json(['redirect' => route('index').$this->requestFrom]);
             }
         }
 
-        return response()->json(['redirect' => route('index').$from]);
+        return response()->json(['redirect' => route('index').$this->requestFrom]);
     }
 
     /**

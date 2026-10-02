@@ -30,7 +30,7 @@ import formatMoney from "../../util/format-money.js";
 import i18next from "i18next";
 import { addDrag } from "../shared/drag-and-droppable-rows.js";
 
-window.enableDates = false;
+window.enableDates = true;
 
 let index = function () {
     return {
