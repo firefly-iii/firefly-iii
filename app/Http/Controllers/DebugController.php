@@ -30,6 +30,7 @@ use FireflyIII\Enums\AccountTypeEnum;
 use FireflyIII\Enums\TransactionTypeEnum;
 use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Http\Middleware\IsDemoUser;
+use FireflyIII\Models\Configuration;
 use FireflyIII\Models\PeriodStatistic;
 use FireflyIII\Models\TransactionType;
 use FireflyIII\Repositories\PiggyBank\PiggyBankRepositoryInterface;
@@ -53,10 +54,8 @@ use Illuminate\View\View;
 use Monolog\Handler\RotatingFileHandler;
 use Safe\Exceptions\FilesystemException;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
-
 use function Safe\file_get_contents;
 use function Safe\ini_get;
-
 use const PHP_INT_SIZE;
 use const PHP_SAPI;
 
@@ -141,16 +140,16 @@ final class DebugController extends Controller
      *
      * @throws FilesystemException
      */
-    public function index(): Factory|\Illuminate\Contracts\View\View
+    public function index(): Factory | \Illuminate\Contracts\View\View
     {
-        $table      = $this->generateTable();
+        $table = $this->generateTable();
         $table      = str_replace(["\n", "\t", '  '], '', $table);
         $now        = now(config('app.timezone'))->format('Y-m-d H:i:s');
         $logContent = '';
 
         if (auth()->check() && auth()->user()->hasRole('owner')) {
             // get latest log file:
-            $logger   = Log::driver();
+            $logger = Log::driver();
             // PHPstan doesn't recognize the method because of its polymorphic nature.
             $handlers = $logger->getHandlers();
 
@@ -164,7 +163,7 @@ final class DebugController extends Controller
             }
             if ('' !== $logContent) {
                 // last few lines
-                $logContent = 'Truncated from this point <----|'.substr($logContent, -16_384);
+                $logContent = 'Truncated from this point <----|' . substr($logContent, -16_384);
             }
         }
 
@@ -245,13 +244,13 @@ final class DebugController extends Controller
 
                 continue;
             }
-            $params                    = [];
+            $params = [];
             foreach ($route->parameterNames() as $name) {
                 $params[] = $this->getParameter($name);
             }
             $return[$route->getName()] = route($route->getName(), $params);
         }
-        $count  = 0;
+        $count = 0;
         echo '<hr>';
         echo '<h1>Routes</h1>';
         echo sprintf('<h2>%s</h2>', $count);
@@ -289,38 +288,53 @@ final class DebugController extends Controller
         $app    = $this->getAppInfo();
         $user   = $this->getUserInfo();
 
-        return (string) view('partials.debug-table', ['system' => $system, 'docker' => $docker, 'app' => $app, 'user' => $user]);
+        return (string)view('partials.debug-table', ['system' => $system, 'docker' => $docker, 'app' => $app, 'user' => $user]);
     }
 
     private function getAppInfo(): array
     {
-        $userGuard      = config('auth.defaults.guard');
+        $userGuard = config('auth.defaults.guard');
 
-        $config         = AppConfiguration::get('last_rt_job', 0);
-        $lastTime       = (int) $config->data;
-        $lastCronjob    = 'never';
-        $lastCronjobAgo = 'never';
-        if ($lastTime > 0) {
-            $carbon         = Carbon::createFromTimestamp($lastTime);
-            $lastCronjob    = $carbon->format('Y-m-d H:i:s');
-            $lastCronjobAgo = $carbon->locale('en')->diffForHumans();
+        $config = AppConfiguration::get('last_rt_job', 0);
+        // last_rt_job_1
+        $configs  = AppConfiguration::getByPrefix('last_rt_job');
+        $cronJobs = [];
+
+        /** @var Configuration $config */
+        foreach ($configs as $config) {
+            if ('last_rt_job' === $config->name) {
+                continue;
+            }
+            $parts  = explode('_', $config->name);
+            $userId = (int)$parts[count($parts) - 1];
+            $time   = (int)$config->data;
+            if ($time > 0) {
+                $carbon         = Carbon::createFromTimestamp($time);
+                $lastCronjob    = $carbon->format('Y-m-d H:i:s');
+                $lastCronjobAgo = $carbon->locale('en')->diffForHumans();
+                $cronJobs[]     = [
+                    'user'          => $userId,
+                    'last_run'     => $lastCronjob,
+                    'last_run_ago' => $lastCronjobAgo,
+                ];
+            }
         }
-
         return [
             'debug'              => var_export(config('app.debug'), return: true),
             'audit_log_channel'  => implode(', ', config('logging.channels.audit.channels')),
-            'default_language'   => (string) config('firefly.default_language'),
-            'default_locale'     => (string) config('firefly.default_locale'),
+            'default_language'   => (string)config('firefly.default_language'),
+            'default_locale'     => (string)config('firefly.default_locale'),
             'remote_header'      => 'remote_user_guard' === $userGuard ? config('auth.guard_header') : 'N/A',
             'remote_mail_header' => 'remote_user_guard' === $userGuard ? config('auth.guard_email') : 'N/A',
-            'stateful_domains'   => implode(', ', config('sanctum.stateful')),
+            //'stateful_domains'   => implode(', ', config('sanctum.stateful')),
+            'cron_jobs'      => $cronJobs,
 
             // the dates for the cron job are based on the recurring cron job's times.
             // any of the cron jobs will do, they always run at the same time.
             // but this job is the oldest, so the biggest chance it ran once
 
-            'last_cronjob'       => $lastCronjob,
-            'last_cronjob_ago'   => $lastCronjobAgo,
+            //            'last_cronjob'       => $lastCronjob,
+            //            'last_cronjob_ago'   => $lastCronjobAgo,
         ];
     }
 
@@ -470,7 +484,7 @@ final class DebugController extends Controller
             'bits'            => PHP_INT_SIZE * 8,
             'bcscale'         => bcscale(),
             'display_errors'  => ini_get('display_errors'),
-            'error_reporting' => $this->errorReporting((int) ini_get('error_reporting')),
+            'error_reporting' => $this->errorReporting((int)ini_get('error_reporting')),
             'upload_size'     => min($maxFileSize, $maxPostSize),
             'all_drivers'     => $drivers,
             'current_driver'  => $currentDriver,
@@ -479,10 +493,10 @@ final class DebugController extends Controller
 
     private function getUserFlags(): string
     {
-        $flags      = [];
+        $flags = [];
 
         /** @var User $user */
-        $user       = auth()->user();
+        $user = auth()->user();
 
         // has liabilities
         if ($user->accounts()->accountTypeIn([AccountTypeEnum::DEBT->value, AccountTypeEnum::LOAN->value, AccountTypeEnum::MORTGAGE->value])->count() > 0) {
@@ -498,7 +512,7 @@ final class DebugController extends Controller
         }
 
         // has stored reconciliations
-        $type       = TransactionType::whereType(TransactionTypeEnum::RECONCILIATION->value)->first();
+        $type = TransactionType::whereType(TransactionTypeEnum::RECONCILIATION->value)->first();
         if ($user->transactionJournals()->where('transaction_type_id', $type->id)->count() > 0) {
             $flags[] = '<span title="Has reconciled">:ledger:</span>';
         }
@@ -530,22 +544,22 @@ final class DebugController extends Controller
 
     private function getUserInfo(): array
     {
-        $userFlags      = $this->getUserFlags();
+        $userFlags = $this->getUserFlags();
 
         // user info
-        $userAgent      = request()->header('user-agent');
+        $userAgent = request()->header('user-agent');
 
         // set languages, see what happens:
         $original       = setlocale(LC_ALL, '0');
         $localeAttempts = [];
         $parts          = Steam::getLocaleArray(Steam::getLocale());
         foreach ($parts as $code) {
-            $code                  = trim($code);
+            $code = trim($code);
             Log::debug(sprintf('Trying to set %s', $code));
             $result                = setlocale(LC_ALL, $code);
             $localeAttempts[$code] = $result === $code;
         }
-        setlocale(LC_ALL, (string) $original);
+        setlocale(LC_ALL, (string)$original);
 
         return [
             'user_id'            => auth()->user()->id,
