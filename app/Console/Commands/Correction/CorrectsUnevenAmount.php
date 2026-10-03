@@ -59,8 +59,10 @@ class CorrectsUnevenAmount extends Command
         // convert old-style transactions between assets and liabilities.
         $this->convertOldStyleTransactions();
 
-        if (($this->fixUnevenAmounts() > 0 || $this->matchCurrencies() > 0) &&
-            true === AppConfiguration::get('use_running_balance', config('firefly.feature_flags.running_balance_column'))->data) {
+        if (
+            ($this->fixUnevenAmounts() > 0 || $this->matchCurrencies() > 0)
+            && true === AppConfiguration::get('use_running_balance', config('firefly.feature_flags.running_balance_column'))->data
+        ) {
             $this->friendlyInfo('Will recalculate transaction running balance columns. This may take a LONG time. Please be patient.');
             AccountBalanceCalculator::recalculateAll(false);
             $this->friendlyInfo('Done recalculating transaction running balance columns.');
@@ -320,12 +322,13 @@ class CorrectsUnevenAmount extends Command
         $message             = sprintf('Corrected amount in transaction journal #%d', $param);
         $this->friendlyInfo($message);
         ++$this->count;
+
         return true;
     }
 
     private function fixUnevenAmounts(): int
     {
-        $count = 0;
+        $count    = 0;
         Log::debug('fixUnevenAmounts()');
         $journals = DB::table('transactions')
             ->groupBy('transaction_journal_id')
@@ -356,11 +359,12 @@ class CorrectsUnevenAmount extends Command
             }
             if (0 !== $res) {
                 $fix = $this->fixJournal((int) $entry->transaction_journal_id);
-                if(true === $fix) {
-                    $count++;
+                if (true === $fix) {
+                    ++$count;
                 }
             }
         }
+
         return $count;
     }
 
@@ -461,6 +465,7 @@ class CorrectsUnevenAmount extends Command
         }
 
         $this->friendlyPositive(sprintf('Fixed %d journal(s) with mismatched currencies.', $journals->count()));
+
         return $count;
     }
 }
