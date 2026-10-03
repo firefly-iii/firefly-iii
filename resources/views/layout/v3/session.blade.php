@@ -127,10 +127,10 @@
                 <li class="nav-item">
                     <a class="nav-link" href="#" id="anonymous">
                         @if($anonymous)
-                            <span class="text-danger bi bi-eye-slash"></span>
+                            <span class="money-negative bi bi-eye-slash"></span>
                         @endif
                         @if(!$anonymous)
-                            <span class="text-success bi bi-eye"></span>
+                            <span class="money-positive bi bi-eye"></span>
                         @endif
                     </a>
                 </li>
