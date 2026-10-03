@@ -54,8 +54,8 @@ export function addAllAutocompleteToForm() {
     // the available account types may be limited.
 
     let transactionType = this.groupProperties.transactionType;
-    let sourceType = this.entries[0].source_account.type ?? 'unknown';
-    let destinationType = this.entries[0].destination_account.type ?? 'unknown';
+    let sourceType = this.entries[0].source_account.type ?? "unknown";
+    let destinationType = this.entries[0].destination_account.type ?? "unknown";
     filters.destination = getExpectedAccountTypes(transactionType, sourceType, destinationType);
 
     console.log("Filters for autocomplete: ", filters);
@@ -143,7 +143,7 @@ export function addAllAutocompleteToForm() {
 }
 
 export function addAutocomplete(options) {
-    console.log('addAutocomplete("'+options.serverUrl+'")');
+    console.log('addAutocomplete("' + options.serverUrl + '")');
     const params = {
         server: options.serverUrl,
         serverParams: {},
@@ -165,7 +165,7 @@ export function addAutocomplete(options) {
         liveServer: true,
     };
     if (typeof options.account_types !== "undefined" && options.account_types.length > 0) {
-        console.log('Add account types');
+        console.log("Add account types");
         params.serverParams["types"] = options.account_types;
     }
     if (typeof options.onRenderItem !== "undefined" && null !== options.onRenderItem) {

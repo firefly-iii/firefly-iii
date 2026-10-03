@@ -85,8 +85,8 @@ export function showMessageOrRedirectUser(sourceOfCall) {
         }
     }
     if ("" !== parts.search) {
-        if(parts.search.includes('&amp;')) {
-            parts.search = parts.search.replaceAll('&amp;', '&');
+        if (parts.search.includes("&amp;")) {
+            parts.search = parts.search.replaceAll("&amp;", "&");
         }
         let obj = new URLSearchParams(parts.search);
         let pathName = parts.pathname; // we redirect here!
