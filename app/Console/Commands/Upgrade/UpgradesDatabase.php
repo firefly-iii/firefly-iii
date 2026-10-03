@@ -30,7 +30,6 @@ use FireflyIII\Support\System\GeneratesInstallationId;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\Log;
 use Safe\Exceptions\InfoException;
-
 use function Safe\set_time_limit;
 
 try {
@@ -85,11 +84,14 @@ class UpgradesDatabase extends Command
             $args = ['--force' => true];
         }
         foreach ($commands as $command) {
-            $this->friendlyLine(sprintf('Now executing %s', $command));
+            $this->friendlyLine(sprintf('Now executing command %s', $command));
+            $time = microtime(true);
             $this->call($command, $args);
+            $time = round((microtime(true) - $time), 2);
+            $this->friendlyLine(sprintf('Command %s took %.4f seconds.', $command, $time));
         }
         // index will set FF3 version.
-        AppConfiguration::set('ff3_build_time', (int) config('firefly.build_time'));
+        AppConfiguration::set('ff3_build_time', (int)config('firefly.build_time'));
         $this->generateInstallationId();
 
         return 0;
