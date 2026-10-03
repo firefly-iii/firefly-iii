@@ -20,7 +20,14 @@
 
 export default function getExpectedAccountTypes(transactionType, sourceType, destinationType) {
     transactionType = transactionType.toLowerCase();
-    console.log('getExpectedAccountTypes: transactionType=' + transactionType + ', sourceType=' + sourceType + ', destinationType=' + destinationType);
+    console.log(
+        "getExpectedAccountTypes: transactionType=" +
+            transactionType +
+            ", sourceType=" +
+            sourceType +
+            ", destinationType=" +
+            destinationType,
+    );
 
     // is withdrawal and source is asset? limit destination types
     if ("withdrawal" === transactionType && "Asset account" === sourceType) {

@@ -22,7 +22,6 @@
 import Autocomplete from "bootstrap5-autocomplete";
 import getExpectedAccountTypes from "../../../form/get-expected-account-types.js";
 
-
 export function disableSplitInputs() {
     let isTransferOrWithdrawal =
         "transfer" === this.groupProperties.transactionType || "withdrawal" === this.groupProperties.transactionType;
