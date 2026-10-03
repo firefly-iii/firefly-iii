@@ -9,10 +9,36 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 
 ### Fixed
 
-- [Issue 12928](https://github.com/firefly-iii/firefly-iii/issues/12928) (Webhook creation fails) reported by @Xav-v
+- #12433
+- #12616
+- #12756
+- #12786
+- #12833
+- #12868
+- #12871
+- #12873
+- #12891
+- #12894
+- #12902
+- #12907
+- #12909
+- #12919
+- #12921
 - [Issue 12922](https://github.com/firefly-iii/firefly-iii/issues/12922) (Undefined variable $incomeTopLength in category graphs) reported by @GunoH
+- #12926
+- #12927
+- #12928
 - [Issue 12929](https://github.com/firefly-iii/firefly-iii/issues/12929) (v6.7.6 Alpine.js requires 'unsafe-eval' in CSP – breaks behind strict proxies) reported by @37-b-j
+- #12932
 - [Issue 12934](https://github.com/firefly-iii/firefly-iii/issues/12934) (API: PUT /v1/bills/{id} refuses empty notes, so a bill's notes can't be cleared (the web form allows it)) reported by @mkloouo
+- #12937
+- #12941
+- #12945
+- #12947
+- #12951
+- #12952
+- #12953
+- #12957
 
 ## v6.7.6 - 2026-09-28
 
