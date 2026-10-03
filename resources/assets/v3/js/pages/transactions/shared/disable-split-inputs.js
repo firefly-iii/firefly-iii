@@ -71,8 +71,9 @@ export function disableSplitInputs() {
             // unless the user changes it, in which case we will not overwrite it.
             if (
                 "" === this.entries[i].destination_account.alpine_name &&
-                "withdrawal" === this.groupProperties.transactionType) {
-                console.log('Prefill destination account #', i, this.entries[i].destination_account);
+                "withdrawal" === this.groupProperties.transactionType
+            ) {
+                console.log("Prefill destination account #", i, this.entries[i].destination_account);
                 this.entries[i].destination_account = JSON.parse(
                     JSON.stringify(this.entries[i - 1].destination_account),
                 ); //structuredClone();

@@ -26,9 +26,18 @@ export function createLinkAutocomplete(fieldIdentifier, url) {
     const renderJournal = function (item) {
         let locale = window.store.get("locale");
         // return item.description;
-        return item.description + '<br><small class="text-muted">#' + item.transaction_group_id + ', ' + formatMoney(item.amount, item.currency_code) + " @ " + format(new Date(item.date), window.i18next.t("config.date_time_fns", { lng: locale }), locale) + "</small>";
+        return (
+            item.description +
+            '<br><small class="text-muted">#' +
+            item.transaction_group_id +
+            ", " +
+            formatMoney(item.amount, item.currency_code) +
+            " @ " +
+            format(new Date(item.date), window.i18next.t("config.date_time_fns", { lng: locale }), locale) +
+            "</small>"
+        );
     };
-    console.log('Created link AC', fieldIdentifier);
+    console.log("Created link AC", fieldIdentifier);
     Autocomplete.init("#" + fieldIdentifier, {
         server: url,
         labelField: "name",
