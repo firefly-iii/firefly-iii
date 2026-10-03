@@ -90,10 +90,11 @@ final class TransactionController extends Controller
 
     public function transactionsWithMeta(AutocompleteTransactionApiRequest $request): JsonResponse
     {
+        $query  = $request->attributes->get('query');
         $result = new Collection();
-        if (is_numeric($request->attributes->get('query'))) {
+        if (is_numeric($query)) {
             // search for group, not journal.
-            $firstResult = $this->groupRepository->find((int) $request->attributes->get('query'));
+            $firstResult = $this->groupRepository->find((int) $query);
             if ($firstResult instanceof TransactionGroup) {
                 // group may contain multiple journals, each a result:
                 foreach ($firstResult->transactionJournals as $journal) {
@@ -101,8 +102,8 @@ final class TransactionController extends Controller
                 }
             }
         }
-        if (!is_numeric($request->attributes->get('query'))) {
-            $result = $this->repository->searchJournalDescriptions($request->attributes->get('query'), $request->attributes->get('limit'));
+        if (!is_numeric($query)) {
+            $result = $this->repository->searchJournalDescriptions($query, $request->attributes->get('limit'));
         }
 
         // limit and unique

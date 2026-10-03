@@ -72,8 +72,6 @@ final class UpdateController extends Controller
         $admin       = auth()->user();
         $enrichment  = new SubscriptionEnrichment();
         $enrichment->setUser($admin);
-        $enrichment->setStart($this->parameters->get('start'));
-        $enrichment->setEnd($this->parameters->get('end'));
         $bill        = $enrichment->enrichSingle($bill);
 
         /** @var BillTransformer $transformer */

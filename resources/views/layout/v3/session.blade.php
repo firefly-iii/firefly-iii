@@ -127,10 +127,10 @@
                 <li class="nav-item">
                     <a class="nav-link" href="#" id="anonymous">
                         @if($anonymous)
-                            <span class="text-danger bi bi-eye-slash"></span>
+                            <span class="money-negative bi bi-eye-slash"></span>
                         @endif
                         @if(!$anonymous)
-                            <span class="text-success bi bi-eye"></span>
+                            <span class="money-positive bi bi-eye"></span>
                         @endif
                     </a>
                 </li>
@@ -438,6 +438,7 @@
         <form action="{{ route('daterange') }}?redirect=true" method="POST" id="daterange-form">
             <input name="_token" type="hidden" value="{{ csrf_token() }}">
             <input type="hidden" name="start" value="" id="customStart"/>
+            <input type="hidden" name="_from" value="{{ $FF3_FROM }}" />
             <input type="hidden" name="end" value="" id="customEnd"/>
             <div class="modal-content">
                 <div class="modal-header">

@@ -30,6 +30,7 @@ use FireflyIII\Enums\AccountTypeEnum;
 use FireflyIII\Enums\TransactionTypeEnum;
 use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Http\Middleware\IsDemoUser;
+use FireflyIII\Models\Configuration;
 use FireflyIII\Models\PeriodStatistic;
 use FireflyIII\Models\TransactionType;
 use FireflyIII\Repositories\PiggyBank\PiggyBankRepositoryInterface;
@@ -294,16 +295,31 @@ final class DebugController extends Controller
 
     private function getAppInfo(): array
     {
-        $userGuard      = config('auth.defaults.guard');
+        $userGuard = config('auth.defaults.guard');
 
-        $config         = AppConfiguration::get('last_rt_job', 0);
-        $lastTime       = (int) $config->data;
-        $lastCronjob    = 'never';
-        $lastCronjobAgo = 'never';
-        if ($lastTime > 0) {
-            $carbon         = Carbon::createFromTimestamp($lastTime);
-            $lastCronjob    = $carbon->format('Y-m-d H:i:s');
-            $lastCronjobAgo = $carbon->locale('en')->diffForHumans();
+        $config    = AppConfiguration::get('last_rt_job', 0);
+        // last_rt_job_1
+        $configs   = AppConfiguration::getByPrefix('last_rt_job');
+        $cronJobs  = [];
+
+        /** @var Configuration $item */
+        foreach ($configs as $item) {
+            if ('last_rt_job' === $item->name) {
+                continue;
+            }
+            $parts  = explode('_', $item->name);
+            $userId = (int) $parts[count($parts) - 1];
+            $time   = (int) $config->data;
+            if ($time > 0) {
+                $carbon         = Carbon::createFromTimestamp($time);
+                $lastCronjob    = $carbon->format('Y-m-d H:i:s');
+                $lastCronjobAgo = $carbon->locale('en')->diffForHumans();
+                $cronJobs[]     = [
+                    'user'         => $userId,
+                    'last_run'     => $lastCronjob,
+                    'last_run_ago' => $lastCronjobAgo,
+                ];
+            }
         }
 
         return [
@@ -313,14 +329,13 @@ final class DebugController extends Controller
             'default_locale'     => (string) config('firefly.default_locale'),
             'remote_header'      => 'remote_user_guard' === $userGuard ? config('auth.guard_header') : 'N/A',
             'remote_mail_header' => 'remote_user_guard' === $userGuard ? config('auth.guard_email') : 'N/A',
-            'stateful_domains'   => implode(', ', config('sanctum.stateful')),
-
+            // 'stateful_domains'   => implode(', ', config('sanctum.stateful')),
+            'cron_jobs'          => $cronJobs,
             // the dates for the cron job are based on the recurring cron job's times.
             // any of the cron jobs will do, they always run at the same time.
             // but this job is the oldest, so the biggest chance it ran once
-
-            'last_cronjob'       => $lastCronjob,
-            'last_cronjob_ago'   => $lastCronjobAgo,
+            //            'last_cronjob'       => $lastCronjob,
+            //            'last_cronjob_ago'   => $lastCronjobAgo,
         ];
     }
 

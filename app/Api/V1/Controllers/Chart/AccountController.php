@@ -37,6 +37,7 @@ use FireflyIII\Support\Facades\Steam;
 use FireflyIII\Support\Http\Api\ApiSupport;
 use FireflyIII\Support\Http\Api\CleansChartData;
 use FireflyIII\Support\Http\Api\CollectsAccountsFromFilter;
+use FireflyIII\Support\Http\Api\ExchangeRateConverter;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
@@ -147,6 +148,7 @@ final class AccountController extends Controller
         $rangeVals         = array_values($range);
         $rangeIdx          = 0;
         $rangeCount        = count($rangeDates);
+        $converter         = new ExchangeRateConverter();
 
         while ($currentStart <= $params['end']) {
             $label                         = $currentStart->toAtomString();
@@ -155,14 +157,17 @@ final class AccountController extends Controller
             while ($rangeIdx < $rangeCount && $rangeDates[$rangeIdx] <= $currentStart) {
                 $previous = $rangeVals[$rangeIdx]['balance'];
                 if ($this->convertToPrimary) {
-                    $pcPrevious = $rangeVals[$rangeIdx]['pc_balance'];
+                    $pcPrevious = $rangeVals[$rangeIdx]['balance'];
                 }
                 ++$rangeIdx;
             }
 
             $currentSet['entries'][$label] = $previous;
             if ($this->convertToPrimary) {
+                $pcPrevious                       = $converter->convert($currency, $this->primaryCurrency, $currentStart, $previous);
                 $currentSet['pc_entries'][$label] = $pcPrevious;
+
+                // convert for the current moment.
             }
 
             $currentStart                  = Navigation::addPeriod($currentStart, $period);

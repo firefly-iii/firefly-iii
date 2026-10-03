@@ -23,7 +23,7 @@ import "../../boot/bootstrap.js";
 import sidebar from "../../pages/shared/sidebar.js";
 import dates from "../shared/dates.js";
 import Get from "../../api/user-group/get.js";
-import Alpine from "alpinejs";
+import Alpine from "@alpinejs/csp";
 
 let index = function () {
     return {

@@ -93,10 +93,13 @@ const locales = {
 // it will format dates in whichever way is appropriate to the locale
 export default function (date, formatStr = "PP", locale) {
     if (typeof locale === "undefined") {
-        locale = window.__localeId__.replace("_", "");
+        locale = window.__localeId__.replace("_", "").replace("-", "");
     }
-    // console.log("Locale is " + locale);
-    return format(date, formatStr, {
-        locale: locales[locale] ?? locales[locale.slice(0, 2)] ?? locales["enUS"], // or global.__localeId__
-    });
+    let res = "(DATE ERROR)";
+    try {
+        res = format(date, formatStr, { locale: locales[locale] ?? locales[locale.slice(0, 2)] ?? locales["enUS"] });
+    } catch (error) {
+        console.warn("Could not format date: ", error);
+    }
+    return res;
 }

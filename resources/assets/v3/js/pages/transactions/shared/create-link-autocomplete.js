@@ -23,32 +23,36 @@ import formatMoney from "../../../util/format-money.js";
 import { format } from "date-fns";
 
 export function createLinkAutocomplete(fieldIdentifier, url) {
-    let token = document.querySelector('meta[name="csrf-token"]').getAttribute("content");
-    let locale = window.store.get("locale");
     const renderJournal = function (item) {
+        let locale = window.store.get("locale");
+        // return item.description;
         return (
             item.description +
-            '<br><small class="text-muted">' +
+            '<br><small class="text-muted">#' +
+            item.transaction_group_id +
+            ", " +
             formatMoney(item.amount, item.currency_code) +
             " @ " +
             format(new Date(item.date), window.i18next.t("config.date_time_fns", { lng: locale }), locale) +
             "</small>"
         );
     };
+    // console.log("Created link AC", fieldIdentifier);
     Autocomplete.init("#" + fieldIdentifier, {
-        server: url + "?_token=" + token,
+        server: url,
         labelField: "name",
         hiddenInput: true,
         valueField: "id",
         liveServer: true,
-        onRenderItem: renderJournal.bind(this),
+        // fixed: true,
+        showAllSuggestions: true,
+        onRenderItem: renderJournal,
         fetchOptions: {
             method: "GET",
-            credentials: "include",
             headers: {
                 "Content-Type": "application/json",
                 Accept: "application/json",
-                "X-CSRF-TOKEN": token,
+                "X-CSRF-TOKEN": document.head.querySelector('meta[name="csrf-token"]').content,
             },
         },
     });

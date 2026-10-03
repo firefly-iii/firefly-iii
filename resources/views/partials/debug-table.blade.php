@@ -114,8 +114,11 @@
     </tr>
     --}}
     <tr>
-        <td>Last cron job</td>
-        <td>{{ $app['last_cronjob'] }} ({{ $app['last_cronjob_ago'] }})</td>
+        <td>Last cron job(s)</td>
+        <td>
+            @foreach($app['cron_jobs'] as $cronJob)
+                <span>#</span>{{ $cronJob['user'] }}: {{ $cronJob['last_run'] }} ({{ $cronJob['last_run_ago'] }})<br>
+            @endforeach
     </tr>
     <tr>
         <td>Mailer</td>

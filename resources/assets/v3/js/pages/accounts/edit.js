@@ -22,7 +22,7 @@ import "../../boot/bootstrap.js";
 import sidebar from "../../pages/shared/sidebar.js";
 import dates from "../shared/dates.js";
 import i18next from "i18next";
-import Alpine from "alpinejs";
+import Alpine from "@alpinejs/csp";
 
 let edit = function () {
     return {

@@ -120,7 +120,7 @@ class UpdateRequest extends FormRequest
             'transactions.*.category_name'         => ['min:1', 'max:255', 'nullable'],
             'transactions.*.piggy_bank_id'         => ['nullable', 'numeric', 'mustExist:piggy_banks,id', new BelongsUser()],
             'transactions.*.piggy_bank_name'       => ['min:1', 'max:255', 'nullable', new BelongsUser()],
-            'transactions.*.tags'                  => ['nullable', 'min:1', 'max:255'],
+            'transactions.*.tags'                  => ['nullable', 'min:0', 'max:255'],
         ];
     }
 

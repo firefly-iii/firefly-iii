@@ -1,13 +1,21 @@
 <table class="table table-valign-middle table-sm table-hover">
     <thead>
     <tr>
-        @if($showCategory || $showBudget)
+        @if($showCategory && $showBudget)
+            <td colspan="9">
+                @if(method_exists($groups, 'links'))
+                    {{ $groups->links('pagination.bootstrap-4') }}
+                @endif
+            </td>
+        @endif
+        @if($showCategory XOR $showBudget)
             <td colspan="8">
                 @if(method_exists($groups, 'links'))
                     {{ $groups->links('pagination.bootstrap-4') }}
                 @endif
             </td>
-        @else
+        @endif
+        @if(!$showCategory && !$showBudget)
             <td colspan="7">
                 @if(method_exists($groups, 'links'))
                 {{ $groups->links('pagination.bootstrap-4') }}
@@ -79,9 +87,13 @@
                 @endforeach
             </td>
             <!-- column to span accounts + extra fields -->
-            @if($showCategory || $showBudget)
+            @if($showCategory && $showBudget)
+                <td colspan="6" class="top-light-border">&nbsp;</td>
+            @endif
+            @if($showCategory XOR $showBudget)
                 <td colspan="5" class="top-light-border">&nbsp;</td>
-            @else
+            @endif
+            @if(!$showCategory && !$showBudget)
                 <td colspan="4" class="top-light-border">&nbsp;</td>
             @endif
         <td class="top-light-border d-xs-none text-end">
@@ -90,8 +102,8 @@
                 <ul class="dropdown-menu" aria-labelledby="group_menu_{{ $group['id'] }}">
                     <li><a class="dropdown-item" href="{{ route('transactions.edit', [$group['id']]) }}?_from={{ urlencode($FF3_FROM) }}"><span class="bi bi-pencil"></span> {{ __('firefly.edit') }}</a></li>
                     <li><a class="dropdown-item" href="{{ route('transactions.delete', [$group['id']]) }}?_from={{ urlencode($FF3_FROM) }}"><span class="text-danger bi bi-trash"></span> {{ __('firefly.delete') }}</a></li>
-                    <li><a class="dropdown-item clone-transaction" href="#" data-id="{{ $group['id'] }}"><span class="bi bi-copy"></span> {{ __('firefly.clone') }}</a></li>
-                    <li><a class="dropdown-item clone-transaction-and-edit" href="#" data-id="{{ $group['id'] }}"><span class="bi bi-copy"></span> {{ __('firefly.clone_and_edit') }}</a></li>
+                    <li><a class="dropdown-item clone-transaction" data-from="{{ $FF3_FROM }}" href="#" data-id="{{ $group['id'] }}"><span class="bi bi-copy"></span> {{ __('firefly.clone') }}</a></li>
+                    <li><a class="dropdown-item clone-transaction-and-edit" data-from="{{ $FF3_FROM }}" href="#" data-id="{{ $group['id'] }}"><span class="bi bi-copy"></span> {{ __('firefly.clone_and_edit') }}</a></li>
                 </ul>
             </div>
         </td>
@@ -191,8 +203,8 @@
                         <li><a class="dropdown-item" href="{{ route('transactions.delete', [$group['id']]) }}?_from={{ urlencode($FF3_FROM) }}"><span class="text-danger bi bi-trash"></span> {{ __('firefly.delete') }}</a></li>
                     @endif
                     @if($transaction['transaction_type_type'] !== 'Reconciliation' and $transaction['transaction_type_type'] !== 'Opening balance' and $transaction['transaction_type_type'] !== 'Liability credit')
-                        <li><a class="dropdown-item clone-transaction" href="#" data-id="{{ $group['id'] }}"><span class="bi bi-copy"></span> {{ __('firefly.clone') }}</a></li>
-                        <li><a class="dropdown-item clone-transaction-and-edit" href="#" data-id="{{ $group['id'] }}"><span class="bi bi-copy"></span> {{ __('firefly.clone_and_edit') }}</a></li>
+                        <li><a class="dropdown-item clone-transaction" data-from="{{ $FF3_FROM }}" href="#" data-id="{{ $group['id'] }}"><span class="bi bi-copy"></span> {{ __('firefly.clone') }}</a></li>
+                        <li><a class="dropdown-item clone-transaction-and-edit" data-from="{{ $FF3_FROM }}" href="#" data-id="{{ $group['id'] }}"><span class="bi bi-copy"></span> {{ __('firefly.clone_and_edit') }}</a></li>
                         <li><a class="dropdown-item" href="{{ route('rules.create-from-journal', [$transaction['transaction_journal_id']]) }}"><span class="bi bi-shuffle"></span> {{ __('firefly.create_rule_from_transaction') }}</a></li>
                     @endif
                 </ul>
@@ -221,35 +233,43 @@
     </tbody>
     <tfoot>
     <tr>
-        <td colspan="7">&nbsp;</td>
-        <td class="d-xs-none text-end">
-            <div class="d-none action-menu">
-            <button class="btn btn-sm btn-outline-secondary dropdown-toggle" type="button" id="bottom_action_menu" data-bs-toggle="dropdown" aria-expanded="false">{{ __('firefly.actions') }} <span class="caret"></span></button>
-            <ul class="dropdown-menu" aria-labelledby="bottom_action_menu">
-                <li><a href="#" class="mass-edit dropdown-item"><span class="bi bi-pencil"></span><span>{{ __('firefly.mass_edit') }}</span></a></li>
-                <li><a href="#" class="bulk-edit dropdown-item"><span class="bi bi-pencil-square"></span><span>{{ __('firefly.bulk_edit') }}</span></a></li>
-                <li><a href="#" class="dropdown-item mass-delete"><span class="bi bi-trash"></span><span>{{ __('firefly.mass_delete') }}</span></a></li>
-            </ul>
-            </div>
-        </td>
-
-        <td class="text-end"><input id="list_ALL_bottom" value="1" name="select-all" type="checkbox" class="select-all form-check-inline"/></td>
-
-    </tr>
-    <tr>
-        @if($showCategory || $showBudget)
+        @if($showCategory && $showBudget)
+            <td colspan="9">
+                @if(method_exists($groups, 'links'))
+                    {{ $groups->links('pagination.bootstrap-4') }}
+                @endif
+            </td>
+        @endif
+        @if($showCategory XOR $showBudget)
             <td colspan="8">
                 @if(method_exists($groups, 'links'))
                     {{ $groups->links('pagination.bootstrap-4') }}
                 @endif
             </td>
-        @else
+        @endif
+        @if(!$showCategory && !$showBudget)
             <td colspan="7">
                 @if(method_exists($groups, 'links'))
                     {{ $groups->links('pagination.bootstrap-4') }}
                 @endif
             </td>
         @endif
+        <td class="d-xs-none text-end">
+            <!-- Single button -->
+            <div class="action-menu d-none"> <!-- d-none -->
+                <button class="btn btn-sm btn-outline-secondary dropdown-toggle" type="button" id="bottom_action_menu" data-bs-toggle="dropdown" aria-expanded="false">
+                    {{ __('firefly.actions') }}<span class="caret"></span>
+                </button>
+                <ul class="dropdown-menu" aria-labelledby="bottom_action_menu">
+                    <li><a href="#" class="dropdown-item mass-edit"><span class="bi bi-pencil"></span> <span class="txt">{{ __('firefly.mass_edit') }}</span></a></li>
+                    <li><a href="#" class="dropdown-item bulk-edit"><span class="bi bi-pencil-square"></span> <span class="txt">{{ __('firefly.bulk_edit') }}</span></a></li>
+                    <li><a href="#" class="dropdown-item mass-delete"><span class="bi bi-trash"></span> <span class="txt">{{ __('firefly.mass_delete') }}</span></a></li>
+                </ul>
+            </div>
+        </td>
+        <td class="d-xs-none text-end">
+            <input id="list_ALL_bottom" value="1" name="select-all" type="checkbox" class="select-all form-check-inline"/>
+        </td>
     </tr>
     </tfoot>
 </table>

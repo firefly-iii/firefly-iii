@@ -25,18 +25,35 @@ declare(strict_types=1);
 namespace FireflyIII\Api\V1\Requests\Generic;
 
 use FireflyIII\Api\V1\Requests\ApiRequest;
+use FireflyIII\Rules\IsValidFilterInstruction;
 use FireflyIII\Support\Request\ChecksLogin;
 use FireflyIII\Support\Request\ConvertsDataTypes;
 use Illuminate\Contracts\Validation\Validator;
 
-class QueryRequest extends ApiRequest
+class FilterRequest extends ApiRequest
 {
     use ChecksLogin;
     use ConvertsDataTypes;
 
+    private ?string $filterClass = null;
+
+    public function handleConfig(array $config): void
+    {
+        parent::handleConfig($config);
+
+        $this->filterClass = $config['filter_class'] ?? null;
+
+        if (null === $this->filterClass) {
+            // throw new RuntimeException('FilterRequest requires a filter_class config');
+            $this->filterClass = 'Account';
+        }
+    }
+
     public function rules(): array
     {
-        return ['query' => sprintf('min:0|max:1024|%s', $this->required)];
+        return [
+            'filter' => ['min:0', 'max:255', $this->required, new IsValidFilterInstruction((string) $this->filterClass)],
+        ];
     }
 
     public function withValidator(Validator $validator): void
@@ -45,8 +62,10 @@ class QueryRequest extends ApiRequest
             if (count($validator->failed()) > 0) {
                 return;
             }
-            $query = $this->convertString('query');
-            $this->attributes->set('query', $query);
         });
     }
+
+    //    private function convertToFilter(string $value): array {
+    //        return [];
+    //    }
 }

@@ -1,8 +1,7 @@
 <?php
 
 /*
- * QueryRequest.php
- * Copyright (c) 2026 james@firefly-iii.org
+ * Copyright (c) 2025 https://github.com/ctrl-f5
  *
  * This file is part of Firefly III (https://github.com/firefly-iii).
  *
@@ -22,21 +21,18 @@
 
 declare(strict_types=1);
 
-namespace FireflyIII\Api\V1\Requests\Generic;
+namespace FireflyIII\Api\V1\Requests;
 
-use FireflyIII\Api\V1\Requests\ApiRequest;
-use FireflyIII\Support\Request\ChecksLogin;
-use FireflyIII\Support\Request\ConvertsDataTypes;
 use Illuminate\Contracts\Validation\Validator;
 
-class QueryRequest extends ApiRequest
+class SameDateRangeRequest extends ApiRequest
 {
-    use ChecksLogin;
-    use ConvertsDataTypes;
-
     public function rules(): array
     {
-        return ['query' => sprintf('min:0|max:1024|%s', $this->required)];
+        return [
+            'start' => sprintf('date|after:1970-01-02|before:2038-01-17|before_or_equal:end|required_with:end|%s', $this->required),
+            'end'   => sprintf('date|after:1970-01-02|before:2038-01-17|after_or_equal:start|required_with:start|%s', $this->required),
+        ];
     }
 
     public function withValidator(Validator $validator): void
@@ -45,8 +41,11 @@ class QueryRequest extends ApiRequest
             if (count($validator->failed()) > 0) {
                 return;
             }
-            $query = $this->convertString('query');
-            $this->attributes->set('query', $query);
+            $start = $this->getCarbonDate('start')?->startOfDay();
+            $end   = $this->getCarbonDate('end')?->endOfDay();
+
+            $this->attributes->set('start', $start);
+            $this->attributes->set('end', $end);
         });
     }
 }

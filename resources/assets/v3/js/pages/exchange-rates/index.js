@@ -23,7 +23,7 @@ import "../../boot/bootstrap.js";
 import sidebar from "../../pages/shared/sidebar.js";
 import dates from "../shared/dates.js";
 import i18next from "i18next";
-import Alpine from "alpinejs";
+import Alpine from "@alpinejs/csp";
 import Get from "../../api/model/currency/get.js";
 
 let index = function () {
@@ -35,6 +35,10 @@ let index = function () {
             this.i18next = i18next;
             this.getCurrencies();
         },
+        notEqualIds(left, right) {
+            return parseInt(left) !== parseInt(right);
+        },
+
         getCurrencies: function () {
             this.currencies = [];
             // start with page one, loop for the rest.

@@ -45,7 +45,14 @@ import { changedAmount } from "./shared/changed-amount.js";
 import { changedForeignAmount } from "./shared/changed-foreign-amount.js";
 import { parseErrors } from "./shared/parse-errors.js";
 import { addSplit } from "./shared/add-split.js";
-import { clearDestinationAccount, clearSourceAccount } from "./shared/clear-fields.js";
+import {
+    clearAmount,
+    clearCategory,
+    clearDescription,
+    clearForeignAmount,
+    clearDestinationAccount,
+    clearSourceAccount,
+} from "./shared/clear-fields.js";
 import { detectTransactionType } from "./shared/detect-transaction-type.js";
 import { determineAmountCurrency } from "./shared/determine-amount-currency.js";
 import { loadCustomFields } from "./shared/load-custom-fields.js";
@@ -69,7 +76,7 @@ import { redirectAfterTransactionLinks } from "./shared/redirect-after-transacti
 import { addTabListener } from "./shared/add-tab-listener.js";
 import { autoStep } from "./shared/auto-step.js";
 import { respondToTabSwitch } from "./shared/respond-to-tab-switch.js";
-import Alpine from "alpinejs";
+import Alpine from "@alpinejs/csp";
 import focusFirstInput from "../../shared/focus-first-input.js";
 import filterForeignCurrencies from "./shared/filter-foreign-currencies.js";
 
@@ -183,6 +190,10 @@ let transactions = function () {
         addSplit: addSplit,
         clearSourceAccount: clearSourceAccount,
         clearDestinationAccount: clearDestinationAccount,
+        clearCategory: clearCategory,
+        clearDescription: clearDescription,
+        clearAmount: clearAmount,
+        clearForeignAmount: clearForeignAmount,
         detectTransactionType: detectTransactionType,
         determineAmountCurrency: determineAmountCurrency,
         addAllAutocompleteToForm: addAllAutocompleteToForm,
@@ -342,6 +353,11 @@ let transactions = function () {
             this.loadCustomFields().then((data) => {
                 this.formBehaviour.customFields = data;
                 this.autoStep();
+            });
+
+            document.addEventListener("upload-failed", (event) => {
+                // console.log('Now in event listener "upload-failed"');
+                this.processUploadError(event);
             });
 
             // add some event listeners

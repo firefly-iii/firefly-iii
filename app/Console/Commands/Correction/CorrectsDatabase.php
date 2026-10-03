@@ -83,7 +83,10 @@ class CorrectsDatabase extends Command
         ];
         foreach ($commands as $command) {
             $this->friendlyLine(sprintf('Now executing command "%s"', $command));
+            $time = microtime(true);
             $this->call($command);
+            $time = microtime(true) - $time;
+            $this->friendlyLine(sprintf('Command %s took %.4f seconds.', $command, $time));
         }
 
         return 0;

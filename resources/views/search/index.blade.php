@@ -137,6 +137,7 @@
         var searchQuery = "{!! escape_for_js($fullQuery) !!}";
         var searchUrl = "{{ route('search.search') }}?page={{ $page }}";
         var searchPage = {{ $page }};
+        var from = '{{ $FF3_FROM }}';
         var cloneGroupUrl = '{{ route('transactions.clone') }}';
         var cloneAndEditUrl = '{{ route('transactions.clone') }}?redirect=edit';
     </script>

@@ -89,7 +89,7 @@ class UpdateRequest extends FormRequest
             'repeat_freq'    => 'in:weekly,monthly,quarterly,half-year,yearly',
             'skip'           => ['min:0', 'max:31', 'numeric'],
             'active'         => [new IsBoolean()],
-            'notes'          => ['min:1', 'max:32768'],
+            'notes'          => ['nullable', 'min:1', 'max:32768'],
         ];
     }
 

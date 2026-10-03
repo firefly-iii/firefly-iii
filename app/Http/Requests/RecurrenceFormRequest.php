@@ -85,7 +85,7 @@ class RecurrenceFormRequest extends FormRequest
                 'bill_name'             => null,
                 'category_id'           => null,
                 'category_name'         => $this->convertString('category'),
-                'tags'                  => '' !== $this->convertString('tags') ? explode(',', $this->convertString('tags')) : [],
+                'tags'                  => $this->array('tags'),
                 'piggy_bank_id'         => $this->convertInteger('piggy_bank_id'),
                 'piggy_bank_name'       => null,
             ]],

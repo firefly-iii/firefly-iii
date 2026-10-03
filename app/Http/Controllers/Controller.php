@@ -67,7 +67,8 @@ abstract class Controller extends BaseController
     protected string $monthAndDayFormat;
     protected string $monthFormat;
     protected string $redirectUrl    = '/';
-    protected string $from           = '';
+    protected string $from           = '/';
+    protected string $requestFrom    = '/';
 
     /**
      * Controller constructor.
@@ -83,17 +84,18 @@ abstract class Controller extends BaseController
 
             return;
         }
-        $isDemoSite  = (bool) $isDemoSiteConfig->data;
+        $isDemoSite        = (bool) $isDemoSiteConfig->data;
         View::share('IS_DEMO_SITE', $isDemoSite);
         View::share('DEMO_USERNAME', config('firefly.demo_username'));
         View::share('DEMO_PASSWORD', config('firefly.demo_password'));
         View::share('FF_VERSION', config('firefly.version'));
         View::share('FF_BUILD_TIME', config('firefly.build_time'));
-        $this->from  = $this->getFromUrl();
+        $this->from        = $this->getFromUrl();
+        $this->requestFrom = $this->getRequestFromUrl();
         View::share('FF3_FROM', $this->from);
         // this breaks when running < PHP 8.5 and is totally intentional.
-        $input       = ' James is cool';
-        $output      = $input
+        $input             = ' James is cool';
+        $output            = $input
             |> trim(...)
             |> (fn (string $string) => str_replace(' ', '-', $string))
             |> (fn (string $string) => str_replace(['.', '/', '…'], '', $string))
@@ -108,22 +110,22 @@ abstract class Controller extends BaseController
         View::share('featuringCer', true === AppConfiguration::get('enable_exchange_rates', config('cer.enabled'))->data);
 
         // share custom auth guard info.
-        $authGuard   = config('firefly.authentication_guard');
-        $logoutUrl   = config('firefly.custom_logout_url');
+        $authGuard         = config('firefly.authentication_guard');
+        $logoutUrl         = config('firefly.custom_logout_url');
 
         View::share('authGuard', $authGuard);
         View::share('logoutUrl', $logoutUrl);
 
         // upload size
-        $maxFileSize = Steam::phpBytes(ini_get('upload_max_filesize'));
-        $maxPostSize = Steam::phpBytes(ini_get('post_max_size'));
-        $uploadSize  = min($maxFileSize, $maxPostSize);
+        $maxFileSize       = Steam::phpBytes(ini_get('upload_max_filesize'));
+        $maxPostSize       = Steam::phpBytes(ini_get('post_max_size'));
+        $uploadSize        = min($maxFileSize, $maxPostSize);
         View::share('uploadSize', $uploadSize);
 
         // share is alpha, is beta
-        $isAlpha     = false;
-        $isBeta      = false;
-        $isDevelop   = false;
+        $isAlpha           = false;
+        $isBeta            = false;
+        $isDevelop         = false;
         if (str_contains((string) config('firefly.version'), 'alpha')) {
             $isAlpha = true;
         }
@@ -194,6 +196,21 @@ abstract class Controller extends BaseController
         }
         if (array_key_exists('fragment', $current) && '' !== $current['fragment']) {
             $from .= '#'.$current['fragment'];
+        }
+        // validate query, and give error if invalid.
+        $validator = validator(['_from' => $from], ['nullable', 'max:255', new IsValidOriginUrl()]);
+        if ($validator->fails()) {
+            throw new FireflyException(trans('validation.bad_url_parts'));
+        }
+
+        return $from;
+    }
+
+    private function getRequestFromUrl(): string
+    {
+        $from      = (string) request()->input('_from');
+        if ('' === $from) {
+            return '/';
         }
         // validate query, and give error if invalid.
         $validator = validator(['_from' => $from], ['nullable', 'max:255', new IsValidOriginUrl()]);

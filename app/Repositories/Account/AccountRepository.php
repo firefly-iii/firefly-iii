@@ -225,7 +225,7 @@ class AccountRepository implements AccountRepositoryInterface, UserGroupInterfac
         return $query->get(['accounts.*']);
     }
 
-    public function getAccountsByType(array $types, ?array $sort = [], ?bool $filterActive = null): Collection
+    public function getAccountsByType(array $types, ?array $sort = [], ?array $filter = [], ?bool $filterActive = null): Collection
     {
         $res     = array_intersect([
             AccountTypeEnum::ASSET->value,
@@ -244,11 +244,24 @@ class AccountRepository implements AccountRepositoryInterface, UserGroupInterfac
         // add sort parameters
         $allowed = config('firefly.allowed_db_sort_parameters.Account', []);
         $sorted  = 0;
+        $sort   ??= [];
+        $filter ??= [];
         if (0 !== count($sort)) {
             foreach ($sort as $param) {
                 if (in_array($param[0], $allowed, true)) {
                     $query->orderBy($param[0], $param[1]);
                     ++$sorted;
+                }
+            }
+        }
+        // add filter parameters.
+        $allowed = config('firefly.allowed_filter_parameters.Account', []);
+        if (0 !== count($filter)) {
+            foreach ($filter as $field => $search) {
+                if (in_array($field, $allowed, true)) {
+                    if ('' !== (string) $search) {
+                        $query->whereLike($field, sprintf('%%%s%%', $search));
+                    }
                 }
             }
         }

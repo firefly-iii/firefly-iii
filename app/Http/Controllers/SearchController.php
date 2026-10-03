@@ -30,6 +30,7 @@ use Illuminate\Contracts\View\Factory;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\View as ViewFacade;
 use Illuminate\View\View;
 use Throwable;
 
@@ -95,6 +96,8 @@ final class SearchController extends Controller
         $invalidOperators = $searcher->getInvalidOperators();
         $subTitle         = (string) trans('breadcrumbs.search_result', ['query' => $fullQuery]);
 
+        // overrule the FF3_FROM variable.
+
         return view('search.index', [
             'words'            => $words,
             'excludedWords'    => $excludedWords,
@@ -123,6 +126,7 @@ final class SearchController extends Controller
         $fullQuery  = (string) $entry;
         $page       = 0 === (int) $request->input('page') ? 1 : (int) $request->input('page');
         $page       = clamp(value: $page, min: 1, max: 2 ** 16);
+        $from       = $request->input('_from');
 
         $searcher->parseQuery($fullQuery);
 
@@ -133,6 +137,8 @@ final class SearchController extends Controller
         $parameters = ['search' => $fullQuery];
         $url        = route('search.index').'?'.http_build_query($parameters);
         $groups->setPath($url);
+
+        ViewFacade::share('FF3_FROM', $from);
 
         try {
             $html = view('search.search', ['groups' => $groups, 'hasPages' => $hasPages, 'searchTime' => $searchTime])->render();

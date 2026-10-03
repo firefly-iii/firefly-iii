@@ -56,8 +56,8 @@
                             <thead>
                             <tr>
                                 <th>{{ __('form.date') }}</th>
-                                <th x-html="i18next.t('form.from_currency_to_currency', {from: from.code, to: to.code})"></th>
-                                <th x-html="i18next.t('form.to_currency_from_currency', {from: from.code, to: to.code})"></th>
+                                <th x-text="i18next.t('form.from_currency_to_currency', {from: from.code, to: to.code})"></th>
+                                <th x-text="i18next.t('form.to_currency_from_currency', {from: from.code, to: to.code})"></th>
                                 <th>&nbsp;</th>
                             </tr>
                             </thead>
@@ -83,7 +83,7 @@
                                     <td>
                                         <input
                                             ref="date"
-                                            :value="rate.date_field"
+                                            x-model="rate.date_field"
                                             autocomplete="off"
                                             class="form-control"
                                             name="date[]"

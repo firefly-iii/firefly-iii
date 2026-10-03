@@ -23,7 +23,7 @@
 import "@fontsource/roboto/300.css";
 import "bootstrap";
 import "admin-lte";
-import Alpine from "alpinejs";
+import Alpine from "@alpinejs/csp";
 import store from "../store/store.js";
 import axios from "axios";
 import Shepherd from "shepherd.js";

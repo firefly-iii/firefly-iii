@@ -17,13 +17,12 @@
                             <div class="card-body">
                                 <div class="row">
                                     @foreach($entries as $tagInfo)
-                                        <div class="col-xs-6 col-sm-4 col-md-3 col-lg-2 big-line">
+                                        <div class="col-3 big-line">
                                             <input type="checkbox" name="tags[]" value="{{ $tagInfo['id'] }}">
-                                            <a
-                                                class="badge text-bg-success text-truncate d-inline-block"
+                                            <a class="badge text-bg-success text-truncate d-inline-block"
 
                                                 title="{{ $tagInfo['created_at']->isoFormat($monthAndDayFormat) }}"
-                                                href="{{ route('tags.show',[$tagInfo['id']]) }}">@if(null !== $tagInfo['location'])<span class="bi bi-geo-alt"></span>@endif<span class="bi bi-tag"></span> @if(strlen($tagInfo['tag']) > 20){{ substr($tagInfo['tag'],0,20) }}...@else{{ $tagInfo['tag'] }}@endif @if($tagInfo['attachments']->count() > 0)<span class="bi bi-paperclip"></span>@endif</a></div>
+                                                href="{{ route('tags.show',[$tagInfo['id']]) }}">@if(null !== $tagInfo['location'])<span class="bi bi-geo-alt"></span>@endif<span class="bi bi-tag"></span> @if(strlen($tagInfo['tag']) > 45){{ substr($tagInfo['tag'],0,45) }}...@else{{ $tagInfo['tag'] }}@endif @if($tagInfo['attachments']->count() > 0)<span class="bi bi-paperclip"></span>@endif</a></div>
                                     @endforeach
                                 </div>
                             </div>

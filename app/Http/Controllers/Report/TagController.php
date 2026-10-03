@@ -264,7 +264,7 @@ final class TagController extends Controller
                 }
             }
         }
-        $incomeTopLength = count($result);
+        $incomeTopLength = count(array_keys($result));
         // sort by amount_float
         // sort temp array by amount.
         $amounts         = array_column($result, 'avg_float');

@@ -151,6 +151,25 @@ trait ConvertsDataTypes
         return trim($string);
     }
 
+    public function convertFilterParameters(string $field, string $class): array
+    {
+        $parameter       = request()->query->all($field);
+
+        if (0 === count($parameter)) {
+            return [];
+        }
+        $shortClass      = str_replace('FireflyIII\Models\\', '', $class);
+        $validParameters = config(sprintf('firefly.allowed_filter_parameters.%s', $shortClass));
+        $return          = [];
+        foreach ($parameter as $key => $search) {
+            if (in_array($key, $validParameters, true) && strlen((string) $search) <= 50) {
+                $return[$key] = trim((string) $search);
+            }
+        }
+
+        return $return;
+    }
+
     public function convertIban(string $field): string
     {
         return Steam::filterSpaces($this->convertString($field));

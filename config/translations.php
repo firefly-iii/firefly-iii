@@ -70,6 +70,7 @@ return [
                 'never',
                 'account_type_loan',
                 'account_type_mortgage',
+                'account_type_Cash account',
                 'account_type_debt',
                 'withdrawal',
                 'i_owe_amount',

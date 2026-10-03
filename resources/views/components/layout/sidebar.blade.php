@@ -242,7 +242,7 @@
     @if('web' === $authGuard)
         <li class="nav-item">
             <a href="{{ route('logout') }}" @click="logoutUser" class="nav-link logout-link">
-                <em class="nav-icon bi bi-person text-danger"></em>
+                <em class="nav-icon bi bi-person money-negative"></em>
                 <p>{{ __('firefly.logout') }}</p>
             </a>
         </li>
@@ -250,7 +250,7 @@
     @if('remote_user_guard' === $authGuard && '' !== $logoutUrl)
         <li class="nav-item">
             <a href="{{ $logoutUrl }}" class="nav-link logout-link">
-                <em class="nav-icon bi bi-person text-danger"></em>
+                <em class="nav-icon bi bi-person money-negative"></em>
                 <p>{{ __('firefly.logout') }}</p>
             </a>
         </li>

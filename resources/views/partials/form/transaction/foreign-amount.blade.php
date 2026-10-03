@@ -25,13 +25,18 @@
             <template x-if="groupProperties.transactionType == 'transfer'">
                 <label class="small form-label">{{ __('firefly.amount_destination_account') }}</label>
             </template>
+            <div class="input-group">
             <input type="number" step="any" min="0"
                    :id="'foreign_amount_' + index"
                    :data-index="index"
+                   x-bind:disabled="transaction.reconciled"
+                   x-bind:readonly="transaction.reconciled"
                    :class="{'is-invalid': transaction.errors.foreign_amount.length > 0, 'input-mask' : true, 'form-control': true}"
                    x-model="transaction.foreign_amount"
                    @change="changedForeignAmount"
                    placeholder="0.00">
+                <button tabindex="-1" class="btn btn-outline-secondary" type="button" @click="clearForeignAmount(index)"><em class="bi bi-trash"></em></button>
+            </div>
             <template x-if="transaction.errors.foreign_amount.length > 0">
                 <div class="invalid-feedback" x-text="transaction.errors.foreign_amount[0]"></div>
             </template>

@@ -25,7 +25,7 @@ import i18next from "i18next";
 import { loadDeliveries } from "./shared/load-deliveries.js";
 import { loadResponses } from "./shared/load-responses.js";
 import { loadTriggers } from "./shared/load-triggers.js";
-import Alpine from "alpinejs";
+import Alpine from "@alpinejs/csp";
 import Post from "../../api/model/webhook/post.js";
 
 window.enableDates = false;
@@ -53,7 +53,7 @@ let create = function () {
             },
         },
         triggers: ["ANY"],
-        responses: ["RELEVANT"],
+        responses: "RELEVANT",
         deliveries: ["JSON"],
         active: true,
         url: "",
@@ -114,7 +114,7 @@ let create = function () {
             let data = {
                 title: this.title,
                 triggers: this.triggers,
-                responses: this.responses,
+                responses: [this.responses],
                 deliveries: this.deliveries,
                 url: this.url,
                 active: this.active,

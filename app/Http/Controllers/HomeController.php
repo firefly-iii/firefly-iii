@@ -114,7 +114,7 @@ final class HomeController extends Controller
         $request->session()->put('end', $end);
         Log::debug(sprintf('Set end to %s', $end->format('Y-m-d H:i:s')));
         if ('true' === $request->input('redirect')) {
-            return redirect(route('home'));
+            return redirect(route('index').$this->requestFrom);
         }
 
         return response()->json(['ok' => 'ok']);

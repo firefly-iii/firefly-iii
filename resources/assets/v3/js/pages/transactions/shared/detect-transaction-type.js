@@ -49,6 +49,13 @@ export function detectTransactionType() {
         console.log('[a] Transaction type is detected to be "' + this.groupProperties.transactionType + '".');
         this.determineAmountCurrency(this.entries[0].source_account.account_currency_code);
         this.disableSplitInputs();
+
+        if ("Expense account" !== destType) {
+            // in this particular case, the foreign amount input is also disabled when both accounts are
+            // of the same currency.
+            this.determineAmountCurrency(this.entries[0].source_account.account_currency_code);
+            this.filterForeignCurrencies(this.entries[0].destination_account.account_currency_code);
+        }
         return;
     }
     if (["Asset account", "Loan", "Debt", "Mortgage"].includes(sourceType) && "unknown" === destType) {
@@ -94,6 +101,12 @@ export function detectTransactionType() {
         console.log('Transaction type is detected to be "' + this.groupProperties.transactionType + '".');
         this.determineAmountCurrency(this.entries[0].destination_account.account_currency_code);
         this.disableSplitInputs();
+
+        // in this particular case, the foreign amount input is also disabled when both accounts are
+        // of the same currency.
+        this.determineAmountCurrency(this.entries[0].source_account.account_currency_code);
+        this.filterForeignCurrencies(this.entries[0].destination_account.account_currency_code);
+
         return;
     }
     console.warn('Unknown account combination between "' + sourceType + '" and "' + destType + '".');

@@ -26,6 +26,7 @@ namespace FireflyIII\Api\V1\Requests;
 use Illuminate\Contracts\Validation\Validator;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Log;
 use Override;
 use RuntimeException;
 
@@ -52,7 +53,7 @@ abstract class AggregateFormRequest extends ApiRequest
         parent::initialize($query, $request, $attributes, $cookies, $files, $server, $content);
 
         // instantiate all subrequests and share current requests' bags with them
-        // Log::debug('Initializing AggregateFormRequest.');
+        Log::debug('Initializing AggregateFormRequest.');
 
         /** @var array|string $config */
         foreach ($this->getRequests() as $config) {

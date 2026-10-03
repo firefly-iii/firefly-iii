@@ -24,7 +24,7 @@ import dates from "../shared/dates.js";
 import i18next from "i18next";
 import { api } from "../../boot/axios";
 import { Modal } from "bootstrap";
-import Alpine from "alpinejs";
+import Alpine from "@alpinejs/csp";
 
 let index = function () {
     return {

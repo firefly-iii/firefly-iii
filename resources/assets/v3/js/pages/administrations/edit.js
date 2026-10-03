@@ -25,7 +25,7 @@ import i18next from "i18next";
 import Get from "../../api/model/currency/get.js";
 import GetUserGroup from "../../api/user-group/get.js";
 import Put from "../../api/user-group/put.js";
-import Alpine from "alpinejs";
+import Alpine from "@alpinejs/csp";
 
 let edit = function () {
     return {

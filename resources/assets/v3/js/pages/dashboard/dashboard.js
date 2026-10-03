@@ -22,7 +22,7 @@ import "../../boot/bootstrap.js";
 import sidebar from "../../pages/shared/sidebar.js";
 import dates from "../shared/dates.js";
 import boxes from "./boxes.js";
-import Alpine from "alpinejs";
+import Alpine from "@alpinejs/csp";
 import Get from "../../api/model/piggy-bank/get.js";
 import formatMoney from "../../util/format-money.js";
 import { getVariable } from "../../store/get-variable.js";

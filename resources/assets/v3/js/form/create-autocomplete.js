@@ -21,9 +21,8 @@
 import Autocomplete from "bootstrap5-autocomplete";
 
 function createAutocomplete(fieldIdentifier, url) {
-    let token = document.querySelector('meta[name="csrf-token"]').getAttribute("content");
     Autocomplete.init("#" + fieldIdentifier, {
-        server: url + "?_token=" + token,
+        server: url,
         labelField: "name",
         valueField: "name",
         liveServer: true,
@@ -33,7 +32,7 @@ function createAutocomplete(fieldIdentifier, url) {
             headers: {
                 "Content-Type": "application/json",
                 Accept: "application/json",
-                "X-CSRF-TOKEN": token,
+                "X-CSRF-TOKEN": document.querySelector('meta[name="csrf-token"]').getAttribute("content"),
             },
         },
     });

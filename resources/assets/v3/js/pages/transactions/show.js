@@ -24,7 +24,7 @@ import dates from "../shared/dates.js";
 import i18next from "i18next";
 import Get from "../../api/model/transaction/get.js";
 import { format } from "date-fns";
-import Alpine from "alpinejs";
+import Alpine from "@alpinejs/csp";
 import "bootstrap";
 import L from "leaflet";
 import "leaflet/dist/leaflet.css";

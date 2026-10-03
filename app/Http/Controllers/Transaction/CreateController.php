@@ -81,14 +81,14 @@ final class CreateController extends Controller
                 session()->flash('success_url', $link);
 
                 if ('edit' === $request->input('redirect')) {
-                    return response()->json(['redirect' => route('transactions.edit', [$newGroup->id])]);
+                    return response()->json(['redirect' => route('transactions.edit', [$newGroup->id]).'?_from='.urlencode($this->requestFrom)]);
                 }
 
-                return response()->json(['redirect' => route('transactions.show', [$newGroup->id])]);
+                return response()->json(['redirect' => route('index').$this->requestFrom]);
             }
         }
 
-        return response()->json(['redirect' => route('transactions.show', [$groupId])]);
+        return response()->json(['redirect' => route('index').$this->requestFrom]);
     }
 
     /**

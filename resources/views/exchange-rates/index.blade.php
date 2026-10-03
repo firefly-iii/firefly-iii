@@ -35,13 +35,13 @@
                 <template x-for="currency in currencies" :key="currency.id">
                 <div class="card mb-2">
                     <div class="card-header">
-                        <h3 class="card-title" x-text="currency.name"></h3>X
+                        <h3 class="card-title" x-text="currency.name"></h3>
                     </div>
                     <div class="card-body">
                         <template x-if="currencies.length > 1">
                         <ul>
                             <template x-for="sub in currencies" :key="sub.id">
-                                <template x-if="parseInt(sub.id) !== parseInt(currency.id)">
+                                <template x-if="notEqualIds(currency.id, sub.id)">
                                     <li>
                                         <a :href="'exchange-rates/' + currency.code + '/' + sub.code"
                                            :title="i18next.t('firefly.exchange_rates_from_to', {from: currency.name, to: sub.name})"

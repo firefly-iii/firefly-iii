@@ -59,9 +59,10 @@ class CorrectsUnevenAmount extends Command
         // convert old-style transactions between assets and liabilities.
         $this->convertOldStyleTransactions();
 
-        $this->fixUnevenAmounts();
-        $this->matchCurrencies();
-        if (true === AppConfiguration::get('use_running_balance', config('firefly.feature_flags.running_balance_column'))->data) {
+        if (
+            ($this->fixUnevenAmounts() > 0 || $this->matchCurrencies() > 0)
+            && true === AppConfiguration::get('use_running_balance', config('firefly.feature_flags.running_balance_column'))->data
+        ) {
             $this->friendlyInfo('Will recalculate transaction running balance columns. This may take a LONG time. Please be patient.');
             AccountBalanceCalculator::recalculateAll(false);
             $this->friendlyInfo('Done recalculating transaction running balance columns.');
@@ -247,12 +248,12 @@ class CorrectsUnevenAmount extends Command
         $this->friendlyPositive(sprintf('Fixed %d transfer(s) with unbalanced amounts.', $count));
     }
 
-    private function fixJournal(int $param): void
+    private function fixJournal(int $param): bool
     {
         // one of the transactions is bad.
         $journal             = TransactionJournal::find($param);
         if (null === $journal) {
-            return;
+            return false;
         }
 
         /** @var null|Transaction $source */
@@ -274,7 +275,7 @@ class CorrectsUnevenAmount extends Command
             ;
             ++$this->count;
 
-            return;
+            return true;
         }
 
         $amount              = bcmul('-1', (string) $source->amount);
@@ -300,14 +301,14 @@ class CorrectsUnevenAmount extends Command
             ;
             ++$this->count;
 
-            return;
+            return true;
         }
 
         // may still be able to salvage this journal if it is a transfer with foreign currency info
         if ($this->isForeignCurrencyTransfer($journal) || $this->isBetweenAssetAndLiability($journal)) {
             Log::debug(sprintf('Can skip foreign currency transfer / asset+liability transaction #%d.', $journal->id));
 
-            return;
+            return false;
         }
 
         $message             = sprintf('Sum of journal #%d is not zero, journal is broken and now fixed.', $journal->id);
@@ -321,10 +322,13 @@ class CorrectsUnevenAmount extends Command
         $message             = sprintf('Corrected amount in transaction journal #%d', $param);
         $this->friendlyInfo($message);
         ++$this->count;
+
+        return true;
     }
 
-    private function fixUnevenAmounts(): void
+    private function fixUnevenAmounts(): int
     {
+        $count    = 0;
         Log::debug('fixUnevenAmounts()');
         $journals = DB::table('transactions')
             ->groupBy('transaction_journal_id')
@@ -347,16 +351,21 @@ class CorrectsUnevenAmount extends Command
             $res = -1;
 
             try {
-                $res = bccomp($sum, '0');
+                $res = bccomp($sum, '0.0');
             } catch (ValueError $e) {
                 $this->friendlyError(sprintf('Could not bccomp("%s", "0").', $sum));
                 Log::error($e->getMessage());
                 Log::error($e->getTraceAsString());
             }
             if (0 !== $res) {
-                $this->fixJournal((int) $entry->transaction_journal_id);
+                $fix = $this->fixJournal((int) $entry->transaction_journal_id);
+                if (true === $fix) {
+                    ++$count;
+                }
             }
         }
+
+        return $count;
     }
 
     private function isBetweenAssetAndLiability(TransactionJournal $journal): bool
@@ -431,7 +440,7 @@ class CorrectsUnevenAmount extends Command
             && (int) $destination->transaction_currency_id === (int) $source->foreign_currency_id;
     }
 
-    private function matchCurrencies(): void
+    private function matchCurrencies(): int
     {
         $journals = TransactionJournal::leftJoin('transactions', 'transaction_journals.id', 'transactions.transaction_journal_id')->where(
             'transactions.transaction_currency_id',
@@ -452,9 +461,11 @@ class CorrectsUnevenAmount extends Command
             Log::debug(sprintf('Can skip foreign currency transfer or transaction between asset and liability #%d.', $journal->id));
         }
         if (0 === $count) {
-            return;
+            return 0;
         }
 
         $this->friendlyPositive(sprintf('Fixed %d journal(s) with mismatched currencies.', $journals->count()));
+
+        return $count;
     }
 }

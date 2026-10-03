@@ -18,49 +18,53 @@
                                                   :linkTitle="__('firefly.make_new_'. $objectType . '_account')"/>
                 <div class="card-body p-0">
                     <x-elements.alpine.page-navigation/>
-                    <div class="p-3 text-center" x-show="true === loadingNewSort">
-                        <div class="spinner-border spinner-border-sm" role="status">
-                            <span class="visually-hidden">{{ __('firefly.thinking') }}</span>
-                        </div>
-                    </div>
+
                     <table class="table table-valign-middle table-sm table-hover sortable">
                         <thead>
                         <tr>
                             <th data-column="order"
                                 :class="{'w-5' : true,'sortable': true, 'sortable_sorted': 'order' === sortColumn, 'sortable_sorted_asc': 'asc' === sortDirection, 'sortable_sorted_desc': 'desc' === sortDirection }">
-                                &nbsp;
+                                <span>&nbsp;</span>
                             </th>
                             <th data-column="name"
-                                :class="{'w-20' : true,'sortable': true, 'sortable_sorted': 'name' === sortColumn, 'sortable_sorted_asc': 'asc' === sortDirection, 'sortable_sorted_desc': 'desc' === sortDirection }">{{ trans('list.name') }}</th>
+                                :class="{'w-20' : true,'sortable': true, 'sortable_sorted': 'name' === sortColumn, 'sortable_sorted_asc': 'asc' === sortDirection, 'sortable_sorted_desc': 'desc' === sortDirection }">
+                                <span data-column="name" class="title">{{ trans('list.name') }}</span>
+                                <span data-column="name" class="search-spacer">&nbsp;</span><em data-column="name" class="search-button search-button-name bi bi-search"></em>
+                                <div data-column="name" class="search-filter search-filter-name d-none input-group">
+                                    <input type="search" x-model="filter.name" class="filter-input form-control form-control-sm" placeholder="Filter name...">
+                                    <button class="btn btn-outline-secondary btn-sm hide-button" data-column="name" type="button"><em class="bi bi-x text-danger"></em></button>
+                                </div>
+                            </th>
+
                             <template x-if="'asset' === objectType">
                                 {{-- hide on LG and smaller. --}}
                                 <th data-column="role"
-                                    :class="{'d-lg-table-cell': true, 'd-none': true,'sortable': true, 'sortable_sorted': 'role' === sortColumn, 'sortable_sorted_asc': 'asc' === sortDirection, 'sortable_sorted_desc': 'desc' === sortDirection }">{{ trans('list.role') }}</th>
+                                    :class="{'d-lg-table-cell': true, 'd-none': true,'sortable': true, 'sortable_sorted': 'role' === sortColumn, 'sortable_sorted_asc': 'asc' === sortDirection, 'sortable_sorted_desc': 'desc' === sortDirection }"><span class="title">{{ trans('list.role') }}</span></th>
                             </template>
                             <template x-if="'liabilities' === objectType">
                                 <th data-column="account_type_id"
-                                    :class="{'sortable': true, 'sortable_sorted': 'account_type_id' === sortColumn, 'sortable_sorted_asc': 'asc' === sortDirection, 'sortable_sorted_desc': 'desc' === sortDirection }">{{ trans('list.liability_type') }}</th>
+                                    :class="{'sortable': true, 'sortable_sorted': 'account_type_id' === sortColumn, 'sortable_sorted_asc': 'asc' === sortDirection, 'sortable_sorted_desc': 'desc' === sortDirection }"><span class="title">{{ trans('list.liability_type') }}</span></th>
                             </template>
                             <template x-if="'liabilities' === objectType">
                                 <th data-column="liability_direction"
-                                    :class="{'sortable': true, 'sortable_sorted': 'liability_direction' === sortColumn, 'sortable_sorted_asc': 'asc' === sortDirection, 'sortable_sorted_desc': 'desc' === sortDirection }">{{ trans('form.liability_direction') }}</th>
+                                    :class="{'sortable': true, 'sortable_sorted': 'liability_direction' === sortColumn, 'sortable_sorted_asc': 'asc' === sortDirection, 'sortable_sorted_desc': 'desc' === sortDirection }"><span class="title">{{ trans('form.liability_direction') }}</span></th>
                             </template>
                             <template x-if="'liabilities' === objectType">
                                 <th data-column="liability_interest"
-                                    :class="{'sortable': true, 'sortable_sorted': 'liability_interest' === sortColumn, 'sortable_sorted_asc': 'asc' === sortDirection, 'sortable_sorted_desc': 'desc' === sortDirection }">{{ trans('list.interest') }}
+                                    :class="{'sortable': true, 'sortable_sorted': 'liability_interest' === sortColumn, 'sortable_sorted_asc': 'asc' === sortDirection, 'sortable_sorted_desc': 'desc' === sortDirection }"><span class="title">{{ trans('list.interest') }}</span>
                                     ({{ trans('list.interest_period') }})
                                 </th>
                             </template>
                             <th data-column="account_number_and_iban"
-                                :class="{'sortable': true, 'sortable_sorted': 'account_number_and_iban' === sortColumn, 'sortable_sorted_asc': 'asc' === sortDirection, 'sortable_sorted_desc': 'desc' === sortDirection }">{{ trans('form.account_number') }}</th>
+                                :class="{'sortable': true, 'sortable_sorted': 'account_number_and_iban' === sortColumn, 'sortable_sorted_asc': 'asc' === sortDirection, 'sortable_sorted_desc': 'desc' === sortDirection }"><span class="title">{{ trans('form.account_number') }}</span></th>
                             <template x-if="'liabilities' !== objectType">
                                 <th data-column="current_balance"
-                                    :class="{'text-end': true, 'sortable': true, 'sortable_sorted': 'current_balance' === sortColumn, 'sortable_sorted_asc': 'asc' === sortDirection, 'sortable_sorted_desc': 'desc' === sortDirection }">{{ trans('list.currentBalance') }}</th>
+                                    :class="{'text-end': true, 'sortable': true, 'sortable_sorted': 'current_balance' === sortColumn, 'sortable_sorted_asc': 'asc' === sortDirection, 'sortable_sorted_desc': 'desc' === sortDirection }"><span class="title">{{ trans('list.currentBalance') }}</span></th>
                             </template>
                             <template x-if="'liabilities' === objectType">
                                 <th data-column="debt_amount"
                                     :class="{'text-end': true, 'sortable': true, 'sortable_sorted': 'debt_amount' === sortColumn, 'sortable_sorted_asc': 'asc' === sortDirection, 'sortable_sorted_desc': 'desc' === sortDirection }">
-                                    {{ trans('firefly.left_in_debt') }}
+                                    <span class="title">{{ trans('firefly.left_in_debt') }}</span>
                                 </th>
                             </template>
                             <th {{-- hide on SM --}} class="d-md-table-cell d-none">{{ trans('list.active') }}</th>
@@ -68,12 +72,21 @@
                             <template x-if="'liabilities' !== objectType">
                                 {{-- hide on LG and smaller. --}}
                                 <th data-column="last_activity"
-                                    :class="{'d-lg-table-cell': true, 'd-none': true, 'sortable': true, 'sortable_sorted': 'last_activity' === sortColumn, 'sortable_sorted_asc': 'asc' === sortDirection, 'sortable_sorted_desc': 'desc' === sortDirection }">{{ trans('list.lastActivity') }}</th>
+                                    :class="{'d-lg-table-cell': true, 'd-none': true, 'sortable': true, 'sortable_sorted': 'last_activity' === sortColumn, 'sortable_sorted_asc': 'asc' === sortDirection, 'sortable_sorted_desc': 'desc' === sortDirection }"><span class="title">{{ trans('list.lastActivity') }}</span></th>
                             </template>
                             {{-- hide on SM --}}
                             <th data-column="balance_difference"
-                                :class="{'w-15': true,'text-end': true, 'd-lg-table-cell': true, 'd-none': true, 'sortable': true, 'sortable_sorted': 'balance_difference' === sortColumn, 'sortable_sorted_asc': 'asc' === sortDirection, 'sortable_sorted_desc': 'desc' === sortDirection }">{{ trans('list.balanceDiff') }}</th>
+                                :class="{'w-15': true,'text-end': true, 'd-lg-table-cell': true, 'd-none': true, 'sortable': true, 'sortable_sorted': 'balance_difference' === sortColumn, 'sortable_sorted_asc': 'asc' === sortDirection, 'sortable_sorted_desc': 'desc' === sortDirection }"><span class="title">{{ trans('list.balanceDiff') }}</span></th>
                             <th>&nbsp;</th>
+                        </tr>
+                        <tr x-show="true === loadingNewSort">
+                            <th colspan="12">
+                                <div class="p-3 text-center">
+                                    <div class="spinner-border spinner-border-sm" role="status">
+                                        <span class="visually-hidden">{{ __('firefly.thinking') }}</span>
+                                    </div>
+                                </div>
+                            </th>
                         </tr>
                         </thead>
                         <tbody>
@@ -129,27 +142,79 @@
                                 </td>
                                 <template x-if="'liabilities' !== objectType">
                                     <td class="text-end">
-                                        <template x-if="0.0 === account.current_balance_float">
-                                            <span class="money-neutral" x-text="account.current_balance"></span>
+                                        <template x-if="!convertToPrimary || account.primary_currency_id === account.currency_id">
+                                            <span>
+                                                <template x-if="0.0 === account.current_balance_float">
+                                                    <span class="money-neutral" x-text="account.current_balance"></span>
+                                                </template>
+                                                <template x-if="account.current_balance_float > 0.0">
+                                                    <span class="money-positive" x-text="account.current_balance"></span>
+                                                </template>
+                                                <template x-if="account.current_balance_float < 0.0">
+                                                    <span class="money-negative" x-text="account.current_balance"></span>
+                                                </template>
+                                            </span>
                                         </template>
-                                        <template x-if="account.current_balance_float > 0.0">
-                                            <span class="money-positive" x-text="account.current_balance"></span>
-                                        </template>
-                                        <template x-if="account.current_balance_float < 0.0">
-                                            <span class="money-negative" x-text="account.current_balance"></span>
+                                        <template x-if="convertToPrimary && account.primary_currency_id !== account.currency_id">
+                                            <span>
+                                                <template x-if="0.0 === account.current_balance_float">
+                                                    <span>~ <span class="money-neutral" x-text="account.pc_current_balance"></span></span>
+                                                </template>
+                                                <template x-if="account.current_balance_float > 0.0">
+                                                    <span>~ <span class="money-positive" x-text="account.pc_current_balance"></span></span>
+                                                </template>
+                                                <template x-if="account.current_balance_float < 0.0">
+                                                    <span>~ <span class="money-negative" x-text="account.pc_current_balance"></span></span>
+                                                </template>
+                                                   <template x-if="0.0 === account.current_balance_float">
+                                                        <span>(<span class="money-neutral" x-text="account.current_balance"></span>)</span>
+                                                    </template>
+                                                    <template x-if="account.current_balance_float > 0.0">
+                                                        <span>(<span class="money-positive" x-text="account.current_balance"></span>)</span>
+                                                    </template>
+                                                    <template x-if="account.current_balance_float < 0.0">
+                                                        <span>(<span class="money-negative" x-text="account.current_balance"></span>)</span>
+                                                    </template>
+                                            </span>
                                         </template>
                                     </td>
                                 </template>
                                 <template x-if="'liabilities' === objectType">
                                     <td class="text-end">
-                                        <template x-if="0.0 === account.current_debt_float">
-                                            <span class="money-neutral" x-text="account.current_debt"></span>
+                                        <template x-if="!convertToPrimary || account.primary_currency_id === account.currency_id">
+                                            <span>
+                                                <template x-if="0.0 === account.current_debt_float">
+                                                    <span class="money-neutral" x-text="account.current_debt"></span>
+                                                </template>
+                                                <template x-if="account.current_debt_float > 0.0">
+                                                    <span class="money-positive" x-text="account.current_debt"></span>
+                                                </template>
+                                                <template x-if="account.current_debt_float < 0.0">
+                                                    <span class="money-negative" x-text="account.current_debt"></span>
+                                                </template>
+                                            </span>
                                         </template>
-                                        <template x-if="account.current_debt_float > 0.0">
-                                            <span class="money-positive" x-text="account.current_debt"></span>
-                                        </template>
-                                        <template x-if="account.current_debt_float < 0.0">
-                                            <span class="money-negative" x-text="account.current_debt"></span>
+                                        <template x-if="convertToPrimary && account.primary_currency_id !== account.currency_id">
+                                            <span>
+                                                <template x-if="0.0 === account.current_debt_float">
+                                                    <span>~ <span class="money-neutral" x-text="account.pc_current_debt"></span></span>
+                                                </template>
+                                                <template x-if="account.current_debt_float > 0.0">
+                                                    <span>~ <span class="money-positive" x-text="account.pc_current_debt"></span></span>
+                                                </template>
+                                                <template x-if="account.current_debt_float < 0.0">
+                                                    <span>~ <span class="money-negative" x-text="account.pc_current_debt"></span></span>
+                                                </template>
+                                                   <template x-if="0.0 === account.current_debt_float">
+                                                        <span>(<span class="money-neutral" x-text="account.current_debt"></span>)</span>
+                                                    </template>
+                                                    <template x-if="account.current_debt_float > 0.0">
+                                                        <span>(<span class="money-positive" x-text="account.current_debt"></span>)</span>
+                                                    </template>
+                                                    <template x-if="account.current_debt_float < 0.0">
+                                                        <span>(<span class="money-negative" x-text="account.current_debt"></span>)</span>
+                                                    </template>
+                                            </span>
                                         </template>
                                     </td>
                                 </template>
@@ -172,14 +237,40 @@
                                     </td>
                                 </template>
                                 <td class="text-end">
-                                    <template x-if="0.0 === account.balance_difference_float">
-                                        <span class="money-neutral" x-text="account.balance_difference"></span>
+                                    <template x-if="!convertToPrimary || account.primary_currency_id === account.currency_id">
+                                            <span>
+                                                <template x-if="0.0 === account.balance_difference_float">
+                                                    <span class="money-neutral" x-text="account.balance_difference"></span>
+                                                </template>
+                                                <template x-if="account.balance_difference_float > 0.0">
+                                                    <span class="money-positive" x-text="account.balance_difference"></span>
+                                                </template>
+                                                <template x-if="account.balance_difference_float < 0.0">
+                                                    <span class="money-negative" x-text="account.balance_difference"></span>
+                                                </template>
+                                            </span>
                                     </template>
-                                    <template x-if="account.balance_difference_float > 0.0">
-                                        <span class="money-positive" x-text="account.balance_difference"></span>
-                                    </template>
-                                    <template x-if="account.balance_difference_float < 0.0">
-                                        <span class="money-negative" x-text="account.balance_difference"></span>
+                                    <template x-if="convertToPrimary && account.primary_currency_id !== account.currency_id">
+                                            <span>
+                                                <template x-if="0.0 === account.balance_difference_float">
+                                                    <span>~ <span class="money-neutral" x-text="account.pc_balance_difference"></span></span>
+                                                </template>
+                                                <template x-if="account.balance_difference_float > 0.0">
+                                                    <span>~ <span class="money-positive" x-text="account.pc_balance_difference"></span></span>
+                                                </template>
+                                                <template x-if="account.balance_difference_float < 0.0">
+                                                    <span>~ <span class="money-negative" x-text="account.pc_balance_difference"></span></span>
+                                                </template>
+                                                   <template x-if="0.0 === account.balance_difference_float">
+                                                        <span>(<span class="money-neutral" x-text="account.balance_difference"></span>)</span>
+                                                    </template>
+                                                    <template x-if="account.balance_difference_float > 0.0">
+                                                        <span>(<span class="money-positive" x-text="account.balance_difference"></span>)</span>
+                                                    </template>
+                                                    <template x-if="account.balance_difference_float < 0.0">
+                                                        <span>(<span class="money-negative" x-text="account.balance_difference"></span>)</span>
+                                                    </template>
+                                            </span>
                                     </template>
                                 </td>
                                 <td class="justify-content-end">
@@ -302,7 +393,7 @@
                     :linkTitle="__('firefly.make_new_'. $objectType . '_account')"/>
             </div>
         </div>
-        <template x-if="0 === accounts.length && true === active && false === loadingPage">
+        <template x-if="0 === accounts.length && true === active && false === loadingPage && false === isFiltering">
             <x-empty-page :route="route('accounts.create', [$objectType]) . '?_from=' . urlencode($FF3_FROM)"
                           type="accounts" :object-type="$objectType"/>
         </template>
@@ -310,7 +401,7 @@
             <p class="text-center"><small>
                     <em>
                         <span
-                            x-html="i18next.t('firefly.may_inactive_accounts_link', {url: '{{ route('accounts.inactive.index', $objectType) }}'})"></span>
+                            x-text="i18next.t('firefly.may_inactive_accounts_link', {url: '{{ route('accounts.inactive.index', $objectType) }}'})"></span>
                     </em>
                 </small>
             </p>
@@ -338,7 +429,7 @@
             <p class="text-center"><small>
                     <em>
                         <span
-                            x-html="i18next.t('firefly.no_inactive_accounts', {url: '{{ route('accounts.index', $objectType) }}'})"></span>
+                            x-text="i18next.t('firefly.no_inactive_accounts', {url: '{{ route('accounts.index', $objectType) }}'})"></span>
                     </em>
                 </small>
             </p>

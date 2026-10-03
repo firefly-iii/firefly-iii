@@ -18,6 +18,8 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
+import { format } from "date-fns/format";
+
 /**
  *
  */
@@ -53,7 +55,8 @@ export function parseFromEntries(entries, originals, transactionType) {
             current.currency_code = entry.currency_code;
 
             // dates
-            current.date = entry.date;
+            current.date = format(new Date(entry.date), "yyyy-MM-dd'T'HH:mm:ssxxx");
+            // console.log('Full date thing', current.date);
             if (i > 0 && !!returnArray[0]) {
                 // console.log("Overrule date for entry ", i, " with ", returnArray[0].date);
                 current.date = returnArray[0].date;
@@ -69,7 +72,11 @@ export function parseFromEntries(entries, originals, transactionType) {
             // meta
             current.budget_id = entry.budget_id;
             current.category_name = entry.category_name;
-            current.piggy_bank_id = entry.piggy_bank_id;
+            const piggyId = parseInt(entry.piggy_bank_id);
+            if (piggyId > 0) {
+                current.piggy_bank_id = piggyId;
+            }
+
             current.bill_id = entry.bill_id;
             current.tags = entry.tags;
             current.notes = entry.notes;
