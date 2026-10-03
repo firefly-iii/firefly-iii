@@ -1,13 +1,21 @@
 <table class="table table-valign-middle table-sm table-hover">
     <thead>
     <tr>
-        @if($showCategory || $showBudget)
+        @if($showCategory && $showBudget)
+            <td colspan="9">
+                @if(method_exists($groups, 'links'))
+                    {{ $groups->links('pagination.bootstrap-4') }}
+                @endif
+            </td>
+        @endif
+        @if($showCategory XOR $showBudget)
             <td colspan="8">
                 @if(method_exists($groups, 'links'))
                     {{ $groups->links('pagination.bootstrap-4') }}
                 @endif
             </td>
-        @else
+        @endif
+        @if(!$showCategory && !$showBudget)
             <td colspan="7">
                 @if(method_exists($groups, 'links'))
                 {{ $groups->links('pagination.bootstrap-4') }}
@@ -79,9 +87,13 @@
                 @endforeach
             </td>
             <!-- column to span accounts + extra fields -->
-            @if($showCategory || $showBudget)
+            @if($showCategory && $showBudget)
+                <td colspan="6" class="top-light-border">&nbsp;</td>
+            @endif
+            @if($showCategory XOR $showBudget)
                 <td colspan="5" class="top-light-border">&nbsp;</td>
-            @else
+            @endif
+            @if(!$showCategory && !$showBudget)
                 <td colspan="4" class="top-light-border">&nbsp;</td>
             @endif
         <td class="top-light-border d-xs-none text-end">
@@ -221,35 +233,43 @@
     </tbody>
     <tfoot>
     <tr>
-        <td colspan="7">&nbsp;</td>
-        <td class="d-xs-none text-end">
-            <div class="d-none action-menu">
-            <button class="btn btn-sm btn-outline-secondary dropdown-toggle" type="button" id="bottom_action_menu" data-bs-toggle="dropdown" aria-expanded="false">{{ __('firefly.actions') }} <span class="caret"></span></button>
-            <ul class="dropdown-menu" aria-labelledby="bottom_action_menu">
-                <li><a href="#" class="mass-edit dropdown-item"><span class="bi bi-pencil"></span><span>{{ __('firefly.mass_edit') }}</span></a></li>
-                <li><a href="#" class="bulk-edit dropdown-item"><span class="bi bi-pencil-square"></span><span>{{ __('firefly.bulk_edit') }}</span></a></li>
-                <li><a href="#" class="dropdown-item mass-delete"><span class="bi bi-trash"></span><span>{{ __('firefly.mass_delete') }}</span></a></li>
-            </ul>
-            </div>
-        </td>
-
-        <td class="text-end"><input id="list_ALL_bottom" value="1" name="select-all" type="checkbox" class="select-all form-check-inline"/></td>
-
-    </tr>
-    <tr>
-        @if($showCategory || $showBudget)
+        @if($showCategory && $showBudget)
+            <td colspan="9">
+                @if(method_exists($groups, 'links'))
+                    {{ $groups->links('pagination.bootstrap-4') }}
+                @endif
+            </td>
+        @endif
+        @if($showCategory XOR $showBudget)
             <td colspan="8">
                 @if(method_exists($groups, 'links'))
                     {{ $groups->links('pagination.bootstrap-4') }}
                 @endif
             </td>
-        @else
+        @endif
+        @if(!$showCategory && !$showBudget)
             <td colspan="7">
                 @if(method_exists($groups, 'links'))
                     {{ $groups->links('pagination.bootstrap-4') }}
                 @endif
             </td>
         @endif
+        <td class="d-xs-none text-end">
+            <!-- Single button -->
+            <div class="action-menu d-none"> <!-- d-none -->
+                <button class="btn btn-sm btn-outline-secondary dropdown-toggle" type="button" id="bottom_action_menu" data-bs-toggle="dropdown" aria-expanded="false">
+                    {{ __('firefly.actions') }}<span class="caret"></span>
+                </button>
+                <ul class="dropdown-menu" aria-labelledby="bottom_action_menu">
+                    <li><a href="#" class="dropdown-item mass-edit"><span class="bi bi-pencil"></span> <span class="txt">{{ __('firefly.mass_edit') }}</span></a></li>
+                    <li><a href="#" class="dropdown-item bulk-edit"><span class="bi bi-pencil-square"></span> <span class="txt">{{ __('firefly.bulk_edit') }}</span></a></li>
+                    <li><a href="#" class="dropdown-item mass-delete"><span class="bi bi-trash"></span> <span class="txt">{{ __('firefly.mass_delete') }}</span></a></li>
+                </ul>
+            </div>
+        </td>
+        <td class="d-xs-none text-end">
+            <input id="list_ALL_bottom" value="1" name="select-all" type="checkbox" class="select-all form-check-inline"/>
+        </td>
     </tr>
     </tfoot>
 </table>
