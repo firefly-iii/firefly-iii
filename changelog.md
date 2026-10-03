@@ -9,36 +9,36 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 
 ### Fixed
 
-- #12433
-- #12616
-- #12756
-- #12786
-- #12833
-- #12868
-- #12871
-- #12873
-- #12891
-- #12894
-- #12902
-- #12907
-- #12909
-- #12919
-- #12921
+- [Issue 12433](https://github.com/firefly-iii/firefly-iii/issues/12433) (The running balance is displayed incorrectly when a transfer is made to a wallet-type account and a foreign currency reference is assigned) reported by @jgmm81
+- [Discussion 12616](https://github.com/orgs/firefly-iii/discussions/12616) (My transaction date gets converted to ??? time zone) started by @PAS-BC
+- [Issue 12756](https://github.com/firefly-iii/firefly-iii/issues/12756) (Transaction creation - Doesn't switch to view mode after submit) reported by @fabienfitoussi
+- [Issue 12786](https://github.com/firefly-iii/firefly-iii/issues/12786) (Language / locale display is mixed with each other in some places) reported by @leppa
+- [Issue 12833](https://github.com/firefly-iii/firefly-iii/issues/12833) (Rules: strict rule option enabled doesn't work) reported by @rdjong80
+- [Issue 12868](https://github.com/firefly-iii/firefly-iii/issues/12868) (Recurrence API: cannot remove all tags) reported by @Toshik1978
+- [Issue 12871](https://github.com/firefly-iii/firefly-iii/issues/12871) (Timezone update error) reported by @dragonguy
+- [Issue 12873](https://github.com/firefly-iii/firefly-iii/issues/12873) (Now able to update/delete reconciled transaction) reported by @fabienfitoussi
+- [Issue 12891](https://github.com/firefly-iii/firefly-iii/issues/12891) ("The Query may not be greater than 50 characters" on Transaction Description) reported by @Kage1
+- [Issue 12894](https://github.com/firefly-iii/firefly-iii/issues/12894) (Location Enable/Disable Conflict) reported by @Unsantae
+- [Issue 12902](https://github.com/firefly-iii/firefly-iii/issues/12902) (Action-buttons inside recurring transaction doesn't do anything) reported by @Tommy78649
+- [Issue 12907](https://github.com/firefly-iii/firefly-iii/issues/12907) (CSS glitch at keywords overview) reported by @vmario89
+- [Issue 12909](https://github.com/firefly-iii/firefly-iii/issues/12909) (Withdrawal Split Unable to Select destination Account) reported by @gthbusrr
+- [Issue 12919](https://github.com/firefly-iii/firefly-iii/issues/12919) (RangeError: Format string contains an unescaped latin alphabet character 'o' when using pl-PL locale) reported by @lukaszfilo-agh
+- [Issue 12921](https://github.com/firefly-iii/firefly-iii/issues/12921) (Firefly III - 500 Internal Server Error when opening importer after last upgrad) reported by @sttehh
 - [Issue 12922](https://github.com/firefly-iii/firefly-iii/issues/12922) (Undefined variable $incomeTopLength in category graphs) reported by @GunoH
-- #12926
-- #12927
-- #12928
+- [Issue 12926](https://github.com/firefly-iii/firefly-iii/issues/12926) (SimpleFIN conversion fails when account IDs contain only digits due to PHP array-key coercion - small change with solution (AI helped)) reported by @Grish-Lon
+- [Issue 12927](https://github.com/firefly-iii/firefly-iii/issues/12927) (Use `d` instead of `D` (in `D MMMM y`) for formatting days) reported by @zynexiz
+- [Issue 12928](https://github.com/firefly-iii/firefly-iii/issues/12928) (Webhook creation fails) reported by @Xav-v
 - [Issue 12929](https://github.com/firefly-iii/firefly-iii/issues/12929) (v6.7.6 Alpine.js requires 'unsafe-eval' in CSP – breaks behind strict proxies) reported by @37-b-j
-- #12932
+- [Issue 12932](https://github.com/firefly-iii/firefly-iii/issues/12932) (Dashboard graph - currency conversion) reported by @marc22polo
 - [Issue 12934](https://github.com/firefly-iii/firefly-iii/issues/12934) (API: PUT /v1/bills/{id} refuses empty notes, so a bill's notes can't be cleared (the web form allows it)) reported by @mkloouo
-- #12937
-- #12941
-- #12945
-- #12947
-- #12951
-- #12952
-- #12953
-- #12957
+- [Issue 12937](https://github.com/firefly-iii/firefly-iii/issues/12937) (accounts>current balance column not showing original currency only converted currency) reported by @fate8383
+- [Issue 12941](https://github.com/firefly-iii/firefly-iii/issues/12941) (Creating or cloning a transaction from an Asset Account no longer returns to the originating account) reported by @Playlist9661
+- [Issue 12945](https://github.com/firefly-iii/firefly-iii/issues/12945) (Unable to deselect a Piggy Bank during deposit creation) reported by @ppslim
+- [Issue 12947](https://github.com/firefly-iii/firefly-iii/issues/12947) (Raw HTML Responses Shown to User) reported by @alpacasec
+- [Issue 12951](https://github.com/firefly-iii/firefly-iii/issues/12951) (Date range selector redirects to home, instead of reloading current page) reported by @davidschlachter
+- [Issue 12952](https://github.com/firefly-iii/firefly-iii/issues/12952) (Date range selector can choose an invalid date range) reported by @davidschlachter
+- [Issue 12953](https://github.com/firefly-iii/firefly-iii/issues/12953) (Cannot add tags to recurring transaction) reported by @ziegwald
+- [Issue 12957](https://github.com/firefly-iii/firefly-iii/issues/12957) (New transaction - withdrawal / expense account) reported by @marc22polo
 
 ## v6.7.6 - 2026-09-28
 
