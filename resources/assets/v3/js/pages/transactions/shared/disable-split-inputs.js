@@ -20,6 +20,8 @@
 
 // what happens when a user adds more than one split?
 import Autocomplete from "bootstrap5-autocomplete";
+import getExpectedAccountTypes from "../../../form/get-expected-account-types.js";
+
 
 export function disableSplitInputs() {
     let isTransferOrWithdrawal =
@@ -29,38 +31,18 @@ export function disableSplitInputs() {
     //console.log('Activate disableSplitInputs');
     // disable source and/or destination, based on account type.
     for (let i = 0; i < this.entries.length; i++) {
-        // is withdrawal? limit destination types to expense, loan debt mortgage
-        if ("withdrawal" === this.groupProperties.transactionType) {
-            const el = document.getElementById("dest_" + i);
-            const inst = Autocomplete.getInstance(el);
-            if (null !== inst) {
-                let params = inst.getConfig("serverParams");
-                params.types = ["Expense account", "Loan", "Debt", "Mortgage"];
-                inst.setConfig("serverParams", params);
-            }
-        }
-        // is deposit? limit destination types.
-        if ("deposit" === this.groupProperties.transactionType) {
-            const el = document.getElementById("dest_" + i);
-            const inst = Autocomplete.getInstance(el);
-            if (null !== inst) {
-                let params = inst.getConfig("serverParams");
-                params.types = ["Asset account", "Loan", "Debt", "Mortgage"];
-                inst.setConfig("serverParams", params);
-            }
-        }
-        // is transfer? No limit to source types.
-        if (
-            "deposit" !== this.groupProperties.transactionType &&
-            "withdrawal" === this.groupProperties.transactionType
-        ) {
-            const el = document.getElementById("dest_" + i);
-            const inst = Autocomplete.getInstance(el);
-            if (null !== inst) {
-                let params = inst.getConfig("serverParams");
-                params.types = [];
-                inst.setConfig("serverParams", params);
-            }
+        let transactionType = this.groupProperties.transactionType;
+        let sourceType = this.entries[i].source_account.type ?? "unknown";
+        let destinationType = this.entries[i].destination_account.type ?? "unknown";
+
+        let newTypes = getExpectedAccountTypes(transactionType, sourceType, destinationType);
+
+        const el = document.getElementById("dest_" + i);
+        const inst = Autocomplete.getInstance(el);
+        if (null !== inst) {
+            let params = inst.getConfig("serverParams");
+            params.types = newTypes;
+            inst.setConfig("serverParams", params);
         }
 
         if (i > 0) {

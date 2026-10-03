@@ -29,6 +29,7 @@ import {
     selectSourceAccount,
 } from "./autocomplete-functions.js";
 import Tags from "bootstrap5-tags";
+import getExpectedAccountTypes from "../../../form/get-expected-account-types.js";
 
 export function getUrls() {
     return {
@@ -51,19 +52,13 @@ export function addAllAutocompleteToForm() {
     // depending on the type of the transaction,
     // the filters are changed. For edit form, this means
     // the available account types may be limited.
-    if ("edit" === this.formBehaviour.formType) {
-        if ("withdrawal" === this.groupProperties.transactionType) {
-            // filters.destination = ['Expense account'];
-        }
-        if ("deposit" === this.groupProperties.transactionType) {
-            // filters.source = ['Revenue account'];
-        }
-        if ("transfer" === this.groupProperties.transactionType) {
-            filters.source = [this.entries[0].source_account.type];
-            filters.destination = [this.entries[0].source_account.type];
-        }
-    }
-    // console.log("Filters for autocomplete: ", filters);
+
+    let transactionType = this.groupProperties.transactionType;
+    let sourceType = this.entries[0].source_account.type ?? 'unknown';
+    let destinationType = this.entries[0].destination_account.type ?? 'unknown';
+    filters.destination = getExpectedAccountTypes(transactionType, sourceType, destinationType);
+
+    console.log("Filters for autocomplete: ", filters);
 
     const urls = getUrls();
     setTimeout(() => {
@@ -148,6 +143,7 @@ export function addAllAutocompleteToForm() {
 }
 
 export function addAutocomplete(options) {
+    console.log('addAutocomplete("'+options.serverUrl+'")');
     const params = {
         server: options.serverUrl,
         serverParams: {},
@@ -169,6 +165,7 @@ export function addAutocomplete(options) {
         liveServer: true,
     };
     if (typeof options.account_types !== "undefined" && options.account_types.length > 0) {
+        console.log('Add account types');
         params.serverParams["types"] = options.account_types;
     }
     if (typeof options.onRenderItem !== "undefined" && null !== options.onRenderItem) {

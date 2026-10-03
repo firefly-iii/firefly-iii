@@ -37,7 +37,7 @@ export function createLinkAutocomplete(fieldIdentifier, url) {
             "</small>"
         );
     };
-    console.log("Created link AC", fieldIdentifier);
+    // console.log("Created link AC", fieldIdentifier);
     Autocomplete.init("#" + fieldIdentifier, {
         server: url,
         labelField: "name",
