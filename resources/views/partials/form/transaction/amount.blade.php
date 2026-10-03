@@ -6,7 +6,7 @@
     <!-- actual amount -->
     <div class="col-sm-9">
         <div class="input-group">
-        <input type="number" step="any" min="0"
+        <input type="text" step="any" min="0" inputmode="decimal"
                :id="'amount_' + index"
                :data-index="index"
                x-bind:disabled="transaction.reconciled"
