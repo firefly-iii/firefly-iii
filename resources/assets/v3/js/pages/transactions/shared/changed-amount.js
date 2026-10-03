@@ -26,8 +26,9 @@ export function changedAmount(e) {
         let len = (value.match(/,/g) || []).length;
         if (1 === len) {
             value = value.replace(",", ".");
+            this.entries[index].amount = value;
         }
-        this.entries[index].amount = parseFloat(value);
+
     }
 
     this.groupProperties.totalAmount = 0;
