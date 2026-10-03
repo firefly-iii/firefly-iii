@@ -27,6 +27,7 @@ export function clearSourceAccount(index) {
 
 export function clearDestinationAccount(index) {
     this.entries[index].destination_account = getAccount();
+    this.entries[index].destination_account.alpine_name = null; // very sneaky trick.
     this.detectTransactionType();
 }
 export function clearDescription(index) {
