@@ -55,8 +55,7 @@ export function disableSplitInputs() {
                 "withdrawal" === this.groupProperties.transactionType
             ) {
                 console.log("Prefill destination account #", i, this.entries[i].destination_account);
-                this.entries[i].destination_account = JSON.parse(
-                    JSON.stringify(this.entries[i - 1].destination_account),
+                this.entries[i].destination_account = JSON.parse(JSON.stringify(this.entries[i - 1].destination_account),
                 ); //structuredClone();
             }
 

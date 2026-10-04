@@ -22,19 +22,20 @@ import "../../boot/bootstrap.js";
 import sidebar from "../shared/sidebar.js";
 import dates from "../shared/dates.js";
 import Alpine from "@alpinejs/csp";
-import { getVariable } from "../../store/get-variable.js";
+import {getVariable} from "../../store/get-variable.js";
 import Put from "../../api/model/account/put.js";
 import Get from "../../api/model/account/get.js";
 import format from "../../util/format.js";
 import formatMoney from "../../util/format-money.js";
 import i18next from "i18next";
-import { addDrag } from "../shared/drag-and-droppable-rows.js";
-import {sortableTable} from "../shared/sortable-tables.js";
+import {addDrag} from "../shared/drag-and-droppable-rows.js";
+import {sortableTable, storeFilterAndSort, updateHistory} from "../shared/sortable-tables.js";
 
 window.enableDates = true;
 
 let index = function () {
     return {
+        // necessary for index
         listPageSize: 50,
         objectType: "invalid",
         accounts: [],
@@ -60,125 +61,113 @@ let index = function () {
         // variables necessary for sorting tables.
         handleFunc: null,
         pageNavUrl: "./accounts/",
-        sortColumn: "order",
-        sortDirection: "asc",
+        sortColumn: "order", // used in GET request.
+        sortDirection: "asc", // used in GET request.
         loadingNewSort: true,
         isFiltering: false,
         filter: {},
 
-        // sort functions
+        // sort functions, imported
+        updateHistory: updateHistory,
+        storeFilterAndSort: storeFilterAndSort,
         sortableTable: null,
 
-        objectToQueryString(obj, prefix) {
-            if (null === obj) {
-                return "";
-            }
-            return Object.keys(obj)
-                .map((objKey) => {
-                    if (Object.hasOwn(obj, objKey)) {
-                        const key = prefix ? `${prefix}[${objKey}]` : objKey;
-                        const value = obj[objKey];
+        // objectToQueryString(obj, prefix) {
+        //     if (null === obj) {
+        //         return "";
+        //     }
+        //     return Object.keys(obj)
+        //         .map((objKey) => {
+        //             if (Object.hasOwn(obj, objKey)) {
+        //                 const key = prefix ? `${prefix}[${objKey}]` : objKey;
+        //                 const value = obj[objKey];
+        //
+        //                 return typeof value === "object"
+        //                     ? this.objectToQueryString(value, key)
+        //                     : `${encodeURIComponent(key)}=${encodeURIComponent(value)}`;
+        //             }
+        //
+        //             return null;
+        //         })
+        //         .join("&");
+        // },
 
-                        return typeof value === "object"
-                            ? this.objectToQueryString(value, key)
-                            : `${encodeURIComponent(key)}=${encodeURIComponent(value)}`;
-                    }
-
-                    return null;
-                })
-                .join("&");
-        },
-
-        updateHistory() {
-            if (history.pushState) {
-                // TODO fix this.
-                let obj = {
-                    page: this.page,
-                    column: this.sortColumn,
-                    direction: this.sortDirection,
-                    filter: this.filter,
-                };
-                let string = this.objectToQueryString(obj);
-                let newUrl =
-                    window.location.protocol + "//" + window.location.host + window.location.pathname + "?" + string;
-                window.history.pushState({ path: newUrl }, "", newUrl);
-                window.store.set(this.storageKey, { column: this.sortColumn, direction: this.sortDirection });
-            }
-        },
-        updateFilterValue(field, newValue) {
-            console.log("Update", field, newValue);
-            this.filter[field] = newValue;
-            if ("" !== newValue) {
-                this.isFiltering = true;
-            }
-            if ("" === newValue) {
-                this.isFiltering = false;
-            }
-            this.updateHistory();
-            this.downloadAccounts();
-        },
+        // updateFilterValue(field, newValue) {
+        //     console.log("Update", field, newValue);
+        //     this.filter[field] = newValue;
+        //     if ("" !== newValue) {
+        //         this.isFiltering = true;
+        //     }
+        //     if ("" === newValue) {
+        //         this.isFiltering = false;
+        //     }
+        //     this.updateHistory();
+        //     this.downloadAccounts();
+        // },
 
         init() {
-            const page = window.location.href.split("?")[0].split("/");
-            this.objectType = page[page.length - 1].substring(0, 15);
+
+            // prepare some variables:
+            const address = window.location.href.split("?")[0].split("/");
+            this.objectType = address[address.length - 1].substring(0, 15);
             this.i18next = i18next;
             this.anonymous = window.store.get("anonymous");
             this.storageKey = "accounts-" + this.objectType + (this.active ? "-active" : "-inactive");
-            this.handleFunc = this.handlePageClick.bind(this);
             this.pageNavUrl = "./accounts/" + this.objectType;
-
-            if ("expense" === this.objectType || "revenue" === this.objectType) {
-                this.defaultSortColumn = "name";
-            }
-
-            // sort and paging settings.
-            if ("inactive-accounts" === page[page.length - 2]) {
-                this.active = false;
-            }
+            this.defaultSortColumn = "expense" === this.objectType || "revenue" === this.objectType ? "name" : this.defaultSortColumn;
+            this.active = "inactive-accounts" !== address[address.length - 2];
 
             let fromStore = window.store.get(this.storageKey);
-            console.log("from store", fromStore);
             if (fromStore) {
                 this.defaultSortColumn = fromStore.column;
                 this.defaultSortDirection = fromStore.direction;
+                this.filter = fromStore.filter;
+                console.log('Restore from store:', fromStore);
             }
-
-            // document.querySelectorAll('table[data-sort-identifier="main"] thead th[data-filter-column]').forEach((th) => {
-            //     let column = th.getAttribute('data-filter-column');
-            //     console.log('[index] Will watch filter for column "' + column + '"');
-            //     this.$watch('filter.' + column, (newValue, oldValue) => {
-            //         console.log('filter for column "' + column + '" changed from "' + oldValue + '" to "' + newValue + '"');
-            //     });
-            // });
-
 
             const params = new Proxy(new URLSearchParams(window.location.search), {
                 get: (searchParams, prop) => searchParams.get(prop),
             });
-            this.sortColumn = params.column ?? this.defaultSortColumn;
-            this.sortDirection = params.direction ?? this.defaultSortDirection;
-            this.page = parseInt(params.page) || 1;
+            this.page = parseInt(params.page || '1');
+            this.defaultSortColumn = params.column ?? this.defaultSortColumn;
+            this.defaultSortDirection = params.direction ?? this.defaultSortDirection;
+
+            console.log('Restore from params:', {
+                page: this.page,
+                column: this.defaultSortColumn,
+                direction: this.defaultSortDirection
+            });
+
 
             this.sortableTable = new sortableTable('main');
-            this.sortableTable.sortColumn = params.column ?? this.defaultSortColumn;
-            this.sortableTable.sortDirection = params.direction ?? this.defaultSortDirection;
+            this.sortableTable.sortColumn = this.defaultSortColumn;
+            this.sortableTable.storageKey = this.storageKey;
+            this.sortableTable.sortDirection = this.defaultSortDirection;
             this.sortableTable.page = this.page;
+
             this.sortableTable.init(this);
+
+            //updateHistory(this.page, this.defaultSortColumn, this.defaultSortDirection, this.filter);
 
             // watch for changes in the sortable table instructions.
             document.addEventListener('sortable-table-sort-change', (event) => {
                 console.log('sortable-table-sort-change', event.detail);
                 this.sortColumn = event.detail.sortColumn;
                 this.sortDirection = event.detail.sortDirection;
-                // this.page = event.detail.page;
-                this.updateHistory();
+                this.updateHistory(this.page, this.sortColumn, this.sortDirection, this.filter);
+                this.storeFilterAndSort(this.storageKey, this.sortColumn, this.sortDirection, this.filter);
                 this.downloadAccounts();
             });
+            this.downloadAccounts();
+            console.log(this.isFiltering);
 
             // grab the account list.
-            this.downloadAccounts();
+            // document.addEventListener('alpine:initialized', (function () {
+            //     console.log('Init!');
+            //
+            // }).bind(this));
 
-
+            // respond to drag and drop.
 
             getVariable("listPageSize").then((listPageSize) => {
                 this.listPageSize = listPageSize;
@@ -189,11 +178,10 @@ let index = function () {
                             let item = e.detail[i];
                             if (item.order !== item.currentOrder) {
                                 // PUT new order to system.
-                                new Put().put({ order: item.order }, { id: item.id });
+                                new Put().put({order: item.order}, {id: item.id});
+
                                 // save new order as current order in the row.
-                                document
-                                    .querySelector(`tr[data-id="${item.id}"]`)
-                                    .setAttribute("data-current-order", item.order);
+                                document.querySelector(`tr[data-id="${item.id}"]`).setAttribute("data-current-order", item.order);
                             }
                         }
                     }
@@ -235,6 +223,7 @@ let index = function () {
             let start = window.store.get("start");
             let end = window.store.get("end");
             this.convertToPrimary = window.store.get("convert_to_primary");
+            console.log('Download accounts using', JSON.parse(JSON.stringify(this.filter)));
             new Get()
                 .list({
                     active: this.active,
@@ -242,7 +231,7 @@ let index = function () {
                     page: this.page,
                     type: this.objectType,
                     start: start,
-                    filter: this.filter,
+                    filter: JSON.parse(JSON.stringify(this.filter)),
                     end: end,
                 })
                 .then((response) => {
@@ -323,8 +312,10 @@ let index = function () {
                             this.accounts.push(account);
                         }
                     }
+                    console.log('Done downloading accounts.', JSON.parse(JSON.stringify(this.filter)), this.accounts.length);
                     this.loadingPage = false;
                     this.loadingNewSort = false;
+                    this.sortableTable.disableRefresh = false;
                     if (0 === this.accounts.length && false === this.isFiltering) {
                         document.querySelectorAll(".data-holder").forEach((el) => {
                             el.classList.add("d-none");
@@ -344,7 +335,7 @@ let index = function () {
             }
             return format(
                 new Date(date),
-                i18next.t("config.date_time_fns_short", { lng: window.store.get("locale") }),
+                i18next.t("config.date_time_fns_short", {lng: window.store.get("locale")}),
                 window.store.get("locale"),
             );
         },

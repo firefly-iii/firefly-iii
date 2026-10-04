@@ -63,10 +63,10 @@ table.sortable thead th[data-sort-column] span {
 .search-button {
     cursor: pointer;
 }
-table.sortable th[data-sort-column].sortable_sorted.sortable_sorted_asc:not(th.is-searching):before {
+table.sortable th[data-sort-column].sortable_sorted_asc:not(th.is-searching):before {
     content: "\25B4 ";
 }
-table.sortable th[data-sort-column].sortable_sorted.sortable_sorted_desc:not(th.is-searching):before {
+table.sortable th[data-sort-column].sortable_sorted_desc:not(th.is-searching):before {
     content: "\25BE ";
 }
 

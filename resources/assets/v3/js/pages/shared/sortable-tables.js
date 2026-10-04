@@ -22,7 +22,8 @@ export class sortableTable {
     tableId = '';
     sortColumn = 'order';
     sortDirection = 'asc';
-    isFiltering = false;
+    storageKey = '';
+    disableRefresh = false;
 
     constructor(tableId) {
         this.tableId = tableId;
@@ -30,22 +31,18 @@ export class sortableTable {
     }
 
     init(parent) {
-        const params = new Proxy(new URLSearchParams(window.location.search), {
-            get: (searchParams, prop) => searchParams.get(prop),
-        });
-        // shitty solution but for now it works.
-        // if ("" !== params["filter[name]"]) {
-        //     this.isFiltering = true;
-        // }
-
         queueMicrotask(() => {
             this.updateHeaderClasses();
             this.addClickEvents();
-            this.addWatch(parent);
         });
+        this.addWatch(parent);
     }
 
     addWatch(parent) {
+        const params = new Proxy(new URLSearchParams(window.location.search), {
+            get: (searchParams, prop) => searchParams.get(prop),
+        });
+
         // add a watch for sortColumn, sortDirection and page
         parent.$watch('sortColumn', (newValue, oldValue) => {
             console.log('sortColumn changed from "' + oldValue + '" to "' + newValue + '"');
@@ -62,11 +59,28 @@ export class sortableTable {
         document.querySelectorAll('table[data-sort-identifier="' + this.tableId + '"] thead th[data-filter-column]').forEach((th) => {
             let column = th.getAttribute('data-filter-column');
             console.log('[class] Will watch filter for column "' + column + '"');
+
+            // also grab current filter value from store AND from url and push back to the parent whichever is set.
+            const key = 'filter[' + column + ']';
+            let urlValue = params[key] ?? null;
+            let fromStore = window.store.get(this.storageKey);
+            let storeValue = fromStore ? fromStore.filter[column] ?? null : null;
+            let valueToUse = null !== urlValue ? urlValue : storeValue;
+
             parent.$watch('filter.' + column, (newValue, oldValue) => {
                 // parent.filter[column] = newValue;
                 console.log('filter for column "' + column + '" changed from "' + oldValue + '" to "' + newValue + '"');
                 this.fireSortChangeEvent();
             });
+
+            if (null !== valueToUse) {
+                console.log('DISABLE refresh');
+                this.disableRefresh = true;
+                parent.isFiltering = true;
+                console.log('Setting initial filter value for column "' + column + '" to "' + valueToUse + '"');
+                parent.filter[column] = valueToUse;
+
+            }
         });
     }
 
@@ -84,6 +98,7 @@ export class sortableTable {
         //this.updateHistory();
         //this.downloadAccounts();
     }
+
     fireSortChangeEvent() {
         this.updateHeaderClasses();
         let obj = {
@@ -95,15 +110,25 @@ export class sortableTable {
         let event = new CustomEvent('sortable-table-sort-change', {
             detail: obj
         });
-        document.dispatchEvent(event);
+        if(!this.disableRefresh) {
+            console.log('Fire event!');
+            document.dispatchEvent(event);
+        }
+        if(this.disableRefresh) {
+            console.log('Do NOT fire event!');
+            this.disableRefresh = false;
+        }
     }
+
     clickCloseButton(event) {
         let th = event.currentTarget.parentNode.parentNode.parentNode;
         let column = th.dataset.filterColumn;
         console.log('close again', column);
         th.querySelector('.search-filter').classList.add('d-none');
         th.querySelector('.title').classList.remove('d-none');
+        th.querySelector('span.search-spacer').classList.remove("d-none");
         th.querySelector('.search-button').classList.remove('d-none');
+        // console.log(th.querySelector('.form-control').value);
         th.querySelector('.form-control').value = '';
 
         this.fireSortChangeEvent();
@@ -116,81 +141,69 @@ export class sortableTable {
         });
 
         // create search buttons and inputs.
-        document.querySelectorAll('table[data-sort-identifier="' + this.tableId + '"] th[data-filter-column]').forEach((el) => {
-
-            let column = el.dataset.filterColumn;
-            // create filter inset.
-            let inset = document.createElement('span');
-            inset.classList.add('search-inset');
-
-            // add spacer
-            let searchSpacer = document.createElement('span');
-            searchSpacer.classList.add('search-spacer');
-            searchSpacer.innerHTML = '&nbsp;';
-            inset.appendChild(searchSpacer);
-
-            // make button.
-            let searchButton = document.createElement('em');
-            searchButton.classList.add('search-button', 'bi', 'bi-search');
-            searchButton.setAttribute('data-filter-column', column);
-            inset.appendChild(searchButton);
-
-            // add hidden div
-            let div = document.createElement('div');
-            div.classList.add('d-none', 'input-group', 'search-filter');
-            // append input to div.
-            let input = document.createElement('input');
-            input.classList.add('form-control', 'form-control-sm');
-            input.setAttribute('type', 'search');
-            input.setAttribute('placeholder', 'TODO placeholder');
-            input.setAttribute('x-model', 'filter.' + column);
-            div.appendChild(input);
-
-            // create button
-            let button = document.createElement('button');
-            button.classList.add('btn', 'btn-outline-secondary', 'btn-sm', 'hide-button');
-            button.setAttribute('type', 'button');
-            button.addEventListener('click', this.clickCloseButton.bind(this));
-            let icon = document.createElement('em');
-            icon.classList.add('bi', 'bi-x', 'text-danger');
-            // append icon to button
-            button.appendChild(icon);
-            // add button to div
-            div.appendChild(button);
-
-            // append div to element
-            inset.appendChild(div);
-            el.appendChild(inset);
-        });
+        document.querySelectorAll('table[data-sort-identifier="' + this.tableId + '"] th[data-filter-column]').forEach(function(el) {
+            this.createSearchBox(el);
+        }.bind(this));
 
         document.querySelectorAll('table[data-sort-identifier="' + this.tableId + '"] th[data-filter-column] .search-button').forEach((el) => {
             el.addEventListener("click", () => {
-                let column = el.dataset.filterColumn;
-
-                // hide search buttons etc.
-                el.classList.add("d-none");
-                let th = el.parentNode.parentNode;
-                th.querySelector('span.title').classList.add("d-none");
-                th.querySelector('span.search-spacer').classList.add("d-none");
-                // add class to parent if it's used to sort
-
-                // if th has class sortable_sorted, add class is-searching
-                if (th.classList.contains('sortable_sorted')) {
-                    th.classList.add("is-searching");
-                }
-
-                // show search input in div.search-filter
-                let input = th.querySelector('div.search-filter');
-                input.classList.remove("d-none");
-                input.querySelector("input").focus();
+                const th = el.parentNode.parentNode;
+                showSearchBox(th);
             });
         });
     }
+    createSearchBox(th) {
+        console.log('createSearchBox', th);
+        let column = th.dataset.filterColumn;
+        // create filter inset.
+        let inset = document.createElement('span');
+        inset.classList.add('search-inset');
+
+        // add spacer
+        let searchSpacer = document.createElement('span');
+        searchSpacer.classList.add('search-spacer');
+        searchSpacer.innerHTML = '&nbsp;';
+        inset.appendChild(searchSpacer);
+
+        // make button.
+        let searchButton = document.createElement('em');
+        searchButton.classList.add('search-button', 'bi', 'bi-search');
+        searchButton.setAttribute('data-filter-column', column);
+        inset.appendChild(searchButton);
+
+        // add hidden div
+        let div = document.createElement('div');
+        div.classList.add('d-none', 'input-group', 'search-filter');
+        // append input to div.
+        let input = document.createElement('input');
+        input.classList.add('form-control', 'form-control-sm');
+        input.setAttribute('type', 'search');
+        input.setAttribute('placeholder', 'TODO placeholder');
+        input.setAttribute('x-model', 'filter.' + column);
+        div.appendChild(input);
+
+        // create button
+        let button = document.createElement('button');
+        button.classList.add('btn', 'btn-outline-secondary', 'btn-sm', 'hide-button');
+        button.setAttribute('type', 'button');
+        button.addEventListener('click', this.clickCloseButton.bind(this));
+        let icon = document.createElement('em');
+        icon.classList.add('bi', 'bi-x', 'text-danger');
+        // append icon to button
+        button.appendChild(icon);
+        // add button to div
+        div.appendChild(button);
+
+        // append div to element
+        inset.appendChild(div);
+        th.appendChild(inset);
+    }
 
 
-    updateHeaderClasses(tableId, column, direction) {
+    updateHeaderClasses() {
+        // console.log('updateHeaderClasses()', this.sortColumn, this.sortDirection);
         document.querySelectorAll('table[data-sort-identifier="' + this.tableId + '"] thead th[data-sort-column]').forEach((th) => {
-            // console.log('th', th.dataset.sortColumn);
+            // console.log(th);
             if (this.sortColumn === th.dataset.sortColumn) {
                 // th.classList.add('sortable');
                 th.classList.add('sortable_sorted');
@@ -210,6 +223,75 @@ export class sortableTable {
             }
         });
     }
+}
+function showSearchBox(th) {
+    let column = th.dataset.filterColumn;
 
+    // hide search buttons etc.
+    th.querySelector('.search-button').classList.add("d-none");
+    th.querySelector('span.title').classList.add("d-none");
+    th.querySelector('span.search-spacer').classList.add("d-none");
+    // add class to parent if it's used to sort
+
+    // if th has class sortable_sorted, add class is-searching
+    if (th.classList.contains('sortable_sorted')) {
+        th.classList.add("is-searching");
+    }
+
+    // show search input in div.search-filter
+    let input = th.querySelector('div.search-filter');
+    input.classList.remove("d-none");
+    input.querySelector("input").focus();
+}
+
+
+
+function objectToQueryString(obj, prefix) {
+    if (null === obj) {
+        return "";
+    }
+    return Object.keys(obj)
+        .map((objKey) => {
+            if (Object.hasOwn(obj, objKey)) {
+                const key = prefix ? `${prefix}[${objKey}]` : objKey;
+                const value = obj[objKey];
+
+                return typeof value === "object"
+                    ? objectToQueryString(value, key)
+                    : `${encodeURIComponent(key)}=${encodeURIComponent(value)}`;
+            }
+
+            return null;
+        })
+        .join("&");
+}
+
+export function updateHistory(page, column, direction, filter) {
+    if (history.pushState) {
+        let obj = {
+            page: page,
+            column: column,
+            direction: direction,
+            filter: JSON.parse(JSON.stringify(filter)),
+        };
+        if(filter.length > 0) {
+            this.isFiltering = true;
+            this.loadingPage = true;
+        }
+        let string = objectToQueryString(obj);
+        console.log('Update history', string);
+        let newUrl = window.location.protocol + "//" + window.location.host + window.location.pathname + "?" + string;
+        window.history.pushState({path: newUrl}, "", newUrl);
+    }
+}
+
+export function storeFilterAndSort(storageKey, column, direction, filter) {
+    let obj = {
+        column: column,
+        direction: direction,
+        filter: JSON.parse(JSON.stringify(filter)),
+    };
+    console.log('storeFilterAndSort', storageKey, obj);
+    window.store.set(storageKey, obj);
 
 }

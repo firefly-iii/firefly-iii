@@ -26,7 +26,6 @@
                                 <span class="title">&nbsp;</span>
                             </th>
                             <th data-sort-column="name" data-filter-column="name" class="w-20"><span class="title">{{ trans('list.name') }}</span></th>
-
                             <template x-if="'asset' === objectType">
                                 {{-- hide on LG and smaller. --}}
                                 <th data-sort-column="role" class="d-lg-table-cell d-none"><span class="title">{{ trans('list.role') }}</span></th>
@@ -76,7 +75,7 @@
                             <tr :data-id="account.id">
                                 <td>
                                     <template
-                                        x-if="('asset' === objectType || 'liabilities' === objectType) && 'asc' === sortDirection && 'order' === sortColumn && accounts.length > 1">
+                                        x-if="('asset' === objectType || 'liabilities' === objectType) && 'asc' === sortableTable.sortDirection && 'order' === sortableTable.sortColumn && accounts.length > 1">
                                         <span class="btn btn-outline-secondary btn-sm bi bi-list object-handle"></span>
                                     </template>
                                 </td>
