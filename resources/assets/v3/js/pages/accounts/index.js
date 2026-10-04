@@ -72,39 +72,6 @@ let index = function () {
         storeFilterAndSort: storeFilterAndSort,
         sortableTable: null,
 
-        // objectToQueryString(obj, prefix) {
-        //     if (null === obj) {
-        //         return "";
-        //     }
-        //     return Object.keys(obj)
-        //         .map((objKey) => {
-        //             if (Object.hasOwn(obj, objKey)) {
-        //                 const key = prefix ? `${prefix}[${objKey}]` : objKey;
-        //                 const value = obj[objKey];
-        //
-        //                 return typeof value === "object"
-        //                     ? this.objectToQueryString(value, key)
-        //                     : `${encodeURIComponent(key)}=${encodeURIComponent(value)}`;
-        //             }
-        //
-        //             return null;
-        //         })
-        //         .join("&");
-        // },
-
-        // updateFilterValue(field, newValue) {
-        //     console.log("Update", field, newValue);
-        //     this.filter[field] = newValue;
-        //     if ("" !== newValue) {
-        //         this.isFiltering = true;
-        //     }
-        //     if ("" === newValue) {
-        //         this.isFiltering = false;
-        //     }
-        //     this.updateHistory();
-        //     this.downloadAccounts();
-        // },
-
         init() {
 
             // prepare some variables:
@@ -117,14 +84,16 @@ let index = function () {
             this.defaultSortColumn = "expense" === this.objectType || "revenue" === this.objectType ? "name" : this.defaultSortColumn;
             this.active = "inactive-accounts" !== address[address.length - 2];
 
+            // grab state from localStorage.
             let fromStore = window.store.get(this.storageKey);
             if (fromStore) {
                 this.defaultSortColumn = fromStore.column;
                 this.defaultSortDirection = fromStore.direction;
                 this.filter = fromStore.filter;
-                console.log('Restore from store:', fromStore);
+                //console.log('Restore from store:', fromStore);
             }
 
+            // grab state from URL params.
             const params = new Proxy(new URLSearchParams(window.location.search), {
                 get: (searchParams, prop) => searchParams.get(prop),
             });
@@ -132,11 +101,7 @@ let index = function () {
             this.defaultSortColumn = params.column ?? this.defaultSortColumn;
             this.defaultSortDirection = params.direction ?? this.defaultSortDirection;
 
-            console.log('Restore from params:', {
-                page: this.page,
-                column: this.defaultSortColumn,
-                direction: this.defaultSortDirection
-            });
+            // console.log('Restore from params:', {page: this.page, column: this.defaultSortColumn, direction: this.defaultSortDirection});
 
 
             this.sortableTable = new sortableTable('main');
@@ -146,8 +111,6 @@ let index = function () {
             this.sortableTable.page = this.page;
 
             this.sortableTable.init(this);
-
-            //updateHistory(this.page, this.defaultSortColumn, this.defaultSortDirection, this.filter);
 
             // watch for changes in the sortable table instructions.
             document.addEventListener('sortable-table-sort-change', (event) => {
@@ -159,16 +122,8 @@ let index = function () {
                 this.downloadAccounts();
             });
             this.downloadAccounts();
-            console.log(this.isFiltering);
-
-            // grab the account list.
-            // document.addEventListener('alpine:initialized', (function () {
-            //     console.log('Init!');
-            //
-            // }).bind(this));
 
             // respond to drag and drop.
-
             getVariable("listPageSize").then((listPageSize) => {
                 this.listPageSize = listPageSize;
                 addDrag();
@@ -301,13 +256,9 @@ let index = function () {
                                 pc_current_debt_float: current.attributes.pc_debt_amount_float,
 
                                 liability_type: i18next.t("firefly.account_type_" + current.attributes.liability_type),
-                                liability_direction: i18next.t(
-                                    "firefly.liability_direction_" + current.attributes.liability_direction + "_short",
-                                ),
+                                liability_direction: i18next.t("firefly.liability_direction_" + current.attributes.liability_direction + "_short",),
                                 liability_interest: current.attributes.interest,
-                                liability_interest_period: i18next
-                                    .t("firefly.interest_calc_" + current.attributes.interest_period)
-                                    .toLowerCase(),
+                                liability_interest_period: i18next.t("firefly.interest_calc_" + current.attributes.interest_period).toLowerCase(),
                             };
                             this.accounts.push(account);
                         }

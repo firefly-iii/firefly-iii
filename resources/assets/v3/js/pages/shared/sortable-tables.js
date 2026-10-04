@@ -24,6 +24,7 @@ export class sortableTable {
     sortDirection = 'asc';
     storageKey = '';
     disableRefresh = false;
+    parent = null;
 
     constructor(tableId) {
         this.tableId = tableId;
@@ -31,6 +32,7 @@ export class sortableTable {
     }
 
     init(parent) {
+        this.parent = parent;
         queueMicrotask(() => {
             this.updateHeaderClasses();
             this.addClickEvents();
@@ -44,17 +46,17 @@ export class sortableTable {
         });
 
         // add a watch for sortColumn, sortDirection and page
-        parent.$watch('sortColumn', (newValue, oldValue) => {
-            console.log('sortColumn changed from "' + oldValue + '" to "' + newValue + '"');
+        // parent.$watch('sortColumn', (newValue, oldValue) => {
+        //     console.log('sortColumn changed from "' + oldValue + '" to "' + newValue + '"');
             // this.updateHeaderClasses();
 
-        });
-        parent.$watch('sortDirection', (newValue, oldValue) => {
-            console.log('sortDirection changed from "' + oldValue + '" to "' + newValue + '"');
-        });
-        parent.$watch('page', (newValue, oldValue) => {
-            console.log('page changed from "' + oldValue + '" to "' + newValue + '"');
-        });
+        // });
+        // parent.$watch('sortDirection', (newValue, oldValue) => {
+        //     console.log('sortDirection changed from "' + oldValue + '" to "' + newValue + '"');
+        // });
+        // parent.$watch('page', (newValue, oldValue) => {
+        //     console.log('page changed from "' + oldValue + '" to "' + newValue + '"');
+        // });
         // loop all filtered columns and watch those values.
         document.querySelectorAll('table[data-sort-identifier="' + this.tableId + '"] thead th[data-filter-column]').forEach((th) => {
             let column = th.getAttribute('data-filter-column');
@@ -71,15 +73,21 @@ export class sortableTable {
                 // parent.filter[column] = newValue;
                 console.log('filter for column "' + column + '" changed from "' + oldValue + '" to "' + newValue + '"');
                 this.fireSortChangeEvent();
+                if('' !== newValue) {
+                    showSearchBox(th);
+                }
             });
 
-            if (null !== valueToUse) {
-                console.log('DISABLE refresh');
+            if (null !== valueToUse && '' !== valueToUse) {
+                // console.log('DISABLE refresh');
                 this.disableRefresh = true;
                 parent.isFiltering = true;
-                console.log('Setting initial filter value for column "' + column + '" to "' + valueToUse + '"');
+                // console.log('Setting initial filter value for column "' + column + '" to "' + valueToUse + '"');
                 parent.filter[column] = valueToUse;
-
+                // make sure the button is visible.
+                setTimeout(() => {
+                    showSearchBox(th);
+                },50);
             }
         });
     }
@@ -123,14 +131,14 @@ export class sortableTable {
     clickCloseButton(event) {
         let th = event.currentTarget.parentNode.parentNode.parentNode;
         let column = th.dataset.filterColumn;
-        console.log('close again', column);
+        console.log('close search box for ', column);
         th.querySelector('.search-filter').classList.add('d-none');
         th.querySelector('.title').classList.remove('d-none');
         th.querySelector('span.search-spacer').classList.remove("d-none");
         th.querySelector('.search-button').classList.remove('d-none');
         // console.log(th.querySelector('.form-control').value);
         th.querySelector('.form-control').value = '';
-
+        this.parent.filter[column] = '';
         this.fireSortChangeEvent();
     }
 
@@ -153,7 +161,7 @@ export class sortableTable {
         });
     }
     createSearchBox(th) {
-        console.log('createSearchBox', th);
+        //console.log('createSearchBox', th);
         let column = th.dataset.filterColumn;
         // create filter inset.
         let inset = document.createElement('span');
@@ -228,6 +236,7 @@ function showSearchBox(th) {
     let column = th.dataset.filterColumn;
 
     // hide search buttons etc.
+    console.log('search button?',th.querySelector('.search-button'));
     th.querySelector('.search-button').classList.add("d-none");
     th.querySelector('span.title').classList.add("d-none");
     th.querySelector('span.search-spacer').classList.add("d-none");
