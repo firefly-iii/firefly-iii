@@ -57,7 +57,7 @@ function loadTranslations(language, locale) {
 
         return i18next.use(ChainedBackend).init(options);
     }
-    return Promise.resolve();
+    return Promise.resolve(null);
 }
 
 export { loadTranslations };

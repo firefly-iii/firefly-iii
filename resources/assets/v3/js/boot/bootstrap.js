@@ -28,10 +28,10 @@ import store from "../store/store.js";
 import axios from "axios";
 import Shepherd from "shepherd.js";
 import "cally";
-import { getFreshVariable } from "../store/get-fresh-variable.js";
-import { getVariables } from "../store/get-variables.js";
-import { getViewRange } from "../support/get-viewrange.js";
-import { loadTranslations } from "../support/load-translations.js";
+import {getFreshVariable} from "../store/get-fresh-variable.js";
+import {getVariables} from "../store/get-variables.js";
+import {getViewRange} from "../support/get-viewrange.js";
+import {loadTranslations} from "../support/load-translations.js";
 import i18next from "i18next";
 
 window.bootstrapped = false;
@@ -42,127 +42,124 @@ window.axios = axios;
 window.axios.defaults.headers.common["X-Requested-With"] = "XMLHttpRequest";
 
 // always grab the preference "marker" from Firefly III.
-getFreshVariable("lastActivity")
-    .then((serverValue) => {
-        if (null === serverValue) {
-            // console.log("Server value is null in getFreshVariable.");
-            throw new Error("401 in getFreshVariable.");
-        }
-        const localValue = store.get("lastActivity");
-        store.set("cacheValid", localValue === serverValue);
-        store.set("lastActivity", serverValue);
-        // console.log('Server value = ' + serverValue);
-        // console.log('Local value:  ' + localValue);
-        // console.log('Cache valid:  ' + (localValue === serverValue));
-    })
-    .then(() => {
-        Promise.resolve(
-            getVariables(["viewRange", "anonymous", "darkMode", "locale", "language", "convert_to_primary"]),
-        ).then((values) => {
-            const range = getViewRange(values.viewRange, new Date());
-            if (!store.get("start") || !store.get("end")) {
-                // calculate new start and end, and store them.
-                store.set("start", range.start);
-                store.set("end", range.end);
-            }
-            // always set defaultStart and defaultEnd
-            store.set("viewRange", values.viewRange);
-            store.set("defaultStart", range.start);
-            store.set("defaultEnd", range.end);
-            store.set("anonymous", values.anonymous);
-            //
-            if ("equal" === values.locale) {
-                values.locale = values.language;
-            }
-            const replacedLocale = values.locale.replace("_", "-");
-            const replacedLanguage = values.language.replace("_", "-");
+const serverValue = await getFreshVariable("lastActivity");
+if (null === serverValue) {
+    // console.log("Server value is null in getFreshVariable.");
+    throw new Error("401 in getFreshVariable.");
+}
+const localValue = store.get("lastActivity");
+store.set("cacheValid", localValue === serverValue);
+store.set("lastActivity", serverValue);
 
-            // save local in window.__ something
-            window.__localeId__ = replacedLocale;
-            store.set("language", replacedLanguage);
-            store.set("locale", replacedLocale);
-            console.log("Ready with bootstrap for this page.");
-            loadTranslations(replacedLanguage, replacedLocale).then(function () {
-                window.i18next = i18next;
-                const event = new Event("firefly-iii-bootstrapped");
-                document.dispatchEvent(event);
-                window.bootstrapped = true;
-                // console.log('Bootstrapped!');
+// get a bunch of variables, and then use them to build the store
+const preferences = await getVariables(["viewRange", "anonymous", "darkMode", "locale", "language", "convert_to_primary"]);
 
-                // page may have an introduction necessary to be played.
-                if (!window.showTour) {
-                    return;
-                }
-                const url = "/";
-                let site = axios.create({
-                    baseURL: url,
-                    withCredentials: true,
-                });
-                axios.defaults.withCredentials = true;
-                axios.defaults.baseURL = url;
+const range = getViewRange(preferences.viewRange, new Date());
+if (!store.get("start") || !store.get("end")) {
+    // calculate new start and end, and store them.
+    store.set("start", range.start);
+    store.set("end", range.end);
+}
+// always set defaultStart and defaultEnd
+store.set("viewRange", preferences.viewRange);
+store.set("defaultStart", range.start);
+store.set("defaultEnd", range.end);
+store.set("anonymous", preferences.anonymous);
+//
+if ("equal" === preferences.locale) {
+    preferences.locale = preferences.language;
+}
+const replacedLocale = preferences.locale.replace("_", "-");
+const replacedLanguage = preferences.language.replace("_", "-");
 
-                site.get(window.routeStepsUrl).then(function (data) {
-                    let hints = data.data;
+// save local in window.__ something
+window.__localeId__ = replacedLocale;
+store.set("language", replacedLanguage);
+store.set("locale", replacedLocale);
+console.log("Ready with bootstrap for this page.");
 
-                    const tour = new Shepherd.Tour({
-                        useModalOverlay: true,
-                        defaultStepOptions: {
-                            // classes: 'shadow-md bg-purple-dark',
-                            scrollTo: true,
-                            cancelIcon: {
-                                enabled: true,
-                            },
-                        },
-                    });
-                    // cancel or complete
-                    tour.on("cancel", () => {
-                        site.post(window.routeForFinishedTour);
-                    });
-                    tour.on("complete", () => {
-                        site.post(window.routeForFinishedTour);
-                    });
+// need the language to be loaded first, so continue only once we have it.
+await loadTranslations(replacedLanguage, replacedLocale)
+const event = new Event("firefly-iii-bootstrapped");
+document.dispatchEvent(event);
+window.bootstrapped = true;
 
-                    for (let i = 0; i < hints.length; i++) {
-                        if (Object.hasOwn(hints, i)) {
-                            let hint = hints[i];
+// page may have an introduction necessary to be played.
+if (!window.showTour) {
+    return;
+}
+loadTour();
 
-                            let buttons = [];
-                            if (i > 0) {
-                                buttons.push({
-                                    text: i18next.t("firefly.intro_prev_label"),
-                                    action: tour.back,
-                                });
-                            }
-                            if (i < hints.length - 1) {
-                                buttons.push({
-                                    text: i18next.t("firefly.intro_next_label"),
-                                    action: tour.next,
-                                });
-                            }
-                            if (i === hints.length - 1) {
-                                // console.log("Add complete");
-                                buttons.push({
-                                    text: i18next.t("firefly.intro_done_label"),
-                                    action: tour.complete,
-                                });
-                            }
 
-                            let step = {
-                                // id: 'example-step',
-                                text: hint.text,
-                                buttons: buttons,
-                            };
-                            if (Object.hasOwn(hint, "element")) {
-                                step.attachTo = {
-                                    element: hint.element,
-                                    on: hint.position,
-                                };
-                            }
-                            tour.addStep(step);
-                        }
-                    }
-                    tour.start();
-                });
-            });
+
+
+
+function loadTour() {
+    const url = "/";
+    let site = axios.create({baseURL: url, withCredentials: true,});
+    axios.defaults.withCredentials = true;
+    axios.defaults.baseURL = url;
+
+    site.get(window.routeStepsUrl).then(function (data) {
+        let hints = data.data;
+
+        const tour = new Shepherd.Tour({
+            useModalOverlay: true,
+            defaultStepOptions: {
+                // classes: 'shadow-md bg-purple-dark',
+                scrollTo: true,
+                cancelIcon: {
+                    enabled: true,
+                },
+            },
         });
+        // cancel or complete
+        tour.on("cancel", () => {
+            site.post(window.routeForFinishedTour);
+        });
+        tour.on("complete", () => {
+            site.post(window.routeForFinishedTour);
+        });
+
+        for (let i = 0; i < hints.length; i++) {
+            if (Object.hasOwn(hints, i)) {
+                let hint = hints[i];
+
+                let buttons = [];
+                if (i > 0) {
+                    buttons.push({
+                        text: i18next.t("firefly.intro_prev_label"),
+                        action: tour.back,
+                    });
+                }
+                if (i < hints.length - 1) {
+                    buttons.push({
+                        text: i18next.t("firefly.intro_next_label"),
+                        action: tour.next,
+                    });
+                }
+                if (i === hints.length - 1) {
+                    // console.log("Add complete");
+                    buttons.push({
+                        text: i18next.t("firefly.intro_done_label"),
+                        action: tour.complete,
+                    });
+                }
+
+                let step = {
+                    // id: 'example-step',
+                    text: hint.text,
+                    buttons: buttons,
+                };
+                if (Object.hasOwn(hint, "element")) {
+                    step.attachTo = {
+                        element: hint.element,
+                        on: hint.position,
+                    };
+                }
+                tour.addStep(step);
+            }
+        }
+        tour.start();
     });
+}

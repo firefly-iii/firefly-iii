@@ -29,6 +29,7 @@ import format from "../../util/format.js";
 import formatMoney from "../../util/format-money.js";
 import i18next from "i18next";
 import { addDrag } from "../shared/drag-and-droppable-rows.js";
+import {sortableTable} from "../shared/sortable-tables.js";
 
 window.enableDates = true;
 
@@ -36,28 +37,38 @@ let index = function () {
     return {
         listPageSize: 50,
         objectType: "invalid",
-        sortColumn: "order",
         accounts: [],
-        sortDirection: "asc",
         page: 1,
         i18next: null,
         anonymous: false,
         totalPages: 1,
         loadingPage: true,
         convertToPrimary: false,
-        loadingNewSort: true,
         active: true,
-        pageNavUrl: "./accounts/",
-        handleFunc: null,
         storageKey: "",
         sums: {},
         debts: {},
         differences: {},
-        isFiltering: false,
-        filter: {
-            name: "",
-        },
+
+        // functions
         formatMoney: formatMoney,
+
+        // default settings for sorting
+        defaultSortColumn: 'order',
+        defaultSortDirection: 'asc',
+
+        // variables necessary for sorting tables.
+        handleFunc: null,
+        pageNavUrl: "./accounts/",
+        sortColumn: "order",
+        sortDirection: "asc",
+        loadingNewSort: true,
+        isFiltering: false,
+        filter: {},
+
+        // sort functions
+        sortableTable: null,
+
         objectToQueryString(obj, prefix) {
             if (null === obj) {
                 return "";
@@ -108,112 +119,66 @@ let index = function () {
         },
 
         init() {
-            this.$watch("filter.name", (value) => this.updateFilterValue("name", value));
-
+            const page = window.location.href.split("?")[0].split("/");
+            this.objectType = page[page.length - 1].substring(0, 15);
             this.i18next = i18next;
             this.anonymous = window.store.get("anonymous");
+            this.storageKey = "accounts-" + this.objectType + (this.active ? "-active" : "-inactive");
             this.handleFunc = this.handlePageClick.bind(this);
-            const page = window.location.href.split("?")[0].split("/");
+            this.pageNavUrl = "./accounts/" + this.objectType;
+
+            if ("expense" === this.objectType || "revenue" === this.objectType) {
+                this.defaultSortColumn = "name";
+            }
+
+            // sort and paging settings.
             if ("inactive-accounts" === page[page.length - 2]) {
                 this.active = false;
             }
-            let defaultSortColumn = "order";
-            let defaultSortDirection = "asc";
-            this.objectType = page[page.length - 1].substring(0, 15);
-            this.storageKey = "accounts-" + this.objectType + (this.active ? "-active" : "-inactive");
-            this.pageNavUrl = "./accounts/" + this.objectType;
-            const params = new Proxy(new URLSearchParams(window.location.search), {
-                get: (searchParams, prop) => searchParams.get(prop),
-            });
-            // shitty solution but for now it works.
-            if ("" !== params["filter[name]"]) {
-                this.filter.name = params["filter[name]"];
-                this.isFiltering = true;
-            }
-            if ("expense" === this.objectType || "revenue" === this.objectType) {
-                defaultSortColumn = "name";
-            }
+
             let fromStore = window.store.get(this.storageKey);
             console.log("from store", fromStore);
             if (fromStore) {
-                defaultSortColumn = fromStore.column;
-                defaultSortDirection = fromStore.direction;
+                this.defaultSortColumn = fromStore.column;
+                this.defaultSortDirection = fromStore.direction;
             }
 
-            this.sortColumn = params.column ?? defaultSortColumn;
-            this.sortDirection = params.direction ?? defaultSortDirection;
+            // document.querySelectorAll('table[data-sort-identifier="main"] thead th[data-filter-column]').forEach((th) => {
+            //     let column = th.getAttribute('data-filter-column');
+            //     console.log('[index] Will watch filter for column "' + column + '"');
+            //     this.$watch('filter.' + column, (newValue, oldValue) => {
+            //         console.log('filter for column "' + column + '" changed from "' + oldValue + '" to "' + newValue + '"');
+            //     });
+            // });
+
+
+            const params = new Proxy(new URLSearchParams(window.location.search), {
+                get: (searchParams, prop) => searchParams.get(prop),
+            });
+            this.sortColumn = params.column ?? this.defaultSortColumn;
+            this.sortDirection = params.direction ?? this.defaultSortDirection;
             this.page = parseInt(params.page) || 1;
+
+            this.sortableTable = new sortableTable('main');
+            this.sortableTable.sortColumn = params.column ?? this.defaultSortColumn;
+            this.sortableTable.sortDirection = params.direction ?? this.defaultSortDirection;
+            this.sortableTable.page = this.page;
+            this.sortableTable.init(this);
+
+            // watch for changes in the sortable table instructions.
+            document.addEventListener('sortable-table-sort-change', (event) => {
+                console.log('sortable-table-sort-change', event.detail);
+                this.sortColumn = event.detail.sortColumn;
+                this.sortDirection = event.detail.sortDirection;
+                // this.page = event.detail.page;
+                this.updateHistory();
+                this.downloadAccounts();
+            });
 
             // grab the account list.
             this.downloadAccounts();
-            // get accounts by initial sort.
-            document.addEventListener("alpine:initialized", () => {
-                // add sortable click events.
-                document.querySelectorAll("table.sortable th.sortable span.title").forEach((el) => {
-                    el.addEventListener("click", (event) => {
-                        let parent = event.currentTarget.parentNode;
-                        let newColumn = parent.dataset.column;
-                        if (newColumn === this.sortColumn) {
-                            this.sortDirection = "asc" === this.sortDirection ? "desc" : "asc";
-                        }
-                        if (newColumn !== this.sortColumn) {
-                            this.sortColumn = newColumn;
-                        }
-                        console.log("New sort instructions", this.sortColumn, this.sortDirection);
-                        this.updateHistory();
-                        this.downloadAccounts();
-                    });
-                });
 
-                // hide search again
-                document.querySelectorAll("table.sortable .hide-button").forEach((el) => {
-                    el.addEventListener("click", () => {
-                        let column = el.dataset.column;
-                        // show search input again
-                        document.querySelector(`span.title[data-column="${column}"]`).classList.remove("d-none");
-                        document
-                            .querySelector(`span.search-spacer[data-column="${column}"]`)
-                            .classList.remove("d-none");
-                        document.querySelector(`em.search-button[data-column="${column}"]`).classList.remove("d-none");
-                        document.querySelector(`div.search-filter[data-column="${column}"] input`).value = "";
 
-                        // remove class from parent if was used to sort
-                        if (null !== document.querySelector(`th.sortable_sorted[data-column="${column}"]`)) {
-                            document
-                                .querySelector(`th.sortable_sorted[data-column="${column}"]`)
-                                .classList.remove("is-searching");
-                        }
-
-                        let input = document.querySelector(`div.search-filter[data-column="${column}"]`);
-                        input.classList.add("d-none");
-
-                        // TODO hardcoded!!
-                        this.filter.name = "";
-                    });
-                });
-
-                // add filterable click events.
-                document.querySelectorAll("table.sortable .search-button").forEach((el) => {
-                    el.addEventListener("click", () => {
-                        let column = el.dataset.column;
-                        // hide search buttons etc.
-                        el.classList.add("d-none");
-                        document.querySelector(`span.title[data-column="${column}"]`).classList.add("d-none");
-                        document.querySelector(`span.search-spacer[data-column="${column}"]`).classList.add("d-none");
-                        // add class to parent if it's used to sort
-                        if (null !== document.querySelector(`th.sortable_sorted[data-column="${column}"]`)) {
-                            document
-                                .querySelector(`th.sortable_sorted[data-column="${column}"]`)
-                                .classList.add("is-searching");
-                        }
-
-                        // show search input
-                        let input = document.querySelector(`div.search-filter[data-column="${column}"]`);
-                        input.classList.remove("d-none");
-                        input.querySelector("input").focus();
-                    });
-                });
-            });
 
             getVariable("listPageSize").then((listPageSize) => {
                 this.listPageSize = listPageSize;

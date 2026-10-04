@@ -1,0 +1,215 @@
+/*
+ * sortable-tables.js
+ * Copyright (c) 2026 james@firefly-iii.org
+ *
+ * This file is part of Firefly III (https://github.com/firefly-iii).
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Affero General Public License as
+ * published by the Free Software Foundation, either version 3 of the
+ * License, or (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU Affero General Public License for more details.
+ *
+ * You should have received a copy of the GNU Affero General Public License
+ * along with this program.  If not, see <https://www.gnu.org/licenses/>.
+ */
+
+export class sortableTable {
+    tableId = '';
+    sortColumn = 'order';
+    sortDirection = 'asc';
+    isFiltering = false;
+
+    constructor(tableId) {
+        this.tableId = tableId;
+        console.log('Now in constructor("' + tableId + '")');
+    }
+
+    init(parent) {
+        const params = new Proxy(new URLSearchParams(window.location.search), {
+            get: (searchParams, prop) => searchParams.get(prop),
+        });
+        // shitty solution but for now it works.
+        // if ("" !== params["filter[name]"]) {
+        //     this.isFiltering = true;
+        // }
+
+        queueMicrotask(() => {
+            this.updateHeaderClasses();
+            this.addClickEvents();
+            this.addWatch(parent);
+        });
+    }
+
+    addWatch(parent) {
+        // add a watch for sortColumn, sortDirection and page
+        parent.$watch('sortColumn', (newValue, oldValue) => {
+            console.log('sortColumn changed from "' + oldValue + '" to "' + newValue + '"');
+            // this.updateHeaderClasses();
+
+        });
+        parent.$watch('sortDirection', (newValue, oldValue) => {
+            console.log('sortDirection changed from "' + oldValue + '" to "' + newValue + '"');
+        });
+        parent.$watch('page', (newValue, oldValue) => {
+            console.log('page changed from "' + oldValue + '" to "' + newValue + '"');
+        });
+        // loop all filtered columns and watch those values.
+        document.querySelectorAll('table[data-sort-identifier="' + this.tableId + '"] thead th[data-filter-column]').forEach((th) => {
+            let column = th.getAttribute('data-filter-column');
+            console.log('[class] Will watch filter for column "' + column + '"');
+            parent.$watch('filter.' + column, (newValue, oldValue) => {
+                // parent.filter[column] = newValue;
+                console.log('filter for column "' + column + '" changed from "' + oldValue + '" to "' + newValue + '"');
+                this.fireSortChangeEvent();
+            });
+        });
+    }
+
+    clickColumnTitle(event) {
+        let parent = event.currentTarget.parentNode;
+        let newColumn = parent.dataset.sortColumn;
+        this.sortDirection = typeof this.sortDirection !== 'undefined' ? this.sortDirection : 'asc';
+        if (newColumn === this.sortColumn) {
+            this.sortDirection = "asc" === this.sortDirection ? "desc" : "asc";
+        }
+        if (newColumn !== this.sortColumn) {
+            this.sortColumn = newColumn;
+        }
+        this.fireSortChangeEvent();
+        //this.updateHistory();
+        //this.downloadAccounts();
+    }
+    fireSortChangeEvent() {
+        this.updateHeaderClasses();
+        let obj = {
+            tableId: this.tableId,
+            sortColumn: this.sortColumn,
+            sortDirection: this.sortDirection,
+        };
+        console.log('Change sort instructions', obj);
+        let event = new CustomEvent('sortable-table-sort-change', {
+            detail: obj
+        });
+        document.dispatchEvent(event);
+    }
+    clickCloseButton(event) {
+        let th = event.currentTarget.parentNode.parentNode.parentNode;
+        let column = th.dataset.filterColumn;
+        console.log('close again', column);
+        th.querySelector('.search-filter').classList.add('d-none');
+        th.querySelector('.title').classList.remove('d-none');
+        th.querySelector('.search-button').classList.remove('d-none');
+        th.querySelector('.form-control').value = '';
+
+        this.fireSortChangeEvent();
+    }
+
+    addClickEvents() {
+        // add sortable click events.
+        document.querySelectorAll('table[data-sort-identifier="' + this.tableId + '"] th[data-sort-column] span.title').forEach((el) => {
+            el.addEventListener("click", this.clickColumnTitle.bind(this));
+        });
+
+        // create search buttons and inputs.
+        document.querySelectorAll('table[data-sort-identifier="' + this.tableId + '"] th[data-filter-column]').forEach((el) => {
+
+            let column = el.dataset.filterColumn;
+            // create filter inset.
+            let inset = document.createElement('span');
+            inset.classList.add('search-inset');
+
+            // add spacer
+            let searchSpacer = document.createElement('span');
+            searchSpacer.classList.add('search-spacer');
+            searchSpacer.innerHTML = '&nbsp;';
+            inset.appendChild(searchSpacer);
+
+            // make button.
+            let searchButton = document.createElement('em');
+            searchButton.classList.add('search-button', 'bi', 'bi-search');
+            searchButton.setAttribute('data-filter-column', column);
+            inset.appendChild(searchButton);
+
+            // add hidden div
+            let div = document.createElement('div');
+            div.classList.add('d-none', 'input-group', 'search-filter');
+            // append input to div.
+            let input = document.createElement('input');
+            input.classList.add('form-control', 'form-control-sm');
+            input.setAttribute('type', 'search');
+            input.setAttribute('placeholder', 'TODO placeholder');
+            input.setAttribute('x-model', 'filter.' + column);
+            div.appendChild(input);
+
+            // create button
+            let button = document.createElement('button');
+            button.classList.add('btn', 'btn-outline-secondary', 'btn-sm', 'hide-button');
+            button.setAttribute('type', 'button');
+            button.addEventListener('click', this.clickCloseButton.bind(this));
+            let icon = document.createElement('em');
+            icon.classList.add('bi', 'bi-x', 'text-danger');
+            // append icon to button
+            button.appendChild(icon);
+            // add button to div
+            div.appendChild(button);
+
+            // append div to element
+            inset.appendChild(div);
+            el.appendChild(inset);
+        });
+
+        document.querySelectorAll('table[data-sort-identifier="' + this.tableId + '"] th[data-filter-column] .search-button').forEach((el) => {
+            el.addEventListener("click", () => {
+                let column = el.dataset.filterColumn;
+
+                // hide search buttons etc.
+                el.classList.add("d-none");
+                let th = el.parentNode.parentNode;
+                th.querySelector('span.title').classList.add("d-none");
+                th.querySelector('span.search-spacer').classList.add("d-none");
+                // add class to parent if it's used to sort
+
+                // if th has class sortable_sorted, add class is-searching
+                if (th.classList.contains('sortable_sorted')) {
+                    th.classList.add("is-searching");
+                }
+
+                // show search input in div.search-filter
+                let input = th.querySelector('div.search-filter');
+                input.classList.remove("d-none");
+                input.querySelector("input").focus();
+            });
+        });
+    }
+
+
+    updateHeaderClasses(tableId, column, direction) {
+        document.querySelectorAll('table[data-sort-identifier="' + this.tableId + '"] thead th[data-sort-column]').forEach((th) => {
+            // console.log('th', th.dataset.sortColumn);
+            if (this.sortColumn === th.dataset.sortColumn) {
+                // th.classList.add('sortable');
+                th.classList.add('sortable_sorted');
+                if ('asc' === this.sortDirection) {
+                    th.classList.add('sortable_sorted_asc');
+                    th.classList.remove('sortable_sorted_desc');
+                }
+                if ('desc' === this.sortDirection) {
+                    th.classList.add('sortable_sorted_desc');
+                    th.classList.remove('sortable_sorted_asc');
+                }
+            }
+            if (this.sortColumn !== th.dataset.sortColumn) {
+                th.classList.remove('sortable_sorted_asc');
+                th.classList.remove('sortable_sorted_desc');
+                th.classList.remove('sortable_sorted');
+            }
+        });
+    }
+
+
+}

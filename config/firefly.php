@@ -851,6 +851,7 @@ return [
     'allowed_filter_parameters'            => [
         'Account' => [
             'name',
+            'account_number_and_iban'
         ],
     ],
     'allowed_sort_parameters'              => [

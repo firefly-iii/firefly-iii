@@ -19,51 +19,35 @@
                 <div class="card-body p-0">
                     <x-elements.alpine.page-navigation/>
 
-                    <table class="table table-valign-middle table-sm table-hover sortable">
+                    <table data-sort-identifier="main" class="table table-valign-middle table-sm table-hover sortable">
                         <thead>
                         <tr>
-                            <th data-column="order"
-                                :class="{'w-5' : true,'sortable': true, 'sortable_sorted': 'order' === sortColumn, 'sortable_sorted_asc': 'asc' === sortDirection, 'sortable_sorted_desc': 'desc' === sortDirection }">
-                                <span>&nbsp;</span>
+                            <th data-sort-column="order" class="w-5">
+                                <span class="title">&nbsp;</span>
                             </th>
-                            <th data-column="name"
-                                :class="{'w-20' : true,'sortable': true, 'sortable_sorted': 'name' === sortColumn, 'sortable_sorted_asc': 'asc' === sortDirection, 'sortable_sorted_desc': 'desc' === sortDirection }">
-                                <span data-column="name" class="title">{{ trans('list.name') }}</span>
-                                <span data-column="name" class="search-spacer">&nbsp;</span><em data-column="name" class="search-button search-button-name bi bi-search"></em>
-                                <div data-column="name" class="search-filter search-filter-name d-none input-group">
-                                    <input type="search" x-model="filter.name" class="filter-input form-control form-control-sm" placeholder="Filter name...">
-                                    <button class="btn btn-outline-secondary btn-sm hide-button" data-column="name" type="button"><em class="bi bi-x text-danger"></em></button>
-                                </div>
-                            </th>
+                            <th data-sort-column="name" data-filter-column="name" class="w-20"><span class="title">{{ trans('list.name') }}</span></th>
 
                             <template x-if="'asset' === objectType">
                                 {{-- hide on LG and smaller. --}}
-                                <th data-column="role"
-                                    :class="{'d-lg-table-cell': true, 'd-none': true,'sortable': true, 'sortable_sorted': 'role' === sortColumn, 'sortable_sorted_asc': 'asc' === sortDirection, 'sortable_sorted_desc': 'desc' === sortDirection }"><span class="title">{{ trans('list.role') }}</span></th>
+                                <th data-sort-column="role" class="d-lg-table-cell d-none"><span class="title">{{ trans('list.role') }}</span></th>
                             </template>
                             <template x-if="'liabilities' === objectType">
-                                <th data-column="account_type_id"
-                                    :class="{'sortable': true, 'sortable_sorted': 'account_type_id' === sortColumn, 'sortable_sorted_asc': 'asc' === sortDirection, 'sortable_sorted_desc': 'desc' === sortDirection }"><span class="title">{{ trans('list.liability_type') }}</span></th>
+                                <th data-sort-column="account_type_id"><span class="title">{{ trans('list.liability_type') }}</span></th>
                             </template>
                             <template x-if="'liabilities' === objectType">
-                                <th data-column="liability_direction"
-                                    :class="{'sortable': true, 'sortable_sorted': 'liability_direction' === sortColumn, 'sortable_sorted_asc': 'asc' === sortDirection, 'sortable_sorted_desc': 'desc' === sortDirection }"><span class="title">{{ trans('form.liability_direction') }}</span></th>
+                                <th data-sort-column="liability_direction"><span class="title">{{ trans('form.liability_direction') }}</span></th>
                             </template>
                             <template x-if="'liabilities' === objectType">
-                                <th data-column="liability_interest"
-                                    :class="{'sortable': true, 'sortable_sorted': 'liability_interest' === sortColumn, 'sortable_sorted_asc': 'asc' === sortDirection, 'sortable_sorted_desc': 'desc' === sortDirection }"><span class="title">{{ trans('list.interest') }}</span>
+                                <th data-sort-column="liability_interest"><span class="title">{{ trans('list.interest') }}</span>
                                     ({{ trans('list.interest_period') }})
                                 </th>
                             </template>
-                            <th data-column="account_number_and_iban"
-                                :class="{'sortable': true, 'sortable_sorted': 'account_number_and_iban' === sortColumn, 'sortable_sorted_asc': 'asc' === sortDirection, 'sortable_sorted_desc': 'desc' === sortDirection }"><span class="title">{{ trans('form.account_number') }}</span></th>
+                            <th data-sort-column="account_number_and_iban" data-filter-column="account_number_and_iban"><span class="title">{{ trans('form.account_number') }}</span></th>
                             <template x-if="'liabilities' !== objectType">
-                                <th data-column="current_balance"
-                                    :class="{'text-end': true, 'sortable': true, 'sortable_sorted': 'current_balance' === sortColumn, 'sortable_sorted_asc': 'asc' === sortDirection, 'sortable_sorted_desc': 'desc' === sortDirection }"><span class="title">{{ trans('list.currentBalance') }}</span></th>
+                                <th data-sort-column="current_balance"><span class="title">{{ trans('list.currentBalance') }}</span></th>
                             </template>
                             <template x-if="'liabilities' === objectType">
-                                <th data-column="debt_amount"
-                                    :class="{'text-end': true, 'sortable': true, 'sortable_sorted': 'debt_amount' === sortColumn, 'sortable_sorted_asc': 'asc' === sortDirection, 'sortable_sorted_desc': 'desc' === sortDirection }">
+                                <th data-sort-column="debt_amount">
                                     <span class="title">{{ trans('firefly.left_in_debt') }}</span>
                                 </th>
                             </template>
@@ -71,12 +55,10 @@
                             {{-- hide last activity to make room for other stuff --}}
                             <template x-if="'liabilities' !== objectType">
                                 {{-- hide on LG and smaller. --}}
-                                <th data-column="last_activity"
-                                    :class="{'d-lg-table-cell': true, 'd-none': true, 'sortable': true, 'sortable_sorted': 'last_activity' === sortColumn, 'sortable_sorted_asc': 'asc' === sortDirection, 'sortable_sorted_desc': 'desc' === sortDirection }"><span class="title">{{ trans('list.lastActivity') }}</span></th>
+                                <th data-sort-column="last_activity" class="d-lg-table-cell d-none"><span class="title">{{ trans('list.lastActivity') }}</span></th>
                             </template>
                             {{-- hide on SM --}}
-                            <th data-column="balance_difference"
-                                :class="{'w-15': true,'text-end': true, 'd-lg-table-cell': true, 'd-none': true, 'sortable': true, 'sortable_sorted': 'balance_difference' === sortColumn, 'sortable_sorted_asc': 'asc' === sortDirection, 'sortable_sorted_desc': 'desc' === sortDirection }"><span class="title">{{ trans('list.balanceDiff') }}</span></th>
+                            <th data-sort-column="balance_difference" class="w-15 text-end d-lg-table-cell d-none"><span class="title">{{ trans('list.balanceDiff') }}</span></th>
                             <th>&nbsp;</th>
                         </tr>
                         <tr x-show="true === loadingNewSort">

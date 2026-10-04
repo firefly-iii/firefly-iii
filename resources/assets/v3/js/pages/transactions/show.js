@@ -91,8 +91,7 @@ let show = function () {
                         current.dateObject = new Date(current.date);
                         current.dateFormatted = format(
                             current.dateObject,
-                            window.i18next.t("config.date_time_fns", { lng: locale }),
-                            locale,
+                            i18next.t("config.date_time_fns", { lng: locale }), locale,
                         );
                         console.log("Date formatted is", current.dateFormatted);
                         this.group.transactions.push(current);

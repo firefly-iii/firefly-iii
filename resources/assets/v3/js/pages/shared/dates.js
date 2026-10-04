@@ -113,7 +113,7 @@ export default () => ({
 
         // set the title:
         let locale = window.store.get("locale");
-        let formatString = this.i18next.t("config.month_and_day_fns", { lng: locale });
+        let formatString = i18next.t("config.month_and_day_fns", { lng: locale });
         let element = document.getElementsByClassName("daterange-holder")[0];
         element.textContent = format(this.range.start, formatString) + " - " + format(this.range.end, formatString);
         element.setAttribute("data-start", format(this.range.start, this.preferredFormat, "en-US"));
@@ -140,7 +140,7 @@ export default () => ({
 
         // generate the default range ("Today")
         element = document.getElementsByClassName("daterange-today")[0];
-        let todayString = this.i18next.t("firefly.today");
+        let todayString = i18next.t("firefly.today");
         todayString = String(todayString).charAt(0).toUpperCase() + String(todayString).slice(1);
         element.textContent = todayString;
         element.setAttribute("data-start", format(todayRange.start, this.preferredFormat, "en-US"));

@@ -257,9 +257,7 @@ let rates = function () {
                                 inverse_id: inverse_id,
                                 date_formatted: format(
                                     date,
-                                    window.i18next.t("config.date_time_fns", { lng: window.store.get("locale") }),
-                                    window.store.get("locale"),
-                                ),
+                                    i18next.t("config.date_time_fns", { lng: window.store.get("locale") }), window.store.get("locale"),),
                                 date_field: current.attributes.date.substring(0, 10),
                                 rate: rate,
                                 inverse: "",

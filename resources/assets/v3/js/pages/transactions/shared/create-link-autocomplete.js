@@ -33,7 +33,7 @@ export function createLinkAutocomplete(fieldIdentifier, url) {
             ", " +
             formatMoney(item.amount, item.currency_code) +
             " @ " +
-            format(new Date(item.date), window.i18next.t("config.date_time_fns", { lng: locale }), locale) +
+            format(new Date(item.date), i18next.t("config.date_time_fns", { lng: locale }), locale) +
             "</small>"
         );
     };
