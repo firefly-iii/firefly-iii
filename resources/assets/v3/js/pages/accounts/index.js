@@ -101,7 +101,7 @@ let index = function () {
             this.defaultSortColumn = params.column ?? this.defaultSortColumn;
             this.defaultSortDirection = params.direction ?? this.defaultSortDirection;
 
-            // console.log('Restore from params:', {page: this.page, column: this.defaultSortColumn, direction: this.defaultSortDirection});
+            console.log('Restore from params:', {page: this.page, column: this.defaultSortColumn, direction: this.defaultSortDirection});
 
             this.sortableTable = new sortableTable("main");
             this.sortableTable.sortColumn = this.defaultSortColumn;
@@ -168,8 +168,8 @@ let index = function () {
             let keys = ["balance_difference", "current_balance", "debt_amount"];
             for (let i = 0; i < keys.length; i++) {
                 let key = keys[i];
-                account.attributes[prefix + key + "_formatted"] = formatMoney(account.attributes[key], code, true);
-                account.attributes[prefix + key + "_float"] = parseFloat(account.attributes[key]);
+                account.attributes[prefix + key + "_formatted"] = formatMoney(account.attributes[prefix+key], code, true);
+                account.attributes[prefix + key + "_float"] = parseFloat(account.attributes[prefix+key]);
             }
             return account;
         },
@@ -179,7 +179,7 @@ let index = function () {
             let start = window.store.get("start");
             let end = window.store.get("end");
             this.convertToPrimary = window.store.get("convert_to_primary");
-            console.log("Download accounts using", JSON.parse(JSON.stringify(this.filter)));
+            // console.log("Download accounts using", JSON.parse(JSON.stringify(this.filter)));
             new Get()
                 .list({
                     active: this.active,
@@ -208,6 +208,7 @@ let index = function () {
                             // add formatted amount property.
                             current = this.createParsedAndFloatingAmounts(current, cc, "");
                             current = this.createParsedAndFloatingAmounts(current, pcc, "pc_");
+                            //console.log(current);
 
                             if (!this.convertToPrimary) {
                                 this.sums[cc] += current.attributes.current_balance_float;
@@ -246,6 +247,11 @@ let index = function () {
                                 pc_current_balance: current.attributes.pc_current_balance_formatted,
                                 pc_current_balance_float: current.attributes.pc_current_balance_float,
 
+                                // current_balance: '1',
+                                // current_balance_float: 2,
+                                // pc_current_balance: '3',
+                                // pc_current_balance_float: 4,
+
                                 balance_difference: current.attributes.balance_difference_formatted,
                                 balance_difference_float: current.attributes.balance_difference_float,
                                 pc_balance_difference: current.attributes.pc_balance_difference_formatted,
@@ -268,11 +274,11 @@ let index = function () {
                             this.accounts.push(account);
                         }
                     }
-                    console.log(
-                        "Done downloading accounts.",
-                        JSON.parse(JSON.stringify(this.filter)),
-                        this.accounts.length,
-                    );
+                    // console.log(
+                    //     "Done downloading accounts.",
+                    //     JSON.parse(JSON.stringify(this.filter)),
+                    //     this.accounts.length,
+                    // );
                     this.loadingPage = false;
                     this.loadingNewSort = false;
                     this.sortableTable.disableRefresh = false;
