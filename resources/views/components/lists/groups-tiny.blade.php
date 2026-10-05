@@ -14,7 +14,7 @@
     </td>
     <td class="text-end w-30">
         <span class="small">
-            <x-generic.amount :transaction="$transaction" />
+            <x-generic.amount :account="$account" :transaction="$transaction" />
         </span>
     </td>
 </tr>

@@ -118,6 +118,18 @@ if (!function_exists('env_default_when_empty')) {
     }
 }
 
+if(!function_exists('steam_negative')) {
+    function steam_negative(string $amount): string {
+        return Steam::negative($amount);
+    }
+}
+
+if(!function_exists('steam_positive')) {
+    function steam_positive(string $amount): string {
+        return Steam::positive($amount);
+    }
+}
+
 if (!function_exists('sign_amount')) {
     function sign_amount(string $amount, string $transactionType, string $sourceType): string
     {
