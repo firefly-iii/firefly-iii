@@ -102,7 +102,11 @@ let index = function () {
             this.defaultSortDirection = params.direction ?? this.defaultSortDirection;
             this.sortColumn = this.defaultSortColumn;
             this.sortDirection = this.defaultSortDirection;
-            console.log('Restore from params:', {page: this.page, column: this.defaultSortColumn, direction: this.defaultSortDirection});
+            console.log("Restore from params:", {
+                page: this.page,
+                column: this.defaultSortColumn,
+                direction: this.defaultSortDirection,
+            });
 
             this.sortableTable = new sortableTable("main");
             this.sortableTable.sortColumn = this.defaultSortColumn;
@@ -181,8 +185,12 @@ let index = function () {
         downloadAccounts() {
             this.loadingNewSort = true;
             let sort = "asc" === this.sortDirection ? this.sortColumn : "-" + this.sortColumn;
-            console.log('downloadAccounts:', {page: this.page, column: this.defaultSortColumn, direction: this.defaultSortDirection});
-            console.log('Sort:', sort)
+            console.log("downloadAccounts:", {
+                page: this.page,
+                column: this.defaultSortColumn,
+                direction: this.defaultSortDirection,
+            });
+            console.log("Sort:", sort);
             let start = window.store.get("start");
             let end = window.store.get("end");
             this.convertToPrimary = window.store.get("convert_to_primary");
