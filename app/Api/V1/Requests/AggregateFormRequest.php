@@ -53,7 +53,7 @@ abstract class AggregateFormRequest extends ApiRequest
         parent::initialize($query, $request, $attributes, $cookies, $files, $server, $content);
 
         // instantiate all subrequests and share current requests' bags with them
-        Log::debug('Initializing AggregateFormRequest.');
+        // Log::debug('Initializing AggregateFormRequest.');
 
         /** @var array|string $config */
         foreach ($this->getRequests() as $config) {
