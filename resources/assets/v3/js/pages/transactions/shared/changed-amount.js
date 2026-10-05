@@ -22,7 +22,7 @@ export function changedAmount(e) {
     if (null !== e) {
         let index = parseInt(e.target.dataset.index);
         let value = e.target.value;
-        if('-' === value.charAt(0)) {
+        if ("-" === value.charAt(0)) {
             value = value.substring(1);
         }
         // switch commas for dots.

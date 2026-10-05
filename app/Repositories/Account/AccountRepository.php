@@ -250,28 +250,28 @@ class AccountRepository implements AccountRepositoryInterface, UserGroupInterfac
         $filter ??= [];
         if (0 !== count($sort)) {
             foreach ($sort as $param) {
-                    // basic sort:
-                    if (in_array($param[0], $allowed, true)) {
-                        $query->orderBy($param[0], $param[1]);
-                        ++$sorted;
-                    }
+                // basic sort:
+                if (in_array($param[0], $allowed, true)) {
+                    $query->orderBy($param[0], $param[1]);
+                    ++$sorted;
+                }
             }
         }
         // add filter parameters.
         $allowed = config('firefly.allowed_filter_parameters.Account', []);
         if (0 !== count($filter)) {
             foreach ($filter as $field => $search) {
-                if('account_number_and_iban' === $field) {
-                    $query->leftJoin('account_meta', function(JoinClause $join)
-                    {
+                if ('account_number_and_iban' === $field) {
+                    $query->leftJoin('account_meta', function (JoinClause $join): void {
                         $join->on('accounts.id', '=', 'account_meta.account_id');
-                        $join->on('account_meta.name','=',DB::raw("'account_number'"));
+                        $join->on('account_meta.name', '=', DB::raw("'account_number'"));
                     });
 
-                    $query->where(function(EloquentBuilder $q1) use ($search) {
+                    $query->where(function (EloquentBuilder $q1) use ($search): void {
                         $q1->whereLike('account_meta.data', sprintf('%%%s%%', $search));
                         $q1->orWhereLike('accounts.iban', sprintf('%%%s%%', $search));
                     });
+
                     continue;
                 }
                 if (in_array($field, $allowed, true)) {
