@@ -19,6 +19,7 @@
  */
 
 import Delete from "../../../api/model/transaction/delete.js";
+import i18next from "i18next";
 
 export function processUploadError(event) {
     this.notifications.success.show = false;

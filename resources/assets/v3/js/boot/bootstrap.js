@@ -85,10 +85,10 @@ document.dispatchEvent(event);
 window.bootstrapped = true;
 
 // page may have an introduction necessary to be played.
-if (!window.showTour) {
-    return;
+if (window.showTour) {
+    loadTour();
 }
-loadTour();
+
 
 
 

@@ -233,7 +233,7 @@ export class sortableTable {
     }
 }
 function showSearchBox(th) {
-    let column = th.dataset.filterColumn;
+    // let column = th.dataset.filterColumn;
 
     // hide search buttons etc.
     console.log('search button?',th.querySelector('.search-button'));
