@@ -28,10 +28,10 @@ import store from "../store/store.js";
 import axios from "axios";
 import Shepherd from "shepherd.js";
 import "cally";
-import {getFreshVariable} from "../store/get-fresh-variable.js";
-import {getVariables} from "../store/get-variables.js";
-import {getViewRange} from "../support/get-viewrange.js";
-import {loadTranslations} from "../support/load-translations.js";
+import { getFreshVariable } from "../store/get-fresh-variable.js";
+import { getVariables } from "../store/get-variables.js";
+import { getViewRange } from "../support/get-viewrange.js";
+import { loadTranslations } from "../support/load-translations.js";
 import i18next from "i18next";
 
 window.bootstrapped = false;
@@ -52,7 +52,14 @@ store.set("cacheValid", localValue === serverValue);
 store.set("lastActivity", serverValue);
 
 // get a bunch of variables, and then use them to build the store
-const preferences = await getVariables(["viewRange", "anonymous", "darkMode", "locale", "language", "convert_to_primary"]);
+const preferences = await getVariables([
+    "viewRange",
+    "anonymous",
+    "darkMode",
+    "locale",
+    "language",
+    "convert_to_primary",
+]);
 
 const range = getViewRange(preferences.viewRange, new Date());
 if (!store.get("start") || !store.get("end")) {
@@ -79,7 +86,7 @@ store.set("locale", replacedLocale);
 console.log("Ready with bootstrap for this page.");
 
 // need the language to be loaded first, so continue only once we have it.
-await loadTranslations(replacedLanguage, replacedLocale)
+await loadTranslations(replacedLanguage, replacedLocale);
 const event = new Event("firefly-iii-bootstrapped");
 document.dispatchEvent(event);
 window.bootstrapped = true;
@@ -89,14 +96,9 @@ if (window.showTour) {
     loadTour();
 }
 
-
-
-
-
-
 function loadTour() {
     const url = "/";
-    let site = axios.create({baseURL: url, withCredentials: true,});
+    let site = axios.create({ baseURL: url, withCredentials: true });
     axios.defaults.withCredentials = true;
     axios.defaults.baseURL = url;
 

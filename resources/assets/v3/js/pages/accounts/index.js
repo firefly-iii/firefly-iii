@@ -22,14 +22,14 @@ import "../../boot/bootstrap.js";
 import sidebar from "../shared/sidebar.js";
 import dates from "../shared/dates.js";
 import Alpine from "@alpinejs/csp";
-import {getVariable} from "../../store/get-variable.js";
+import { getVariable } from "../../store/get-variable.js";
 import Put from "../../api/model/account/put.js";
 import Get from "../../api/model/account/get.js";
 import format from "../../util/format.js";
 import formatMoney from "../../util/format-money.js";
 import i18next from "i18next";
-import {addDrag} from "../shared/drag-and-droppable-rows.js";
-import {sortableTable, storeFilterAndSort, updateHistory} from "../shared/sortable-tables.js";
+import { addDrag } from "../shared/drag-and-droppable-rows.js";
+import { sortableTable, storeFilterAndSort, updateHistory } from "../shared/sortable-tables.js";
 
 window.enableDates = true;
 
@@ -55,8 +55,8 @@ let index = function () {
         formatMoney: formatMoney,
 
         // default settings for sorting
-        defaultSortColumn: 'order',
-        defaultSortDirection: 'asc',
+        defaultSortColumn: "order",
+        defaultSortDirection: "asc",
 
         // variables necessary for sorting tables.
         handleFunc: null,
@@ -73,7 +73,6 @@ let index = function () {
         sortableTable: null,
 
         init() {
-
             // prepare some variables:
             const address = window.location.href.split("?")[0].split("/");
             this.objectType = address[address.length - 1].substring(0, 15);
@@ -81,7 +80,8 @@ let index = function () {
             this.anonymous = window.store.get("anonymous");
             this.storageKey = "accounts-" + this.objectType + (this.active ? "-active" : "-inactive");
             this.pageNavUrl = "./accounts/" + this.objectType;
-            this.defaultSortColumn = "expense" === this.objectType || "revenue" === this.objectType ? "name" : this.defaultSortColumn;
+            this.defaultSortColumn =
+                "expense" === this.objectType || "revenue" === this.objectType ? "name" : this.defaultSortColumn;
             this.active = "inactive-accounts" !== address[address.length - 2];
 
             // grab state from localStorage.
@@ -97,14 +97,13 @@ let index = function () {
             const params = new Proxy(new URLSearchParams(window.location.search), {
                 get: (searchParams, prop) => searchParams.get(prop),
             });
-            this.page = parseInt(params.page || '1');
+            this.page = parseInt(params.page || "1");
             this.defaultSortColumn = params.column ?? this.defaultSortColumn;
             this.defaultSortDirection = params.direction ?? this.defaultSortDirection;
 
             // console.log('Restore from params:', {page: this.page, column: this.defaultSortColumn, direction: this.defaultSortDirection});
 
-
-            this.sortableTable = new sortableTable('main');
+            this.sortableTable = new sortableTable("main");
             this.sortableTable.sortColumn = this.defaultSortColumn;
             this.sortableTable.storageKey = this.storageKey;
             this.sortableTable.sortDirection = this.defaultSortDirection;
@@ -113,8 +112,8 @@ let index = function () {
             this.sortableTable.init(this);
 
             // watch for changes in the sortable table instructions.
-            document.addEventListener('sortable-table-sort-change', (event) => {
-                console.log('sortable-table-sort-change', event.detail);
+            document.addEventListener("sortable-table-sort-change", (event) => {
+                console.log("sortable-table-sort-change", event.detail);
                 this.sortColumn = event.detail.sortColumn;
                 this.sortDirection = event.detail.sortDirection;
                 this.updateHistory(this.page, this.sortColumn, this.sortDirection, this.filter);
@@ -133,10 +132,12 @@ let index = function () {
                             let item = e.detail[i];
                             if (item.order !== item.currentOrder) {
                                 // PUT new order to system.
-                                new Put().put({order: item.order}, {id: item.id});
+                                new Put().put({ order: item.order }, { id: item.id });
 
                                 // save new order as current order in the row.
-                                document.querySelector(`tr[data-id="${item.id}"]`).setAttribute("data-current-order", item.order);
+                                document
+                                    .querySelector(`tr[data-id="${item.id}"]`)
+                                    .setAttribute("data-current-order", item.order);
                             }
                         }
                     }
@@ -178,7 +179,7 @@ let index = function () {
             let start = window.store.get("start");
             let end = window.store.get("end");
             this.convertToPrimary = window.store.get("convert_to_primary");
-            console.log('Download accounts using', JSON.parse(JSON.stringify(this.filter)));
+            console.log("Download accounts using", JSON.parse(JSON.stringify(this.filter)));
             new Get()
                 .list({
                     active: this.active,
@@ -256,14 +257,22 @@ let index = function () {
                                 pc_current_debt_float: current.attributes.pc_debt_amount_float,
 
                                 liability_type: i18next.t("firefly.account_type_" + current.attributes.liability_type),
-                                liability_direction: i18next.t("firefly.liability_direction_" + current.attributes.liability_direction + "_short",),
+                                liability_direction: i18next.t(
+                                    "firefly.liability_direction_" + current.attributes.liability_direction + "_short",
+                                ),
                                 liability_interest: current.attributes.interest,
-                                liability_interest_period: i18next.t("firefly.interest_calc_" + current.attributes.interest_period).toLowerCase(),
+                                liability_interest_period: i18next
+                                    .t("firefly.interest_calc_" + current.attributes.interest_period)
+                                    .toLowerCase(),
                             };
                             this.accounts.push(account);
                         }
                     }
-                    console.log('Done downloading accounts.', JSON.parse(JSON.stringify(this.filter)), this.accounts.length);
+                    console.log(
+                        "Done downloading accounts.",
+                        JSON.parse(JSON.stringify(this.filter)),
+                        this.accounts.length,
+                    );
                     this.loadingPage = false;
                     this.loadingNewSort = false;
                     this.sortableTable.disableRefresh = false;
@@ -286,7 +295,7 @@ let index = function () {
             }
             return format(
                 new Date(date),
-                i18next.t("config.date_time_fns_short", {lng: window.store.get("locale")}),
+                i18next.t("config.date_time_fns_short", { lng: window.store.get("locale") }),
                 window.store.get("locale"),
             );
         },
