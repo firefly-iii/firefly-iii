@@ -101,7 +101,11 @@ let index = function () {
             this.defaultSortColumn = params.column ?? this.defaultSortColumn;
             this.defaultSortDirection = params.direction ?? this.defaultSortDirection;
 
-            console.log('Restore from params:', {page: this.page, column: this.defaultSortColumn, direction: this.defaultSortDirection});
+            console.log("Restore from params:", {
+                page: this.page,
+                column: this.defaultSortColumn,
+                direction: this.defaultSortDirection,
+            });
 
             this.sortableTable = new sortableTable("main");
             this.sortableTable.sortColumn = this.defaultSortColumn;
@@ -168,8 +172,12 @@ let index = function () {
             let keys = ["balance_difference", "current_balance", "debt_amount"];
             for (let i = 0; i < keys.length; i++) {
                 let key = keys[i];
-                account.attributes[prefix + key + "_formatted"] = formatMoney(account.attributes[prefix+key], code, true);
-                account.attributes[prefix + key + "_float"] = parseFloat(account.attributes[prefix+key]);
+                account.attributes[prefix + key + "_formatted"] = formatMoney(
+                    account.attributes[prefix + key],
+                    code,
+                    true,
+                );
+                account.attributes[prefix + key + "_float"] = parseFloat(account.attributes[prefix + key]);
             }
             return account;
         },
