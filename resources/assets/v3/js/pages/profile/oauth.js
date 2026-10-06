@@ -23,8 +23,9 @@ import sidebar from "../../pages/shared/sidebar.js";
 import dates from "../shared/dates.js";
 import i18next from "i18next";
 import { api } from "../../boot/axios";
-import { Modal } from "bootstrap";
+import * as bootstrap from 'bootstrap';
 import Alpine from "@alpinejs/csp";
+import formatDate from "../../util/format-date.js";
 
 let index = function () {
     return {
@@ -105,10 +106,19 @@ let index = function () {
          * Get all of the personal access tokens for the user.
          */
         getTokens() {
+            const locale = window.store.get("locale");
             // console.log("getTokens()");
             api.get("./oauth/personal-access-tokens").then((response) => {
                 // console.log(response.data);
-                this.tokens = response.data;
+                for(let i=0;i<response.data.length; i++) {
+                    if(Object.hasOwn(response.data, i)) {
+                        let token = response.data[i];
+                        console.log(i18next.t("config.date_time_fns", { lng: locale }));
+                        token.expires_at = formatDate(new Date(token.expires_at), i18next.t("config.date_time_fns", { lng: locale }), locale);
+                        this.tokens.push(token);
+                    }
+                }
+                // this.tokens = response.data;
             });
         },
 
@@ -117,7 +127,7 @@ let index = function () {
          */
         showCreateTokenForm() {
             // console.log("showCreateTokenForm()");
-            new Modal(document.getElementById("modal-create-token"), {}).show();
+            new bootstrap.Modal(document.getElementById("modal-create-token"), {}).show();
         },
 
         /**
@@ -131,9 +141,7 @@ let index = function () {
 
             api.post("./oauth/personal-access-tokens", this.form)
                 .then((response) => {
-                    // console.log(
-                    //     "Successful POST new token, reset form content.",
-                    // );
+                    console.log("Successful POST new token, reset form content.",);
                     this.form.name = "";
                     this.form.scopes = [];
                     this.form.errors = [];
@@ -161,11 +169,19 @@ let index = function () {
          */
         showAccessToken(accessToken) {
             // console.log("showAccessToken");
-            new Modal(document.getElementById("modal-create-token"), {}).hide();
-
+            let modal = new bootstrap.Modal(document.getElementById("modal-create-token"), {});
             this.accessToken = accessToken;
+            console.log('here we are', modal);
+            // modal.toggle();
+            // modal.toggle();
 
-            new Modal(document.getElementById("modal-access-token"), {}).show();
+            modal.addEventListener('hidden.bs.modal', function () {
+                new Modal(document.getElementById("modal-access-token"), {}).show();
+            });
+
+
+
+
         },
         getClients() {
             api.get("./oauth/clients").then((response) => {
@@ -174,7 +190,7 @@ let index = function () {
             });
         },
         showCreateClientForm() {
-            new Modal(document.getElementById("modal-create-client"), {}).show();
+            new bootstrap.Modal(document.getElementById("modal-create-client"), {}).show();
         },
         /**
          * Persist the client to storage using the given form.
@@ -190,14 +206,20 @@ let index = function () {
                     form.redirect_uris = "";
                     form.errors = [];
 
-                    new Modal(document.querySelector(modal), {}).hide();
+                    document.addEventListener("hidden.bs.modal", function () {
+                        console.log('Closed??');
+                    });
+
+                     new bootstrap.Modal('#' + modal, {}).hide();
+
 
                     if (response.data.plainSecret) {
-                        this.showClientSecret(response.data.plainSecret);
+                        // this.showClientSecret(response.data.plainSecret);
                     }
                 })
                 .catch((error) => {
-                    if (typeof error.response.data === "object") {
+                    console.error(error);
+                    if (typeof error.response === "object" && typeof error.response.data === "object") {
                         for (const value of Object.entries(error.response.data.errors)) {
                             form.errors.push(value);
                         }
@@ -242,7 +264,7 @@ let index = function () {
          * Create a new OAuth client for the user.
          */
         store() {
-            this.persistClient("post", "./oauth/clients", this.createForm, "#modal-create-client");
+            this.persistClient("post", "./oauth/clients", this.createForm, "modal-create-client");
         },
         /**
          * Edit the given client.
@@ -259,7 +281,7 @@ let index = function () {
          * Update the client being edited.
          */
         update() {
-            this.persistClient("put", "./oauth/clients/" + this.editForm.id, this.editForm, "#modal-edit-client");
+            this.persistClient("put", "./oauth/clients/" + this.editForm.id, this.editForm, "modal-edit-client");
         },
     };
 };

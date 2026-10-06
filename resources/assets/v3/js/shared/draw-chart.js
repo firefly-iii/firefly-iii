@@ -21,7 +21,7 @@
 import Chart from "chart.js/auto";
 import formatMoney from "../util/format-money.js";
 import i18next from "i18next";
-import format from "../util/format.js";
+import formatDate from "../util/format-date.js";
 import annotationPlugin from "chartjs-plugin-annotation";
 
 Chart.register(annotationPlugin);
@@ -354,7 +354,7 @@ function drawMultiCurrencyLineChart(url, holder, anonymous, drawTodayMarker, col
                                 }
                                 // add the label to the array
                                 data.labels.push(
-                                    format(date, i18next.t("config.month_and_day_fns", { lng: locale }), locale),
+                                    formatDate(date, i18next.t("config.month_and_day_fns", { lng: locale }), locale),
                                 );
                             }
                         }
@@ -436,7 +436,7 @@ function drawMultiCurrencyLineChart(url, holder, anonymous, drawTodayMarker, col
             if (drawTodayMarker && "" !== drawTodayLabel) {
                 let locale = window.store.get("locale");
                 let language = window.store.get("language");
-                let markDate = format(
+                let markDate = formatDate(
                     new Date(drawTodayLabel),
                     i18next.t("config.month_and_day_fns", { lng: locale }),
                     locale,

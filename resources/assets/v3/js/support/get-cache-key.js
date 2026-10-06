@@ -18,9 +18,8 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-import { format } from "date-fns";
 import store from "store";
-//const { createHash } = require('crypto');
+import formatDate from "./../util/format-date.js";
 
 function getCacheKey(string, params) {
     const lastActivity = store.get("lastActivity");
@@ -33,7 +32,7 @@ function getCacheKey(string, params) {
                 continue;
             }
             if (params[key] instanceof Date) {
-                newParams[key] = format(params[key], "yMMdd");
+                newParams[key] = formatDate(params[key], "yMMdd");
                 continue;
             }
             newParams[key] = params[key];

@@ -370,7 +370,7 @@
                                                 </td>
                                                 <!-- expires at -->
                                                 <td style="vertical-align: middle;">
-                                                    <span x-text="new Date(token.expires_at).toLocaleString()"></span>
+                                                    <span x-text="token.expires_at"></span>
                                                 </td>
 
                                                 <!-- Delete Button -->

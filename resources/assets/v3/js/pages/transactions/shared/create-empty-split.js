@@ -18,7 +18,7 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-import format from "date-fns/format";
+import formatDate from "../../../util/format-date.js";
 
 export function getAccount() {
     return {
@@ -74,7 +74,7 @@ export function defaultErrorSet() {
 
 export function createEmptySplit() {
     let now = new Date();
-    let formatted = format(now, "yyyy-MM-dd HH:mm");
+    let formatted = formatDate(now, "yyyy-MM-dd HH:mm");
     return {
         transaction_journal_id: 0,
         description: "",

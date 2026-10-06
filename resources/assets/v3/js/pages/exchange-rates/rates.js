@@ -22,7 +22,6 @@
 import "../../boot/bootstrap.js";
 import sidebar from "../../pages/shared/sidebar.js";
 import dates from "../shared/dates.js";
-import { format } from "date-fns/format";
 import i18next from "i18next";
 import Post from "../../api/model/exchange-rate/post.js";
 import Put from "../../api/model/exchange-rate/put.js";
@@ -30,6 +29,7 @@ import Delete from "../../api/model/exchange-rate/delete.js";
 import Get from "../../api/model/currency/get.js";
 import GetRate from "../../api/model/exchange-rate/get.js";
 import Alpine from "@alpinejs/csp";
+import formatDate from "../../util/format-date.js";
 
 let rates = function () {
     return {
@@ -54,7 +54,7 @@ let rates = function () {
         totalPages: 1,
         init() {
             this.i18next = i18next;
-            this.newDate = format(new Date(), "yyyy-MM-dd");
+            this.newDate = formatDate(new Date(), "yyyy-MM-dd");
             let parts = window.location.pathname.split("/");
             this.from_code = parts[parts.length - 2].toUpperCase();
             this.to_code = parts[parts.length - 1].toUpperCase();
@@ -233,13 +233,13 @@ let rates = function () {
                         let inverse = "";
                         let rate_id = current.id;
                         let inverse_id = "0";
-                        let key = from_code + "_" + to_code + "_" + format(date, "yyyy-MM-dd");
+                        let key = from_code + "_" + to_code + "_" + formatDate(date, "yyyy-MM-dd");
                         // console.log('Key is now "' + key + '"');
 
                         // perhaps the returned rate is actually the inverse rate.
                         if (from_code === this.to_code && to_code === this.from_code) {
                             // console.log('Inverse rate found!');
-                            key = to_code + "_" + from_code + "_" + format(date, "yyyy-MM-dd");
+                            key = to_code + "_" + from_code + "_" + formatDate(date, "yyyy-MM-dd");
                             rate = "";
                             // new: set rate id to zero.
                             rate_id = "0";
@@ -255,7 +255,7 @@ let rates = function () {
                                 date: date,
                                 rate_id: rate_id,
                                 inverse_id: inverse_id,
-                                date_formatted: format(
+                                date_formatted: formatDate(
                                     date,
                                     i18next.t("config.date_time_fns", { lng: window.store.get("locale") }),
                                     window.store.get("locale"),

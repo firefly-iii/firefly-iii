@@ -21,12 +21,12 @@
 import "../../boot/bootstrap.js";
 import sidebar from "../../pages/shared/sidebar.js";
 import dates from "../shared/dates.js";
-import { format } from "date-fns/format";
 import i18next from "i18next";
 import Post from "../../api/model/webhook/post.js";
 import Get from "../../api/model/webhook/get.js";
 import Put from "../../api/model/webhook/put.js";
 import Alpine from "@alpinejs/csp";
+import formatDate from "../../util/format-date.js";
 
 window.enableDates = false;
 
@@ -126,7 +126,7 @@ let show = function () {
                         let current = response.data.data[i];
                         this.messages.push({
                             id: current.id,
-                            created_at: format(
+                            created_at: formatDate(
                                 new Date(current.attributes.created_at),
                                 i18next.t("config.date_time_fns", { lng: locale }),
                                 locale,
@@ -160,7 +160,7 @@ let show = function () {
                         let current = response.data.data[i];
                         this.message_attempts.push({
                             id: current.id,
-                            created_at: format(
+                            created_at: formatDate(
                                 new Date(current.attributes.created_at),
                                 i18next.t("config.date_time_fns"),
                             ),
