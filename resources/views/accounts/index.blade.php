@@ -381,8 +381,10 @@
         <template x-if="0 === accounts.length && true === active">
             <p class="text-center"><small>
                     <em>
+                        <a href="{{ route('accounts.inactive.index', $objectType) }}">
                         <span
-                            x-text="i18next.t('firefly.may_inactive_accounts_link', {url: '{{ route('accounts.inactive.index', $objectType) }}'})"></span>
+                            x-text="i18next.t('firefly.may_inactive_accounts_link')"></span>
+                        </a>
                     </em>
                 </small>
             </p>
@@ -408,9 +410,10 @@
         </template>
         <template x-if="0 === accounts.length && false === active">
             <p class="text-center"><small>
-                    <em>
+                    <em><a href="{{ route('accounts.index', $objectType) }}">
                         <span
-                            x-text="i18next.t('firefly.no_inactive_accounts', {url: '{{ route('accounts.index', $objectType) }}'})"></span>
+                            x-text="i18next.t('firefly.no_inactive_accounts', {url: ''})"></span>
+                        </a>
                     </em>
                 </small>
             </p>
