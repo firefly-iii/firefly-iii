@@ -123,6 +123,7 @@ class Preferences
         if (null === $user) {
             $preference       = new Preference();
             $preference->data = $default;
+            $preference->name = $name;
 
             return $preference;
         }

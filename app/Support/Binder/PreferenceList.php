@@ -51,6 +51,9 @@ class PreferenceList implements BinderInterface
             $result = new Collection();
             foreach ($list as $item) {
                 $current = Preferences::get($item);
+                if (null === $current) {
+                    $current = Preferences::set($item, null, false);
+                }
                 if (null !== $current) {
                     Log::debug(sprintf('Add %s to the result', $item));
                     $result->push($current);
