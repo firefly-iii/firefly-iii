@@ -49,21 +49,34 @@ class CorrectsGroupAccounts extends Command
     {
         Log::debug('Start of correction:group-accounts');
         $groups                   = [];
-        $res                      = TransactionJournal::query()->groupBy('transaction_group_id')->get([
-            'transaction_group_id',
-            DB::raw('COUNT(transaction_group_id) as the_count'),
-        ]);
+//        $res                      = TransactionJournal::query()
+//            ->groupBy('transaction_group_id')
+//            ->havingRaw('the_count > 1')
+//            ->get([
+//            'transaction_group_id',
+//            DB::raw('COUNT(transaction_group_id) as the_count'),
+//        ]);
 
-        /** @var TransactionJournal $journal */
-        foreach ($res as $journal) {
-            if ((int) $journal->the_count > 1) {
-                $groups[] = (int) $journal->transaction_group_id;
-            }
-        }
+        $groups                      = TransactionJournal::query()
+            ->groupBy('transaction_group_id')
+            ->havingRaw('the_count > 1')
+            ->get([
+                'transaction_group_id',
+                DB::raw('COUNT(transaction_group_id) as the_count'),
+            ])->pluck('transaction_group_id')->toArray();
+
+//        /** @var TransactionJournal $journal */
+//        foreach ($res as $journal) {
+//            if ((int) $journal->the_count > 1) {
+//                $groups[] = (int) $journal->transaction_group_id;
+//            }
+//        }
+//        var_dump($groups);
+//        var_dump($groups2);exit;
         $flags                    = new TransactionGroupEventFlags();
         $flags->applyRules        = false;
         $flags->fireWebhooks      = false;
-        $flags->recalculateCredit = true;
+        $flags->recalculateCredit = false;
         $flags->unifyOnly         = true;
         $objects                  = new TransactionGroupEventObjects();
         foreach ($groups as $groupId) {
