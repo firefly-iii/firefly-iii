@@ -43,8 +43,11 @@ let index = function () {
                 const whatsNewDialog = 'wn_' + version;
                 const lastTimeDialog = 'lt_' + version;
                 getVariables([whatsNewDialog, lastTimeDialog]).then((values) => {
-                        alert(whatsNewDialog + ' is ' + values.whatsNewDialog);
-                        alert(lastTimeDialog + ' is ' + values.lastTimeDialog);
+                    const shownWhatsNewDialog = true === values[whatsNewDialog];
+                    const lastShowTime = null === values[lastTimeDialog] ? 0 : parseInt(values[lastTimeDialog]);
+                    console.log(lastShowTime);
+                        // alert(whatsNewDialog + ' is ' + (null === values[whatsNewDialog]));
+                        // alert(lastTimeDialog + ' is ' + (null === values[lastTimeDialog]));
                 });
 
             }

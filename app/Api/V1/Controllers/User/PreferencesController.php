@@ -104,7 +104,6 @@ final class PreferencesController extends Controller
         $manager     = $this->getManager();
         $count       = $preferenceList->count();
         $names       = implode(',', $preferenceList->pluck('name')->toArray());
-        var_dump($names);exit;
 
         // make paginator:
         $paginator   = new LengthAwarePaginator($preferenceList, $count, 31_337, 1);
@@ -115,7 +114,6 @@ final class PreferencesController extends Controller
 
         $resource    = new FractalCollection($preferenceList, $transformer, self::RESOURCE_KEY);
         $resource->setPaginator(new IlluminatePaginatorAdapter($paginator));
-        die('here we are2');
 
         return response()->json($manager->createData($resource)->toArray())->header('Content-Type', self::CONTENT_TYPE);
     }
