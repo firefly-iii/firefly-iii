@@ -82,11 +82,14 @@ class CorrectsGroupAccounts extends Command
         $flags->recalculateCredit = false;
         $flags->unifyOnly         = true;
         $objects                  = new TransactionGroupEventObjects();
-        foreach ($groups as $groupId) {
-            $group = TransactionGroup::find($groupId);
-            $objects->appendFromTransactionGroup($group);
+        $collection = TransactionGroup::whereIn('id', $groups)->get();
+        foreach($collection as $item) {
+            $objects->appendFromTransactionGroup($item);
         }
-        Log::debug(sprintf('Fire event for %d transaction group(s)', count($groups)));
+        //foreach ($groups as $groupId) {
+            //$group = TransactionGroup::find($groupId);
+        //}
+        Log::debug(sprintf('Fire event for %d transaction group(s)', count($collection)));
         event(new UpdatedSingleTransactionGroup($flags, $objects));
         event(new WebhookMessagesRequestSending());
         Log::debug('End of correction:group-accounts');
