@@ -26,6 +26,7 @@ import Alpine from "@alpinejs/csp";
 import Get from "../../api/model/piggy-bank/get.js";
 import formatMoney from "../../util/format-money.js";
 import { getVariable } from "../../store/get-variable.js";
+import { getVariables } from "../../store/get-variables.js";
 import { drawMultiCurrencyChart } from "../../shared/draw-chart.js";
 import format from "../../util/format.js";
 
@@ -35,6 +36,20 @@ let index = function () {
         anonymous: false,
         loadingPiggyBanks: true,
         init() {
+            // only if no tour!
+            if(!window.showTour) {
+                // get config, then get preference.
+                const version = document.head.querySelector('meta[name="x-firefly-iii-version"]').content;
+                const whatsNewDialog = 'wn_' + version;
+                const lastTimeDialog = 'lt_' + version;
+                getVariables([whatsNewDialog, lastTimeDialog]).then((values) => {
+                        alert(whatsNewDialog + ' is ' + values.whatsNewDialog);
+                        alert(lastTimeDialog + ' is ' + values.lastTimeDialog);
+                });
+
+            }
+
+
             getVariable("anonymous").then((value) => {
                 let start = new Date(window.store.get("start"));
                 let end = new Date(window.store.get("end"));

@@ -7,6 +7,7 @@
     <meta name="robots" content="noindex, nofollow, noarchive, noodp, NoImageIndex, noydir">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="mobile-web-app-capable" content="yes">
+    <meta name="x-firefly-iii-version" content="{{ str_replace('/','-',$FF_VERSION) }}">
     <!--
     (SESSION)
     If the base href URL begins with "http://" but you are sure it should start with "https://",

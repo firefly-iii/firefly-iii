@@ -37,7 +37,6 @@ import i18next from "i18next";
 window.bootstrapped = false;
 window.store = store;
 window.Alpine = Alpine;
-
 window.axios = axios;
 window.axios.defaults.headers.common["X-Requested-With"] = "XMLHttpRequest";
 
