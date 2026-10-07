@@ -358,19 +358,21 @@ class Preferences
 
         if (null !== $preference && null === $value) {
             $preference->delete();
-            $new  = new Preference;
+            $new             = new Preference();
             $new->created_at = now();
-            $new->updated_at= now();
-            $new->name = $name;
-            $new->value = null;
+            $new->updated_at = now();
+            $new->name       = $name;
+            $new->value      = null;
+
             return $new;
         }
         if (null === $value) {
-            $new  = new Preference;
+            $new             = new Preference();
             $new->created_at = now();
-            $new->updated_at= now();
-            $new->name = $name;
-            $new->value = null;
+            $new->updated_at = now();
+            $new->name       = $name;
+            $new->value      = null;
+
             return $new;
         }
         if (null === $preference) {

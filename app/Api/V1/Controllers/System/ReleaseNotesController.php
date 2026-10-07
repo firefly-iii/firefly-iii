@@ -1,4 +1,5 @@
 <?php
+
 /*
  * ReleaseNotesController.php
  * Copyright (c) 2026 james@firefly-iii.org
@@ -41,17 +42,14 @@ final class ReleaseNotesController extends Controller
         $notes   = null;
         $parsed  = null;
         if ($disk->exists($file)) {
-            $notes  = trim((string)$disk->get($file));
+            $notes  = trim((string) $disk->get($file));
             $parsed = trim(parse_markdown($notes));
         }
 
-        return response()->json(
-            [
-                'version' =>config('firefly.version'),
-                'release_notes'          => $parsed,
-                'release_notes_markdown' => $notes,
-            ]
-        );
+        return response()->json([
+            'version'                => config('firefly.version'),
+            'release_notes'          => $parsed,
+            'release_notes_markdown' => $notes,
+        ]);
     }
-
 }

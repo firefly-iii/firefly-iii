@@ -2772,8 +2772,8 @@ return [
     'explain_related'                                     => 'You can link transactions. The link doesn\'t do anything YET, but this is on my list.',
     'no_relations_yet'                                    => 'This transaction has no relations to other transactions (yet).',
     'auto_save_active'                                    => 'Changes are saved automatically in the background.',
-    'release_notes_title' => 'Release notes for Firefly III {{version}}',
-    'notes_again_in_two_days' => 'Check this box to see the release notes again in two days.',
+    'release_notes_title'                                 => 'Release notes for Firefly III {{version}}',
+    'notes_again_in_two_days'                             => 'Check this box to see the release notes again in two days.',
 
     // split a transaction:
     'splits'                                              => 'Splits',

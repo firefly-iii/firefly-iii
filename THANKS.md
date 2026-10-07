@@ -4,7 +4,6 @@ Over time, many people have contributed to Firefly III. Their efforts are not al
 Please find below all the people who contributed to the Firefly III code. Their names are mentioned in the year of their first contribution.
 
 ## 2026
-
 - Nick
 - George Garside
 - kobihikri
@@ -22,7 +21,6 @@ Please find below all the people who contributed to the Firefly III code. Their 
 - embedded
 
 ## 2025
-
 - Diego Algorta
 - Jihad
 - jreyesr
@@ -34,7 +32,6 @@ Please find below all the people who contributed to the Firefly III code. Their 
 - SoftBrix
 
 ## 2024
-
 - Sobuno
 - TasneemTantawy
 - Antônio Franco
@@ -55,7 +52,6 @@ Please find below all the people who contributed to the Firefly III code. Their 
 - maureenferreira
 
 ## 2023
-
 - tieu1991
 - Maxco10
 - zqye
@@ -71,7 +67,6 @@ Please find below all the people who contributed to the Firefly III code. Their 
 - Julien Stébenne
 
 ## 2022
-
 - Johannes Zellner
 - Janne Heß
 - charlesteets
@@ -88,7 +83,6 @@ Please find below all the people who contributed to the Firefly III code. Their 
 - George Hahn
 
 ## 2021
-
 - StillLoading
 - Igor Rzegocki
 - Lorenzo Breda
@@ -107,7 +101,6 @@ Please find below all the people who contributed to the Firefly III code. Their 
 - MihataBG
 
 ## 2020
-
 - Hannes Körber
 - Julien Cassagne
 - bu4ak
@@ -133,7 +126,6 @@ Please find below all the people who contributed to the Firefly III code. Their 
 - Tomer Shvueli
 
 ## 2019
-
 - Pascal Jungblut
 - Justyn Shull
 - Timendum
@@ -156,7 +148,6 @@ Please find below all the people who contributed to the Firefly III code. Their 
 - Bastiaan Nijkamp
 
 ## 2018
-
 - a1ex4
 - Daniel Quah
 - Marco Lourenço
@@ -186,7 +177,6 @@ Please find below all the people who contributed to the Firefly III code. Their 
 - J'informatique
 
 ## 2017
-
 - Victor Mosin
 - Justin
 - Hugo van Duijn
@@ -206,7 +196,6 @@ Please find below all the people who contributed to the Firefly III code. Their 
 - Enno Lohmeier
 
 ## 2016
-
 - Sander
 - Toon Schoenmakers
 - Telyn
@@ -224,7 +213,6 @@ Please find below all the people who contributed to the Firefly III code. Their 
 - leander091
 
 ## 2015
-
 - Antonio Spinelli
 - Colin O'Dell
 - RonaldvanMeer
@@ -234,8 +222,8 @@ Please find below all the people who contributed to the Firefly III code. Their 
 - Ilya Kil
 
 ## 2014
-
 - Stewart Malik
 - Graham Campbell
+
 
 Thank you for all your support!
