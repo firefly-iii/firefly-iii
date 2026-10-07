@@ -91,7 +91,7 @@ let index = function () {
                                 element.querySelector('.modal-title').textContent = i18next.t('firefly.release_notes_title', {version: version});
                                 element.querySelector('.modal-body').innerHTML = releaseNotes;
                                 modal.show();
-                                element.addEventListener('hidden.bs.modal', function (event) {
+                                element.addEventListener('hidden.bs.modal', function () {
                                     let checkBox = document.getElementById('revisitCheckbox');
                                     const revisit = !checkBox.checked;
                                     const now = parseInt(new Date().getTime() / 1000);
