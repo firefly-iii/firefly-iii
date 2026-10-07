@@ -272,9 +272,11 @@
                 <div class="modal-footer">
                     <div class="row inline" style="width:100%;">
                         <div class="col align-middle d-flex align-items-center">
+                            <template x-if="'edit' === formBehaviour.formType">
                             <em><small>
                                     {{ __('firefly.auto_save_active') }}
                                 </small></em>
+                            </template>
                         </div>
                         <div class="col text-end">
                             <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">{{ __('firefly.close') }}</button>

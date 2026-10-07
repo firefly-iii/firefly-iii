@@ -2771,7 +2771,7 @@ return [
     '(partially) reimburses'                              => '(partially) reimburses',
     'explain_related'                                     => 'You can link transactions. The link doesn\'t do anything YET, but this is on my list.',
     'no_relations_yet'                                    => 'This transaction has no relations to other transactions (yet).',
-    'auto_save_active'                                    => 'Changes are saved automatically.',
+    'auto_save_active'                                    => 'Changes are saved automatically in the background.',
 
     // split a transaction:
     'splits'                                              => 'Splits',

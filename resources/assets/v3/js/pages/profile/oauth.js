@@ -22,8 +22,8 @@ import "../../boot/bootstrap.js";
 import sidebar from "../../pages/shared/sidebar.js";
 import dates from "../shared/dates.js";
 import i18next from "i18next";
-import { api } from "../../boot/axios";
-import * as bootstrap from 'bootstrap';
+import {api} from "../../boot/axios";
+import {Modal} from 'bootstrap';
 import Alpine from "@alpinejs/csp";
 import formatDate from "../../util/format-date.js";
 
@@ -110,15 +110,14 @@ let index = function () {
             // console.log("getTokens()");
             api.get("./oauth/personal-access-tokens").then((response) => {
                 // console.log(response.data);
-                for(let i=0;i<response.data.length; i++) {
-                    if(Object.hasOwn(response.data, i)) {
+                for (let i = 0; i < response.data.length; i++) {
+                    if (Object.hasOwn(response.data, i)) {
                         let token = response.data[i];
-                        console.log(i18next.t("config.date_time_fns", { lng: locale }));
-                        token.expires_at = formatDate(new Date(token.expires_at), i18next.t("config.date_time_fns", { lng: locale }), locale);
+                        console.log(i18next.t("config.date_time_fns", {lng: locale}));
+                        token.expires_at = formatDate(new Date(token.expires_at), i18next.t("config.date_time_fns", {lng: locale}), locale);
                         this.tokens.push(token);
                     }
                 }
-                // this.tokens = response.data;
             });
         },
 
@@ -126,25 +125,24 @@ let index = function () {
          * Show the form for creating new tokens.
          */
         showCreateTokenForm() {
-            // console.log("showCreateTokenForm()");
-            new bootstrap.Modal(document.getElementById("modal-create-token"), {}).show();
+            new Modal(document.getElementById("modal-create-token"), {}).show();
         },
 
         /**
          * Create a new personal access token.
          */
         storePat() {
-            // console.log("storePat()");
             this.accessToken = null;
-
             this.form.errors = [];
 
             api.post("./oauth/personal-access-tokens", this.form)
                 .then((response) => {
-                    console.log("Successful POST new token, reset form content.",);
+                    //console.log("Successful POST new token, reset form content.",);
                     this.form.name = "";
                     this.form.scopes = [];
                     this.form.errors = [];
+
+                    Modal.getInstance(document.getElementById('modal-create-token')).hide();
 
                     this.getTokens();
                     this.showAccessToken(response.data.accessToken);
@@ -168,20 +166,8 @@ let index = function () {
          * Show the given access token to the user.
          */
         showAccessToken(accessToken) {
-            // console.log("showAccessToken");
-            let modal = new bootstrap.Modal(document.getElementById("modal-create-token"), {});
             this.accessToken = accessToken;
-            console.log('here we are', modal);
-            // modal.toggle();
-            // modal.toggle();
-
-            modal.addEventListener('hidden.bs.modal', function () {
-                new Modal(document.getElementById("modal-access-token"), {}).show();
-            });
-
-
-
-
+            new Modal(document.getElementById("modal-access-token"), {}).show();
         },
         getClients() {
             api.get("./oauth/clients").then((response) => {
@@ -189,9 +175,7 @@ let index = function () {
                 this.clients = response.data;
             });
         },
-        showCreateClientForm() {
-            new bootstrap.Modal(document.getElementById("modal-create-client"), {}).show();
-        },
+
         /**
          * Persist the client to storage using the given form.
          */
@@ -205,16 +189,10 @@ let index = function () {
                     form.name = "";
                     form.redirect_uris = "";
                     form.errors = [];
-
-                    document.addEventListener("hidden.bs.modal", function () {
-                        console.log('Closed??');
-                    });
-
-                     new bootstrap.Modal('#' + modal, {}).hide();
-
+                    Modal.getInstance(document.getElementById(modal)).hide();
 
                     if (response.data.plainSecret) {
-                        // this.showClientSecret(response.data.plainSecret);
+                        this.showClientSecret(response.data.plainSecret);
                     }
                 })
                 .catch((error) => {
@@ -226,7 +204,6 @@ let index = function () {
                     } else {
                         form.errors = ["Something went wrong. Please try again."];
                     }
-                    //console.log(form.errors);
                 });
         },
         /**
@@ -248,7 +225,7 @@ let index = function () {
         regenerateSecret(client) {
             api.post("./oauth/clients/regenerate/" + client.id).then((response) => {
                 this.clientSecret = response.data.plainSecret;
-                new Modal(document.getElementById("modal-client-secret"), {}).show();
+                Modal.getInstance(document.getElementById("modal-client-secret"), {}).show();
             });
         },
 

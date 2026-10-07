@@ -110,16 +110,13 @@
                             </div>
 
                             <!-- Create Client Modal -->
-                            <div id="modal-create-client" class="modal fade" role="dialog" tabindex="-1">
+                            <div class="modal fade" tabindex="-1" id="modal-create-client">
                                 <div class="modal-dialog">
                                     <div class="modal-content">
                                         <div class="modal-header">
-                                            <h5 class="modal-title">
-                                                {{ __('firefly.profile_oauth_create_client') }}
-                                            </h5>
+                                            <h5 class="modal-title">{{ __('firefly.profile_oauth_create_client') }}</h5>
                                             <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="{{ __('firefly.close') }}"></button>
                                         </div>
-
                                         <div class="modal-body">
                                             <!-- Form Errors -->
                                             <template x-if="createForm.errors.length > 0">
@@ -137,8 +134,6 @@
                                                     </ul>
                                                 </div>
                                             </template>
-
-                                            <!-- Create Client Form -->
                                             <form role="form" aria-label="form">
                                                 <!-- Name -->
                                                 <div class="form-group row">
@@ -158,9 +153,7 @@
 
                                                 <!-- Redirect URIs -->
                                                 <div class="form-group row">
-                                                    <label class="col-md-3 col-form-label">{{
-                                        __('firefly.profile_oauth_redirect_url')
-                                    }}</label>
+                                                    <label class="col-md-3 col-form-label">{{__('firefly.profile_oauth_redirect_url')}}</label>
 
                                                     <div class="col-md-9">
                                                         <input x-model="createForm.redirect_uris" class="form-control"
@@ -175,36 +168,24 @@
 
                                                 <!-- Confidential -->
                                                 <div class="form-group row">
-                                                    <label class="col-md-3 col-form-label">{{
-                                        __('firefly.profile_oauth_confidential')
-                                    }}</label>
-
+                                                    <label class="col-md-3 col-form-label">{{ __('firefly.profile_oauth_confidential') }}</label>
                                                     <div class="col-md-9">
                                                         <div class="checkbox">
                                                             <label>
-                                                                <input x-model="createForm.confidential"
-                                                                       type="checkbox">
+                                                                <input x-model="createForm.confidential" type="checkbox">
                                                             </label>
                                                         </div>
 
-                                                        <span class="form-text text-muted">
-                    {{ __('firefly.profile_oauth_confidential_help') }}
-                  </span>
+                                                        <span class="form-text text-muted">{{ __('firefly.profile_oauth_confidential_help') }}</span>
                                                     </div>
                                                 </div>
                                             </form>
+
+
                                         </div>
-
-                                        <!-- Modal Actions -->
                                         <div class="modal-footer">
-                                            <button class="btn btn-secondary" data-bs-dismiss="modal" type="button">{{
-                                __('firefly.close')
-                            }}
-                                            </button>
-
-                                            <button class="btn btn-primary" type="button" @click="store">
-                                                {{ __('firefly.profile_create') }}
-                                            </button>
+                                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">{{ __('firefly.close') }}</button>
+                                            <button type="button" class="btn btn-primary" @click="store">{{ __('firefly.profile_create') }}</button>
                                         </div>
                                     </div>
                                 </div>
