@@ -23,6 +23,7 @@
 declare(strict_types=1);
 
 use FireflyIII\Api\V1\Controllers\System\CronController;
+use FireflyIII\Api\V1\Controllers\System\ReleaseNotesController;
 use Illuminate\Support\Facades\Route;
 
 use function Safe\define;
@@ -108,6 +109,18 @@ Route::group(
         Route::post('', ['uses' => 'StoreController@store', 'as' => 'store']);
         Route::post('by-date/{date}', ['uses' => 'StoreController@storeByDate', 'as' => 'store.by-date'])->where(['start_date' => DATEFORMAT]);
         Route::post('by-currencies/{fromCurrencyCode}/{toCurrencyCode}', ['uses' => 'StoreController@storeByCurrencies', 'as' => 'store.by-currencies']);
+    }
+);
+
+// RELEASE NOTES ROUTES
+Route::group(
+    [
+        'namespace' => 'FireflyIII\Api\V1\Controllers\System',
+        'prefix'    => 'v1/release-notes',
+        'as'        => 'api.v1.release-notes.',
+    ],
+    static function (): void {
+        Route::get('', [ReleaseNotesController::class,'index'])->name('index');
     }
 );
 

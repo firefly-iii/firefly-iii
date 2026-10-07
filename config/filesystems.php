@@ -57,6 +57,10 @@ return [
             'driver' => 'local',
             'root'   => storage_path('app'),
         ],
+        'release-notes'     => [
+            'driver' => 'local',
+            'root'   => resource_path('release-notes'),
+        ],
 
         // local storage configuration for upload and export:
         'upload'    => [

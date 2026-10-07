@@ -211,6 +211,9 @@ trait ConvertsDataTypes
     public function convertString(string $field, string $default = ''): string
     {
         $entry = $this->get($field);
+        if($entry === true) {
+            $entry = 'true';
+        }
         if (!is_scalar($entry)) {
             return $default;
         }

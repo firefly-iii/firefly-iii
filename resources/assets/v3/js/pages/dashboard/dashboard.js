@@ -29,6 +29,8 @@ import { getVariable } from "../../store/get-variable.js";
 import { getVariables } from "../../store/get-variables.js";
 import { drawMultiCurrencyChart } from "../../shared/draw-chart.js";
 import formatDate from "../../util/format-date.js";
+import ReleaseNotes from '../../api/system/release-notes.js';
+import Post from '../../api/preferences/post.js';
 
 let index = function () {
     return {
@@ -45,10 +47,12 @@ let index = function () {
                 getVariables([whatsNewDialog, lastTimeDialog]).then((values) => {
                     const shownWhatsNewDialog = true === values[whatsNewDialog];
                     const lastShowTime = null === values[lastTimeDialog] ? 0 : parseInt(values[lastTimeDialog]) * 1000;
+                    let showNewFeatures = false;
                     // const lastShowTime = (1791297200 - (48*60*60)) * 1000;
                     if (0 === lastShowTime && !shownWhatsNewDialog) {
                         console.log("User needs new feature dialogue.");
                         // alert('Show dialog because never seen before.');
+                        showNewFeatures = true;
                     }
                     if (!shownWhatsNewDialog && lastShowTime > 0) {
                         const now = new Date().getTime();
@@ -56,7 +60,31 @@ let index = function () {
                         const diffInDays = diff / (1000 * 60 * 60 * 24);
                         if (diffInDays > 2) {
                             console.log("User needs new feature dialogue.");
+                            showNewFeatures = true;
                         }
+                    }
+                    if(!showNewFeatures) {
+                        console.warn('User has already seen release notes.');
+                    }
+                    if(showNewFeatures) {
+                        // get from API.
+                        (new ReleaseNotes).get().then((notes) => {
+                            let releaseNotes = notes.data.release_notes;
+                            if(null === releaseNotes) {
+                                // mark as seen by submitting a preference.
+                                // TODO make a function.
+                                const now = parseInt(new Date().getTime() / 1000);
+                                (new Post).post(whatsNewDialog, true);
+                                (new Post).post(lastTimeDialog, now);
+                                window[whatsNewDialog] = true;
+                                window[lastTimeDialog] = now;
+                                window.store.set(whatsNewDialog, true);
+                                window.store.set(lastTimeDialog, now);
+                            }
+                        });
+                        // make modal.
+                        // show it.
+                        // on close, mark as viewed (depends on box).
                     }
 
                     // alert(whatsNewDialog + ' is ' + (null === values[whatsNewDialog]));
