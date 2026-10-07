@@ -120,7 +120,7 @@ Route::group(
         'as'        => 'api.v1.release-notes.',
     ],
     static function (): void {
-        Route::get('', [ReleaseNotesController::class,'index'])->name('index');
+        Route::get('', [ReleaseNotesController::class, 'index'])->name('index');
     }
 );
 

@@ -223,7 +223,7 @@ trait RenderPartialViews
                     )
                     && $otherAccount->id !== $account->id
                 ) {
-                    $set[(int)$account->id] = $account;
+                    $set[(int) $account->id] = $account;
                 }
             }
         }

@@ -29,10 +29,10 @@ import { getVariable } from "../../store/get-variable.js";
 import { getVariables } from "../../store/get-variables.js";
 import { drawMultiCurrencyChart } from "../../shared/draw-chart.js";
 import formatDate from "../../util/format-date.js";
-import ReleaseNotes from '../../api/system/release-notes.js';
-import Post from '../../api/preferences/post.js';
+import ReleaseNotes from "../../api/system/release-notes.js";
+import Post from "../../api/preferences/post.js";
 import { Modal } from "bootstrap";
-import i18next   from "i18next";
+import i18next from "i18next";
 
 let index = function () {
     return {
@@ -67,19 +67,19 @@ let index = function () {
                     }
                     if (showNewFeatures) {
                         // get from API.
-                        (new ReleaseNotes).get().then((notes) => {
+                        new ReleaseNotes().get().then((notes) => {
                             let releaseNotes = notes.data.release_notes;
                             let version = notes.data.version;
-                            if (!version.startsWith('develop')) {
+                            if (!version.startsWith("develop")) {
                                 version = "v" + version;
                             }
                             if (null === releaseNotes) {
-                                console.log('Release notes are NULL');
+                                console.log("Release notes are NULL");
                                 // mark as seen by submitting a preference.
                                 // TODO make a function.
                                 const now = parseInt(new Date().getTime() / 1000);
-                                (new Post).post(whatsNewDialog, true);
-                                (new Post).post(lastTimeDialog, now);
+                                new Post().post(whatsNewDialog, true);
+                                new Post().post(lastTimeDialog, now);
                                 window[whatsNewDialog] = true;
                                 window[lastTimeDialog] = now;
                                 window.store.set(whatsNewDialog, true);
@@ -88,15 +88,18 @@ let index = function () {
                             if (null !== releaseNotes) {
                                 let element = document.getElementById("releaseNotesModal");
                                 let modal = new Modal(element, {});
-                                element.querySelector('.modal-title').textContent = i18next.t('firefly.release_notes_title', {version: version});
-                                element.querySelector('.modal-body').innerHTML = releaseNotes;
+                                element.querySelector(".modal-title").textContent = i18next.t(
+                                    "firefly.release_notes_title",
+                                    { version: version },
+                                );
+                                element.querySelector(".modal-body").innerHTML = releaseNotes;
                                 modal.show();
-                                element.addEventListener('hidden.bs.modal', function () {
-                                    let checkBox = document.getElementById('revisitCheckbox');
+                                element.addEventListener("hidden.bs.modal", function () {
+                                    let checkBox = document.getElementById("revisitCheckbox");
                                     const revisit = !checkBox.checked;
                                     const now = parseInt(new Date().getTime() / 1000);
-                                    (new Post).post(whatsNewDialog, revisit);
-                                    (new Post).post(lastTimeDialog, now);
+                                    new Post().post(whatsNewDialog, revisit);
+                                    new Post().post(lastTimeDialog, now);
                                     window[whatsNewDialog] = revisit;
                                     window[lastTimeDialog] = now;
                                     window.store.set(whatsNewDialog, revisit);

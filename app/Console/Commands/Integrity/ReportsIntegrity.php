@@ -48,10 +48,10 @@ class ReportsIntegrity extends Command
         $commands = ['integrity:empty-objects', 'integrity:total-sums', 'integrity:file-permissions'];
         foreach ($commands as $command) {
             $moment = date('H:i:s');
-            $this->friendlyLine(sprintf('[%s] Now executing command %s',$moment, $command));
-            $time = microtime(true);
+            $this->friendlyLine(sprintf('[%s] Now executing command %s', $moment, $command));
+            $time   = microtime(true);
             $this->call($command);
-            $time = microtime(true) - $time;
+            $time   = microtime(true) - $time;
             $moment = date('H:i:s');
             $this->friendlyLine(sprintf('[%s] Command %s took %.4f seconds.', $moment, $command, $time));
         }

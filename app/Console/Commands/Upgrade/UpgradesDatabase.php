@@ -87,9 +87,9 @@ class UpgradesDatabase extends Command
         foreach ($commands as $command) {
             $moment = date('H:i:s');
             $this->friendlyLine(sprintf('[%s] Now executing command %s', $moment, $command));
-            $time = microtime(true);
+            $time   = microtime(true);
             $this->call($command, $args);
-            $time = round(microtime(true) - $time, 2);
+            $time   = round(microtime(true) - $time, 2);
             $moment = date('H:i:s');
             $this->friendlyLine(sprintf('[%s] Command %s took %.4f seconds.', $moment, $command, $time));
         }
