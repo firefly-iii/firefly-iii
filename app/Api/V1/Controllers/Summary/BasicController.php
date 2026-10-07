@@ -593,6 +593,7 @@ final class BasicController extends Controller
                 'value_parsed'            => Amount::formatFlat($info['symbol'], $info['decimal_places'], $amount, false),
                 'sub_title'               => '',
             ];
+            unset($amount);
         }
         unset($info);
 
@@ -612,13 +613,13 @@ final class BasicController extends Controller
                 'value_parsed'            => Amount::formatFlat($info['symbol'], $info['decimal_places'], $amount, false),
                 'sub_title'               => '',
             ];
+            unset($amount);
         }
         unset($info);
         Log::debug(sprintf('Done with getBillInformation("%s", "%s")', $start->format('Y-m-d'), $end->format('Y-m-d-')));
 
         if (0 === count($return)) {
             $currency = $this->primaryCurrency;
-            unset($info, $amount);
 
             $return[] = [
                 'key'                     => sprintf('bills-paid-in-%s', $currency->code),
