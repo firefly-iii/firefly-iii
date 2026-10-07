@@ -26,7 +26,6 @@ namespace FireflyIII\Api\V1\Requests;
 use Illuminate\Contracts\Validation\Validator;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Log;
 use Override;
 use RuntimeException;
 

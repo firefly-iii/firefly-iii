@@ -19,6 +19,8 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
+declare(strict_types=1);
+
 namespace FireflyIII\Api\V1\Controllers\System;
 
 use FireflyIII\Api\V1\Controllers\Controller;
@@ -26,7 +28,7 @@ use FireflyIII\Exceptions\FireflyException;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Facades\Storage;
 
-class ReleaseNotesController extends Controller
+final class ReleaseNotesController extends Controller
 {
     /**
      * @throws FireflyException

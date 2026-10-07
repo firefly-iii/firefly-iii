@@ -82,7 +82,7 @@ class CorrectsGroupAccounts extends Command
         $flags->recalculateCredit = false;
         $flags->unifyOnly         = true;
         $objects                  = new TransactionGroupEventObjects();
-        $collection               = TransactionGroup::whereIn('id', $groups)->get();
+        $collection               = TransactionGroup::query()->whereIn('id', $groups)->get();
         foreach ($collection as $item) {
             $objects->appendFromTransactionGroup($item);
         }
