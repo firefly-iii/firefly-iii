@@ -19,6 +19,7 @@
  */
 
 import i18next from "i18next";
+import Tags from "bootstrap5-tags";
 
 export function showMessageOrRedirectUser(sourceOfCall) {
     console.log('Called showMessageOrRedirectUser("' + sourceOfCall + '")');
@@ -55,6 +56,12 @@ export function showMessageOrRedirectUser(sourceOfCall) {
             // reset the form.
             if (this.formStates.resetButton) {
                 this.entries = [];
+                // make sure tags is empty.
+                document.querySelectorAll('.ac-tags').forEach(function (el) {
+                    Tags.getInstance(el).clear();
+                    //console.log('el', el);
+                    //el.innerHTML = '';
+                });
                 this.addSplit();
                 this.groupProperties.totalAmount = 0;
             }
