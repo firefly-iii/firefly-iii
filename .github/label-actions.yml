@@ -89,7 +89,6 @@ needs-moar-debug:
       Thank you for your contributions.
     unlabel: needs-moar-debug
 
-
 needs-moar-logs:
   issues:
     comment: |

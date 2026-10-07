@@ -44,7 +44,8 @@ export function parseDownloadedSplits(downloads, groupId) {
             current.piggy_bank_name = download.piggy_bank_name;
 
             // meta dates
-            current.book_date = null === download.book_date ? "" : formatDate(new Date(download.book_date), "yyyy-MM-dd");
+            current.book_date =
+                null === download.book_date ? "" : formatDate(new Date(download.book_date), "yyyy-MM-dd");
             current.due_date = null === download.due_date ? "" : formatDate(new Date(download.due_date), "yyyy-MM-dd");
             current.interest_date =
                 null === download.interest_date ? "" : formatDate(new Date(download.interest_date), "yyyy-MM-dd");

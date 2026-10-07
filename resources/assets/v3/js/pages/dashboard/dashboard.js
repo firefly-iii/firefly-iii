@@ -37,34 +37,32 @@ let index = function () {
         loadingPiggyBanks: true,
         init() {
             // only if no tour!
-            if(!window.showTour) {
+            if (!window.showTour) {
                 // get config, then get preference.
                 const version = document.head.querySelector('meta[name="x-firefly-iii-version"]').content;
-                const whatsNewDialog = 'wn_' + version;
-                const lastTimeDialog = 'lt_' + version;
+                const whatsNewDialog = "wn_" + version;
+                const lastTimeDialog = "lt_" + version;
                 getVariables([whatsNewDialog, lastTimeDialog]).then((values) => {
                     const shownWhatsNewDialog = true === values[whatsNewDialog];
                     const lastShowTime = null === values[lastTimeDialog] ? 0 : parseInt(values[lastTimeDialog]) * 1000;
                     // const lastShowTime = (1791297200 - (48*60*60)) * 1000;
-                    if(0 === lastShowTime && !shownWhatsNewDialog) {
-                        console.log('User needs new feature dialogue.');
+                    if (0 === lastShowTime && !shownWhatsNewDialog) {
+                        console.log("User needs new feature dialogue.");
                         // alert('Show dialog because never seen before.');
                     }
-                    if(!shownWhatsNewDialog && lastShowTime > 0) {
+                    if (!shownWhatsNewDialog && lastShowTime > 0) {
                         const now = new Date().getTime();
                         const diff = now - lastShowTime;
                         const diffInDays = diff / (1000 * 60 * 60 * 24);
-                        if(diffInDays > 2) {
-                            console.log('User needs new feature dialogue.');
+                        if (diffInDays > 2) {
+                            console.log("User needs new feature dialogue.");
                         }
                     }
 
-                        // alert(whatsNewDialog + ' is ' + (null === values[whatsNewDialog]));
-                        // alert(lastTimeDialog + ' is ' + (null === values[lastTimeDialog]));
+                    // alert(whatsNewDialog + ' is ' + (null === values[whatsNewDialog]));
+                    // alert(lastTimeDialog + ' is ' + (null === values[lastTimeDialog]));
                 });
-
             }
-
 
             getVariable("anonymous").then((value) => {
                 let start = new Date(window.store.get("start"));
@@ -74,9 +72,9 @@ let index = function () {
                 drawMultiCurrencyChart(
                     "line",
                     "api/v1/chart/account/overview?period=1D&start=" +
-                    formatDate(start, "yyyy-LL-dd") +
+                        formatDate(start, "yyyy-LL-dd") +
                         "&end=" +
-                    formatDate(end, "yyyy-LL-dd"),
+                        formatDate(end, "yyyy-LL-dd"),
                     "accounts-chart",
                     value,
                     true,
@@ -86,9 +84,9 @@ let index = function () {
                 drawMultiCurrencyChart(
                     "stacked-column",
                     "api/v1/chart/budget/overview-with-limits?start=" +
-                    formatDate(start, "yyyy-LL-dd") +
+                        formatDate(start, "yyyy-LL-dd") +
                         "&end=" +
-                    formatDate(end, "yyyy-LL-dd"),
+                        formatDate(end, "yyyy-LL-dd"),
                     "budgets-chart",
                     value,
                     false,

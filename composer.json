@@ -133,7 +133,6 @@
         "paragonie/sodium_compat": "*",
         "symfony/polyfill-mbstring": "*"
     },
-
     "suggest": {},
     "autoload": {
         "files": [

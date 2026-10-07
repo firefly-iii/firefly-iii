@@ -57,7 +57,7 @@ export function showMessageOrRedirectUser(sourceOfCall) {
             if (this.formStates.resetButton) {
                 this.entries = [];
                 // make sure tags is empty.
-                document.querySelectorAll('.ac-tags').forEach(function (el) {
+                document.querySelectorAll(".ac-tags").forEach(function (el) {
                     Tags.getInstance(el).clear();
                     //console.log('el', el);
                     //el.innerHTML = '';

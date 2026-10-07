@@ -3,10 +3,10 @@
 
 "base_path_env": CROWDIN_BASE_PATH
 "preserve_hierarchy": false
-files: [
-  {
-    source: "/resources/lang/en_US/*.php",
-    translation: /resources/lang/%locale_with_underscore%/%original_file_name%,
-
-  }
-]
+files:
+  [
+    {
+      source: "/resources/lang/en_US/*.php",
+      translation: /resources/lang/%locale_with_underscore%/%original_file_name%,
+    },
+  ]

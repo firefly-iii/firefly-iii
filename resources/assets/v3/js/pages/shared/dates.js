@@ -115,7 +115,8 @@ export default () => ({
         let locale = window.store.get("locale");
         let formatString = i18next.t("config.month_and_day_fns", { lng: locale });
         let element = document.getElementsByClassName("daterange-holder")[0];
-        element.textContent = formatDate(this.range.start, formatString) + " - " + formatDate(this.range.end, formatString);
+        element.textContent =
+            formatDate(this.range.start, formatString) + " - " + formatDate(this.range.end, formatString);
         element.setAttribute("data-start", formatDate(this.range.start, this.preferredFormat, "en-US"));
         element.setAttribute("data-end", formatDate(this.range.end, this.preferredFormat, "en-US"));
 
@@ -128,13 +129,15 @@ export default () => ({
 
         // generate next range
         element = document.getElementsByClassName("daterange-next")[0];
-        element.textContent = formatDate(nextRange.start, formatString) + " - " + formatDate(nextRange.end, formatString);
+        element.textContent =
+            formatDate(nextRange.start, formatString) + " - " + formatDate(nextRange.end, formatString);
         element.setAttribute("data-start", formatDate(nextRange.start, this.preferredFormat, "en-US"));
         element.setAttribute("data-end", formatDate(nextRange.end, this.preferredFormat, "en-US"));
 
         // previous range.
         element = document.getElementsByClassName("daterange-prev")[0];
-        element.textContent = formatDate(prevRange.start, formatString) + " - " + formatDate(prevRange.end, formatString);
+        element.textContent =
+            formatDate(prevRange.start, formatString) + " - " + formatDate(prevRange.end, formatString);
         element.setAttribute("data-start", formatDate(prevRange.start, this.preferredFormat, "en-US"));
         element.setAttribute("data-end", formatDate(prevRange.end, this.preferredFormat, "en-US"));
 

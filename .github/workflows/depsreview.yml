@@ -1,5 +1,5 @@
-name: 'Code - Dependency review'
-on: [ pull_request ]
+name: "Code - Dependency review"
+on: [pull_request]
 
 permissions:
   contents: read
@@ -8,9 +8,9 @@ jobs:
   dependency-review:
     runs-on: ubuntu-latest
     steps:
-      - name: 'Checkout repository'
+      - name: "Checkout repository"
         uses: actions/checkout@v7
         with:
           fetch-depth: 0
-      - name: 'Dependency review'
+      - name: "Dependency review"
         uses: actions/dependency-review-action@v5

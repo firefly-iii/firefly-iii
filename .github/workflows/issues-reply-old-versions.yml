@@ -1,9 +1,9 @@
-name: 'Issues - Old version / missing debug info'
+name: "Issues - Old version / missing debug info"
 
 # the workflow to execute on is comments that are newly created
 on:
   issues:
-    types: [ opened ]
+    types: [opened]
 
 # permissions needed for reacting to IssueOps commands on issues and PRs
 permissions:

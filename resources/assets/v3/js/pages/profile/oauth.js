@@ -22,8 +22,8 @@ import "../../boot/bootstrap.js";
 import sidebar from "../../pages/shared/sidebar.js";
 import dates from "../shared/dates.js";
 import i18next from "i18next";
-import {api} from "../../boot/axios";
-import {Modal} from 'bootstrap';
+import { api } from "../../boot/axios";
+import { Modal } from "bootstrap";
 import Alpine from "@alpinejs/csp";
 import formatDate from "../../util/format-date.js";
 
@@ -113,8 +113,12 @@ let index = function () {
                 for (let i = 0; i < response.data.length; i++) {
                     if (Object.hasOwn(response.data, i)) {
                         let token = response.data[i];
-                        console.log(i18next.t("config.date_time_fns", {lng: locale}));
-                        token.expires_at = formatDate(new Date(token.expires_at), i18next.t("config.date_time_fns", {lng: locale}), locale);
+                        console.log(i18next.t("config.date_time_fns", { lng: locale }));
+                        token.expires_at = formatDate(
+                            new Date(token.expires_at),
+                            i18next.t("config.date_time_fns", { lng: locale }),
+                            locale,
+                        );
                         this.tokens.push(token);
                     }
                 }
@@ -142,7 +146,7 @@ let index = function () {
                     this.form.scopes = [];
                     this.form.errors = [];
 
-                    Modal.getInstance(document.getElementById('modal-create-token')).hide();
+                    Modal.getInstance(document.getElementById("modal-create-token")).hide();
 
                     this.getTokens();
                     this.showAccessToken(response.data.accessToken);
