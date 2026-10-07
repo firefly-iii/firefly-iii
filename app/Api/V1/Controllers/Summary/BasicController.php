@@ -594,6 +594,7 @@ final class BasicController extends Controller
                 'sub_title'               => '',
             ];
         }
+        unset($info);
 
         /**
          * @var array $info
@@ -612,6 +613,7 @@ final class BasicController extends Controller
                 'sub_title'               => '',
             ];
         }
+        unset($info);
         Log::debug(sprintf('Done with getBillInformation("%s", "%s")', $start->format('Y-m-d'), $end->format('Y-m-d-')));
 
         if (0 === count($return)) {

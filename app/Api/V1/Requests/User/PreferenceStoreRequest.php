@@ -54,9 +54,6 @@ class PreferenceStoreRequest extends FormRequest
         return $array;
     }
 
-    /**
-     * @return string[]
-     */
     public function rules(): array
     {
         return ['name' => ['required',',min:1','max:255'], 'data' => ['required']];
