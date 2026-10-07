@@ -271,6 +271,7 @@ return [
                 'source_account_reconciliation',
                 'budget',
                 'bill',
+                'release_notes_title',
                 'you_create_withdrawal',
                 'you_create_transfer',
                 'you_create_deposit',

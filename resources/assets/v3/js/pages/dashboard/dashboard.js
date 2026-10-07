@@ -31,6 +31,8 @@ import { drawMultiCurrencyChart } from "../../shared/draw-chart.js";
 import formatDate from "../../util/format-date.js";
 import ReleaseNotes from '../../api/system/release-notes.js';
 import Post from '../../api/preferences/post.js';
+import { Modal } from "bootstrap";
+import i18next   from "i18next";
 
 let index = function () {
     return {
@@ -63,14 +65,16 @@ let index = function () {
                             showNewFeatures = true;
                         }
                     }
-                    if(!showNewFeatures) {
-                        console.warn('User has already seen release notes.');
-                    }
-                    if(showNewFeatures) {
+                    if (showNewFeatures) {
                         // get from API.
                         (new ReleaseNotes).get().then((notes) => {
                             let releaseNotes = notes.data.release_notes;
-                            if(null === releaseNotes) {
+                            let version = notes.data.version;
+                            if (!version.startsWith('develop')) {
+                                version = "v" + version;
+                            }
+                            if (null === releaseNotes) {
+                                console.log('Release notes are NULL');
                                 // mark as seen by submitting a preference.
                                 // TODO make a function.
                                 const now = parseInt(new Date().getTime() / 1000);
@@ -81,17 +85,28 @@ let index = function () {
                                 window.store.set(whatsNewDialog, true);
                                 window.store.set(lastTimeDialog, now);
                             }
+                            if (null !== releaseNotes) {
+                                let element = document.getElementById("releaseNotesModal");
+                                let modal = new Modal(element, {});
+                                element.querySelector('.modal-title').textContent = i18next.t('firefly.release_notes_title', {version: version});
+                                element.querySelector('.modal-body').innerHTML = releaseNotes;
+                                modal.show();
+                                element.addEventListener('hidden.bs.modal', function (event) {
+                                    let checkBox = document.getElementById('revisitCheckbox');
+                                    const revisit = !checkBox.checked;
+                                    const now = parseInt(new Date().getTime() / 1000);
+                                    (new Post).post(whatsNewDialog, revisit);
+                                    (new Post).post(lastTimeDialog, now);
+                                    window[whatsNewDialog] = revisit;
+                                    window[lastTimeDialog] = now;
+                                    window.store.set(whatsNewDialog, revisit);
+                                    window.store.set(lastTimeDialog, now);
+                                });
+                            }
                         });
-                        // make modal.
-                        // show it.
-                        // on close, mark as viewed (depends on box).
                     }
-
-                    // alert(whatsNewDialog + ' is ' + (null === values[whatsNewDialog]));
-                    // alert(lastTimeDialog + ' is ' + (null === values[lastTimeDialog]));
                 });
             }
-
             getVariable("anonymous").then((value) => {
                 let start = new Date(window.store.get("start"));
                 let end = new Date(window.store.get("end"));

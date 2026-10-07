@@ -45,6 +45,7 @@ class ReleaseNotesController extends Controller
 
         return response()->json(
             [
+                'version' =>config('firefly.version'),
                 'release_notes'          => $parsed,
                 'release_notes_markdown' => $notes,
             ]

@@ -545,6 +545,30 @@
 <div class="modal fade" id="defaultModal" tabindex="-1" role="dialog">
 </div>
 
+<div class="modal fade" tabindex="-1" role="dialog" id="releaseNotesModal">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title">
+
+                </h4>
+            </div>
+            <div class="modal-body">
+
+            </div>
+            <div class="modal-footer">
+                    <div class="form-check">
+                        <input class="form-check-input" id="revisitCheckbox" type="checkbox" name="show-again" value="1">
+                        <label class="form-check-label" for="revisitCheckbox">
+                            {{ trans('firefly.notes_again_in_two_days') }}
+                        </label>
+                    </div>
+                <button type="button" class="btn btn-primary" data-bs-dismiss="modal">{{ trans('firefly.close') }}</button>
+            </div>
+        </div>
+    </div>
+</div>
+
 <div class="modal fade" tabindex="-1" role="dialog" id="helpModal">
     <div class="modal-dialog modal-lg">
         <div class="modal-content">
