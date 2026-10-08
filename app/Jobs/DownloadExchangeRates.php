@@ -80,10 +80,11 @@ class DownloadExchangeRates implements ShouldQueue
     public function handle(): void
     {
         Log::debug('Now in handle()');
-        $currencies = $this->repository->getCompleteSet();
+        $currencies = $this->repository->get();
 
         /** @var TransactionCurrency $currency */
         foreach ($currencies as $currency) {
+            Log::debug(sprintf('Processing currency %s', $currency->code));
             $this->downloadRates($currency);
         }
     }
@@ -99,6 +100,8 @@ class DownloadExchangeRates implements ShouldQueue
     public function setUser(User $user): void
     {
         $this->user = $user;
+        $this->repository->setUser($this->user);
+        $this->repository->setUserGroup($this->user->userGroup);
     }
 
     /**
