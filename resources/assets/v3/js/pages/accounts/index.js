@@ -46,7 +46,6 @@ let index = function () {
         loadingPage: true,
         convertToPrimary: false,
         active: true,
-        storageKey: "",
         sums: {},
         debts: {},
         differences: {},
@@ -55,6 +54,7 @@ let index = function () {
         formatMoney: formatMoney,
 
         // default settings for sorting
+        storageKey: "",
         defaultSortColumn: "order",
         defaultSortDirection: "asc",
 
@@ -78,10 +78,10 @@ let index = function () {
             this.anonymous = window.store.get("anonymous");
             this.storageKey = "accounts-" + this.objectType + (this.active ? "-active" : "-inactive");
             this.pageNavUrl = "./accounts/" + this.objectType;
-            this.defaultSortColumn =
-                "expense" === this.objectType || "revenue" === this.objectType ? "name" : this.defaultSortColumn;
+            this.defaultSortColumn = "expense" === this.objectType || "revenue" === this.objectType ? "name" : this.defaultSortColumn;
             this.active = "inactive-accounts" !== address[address.length - 2];
 
+            // todo make function:
             // grab state from localStorage.
             let fromStore = window.store.get(this.storageKey);
             if (fromStore) {
@@ -91,6 +91,7 @@ let index = function () {
                 //console.log('Restore from store:', fromStore);
             }
 
+            // todo make function
             // grab state from URL params.
             const params = new Proxy(new URLSearchParams(window.location.search), {
                 get: (searchParams, prop) => searchParams.get(prop),
@@ -113,6 +114,7 @@ let index = function () {
 
             this.sortableTable.init(this);
 
+            // todo make function
             // watch for changes in the sortable table instructions.
             document.addEventListener("sortable-table-sort-change", (event) => {
                 console.log("sortable-table-sort-change", event.detail);
