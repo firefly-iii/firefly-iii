@@ -78,7 +78,8 @@ let index = function () {
             this.anonymous = window.store.get("anonymous");
             this.storageKey = "accounts-" + this.objectType + (this.active ? "-active" : "-inactive");
             this.pageNavUrl = "./accounts/" + this.objectType;
-            this.defaultSortColumn = "expense" === this.objectType || "revenue" === this.objectType ? "name" : this.defaultSortColumn;
+            this.defaultSortColumn =
+                "expense" === this.objectType || "revenue" === this.objectType ? "name" : this.defaultSortColumn;
             this.active = "inactive-accounts" !== address[address.length - 2];
 
             // todo make function:
@@ -185,8 +186,11 @@ let index = function () {
         },
         downloadAccounts() {
             this.sortableTable.loadingNewSort = true;
-            let sort = "asc" === this.sortableTable.sortDirection ? this.sortableTable.sortColumn : "-" + this.sortableTable.sortColumn;
-            console.log("downloadAccounts:", {page: this.page, sort: sort});
+            let sort =
+                "asc" === this.sortableTable.sortDirection
+                    ? this.sortableTable.sortColumn
+                    : "-" + this.sortableTable.sortColumn;
+            console.log("downloadAccounts:", { page: this.page, sort: sort });
             let start = window.store.get("start");
             let end = window.store.get("end");
             this.convertToPrimary = window.store.get("convert_to_primary");

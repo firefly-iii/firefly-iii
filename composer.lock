@@ -5060,16 +5060,16 @@
         },
         {
             "name": "predis/predis",
-            "version": "v3.6.1",
+            "version": "v3.7.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/predis/predis.git",
-                "reference": "e2db96312ecf57a01a3477bf192d1ebc0ad7e9fb"
+                "reference": "4d91f3b08a60c3bacc2afbd8dc41724559b7626a"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/predis/predis/zipball/e2db96312ecf57a01a3477bf192d1ebc0ad7e9fb",
-                "reference": "e2db96312ecf57a01a3477bf192d1ebc0ad7e9fb",
+                "url": "https://api.github.com/repos/predis/predis/zipball/4d91f3b08a60c3bacc2afbd8dc41724559b7626a",
+                "reference": "4d91f3b08a60c3bacc2afbd8dc41724559b7626a",
                 "shasum": ""
             },
             "require": {
@@ -5111,7 +5111,7 @@
             ],
             "support": {
                 "issues": "https://github.com/predis/predis/issues",
-                "source": "https://github.com/predis/predis/tree/v3.6.1"
+                "source": "https://github.com/predis/predis/tree/v3.7.0"
             },
             "funding": [
                 {
@@ -5119,7 +5119,7 @@
                     "type": "github"
                 }
             ],
-            "time": "2026-09-17T20:41:00+00:00"
+            "time": "2026-10-08T16:46:04+00:00"
         },
         {
             "name": "psr/cache",
@@ -10215,16 +10215,16 @@
         },
         {
             "name": "carthage-software/mago",
-            "version": "1.53.0",
+            "version": "1.54.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/carthage-software/mago.git",
-                "reference": "c6ebcdbc65ab5c2d73f1a2a8c9959e81c4887cfb"
+                "reference": "9a86b1847d12f4f2fe073ecbb2614eb7b2b1614c"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/carthage-software/mago/zipball/c6ebcdbc65ab5c2d73f1a2a8c9959e81c4887cfb",
-                "reference": "c6ebcdbc65ab5c2d73f1a2a8c9959e81c4887cfb",
+                "url": "https://api.github.com/repos/carthage-software/mago/zipball/9a86b1847d12f4f2fe073ecbb2614eb7b2b1614c",
+                "reference": "9a86b1847d12f4f2fe073ecbb2614eb7b2b1614c",
                 "shasum": ""
             },
             "require": {
@@ -10266,7 +10266,7 @@
             ],
             "support": {
                 "issues": "https://github.com/carthage-software/mago/issues",
-                "source": "https://github.com/carthage-software/mago/tree/1.53.0"
+                "source": "https://github.com/carthage-software/mago/tree/1.54.0"
             },
             "funding": [
                 {
@@ -10274,7 +10274,7 @@
                     "type": "github"
                 }
             ],
-            "time": "2026-10-08T02:18:45+00:00"
+            "time": "2026-10-08T18:27:19+00:00"
         },
         {
             "name": "cloudcreativity/json-api-testing",

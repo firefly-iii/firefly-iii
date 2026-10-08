@@ -27,7 +27,7 @@ export class sortableTable {
     storageKey = "";
     disableRefresh = false;
     parent = null;
-    isFiltering =  true;
+    isFiltering = true;
     loadingNewSort = true;
 
     constructor(tableId) {
@@ -101,7 +101,7 @@ export class sortableTable {
             });
     }
     capturePageNavigation() {
-        console.log('capturePageNavigation()');
+        console.log("capturePageNavigation()");
         document.querySelectorAll("a.page-link").forEach((el) => {
             el.removeEventListener("click", this.handleFunc);
             el.addEventListener("click", this.handleFunc);
