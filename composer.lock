@@ -4741,16 +4741,16 @@
         },
         {
             "name": "phpseclib/phpseclib",
-            "version": "4.0.1",
+            "version": "4.0.2",
             "source": {
                 "type": "git",
                 "url": "https://github.com/phpseclib/phpseclib.git",
-                "reference": "bb7b959c8159957edae6f5084ebbac765d310e16"
+                "reference": "1fe20b9acb08ce810cec24d8a9d02e7c13426e4c"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/phpseclib/phpseclib/zipball/bb7b959c8159957edae6f5084ebbac765d310e16",
-                "reference": "bb7b959c8159957edae6f5084ebbac765d310e16",
+                "url": "https://api.github.com/repos/phpseclib/phpseclib/zipball/1fe20b9acb08ce810cec24d8a9d02e7c13426e4c",
+                "reference": "1fe20b9acb08ce810cec24d8a9d02e7c13426e4c",
                 "shasum": ""
             },
             "require": {
@@ -4841,7 +4841,7 @@
             ],
             "support": {
                 "issues": "https://github.com/phpseclib/phpseclib/issues",
-                "source": "https://github.com/phpseclib/phpseclib/tree/4.0.1"
+                "source": "https://github.com/phpseclib/phpseclib/tree/4.0.2"
             },
             "funding": [
                 {
@@ -4857,7 +4857,7 @@
                     "type": "tidelift"
                 }
             ],
-            "time": "2026-08-26T12:15:13+00:00"
+            "time": "2026-10-07T19:55:38+00:00"
         },
         {
             "name": "pragmarx/google2fa",
@@ -10215,16 +10215,16 @@
         },
         {
             "name": "carthage-software/mago",
-            "version": "1.52.0",
+            "version": "1.53.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/carthage-software/mago.git",
-                "reference": "49452fbf1af6a5b4f2edc354c7b95097305d51e1"
+                "reference": "c6ebcdbc65ab5c2d73f1a2a8c9959e81c4887cfb"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/carthage-software/mago/zipball/49452fbf1af6a5b4f2edc354c7b95097305d51e1",
-                "reference": "49452fbf1af6a5b4f2edc354c7b95097305d51e1",
+                "url": "https://api.github.com/repos/carthage-software/mago/zipball/c6ebcdbc65ab5c2d73f1a2a8c9959e81c4887cfb",
+                "reference": "c6ebcdbc65ab5c2d73f1a2a8c9959e81c4887cfb",
                 "shasum": ""
             },
             "require": {
@@ -10266,7 +10266,7 @@
             ],
             "support": {
                 "issues": "https://github.com/carthage-software/mago/issues",
-                "source": "https://github.com/carthage-software/mago/tree/1.52.0"
+                "source": "https://github.com/carthage-software/mago/tree/1.53.0"
             },
             "funding": [
                 {
@@ -10274,7 +10274,7 @@
                     "type": "github"
                 }
             ],
-            "time": "2026-10-07T03:59:38+00:00"
+            "time": "2026-10-08T02:18:45+00:00"
         },
         {
             "name": "cloudcreativity/json-api-testing",
