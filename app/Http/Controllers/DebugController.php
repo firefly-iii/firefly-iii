@@ -311,9 +311,9 @@ final class DebugController extends Controller
             $userId = (int) $parts[count($parts) - 1];
             $time   = (int) $config->data;
             if ($time > 0) {
-                $carbon         = Carbon::createFromTimestamp($time);
-                $lastCronjob    = $carbon->format('Y-m-d H:i:s');
-                $cronJobs[]     = [
+                $carbon      = Carbon::createFromTimestamp($time);
+                $lastCronjob = $carbon->format('Y-m-d H:i:s');
+                $cronJobs[]  = [
                     'user'         => $userId,
                     'last_run'     => $lastCronjob,
                     'last_run_ago' => Steam::secondsAsTime((int) $carbon->diffInSeconds(now(config('app.timezone')))),
