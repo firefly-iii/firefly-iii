@@ -59,12 +59,9 @@ let index = function () {
         defaultSortDirection: "asc",
 
         // variables necessary for sorting tables.
-        handleFunc: null,
         pageNavUrl: "./accounts/",
         sortColumn: "order", // used in GET request.
         sortDirection: "asc", // used in GET request.
-        loadingNewSort: true,
-        isFiltering: false,
         filter: {},
 
         // sort functions, imported
@@ -110,8 +107,8 @@ let index = function () {
             });
 
             this.sortableTable.sortColumn = this.defaultSortColumn;
-            this.sortableTable.storageKey = this.storageKey;
             this.sortableTable.sortDirection = this.defaultSortDirection;
+            this.sortableTable.storageKey = this.storageKey;
             this.sortableTable.page = this.page;
 
             this.sortableTable.init(this);
@@ -121,6 +118,8 @@ let index = function () {
                 console.log("sortable-table-sort-change", event.detail);
                 this.sortColumn = event.detail.sortColumn;
                 this.sortDirection = event.detail.sortDirection;
+                this.sortableTable.sortColumn = this.sortColumn;
+                this.sortableTable.sortDirection = this.sortDirection;
                 this.updateHistory(this.page, this.sortColumn, this.sortDirection, this.filter);
                 this.storeFilterAndSort(this.storageKey, this.sortColumn, this.sortDirection, this.filter);
                 this.downloadAccounts();
@@ -183,14 +182,9 @@ let index = function () {
             return account;
         },
         downloadAccounts() {
-            this.loadingNewSort = true;
-            let sort = "asc" === this.sortDirection ? this.sortColumn : "-" + this.sortColumn;
-            console.log("downloadAccounts:", {
-                page: this.page,
-                column: this.defaultSortColumn,
-                direction: this.defaultSortDirection,
-            });
-            console.log("Sort:", sort);
+            this.sortableTable.loadingNewSort = true;
+            let sort = "asc" === this.sortableTable.sortDirection ? this.sortableTable.sortColumn : "-" + this.sortableTable.sortColumn;
+            console.log("downloadAccounts:", {page: this.page, sort: sort});
             let start = window.store.get("start");
             let end = window.store.get("end");
             this.convertToPrimary = window.store.get("convert_to_primary");
@@ -295,7 +289,7 @@ let index = function () {
                     //     this.accounts.length,
                     // );
                     this.loadingPage = false;
-                    this.loadingNewSort = false;
+                    this.sortableTable.loadingNewSort = false;
                     this.sortableTable.disableRefresh = false;
                     if (0 === this.accounts.length && false === this.isFiltering) {
                         document.querySelectorAll(".data-holder").forEach((el) => {
@@ -320,29 +314,6 @@ let index = function () {
                 window.store.get("locale"),
             );
         },
-        handlePageClick(e) {
-            let link = e.currentTarget;
-
-            let page = parseInt(link.dataset.page);
-            if (isNaN(page)) {
-                e.preventDefault();
-                return false;
-            }
-            this.page = page;
-            this.updateHistory();
-            this.downloadAccounts();
-            e.preventDefault();
-            queueMicrotask(() => {
-                this.capturePageNavigation();
-            });
-            return false;
-        },
-        // capturePageNavigation() {
-        //     document.querySelectorAll("a.page-link").forEach((el) => {
-        //         el.removeEventListener("click", this.handleFunc);
-        //         el.addEventListener("click", this.handleFunc);
-        //     });
-        // },
     };
 };
 

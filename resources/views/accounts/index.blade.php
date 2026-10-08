@@ -60,7 +60,7 @@
                             <th data-sort-column="balance_difference" class="w-15 text-end d-lg-table-cell d-none"><span class="title">{{ trans('list.balanceDiff') }}</span></th>
                             <th>&nbsp;</th>
                         </tr>
-                        <tr x-show="true === loadingNewSort">
+                        <tr x-show="true === sortableTable.loadingNewSort">
                             <th colspan="12">
                                 <div class="p-3 text-center">
                                     <div class="spinner-border spinner-border-sm" role="status">

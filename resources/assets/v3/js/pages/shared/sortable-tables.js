@@ -18,6 +18,8 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
+import i18next from "i18next";
+
 export class sortableTable {
     tableId = "";
     sortColumn = "order";
@@ -26,6 +28,7 @@ export class sortableTable {
     disableRefresh = false;
     parent = null;
     isFiltering =  true;
+    loadingNewSort = true;
 
     constructor(tableId) {
         this.tableId = tableId;
@@ -33,6 +36,7 @@ export class sortableTable {
     }
 
     init(parent) {
+        this.handleFunc = this.handlePageClick.bind(this);
         this.parent = parent;
         queueMicrotask(() => {
             this.updateHeaderClasses();
@@ -99,7 +103,6 @@ export class sortableTable {
     capturePageNavigation() {
         console.log('capturePageNavigation()');
         document.querySelectorAll("a.page-link").forEach((el) => {
-            console.log('Catch clicks.');
             el.removeEventListener("click", this.handleFunc);
             el.addEventListener("click", this.handleFunc);
         });
@@ -118,6 +121,27 @@ export class sortableTable {
         this.fireSortChangeEvent();
         //this.updateHistory();
         //this.downloadAccounts();
+    }
+
+    handlePageClick(e) {
+        let link = e.currentTarget;
+
+        let page = parseInt(link.dataset.page);
+        if (isNaN(page)) {
+            e.preventDefault();
+            return false;
+        }
+        this.page = page;
+        this.parent.page = page;
+        // some sort of trigger to parent?
+        // console.warn('Here be push to parent!');
+        this.parent.updateHistory(page, this.sortColumn, this.sortDirection, this.parent.filter);
+        this.parent.downloadAccounts();
+        e.preventDefault();
+        queueMicrotask(() => {
+            this.capturePageNavigation();
+        });
+        return false;
     }
 
     fireSortChangeEvent() {
@@ -207,7 +231,7 @@ export class sortableTable {
         let input = document.createElement("input");
         input.classList.add("form-control", "form-control-sm");
         input.setAttribute("type", "search");
-        input.setAttribute("placeholder", "TODO placeholder");
+        input.setAttribute("placeholder", i18next.t("firefly.filter_placeholder_" + column));
         input.setAttribute("x-model", "filter." + column);
         div.appendChild(input);
 

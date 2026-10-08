@@ -1732,6 +1732,9 @@ return [
     'select_source_account'                               => 'Please select or type a valid source account name',
     'select_dest_account'                                 => 'Please select or type a valid destination account name',
 
+    'filter_placeholder_name' => 'Filter on name...',
+    'filter_placeholder_account_number_and_iban' => 'Filter on account number...',
+
     // convert stuff:
     'convert_is_already_type_Withdrawal'                  => 'This transaction is already a withdrawal',
     'convert_is_already_type_Deposit'                     => 'This transaction is already a deposit',

@@ -107,6 +107,8 @@ return [
                 'interest_calc_',
                 'release_notes_title',
                 'wait_attachments',
+                'filter_placeholder_name',
+                'filter_placeholder_account_number_and_iban',
                 'interest_calc_null',
                 'interest_calc_daily',
                 'interest_calc_monthly',
