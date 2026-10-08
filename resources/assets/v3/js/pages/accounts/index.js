@@ -40,9 +40,9 @@ let index = function () {
         objectType: "invalid",
         accounts: [],
         page: 1,
+        totalPages: 1,
         i18next: null,
         anonymous: false,
-        totalPages: 1,
         loadingPage: true,
         convertToPrimary: false,
         active: true,
@@ -73,6 +73,7 @@ let index = function () {
         sortableTable: null,
 
         init() {
+            this.sortableTable = new sortableTable("main");
             // prepare some variables:
             const address = window.location.href.split("?")[0].split("/");
             this.objectType = address[address.length - 1].substring(0, 15);
@@ -108,7 +109,6 @@ let index = function () {
                 direction: this.defaultSortDirection,
             });
 
-            this.sortableTable = new sortableTable("main");
             this.sortableTable.sortColumn = this.defaultSortColumn;
             this.sortableTable.storageKey = this.storageKey;
             this.sortableTable.sortDirection = this.defaultSortDirection;
@@ -337,12 +337,12 @@ let index = function () {
             });
             return false;
         },
-        capturePageNavigation() {
-            document.querySelectorAll("a.page-link").forEach((el) => {
-                el.removeEventListener("click", this.handleFunc);
-                el.addEventListener("click", this.handleFunc);
-            });
-        },
+        // capturePageNavigation() {
+        //     document.querySelectorAll("a.page-link").forEach((el) => {
+        //         el.removeEventListener("click", this.handleFunc);
+        //         el.addEventListener("click", this.handleFunc);
+        //     });
+        // },
     };
 };
 

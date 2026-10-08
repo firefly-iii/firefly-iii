@@ -25,6 +25,7 @@ export class sortableTable {
     storageKey = "";
     disableRefresh = false;
     parent = null;
+    isFiltering =  true;
 
     constructor(tableId) {
         this.tableId = tableId;
@@ -94,6 +95,14 @@ export class sortableTable {
                     }, 50);
                 }
             });
+    }
+    capturePageNavigation() {
+        console.log('capturePageNavigation()');
+        document.querySelectorAll("a.page-link").forEach((el) => {
+            console.log('Catch clicks.');
+            el.removeEventListener("click", this.handleFunc);
+            el.addEventListener("click", this.handleFunc);
+        });
     }
 
     clickColumnTitle(event) {

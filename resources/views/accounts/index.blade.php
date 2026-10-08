@@ -374,7 +374,7 @@
                     :linkTitle="__('firefly.make_new_'. $objectType . '_account')"/>
             </div>
         </div>
-        <template x-if="0 === accounts.length && true === active && false === loadingPage && false === isFiltering">
+        <template x-if="0 === accounts.length && true === active && false === loadingPage && false === sortableTable.isFiltering">
             <x-empty-page :route="route('accounts.create', [$objectType]) . '?_from=' . urlencode($FF3_FROM)"
                           type="accounts" :object-type="$objectType"/>
         </template>
