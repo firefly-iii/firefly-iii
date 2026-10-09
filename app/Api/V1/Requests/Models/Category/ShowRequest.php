@@ -27,10 +27,7 @@ namespace FireflyIII\Api\V1\Requests\Models\Category;
 use FireflyIII\Api\V1\Requests\AggregateFormRequest;
 use FireflyIII\Api\V1\Requests\DateRangeRequest;
 use FireflyIII\Api\V1\Requests\DateRequest;
-use FireflyIII\Api\V1\Requests\Generic\ActiveObjectRequest;
-use FireflyIII\Api\V1\Requests\Models\Account\AccountTypeApiRequest;
 use FireflyIII\Api\V1\Requests\PaginationRequest;
-use FireflyIII\Models\Account;
 use FireflyIII\Models\Category;
 
 class ShowRequest extends AggregateFormRequest

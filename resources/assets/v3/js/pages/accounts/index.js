@@ -22,14 +22,14 @@ import "../../boot/bootstrap.js";
 import sidebar from "../shared/sidebar.js";
 import dates from "../shared/dates.js";
 import Alpine from "@alpinejs/csp";
-import {getVariable} from "../../store/get-variable.js";
+import { getVariable } from "../../store/get-variable.js";
 import Put from "../../api/model/account/put.js";
 import Get from "../../api/model/account/get.js";
 import formatDate from "../../util/format-date.js";
 import formatMoney from "../../util/format-money.js";
 import i18next from "i18next";
-import {addDrag} from "../shared/drag-and-droppable-rows.js";
-import {sortableTable, storeFilterAndSort, updateHistory} from "../shared/sortable-tables.js";
+import { addDrag } from "../shared/drag-and-droppable-rows.js";
+import { sortableTable, storeFilterAndSort, updateHistory } from "../shared/sortable-tables.js";
 
 window.enableDates = true;
 
@@ -140,7 +140,7 @@ let index = function () {
                             let item = e.detail[i];
                             if (item.order !== item.currentOrder) {
                                 // PUT new order to system.
-                                new Put().put({order: item.order}, {id: item.id});
+                                new Put().put({ order: item.order }, { id: item.id });
 
                                 // save new order as current order in the row.
                                 document
@@ -191,7 +191,7 @@ let index = function () {
                 "asc" === this.sortableTable.sortDirection
                     ? this.sortableTable.sortColumn
                     : "-" + this.sortableTable.sortColumn;
-            console.log("downloadObjects:", {page: this.page, sort: sort});
+            console.log("downloadObjects:", { page: this.page, sort: sort });
             let start = window.store.get("start");
             let end = window.store.get("end");
             this.convertToPrimary = window.store.get("convert_to_primary");
@@ -237,7 +237,11 @@ let index = function () {
                                 this.debts[pcc] += current.attributes.pc_debt_amount_float;
                                 this.differences[pcc] += current.attributes.pc_balance_difference_float;
                             }
-                            let lastActivity = formatDate(current.attributes.last_activity, i18next.t("config.date_time_fns_short", {lng: locale}), locale);
+                            let lastActivity = formatDate(
+                                current.attributes.last_activity,
+                                i18next.t("config.date_time_fns_short", { lng: locale }),
+                                locale,
+                            );
 
                             let noLastActivity = false;
                             if ("" === lastActivity) {

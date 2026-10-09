@@ -44,6 +44,7 @@ use League\Fractal\Resource\Item;
 final class ShowController extends Controller
 {
     use ChecksSortType;
+
     private CategoryRepositoryInterface $repository;
 
     /**
@@ -83,11 +84,10 @@ final class ShowController extends Controller
         $collection  = $this->repository->getCategories($sort, $filter);
         $count       = $collection->count();
         $dbFields    = $this->isAllDatabaseSort($sort, 'Category');
-        $categories    = $collection;
+        $categories  = $collection;
         if ($dbFields) {
             $categories = $collection->slice($offset, $limit);
         }
-
 
         // enrich
         /** @var User $admin */

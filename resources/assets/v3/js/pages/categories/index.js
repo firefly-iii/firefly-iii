@@ -29,7 +29,6 @@ window.enableDates = false;
 import { sortableTable, storeFilterAndSort, updateHistory } from "../shared/sortable-tables.js";
 import Get from "../../api/model/category/get.js";
 
-
 let index = function () {
     return {
         categories: [],
@@ -60,7 +59,7 @@ let index = function () {
         sortableTable: null,
 
         init() {
-            console.log('init');
+            console.log("init");
             this.sortableTable = new sortableTable("main");
             this.i18next = i18next;
             this.anonymous = window.store.get("anonymous");
@@ -111,11 +110,13 @@ let index = function () {
                 this.downloadObjects();
             });
             this.downloadObjects();
-
         },
         downloadObjects() {
             this.sortableTable.loadingNewSort = true;
-            let sort = "asc" === this.sortableTable.sortDirection ? this.sortableTable.sortColumn : "-" + this.sortableTable.sortColumn;
+            let sort =
+                "asc" === this.sortableTable.sortDirection
+                    ? this.sortableTable.sortColumn
+                    : "-" + this.sortableTable.sortColumn;
             this.convertToPrimary = window.store.get("convert_to_primary");
             let locale = window.store.get("locale");
             new Get()
@@ -133,10 +134,14 @@ let index = function () {
                         if (Object.hasOwn(response.data.data, i)) {
                             let current = response.data.data[i];
                             console.log(current);
-                            let lastActivity = i18next.t('firefly.never');
+                            let lastActivity = i18next.t("firefly.never");
                             let noLastActivity = true;
-                            if(null !== current.attributes.last_activity) {
-                                lastActivity = formatDate(current.attributes.last_activity, i18next.t("config.date_time_fns", { lng: locale }), locale);
+                            if (null !== current.attributes.last_activity) {
+                                lastActivity = formatDate(
+                                    current.attributes.last_activity,
+                                    i18next.t("config.date_time_fns", { lng: locale }),
+                                    locale,
+                                );
                                 noLastActivity = false;
                             }
 
@@ -159,9 +164,9 @@ let index = function () {
                         });
                     }
                 });
-        }
-    }
-}
+        },
+    };
+};
 
 const comps = {
     index,

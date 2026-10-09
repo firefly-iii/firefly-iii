@@ -26,7 +26,6 @@ namespace FireflyIII\Support\JsonApi\Enrichments;
 
 use Carbon\Carbon;
 use FireflyIII\Exceptions\FireflyException;
-use FireflyIII\Models\Account;
 use FireflyIII\Models\Category;
 use FireflyIII\Models\Note;
 use FireflyIII\Models\TransactionJournal;
@@ -39,20 +38,20 @@ use Illuminate\Support\Collection;
 class CategoryEnrichment implements EnrichmentInterface
 {
     private Collection $collection;
-    private array      $earned       = [];
-    private ?Carbon    $end          = null;
-    private array      $ids          = [];
-    private array $sort = [];
-    private array      $notes        = [];
-    private array      $pcEarned     = [];
-    private array      $pcSpent      = [];
-    private array      $pcTransfers  = [];
-    private array      $spent        = [];
-    private ?Carbon    $start        = null;
-    private array      $transfers    = [];
-    private array      $lastActivity = [];
-    private User       $user;
-    private UserGroup  $userGroup;
+    private array   $earned       = [];
+    private ?Carbon $end          = null;
+    private array   $ids          = [];
+    private array   $sort         = [];
+    private array   $notes        = [];
+    private array   $pcEarned     = [];
+    private array   $pcSpent      = [];
+    private array   $pcTransfers  = [];
+    private array   $spent        = [];
+    private ?Carbon $start        = null;
+    private array   $transfers    = [];
+    private array   $lastActivity = [];
+    private User $user;
+    private UserGroup $userGroup;
 
     public function enrich(Collection $collection): Collection
     {
@@ -67,7 +66,7 @@ class CategoryEnrichment implements EnrichmentInterface
         return $this->collection;
     }
 
-    public function enrichSingle(array | Model $model): array | Model
+    public function enrichSingle(array|Model $model): array|Model
     {
         // Log::debug(__METHOD__);
         $collection = new Collection()->push($model);
@@ -79,6 +78,11 @@ class CategoryEnrichment implements EnrichmentInterface
     public function setEnd(?Carbon $end): void
     {
         $this->end = $end;
+    }
+
+    public function setSort(array $sort): void
+    {
+        $this->sort = $sort;
     }
 
     public function setStart(?Carbon $start): void
@@ -100,16 +104,16 @@ class CategoryEnrichment implements EnrichmentInterface
     private function appendCollectedData(): void
     {
         $this->collection = $this->collection->map(function (Category $item): Category {
-            $id         = (int)$item->id;
+            $id         = (int) $item->id;
             $meta       = [
                 'last_activity' => $this->lastActivity[$id] ?? null,
-                'notes'        => $this->notes[$id] ?? null,
-                'spent'        => $this->spent[$id] ?? null,
-                'pc_spent'     => $this->pcSpent[$id] ?? null,
-                'earned'       => $this->earned[$id] ?? null,
-                'pc_earned'    => $this->pcEarned[$id] ?? null,
-                'transfers'    => $this->transfers[$id] ?? null,
-                'pc_transfers' => $this->pcTransfers[$id] ?? null,
+                'notes'         => $this->notes[$id] ?? null,
+                'spent'         => $this->spent[$id] ?? null,
+                'pc_spent'      => $this->pcSpent[$id] ?? null,
+                'earned'        => $this->earned[$id] ?? null,
+                'pc_earned'     => $this->pcEarned[$id] ?? null,
+                'transfers'     => $this->transfers[$id] ?? null,
+                'pc_transfers'  => $this->pcTransfers[$id] ?? null,
             ];
             $item->meta = $meta;
 
@@ -121,23 +125,19 @@ class CategoryEnrichment implements EnrichmentInterface
     {
         /** @var Category $category */
         foreach ($this->collection as $category) {
-            $this->ids[] = (int)$category->id;
+            $this->ids[] = (int) $category->id;
         }
         $this->ids = array_unique($this->ids);
-    }
-
-    public function setSort(array $sort): void
-    {
-        $this->sort = $sort;
     }
 
     private function collectLastActivity(): void
     {
         $query = TransactionJournal::query()
-                                   ->leftJoin('category_transaction_journal', 'transaction_journals.id', '=', 'category_transaction_journal.transaction_journal_id')
-                                   ->whereIn('category_transaction_journal.category_id', $this->ids)
-                                   ->selectRaw('category_transaction_journal.category_id, MAX(transaction_journals.date) as last_activity')
-                                   ->groupBy('category_transaction_journal.category_id');
+            ->leftJoin('category_transaction_journal', 'transaction_journals.id', '=', 'category_transaction_journal.transaction_journal_id')
+            ->whereIn('category_transaction_journal.category_id', $this->ids)
+            ->selectRaw('category_transaction_journal.category_id, MAX(transaction_journals.date) as last_activity')
+            ->groupBy('category_transaction_journal.category_id')
+        ;
         if (null !== $this->end) {
             $query->where('transaction_journals.date', '<=', $this->end);
         }
@@ -145,23 +145,24 @@ class CategoryEnrichment implements EnrichmentInterface
             $query->where('transaction_journals.date', '>=', $this->start);
         }
 
-        $set = $query->get(['category_transaction_journal.category_id', 'last_activity']);
-        foreach($set as $entry) {
-            $this->lastActivity[(int)$entry->category_id] = Carbon::parse($entry->last_activity, config('app.timezone'));
+        $set   = $query->get(['category_transaction_journal.category_id', 'last_activity']);
+        foreach ($set as $entry) {
+            $this->lastActivity[(int) $entry->category_id] = Carbon::parse($entry->last_activity, config('app.timezone'));
         }
     }
 
     private function collectNotes(): void
     {
         $notes = Note::query()
-                     ->whereIn('noteable_id', $this->ids)
-                     ->whereNotNull('notes.text')
-                     ->where('notes.text', '!=', '')
-                     ->where('noteable_type', Category::class)
-                     ->get(['notes.noteable_id', 'notes.text'])
-                     ->toArray();
+            ->whereIn('noteable_id', $this->ids)
+            ->whereNotNull('notes.text')
+            ->where('notes.text', '!=', '')
+            ->where('noteable_type', Category::class)
+            ->get(['notes.noteable_id', 'notes.text'])
+            ->toArray()
+        ;
         foreach ($notes as $note) {
-            $this->notes[(int)$note['noteable_id']] = (string)$note['text'];
+            $this->notes[(int) $note['noteable_id']] = (string) $note['text'];
         }
 
         //        Log::debug(sprintf('Enrich with %d note(s)', count($this->notes)));
@@ -174,11 +175,11 @@ class CategoryEnrichment implements EnrichmentInterface
             $opsRepository = app(OperationsRepositoryInterface::class);
             $opsRepository->setUser($this->user);
             $opsRepository->setUserGroup($this->userGroup);
-            $expenses  = $opsRepository->collectExpenses($this->start, $this->end, null, $this->collection);
-            $income    = $opsRepository->collectIncome($this->start, $this->end, null, $this->collection);
-            $transfers = $opsRepository->collectTransfers($this->start, $this->end, null, $this->collection);
+            $expenses      = $opsRepository->collectExpenses($this->start, $this->end, null, $this->collection);
+            $income        = $opsRepository->collectIncome($this->start, $this->end, null, $this->collection);
+            $transfers     = $opsRepository->collectTransfers($this->start, $this->end, null, $this->collection);
             foreach ($this->collection as $item) {
-                $id                     = (int)$item->id;
+                $id                     = (int) $item->id;
                 $this->spent[$id]       = array_values($opsRepository->sumCollectedTransactionsByCategory($expenses, $item, 'negative'));
                 $this->pcSpent[$id]     = array_values($opsRepository->sumCollectedTransactionsByCategory($expenses, $item, 'negative', true));
                 $this->earned[$id]      = array_values($opsRepository->sumCollectedTransactionsByCategory($income, $item, 'positive'));
@@ -188,6 +189,7 @@ class CategoryEnrichment implements EnrichmentInterface
             }
         }
     }
+
     private function sortData(): void
     {
         $dbParams = config('firefly.allowed_db_sort_parameters.Category', []);
