@@ -321,8 +321,8 @@ class CategoryRepository implements CategoryRepositoryInterface, UserGroupInterf
         /** @var CategoryFactory $factory */
         $factory  = app(CategoryFactory::class);
         $factory->setUser($this->user);
-
-        $category = $factory->findOrCreate(null, $data['name']);
+        $color= array_key_exists('color', $data) ? $data['color'] : null;
+        $category = $factory->findOrCreate(null, $data['name'], $color);
 
         if (null === $category) {
             throw new FireflyException(sprintf('400003: Could not store new category with name "%s"', $data['name']));

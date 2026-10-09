@@ -63,8 +63,17 @@ class CategoryUpdateService
     public function update(Category $category, array $data): Category
     {
         $oldName = $category->name;
+        $changed = false;
         if (array_key_exists('name', $data)) {
             $category->name = $data['name'];
+            $changed = true;
+        }
+        if (array_key_exists('color', $data)) {
+            $data['color'] = '' === $data['color'] ? null : $data['color'];
+            $category->color = $data['color'];
+            $changed = true;
+        }
+        if ($changed) {
             $category->save();
             // update triggers and actions
             $this->updateRuleTriggers($oldName, $data['name']);

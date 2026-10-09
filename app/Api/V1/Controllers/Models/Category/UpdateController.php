@@ -69,15 +69,12 @@ final class UpdateController extends Controller
 
         /** @var CategoryTransformer $transformer */
         $transformer = app(CategoryTransformer::class);
-        $transformer->setParameters($this->parameters);
 
         // enrich
         /** @var User $admin */
         $admin       = auth()->user();
         $enrichment  = new CategoryEnrichment();
         $enrichment->setUser($admin);
-        $enrichment->setStart($this->parameters->get('start'));
-        $enrichment->setEnd($this->parameters->get('end'));
         $category    = $enrichment->enrichSingle($category);
 
         $resource    = new Item($category, $transformer, 'categories');

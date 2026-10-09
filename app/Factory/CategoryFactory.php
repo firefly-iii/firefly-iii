@@ -45,7 +45,7 @@ class CategoryFactory
     /**
      * @throws FireflyException
      */
-    public function findOrCreate(?int $categoryId, ?string $categoryName): ?Category
+    public function findOrCreate(?int $categoryId, ?string $categoryName, ?string $color): ?Category
     {
         $categoryId   = (int) $categoryId;
         $categoryName = (string) $categoryName;
@@ -71,7 +71,7 @@ class CategoryFactory
             }
 
             try {
-                return Category::create(['user_id' => $this->user->id, 'user_group_id' => $this->user->user_group_id, 'name' => $categoryName]);
+                return Category::create(['user_id' => $this->user->id, 'user_group_id' => $this->user->user_group_id, 'name' => $categoryName, 'color' => $color]);
             } catch (QueryException $e) {
                 Log::error($e->getMessage());
                 Log::error($e->getTraceAsString());
