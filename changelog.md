@@ -3,11 +3,44 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
-## v6.7.8 - 2026-10-xx
+## v6.7.8 - 2026-10-10
+
+<!-- summary: This release adds a fancy new "release notes"-popup and fixed many bugs. -->
+
+### Added
+
+- #8405
+- A "release notes" popup will tell you about the current releases most important changes.
+- The list of categories can be sorted and filtered.
 
 ### Fixed
 
 - [Issue 12965](https://github.com/firefly-iii/firefly-iii/issues/12965) (Unnecessary float conversion in input field when creating or editing transactions) reported by @JC5
+- #12841
+- #12847
+- #12965
+- #12967
+- #12968
+- #12973
+- #12978
+- #12979
+- #12980
+- #12983
+- #12988
+- #12990
+- #12991
+- #12992
+- #13003
+- #13006
+
+### Security
+
+- @ppslim found a place where your static access token was logged in full.
+
+### API
+
+- Added new end point for release notes.
+- Fixed missing info for delete data endpoint.
 
 ## v6.7.7 - 2026-10-04
 
