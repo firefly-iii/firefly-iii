@@ -331,9 +331,9 @@ final class CategoryController extends Controller
         // sort temp array by amount.
         $amounts = array_column($result, 'avg_float');
         array_multisort($amounts, SORT_DESC, $result);
-
+        $incomeTopLength = count(array_keys($result));
         try {
-            $result = view('reports.category.partials.avg-income', ['result' => $result])->render();
+            $result = view('reports.category.partials.avg-income', ['result' => $result, 'incomeTopLength' => $incomeTopLength])->render();
         } catch (Throwable $e) {
             Log::error(sprintf('Could not render reports.partials.budget-period: %s', $e->getMessage()));
             $result = sprintf('Could not render view: %s', $e->getMessage());
@@ -444,8 +444,9 @@ final class CategoryController extends Controller
                 }
             }
         }
+        $incomeTopLength = count($report);
 
-        return view('reports.category.partials.categories', ['sums' => $sums, 'report' => $report]);
+        return view('reports.category.partials.categories', ['sums' => $sums, 'report' => $report, 'incomeTopLength' => $incomeTopLength]);
     }
 
     /**
@@ -720,9 +721,10 @@ final class CategoryController extends Controller
         // sort temp array by amount.
         $amounts = array_column($result, 'amount_float');
         array_multisort($amounts, SORT_DESC, $result);
+        $incomeTopLength = count(array_keys($result));
 
         try {
-            $result = view('reports.category.partials.top-income', ['result' => $result])->render();
+            $result = view('reports.category.partials.top-income', ['result' => $result, 'incomeTopLength' => $incomeTopLength])->render();
         } catch (Throwable $e) {
             Log::debug(sprintf('Could not render reports.partials.budget-period: %s', $e->getMessage()));
             $result = sprintf('Could not render view: %s', $e->getMessage());
