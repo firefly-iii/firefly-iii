@@ -9,28 +9,28 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 
 ### Added
 
-- #8405
+- [Issue 8405](https://github.com/firefly-iii/firefly-iii/issues/8405) (Feature Request: New color field for category object) reported by @victorbalssa
 - A "release notes" popup will tell you about the current releases most important changes.
 - The list of categories can be sorted and filtered.
 
 ### Fixed
 
-- #12841
-- #12847
-- #12965
-- #12967
-- #12968
-- #12973
-- #12978
-- #12979
-- #12980
-- #12983
-- #12988
-- #12990
-- #12991
-- #12992
-- #13003
-- #13006
+- [Issue 12841](https://github.com/firefly-iii/firefly-iii/issues/12841) (Default financial report does not display left amount of yearly budgets correctly) reported by @DireMunchkin
+- [Issue 12847](https://github.com/firefly-iii/firefly-iii/issues/12847) (Feature Request: Add a total sum row for "Current balance" in the accounts list) reported by @secqyl-alt
+- [Issue 12965](https://github.com/firefly-iii/firefly-iii/issues/12965) (Unnecessary float conversion in input field when creating or editing transactions) reported by @JC5
+- [Issue 12967](https://github.com/firefly-iii/firefly-iii/issues/12967) (Cannot close popup when a pesonal access token is created) reported by @rdjong80
+- [Issue 12968](https://github.com/firefly-iii/firefly-iii/issues/12968) (Report option Income/Outcome Account show multiple duplicate account in the "Select Account List") reported by @no-coders
+- [Issue 12973](https://github.com/firefly-iii/firefly-iii/issues/12973) (Text on secondary buttons is hard to read in light theme) reported by @Tommy78649
+- [Issue 12978](https://github.com/firefly-iii/firefly-iii/issues/12978) (When making an internal transfer between asset accounts, amount shows a minus sign on both accounts) reported by @rdjong80
+- [Issue 12979](https://github.com/firefly-iii/firefly-iii/issues/12979) ([Translation/UI] Inconsistent French apostrophe ("aujourd'hui" vs "aujourd&#039;hui") on account charts) reported by @carlgregoire
+- [Issue 12980](https://github.com/firefly-iii/firefly-iii/issues/12980) (Display amounts in your primary currency not doing exchange rate properly in account page) reported by @kyalpha313
+- [Issue 12983](https://github.com/firefly-iii/firefly-iii/issues/12983) (links to inactive accounts not working after disabling all liabilities accounts) reported by @kyalpha313
+- [Issue 12988](https://github.com/firefly-iii/firefly-iii/issues/12988) (Auto-completion in Rules triggers offers phantom selectors) reported by @ppslim
+- [Issue 12990](https://github.com/firefly-iii/firefly-iii/issues/12990) (csp for reverse proxy broken in 6.7.7) reported by @zapovit
+- [Issue 12991](https://github.com/firefly-iii/firefly-iii/issues/12991) (Changing Date for recurring transaction changes Type of Repetition to "Every day") reported by @Tommy78649
+- [Issue 12992](https://github.com/firefly-iii/firefly-iii/issues/12992) ("Reset form after submission" doesn't reset tags) reported by @Tommy78649
+- [Issue 13003](https://github.com/firefly-iii/firefly-iii/issues/13003) (Firefly stopped sync exchange rates) reported by @Toshik1978
+- [Issue 13006](https://github.com/firefly-iii/firefly-iii/issues/13006) (No "Expires At" date for all my PATs) reported by @Toshik1978
 
 ### Security
 
