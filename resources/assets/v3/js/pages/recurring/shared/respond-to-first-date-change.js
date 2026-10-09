@@ -35,7 +35,7 @@ function parseRepetitionSuggestions(response) {
             // );
             opt = document.createElement("option");
             opt.value = k;
-            if('' !== currentValue && k.startsWith(currentValue)) {
+            if ("" !== currentValue && k.startsWith(currentValue)) {
                 opt.selected = true;
             }
             opt.label = data[k].label;
