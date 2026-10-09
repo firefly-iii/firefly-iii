@@ -36,8 +36,6 @@ use FireflyIII\Services\Internal\Destroy\CategoryDestroyService;
 use FireflyIII\Services\Internal\Update\CategoryUpdateService;
 use FireflyIII\Support\Repositories\UserGroup\UserGroupInterface;
 use FireflyIII\Support\Repositories\UserGroup\UserGroupTrait;
-use Illuminate\Database\Eloquent\Builder as EloquentBuilder;
-use Illuminate\Database\Query\JoinClause;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
@@ -190,7 +188,7 @@ class CategoryRepository implements CategoryRepositoryInterface, UserGroupInterf
      */
     public function getCategories(array $sort = [], array $filter = []): Collection
     {
-        $query = $this->user->categories()->with(['attachments']);
+        $query   = $this->user->categories()->with(['attachments']);
 
         // add sort parameters
         $allowed = config('firefly.allowed_db_sort_parameters.Category', []);
@@ -319,7 +317,7 @@ class CategoryRepository implements CategoryRepositoryInterface, UserGroupInterf
         /** @var CategoryFactory $factory */
         $factory  = app(CategoryFactory::class);
         $factory->setUser($this->user);
-        $color= array_key_exists('color', $data) ? $data['color'] : null;
+        $color    = array_key_exists('color', $data) ? $data['color'] : null;
         $category = $factory->findOrCreate(null, $data['name'], $color);
 
         if (null === $category) {

@@ -1,4 +1,5 @@
 <?php
+
 /*
  * ChecksSortType.php
  * Copyright (c) 2026 james@firefly-iii.org
@@ -23,7 +24,8 @@ declare(strict_types=1);
 
 namespace FireflyIII\Support\Http\Api;
 
-trait ChecksSortType {
+trait ChecksSortType
+{
     protected function isAllDatabaseSort(array $instructions, string $model): bool
     {
         if (0 === count($instructions)) {

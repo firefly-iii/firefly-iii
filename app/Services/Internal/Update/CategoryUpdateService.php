@@ -66,12 +66,12 @@ class CategoryUpdateService
         $changed = false;
         if (array_key_exists('name', $data)) {
             $category->name = $data['name'];
-            $changed = true;
+            $changed        = true;
         }
         if (array_key_exists('color', $data)) {
-            $data['color'] = '' === $data['color'] ? null : $data['color'];
+            $data['color']   = '' === $data['color'] ? null : $data['color'];
             $category->color = $data['color'];
-            $changed = true;
+            $changed         = true;
         }
         if ($changed) {
             $category->save();

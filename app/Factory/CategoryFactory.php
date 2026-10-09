@@ -71,7 +71,12 @@ class CategoryFactory
             }
 
             try {
-                return Category::create(['user_id' => $this->user->id, 'user_group_id' => $this->user->user_group_id, 'name' => $categoryName, 'color' => $color]);
+                return Category::create([
+                    'user_id'       => $this->user->id,
+                    'user_group_id' => $this->user->user_group_id,
+                    'name'          => $categoryName,
+                    'color'         => $color,
+                ]);
             } catch (QueryException $e) {
                 Log::error($e->getMessage());
                 Log::error($e->getTraceAsString());

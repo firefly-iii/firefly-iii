@@ -70,6 +70,7 @@ class DownloadExchangeRates implements ShouldQueue
             $newDate    = clone $date;
             $newDate->startOfDay();
             $this->date = $newDate;
+
             // Log::debug(sprintf('Created new DownloadExchangeRates("%s")', $this->date->format('Y-m-d')));
         }
     }

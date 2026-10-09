@@ -45,9 +45,9 @@ class UpdateRequest extends FormRequest
     public function getAll(): array
     {
         $fields = [
-            'name' => ['name', 'convertString'],
+            'name'  => ['name', 'convertString'],
             'color' => ['color', 'convertString'],
-            'notes' => ['notes', 'stringWithNewlines']
+            'notes' => ['notes', 'stringWithNewlines'],
         ];
 
         return $this->getAllData($fields);
@@ -62,7 +62,7 @@ class UpdateRequest extends FormRequest
         $category = $this->route()->parameter('category');
 
         return [
-            'name' => sprintf('min:1|max:100|uniqueObjectForUser:categories,name,%d', $category->id),
+            'name'  => sprintf('min:1|max:100|uniqueObjectForUser:categories,name,%d', $category->id),
             'notes' => ['nullable', 'string', 'max:65535'],
             'color' => ['nullable', 'string', 'max:6', 'regex:/^[0-9a-fA-F]{6}$/'],
         ];

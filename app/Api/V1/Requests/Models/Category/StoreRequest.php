@@ -44,7 +44,7 @@ class StoreRequest extends FormRequest
     public function getAll(): array
     {
         return [
-            'name' => $this->convertString('name'),
+            'name'  => $this->convertString('name'),
             'notes' => $this->stringWithNewlines('notes'),
             'color' => $this->convertString('color'),
         ];
@@ -56,7 +56,7 @@ class StoreRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'name' => ['required', 'min:1', 'max:100', 'uniqueObjectForUser:categories,name'],
+            'name'  => ['required', 'min:1', 'max:100', 'uniqueObjectForUser:categories,name'],
             'notes' => ['nullable', 'string', 'max:65535'],
             'color' => ['nullable', 'string', 'max:6', 'regex:/^[0-9a-fA-F]{6}$/'],
         ];
