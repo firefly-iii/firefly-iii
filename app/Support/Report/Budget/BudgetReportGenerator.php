@@ -292,10 +292,25 @@ class BudgetReportGenerator
         $limitId                                        = $limit->id;
         $limitCurrency                                  = $limit->transactionCurrency ?? $this->currency;
         $currencyId                                     = $limitCurrency->id;
-        $expenses                                       = $this->opsRepository->sumExpenses($this->start, $this->end, $this->accounts, new Collection()->push($budget));
-        $spent                                          = $expenses[$currencyId]['sum'] ?? '0';
-        $left                                           = -1 === bccomp(bcadd($limit->amount, $spent), '0') ? '0' : bcadd($limit->amount, $spent);
-        $overspent                                      = 1 === bccomp(bcmul($spent, '-1'), $limit->amount) ? bcadd($spent, $limit->amount) : '0';
+
+
+        // total expenses for entire budget limit period, if different from the report period.
+        if($this->start->isSameDay($limit->start_date) && $this->end->isSameDay($limit->end_date)) {
+            $expenses                                       = $this->opsRepository->sumExpenses($this->start, $this->end, $this->accounts, new Collection()->push($budget));
+            $spent                                          = $expenses[$currencyId]['sum'] ?? '0';
+            $left                                           = -1 === bccomp(bcadd($limit->amount, $spent), '0') ? '0' : bcadd($limit->amount, $spent);
+            $overspent                                      = 1 === bccomp(bcmul($spent, '-1'), $limit->amount) ? bcadd($spent, $limit->amount) : '0';
+        }
+        if($limit->start_date <= $this->start || $limit->end_date >= $this->end ) {
+            $expenses                                       = $this->opsRepository->sumExpenses($this->start, $this->end, $this->accounts, new Collection()->push($budget));
+            $totalExpenses                                       = $this->opsRepository->sumExpenses($limit->start_date, $limit->end_date, $this->accounts, new Collection()->push($budget));
+            $spent                                          = $expenses[$currencyId]['sum'] ?? '0';
+            $totalSpent = $totalExpenses[$currencyId]['sum'] ?? '0';
+            $left                                           = -1 === bccomp(bcadd($limit->amount, $totalSpent), '0') ? '0' : bcadd($limit->amount, $totalSpent);
+            $overspent                                      = 1 === bccomp(bcmul($totalSpent, '-1'), $limit->amount) ? bcadd($totalSpent, $limit->amount) : '0';
+        }
+
+
 
         $this->report['budgets'][$budgetId]['budget_limits'][$limitId] ??= [
             'budget_limit_id'         => $limitId,
