@@ -147,6 +147,13 @@ jobs:
           cp .env.example .env
           php artisan blade:lint
           rm .env
+      - name: Install Composer dependencies again
+        run: |
+          cp .env.example .env
+          # install all packages etc.
+          rm -rf vendor composer.lock
+          composer update --no-dev --no-scripts -q
+          rm .env
       - name: Crowdin action
         if: ${{ inputs.quick != true }}
         uses: crowdin/github-action@v3
