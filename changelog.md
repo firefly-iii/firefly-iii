@@ -31,6 +31,7 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 - [Issue 12992](https://github.com/firefly-iii/firefly-iii/issues/12992) ("Reset form after submission" doesn't reset tags) reported by @Tommy78649
 - [Issue 13003](https://github.com/firefly-iii/firefly-iii/issues/13003) (Firefly stopped sync exchange rates) reported by @Toshik1978
 - [Issue 13006](https://github.com/firefly-iii/firefly-iii/issues/13006) (No "Expires At" date for all my PATs) reported by @Toshik1978
+- #13016
 
 ### Security
 
