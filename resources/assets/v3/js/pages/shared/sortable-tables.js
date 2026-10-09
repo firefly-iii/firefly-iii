@@ -136,7 +136,7 @@ export class sortableTable {
         // some sort of trigger to parent?
         // console.warn('Here be push to parent!');
         this.parent.updateHistory(page, this.sortColumn, this.sortDirection, this.parent.filter);
-        this.parent.downloadAccounts();
+        this.parent.downloadObjects();
         e.preventDefault();
         queueMicrotask(() => {
             this.capturePageNavigation();

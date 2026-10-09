@@ -853,6 +853,9 @@ return [
             'name',
             'account_number_and_iban',
         ],
+        'Category' => [
+            'name'
+        ],
     ],
     'allowed_sort_parameters'              => [
         'Account' => [
@@ -879,9 +882,15 @@ return [
             'balance_difference',
             'pc_balance_difference',
         ],
+        'Category' => [
+            'id',
+            'name',
+            'last_activity'
+        ],
     ],
     'allowed_db_sort_parameters'           => [
         'Account' => ['id', 'order', 'name', 'iban', 'active', 'account_type_id'],
+        'Category' => ['name'],
     ],
 
 

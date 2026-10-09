@@ -29,6 +29,7 @@ use FireflyIII\Api\V1\Requests\Models\Account\ShowRequest;
 use FireflyIII\Models\Account;
 use FireflyIII\Repositories\Account\AccountRepositoryInterface;
 use FireflyIII\Support\Http\Api\AccountFilter;
+use FireflyIII\Support\Http\Api\ChecksSortType;
 use FireflyIII\Support\JsonApi\Enrichments\AccountEnrichment;
 use FireflyIII\Transformers\AccountTransformer;
 use FireflyIII\User;
@@ -44,6 +45,7 @@ use League\Fractal\Resource\Item;
 final class ShowController extends Controller
 {
     use AccountFilter;
+    use ChecksSortType;
 
     public const string RESOURCE_KEY = 'accounts';
 
@@ -151,22 +153,5 @@ final class ShowController extends Controller
         return response()->json($manager->createData($resource)->toArray())->header('Content-Type', self::CONTENT_TYPE);
     }
 
-    private function isAllDatabaseSort(array $instructions, string $model): bool
-    {
-        if (0 === count($instructions)) {
-            return true;
-        }
-        $config = config(sprintf('firefly.allowed_db_sort_parameters.%s', $model));
-        if (null === $config) {
-            return true;
-        }
-        foreach ($instructions as $item) {
-            $field = $item[0];
-            if (!in_array($field, $config, true)) {
-                return false;
-            }
-        }
 
-        return true;
-    }
 }
