@@ -301,7 +301,7 @@ class BudgetReportGenerator
             $left                                           = -1 === bccomp(bcadd($limit->amount, $spent), '0') ? '0' : bcadd($limit->amount, $spent);
             $overspent                                      = 1 === bccomp(bcmul($spent, '-1'), $limit->amount) ? bcadd($spent, $limit->amount) : '0';
         }
-        if($limit->start_date <= $this->start || $limit->end_date >= $this->end ) {
+        if(!$limit->start_date->isSameDay($this->start) || !$limit->end_date->isSameDay($this->end)) {
             $expenses                                       = $this->opsRepository->sumExpenses($this->start, $this->end, $this->accounts, new Collection()->push($budget));
             $totalExpenses                                       = $this->opsRepository->sumExpenses($limit->start_date, $limit->end_date, $this->accounts, new Collection()->push($budget));
             $spent                                          = $expenses[$currencyId]['sum'] ?? '0';
