@@ -43,10 +43,10 @@ export class sortableTable {
             this.updateHeaderClasses();
             this.addClickEvents();
         });
-        this.addWatch(parent);
+        this.addWatch();
     }
 
-    addWatch(parent) {
+    addWatch() {
         const params = new Proxy(new URLSearchParams(window.location.search), {
             get: (searchParams, prop) => searchParams.get(prop),
         });
@@ -77,7 +77,7 @@ export class sortableTable {
                 let storeValue = fromStore ? (fromStore.filter[column] ?? null) : null;
                 let valueToUse = null !== urlValue ? urlValue : storeValue;
 
-                parent.$watch("filter." + column, (newValue, oldValue) => {
+                this.parent.$watch("filter." + column, (newValue, oldValue) => {
                     // parent.filter[column] = newValue;
                     console.log(
                         'filter for column "' + column + '" changed from "' + oldValue + '" to "' + newValue + '"',
@@ -91,9 +91,9 @@ export class sortableTable {
                 if (null !== valueToUse && "" !== valueToUse) {
                     // console.log('DISABLE refresh');
                     this.disableRefresh = true;
-                    parent.isFiltering = true;
+                    this.parent.isFiltering = true;
                     // console.log('Setting initial filter value for column "' + column + '" to "' + valueToUse + '"');
-                    parent.filter[column] = valueToUse;
+                    this.parent.filter[column] = valueToUse;
                     // make sure the button is visible.
                     setTimeout(() => {
                         showSearchBox(th);
