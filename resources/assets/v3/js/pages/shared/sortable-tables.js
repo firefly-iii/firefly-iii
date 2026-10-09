@@ -29,6 +29,7 @@ export class sortableTable {
     parent = null;
     isFiltering = true;
     loadingNewSort = true;
+    filter = {};
 
     constructor(tableId) {
         this.tableId = tableId;
