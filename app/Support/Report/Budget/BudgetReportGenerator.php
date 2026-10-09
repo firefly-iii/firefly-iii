@@ -292,7 +292,9 @@ class BudgetReportGenerator
         $limitId                                        = $limit->id;
         $limitCurrency                                  = $limit->transactionCurrency ?? $this->currency;
         $currencyId                                     = $limitCurrency->id;
-
+        $spent = '0';
+        $overspent = '0';
+        $left = '0';
 
         // total expenses for entire budget limit period, if different from the report period.
         if($this->start->isSameDay($limit->start_date) && $this->end->isSameDay($limit->end_date)) {
