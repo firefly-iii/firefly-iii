@@ -45,7 +45,7 @@ class CategoryFactory
     /**
      * @throws FireflyException
      */
-    public function findOrCreate(?int $categoryId, ?string $categoryName, ?string $color): ?Category
+    public function findOrCreate(?int $categoryId, ?string $categoryName, ?string $color = null): ?Category
     {
         $categoryId   = (int) $categoryId;
         $categoryName = (string) $categoryName;
