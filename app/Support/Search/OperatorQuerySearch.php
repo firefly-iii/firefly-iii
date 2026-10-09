@@ -89,7 +89,7 @@ class OperatorQuerySearch implements SearchInterface
      */
     public function __construct()
     {
-        Log::debug('Constructed OperatorQuerySearch');
+        // Log::debug('Constructed OperatorQuerySearch');
         $this->operators          = new Collection();
         $this->validOperators     = array_keys(config('search.operators'));
         $this->startTime          = microtime(true);

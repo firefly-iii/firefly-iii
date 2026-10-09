@@ -195,8 +195,6 @@ class CategoryRepository implements CategoryRepositoryInterface, UserGroupInterf
         // add sort parameters
         $allowed = config('firefly.allowed_db_sort_parameters.Category', []);
         $sorted  = 0;
-        $sort   ??= [];
-        $filter ??= [];
         if (0 !== count($sort)) {
             foreach ($sort as $param) {
                 // basic sort:

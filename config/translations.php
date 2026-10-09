@@ -83,6 +83,7 @@ return [
                 'deposit',
                 'transfer',
                 'could_not_load_chart',
+                'webhook_was_triggered',
                 'inactive_account_link_js',
                 'active_account_link',
                 'inactive',

@@ -69,7 +69,7 @@ class WarnAboutBills implements ShouldQueue
 
         $this->force = false;
 
-        Log::debug(sprintf('Created new WarnAboutBills("%s")', $this->date->format('Y-m-d')));
+        // Log::debug(sprintf('Created new WarnAboutBills("%s")', $this->date->format('Y-m-d')));
     }
 
     /**

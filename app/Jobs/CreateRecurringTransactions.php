@@ -91,7 +91,7 @@ class CreateRecurringTransactions implements ShouldQueue
         $this->recurrences       = new Collection();
         $this->groups            = new Collection();
 
-        Log::debug(sprintf('Created new CreateRecurringTransactions("%s")', $this->date->format('Y-m-d')));
+        // Log::debug(sprintf('Created new CreateRecurringTransactions("%s")', $this->date->format('Y-m-d')));
     }
 
     public function getGroups(): Collection
