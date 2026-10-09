@@ -55,13 +55,13 @@ If you don't feel like skipping to the end, here are several ways to run and/or 
 Commercial options also exist. First, some sponsored options:
 
 - [Hostinger](https://www.hostg.xyz/aff_c?offer_id=815&aff_id=243699&url_id=6810)
-- [Pika pods](https://www.pikapods.com/pods?run=firefly-iii)
+- [PikaPods](https://www.pikapods.com/pods?run=firefly-iii)
 
 Both are excellent choices for affordable and safe Firefly III hosting. If you use any of their paid options a small reward is paid to the developer of Firefly III.
 
 Other options are available as well. These are not sponsored, but they do support the development of Firefly III.
 
-- You can [install it on LumaDock](https://lumadock.com/vps-hosting/firefly-iii). This is a paid service but includes the data importer as well. 
+- You can [install it on LumaDock](https://lumadock.com/vps-hosting/firefly-iii). This is a paid service and includes the data importer as well. 
 - You can [install it using Softaculous](https://www.softaculous.com/softaculous/apps/others/Firefly_III).
 - You can [install it using AMPPS](https://www.ampps.com/).
 - You can [install it on Cloudron](https://cloudron.io/store/org.fireflyiii.cloudronapp.html).
@@ -100,7 +100,7 @@ Browser testing via TestMu AI:
 <img src="https://raw.githubusercontent.com/firefly-iii/firefly-iii/develop/.github/assets/img/testmu.png" alt="TestMu AI" style="vertical-align: middle;" width="250" />
 </a>
 
-Firefly III is also sponsored by [Hostinger](https://www.hostg.xyz/aff_c?offer_id=815&aff_id=243699&url_id=6810) and [Pika Pods](https://www.pikapods.com/pods?run=firefly-iii) with a kickback program that pays me a small amount for every new customer that signs up for their hosting services. Consider using them if you do not want to self-host Firefly III.
+Firefly III is also sponsored by [Hostinger](https://www.hostg.xyz/aff_c?offer_id=815&aff_id=243699&url_id=6810) and [PikaPods](https://www.pikapods.com/pods?run=firefly-iii) with a kickback program that pays me a small amount for every new customer that signs up for their hosting services. Consider using them if you do not want to self-host Firefly III.
 
 ## Do you need help, or do you want to get in touch?
 
