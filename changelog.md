@@ -15,7 +15,6 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 
 ### Fixed
 
-- [Issue 12965](https://github.com/firefly-iii/firefly-iii/issues/12965) (Unnecessary float conversion in input field when creating or editing transactions) reported by @JC5
 - #12841
 - #12847
 - #12965
