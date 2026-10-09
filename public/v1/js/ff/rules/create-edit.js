@@ -401,7 +401,7 @@ function updateTriggerInput(selectList) {
         case 'currency_is':
         case 'foreign_currency_is':
             console.log('Select list value is ' + selectList.val() + ', so input needs auto complete.');
-            createAutoComplete(inputResult, 'api/v1/autocomplete/currencies-with-code');
+            createAutoComplete(inputResult, 'api/v1/autocomplete/currencies');
             break;
         case 'amount_less':
         case 'amount_more':
