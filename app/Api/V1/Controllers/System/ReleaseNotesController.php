@@ -59,16 +59,14 @@ final class ReleaseNotesController extends Controller
         $notes  = null;
         $parsed = null;
         if ($disk->exists($file)) {
-            $notes  = trim((string)$disk->get($file));
+            $notes  = trim((string) $disk->get($file));
             $parsed = trim(parse_markdown($notes));
         }
 
-        return response()->json(
-            [
-                'version'                => $ogVersion,
-                'release_notes'          => $parsed,
-                'release_notes_markdown' => $notes,
-            ]
-        );
+        return response()->json([
+            'version'                => $ogVersion,
+            'release_notes'          => $parsed,
+            'release_notes_markdown' => $notes,
+        ]);
     }
 }
