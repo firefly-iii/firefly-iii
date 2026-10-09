@@ -88,7 +88,10 @@ let index = function () {
                             if (null !== releaseNotes) {
                                 let element = document.getElementById("releaseNotesModal");
                                 let modal = new Modal(element, {});
-                                element.querySelector(".modal-title").innerHTML = i18next.t("firefly.release_notes_title", { version: version },);
+                                element.querySelector(".modal-title").innerHTML = i18next.t(
+                                    "firefly.release_notes_title",
+                                    { version: version },
+                                );
                                 element.querySelector(".modal-body").innerHTML = releaseNotes;
                                 modal.show();
                                 element.addEventListener("hidden.bs.modal", function () {
