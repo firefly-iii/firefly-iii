@@ -34,22 +34,41 @@ final class ReleaseNotesController extends Controller
     /**
      * @throws FireflyException
      */
-    public function index(): JsonResponse
+    public function index(?string $version = null): JsonResponse
     {
-        $version = trim(str_replace('/', '-', config('firefly.version')));
-        $disk    = Storage::disk('release-notes');
-        $file    = sprintf('%s.md', $version);
-        $notes   = null;
-        $parsed  = null;
+        if (null !== $version) {
+            // remove "v" from version if it is there.
+            if (str_starts_with($version, 'v')) {
+                $version = substr($version, 1);
+            }
+            if (str_starts_with($version, 'develop-')) {
+                $version = sprintf('develop/%s', substr($version, 8));
+            }
+            $version   = substr($version, 0, 18);
+            $ogVersion = $version;
+        }
+        if (null === $version) {
+            $version   = config('firefly.version');
+            $version   = trim(str_replace('/', '-', $version));
+            $ogVersion = config('firefly.version');
+        }
+
+        // find it on the disk.
+        $disk   = Storage::disk('release-notes');
+        $file   = sprintf('%s.md', trim(str_replace('/', '-', $version)));
+        $notes  = null;
+        $parsed = null;
         if ($disk->exists($file)) {
-            $notes  = trim((string) $disk->get($file));
+            $notes  = trim((string)$disk->get($file));
             $parsed = trim(parse_markdown($notes));
         }
 
-        return response()->json([
-            'version'                => config('firefly.version'),
-            'release_notes'          => $parsed,
-            'release_notes_markdown' => $notes,
-        ]);
+        return response()->json(
+            [
+                'version'                => $ogVersion,
+                'release_notes'          => $parsed,
+                'release_notes_markdown' => $notes,
+            ]
+        );
     }
 }
