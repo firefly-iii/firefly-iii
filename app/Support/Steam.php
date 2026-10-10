@@ -883,8 +883,8 @@ class Steam
     public function secondsAsTime(int $seconds): string
     {
         $seconds          = $seconds < 0 ? abs($seconds) : $seconds;
-        $weeks            = floor($seconds / 604800);
-        $days             = floor($seconds / 86400);
+        $weeks            = floor($seconds / 604_800);
+        $days             = floor($seconds / 86_400);
         $hours            = floor($seconds / 3600);
         $minutes          = floor(($seconds % 3600) / 60);
         $remainingSeconds = $seconds % 60;
