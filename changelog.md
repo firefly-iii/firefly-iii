@@ -22,7 +22,7 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 - [Issue 12968](https://github.com/firefly-iii/firefly-iii/issues/12968) (Report option Income/Outcome Account show multiple duplicate account in the "Select Account List") reported by @no-coders
 - [Issue 12973](https://github.com/firefly-iii/firefly-iii/issues/12973) (Text on secondary buttons is hard to read in light theme) reported by @Tommy78649
 - [Issue 12978](https://github.com/firefly-iii/firefly-iii/issues/12978) (When making an internal transfer between asset accounts, amount shows a minus sign on both accounts) reported by @rdjong80
-- [Issue 12979](https://github.com/firefly-iii/firefly-iii/issues/12979) ([Translation/UI] Inconsistent French apostrophe ("aujourd'hui" vs "aujourd&[Issue 39](https://github.com/firefly-iii/firefly-iii/issues/39) (Allow users to create transactions with other currencies) reported by @JC5;hui") on account charts) reported by @carlgregoire
+- [Issue 12979](https://github.com/firefly-iii/firefly-iii/issues/12979) (\[Translation/UI\] Inconsistent French apostrophe ("aujourd'hui" vs "aujourd&;hui") on account charts) reported by @carlgregoire
 - [Issue 12980](https://github.com/firefly-iii/firefly-iii/issues/12980) (Display amounts in your primary currency not doing exchange rate properly in account page) reported by @kyalpha313
 - [Issue 12983](https://github.com/firefly-iii/firefly-iii/issues/12983) (links to inactive accounts not working after disabling all liabilities accounts) reported by @kyalpha313
 - [Issue 12988](https://github.com/firefly-iii/firefly-iii/issues/12988) (Auto-completion in Rules triggers offers phantom selectors) reported by @ppslim
@@ -31,7 +31,6 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 - [Issue 12992](https://github.com/firefly-iii/firefly-iii/issues/12992) ("Reset form after submission" doesn't reset tags) reported by @Tommy78649
 - [Issue 13003](https://github.com/firefly-iii/firefly-iii/issues/13003) (Firefly stopped sync exchange rates) reported by @Toshik1978
 - [Issue 13006](https://github.com/firefly-iii/firefly-iii/issues/13006) (No "Expires At" date for all my PATs) reported by @Toshik1978
-- [Issue 13016](https://github.com/firefly-iii/firefly-iii/issues/13016) (Test group rules endpoint always returns no results unless optional accounts argument is passed) reported by @oerkel47
 
 ### Security
 
@@ -41,6 +40,7 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 
 - Added new end point for release notes.
 - Fixed missing info for delete data endpoint.
+- [Issue 13016](https://github.com/firefly-iii/firefly-iii/issues/13016) (Test group rules endpoint always returns no results unless optional accounts argument is passed) reported by @oerkel47
 
 ## v6.7.7 - 2026-10-04
 
