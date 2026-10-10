@@ -119,7 +119,7 @@ jobs:
           cp .env.example .env
           # install all packages etc.
           rm -rf vendor composer.lock
-          composer update --no-scripts -q
+          composer update --no-scripts
           rm .env
       - name: Run CI
         if: ${{ inputs.quick != true }}
@@ -152,7 +152,7 @@ jobs:
           cp .env.example .env
           # install all packages etc.
           rm -rf vendor composer.lock
-          composer update --no-dev --no-scripts -q
+          composer update --no-dev -q
           rm .env
       - name: Crowdin action
         if: ${{ inputs.quick != true }}
