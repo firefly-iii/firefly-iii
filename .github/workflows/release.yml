@@ -152,7 +152,7 @@ jobs:
           cp .env.example .env
           # install all packages etc.
           rm -rf vendor composer.lock
-          composer update --no-dev -q
+          composer update --no-dev
           rm .env
       - name: Crowdin action
         if: ${{ inputs.quick != true }}
