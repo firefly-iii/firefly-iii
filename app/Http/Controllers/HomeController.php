@@ -93,12 +93,13 @@ final class HomeController extends Controller
         $label         = $request->input('label');
         $isCustomRange = false;
 
-        //Log::debug('dateRange: Received dateRange', ['start' => $stringStart, 'end' => $stringEnd, 'label' => $request->input('label')]);
+        // Log::debug('dateRange: Received dateRange', ['start' => $stringStart, 'end' => $stringEnd, 'label' => $request->input('label')]);
         // check if the label is "everything" or "Custom range" which will betray
         // a possible problem with the budgets.
         if ($label === (string) trans('firefly.everything') || $label === (string) trans('firefly.customRange')) {
             $isCustomRange = true;
-            //Log::debug('Range is now marked as "custom".');
+
+            // Log::debug('Range is now marked as "custom".');
         }
 
         $diff          = $start->diffInDays($end, true) + 1;
@@ -108,11 +109,11 @@ final class HomeController extends Controller
         }
 
         $request->session()->put('is_custom_range', $isCustomRange);
-//        Log::debug(sprintf('Set is_custom_range to %s', var_export($isCustomRange, return: true)));
+        //        Log::debug(sprintf('Set is_custom_range to %s', var_export($isCustomRange, return: true)));
         $request->session()->put('start', $start);
-//        Log::debug(sprintf('Set start to %s', $start->format('Y-m-d H:i:s')));
+        //        Log::debug(sprintf('Set start to %s', $start->format('Y-m-d H:i:s')));
         $request->session()->put('end', $end);
-//        Log::debug(sprintf('Set end to %s', $end->format('Y-m-d H:i:s')));
+        //        Log::debug(sprintf('Set end to %s', $end->format('Y-m-d H:i:s')));
         if ('true' === $request->input('redirect')) {
             return redirect(route('index').$this->requestFrom);
         }
