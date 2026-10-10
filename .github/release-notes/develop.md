@@ -11,8 +11,8 @@ The changelog for this release may not be up-to-date, so it is not included. How
 
 ## Installation and upgrade instructions
 
-* Please read the installation instructions for [Docker](https://docs.firefly-iii.org/how-to/firefly-iii/installation/docker/), [Portainer](https://docs.firefly-iii.org/how-to/firefly-iii/installation/portainer/), [Kubernetes](https://docs.firefly-iii.org/how-to/firefly-iii/installation/kubernetes/) or [self-managed servers](https://docs.firefly-iii.org/how-to/firefly-iii/installation/self-managed/).
-* Alternatively, read the upgrade instructions for [Docker](https://docs.firefly-iii.org/how-to/firefly-iii/upgrade/docker/), [Kubernetes](https://docs.firefly-iii.org/how-to/firefly-iii/upgrade/kubernetes/) or [self-managed servers](https://docs.firefly-iii.org/how-to/firefly-iii/upgrade/self-managed/)
+- Please read the installation instructions for [Docker](https://docs.firefly-iii.org/how-to/firefly-iii/installation/docker/), [Portainer](https://docs.firefly-iii.org/how-to/firefly-iii/installation/portainer/), [Kubernetes](https://docs.firefly-iii.org/how-to/firefly-iii/installation/kubernetes/) or [self-managed servers](https://docs.firefly-iii.org/how-to/firefly-iii/installation/self-managed/).
+- Alternatively, read the upgrade instructions for [Docker](https://docs.firefly-iii.org/how-to/firefly-iii/upgrade/docker/), [Kubernetes](https://docs.firefly-iii.org/how-to/firefly-iii/upgrade/kubernetes/) or [self-managed servers](https://docs.firefly-iii.org/how-to/firefly-iii/upgrade/self-managed/)
 
 The releases are signed, and you can verify them using the [Firefly III releases PGP key](https://docs.firefly-iii.org/explanation/more-information/signatures/).
 

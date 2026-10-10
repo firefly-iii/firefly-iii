@@ -19,11 +19,11 @@
  */
 
 import Summary from "../../api/summary/index.js";
-import { format } from "date-fns";
 import { getVariables } from "../../store/get-variables.js";
 import formatMoney from "../../util/format-money.js";
 import { getCacheKey } from "../../support/get-cache-key.js";
 import { cleanupCache } from "../../support/cleanup-cache.js";
+import formatDate from "../../util/format-date.js";
 
 let afterPromises = false;
 export default () => ({
@@ -72,7 +72,7 @@ export default () => ({
         // get stuff
         let getter = new Summary();
         getter
-            .get(format(start, "yyyy-MM-dd"), format(end, "yyyy-MM-dd"), null)
+            .get(formatDate(start, "yyyy-MM-dd"), formatDate(end, "yyyy-MM-dd"), null)
             .then((response) => {
                 this.boxData = response.data;
                 window.store.set(boxesCacheKey, response.data);

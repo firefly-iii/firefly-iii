@@ -1732,6 +1732,9 @@ return [
     'select_source_account'                               => 'Please select or type a valid source account name',
     'select_dest_account'                                 => 'Please select or type a valid destination account name',
 
+    'filter_placeholder_name'                             => 'Filter on name...',
+    'filter_placeholder_account_number_and_iban'          => 'Filter on account number...',
+
     // convert stuff:
     'convert_is_already_type_Withdrawal'                  => 'This transaction is already a withdrawal',
     'convert_is_already_type_Deposit'                     => 'This transaction is already a deposit',
@@ -1978,8 +1981,8 @@ return [
     'account_locked_currency'                             => 'The currency of this account must remain :name as long as piggy banks are linked to it.',
     'i_am_owed_amount'                                    => 'I am owed amount',
     'i_owe_amount'                                        => 'I owe amount',
-    'may_inactive_accounts_link'                          => 'If all your accounts are inactive, <a href="{{url}}">you can view them on this separate page</a>.',
-    'no_inactive_accounts'                                => 'You have no inactive (archived) accounts. <a href="{{url}}">Go back to your list of active accounts</a>.',
+    'may_inactive_accounts_link'                          => 'If all your accounts are inactive, you can view them on this separate page.',
+    'no_inactive_accounts'                                => 'You have no inactive (archived) accounts. Go back to your list of active accounts.',
     'inactive_account_link'                               => 'You have :count inactive (archived) account, which you can view on this separate page.|You have :count inactive (archived) accounts, which you can view on this separate page.',
     'inactive_account_link_js'                            => 'You can view inactive accounts on this separate page.',
     'all_accounts_inactive'                               => 'These are your inactive accounts.',
@@ -2771,7 +2774,9 @@ return [
     '(partially) reimburses'                              => '(partially) reimburses',
     'explain_related'                                     => 'You can link transactions. The link doesn\'t do anything YET, but this is on my list.',
     'no_relations_yet'                                    => 'This transaction has no relations to other transactions (yet).',
-    'auto_save_active'                                    => 'Changes are saved automatically.',
+    'auto_save_active'                                    => 'Changes are saved automatically in the background.',
+    'release_notes_title'                                 => 'Release notes for Firefly III {{version}}',
+    'notes_again_in_two_days'                             => 'Check this box to see the release notes again in two days.',
 
     // split a transaction:
     'splits'                                              => 'Splits',

@@ -20,7 +20,6 @@ body:
         - label: I'm a real person and wrote this bug without assistance from AI.
           required: false
 
-
   - type: textarea
     attributes:
       label: Description

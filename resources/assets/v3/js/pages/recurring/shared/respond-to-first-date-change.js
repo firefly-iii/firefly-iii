@@ -23,6 +23,9 @@ import { api } from "../../../boot/axios";
 function parseRepetitionSuggestions(response) {
     let data = response.data;
     let select = document.getElementById("ffInput_repetition_type");
+    // currently selected value:
+    let currentValue = select.value.split(",")[0];
+
     select.innerHTML = "";
     let opt;
     for (var k in data) {
@@ -32,6 +35,9 @@ function parseRepetitionSuggestions(response) {
             // );
             opt = document.createElement("option");
             opt.value = k;
+            if ("" !== currentValue && k.startsWith(currentValue)) {
+                opt.selected = true;
+            }
             opt.label = data[k].label;
             opt.text = data[k].label;
             if (data[k].selected) {

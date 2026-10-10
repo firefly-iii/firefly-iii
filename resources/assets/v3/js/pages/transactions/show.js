@@ -23,7 +23,6 @@ import sidebar from "../../pages/shared/sidebar.js";
 import dates from "../shared/dates.js";
 import i18next from "i18next";
 import Get from "../../api/model/transaction/get.js";
-import { format } from "date-fns";
 import Alpine from "@alpinejs/csp";
 import "bootstrap";
 import L from "leaflet";
@@ -31,6 +30,7 @@ import "leaflet/dist/leaflet.css";
 import markerIcon from "leaflet/dist/images/marker-icon.png";
 import markerRetinaIcon from "leaflet/dist/images/marker-icon-2x.png";
 import shadow from "leaflet/dist/images/marker-shadow.png";
+import formatDate from "../../util/format-date.js";
 
 window.enableDates = false;
 
@@ -89,9 +89,9 @@ let show = function () {
                     if (Object.hasOwn(info.attributes.transactions, i)) {
                         let current = info.attributes.transactions[i];
                         current.dateObject = new Date(current.date);
-                        current.dateFormatted = format(
+                        current.dateFormatted = formatDate(
                             current.dateObject,
-                            window.i18next.t("config.date_time_fns", { lng: locale }),
+                            i18next.t("config.date_time_fns", { lng: locale }),
                             locale,
                         );
                         console.log("Date formatted is", current.dateFormatted);

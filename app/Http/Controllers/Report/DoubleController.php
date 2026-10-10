@@ -120,10 +120,10 @@ final class DoubleController extends Controller
      */
     public function avgIncome(Collection $accounts, Collection $doubles, Carbon $start, Carbon $end)
     {
-        $expanded = $this->accountRepository->expandWithDoubles($doubles);
-        $accounts = $accounts->merge($expanded);
-        $spent    = $this->opsRepository->listIncome($start, $end, $accounts);
-        $result   = [];
+        $expanded        = $this->accountRepository->expandWithDoubles($doubles);
+        $accounts        = $accounts->merge($expanded);
+        $spent           = $this->opsRepository->listIncome($start, $end, $accounts);
+        $result          = [];
         foreach ($spent as $currency) {
             foreach ($currency['transaction_journals'] as $journal) {
                 $destinationId             = $journal['destination_account_id'];
@@ -148,11 +148,12 @@ final class DoubleController extends Controller
         }
         // sort by amount_float
         // sort temp array by amount.
-        $amounts  = array_column($result, 'avg_float');
+        $amounts         = array_column($result, 'avg_float');
         array_multisort($amounts, SORT_DESC, $result);
+        $incomeTopLength = count(array_keys($result));
 
         try {
-            $result = view('reports.double.partials.avg-income', ['result' => $result])->render();
+            $result = view('reports.double.partials.avg-income', ['result' => $result, 'incomeTopLength' => $incomeTopLength])->render();
         } catch (Throwable $e) {
             Log::error(sprintf('Could not render reports.partials.budget-period: %s', $e->getMessage()));
             $result = sprintf('Could not render view: %s', $e->getMessage());
@@ -431,10 +432,10 @@ final class DoubleController extends Controller
      */
     public function topIncome(Collection $accounts, Collection $doubles, Carbon $start, Carbon $end)
     {
-        $expanded = $this->accountRepository->expandWithDoubles($doubles);
-        $accounts = $accounts->merge($expanded);
-        $spent    = $this->opsRepository->listIncome($start, $end, $accounts);
-        $result   = [];
+        $expanded        = $this->accountRepository->expandWithDoubles($doubles);
+        $accounts        = $accounts->merge($expanded);
+        $spent           = $this->opsRepository->listIncome($start, $end, $accounts);
+        $result          = [];
         foreach ($spent as $currency) {
             foreach ($currency['transaction_journals'] as $journal) {
                 $result[] = [
@@ -457,11 +458,12 @@ final class DoubleController extends Controller
         }
         // sort by amount_float
         // sort temp array by amount.
-        $amounts  = array_column($result, 'amount_float');
+        $amounts         = array_column($result, 'amount_float');
         array_multisort($amounts, SORT_DESC, $result);
+        $incomeTopLength = count(array_keys($result));
 
         try {
-            $result = view('reports.double.partials.top-income', ['result' => $result])->render();
+            $result = view('reports.double.partials.top-income', ['result' => $result, 'incomeTopLength' => $incomeTopLength])->render();
         } catch (Throwable $e) {
             Log::error(sprintf('Could not render reports.partials.budget-period: %s', $e->getMessage()));
             $result = sprintf('Could not render view: %s', $e->getMessage());

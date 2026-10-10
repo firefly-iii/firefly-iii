@@ -301,8 +301,8 @@ final class CategoryController extends Controller
      */
     public function avgIncome(Collection $accounts, Collection $categories, Carbon $start, Carbon $end)
     {
-        $spent   = $this->opsRepository->listIncome($start, $end, $accounts, $categories);
-        $result  = [];
+        $spent           = $this->opsRepository->listIncome($start, $end, $accounts, $categories);
+        $result          = [];
         foreach ($spent as $currency) {
             foreach ($currency['categories'] as $category) {
                 foreach ($category['transaction_journals'] as $journal) {
@@ -329,11 +329,12 @@ final class CategoryController extends Controller
         }
         // sort by amount_float
         // sort temp array by amount.
-        $amounts = array_column($result, 'avg_float');
+        $amounts         = array_column($result, 'avg_float');
         array_multisort($amounts, SORT_DESC, $result);
+        $incomeTopLength = count(array_keys($result));
 
         try {
-            $result = view('reports.category.partials.avg-income', ['result' => $result])->render();
+            $result = view('reports.category.partials.avg-income', ['result' => $result, 'incomeTopLength' => $incomeTopLength])->render();
         } catch (Throwable $e) {
             Log::error(sprintf('Could not render reports.partials.budget-period: %s', $e->getMessage()));
             $result = sprintf('Could not render view: %s', $e->getMessage());
@@ -351,10 +352,10 @@ final class CategoryController extends Controller
      */
     public function categories(Collection $accounts, Collection $categories, Carbon $start, Carbon $end): Factory|\Illuminate\Contracts\View\View
     {
-        $spent  = $this->opsRepository->listExpenses($start, $end, $accounts, $categories);
-        $earned = $this->opsRepository->listIncome($start, $end, $accounts, $categories);
-        $sums   = [];
-        $report = [];
+        $spent           = $this->opsRepository->listExpenses($start, $end, $accounts, $categories);
+        $earned          = $this->opsRepository->listIncome($start, $end, $accounts, $categories);
+        $sums            = [];
+        $report          = [];
 
         /** @var Category $category */
         foreach ($categories as $category) {
@@ -444,8 +445,9 @@ final class CategoryController extends Controller
                 }
             }
         }
+        $incomeTopLength = count($report);
 
-        return view('reports.category.partials.categories', ['sums' => $sums, 'report' => $report]);
+        return view('reports.category.partials.categories', ['sums' => $sums, 'report' => $report, 'incomeTopLength' => $incomeTopLength]);
     }
 
     /**
@@ -692,8 +694,8 @@ final class CategoryController extends Controller
      */
     public function topIncome(Collection $accounts, Collection $categories, Carbon $start, Carbon $end)
     {
-        $spent   = $this->opsRepository->listIncome($start, $end, $accounts, $categories);
-        $result  = [];
+        $spent           = $this->opsRepository->listIncome($start, $end, $accounts, $categories);
+        $result          = [];
         foreach ($spent as $currency) {
             foreach ($currency['categories'] as $category) {
                 foreach ($category['transaction_journals'] as $journal) {
@@ -718,11 +720,12 @@ final class CategoryController extends Controller
         }
         // sort by amount_float
         // sort temp array by amount.
-        $amounts = array_column($result, 'amount_float');
+        $amounts         = array_column($result, 'amount_float');
         array_multisort($amounts, SORT_DESC, $result);
+        $incomeTopLength = count(array_keys($result));
 
         try {
-            $result = view('reports.category.partials.top-income', ['result' => $result])->render();
+            $result = view('reports.category.partials.top-income', ['result' => $result, 'incomeTopLength' => $incomeTopLength])->render();
         } catch (Throwable $e) {
             Log::debug(sprintf('Could not render reports.partials.budget-period: %s', $e->getMessage()));
             $result = sprintf('Could not render view: %s', $e->getMessage());

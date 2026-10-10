@@ -79,7 +79,7 @@ interface CategoryRepositoryInterface
     /**
      * Returns a list of all the categories belonging to a user.
      */
-    public function getCategories(): Collection;
+    public function getCategories(array $sort = [], array $filter = []): Collection;
 
     public function getNoteText(Category $category): ?string;
 

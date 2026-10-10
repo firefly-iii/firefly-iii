@@ -264,24 +264,42 @@ final class BudgetController extends Controller
      */
     private function processBudgetAndLimits(Budget $budget, Carbon $start, Carbon $end): array
     {
+        Log::debug('Now in processBudgetAndLimits()');
         // prep function
         $converter   = new ExchangeRateConverter();
         $currencies  = [$this->primaryCurrency->id => $this->primaryCurrency];
         $rows        = [];
         // get all limits:
         $limits      = $this->blRepository->getBudgetLimits($budget, $start, $end);
-        $spentAll    = $this->opsRepository->listExpenses($start, $end, null, new Collection()->push($budget));
-        $allExpenses = $this->processExpenses($budget->id, $spentAll, $start, $end);
+
+        // expand the start and end date to include whatever the limits are.
+        $allStart    = clone $start;
+        $allEnd      = clone $end;
+        foreach ($limits as $limit) {
+            if ($limit->start_date < $allStart) {
+                $allStart = clone $limit->start_date;
+            }
+            if ($limit->end_date > $allEnd) {
+                $allEnd = clone $limit->end_date;
+            }
+        }
+
+        $spentAll    = $this->opsRepository->listExpenses($allStart, $allEnd, null, new Collection()->push($budget));
+        $allExpenses = $this->processExpenses($budget->id, $spentAll, $allStart, $allStart);
+        Log::debug('All expenses', $allExpenses);
 
         /** @var BudgetLimit $limit */
         foreach ($limits as $limit) {
+            Log::debug(sprintf('Now processing limit #%d', $limit->id));
             $spentLimit    = $this->opsRepository->listExpenses($limit->start_date, $limit->end_date, null, new Collection()->push($budget));
             $limitExpenses = $this->processExpenses($budget->id, $spentLimit, $start, $end);
 
             foreach ($limitExpenses as $currencyId => $row) {
+                Log::debug(sprintf('[a] allExpenses spent is now %s', $allExpenses[$currencyId]['spent'] ?? '0'));
                 // also process the data in $allExpenses.
                 if (array_key_exists($currencyId, $allExpenses)) {
-                    $allExpenses[$currencyId]['spent'] = bcadd($allExpenses[$currencyId]['spent'], bcmul($row['spent'], '-1'));
+                    $allExpenses[$currencyId]['spent'] = bcadd($allExpenses[$currencyId]['spent'], Steam::positive($row['spent']));
+                    Log::debug(sprintf('[b] allExpenses spent became %s (because %s)', $allExpenses[$currencyId]['spent'], $row['spent']));
                 }
 
                 // process entry for single limit:

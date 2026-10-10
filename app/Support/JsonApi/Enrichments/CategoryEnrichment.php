@@ -25,8 +25,10 @@ declare(strict_types=1);
 namespace FireflyIII\Support\JsonApi\Enrichments;
 
 use Carbon\Carbon;
+use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Models\Category;
 use FireflyIII\Models\Note;
+use FireflyIII\Models\TransactionJournal;
 use FireflyIII\Models\UserGroup;
 use FireflyIII\Repositories\Category\OperationsRepositoryInterface;
 use FireflyIII\User;
@@ -36,16 +38,18 @@ use Illuminate\Support\Collection;
 class CategoryEnrichment implements EnrichmentInterface
 {
     private Collection $collection;
-    private array   $earned      = [];
-    private ?Carbon $end         = null;
-    private array   $ids         = [];
-    private array   $notes       = [];
-    private array   $pcEarned    = [];
-    private array   $pcSpent     = [];
-    private array   $pcTransfers = [];
-    private array   $spent       = [];
-    private ?Carbon $start       = null;
-    private array   $transfers   = [];
+    private array   $earned       = [];
+    private ?Carbon $end          = null;
+    private array   $ids          = [];
+    private array   $sort         = [];
+    private array   $notes        = [];
+    private array   $pcEarned     = [];
+    private array   $pcSpent      = [];
+    private array   $pcTransfers  = [];
+    private array   $spent        = [];
+    private ?Carbon $start        = null;
+    private array   $transfers    = [];
+    private array   $lastActivity = [];
     private User $user;
     private UserGroup $userGroup;
 
@@ -55,9 +59,11 @@ class CategoryEnrichment implements EnrichmentInterface
         $this->collectIds();
         $this->collectNotes();
         $this->collectTransactions();
+        $this->collectLastActivity();
         $this->appendCollectedData();
+        $this->sortData();
 
-        return $collection;
+        return $this->collection;
     }
 
     public function enrichSingle(array|Model $model): array|Model
@@ -72,6 +78,11 @@ class CategoryEnrichment implements EnrichmentInterface
     public function setEnd(?Carbon $end): void
     {
         $this->end = $end;
+    }
+
+    public function setSort(array $sort): void
+    {
+        $this->sort = $sort;
     }
 
     public function setStart(?Carbon $start): void
@@ -95,13 +106,14 @@ class CategoryEnrichment implements EnrichmentInterface
         $this->collection = $this->collection->map(function (Category $item): Category {
             $id         = (int) $item->id;
             $meta       = [
-                'notes'        => $this->notes[$id] ?? null,
-                'spent'        => $this->spent[$id] ?? null,
-                'pc_spent'     => $this->pcSpent[$id] ?? null,
-                'earned'       => $this->earned[$id] ?? null,
-                'pc_earned'    => $this->pcEarned[$id] ?? null,
-                'transfers'    => $this->transfers[$id] ?? null,
-                'pc_transfers' => $this->pcTransfers[$id] ?? null,
+                'last_activity' => $this->lastActivity[$id] ?? null,
+                'notes'         => $this->notes[$id] ?? null,
+                'spent'         => $this->spent[$id] ?? null,
+                'pc_spent'      => $this->pcSpent[$id] ?? null,
+                'earned'        => $this->earned[$id] ?? null,
+                'pc_earned'     => $this->pcEarned[$id] ?? null,
+                'transfers'     => $this->transfers[$id] ?? null,
+                'pc_transfers'  => $this->pcTransfers[$id] ?? null,
             ];
             $item->meta = $meta;
 
@@ -116,6 +128,27 @@ class CategoryEnrichment implements EnrichmentInterface
             $this->ids[] = (int) $category->id;
         }
         $this->ids = array_unique($this->ids);
+    }
+
+    private function collectLastActivity(): void
+    {
+        $query = TransactionJournal::query()
+            ->leftJoin('category_transaction_journal', 'transaction_journals.id', '=', 'category_transaction_journal.transaction_journal_id')
+            ->whereIn('category_transaction_journal.category_id', $this->ids)
+            ->selectRaw('category_transaction_journal.category_id, MAX(transaction_journals.date) as last_activity')
+            ->groupBy('category_transaction_journal.category_id')
+        ;
+        if (null !== $this->end) {
+            $query->where('transaction_journals.date', '<=', $this->end);
+        }
+        if (null !== $this->start) {
+            $query->where('transaction_journals.date', '>=', $this->start);
+        }
+
+        $set   = $query->get(['category_transaction_journal.category_id', 'last_activity']);
+        foreach ($set as $entry) {
+            $this->lastActivity[(int) $entry->category_id] = Carbon::parse($entry->last_activity, config('app.timezone'));
+        }
     }
 
     private function collectNotes(): void
@@ -153,6 +186,35 @@ class CategoryEnrichment implements EnrichmentInterface
                 $this->pcEarned[$id]    = array_values($opsRepository->sumCollectedTransactionsByCategory($income, $item, 'positive', true));
                 $this->transfers[$id]   = array_values($opsRepository->sumCollectedTransactionsByCategory($transfers, $item, 'positive'));
                 $this->pcTransfers[$id] = array_values($opsRepository->sumCollectedTransactionsByCategory($transfers, $item, 'positive', true));
+            }
+        }
+    }
+
+    private function sortData(): void
+    {
+        $dbParams = config('firefly.allowed_db_sort_parameters.Category', []);
+
+        /** @var array $parameter */
+        foreach ($this->sort as $parameter) {
+            if (in_array($parameter[0], $dbParams, true)) {
+                continue;
+            }
+            $field = $parameter[0];
+
+            switch ($field) {
+                default:
+                    throw new FireflyException(sprintf('Category enrichment cannot sort on field "%s"', $field));
+
+                case 'last_activity':
+                    $this->collection = $this->collection->sortBy(
+                        static fn (Category $category) => null === $category->meta['last_activity']
+                            ? '0000-00-00 00:00:00'
+                            : $category->meta['last_activity']->format('Y-m-d H:i:s'),
+                        SORT_REGULAR,
+                        'desc' === $parameter[1]
+                    );
+
+                    break;
             }
         }
     }

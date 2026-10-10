@@ -73,12 +73,12 @@
                 <div class="card card-outline mb-2">
                     <div class="card-header">
                         <div class="card-title"><a
-                                href="{{ route('accounts.show', [$data['account']['id']]) }}">{{ $data['account']['name'] }}</a>
+                                href="{{ route('accounts.show', [$data['account']->id]) }}">{{ $data['account']->name }}</a>
                         </div>
                     </div>
                     @if(count($data['transactions']) > 0)
                         <div class="card-body p-0">
-                            <x-lists.groups-tiny :transactions="$data['transactions']"/>
+                            <x-lists.groups-tiny :account="$data['account']" :transactions="$data['transactions']"/>
                         </div>
                     @endif
                     @if(0 === count($data['transactions']))

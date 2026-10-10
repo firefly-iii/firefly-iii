@@ -25,196 +25,112 @@ import Alpine from "@alpinejs/csp";
 import { getVariable } from "../../store/get-variable.js";
 import Put from "../../api/model/account/put.js";
 import Get from "../../api/model/account/get.js";
-import format from "../../util/format.js";
+import formatDate from "../../util/format-date.js";
 import formatMoney from "../../util/format-money.js";
 import i18next from "i18next";
 import { addDrag } from "../shared/drag-and-droppable-rows.js";
+import { sortableTable, storeFilterAndSort, updateHistory } from "../shared/sortable-tables.js";
 
 window.enableDates = true;
 
 let index = function () {
     return {
+        // necessary for index
         listPageSize: 50,
         objectType: "invalid",
-        sortColumn: "order",
         accounts: [],
-        sortDirection: "asc",
         page: 1,
+        totalPages: 1,
         i18next: null,
         anonymous: false,
-        totalPages: 1,
         loadingPage: true,
         convertToPrimary: false,
-        loadingNewSort: true,
         active: true,
-        pageNavUrl: "./accounts/",
-        handleFunc: null,
-        storageKey: "",
         sums: {},
         debts: {},
         differences: {},
-        isFiltering: false,
-        filter: {
-            name: "",
-        },
+
+        // functions
         formatMoney: formatMoney,
-        objectToQueryString(obj, prefix) {
-            if (null === obj) {
-                return "";
-            }
-            return Object.keys(obj)
-                .map((objKey) => {
-                    if (Object.hasOwn(obj, objKey)) {
-                        const key = prefix ? `${prefix}[${objKey}]` : objKey;
-                        const value = obj[objKey];
 
-                        return typeof value === "object"
-                            ? this.objectToQueryString(value, key)
-                            : `${encodeURIComponent(key)}=${encodeURIComponent(value)}`;
-                    }
+        // default settings for sorting
+        storageKey: "",
+        defaultSortColumn: "order",
+        defaultSortDirection: "asc",
 
-                    return null;
-                })
-                .join("&");
-        },
+        // variables necessary for sorting tables.
+        pageNavUrl: "./accounts/",
+        sortColumn: "order", // used in GET request.
+        sortDirection: "asc", // used in GET request.
+        filter: {},
 
-        updateHistory() {
-            if (history.pushState) {
-                // TODO fix this.
-                let obj = {
-                    page: this.page,
-                    column: this.sortColumn,
-                    direction: this.sortDirection,
-                    filter: this.filter,
-                };
-                let string = this.objectToQueryString(obj);
-                let newUrl =
-                    window.location.protocol + "//" + window.location.host + window.location.pathname + "?" + string;
-                window.history.pushState({ path: newUrl }, "", newUrl);
-                window.store.set(this.storageKey, { column: this.sortColumn, direction: this.sortDirection });
-            }
-        },
-        updateFilterValue(field, newValue) {
-            console.log("Update", field, newValue);
-            this.filter[field] = newValue;
-            if ("" !== newValue) {
-                this.isFiltering = true;
-            }
-            if ("" === newValue) {
-                this.isFiltering = false;
-            }
-            this.updateHistory();
-            this.downloadAccounts();
-        },
+        // sort functions, imported
+        updateHistory: updateHistory,
+        storeFilterAndSort: storeFilterAndSort,
+        sortableTable: null,
 
         init() {
-            this.$watch("filter.name", (value) => this.updateFilterValue("name", value));
+            this.sortableTable = new sortableTable("main");
+            // prepare some variables:
 
+            const address = window.location.href.split("?")[0].split("/");
+            this.objectType = address[address.length - 1].substring(0, 15);
             this.i18next = i18next;
             this.anonymous = window.store.get("anonymous");
-            this.handleFunc = this.handlePageClick.bind(this);
-            const page = window.location.href.split("?")[0].split("/");
-            if ("inactive-accounts" === page[page.length - 2]) {
-                this.active = false;
-            }
-            let defaultSortColumn = "order";
-            let defaultSortDirection = "asc";
-            this.objectType = page[page.length - 1].substring(0, 15);
             this.storageKey = "accounts-" + this.objectType + (this.active ? "-active" : "-inactive");
             this.pageNavUrl = "./accounts/" + this.objectType;
+            this.defaultSortColumn =
+                "expense" === this.objectType || "revenue" === this.objectType ? "name" : this.defaultSortColumn;
+            this.active = "inactive-accounts" !== address[address.length - 2];
+
+            // todo make function:
+            // grab state from localStorage.
+            let fromStore = window.store.get(this.storageKey);
+            if (fromStore) {
+                this.defaultSortColumn = fromStore.column;
+                this.defaultSortDirection = fromStore.direction;
+                this.filter = fromStore.filter;
+                //console.log('Restore from store:', fromStore);
+            }
+
+            // todo make function
+            // grab state from URL params.
             const params = new Proxy(new URLSearchParams(window.location.search), {
                 get: (searchParams, prop) => searchParams.get(prop),
             });
-            // shitty solution but for now it works.
-            if ("" !== params["filter[name]"]) {
-                this.filter.name = params["filter[name]"];
-                this.isFiltering = true;
-            }
-            if ("expense" === this.objectType || "revenue" === this.objectType) {
-                defaultSortColumn = "name";
-            }
-            let fromStore = window.store.get(this.storageKey);
-            console.log("from store", fromStore);
-            if (fromStore) {
-                defaultSortColumn = fromStore.column;
-                defaultSortDirection = fromStore.direction;
-            }
-
-            this.sortColumn = params.column ?? defaultSortColumn;
-            this.sortDirection = params.direction ?? defaultSortDirection;
-            this.page = parseInt(params.page) || 1;
-
-            // grab the account list.
-            this.downloadAccounts();
-            // get accounts by initial sort.
-            document.addEventListener("alpine:initialized", () => {
-                // add sortable click events.
-                document.querySelectorAll("table.sortable th.sortable span.title").forEach((el) => {
-                    el.addEventListener("click", (event) => {
-                        let parent = event.currentTarget.parentNode;
-                        let newColumn = parent.dataset.column;
-                        if (newColumn === this.sortColumn) {
-                            this.sortDirection = "asc" === this.sortDirection ? "desc" : "asc";
-                        }
-                        if (newColumn !== this.sortColumn) {
-                            this.sortColumn = newColumn;
-                        }
-                        console.log("New sort instructions", this.sortColumn, this.sortDirection);
-                        this.updateHistory();
-                        this.downloadAccounts();
-                    });
-                });
-
-                // hide search again
-                document.querySelectorAll("table.sortable .hide-button").forEach((el) => {
-                    el.addEventListener("click", () => {
-                        let column = el.dataset.column;
-                        // show search input again
-                        document.querySelector(`span.title[data-column="${column}"]`).classList.remove("d-none");
-                        document
-                            .querySelector(`span.search-spacer[data-column="${column}"]`)
-                            .classList.remove("d-none");
-                        document.querySelector(`em.search-button[data-column="${column}"]`).classList.remove("d-none");
-                        document.querySelector(`div.search-filter[data-column="${column}"] input`).value = "";
-
-                        // remove class from parent if was used to sort
-                        if (null !== document.querySelector(`th.sortable_sorted[data-column="${column}"]`)) {
-                            document
-                                .querySelector(`th.sortable_sorted[data-column="${column}"]`)
-                                .classList.remove("is-searching");
-                        }
-
-                        let input = document.querySelector(`div.search-filter[data-column="${column}"]`);
-                        input.classList.add("d-none");
-
-                        // TODO hardcoded!!
-                        this.filter.name = "";
-                    });
-                });
-
-                // add filterable click events.
-                document.querySelectorAll("table.sortable .search-button").forEach((el) => {
-                    el.addEventListener("click", () => {
-                        let column = el.dataset.column;
-                        // hide search buttons etc.
-                        el.classList.add("d-none");
-                        document.querySelector(`span.title[data-column="${column}"]`).classList.add("d-none");
-                        document.querySelector(`span.search-spacer[data-column="${column}"]`).classList.add("d-none");
-                        // add class to parent if it's used to sort
-                        if (null !== document.querySelector(`th.sortable_sorted[data-column="${column}"]`)) {
-                            document
-                                .querySelector(`th.sortable_sorted[data-column="${column}"]`)
-                                .classList.add("is-searching");
-                        }
-
-                        // show search input
-                        let input = document.querySelector(`div.search-filter[data-column="${column}"]`);
-                        input.classList.remove("d-none");
-                        input.querySelector("input").focus();
-                    });
-                });
+            this.page = parseInt(params.page || "1");
+            this.defaultSortColumn = params.column ?? this.defaultSortColumn;
+            this.defaultSortDirection = params.direction ?? this.defaultSortDirection;
+            this.sortColumn = this.defaultSortColumn;
+            this.sortDirection = this.defaultSortDirection;
+            console.log("Restore from params:", {
+                page: this.page,
+                column: this.defaultSortColumn,
+                direction: this.defaultSortDirection,
             });
 
+            this.sortableTable.sortColumn = this.defaultSortColumn;
+            this.sortableTable.sortDirection = this.defaultSortDirection;
+            this.sortableTable.storageKey = this.storageKey;
+            this.sortableTable.page = this.page;
+
+            this.sortableTable.init(this);
+
+            // todo make function
+            // watch for changes in the sortable table instructions.
+            document.addEventListener("sortable-table-sort-change", (event) => {
+                console.log("sortable-table-sort-change", event.detail);
+                this.sortColumn = event.detail.sortColumn;
+                this.sortDirection = event.detail.sortDirection;
+                this.sortableTable.sortColumn = this.sortColumn;
+                this.sortableTable.sortDirection = this.sortDirection;
+                this.updateHistory(this.page, this.sortColumn, this.sortDirection, this.filter);
+                this.storeFilterAndSort(this.storageKey, this.sortColumn, this.sortDirection, this.filter);
+                this.downloadObjects();
+            });
+            this.downloadObjects();
+
+            // respond to drag and drop.
             getVariable("listPageSize").then((listPageSize) => {
                 this.listPageSize = listPageSize;
                 addDrag();
@@ -225,6 +141,7 @@ let index = function () {
                             if (item.order !== item.currentOrder) {
                                 // PUT new order to system.
                                 new Put().put({ order: item.order }, { id: item.id });
+
                                 // save new order as current order in the row.
                                 document
                                     .querySelector(`tr[data-id="${item.id}"]`)
@@ -259,17 +176,26 @@ let index = function () {
             let keys = ["balance_difference", "current_balance", "debt_amount"];
             for (let i = 0; i < keys.length; i++) {
                 let key = keys[i];
-                account.attributes[prefix + key + "_formatted"] = formatMoney(account.attributes[key], code, true);
-                account.attributes[prefix + key + "_float"] = parseFloat(account.attributes[key]);
+                account.attributes[prefix + key + "_formatted"] = formatMoney(
+                    account.attributes[prefix + key],
+                    code,
+                    true,
+                );
+                account.attributes[prefix + key + "_float"] = parseFloat(account.attributes[prefix + key]);
             }
             return account;
         },
-        downloadAccounts() {
-            this.loadingNewSort = true;
-            let sort = "asc" === this.sortDirection ? this.sortColumn : "-" + this.sortColumn;
+        downloadObjects() {
+            this.sortableTable.loadingNewSort = true;
+            let sort =
+                "asc" === this.sortableTable.sortDirection
+                    ? this.sortableTable.sortColumn
+                    : "-" + this.sortableTable.sortColumn;
+            console.log("downloadObjects:", { page: this.page, sort: sort });
             let start = window.store.get("start");
             let end = window.store.get("end");
             this.convertToPrimary = window.store.get("convert_to_primary");
+            // console.log("Download accounts using", JSON.parse(JSON.stringify(this.filter)));
             new Get()
                 .list({
                     active: this.active,
@@ -277,10 +203,11 @@ let index = function () {
                     page: this.page,
                     type: this.objectType,
                     start: start,
-                    filter: this.filter,
+                    filter: JSON.parse(JSON.stringify(this.filter)),
                     end: end,
                 })
                 .then((response) => {
+                    const locale = window.store.get("locale");
                     this.accounts = [];
                     this.sums = {};
                     this.debts = {};
@@ -298,6 +225,7 @@ let index = function () {
                             // add formatted amount property.
                             current = this.createParsedAndFloatingAmounts(current, cc, "");
                             current = this.createParsedAndFloatingAmounts(current, pcc, "pc_");
+                            //console.log(current);
 
                             if (!this.convertToPrimary) {
                                 this.sums[cc] += current.attributes.current_balance_float;
@@ -309,7 +237,12 @@ let index = function () {
                                 this.debts[pcc] += current.attributes.pc_debt_amount_float;
                                 this.differences[pcc] += current.attributes.pc_balance_difference_float;
                             }
-                            let lastActivity = this.formatDate(current.attributes.last_activity);
+                            let lastActivity = formatDate(
+                                current.attributes.last_activity,
+                                i18next.t("config.date_time_fns_short", { lng: locale }),
+                                locale,
+                            );
+
                             let noLastActivity = false;
                             if ("" === lastActivity) {
                                 lastActivity = i18next.t("firefly.never");
@@ -336,6 +269,11 @@ let index = function () {
                                 pc_current_balance: current.attributes.pc_current_balance_formatted,
                                 pc_current_balance_float: current.attributes.pc_current_balance_float,
 
+                                // current_balance: '1',
+                                // current_balance_float: 2,
+                                // pc_current_balance: '3',
+                                // pc_current_balance_float: 4,
+
                                 balance_difference: current.attributes.balance_difference_formatted,
                                 balance_difference_float: current.attributes.balance_difference_float,
                                 pc_balance_difference: current.attributes.pc_balance_difference_formatted,
@@ -358,8 +296,14 @@ let index = function () {
                             this.accounts.push(account);
                         }
                     }
+                    // console.log(
+                    //     "Done downloading accounts.",
+                    //     JSON.parse(JSON.stringify(this.filter)),
+                    //     this.accounts.length,
+                    // );
                     this.loadingPage = false;
-                    this.loadingNewSort = false;
+                    this.sortableTable.loadingNewSort = false;
+                    this.sortableTable.disableRefresh = false;
                     if (0 === this.accounts.length && false === this.isFiltering) {
                         document.querySelectorAll(".data-holder").forEach((el) => {
                             el.classList.add("d-none");
@@ -372,39 +316,6 @@ let index = function () {
                 return "";
             }
             return iban.match(/.{1,4}/g).join(" ");
-        },
-        formatDate(date) {
-            if (null === date) {
-                return "";
-            }
-            return format(
-                new Date(date),
-                i18next.t("config.date_time_fns_short", { lng: window.store.get("locale") }),
-                window.store.get("locale"),
-            );
-        },
-        handlePageClick(e) {
-            let link = e.currentTarget;
-
-            let page = parseInt(link.dataset.page);
-            if (isNaN(page)) {
-                e.preventDefault();
-                return false;
-            }
-            this.page = page;
-            this.updateHistory();
-            this.downloadAccounts();
-            e.preventDefault();
-            queueMicrotask(() => {
-                this.capturePageNavigation();
-            });
-            return false;
-        },
-        capturePageNavigation() {
-            document.querySelectorAll("a.page-link").forEach((el) => {
-                el.removeEventListener("click", this.handleFunc);
-                el.addEventListener("click", this.handleFunc);
-            });
         },
     };
 };

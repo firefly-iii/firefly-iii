@@ -123,6 +123,7 @@ class Preferences
         if (null === $user) {
             $preference       = new Preference();
             $preference->data = $default;
+            $preference->name = $name;
 
             return $preference;
         }
@@ -357,11 +358,22 @@ class Preferences
 
         if (null !== $preference && null === $value) {
             $preference->delete();
+            $new             = new Preference();
+            $new->created_at = now();
+            $new->updated_at = now();
+            $new->name       = $name;
+            $new->value      = null;
 
-            return new Preference();
+            return $new;
         }
         if (null === $value) {
-            return new Preference();
+            $new             = new Preference();
+            $new->created_at = now();
+            $new->updated_at = now();
+            $new->name       = $name;
+            $new->value      = null;
+
+            return $new;
         }
         if (null === $preference) {
             $preference                = new Preference();

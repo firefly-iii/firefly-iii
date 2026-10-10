@@ -78,8 +78,8 @@ return [
         'running_balance_column' => (bool)env_default_when_empty(env('USE_RUNNING_BALANCE'), true), // this is only the default value, is not used.
         // see cer.php for exchange rates feature flag.
     ],
-'version' => '6.7.7',
-'build_time' => 1791013464,
+'version' => '6.7.8',
+'build_time' => 1791610789,
     'api_version'                          => '2.1.0', // field is no longer used.
     'db_version'                           => 28, // field is no longer used.
 
@@ -849,12 +849,16 @@ return [
     // dynamic date ranges are as follows:
     'dynamic_date_ranges'                  => ['last7', 'last30', 'last90', 'last365', 'MTD', 'QTD', 'YTD'],
     'allowed_filter_parameters'            => [
-        'Account' => [
+        'Account'  => [
+            'name',
+            'account_number_and_iban',
+        ],
+        'Category' => [
             'name',
         ],
     ],
     'allowed_sort_parameters'              => [
-        'Account' => [
+        'Account'  => [
             'id',
             'order',
             'name',
@@ -878,9 +882,15 @@ return [
             'balance_difference',
             'pc_balance_difference',
         ],
+        'Category' => [
+            'id',
+            'name',
+            'last_activity',
+        ],
     ],
     'allowed_db_sort_parameters'           => [
-        'Account' => ['id', 'order', 'name', 'iban', 'active', 'account_type_id'],
+        'Account'  => ['id', 'order', 'name', 'iban', 'active', 'account_type_id'],
+        'Category' => ['name'],
     ],
 
 

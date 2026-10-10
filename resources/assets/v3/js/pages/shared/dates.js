@@ -19,7 +19,7 @@
  */
 
 import { endOfDay, startOfMonth, startOfYear, subDays } from "date-fns";
-import format from "../../util/format";
+import formatDate from "../../util/format-date.js";
 import i18next from "i18next";
 import { addPeriod, subtractPeriod } from "../../support/get-viewrange.js";
 
@@ -49,8 +49,8 @@ export default () => ({
     submitForm() {
         // console.log('submitForm', format(window.store.get('start'), 'yyyy-MM-dd'), format(window.store.get('end'), 'yyyy-MM-dd'));
         // save form and submit for v1.
-        document.getElementById("customStart").value = format(window.store.get("start"), "yyyy-MM-dd");
-        document.getElementById("customEnd").value = format(window.store.get("end"), "yyyy-MM-dd");
+        document.getElementById("customStart").value = formatDate(window.store.get("start"), "yyyy-MM-dd");
+        document.getElementById("customEnd").value = formatDate(window.store.get("end"), "yyyy-MM-dd");
         document.getElementById("daterange-form").submit();
     },
     language: "en_US",
@@ -113,58 +113,61 @@ export default () => ({
 
         // set the title:
         let locale = window.store.get("locale");
-        let formatString = this.i18next.t("config.month_and_day_fns", { lng: locale });
+        let formatString = i18next.t("config.month_and_day_fns", { lng: locale });
         let element = document.getElementsByClassName("daterange-holder")[0];
-        element.textContent = format(this.range.start, formatString) + " - " + format(this.range.end, formatString);
-        element.setAttribute("data-start", format(this.range.start, this.preferredFormat, "en-US"));
-        element.setAttribute("data-end", format(this.range.end, this.preferredFormat, "en-US"));
+        element.textContent =
+            formatDate(this.range.start, formatString) + " - " + formatDate(this.range.end, formatString);
+        element.setAttribute("data-start", formatDate(this.range.start, this.preferredFormat, "en-US"));
+        element.setAttribute("data-end", formatDate(this.range.end, this.preferredFormat, "en-US"));
 
         // set the current one
         element = document.getElementsByClassName("daterange-current")[0];
         element.textContent =
-            format(this.defaultRange.start, formatString) + " - " + format(this.defaultRange.end, formatString);
-        element.setAttribute("data-start", format(this.defaultRange.start, this.preferredFormat, "en-US"));
-        element.setAttribute("data-end", format(this.defaultRange.end, this.preferredFormat, "en-US"));
+            formatDate(this.defaultRange.start, formatString) + " - " + formatDate(this.defaultRange.end, formatString);
+        element.setAttribute("data-start", formatDate(this.defaultRange.start, this.preferredFormat, "en-US"));
+        element.setAttribute("data-end", formatDate(this.defaultRange.end, this.preferredFormat, "en-US"));
 
         // generate next range
         element = document.getElementsByClassName("daterange-next")[0];
-        element.textContent = format(nextRange.start, formatString) + " - " + format(nextRange.end, formatString);
-        element.setAttribute("data-start", format(nextRange.start, this.preferredFormat, "en-US"));
-        element.setAttribute("data-end", format(nextRange.end, this.preferredFormat, "en-US"));
+        element.textContent =
+            formatDate(nextRange.start, formatString) + " - " + formatDate(nextRange.end, formatString);
+        element.setAttribute("data-start", formatDate(nextRange.start, this.preferredFormat, "en-US"));
+        element.setAttribute("data-end", formatDate(nextRange.end, this.preferredFormat, "en-US"));
 
         // previous range.
         element = document.getElementsByClassName("daterange-prev")[0];
-        element.textContent = format(prevRange.start, formatString) + " - " + format(prevRange.end, formatString);
-        element.setAttribute("data-start", format(prevRange.start, this.preferredFormat, "en-US"));
-        element.setAttribute("data-end", format(prevRange.end, this.preferredFormat, "en-US"));
+        element.textContent =
+            formatDate(prevRange.start, formatString) + " - " + formatDate(prevRange.end, formatString);
+        element.setAttribute("data-start", formatDate(prevRange.start, this.preferredFormat, "en-US"));
+        element.setAttribute("data-end", formatDate(prevRange.end, this.preferredFormat, "en-US"));
 
         // generate the default range ("Today")
         element = document.getElementsByClassName("daterange-today")[0];
-        let todayString = this.i18next.t("firefly.today");
+        let todayString = i18next.t("firefly.today");
         todayString = String(todayString).charAt(0).toUpperCase() + String(todayString).slice(1);
         element.textContent = todayString;
-        element.setAttribute("data-start", format(todayRange.start, this.preferredFormat, "en-US"));
-        element.setAttribute("data-end", format(todayRange.end, this.preferredFormat, "en-US"));
+        element.setAttribute("data-start", formatDate(todayRange.start, this.preferredFormat, "en-US"));
+        element.setAttribute("data-end", formatDate(todayRange.end, this.preferredFormat, "en-US"));
 
         // last 7
         element = document.getElementsByClassName("daterange-7d")[0];
-        element.setAttribute("data-start", format(last7.start, this.preferredFormat, "en-US"));
-        element.setAttribute("data-end", format(last7.end, this.preferredFormat, "en-US"));
+        element.setAttribute("data-start", formatDate(last7.start, this.preferredFormat, "en-US"));
+        element.setAttribute("data-end", formatDate(last7.end, this.preferredFormat, "en-US"));
 
         // last 30
         element = document.getElementsByClassName("daterange-30d")[0];
-        element.setAttribute("data-start", format(last30.start, this.preferredFormat, "en-US"));
-        element.setAttribute("data-end", format(last30.end, this.preferredFormat, "en-US"));
+        element.setAttribute("data-start", formatDate(last30.start, this.preferredFormat, "en-US"));
+        element.setAttribute("data-end", formatDate(last30.end, this.preferredFormat, "en-US"));
 
         // MTD
         element = document.getElementsByClassName("daterange-mtd")[0];
-        element.setAttribute("data-start", format(mtd.start, this.preferredFormat, "en-US"));
-        element.setAttribute("data-end", format(mtd.end, this.preferredFormat, "en-US"));
+        element.setAttribute("data-start", formatDate(mtd.start, this.preferredFormat, "en-US"));
+        element.setAttribute("data-end", formatDate(mtd.end, this.preferredFormat, "en-US"));
 
         // YTD
         element = document.getElementsByClassName("daterange-ytd")[0];
-        element.setAttribute("data-start", format(ytd.start, this.preferredFormat, "en-US"));
-        element.setAttribute("data-end", format(ytd.end, this.preferredFormat, "en-US"));
+        element.setAttribute("data-start", formatDate(ytd.start, this.preferredFormat, "en-US"));
+        element.setAttribute("data-end", formatDate(ytd.end, this.preferredFormat, "en-US"));
     },
 
     getNextRange() {

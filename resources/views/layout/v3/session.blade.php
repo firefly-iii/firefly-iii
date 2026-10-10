@@ -7,6 +7,7 @@
     <meta name="robots" content="noindex, nofollow, noarchive, noodp, NoImageIndex, noydir">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="mobile-web-app-capable" content="yes">
+    <meta name="x-firefly-iii-version" content="{{ str_replace('/','-',$FF_VERSION) }}">
     <!--
     (SESSION)
     If the base href URL begins with "http://" but you are sure it should start with "https://",
@@ -542,6 +543,30 @@
 </div>
 
 <div class="modal fade" id="defaultModal" tabindex="-1" role="dialog">
+</div>
+
+<div class="modal fade" tabindex="-1" role="dialog" id="releaseNotesModal">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title">
+
+                </h4>
+            </div>
+            <div class="modal-body">
+
+            </div>
+            <div class="modal-footer">
+                    <div class="form-check">
+                        <input class="form-check-input" id="revisitCheckbox" type="checkbox" name="show-again" value="1">
+                        <label class="form-check-label" for="revisitCheckbox">
+                            {{ trans('firefly.notes_again_in_two_days') }}
+                        </label>
+                    </div>
+                <button type="button" class="btn btn-primary" data-bs-dismiss="modal">{{ trans('firefly.close') }}</button>
+            </div>
+        </div>
+    </div>
 </div>
 
 <div class="modal fade" tabindex="-1" role="dialog" id="helpModal">

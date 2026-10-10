@@ -30,13 +30,14 @@ use FireflyIII\User;
 use Illuminate\Auth\AuthenticationException;
 use Illuminate\Routing\Route;
 use Illuminate\Support\Facades\Log;
+use SensitiveParameter;
 
 /**
  * Class CLIToken
  */
 class CLIToken implements BinderInterface
 {
-    public static function findUserByToken(string $value): ?User
+    public static function findUserByToken(#[SensitiveParameter] string $token): ?User
     {
         /** @var UserRepositoryInterface $repository */
         $repository = app(UserRepositoryInterface::class);
@@ -44,18 +45,18 @@ class CLIToken implements BinderInterface
 
         foreach ($users as $user) {
             $accessToken = Preferences::getForUser($user, 'access_token');
-            if (null !== $accessToken && hash_equals((string) $accessToken->data, $value)) {
+            if (null !== $accessToken && hash_equals((string) $accessToken->data, $token)) {
                 Log::info(sprintf('Recognized user #%d (%s) from his access token.', $user->id, $user->email));
 
                 return $user;
             }
         }
-        Log::error(sprintf('Recognized no users by access token "%s"', $value));
+        Log::error(sprintf('Recognized no users by access token "%s..."', substr($token, 0, 8)));
 
         return null;
     }
 
-    public static function routeBinder(string $value, Route $route): string
+    public static function routeBinder(#[SensitiveParameter] string $value, Route $route): string
     {
         /** @var UserRepositoryInterface $repository */
         $repository = app(UserRepositoryInterface::class);
@@ -67,14 +68,14 @@ class CLIToken implements BinderInterface
         }
 
         foreach ($users as $user) {
-            $accessToken = Preferences::getForUser($user, 'access_token');
-            if (null !== $accessToken && hash_equals((string) $accessToken->data, $value)) {
+            $userAccessToken = Preferences::getForUser($user, 'access_token');
+            if (null !== $userAccessToken && hash_equals((string) $userAccessToken->data, $value)) {
                 Log::info(sprintf('Recognized user #%d (%s) from his access token.', $user->id, $user->email));
 
                 return $value;
             }
         }
-        Log::error(sprintf('Recognized no users by access token "%s"', $value));
+        Log::error(sprintf('Recognized no users by access token "%s..."', substr($value, 0, 8)));
 
         throw new AuthenticationException();
     }

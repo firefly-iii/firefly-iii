@@ -1,4 +1,4 @@
-name: 'Code - Create new release'
+name: "Code - Create new release"
 
 on:
   workflow_dispatch:
@@ -6,18 +6,18 @@ on:
       version:
         description: 'Release "v1.2.3" or "develop" or "branch-abc"'
         required: true
-        default: 'develop'
+        default: "develop"
       quick:
         type: boolean
-        description: 'Quick run'
+        description: "Quick run"
         required: true
         default: false
       phpversion:
-        description: 'PHP version'
+        description: "PHP version"
         required: true
-        default: '8.5'
+        default: "8.5"
   schedule:
-    - cron: '0 3 * * MON'
+    - cron: "0 3 * * MON"
 
 jobs:
   build:
@@ -109,11 +109,11 @@ jobs:
         if: ${{ inputs.quick != true }}
         uses: JC5/firefly-iii-dev@main
         with:
-          action: 'ff3:code'
-          output: ''
+          action: "ff3:code"
+          output: ""
         env:
           FIREFLY_III_ROOT: /github/workspace
-          GH_TOKEN: ''
+          GH_TOKEN: ""
       - name: Install Composer dependencies
         run: |
           cp .env.example .env
@@ -170,11 +170,11 @@ jobs:
         id: json-v3
         uses: JC5/firefly-iii-dev@main
         with:
-          action: 'ff3:json-translations v3'
-          output: ''
+          action: "ff3:json-translations v3"
+          output: ""
         env:
           FIREFLY_III_ROOT: /github/workspace
-          GH_TOKEN: ''
+          GH_TOKEN: ""
       - name: Build JS
         run: |
           npm install
@@ -187,8 +187,8 @@ jobs:
         id: cleanup-changelog
         uses: JC5/firefly-iii-dev@main
         with:
-          action: 'ff3:changelog'
-          output: ''
+          action: "ff3:changelog"
+          output: ""
         env:
           FIREFLY_III_ROOT: /github/workspace
           GH_TOKEN: ${{ secrets.CHANGELOG_TOKEN }}
@@ -197,17 +197,17 @@ jobs:
         id: thank-you
         uses: JC5/firefly-iii-dev@main
         with:
-          action: 'ff3:thank-you'
-          output: ''
+          action: "ff3:thank-you"
+          output: ""
         env:
           FIREFLY_III_ROOT: /github/workspace
-          GH_TOKEN: ''
+          GH_TOKEN: ""
       - name: Replace version
         id: replace-version
         uses: JC5/firefly-iii-dev@main
         with:
-          action: 'ff3:version'
-          output: ''
+          action: "ff3:version"
+          output: ""
         env:
           FIREFLY_III_ROOT: /github/workspace
           GH_TOKEN: ""
@@ -293,7 +293,7 @@ jobs:
         uses: JC5/firefly-iii-dev@main
         with:
           action: "ff3:generate-release-notes firefly-iii ${{ inputs.version || 'develop' }}"
-          output: 'output'
+          output: "output"
         env:
           FIREFLY_III_ROOT: /github/workspace
           GH_TOKEN: ""

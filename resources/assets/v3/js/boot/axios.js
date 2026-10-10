@@ -29,7 +29,7 @@ import axios from "axios";
 
 // for use inside Vue files (Options API) through this.$axios and this.$api
 
-const url = "/";
+const url = "./";
 const api = axios.create({ baseURL: url, withCredentials: true });
 
 axios.defaults.withCredentials = true;

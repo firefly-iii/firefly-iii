@@ -41,6 +41,7 @@ use FireflyIII\Services\Internal\Update\CurrencyUpdateService;
 use FireflyIII\Support\Facades\Amount;
 use FireflyIII\Support\Repositories\UserGroup\UserGroupInterface;
 use FireflyIII\Support\Repositories\UserGroup\UserGroupTrait;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\QueryException;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Log;
@@ -401,7 +402,13 @@ class CurrencyRepository implements CurrencyRepositoryInterface, UserGroupInterf
     {
         $query = TransactionCurrency::query()->orderBy('code', 'ASC');
         if ('' !== $search) {
-            $query->whereLike('name', sprintf('%%%s%%', $search));
+            $query->where(function (Builder $q1) use ($search): void {
+                $q1
+                    ->whereLike('code', sprintf('%%%s%%', $search))
+                    ->orWhereLike('name', sprintf('%%%s%%', $search))
+                    ->orWhereLike('symbol', sprintf('%%%s%%', $search))
+                ;
+            });
         }
 
         return $query->take($limit)->get();

@@ -1,4 +1,4 @@
-<template x-if="totalPages > 1" x-effect="capturePageNavigation()">
+<template x-if="totalPages > 1" x-effect="sortableTable ? sortableTable.capturePageNavigation() : null">
     <div class="m-2">
         <nav>
             <ul class="pagination">

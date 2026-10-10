@@ -20,7 +20,8 @@
 
 import Autocomplete from "bootstrap5-autocomplete";
 import formatMoney from "../../../util/format-money.js";
-import { format } from "date-fns";
+import i18next from "i18next";
+import formatDate from "../../../util/format-date.js";
 
 export function createLinkAutocomplete(fieldIdentifier, url) {
     const renderJournal = function (item) {
@@ -33,7 +34,7 @@ export function createLinkAutocomplete(fieldIdentifier, url) {
             ", " +
             formatMoney(item.amount, item.currency_code) +
             " @ " +
-            format(new Date(item.date), window.i18next.t("config.date_time_fns", { lng: locale }), locale) +
+            formatDate(new Date(item.date), i18next.t("config.date_time_fns", { lng: locale }), locale) +
             "</small>"
         );
     };

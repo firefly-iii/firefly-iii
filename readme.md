@@ -26,7 +26,7 @@
 
 "Firefly III" is a (self-hosted) manager for your personal finances. It can help you keep track of your expenses and income, so you can spend less and save more. Firefly III supports the use of budgets, categories and tags. Using a bunch of tools, you can import data. It also has many neat financial reports available.
 
-Firefly III should give you **insight** into and **control** over your finances. Money should be useful, not scary. You should be able to *see* where it is going, to *feel* your expenses and to... wow, I'm going overboard with this aren't I?
+Firefly III should give you **insight** into and **control** over your finances. Money should be useful, not scary. You should be able to _see_ where it is going, to _feel_ your expenses and to... wow, I'm going overboard with this aren't I?
 
 But you get the idea: this is your money. These are your expenses. Stop them from controlling you. I built this tool because I started to dislike money. Having money, not having money, paying bills with money, you get the idea. But no more. I want to feel "safe", whatever my balance is. And I hope this tool can help you. I know it helps me.
 
@@ -43,7 +43,6 @@ But you get the idea: this is your money. These are your expenses. Stop them fro
 [![Stargazers][stars-shield]][stars-url]
 [![Donate][donate-shield]][donate-url]
 
-
 ## Important information
 
 If you don't feel like skipping to the end, here are several ways to run and/or install Firefly III.
@@ -53,14 +52,16 @@ If you don't feel like skipping to the end, here are several ways to run and/or 
 - You can [run it using Docker](https://docs.firefly-iii.org/how-to/firefly-iii/installation/docker/).
 - You can [deploy via Kubernetes](https://firefly-iii.github.io/kubernetes/).
 
-Commercial options also exist. First, a sponsored option:
+Commercial options also exist. First, some sponsored options:
 
-- A one-click installation is available at **[Hostinger](https://www.hostg.xyz/aff_c?offer_id=815&aff_id=243699&url_id=6810)**
+- [Hostinger](https://www.hostg.xyz/aff_c?offer_id=815&aff_id=243699&url_id=6810)
+- [PikaPods](https://www.pikapods.com/pods?run=firefly-iii)
 
-If you use any of Hostinger's paid options a small reward is paid to the developer of Firefly III.
+Both are excellent choices for affordable and safe Firefly III hosting. If you use any of their paid options a small reward is paid to the developer of Firefly III.
 
 Other options are available as well. These are not sponsored, but they do support the development of Firefly III.
 
+- You can [install it on LumaDock](https://lumadock.com/vps-hosting/firefly-iii). This is a paid service and includes the data importer as well. 
 - You can [install it using Softaculous](https://www.softaculous.com/softaculous/apps/others/Firefly_III).
 - You can [install it using AMPPS](https://www.ampps.com/).
 - You can [install it on Cloudron](https://cloudron.io/store/org.fireflyiii.cloudronapp.html).
@@ -99,7 +100,7 @@ Browser testing via TestMu AI:
 <img src="https://raw.githubusercontent.com/firefly-iii/firefly-iii/develop/.github/assets/img/testmu.png" alt="TestMu AI" style="vertical-align: middle;" width="250" />
 </a>
 
-Firefly III is also sponsored by [Hostinger](https://www.hostg.xyz/aff_c?offer_id=815&aff_id=243699&url_id=6810) with a kickback program that pays me a small amount for every new customer that signs up for their hosting services. Consider using them if you do not want to self-host Firefly III.
+Firefly III is also sponsored by [Hostinger](https://www.hostg.xyz/aff_c?offer_id=815&aff_id=243699&url_id=6810) and [PikaPods](https://www.pikapods.com/pods?run=firefly-iii) with a kickback program that pays me a small amount for every new customer that signs up for their hosting services. Consider using them if you do not want to self-host Firefly III.
 
 ## Do you need help, or do you want to get in touch?
 
@@ -116,34 +117,33 @@ Do you want to contact me? You can email me at [james@firefly-iii.org](mailto:ja
 
 Firefly III is pretty feature packed. Some important stuff first:
 
-* It is completely self-hosted and isolated, and will never contact external servers until you explicitly tell it to.
-* It features a REST JSON API that covers almost every part of Firefly III.
+- It is completely self-hosted and isolated, and will never contact external servers until you explicitly tell it to.
+- It features a REST JSON API that covers almost every part of Firefly III.
 
 The most exciting features are:
 
-* Create [recurring transactions to manage your money](https://docs.firefly-iii.org/explanation/financial-concepts/recurring/).
-* [Rule based transaction handling](https://docs.firefly-iii.org/how-to/firefly-iii/features/rules/) with the ability to create your own rules.
+- Create [recurring transactions to manage your money](https://docs.firefly-iii.org/explanation/financial-concepts/recurring/).
+- [Rule based transaction handling](https://docs.firefly-iii.org/how-to/firefly-iii/features/rules/) with the ability to create your own rules.
 
 Then the things that make you go "yeah OK, makes sense".
 
-* A [double-entry](https://en.wikipedia.org/wiki/Double-entry_bookkeeping_system) bookkeeping system.
-* Save towards a goal using [piggy banks](https://docs.firefly-iii.org/explanation/financial-concepts/piggy-banks/).
-* View [income and expense reports](https://docs.firefly-iii.org/how-to/firefly-iii/finances/reports/).
+- A [double-entry](https://en.wikipedia.org/wiki/Double-entry_bookkeeping_system) bookkeeping system.
+- Save towards a goal using [piggy banks](https://docs.firefly-iii.org/explanation/financial-concepts/piggy-banks/).
+- View [income and expense reports](https://docs.firefly-iii.org/how-to/firefly-iii/finances/reports/).
 
 And the things you would hope for but not expect:
 
-* 2 factor authentication for extra security 🔒.
-* Supports [any currency you want](https://docs.firefly-iii.org/how-to/firefly-iii/features/currencies/).
-* There is a [Docker image](https://docs.firefly-iii.org/how-to/firefly-iii/installation/docker/).
+- 2 factor authentication for extra security 🔒.
+- Supports [any currency you want](https://docs.firefly-iii.org/how-to/firefly-iii/features/currencies/).
+- There is a [Docker image](https://docs.firefly-iii.org/how-to/firefly-iii/installation/docker/).
 
 And to organise everything:
 
-* Clear views that should show you how you're doing.
-* Easy navigation through your records.
-* Lots of charts because we all love them.
+- Clear views that should show you how you're doing.
+- Easy navigation through your records.
+- Lots of charts because we all love them.
 
 Many more features are listed in the [documentation](https://docs.firefly-iii.org/explanation/firefly-iii/about/introduction/).
-
 
 <!-- END OF SPONSOR TEXT -->
 
@@ -155,7 +155,6 @@ Several users have built pretty awesome stuff around the Firefly III API. [Check
 
 You can contact me at [james@firefly-iii.org](mailto:james@firefly-iii.org), you may open an issue in the [main repository](https://github.com/firefly-iii/firefly-iii) or contact me through [gitter](https://gitter.im/firefly-iii/firefly-iii) and [Mastodon](https://fosstodon.org/@ff3) Of course, there are some [contributing guidelines](https://docs.firefly-iii.org/explanation/support/#contributing-code) and a [code of conduct](https://github.com/firefly-iii/firefly-iii/blob/main/.github/code_of_conduct.md), which I invite you to check out. I can always use your help [squashing bugs](https://docs.firefly-iii.org/explanation/support/), thinking about [new features](https://docs.firefly-iii.org/explanation/support/) or [translating Firefly III](https://docs.firefly-iii.org/how-to/firefly-iii/development/translations/) into other languages. There is also a [security policy](https://github.com/firefly-iii/firefly-iii/security/policy).
 
-
 ## License
 
 This work [is licensed](https://github.com/firefly-iii/firefly-iii/blob/main/LICENSE) under the [GNU Affero General Public License v3](https://www.gnu.org/licenses/agpl-3.0.html).
@@ -166,8 +165,7 @@ Over time, [many people have contributed to Firefly III](https://github.com/fire
 
 The Firefly III logo is made by the excellent Cherie Woo.
 
-
-<!-- 
+<!--
 
 <p>
 <img align="left" src="https://raw.githubusercontent.com/firefly-iii/firefly-iii/develop/.github/assets/img/europe.png" alt="Flag of Europe" height="50"> Billionaires and fascists are breaking democracies and international alliances. Their profits are costing us our safety. (Digital) sovereignty is more important than ever. <strong>Firefly III</strong> is free open source software and originates from, and lives in the European Union (🇳🇱). Support your local software developer for a free and open society.

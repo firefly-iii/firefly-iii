@@ -29,6 +29,7 @@ use FireflyIII\Jobs\DownloadExchangeRates;
 use FireflyIII\Models\Configuration;
 use FireflyIII\Support\Facades\AppConfiguration;
 use FireflyIII\Support\Facades\Preferences;
+use FireflyIII\Support\Facades\Steam;
 use FireflyIII\User;
 use Illuminate\Support\Facades\Log;
 
@@ -47,7 +48,7 @@ class ExchangeRatesCronjob extends AbstractCronjob
             $config        = AppConfiguration::get($key, 0);
             $lastTime      = (int) $config->data;
             $diff          = now(config('app.timezone'))->getTimestamp() - $lastTime;
-            $diffForHumans = now(config('app.timezone'))->diffForHumans(Carbon::createFromTimestamp($lastTime), null, true);
+            $diffForHumans = Steam::secondsAsTime((int) now(config('app.timezone'))->diffInSeconds(Carbon::createFromTimestamp($lastTime)));
             if (0 === $lastTime) {
                 Log::info(sprintf('Exchange rates cron-job has never fired before for user #%d.', $user->id));
             }

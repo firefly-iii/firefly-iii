@@ -54,7 +54,9 @@ class CategoryTransformer extends AbstractTransformer
             'created_at'                      => $category->created_at->toAtomString(),
             'updated_at'                      => $category->updated_at->toAtomString(),
             'name'                            => $category->name,
+            'color'                           => $category->color,
             'notes'                           => $category->meta['notes'],
+            'last_activity'                   => $category->meta['last_activity'],
 
             // category never has currency settings.
             'object_has_currency_setting'     => false,

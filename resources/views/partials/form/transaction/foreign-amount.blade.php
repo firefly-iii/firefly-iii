@@ -26,7 +26,7 @@
                 <label class="small form-label">{{ __('firefly.amount_destination_account') }}</label>
             </template>
             <div class="input-group">
-            <input type="number" step="any" min="0"
+            <input type="text" step="any" min="0" inputmode="decimal"
                    :id="'foreign_amount_' + index"
                    :data-index="index"
                    x-bind:disabled="transaction.reconciled"

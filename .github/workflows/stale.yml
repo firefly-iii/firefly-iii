@@ -10,8 +10,8 @@ permissions:
 jobs:
   stale:
     permissions:
-      issues: write  # for actions/stale to close stale issues
-      pull-requests: write  # for actions/stale to close stale PRs
+      issues: write # for actions/stale to close stale issues
+      pull-requests: write # for actions/stale to close stale PRs
       actions: write
     runs-on: ubuntu-latest
     steps:
@@ -37,4 +37,4 @@ jobs:
           days-before-stale: 14
           days-before-close: 7
           exempt-all-milestones: true
-          exempt-issue-labels: 'triage'
+          exempt-issue-labels: "triage"

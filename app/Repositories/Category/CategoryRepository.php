@@ -186,9 +186,40 @@ class CategoryRepository implements CategoryRepositoryInterface, UserGroupInterf
     /**
      * Returns a list of all the categories belonging to a user.
      */
-    public function getCategories(): Collection
+    public function getCategories(array $sort = [], array $filter = []): Collection
     {
-        return $this->user->categories()->with(['attachments'])->orderBy('name', 'ASC')->get();
+        $query   = $this->user->categories()->with(['attachments']);
+
+        // add sort parameters
+        $allowed = config('firefly.allowed_db_sort_parameters.Category', []);
+        $sorted  = 0;
+        if (0 !== count($sort)) {
+            foreach ($sort as $param) {
+                // basic sort:
+                if (in_array($param[0], $allowed, true)) {
+                    $query->orderBy($param[0], $param[1]);
+                    ++$sorted;
+                }
+            }
+        }
+
+        // add filter parameters.
+        $allowed = config('firefly.allowed_filter_parameters.Category', []);
+        if (0 !== count($filter)) {
+            foreach ($filter as $field => $search) {
+                if (in_array($field, $allowed, true)) {
+                    if ('' !== (string) $search) {
+                        $query->whereLike($field, sprintf('%%%s%%', $search));
+                    }
+                }
+            }
+        }
+
+        if (0 === $sorted) {
+            $query->orderBy('categories.name', 'ASC');
+        }
+
+        return $query->get(['categories.*']);
     }
 
     public function getNoteText(Category $category): ?string
@@ -286,8 +317,8 @@ class CategoryRepository implements CategoryRepositoryInterface, UserGroupInterf
         /** @var CategoryFactory $factory */
         $factory  = app(CategoryFactory::class);
         $factory->setUser($this->user);
-
-        $category = $factory->findOrCreate(null, $data['name']);
+        $color    = array_key_exists('color', $data) ? $data['color'] : null;
+        $category = $factory->findOrCreate(null, $data['name'], $color);
 
         if (null === $category) {
             throw new FireflyException(sprintf('400003: Could not store new category with name "%s"', $data['name']));

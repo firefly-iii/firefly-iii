@@ -44,7 +44,9 @@ use FireflyIII\Support\Repositories\UserGroup\UserGroupInterface;
 use FireflyIII\Support\Repositories\UserGroup\UserGroupTrait;
 use Illuminate\Database\Eloquent\Builder as EloquentBuilder;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Query\JoinClause;
 use Illuminate\Support\Collection;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Storage;
 use Override;
@@ -248,6 +250,7 @@ class AccountRepository implements AccountRepositoryInterface, UserGroupInterfac
         $filter ??= [];
         if (0 !== count($sort)) {
             foreach ($sort as $param) {
+                // basic sort:
                 if (in_array($param[0], $allowed, true)) {
                     $query->orderBy($param[0], $param[1]);
                     ++$sorted;
@@ -258,6 +261,19 @@ class AccountRepository implements AccountRepositoryInterface, UserGroupInterfac
         $allowed = config('firefly.allowed_filter_parameters.Account', []);
         if (0 !== count($filter)) {
             foreach ($filter as $field => $search) {
+                if ('account_number_and_iban' === $field) {
+                    $query->leftJoin('account_meta', function (JoinClause $join): void {
+                        $join->on('accounts.id', '=', 'account_meta.account_id');
+                        $join->on('account_meta.name', '=', DB::raw("'account_number'"));
+                    });
+
+                    $query->where(function (EloquentBuilder $q1) use ($search): void {
+                        $q1->whereLike('account_meta.data', sprintf('%%%s%%', $search));
+                        $q1->orWhereLike('accounts.iban', sprintf('%%%s%%', $search));
+                    });
+
+                    continue;
+                }
                 if (in_array($field, $allowed, true)) {
                     if ('' !== (string) $search) {
                         $query->whereLike($field, sprintf('%%%s%%', $search));
@@ -275,6 +291,8 @@ class AccountRepository implements AccountRepositoryInterface, UserGroupInterfac
             $query->orderBy('accounts.account_type_id', 'ASC');
             $query->orderBy('accounts.id', 'ASC');
         }
+
+        // add post-db filter:
 
         return $query->get(['accounts.*']);
     }

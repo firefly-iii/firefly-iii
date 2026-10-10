@@ -52,22 +52,22 @@ $primary: #1e6581; // original
 @import "shepherd.js/dist/css/shepherd.css";
 
 // btn-outline-secondary
-.btn-outline-secondary {
+html[data-bs-theme="dark"] .btn-outline-secondary {
     color: rgb(222, 226, 230);
 }
 
 // for sortable tables
-table.sortable thead th.sortable span {
+table.sortable thead th[data-sort-column] span {
     cursor: pointer;
 }
 .search-button {
     cursor: pointer;
 }
-table.sortable th.sortable.sortable_sorted.sortable_sorted_asc:not(th.is-searching):before {
-    content: " \25B4";
+table.sortable th[data-sort-column].sortable_sorted_asc:not(th.is-searching):before {
+    content: "\25B4 ";
 }
-table.sortable th.sortable.sortable_sorted.sortable_sorted_desc:not(th.is-searching):before {
-    content: " \25BE";
+table.sortable th[data-sort-column].sortable_sorted_desc:not(th.is-searching):before {
+    content: "\25BE ";
 }
 
 html[data-bs-theme="dark"] .btn-outline-success {

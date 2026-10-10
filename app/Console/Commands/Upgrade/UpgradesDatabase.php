@@ -85,11 +85,13 @@ class UpgradesDatabase extends Command
             $args = ['--force' => true];
         }
         foreach ($commands as $command) {
-            $this->friendlyLine(sprintf('Now executing command %s', $command));
-            $time = microtime(true);
+            $moment = date('H:i:s');
+            $this->friendlyLine(sprintf('[%s] Now executing command %s', $moment, $command));
+            $time   = microtime(true);
             $this->call($command, $args);
-            $time = round(microtime(true) - $time, 2);
-            $this->friendlyLine(sprintf('Command %s took %.4f seconds.', $command, $time));
+            $time   = round(microtime(true) - $time, 2);
+            $moment = date('H:i:s');
+            $this->friendlyLine(sprintf('[%s] Command %s took %.4f seconds.', $moment, $command, $time));
         }
         // index will set FF3 version.
         AppConfiguration::set('ff3_build_time', (int) config('firefly.build_time'));

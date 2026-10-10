@@ -880,6 +880,26 @@ class Steam
         return $amount;
     }
 
+    public function secondsAsTime(int $seconds): string
+    {
+        $seconds          = $seconds < 0 ? abs($seconds) : $seconds;
+        $weeks            = floor($seconds / 604_800);
+        $days             = floor($seconds / 86_400);
+        $hours            = floor($seconds / 3600);
+        $minutes          = floor(($seconds % 3600) / 60);
+        $remainingSeconds = $seconds % 60;
+        $return           = '';
+        if ($weeks > 0) {
+            $return .= sprintf('%dw', $weeks);
+        }
+        if ($days > 0) {
+            $return .= sprintf('%dd', $days);
+        }
+        $return .= sprintf('%dh%dm%ds', $hours, $minutes, $remainingSeconds);
+
+        return $return;
+    }
+
     private function convertAllBalances(array $others, TransactionCurrency $primary, Carbon $date): string
     {
         $total     = '0';

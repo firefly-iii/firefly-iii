@@ -51,8 +51,8 @@ services:
   # Looks for unused imports from other namespaces.
   Nette\CodingStandard\Sniffs\Namespaces\UnusedUsesSniff:
     searchAnnotations: yes
-    ignoredAnnotationNames: [ '@testCase' ]
-    ignoredAnnotations: [ '@internal' ]
+    ignoredAnnotationNames: ["@testCase"]
+    ignoredAnnotations: ["@internal"]
 
   # Language Construct (should be placed before some other fixers)
 
@@ -134,7 +134,7 @@ services:
 
   # There MUST NOT be more than one property declared per statement.
   PhpCsFixer\Fixer\ClassNotation\SingleClassElementPerStatementFixer:
-    elements: [ 'property' ]
+    elements: ["property"]
 
   # Methods - https://nette.org/en/coding-standard#toc-methods
 
@@ -224,16 +224,15 @@ services:
   PhpCsFixer\Fixer\Phpdoc\PhpdocTrimFixer: ~
   # Single-line comments comments with only one line of actual content should use the `//` syntax.
   PhpCsFixer\Fixer\Comment\SingleLineCommentStyleFixer:
-    comment_types: [ 'hash' ]
+    comment_types: ["hash"]
   # Require comments with single-line content to be written as one-liners
   SlevomatCodingStandard\Sniffs\Commenting\RequireOneLinePropertyDocCommentSniff: ~
-
 
   # Properties MUST not be explicitly initialized with `null`.
   #PhpCsFixer\Fixer\ClassNotation\NoNullPropertyInitializationFixer: ~
 
   PhpCsFixer\Fixer\ControlStructure\NoBreakCommentFixer:
-    comment_text: 'break omitted'
+    comment_text: "break omitted"
 
   # declare(strict_types=1);
   PhpCsFixer\Fixer\Strict\DeclareStrictTypesFixer: ~
@@ -243,7 +242,7 @@ services:
   PhpCsFixer\Fixer\Operator\TernaryToNullCoalescingFixer: ~
 
   Nette\CodingStandard\Fixer\ClassNotation\ClassAndTraitVisibilityRequiredFixer:
-    elements: [ 'const', 'property', 'method' ]
+    elements: ["const", "property", "method"]
 
   # short list() syntax []
   PhpCsFixer\Fixer\ListNotation\ListSyntaxFixer:

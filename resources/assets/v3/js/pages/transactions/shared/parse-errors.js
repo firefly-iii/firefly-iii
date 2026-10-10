@@ -17,7 +17,7 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
-
+import i18next from "i18next";
 import { spliceErrorsIntoTransactions } from "./splice-errors-into-transactions.js";
 
 export function parseErrors(data) {
@@ -26,7 +26,7 @@ export function parseErrors(data) {
     this.notifications.success.show = false;
     this.notifications.wait.show = false;
     this.formStates.isSubmitting = false;
-    this.notifications.error.text = this.i18next.t("firefly.errors_submission_v2", { errorMessage: data.message });
+    this.notifications.error.text = i18next.t("firefly.errors_submission_v2", { errorMessage: data.message });
 
     if (Object.hasOwn(data, "errors")) {
         this.entries = spliceErrorsIntoTransactions(data.errors, this.entries);

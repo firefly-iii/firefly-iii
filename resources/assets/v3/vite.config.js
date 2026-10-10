@@ -60,6 +60,7 @@ export default defineConfig(({ command }) => {
                     "js/pages/administrations/edit.js",
 
                     // categories
+                    "js/pages/categories/index.js",
 
                     // budgets
 

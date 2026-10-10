@@ -26,8 +26,13 @@ import Alpine from "@alpinejs/csp";
 import Get from "../../api/model/piggy-bank/get.js";
 import formatMoney from "../../util/format-money.js";
 import { getVariable } from "../../store/get-variable.js";
+import { getVariables } from "../../store/get-variables.js";
 import { drawMultiCurrencyChart } from "../../shared/draw-chart.js";
-import format from "../../util/format.js";
+import formatDate from "../../util/format-date.js";
+import ReleaseNotes from "../../api/system/release-notes.js";
+import Post from "../../api/preferences/post.js";
+import { Modal } from "bootstrap";
+import i18next from "i18next";
 
 let index = function () {
     return {
@@ -35,6 +40,76 @@ let index = function () {
         anonymous: false,
         loadingPiggyBanks: true,
         init() {
+            // only if no tour!
+            if (!window.showTour) {
+                // get config, then get preference.
+                const version = document.head.querySelector('meta[name="x-firefly-iii-version"]').content;
+                const whatsNewDialog = "wn_" + version;
+                const lastTimeDialog = "lt_" + version;
+                getVariables([whatsNewDialog, lastTimeDialog]).then((values) => {
+                    const shownWhatsNewDialog = true === values[whatsNewDialog];
+                    const lastShowTime = null === values[lastTimeDialog] ? 0 : parseInt(values[lastTimeDialog]) * 1000;
+                    let showNewFeatures = false;
+                    // const lastShowTime = (1791297200 - (48*60*60)) * 1000;
+                    if (0 === lastShowTime && !shownWhatsNewDialog) {
+                        console.log("User needs new feature dialogue.");
+                        // alert('Show dialog because never seen before.');
+                        showNewFeatures = true;
+                    }
+                    if (!shownWhatsNewDialog && lastShowTime > 0) {
+                        const now = new Date().getTime();
+                        const diff = now - lastShowTime;
+                        const diffInDays = diff / (1000 * 60 * 60 * 24);
+                        if (diffInDays > 2) {
+                            console.log("User needs new feature dialogue.");
+                            showNewFeatures = true;
+                        }
+                    }
+                    if (showNewFeatures) {
+                        // get from API.
+                        new ReleaseNotes().get().then((notes) => {
+                            let releaseNotes = notes.data.release_notes;
+                            let version = notes.data.version;
+                            if (!version.startsWith("develop")) {
+                                version = "v" + version;
+                            }
+                            if (null === releaseNotes) {
+                                console.log("Release notes are NULL");
+                                // mark as seen by submitting a preference.
+                                // TODO make a function.
+                                const now = parseInt(new Date().getTime() / 1000);
+                                new Post().post(whatsNewDialog, true);
+                                new Post().post(lastTimeDialog, now);
+                                window[whatsNewDialog] = true;
+                                window[lastTimeDialog] = now;
+                                window.store.set(whatsNewDialog, true);
+                                window.store.set(lastTimeDialog, now);
+                            }
+                            if (null !== releaseNotes) {
+                                let element = document.getElementById("releaseNotesModal");
+                                let modal = new Modal(element, {});
+                                element.querySelector(".modal-title").innerHTML = i18next.t(
+                                    "firefly.release_notes_title",
+                                    { version: version },
+                                );
+                                element.querySelector(".modal-body").innerHTML = releaseNotes;
+                                modal.show();
+                                element.addEventListener("hidden.bs.modal", function () {
+                                    let checkBox = document.getElementById("revisitCheckbox");
+                                    const revisit = !checkBox.checked;
+                                    const now = parseInt(new Date().getTime() / 1000);
+                                    new Post().post(whatsNewDialog, revisit);
+                                    new Post().post(lastTimeDialog, now);
+                                    window[whatsNewDialog] = revisit;
+                                    window[lastTimeDialog] = now;
+                                    window.store.set(whatsNewDialog, revisit);
+                                    window.store.set(lastTimeDialog, now);
+                                });
+                            }
+                        });
+                    }
+                });
+            }
             getVariable("anonymous").then((value) => {
                 let start = new Date(window.store.get("start"));
                 let end = new Date(window.store.get("end"));
@@ -43,9 +118,9 @@ let index = function () {
                 drawMultiCurrencyChart(
                     "line",
                     "api/v1/chart/account/overview?period=1D&start=" +
-                        format(start, "yyyy-LL-dd") +
+                        formatDate(start, "yyyy-LL-dd") +
                         "&end=" +
-                        format(end, "yyyy-LL-dd"),
+                        formatDate(end, "yyyy-LL-dd"),
                     "accounts-chart",
                     value,
                     true,
@@ -55,9 +130,9 @@ let index = function () {
                 drawMultiCurrencyChart(
                     "stacked-column",
                     "api/v1/chart/budget/overview-with-limits?start=" +
-                        format(start, "yyyy-LL-dd") +
+                        formatDate(start, "yyyy-LL-dd") +
                         "&end=" +
-                        format(end, "yyyy-LL-dd"),
+                        formatDate(end, "yyyy-LL-dd"),
                     "budgets-chart",
                     value,
                     false,

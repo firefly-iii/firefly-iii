@@ -82,11 +82,13 @@ class CorrectsDatabase extends Command
             'firefly-iii:report-integrity',
         ];
         foreach ($commands as $command) {
-            $this->friendlyLine(sprintf('Now executing command "%s"', $command));
-            $time = microtime(true);
+            $moment = date('H:i:s');
+            $this->friendlyLine(sprintf('[%s] Now executing command "%s"', $moment, $command));
+            $time   = microtime(true);
             $this->call($command);
-            $time = microtime(true) - $time;
-            $this->friendlyLine(sprintf('Command %s took %.4f seconds.', $command, $time));
+            $time   = microtime(true) - $time;
+            $moment = date('H:i:s');
+            $this->friendlyLine(sprintf('[%s] Command %s took %.4f seconds.', $moment, $command, $time));
         }
 
         return 0;

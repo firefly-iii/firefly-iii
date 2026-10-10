@@ -44,7 +44,7 @@ class Category extends Model
     use ReturnsIntegerUserIdTrait;
     use SoftDeletes;
 
-    protected $fillable = ['user_id', 'user_group_id', 'name'];
+    protected $fillable = ['user_id', 'user_group_id', 'name', 'color'];
 
     protected $hidden   = ['encrypted'];
 
