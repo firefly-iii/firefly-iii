@@ -83,7 +83,7 @@ class Authenticate
             // Log::debug('in Authenticate::authenticate() with zero guards.');
             // There are no guards defined, go for the default guard:
             if (auth()->check()) {
-                //Log::debug('User is authenticated.');
+                // Log::debug('User is authenticated.');
                 $user = auth()->user();
                 $this->validateBlockedUser($user, $guards);
 
@@ -146,6 +146,7 @@ class Authenticate
 
             throw new AuthenticationException('Blocked account.', $guards);
         }
+
         // Log::debug(sprintf('User #%d is not blocked.', $user->id));
     }
 }
