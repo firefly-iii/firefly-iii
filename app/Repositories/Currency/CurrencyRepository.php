@@ -402,10 +402,12 @@ class CurrencyRepository implements CurrencyRepositoryInterface, UserGroupInterf
     {
         $query = TransactionCurrency::query()->orderBy('code', 'ASC');
         if ('' !== $search) {
-            $query->where(function(Builder $q1) use ($search) {
-                $q1->whereLike('code', sprintf('%%%s%%', $search))
+            $query->where(function (Builder $q1) use ($search): void {
+                $q1
+                    ->whereLike('code', sprintf('%%%s%%', $search))
                     ->orWhereLike('name', sprintf('%%%s%%', $search))
-                    ->orWhereLike('symbol', sprintf('%%%s%%', $search));
+                    ->orWhereLike('symbol', sprintf('%%%s%%', $search))
+                ;
             });
         }
 

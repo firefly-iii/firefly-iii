@@ -9911,12 +9911,12 @@
             "version": "v5.7.0",
             "source": {
                 "type": "git",
-                "url": "https://github.com/vlucas/phpdotenv.git",
+                "url": "https://github.com/phpdotenv/phpdotenv.git",
                 "reference": "301c07936b16d88628b126b01d082ba153cf4c40"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/vlucas/phpdotenv/zipball/301c07936b16d88628b126b01d082ba153cf4c40",
+                "url": "https://api.github.com/repos/phpdotenv/phpdotenv/zipball/301c07936b16d88628b126b01d082ba153cf4c40",
                 "reference": "301c07936b16d88628b126b01d082ba153cf4c40",
                 "shasum": ""
             },
@@ -10215,16 +10215,16 @@
         },
         {
             "name": "carthage-software/mago",
-            "version": "1.54.0",
+            "version": "1.55.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/carthage-software/mago.git",
-                "reference": "9a86b1847d12f4f2fe073ecbb2614eb7b2b1614c"
+                "reference": "2487de2818449cab3b7fde26be7b00d3a63f6a61"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/carthage-software/mago/zipball/9a86b1847d12f4f2fe073ecbb2614eb7b2b1614c",
-                "reference": "9a86b1847d12f4f2fe073ecbb2614eb7b2b1614c",
+                "url": "https://api.github.com/repos/carthage-software/mago/zipball/2487de2818449cab3b7fde26be7b00d3a63f6a61",
+                "reference": "2487de2818449cab3b7fde26be7b00d3a63f6a61",
                 "shasum": ""
             },
             "require": {
@@ -10266,7 +10266,7 @@
             ],
             "support": {
                 "issues": "https://github.com/carthage-software/mago/issues",
-                "source": "https://github.com/carthage-software/mago/tree/1.54.0"
+                "source": "https://github.com/carthage-software/mago/tree/1.55.0"
             },
             "funding": [
                 {
@@ -10274,7 +10274,7 @@
                     "type": "github"
                 }
             ],
-            "time": "2026-10-08T18:27:19+00:00"
+            "time": "2026-10-09T22:43:14+00:00"
         },
         {
             "name": "cloudcreativity/json-api-testing",
