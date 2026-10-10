@@ -154,6 +154,7 @@ jobs:
           rm -rf vendor composer.lock
           composer update --no-dev --no-scripts -q
           composer install --no-dev --no-scripts -q
+          composer dump-autoload
           php artisan package:discover
           rm .env
       - name: Crowdin action
