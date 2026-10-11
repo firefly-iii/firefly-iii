@@ -360,15 +360,34 @@ export function initFromLocalStorage() {
     }
 }
 
+function parseQueryParams(search = window.location.search) {
+    const params = new URLSearchParams(search);
+    const result = {};
+
+    for (const [key, value] of params) {
+        const parts = key.split(/[\[\]]/).filter(Boolean);
+        let current = result;
+
+        for (let i = 0; i < parts.length; i++) {
+            const part = parts[i];
+
+            if (i === parts.length - 1) {
+                current[part] = value;
+            } else {
+                current[part] ??= {};
+                current = current[part];
+            }
+        }
+    }
+
+    return result;
+}
+
 export function initFromQueryParams() {
-    // grab state from URL params.
-    // Filter is not part of this because the code does not know which columns are filterable.
-    const params = new Proxy(new URLSearchParams(window.location.search), {
-        get: (searchParams, prop) => searchParams.get(prop),
-    });
+    const params = parseQueryParams();
     this.page = parseInt(params.page || "1");
-    this.defaultSortColumn = params.column ?? this.defaultSortColumn;
-    this.defaultSortDirection = params.direction ?? this.defaultSortDirection;
+    this.defaultSortColumns = params.column ?? this.defaultSortColumns;
+    this.defaultSortDirections = params.direction ?? this.defaultSortDirections;
 }
 
 export function respondToSortChange(event) {
@@ -376,10 +395,6 @@ export function respondToSortChange(event) {
     const tableId = event.detail.tableId;
     this.sortableTable.sortColumns[tableId] = event.detail.sortColumn;
     this.sortableTable.sortDirections[tableId] = event.detail.sortDirection;
-    // this.sortableTable.tableIds[event.detail.tableId].sortColumn = event.detail.sortColumn;
-    // this.sortableTable.tableIds[event.detail.tableId].sortDirection = event.detail.sortDirection;
-    //this.sortableTable.sortColumn = event.detail.sortColumn;
-    //this.sortableTable.sortDirection = event.detail.sortDirection;
     this.updateHistory(this.page, this.sortableTable.sortColumns, this.sortableTable.sortDirections); // TODO Need fix.
     this.storeFilterAndSort(this.storageKey, this.sortableTable.sortColumns, this.sortableTable.sortDirections, this.filter); // TODO store for ALL.
     this.downloadObjects();

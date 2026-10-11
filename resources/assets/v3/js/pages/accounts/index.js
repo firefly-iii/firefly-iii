@@ -59,6 +59,7 @@ let index = function () {
         defaultSortDirection: "asc", // TODO obsolete?
         defaultSortColumns: {"main": "order"},
         defaultSortDirections: {"main": "asc"},
+        defaultPages: {"main": 1},
 
         // variables necessary for sortable tables.
         pageNavUrl: "./accounts/",
