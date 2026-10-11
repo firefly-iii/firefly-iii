@@ -326,7 +326,7 @@ trait ModifiesPiggyBanks
 
                 return $piggyBank;
             }
-            $piggyBank->objectGroups()->sync([]);
+            $piggyBank->objectGroups()->detach();
             $piggyBank->save();
         }
 
@@ -342,6 +342,7 @@ trait ModifiesPiggyBanks
 
                 return $piggyBank;
             }
+            $piggyBank->objectGroups()->detach();
         }
 
         return $piggyBank;

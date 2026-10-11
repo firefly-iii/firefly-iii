@@ -53,7 +53,7 @@
     </li>
     <li class="nav-item">
         <a href="{{ route('piggy-banks.index') }}" class="nav-link {{ menu_item_active_partial('piggy-banks.') }}">
-            <em class="nav-icon bi bi-bullseye"></em>
+            <em class="nav-icon bi bi-piggy-bank"></em>
             <p>
                 {{ __('firefly.piggyBanks') }}
             </p>
