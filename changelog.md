@@ -3,6 +3,16 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
+## v6.7.9 - 2026-10-12
+
+<!-- summary: This release fixes an issue for self-hosted users. -->
+
+### Fixed
+
+- Self-hosted users should no longer run into `Target class [has] does not exist` errors.
+- Explain in the release notes how to clear your cache, as suggested by @Kage1
+- #13022
+
 ## v6.7.8 - 2026-10-10
 
 <!-- summary: This release adds a fancy new "release notes"-popup and fixed many bugs. -->
