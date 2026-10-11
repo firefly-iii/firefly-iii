@@ -25,7 +25,14 @@ import Alpine from "@alpinejs/csp";
 import formatMoney from "../../util/format-money.js";
 import formatDate from "../../util/format-date.js";
 import i18next from "i18next";
-import {initFromLocalStorage, initFromQueryParams, sortableTable, storeFilterAndSort, updateHistory, respondToSortChange} from "../shared/sortable-tables.js";
+import {
+    initFromLocalStorage,
+    initFromQueryParams,
+    sortableTable,
+    storeFilterAndSort,
+    updateHistory,
+    respondToSortChange,
+} from "../shared/sortable-tables.js";
 import Get from "../../api/model/category/get.js";
 
 window.enableDates = false;
@@ -85,7 +92,10 @@ let index = function () {
         },
         downloadObjects() {
             this.sortableTable.loadingNewSort = true;
-            let sort = "asc" === this.sortableTable.sortDirection ? this.sortableTable.sortColumn : "-" + this.sortableTable.sortColumn;
+            let sort =
+                "asc" === this.sortableTable.sortDirection
+                    ? this.sortableTable.sortColumn
+                    : "-" + this.sortableTable.sortColumn;
             this.convertToPrimary = window.store.get("convert_to_primary");
             let locale = window.store.get("locale");
             new Get()

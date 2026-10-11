@@ -11,11 +11,11 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 
 - Self-hosted users should no longer run into `Target class [has] does not exist` errors.
 - Explain in the release notes how to clear your cache, as suggested by @Kage1
-- #12972
-- #13022
-- #13034
-- #13037
-- #13039
+- [Issue 12972](https://github.com/firefly-iii/firefly-iii/issues/12972) (Updating transaction from account reconciliation results in JSON/HTML output) reported by @Tommy78649
+- [Issue 13022](https://github.com/firefly-iii/firefly-iii/issues/13022) (Category list does not render actions-menu) reported by @JC5
+- [Issue 13034](https://github.com/firefly-iii/firefly-iii/issues/13034) (Account list shows "January 1st" when there is no last activity) reported by @JC5
+- [Issue 13037](https://github.com/firefly-iii/firefly-iii/issues/13037) (Account lists are missing sums) reported by @JC5
+- [Issue 13039](https://github.com/firefly-iii/firefly-iii/issues/13039) (Budget column empty values on transaction view) reported by @no-coders
 
 ## v6.7.8 - 2026-10-10
 

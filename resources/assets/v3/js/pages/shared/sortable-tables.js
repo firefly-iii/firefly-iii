@@ -66,7 +66,9 @@ export class sortableTable {
 
                 // we do this in the parent because Alpine has the watch function that is needed.
                 this.parent.$watch("filter." + column, (newValue, oldValue) => {
-                    console.log('filter for column "' + column + '" changed from "' + oldValue + '" to "' + newValue + '"',);
+                    console.log(
+                        'filter for column "' + column + '" changed from "' + oldValue + '" to "' + newValue + '"',
+                    );
                     this.fireSortChangeEvent();
                     if ("" !== newValue) {
                         showSearchBox(th);
@@ -234,7 +236,8 @@ export class sortableTable {
     }
 
     updateHeaderClasses() {
-        document.querySelectorAll('table[data-sort-identifier="' + this.tableId + '"] thead th[data-sort-column]')
+        document
+            .querySelectorAll('table[data-sort-identifier="' + this.tableId + '"] thead th[data-sort-column]')
             .forEach((th) => {
                 if (this.sortColumn === th.dataset.sortColumn) {
                     th.classList.add("sortable_sorted");
