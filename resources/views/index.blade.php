@@ -204,7 +204,7 @@
                     <div class="card-footer text-end d-print-none">
                         <a href="{{ route('piggy-banks.index') }}" title="{{ __('firefly.go_to_piggies') }}"
                            class="btn btn-primary btn-sm"><span
-                                class="bi bi-piggy-bank"></span> {{ __('firefly.go_to_piggies') }}</a>
+                                class="bi bi-bullseye"></span> {{ __('firefly.go_to_piggies') }}</a>
                     </div>
                 </div>
             </div>

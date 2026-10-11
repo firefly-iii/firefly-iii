@@ -53,7 +53,7 @@ final class CreateController extends Controller
 
         $this->middleware(function ($request, $next) {
             app('view')->share('title', (string) trans('firefly.piggyBanks'));
-            app('view')->share('mainTitleIcon', 'bi-piggy-bank');
+            app('view')->share('mainTitleIcon', 'bi-target');
 
             $this->attachments = app(AttachmentHelperInterface::class);
             $this->piggyRepos  = app(PiggyBankRepositoryInterface::class);

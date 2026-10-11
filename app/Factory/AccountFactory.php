@@ -29,10 +29,8 @@ use FireflyIII\Events\Model\Account\CreatedNewAccount;
 use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Models\Account;
 use FireflyIII\Models\AccountType;
-use FireflyIII\Models\ObjectGroup;
 use FireflyIII\Models\UserGroup;
 use FireflyIII\Repositories\Account\AccountRepositoryInterface;
-use FireflyIII\Repositories\ObjectGroup\CreatesObjectGroups;
 use FireflyIII\Services\Internal\Support\AccountServiceTrait;
 use FireflyIII\Services\Internal\Support\LocationServiceTrait;
 use FireflyIII\Services\Internal\Update\AccountUpdateService;
@@ -48,7 +46,6 @@ class AccountFactory
 {
     use AccountServiceTrait;
     use LocationServiceTrait;
-    use CreatesObjectGroups;
 
     protected AccountRepositoryInterface $accountRepository;
     protected array $validAssetFields;
@@ -268,23 +265,6 @@ class AccountFactory
 
         // set order
         $this->storeOrder($account, $data);
-
-        $objectGroupTitle                         = $data['object_group_title'] ?? '';
-        if ('' !== $objectGroupTitle) {
-            $objectGroup = $this->findOrCreateObjectGroup($objectGroupTitle);
-            if ($objectGroup instanceof ObjectGroup) {
-                $account->objectGroups()->sync([$objectGroup->id]);
-            }
-        }
-        // try also with ID
-        $objectGroupId                            = (int) ($data['object_group_id'] ?? 0);
-        if (0 !== $objectGroupId) {
-            $objectGroup = $this->findObjectGroupById($objectGroupId);
-            if ($objectGroup instanceof ObjectGroup) {
-                $account->objectGroups()->sync([$objectGroup->id]);
-            }
-        }
-        $account->save();
 
         // refresh and return
         $account->refresh();

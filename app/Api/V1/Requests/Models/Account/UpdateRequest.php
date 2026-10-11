@@ -74,8 +74,6 @@ class UpdateRequest extends FormRequest
             'liability_direction'     => ['liability_direction', 'convertString'],
             'liability_amount'        => ['liability_amount', 'convertString'],
             'liability_start_date'    => ['liability_start_date', 'date'],
-            'object_group_id'           => ['object_group_id', 'convertInteger'],
-            'object_group_title'        => ['object_group_title', 'convertString'],
         ];
         $data   = $this->getAllData($fields);
 
@@ -115,8 +113,6 @@ class UpdateRequest extends FormRequest
             'interest'             => ['required_if:type,liability', 'min:0', 'max:100', 'numeric'],
             'interest_period'      => ['required_if:type,liability', 'in:daily,monthly,yearly'],
             'notes'                => ['min:0', 'max:32768'],
-            'object_group_id'           => ['numeric', 'belongsToUser:object_groups,id'],
-            'object_group_title'        => ['min:0', 'max:255'],
         ];
 
         return Location::requestRules($rules);
