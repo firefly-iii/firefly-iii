@@ -55,8 +55,10 @@ let index = function () {
 
         // default settings for sortable tables.
         storageKey: "",
-        defaultSortColumn: "order",
-        defaultSortDirection: "asc",
+        defaultSortColumn: "order", // TODO obsolete?
+        defaultSortDirection: "asc", // TODO obsolete?
+        defaultSortColumns: {"main": "order"},
+        defaultSortDirections: {"main": "asc"},
 
         // variables necessary for sortable tables.
         pageNavUrl: "./accounts/",
@@ -73,7 +75,7 @@ let index = function () {
         init() {
             // initialize sortable table.
             this.storageKey = "accounts-" + this.objectType + (this.active ? "-active" : "-inactive");
-            this.defaultSortColumn = "expense" === this.objectType || "revenue" === this.objectType ? "name" : this.defaultSortColumn;
+            this.defaultSortColumns = "expense" === this.objectType || "revenue" === this.objectType ? {"main": "name"} : this.defaultSortColumns;
             this.initFromLocalStorage();
             this.initFromQueryParams();
 
@@ -94,8 +96,8 @@ let index = function () {
             this.active = "inactive-accounts" !== address[address.length - 2];
 
             // configure sortable table with final result (not filter).
-            this.sortableTable.sortColumn = this.defaultSortColumn;
-            this.sortableTable.sortDirection = this.defaultSortDirection;
+            this.sortableTable.sortColumns = this.defaultSortColumns;
+            this.sortableTable.sortDirections = this.defaultSortDirections;
             this.sortableTable.storageKey = this.storageKey;
             this.sortableTable.page = this.page;
 
@@ -166,7 +168,12 @@ let index = function () {
 
             // since this function only downloads for table "main", it is safe to extract only "main" from the filter object.
             this.sortableTable.loadingNewSort = true;
-            let sort = "asc" === this.sortableTable.sortDirection ? this.sortableTable.sortColumn : "-" + this.sortableTable.sortColumn;
+            let sort = "asc" === this.sortableTable.sortDirections["main"] ? this.sortableTable.sortColumns["main"] : "-" + this.sortableTable.sortColumns["main"];
+
+            // catch undefined stuff.
+            if('-undefined' === sort) {
+                sort = "asc" === this.defaultSortDirections["main"] ? this.defaultSortColumns["main"] : "-" + this.defaultSortColumns["main"];
+            }
             let start = window.store.get("start");
             let end = window.store.get("end");
             this.convertToPrimary = window.store.get("convert_to_primary");
@@ -188,6 +195,10 @@ let index = function () {
                     this.differences = {};
 
                     this.totalPages = parseInt(response.data.meta.pagination.total_pages);
+                    if(this.totalPages > this.page) {
+                        this.page = this.totalPages;
+                        this.sortableTable.page = this.totalPages;
+                    }
                     for (let i = 0; i < response.data.data.length; i++) {
                         if (Object.hasOwn(response.data.data, i)) {
                             let current = this.filterAmounts(response.data.data[i]);

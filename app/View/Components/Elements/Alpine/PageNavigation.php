@@ -13,7 +13,7 @@ class PageNavigation extends Component
     /**
      * Create a new component instance.
      */
-    public function __construct() {}
+    public function __construct(public string $sortIdentifier) {}
 
     /**
      * Get the view / contents that represent the component.

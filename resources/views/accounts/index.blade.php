@@ -18,7 +18,7 @@
                                                   :linkTitle="__('firefly.make_new_'. $objectType . '_account')"/>
                 <div class="card-body p-0">
                     <template x-if="totalPages > 1">
-                        <x-elements.alpine.page-navigation/>
+                        <x-elements.alpine.page-navigation sort-identifier="main"/>
                     </template>
 
                     <table data-sort-identifier="main" class="table table-valign-middle table-sm table-hover sortable">
@@ -368,7 +368,7 @@
                     </table>
 
                     <template x-if="totalPages > 1">
-                        <x-elements.alpine.page-navigation/>
+                        <x-elements.alpine.page-navigation sort-identifier="main"/>
                     </template>
                 </div>
                 <x-elements.card-footer-with-menu

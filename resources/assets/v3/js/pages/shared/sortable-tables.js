@@ -23,6 +23,9 @@ import getNearestParent from '../shared/get-nearest-parent.js'
 
 export class sortableTable {
     tableIds = {};
+    sortColumns = {};
+    sortDirections = {};
+    pages = {};
     sortColumn = "order"; // todo forbidden to use!
     sortDirection = "asc"; // todo forbidden to use!
     storageKey = "";
@@ -36,9 +39,12 @@ export class sortableTable {
         //this.tableId = tableId;
         for (let i = 0; i < tableIds.length; i++) {
             let tableId = tableIds[i];
+            this.sortColumns[tableId] = "order";
+            this.sortDirections[tableId] = "asc";
             this.tableIds[tableId] = {
                 sortColumn: "order",
                 sortDirection: "asc",
+                page: 1,
             };
             console.log('Initialized sort table "' + tableId + '"');
         }
@@ -48,6 +54,7 @@ export class sortableTable {
         this.handleFunc = this.handlePageClick.bind(this);
         this.parent = parent;
         queueMicrotask(() => {
+            console.log('Now calling update header classes from init-queuemicrotask');
             this.updateHeaderClasses();
             this.addClickEvents();
         });
@@ -59,12 +66,12 @@ export class sortableTable {
             get: (searchParams, prop) => searchParams.get(prop),
         });
         for (let tableId in this.tableIds) {
-            console.log(tableId, this.tableIds[tableId]);
+            // console.log(tableId, this.tableIds[tableId]);
             document
                 .querySelectorAll('table[data-sort-identifier="' + tableId + '"] thead th[data-filter-column]')
                 .forEach((th) => {
                     let column = th.getAttribute("data-filter-column");
-                    console.log('[class] Will watch "'+tableId+'" filter for column "' + column + '"');
+                    // console.log('[class] Will watch "'+tableId+'" filter for column "' + column + '"');
 
                     // also grab current filter value from store AND from url and push back to the parent whichever is set.
                     const key = "filter[" + tableId + "][" + column + "]";
@@ -75,7 +82,7 @@ export class sortableTable {
 
                     // we do this in the parent because Alpine has the watch function that is needed.
                     this.parent.$watch("filter." + tableId + "." + column, (newValue, oldValue) => {
-                        console.log('filter for "'+tableId+'" column "' + column + '" changed from "' + oldValue + '" to "' + newValue + '"',);
+                        //console.log('filter for "'+tableId+'" column "' + column + '" changed from "' + oldValue + '" to "' + newValue + '"',);
                         this.fireSortOrDataChangeEvent(tableId);
                         if ("" !== newValue) {
                             showSearchBox(th);
@@ -108,28 +115,52 @@ export class sortableTable {
         const parentTable = getNearestParent(parent, "table");
         const tableId = parentTable.dataset.sortIdentifier;
         let newColumn = parent.dataset.sortColumn;
+
+        // old
         this.sortDirection = typeof this.sortDirection !== "undefined" ? this.sortDirection : "asc";
+        // new: sort direction and sort column to be put in tableIds[tableId].
+        this.sortDirections[tableId] = typeof this.sortDirections[tableId] !== "undefined" ? this.sortDirections[tableId] : "asc";
+
+        // old:
         if (newColumn === this.sortColumn) {
             this.sortDirection = "asc" === this.sortDirection ? "desc" : "asc";
         }
+        // new:
+        if (newColumn === this.sortColumns[tableId]) {
+            this.sortDirections[tableId] = "asc" === this.sortDirections[tableId] ? "desc" : "asc";
+        }
+
+        // old:
         if (newColumn !== this.sortColumn) {
             this.sortColumn = newColumn;
+        }
+        // new:
+        if (newColumn !== this.sortColumns[tableId]) {
+            this.sortColumns[tableId] = newColumn;
         }
         this.fireSortOrDataChangeEvent(tableId);
     }
 
     handlePageClick(e) {
         let link = e.currentTarget;
+        let nav = getNearestParent(link, "nav");
+        const tableId = nav.dataset.sortIdentifier;
 
         let page = parseInt(link.dataset.page);
         if (isNaN(page)) {
             e.preventDefault();
             return false;
         }
+        // old:
         this.page = page;
+        // new:
+        this.pages[tableId] = page;
+
+        // should be removed:
         this.parent.page = page;
+
         // some sort of trigger to parent?
-        this.parent.updateHistory(page, this.sortColumn, this.sortDirection);
+        this.parent.updateHistory(page, this.sortColumns, this.sortDirections); // TODO give all pages, sort columns and sort directions to parent
         this.parent.downloadObjects();
         e.preventDefault();
         queueMicrotask(() => {
@@ -139,24 +170,25 @@ export class sortableTable {
     }
 
     fireSortOrDataChangeEvent(tableId) {
+        console.log('Now calling update header classes from fireSortOrDataChangeEvent');
         this.updateHeaderClasses();
         let obj = {
             tableId: tableId,
-            sortColumn: this.sortColumn,
-            sortDirection: this.sortDirection,
+            sortColumn: this.sortColumns[tableId],
+            sortDirection: this.sortDirections[tableId],
         };
         console.log("Change sort instructions", obj);
         let event = new CustomEvent("sortable-table-sort-change", {
             detail: obj,
         });
         if (!this.disableRefresh) {
-            console.log("Fire event!");
+            // console.log("Fire event!");
             document.dispatchEvent(event);
         }
-        if (this.disableRefresh) {
-            console.log("Do NOT fire event!");
-            this.disableRefresh = false;
-        }
+        // if (this.disableRefresh) {
+            // console.log("Do NOT fire event!");
+            // this.disableRefresh = false;
+        // }
     }
 
     clickCloseButton(event) {
@@ -252,20 +284,23 @@ export class sortableTable {
 
     updateHeaderClasses() {
         for (let tableId in this.tableIds) {
+            console.log('Update headers for table "' + tableId + '"');
+            console.log('Sort directions', JSON.parse(JSON.stringify(this.sortDirections)));
+            console.log('Sort columns', JSON.parse(JSON.stringify(this.sortColumns)));
             document.querySelectorAll('table[data-sort-identifier="' + tableId + '"] thead th[data-sort-column]')
                 .forEach((th) => {
-                    if (this.sortColumn === th.dataset.sortColumn) {
+                    if (this.sortColumns[tableId] === th.dataset.sortColumn) {
                         th.classList.add("sortable_sorted");
-                        if ("asc" === this.sortDirection) {
+                        if ("asc" === this.sortDirections[tableId]) {
                             th.classList.add("sortable_sorted_asc");
                             th.classList.remove("sortable_sorted_desc");
                         }
-                        if ("desc" === this.sortDirection) {
+                        if ("desc" === this.sortDirections[tableId]) {
                             th.classList.add("sortable_sorted_desc");
                             th.classList.remove("sortable_sorted_asc");
                         }
                     }
-                    if (this.sortColumn !== th.dataset.sortColumn) {
+                    if (this.sortColumns[tableId] !== th.dataset.sortColumn) {
                         th.classList.remove("sortable_sorted_asc");
                         th.classList.remove("sortable_sorted_desc");
                         th.classList.remove("sortable_sorted");
@@ -320,9 +355,8 @@ export function initFromLocalStorage() {
     // grab state from localStorage.
     let fromStore = window.store.get(this.storageKey);
     if (fromStore) {
-        this.defaultSortColumn = fromStore.column;
-        this.defaultSortDirection = fromStore.direction;
-        this.defaultFilter = fromStore.filter;
+        this.defaultSortColumns = fromStore.column;
+        this.defaultSortDirections = fromStore.direction;
     }
 }
 
@@ -339,12 +373,15 @@ export function initFromQueryParams() {
 
 export function respondToSortChange(event) {
     console.log("sortable-table-sort-change", event.detail);
-    this.sortableTable.tableIds[event.detail.tableId].sortColumn = event.detail.sortColumn;
-    this.sortableTable.tableIds[event.detail.tableId].sortDirection = event.detail.sortDirection;
+    const tableId = event.detail.tableId;
+    this.sortableTable.sortColumns[tableId] = event.detail.sortColumn;
+    this.sortableTable.sortDirections[tableId] = event.detail.sortDirection;
+    // this.sortableTable.tableIds[event.detail.tableId].sortColumn = event.detail.sortColumn;
+    // this.sortableTable.tableIds[event.detail.tableId].sortDirection = event.detail.sortDirection;
     //this.sortableTable.sortColumn = event.detail.sortColumn;
     //this.sortableTable.sortDirection = event.detail.sortDirection;
-    this.updateHistory(this.page, event.detail.sortColumn, event.detail.sortDirection);
-    this.storeFilterAndSort(this.storageKey, event.detail.sortColumn, event.detail.sortDirection, this.filter);
+    this.updateHistory(this.page, this.sortableTable.sortColumns, this.sortableTable.sortDirections); // TODO Need fix.
+    this.storeFilterAndSort(this.storageKey, this.sortableTable.sortColumns, this.sortableTable.sortDirections, this.filter); // TODO store for ALL.
     this.downloadObjects();
 }
 

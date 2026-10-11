@@ -1,6 +1,6 @@
 <template x-if="totalPages > 1" x-effect="sortableTable ? sortableTable.capturePageNavigation() : null">
     <div class="m-2">
-        <nav>
+        <nav data-sort-identifier="{{ $sortIdentifier }}">
             <ul class="pagination">
                 <li :class="{'page-item': true, 'disabled': 1 === page}" :aria-disabled="1 === page ? 'true' : 'false'" aria-label="{!! __('pagination.previous') !!}">
                     <template x-if="1 === page">
