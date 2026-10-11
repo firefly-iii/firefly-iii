@@ -111,7 +111,7 @@ class GitHubUpdateRequest implements UpdateRequestInterface
     private function filterReleases(array $releases): array
     {
         $return  = [];
-        $weekAgo = now()->subWeek();
+        $weekAgo = now()->subDays(3); // ok so its less than a week.
 
         /** @var array $release */
         foreach ($releases as $release) {

@@ -25,9 +25,17 @@ import Alpine from "@alpinejs/csp";
 import formatMoney from "../../util/format-money.js";
 import formatDate from "../../util/format-date.js";
 import i18next from "i18next";
-window.enableDates = false;
-import { sortableTable, storeFilterAndSort, updateHistory } from "../shared/sortable-tables.js";
+import {
+    initFromLocalStorage,
+    initFromQueryParams,
+    sortableTable,
+    storeFilterAndSort,
+    updateHistory,
+    respondToSortChange,
+} from "../shared/sortable-tables.js";
 import Get from "../../api/model/category/get.js";
+
+window.enableDates = false;
 
 let index = function () {
     return {
@@ -44,71 +52,42 @@ let index = function () {
         formatDate: formatDate,
 
         // default settings for sorting
-        filter: {},
         pageNavUrl: "./categories/",
         storageKey: "categories-index",
         defaultSortColumn: "name",
         defaultSortDirection: "asc",
-
-        sortColumn: "name", // used in GET request.
-        sortDirection: "asc", // used in GET request.
+        filter: {},
 
         // sort functions, imported
         updateHistory: updateHistory,
         storeFilterAndSort: storeFilterAndSort,
+        initFromLocalStorage: initFromLocalStorage,
+        initFromQueryParams: initFromQueryParams,
+        respondToSortChange: respondToSortChange,
         sortableTable: null,
 
         init() {
-            console.log("init");
+            this.initFromLocalStorage();
+            this.initFromQueryParams();
+
+            // create sortable table.
             this.sortableTable = new sortableTable("main");
+
+            // prepare some vars
             this.i18next = i18next;
             this.anonymous = window.store.get("anonymous");
 
-            // todo make function:
-            // grab state from localStorage.
-            let fromStore = window.store.get(this.storageKey);
-            if (fromStore) {
-                this.defaultSortColumn = fromStore.column;
-                this.defaultSortDirection = fromStore.direction;
-                this.filter = fromStore.filter;
-                //console.log('Restore from store:', fromStore);
-            }
-
-            // todo make function
-            // grab state from URL params.
-            const params = new Proxy(new URLSearchParams(window.location.search), {
-                get: (searchParams, prop) => searchParams.get(prop),
-            });
-            this.page = parseInt(params.page || "1");
-            this.defaultSortColumn = params.column ?? this.defaultSortColumn;
-            this.defaultSortDirection = params.direction ?? this.defaultSortDirection;
-            this.sortColumn = this.defaultSortColumn;
-            this.sortDirection = this.defaultSortDirection;
-            console.log("Restore from params:", {
-                page: this.page,
-                column: this.defaultSortColumn,
-                direction: this.defaultSortDirection,
-            });
-
+            // configure sortable table with final result (not filter).
             this.sortableTable.sortColumn = this.defaultSortColumn;
             this.sortableTable.sortDirection = this.defaultSortDirection;
             this.sortableTable.storageKey = this.storageKey;
             this.sortableTable.page = this.page;
 
+            // initialize sortable table.
             this.sortableTable.init(this);
 
-            // todo make function
             // watch for changes in the sortable table instructions.
-            document.addEventListener("sortable-table-sort-change", (event) => {
-                console.log("sortable-table-sort-change", event.detail);
-                this.sortColumn = event.detail.sortColumn;
-                this.sortDirection = event.detail.sortDirection;
-                this.sortableTable.sortColumn = this.sortColumn;
-                this.sortableTable.sortDirection = this.sortDirection;
-                this.updateHistory(this.page, this.sortColumn, this.sortDirection, this.filter);
-                this.storeFilterAndSort(this.storageKey, this.sortColumn, this.sortDirection, this.filter);
-                this.downloadObjects();
-            });
+            document.addEventListener("sortable-table-sort-change", this.respondToSortChange.bind(this));
             this.downloadObjects();
         },
         downloadObjects() {
@@ -133,7 +112,6 @@ let index = function () {
                     for (let i = 0; i < response.data.data.length; i++) {
                         if (Object.hasOwn(response.data.data, i)) {
                             let current = response.data.data[i];
-                            console.log(current);
                             let lastActivity = i18next.t("firefly.never");
                             let noLastActivity = true;
                             if (null !== current.attributes.last_activity) {

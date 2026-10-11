@@ -224,7 +224,7 @@ final class ShowController extends Controller
 
         /** @var GroupCollectorInterface $collector */
         $collector    = app(GroupCollectorInterface::class);
-        $collector->setAccounts(new Collection()->push($account))->setLimit($pageSize)->setPage($page)->withAccountInformation()->withCategoryInformation();
+        $collector->setAccounts(new Collection()->push($account))->withAPIInformation()->setLimit($pageSize)->setPage($page)->withAccountInformation();
 
         // this search will not include transaction groups where this asset account (or liability)
         // is just part of ONE of the journals. To force this:

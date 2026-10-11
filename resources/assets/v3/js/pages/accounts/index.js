@@ -29,7 +29,14 @@ import formatDate from "../../util/format-date.js";
 import formatMoney from "../../util/format-money.js";
 import i18next from "i18next";
 import { addDrag } from "../shared/drag-and-droppable-rows.js";
-import { sortableTable, storeFilterAndSort, updateHistory } from "../shared/sortable-tables.js";
+import {
+    initFromLocalStorage,
+    initFromQueryParams,
+    sortableTable,
+    storeFilterAndSort,
+    updateHistory,
+    respondToSortChange,
+} from "../shared/sortable-tables.js";
 
 window.enableDates = true;
 
@@ -53,81 +60,55 @@ let index = function () {
         // functions
         formatMoney: formatMoney,
 
-        // default settings for sorting
+        // default settings for sortable tables.
         storageKey: "",
         defaultSortColumn: "order",
         defaultSortDirection: "asc",
 
-        // variables necessary for sorting tables.
+        // variables necessary for sortable tables.
         pageNavUrl: "./accounts/",
-        sortColumn: "order", // used in GET request.
-        sortDirection: "asc", // used in GET request.
-        filter: {},
+        sortColumn: "order", // used in GET request. TODO needs change when doing multiple tables.
+        sortDirection: "asc", // used in GET request. TODO needs change when doing multiple tables.
+        filter: {}, // TODO needs change when doing multiple tables.
 
         // sort functions, imported
         updateHistory: updateHistory,
+        initFromLocalStorage: initFromLocalStorage,
+        initFromQueryParams: initFromQueryParams,
         storeFilterAndSort: storeFilterAndSort,
+        respondToSortChange: respondToSortChange,
         sortableTable: null,
 
         init() {
-            this.sortableTable = new sortableTable("main");
-            // prepare some variables:
+            // initialize sortable table.
+            this.initFromLocalStorage();
+            this.initFromQueryParams();
 
+            // create sortable table.
+            this.sortableTable = new sortableTable("main");
+
+            // prepare some variables. Has nothing to do with sortable table.
             const address = window.location.href.split("?")[0].split("/");
             this.objectType = address[address.length - 1].substring(0, 15);
-            this.i18next = i18next;
-            this.anonymous = window.store.get("anonymous");
             this.storageKey = "accounts-" + this.objectType + (this.active ? "-active" : "-inactive");
-            this.pageNavUrl = "./accounts/" + this.objectType;
             this.defaultSortColumn =
                 "expense" === this.objectType || "revenue" === this.objectType ? "name" : this.defaultSortColumn;
+            this.i18next = i18next;
+            this.anonymous = window.store.get("anonymous");
+            this.pageNavUrl = "./accounts/" + this.objectType;
             this.active = "inactive-accounts" !== address[address.length - 2];
 
-            // todo make function:
-            // grab state from localStorage.
-            let fromStore = window.store.get(this.storageKey);
-            if (fromStore) {
-                this.defaultSortColumn = fromStore.column;
-                this.defaultSortDirection = fromStore.direction;
-                this.filter = fromStore.filter;
-                //console.log('Restore from store:', fromStore);
-            }
-
-            // todo make function
-            // grab state from URL params.
-            const params = new Proxy(new URLSearchParams(window.location.search), {
-                get: (searchParams, prop) => searchParams.get(prop),
-            });
-            this.page = parseInt(params.page || "1");
-            this.defaultSortColumn = params.column ?? this.defaultSortColumn;
-            this.defaultSortDirection = params.direction ?? this.defaultSortDirection;
-            this.sortColumn = this.defaultSortColumn;
-            this.sortDirection = this.defaultSortDirection;
-            console.log("Restore from params:", {
-                page: this.page,
-                column: this.defaultSortColumn,
-                direction: this.defaultSortDirection,
-            });
-
+            // configure sortable table with final result (not filter).
             this.sortableTable.sortColumn = this.defaultSortColumn;
             this.sortableTable.sortDirection = this.defaultSortDirection;
             this.sortableTable.storageKey = this.storageKey;
             this.sortableTable.page = this.page;
 
+            // initialize sortable table.
             this.sortableTable.init(this);
 
-            // todo make function
             // watch for changes in the sortable table instructions.
-            document.addEventListener("sortable-table-sort-change", (event) => {
-                console.log("sortable-table-sort-change", event.detail);
-                this.sortColumn = event.detail.sortColumn;
-                this.sortDirection = event.detail.sortDirection;
-                this.sortableTable.sortColumn = this.sortColumn;
-                this.sortableTable.sortDirection = this.sortDirection;
-                this.updateHistory(this.page, this.sortColumn, this.sortDirection, this.filter);
-                this.storeFilterAndSort(this.storageKey, this.sortColumn, this.sortDirection, this.filter);
-                this.downloadObjects();
-            });
+            document.addEventListener("sortable-table-sort-change", this.respondToSortChange.bind(this));
             this.downloadObjects();
 
             // respond to drag and drop.
@@ -152,13 +133,11 @@ let index = function () {
                 });
             });
         },
+
         prepareSumArrays(code) {
-            let keys = ["sums", "differences", "debts"];
-            for (let i = 0; i < keys.length; i++) {
-                if (Object.hasOwn(this, keys[i])) {
-                    this[keys[i]][code] = this[keys[i]][code] || 0;
-                }
-            }
+            this.sums[code] = Object.hasOwn(this.sums, code) ? this.sums[code] : 0;
+            this.debts[code] = Object.hasOwn(this.debts, code) ? this.debts[code] : 0;
+            this.differences[code] = Object.hasOwn(this.differences, code) ? this.differences[code] : 0;
         },
         filterAmounts(account) {
             // overrule some amounts, set them to zero when "this.anonymous" is true.
@@ -191,11 +170,9 @@ let index = function () {
                 "asc" === this.sortableTable.sortDirection
                     ? this.sortableTable.sortColumn
                     : "-" + this.sortableTable.sortColumn;
-            console.log("downloadObjects:", { page: this.page, sort: sort });
             let start = window.store.get("start");
             let end = window.store.get("end");
             this.convertToPrimary = window.store.get("convert_to_primary");
-            // console.log("Download accounts using", JSON.parse(JSON.stringify(this.filter)));
             new Get()
                 .list({
                     active: this.active,
@@ -244,7 +221,7 @@ let index = function () {
                             );
 
                             let noLastActivity = false;
-                            if ("" === lastActivity) {
+                            if (null === current.attributes.last_activity) {
                                 lastActivity = i18next.t("firefly.never");
                                 noLastActivity = true;
                             }

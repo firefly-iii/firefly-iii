@@ -24,6 +24,7 @@
                     <tr>
                         <th data-sort-column="name" data-filter-column="name" class="w-40"><span class="title">{{ trans('list.name') }}</span></th>
                         <th data-sort-column="last_activity"><span class="title">{{ trans('list.last_activity') }}</span></th>
+                        <th>&nbsp;</th>
                     </tr>
                     </thead>
                     <tbody>
@@ -35,6 +36,17 @@
                             </td>
                             <td>
                                 <span x-text="category.last_activity"></span>
+                            </td>
+                            <td class="text-end">
+                                <div class="dropdown">
+                                    <button class="btn btn-sm btn-outline-secondary dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                        {{ __('firefly.actions') }}
+                                    </button>
+                                    <ul class="dropdown-menu">
+                                        <li><a class="dropdown-item" :href="'./categories/edit/' + category.id + '?_from={{ urlencode($FF3_FROM) }}'"><span class="bi bi-pencil"></span> {{ __('firefly.edit') }}</a></li>
+                                        <li><a class="dropdown-item text-danger" :href="'./categories/delete/' + category.id + '?_from={{ urlencode($FF3_FROM) }}'"><span class="bi bi-trash"></span> {{ __('firefly.delete') }}</a></li>
+                                    </ul>
+                                </div>
                             </td>
                         </tr>
                     </template>

@@ -25,14 +25,15 @@ namespace FireflyIII\Http\Controllers;
 
 use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Repositories\Rule\RuleRepositoryInterface;
+use FireflyIII\Rules\System\IsValidOriginUrl;
 use FireflyIII\Support\Search\SearchInterface;
 use Illuminate\Contracts\View\Factory;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\View as ViewFacade;
-use Illuminate\View\View;
 use Throwable;
+use Illuminate\Contracts\View\View;
 
 use function Safe\mb_convert_encoding;
 
@@ -56,12 +57,7 @@ final class SearchController extends Controller
         });
     }
 
-    /**
-     * Do the search.
-     *
-     * @return Factory|View
-     */
-    public function index(Request $request, SearchInterface $searcher): Factory|\Illuminate\Contracts\View\View
+    public function index(Request $request, SearchInterface $searcher): Factory|View
     {
         // search params:
         $fullQuery        = (string) $request->input('search');
@@ -126,7 +122,13 @@ final class SearchController extends Controller
         $fullQuery  = (string) $entry;
         $page       = 0 === (int) $request->input('page') ? 1 : (int) $request->input('page');
         $page       = clamp(value: $page, min: 1, max: 2 ** 16);
+
+        // validate from or exit
         $from       = $request->input('_from');
+        $validator  = validator(['_from' => $from], ['nullable', 'max:255', new IsValidOriginUrl()]);
+        if ($validator->fails()) {
+            throw new FireflyException(trans('validation.bad_url_parts'));
+        }
 
         $searcher->parseQuery($fullQuery);
 

@@ -32,11 +32,13 @@ use FireflyIII\Http\Controllers\Controller;
 use FireflyIII\Models\Account;
 use FireflyIII\Models\TransactionCurrency;
 use FireflyIII\Repositories\Account\AccountRepositoryInterface;
+use FireflyIII\Rules\System\IsValidOriginUrl;
 use FireflyIII\Support\Facades\Steam;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\View as ViewFacade;
 use Throwable;
 
 /**
@@ -169,7 +171,7 @@ final class ReconcileController extends Controller
      *
      * @throws FireflyException
      */
-    public function transactions(Account $account, ?Carbon $start = null, ?Carbon $end = null)
+    public function transactions(Request $request, Account $account, ?Carbon $start = null, ?Carbon $end = null)
     {
         if (!$start instanceof Carbon || !$end instanceof Carbon) {
             throw new FireflyException('Invalid dates submitted.');
@@ -181,6 +183,14 @@ final class ReconcileController extends Controller
         $end->endOfDay();
         $startDate      = clone $start;
         $startDate->subDay();
+
+        // validate from or exit
+        $from           = $request->input('_from');
+        $validator      = validator(['_from' => $from], ['nullable', 'max:255', new IsValidOriginUrl()]);
+        if ($validator->fails()) {
+            throw new FireflyException(trans('validation.bad_url_parts'));
+        }
+        ViewFacade::share('FF3_FROM', $from);
 
         $currency       = $this->accountRepos->getAccountCurrency($account) ?? $this->primaryCurrency;
         // correct
