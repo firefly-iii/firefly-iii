@@ -39,8 +39,6 @@ let index = function () {
         listPageSize: 50,
         objectType: "invalid",
         accounts: [],
-        // page: 1, // TODO obsolete, must be per table.
-        // totalPages: 1, // TODO obsolete.
         i18next: null,
         anonymous: false,
         loadingPage: true,
@@ -50,22 +48,16 @@ let index = function () {
         debts: {},
         differences: {},
 
-        // functions
-        formatMoney: formatMoney,
-
         // default settings for sortable tables.
         storageKey: "",
-        defaultSortColumn: "order", // TODO obsolete?
-        defaultSortDirection: "asc", // TODO obsolete?
         defaultSortColumns: {"main": "order"},
         defaultSortDirections: {"main": "asc"},
         defaultPages: {"main": 1},
-
-        // variables necessary for sortable tables.
         pageNavUrl: "./accounts/",
-        filter: {}, // TODO needs change when doing multiple tables.
+        filter: {},
 
         // sort functions, imported
+        formatMoney: formatMoney,
         updateHistory: updateHistory,
         initFromLocalStorage: initFromLocalStorage,
         initFromQueryParams: initFromQueryParams,
@@ -166,7 +158,6 @@ let index = function () {
             return account;
         },
         downloadObjects() {
-
             // since this function only downloads for table "main", it is safe to extract only "main" from the filter object.
             this.sortableTable.loadingNewSort = true;
             let sort = "asc" === this.sortableTable.sortDirections["main"] ? this.sortableTable.sortColumns["main"] : "-" + this.sortableTable.sortColumns["main"];
