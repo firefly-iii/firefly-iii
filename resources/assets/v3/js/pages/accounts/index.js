@@ -90,9 +90,6 @@ let index = function () {
 
             }
 
-            this.initFromLocalStorage();
-            this.initFromQueryParams();
-
             console.log('final sort columns', JSON.parse(JSON.stringify(this.defaultSortColumns)));
             console.log('final sort directions', JSON.parse(JSON.stringify(this.defaultSortDirections)));
 
@@ -115,6 +112,9 @@ let index = function () {
             this.anonymous = window.store.get("anonymous");
             this.pageNavUrl = "./accounts/" + this.objectType;
             this.active = "inactive-accounts" !== address[address.length - 2];
+
+            this.initFromLocalStorage();
+            this.initFromQueryParams();
 
             // watch for changes in the sortable table instructions.
             document.addEventListener("sortable-table-sort-change", this.respondToSortChange.bind(this));
