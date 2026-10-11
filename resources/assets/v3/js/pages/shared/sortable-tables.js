@@ -26,6 +26,7 @@ export class sortableTable {
     sortColumns = {};
     sortDirections = {};
     pages = {};
+    totalPages= {};
     sortColumn = "order"; // todo forbidden to use!
     sortDirection = "asc"; // todo forbidden to use!
     storageKey = "";
@@ -41,6 +42,8 @@ export class sortableTable {
             let tableId = tableIds[i];
             this.sortColumns[tableId] = "order";
             this.sortDirections[tableId] = "asc";
+            this.pages[tableId] = 1;
+            this.totalPages[tableId] = 1;
             this.tableIds[tableId] = {
                 sortColumn: "order",
                 sortDirection: "asc",
@@ -152,15 +155,15 @@ export class sortableTable {
             return false;
         }
         // old:
-        this.page = page;
+        // this.page = page;
         // new:
         this.pages[tableId] = page;
 
         // should be removed:
-        this.parent.page = page;
+        // this.parent.page = page;
 
         // some sort of trigger to parent?
-        this.parent.updateHistory(page, this.sortColumns, this.sortDirections); // TODO give all pages, sort columns and sort directions to parent
+        this.parent.updateHistory(this.pages, this.sortColumns, this.sortDirections); // TODO give all pages, sort columns and sort directions to parent
         this.parent.downloadObjects();
         e.preventDefault();
         queueMicrotask(() => {
@@ -385,7 +388,12 @@ function parseQueryParams(search = window.location.search) {
 
 export function initFromQueryParams() {
     const params = parseQueryParams();
-    this.page = parseInt(params.page || "1");
+    this.defaultPages = params.page || this.defaultPages;
+    // make sure all defaultPages are integers:
+    for (let tableId in this.defaultPages) {
+        this.defaultPages[tableId] = parseInt(this.defaultPages[tableId]);
+    }
+
     this.defaultSortColumns = params.column ?? this.defaultSortColumns;
     this.defaultSortDirections = params.direction ?? this.defaultSortDirections;
 }
@@ -395,7 +403,7 @@ export function respondToSortChange(event) {
     const tableId = event.detail.tableId;
     this.sortableTable.sortColumns[tableId] = event.detail.sortColumn;
     this.sortableTable.sortDirections[tableId] = event.detail.sortDirection;
-    this.updateHistory(this.page, this.sortableTable.sortColumns, this.sortableTable.sortDirections); // TODO Need fix.
+    this.updateHistory(this.sortableTable.pages, this.sortableTable.sortColumns, this.sortableTable.sortDirections); // TODO Need fix.
     this.storeFilterAndSort(this.storageKey, this.sortableTable.sortColumns, this.sortableTable.sortDirections, this.filter); // TODO store for ALL.
     this.downloadObjects();
 }

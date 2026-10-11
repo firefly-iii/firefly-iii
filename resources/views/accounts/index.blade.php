@@ -17,7 +17,7 @@
                                                   :route="route('accounts.create', $objectType) . '?_from=' . urlencode($FF3_FROM)"
                                                   :linkTitle="__('firefly.make_new_'. $objectType . '_account')"/>
                 <div class="card-body p-0">
-                    <template x-if="totalPages > 1">
+                    <template x-if="sortableTable.totalPages.main > 1">
                         <x-elements.alpine.page-navigation sort-identifier="main"/>
                     </template>
 
@@ -367,7 +367,7 @@
                         </template>
                     </table>
 
-                    <template x-if="totalPages > 1">
+                    <template x-if="sortableTable.totalPages.main > 1">
                         <x-elements.alpine.page-navigation sort-identifier="main"/>
                     </template>
                 </div>

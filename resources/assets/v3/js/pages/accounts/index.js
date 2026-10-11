@@ -39,8 +39,8 @@ let index = function () {
         listPageSize: 50,
         objectType: "invalid",
         accounts: [],
-        page: 1, // TODO obsolete, must be per table.
-        totalPages: 1, // TODO obsolete.
+        // page: 1, // TODO obsolete, must be per table.
+        // totalPages: 1, // TODO obsolete.
         i18next: null,
         anonymous: false,
         loadingPage: true,
@@ -100,7 +100,7 @@ let index = function () {
             this.sortableTable.sortColumns = this.defaultSortColumns;
             this.sortableTable.sortDirections = this.defaultSortDirections;
             this.sortableTable.storageKey = this.storageKey;
-            this.sortableTable.page = this.page;
+            this.sortableTable.pages = this.defaultPages;
 
             // initialize sortable table.
             this.sortableTable.init(this);
@@ -182,7 +182,7 @@ let index = function () {
                 .list({
                     active: this.active,
                     sort: sort,
-                    page: this.page,
+                    page: this.sortableTable.pages["main"],
                     type: this.objectType,
                     start: start,
                     filter: JSON.parse(JSON.stringify(this.filter))["main"],
@@ -195,11 +195,10 @@ let index = function () {
                     this.debts = {};
                     this.differences = {};
 
-                    this.totalPages = parseInt(response.data.meta.pagination.total_pages);
+                    this.sortableTable.totalPages["main"] = parseInt(response.data.meta.pagination.total_pages);
                     const length = response.data.data.length;
-                    if(this.totalPages <= this.page && 0 === length) {
-                        this.page = this.totalPages;
-                        this.sortableTable.page = this.totalPages;
+                    if(this.sortableTable.totalPages["main"] <= this.sortableTable.pages["main"] && 0 === length) {
+                        this.sortableTable.pages["main"] = this.sortableTable.totalPages["main"];
                         this.downloadObjects();
                     }
                     for (let i = 0; i < response.data.data.length; i++) {
