@@ -9,7 +9,7 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 
 ### Fixed
 
-- Self-hosted users should no longer run into `Target class [has] does not exist` errors.
+- Self-hosted users should no longer run into `Target class [hash] does not exist` errors.
 - Explain in the release notes how to clear your cache, as suggested by @Kage1
 - [Issue 12972](https://github.com/firefly-iii/firefly-iii/issues/12972) (Updating transaction from account reconciliation results in JSON/HTML output) reported by @Tommy78649
 - [Issue 13022](https://github.com/firefly-iii/firefly-iii/issues/13022) (Category list does not render actions-menu) reported by @JC5
