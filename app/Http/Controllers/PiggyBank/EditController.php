@@ -53,7 +53,7 @@ final class EditController extends Controller
 
         $this->middleware(function ($request, $next) {
             app('view')->share('title', (string) trans('firefly.piggyBanks'));
-            app('view')->share('mainTitleIcon', 'bi-target');
+            app('view')->share('mainTitleIcon', 'bi-piggy-bank');
 
             $this->attachments = app(AttachmentHelperInterface::class);
             $this->piggyRepos  = app(PiggyBankRepositoryInterface::class);
