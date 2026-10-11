@@ -74,8 +74,6 @@ let index = function () {
 
         init() {
             // initialize sortable table.
-            this.storageKey = "accounts-" + this.objectType + (this.active ? "-active" : "-inactive");
-            this.defaultSortColumn = "expense" === this.objectType || "revenue" === this.objectType ? "name" : this.defaultSortColumn;
             this.initFromLocalStorage();
             this.initFromQueryParams();
 
@@ -85,6 +83,8 @@ let index = function () {
             // prepare some variables. Has nothing to do with sortable table.
             const address = window.location.href.split("?")[0].split("/");
             this.objectType = address[address.length - 1].substring(0, 15);
+            this.storageKey = "accounts-" + this.objectType + (this.active ? "-active" : "-inactive");
+            this.defaultSortColumn = "expense" === this.objectType || "revenue" === this.objectType ? "name" : this.defaultSortColumn;
             this.i18next = i18next;
             this.anonymous = window.store.get("anonymous");
             this.pageNavUrl = "./accounts/" + this.objectType;
@@ -127,12 +127,9 @@ let index = function () {
         },
 
         prepareSumArrays(code) {
-            let keys = ["sums", "differences", "debts"];
-            for (let i = 0; i < keys.length; i++) {
-                if (Object.hasOwn(this, keys[i])) {
-                    this[keys[i]][code] = this[keys[i]][code] || 0;
-                }
-            }
+            this.sums[code] = Object.hasOwn(this.sums, code) ? this.sums[code] : 0;
+            this.debts[code] = Object.hasOwn(this.debts, code) ? this.debts[code] : 0;
+            this.differences[code] = Object.hasOwn(this.differences, code) ? this.differences[code] : 0;
         },
         filterAmounts(account) {
             // overrule some amounts, set them to zero when "this.anonymous" is true.
