@@ -22,14 +22,14 @@ import "../../boot/bootstrap.js";
 import sidebar from "../shared/sidebar.js";
 import dates from "../shared/dates.js";
 import Alpine from "@alpinejs/csp";
-import { getVariable } from "../../store/get-variable.js";
+import {getVariable} from "../../store/get-variable.js";
 import Put from "../../api/model/account/put.js";
 import Get from "../../api/model/account/get.js";
 import formatDate from "../../util/format-date.js";
 import formatMoney from "../../util/format-money.js";
 import i18next from "i18next";
-import { addDrag } from "../shared/drag-and-droppable-rows.js";
-import { sortableTable, storeFilterAndSort, updateHistory } from "../shared/sortable-tables.js";
+import {addDrag} from "../shared/drag-and-droppable-rows.js";
+import {initFromLocalStorage, initFromQueryParams, sortableTable, storeFilterAndSort, updateHistory, respondToSortChange} from "../shared/sortable-tables.js";
 
 window.enableDates = true;
 
@@ -53,81 +53,54 @@ let index = function () {
         // functions
         formatMoney: formatMoney,
 
-        // default settings for sorting
+        // default settings for sortable tables.
         storageKey: "",
         defaultSortColumn: "order",
         defaultSortDirection: "asc",
 
-        // variables necessary for sorting tables.
+        // variables necessary for sortable tables.
         pageNavUrl: "./accounts/",
-        sortColumn: "order", // used in GET request.
-        sortDirection: "asc", // used in GET request.
-        filter: {},
+        sortColumn: "order", // used in GET request. TODO needs change when doing multiple tables.
+        sortDirection: "asc", // used in GET request. TODO needs change when doing multiple tables.
+        filter: {}, // TODO needs change when doing multiple tables.
 
         // sort functions, imported
         updateHistory: updateHistory,
+        initFromLocalStorage: initFromLocalStorage,
+        initFromQueryParams: initFromQueryParams,
         storeFilterAndSort: storeFilterAndSort,
+        respondToSortChange: respondToSortChange,
         sortableTable: null,
 
         init() {
-            this.sortableTable = new sortableTable("main");
-            // prepare some variables:
+            // initialize sortable table.
+            this.storageKey = "accounts-" + this.objectType + (this.active ? "-active" : "-inactive");
+            this.defaultSortColumn = "expense" === this.objectType || "revenue" === this.objectType ? "name" : this.defaultSortColumn;
+            this.initFromLocalStorage();
+            this.initFromQueryParams();
 
+            // create sortable table.
+            this.sortableTable = new sortableTable("main");
+
+            // prepare some variables. Has nothing to do with sortable table.
             const address = window.location.href.split("?")[0].split("/");
             this.objectType = address[address.length - 1].substring(0, 15);
             this.i18next = i18next;
             this.anonymous = window.store.get("anonymous");
-            this.storageKey = "accounts-" + this.objectType + (this.active ? "-active" : "-inactive");
             this.pageNavUrl = "./accounts/" + this.objectType;
-            this.defaultSortColumn =
-                "expense" === this.objectType || "revenue" === this.objectType ? "name" : this.defaultSortColumn;
             this.active = "inactive-accounts" !== address[address.length - 2];
 
-            // todo make function:
-            // grab state from localStorage.
-            let fromStore = window.store.get(this.storageKey);
-            if (fromStore) {
-                this.defaultSortColumn = fromStore.column;
-                this.defaultSortDirection = fromStore.direction;
-                this.filter = fromStore.filter;
-                //console.log('Restore from store:', fromStore);
-            }
-
-            // todo make function
-            // grab state from URL params.
-            const params = new Proxy(new URLSearchParams(window.location.search), {
-                get: (searchParams, prop) => searchParams.get(prop),
-            });
-            this.page = parseInt(params.page || "1");
-            this.defaultSortColumn = params.column ?? this.defaultSortColumn;
-            this.defaultSortDirection = params.direction ?? this.defaultSortDirection;
-            this.sortColumn = this.defaultSortColumn;
-            this.sortDirection = this.defaultSortDirection;
-            console.log("Restore from params:", {
-                page: this.page,
-                column: this.defaultSortColumn,
-                direction: this.defaultSortDirection,
-            });
-
+            // configure sortable table with final result (not filter).
             this.sortableTable.sortColumn = this.defaultSortColumn;
             this.sortableTable.sortDirection = this.defaultSortDirection;
             this.sortableTable.storageKey = this.storageKey;
             this.sortableTable.page = this.page;
 
+            // initialize sortable table.
             this.sortableTable.init(this);
 
-            // todo make function
             // watch for changes in the sortable table instructions.
-            document.addEventListener("sortable-table-sort-change", (event) => {
-                console.log("sortable-table-sort-change", event.detail);
-                this.sortColumn = event.detail.sortColumn;
-                this.sortDirection = event.detail.sortDirection;
-                this.sortableTable.sortColumn = this.sortColumn;
-                this.sortableTable.sortDirection = this.sortDirection;
-                this.updateHistory(this.page, this.sortColumn, this.sortDirection, this.filter);
-                this.storeFilterAndSort(this.storageKey, this.sortColumn, this.sortDirection, this.filter);
-                this.downloadObjects();
-            });
+            document.addEventListener("sortable-table-sort-change", this.respondToSortChange.bind(this));
             this.downloadObjects();
 
             // respond to drag and drop.
@@ -140,7 +113,7 @@ let index = function () {
                             let item = e.detail[i];
                             if (item.order !== item.currentOrder) {
                                 // PUT new order to system.
-                                new Put().put({ order: item.order }, { id: item.id });
+                                new Put().put({order: item.order}, {id: item.id});
 
                                 // save new order as current order in the row.
                                 document
@@ -152,6 +125,7 @@ let index = function () {
                 });
             });
         },
+
         prepareSumArrays(code) {
             let keys = ["sums", "differences", "debts"];
             for (let i = 0; i < keys.length; i++) {
@@ -187,15 +161,10 @@ let index = function () {
         },
         downloadObjects() {
             this.sortableTable.loadingNewSort = true;
-            let sort =
-                "asc" === this.sortableTable.sortDirection
-                    ? this.sortableTable.sortColumn
-                    : "-" + this.sortableTable.sortColumn;
-            console.log("downloadObjects:", { page: this.page, sort: sort });
+            let sort = "asc" === this.sortableTable.sortDirection ? this.sortableTable.sortColumn : "-" + this.sortableTable.sortColumn;
             let start = window.store.get("start");
             let end = window.store.get("end");
             this.convertToPrimary = window.store.get("convert_to_primary");
-            // console.log("Download accounts using", JSON.parse(JSON.stringify(this.filter)));
             new Get()
                 .list({
                     active: this.active,
@@ -239,12 +208,12 @@ let index = function () {
                             }
                             let lastActivity = formatDate(
                                 current.attributes.last_activity,
-                                i18next.t("config.date_time_fns_short", { lng: locale }),
+                                i18next.t("config.date_time_fns_short", {lng: locale}),
                                 locale,
                             );
 
                             let noLastActivity = false;
-                            if ("" === lastActivity) {
+                            if (null === current.attributes.last_activity) {
                                 lastActivity = i18next.t("firefly.never");
                                 noLastActivity = true;
                             }

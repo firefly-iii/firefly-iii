@@ -51,19 +51,6 @@ export class sortableTable {
             get: (searchParams, prop) => searchParams.get(prop),
         });
 
-        // add a watch for sortColumn, sortDirection and page
-        // parent.$watch('sortColumn', (newValue, oldValue) => {
-        //     console.log('sortColumn changed from "' + oldValue + '" to "' + newValue + '"');
-        // this.updateHeaderClasses();
-
-        // });
-        // parent.$watch('sortDirection', (newValue, oldValue) => {
-        //     console.log('sortDirection changed from "' + oldValue + '" to "' + newValue + '"');
-        // });
-        // parent.$watch('page', (newValue, oldValue) => {
-        //     console.log('page changed from "' + oldValue + '" to "' + newValue + '"');
-        // });
-        // loop all filtered columns and watch those values.
         document
             .querySelectorAll('table[data-sort-identifier="' + this.tableId + '"] thead th[data-filter-column]')
             .forEach((th) => {
@@ -77,11 +64,9 @@ export class sortableTable {
                 let storeValue = fromStore ? (fromStore.filter[column] ?? null) : null;
                 let valueToUse = null !== urlValue ? urlValue : storeValue;
 
+                // we do this in the parent because Alpine has the watch function that is needed.
                 this.parent.$watch("filter." + column, (newValue, oldValue) => {
-                    // parent.filter[column] = newValue;
-                    console.log(
-                        'filter for column "' + column + '" changed from "' + oldValue + '" to "' + newValue + '"',
-                    );
+                    console.log('filter for column "' + column + '" changed from "' + oldValue + '" to "' + newValue + '"',);
                     this.fireSortChangeEvent();
                     if ("" !== newValue) {
                         showSearchBox(th);
@@ -89,20 +74,18 @@ export class sortableTable {
                 });
 
                 if (null !== valueToUse && "" !== valueToUse) {
-                    // console.log('DISABLE refresh');
                     this.disableRefresh = true;
                     this.parent.isFiltering = true;
-                    // console.log('Setting initial filter value for column "' + column + '" to "' + valueToUse + '"');
                     this.parent.filter[column] = valueToUse;
                     // make sure the button is visible.
-                    setTimeout(() => {
+                    queueMicrotask(() => {
                         showSearchBox(th);
-                    }, 50);
+                    });
                 }
             });
     }
     capturePageNavigation() {
-        console.log("capturePageNavigation()");
+        // console.log("capturePageNavigation()");
         document.querySelectorAll("a.page-link").forEach((el) => {
             el.removeEventListener("click", this.handleFunc);
             el.addEventListener("click", this.handleFunc);
@@ -120,8 +103,6 @@ export class sortableTable {
             this.sortColumn = newColumn;
         }
         this.fireSortChangeEvent();
-        //this.updateHistory();
-        //this.downloadAccounts();
     }
 
     handlePageClick(e) {
@@ -135,8 +116,7 @@ export class sortableTable {
         this.page = page;
         this.parent.page = page;
         // some sort of trigger to parent?
-        // console.warn('Here be push to parent!');
-        this.parent.updateHistory(page, this.sortColumn, this.sortDirection, this.parent.filter);
+        this.parent.updateHistory(page, this.sortColumn, this.sortDirection);
         this.parent.downloadObjects();
         e.preventDefault();
         queueMicrotask(() => {
@@ -254,13 +234,9 @@ export class sortableTable {
     }
 
     updateHeaderClasses() {
-        // console.log('updateHeaderClasses()', this.sortColumn, this.sortDirection);
-        document
-            .querySelectorAll('table[data-sort-identifier="' + this.tableId + '"] thead th[data-sort-column]')
+        document.querySelectorAll('table[data-sort-identifier="' + this.tableId + '"] thead th[data-sort-column]')
             .forEach((th) => {
-                // console.log(th);
                 if (this.sortColumn === th.dataset.sortColumn) {
-                    // th.classList.add('sortable');
                     th.classList.add("sortable_sorted");
                     if ("asc" === this.sortDirection) {
                         th.classList.add("sortable_sorted_asc");
@@ -320,15 +296,45 @@ function objectToQueryString(obj, prefix) {
         .join("&");
 }
 
-export function updateHistory(page, column, direction, filter) {
+export function initFromLocalStorage() {
+    // grab state from localStorage.
+    let fromStore = window.store.get(this.storageKey);
+    if (fromStore) {
+        this.defaultSortColumn = fromStore.column;
+        this.defaultSortDirection = fromStore.direction;
+        this.defaultFilter = fromStore.filter;
+    }
+}
+
+export function initFromQueryParams() {
+    // grab state from URL params.
+    // Filter is not part of this because the code does not know which columns are filterable.
+    const params = new Proxy(new URLSearchParams(window.location.search), {
+        get: (searchParams, prop) => searchParams.get(prop),
+    });
+    this.page = parseInt(params.page || "1");
+    this.defaultSortColumn = params.column ?? this.defaultSortColumn;
+    this.defaultSortDirection = params.direction ?? this.defaultSortDirection;
+}
+
+export function respondToSortChange(event) {
+    console.log("sortable-table-sort-change", event.detail);
+    this.sortableTable.sortColumn = event.detail.sortColumn;
+    this.sortableTable.sortDirection = event.detail.sortDirection;
+    this.updateHistory(this.page, event.detail.sortColumn, event.detail.sortDirection);
+    this.storeFilterAndSort(this.storageKey, event.detail.sortColumn, event.detail.sortDirection, this.filter);
+    this.downloadObjects();
+}
+
+export function updateHistory(page, column, direction) {
     if (history.pushState) {
         let obj = {
             page: page,
             column: column,
             direction: direction,
-            filter: JSON.parse(JSON.stringify(filter)),
+            filter: JSON.parse(JSON.stringify(this.filter)),
         };
-        if (filter.length > 0) {
+        if (this.filter.length > 0) {
             this.isFiltering = true;
             this.loadingPage = true;
         }
