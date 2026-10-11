@@ -11,6 +11,7 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 
 - Self-hosted users should no longer run into `Target class [has] does not exist` errors.
 - Explain in the release notes how to clear your cache, as suggested by @Kage1
+- #12972
 - #13022
 
 ## v6.7.8 - 2026-10-10

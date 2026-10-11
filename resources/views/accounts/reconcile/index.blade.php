@@ -124,7 +124,7 @@
         var accountID = {{ $account->id }};
         var startBalance = {{ $startBalance }};
         var endBalance = {{ $endBalance }};
-        var transactionsUrl = '{{ $transactionsUrl }}';
+        var transactionsUrl = '{{ $transactionsUrl }}?_from={{ urlencode($FF3_FROM) }}';
         var overviewUrl = '{{ $overviewUrl }}';
         var indexUrl = '{{ $indexUrl }}';
         var selectRangeAndBalance = '{{ __('firefly.select_range_and_balance') }}';
