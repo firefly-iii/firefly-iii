@@ -60,8 +60,6 @@ let index = function () {
 
         // variables necessary for sortable tables.
         pageNavUrl: "./accounts/",
-        sortColumn: "order", // used in GET request. TODO needs change when doing multiple tables.
-        sortDirection: "asc", // used in GET request. TODO needs change when doing multiple tables.
         filter: {}, // TODO needs change when doing multiple tables.
 
         // sort functions, imported
@@ -165,6 +163,8 @@ let index = function () {
             return account;
         },
         downloadObjects() {
+
+            // since this function only downloads for table "main", it is safe to extract only "main" from the filter object.
             this.sortableTable.loadingNewSort = true;
             let sort = "asc" === this.sortableTable.sortDirection ? this.sortableTable.sortColumn : "-" + this.sortableTable.sortColumn;
             let start = window.store.get("start");
@@ -177,7 +177,7 @@ let index = function () {
                     page: this.page,
                     type: this.objectType,
                     start: start,
-                    filter: JSON.parse(JSON.stringify(this.filter)),
+                    filter: JSON.parse(JSON.stringify(this.filter))["main"],
                     end: end,
                 })
                 .then((response) => {

@@ -22,10 +22,9 @@ import i18next from "i18next";
 import getNearestParent from '../shared/get-nearest-parent.js'
 
 export class sortableTable {
-    tableId = "";
     tableIds = {};
-    sortColumn = "order";
-    sortDirection = "asc";
+    sortColumn = "order"; // todo forbidden to use!
+    sortDirection = "asc"; // todo forbidden to use!
     storageKey = "";
     disableRefresh = false;
     parent = null;
@@ -38,10 +37,8 @@ export class sortableTable {
         for (let i = 0; i < tableIds.length; i++) {
             let tableId = tableIds[i];
             this.tableIds[tableId] = {
-                empty: true,
-                // sortColumn: null,
-                // sortDirection: null,
-                // filter: {},
+                sortColumn: "order",
+                sortDirection: "asc",
             };
             console.log('Initialized sort table "' + tableId + '"');
         }
@@ -79,7 +76,7 @@ export class sortableTable {
                     // we do this in the parent because Alpine has the watch function that is needed.
                     this.parent.$watch("filter." + tableId + "." + column, (newValue, oldValue) => {
                         console.log('filter for "'+tableId+'" column "' + column + '" changed from "' + oldValue + '" to "' + newValue + '"',);
-                        this.fireSortChangeEvent(tableId);
+                        this.fireSortOrDataChangeEvent(tableId);
                         if ("" !== newValue) {
                             showSearchBox(th);
                         }
@@ -118,7 +115,7 @@ export class sortableTable {
         if (newColumn !== this.sortColumn) {
             this.sortColumn = newColumn;
         }
-        this.fireSortChangeEvent(tableId);
+        this.fireSortOrDataChangeEvent(tableId);
     }
 
     handlePageClick(e) {
@@ -141,7 +138,7 @@ export class sortableTable {
         return false;
     }
 
-    fireSortChangeEvent(tableId) {
+    fireSortOrDataChangeEvent(tableId) {
         this.updateHeaderClasses();
         let obj = {
             tableId: tableId,
@@ -174,8 +171,8 @@ export class sortableTable {
         th.querySelector(".search-button").classList.remove("d-none");
         // console.log(th.querySelector('.form-control').value);
         th.querySelector(".form-control").value = "";
-        this.parent.filter[column] = "";
-        this.fireSortChangeEvent(tableId);
+        this.parent.filter[tableId][column] = "";
+        this.fireSortOrDataChangeEvent(tableId);
     }
 
     addClickEvents() {
@@ -207,6 +204,8 @@ export class sortableTable {
     createSearchBox(th) {
         //console.log('createSearchBox', th);
         let column = th.dataset.filterColumn;
+        let table = getNearestParent(th, "table");
+        let tableId = table.dataset.sortIdentifier;
         // create filter inset.
         let inset = document.createElement("span");
         inset.classList.add("search-inset");
@@ -231,7 +230,7 @@ export class sortableTable {
         input.classList.add("form-control", "form-control-sm");
         input.setAttribute("type", "search");
         input.setAttribute("placeholder", i18next.t("firefly.filter_placeholder_" + column));
-        input.setAttribute("x-model", "filter." + column);
+        input.setAttribute("x-model", "filter." + tableId + "." + column);
         div.appendChild(input);
 
         // create button
@@ -340,8 +339,10 @@ export function initFromQueryParams() {
 
 export function respondToSortChange(event) {
     console.log("sortable-table-sort-change", event.detail);
-    this.sortableTable.sortColumn = event.detail.sortColumn;
-    this.sortableTable.sortDirection = event.detail.sortDirection;
+    this.sortableTable.tableIds[event.detail.tableId].sortColumn = event.detail.sortColumn;
+    this.sortableTable.tableIds[event.detail.tableId].sortDirection = event.detail.sortDirection;
+    //this.sortableTable.sortColumn = event.detail.sortColumn;
+    //this.sortableTable.sortDirection = event.detail.sortDirection;
     this.updateHistory(this.page, event.detail.sortColumn, event.detail.sortDirection);
     this.storeFilterAndSort(this.storageKey, event.detail.sortColumn, event.detail.sortDirection, this.filter);
     this.downloadObjects();
