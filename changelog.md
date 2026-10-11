@@ -5,7 +5,7 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 
 ## v6.7.9 - 2026-10-12
 
-<!-- summary: This release fixes an issue for self-hosted users. -->
+<!-- summary: This release fixes an issue for self-hosted users and fixes some minor other issues. -->
 
 ### Fixed
 
@@ -13,6 +13,9 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 - Explain in the release notes how to clear your cache, as suggested by @Kage1
 - #12972
 - #13022
+- #13034
+- #13037
+- #13039
 
 ## v6.7.8 - 2026-10-10
 
