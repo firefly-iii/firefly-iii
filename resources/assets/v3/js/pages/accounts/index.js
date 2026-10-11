@@ -80,7 +80,12 @@ let index = function () {
             this.initFromQueryParams();
 
             // create sortable table.
-            this.sortableTable = new sortableTable("main");
+            let tables = ["main"];
+            for(let i = 0; i < tables.length; i++) {
+                let table = tables[i];
+                this.filter[table] = {};
+            }
+            this.sortableTable = new sortableTable(tables);
 
             // prepare some variables. Has nothing to do with sortable table.
             const address = window.location.href.split("?")[0].split("/");

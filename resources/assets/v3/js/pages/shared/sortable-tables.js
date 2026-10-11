@@ -19,9 +19,11 @@
  */
 
 import i18next from "i18next";
+import getNearestParent from '../shared/get-nearest-parent.js'
 
 export class sortableTable {
     tableId = "";
+    tableIds = {};
     sortColumn = "order";
     sortDirection = "asc";
     storageKey = "";
@@ -31,9 +33,18 @@ export class sortableTable {
     loadingNewSort = true;
     filter = {};
 
-    constructor(tableId) {
-        this.tableId = tableId;
-        console.log('Now in constructor("' + tableId + '")');
+    constructor(tableIds) {
+        //this.tableId = tableId;
+        for (let i = 0; i < tableIds.length; i++) {
+            let tableId = tableIds[i];
+            this.tableIds[tableId] = {
+                empty: true,
+                // sortColumn: null,
+                // sortDirection: null,
+                // filter: {},
+            };
+            console.log('Initialized sort table "' + tableId + '"');
+        }
     }
 
     init(parent) {
@@ -50,40 +61,43 @@ export class sortableTable {
         const params = new Proxy(new URLSearchParams(window.location.search), {
             get: (searchParams, prop) => searchParams.get(prop),
         });
+        for (let tableId in this.tableIds) {
+            console.log(tableId, this.tableIds[tableId]);
+            document
+                .querySelectorAll('table[data-sort-identifier="' + tableId + '"] thead th[data-filter-column]')
+                .forEach((th) => {
+                    let column = th.getAttribute("data-filter-column");
+                    console.log('[class] Will watch "'+tableId+'" filter for column "' + column + '"');
 
-        document
-            .querySelectorAll('table[data-sort-identifier="' + this.tableId + '"] thead th[data-filter-column]')
-            .forEach((th) => {
-                let column = th.getAttribute("data-filter-column");
-                console.log('[class] Will watch filter for column "' + column + '"');
+                    // also grab current filter value from store AND from url and push back to the parent whichever is set.
+                    const key = "filter[" + tableId + "][" + column + "]";
+                    let urlValue = params[key] ?? null;
+                    let fromStore = window.store.get(this.storageKey);
+                    let storeValue = fromStore ? (fromStore.filter[column] ?? null) : null;
+                    let valueToUse = null !== urlValue ? urlValue : storeValue;
 
-                // also grab current filter value from store AND from url and push back to the parent whichever is set.
-                const key = "filter[" + column + "]";
-                let urlValue = params[key] ?? null;
-                let fromStore = window.store.get(this.storageKey);
-                let storeValue = fromStore ? (fromStore.filter[column] ?? null) : null;
-                let valueToUse = null !== urlValue ? urlValue : storeValue;
+                    // we do this in the parent because Alpine has the watch function that is needed.
+                    this.parent.$watch("filter." + tableId + "." + column, (newValue, oldValue) => {
+                        console.log('filter for "'+tableId+'" column "' + column + '" changed from "' + oldValue + '" to "' + newValue + '"',);
+                        this.fireSortChangeEvent(tableId);
+                        if ("" !== newValue) {
+                            showSearchBox(th);
+                        }
+                    });
 
-                // we do this in the parent because Alpine has the watch function that is needed.
-                this.parent.$watch("filter." + column, (newValue, oldValue) => {
-                    console.log('filter for column "' + column + '" changed from "' + oldValue + '" to "' + newValue + '"',);
-                    this.fireSortChangeEvent();
-                    if ("" !== newValue) {
-                        showSearchBox(th);
+                    if (null !== valueToUse && "" !== valueToUse) {
+                        this.disableRefresh = true;
+                        this.parent.isFiltering = true;
+                        this.parent.filter[tableId][column] = valueToUse;
+                        // make sure the button is visible.
+                        queueMicrotask(() => {
+                            showSearchBox(th);
+                        });
                     }
                 });
-
-                if (null !== valueToUse && "" !== valueToUse) {
-                    this.disableRefresh = true;
-                    this.parent.isFiltering = true;
-                    this.parent.filter[column] = valueToUse;
-                    // make sure the button is visible.
-                    queueMicrotask(() => {
-                        showSearchBox(th);
-                    });
-                }
-            });
+        }
     }
+
     capturePageNavigation() {
         // console.log("capturePageNavigation()");
         document.querySelectorAll("a.page-link").forEach((el) => {
@@ -94,6 +108,8 @@ export class sortableTable {
 
     clickColumnTitle(event) {
         let parent = event.currentTarget.parentNode;
+        const parentTable = getNearestParent(parent, "table");
+        const tableId = parentTable.dataset.sortIdentifier;
         let newColumn = parent.dataset.sortColumn;
         this.sortDirection = typeof this.sortDirection !== "undefined" ? this.sortDirection : "asc";
         if (newColumn === this.sortColumn) {
@@ -102,7 +118,7 @@ export class sortableTable {
         if (newColumn !== this.sortColumn) {
             this.sortColumn = newColumn;
         }
-        this.fireSortChangeEvent();
+        this.fireSortChangeEvent(tableId);
     }
 
     handlePageClick(e) {
@@ -125,10 +141,10 @@ export class sortableTable {
         return false;
     }
 
-    fireSortChangeEvent() {
+    fireSortChangeEvent(tableId) {
         this.updateHeaderClasses();
         let obj = {
-            tableId: this.tableId,
+            tableId: tableId,
             sortColumn: this.sortColumn,
             sortDirection: this.sortDirection,
         };
@@ -148,6 +164,8 @@ export class sortableTable {
 
     clickCloseButton(event) {
         let th = event.currentTarget.parentNode.parentNode.parentNode;
+        const table = getNearestParent(th, "table");
+        const tableId = table.dataset.sortIdentifier;
         let column = th.dataset.filterColumn;
         console.log("close search box for ", column);
         th.querySelector(".search-filter").classList.add("d-none");
@@ -157,35 +175,35 @@ export class sortableTable {
         // console.log(th.querySelector('.form-control').value);
         th.querySelector(".form-control").value = "";
         this.parent.filter[column] = "";
-        this.fireSortChangeEvent();
+        this.fireSortChangeEvent(tableId);
     }
 
     addClickEvents() {
         // add sortable click events.
-        document
-            .querySelectorAll('table[data-sort-identifier="' + this.tableId + '"] th[data-sort-column] span.title')
-            .forEach((el) => {
-                el.addEventListener("click", this.clickColumnTitle.bind(this));
-            });
-
-        // create search buttons and inputs.
-        document.querySelectorAll('table[data-sort-identifier="' + this.tableId + '"] th[data-filter-column]').forEach(
-            function (el) {
-                this.createSearchBox(el);
-            }.bind(this),
-        );
-
-        document
-            .querySelectorAll(
-                'table[data-sort-identifier="' + this.tableId + '"] th[data-filter-column] .search-button',
-            )
-            .forEach((el) => {
-                el.addEventListener("click", () => {
-                    const th = el.parentNode.parentNode;
-                    showSearchBox(th);
+        for (let tableId in this.tableIds) {
+            document.querySelectorAll('table[data-sort-identifier="' + tableId + '"] th[data-sort-column] span.title')
+                .forEach((el) => {
+                    el.addEventListener("click", this.clickColumnTitle.bind(this));
                 });
-            });
+
+            // create search buttons and inputs.
+            document.querySelectorAll('table[data-sort-identifier="' + tableId + '"] th[data-filter-column]').forEach(
+                function (el) {
+                    this.createSearchBox(el);
+                }.bind(this),
+            );
+
+            // add event to search-button.
+            document.querySelectorAll('table[data-sort-identifier="' + tableId + '"] th[data-filter-column] .search-button',)
+                .forEach((el) => {
+                    el.addEventListener("click", () => {
+                        const th = el.parentNode.parentNode;
+                        showSearchBox(th);
+                    });
+                });
+        }
     }
+
     createSearchBox(th) {
         //console.log('createSearchBox', th);
         let column = th.dataset.filterColumn;
@@ -234,27 +252,30 @@ export class sortableTable {
     }
 
     updateHeaderClasses() {
-        document.querySelectorAll('table[data-sort-identifier="' + this.tableId + '"] thead th[data-sort-column]')
-            .forEach((th) => {
-                if (this.sortColumn === th.dataset.sortColumn) {
-                    th.classList.add("sortable_sorted");
-                    if ("asc" === this.sortDirection) {
-                        th.classList.add("sortable_sorted_asc");
-                        th.classList.remove("sortable_sorted_desc");
+        for (let tableId in this.tableIds) {
+            document.querySelectorAll('table[data-sort-identifier="' + tableId + '"] thead th[data-sort-column]')
+                .forEach((th) => {
+                    if (this.sortColumn === th.dataset.sortColumn) {
+                        th.classList.add("sortable_sorted");
+                        if ("asc" === this.sortDirection) {
+                            th.classList.add("sortable_sorted_asc");
+                            th.classList.remove("sortable_sorted_desc");
+                        }
+                        if ("desc" === this.sortDirection) {
+                            th.classList.add("sortable_sorted_desc");
+                            th.classList.remove("sortable_sorted_asc");
+                        }
                     }
-                    if ("desc" === this.sortDirection) {
-                        th.classList.add("sortable_sorted_desc");
+                    if (this.sortColumn !== th.dataset.sortColumn) {
                         th.classList.remove("sortable_sorted_asc");
+                        th.classList.remove("sortable_sorted_desc");
+                        th.classList.remove("sortable_sorted");
                     }
-                }
-                if (this.sortColumn !== th.dataset.sortColumn) {
-                    th.classList.remove("sortable_sorted_asc");
-                    th.classList.remove("sortable_sorted_desc");
-                    th.classList.remove("sortable_sorted");
-                }
-            });
+                });
+        }
     }
 }
+
 function showSearchBox(th) {
     // let column = th.dataset.filterColumn;
 
@@ -341,7 +362,7 @@ export function updateHistory(page, column, direction) {
         let string = objectToQueryString(obj);
         console.log("Update history", string);
         let newUrl = window.location.protocol + "//" + window.location.host + window.location.pathname + "?" + string;
-        window.history.pushState({ path: newUrl }, "", newUrl);
+        window.history.pushState({path: newUrl}, "", newUrl);
     }
 }
 
