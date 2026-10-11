@@ -39,8 +39,8 @@ let index = function () {
         listPageSize: 50,
         objectType: "invalid",
         accounts: [],
-        page: 1,
-        totalPages: 1,
+        page: 1, // TODO obsolete, must be per table.
+        totalPages: 1, // TODO obsolete.
         i18next: null,
         anonymous: false,
         loadingPage: true,
@@ -195,9 +195,11 @@ let index = function () {
                     this.differences = {};
 
                     this.totalPages = parseInt(response.data.meta.pagination.total_pages);
-                    if(this.totalPages > this.page) {
+                    const length = response.data.data.length;
+                    if(this.totalPages <= this.page && 0 === length) {
                         this.page = this.totalPages;
                         this.sortableTable.page = this.totalPages;
+                        this.downloadObjects();
                     }
                     for (let i = 0; i < response.data.data.length; i++) {
                         if (Object.hasOwn(response.data.data, i)) {
