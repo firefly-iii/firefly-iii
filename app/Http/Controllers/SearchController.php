@@ -33,6 +33,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\View as ViewFacade;
 use Throwable;
+use Illuminate\Contracts\View\View;
 
 use function Safe\mb_convert_encoding;
 
@@ -56,7 +57,7 @@ final class SearchController extends Controller
         });
     }
 
-    public function index(Request $request, SearchInterface $searcher): Factory|\Illuminate\Contracts\View\View
+    public function index(Request $request, SearchInterface $searcher): Factory|View
     {
         // search params:
         $fullQuery        = (string) $request->input('search');
