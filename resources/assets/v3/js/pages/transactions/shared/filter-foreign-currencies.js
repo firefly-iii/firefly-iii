@@ -20,7 +20,7 @@
 
 export default function filterForeignCurrencies(code) {
     console.log('filterForeignCurrencies("' + code + '")');
-    console.log('Source currency code is ', this.entries[0].source_account.currency_code);
+    console.log("Source currency code is ", this.entries[0].source_account.currency_code);
     let list = [];
     let currency = null;
     for (let i in this.formData.enabledCurrencies) {
@@ -31,9 +31,9 @@ export default function filterForeignCurrencies(code) {
             }
         }
     }
-    if(null !== currency) {
+    if (null !== currency) {
         list.push(currency);
-        console.log('Add currency to list', currency);
+        console.log("Add currency to list", currency);
     }
     this.formData.foreignCurrencies = list;
     // is he source account currency anyway:
