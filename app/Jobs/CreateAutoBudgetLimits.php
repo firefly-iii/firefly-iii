@@ -150,7 +150,6 @@ class CreateAutoBudgetLimits implements ShouldQueue
         $budgetAvailable = bcadd(bcadd($budgetLimit->amount, $autoBudget->amount), $spentAmount);
         $totalAmount     = $autoBudget->amount;
         Log::debug(sprintf('Total amount available for current budget period is %s', $budgetAvailable));
-        Log::debug(sprintf('bccomp is %s', bccomp($budgetAvailable, $totalAmount)));
         $compare   = bccomp($budgetAvailable, $totalAmount);
         $belowZero = bccomp($budgetAvailable, '0');
         if (0 === $compare || 1 === $compare) {
