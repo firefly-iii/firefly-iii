@@ -19,9 +19,10 @@
  */
 
 export default function filterForeignCurrencies(code) {
-    // console.log('filterForeignCurrencies("' + code + '")');
+    console.log('filterForeignCurrencies("' + code + '")');
+    console.log('Source currency code is ', this.entries[0].source_account.currency_code);
     let list = [];
-    let currency;
+    let currency = null;
     for (let i in this.formData.enabledCurrencies) {
         if (Object.hasOwn(this.formData.enabledCurrencies, i)) {
             let current = this.formData.enabledCurrencies[i];
@@ -30,19 +31,18 @@ export default function filterForeignCurrencies(code) {
             }
         }
     }
-    list.push(currency);
+    if(null !== currency) {
+        list.push(currency);
+        console.log('Add currency to list', currency);
+    }
     this.formData.foreignCurrencies = list;
     // is he source account currency anyway:
     if (1 === list.length && list[0].code === this.entries[0].source_account.currency_code) {
-        // console.log(
-        //     "Foreign currency is same as source currency. Disable foreign amount.",
-        // );
+        // console.log("Foreign currency is same as source currency. Disable foreign amount.",);
         this.formBehaviour.foreignCurrencyEnabled = false;
     }
     if (1 === list.length && list[0].code !== this.entries[0].source_account.currency_code) {
-        // console.log(
-        //     "Foreign currency is NOT same as source currency. Enable foreign amount.",
-        // );
+        // console.log("Foreign currency is NOT same as source currency. Enable foreign amount.",);
         this.formBehaviour.foreignCurrencyEnabled = true;
     }
 

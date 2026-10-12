@@ -279,7 +279,7 @@ let create = function () {
                         loading: false,
                         name: attributes.name,
                         account_currency_code: attributes.currency_code,
-                        currency_code: attributes.primary_currency_code,
+                        currency_code: attributes.currency_code ?? attributes.primary_currency_code,
                         type: type,
                         alpine_name: attributes.name,
                         // disabled: false,
