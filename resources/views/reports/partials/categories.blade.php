@@ -16,7 +16,12 @@
             <tr>
         @endif
         <td data-value="{{ $category['title'] }}">
-            <a href="{{ route('categories.show', $category['id']) }}">{{ $category['title'] }}</a>
+            @if(0 === $category['id'])
+                <a href="{{ route('categories.no-category.all') }}">{{ $category['title'] }}</a>
+            @endif
+            @if(0 !== $category['id'])
+                <a href="{{ route('categories.show', $category['id']) }}">{{ $category['title'] }}</a>
+            @endif
         </td>
         <td data-value="{{ $category['spent'] }}" class="text-end">{!! format_amount_by_symbol($category['spent'], $category['currency_symbol'], $category['currency_decimal_places'], true) !!}</td>
         <td data-value="{{ $category['earned'] }}" class="text-end">{!! format_amount_by_symbol($category['earned'], $category['currency_symbol'], $category['currency_decimal_places'], true) !!}</td>
