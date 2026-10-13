@@ -278,8 +278,9 @@ class LinkTypeRepository implements LinkTypeRepositoryInterface, UserGroupInterf
 
         try {
             $journalLink->save();
-        } catch(QueryException $e) {
+        } catch (QueryException $e) {
             Log::error($e->getMessage());
+
             throw new ValidationException('Invalid link.');
         }
         if (array_key_exists('link_type_name', $data)) {
