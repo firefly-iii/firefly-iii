@@ -113,8 +113,8 @@ class UpdateRequest extends FormRequest
             $validator->errors()->add('outward_id', 'Inward ID must be different from outward ID.');
         }
 
-        $inDBa         = $repository->findSpecificLink($existing->linkType, $inward, $outward);
-        $inDBb         = $repository->findSpecificLink($existing->linkType, $outward, $inward);
+        $inDBa        = $repository->findSpecificLink($existing->linkType, $inward, $outward);
+        $inDBb        = $repository->findSpecificLink($existing->linkType, $outward, $inward);
         if (null === $inDBa && null === $inDBb) {
             return;
         }
