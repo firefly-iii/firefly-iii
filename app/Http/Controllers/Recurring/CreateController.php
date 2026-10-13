@@ -134,10 +134,6 @@ final class CreateController extends Controller
         $tomorrow->addDay();
 
         // put previous url in session if not redirect from store (not "create another").
-        if (true !== session('recurring.create.fromStore')) {
-            $this->rememberPreviousUrl('recurring.create.url');
-        }
-        $request->session()->forget('recurring.create.fromStore');
         $repetitionEnds    = [
             'forever'    => (string) trans('firefly.repeat_forever'),
             'until_date' => (string) trans('firefly.repeat_until_date'),
@@ -256,15 +252,12 @@ final class CreateController extends Controller
             $request->session()->flash('info', $this->attachments->getMessages()->get('attachments'));
         }
 
-        $redirect = redirect($this->getPreviousUrl('recurring.create.url'));
-        if (1 === (int) $request->input('create_another')) {
-            // set value so create routine will not overwrite URL:
-            $request->session()->put('recurring.create.fromStore', true);
-
-            $redirect = redirect(route('recurring.create'))->withInput();
-        }
-
         // redirect to previous URL.
+        $from     = $request->input('_from', '');
+        $redirect = redirect(route('index') . $from);
+        if (1 === (int)$request->input('create_another')) {
+            $redirect = redirect(route('recurring.create') . '?_from=' . $from)->withInput();
+        }
         return $redirect;
     }
 }
