@@ -801,7 +801,7 @@ class Steam
         }
 
         // URL must not lead to weird pages
-        $forbiddenWords = ['jscript', 'json', 'debug', 'serviceworker', 'recurring/suggest','offline', 'delete', '/login', '/attachments/view'];
+        $forbiddenWords = ['jscript', 'json', 'debug', 'serviceworker', 'recurring/suggest', 'offline', 'delete', '/login', '/attachments/view'];
         if (Str::contains($returnUrl, $forbiddenWords)) {
             return $safeUrl;
         }
