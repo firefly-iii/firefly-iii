@@ -76,9 +76,11 @@ class CategoryUpdateService
         if ($changed) {
             $category->save();
             // update triggers and actions
-            $this->updateRuleTriggers($oldName, $data['name']);
-            $this->updateRuleActions($oldName, $data['name']);
-            $this->updateRecurrences($oldName, $data['name']);
+            if (array_key_exists('name', $data)) {
+                $this->updateRuleTriggers($oldName, $data['name']);
+                $this->updateRuleActions($oldName, $data['name']);
+                $this->updateRecurrences($oldName, $data['name']);
+            }
         }
 
         $this->updateNotes($category, $data);

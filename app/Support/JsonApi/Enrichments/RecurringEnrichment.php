@@ -389,10 +389,12 @@ class RecurringEnrichment implements EnrichmentInterface
     {
         $rtIds         = [];
         foreach ($this->ids as $recurrenceId) {
-            $rtIds = array_merge($rtIds, array_keys($this->transactions[$recurrenceId]));
+            if(array_key_exists($recurrenceId, $this->transactions)) {
+                $rtIds = array_merge($rtIds, array_keys($this->transactions[$recurrenceId]));
+            }
         }
         $meta          = RecurrenceTransactionMeta::query()->whereNull('deleted_at')->whereIn('rt_id', $rtIds)->get();
-        // other meta-data to be collected:
+        // other metadata to be collected:
         $billIds       = [];
         $piggyBankIds  = [];
         $categoryIds   = [];

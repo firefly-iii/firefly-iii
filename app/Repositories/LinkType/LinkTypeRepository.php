@@ -24,12 +24,14 @@ declare(strict_types=1);
 namespace FireflyIII\Repositories\LinkType;
 
 use Exception;
+use FireflyIII\Exceptions\ValidationException;
 use FireflyIII\Models\LinkType;
 use FireflyIII\Models\Note;
 use FireflyIII\Models\TransactionJournal;
 use FireflyIII\Models\TransactionJournalLink;
 use FireflyIII\Support\Repositories\UserGroup\UserGroupInterface;
 use FireflyIII\Support\Repositories\UserGroup\UserGroupTrait;
+use Illuminate\Database\QueryException;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Log;
 
@@ -273,7 +275,13 @@ class LinkTypeRepository implements LinkTypeRepositoryInterface, UserGroupInterf
     {
         $journalLink->source_id      = $data['inward_id'] ?? $journalLink->source_id;
         $journalLink->destination_id = $data['outward_id'] ?? $journalLink->destination_id;
-        $journalLink->save();
+
+        try {
+            $journalLink->save();
+        } catch(QueryException $e) {
+            Log::error($e->getMessage());
+            throw new ValidationException('Invalid link.');
+        }
         if (array_key_exists('link_type_name', $data)) {
             $linkType = LinkType::whereName($data['link_type_name'])->first();
             if (null !== $linkType) {
