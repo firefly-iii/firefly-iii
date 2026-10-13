@@ -23,13 +23,13 @@
         </form>
     </li>
     <li class="nav-item search-xs" style="display:none;">
-        <a title="{{ __('firefly.search') }}" href="{{ route('search.index') }}" class="nav-link {{ \FireflyIII\Support\Blade\Navigation::menuItemActive('search.index') }}">
+        <a title="{{ __('firefly.search') }}" href="{{ route('search.index') }}" class="nav-link {{ menu_item_active('search.index') }}">
             <em title="{{ __('firefly.search') }}" class="nav-icon bi bi-search"></em>
             <p>{{ __('firefly.search') }}</p>
         </a>
     </li>
     <li class="nav-item">
-        <a title="{{ __('firefly.dashboard') }}" href="{{ route('index') }}" class="nav-link {{ \FireflyIII\Support\Blade\Navigation::menuItemActive('index') }}">
+        <a title="{{ __('firefly.dashboard') }}" href="{{ route('index') }}" class="nav-link {{ menu_item_active('index') }}">
             <em title="{{ __('firefly.dashboard') }}" class="nav-icon bi bi-speedometer"></em>
             <p>{{ __('firefly.dashboard') }}</p>
         </a>
