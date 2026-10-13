@@ -254,10 +254,11 @@ final class CreateController extends Controller
 
         // redirect to previous URL.
         $from     = $request->input('_from', '');
-        $redirect = redirect(route('index') . $from);
-        if (1 === (int)$request->input('create_another')) {
-            $redirect = redirect(route('recurring.create') . '?_from=' . $from)->withInput();
+        $redirect = redirect(route('index').$from);
+        if (1 === (int) $request->input('create_another')) {
+            $redirect = redirect(route('recurring.create').'?_from='.$from)->withInput();
         }
+
         return $redirect;
     }
 }
