@@ -135,6 +135,26 @@ html[data-bs-theme="dark"] .money-transfer {
     background-position: center center;
 }
 
+// center navigation icons when collapsed
+.sidebar-collapse #navigation .nav-link,
+.sidebar-mini #navigation .nav-link {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding-left: 0;
+    padding-right: 0;
+}
+.sidebar-collapse #navigation .nav-icon,
+.sidebar-mini #navigation .nav-icon {
+    margin: 0 !important;
+    padding: 4px 0;
+}
+
+.sidebar-collapse #navigation .nav-link p,
+.sidebar-mini.sidebar-collapse #navigation .nav-link p {
+    display: none !important;
+}
+
 // hide search.
 body.sidebar-collapse .search-xl {
     display: none;
