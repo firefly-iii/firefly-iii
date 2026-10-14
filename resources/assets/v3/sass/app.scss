@@ -136,8 +136,7 @@ html[data-bs-theme="dark"] .money-transfer {
 }
 
 // center navigation icons when collapsed
-.sidebar-collapse #navigation .nav-link,
-.sidebar-mini #navigation .nav-link {
+.sidebar-collapse #navigation .nav-link {
     display: flex;
     justify-content: center;
     align-items: center;
