@@ -59,10 +59,8 @@
                             </label>
                     </div>
                 </div>
-                <div class="row mt-3">
-                    <div class="col-4 offset-8">
-                        <button type="submit" class="btn btn-primary btn-block">Register</button>
-                    </div>
+                <div class="d-flex justify-content-end mt-3">
+                    <button type="submit" class="btn btn-primary">Register</button>
                 </div>
             </form>
 
