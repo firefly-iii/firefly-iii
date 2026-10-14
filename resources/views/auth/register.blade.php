@@ -59,8 +59,12 @@
                             </label>
                     </div>
                 </div>
-                <div class="d-flex justify-content-end mt-3">
-                    <button type="submit" class="btn btn-primary">Register</button>
+                <div class="row mt-3">
+                    <div class="col-4 offset-8">
+                        <div class="d-grid gap-2">
+                            <button type="submit" class="btn btn-primary">Register</button>
+                        </div>
+                    </div>
                 </div>
             </form>
 
