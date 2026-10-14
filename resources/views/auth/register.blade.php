@@ -61,7 +61,9 @@
                 </div>
                 <div class="row mt-3">
                     <div class="col-4 offset-8">
-                        <button type="submit" class="btn btn-primary btn-block">Register</button>
+                        <div class="d-grid gap-2">
+                            <button type="submit" class="btn btn-primary">Register</button>
+                        </div>
                     </div>
                 </div>
             </form>
