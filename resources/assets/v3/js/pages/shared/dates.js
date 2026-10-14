@@ -168,6 +168,15 @@ export default () => ({
         element = document.getElementsByClassName("daterange-ytd")[0];
         element.setAttribute("data-start", formatDate(ytd.start, this.preferredFormat, "en-US"));
         element.setAttribute("data-end", formatDate(ytd.end, this.preferredFormat, "en-US"));
+
+        // All time. data-first is a Y-m-d calendar date. Parsing it as UTC
+        // would shift the start to the previous local day west of Greenwich.
+        element = document.getElementsByClassName("daterange-everything")[0];
+        if (element) {
+            let everything = this.everything(element.getAttribute("data-first"));
+            element.setAttribute("data-start", formatDate(everything.start, this.preferredFormat, "en-US"));
+            element.setAttribute("data-end", formatDate(everything.end, this.preferredFormat, "en-US"));
+        }
     },
 
     getNextRange() {
@@ -190,6 +199,20 @@ export default () => ({
         return { start: start, end: end };
     },
 
+    everything(first) {
+        return { start: this.parseLocalDate(first), end: endOfDay(new Date()) };
+    },
+
+    parseLocalDate(value) {
+        if (typeof value === "string") {
+            let match = /^(\d{4})-(\d{2})-(\d{2})$/.exec(value);
+            if (match) {
+                return new Date(Number(match[1]), Number(match[2]) - 1, Number(match[3]));
+            }
+        }
+        return new Date(2000, 0, 1);
+    },
+
     mtd() {
         let end = endOfDay(new Date());
         let start = startOfMonth(end);
@@ -209,6 +232,10 @@ export default () => ({
         console.log("changeDateRange: end is", target.getAttribute("data-end"));
         let start = new Date(Date.parse(target.getAttribute("data-start")));
         let end = new Date(Date.parse(target.getAttribute("data-end")));
+        let labelInput = document.getElementById("dateRangeLabel");
+        if (labelInput) {
+            labelInput.value = target.getAttribute("data-label") || "";
+        }
         // console.log('Start date is', start);
         // console.log('End date is', end);
         window.store.set("start", start);

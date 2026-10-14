@@ -47,6 +47,13 @@
             </a>
         </li>
         <li>
+            <a href="#" class="dropdown-item daterange-everything" @click="changeDateRange"
+               data-first="{{ optional(session('first'))->format('Y-m-d') ?? now()->startOfYear()->format('Y-m-d') }}"
+               data-label="{{ __('firefly.everything') }}">
+                {{ __('firefly.everything') }}
+            </a>
+        </li>
+        <li>
             <a href="#" class="dropdown-item" data-bs-toggle="modal" data-bs-target="#customDateRangeModal">
                 {{ __('firefly.customRange') }}
             </a>

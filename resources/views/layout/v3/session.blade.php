@@ -441,6 +441,7 @@
             <input type="hidden" name="start" value="" id="customStart"/>
             <input type="hidden" name="_from" value="{{ $FF3_FROM }}" />
             <input type="hidden" name="end" value="" id="customEnd"/>
+            <input type="hidden" name="label" value="" id="dateRangeLabel"/>
             <div class="modal-content">
                 <div class="modal-header">
                     <h4 class="modal-title">{{ __('firefly.customRange') }}</h4>
