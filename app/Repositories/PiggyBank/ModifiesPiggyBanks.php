@@ -61,7 +61,7 @@ trait ModifiesPiggyBanks
         if ($userCurrency->id !== $piggyBank->transaction_currency_id) {
             $converter                    = new ExchangeRateConverter();
             $converter->setIgnoreSettings(true);
-            $pivot->native_current_amount = $converter->convert($piggyBank->transactionCurrency, $userCurrency, today(), $pivot->current_amount);
+            $pivot->native_current_amount = $converter->convert($piggyBank->transactionCurrency, $userCurrency, today(), (string) $pivot->current_amount);
         }
 
         $pivot->save();
@@ -158,7 +158,7 @@ trait ModifiesPiggyBanks
         if ($userCurrency->id !== $piggyBank->transaction_currency_id) {
             $converter                    = new ExchangeRateConverter();
             $converter->setIgnoreSettings(true);
-            $pivot->native_current_amount = $converter->convert($piggyBank->transactionCurrency, $userCurrency, today(), $pivot->current_amount);
+            $pivot->native_current_amount = $converter->convert($piggyBank->transactionCurrency, $userCurrency, today(), (string) $pivot->current_amount);
         }
 
         $pivot->save();
@@ -172,16 +172,16 @@ trait ModifiesPiggyBanks
     public function removeAmountFromAll(PiggyBank $piggyBank, string $amount): void
     {
         foreach ($piggyBank->accounts as $account) {
-            $current = $account->pivot->current_amount;
+            $current = (string) $account->pivot->current_amount;
             // if this account contains more than the amount, remove the amount and return.
-            if (1 === bccomp((string) $current, $amount)) {
+            if (1 === bccomp( $current, $amount)) {
                 $this->removeAmount($piggyBank, $account, $amount);
 
                 return;
             }
             // if this account contains less than the amount, remove the current amount, update the amount and continue.
             $this->removeAmount($piggyBank, $account, $current);
-            $amount  = bcsub($amount, (string) $current);
+            $amount  = bcsub($amount,  $current);
         }
     }
 
