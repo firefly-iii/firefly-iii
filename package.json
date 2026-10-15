@@ -6,7 +6,7 @@
         "resources/assets/v3"
     ],
     "dependencies": {
-        "patch-package": "^8.0.1"
+        "patch-package": "^6.0.7"
     },
     "allowScripts": {
         "@parcel/watcher@2.6.0": true
