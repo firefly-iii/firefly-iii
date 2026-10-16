@@ -1,5 +1,8 @@
 # Security Policy
 
+> [!WARNING]
+> If your report gets closed with no explanation or reply, another clanker beat you to it.
+
 Firefly III is an application to manage your personal finances. As such, the developer has adopted this security
 disclosure and response policy to ensure that critical issues are responsibly handled.
 
