@@ -183,8 +183,6 @@ jobs:
           GH_TOKEN: ""
       - name: Build JS
         run: |
-          pwd
-          ls
           npm install
           npx eslint resources/assets/v3
           npx prettier resources/assets/v3 --write
