@@ -579,7 +579,7 @@ const colors = [
     [92, 107, 192],
     [240, 98, 146],
     [0, 121, 107],
-    [194, 24, 91]
+    [194, 24, 91],
 ];
 
 function colorizeAllData(data) {
