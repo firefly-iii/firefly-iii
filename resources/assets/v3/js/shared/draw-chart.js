@@ -562,6 +562,24 @@ const colors = [
     [200, 78, 16], // bg-orange, 5
     [111, 96, 234], // indigo, 6
     [205, 56, 141], // bg-pink, 7
+    [0, 141, 76], // v1 layout green, 8
+    [219, 68, 55], // v1 layout red, 9
+    [53, 124, 165], // v1 layout dark blue, 10
+    [219, 139, 11], // v1 layout orange, 11
+    [202, 25, 90], // v1 paars rood-ish #CA195A, 12
+    [85, 82, 153], // 13
+    [66, 133, 244], // 14
+    [219, 68, 55], // v1 red #DB4437, 15
+    [244, 180, 0],
+    [15, 157, 88],
+    [171, 71, 188],
+    [0, 172, 193],
+    [255, 112, 67],
+    [158, 157, 36],
+    [92, 107, 192],
+    [240, 98, 146],
+    [0, 121, 107],
+    [194, 24, 91]
 ];
 
 function colorizeAllData(data) {
@@ -570,20 +588,20 @@ function colorizeAllData(data) {
         if (Object.hasOwn(data.datasets, i)) {
             let index = i % colors.length;
             if (data.datasets[i].label.startsWith("budgeted")) {
-                index = 0;
-                transparency = 0.5;
+                index = 10;
+                transparency = 0.8;
             }
             if (data.datasets[i].label.startsWith("overspent")) {
-                index = 5;
-                transparency = 0.5;
+                index = 15;
+                transparency = 0.8;
             }
             if (data.datasets[i].label.startsWith("spent")) {
-                index = 5;
-                transparency = 0.5;
+                index = 15;
+                transparency = 0.8;
             }
             if (data.datasets[i].label.startsWith("left")) {
-                index = 2;
-                transparency = 0.5;
+                index = 8;
+                transparency = 0.8;
             }
             let color = colors[index];
             // grab color from colors, use modulo to make sure we don't go out of bounds.

@@ -115,8 +115,8 @@
                                                 {{ $entry['next_expected_match_diff'] }}
                                             </td>
                                         @else
-                                            <td class="paid_in_period text-warning">
-                                                {{ $entry['next_expected_match_diff'] }}
+                                            <td class="paid_in_period text-primary">
+                                               {{ $entry['next_expected_match_diff'] }}
                                                 <!-- {{ __('firefly.bill_expected_date', ['date' => $entry['next_expected_match_diff']]) }} -->
                                             </td>
                                         @endif
