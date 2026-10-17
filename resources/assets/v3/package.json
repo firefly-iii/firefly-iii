@@ -39,7 +39,9 @@
         "prettier": "3.9.9",
         "sass": "^1",
         "tailwindcss": "^4.0.0",
-        "vite": "^8.0.0",
-        "vite-plugin-manifest-sri": "^0.2.0"
+        "vite-plugin-manifest-sri": "^0.2.0",
+        "@eslint/js": "^10.0.1",
+        "eslint": "^10.10.0",
+        "globals": "^17.12.0"
     }
 }

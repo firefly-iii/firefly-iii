@@ -12,8 +12,7 @@
         "@parcel/watcher@2.6.0": true
     },
     "devDependencies": {
-        "@eslint/js": "^10.0.1",
-        "eslint": "^10.10.0",
-        "globals": "^17.12.0"
+        "vite": "^8.3.4",
+        "vite-plugin-full-reload": "^1.2.0"
     }
 }
