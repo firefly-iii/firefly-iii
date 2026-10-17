@@ -109,6 +109,17 @@ let index = function () {
                     this.categories = [];
                     this.totalPages = parseInt(response.data.meta.pagination.total_pages);
 
+                    // add empty category.
+                    this.categories.push(
+                        {
+                            id: 0,
+                            name: i18next.t('firefly.no_category'),
+                            active: true,
+                            last_activity: i18next.t('firefly.unknown'),
+                            no_last_activity: true,
+                        }
+                    );
+
                     for (let i = 0; i < response.data.data.length; i++) {
                         if (Object.hasOwn(response.data.data, i)) {
                             let current = response.data.data[i];

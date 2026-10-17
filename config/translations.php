@@ -67,6 +67,8 @@ return [
                 'wait_loading_page',
                 'save_transaction_working',
                 'save_links_working',
+                'unknown',
+                'no_category',
                 'never',
                 'account_type_loan',
                 'account_type_mortgage',

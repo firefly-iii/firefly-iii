@@ -182,7 +182,7 @@
         </a>
         <ul class="nav nav-treeview">
             <li class="nav-item sub-nav-item">
-                <a title="{{trans('firefly.categories')}}" ref="{{ route('categories.index') }}" class="nav-link {{ menu_item_active_partial('categories.') }}">
+                <a title="{{trans('firefly.categories')}}" href="{{ route('categories.index') }}" class="nav-link {{ menu_item_active_partial('categories.') }}">
                     <em title="{{trans('firefly.categories')}}" class="nav-icon bi bi-bookmark"></em>
                     <p>{{trans('firefly.categories')}}</p>
                 </a>
