@@ -174,14 +174,14 @@ trait ModifiesPiggyBanks
         foreach ($piggyBank->accounts as $account) {
             $current = (string) $account->pivot->current_amount;
             // if this account contains more than the amount, remove the amount and return.
-            if (1 === bccomp( $current, $amount)) {
+            if (1 === bccomp($current, $amount)) {
                 $this->removeAmount($piggyBank, $account, $amount);
 
                 return;
             }
             // if this account contains less than the amount, remove the current amount, update the amount and continue.
             $this->removeAmount($piggyBank, $account, $current);
-            $amount  = bcsub($amount,  $current);
+            $amount  = bcsub($amount, $current);
         }
     }
 
