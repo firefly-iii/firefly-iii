@@ -22,7 +22,6 @@
         "i18next-http-backend": "^4.0.0",
         "i18next-localstorage-backend": "^4.2.0",
         "leaflet": "^1.9.4",
-        "patch-package": "^6.0.7",
         "shepherd.js": "^15.2.3",
         "store": "^2.0.12"
     },

@@ -6,12 +6,12 @@
         "resources/assets/v3"
     ],
     "dependencies": {
-        "patch-package": "^6.0.7"
     },
     "allowScripts": {
         "@parcel/watcher@2.6.0": true
     },
     "devDependencies": {
+        "patch-package": "^8.0.1",
         "vite": "^8.3.4",
         "vite-plugin-full-reload": "^1.2.0"
     }
