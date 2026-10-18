@@ -43,7 +43,7 @@ return [
     'complex_error'                               => 'Something complicated went wrong. Sorry about that. Please inspect the logs of Firefly III',
     'no_valid_opposing'                           => 'Conversion failed because there is no valid account named ":account"',
     'new_notes_empty'                             => 'The notes to be set are empty',
-    'invalid_date' => 'This rule has an invalid date.',
+    'invalid_date'                                => 'This rule has an invalid date.',
     'unsupported_transaction_type_withdrawal'     => 'Firefly III cannot convert a ":type" to a withdrawal',
     'unsupported_transaction_type_deposit'        => 'Firefly III cannot convert a ":type" to a deposit',
     'unsupported_transaction_type_transfer'       => 'Firefly III cannot convert a ":type" to a transfer',
