@@ -25,13 +25,11 @@ namespace FireflyIII\TransactionRules\Actions;
 
 use Carbon\Carbon;
 use Carbon\Exceptions\InvalidFormatException;
-use FireflyIII\Enums\TransactionTypeEnum;
 use FireflyIII\Events\Model\Rule\RuleActionFailedOnArray;
 use FireflyIII\Events\Model\TransactionGroup\TransactionGroupRequestsAuditLogEntry;
 use FireflyIII\Models\RuleAction;
 use FireflyIII\Models\TransactionJournal;
 use FireflyIII\User;
-use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 
 /**
@@ -49,31 +47,37 @@ class SetTransactionDate implements ActionInterface
     public function actOnArray(array $journal): bool
     {
         /** @var User $user */
-        $user          = User::find($journal['user_id']);
-        $search        = $this->action->getValue($journal);
+        $user         = User::find($journal['user_id']);
+        $search       = $this->action->getValue($journal);
 
-        if('' === $search) {
+        if ('' === $search) {
             Log::debug(sprintf('RuleAction SetTransactionDate failed because the date is empty for journal #%d.', $journal['transaction_journal_id']));
             event(new RuleActionFailedOnArray($this->action, $journal, trans('rules.invalid_date')));
+
             return false;
         }
+
         // needs to be parseable date:
         try {
             $carbon = Carbon::parse($search);
-        } catch(InvalidFormatException $e) {
-            Log::debug(sprintf('RuleAction SetTransactionDate failed because the date "%s" is invalid for journal #%d.', $search, $journal['transaction_journal_id']));
+        } catch (InvalidFormatException $e) {
+            Log::debug(sprintf(
+                'RuleAction SetTransactionDate failed because the date "%s" is invalid for journal #%d.',
+                $search,
+                $journal['transaction_journal_id']
+            ));
             event(new RuleActionFailedOnArray($this->action, $journal, trans('rules.invalid_date')));
+
             return false;
         }
 
         /** @var TransactionJournal $object */
-        $object        = $user->transactionJournals()->find($journal['transaction_journal_id']);
+        $object       = $user->transactionJournals()->find($journal['transaction_journal_id']);
 
         Log::debug(sprintf('RuleAction SetTransactionDate set the date of journal #%d to "%s".', $journal['transaction_journal_id'], $carbon->toW3cString()));
-        $oldDate = clone $object->date;
+        $oldDate      = clone $object->date;
         $object->date = clone $carbon;
         $object->save();
-
 
         event(new TransactionGroupRequestsAuditLogEntry($this->action->rule, $object, 'set_transaction_date', $oldDate->toW3cString(), $carbon->toW3cString()));
 
