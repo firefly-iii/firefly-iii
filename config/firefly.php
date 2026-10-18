@@ -460,6 +460,7 @@ return [
         'set_source_to_cash'      => SetSourceToCashAccount::class,
         'set_destination_to_cash' => SetDestinationToCashAccount::class,
         'set_amount'              => SetAmount::class,
+        'set_transaction_date' => \FireflyIII\TransactionRules\Actions\SetTransactionDate::class,
         // 'set_foreign_amount' => SetForeignAmount::class,
         // 'set_foreign_currency' => SetForeignCurrency::class,
     ],

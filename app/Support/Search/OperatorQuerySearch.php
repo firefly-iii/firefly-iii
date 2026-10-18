@@ -378,6 +378,7 @@ class OperatorQuerySearch implements SearchInterface
         } catch (FireflyException) {
             Log::debug(sprintf('Could not parse date "%s", will return empty array.', $value));
             $this->invalidOperators[] = ['type' => $type, 'value' => $value];
+            $this->collector->findNothing();
 
             return [];
         }

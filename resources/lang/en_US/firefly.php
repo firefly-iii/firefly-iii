@@ -1298,6 +1298,8 @@ return [
     'rule_action_clear_category'                          => 'Clear category',
     'rule_action_set_budget'                              => 'Set budget to ":action_value"',
     'rule_action_clear_budget'                            => 'Clear budget',
+    'rule_action_set_transaction_date_choice'                            => 'Set the transaction date to ..',
+    'rule_action_set_transaction_date' => 'Set the transaction date to ":action_value"',
     'rule_action_add_tag'                                 => 'Add tag ":action_value"',
     'rule_action_remove_tag'                              => 'Remove tag ":action_value"',
     'rule_action_remove_all_tags'                         => 'Remove all tags',
