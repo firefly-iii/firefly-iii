@@ -29,9 +29,11 @@ export default function (amount, currencyCode) {
         console.warn("format-money: currencyCode is not a valid ISO 4217 code:", currencyCode);
         return "";
     }
-    let locale = window.__localeId__.replace("_", "-");
+    let locale = window.__localeId__;
+    console.log('Locale for formatting money:', locale);
     return Intl.NumberFormat(locale, {
         style: "currency",
         currency: currencyCode,
+        useGrouping: "always"
     }).format(amount);
 }
