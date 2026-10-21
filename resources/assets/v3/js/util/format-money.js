@@ -30,10 +30,10 @@ export default function (amount, currencyCode) {
         return "";
     }
     let locale = window.__localeId__;
-    console.log('Locale for formatting money:', locale);
+    console.log("Locale for formatting money:", locale);
     return Intl.NumberFormat(locale, {
         style: "currency",
         currency: currencyCode,
-        useGrouping: "always"
+        useGrouping: "always",
     }).format(amount);
 }
