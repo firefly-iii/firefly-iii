@@ -51,8 +51,8 @@ trait AttachmentCollection
                 /** @var array $attachment */
                 foreach ($transaction['attachments'] as $attachment) {
                     $result
-                        = str_contains(strtolower((string)$attachment['filename']), strtolower($name))
-                          || str_contains(strtolower((string)$attachment['title']), strtolower($name));
+                        = str_contains(strtolower((string) $attachment['filename']), strtolower($name))
+                        || str_contains(strtolower((string) $attachment['title']), strtolower($name));
                     if ($result) {
                         return true;
                     }
@@ -84,8 +84,8 @@ trait AttachmentCollection
                 /** @var array $attachment */
                 foreach ($transaction['attachments'] as $attachment) {
                     $result
-                        = !str_contains(strtolower((string)$attachment['filename']), strtolower($name))
-                          && !str_contains(strtolower((string)$attachment['title']), strtolower($name));
+                        = !str_contains(strtolower((string) $attachment['filename']), strtolower($name))
+                        && !str_contains(strtolower((string) $attachment['title']), strtolower($name));
                     if ($result) {
                         return true;
                     }
@@ -117,8 +117,8 @@ trait AttachmentCollection
                 /** @var array $attachment */
                 foreach ($transaction['attachments'] as $attachment) {
                     $result
-                        = !str_ends_with(strtolower((string)$attachment['filename']), strtolower($name))
-                          && !str_ends_with(strtolower((string)$attachment['title']), strtolower($name));
+                        = !str_ends_with(strtolower((string) $attachment['filename']), strtolower($name))
+                        && !str_ends_with(strtolower((string) $attachment['title']), strtolower($name));
                     if ($result) {
                         return true;
                     }
@@ -150,8 +150,8 @@ trait AttachmentCollection
                 /** @var array $attachment */
                 foreach ($transaction['attachments'] as $attachment) {
                     $result
-                        = !str_starts_with(strtolower((string)$attachment['filename']), strtolower($name))
-                          && !str_starts_with(strtolower((string)$attachment['title']), strtolower($name));
+                        = !str_starts_with(strtolower((string) $attachment['filename']), strtolower($name))
+                        && !str_starts_with(strtolower((string) $attachment['title']), strtolower($name));
                     if ($result) {
                         return true;
                     }
@@ -175,8 +175,8 @@ trait AttachmentCollection
                 /** @var array $attachment */
                 foreach ($transaction['attachments'] as $attachment) {
                     $result
-                        = str_ends_with(strtolower((string)$attachment['filename']), strtolower($name))
-                          || str_ends_with(strtolower((string)$attachment['title']), strtolower($name));
+                        = str_ends_with(strtolower((string) $attachment['filename']), strtolower($name))
+                        || str_ends_with(strtolower((string) $attachment['title']), strtolower($name));
                     if ($result) {
                         return true;
                     }
@@ -246,8 +246,8 @@ trait AttachmentCollection
                 /** @var array $attachment */
                 foreach ($transaction['attachments'] as $attachment) {
                     $result
-                        = str_starts_with(strtolower((string)$attachment['filename']), strtolower($name))
-                          || str_starts_with(strtolower((string)$attachment['title']), strtolower($name));
+                        = str_starts_with(strtolower((string) $attachment['filename']), strtolower($name))
+                        || str_starts_with(strtolower((string) $attachment['title']), strtolower($name));
                     if ($result) {
                         return true;
                     }
@@ -272,7 +272,7 @@ trait AttachmentCollection
                 foreach ($transaction['attachments'] as $attachment) {
                     /** @var null|Attachment $object */
                     $object = auth()->user()->attachments()->find($attachment['id']);
-                    $notes  = (string)$object?->notes()->first()?->text;
+                    $notes  = (string) $object?->notes()->first()?->text;
                     if ('' !== $notes && $notes === $value) {
                         return true;
                     }
@@ -297,7 +297,7 @@ trait AttachmentCollection
                 foreach ($transaction['attachments'] as $attachment) {
                     /** @var null|Attachment $object */
                     $object = auth()->user()->attachments()->find($attachment['id']);
-                    $notes  = (string)$object?->notes()->first()?->text;
+                    $notes  = (string) $object?->notes()->first()?->text;
                     if ('' !== $notes && $notes !== $value) {
                         return true;
                     }
@@ -322,7 +322,7 @@ trait AttachmentCollection
                 foreach ($transaction['attachments'] as $attachment) {
                     /** @var null|Attachment $object */
                     $object = auth()->user()->attachments()->find($attachment['id']);
-                    $notes  = (string)$object?->notes()->first()?->text;
+                    $notes  = (string) $object?->notes()->first()?->text;
                     if ('' !== $notes && str_contains(strtolower($notes), strtolower($value))) {
                         return true;
                     }
@@ -347,7 +347,7 @@ trait AttachmentCollection
                 foreach ($transaction['attachments'] as $attachment) {
                     /** @var null|Attachment $object */
                     $object = auth()->user()->attachments()->find($attachment['id']);
-                    $notes  = (string)$object?->notes()->first()?->text;
+                    $notes  = (string) $object?->notes()->first()?->text;
                     if ('' !== $notes && !str_contains(strtolower($notes), strtolower($value))) {
                         return true;
                     }
@@ -372,7 +372,7 @@ trait AttachmentCollection
                 foreach ($transaction['attachments'] as $attachment) {
                     /** @var null|Attachment $object */
                     $object = auth()->user()->attachments()->find($attachment['id']);
-                    $notes  = (string)$object?->notes()->first()?->text;
+                    $notes  = (string) $object?->notes()->first()?->text;
 
                     if ('' !== $notes && !str_ends_with(strtolower($notes), strtolower($value))) {
                         return true;
@@ -398,7 +398,7 @@ trait AttachmentCollection
                 foreach ($transaction['attachments'] as $attachment) {
                     /** @var null|Attachment $object */
                     $object = auth()->user()->attachments()->find($attachment['id']);
-                    $notes  = (string)$object?->notes()->first()?->text;
+                    $notes  = (string) $object?->notes()->first()?->text;
                     if ('' !== $notes && !str_starts_with(strtolower($notes), strtolower($value))) {
                         return true;
                     }
@@ -423,7 +423,7 @@ trait AttachmentCollection
                 foreach ($transaction['attachments'] as $attachment) {
                     /** @var null|Attachment $object */
                     $object = auth()->user()->attachments()->find($attachment['id']);
-                    $notes  = (string)$object?->notes()->first()?->text;
+                    $notes  = (string) $object?->notes()->first()?->text;
                     if ('' !== $notes && str_ends_with(strtolower($notes), strtolower($value))) {
                         return true;
                     }
@@ -448,7 +448,7 @@ trait AttachmentCollection
                 foreach ($transaction['attachments'] as $attachment) {
                     /** @var null|Attachment $object */
                     $object = auth()->user()->attachments()->find($attachment['id']);
-                    $notes  = (string)$object?->notes()->first()?->text;
+                    $notes  = (string) $object?->notes()->first()?->text;
                     if ('' !== $notes && str_starts_with(strtolower($notes), strtolower($value))) {
                         return true;
                     }
@@ -516,12 +516,13 @@ trait AttachmentCollection
             // join some extra tables:
             $this->hasJoinedAttTables = true;
             $this->query->leftJoin('attachments', 'attachments.attachable_id', '=', 'transaction_journals.id')
-                        ->where(static function (EloquentBuilder $q1): void {
-                            $q1->where('attachments.attachable_type', TransactionJournal::class);
-                            // $q1->where('attachments.uploaded', true);
-                            // $q1->whereNull('attachments.deleted_at');
-                            $q1->orWhereNull('attachments.attachable_type');
-                        });
+                ->where(static function (EloquentBuilder $q1): void {
+                    $q1->where('attachments.attachable_type', TransactionJournal::class);
+                    // $q1->where('attachments.uploaded', true);
+                    // $q1->whereNull('attachments.deleted_at');
+                    $q1->orWhereNull('attachments.attachable_type');
+                })
+            ;
         }
     }
 }
