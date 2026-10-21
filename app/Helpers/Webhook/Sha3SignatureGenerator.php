@@ -29,7 +29,6 @@ use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Models\WebhookMessage;
 use Illuminate\Support\Facades\Log;
 use JsonException;
-
 use function Safe\json_encode;
 
 /**
@@ -48,7 +47,7 @@ class Sha3SignatureGenerator implements SignatureGeneratorInterface
         if (null === $message->webhook) {
             throw new FireflyException('Part of a deleted webhook.');
         }
-        $json      = '';
+        $json = '';
 
         try {
             $json = json_encode($message->message, JSON_THROW_ON_ERROR);
@@ -69,7 +68,7 @@ class Sha3SignatureGenerator implements SignatureGeneratorInterface
         // The actual JSON payload (i.e., the request body)
         $timestamp = Carbon::now()->getTimestamp();
         $payload   = sprintf('%s.%s', $timestamp, $json);
-        $signature = hash_hmac('sha3-256', $payload, (string) $message->webhook->secret);
+        $signature = hash_hmac('sha3-256', $payload, (string)$message->webhook->secret);
 
         // signature string:
         // header included in each signed event contains a timestamp and one or more signatures.

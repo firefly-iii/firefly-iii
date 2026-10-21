@@ -40,7 +40,7 @@ class FiscalHelper implements FiscalHelperInterface
      */
     public function __construct()
     {
-        $this->useCustomFiscalYear = (bool) Preferences::get('customFiscalYear', false)->data;
+        $this->useCustomFiscalYear = (bool)Preferences::get('customFiscalYear', false)->data;
     }
 
     /**
@@ -78,9 +78,9 @@ class FiscalHelper implements FiscalHelperInterface
             if (is_array($prefStartStr)) {
                 $prefStartStr = '01-01';
             }
-            $prefStartStr = (string) $prefStartStr;
-            [$mth, $day]  = explode('-', $prefStartStr);
-            $startDate->day((int) $day)->month((int) $mth);
+            $prefStartStr = (string)$prefStartStr;
+            [$mth, $day] = explode('-', $prefStartStr);
+            $startDate->day((int)$day)->month((int)$mth);
 
             // if start date is after passed date, sub 1 year.
             if ($startDate > $date) {

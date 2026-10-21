@@ -35,7 +35,6 @@ use Illuminate\Database\Eloquent\Builder as EloquentBuilder;
 use Illuminate\Database\Query\JoinClause;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Log;
-
 use function Safe\json_encode;
 
 /**
@@ -471,14 +470,14 @@ trait MetaCollection
         // this method adds a "postFilter" to the collector.
         $list                = $tags->pluck('tag')->toArray();
         $list                = array_map(strtolower(...), $list);
-        $filter              = static function (array $object) use ($list): array|bool {
-            $includedJournals       = [];
-            $return                 = $object;
+        $filter              = static function (array $object) use ($list): array | bool {
+            $includedJournals = [];
+            $return           = $object;
             unset($return['transactions']);
             $return['transactions'] = [];
             Log::debug(sprintf('Now in setAllTags(%s) filter', implode(', ', $list)));
-            $expectedTagCount       = count($list);
-            $foundTagCount          = 0;
+            $expectedTagCount = count($list);
+            $foundTagCount    = 0;
             foreach ($object['transactions'] as $transaction) {
                 $transactionTagCount = count($transaction['tags']);
                 Log::debug(sprintf('Transaction #%d has %d tag(s)', $transaction['transaction_journal_id'], $transactionTagCount));
@@ -488,8 +487,8 @@ trait MetaCollection
                     return false;
                 }
                 foreach ($transaction['tags'] as $tag) {
-                    Log::debug(sprintf('"%s" versus', strtolower((string) $tag['name'])), $list);
-                    if (in_array(strtolower((string) $tag['name']), $list, true)) {
+                    Log::debug(sprintf('"%s" versus', strtolower((string)$tag['name'])), $list);
+                    if (in_array(strtolower((string)$tag['name']), $list, true)) {
                         Log::debug(sprintf('Transaction has tag "%s" so count++.', $tag['name']));
                         ++$foundTagCount;
                         $journalId = $transaction['transaction_journal_id'];
@@ -504,7 +503,7 @@ trait MetaCollection
             Log::debug(sprintf('Found %d tags, need at least %d.', $foundTagCount, $expectedTagCount));
 
             // found at least the expected tags.
-            $result                 = $foundTagCount >= $expectedTagCount;
+            $result = $foundTagCount >= $expectedTagCount;
             if ($result) {
                 return $return;
             }
@@ -670,8 +669,8 @@ trait MetaCollection
             Log::debug(sprintf('Now in setTags (any) filter: %s', implode(', ', $list)));
             foreach ($object['transactions'] as $transaction) {
                 foreach ($transaction['tags'] as $tag) {
-                    Log::debug(sprintf('"%s" versus', strtolower((string) $tag['name'])), $list);
-                    if (in_array(strtolower((string) $tag['name']), $list, true)) {
+                    Log::debug(sprintf('"%s" versus', strtolower((string)$tag['name'])), $list);
+                    if (in_array(strtolower((string)$tag['name']), $list, true)) {
                         Log::debug(sprintf('Transaction has tag "%s" so return true.', $tag['name']));
 
                         return true;
@@ -702,8 +701,8 @@ trait MetaCollection
             foreach ($object['transactions'] as $transaction) {
                 Log::debug(sprintf('Transaction has %d tag(s)', count($transaction['tags'])));
                 foreach ($transaction['tags'] as $tag) {
-                    Log::debug(sprintf('"%s" versus', strtolower((string) $tag['name'])), $list);
-                    if (in_array(strtolower((string) $tag['name']), $list, true)) {
+                    Log::debug(sprintf('"%s" versus', strtolower((string)$tag['name'])), $list);
+                    if (in_array(strtolower((string)$tag['name']), $list, true)) {
                         Log::debug(sprintf('Transaction has tag "%s", but should not have it, return false.', $tag['name']));
 
                         return false;
@@ -851,6 +850,21 @@ trait MetaCollection
         return $this;
     }
 
+    public function withTagInformation(): GroupCollectorInterface
+    {
+        $this->fields[] = 'tags.id as tag_id';
+        $this->fields[] = 'tags.tag as tag_name';
+        $this->fields[] = 'tags.date as tag_date';
+        $this->fields[] = 'tags.description as tag_description';
+        //        $this->fields[] = 'tags.latitude as tag_latitude';
+        //        $this->fields[] = 'tags.longitude as tag_longitude';
+        // $this->fields[] = 'tags.zoomLevel as tag_zoom_level';
+
+        $this->joinTagTables();
+
+        return $this;
+    }
+
     /**
      * Limit results to a transactions without a bill.
      */
@@ -949,21 +963,6 @@ trait MetaCollection
         return $this;
     }
 
-    public function withTagInformation(): GroupCollectorInterface
-    {
-        $this->fields[] = 'tags.id as tag_id';
-        $this->fields[] = 'tags.tag as tag_name';
-        $this->fields[] = 'tags.date as tag_date';
-        $this->fields[] = 'tags.description as tag_description';
-        //        $this->fields[] = 'tags.latitude as tag_latitude';
-        //        $this->fields[] = 'tags.longitude as tag_longitude';
-        // $this->fields[] = 'tags.zoomLevel as tag_zoom_level';
-
-        $this->joinTagTables();
-
-        return $this;
-    }
-
     /**
      * Join table to get tag information.
      */
@@ -972,8 +971,8 @@ trait MetaCollection
         if (false === $this->hasJoinedMetaTables) {
             $this->hasJoinedMetaTables = true;
             $this->query->leftJoin('journal_meta', 'transaction_journals.id', '=', 'journal_meta.transaction_journal_id');
-            $this->fields[]            = 'journal_meta.name as meta_name';
-            $this->fields[]            = 'journal_meta.data as meta_data';
+            $this->fields[] = 'journal_meta.name as meta_name';
+            $this->fields[] = 'journal_meta.data as meta_data';
         }
     }
 

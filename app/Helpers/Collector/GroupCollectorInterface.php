@@ -623,6 +623,11 @@ interface GroupCollectorInterface
     public function sortCollection(Collection $collection): Collection;
 
     /**
+     * Automatically include all stuff required to make API calls work.
+     */
+    public function withAPIInformation(): self;
+
+    /**
      * Will include the source and destination account names and types.
      */
     public function withAccountInformation(): self;
@@ -631,11 +636,6 @@ interface GroupCollectorInterface
      * Any notes, no matter what.
      */
     public function withAnyNotes(): self;
-
-    /**
-     * Automatically include all stuff required to make API calls work.
-     */
-    public function withAPIInformation(): self;
 
     /**
      * Add basic info on attachments of transactions.
@@ -693,6 +693,11 @@ interface GroupCollectorInterface
     public function withNotes(): self;
 
     /**
+     * Add tag info.
+     */
+    public function withTagInformation(): self;
+
+    /**
      * Limit results to a transactions without a bill.
      */
     public function withoutBill(): self;
@@ -720,11 +725,6 @@ interface GroupCollectorInterface
     public function withoutNotes(): self;
 
     public function withoutTags(): self;
-
-    /**
-     * Add tag info.
-     */
-    public function withTagInformation(): self;
 
     public function yearAfter(string $year): self;
 
