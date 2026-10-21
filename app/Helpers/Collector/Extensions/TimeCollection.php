@@ -66,7 +66,7 @@ trait TimeCollection
         if ($end < $start) {
             [$start, $end] = [$end, $start];
         }
-        $end = clone $end; // this is so weird, but it works if $end and $start secretly point to the same object.
+        $end                 = clone $end; // this is so weird, but it works if $end and $start secretly point to the same object.
         $end->endOfDay();
         $start->startOfDay();
         $this->withMetaDate($field);
@@ -121,7 +121,7 @@ trait TimeCollection
         $filter              = static function (array $object) use ($field, $day): bool {
             foreach ($object['transactions'] as $transaction) {
                 if (array_key_exists($field, $transaction) && $transaction[$field] instanceof Carbon) {
-                    return $transaction[$field]->day >= (int)$day;
+                    return $transaction[$field]->day >= (int) $day;
                 }
             }
 
@@ -138,7 +138,7 @@ trait TimeCollection
         $filter              = static function (array $object) use ($field, $day): bool {
             foreach ($object['transactions'] as $transaction) {
                 if (array_key_exists($field, $transaction) && $transaction[$field] instanceof Carbon) {
-                    return $transaction[$field]->day <= (int)$day;
+                    return $transaction[$field]->day <= (int) $day;
                 }
             }
 
@@ -155,7 +155,7 @@ trait TimeCollection
         $filter              = static function (array $object) use ($field, $day): bool {
             foreach ($object['transactions'] as $transaction) {
                 if (array_key_exists($field, $transaction) && $transaction[$field] instanceof Carbon) {
-                    return (int)$day === $transaction[$field]->day;
+                    return (int) $day === $transaction[$field]->day;
                 }
             }
 
@@ -172,7 +172,7 @@ trait TimeCollection
         $filter              = static function (array $object) use ($field, $day): bool {
             foreach ($object['transactions'] as $transaction) {
                 if (array_key_exists($field, $transaction) && $transaction[$field] instanceof Carbon) {
-                    return (int)$day !== $transaction[$field]->day;
+                    return (int) $day !== $transaction[$field]->day;
                 }
             }
 
@@ -189,7 +189,7 @@ trait TimeCollection
         $filter              = static function (array $object) use ($field, $month): bool {
             foreach ($object['transactions'] as $transaction) {
                 if (array_key_exists($field, $transaction) && $transaction[$field] instanceof Carbon) {
-                    return $transaction[$field]->month >= (int)$month;
+                    return $transaction[$field]->month >= (int) $month;
                 }
             }
 
@@ -206,7 +206,7 @@ trait TimeCollection
         $filter              = static function (array $object) use ($field, $month): bool {
             foreach ($object['transactions'] as $transaction) {
                 if (array_key_exists($field, $transaction) && $transaction[$field] instanceof Carbon) {
-                    return $transaction[$field]->month <= (int)$month;
+                    return $transaction[$field]->month <= (int) $month;
                 }
             }
 
@@ -223,7 +223,7 @@ trait TimeCollection
         $filter              = static function (array $object) use ($field, $month): bool {
             foreach ($object['transactions'] as $transaction) {
                 if (array_key_exists($field, $transaction) && $transaction[$field] instanceof Carbon) {
-                    return (int)$month === $transaction[$field]->month;
+                    return (int) $month === $transaction[$field]->month;
                 }
             }
 
@@ -240,7 +240,7 @@ trait TimeCollection
         $filter              = static function (array $object) use ($field, $month): bool {
             foreach ($object['transactions'] as $transaction) {
                 if (array_key_exists($field, $transaction) && $transaction[$field] instanceof Carbon) {
-                    return (int)$month !== $transaction[$field]->month;
+                    return (int) $month !== $transaction[$field]->month;
                 }
             }
 
@@ -257,7 +257,7 @@ trait TimeCollection
         $filter              = static function (array $object) use ($field, $year): bool {
             foreach ($object['transactions'] as $transaction) {
                 if (array_key_exists($field, $transaction) && $transaction[$field] instanceof Carbon) {
-                    return $transaction[$field]->year >= (int)$year;
+                    return $transaction[$field]->year >= (int) $year;
                 }
             }
 
@@ -274,7 +274,7 @@ trait TimeCollection
         $filter              = static function (array $object) use ($field, $year): bool {
             foreach ($object['transactions'] as $transaction) {
                 if (array_key_exists($field, $transaction) && $transaction[$field] instanceof Carbon) {
-                    return $transaction[$field]->year <= (int)$year;
+                    return $transaction[$field]->year <= (int) $year;
                 }
             }
 
@@ -291,7 +291,7 @@ trait TimeCollection
         $filter              = static function (array $object) use ($field, $year): bool {
             foreach ($object['transactions'] as $transaction) {
                 if (array_key_exists($field, $transaction) && $transaction[$field] instanceof Carbon) {
-                    return $year === (string)$transaction[$field]->year;
+                    return $year === (string) $transaction[$field]->year;
                 }
             }
 
@@ -308,7 +308,7 @@ trait TimeCollection
         $filter              = static function (array $object) use ($field, $year): bool {
             foreach ($object['transactions'] as $transaction) {
                 if (array_key_exists($field, $transaction) && $transaction[$field] instanceof Carbon) {
-                    return $year !== (string)$transaction[$field]->year;
+                    return $year !== (string) $transaction[$field]->year;
                 }
             }
 
@@ -519,7 +519,7 @@ trait TimeCollection
         if ($end < $start) {
             [$start, $end] = [$end, $start];
         }
-        $end = clone $end; // this is so weird, but it works if $end and $start secretly point to the same object.
+        $end                 = clone $end; // this is so weird, but it works if $end and $start secretly point to the same object.
         $end->endOfDay();
         $start->startOfDay();
         $this->withMetaDate($field);

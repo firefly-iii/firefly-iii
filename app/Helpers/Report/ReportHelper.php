@@ -60,10 +60,10 @@ class ReportHelper implements ReportHelperInterface
 
         /** @var Bill $bill */
         foreach ($bills as $bill) {
-            $expectedDates = $repository->getPayDatesInRange($bill, $start, $end);
-            $billId        = $bill->id;
-            $currency      = $bill->transactionCurrency;
-            $current       = [
+            $expectedDates            = $repository->getPayDatesInRange($bill, $start, $end);
+            $billId                   = $bill->id;
+            $currency                 = $bill->transactionCurrency;
+            $current                  = [
                 'id'                      => $bill->id,
                 'name'                    => $bill->name,
                 'active'                  => $bill->active,
@@ -80,11 +80,11 @@ class ReportHelper implements ReportHelperInterface
 
             /** @var Carbon $expectedStart */
             foreach ($expectedDates as $expectedStart) {
-                $expectedEnd = Navigation::endOfX($expectedStart, $bill->repeat_freq, null);
+                $expectedEnd               = Navigation::endOfX($expectedStart, $bill->repeat_freq, null);
 
                 // is paid in this period maybe?
                 /** @var GroupCollectorInterface $collector */
-                $collector = app(GroupCollectorInterface::class);
+                $collector                 = app(GroupCollectorInterface::class);
                 $collector->setAccounts($accounts)->setRange($expectedStart, $expectedEnd)->setBill($bill);
                 $current['paid_moments'][] = $collector->getExtractedJournals();
             }
@@ -105,12 +105,12 @@ class ReportHelper implements ReportHelperInterface
         $fiscalHelper = app(FiscalHelperInterface::class);
         $start        = clone $date;
         $start->startOfMonth();
-        $end = today(config('app.timezone'));
+        $end          = today(config('app.timezone'));
         $end->endOfMonth();
-        $months = [];
+        $months       = [];
 
         while ($start <= $end) {
-            $year = $fiscalHelper->endOfFiscalYear($start)->year; // current year
+            $year                      = $fiscalHelper->endOfFiscalYear($start)->year; // current year
             if (!array_key_exists($year, $months)) {
                 $months[$year] = [
                     'fiscal_start' => $fiscalHelper->startOfFiscalYear($start)->format('Y-m-d'),
@@ -121,17 +121,17 @@ class ReportHelper implements ReportHelperInterface
                 ];
             }
 
-            $currentEnd = clone $start;
+            $currentEnd                = clone $start;
             $currentEnd->endOfMonth();
             $months[$year]['months'][] = [
-                'formatted' => $start->isoFormat((string)trans('config.month_js')),
+                'formatted' => $start->isoFormat((string) trans('config.month_js')),
                 'start'     => $start->format('Y-m-d'),
                 'end'       => $currentEnd->format('Y-m-d'),
                 'month'     => $start->month,
                 'year'      => $year,
             ];
 
-            $start = clone $currentEnd; // to make the hop to the next month properly
+            $start                     = clone $currentEnd; // to make the hop to the next month properly
             $start->addDay();
         }
 
