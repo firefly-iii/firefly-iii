@@ -110,13 +110,15 @@ final class ListController extends Controller
         /** @var User $admin */
         $admin        = auth()->user();
 
+        $journals = $tag->transactionJournals()->get(['transaction_journals.id'])->pluck('id')->toArray();
+
         // use new group collector:
         /** @var GroupCollectorInterface $collector */
         $collector    = app(GroupCollectorInterface::class);
         $collector
             ->setUser($admin)
             // filter on tag.
-            ->setTag($tag)
+            ->setJournalIds($journals)
             // all info needed for the API:
             ->withAPIInformation()
             // set page size:
