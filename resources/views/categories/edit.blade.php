@@ -27,6 +27,7 @@
                     <div class="card-body">
                         {!! ExpandedForm::textarea('notes', $preFilled['notes'], ['helpText' => trans('firefly.field_supports_markdown')] ) !!}
                         {!! ExpandedForm::file('attachments[]', ['multiple' => 'multiple','helpText' => trans('firefly.upload_max_file_size', ['size' => print_nice_filesize($uploadSize)])]) !!}
+                        {!! ExpandedForm::objectGroup() !!}
                     </div>
                 </div>
             </div>
@@ -54,5 +55,8 @@
     </form>
 @endsection
 @section('scripts')
-    @vite(['js/pages/generic.js'])
+    @vite(['js/pages/generic-nodates.js'])
+    {{-- auto complete for object groups --}}
+    <script src="v1/js/lib/bootstrap-simple-autocomplete.js?v={{ $FF_BUILD_TIME }}" nonce="{{ $JS_NONCE }}"></script>
+    <script src="v1/js/ff/object-groups/ac.js?v={{ $FF_BUILD_TIME }}" nonce="{{ $JS_NONCE }}"></script>
 @endsection

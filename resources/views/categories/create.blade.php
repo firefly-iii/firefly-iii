@@ -22,6 +22,7 @@
                     <div class="card-body">
                         {!! ExpandedForm::textarea('notes', null, ['helpText' => trans('firefly.field_supports_markdown')] ) !!}
                         {!! ExpandedForm::file('attachments[]', ['multiple' => 'multiple','helpText' => trans('firefly.upload_max_file_size', ['size' => print_nice_filesize($uploadSize)])]) !!}
+                        {!! ExpandedForm::objectGroup() !!}
                     </div>
                 </div>
             </div>
