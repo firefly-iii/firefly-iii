@@ -128,16 +128,19 @@ class AccountUpdateService
         $objectGroupTitle = null;
         $objectGroupId = null;
         if(array_key_exists('object_group_title', $data)) {
-            $objectGroupTitle = (string)$data['object_group_title'];
-            if ('' !== $objectGroupTitle) {
-                $objectGroup = $this->findOrCreateObjectGroup($objectGroupTitle);
-                if ($objectGroup instanceof ObjectGroup) {
-                    $account->objectGroups()->sync([$objectGroup->id]);
+            if(null !== $data['object_group_title']) {
+                $objectGroupTitle = (string)$data['object_group_title'];
+                if ('' !== $objectGroupTitle) {
+                    $objectGroup = $this->findOrCreateObjectGroup($objectGroupTitle);
+                    if ($objectGroup instanceof ObjectGroup) {
+                        $account->objectGroups()->sync([$objectGroup->id]);
+                    }
                 }
             }
         }
         // try also with ID
         if(array_key_exists('object_group_id', $data)) {
+            if(null !== $data['object_group_id']) {
             $objectGroupId = (int)$data['object_group_id'];
             if (0 !== $objectGroupId) {
                 $objectGroup = $this->findObjectGroupById($objectGroupId);
@@ -145,8 +148,9 @@ class AccountUpdateService
                     $account->objectGroups()->sync([$objectGroup->id]);
                 }
             }
+            }
         }
-        if ('' === $objectGroupTitle && 0 === $objectGroupId) {
+        if ('' === $objectGroupTitle || 0 === $objectGroupId) {
             $account->objectGroups()->detach();
         }
         $account->save();

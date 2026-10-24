@@ -30,8 +30,10 @@ use FireflyIII\Factory\CategoryFactory;
 use FireflyIII\Models\Attachment;
 use FireflyIII\Models\Category;
 use FireflyIII\Models\Note;
+use FireflyIII\Models\ObjectGroup;
 use FireflyIII\Models\RecurrenceTransactionMeta;
 use FireflyIII\Models\RuleAction;
+use FireflyIII\Repositories\ObjectGroup\CreatesObjectGroups;
 use FireflyIII\Services\Internal\Destroy\CategoryDestroyService;
 use FireflyIII\Services\Internal\Update\CategoryUpdateService;
 use FireflyIII\Support\Repositories\UserGroup\UserGroupInterface;
@@ -47,6 +49,7 @@ use Illuminate\Support\Facades\Storage;
 class CategoryRepository implements CategoryRepositoryInterface, UserGroupInterface
 {
     use UserGroupTrait;
+    use CreatesObjectGroups;
 
     public function categoryEndsWith(string $query, int $limit): Collection
     {
@@ -330,6 +333,26 @@ class CategoryRepository implements CategoryRepositoryInterface, UserGroupInterf
         if (array_key_exists('notes', $data) && '' !== $data['notes']) {
             $this->updateNotes($category, $data['notes']);
         }
+
+        // todo duplicate code
+        $objectGroupTitle = $data['object_group_title'] ?? '';
+        if ('' !== $objectGroupTitle) {
+            $objectGroup = $this->findOrCreateObjectGroup($objectGroupTitle);
+            if ($objectGroup instanceof ObjectGroup) {
+                $category->objectGroups()->sync([$objectGroup->id]);
+            }
+        }
+        // try also with ID
+        $objectGroupId    = (int) ($data['object_group_id'] ?? 0);
+        if (0 !== $objectGroupId) {
+            $objectGroup = $this->findObjectGroupById($objectGroupId);
+            if ($objectGroup instanceof ObjectGroup) {
+                $category->objectGroups()->sync([$objectGroup->id]);
+            }
+        }
+        $category->save();
+
+
 
         return $category;
     }

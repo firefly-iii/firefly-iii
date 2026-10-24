@@ -47,6 +47,8 @@ class StoreRequest extends FormRequest
             'name'  => $this->convertString('name'),
             'notes' => $this->stringWithNewlines('notes'),
             'color' => $this->convertString('color'),
+            'object_group_title'      => $this->convertString('object_group_title'),
+            'object_group_id'         => $this->convertInteger('object_group_id'),
         ];
     }
 
@@ -59,6 +61,8 @@ class StoreRequest extends FormRequest
             'name'  => ['required', 'min:1', 'max:100', 'uniqueObjectForUser:categories,name'],
             'notes' => ['nullable', 'string', 'max:65535'],
             'color' => ['nullable', 'string', 'max:6', 'regex:/^[0-9a-fA-F]{6}$/'],
+            'object_group_id'      => ['numeric', 'belongsToUser:object_groups,id'],
+            'object_group_title'   => ['min:0', 'max:255'],
         ];
     }
 }

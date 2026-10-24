@@ -26,14 +26,17 @@ namespace FireflyIII\Support\JsonApi\Enrichments;
 
 use Carbon\Carbon;
 use FireflyIII\Exceptions\FireflyException;
+use FireflyIII\Models\Account;
 use FireflyIII\Models\Category;
 use FireflyIII\Models\Note;
+use FireflyIII\Models\ObjectGroup;
 use FireflyIII\Models\TransactionJournal;
 use FireflyIII\Models\UserGroup;
 use FireflyIII\Repositories\Category\OperationsRepositoryInterface;
 use FireflyIII\User;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Collection;
+use Illuminate\Support\Facades\DB;
 
 class CategoryEnrichment implements EnrichmentInterface
 {
@@ -45,9 +48,11 @@ class CategoryEnrichment implements EnrichmentInterface
     private array   $notes        = [];
     private array   $pcEarned     = [];
     private array   $pcSpent      = [];
+    private array   $objectGroups    = [];
     private array   $pcTransfers  = [];
     private array   $spent        = [];
     private ?Carbon $start        = null;
+    private array   $mappedObjects   = [];
     private array   $transfers    = [];
     private array   $lastActivity = [];
     private User $user;
@@ -60,7 +65,9 @@ class CategoryEnrichment implements EnrichmentInterface
         $this->collectNotes();
         $this->collectTransactions();
         $this->collectLastActivity();
+        $this->collectObjectGroups();
         $this->appendCollectedData();
+
         $this->sortData();
 
         return $this->collection;
@@ -115,6 +122,16 @@ class CategoryEnrichment implements EnrichmentInterface
                 'transfers'     => $this->transfers[$id] ?? null,
                 'pc_transfers'  => $this->pcTransfers[$id] ?? null,
             ];
+
+            // add object group if available
+            if (array_key_exists($id, $this->mappedObjects)) {
+                $key                        = $this->mappedObjects[$id];
+                $meta['object_group_id']    = (string) $this->objectGroups[$key]['id'];
+                $meta['object_group_title'] = $this->objectGroups[$key]['title'];
+                $meta['object_group_order'] = $this->objectGroups[$key]['order'];
+            }
+
+
             $item->meta = $meta;
 
             return $item;
@@ -187,6 +204,28 @@ class CategoryEnrichment implements EnrichmentInterface
                 $this->transfers[$id]   = array_values($opsRepository->sumCollectedTransactionsByCategory($transfers, $item, 'positive'));
                 $this->pcTransfers[$id] = array_values($opsRepository->sumCollectedTransactionsByCategory($transfers, $item, 'positive', true));
             }
+        }
+    }
+    // TODO this method is duplicate over all enrichments.
+    private function collectObjectGroups(): void
+    {
+        $set    = DB::table('object_groupables')
+                    ->whereIn('object_groupable_id', $this->ids)
+                    ->where('object_groupable_type', Category::class)
+                    ->get(['object_groupable_id', 'object_group_id'])
+        ;
+
+        $ids    = array_unique($set->pluck('object_group_id')->toArray());
+
+        foreach ($set as $entry) {
+            $this->mappedObjects[(int) $entry->object_groupable_id] = (int) $entry->object_group_id;
+        }
+
+        $groups = ObjectGroup::query()->whereIn('id', $ids)->get(['id', 'title', 'order'])->toArray();
+        foreach ($groups as $group) {
+            $group['id']                            = (int) $group['id'];
+            $group['order']                         = (int) $group['order'];
+            $this->objectGroups[$group['id']] = $group;
         }
     }
 

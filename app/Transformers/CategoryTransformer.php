@@ -58,6 +58,11 @@ class CategoryTransformer extends AbstractTransformer
             'notes'                           => $category->meta['notes'],
             'last_activity'                   => $category->meta['last_activity'],
 
+            // object group:
+            'object_group_id'    => $category->meta['object_group_id'] ?? null,
+            'object_group_title' => $category->meta['object_group_title'] ?? null,
+            'object_group_order' => $category->meta['object_group_order'] ?? null,
+
             // category never has currency settings.
             'object_has_currency_setting'     => false,
             'primary_currency_id'             => (string) $this->primaryCurrency->id,

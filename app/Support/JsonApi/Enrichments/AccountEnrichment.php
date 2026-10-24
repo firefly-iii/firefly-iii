@@ -409,7 +409,7 @@ class AccountEnrichment implements EnrichmentInterface
         foreach ($groups as $group) {
             $group['id']                            = (int) $group['id'];
             $group['order']                         = (int) $group['order'];
-            $this->objectGroups[(int) $group['id']] = $group;
+            $this->objectGroups[$group['id']] = $group;
         }
     }
 

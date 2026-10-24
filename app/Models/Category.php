@@ -34,6 +34,7 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\MorphMany;
+use Illuminate\Database\Eloquent\Relations\MorphToMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
@@ -47,6 +48,12 @@ class Category extends Model
     protected $fillable = ['user_id', 'user_group_id', 'name', 'color'];
 
     protected $hidden   = ['encrypted'];
+
+
+    public function objectGroups(): MorphToMany
+    {
+        return $this->morphToMany(ObjectGroup::class, 'object_groupable');
+    }
 
     /**
      * Route binder. Converts the key in the URL to the specified object (or throw 404).

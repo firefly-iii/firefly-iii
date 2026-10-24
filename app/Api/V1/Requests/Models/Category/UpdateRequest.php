@@ -48,6 +48,8 @@ class UpdateRequest extends FormRequest
             'name'  => ['name', 'convertString'],
             'color' => ['color', 'convertString'],
             'notes' => ['notes', 'stringWithNewlines'],
+            'object_group_id'         => ['object_group_id', 'convertInteger'],
+            'object_group_title'      => ['object_group_title', 'convertString'],
         ];
 
         return $this->getAllData($fields);
@@ -65,6 +67,8 @@ class UpdateRequest extends FormRequest
             'name'  => sprintf('min:1|max:100|uniqueObjectForUser:categories,name,%d', $category->id),
             'notes' => ['nullable', 'string', 'max:65535'],
             'color' => ['nullable', 'string', 'max:6', 'regex:/^[0-9a-fA-F]{6}$/'],
+            'object_group_id'      => ['numeric', 'belongsToUser:object_groups,id'],
+            'object_group_title'   => ['min:0', 'max:255'],
         ];
     }
 }

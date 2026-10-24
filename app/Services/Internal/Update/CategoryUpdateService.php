@@ -27,9 +27,11 @@ namespace FireflyIII\Services\Internal\Update;
 use Exception;
 use FireflyIII\Models\Category;
 use FireflyIII\Models\Note;
+use FireflyIII\Models\ObjectGroup;
 use FireflyIII\Models\RecurrenceTransactionMeta;
 use FireflyIII\Models\RuleAction;
 use FireflyIII\Models\RuleTrigger;
+use FireflyIII\Repositories\ObjectGroup\CreatesObjectGroups;
 use FireflyIII\User;
 use Illuminate\Support\Facades\Log;
 
@@ -39,6 +41,7 @@ use Illuminate\Support\Facades\Log;
 class CategoryUpdateService
 {
     private User $user;
+    use CreatesObjectGroups;
 
     /**
      * Constructor.
@@ -82,6 +85,38 @@ class CategoryUpdateService
                 $this->updateRecurrences($oldName, $data['name']);
             }
         }
+        // todo duplicate code
+        $objectGroupTitle = null;
+        $objectGroupId = null;
+        if(array_key_exists('object_group_title', $data)) {
+            if(null !== $data['object_group_title']) {
+                $objectGroupTitle = (string)$data['object_group_title'];
+                if ('' !== $objectGroupTitle) {
+                    $objectGroup = $this->findOrCreateObjectGroup($objectGroupTitle);
+                    if ($objectGroup instanceof ObjectGroup) {
+                        $category->objectGroups()->sync([$objectGroup->id]);
+                    }
+                }
+            }
+        }
+        // try also with ID
+        if(array_key_exists('object_group_id', $data)) {
+            if(null !== $data['object_group_id']) {
+                $objectGroupId = (int)$data['object_group_id'];
+                if (0 !== $objectGroupId) {
+                    $objectGroup = $this->findObjectGroupById($objectGroupId);
+                    if ($objectGroup instanceof ObjectGroup) {
+                        $category->objectGroups()->sync([$objectGroup->id]);
+                    }
+                }
+            }
+        }
+        if ('' === $objectGroupTitle || 0 === $objectGroupId) {
+            $category->objectGroups()->detach();
+        }
+        $category->save();
+
+
 
         $this->updateNotes($category, $data);
 
