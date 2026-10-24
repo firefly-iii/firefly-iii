@@ -212,10 +212,11 @@ let index = function () {
                 if ('-undefined' === sort) {
                     sort = "asc" === this.defaultSortDirections["main"] ? this.defaultSortColumns["main"] : "-" + this.defaultSortColumns["main"];
                 }
+                console.log('Sort instructions are now', sort);
                 downloadParams = {
                     active: this.active,
                     sort: sort,
-                    limit:1337,
+                    limit: 1337,
                     page: page, // because we download ALL.
                     type: this.objectType,
                     start: start,
@@ -230,8 +231,20 @@ let index = function () {
                 this.sums[tableId] = {};
                 this.debts[tableId] = {};
                 this.differences[tableId] = {};
+                // catch undefined sort instructions.
+                if('undefined' === typeof this.defaultSortColumns[tableId]) {
+                    this.defaultSortColumns[tableId] = this.defaultSortColumns["main"];
+                }
 
                 sort = "asc" === this.sortableTable.sortDirections[tableId] ? this.sortableTable.sortColumns[tableId] : "-" + this.sortableTable.sortColumns[tableId];
+
+
+                if ('-undefined' === sort) {
+                    sort = "asc" === this.defaultSortDirections[tableId] ? this.defaultSortColumns[tableId] : "-" + this.defaultSortColumns[tableId];
+                }
+                console.log('Sort instructions are now', sort);
+                console.log('Typeof is ', typeof this.defaultSortColumns[tableId]);
+
                 page = this.sortableTable.pages[tableId];
                 let filter = JSON.parse(JSON.stringify(this.filter))[tableId];
                 filter.object_group_id = 0;
