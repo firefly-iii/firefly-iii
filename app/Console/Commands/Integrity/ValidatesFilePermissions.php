@@ -67,13 +67,16 @@ class ValidatesFilePermissions extends Command
                 continue;
             }
             Log::debug('It is a directory!');
-            if (!is_writable($directory)) {
+            $isWriteable = is_writable($directory);
+            if (!$isWriteable) {
                 $message = sprintf('Directory "%s" is not writeable. Uploading attachments may fail silently.', $directory);
                 $this->friendlyError($message);
                 Log::error($message);
                 $errors  = true;
             }
-            Log::debug('It is writeable!');
+            if($isWriteable) {
+                Log::debug('It is writeable!');
+            }
             Log::debug(sprintf('Done processing %s', $directory));
         }
         Log::debug('Done with loop.');
