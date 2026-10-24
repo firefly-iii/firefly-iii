@@ -30,8 +30,10 @@ use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Models\Account;
 use FireflyIII\Models\AccountType;
 use FireflyIII\Models\Location;
+use FireflyIII\Models\ObjectGroup;
 use FireflyIII\Models\UserGroup;
 use FireflyIII\Repositories\Account\AccountRepositoryInterface;
+use FireflyIII\Repositories\ObjectGroup\CreatesObjectGroups;
 use FireflyIII\Services\Internal\Support\AccountServiceTrait;
 use FireflyIII\Support\Facades\Preferences;
 use FireflyIII\Support\Facades\Steam;
@@ -45,6 +47,7 @@ use Illuminate\Support\Facades\Log;
 class AccountUpdateService
 {
     use AccountServiceTrait;
+    use CreatesObjectGroups;
 
     protected AccountRepositoryInterface $accountRepository;
     protected array $validAssetFields;
@@ -110,6 +113,9 @@ class AccountUpdateService
 
         // update opening balance.
         $this->updateOpeningBalance($account, $data);
+
+        // update object group
+        $this->updateObjectGroup($account, $data);
 
         // Since 5.8.0, delete liability credit transactions, if any:
         $this->deleteCreditTransaction($account);
@@ -272,6 +278,38 @@ class AccountUpdateService
                 $location->zoom_level = $data['zoom_level'] ?? config('firefly.default_location.zoom_level');
                 $location->save();
             }
+        }
+    }
+
+    private function updateObjectGroup(Account $account, array $data): void {
+        // update using name:
+        if (array_key_exists('object_group_title', $data)) {
+            $objectGroupTitle = $data['object_group_title'] ?? '';
+            if ('' !== $objectGroupTitle) {
+                $objectGroup = $this->findOrCreateObjectGroup($objectGroupTitle);
+                if ($objectGroup instanceof ObjectGroup) {
+                    $account->objectGroups()->sync([$objectGroup->id]);
+                    $account->save();
+                }
+                return;
+            }
+            // remove if name is empty. Should be overruled by ID.
+            $account->objectGroups()->sync([]);
+            $account->save();
+        }
+        if (array_key_exists('object_group_id', $data)) {
+            // try also with ID:
+            $objectGroupId = (int) ($data['object_group_id'] ?? 0);
+            if (0 !== $objectGroupId) {
+                $objectGroup = $this->findObjectGroupById($objectGroupId);
+                if ($objectGroup instanceof ObjectGroup) {
+                    $account->objectGroups()->sync([$objectGroup->id]);
+                    $account->save();
+                }
+                return;
+            }
+            $account->objectGroups()->sync([]);
+            $account->save();
         }
     }
 

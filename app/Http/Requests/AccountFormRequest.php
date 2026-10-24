@@ -72,6 +72,7 @@ class AccountFormRequest extends FormRequest
             'interest_period'         => $this->convertString('interest_period'),
             'include_net_worth'       => '1',
             'liability_direction'     => $this->convertString('liability_direction'),
+            'object_group_title' => $this->convertString('object_group'),
         ];
 
         $data = $this->appendLocationData($data, 'location');
@@ -122,6 +123,7 @@ class AccountFormRequest extends FormRequest
             'interest_period'                    => 'in:daily,monthly,yearly',
             'notes'                              => ['min:1', 'max:32768', 'nullable'],
             '_from'                              => ['nullable', 'max:255', new IsValidOriginUrl()],
+            'object_group'  => ['min:0', 'max:255'],
         ];
         $rules          = Location::requestRules($rules);
 

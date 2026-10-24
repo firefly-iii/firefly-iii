@@ -80,6 +80,7 @@ let index = function () {
         sortableTable: null,
 
         init() {
+            console.log('init');
             // initialize sortable table.
             this.initFromLocalStorage();
             this.initFromQueryParams();
