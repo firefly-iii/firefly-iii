@@ -30,8 +30,10 @@ use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Models\Account;
 use FireflyIII\Models\AccountType;
 use FireflyIII\Models\Location;
+use FireflyIII\Models\ObjectGroup;
 use FireflyIII\Models\UserGroup;
 use FireflyIII\Repositories\Account\AccountRepositoryInterface;
+use FireflyIII\Repositories\ObjectGroup\CreatesObjectGroups;
 use FireflyIII\Services\Internal\Support\AccountServiceTrait;
 use FireflyIII\Support\Facades\Preferences;
 use FireflyIII\Support\Facades\Steam;
@@ -45,6 +47,7 @@ use Illuminate\Support\Facades\Log;
 class AccountUpdateService
 {
     use AccountServiceTrait;
+    use CreatesObjectGroups;
 
     protected AccountRepositoryInterface $accountRepository;
     protected array $validAssetFields;
@@ -121,6 +124,26 @@ class AccountUpdateService
 
         // update preferences if inactive:
         $this->updatePreferences($account);
+
+        $objectGroupTitle                         = $data['object_group_title'] ?? '';
+        if ('' !== $objectGroupTitle) {
+            $objectGroup = $this->findOrCreateObjectGroup($objectGroupTitle);
+            if ($objectGroup instanceof ObjectGroup) {
+                $account->objectGroups()->sync([$objectGroup->id]);
+            }
+        }
+        // try also with ID
+        $objectGroupId                            = (int) ($data['object_group_id'] ?? 0);
+        if (0 !== $objectGroupId) {
+            $objectGroup = $this->findObjectGroupById($objectGroupId);
+            if ($objectGroup instanceof ObjectGroup) {
+                $account->objectGroups()->sync([$objectGroup->id]);
+            }
+        }
+        if('' === $objectGroupTitle && 0 === $objectGroupId) {
+            $account->objectGroups()->detach();
+        }
+        $account->save();
 
         event(new UpdatedExistingAccount($account, $oldData));
 

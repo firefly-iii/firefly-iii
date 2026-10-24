@@ -854,6 +854,7 @@ return [
         'Account'  => [
             'name',
             'account_number_and_iban',
+            'object_group_id'
         ],
         'Category' => [
             'name',

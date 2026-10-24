@@ -157,6 +157,7 @@ final class EditController extends Controller
             'interest_period'         => $repository->getMetaValue($account, 'interest_period'),
             'notes'                   => $this->repository->getNoteText($account),
             'active'                  => $hasOldInput ? (bool) $request->old('active') : $account->active,
+            'object_group'            => null !== $account->objectGroups->first() ? $account->objectGroups->first()->title : '',
         ];
         if ('' === $openingBalanceAmount) {
             $preFilled['opening_balance'] = '';

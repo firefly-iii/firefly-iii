@@ -68,6 +68,7 @@ return [
                 'save_transaction_working',
                 'save_links_working',
                 'unknown',
+                'default_group_title_name',
                 'no_category',
                 'never',
                 'account_type_loan',

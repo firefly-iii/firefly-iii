@@ -16,8 +16,8 @@
                                               :route="route('categories.create') . '?_from=' . urlencode($FF3_FROM)"
                                               :linkTitle="__('firefly.create_new_category')"/>
             <div class="card-body p-0">
-                <template x-if="totalPages > 1">
-                    <x-elements.alpine.page-navigation/>
+                <template x-if="sortableTable.totalPages.main > 1">
+                    <x-elements.alpine.page-navigation sort-identifier="main"/>
                 </template>
                 <table data-sort-identifier="main" class="table table-valign-middle table-sm table-hover sortable">
                     <thead>
@@ -31,13 +31,8 @@
                     <template x-for="category in categories" :key="category.id">
                         <tr>
                             <td>
-                                <template x-if="0 !== category.id">
                                 <a :href="'./categories/show/' + category.id" :title="category.name"
                                    x-text="category.name"></a>
-                                </template>
-                                <template x-if="0 === category.id">
-                                    <a href="./categories/list/no-category" :title="category.name" x-text="category.name"></a>
-                                </template>
                             </td>
                             <td>
                                 <span x-text="category.last_activity"></span>
@@ -58,8 +53,8 @@
                     </tbody>
                 </table>
 
-                <template x-if="totalPages > 1">
-                    <x-elements.alpine.page-navigation/>
+                <template x-if="sortableTable.totalPages.main > 1">
+                    <x-elements.alpine.page-navigation sort-identifier="main"/>
                 </template>
 
                 <x-elements.card-footer-with-menu
