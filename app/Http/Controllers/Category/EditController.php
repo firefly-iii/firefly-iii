@@ -69,7 +69,7 @@ final class EditController extends Controller
     public function edit(Request $request, Category $category): Factory|\Illuminate\Contracts\View\View
     {
         $subTitle  = (string) trans('firefly.edit_category', ['name' => $category->name]);
-
+        $from                 = $request->input('_from', '');
         // put previous url in session if not redirect from store (not "return_to_edit").
         if (true !== session('categories.edit.fromUpdate')) {
             $this->rememberPreviousUrl('categories.edit.url');
@@ -82,7 +82,7 @@ final class EditController extends Controller
         ];
         $request->session()->flash('preFilled', $preFilled);
 
-        return view('categories.edit', ['category' => $category, 'subTitle' => $subTitle, 'preFilled' => $preFilled]);
+        return view('categories.edit', ['from' => $from,'category' => $category, 'subTitle' => $subTitle, 'preFilled' => $preFilled]);
     }
 
     /**
@@ -110,13 +110,14 @@ final class EditController extends Controller
         if (count($this->attachments->getMessages()->get('attachments')) > 0) {
             $request->session()->flash('info', $this->attachments->getMessages()->get('attachments'));
         }
-        $redirect = redirect($this->getPreviousUrl('categories.edit.url'));
+        // multi-tab redirect
+        $from     = $request->input('_from', '');
+        $redirect = redirect(route('index').$from);
 
         if (1 === (int) $request->input('return_to_edit')) {
-            $request->session()->put('categories.edit.fromUpdate', true);
-
-            $redirect = redirect(route('categories.edit', [$category->id]));
+            $redirect = redirect(route('accounts.edit', [$category->id]))->withInput(['return_to_edit' => 1]);
         }
+        Preferences::mark();
 
         return $redirect;
     }
