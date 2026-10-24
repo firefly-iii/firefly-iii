@@ -40,8 +40,8 @@ use Illuminate\Support\Facades\Log;
  */
 class CategoryUpdateService
 {
-    private User $user;
     use CreatesObjectGroups;
+    private User $user;
 
     /**
      * Constructor.
@@ -65,8 +65,8 @@ class CategoryUpdateService
      */
     public function update(Category $category, array $data): Category
     {
-        $oldName = $category->name;
-        $changed = false;
+        $oldName          = $category->name;
+        $changed          = false;
         if (array_key_exists('name', $data)) {
             $category->name = $data['name'];
             $changed        = true;
@@ -87,10 +87,10 @@ class CategoryUpdateService
         }
         // todo duplicate code
         $objectGroupTitle = null;
-        $objectGroupId = null;
-        if(array_key_exists('object_group_title', $data)) {
-            if(null !== $data['object_group_title']) {
-                $objectGroupTitle = (string)$data['object_group_title'];
+        $objectGroupId    = null;
+        if (array_key_exists('object_group_title', $data)) {
+            if (null !== $data['object_group_title']) {
+                $objectGroupTitle = (string) $data['object_group_title'];
                 if ('' !== $objectGroupTitle) {
                     $objectGroup = $this->findOrCreateObjectGroup($objectGroupTitle);
                     if ($objectGroup instanceof ObjectGroup) {
@@ -100,9 +100,9 @@ class CategoryUpdateService
             }
         }
         // try also with ID
-        if(array_key_exists('object_group_id', $data)) {
-            if(null !== $data['object_group_id']) {
-                $objectGroupId = (int)$data['object_group_id'];
+        if (array_key_exists('object_group_id', $data)) {
+            if (null !== $data['object_group_id']) {
+                $objectGroupId = (int) $data['object_group_id'];
                 if (0 !== $objectGroupId) {
                     $objectGroup = $this->findObjectGroupById($objectGroupId);
                     if ($objectGroup instanceof ObjectGroup) {
@@ -115,8 +115,6 @@ class CategoryUpdateService
             $category->objectGroups()->detach();
         }
         $category->save();
-
-
 
         $this->updateNotes($category, $data);
 

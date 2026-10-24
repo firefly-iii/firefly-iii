@@ -49,8 +49,8 @@ use Illuminate\Support\Facades\Storage;
  */
 class CategoryRepository implements CategoryRepositoryInterface, UserGroupInterface
 {
-    use UserGroupTrait;
     use CreatesObjectGroups;
+    use UserGroupTrait;
 
     public function categoryEndsWith(string $query, int $limit): Collection
     {
@@ -227,7 +227,6 @@ class CategoryRepository implements CategoryRepositoryInterface, UserGroupInterf
                     continue;
                 }
 
-
                 if (in_array($field, $allowed, true)) {
                     if ('' !== (string) $search) {
                         $query->whereLike($field, sprintf('%%%s%%', $search));
@@ -336,10 +335,10 @@ class CategoryRepository implements CategoryRepositoryInterface, UserGroupInterf
     public function store(array $data): Category
     {
         /** @var CategoryFactory $factory */
-        $factory  = app(CategoryFactory::class);
+        $factory          = app(CategoryFactory::class);
         $factory->setUser($this->user);
-        $color    = array_key_exists('color', $data) ? $data['color'] : null;
-        $category = $factory->findOrCreate(null, $data['name'], $color);
+        $color            = array_key_exists('color', $data) ? $data['color'] : null;
+        $category         = $factory->findOrCreate(null, $data['name'], $color);
 
         if (null === $category) {
             throw new FireflyException(sprintf('400003: Could not store new category with name "%s"', $data['name']));
@@ -369,8 +368,6 @@ class CategoryRepository implements CategoryRepositoryInterface, UserGroupInterf
             }
         }
         $category->save();
-
-
 
         return $category;
     }

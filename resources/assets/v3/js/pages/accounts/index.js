@@ -81,7 +81,10 @@ let index = function () {
             // prepare some variables.
             const address = window.location.href.split("?")[0].split("/");
             this.objectType = address[address.length - 1].substring(0, 15);
-            this.defaultSortColumns = "expense" === this.objectType || "revenue" === this.objectType ? { main: "name" } : this.defaultSortColumns;
+            this.defaultSortColumns =
+                "expense" === this.objectType || "revenue" === this.objectType
+                    ? { main: "name" }
+                    : this.defaultSortColumns;
             this.storageKey = "accounts-" + this.objectType + (this.active ? "-active" : "-inactive");
             this.i18next = i18next;
             this.anonymous = window.store.get("anonymous");
@@ -264,7 +267,9 @@ let index = function () {
                     }
                 }
                 // process all accounts in this search result.
-                console.log("Have " + response.data.data.length + " accounts in this search result for tableId " + tableId,);
+                console.log(
+                    "Have " + response.data.data.length + " accounts in this search result for tableId " + tableId,
+                );
                 for (let i = 0; i < response.data.data.length; i++) {
                     if (Object.hasOwn(response.data.data, i)) {
                         let current = this.filterAmounts(response.data.data[i]);
@@ -280,9 +285,18 @@ let index = function () {
                             // console.log('Will create new group "' + group + '"');
                             downloadedObjectGroups[group] = {
                                 group: group,
-                                id: null === current.attributes.object_group_id ? 0 : parseInt(current.attributes.object_group_id),
-                                title: null === current.attributes.object_group_title ? "ungrouped" : current.attributes.object_group_title,
-                                order: null === current.attributes.object_group_order ? 0 : parseInt(current.attributes.object_group_order),
+                                id:
+                                    null === current.attributes.object_group_id
+                                        ? 0
+                                        : parseInt(current.attributes.object_group_id),
+                                title:
+                                    null === current.attributes.object_group_title
+                                        ? "ungrouped"
+                                        : current.attributes.object_group_title,
+                                order:
+                                    null === current.attributes.object_group_order
+                                        ? 0
+                                        : parseInt(current.attributes.object_group_order),
                                 accounts: [],
                                 total: 0,
                             };

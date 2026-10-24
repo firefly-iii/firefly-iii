@@ -49,12 +49,6 @@ class Category extends Model
 
     protected $hidden   = ['encrypted'];
 
-
-    public function objectGroups(): MorphToMany
-    {
-        return $this->morphToMany(ObjectGroup::class, 'object_groupable');
-    }
-
     /**
      * Route binder. Converts the key in the URL to the specified object (or throw 404).
      *
@@ -94,6 +88,11 @@ class Category extends Model
     public function notes(): MorphMany
     {
         return $this->morphMany(Note::class, 'noteable');
+    }
+
+    public function objectGroups(): MorphToMany
+    {
+        return $this->morphToMany(ObjectGroup::class, 'object_groupable');
     }
 
     public function primaryPeriodStatistics(): MorphMany

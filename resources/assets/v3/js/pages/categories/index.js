@@ -25,14 +25,15 @@ import Alpine from "@alpinejs/csp";
 import formatMoney from "../../util/format-money.js";
 import formatDate from "../../util/format-date.js";
 import i18next from "i18next";
-import {getVariable} from "../../store/get-variable.js";
+import { getVariable } from "../../store/get-variable.js";
 import {
     initFromLocalStorage,
     initFromQueryParams,
     sortGroupedObjects,
     respondToSortChange,
     storeFilterAndSort,
-    updateHistory, launchSortableTable,
+    updateHistory,
+    launchSortableTable,
 } from "../shared/sortable-tables.js";
 import Get from "../../api/model/category/get.js";
 
@@ -54,9 +55,9 @@ let index = function () {
 
         // default settings for sortable tables.
         storageKey: "categories",
-        defaultSortColumns: {main: "name"},
-        defaultSortDirections: {main: "asc"},
-        defaultPages: {main: 1},
+        defaultSortColumns: { main: "name" },
+        defaultSortDirections: { main: "asc" },
+        defaultPages: { main: 1 },
         pageNavUrl: "./categories/",
         filter: {},
 
@@ -86,7 +87,6 @@ let index = function () {
                 this.listPageSize = listPageSize;
                 this.downloadObjects(null);
             });
-
 
             // // create sortable table.
             // let tables = ["main"];
@@ -133,12 +133,18 @@ let index = function () {
 
                 page = 1;
                 if (null !== this.sortableTable) {
-                    sort = "asc" === this.sortableTable.sortDirections["main"] ? this.sortableTable.sortColumns["main"] : "-" + this.sortableTable.sortColumns["main"];
+                    sort =
+                        "asc" === this.sortableTable.sortDirections["main"]
+                            ? this.sortableTable.sortColumns["main"]
+                            : "-" + this.sortableTable.sortColumns["main"];
                     page = this.sortableTable.pages["main"];
                 }
                 // catch undefined stuff.
                 if ("-undefined" === sort) {
-                    sort = "asc" === this.defaultSortDirections["main"] ? this.defaultSortColumns["main"] : "-" + this.defaultSortColumns["main"];
+                    sort =
+                        "asc" === this.defaultSortDirections["main"]
+                            ? this.defaultSortColumns["main"]
+                            : "-" + this.defaultSortColumns["main"];
                 }
                 console.log("Sort instructions are now", sort);
                 downloadParams = {
@@ -162,9 +168,15 @@ let index = function () {
                     this.defaultSortDirections[tableId] = this.defaultSortDirections["main"];
                 }
 
-                sort = "asc" === this.sortableTable.sortDirections[tableId] ? this.sortableTable.sortColumns[tableId] : "-" + this.sortableTable.sortColumns[tableId];
+                sort =
+                    "asc" === this.sortableTable.sortDirections[tableId]
+                        ? this.sortableTable.sortColumns[tableId]
+                        : "-" + this.sortableTable.sortColumns[tableId];
                 if ("-undefined" === sort) {
-                    sort = "asc" === this.defaultSortDirections[tableId] ? this.defaultSortColumns[tableId] : "-" + this.defaultSortColumns[tableId];
+                    sort =
+                        "asc" === this.defaultSortDirections[tableId]
+                            ? this.defaultSortColumns[tableId]
+                            : "-" + this.defaultSortColumns[tableId];
                 }
 
                 page = this.sortableTable.pages[tableId];
@@ -206,23 +218,15 @@ let index = function () {
                 if (null !== this.sortableTable) {
                     this.sortableTable.totalPages[fallBackId] = parseInt(response.data.meta.pagination.total_pages);
                     const length = response.data.data.length;
-                    if (this.sortableTable.totalPages[fallBackId] < this.sortableTable.pages[fallBackId] && 0 === length
+                    if (
+                        this.sortableTable.totalPages[fallBackId] < this.sortableTable.pages[fallBackId] &&
+                        0 === length
                     ) {
                         this.sortableTable.pages[fallBackId] = this.sortableTable.totalPages[fallBackId];
                         console.log("Call downloadObjects again because page is too high for tableId " + tableId);
                         this.downloadObjects(tableId);
                     }
                 }
-
-
-
-
-
-
-
-
-
-
 
                 // this.categories = [];
                 //
@@ -234,7 +238,9 @@ let index = function () {
                 // }
 
                 // process all categories in this search result.
-                console.log("Have " + response.data.data.length + " categories in this search result for tableId " + tableId,);
+                console.log(
+                    "Have " + response.data.data.length + " categories in this search result for tableId " + tableId,
+                );
                 for (let i = 0; i < response.data.data.length; i++) {
                     if (Object.hasOwn(response.data.data, i)) {
                         let current = response.data.data[i];
@@ -250,9 +256,18 @@ let index = function () {
                             // console.log('Will create new group "' + group + '"');
                             downloadedObjectGroups[group] = {
                                 group: group,
-                                id: null === current.attributes.object_group_id ? 0 : parseInt(current.attributes.object_group_id),
-                                title: null === current.attributes.object_group_title ? "ungrouped" : current.attributes.object_group_title,
-                                order: null === current.attributes.object_group_order ? 0 : parseInt(current.attributes.object_group_order),
+                                id:
+                                    null === current.attributes.object_group_id
+                                        ? 0
+                                        : parseInt(current.attributes.object_group_id),
+                                title:
+                                    null === current.attributes.object_group_title
+                                        ? "ungrouped"
+                                        : current.attributes.object_group_title,
+                                order:
+                                    null === current.attributes.object_group_order
+                                        ? 0
+                                        : parseInt(current.attributes.object_group_order),
                                 categories: [],
                                 total: 0,
                             };
@@ -266,7 +281,11 @@ let index = function () {
                         let lastActivity = i18next.t("firefly.never");
                         let noLastActivity = true;
                         if (null !== current.attributes.last_activity) {
-                            lastActivity = formatDate(current.attributes.last_activity, i18next.t("config.date_time_fns", {lng: locale}), locale,);
+                            lastActivity = formatDate(
+                                current.attributes.last_activity,
+                                i18next.t("config.date_time_fns", { lng: locale }),
+                                locale,
+                            );
                             noLastActivity = false;
                         }
 
@@ -303,7 +322,6 @@ let index = function () {
                 // }
             });
         },
-
     };
 };
 
