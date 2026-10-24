@@ -118,8 +118,8 @@ let index = function () {
             const fallBackId = null === tableId ? "ungrouped" : tableId;
             let sort = "-undefined";
             let page;
-            let start = window.store.get("start");
-            let end = window.store.get("end");
+            // let start = window.store.get("start");
+            // let end = window.store.get("end");
 
             if (null === tableId) {
                 console.log("Download ALL");
@@ -151,9 +151,9 @@ let index = function () {
                     sort: sort,
                     limit: 1337,
                     page: page, // because we download ALL.
-                    start: start,
                     filter: JSON.parse(JSON.stringify(this.filter))["main"], // same.
-                    end: end,
+                    // start: start,
+                    // end: end,
                 };
             }
 
@@ -188,9 +188,9 @@ let index = function () {
                 downloadParams = {
                     sort: sort,
                     page: page, // because we download ALL.
-                    start: start,
+                    // start: start,
+                    // end: end,
                     filter: filter, // same.
-                    end: end,
                 };
             }
 
