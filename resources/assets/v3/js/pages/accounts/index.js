@@ -223,6 +223,7 @@ let index = function () {
                     filter: JSON.parse(JSON.stringify(this.filter))["main"], // same.
                     end: end,
                 };
+                // console.log('Download params for ALL ', downloadParams);
             }
             if (null !== tableId) {
                 console.log('Download', tableId);
@@ -235,15 +236,15 @@ let index = function () {
                 if('undefined' === typeof this.defaultSortColumns[tableId]) {
                     this.defaultSortColumns[tableId] = this.defaultSortColumns["main"];
                 }
+                if('undefined' === typeof this.defaultSortDirections[tableId]) {
+                    this.defaultSortDirections[tableId] = this.defaultSortDirections["main"];
+                }
 
                 sort = "asc" === this.sortableTable.sortDirections[tableId] ? this.sortableTable.sortColumns[tableId] : "-" + this.sortableTable.sortColumns[tableId];
-
-
                 if ('-undefined' === sort) {
                     sort = "asc" === this.defaultSortDirections[tableId] ? this.defaultSortColumns[tableId] : "-" + this.defaultSortColumns[tableId];
                 }
                 console.log('Sort instructions are now', sort);
-                console.log('Typeof is ', typeof this.defaultSortColumns[tableId]);
 
                 page = this.sortableTable.pages[tableId];
                 let filter = JSON.parse(JSON.stringify(this.filter))[tableId];
@@ -260,6 +261,7 @@ let index = function () {
                     filter: filter, // same.
                     end: end,
                 };
+                // console.log('Download params for tableId ' + tableId, downloadParams);
             }
             new Get().list(downloadParams).then((response) => {
                 console.log('After download', downloadParams);
@@ -288,7 +290,7 @@ let index = function () {
                         }
 
                         if(!Object.hasOwn(downloadedObjectGroups, group)) {
-                            console.log('Will create new group "' + group + '"');
+                            // console.log('Will create new group "' + group + '"');
                             downloadedObjectGroups[group] = {
                                 group: group,
                                 id: null === current.attributes.object_group_id ? 0 : parseInt(current.attributes.object_group_id),
@@ -381,7 +383,7 @@ let index = function () {
                                 .toLowerCase(),
                         };
                         downloadedObjectGroups[group].accounts.push(account);
-                        console.log('Grouped objects "'+group+ '" now consists of ' + downloadedObjectGroups[group].accounts.length + " accounts.");
+                        // console.log('Grouped objects "'+group+ '" now consists of ' + downloadedObjectGroups[group].accounts.length + " accounts.");
                         // this.sortableTable.loadingNewSort[group] = false;
                     }
                 }
@@ -389,7 +391,7 @@ let index = function () {
                 // after downloading and parsing, THEN do init.
                 // initialize sortable table.
                 if (null !== tableId) {
-                    console.log('Table id is', tableId);
+                    // console.log('Table id is', tableId);
                     this.sortableTable.loadingNewSorts[tableId] = false;
                     //console.log('Type of this.groupedObjects[tableId].accounts is', typeof this.groupedObjects[tableId].accounts, this.groupedObjects[tableId].accounts);
                     // console.log('Type of downloadedObjectGroups is', typeof downloadedObjectGroups[tableId].accounts, downloadedObjectGroups[tableId].accounts);
