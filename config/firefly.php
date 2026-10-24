@@ -858,6 +858,7 @@ return [
         ],
         'Category' => [
             'name',
+            'object_group_id',
         ],
     ],
     'allowed_sort_parameters'              => [

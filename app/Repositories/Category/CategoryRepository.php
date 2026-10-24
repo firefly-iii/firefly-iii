@@ -38,6 +38,7 @@ use FireflyIII\Services\Internal\Destroy\CategoryDestroyService;
 use FireflyIII\Services\Internal\Update\CategoryUpdateService;
 use FireflyIII\Support\Repositories\UserGroup\UserGroupInterface;
 use FireflyIII\Support\Repositories\UserGroup\UserGroupTrait;
+use Illuminate\Database\Query\JoinClause;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
@@ -210,6 +211,23 @@ class CategoryRepository implements CategoryRepositoryInterface, UserGroupInterf
         $allowed = config('firefly.allowed_filter_parameters.Category', []);
         if (0 !== count($filter)) {
             foreach ($filter as $field => $search) {
+                if ('object_group_id' === $field) {
+                    $query->leftJoin('object_groupables', function (JoinClause $join): void {
+                        $join->on('categories.id', '=', 'object_groupables.object_groupable_id');
+                        $join->on('object_groupables.object_groupable_type', '=', DB::raw("'FireflyIII\\\\Models\\\\Category'"));
+                    });
+                    $search = (int) $search;
+                    if (0 !== $search) {
+                        $query->where('object_groupables.object_group_id', $search);
+                    }
+                    if (0 === $search) {
+                        $query->whereNull('object_groupables.object_group_id');
+                    }
+
+                    continue;
+                }
+
+
                 if (in_array($field, $allowed, true)) {
                     if ('' !== (string) $search) {
                         $query->whereLike($field, sprintf('%%%s%%', $search));
