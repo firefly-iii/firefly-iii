@@ -26,7 +26,6 @@ namespace FireflyIII\Support\JsonApi\Enrichments;
 
 use Carbon\Carbon;
 use FireflyIII\Exceptions\FireflyException;
-use FireflyIII\Models\Account;
 use FireflyIII\Models\Category;
 use FireflyIII\Models\Note;
 use FireflyIII\Models\ObjectGroup;
@@ -41,20 +40,20 @@ use Illuminate\Support\Facades\DB;
 class CategoryEnrichment implements EnrichmentInterface
 {
     private Collection $collection;
-    private array   $earned       = [];
-    private ?Carbon $end          = null;
-    private array   $ids          = [];
-    private array   $sort         = [];
-    private array   $notes        = [];
-    private array   $pcEarned     = [];
-    private array   $pcSpent      = [];
-    private array   $objectGroups    = [];
-    private array   $pcTransfers  = [];
-    private array   $spent        = [];
-    private ?Carbon $start        = null;
-    private array   $mappedObjects   = [];
-    private array   $transfers    = [];
-    private array   $lastActivity = [];
+    private array   $earned        = [];
+    private ?Carbon $end           = null;
+    private array   $ids           = [];
+    private array   $sort          = [];
+    private array   $notes         = [];
+    private array   $pcEarned      = [];
+    private array   $pcSpent       = [];
+    private array   $objectGroups  = [];
+    private array   $pcTransfers   = [];
+    private array   $spent         = [];
+    private ?Carbon $start         = null;
+    private array   $mappedObjects = [];
+    private array   $transfers     = [];
+    private array   $lastActivity  = [];
     private User $user;
     private UserGroup $userGroup;
 
@@ -131,7 +130,6 @@ class CategoryEnrichment implements EnrichmentInterface
                 $meta['object_group_order'] = $this->objectGroups[$key]['order'];
             }
 
-
             $item->meta = $meta;
 
             return $item;
@@ -185,6 +183,29 @@ class CategoryEnrichment implements EnrichmentInterface
         //        Log::debug(sprintf('Enrich with %d note(s)', count($this->notes)));
     }
 
+    // TODO this method is duplicate over all enrichments.
+    private function collectObjectGroups(): void
+    {
+        $set    = DB::table('object_groupables')
+            ->whereIn('object_groupable_id', $this->ids)
+            ->where('object_groupable_type', Category::class)
+            ->get(['object_groupable_id', 'object_group_id'])
+        ;
+
+        $ids    = array_unique($set->pluck('object_group_id')->toArray());
+
+        foreach ($set as $entry) {
+            $this->mappedObjects[(int) $entry->object_groupable_id] = (int) $entry->object_group_id;
+        }
+
+        $groups = ObjectGroup::query()->whereIn('id', $ids)->get(['id', 'title', 'order'])->toArray();
+        foreach ($groups as $group) {
+            $group['id']                      = (int) $group['id'];
+            $group['order']                   = (int) $group['order'];
+            $this->objectGroups[$group['id']] = $group;
+        }
+    }
+
     private function collectTransactions(): void
     {
         if ($this->start instanceof Carbon && $this->end instanceof Carbon) {
@@ -204,28 +225,6 @@ class CategoryEnrichment implements EnrichmentInterface
                 $this->transfers[$id]   = array_values($opsRepository->sumCollectedTransactionsByCategory($transfers, $item, 'positive'));
                 $this->pcTransfers[$id] = array_values($opsRepository->sumCollectedTransactionsByCategory($transfers, $item, 'positive', true));
             }
-        }
-    }
-    // TODO this method is duplicate over all enrichments.
-    private function collectObjectGroups(): void
-    {
-        $set    = DB::table('object_groupables')
-                    ->whereIn('object_groupable_id', $this->ids)
-                    ->where('object_groupable_type', Category::class)
-                    ->get(['object_groupable_id', 'object_group_id'])
-        ;
-
-        $ids    = array_unique($set->pluck('object_group_id')->toArray());
-
-        foreach ($set as $entry) {
-            $this->mappedObjects[(int) $entry->object_groupable_id] = (int) $entry->object_group_id;
-        }
-
-        $groups = ObjectGroup::query()->whereIn('id', $ids)->get(['id', 'title', 'order'])->toArray();
-        foreach ($groups as $group) {
-            $group['id']                            = (int) $group['id'];
-            $group['order']                         = (int) $group['order'];
-            $this->objectGroups[$group['id']] = $group;
         }
     }
 

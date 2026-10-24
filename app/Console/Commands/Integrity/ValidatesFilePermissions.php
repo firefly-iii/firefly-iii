@@ -74,7 +74,7 @@ class ValidatesFilePermissions extends Command
                 Log::error($message);
                 $errors  = true;
             }
-            if($isWriteable) {
+            if ($isWriteable) {
                 Log::debug('It is writeable!');
             }
             Log::debug(sprintf('Done processing %s', $directory));

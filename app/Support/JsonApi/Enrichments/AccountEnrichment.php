@@ -407,8 +407,8 @@ class AccountEnrichment implements EnrichmentInterface
 
         $groups = ObjectGroup::query()->whereIn('id', $ids)->get(['id', 'title', 'order'])->toArray();
         foreach ($groups as $group) {
-            $group['id']                            = (int) $group['id'];
-            $group['order']                         = (int) $group['order'];
+            $group['id']                      = (int) $group['id'];
+            $group['order']                   = (int) $group['order'];
             $this->objectGroups[$group['id']] = $group;
         }
     }

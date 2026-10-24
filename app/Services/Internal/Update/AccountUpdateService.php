@@ -125,11 +125,11 @@ class AccountUpdateService
         // update preferences if inactive:
         $this->updatePreferences($account);
 
-        $objectGroupTitle = null;
-        $objectGroupId = null;
-        if(array_key_exists('object_group_title', $data)) {
-            if(null !== $data['object_group_title']) {
-                $objectGroupTitle = (string)$data['object_group_title'];
+        $objectGroupTitle          = null;
+        $objectGroupId             = null;
+        if (array_key_exists('object_group_title', $data)) {
+            if (null !== $data['object_group_title']) {
+                $objectGroupTitle = (string) $data['object_group_title'];
                 if ('' !== $objectGroupTitle) {
                     $objectGroup = $this->findOrCreateObjectGroup($objectGroupTitle);
                     if ($objectGroup instanceof ObjectGroup) {
@@ -139,15 +139,15 @@ class AccountUpdateService
             }
         }
         // try also with ID
-        if(array_key_exists('object_group_id', $data)) {
-            if(null !== $data['object_group_id']) {
-            $objectGroupId = (int)$data['object_group_id'];
-            if (0 !== $objectGroupId) {
-                $objectGroup = $this->findObjectGroupById($objectGroupId);
-                if ($objectGroup instanceof ObjectGroup) {
-                    $account->objectGroups()->sync([$objectGroup->id]);
+        if (array_key_exists('object_group_id', $data)) {
+            if (null !== $data['object_group_id']) {
+                $objectGroupId = (int) $data['object_group_id'];
+                if (0 !== $objectGroupId) {
+                    $objectGroup = $this->findObjectGroupById($objectGroupId);
+                    if ($objectGroup instanceof ObjectGroup) {
+                        $account->objectGroups()->sync([$objectGroup->id]);
+                    }
                 }
-            }
             }
         }
         if ('' === $objectGroupTitle || 0 === $objectGroupId) {

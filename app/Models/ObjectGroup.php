@@ -77,17 +77,17 @@ class ObjectGroup extends Model
     /**
      * @return MorphToMany
      */
-    public function categories()
+    public function bills()
     {
-        return $this->morphedByMany(Category::class, 'object_groupable');
+        return $this->morphedByMany(Bill::class, 'object_groupable');
     }
 
     /**
      * @return MorphToMany
      */
-    public function bills()
+    public function categories()
     {
-        return $this->morphedByMany(Bill::class, 'object_groupable');
+        return $this->morphedByMany(Category::class, 'object_groupable');
     }
 
     /**
