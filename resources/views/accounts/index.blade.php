@@ -12,12 +12,25 @@
         </template>
         <template x-for="(data, tableId) in groupedObjects" :key="tableId">
             <div class="col-lg-12 col-md-12 col-sm-12 data-holder mb-2">
-                <div class="card" id="account-index-{{ $objectType }}">
-                    <x-elements.card-header-with-menu :cardTitle="trans('firefly.'.$objectType.'_accounts')"
-                                                      :route="route('accounts.create', $objectType) . '?_from=' . urlencode($FF3_FROM)"
-                                                      :linkTitle="__('firefly.make_new_'. $objectType . '_account')"/>
+                <div class="card" :id="'account-index-{{ $objectType }}-' + tableId">
+                    <div class="card-header">
+                        <div class="row">
+                            <div class="col">
+                                <template x-if="'ungrouped' === data.title">
+                                    <h3 class="card-title" x-text="i18next.t('firefly.default_group_title_name')"></h3>
+                                </template>
+                                <template x-if="'ungrouped' !== data.title">
+                                    <h3 class="card-title" x-text="data.title"></h3>
+                                </template>
+                            </div>
+                                <div class="col text-end" role="group">
+                                    <a href="{{ route('accounts.create', $objectType) . '?_from=' . urlencode($FF3_FROM) }}" class="btn btn-sm btn-outline-success">
+                                        <span class="bi bi-plus-circle"></span> {{ __('firefly.make_new_'. $objectType . '_account') }}
+                                    </a>
+                                </div>
+                        </div>
+                    </div>
                     <div class="card-body p-0">
-                        <span x-text="data.title"></span>
                         <table :data-sort-identifier="tableId" class="table table-valign-middle table-sm table-hover sortable">
                             <thead>
                             <template x-if="sortableTable.totalPages[tableId] > 1">
