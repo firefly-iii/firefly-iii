@@ -34,23 +34,24 @@
                                             <div class="col-3 big-line">
                                                 <a style="font-size:0.9em;" class="badge text-bg-success text-truncate d-inline-block" title="{{ $piggyBank->title }}" href="{{ route('piggy-banks.show',[$piggyBank->id]) }}">
                                                     <span class="bi bi-piggy-bank"></span> {{  $piggyBank->name }}</a></div>
-                                            {{-- {{ __('firefly.piggy_bank') }}: <a href="{{ route('piggy-banks.show', [$piggyBank['id']]) }}">{{ $piggyBank['name'] }}</a><br> --}}
                                         @endforeach
 
                                         @foreach($objectGroup['bills'] as $subscription)
                                                 <div class="col-3 big-line">
                                                     <a style="font-size:0.9em;" class="badge text-bg-primary text-truncate d-inline-block" title="{{ $subscription->title }}" href="{{ route('subscriptions.show',[$subscription->id]) }}">
                                                         <span class="bi bi-calendar"></span> {{  $subscription->name }}</a></div>
-
-                                            {{-- - {{ __('firefly.bill') }}: <a href="{{ route('subscriptions.show', [$subscription['id']]) }}">{{ $subscription['name'] }}</a><br> --}}
                                         @endforeach
                                         @foreach($objectGroup['accounts'] as $account)
                                                 <div class="col-3 big-line">
                                                     <a style="font-size:0.9em;" class="badge text-bg-teal text-truncate d-inline-block" title="{{ $account->title }}" href="{{ route('accounts.show',[$account->id]) }}">
                                                         <span class="bi bi-cash"></span> {{ $account->name }}</a></div>
 
-                                            {{-- - {{ __('firefly.account') }}: <a href="{{ route('accounts.show', [$account['id']]) }}">{{ $account['name'] }}</a><br> --}}
                                         @endforeach
+                                            @foreach($objectGroup['categories'] as $category)
+                                                <div class="col-3 big-line">
+                                                    <a style="font-size:0.9em;" class="badge text-bg-amber text-truncate d-inline-block" title="{{ $category->title }}" href="{{ route('categories.show',[$category->id]) }}">
+                                                        <span class="bi bi-bookmark"></span> {{ $category->name }}</a></div>
+                                            @endforeach
                                         </div>
                                     </td>
                                     <td class="text-end">
