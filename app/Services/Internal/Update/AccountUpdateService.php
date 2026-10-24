@@ -114,9 +114,6 @@ class AccountUpdateService
         // update opening balance.
         $this->updateOpeningBalance($account, $data);
 
-        // update object group
-        $this->updateObjectGroup($account, $data);
-
         // Since 5.8.0, delete liability credit transactions, if any:
         $this->deleteCreditTransaction($account);
 
@@ -127,6 +124,26 @@ class AccountUpdateService
 
         // update preferences if inactive:
         $this->updatePreferences($account);
+
+        $objectGroupTitle                         = $data['object_group_title'] ?? '';
+        if ('' !== $objectGroupTitle) {
+            $objectGroup = $this->findOrCreateObjectGroup($objectGroupTitle);
+            if ($objectGroup instanceof ObjectGroup) {
+                $account->objectGroups()->sync([$objectGroup->id]);
+            }
+        }
+        // try also with ID
+        $objectGroupId                            = (int) ($data['object_group_id'] ?? 0);
+        if (0 !== $objectGroupId) {
+            $objectGroup = $this->findObjectGroupById($objectGroupId);
+            if ($objectGroup instanceof ObjectGroup) {
+                $account->objectGroups()->sync([$objectGroup->id]);
+            }
+        }
+        if('' === $objectGroupTitle && 0 === $objectGroupId) {
+            $account->objectGroups()->detach();
+        }
+        $account->save();
 
         event(new UpdatedExistingAccount($account, $oldData));
 
@@ -278,38 +295,6 @@ class AccountUpdateService
                 $location->zoom_level = $data['zoom_level'] ?? config('firefly.default_location.zoom_level');
                 $location->save();
             }
-        }
-    }
-
-    private function updateObjectGroup(Account $account, array $data): void {
-        // update using name:
-        if (array_key_exists('object_group_title', $data)) {
-            $objectGroupTitle = $data['object_group_title'] ?? '';
-            if ('' !== $objectGroupTitle) {
-                $objectGroup = $this->findOrCreateObjectGroup($objectGroupTitle);
-                if ($objectGroup instanceof ObjectGroup) {
-                    $account->objectGroups()->sync([$objectGroup->id]);
-                    $account->save();
-                }
-                return;
-            }
-            // remove if name is empty. Should be overruled by ID.
-            $account->objectGroups()->sync([]);
-            $account->save();
-        }
-        if (array_key_exists('object_group_id', $data)) {
-            // try also with ID:
-            $objectGroupId = (int) ($data['object_group_id'] ?? 0);
-            if (0 !== $objectGroupId) {
-                $objectGroup = $this->findObjectGroupById($objectGroupId);
-                if ($objectGroup instanceof ObjectGroup) {
-                    $account->objectGroups()->sync([$objectGroup->id]);
-                    $account->save();
-                }
-                return;
-            }
-            $account->objectGroups()->sync([]);
-            $account->save();
         }
     }
 

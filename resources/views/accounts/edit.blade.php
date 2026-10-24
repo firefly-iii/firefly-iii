@@ -69,6 +69,7 @@
                         {!! ExpandedForm::checkbox('active', 1) !!}
                         {!! ExpandedForm::file('attachments[]', ['multiple' => 'multiple','helpText' => trans('firefly.upload_max_file_size', ['size' => $uploadSize ?? $filesize])]) !!}
                         {!! ExpandedForm::objectGroup() !!}
+
                     </div>
                 </div>
 

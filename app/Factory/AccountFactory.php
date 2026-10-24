@@ -239,9 +239,6 @@ class AccountFactory
         $account        = Account::create($databaseData);
         Log::channel('audit')->info(sprintf('Account #%d ("%s") has been created.', $account->id, $account->name));
 
-        // create object group
-        $this->createObjectGroup($account, $data);
-
         // update meta data:
         $data           = $this->cleanMetaDataArray($account, $data);
         $this->storeMetaData($account, $data);
@@ -272,42 +269,27 @@ class AccountFactory
         // set order
         $this->storeOrder($account, $data);
 
+        $objectGroupTitle                         = $data['object_group_title'] ?? '';
+        if ('' !== $objectGroupTitle) {
+            $objectGroup = $this->findOrCreateObjectGroup($objectGroupTitle);
+            if ($objectGroup instanceof ObjectGroup) {
+                $account->objectGroups()->sync([$objectGroup->id]);
+            }
+        }
+        // try also with ID
+        $objectGroupId                            = (int) ($data['object_group_id'] ?? 0);
+        if (0 !== $objectGroupId) {
+            $objectGroup = $this->findObjectGroupById($objectGroupId);
+            if ($objectGroup instanceof ObjectGroup) {
+                $account->objectGroups()->sync([$objectGroup->id]);
+            }
+        }
+        $account->save();
+
         // refresh and return
         $account->refresh();
 
         return $account;
-    }
-
-    private function createObjectGroup(Account $account, array $data): void {
-        // update using name:
-        if (array_key_exists('object_group_title', $data)) {
-            $objectGroupTitle = $data['object_group_title'] ?? '';
-            if ('' !== $objectGroupTitle) {
-                $objectGroup = $this->findOrCreateObjectGroup($objectGroupTitle);
-                if ($objectGroup instanceof ObjectGroup) {
-                    $account->objectGroups()->sync([$objectGroup->id]);
-                    $account->save();
-                }
-                return;
-            }
-            // remove if name is empty. Should be overruled by ID.
-            $account->objectGroups()->sync([]);
-            $account->save();
-        }
-        if (array_key_exists('object_group_id', $data)) {
-            // try also with ID:
-            $objectGroupId = (int) ($data['object_group_id'] ?? 0);
-            if (0 !== $objectGroupId) {
-                $objectGroup = $this->findObjectGroupById($objectGroupId);
-                if ($objectGroup instanceof ObjectGroup) {
-                    $account->objectGroups()->sync([$objectGroup->id]);
-                    $account->save();
-                }
-                return;
-            }
-            $account->objectGroups()->sync([]);
-            $account->save();
-        }
     }
 
     /**

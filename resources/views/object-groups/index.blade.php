@@ -13,11 +13,11 @@
                         <table class="table table-valign-middle table-sm" id="sortable">
                             <thead>
                             <tr>
-                                <th>&nbsp;</th>
-                                <th>
+                                <th class="w-10">&nbsp;</th>
+                                <th class="w-80">
                                     {{ __('firefly.object_group_title') }}
                                 </th>
-                                <th>
+                                <th class="w-10">
                                     &nbsp;
                                 </th>
                             </tr>
@@ -27,13 +27,31 @@
                                 <tr class="group-sortable" data-id="{{ $objectGroup['id'] }}" data-name="{{ e($objectGroup['title']) }}" data-order="{{ $objectGroup['order'] }}">
                                     <td><span class="btn btn-sm btn-outline-secondary bi bi-list group-handle"></span></td>
                                     <td>
+
                                         <strong>{{ $objectGroup['title'] }}</strong><br/>
+                                        <div class="row">
                                         @foreach($objectGroup['piggyBanks'] as $piggyBank)
-                                            - {{ __('firefly.piggy_bank') }}: <a href="{{ route('piggy-banks.show', [$piggyBank['id']]) }}">{{ $piggyBank['name'] }}</a><br>
+                                            <div class="col-3 big-line">
+                                                <a style="font-size:0.9em;" class="badge text-bg-success text-truncate d-inline-block" title="{{ $piggyBank->title }}" href="{{ route('piggy-banks.show',[$piggyBank->id]) }}">
+                                                    <span class="bi bi-piggy-bank"></span> {{  $piggyBank->name }}</a></div>
+                                            {{-- {{ __('firefly.piggy_bank') }}: <a href="{{ route('piggy-banks.show', [$piggyBank['id']]) }}">{{ $piggyBank['name'] }}</a><br> --}}
                                         @endforeach
+
                                         @foreach($objectGroup['bills'] as $subscription)
-                                            - {{ __('firefly.bill') }}: <a href="{{ route('subscriptions.show', [$subscription['id']]) }}">{{ $subscription['name'] }}</a><br>
+                                                <div class="col-3 big-line">
+                                                    <a style="font-size:0.9em;" class="badge text-bg-primary text-truncate d-inline-block" title="{{ $subscription->title }}" href="{{ route('subscriptions.show',[$subscription->id]) }}">
+                                                        <span class="bi bi-calendar"></span> {{  $subscription->name }}</a></div>
+
+                                            {{-- - {{ __('firefly.bill') }}: <a href="{{ route('subscriptions.show', [$subscription['id']]) }}">{{ $subscription['name'] }}</a><br> --}}
                                         @endforeach
+                                        @foreach($objectGroup['accounts'] as $account)
+                                                <div class="col-3 big-line">
+                                                    <a style="font-size:0.9em;" class="badge text-bg-teal text-truncate d-inline-block" title="{{ $account->title }}" href="{{ route('accounts.show',[$account->id]) }}">
+                                                        <span class="bi bi-cash"></span> {{ $account->name }}</a></div>
+
+                                            {{-- - {{ __('firefly.account') }}: <a href="{{ route('accounts.show', [$account['id']]) }}">{{ $account['name'] }}</a><br> --}}
+                                        @endforeach
+                                        </div>
                                     </td>
                                     <td class="text-end">
                                         <div class="dropdown">

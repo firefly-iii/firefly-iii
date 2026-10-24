@@ -396,7 +396,8 @@ class AccountEnrichment implements EnrichmentInterface
         $set    = DB::table('object_groupables')
             ->whereIn('object_groupable_id', $this->ids)
             ->where('object_groupable_type', Account::class)
-            ->get(['object_groupable_id', 'object_group_id']);
+            ->get(['object_groupable_id', 'object_group_id'])
+        ;
 
         $ids    = array_unique($set->pluck('object_group_id')->toArray());
 
