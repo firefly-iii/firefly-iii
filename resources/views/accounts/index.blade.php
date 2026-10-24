@@ -24,7 +24,7 @@
                                 </template>
                             </div>
                                 <div class="col text-end" role="group">
-                                    <a href="{{ route('accounts.create', $objectType) . '?_from=' . urlencode($FF3_FROM) }}" class="btn btn-sm btn-outline-success">
+                                    <a href="{{ route('accounts.create', [$objectType]) . '?_from=' . urlencode($FF3_FROM) }}" class="btn btn-sm btn-outline-success">
                                         <span class="bi bi-plus-circle"></span> {{ __('firefly.make_new_'. $objectType . '_account') }}
                                     </a>
                                 </div>

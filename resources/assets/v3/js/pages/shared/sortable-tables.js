@@ -490,3 +490,43 @@ export function storeFilterAndSort(storageKey, column, direction, filter) {
     console.log("storeFilterAndSort", storageKey, obj);
     window.store.set(storageKey, obj);
 }
+
+export function sortGroupedObjects(downloadedObjectGroups) {
+    // turn grouped objects into array:
+    let array = Object.keys(downloadedObjectGroups).map((key) => downloadedObjectGroups[key]);
+    // sort array by order:
+    array.sort((a, b) => a.order - b.order);
+    // turn back into object:
+    downloadedObjectGroups = {};
+    for (let i = 0; i < array.length; i++) {
+        let group = array[i].group;
+        downloadedObjectGroups[group] = array[i];
+    }
+    return downloadedObjectGroups;
+}
+
+export function launchSortableTable(groupedObjects) {
+    // create sortable table.
+    let tables = Object.keys(groupedObjects);
+    console.log("All tables are", tables);
+    this.sortableTable = new sortableTable(tables);
+
+    for (let i = 0; i < tables.length; i++) {
+        let table = tables[i];
+        this.filter[table] = {};
+
+        // make sure grouped objects is not longer than listPageSize.
+        this.sortableTable.totalPages[table] = Math.ceil(groupedObjects[table].total / this.listPageSize);
+    }
+
+    console.log("final sort columns", JSON.parse(JSON.stringify(this.defaultSortColumns)));
+    console.log("final sort directions", JSON.parse(JSON.stringify(this.defaultSortDirections)));
+
+    // configure sortable table with final result (not filter).
+    this.sortableTable.sortColumns = this.defaultSortColumns;
+    this.sortableTable.sortDirections = this.defaultSortDirections;
+    this.sortableTable.storageKey = this.storageKey;
+    this.sortableTable.pages = this.defaultPages;
+    this.groupedObjects = groupedObjects;
+    this.sortableTable.init(this);
+}

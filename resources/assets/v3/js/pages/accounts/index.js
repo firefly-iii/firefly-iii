@@ -32,9 +32,11 @@ import { addDrag } from "../shared/drag-and-droppable-rows.js";
 import {
     initFromLocalStorage,
     initFromQueryParams,
+    sortGroupedObjects,
     respondToSortChange,
     sortableTable,
     storeFilterAndSort,
+    launchSortableTable,
     updateHistory,
 } from "../shared/sortable-tables.js";
 
@@ -54,8 +56,7 @@ let index = function () {
         debts: {},
         differences: {},
 
-        // grouped accounts per object group.
-        accounts: [],
+        // grouped objects per object group.
         groupedObjects: {},
 
         // default settings for sortable tables.
@@ -73,47 +74,15 @@ let index = function () {
         initFromQueryParams: initFromQueryParams,
         storeFilterAndSort: storeFilterAndSort,
         respondToSortChange: respondToSortChange,
+        launchSortableTable: launchSortableTable,
+
         sortableTable: null,
-
-        launchSortableTable(groupedObjects) {
-            // create sortable table.
-            let tables = Object.keys(groupedObjects);
-            console.log("All tables are", tables);
-            this.sortableTable = new sortableTable(tables);
-
-            for (let i = 0; i < tables.length; i++) {
-                let table = tables[i];
-                this.filter[table] = {};
-
-                // make sure grouped objects is not longer than listPageSize.
-                this.sortableTable.totalPages[table] = Math.ceil(groupedObjects[table].total / this.listPageSize);
-                // if (groupedObjects[table].accounts.length > this.listPageSize) {
-                //     console.log('Grouped objects "' + table + '" has ' + groupedObjects[table].accounts.length + ' accounts, which is more than listPageSize of ' + this.listPageSize + '. Will slice.');
-                //     this.sortableTable.totalPages[table] = Math.ceil(groupedObjects[table].accounts.length / this.listPageSize);
-                //     groupedObjects[table].accounts = groupedObjects[table].accounts.slice(0, this.listPageSize);
-                // }
-            }
-
-            console.log("final sort columns", JSON.parse(JSON.stringify(this.defaultSortColumns)));
-            console.log("final sort directions", JSON.parse(JSON.stringify(this.defaultSortDirections)));
-
-            // configure sortable table with final result (not filter).
-            this.sortableTable.sortColumns = this.defaultSortColumns;
-            this.sortableTable.sortDirections = this.defaultSortDirections;
-            this.sortableTable.storageKey = this.storageKey;
-            this.sortableTable.pages = this.defaultPages;
-            this.groupedObjects = groupedObjects;
-            this.sortableTable.init(this);
-        },
 
         init() {
             // prepare some variables.
             const address = window.location.href.split("?")[0].split("/");
             this.objectType = address[address.length - 1].substring(0, 15);
-            this.defaultSortColumns =
-                "expense" === this.objectType || "revenue" === this.objectType
-                    ? { main: "name" }
-                    : this.defaultSortColumns;
+            this.defaultSortColumns = "expense" === this.objectType || "revenue" === this.objectType ? { main: "name" } : this.defaultSortColumns;
             this.storageKey = "accounts-" + this.objectType + (this.active ? "-active" : "-inactive");
             this.i18next = i18next;
             this.anonymous = window.store.get("anonymous");
@@ -186,7 +155,6 @@ let index = function () {
             return account;
         },
         downloadObjects(tableId) {
-            console.log("DownloadObjects(" + tableId + ")");
             let downloadParams = {};
             const locale = window.store.get("locale");
             let downloadedObjectGroups = {};
@@ -297,9 +265,7 @@ let index = function () {
                     }
                 }
                 // process all accounts in this search result.
-                console.log(
-                    "Have " + response.data.data.length + " accounts in this search result for tableId " + tableId,
-                );
+                console.log("Have " + response.data.data.length + " accounts in this search result for tableId " + tableId,);
                 for (let i = 0; i < response.data.data.length; i++) {
                     if (Object.hasOwn(response.data.data, i)) {
                         let current = this.filterAmounts(response.data.data[i]);
@@ -315,18 +281,9 @@ let index = function () {
                             // console.log('Will create new group "' + group + '"');
                             downloadedObjectGroups[group] = {
                                 group: group,
-                                id:
-                                    null === current.attributes.object_group_id
-                                        ? 0
-                                        : parseInt(current.attributes.object_group_id),
-                                title:
-                                    null === current.attributes.object_group_title
-                                        ? "ungrouped"
-                                        : current.attributes.object_group_title,
-                                order:
-                                    null === current.attributes.object_group_order
-                                        ? 0
-                                        : parseInt(current.attributes.object_group_order),
+                                id: null === current.attributes.object_group_id ? 0 : parseInt(current.attributes.object_group_id),
+                                title: null === current.attributes.object_group_title ? "ungrouped" : current.attributes.object_group_title,
+                                order: null === current.attributes.object_group_order ? 0 : parseInt(current.attributes.object_group_order),
                                 accounts: [],
                                 total: 0,
                             };
@@ -439,7 +396,7 @@ let index = function () {
 
                 // TODO needs to be per table, cannot be done yet.
                 if (null === tableId) {
-                    downloadedObjectGroups = this.sortGroupedObjects(downloadedObjectGroups);
+                    downloadedObjectGroups = sortGroupedObjects(downloadedObjectGroups);
                     this.launchSortableTable(downloadedObjectGroups);
                     //this.loadingPage = false;
                     // this.sortableTable.loadingNewSort = false; // TODO fix me
@@ -452,19 +409,7 @@ let index = function () {
                 }
             });
         },
-        sortGroupedObjects(downloadedObjectGroups) {
-            // turn grouped objects into array:
-            let array = Object.keys(downloadedObjectGroups).map((key) => downloadedObjectGroups[key]);
-            // sort array by order:
-            array.sort((a, b) => a.order - b.order);
-            // turn back into object:
-            downloadedObjectGroups = {};
-            for (let i = 0; i < array.length; i++) {
-                let group = array[i].group;
-                downloadedObjectGroups[group] = array[i];
-            }
-            return downloadedObjectGroups;
-        },
+
         addSpaces(iban) {
             if (null === iban) {
                 return "";
