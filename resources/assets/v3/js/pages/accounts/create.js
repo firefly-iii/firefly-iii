@@ -24,6 +24,8 @@ import dates from "../shared/dates.js";
 import i18next from "i18next";
 import Alpine from "@alpinejs/csp";
 
+window.enableDates = false;
+
 let create = function () {
     return {
         init() {
