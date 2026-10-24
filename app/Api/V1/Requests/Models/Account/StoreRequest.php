@@ -77,7 +77,7 @@ class StoreRequest extends FormRequest
             'interest'                => $this->convertString('interest'),
             'interest_period'         => $this->convertString('interest_period'),
             'object_group_title'      => $this->convertString('object_group_title'),
-            'object_group_id'      => $this->convertInteger('object_group_id'),
+            'object_group_id'         => $this->convertInteger('object_group_id'),
         ];
         // append location information.
         $data            = $this->appendLocationData($data, null);
@@ -124,8 +124,8 @@ class StoreRequest extends FormRequest
             'interest'             => ['min:0', 'max:100', 'numeric'],
             'interest_period'      => sprintf('nullable|in:%s', implode(',', config('firefly.interest_periods'))),
             'notes'                => ['min:0', 'max:32768'],
-            'object_group_id'           => ['numeric', 'belongsToUser:object_groups,id'],
-            'object_group_title'        => ['min:0', 'max:255'],
+            'object_group_id'      => ['numeric', 'belongsToUser:object_groups,id'],
+            'object_group_title'   => ['min:0', 'max:255'],
         ];
 
         return Location::requestRules($rules);

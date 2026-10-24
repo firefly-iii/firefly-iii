@@ -125,7 +125,7 @@ class AccountUpdateService
         // update preferences if inactive:
         $this->updatePreferences($account);
 
-        $objectGroupTitle                         = $data['object_group_title'] ?? '';
+        $objectGroupTitle          = $data['object_group_title'] ?? '';
         if ('' !== $objectGroupTitle) {
             $objectGroup = $this->findOrCreateObjectGroup($objectGroupTitle);
             if ($objectGroup instanceof ObjectGroup) {
@@ -133,14 +133,14 @@ class AccountUpdateService
             }
         }
         // try also with ID
-        $objectGroupId                            = (int) ($data['object_group_id'] ?? 0);
+        $objectGroupId             = (int) ($data['object_group_id'] ?? 0);
         if (0 !== $objectGroupId) {
             $objectGroup = $this->findObjectGroupById($objectGroupId);
             if ($objectGroup instanceof ObjectGroup) {
                 $account->objectGroups()->sync([$objectGroup->id]);
             }
         }
-        if('' === $objectGroupTitle && 0 === $objectGroupId) {
+        if ('' === $objectGroupTitle && 0 === $objectGroupId) {
             $account->objectGroups()->detach();
         }
         $account->save();

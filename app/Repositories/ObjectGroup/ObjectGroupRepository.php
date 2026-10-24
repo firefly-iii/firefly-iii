@@ -79,7 +79,7 @@ class ObjectGroupRepository implements ObjectGroupRepositoryInterface, UserGroup
     public function get(): Collection
     {
         return $this->user->objectGroups()
-            ->with(['piggyBanks', 'bills','accounts'])
+            ->with(['piggyBanks', 'bills', 'accounts'])
             ->orderBy('order', 'ASC')
             ->orderBy('title', 'ASC')
             ->get()

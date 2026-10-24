@@ -185,8 +185,8 @@ final class ReconcileController extends Controller
         $startDate->subDay();
 
         // validate from or exit
-        $from       = $request->input('_from');
-        $validator = validator(['_from' => $from], ['nullable', 'max:255', new IsValidOriginUrl()]);
+        $from           = $request->input('_from');
+        $validator      = validator(['_from' => $from], ['nullable', 'max:255', new IsValidOriginUrl()]);
         if ($validator->fails()) {
             throw new FireflyException(trans('validation.bad_url_parts'));
         }

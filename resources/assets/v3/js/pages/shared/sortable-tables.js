@@ -19,14 +19,14 @@
  */
 
 import i18next from "i18next";
-import getNearestParent from '../shared/get-nearest-parent.js'
+import getNearestParent from "../shared/get-nearest-parent.js";
 
 export class sortableTable {
     tableIds = {};
     sortColumns = {};
     sortDirections = {};
     pages = {};
-    totalPages= {};
+    totalPages = {};
     sortColumn = "order"; // todo forbidden to use!
     sortDirection = "asc"; // todo forbidden to use!
     storageKey = "";
@@ -38,13 +38,12 @@ export class sortableTable {
 
     loadingNewSorts = {};
 
-
     constructor(tableIds) {
         this.tableIds = tableIds;
     }
 
     init(parent) {
-        console.log('Now in sortable tables init()');
+        console.log("Now in sortable tables init()");
 
         //this.tableId = tableId;
         for (let i = 0; i < this.tableIds.length; i++) {
@@ -64,11 +63,10 @@ export class sortableTable {
             // console.log('Sort direction: ', this.sortDirections[tableId])
         }
 
-
         this.handleFunc = this.handlePageClick.bind(this);
         this.parent = parent;
         queueMicrotask(() => {
-            console.log('Now calling update header classes from init-queuemicrotask');
+            console.log("Now calling update header classes from init-queuemicrotask");
             this.updateHeaderClasses();
             this.addClickEvents();
             this.addWatch();
@@ -76,7 +74,7 @@ export class sortableTable {
     }
 
     addWatch() {
-        console.log('Now in addWatch()');
+        console.log("Now in addWatch()");
         const params = new Proxy(new URLSearchParams(window.location.search), {
             get: (searchParams, prop) => searchParams.get(prop),
         });
@@ -86,7 +84,7 @@ export class sortableTable {
                 .querySelectorAll('table[data-sort-identifier="' + tableId + '"] thead th[data-filter-column]')
                 .forEach((th) => {
                     let column = th.getAttribute("data-filter-column");
-                    console.log('[class] Will watch "'+tableId+'" filter for column "' + column + '"');
+                    console.log('[class] Will watch "' + tableId + '" filter for column "' + column + '"');
 
                     // also grab current filter value from store AND from url and push back to the parent whichever is set.
                     const key = "filter[" + tableId + "][" + column + "]";
@@ -97,7 +95,17 @@ export class sortableTable {
 
                     // we do this in the parent because Alpine has the watch function that is needed.
                     this.parent.$watch("filter." + tableId + "." + column, (newValue, oldValue) => {
-                        console.log('filter for "'+tableId+'" column "' + column + '" changed from "' + oldValue + '" to "' + newValue + '"',);
+                        console.log(
+                            'filter for "' +
+                                tableId +
+                                '" column "' +
+                                column +
+                                '" changed from "' +
+                                oldValue +
+                                '" to "' +
+                                newValue +
+                                '"',
+                        );
                         this.fireSortOrDataChangeEvent(tableId);
                         if ("" !== newValue) {
                             showSearchBox(th);
@@ -115,7 +123,7 @@ export class sortableTable {
                     }
                 });
         }
-        console.log('Done with addWatch()');
+        console.log("Done with addWatch()");
     }
 
     capturePageNavigation() {
@@ -135,7 +143,8 @@ export class sortableTable {
         // old
         this.sortDirection = typeof this.sortDirection !== "undefined" ? this.sortDirection : "asc";
         // new: sort direction and sort column to be put in tableIds[tableId].
-        this.sortDirections[tableId] = typeof this.sortDirections[tableId] !== "undefined" ? this.sortDirections[tableId] : "asc";
+        this.sortDirections[tableId] =
+            typeof this.sortDirections[tableId] !== "undefined" ? this.sortDirections[tableId] : "asc";
 
         // old:
         if (newColumn === this.sortColumn) {
@@ -187,7 +196,7 @@ export class sortableTable {
     }
 
     fireSortOrDataChangeEvent(tableId) {
-        console.log('Now calling update header classes from fireSortOrDataChangeEvent');
+        console.log("Now calling update header classes from fireSortOrDataChangeEvent");
         this.updateHeaderClasses();
         let obj = {
             tableId: tableId,
@@ -203,8 +212,8 @@ export class sortableTable {
             document.dispatchEvent(event);
         }
         // if (this.disableRefresh) {
-            // console.log("Do NOT fire event!");
-            // this.disableRefresh = false;
+        // console.log("Do NOT fire event!");
+        // this.disableRefresh = false;
         // }
     }
 
@@ -228,7 +237,8 @@ export class sortableTable {
         // add sortable click events.
         for (let i in this.tableIds) {
             const tableId = this.tableIds[i];
-            document.querySelectorAll('table[data-sort-identifier="' + tableId + '"] th[data-sort-column] span.title')
+            document
+                .querySelectorAll('table[data-sort-identifier="' + tableId + '"] th[data-sort-column] span.title')
                 .forEach((el) => {
                     el.addEventListener("click", this.clickColumnTitle.bind(this));
                 });
@@ -241,7 +251,8 @@ export class sortableTable {
             );
 
             // add event to search-button.
-            document.querySelectorAll('table[data-sort-identifier="' + tableId + '"] th[data-filter-column] .search-button',)
+            document
+                .querySelectorAll('table[data-sort-identifier="' + tableId + '"] th[data-filter-column] .search-button')
                 .forEach((el) => {
                     el.addEventListener("click", () => {
                         const th = el.parentNode.parentNode;
@@ -301,24 +312,37 @@ export class sortableTable {
     }
 
     updateHeaderClasses() {
-        console.log('Now in updateHeaderClasses()', this.tableIds);
+        console.log("Now in updateHeaderClasses()", this.tableIds);
         for (let i in this.tableIds) {
             const tableId = this.tableIds[i];
             console.log('Update headers for table "' + tableId + '"', tableId);
             // console.log('Sort direction for this table: ', this.sortDirections[tableId]);
             // console.log('Sort column for this table', this.sortColumns[tableId]);
             // console.log('Found columns to fix: ', document.querySelectorAll('table[data-sort-identifier="' + tableId + '"] thead th[data-sort-column]').length);
-            document.querySelectorAll('table[data-sort-identifier="' + tableId + '"] thead th[data-sort-column]')
+            document
+                .querySelectorAll('table[data-sort-identifier="' + tableId + '"] thead th[data-sort-column]')
                 .forEach((th) => {
                     if (this.sortColumns[tableId] === th.dataset.sortColumn) {
                         th.classList.add("sortable_sorted");
                         if ("asc" === this.sortDirections[tableId]) {
-                            console.log('Table "'+tableId+'" is sorted on column "'+th.dataset.sortColumn+'" in the ASC direction');
+                            console.log(
+                                'Table "' +
+                                    tableId +
+                                    '" is sorted on column "' +
+                                    th.dataset.sortColumn +
+                                    '" in the ASC direction',
+                            );
                             th.classList.add("sortable_sorted_asc");
                             th.classList.remove("sortable_sorted_desc");
                         }
                         if ("desc" === this.sortDirections[tableId]) {
-                            console.log('Table "'+tableId+'" is sorted on column "'+th.dataset.sortColumn+'" in the DESC direction');
+                            console.log(
+                                'Table "' +
+                                    tableId +
+                                    '" is sorted on column "' +
+                                    th.dataset.sortColumn +
+                                    '" in the DESC direction',
+                            );
                             th.classList.add("sortable_sorted_desc");
                             th.classList.remove("sortable_sorted_asc");
                         }
@@ -378,7 +402,7 @@ export function initFromLocalStorage() {
     // grab state from localStorage.
     let fromStore = window.store.get(this.storageKey);
     if (fromStore) {
-        console.log('From store', JSON.parse(JSON.stringify(fromStore)));
+        console.log("From store", JSON.parse(JSON.stringify(fromStore)));
         this.defaultSortColumns = fromStore.column;
         this.defaultSortDirections = fromStore.direction;
     }
@@ -411,7 +435,7 @@ export function initFromQueryParams() {
     const params = parseQueryParams();
     this.defaultPages = params.page || this.defaultPages;
 
-    console.log('From query params', JSON.parse(JSON.stringify(params)));
+    console.log("From query params", JSON.parse(JSON.stringify(params)));
 
     // make sure all defaultPages are integers:
     for (let tableId in this.defaultPages) {
@@ -429,7 +453,12 @@ export function respondToSortChange(event) {
     this.sortableTable.sortDirections[tableId] = event.detail.sortDirection;
     this.sortableTable.loadingNewSorts[tableId] = true;
     this.updateHistory();
-    this.storeFilterAndSort(this.storageKey, this.sortableTable.sortColumns, this.sortableTable.sortDirections, this.filter); // TODO store for ALL.
+    this.storeFilterAndSort(
+        this.storageKey,
+        this.sortableTable.sortColumns,
+        this.sortableTable.sortDirections,
+        this.filter,
+    ); // TODO store for ALL.
     this.downloadObjects(tableId);
 }
 
@@ -448,7 +477,7 @@ export function updateHistory() {
         let string = objectToQueryString(obj);
         console.log("Update history", string);
         let newUrl = window.location.protocol + "//" + window.location.host + window.location.pathname + "?" + string;
-        window.history.pushState({path: newUrl}, "", newUrl);
+        window.history.pushState({ path: newUrl }, "", newUrl);
     }
 }
 

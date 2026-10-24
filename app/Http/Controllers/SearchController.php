@@ -32,7 +32,6 @@ use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\View as ViewFacade;
-use Illuminate\View\View;
 use Throwable;
 
 use function Safe\mb_convert_encoding;
@@ -125,7 +124,7 @@ final class SearchController extends Controller
 
         // validate from or exit
         $from       = $request->input('_from');
-        $validator = validator(['_from' => $from], ['nullable', 'max:255', new IsValidOriginUrl()]);
+        $validator  = validator(['_from' => $from], ['nullable', 'max:255', new IsValidOriginUrl()]);
         if ($validator->fails()) {
             throw new FireflyException(trans('validation.bad_url_parts'));
         }

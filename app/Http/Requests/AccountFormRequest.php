@@ -123,7 +123,7 @@ class AccountFormRequest extends FormRequest
             'interest_period'                    => 'in:daily,monthly,yearly',
             'notes'                              => ['min:1', 'max:32768', 'nullable'],
             '_from'                              => ['nullable', 'max:255', new IsValidOriginUrl()],
-            'object_group'  => ['min:0', 'max:255'],
+            'object_group'                       => ['min:0', 'max:255'],
         ];
         $rules          = Location::requestRules($rules);
 

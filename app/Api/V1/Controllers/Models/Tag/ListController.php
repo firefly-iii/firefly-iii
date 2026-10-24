@@ -110,7 +110,7 @@ final class ListController extends Controller
         /** @var User $admin */
         $admin        = auth()->user();
 
-        $journals = $tag->transactionJournals()->get(['transaction_journals.id'])->pluck('id')->toArray();
+        $journals     = $tag->transactionJournals()->get(['transaction_journals.id'])->pluck('id')->toArray();
 
         // use new group collector:
         /** @var GroupCollectorInterface $collector */
