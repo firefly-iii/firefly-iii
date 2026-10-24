@@ -389,7 +389,7 @@ function parseQueryParams(search = window.location.search) {
     const result = {};
 
     for (const [key, value] of params) {
-        const parts = key.split(/[\[\]]/).filter(Boolean);
+        const parts = key.split(/[[\]]/).filter(Boolean);
         let current = result;
 
         for (let i = 0; i < parts.length; i++) {
@@ -428,12 +428,12 @@ export function respondToSortChange(event) {
     this.sortableTable.sortColumns[tableId] = event.detail.sortColumn;
     this.sortableTable.sortDirections[tableId] = event.detail.sortDirection;
     this.sortableTable.loadingNewSorts[tableId] = true;
-    this.updateHistory(this.sortableTable.pages, this.sortableTable.sortColumns, this.sortableTable.sortDirections);
+    this.updateHistory();
     this.storeFilterAndSort(this.storageKey, this.sortableTable.sortColumns, this.sortableTable.sortDirections, this.filter); // TODO store for ALL.
     this.downloadObjects(tableId);
 }
 
-export function updateHistory(page, column, direction) {
+export function updateHistory() {
     if (history.pushState) {
         let obj = {
             page: this.sortableTable.pages,

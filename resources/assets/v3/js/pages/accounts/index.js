@@ -185,7 +185,7 @@ let index = function () {
             let downloadedObjectGroups = {};
             const fallBackId = null === tableId ? "ungrouped" : tableId;
             let sort = '-undefined';
-            let page = 1;
+            let page;
             let start = window.store.get("start");
             let end = window.store.get("end");
             if (null === tableId) {
