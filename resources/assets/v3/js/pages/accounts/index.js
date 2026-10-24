@@ -34,7 +34,6 @@ import {
     initFromQueryParams,
     sortGroupedObjects,
     respondToSortChange,
-    sortableTable,
     storeFilterAndSort,
     launchSortableTable,
     updateHistory,
