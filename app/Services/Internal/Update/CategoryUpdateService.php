@@ -41,6 +41,7 @@ use Illuminate\Support\Facades\Log;
 class CategoryUpdateService
 {
     use CreatesObjectGroups;
+
     private User $user;
 
     /**

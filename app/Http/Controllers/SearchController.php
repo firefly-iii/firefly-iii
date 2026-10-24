@@ -28,12 +28,12 @@ use FireflyIII\Repositories\Rule\RuleRepositoryInterface;
 use FireflyIII\Rules\System\IsValidOriginUrl;
 use FireflyIII\Support\Search\SearchInterface;
 use Illuminate\Contracts\View\Factory;
+use Illuminate\Contracts\View\View;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\View as ViewFacade;
 use Throwable;
-use Illuminate\Contracts\View\View;
 
 use function Safe\mb_convert_encoding;
 
