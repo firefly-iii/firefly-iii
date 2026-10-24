@@ -25,7 +25,14 @@ import Alpine from "@alpinejs/csp";
 import formatMoney from "../../util/format-money.js";
 import formatDate from "../../util/format-date.js";
 import i18next from "i18next";
-import {initFromLocalStorage, initFromQueryParams, respondToSortChange, sortableTable, storeFilterAndSort, updateHistory} from "../shared/sortable-tables.js";
+import {
+    initFromLocalStorage,
+    initFromQueryParams,
+    respondToSortChange,
+    sortableTable,
+    storeFilterAndSort,
+    updateHistory,
+} from "../shared/sortable-tables.js";
 import Get from "../../api/model/category/get.js";
 
 window.enableDates = false;
@@ -40,9 +47,9 @@ let index = function () {
 
         // default settings for sortable tables.
         storageKey: "",
-        defaultSortColumns: {"main": "name"},
-        defaultSortDirections: {"main": "asc"},
-        defaultPages: {"main": 1},
+        defaultSortColumns: { main: "name" },
+        defaultSortDirections: { main: "asc" },
+        defaultPages: { main: 1 },
         filter: {},
         pageNavUrl: "./categories/",
 
@@ -62,7 +69,7 @@ let index = function () {
 
             // create sortable table.
             let tables = ["main"];
-            for(let i = 0; i < tables.length; i++) {
+            for (let i = 0; i < tables.length; i++) {
                 let table = tables[i];
                 this.filter[table] = {};
             }
@@ -88,11 +95,17 @@ let index = function () {
         downloadObjects() {
             // since this function only downloads for table "main", it is safe to extract only "main" from the filter object.
             this.sortableTable.loadingNewSort = true;
-            let sort = "asc" === this.sortableTable.sortDirections["main"] ? this.sortableTable.sortColumns["main"] : "-" + this.sortableTable.sortColumns["main"];
+            let sort =
+                "asc" === this.sortableTable.sortDirections["main"]
+                    ? this.sortableTable.sortColumns["main"]
+                    : "-" + this.sortableTable.sortColumns["main"];
 
             // catch undefined stuff.
-            if('-undefined' === sort) {
-                sort = "asc" === this.defaultSortDirections["main"] ? this.defaultSortColumns["main"] : "-" + this.defaultSortColumns["main"];
+            if ("-undefined" === sort) {
+                sort =
+                    "asc" === this.defaultSortDirections["main"]
+                        ? this.defaultSortColumns["main"]
+                        : "-" + this.defaultSortColumns["main"];
             }
 
             this.convertToPrimary = window.store.get("convert_to_primary");
@@ -109,7 +122,7 @@ let index = function () {
 
                     this.sortableTable.totalPages["main"] = parseInt(response.data.meta.pagination.total_pages);
                     const length = response.data.data.length;
-                    if(this.sortableTable.totalPages["main"] <= this.sortableTable.pages["main"] && 0 === length) {
+                    if (this.sortableTable.totalPages["main"] <= this.sortableTable.pages["main"] && 0 === length) {
                         this.sortableTable.pages["main"] = this.sortableTable.totalPages["main"];
                         this.downloadObjects();
                     }
@@ -122,7 +135,7 @@ let index = function () {
                             if (null !== current.attributes.last_activity) {
                                 lastActivity = formatDate(
                                     current.attributes.last_activity,
-                                    i18next.t("config.date_time_fns", {lng: locale}),
+                                    i18next.t("config.date_time_fns", { lng: locale }),
                                     locale,
                                 );
                                 noLastActivity = false;

@@ -19,10 +19,9 @@
  */
 
 export function addDrag() {
-
     // TODO needs query selector ALL.
     const tbody = document.querySelector(".sortable tbody");
-    if(null === tbody) {
+    if (null === tbody) {
         return;
     }
     let draggedRow = null;
