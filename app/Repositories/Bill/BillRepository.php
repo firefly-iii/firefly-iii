@@ -638,8 +638,8 @@ class BillRepository implements BillRepositoryInterface, UserGroupInterface
                     'sum'            => '0',
                 ];
                 $amountFromJournal          = Amount::getAmountFromJournalObject($transactionJournal, true);
-//                Log::debug(sprintf('Created a (new) array for currency #%d', $currencyId));
-//                Log::debug(sprintf('Amount to add is %s', $amountFromJournal));
+                //                Log::debug(sprintf('Created a (new) array for currency #%d', $currencyId));
+                //                Log::debug(sprintf('Amount to add is %s', $amountFromJournal));
                 // get currency from transaction as well.
                 $return[$currencyId]['sum'] = bcadd($return[$currencyId]['sum'], $amountFromJournal);
             }

@@ -33,7 +33,8 @@ import {
     respondToSortChange,
     storeFilterAndSort,
     updateHistory,
-    launchSortableTable, getSortInstructions,
+    launchSortableTable,
+    getSortInstructions,
 } from "../shared/sortable-tables.js";
 import Get from "../../api/model/category/get.js";
 
@@ -133,7 +134,10 @@ let index = function () {
                 if (null !== this.sortableTable) {
                     this.sortableTable.totalPages[fallBackId] = parseInt(response.data.meta.pagination.total_pages);
                     const length = response.data.data.length;
-                    if (this.sortableTable.totalPages[fallBackId] < this.sortableTable.pages[fallBackId] && 0 === length) {
+                    if (
+                        this.sortableTable.totalPages[fallBackId] < this.sortableTable.pages[fallBackId] &&
+                        0 === length
+                    ) {
                         this.sortableTable.pages[fallBackId] = this.sortableTable.totalPages[fallBackId];
                         console.log("Call downloadObjects again because page is too high for tableId " + tableId);
                         this.downloadObjects(tableId);
@@ -141,7 +145,9 @@ let index = function () {
                 }
 
                 // process all categories in this search result.
-                console.log("Have " + response.data.data.length + " categories in this search result for tableId " + tableId,);
+                console.log(
+                    "Have " + response.data.data.length + " categories in this search result for tableId " + tableId,
+                );
                 for (let i = 0; i < response.data.data.length; i++) {
                     if (Object.hasOwn(response.data.data, i)) {
                         let current = response.data.data[i];
@@ -181,7 +187,11 @@ let index = function () {
                         let lastActivityTimestamp = 0;
                         let noLastActivity = true;
                         if (null !== current.attributes.last_activity) {
-                            lastActivity = formatDate(current.attributes.last_activity, i18next.t("config.date_time_fns", { lng: locale }), locale,);
+                            lastActivity = formatDate(
+                                current.attributes.last_activity,
+                                i18next.t("config.date_time_fns", { lng: locale }),
+                                locale,
+                            );
                             lastActivityTimestamp = new Date(current.attributes.last_activity).getTime();
                             noLastActivity = false;
                         }
