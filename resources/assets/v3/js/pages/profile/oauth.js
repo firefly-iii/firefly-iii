@@ -109,6 +109,7 @@ let index = function () {
             const locale = window.store.get("locale");
             // console.log("getTokens()");
             api.get("./oauth/personal-access-tokens").then((response) => {
+                this.tokens = [];
                 // console.log(response.data);
                 for (let i = 0; i < response.data.length; i++) {
                     if (Object.hasOwn(response.data, i)) {
