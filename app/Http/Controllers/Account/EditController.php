@@ -210,9 +210,9 @@ final class EditController extends Controller
 
         // multi-tab redirect
         $from     = $request->input('_from', '');
-        $redirect = redirect(route('index') . $from);
+        $redirect = redirect(route('index').$from);
 
-        if (1 === (int)$request->input('return_to_edit')) {
+        if (1 === (int) $request->input('return_to_edit')) {
             $redirect = redirect(route('accounts.edit', [$account->id]))->withInput(['return_to_edit' => 1]);
         }
         Preferences::mark();

@@ -231,7 +231,9 @@ let index = function () {
                     }
                 }
                 // process all accounts in this search result.
-                console.log("Have " + response.data.data.length + " accounts in this search result for tableId " + tableId,);
+                console.log(
+                    "Have " + response.data.data.length + " accounts in this search result for tableId " + tableId,
+                );
                 for (let i = 0; i < response.data.data.length; i++) {
                     if (Object.hasOwn(response.data.data, i)) {
                         let current = this.filterAmounts(response.data.data[i]);
@@ -250,9 +252,18 @@ let index = function () {
                                 sortInstructions: sort,
                                 specificSortInstructions: specificSort,
                                 differentSortInstructions: specificSort !== sort,
-                                id: null === current.attributes.object_group_id ? 0 : parseInt(current.attributes.object_group_id),
-                                title: null === current.attributes.object_group_title ? "ungrouped" : current.attributes.object_group_title,
-                                order: null === current.attributes.object_group_order ? 0 : parseInt(current.attributes.object_group_order),
+                                id:
+                                    null === current.attributes.object_group_id
+                                        ? 0
+                                        : parseInt(current.attributes.object_group_id),
+                                title:
+                                    null === current.attributes.object_group_title
+                                        ? "ungrouped"
+                                        : current.attributes.object_group_title,
+                                order:
+                                    null === current.attributes.object_group_order
+                                        ? 0
+                                        : parseInt(current.attributes.object_group_order),
                                 objects: [],
                                 total: 0,
                             };
@@ -261,7 +272,10 @@ let index = function () {
 
                         // we will stop adding objects to this group once the list page size is reached.
                         // unless we must do a resorting later on.
-                        if (downloadedObjectGroups[group].objects.length >= this.listPageSize && false === downloadedObjectGroups[group].differentSortInstructions) {
+                        if (
+                            downloadedObjectGroups[group].objects.length >= this.listPageSize &&
+                            false === downloadedObjectGroups[group].differentSortInstructions
+                        ) {
                             continue;
                         }
 
@@ -285,7 +299,11 @@ let index = function () {
                             this.debts[group][pcc] += current.attributes.pc_debt_amount_float;
                             this.differences[group][pcc] += current.attributes.pc_balance_difference_float;
                         }
-                        let lastActivity = formatDate(current.attributes.last_activity, i18next.t("config.date_time_fns_short", { lng: locale }), locale,);
+                        let lastActivity = formatDate(
+                            current.attributes.last_activity,
+                            i18next.t("config.date_time_fns_short", { lng: locale }),
+                            locale,
+                        );
                         let lastActivityTimestamp = new Date(current.attributes.last_activity).getTime();
                         let noLastActivity = false;
                         if (null === current.attributes.last_activity) {
@@ -334,9 +352,13 @@ let index = function () {
                             pc_current_debt_float: current.attributes.pc_debt_amount_float,
 
                             liability_type: i18next.t("firefly.account_type_" + current.attributes.liability_type),
-                            liability_direction: i18next.t("firefly.liability_direction_" + current.attributes.liability_direction + "_short",),
+                            liability_direction: i18next.t(
+                                "firefly.liability_direction_" + current.attributes.liability_direction + "_short",
+                            ),
                             liability_interest: current.attributes.interest,
-                            liability_interest_period: i18next.t("firefly.interest_calc_" + current.attributes.interest_period).toLowerCase(),
+                            liability_interest_period: i18next
+                                .t("firefly.interest_calc_" + current.attributes.interest_period)
+                                .toLowerCase(),
                         };
                         downloadedObjectGroups[group].objects.push(account);
                     }
