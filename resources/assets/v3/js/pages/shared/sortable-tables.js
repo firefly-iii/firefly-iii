@@ -97,14 +97,14 @@ export class sortableTable {
                     this.parent.$watch("filter." + tableId + "." + column, (newValue, oldValue) => {
                         console.log(
                             'filter for "' +
-                                tableId +
-                                '" column "' +
-                                column +
-                                '" changed from "' +
-                                oldValue +
-                                '" to "' +
-                                newValue +
-                                '"',
+                            tableId +
+                            '" column "' +
+                            column +
+                            '" changed from "' +
+                            oldValue +
+                            '" to "' +
+                            newValue +
+                            '"',
                         );
                         this.fireSortOrDataChangeEvent(tableId);
                         if ("" !== newValue) {
@@ -327,10 +327,10 @@ export class sortableTable {
                         if ("asc" === this.sortDirections[tableId]) {
                             console.log(
                                 'Table "' +
-                                    tableId +
-                                    '" is sorted on column "' +
-                                    th.dataset.sortColumn +
-                                    '" in the ASC direction',
+                                tableId +
+                                '" is sorted on column "' +
+                                th.dataset.sortColumn +
+                                '" in the ASC direction',
                             );
                             th.classList.add("sortable_sorted_asc");
                             th.classList.remove("sortable_sorted_desc");
@@ -338,10 +338,10 @@ export class sortableTable {
                         if ("desc" === this.sortDirections[tableId]) {
                             console.log(
                                 'Table "' +
-                                    tableId +
-                                    '" is sorted on column "' +
-                                    th.dataset.sortColumn +
-                                    '" in the DESC direction',
+                                tableId +
+                                '" is sorted on column "' +
+                                th.dataset.sortColumn +
+                                '" in the DESC direction',
                             );
                             th.classList.add("sortable_sorted_desc");
                             th.classList.remove("sortable_sorted_asc");
@@ -477,7 +477,7 @@ export function updateHistory() {
         let string = objectToQueryString(obj);
         console.log("Update history", string);
         let newUrl = window.location.protocol + "//" + window.location.host + window.location.pathname + "?" + string;
-        window.history.pushState({ path: newUrl }, "", newUrl);
+        window.history.pushState({path: newUrl}, "", newUrl);
     }
 }
 
@@ -491,7 +491,40 @@ export function storeFilterAndSort(storageKey, column, direction, filter) {
     window.store.set(storageKey, obj);
 }
 
-export function sortGroupedObjects(downloadedObjectGroups) {
+export function getSortInstructions(tableId) {
+    let sort = "-undefined";
+    // for all things
+    if (null === tableId) {
+        if (null !== this.sortableTable) {
+            // grab default sort instructions.
+            sort = "asc" === this.sortableTable.sortDirections["main"] ? this.sortableTable.sortColumns["main"] : "-" + this.sortableTable.sortColumns["main"];
+        }
+        // catch undefined stuff for tableId = null.
+        if ("-undefined" === sort) {
+            sort = "asc" === this.defaultSortDirections["main"] ? this.defaultSortColumns["main"] : "-" + this.defaultSortColumns["main"];
+        }
+    }
+    if(null !== tableId) {
+        // also update default sort instructions:
+        if ("undefined" === typeof this.defaultSortColumns[tableId]) {
+            this.defaultSortColumns[tableId] = this.defaultSortColumns["main"];
+        }
+        if ("undefined" === typeof this.defaultSortDirections[tableId]) {
+            this.defaultSortDirections[tableId] = this.defaultSortDirections["main"];
+        }
+        if (null !== this.sortableTable) {
+            // set sort instructions:
+            sort = "asc" === this.sortableTable.sortDirections[tableId] ? this.sortableTable.sortColumns[tableId] : "-" + this.sortableTable.sortColumns[tableId];
+        }
+        if ("-undefined" === sort) {
+            sort = "asc" === this.defaultSortDirections[tableId] ? this.defaultSortColumns[tableId] : "-" + this.defaultSortColumns[tableId];
+        }
+    }
+
+    return sort;
+}
+
+export function sortGroupedObjects(downloadedObjectGroups, pageSize) {
     // turn grouped objects into array:
     let array = Object.keys(downloadedObjectGroups).map((key) => downloadedObjectGroups[key]);
     // sort array by order:
@@ -500,8 +533,36 @@ export function sortGroupedObjects(downloadedObjectGroups) {
     downloadedObjectGroups = {};
     for (let i = 0; i < array.length; i++) {
         let group = array[i].group;
+        // now also sort the objects if that is necessary.
+        if (true === array[i].differentSortInstructions) {
+            // be able to sort on '-name' or 'name' or whatever.
+            let sortInstructions = array[i].specificSortInstructions;
+            array[i].objects.sort((a, b) => {
+                // console.log('a', a);
+                if ('name' === sortInstructions) {
+                    return a.name.localeCompare(b.name);
+                }
+                if ('-name' === sortInstructions) {
+                    return b.name.localeCompare(a.name);
+                }
+                if ('last_activity' === sortInstructions) {
+                    return a.last_activity_timestamp < b.last_activity_timestamp ? -1 : 1;
+                }
+                if ('-last_activity' === sortInstructions) {
+                    return b.last_activity_timestamp < a.last_activity_timestamp ? -1 : 1;
+                }
+                // otherwise, never sort on anything.
+                console.warn('Cannot do custom sort on "' + sortInstructions + '"!');
+                return a;
+            });
+            if (array[i].objects.length > pageSize) {
+                array[i].objects = array[i].objects.slice(0, pageSize);
+            }
+        }
         downloadedObjectGroups[group] = array[i];
     }
+
+
     return downloadedObjectGroups;
 }
 

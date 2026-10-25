@@ -90,11 +90,11 @@
                             </tr>
                             </thead>
                             <tbody>
-                            <template x-for="account in data.accounts" :key="account.id">
+                            <template x-for="account in data.objects" :key="account.id">
                                 <tr :data-id="account.id">
                                     <td>
                                         <template
-                                            x-if="('asset' === objectType || 'liabilities' === objectType) && 'asc' === sortableTable.sortDirections[tableId] && 'order' === sortableTable.sortColumns[tableId] && groupedObjects[tableId].accounts.length > 1">
+                                            x-if="('asset' === objectType || 'liabilities' === objectType) && 'asc' === sortableTable.sortDirections[tableId] && 'order' === sortableTable.sortColumns[tableId] && groupedObjects[tableId].objects.length > 1">
                                             <span class="btn btn-outline-secondary btn-sm bi bi-list object-handle"></span>
                                         </template>
                                     </td>
@@ -301,7 +301,7 @@
                             </tbody>
                             <tfoot>
                             <template
-                                x-if="accounts.length > 0 && ('asset' === objectType || 'liabilities' === objectType)">
+                                x-if="data.objects.length > 0 && ('asset' === objectType || 'liabilities' === objectType)">
                                 <tr>
                                     <td colspan="3">&nbsp;</td>
                                     <template x-if="'asset' === objectType">

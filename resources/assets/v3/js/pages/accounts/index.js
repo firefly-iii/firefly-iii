@@ -36,6 +36,7 @@ import {
     respondToSortChange,
     storeFilterAndSort,
     launchSortableTable,
+    getSortInstructions,
     updateHistory,
 } from "../shared/sortable-tables.js";
 
@@ -74,6 +75,7 @@ let index = function () {
         storeFilterAndSort: storeFilterAndSort,
         respondToSortChange: respondToSortChange,
         launchSortableTable: launchSortableTable,
+        getSortInstructions: getSortInstructions,
 
         sortableTable: null,
 
@@ -161,13 +163,11 @@ let index = function () {
             const locale = window.store.get("locale");
             let downloadedObjectGroups = {};
             const fallBackId = null === tableId ? "ungrouped" : tableId;
-            let sort = "-undefined";
+            let sort = this.getSortInstructions(tableId);
             let page;
             let start = window.store.get("start");
             let end = window.store.get("end");
             if (null === tableId) {
-                console.log("Download ALL");
-                // this.sortableTable.loadingNewSort = true; // TODO fix me.
                 this.convertToPrimary = window.store.get("convert_to_primary");
 
                 // reset ALL
@@ -181,20 +181,8 @@ let index = function () {
 
                 page = 1;
                 if (null !== this.sortableTable) {
-                    sort =
-                        "asc" === this.sortableTable.sortDirections["main"]
-                            ? this.sortableTable.sortColumns["main"]
-                            : "-" + this.sortableTable.sortColumns["main"];
                     page = this.sortableTable.pages["main"];
                 }
-                // catch undefined stuff.
-                if ("-undefined" === sort) {
-                    sort =
-                        "asc" === this.defaultSortDirections["main"]
-                            ? this.defaultSortColumns["main"]
-                            : "-" + this.defaultSortColumns["main"];
-                }
-                console.log("Sort instructions are now", sort);
                 downloadParams = {
                     active: this.active,
                     sort: sort,
@@ -205,34 +193,11 @@ let index = function () {
                     filter: JSON.parse(JSON.stringify(this.filter))["main"], // same.
                     end: end,
                 };
-                // console.log('Download params for ALL ', downloadParams);
             }
             if (null !== tableId) {
-                console.log("Download", tableId);
-                // reset GROUP
-                //this.groupedObjects[tableId] = null;
                 this.sums[tableId] = {};
                 this.debts[tableId] = {};
                 this.differences[tableId] = {};
-                // catch undefined sort instructions.
-                if ("undefined" === typeof this.defaultSortColumns[tableId]) {
-                    this.defaultSortColumns[tableId] = this.defaultSortColumns["main"];
-                }
-                if ("undefined" === typeof this.defaultSortDirections[tableId]) {
-                    this.defaultSortDirections[tableId] = this.defaultSortDirections["main"];
-                }
-
-                sort =
-                    "asc" === this.sortableTable.sortDirections[tableId]
-                        ? this.sortableTable.sortColumns[tableId]
-                        : "-" + this.sortableTable.sortColumns[tableId];
-                if ("-undefined" === sort) {
-                    sort =
-                        "asc" === this.defaultSortDirections[tableId]
-                            ? this.defaultSortColumns[tableId]
-                            : "-" + this.defaultSortColumns[tableId];
-                }
-                console.log("Sort instructions are now", sort);
 
                 page = this.sortableTable.pages[tableId];
                 let filter = JSON.parse(JSON.stringify(this.filter))[tableId];
@@ -249,7 +214,6 @@ let index = function () {
                     filter: filter, // same.
                     end: end,
                 };
-                // console.log('Download params for tableId ' + tableId, downloadParams);
             }
             new Get().list(downloadParams).then((response) => {
                 console.log("After download", downloadParams);
@@ -267,9 +231,7 @@ let index = function () {
                     }
                 }
                 // process all accounts in this search result.
-                console.log(
-                    "Have " + response.data.data.length + " accounts in this search result for tableId " + tableId,
-                );
+                console.log("Have " + response.data.data.length + " accounts in this search result for tableId " + tableId,);
                 for (let i = 0; i < response.data.data.length; i++) {
                     if (Object.hasOwn(response.data.data, i)) {
                         let current = this.filterAmounts(response.data.data[i]);
@@ -282,32 +244,27 @@ let index = function () {
                         }
 
                         if (!Object.hasOwn(downloadedObjectGroups, group)) {
-                            // console.log('Will create new group "' + group + '"');
+                            let specificSort = this.getSortInstructions(group);
                             downloadedObjectGroups[group] = {
                                 group: group,
-                                id:
-                                    null === current.attributes.object_group_id
-                                        ? 0
-                                        : parseInt(current.attributes.object_group_id),
-                                title:
-                                    null === current.attributes.object_group_title
-                                        ? "ungrouped"
-                                        : current.attributes.object_group_title,
-                                order:
-                                    null === current.attributes.object_group_order
-                                        ? 0
-                                        : parseInt(current.attributes.object_group_order),
-                                accounts: [],
+                                sortInstructions: sort,
+                                specificSortInstructions: specificSort,
+                                differentSortInstructions: specificSort !== sort,
+                                id: null === current.attributes.object_group_id ? 0 : parseInt(current.attributes.object_group_id),
+                                title: null === current.attributes.object_group_title ? "ungrouped" : current.attributes.object_group_title,
+                                order: null === current.attributes.object_group_order ? 0 : parseInt(current.attributes.object_group_order),
+                                objects: [],
                                 total: 0,
                             };
                         }
                         downloadedObjectGroups[group].total += 1;
 
-                        if (downloadedObjectGroups[group].accounts.length >= this.listPageSize) {
+                        // we will stop adding objects to this group once the list page size is reached.
+                        // unless we must do a resorting later on.
+                        if (downloadedObjectGroups[group].objects.length >= this.listPageSize && false === downloadedObjectGroups[group].differentSortInstructions) {
                             continue;
                         }
 
-                        // console.log('Found account', current.attributes.object_group_title);
                         let cc = current.attributes.currency_code;
                         let pcc = current.attributes.primary_currency_code;
                         this.prepareSumArrays(group, cc);
@@ -328,16 +285,13 @@ let index = function () {
                             this.debts[group][pcc] += current.attributes.pc_debt_amount_float;
                             this.differences[group][pcc] += current.attributes.pc_balance_difference_float;
                         }
-                        let lastActivity = formatDate(
-                            current.attributes.last_activity,
-                            i18next.t("config.date_time_fns_short", { lng: locale }),
-                            locale,
-                        );
-
+                        let lastActivity = formatDate(current.attributes.last_activity, i18next.t("config.date_time_fns_short", { lng: locale }), locale,);
+                        let lastActivityTimestamp = new Date(current.attributes.last_activity).getTime();
                         let noLastActivity = false;
                         if (null === current.attributes.last_activity) {
                             lastActivity = i18next.t("firefly.never");
                             noLastActivity = true;
+                            lastActivityTimestamp = 0;
                         }
                         // console.log('ID is', parseInt(current.id));
                         let account = {
@@ -356,6 +310,7 @@ let index = function () {
 
                             active: current.attributes.active,
                             last_activity: lastActivity,
+                            last_activity_timestamp: lastActivityTimestamp,
                             no_last_activity: noLastActivity,
 
                             current_balance: current.attributes.current_balance_formatted,
@@ -379,46 +334,23 @@ let index = function () {
                             pc_current_debt_float: current.attributes.pc_debt_amount_float,
 
                             liability_type: i18next.t("firefly.account_type_" + current.attributes.liability_type),
-                            liability_direction: i18next.t(
-                                "firefly.liability_direction_" + current.attributes.liability_direction + "_short",
-                            ),
+                            liability_direction: i18next.t("firefly.liability_direction_" + current.attributes.liability_direction + "_short",),
                             liability_interest: current.attributes.interest,
-                            liability_interest_period: i18next
-                                .t("firefly.interest_calc_" + current.attributes.interest_period)
-                                .toLowerCase(),
+                            liability_interest_period: i18next.t("firefly.interest_calc_" + current.attributes.interest_period).toLowerCase(),
                         };
-                        downloadedObjectGroups[group].accounts.push(account);
-                        // console.log('Grouped objects "'+group+ '" now consists of ' + downloadedObjectGroups[group].accounts.length + " accounts.");
-                        // this.sortableTable.loadingNewSort[group] = false;
+                        downloadedObjectGroups[group].objects.push(account);
                     }
                 }
-                console.log("Done with download");
                 // after downloading and parsing, THEN do init.
                 // initialize sortable table.
                 if (null !== tableId) {
-                    // console.log('Table id is', tableId);
                     this.sortableTable.loadingNewSorts[tableId] = false;
-                    //console.log('Type of this.groupedObjects[tableId].accounts is', typeof this.groupedObjects[tableId].accounts, this.groupedObjects[tableId].accounts);
-                    // console.log('Type of downloadedObjectGroups is', typeof downloadedObjectGroups[tableId].accounts, downloadedObjectGroups[tableId].accounts);
-                    this.groupedObjects[tableId].accounts = downloadedObjectGroups[tableId].accounts;
-                    // let newGroups = JSON.parse(JSON.stringify(this.groupedObjects));
-                    // newGroups[tableId] = downloadedObjectGroups[tableId];
-                    //this.groupedObjects = newGroups;
-                    // this.sortableTable.loadingNewSort[tableId] = false;
+                    this.groupedObjects[tableId].objects = downloadedObjectGroups[tableId].objects;
                 }
 
-                // TODO needs to be per table, cannot be done yet.
                 if (null === tableId) {
-                    downloadedObjectGroups = sortGroupedObjects(downloadedObjectGroups);
+                    downloadedObjectGroups = sortGroupedObjects(downloadedObjectGroups, this.listPageSize);
                     this.launchSortableTable(downloadedObjectGroups);
-                    //this.loadingPage = false;
-                    // this.sortableTable.loadingNewSort = false; // TODO fix me
-                    //this.sortableTable.disableRefresh = false;
-                    // if (0 === this.accounts.length && false === this.isFiltering) {
-                    //     document.querySelectorAll(".data-holder").forEach((el) => {
-                    //         el.classList.add("d-none");
-                    //     });
-                    // }
                 }
             });
         },
