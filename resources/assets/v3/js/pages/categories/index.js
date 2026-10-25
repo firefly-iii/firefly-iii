@@ -164,7 +164,7 @@ let index = function () {
                                 id: null === current.attributes.object_group_id ? 0 : parseInt(current.attributes.object_group_id),
                                 title: null === current.attributes.object_group_title ? "ungrouped" : current.attributes.object_group_title,
                                 order: null === current.attributes.object_group_order ? 0 : parseInt(current.attributes.object_group_order),
-                                objects: [],
+                                items: [],
                                 total: 0,
                             };
                             console.log('Will create new group "' + group + '"', downloadedObjectGroups[group]);
@@ -173,7 +173,7 @@ let index = function () {
 
                         // we will stop adding categories to this group once the list page size is reached.
                         // unless we must do a resorting later on.
-                        if (downloadedObjectGroups[group].objects.length >= this.listPageSize && false === downloadedObjectGroups[group].differentSortInstructions) {
+                        if (downloadedObjectGroups[group].items.length >= this.listPageSize && false === downloadedObjectGroups[group].differentSortInstructions) {
                             continue;
                         }
 
@@ -194,13 +194,13 @@ let index = function () {
                             no_last_activity: noLastActivity,
                             last_activity_timestamp: lastActivityTimestamp,
                         };
-                        downloadedObjectGroups[group].objects.push(category);
+                        downloadedObjectGroups[group].items.push(category);
                     }
                 }
                 // done with download
                 if (null !== tableId) {
                     this.sortableTable.loadingNewSorts[tableId] = false;
-                    this.groupedObjects[tableId].objects = downloadedObjectGroups[tableId].objects;
+                    this.groupedObjects[tableId].items = downloadedObjectGroups[tableId].items;
                 }
                 if (null === tableId) {
                     downloadedObjectGroups = sortGroupedObjects(downloadedObjectGroups, this.listPageSize);

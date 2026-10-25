@@ -253,15 +253,15 @@ let index = function () {
                                 id: null === current.attributes.object_group_id ? 0 : parseInt(current.attributes.object_group_id),
                                 title: null === current.attributes.object_group_title ? "ungrouped" : current.attributes.object_group_title,
                                 order: null === current.attributes.object_group_order ? 0 : parseInt(current.attributes.object_group_order),
-                                objects: [],
+                                items: [],
                                 total: 0,
                             };
                         }
                         downloadedObjectGroups[group].total += 1;
 
-                        // we will stop adding objects to this group once the list page size is reached.
+                        // we will stop adding items to this group once the list page size is reached.
                         // unless we must do a resorting later on.
-                        if (downloadedObjectGroups[group].objects.length >= this.listPageSize && false === downloadedObjectGroups[group].differentSortInstructions) {
+                        if (downloadedObjectGroups[group].items.length >= this.listPageSize && false === downloadedObjectGroups[group].differentSortInstructions) {
                             continue;
                         }
 
@@ -338,14 +338,14 @@ let index = function () {
                             liability_interest: current.attributes.interest,
                             liability_interest_period: i18next.t("firefly.interest_calc_" + current.attributes.interest_period).toLowerCase(),
                         };
-                        downloadedObjectGroups[group].objects.push(account);
+                        downloadedObjectGroups[group].items.push(account);
                     }
                 }
                 // after downloading and parsing, THEN do init.
                 // initialize sortable table.
                 if (null !== tableId) {
                     this.sortableTable.loadingNewSorts[tableId] = false;
-                    this.groupedObjects[tableId].objects = downloadedObjectGroups[tableId].objects;
+                    this.groupedObjects[tableId].items = downloadedObjectGroups[tableId].items;
                 }
 
                 if (null === tableId) {

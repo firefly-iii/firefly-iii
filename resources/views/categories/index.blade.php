@@ -47,7 +47,7 @@
                     </tr>
                     </thead>
                     <tbody>
-                    <template x-for="category in data.objects" :key="category.id">
+                    <template x-for="category in data.items" :key="category.id">
                         <tr>
                             <td>
                                 <a :href="'./categories/show/' + category.id" :title="category.name"

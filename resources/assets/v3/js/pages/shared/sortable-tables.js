@@ -211,10 +211,6 @@ export class sortableTable {
             // console.log("Fire event!");
             document.dispatchEvent(event);
         }
-        // if (this.disableRefresh) {
-        // console.log("Do NOT fire event!");
-        // this.disableRefresh = false;
-        // }
     }
 
     clickCloseButton(event) {
@@ -316,9 +312,6 @@ export class sortableTable {
         for (let i in this.tableIds) {
             const tableId = this.tableIds[i];
             console.log('Update headers for table "' + tableId + '"', tableId);
-            // console.log('Sort direction for this table: ', this.sortDirections[tableId]);
-            // console.log('Sort column for this table', this.sortColumns[tableId]);
-            // console.log('Found columns to fix: ', document.querySelectorAll('table[data-sort-identifier="' + tableId + '"] thead th[data-sort-column]').length);
             document
                 .querySelectorAll('table[data-sort-identifier="' + tableId + '"] thead th[data-sort-column]')
                 .forEach((th) => {
@@ -537,7 +530,7 @@ export function sortGroupedObjects(downloadedObjectGroups, pageSize) {
         if (true === array[i].differentSortInstructions) {
             // be able to sort on '-name' or 'name' or whatever.
             let sortInstructions = array[i].specificSortInstructions;
-            array[i].objects.sort((a, b) => {
+            array[i].items.sort((a, b) => {
                 // console.log('a', a);
                 if ('name' === sortInstructions) {
                     return a.name.localeCompare(b.name);
@@ -555,8 +548,8 @@ export function sortGroupedObjects(downloadedObjectGroups, pageSize) {
                 console.warn('Cannot do custom sort on "' + sortInstructions + '"!');
                 return a;
             });
-            if (array[i].objects.length > pageSize) {
-                array[i].objects = array[i].objects.slice(0, pageSize);
+            if (array[i].items.length > pageSize) {
+                array[i].items = array[i].items.slice(0, pageSize);
             }
         }
         downloadedObjectGroups[group] = array[i];
@@ -576,7 +569,7 @@ export function launchSortableTable(groupedObjects) {
         let table = tables[i];
         this.filter[table] = {};
 
-        // make sure grouped objects is not longer than listPageSize.
+        // make sure grouped items is not longer than listPageSize.
         this.sortableTable.totalPages[table] = Math.ceil(groupedObjects[table].total / this.listPageSize);
     }
 
