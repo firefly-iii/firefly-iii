@@ -69,7 +69,7 @@ final class EditController extends Controller
     public function edit(Request $request, Category $category): Factory|\Illuminate\Contracts\View\View
     {
         $subTitle  = (string) trans('firefly.edit_category', ['name' => $category->name]);
-        $from                 = $request->input('_from', '');
+        $from      = $request->input('_from', '');
         // put previous url in session if not redirect from store (not "return_to_edit").
         if (true !== session('categories.edit.fromUpdate')) {
             $this->rememberPreviousUrl('categories.edit.url');
@@ -82,7 +82,7 @@ final class EditController extends Controller
         ];
         $request->session()->flash('preFilled', $preFilled);
 
-        return view('categories.edit', ['from' => $from,'category' => $category, 'subTitle' => $subTitle, 'preFilled' => $preFilled]);
+        return view('categories.edit', ['from' => $from, 'category' => $category, 'subTitle' => $subTitle, 'preFilled' => $preFilled]);
     }
 
     /**

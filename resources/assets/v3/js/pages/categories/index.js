@@ -33,7 +33,8 @@ import {
     respondToSortChange,
     storeFilterAndSort,
     updateHistory,
-    launchSortableTable, getSortInstructions,
+    launchSortableTable,
+    getSortInstructions,
 } from "../shared/sortable-tables.js";
 import Get from "../../api/model/category/get.js";
 
@@ -133,7 +134,10 @@ let index = function () {
                 if (null !== this.sortableTable) {
                     this.sortableTable.totalPages[fallBackId] = parseInt(response.data.meta.pagination.total_pages);
                     const length = response.data.data.length;
-                    if (this.sortableTable.totalPages[fallBackId] < this.sortableTable.pages[fallBackId] && 0 === length) {
+                    if (
+                        this.sortableTable.totalPages[fallBackId] < this.sortableTable.pages[fallBackId] &&
+                        0 === length
+                    ) {
                         this.sortableTable.pages[fallBackId] = this.sortableTable.totalPages[fallBackId];
                         console.log("Call downloadObjects again because page is too high for tableId " + tableId);
                         this.downloadObjects(tableId);
@@ -141,7 +145,9 @@ let index = function () {
                 }
 
                 // process all categories in this search result.
-                console.log("Have " + response.data.data.length + " categories in this search result for tableId " + tableId,);
+                console.log(
+                    "Have " + response.data.data.length + " categories in this search result for tableId " + tableId,
+                );
                 for (let i = 0; i < response.data.data.length; i++) {
                     if (Object.hasOwn(response.data.data, i)) {
                         let current = response.data.data[i];
@@ -161,9 +167,18 @@ let index = function () {
                                 specificSortInstructions: specificSort,
                                 differentSortInstructions: specificSort !== sort,
                                 page: page,
-                                id: null === current.attributes.object_group_id ? 0 : parseInt(current.attributes.object_group_id),
-                                title: null === current.attributes.object_group_title ? "ungrouped" : current.attributes.object_group_title,
-                                order: null === current.attributes.object_group_order ? 0 : parseInt(current.attributes.object_group_order),
+                                id:
+                                    null === current.attributes.object_group_id
+                                        ? 0
+                                        : parseInt(current.attributes.object_group_id),
+                                title:
+                                    null === current.attributes.object_group_title
+                                        ? "ungrouped"
+                                        : current.attributes.object_group_title,
+                                order:
+                                    null === current.attributes.object_group_order
+                                        ? 0
+                                        : parseInt(current.attributes.object_group_order),
                                 objects: [],
                                 total: 0,
                             };
@@ -173,7 +188,10 @@ let index = function () {
 
                         // we will stop adding categories to this group once the list page size is reached.
                         // unless we must do a resorting later on.
-                        if (downloadedObjectGroups[group].objects.length >= this.listPageSize && false === downloadedObjectGroups[group].differentSortInstructions) {
+                        if (
+                            downloadedObjectGroups[group].objects.length >= this.listPageSize &&
+                            false === downloadedObjectGroups[group].differentSortInstructions
+                        ) {
                             continue;
                         }
 
@@ -181,7 +199,11 @@ let index = function () {
                         let lastActivityTimestamp = 0;
                         let noLastActivity = true;
                         if (null !== current.attributes.last_activity) {
-                            lastActivity = formatDate(current.attributes.last_activity, i18next.t("config.date_time_fns", { lng: locale }), locale,);
+                            lastActivity = formatDate(
+                                current.attributes.last_activity,
+                                i18next.t("config.date_time_fns", { lng: locale }),
+                                locale,
+                            );
                             lastActivityTimestamp = new Date(current.attributes.last_activity).getTime();
                             noLastActivity = false;
                         }
