@@ -252,9 +252,18 @@ let index = function () {
                                 sortInstructions: sort,
                                 specificSortInstructions: specificSort,
                                 differentSortInstructions: specificSort !== sort,
-                                id: null === current.attributes.object_group_id ? 0 : parseInt(current.attributes.object_group_id),
-                                title: null === current.attributes.object_group_title ? "ungrouped" : current.attributes.object_group_title,
-                                order: null === current.attributes.object_group_order ? 0 : parseInt(current.attributes.object_group_order),
+                                id:
+                                    null === current.attributes.object_group_id
+                                        ? 0
+                                        : parseInt(current.attributes.object_group_id),
+                                title:
+                                    null === current.attributes.object_group_title
+                                        ? "ungrouped"
+                                        : current.attributes.object_group_title,
+                                order:
+                                    null === current.attributes.object_group_order
+                                        ? 0
+                                        : parseInt(current.attributes.object_group_order),
                                 items: [],
                                 total: 0,
                             };
@@ -263,7 +272,10 @@ let index = function () {
 
                         // we will stop adding items to this group once the list page size is reached.
                         // unless we must do a resorting later on.
-                        if (downloadedObjectGroups[group].items.length >= this.listPageSize && false === downloadedObjectGroups[group].differentSortInstructions) {
+                        if (
+                            downloadedObjectGroups[group].items.length >= this.listPageSize &&
+                            false === downloadedObjectGroups[group].differentSortInstructions
+                        ) {
                             continue;
                         }
 
