@@ -294,7 +294,7 @@ class AccountRepository implements AccountRepositoryInterface, UserGroupInterfac
                 }
                 if (in_array($field, $allowed, true)) {
                     if ('' !== (string) $search) {
-                        $query->whereLike(sprintf('accounts.%s',$field), sprintf('%%%s%%', $search));
+                        $query->whereLike(sprintf('accounts.%s', $field), sprintf('%%%s%%', $search));
                     }
                 }
             }
