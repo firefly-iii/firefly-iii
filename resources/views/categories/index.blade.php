@@ -24,9 +24,19 @@
                                 </template>
                             </div>
                             <div class="col text-end" role="group">
+                                <div class="btn-group" role="group">
                                 <a href="{{ route('categories.create') . '?_from=' . urlencode($FF3_FROM) }}" class="btn btn-sm btn-outline-success">
                                     <span class="bi bi-plus-circle"></span> {{ __('firefly.create_new_category') }}
                                 </a>
+                                <div class="btn-group" role="group">
+                                    <button class="btn btn-sm btn-outline-secondary dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                        <em class="bi bi-list"></em>
+                                    </button>
+                                    <ul class="dropdown-menu">
+                                        <li><a class="dropdown-item" href="{{ route('categories.no-category') }}?_from={{ urlencode($FF3_FROM) }}"><span class="bi bi-bookmark-x"></span> {{ __('firefly.tr_without_category') }}</a></li>
+                                    </ul>
+                                </div>
+                                </div>
                             </div>
                         </div>
                     </div>

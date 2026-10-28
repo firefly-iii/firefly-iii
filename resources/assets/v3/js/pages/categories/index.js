@@ -112,28 +112,6 @@ let index = function () {
                     page: page,
                     filter: JSON.parse(JSON.stringify(this.filter))["main"],
                 };
-                // add default ungrouped "group" with also the category "(no category)" in it.
-                downloadedObjectGroups["ungrouped"] = {
-                    group: "ungrouped",
-                    sortInstructions: sort,
-                    specificSortInstructions: sort,
-                    differentSortInstructions: false,
-                    page: page,
-                    id: 0,
-                    title: "ungrouped",
-                    order: 0,
-                    items: [
-                        {
-                            id: 0,
-                            name: this.i18next.t('firefly.unknown_category_plain'),
-                            active: true,
-                            last_activity: this.i18next.t('firefly.unknown'),
-                            no_last_activity: true,
-                            last_activity_timestamp: 0,
-                        }
-                    ],
-                    total: 1,
-                };
             }
 
             if (null !== tableId) {

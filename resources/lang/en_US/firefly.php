@@ -2124,6 +2124,7 @@ return [
     'new_category'                                        => 'New category',
     'create_new_category'                                 => 'Create a new category',
     'without_category'                                    => 'Without a category',
+    'tr_without_category'                                    => 'View transactions without a category',
     'update_category'                                     => 'Update category',
     'updated_category'                                    => 'Updated category ":name"',
     'categories'                                          => 'Categories',
