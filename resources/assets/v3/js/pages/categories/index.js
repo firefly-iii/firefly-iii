@@ -25,16 +25,16 @@ import Alpine from "@alpinejs/csp";
 import formatMoney from "../../util/format-money.js";
 import formatDate from "../../util/format-date.js";
 import i18next from "i18next";
-import { getVariable } from "../../store/get-variable.js";
+import {getVariable} from "../../store/get-variable.js";
 import {
+    getSortInstructions,
     initFromLocalStorage,
     initFromQueryParams,
-    sortGroupedObjects,
+    launchSortableTable,
     respondToSortChange,
+    sortGroupedObjects,
     storeFilterAndSort,
     updateHistory,
-    launchSortableTable,
-    getSortInstructions,
 } from "../shared/sortable-tables.js";
 import Get from "../../api/model/category/get.js";
 
@@ -56,9 +56,9 @@ let index = function () {
 
         // default settings for sortable tables.
         storageKey: "categories",
-        defaultSortColumns: { main: "name" },
-        defaultSortDirections: { main: "asc" },
-        defaultPages: { main: 1 },
+        defaultSortColumns: {main: "name"},
+        defaultSortDirections: {main: "asc"},
+        defaultPages: {main: 1},
         pageNavUrl: "./categories/",
         filter: {},
 
@@ -112,6 +112,28 @@ let index = function () {
                     page: page,
                     filter: JSON.parse(JSON.stringify(this.filter))["main"],
                 };
+                // add default ungrouped "group" with also the category "(no category)" in it.
+                downloadedObjectGroups["ungrouped"] = {
+                    group: "ungrouped",
+                    sortInstructions: sort,
+                    specificSortInstructions: sort,
+                    differentSortInstructions: false,
+                    page: page,
+                    id: 0,
+                    title: "ungrouped",
+                    order: 0,
+                    items: [
+                        {
+                            id: 0,
+                            name: this.i18next.t('firefly.unknown_category_plain'),
+                            active: true,
+                            last_activity: this.i18next.t('firefly.unknown'),
+                            no_last_activity: true,
+                            last_activity_timestamp: 0,
+                        }
+                    ],
+                    total: 1,
+                };
             }
 
             if (null !== tableId) {
@@ -128,6 +150,7 @@ let index = function () {
                     filter: filter, // same.
                 };
             }
+
 
             new Get().list(downloadParams).then((response) => {
                 // safety catch for search.
@@ -167,18 +190,9 @@ let index = function () {
                                 specificSortInstructions: specificSort,
                                 differentSortInstructions: specificSort !== sort,
                                 page: page,
-                                id:
-                                    null === current.attributes.object_group_id
-                                        ? 0
-                                        : parseInt(current.attributes.object_group_id),
-                                title:
-                                    null === current.attributes.object_group_title
-                                        ? "ungrouped"
-                                        : current.attributes.object_group_title,
-                                order:
-                                    null === current.attributes.object_group_order
-                                        ? 0
-                                        : parseInt(current.attributes.object_group_order),
+                                id: null === current.attributes.object_group_id ? 0 : parseInt(current.attributes.object_group_id),
+                                title: null === current.attributes.object_group_title ? "ungrouped" : current.attributes.object_group_title,
+                                order: null === current.attributes.object_group_order ? 0 : parseInt(current.attributes.object_group_order),
                                 items: [],
                                 total: 0,
                             };
@@ -188,10 +202,7 @@ let index = function () {
 
                         // we will stop adding categories to this group once the list page size is reached.
                         // unless we must do a resorting later on.
-                        if (
-                            downloadedObjectGroups[group].items.length >= this.listPageSize &&
-                            false === downloadedObjectGroups[group].differentSortInstructions
-                        ) {
+                        if (downloadedObjectGroups[group].items.length >= this.listPageSize && false === downloadedObjectGroups[group].differentSortInstructions) {
                             continue;
                         }
 
@@ -201,7 +212,7 @@ let index = function () {
                         if (null !== current.attributes.last_activity) {
                             lastActivity = formatDate(
                                 current.attributes.last_activity,
-                                i18next.t("config.date_time_fns", { lng: locale }),
+                                i18next.t("config.date_time_fns", {lng: locale}),
                                 locale,
                             );
                             lastActivityTimestamp = new Date(current.attributes.last_activity).getTime();

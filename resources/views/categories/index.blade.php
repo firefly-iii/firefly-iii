@@ -50,8 +50,14 @@
                     <template x-for="category in data.items" :key="category.id">
                         <tr>
                             <td>
+                                <template x-if="0 !== category.id">
                                 <a :href="'./categories/show/' + category.id" :title="category.name"
                                    x-text="category.name"></a>
+                                </template>
+                                <template x-if="0 === category.id">
+                                <a href="./categories/list/no-category" :title="category.name"
+                                   x-text="category.name"></a>
+                                </template>
                             </td>
                             <td>
                                 <span x-text="category.last_activity"></span>
