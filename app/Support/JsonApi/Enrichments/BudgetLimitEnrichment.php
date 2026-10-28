@@ -210,5 +210,10 @@ class BudgetLimitEnrichment implements EnrichmentInterface
 
             return $second;
         }, $first), $this->expenses);
+        $this->pcExpenses = array_map(static fn ($first): array => array_map(static function (array $second): array {
+            $second['currency_id'] = (string) ($second['currency_id'] ?? 0);
+
+            return $second;
+        }, $first), $this->pcExpenses);
     }
 }

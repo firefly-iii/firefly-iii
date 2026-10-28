@@ -72,7 +72,7 @@ class TransactionSummarizer
                 if ($usePrimary) {
                     //                    Log::debug(sprintf('Journal #%d switches to primary currency amount (original is %s)', $journal['transaction_journal_id'], $journal['currency_code']));
                     $field                 = 'pc_amount';
-                    $currencyId            = $this->default->id;
+                    $currencyId            = (int)$this->default->id;
                     $currencyName          = $this->default->name;
                     $currencySymbol        = $this->default->symbol;
                     $currencyCode          = $this->default->code;
