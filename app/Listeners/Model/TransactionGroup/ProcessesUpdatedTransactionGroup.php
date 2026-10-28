@@ -40,7 +40,10 @@ class ProcessesUpdatedTransactionGroup
     public function handle(UpdatedSingleTransactionGroup $event): void
     {
         Log::debug(sprintf('Now handling event %s', get_class($event)));
-        $effect = $this->unifyAccounts($event);
+        $effect = 0;
+        if(false === $event->flags->skipUnify) {
+            $effect = $this->unifyAccounts($event);
+        }
         Log::debug(sprintf('Effect of unifyAccounts = %d', $effect));
         Log::debug(sprintf('Transaction journal count is %d', $event->objects->transactionJournals->count()));
         if (!$event->flags->applyRules) {
