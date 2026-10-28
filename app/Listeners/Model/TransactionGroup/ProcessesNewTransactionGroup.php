@@ -70,7 +70,7 @@ class ProcessesNewTransactionGroup implements ShouldQueue
             $this->createWebhookMessages($event->objects->transactionGroups, WebhookTrigger::STORE_TRANSACTION);
         }
         $this->removePeriodStatistics($event->objects);
-        if(false === $event->flags->batchSubmission) {
+        if (false === $event->flags->batchSubmission) {
             $this->recalculateRunningBalance($event->objects);
         }
         $repository->markAsCompleted($journals);
