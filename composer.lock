@@ -10638,16 +10638,16 @@
         },
         {
             "name": "ergebnis/phpstan-rules",
-            "version": "2.14.2",
+            "version": "2.15.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/ergebnis/phpstan-rules.git",
-                "reference": "a8d8695a4197b79f74e1ed1353ef52c41578c0ab"
+                "reference": "56db4a413823912214ee1df85912e319bfe5771f"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/ergebnis/phpstan-rules/zipball/a8d8695a4197b79f74e1ed1353ef52c41578c0ab",
-                "reference": "a8d8695a4197b79f74e1ed1353ef52c41578c0ab",
+                "url": "https://api.github.com/repos/ergebnis/phpstan-rules/zipball/56db4a413823912214ee1df85912e319bfe5771f",
+                "reference": "56db4a413823912214ee1df85912e319bfe5771f",
                 "shasum": ""
             },
             "require": {
@@ -10666,11 +10666,11 @@
                 "fakerphp/faker": "^1.24.1",
                 "phpstan/extension-installer": "^1.4.3",
                 "phpstan/phpstan-deprecation-rules": "^2.0.5",
-                "phpstan/phpstan-phpunit": "^2.0.21",
+                "phpstan/phpstan-phpunit": "^2.1.1",
                 "phpstan/phpstan-strict-rules": "^2.1.0",
                 "phpunit/phpunit": "^9.6.33",
                 "psr/container": "^2.0.2",
-                "rector/rector": "^2.3.8",
+                "rector/rector": "^2.7.0",
                 "symfony/finder": "^5.4.45",
                 "symfony/process": "^5.4.51"
             },
@@ -10682,7 +10682,7 @@
                     ]
                 },
                 "branch-alias": {
-                    "dev-main": "2.14-dev"
+                    "dev-main": "2.15-dev"
                 }
             },
             "autoload": {
@@ -10712,7 +10712,7 @@
                 "security": "https://github.com/ergebnis/phpstan-rules/blob/main/.github/SECURITY.md",
                 "source": "https://github.com/ergebnis/phpstan-rules"
             },
-            "time": "2026-10-16T14:36:23+00:00"
+            "time": "2026-10-28T15:54:25+00:00"
         },
         {
             "name": "fakerphp/faker",
@@ -12379,21 +12379,21 @@
         },
         {
             "name": "rector/rector",
-            "version": "2.8.1",
+            "version": "2.8.2",
             "source": {
                 "type": "git",
                 "url": "https://github.com/rectorphp/rector.git",
-                "reference": "10c96546bb72b38b4e2e9960fcd3f884d7fa02eb"
+                "reference": "03a365d439624872239f22911893c960cc45a6e3"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/rectorphp/rector/zipball/10c96546bb72b38b4e2e9960fcd3f884d7fa02eb",
-                "reference": "10c96546bb72b38b4e2e9960fcd3f884d7fa02eb",
+                "url": "https://api.github.com/repos/rectorphp/rector/zipball/03a365d439624872239f22911893c960cc45a6e3",
+                "reference": "03a365d439624872239f22911893c960cc45a6e3",
                 "shasum": ""
             },
             "require": {
                 "php": "^7.4|^8.0",
-                "phpstan/phpstan": "^2.3.2"
+                "phpstan/phpstan": "^2.3.3"
             },
             "conflict": {
                 "rector/rector-doctrine": "*",
@@ -12424,7 +12424,7 @@
             ],
             "support": {
                 "issues": "https://github.com/rectorphp/rector/issues",
-                "source": "https://github.com/rectorphp/rector/tree/2.8.1"
+                "source": "https://github.com/rectorphp/rector/tree/2.8.2"
             },
             "funding": [
                 {
@@ -12432,7 +12432,7 @@
                     "type": "github"
                 }
             ],
-            "time": "2026-10-26T13:03:01+00:00"
+            "time": "2026-10-28T15:59:43+00:00"
         },
         {
             "name": "revolt/event-loop",
