@@ -41,7 +41,7 @@ class ProcessesUpdatedTransactionGroup
     {
         Log::debug(sprintf('Now handling event %s', get_class($event)));
         $effect = 0;
-        if(false === $event->flags->skipUnify) {
+        if (false === $event->flags->skipUnify) {
             $effect = $this->unifyAccounts($event);
         }
         Log::debug(sprintf('Effect of unifyAccounts = %d', $effect));

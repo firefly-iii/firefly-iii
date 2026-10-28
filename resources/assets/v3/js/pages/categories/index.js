@@ -25,7 +25,7 @@ import Alpine from "@alpinejs/csp";
 import formatMoney from "../../util/format-money.js";
 import formatDate from "../../util/format-date.js";
 import i18next from "i18next";
-import {getVariable} from "../../store/get-variable.js";
+import { getVariable } from "../../store/get-variable.js";
 import {
     getSortInstructions,
     initFromLocalStorage,
@@ -56,9 +56,9 @@ let index = function () {
 
         // default settings for sortable tables.
         storageKey: "categories",
-        defaultSortColumns: {main: "name"},
-        defaultSortDirections: {main: "asc"},
-        defaultPages: {main: 1},
+        defaultSortColumns: { main: "name" },
+        defaultSortDirections: { main: "asc" },
+        defaultPages: { main: 1 },
         pageNavUrl: "./categories/",
         filter: {},
 
@@ -129,7 +129,6 @@ let index = function () {
                 };
             }
 
-
             new Get().list(downloadParams).then((response) => {
                 // safety catch for search.
                 if (null !== this.sortableTable) {
@@ -168,9 +167,18 @@ let index = function () {
                                 specificSortInstructions: specificSort,
                                 differentSortInstructions: specificSort !== sort,
                                 page: page,
-                                id: null === current.attributes.object_group_id ? 0 : parseInt(current.attributes.object_group_id),
-                                title: null === current.attributes.object_group_title ? "ungrouped" : current.attributes.object_group_title,
-                                order: null === current.attributes.object_group_order ? 0 : parseInt(current.attributes.object_group_order),
+                                id:
+                                    null === current.attributes.object_group_id
+                                        ? 0
+                                        : parseInt(current.attributes.object_group_id),
+                                title:
+                                    null === current.attributes.object_group_title
+                                        ? "ungrouped"
+                                        : current.attributes.object_group_title,
+                                order:
+                                    null === current.attributes.object_group_order
+                                        ? 0
+                                        : parseInt(current.attributes.object_group_order),
                                 items: [],
                                 total: 0,
                             };
@@ -180,7 +188,10 @@ let index = function () {
 
                         // we will stop adding categories to this group once the list page size is reached.
                         // unless we must do a resorting later on.
-                        if (downloadedObjectGroups[group].items.length >= this.listPageSize && false === downloadedObjectGroups[group].differentSortInstructions) {
+                        if (
+                            downloadedObjectGroups[group].items.length >= this.listPageSize &&
+                            false === downloadedObjectGroups[group].differentSortInstructions
+                        ) {
                             continue;
                         }
 
@@ -190,7 +201,7 @@ let index = function () {
                         if (null !== current.attributes.last_activity) {
                             lastActivity = formatDate(
                                 current.attributes.last_activity,
-                                i18next.t("config.date_time_fns", {lng: locale}),
+                                i18next.t("config.date_time_fns", { lng: locale }),
                                 locale,
                             );
                             lastActivityTimestamp = new Date(current.attributes.last_activity).getTime();
