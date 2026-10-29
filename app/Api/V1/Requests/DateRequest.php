@@ -30,7 +30,7 @@ class DateRequest extends ApiRequest
 {
     public function rules(): array
     {
-        return ['date' => 'date|after:1970-01-02|before:2038-01-17|'.$this->required];
+        return ['date' => 'date|after:1970-01-02|before:2038-01-17|' . $this->required];
     }
 
     public function withValidator(Validator $validator): void
@@ -39,13 +39,13 @@ class DateRequest extends ApiRequest
             if (count($validator->failed()) > 0) {
                 return;
             }
-            $date  = $this->getCarbonDate('date')?->endOfDay();
+            $date = $this->getCarbonDate('date')?->endOfDay();
 
             // if we also have a range, date must be in that range
             $start = $this->attributes->get('start');
             $end   = $this->attributes->get('end');
             if ($date instanceof Carbon && $start instanceof Carbon && $end instanceof Carbon && !$date->between($start, $end)) {
-                $validator->errors()->add('date', (string) trans('validation.between_date'));
+                $validator->errors()->add('date', (string)trans('validation.between_date'));
             }
 
             $this->attributes->set('date', $date);

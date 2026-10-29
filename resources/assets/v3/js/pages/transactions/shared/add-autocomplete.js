@@ -33,10 +33,10 @@ import getExpectedAccountTypes from "../../../form/get-expected-account-types.js
 
 export function getUrls() {
     return {
-        description: "/api/v1/autocomplete/transactions",
-        account: "/api/v1/autocomplete/accounts",
-        category: "/api/v1/autocomplete/categories",
-        tag: "/api/v1/autocomplete/tags",
+        description: "./api/v1/autocomplete/transactions",
+        account: "./api/v1/autocomplete/accounts",
+        category: "./api/v1/autocomplete/categories",
+        tag: "./api/v1/autocomplete/tags",
     };
 }
 

@@ -70,8 +70,8 @@ class GenericRequest extends FormRequest
         foreach ($this->accounts as $account) {
             $type = $account->accountType->type;
             if (in_array(
-                $type,
-                [AccountTypeEnum::ASSET->value, AccountTypeEnum::LOAN->value, AccountTypeEnum::DEBT->value, AccountTypeEnum::MORTGAGE->value],
+                        $type,
+                        [AccountTypeEnum::ASSET->value, AccountTypeEnum::LOAN->value, AccountTypeEnum::DEBT->value, AccountTypeEnum::MORTGAGE->value],
                 strict: true
             )) {
                 $return->push($account);
@@ -179,10 +179,10 @@ class GenericRequest extends FormRequest
         }
         $repository = app(AccountRepositoryInterface::class);
         $repository->setUser(auth()->user());
-        $array      = $this->get('accounts');
+        $array = $this->get('accounts');
         if (is_array($array)) {
             foreach ($array as $accountId) {
-                $accountId = (int) $accountId;
+                $accountId = (int)$accountId;
                 $account   = $repository->find($accountId);
                 if (null !== $account) {
                     $this->accounts->push($account);
@@ -198,10 +198,10 @@ class GenericRequest extends FormRequest
         }
         $repository = app(BillRepositoryInterface::class);
         $repository->setUser(auth()->user());
-        $array      = $this->get('bills');
+        $array = $this->get('bills');
         if (is_array($array)) {
             foreach ($array as $billId) {
-                $billId = (int) $billId;
+                $billId = (int)$billId;
                 $bill   = $repository->find($billId);
                 if (null !== $bill) {
                     $this->bills->push($bill);
@@ -217,10 +217,10 @@ class GenericRequest extends FormRequest
         }
         $repository = app(BudgetRepositoryInterface::class);
         $repository->setUser(auth()->user());
-        $array      = $this->get('budgets');
+        $array = $this->get('budgets');
         if (is_array($array)) {
             foreach ($array as $budgetId) {
-                $budgetId = (int) $budgetId;
+                $budgetId = (int)$budgetId;
                 $budget   = $repository->find($budgetId);
                 if (null !== $budget) {
                     $this->budgets->push($budget);
@@ -236,10 +236,10 @@ class GenericRequest extends FormRequest
         }
         $repository = app(CategoryRepositoryInterface::class);
         $repository->setUser(auth()->user());
-        $array      = $this->get('categories');
+        $array = $this->get('categories');
         if (is_array($array)) {
             foreach ($array as $categoryId) {
-                $categoryId = (int) $categoryId;
+                $categoryId = (int)$categoryId;
                 $category   = $repository->find($categoryId);
                 if (null !== $category) {
                     $this->categories->push($category);
@@ -255,10 +255,10 @@ class GenericRequest extends FormRequest
         }
         $repository = app(TagRepositoryInterface::class);
         $repository->setUser(auth()->user());
-        $array      = $this->get('tags');
+        $array = $this->get('tags');
         if (is_array($array)) {
             foreach ($array as $tagId) {
-                $tagId = (int) $tagId;
+                $tagId = (int)$tagId;
                 $tag   = $repository->find($tagId);
                 if (null !== $tag) {
                     $this->tags->push($tag);

@@ -48,7 +48,7 @@ class UpdateRequest extends FormRequest
      */
     public function getAll(): array
     {
-        $fields             = [
+        $fields = [
             'name'                      => ['name', 'convertString'],
             'target_amount'             => ['target_amount', 'convertString'],
             'start_date'                => ['start_date', 'convertDateTime'],
@@ -76,7 +76,7 @@ class UpdateRequest extends FormRequest
         $piggyBank = $this->route()->parameter('piggyBank');
 
         return [
-            'name'                      => 'min:1|max:255|uniquePiggyBankForUser:'.$piggyBank->id,
+            'name'                      => 'min:1|max:255|uniquePiggyBankForUser:' . $piggyBank->id,
             'current_amount'            => ['nullable', new LessThanPiggyTarget(), new IsValidPositiveAmount()],
             'target_amount'             => ['nullable', new IsValidZeroOrMoreAmount()],
             'start_date'                => ['date', 'nullable'],

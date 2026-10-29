@@ -65,13 +65,13 @@ class TestRequest extends FormRequest
         if (is_array($value)) {
             return null;
         }
-        $value = (string) $value;
+        $value = (string)$value;
 
         return null === $this->query($field) ? null : Carbon::createFromFormat('Y-m-d', substr($value, 0, 10));
     }
 
     private function getPage(): int
     {
-        return 0 === (int) $this->query('page') ? 1 : (int) $this->query('page');
+        return 0 === (int)$this->query('page') ? 1 : (int)$this->query('page');
     }
 }

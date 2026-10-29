@@ -50,8 +50,8 @@ class PaginationRequest extends ApiRequest
     public function rules(): array
     {
         return [
-            'sort'   => ['nullable', new IsValidSortInstruction((string) $this->sortClass)],
-            'filter' => ['nullable', new IsValidFilterInstruction((string) $this->sortClass)],
+            'sort'   => ['nullable', new IsValidSortInstruction((string)$this->sortClass)],
+            'filter' => ['nullable', new IsValidFilterInstruction((string)$this->sortClass)],
             'limit'  => ['numeric', 'min:1', 'max:131337'],
             'page'   => ['numeric', 'min:1', 'max:131337'],
         ];
@@ -63,15 +63,15 @@ class PaginationRequest extends ApiRequest
             if (count($validator->failed()) > 0) {
                 return;
             }
-            $data   = $validator->getData();
-            $limit  = $this->integerFromValue($data['limit'] ?? null);
+            $data  = $validator->getData();
+            $limit = $this->integerFromValue($data['limit'] ?? null);
             if (0 === $limit || null === $limit) {
                 // get default for user:
                 /** @var User $user */
                 $user  = auth()->user();
-                $limit = (int) Preferences::getForUser($user, 'listPageSize', 50)->data;
+                $limit = (int)Preferences::getForUser($user, 'listPageSize', 50)->data;
             }
-            $page   = $this->integerFromValue($data['page'] ?? '1');
+            $page = $this->integerFromValue($data['page'] ?? '1');
 
             $page   = clamp(value: $page, min: 1, max: 2 ** 16);
             $offset = ($page - 1) * $limit;

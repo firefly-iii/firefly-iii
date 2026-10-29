@@ -94,28 +94,28 @@ class StoreRequest extends FormRequest
     {
         $validator->after(function (Validator $validator): void {
             // validate start before end only if both are there.
-            $data          = $validator->getData();
-            $currency      = $this->getCurrencyFromData($validator, $data);
+            $data     = $validator->getData();
+            $currency = $this->getCurrencyFromData($validator, $data);
             if (!$currency instanceof TransactionCurrency) {
                 return;
             }
-            $targetAmount  = (string) ($data['target_amount'] ?? '0');
+            $targetAmount  = (string)($data['target_amount'] ?? '0');
             $currentAmount = '0';
             if (array_key_exists('accounts', $data) && is_array($data['accounts'])) {
                 $repository = app(AccountRepositoryInterface::class);
                 $types      = config('firefly.piggy_bank_account_types');
                 foreach ($data['accounts'] as $index => $array) {
-                    $accountId = (int) ($array['account_id'] ?? 0);
+                    $accountId = (int)($array['account_id'] ?? 0);
                     $account   = $repository->find($accountId);
                     if (null !== $account) {
                         // check currency here.
                         $accountCurrency = $repository->getAccountCurrency($account);
                         $isMultiCurrency = $repository->getMetaValue($account, 'is_multi_currency');
-                        $currentAmount   = bcadd($currentAmount, (string) ($array['current_amount'] ?? '0'));
+                        $currentAmount   = bcadd($currentAmount, (string)($array['current_amount'] ?? '0'));
                         if ($accountCurrency->id !== $currency->id && 'true' !== $isMultiCurrency) {
                             $validator->errors()->add(sprintf('accounts.%d', $index), trans('validation.invalid_account_currency'));
                         }
-                        $type            = $account->accountType->type;
+                        $type = $account->accountType->type;
                         if (!in_array($type, $types, strict: true)) {
                             $validator->errors()->add(sprintf('accounts.%d', $index), trans('validation.invalid_account_type'));
                         }
@@ -133,11 +133,11 @@ class StoreRequest extends FormRequest
 
     private function getCurrencyFromData(Validator $validator, array $data): ?TransactionCurrency
     {
-        if (array_key_exists('transaction_currency_code', $data) && '' !== (string) $data['transaction_currency_code']) {
-            return Amount::getTransactionCurrencyByCode((string) $data['transaction_currency_code']);
+        if (array_key_exists('transaction_currency_code', $data) && '' !== (string)$data['transaction_currency_code']) {
+            return Amount::getTransactionCurrencyByCode((string)$data['transaction_currency_code']);
         }
-        if (array_key_exists('transaction_currency_id', $data) && '' !== (string) $data['transaction_currency_id']) {
-            return Amount::getTransactionCurrencyById((int) $data['transaction_currency_id']);
+        if (array_key_exists('transaction_currency_id', $data) && '' !== (string)$data['transaction_currency_id']) {
+            return Amount::getTransactionCurrencyById((int)$data['transaction_currency_id']);
         }
         $validator->errors()->add('transaction_currency_id', trans('validation.require_currency_id_code'));
 
