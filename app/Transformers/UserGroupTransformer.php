@@ -58,12 +58,14 @@ class UserGroupTransformer extends AbstractTransformer
 
                     /** @var GroupMembership $groupMembership */
                     foreach ($groupMemberships as $groupMembership) {
-                        $this->memberships[$userGroupId][] = [
-                            'user_id'    => (string) $groupMembership->user_id,
-                            'user_email' => $groupMembership->user->email,
-                            'role'       => $groupMembership->userRole->title,
-                            'you'        => $groupMembership->user_id === $user->id,
-                        ];
+                        if (null !== $groupMembership->user) {
+                            $this->memberships[$userGroupId][] = [
+                                'user_id'    => (string)$groupMembership->user_id,
+                                'user_email' => $groupMembership->user->email,
+                                'role'       => $groupMembership->userRole->title,
+                                'you'        => $groupMembership->user_id === $user->id,
+                            ];
+                        }
                     }
                 }
             }
@@ -87,7 +89,7 @@ class UserGroupTransformer extends AbstractTransformer
             'in_use'                          => $this->inUse[$userGroup->id] ?? false,
             'can_see_members'                 => $this->membershipsVisible[$userGroup->id] ?? false,
             'title'                           => $userGroup->title,
-            'primary_currency_id'             => (string) $currency->id,
+            'primary_currency_id'             => (string)$currency->id,
             'primary_currency_name'           => $currency->name,
             'primary_currency_code'           => $currency->code,
             'primary_currency_symbol'         => $currency->symbol,
@@ -100,14 +102,14 @@ class UserGroupTransformer extends AbstractTransformer
 
     private function mergeMemberships(): void
     {
-        $new               = [];
+        $new = [];
         foreach ($this->memberships as $groupId => $members) {
             $new[$groupId] ??= [];
 
             foreach ($members as $member) {
                 $mail                            = $member['user_email'];
-                $new[$groupId][$mail] ??= [
-                    'user_id'    => (string) $member['user_id'],
+                $new[$groupId][$mail]            ??= [
+                    'user_id'    => (string)$member['user_id'],
                     'user_email' => $member['user_email'],
                     'you'        => $member['you'],
                     'roles'      => [],
