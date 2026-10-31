@@ -25,16 +25,7 @@ declare(strict_types=1);
 namespace FireflyIII\Http\Controllers\Category;
 
 use FireflyIII\Http\Controllers\Controller;
-use FireflyIII\Models\Category;
-use FireflyIII\Repositories\Category\CategoryRepositoryInterface;
-use FireflyIII\Support\Facades\Preferences;
 use Illuminate\Contracts\View\Factory;
-use Illuminate\Http\Request;
-use Illuminate\Pagination\LengthAwarePaginator;
-use Illuminate\Support\Collection;
-use Illuminate\View\View;
-use Psr\Container\ContainerExceptionInterface;
-use Psr\Container\NotFoundExceptionInterface;
 
 /**
  * Class IndexController

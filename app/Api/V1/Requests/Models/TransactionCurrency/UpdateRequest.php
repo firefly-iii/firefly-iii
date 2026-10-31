@@ -50,7 +50,7 @@ class UpdateRequest extends FormRequest
         $user    = auth()->user();
         $isAdmin = $user->hasRole('owner');
 
-        $fields = [
+        $fields  = [
             'enabled' => ['enabled', 'boolean'],
         ];
         if ($isAdmin) {
