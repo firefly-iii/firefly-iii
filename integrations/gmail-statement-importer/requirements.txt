@@ -1,0 +1,8 @@
+fastapi>=0.115,<1
+uvicorn[standard]>=0.34,<1
+google-api-python-client>=2.160,<3
+google-auth>=2.38,<3
+google-auth-oauthlib>=1.2,<2
+google-auth-httplib2>=0.2,<1
+cryptography>=44,<47
+pymupdf>=1.25,<2

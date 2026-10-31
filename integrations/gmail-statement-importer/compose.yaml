@@ -1,0 +1,12 @@
+services:
+  gmail-statement-importer:
+    build: .
+    restart: unless-stopped
+    env_file: .env
+    ports:
+      - "127.0.0.1:8082:8082"
+    volumes:
+      - importer-data:/data
+      - ./google-oauth-client.json:/run/secrets/google-oauth-client.json:ro
+volumes:
+  importer-data:
