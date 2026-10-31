@@ -94,7 +94,7 @@ export class sortableTable {
                     let valueToUse = null !== urlValue ? urlValue : storeValue;
 
                     // we do this in the parent because Alpine has the watch function that is needed.
-                    this.parent.$watch("filter." + tableId + "." + column, (newValue, oldValue) => {
+                    this.parent.$watch("filter." + tableId + "." + column, (newValue) => {
                         // console.log(
                         //     'filter for "' +
                         //         tableId +
