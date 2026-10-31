@@ -52,7 +52,7 @@ class FilterRequest extends ApiRequest
     public function rules(): array
     {
         return [
-            'filter' => ['min:0', 'max:255', $this->required, new IsValidFilterInstruction((string)$this->filterClass)],
+            'filter' => ['min:0', 'max:255', $this->required, new IsValidFilterInstruction((string) $this->filterClass)],
         ];
     }
 

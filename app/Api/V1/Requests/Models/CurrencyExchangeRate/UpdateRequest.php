@@ -43,7 +43,7 @@ class UpdateRequest extends FormRequest
 
     public function getRate(): string
     {
-        return (string)$this->get('rate');
+        return (string) $this->get('rate');
     }
 
     /**
