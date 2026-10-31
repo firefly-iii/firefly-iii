@@ -26,6 +26,7 @@ namespace FireflyIII\Api\V1\Controllers\Chart;
 
 use Carbon\Carbon;
 use FireflyIII\Api\V1\Controllers\Controller;
+use FireflyIII\Api\V1\Requests\Date\MandatoryDateRangeRequest;
 use FireflyIII\Api\V1\Requests\DateRangeRequest;
 use FireflyIII\Api\V1\Requests\SameDateRangeRequest;
 use FireflyIII\Enums\UserRoleEnum;
@@ -108,7 +109,7 @@ final class BudgetController extends Controller
     /**
      * @throws FireflyException
      */
-    public function overviewWithBudgetLimits(SameDateRangeRequest $request): JsonResponse
+    public function overviewWithBudgetLimits(MandatoryDateRangeRequest $request): JsonResponse
     {
         /** @var Carbon $start */
         $start   = $request->attributes->get('start');
