@@ -139,15 +139,15 @@ let index = function () {
                         0 === length
                     ) {
                         this.sortableTable.pages[fallBackId] = this.sortableTable.totalPages[fallBackId];
-                        console.log("Call downloadObjects again because page is too high for tableId " + tableId);
+                        //console.log("Call downloadObjects again because page is too high for tableId " + tableId);
                         this.downloadObjects(tableId);
                     }
                 }
 
                 // process all categories in this search result.
-                console.log(
-                    "Have " + response.data.data.length + " categories in this search result for tableId " + tableId,
-                );
+                // console.log(
+                //     "Have " + response.data.data.length + " categories in this search result for tableId " + tableId,
+                // );
                 for (let i = 0; i < response.data.data.length; i++) {
                     if (Object.hasOwn(response.data.data, i)) {
                         let current = response.data.data[i];
@@ -182,7 +182,7 @@ let index = function () {
                                 items: [],
                                 total: 0,
                             };
-                            console.log('Will create new group "' + group + '"', downloadedObjectGroups[group]);
+                            // console.log('Will create new group "' + group + '"', downloadedObjectGroups[group]);
                         }
                         downloadedObjectGroups[group].total += 1;
 
@@ -228,6 +228,43 @@ let index = function () {
                     downloadedObjectGroups = sortGroupedObjects(downloadedObjectGroups, this.listPageSize);
                     this.launchSortableTable(downloadedObjectGroups);
                 }
+            }).then(() => {
+                // check for collapsed boxes.
+                document.querySelectorAll('.categories-card').forEach(function (v) {
+                    let configName = 'category-card-collapse-' + v.dataset.group;
+
+                    // also listen for close and open.
+                    v.addEventListener('collapsed.lte.card-widget', function (e) {
+                        var box = e.currentTarget;
+                        let configName = 'category-card-collapse-' + box.dataset.group;
+                        window.store.set(configName, 'collapsed');
+                        console.log('Card ' + box.dataset.group + ' is now collapsed.');
+                    });
+                    v.addEventListener('expanded.lte.card-widget', function (e) {
+                        var box = e.currentTarget;
+                        let configName = 'category-card-collapse-' + box.dataset.group;
+                        window.store.set(configName, 'expanded');
+                        console.log('Card ' + box.dataset.group + ' is now expanded.');
+                    });
+
+                    if ('collapsed' === window.store.get(configName)) {
+                        v.classList.add('collapsed-card');
+                        console.log('Card ' + v.dataset.group + ' is collapsed');
+                        return;
+                    }
+                    console.log('Card ' + v.dataset.group + ' is not collapsed');
+                });
+                // $('.rules-card').each(function (i, v) {
+                //     var box = $(v);
+                //     var groupId = box.data('group');
+                //     var cookieName = 'rule-box-collapse-' + groupId;
+                //     if ('collapsed' === readCookie(cookieName)) {
+                //         box.addClass('collapsed-card');
+                //         console.log('Card ' + groupId + ' is collapsed');
+                //         return;
+                //     }
+                //     console.log('Card ' + groupId + ' is not collapsed');
+                // });
             });
         },
     };

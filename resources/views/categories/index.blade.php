@@ -11,8 +11,8 @@
             </div>
         </template>
         <template x-for="(data, tableId) in groupedObjects" :key="tableId">
-            <div class="col-lg-12 col-md-12 col-sm-12 data-holder">
-                <div class="card" id="category-index">
+            <div class="col-lg-12 col-md-12 col-sm-12 data-holder mb-2">
+                <div class="card categories-card" :id="'category-index-' + tableId" :data-group="tableId">
                     <div class="card-header">
                         <div class="row">
                             <div class="col">
@@ -37,6 +37,10 @@
                                     </ul>
                                 </div>
                                 </div>
+                                <button type="button" class="btn btn-tool collapse-button" data-lte-toggle="card-collapse" aria-label="Collapse card">
+                                    <em data-lte-icon="expand" class="bi bi-plus-lg"></em>
+                                    <em data-lte-icon="collapse" class="bi bi-dash-lg"></em>
+                                </button>
                             </div>
                         </div>
                     </div>
