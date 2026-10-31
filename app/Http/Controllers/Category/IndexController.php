@@ -26,6 +26,7 @@ namespace FireflyIII\Http\Controllers\Category;
 
 use FireflyIII\Http\Controllers\Controller;
 use Illuminate\Contracts\View\Factory;
+use Illuminate\Contracts\View\View;
 
 /**
  * Class IndexController
@@ -44,7 +45,7 @@ final class IndexController extends Controller
         });
     }
 
-    public function index(): Factory|\Illuminate\Contracts\View\View
+    public function index(): Factory|View
     {
         return view('categories.index');
     }

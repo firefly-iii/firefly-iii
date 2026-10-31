@@ -129,143 +129,146 @@ let index = function () {
                 };
             }
 
-            new Get().list(downloadParams).then((response) => {
-                // safety catch for search.
-                if (null !== this.sortableTable) {
-                    this.sortableTable.totalPages[fallBackId] = parseInt(response.data.meta.pagination.total_pages);
-                    const length = response.data.data.length;
-                    if (
-                        this.sortableTable.totalPages[fallBackId] < this.sortableTable.pages[fallBackId] &&
-                        0 === length
-                    ) {
-                        this.sortableTable.pages[fallBackId] = this.sortableTable.totalPages[fallBackId];
-                        //console.log("Call downloadObjects again because page is too high for tableId " + tableId);
-                        this.downloadObjects(tableId);
-                    }
-                }
-
-                // process all categories in this search result.
-                // console.log(
-                //     "Have " + response.data.data.length + " categories in this search result for tableId " + tableId,
-                // );
-                for (let i = 0; i < response.data.data.length; i++) {
-                    if (Object.hasOwn(response.data.data, i)) {
-                        let current = response.data.data[i];
-                        let objectGroupTitle = current.attributes.object_group_title;
-                        let objectGroupId = parseInt(current.attributes.object_group_id);
-                        let group = "ungrouped";
-
-                        if (0 !== objectGroupId && null !== objectGroupTitle) {
-                            group = "group_" + objectGroupId;
-                        }
-
-                        if (!Object.hasOwn(downloadedObjectGroups, group)) {
-                            let specificSort = this.getSortInstructions(group);
-                            downloadedObjectGroups[group] = {
-                                group: group,
-                                sortInstructions: sort,
-                                specificSortInstructions: specificSort,
-                                differentSortInstructions: specificSort !== sort,
-                                page: page,
-                                id:
-                                    null === current.attributes.object_group_id
-                                        ? 0
-                                        : parseInt(current.attributes.object_group_id),
-                                title:
-                                    null === current.attributes.object_group_title
-                                        ? "ungrouped"
-                                        : current.attributes.object_group_title,
-                                order:
-                                    null === current.attributes.object_group_order
-                                        ? 0
-                                        : parseInt(current.attributes.object_group_order),
-                                items: [],
-                                total: 0,
-                            };
-                            // console.log('Will create new group "' + group + '"', downloadedObjectGroups[group]);
-                        }
-                        downloadedObjectGroups[group].total += 1;
-
-                        // we will stop adding categories to this group once the list page size is reached.
-                        // unless we must do a resorting later on.
+            new Get()
+                .list(downloadParams)
+                .then((response) => {
+                    // safety catch for search.
+                    if (null !== this.sortableTable) {
+                        this.sortableTable.totalPages[fallBackId] = parseInt(response.data.meta.pagination.total_pages);
+                        const length = response.data.data.length;
                         if (
-                            downloadedObjectGroups[group].items.length >= this.listPageSize &&
-                            false === downloadedObjectGroups[group].differentSortInstructions
+                            this.sortableTable.totalPages[fallBackId] < this.sortableTable.pages[fallBackId] &&
+                            0 === length
                         ) {
-                            continue;
+                            this.sortableTable.pages[fallBackId] = this.sortableTable.totalPages[fallBackId];
+                            //console.log("Call downloadObjects again because page is too high for tableId " + tableId);
+                            this.downloadObjects(tableId);
                         }
+                    }
 
-                        let lastActivity = i18next.t("firefly.never");
-                        let lastActivityTimestamp = 0;
-                        let noLastActivity = true;
-                        if (null !== current.attributes.last_activity) {
-                            lastActivity = formatDate(
-                                current.attributes.last_activity,
-                                i18next.t("config.date_time_fns", { lng: locale }),
-                                locale,
-                            );
-                            lastActivityTimestamp = new Date(current.attributes.last_activity).getTime();
-                            noLastActivity = false;
+                    // process all categories in this search result.
+                    // console.log(
+                    //     "Have " + response.data.data.length + " categories in this search result for tableId " + tableId,
+                    // );
+                    for (let i = 0; i < response.data.data.length; i++) {
+                        if (Object.hasOwn(response.data.data, i)) {
+                            let current = response.data.data[i];
+                            let objectGroupTitle = current.attributes.object_group_title;
+                            let objectGroupId = parseInt(current.attributes.object_group_id);
+                            let group = "ungrouped";
+
+                            if (0 !== objectGroupId && null !== objectGroupTitle) {
+                                group = "group_" + objectGroupId;
+                            }
+
+                            if (!Object.hasOwn(downloadedObjectGroups, group)) {
+                                let specificSort = this.getSortInstructions(group);
+                                downloadedObjectGroups[group] = {
+                                    group: group,
+                                    sortInstructions: sort,
+                                    specificSortInstructions: specificSort,
+                                    differentSortInstructions: specificSort !== sort,
+                                    page: page,
+                                    id:
+                                        null === current.attributes.object_group_id
+                                            ? 0
+                                            : parseInt(current.attributes.object_group_id),
+                                    title:
+                                        null === current.attributes.object_group_title
+                                            ? "ungrouped"
+                                            : current.attributes.object_group_title,
+                                    order:
+                                        null === current.attributes.object_group_order
+                                            ? 0
+                                            : parseInt(current.attributes.object_group_order),
+                                    items: [],
+                                    total: 0,
+                                };
+                                // console.log('Will create new group "' + group + '"', downloadedObjectGroups[group]);
+                            }
+                            downloadedObjectGroups[group].total += 1;
+
+                            // we will stop adding categories to this group once the list page size is reached.
+                            // unless we must do a resorting later on.
+                            if (
+                                downloadedObjectGroups[group].items.length >= this.listPageSize &&
+                                false === downloadedObjectGroups[group].differentSortInstructions
+                            ) {
+                                continue;
+                            }
+
+                            let lastActivity = i18next.t("firefly.never");
+                            let lastActivityTimestamp = 0;
+                            let noLastActivity = true;
+                            if (null !== current.attributes.last_activity) {
+                                lastActivity = formatDate(
+                                    current.attributes.last_activity,
+                                    i18next.t("config.date_time_fns", { lng: locale }),
+                                    locale,
+                                );
+                                lastActivityTimestamp = new Date(current.attributes.last_activity).getTime();
+                                noLastActivity = false;
+                            }
+
+                            let category = {
+                                id: parseInt(current.id),
+                                name: current.attributes.name,
+                                active: current.attributes.active,
+                                last_activity: lastActivity,
+                                no_last_activity: noLastActivity,
+                                last_activity_timestamp: lastActivityTimestamp,
+                            };
+                            downloadedObjectGroups[group].items.push(category);
                         }
-
-                        let category = {
-                            id: parseInt(current.id),
-                            name: current.attributes.name,
-                            active: current.attributes.active,
-                            last_activity: lastActivity,
-                            no_last_activity: noLastActivity,
-                            last_activity_timestamp: lastActivityTimestamp,
-                        };
-                        downloadedObjectGroups[group].items.push(category);
                     }
-                }
-                // done with download
-                if (null !== tableId) {
-                    this.sortableTable.loadingNewSorts[tableId] = false;
-                    this.groupedObjects[tableId].items = downloadedObjectGroups[tableId].items;
-                }
-                if (null === tableId) {
-                    downloadedObjectGroups = sortGroupedObjects(downloadedObjectGroups, this.listPageSize);
-                    this.launchSortableTable(downloadedObjectGroups);
-                }
-            }).then(() => {
-                // check for collapsed boxes.
-                document.querySelectorAll('.categories-card').forEach(function (v) {
-                    let configName = 'category-card-collapse-' + v.dataset.group;
-
-                    // also listen for close and open.
-                    v.addEventListener('collapsed.lte.card-widget', function (e) {
-                        var box = e.currentTarget;
-                        let configName = 'category-card-collapse-' + box.dataset.group;
-                        window.store.set(configName, 'collapsed');
-                        console.log('Card ' + box.dataset.group + ' is now collapsed.');
-                    });
-                    v.addEventListener('expanded.lte.card-widget', function (e) {
-                        var box = e.currentTarget;
-                        let configName = 'category-card-collapse-' + box.dataset.group;
-                        window.store.set(configName, 'expanded');
-                        console.log('Card ' + box.dataset.group + ' is now expanded.');
-                    });
-
-                    if ('collapsed' === window.store.get(configName)) {
-                        v.classList.add('collapsed-card');
-                        console.log('Card ' + v.dataset.group + ' is collapsed');
-                        return;
+                    // done with download
+                    if (null !== tableId) {
+                        this.sortableTable.loadingNewSorts[tableId] = false;
+                        this.groupedObjects[tableId].items = downloadedObjectGroups[tableId].items;
                     }
-                    console.log('Card ' + v.dataset.group + ' is not collapsed');
+                    if (null === tableId) {
+                        downloadedObjectGroups = sortGroupedObjects(downloadedObjectGroups, this.listPageSize);
+                        this.launchSortableTable(downloadedObjectGroups);
+                    }
+                })
+                .then(() => {
+                    // check for collapsed boxes.
+                    document.querySelectorAll(".categories-card").forEach(function (v) {
+                        let configName = "category-card-collapse-" + v.dataset.group;
+
+                        // also listen for close and open.
+                        v.addEventListener("collapsed.lte.card-widget", function (e) {
+                            var box = e.currentTarget;
+                            let configName = "category-card-collapse-" + box.dataset.group;
+                            window.store.set(configName, "collapsed");
+                            console.log("Card " + box.dataset.group + " is now collapsed.");
+                        });
+                        v.addEventListener("expanded.lte.card-widget", function (e) {
+                            var box = e.currentTarget;
+                            let configName = "category-card-collapse-" + box.dataset.group;
+                            window.store.set(configName, "expanded");
+                            console.log("Card " + box.dataset.group + " is now expanded.");
+                        });
+
+                        if ("collapsed" === window.store.get(configName)) {
+                            v.classList.add("collapsed-card");
+                            console.log("Card " + v.dataset.group + " is collapsed");
+                            return;
+                        }
+                        console.log("Card " + v.dataset.group + " is not collapsed");
+                    });
+                    // $('.rules-card').each(function (i, v) {
+                    //     var box = $(v);
+                    //     var groupId = box.data('group');
+                    //     var cookieName = 'rule-box-collapse-' + groupId;
+                    //     if ('collapsed' === readCookie(cookieName)) {
+                    //         box.addClass('collapsed-card');
+                    //         console.log('Card ' + groupId + ' is collapsed');
+                    //         return;
+                    //     }
+                    //     console.log('Card ' + groupId + ' is not collapsed');
+                    // });
                 });
-                // $('.rules-card').each(function (i, v) {
-                //     var box = $(v);
-                //     var groupId = box.data('group');
-                //     var cookieName = 'rule-box-collapse-' + groupId;
-                //     if ('collapsed' === readCookie(cookieName)) {
-                //         box.addClass('collapsed-card');
-                //         console.log('Card ' + groupId + ' is collapsed');
-                //         return;
-                //     }
-                //     console.log('Card ' + groupId + ' is not collapsed');
-                // });
-            });
         },
     };
 };
