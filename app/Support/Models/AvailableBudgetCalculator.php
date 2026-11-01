@@ -32,21 +32,18 @@ use FireflyIII\Support\Facades\Navigation;
 use FireflyIII\Support\Facades\Preferences;
 use FireflyIII\User;
 use Illuminate\Support\Facades\Log;
-use Spatie\Period\Boundaries;
-use Spatie\Period\Period;
-use Spatie\Period\Precision;
 
 class AvailableBudgetCalculator
 {
-    private User $user;
-    private bool $create = true;
-    private Carbon $start;
-    private Carbon $end;
-    private string $viewRange;
+    private User                $user;
+    private bool                $create = true;
+    private Carbon              $start;
+    private Carbon              $end;
+    private string              $viewRange;
     private TransactionCurrency $currency;
 
     private AvailableBudgetRepositoryInterface $abRepository;
-    private BudgetLimitRepositoryInterface $blRepository;
+    private BudgetLimitRepositoryInterface     $blRepository;
 
     public function __construct()
     {
@@ -59,9 +56,9 @@ class AvailableBudgetCalculator
         // based on the view range of the user (month week quarter etc) the budget limit could
         // either overlap multiple available budget periods or be contained in a single one.
         // all have to be created or updated.
-        $start   = Navigation::startOfPeriod($this->start, $this->viewRange);
-        $end     = Navigation::startOfPeriod($this->end, $this->viewRange);
-        $end     = Navigation::endOfPeriod($end, $this->viewRange);
+        $start = Navigation::startOfPeriod($this->start, $this->viewRange);
+        $end   = Navigation::startOfPeriod($this->end, $this->viewRange);
+        $end   = Navigation::endOfPeriod($end, $this->viewRange);
 
         if ($end < $start) {
             [$start, $end] = [$end, $start];
@@ -116,21 +113,21 @@ class AvailableBudgetCalculator
         $this->abRepository->setUser($this->user);
         $this->blRepository->setUser($this->user);
 
-        $viewRange          = Preferences::getForUser($this->user, 'viewRange', '1M')->data;
-        $viewRange          = !is_string($viewRange) ? '1M' : $viewRange;
-        $this->viewRange    = $this->correctViewRange($viewRange);
+        $viewRange       = Preferences::getForUser($this->user, 'viewRange', '1M')->data;
+        $viewRange       = !is_string($viewRange) ? '1M' : $viewRange;
+        $this->viewRange = $this->correctViewRange($viewRange);
         $this->abRepository->cleanup();
     }
 
     private function correctViewRange(string $viewRange): string
     {
-        $week    = ['last7']; // 'last7'
+        $week = ['last7']; // 'last7'
         if (in_array($viewRange, $week, true)) {
             Log::debug(sprintf('Overrule %s to 1W', $viewRange));
 
             return '1W';
         }
-        $month   = ['MTD', 'custom', 'last30'];
+        $month = ['MTD', 'custom', 'last30'];
         if (in_array($viewRange, $month, true)) {
             Log::debug(sprintf('Overrule %s to 1M', $viewRange));
 
@@ -142,7 +139,7 @@ class AvailableBudgetCalculator
 
             return '3M';
         }
-        $year    = ['YTD', 'last365'];
+        $year = ['YTD', 'last365'];
         if (in_array($viewRange, $year, true)) {
             Log::debug(sprintf('Overrule %s to 1Y', $viewRange));
 
@@ -154,7 +151,7 @@ class AvailableBudgetCalculator
 
     private function refreshAvailableBudget(Carbon $start): void
     {
-        $end              = Navigation::endOfPeriod($start, $this->viewRange);
+        $end = Navigation::endOfPeriod($start, $this->viewRange);
         Log::debug(sprintf('refreshAvailableBudget(%s), end is %s', $start->format('Y-m-d'), $end->format('Y-m-d')));
 
         if ($end->lt($start)) {
@@ -168,11 +165,11 @@ class AvailableBudgetCalculator
 
         foreach ($availableBudgets as $item) {
             Log::debug(sprintf(
-                'findInRange found available budget #%d (%s - %s), will update it.',
-                $item->id,
-                $item->start_date->format('Y-m-d'),
-                $item->end_date->format('Y-m-d')
-            ));
+                           'findInRange found available budget #%d (%s - %s), will update it.',
+                           $item->id,
+                           $item->start_date->format('Y-m-d'),
+                           $item->end_date->format('Y-m-d')
+                       ));
             $this->abRepository->recalculateAmount($item);
         }
         if (!$this->create) {
@@ -183,11 +180,11 @@ class AvailableBudgetCalculator
         if (null === $availableBudget) {
             Log::debug(sprintf('Will create new available budget for period %s to %s', $start->format('Y-m-d'), $end->format('Y-m-d')));
             $availableBudget = $this->abRepository->store([
-                'start'       => $start,
-                'end'         => $end,
-                'currency_id' => $this->currency->id,
-                'amount'      => '1',
-            ]);
+                                                              'start'       => $start,
+                                                              'end'         => $end,
+                                                              'currency_id' => $this->currency->id,
+                                                              'amount'      => '1',
+                                                          ]);
             $this->abRepository->recalculateAmount($availableBudget);
         }
     }
