@@ -187,7 +187,9 @@ final class IndexController extends Controller
             // spent in period:
             $spentArr             = $this->opsRepository->sumExpenses($entry->start_date, $entry->end_date, null, null, $entry->transactionCurrency);
             $array['spent']       = $spentArr[$entry->transaction_currency_id]['sum'] ?? '0';
-            $array['pc_spent']    = $this->convertToPrimary && $entry->transaction_currency_id !== $this->primaryCurrency->id ? $converter->convert($entry->transactionCurrency, $this->primaryCurrency, $entry->start_date, $array['spent']) : null;
+            $array['pc_spent']    = $this->convertToPrimary && $entry->transaction_currency_id !== $this->primaryCurrency->id
+                ? $converter->convert($entry->transactionCurrency, $this->primaryCurrency, $entry->start_date, $array['spent'])
+                : null;
             // budgeted in period:
             $budgeted             = $this->blRepository->budgeted($entry->start_date, $entry->end_date, $entry->transactionCurrency);
             $array['budgeted']    = $budgeted;
@@ -271,7 +273,10 @@ final class IndexController extends Controller
 
                 if (array_key_exists($currency->id, $spentArr) && array_key_exists('sum', $spentArr[$currency->id])) {
                     $array['spent'][$currency->id]['spent']                   = $spentArr[$currency->id]['sum'];
-                    $array['spent'][$currency->id]['spent_outside']           = Steam::negative(bcsub($spentInLimits[$currency->id], $spentArr[$currency->id]['sum']));
+                    $array['spent'][$currency->id]['spent_outside']           = Steam::negative(bcsub(
+                        $spentInLimits[$currency->id],
+                        $spentArr[$currency->id]['sum']
+                    ));
                     $array['spent'][$currency->id]['currency_id']             = $currency->id;
                     $array['spent'][$currency->id]['currency_symbol']         = $currency->symbol;
                     $array['spent'][$currency->id]['currency_decimal_places'] = $currency->decimal_places;

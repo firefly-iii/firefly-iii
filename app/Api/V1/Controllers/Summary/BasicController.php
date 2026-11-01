@@ -78,7 +78,7 @@ final class BasicController extends Controller
             $this->accountRepository = app(AccountRepositoryInterface::class);
             $this->abRepository      = app(AvailableBudgetRepositoryInterface::class);
             $this->opsRepository     = app(OperationsRepositoryInterface::class);
-            $this->blRepository = app(BudgetLimitRepositoryInterface::class);
+            $this->blRepository      = app(BudgetLimitRepositoryInterface::class);
 
             $this->billRepository->setUser($user);
             $this->blRepository->setUser($user);
@@ -338,8 +338,8 @@ final class BasicController extends Controller
         /** @var string $availableBudget */
         foreach ($available as $currencyId => $availableBudget) {
             $currencies[$currencyId] ??= $this->currencyRepos->find($currencyId);
-            $budgeted             = $this->blRepository->budgeted($start, $end, $currencies[$currencyId]);
-            $return[$currencyId] = [
+            $budgeted               = $this->blRepository->budgeted($start, $end, $currencies[$currencyId]);
+            $return[$currencyId]    = [
                 'key'                     => sprintf('left-to-spend-in-%s', $currencies[$currencyId]->code),
                 'title'                   => trans('firefly.box_left_to_spend_in_currency', ['currency' => $currencies[$currencyId]->symbol]),
                 'no_available_budgets'    => false,
@@ -348,8 +348,18 @@ final class BasicController extends Controller
                 'currency_code'           => $currencies[$currencyId]->code,
                 'currency_symbol'         => $currencies[$currencyId]->symbol,
                 'currency_decimal_places' => $currencies[$currencyId]->decimal_places,
-                'value_parsed'            => Amount::formatFlat($currencies[$currencyId]->symbol, $currencies[$currencyId]->decimal_places, $availableBudget, false),
-                'sub_title'               => Amount::formatFlat($currencies[$currencyId]->symbol, $currencies[$currencyId]->decimal_places, bcdiv($availableBudget, (string) $days), false),
+                'value_parsed'            => Amount::formatFlat(
+                    $currencies[$currencyId]->symbol,
+                    $currencies[$currencyId]->decimal_places,
+                    $availableBudget,
+                    false
+                ),
+                'sub_title'               => Amount::formatFlat(
+                    $currencies[$currencyId]->symbol,
+                    $currencies[$currencyId]->decimal_places,
+                    bcdiv($availableBudget, (string) $days),
+                    false
+                ),
             ];
             // TODO with this overrule in place, the collection of available budgets has little use.
             $available[$currencyId] = $budgeted;
