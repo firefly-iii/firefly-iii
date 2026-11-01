@@ -376,31 +376,32 @@ class AvailableBudgetRepository implements AvailableBudgetRepositoryInterface, U
 
             return (string)$budgetLimit->amount;
         }
-
         $ogAmount = $budgetLimit->amount;
         if ($availableBudgetPeriod->overlapsWith($limitPeriod)) {
             Log::debug('This budget limit is something else entirely!');
             $overlap = $availableBudgetPeriod->overlap($limitPeriod);
             if ($overlap instanceof Period) {
 
-                if ($availableBudgetPeriod->startsAfter($budgetLimit->start_date)) {
-                    // expenses in the period $budgetLimit->start_date to (but not including!) $availableBudgetPeriod->start()
-                    // must be removed from the amount.
-                    $opsRepository = app(OperationsRepositoryInterface::class);
-                    $opsRepository->setUser($this->user);
-                    $end = new Carbon(clone $availableBudgetPeriod->start());
-                    $end->subDay()->endOfDay();
-                    $sum = $opsRepository->sumExpenses($budgetLimit->start_date, $end, null, collect([$budgetLimit->budget]), $budgetLimit->transactionCurrency);
-                    if(0 === count($sum)) {
-                        Log::debug('NO expenses found');
-                    }
-                    if(count($sum) > 0) {
-                        $spentAmount = $sum[(int)$budgetLimit->transactionCurrency->id]['sum'] ?? '0';
-                        Log::debug(sprintf('Expenses between %s and %s', $budgetLimit->start_date->format('Y-m-d'), $end->format('Y-m-d')), $sum);
-                        $budgetLimit->amount = bcadd($budgetLimit->amount, $spentAmount);
-                    }
-                    Log::debug(sprintf('Budget limit started before available budget period: %s - %s', $budgetLimit->start_date->format('Y-m-d'), $availableBudgetPeriod->start()->format('Y-m-d')));
-                }
+                // TODO if you want to correct for existing expenses, uncomment this block:
+
+//                if ($availableBudgetPeriod->startsAfter($budgetLimit->start_date)) {
+//                    // expenses in the period $budgetLimit->start_date to (but not including!) $availableBudgetPeriod->start()
+//                    // must be removed from the amount.
+//                    $opsRepository = app(OperationsRepositoryInterface::class);
+//                    $opsRepository->setUser($this->user);
+//                    $end = new Carbon(clone $availableBudgetPeriod->start());
+//                    $end->subDay()->endOfDay();
+//                    $sum = $opsRepository->sumExpenses($budgetLimit->start_date, $end, null, collect([$budgetLimit->budget]), $budgetLimit->transactionCurrency);
+//                    if(0 === count($sum)) {
+//                        Log::debug('NO expenses found');
+//                    }
+//                    if(count($sum) > 0) {
+//                        $spentAmount = $sum[(int)$budgetLimit->transactionCurrency->id]['sum'] ?? '0';
+//                        Log::debug(sprintf('Expenses between %s and %s', $budgetLimit->start_date->format('Y-m-d'), $end->format('Y-m-d')), $sum);
+//                        $budgetLimit->amount = bcadd($budgetLimit->amount, $spentAmount);
+//                    }
+//                    Log::debug(sprintf('Budget limit started before available budget period: %s - %s', $budgetLimit->start_date->format('Y-m-d'), $availableBudgetPeriod->start()->format('Y-m-d')));
+//                }
 
                 $length              = $overlap->length();
                 $dailyAmount         = bcmul($blRepository->getDailyAmount($budgetLimit), (string)$length);

@@ -58,14 +58,12 @@ class UserGroupTransformer extends AbstractTransformer
 
                     /** @var GroupMembership $groupMembership */
                     foreach ($groupMemberships as $groupMembership) {
-                        if (null !== $groupMembership->user) {
-                            $this->memberships[$userGroupId][] = [
-                                'user_id'    => (string)$groupMembership->user_id,
-                                'user_email' => $groupMembership->user->email,
-                                'role'       => $groupMembership->userRole->title,
-                                'you'        => $groupMembership->user_id === $user->id,
-                            ];
-                        }
+                        $this->memberships[$userGroupId][] = [
+                            'user_id'    => (string)$groupMembership->user_id,
+                            'user_email' => $groupMembership->user->email,
+                            'role'       => $groupMembership->userRole->title,
+                            'you'        => $groupMembership->user_id === $user->id,
+                        ];
                     }
                 }
             }
