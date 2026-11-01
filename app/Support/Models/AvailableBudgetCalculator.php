@@ -65,12 +65,12 @@ class AvailableBudgetCalculator
 
         if ($end < $start) {
             [$start, $end] = [$end, $start];
+            Log::debug(sprintf('Corrected start to %s and end to %s.', $start->format('Y-m-d'), $end->format('Y-m-d')));
         }
-        Log::debug(sprintf('Corrected start to %s and end to %s.', $start->format('Y-m-d'), $end->format('Y-m-d')));
 
         // limit period in total is:
-        $limitPeriod = Period::make($start, $end, precision: Precision::DAY(), boundaries: Boundaries::EXCLUDE_NONE());
-        Log::debug(sprintf('Limit period is from %s to %s', $start->format('Y-m-d'), $end->format('Y-m-d')));
+        //$limitPeriod = Period::make($start, $end, precision: Precision::DAY(), boundaries: Boundaries::EXCLUDE_NONE());
+        //Log::debug(sprintf('Limit period is from %s to %s', $start->format('Y-m-d'), $end->format('Y-m-d')));
 
         // from the start until the end of the budget limit, need to loop!
         $count       = 0;
@@ -167,12 +167,7 @@ class AvailableBudgetCalculator
         $availableBudgets = $this->abRepository->findInRange($this->currency, $start, $end);
 
         foreach ($availableBudgets as $item) {
-            Log::debug(sprintf(
-                'findInRange found available budget #%d (%s - %s), will update it.',
-                $item->id,
-                $item->start_date->format('Y-m-d'),
-                $item->end_date->format('Y-m-d')
-            ));
+            Log::debug(sprintf('findInRange found available budget #%d (%s - %s), will update it.', $item->id, $item->start_date->format('Y-m-d'), $item->end_date->format('Y-m-d')));
             $this->abRepository->recalculateAmount($item);
         }
         if (!$this->create) {
@@ -186,8 +181,7 @@ class AvailableBudgetCalculator
                 'start'       => $start,
                 'end'         => $end,
                 'currency_id' => $this->currency->id,
-                'amount'      => '1',
-            ]);
+                'amount'      => '1',]);
             $this->abRepository->recalculateAmount($availableBudget);
         }
     }

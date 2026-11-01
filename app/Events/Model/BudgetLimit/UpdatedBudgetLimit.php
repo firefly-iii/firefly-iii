@@ -33,10 +33,7 @@ class UpdatedBudgetLimit extends Event
 {
     use SerializesModels;
 
-    public function __construct(
-        public BudgetLimit $budgetLimit,
-        public bool $createWebhookMessages
-    ) {
+    public function __construct(public BudgetLimit $budgetLimit, public bool $createWebhookMessages) {
         Log::debug(sprintf('UpdatedBudgetLimit(#%d) Event', $budgetLimit->id));
     }
 }

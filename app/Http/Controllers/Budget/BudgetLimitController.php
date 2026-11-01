@@ -265,13 +265,7 @@ final class BudgetLimitController extends Controller
         Preferences::mark();
         $array                           = $limit->toArray();
 
-        $spentArr                        = $this->opsRepository->sumExpenses(
-            $limit->start_date,
-            $limit->end_date,
-            null,
-            new Collection()->push($budgetLimit->budget),
-            $budgetLimit->transactionCurrency
-        );
+        $spentArr                        = $this->opsRepository->sumExpenses($limit->start_date, $limit->end_date, null, new Collection()->push($budgetLimit->budget), $budgetLimit->transactionCurrency);
         $daysLeft                        = $this->activeDaysLeft($limit->start_date, $limit->end_date);
 
         $limitPeriod                     = Period::make($limit->start_date, $limit->end_date, precision: Precision::DAY(), boundaries: Boundaries::EXCLUDE_NONE());

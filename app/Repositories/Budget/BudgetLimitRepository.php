@@ -258,13 +258,7 @@ class BudgetLimitRepository implements BudgetLimitRepositoryInterface, UserGroup
         $limitPeriod = Period::make($budgetLimit->start_date, $budgetLimit->end_date, precision: Precision::DAY(), boundaries: Boundaries::EXCLUDE_NONE());
         $days        = $limitPeriod->length();
         $amount      = bcdiv($budgetLimit->amount, (string) $days, 12);
-        Log::debug(sprintf(
-            'Total amount for budget limit #%d is %s. Nr. of days is %d. Amount per day is %s',
-            $budgetLimit->id,
-            $budgetLimit->amount,
-            $days,
-            $amount
-        ));
+        Log::debug(sprintf('Total amount for budget limit #%d is %s. Nr. of days is %d. Amount per day is %s', $budgetLimit->id, $budgetLimit->amount, $days, $amount));
 
         return $amount;
     }
