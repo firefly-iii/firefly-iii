@@ -187,9 +187,7 @@ final class IndexController extends Controller
             // spent in period:
             $spentArr             = $this->opsRepository->sumExpenses($entry->start_date, $entry->end_date, null, null, $entry->transactionCurrency);
             $array['spent']       = $spentArr[$entry->transaction_currency_id]['sum'] ?? '0';
-            $array['pc_spent']    = $this->convertToPrimary && $entry->transaction_currency_id !== $this->primaryCurrency->id
-                ? $converter->convert($entry->transactionCurrency, $this->primaryCurrency, $entry->start_date, $array['spent'])
-                : null;
+            $array['pc_spent']    = $this->convertToPrimary && $entry->transaction_currency_id !== $this->primaryCurrency->id ? $converter->convert($entry->transactionCurrency, $this->primaryCurrency, $entry->start_date, $array['spent']) : null;
             // budgeted in period:
             $budgeted             = $this->blRepository->budgeted($entry->start_date, $entry->end_date, $entry->transactionCurrency);
             $array['budgeted']    = $budgeted;
