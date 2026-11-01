@@ -10859,38 +10859,38 @@
         },
         {
             "name": "ergebnis/version",
-            "version": "1.4.0",
+            "version": "1.5.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/ergebnis/version.git",
-                "reference": "cfdde08dac36650286acf310a8f99138201a484b"
+                "reference": "d24af41aa88e24c24e705816e428668de2b7391a"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/ergebnis/version/zipball/cfdde08dac36650286acf310a8f99138201a484b",
-                "reference": "cfdde08dac36650286acf310a8f99138201a484b",
+                "url": "https://api.github.com/repos/ergebnis/version/zipball/d24af41aa88e24c24e705816e428668de2b7391a",
+                "reference": "d24af41aa88e24c24e705816e428668de2b7391a",
                 "shasum": ""
             },
             "require": {
                 "php": "~7.4.0 || ~8.0.0 || ~8.1.0 || ~8.2.0 || ~8.3.0 || ~8.4.0 || ~8.5.0 || ~8.6.0"
             },
             "require-dev": {
-                "ergebnis/composer-normalize": "^2.53.0",
-                "ergebnis/data-provider": "^3.6.0",
-                "ergebnis/license": "^2.7.0",
-                "ergebnis/php-cs-fixer-config": "^6.63.2",
-                "ergebnis/phpunit-slow-test-detector": "^2.25.0",
-                "ergebnis/rector-rules": "^1.18.3",
+                "ergebnis/composer-normalize": "^2.54.0",
+                "ergebnis/data-provider": "^3.7.0",
+                "ergebnis/license": "^2.8.0",
+                "ergebnis/php-cs-fixer-config": "^6.64.1",
+                "ergebnis/phpunit-slow-test-detector": "^2.27.0",
+                "ergebnis/rector-rules": "^1.18.5",
                 "ext-bcmath": "*",
                 "fakerphp/faker": "^1.24.1",
                 "infection/infection": "~0.26.6",
                 "phpstan/extension-installer": "^1.4.3",
                 "phpstan/phpstan": "^2.2.14",
                 "phpstan/phpstan-deprecation-rules": "^2.0.5",
-                "phpstan/phpstan-phpunit": "^2.0.18",
-                "phpstan/phpstan-strict-rules": "^2.0.12",
+                "phpstan/phpstan-phpunit": "^2.1.1",
+                "phpstan/phpstan-strict-rules": "^2.1.0",
                 "phpunit/phpunit": "^9.6.33",
-                "rector/rector": "^2.6.7"
+                "rector/rector": "^2.7.0"
             },
             "suggest": {
                 "ext-bcmath": "If you want to bump Major, Minor, or Patch versions greater than PHP_MAX_INT."
@@ -10898,7 +10898,7 @@
             "type": "library",
             "extra": {
                 "branch-alias": {
-                    "dev-main": "1.4-dev"
+                    "dev-main": "1.5-dev"
                 },
                 "composer-normalize": {
                     "indent-size": 2,
@@ -10932,8 +10932,8 @@
                 "security": "https://github.com/ergebnis/version/blob/main/.github/SECURITY.md",
                 "source": "https://github.com/ergebnis/version"
             },
-            "time": "2026-09-24T19:43:55+00:00",
-            "published-time": "2026-09-24T19:44:08+00:00"
+            "time": "2026-10-31T19:24:09+00:00",
+            "published-time": "2026-10-31T19:24:28+00:00"
         },
         {
             "name": "fakerphp/faker",

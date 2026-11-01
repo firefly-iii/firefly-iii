@@ -59,9 +59,9 @@ class AvailableBudgetCalculator
         // based on the view range of the user (month week quarter etc) the budget limit could
         // either overlap multiple available budget periods or be contained in a single one.
         // all have to be created or updated.
-        $start       = Navigation::startOfPeriod($this->start, $this->viewRange);
-        $end         = Navigation::startOfPeriod($this->end, $this->viewRange);
-        $end         = Navigation::endOfPeriod($end, $this->viewRange);
+        $start   = Navigation::startOfPeriod($this->start, $this->viewRange);
+        $end     = Navigation::startOfPeriod($this->end, $this->viewRange);
+        $end     = Navigation::endOfPeriod($end, $this->viewRange);
 
         if ($end < $start) {
             [$start, $end] = [$end, $start];
@@ -69,13 +69,13 @@ class AvailableBudgetCalculator
         }
 
         // limit period in total is:
-        //$limitPeriod = Period::make($start, $end, precision: Precision::DAY(), boundaries: Boundaries::EXCLUDE_NONE());
-        //Log::debug(sprintf('Limit period is from %s to %s', $start->format('Y-m-d'), $end->format('Y-m-d')));
+        // $limitPeriod = Period::make($start, $end, precision: Precision::DAY(), boundaries: Boundaries::EXCLUDE_NONE());
+        // Log::debug(sprintf('Limit period is from %s to %s', $start->format('Y-m-d'), $end->format('Y-m-d')));
 
         // from the start until the end of the budget limit, need to loop!
-        $count       = 0;
-        $max         = 14_600; // 40 years in days.
-        $current     = clone $start;
+        $count   = 0;
+        $max     = 14_600; // 40 years in days.
+        $current = clone $start;
         while ($current <= $end) {
             if ($count > $max) {
                 Log::error(sprintf('Count %d is greater than max %d, stop.', $count, $max));
@@ -167,7 +167,12 @@ class AvailableBudgetCalculator
         $availableBudgets = $this->abRepository->findInRange($this->currency, $start, $end);
 
         foreach ($availableBudgets as $item) {
-            Log::debug(sprintf('findInRange found available budget #%d (%s - %s), will update it.', $item->id, $item->start_date->format('Y-m-d'), $item->end_date->format('Y-m-d')));
+            Log::debug(sprintf(
+                'findInRange found available budget #%d (%s - %s), will update it.',
+                $item->id,
+                $item->start_date->format('Y-m-d'),
+                $item->end_date->format('Y-m-d')
+            ));
             $this->abRepository->recalculateAmount($item);
         }
         if (!$this->create) {
@@ -181,7 +186,8 @@ class AvailableBudgetCalculator
                 'start'       => $start,
                 'end'         => $end,
                 'currency_id' => $this->currency->id,
-                'amount'      => '1',]);
+                'amount'      => '1',
+            ]);
             $this->abRepository->recalculateAmount($availableBudget);
         }
     }

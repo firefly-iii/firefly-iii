@@ -28,7 +28,6 @@ use Carbon\Carbon;
 use FireflyIII\Api\V1\Controllers\Controller;
 use FireflyIII\Api\V1\Requests\Date\MandatoryDateRangeRequest;
 use FireflyIII\Api\V1\Requests\DateRangeRequest;
-use FireflyIII\Api\V1\Requests\SameDateRangeRequest;
 use FireflyIII\Enums\UserRoleEnum;
 use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Models\Budget;
