@@ -150,15 +150,18 @@ let index = function () {
                     if (Object.hasOwn(response.data.data, i)) {
                         let current = response.data.data[i];
 
-                        let currentAmount = null === current.attributes.current_amount ? "0" : current.attributes.current_amount;
+                        let currentAmount =
+                            null === current.attributes.current_amount ? "0" : current.attributes.current_amount;
                         let groupId = parseInt(current.attributes.object_group_id);
-                        let targetAmount = null === current.attributes.target_amount ? "0" : current.attributes.target_amount;
+                        let targetAmount =
+                            null === current.attributes.target_amount ? "0" : current.attributes.target_amount;
                         let groupOrder = current.attributes.object_group_order;
-                        let groupTitle = current.attributes.object_group_title ?? i18next.t('firefly.default_group_title_name');
-                        if(0.0 === parseFloat(currentAmount)) {
+                        let groupTitle =
+                            current.attributes.object_group_title ?? i18next.t("firefly.default_group_title_name");
+                        if (0.0 === parseFloat(currentAmount)) {
                             continue;
                         }
-                        if(parseFloat(currentAmount) === parseFloat(targetAmount)) {
+                        if (parseFloat(currentAmount) === parseFloat(targetAmount)) {
                             continue;
                         }
                         this.piggyBanks[groupId] ??= {
@@ -171,8 +174,12 @@ let index = function () {
                         let piggy = {
                             id: current.id,
                             name: current.attributes.name,
-                            percentage: null === current.attributes.percentage ? 0 : parseInt(current.attributes.percentage),
-                            amount: formatMoney(currentAmount, current.attributes.currency_code) + " / " + formatMoney(targetAmount, current.attributes.currency_code),
+                            percentage:
+                                null === current.attributes.percentage ? 0 : parseInt(current.attributes.percentage),
+                            amount:
+                                formatMoney(currentAmount, current.attributes.currency_code) +
+                                " / " +
+                                formatMoney(targetAmount, current.attributes.currency_code),
                         };
                         if (null === current.attributes.target_amount) {
                             piggy.amount = formatMoney(currentAmount, current.attributes.currency_code) + " / ∞";
