@@ -117,6 +117,9 @@ class BudgetLimitRepository implements BudgetLimitRepositoryInterface, UserGroup
                     $spentAmount         = $sum[(int) $budgetLimit->transactionCurrency->id]['sum'] ?? '0';
                     Log::debug(sprintf('Expenses between %s and %s', $budgetLimit->start_date->format('Y-m-d'), $spentEnd->format('Y-m-d')), $sum);
                     $budgetLimit->amount = bcadd($budgetLimit->amount, $spentAmount);
+                    if(-1 === bccomp($budgetLimit->amount,'0')) {
+                        $budgetLimit->amount = '0';
+                    }
                 }
             }
 
