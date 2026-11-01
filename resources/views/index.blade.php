@@ -180,22 +180,31 @@
                         <template x-if="!loadingPiggyBanks && piggyBanks.length === 0">
                             <p><em>{{ __('firefly.no_piggies_intro_default') }}</em></p>
                         </template>
-                        <template x-for="piggyBank in piggyBanks" :key="piggyBank.id">
-                            <div>
-                                <a :href="'./piggy-banks/show/' + piggyBank.id" :title="piggyBank.name"><strong
-                                        x-text="piggyBank.name"></strong></a><br>
-                                <div class="progress">
-                                    <div class="progress-bar progress-bar-striped" role="progressbar"
-                                         :class="'w-'+piggyBank.percentage" :aria-valuenow="piggyBank.percentage"
-                                         aria-valuemin="0" aria-valuemax="100">
-                                        <template x-if="piggyBank.percentage > 50">
-                                            <span x-text="piggyBank.amount"></span>
-                                        </template>
-                                    </div>
-                                    <template x-if="piggyBank.percentage <= 50">
+                        <template x-for="group in piggyBanks" :key="group.id">
+                            <div class="mb-2">
+                                <div class="d-flex justify-content-between">
+                                    <h5 x-text="group.title"></h5>
+                                </div>
+                                <div>
+                                    <template x-for="piggyBank in group.items" :key="piggyBank.id">
+                                    <div>
+                                        <a :href="'./piggy-banks/show/' + piggyBank.id" :title="piggyBank.name"><strong
+                                                x-text="piggyBank.name"></strong></a><br>
+                                        <div class="progress">
+                                            <div class="progress-bar progress-bar-striped" role="progressbar"
+                                                 :class="'w-'+piggyBank.percentage" :aria-valuenow="piggyBank.percentage"
+                                                 aria-valuemin="0" aria-valuemax="100">
+                                                <template x-if="piggyBank.percentage > 50">
+                                                    <span x-text="piggyBank.amount"></span>
+                                                </template>
+                                            </div>
+                                            <template x-if="piggyBank.percentage <= 50">
                                         <span>&nbsp;
                                             <span class="ml-1" x-text="piggyBank.amount"></span>
                                         </span>
+                                            </template>
+                                        </div>
+                                    </div>
                                     </template>
                                 </div>
                             </div>

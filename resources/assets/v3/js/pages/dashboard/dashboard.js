@@ -36,7 +36,7 @@ import i18next from "i18next";
 
 let index = function () {
     return {
-        piggyBanks: [],
+        piggyBanks: {},
         anonymous: false,
         loadingPiggyBanks: true,
         init() {
@@ -141,6 +141,7 @@ let index = function () {
             });
         },
         loadPiggyBanks() {
+            this.piggyBanks = {};
             this.downloadPiggyBanks(1);
         },
         downloadPiggyBanks(page) {
@@ -148,19 +149,30 @@ let index = function () {
                 for (let i = 0; i < response.data.data.length; i++) {
                     if (Object.hasOwn(response.data.data, i)) {
                         let current = response.data.data[i];
-                        let currentAmount =
-                            null === current.attributes.current_amount ? "0" : current.attributes.current_amount;
-                        let targetAmount =
-                            null === current.attributes.target_amount ? "0" : current.attributes.target_amount;
+
+                        let currentAmount = null === current.attributes.current_amount ? "0" : current.attributes.current_amount;
+                        let groupId = parseInt(current.attributes.object_group_id);
+                        let targetAmount = null === current.attributes.target_amount ? "0" : current.attributes.target_amount;
+                        let groupOrder = current.attributes.object_group_order;
+                        let groupTitle = current.attributes.object_group_title ?? i18next.t('firefly.default_group_title_name');
+                        if(0.0 === parseFloat(currentAmount)) {
+                            continue;
+                        }
+                        if(parseFloat(currentAmount) === parseFloat(targetAmount)) {
+                            continue;
+                        }
+                        this.piggyBanks[groupId] ??= {
+                            id: groupId,
+                            title: groupTitle,
+                            order: groupOrder,
+                            items: [],
+                        };
+
                         let piggy = {
                             id: current.id,
                             name: current.attributes.name,
-                            percentage:
-                                null === current.attributes.percentage ? 0 : parseInt(current.attributes.percentage),
-                            amount:
-                                formatMoney(currentAmount, current.attributes.currency_code) +
-                                " / " +
-                                formatMoney(targetAmount, current.attributes.currency_code),
+                            percentage: null === current.attributes.percentage ? 0 : parseInt(current.attributes.percentage),
+                            amount: formatMoney(currentAmount, current.attributes.currency_code) + " / " + formatMoney(targetAmount, current.attributes.currency_code),
                         };
                         if (null === current.attributes.target_amount) {
                             piggy.amount = formatMoney(currentAmount, current.attributes.currency_code) + " / ∞";
@@ -169,7 +181,7 @@ let index = function () {
                             piggy.amount = "- / -";
                         }
 
-                        this.piggyBanks.push(piggy);
+                        this.piggyBanks[groupId].items.push(piggy);
                     }
                 }
 
@@ -178,7 +190,10 @@ let index = function () {
                     this.downloadPiggyBanks(page + 1);
                     return;
                 }
+                // sort groups.
+                this.piggyBanks = Object.values(this.piggyBanks).sort((a, b) => a.order - b.order);
                 this.loadingPiggyBanks = false;
+                console.log("Loaded piggy banks: ", this.piggyBanks);
             });
         },
     };
