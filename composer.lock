@@ -955,16 +955,16 @@
         },
         {
             "name": "filp/whoops",
-            "version": "2.18.7",
+            "version": "2.19.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/filp/whoops.git",
-                "reference": "50670ba239926c50f2073e868f6672f775cd57ec"
+                "reference": "2915c807d7af61d8fb5c31d90c57af91d30f29fc"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/filp/whoops/zipball/50670ba239926c50f2073e868f6672f775cd57ec",
-                "reference": "50670ba239926c50f2073e868f6672f775cd57ec",
+                "url": "https://api.github.com/repos/filp/whoops/zipball/2915c807d7af61d8fb5c31d90c57af91d30f29fc",
+                "reference": "2915c807d7af61d8fb5c31d90c57af91d30f29fc",
                 "shasum": ""
             },
             "require": {
@@ -1014,7 +1014,7 @@
             ],
             "support": {
                 "issues": "https://github.com/filp/whoops/issues",
-                "source": "https://github.com/filp/whoops/tree/2.18.7"
+                "source": "https://github.com/filp/whoops/tree/2.19.1"
             },
             "funding": [
                 {
@@ -1022,8 +1022,8 @@
                     "type": "github"
                 }
             ],
-            "time": "2026-10-18T13:17:38+00:00",
-            "published-time": "2026-10-18T13:33:07+00:00"
+            "time": "2026-11-02T12:00:00+00:00",
+            "published-time": "2026-11-02T01:04:38+00:00"
         },
         {
             "name": "firebase/php-jwt",
