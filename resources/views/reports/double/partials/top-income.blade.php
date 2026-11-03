@@ -26,7 +26,7 @@
 
         <td data-sortable="false">
             <a href="{{ route('accounts.show', $row['source_account_id']) }}">
-                {{ row['source_account_name'] }}
+                {{ $row['source_account_name'] }}
             </a>
         </td>
         <td data-sortable="false">
