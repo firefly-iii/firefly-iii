@@ -1818,6 +1818,8 @@ return [
     'make_default_currency'                               => 'Make default',
     'default_currency'                                    => 'default',
     'primary_currency_button'                             => 'primary',
+    'primary_currency_switch'                             => 'Switch the primary currency',
+    'make_primary_currency'                               => 'Make ":name" the primary currency',
     'currency_is_disabled'                                => 'Disabled',
     'enable_currency'                                     => 'Enable',
     'disable_currency'                                    => 'Disable',
