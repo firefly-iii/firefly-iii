@@ -43,6 +43,7 @@ return new class extends Migration {
         Schema::dropIfExists('oauth_clients');
         Schema::dropIfExists('oauth_personal_access_clients');
         Schema::dropIfExists('oauth_refresh_tokens');
+        Schema::dropIfExists('oauth_device_codes');
 
         // create new stuff
         Schema::create('oauth_auth_codes', function (Blueprint $table) {
