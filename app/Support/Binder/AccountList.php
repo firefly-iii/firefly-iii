@@ -55,12 +55,11 @@ class AccountList implements BinderInterface
                         AccountTypeEnum::MORTGAGE->value,
                     ])
                     ->orderBy('accounts.name', 'ASC')
-                    ->get(['accounts.*'])
-                ;
+                    ->get(['accounts.*']);
             }
             if ('allAssetAccounts' !== $value) {
-                $incoming   = array_map(\intval(...), explode(',', $value));
-                $list       = array_merge(array_unique($incoming), [0]);
+                $incoming = array_map(\intval(...), explode(',', $value));
+                $list     = array_merge(array_unique($incoming), [0]);
 
                 /** @var Collection $collection */
                 $collection = auth()
@@ -69,8 +68,7 @@ class AccountList implements BinderInterface
                     ->leftJoin('account_types', 'account_types.id', '=', 'accounts.account_type_id')
                     ->whereIn('accounts.id', $list)
                     ->orderBy('accounts.name', 'ASC')
-                    ->get(['accounts.*'])
-                ;
+                    ->get(['accounts.*']);
             }
 
             if ($collection->count() > 0) {

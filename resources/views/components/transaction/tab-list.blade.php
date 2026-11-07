@@ -18,7 +18,6 @@
                         <template x-if="'' !== transaction.description">
                             <span x-text="transaction.description"></span>
                         </template>
-                        <span x-text="index"></span>
                     </button>
                 </li>
             </template>
