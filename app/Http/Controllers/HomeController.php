@@ -33,6 +33,7 @@ use FireflyIII\Helpers\Collector\GroupCollectorInterface;
 use FireflyIII\Http\Middleware\Installer;
 use FireflyIII\Repositories\Account\AccountRepositoryInterface;
 use FireflyIII\Repositories\Bill\BillRepositoryInterface;
+use FireflyIII\Repositories\Currency\CurrencyRepositoryInterface;
 use FireflyIII\Support\Facades\Preferences;
 use FireflyIII\User;
 use Illuminate\Http\JsonResponse;
@@ -183,8 +184,11 @@ final class HomeController extends Controller
         $user           = auth()->user();
         event(new SystemRequestedVersionCheck($user));
 
+        $currencies     = app(CurrencyRepositoryInterface::class)->get();
+
         return view('index', [
             'count'        => $count,
+            'currencies'   => $currencies,
             'subTitleIcon' => $subTitleIcon,
             'subTitle'     => $subTitle,
             'transactions' => $transactions,
