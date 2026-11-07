@@ -53,7 +53,7 @@ final class AccountController extends Controller
     protected array $accepts       = ['application/json', 'application/vnd.api+json'];
 
     /** @var array<int, string> */
-    private array $balanceTypes;
+    private array                      $balanceTypes;
     private AccountRepositoryInterface $repository;
 
     /**
@@ -90,9 +90,9 @@ final class AccountController extends Controller
         // set date to end-of-day for account balance. so it is at $date 23:59:59
         $date->endOfDay();
 
-        $return                                                                    = [];
-        $result                                                                    = $this->repository->searchAccount((string) $query, $types, $limit);
-        $allBalances                                                               = Steam::accountsBalancesOptimized($result, $date, $this->primaryCurrency, $this->convertToPrimary);
+        $return      = [];
+        $result      = $this->repository->searchAccount((string)$query, $types, $limit);
+        $allBalances = Steam::accountsBalancesOptimized($result, $date, $this->primaryCurrency, $this->convertToPrimary);
 
         /** @var Account $account */
         foreach ($result as $account) {
@@ -109,18 +109,18 @@ final class AccountController extends Controller
                 $nameWithBalance = sprintf('%s (%s)', $account->name, Amount::formatAnything($useCurrency, $amount, false));
             }
 
-            $return[]        = [
-                'id'                              => (string) $account->id,
+            $return[] = [
+                'id'                              => (string)$account->id,
                 'name'                            => $account->name,
                 'name_with_balance'               => $nameWithBalance,
                 'active'                          => $account->active,
                 'type'                            => $account->accountType->type,
-                'currency_id'                     => (string) $useCurrency->id,
+                'currency_id'                     => (string)$useCurrency->id,
                 'currency_name'                   => $useCurrency->name,
                 'currency_code'                   => $useCurrency->code,
                 'currency_symbol'                 => $useCurrency->symbol,
                 'currency_decimal_places'         => $useCurrency->decimal_places,
-                'account_currency_id'             => (string) $currency->id,
+                'account_currency_id'             => (string)$currency->id,
                 'account_currency_name'           => $currency->name,
                 'account_currency_code'           => $currency->code,
                 'account_currency_symbol'         => $currency->symbol,

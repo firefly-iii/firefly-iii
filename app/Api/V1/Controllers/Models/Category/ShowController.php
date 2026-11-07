@@ -69,7 +69,7 @@ final class ShowController extends Controller
      */
     public function index(ShowRequest $request): JsonResponse
     {
-        $manager     = $this->getManager();
+        $manager = $this->getManager();
         [
             'page'   => $page,
             'limit'  => $limit,
@@ -78,26 +78,27 @@ final class ShowController extends Controller
             'filter' => $filter,
             'start'  => $start,
             'end'    => $end,
-        ]            = $request->attributes->all();
+        ]
+            = $request->attributes->all();
 
         // get list of budgets. Count it and split it.
-        $collection  = $this->repository->getCategories($sort, $filter);
-        $count       = $collection->count();
-        $dbFields    = $this->isAllDatabaseSort($sort, 'Category');
-        $categories  = $collection;
+        $collection = $this->repository->getCategories($sort, $filter);
+        $count      = $collection->count();
+        $dbFields   = $this->isAllDatabaseSort($sort, 'Category');
+        $categories = $collection;
         if ($dbFields) {
             $categories = $collection->slice($offset, $limit);
         }
 
         // enrich
         /** @var User $admin */
-        $admin       = auth()->user();
-        $enrichment  = new CategoryEnrichment();
+        $admin      = auth()->user();
+        $enrichment = new CategoryEnrichment();
         $enrichment->setSort($sort);
         $enrichment->setUser($admin);
         $enrichment->setStart($start);
         $enrichment->setEnd($end);
-        $categories  = $enrichment->enrich($categories);
+        $categories = $enrichment->enrich($categories);
 
         if (!$dbFields) {
             // now do the slicing.
@@ -105,8 +106,8 @@ final class ShowController extends Controller
         }
 
         // make paginator:
-        $paginator   = new LengthAwarePaginator($categories, $count, $limit, $page);
-        $paginator->setPath(route('api.v1.categories.index').$this->buildParams());
+        $paginator = new LengthAwarePaginator($categories, $count, $limit, $page);
+        $paginator->setPath(route('api.v1.categories.index') . $this->buildParams());
 
         /** @var CategoryTransformer $transformer */
         $transformer = app(CategoryTransformer::class);
@@ -124,7 +125,7 @@ final class ShowController extends Controller
      */
     public function show(Category $category): JsonResponse
     {
-        $manager     = $this->getManager();
+        $manager = $this->getManager();
 
         /** @var CategoryTransformer $transformer */
         $transformer = app(CategoryTransformer::class);
@@ -132,14 +133,14 @@ final class ShowController extends Controller
 
         // enrich
         /** @var User $admin */
-        $admin       = auth()->user();
-        $enrichment  = new CategoryEnrichment();
+        $admin      = auth()->user();
+        $enrichment = new CategoryEnrichment();
         $enrichment->setUser($admin);
         $enrichment->setStart($this->parameters->get('start'));
         $enrichment->setEnd($this->parameters->get('end'));
-        $category    = $enrichment->enrichSingle($category);
+        $category = $enrichment->enrichSingle($category);
 
-        $resource    = new Item($category, $transformer, 'categories');
+        $resource = new Item($category, $transformer, 'categories');
 
         return response()->json($manager->createData($resource)->toArray())->header('Content-Type', self::CONTENT_TYPE);
     }

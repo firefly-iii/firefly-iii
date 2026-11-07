@@ -63,18 +63,14 @@ abstract class Controller extends BaseController
     use ValidatesRequests;
     use ValidatesUserGroupTrait;
 
-    protected string $monthAndDayFormat;
-
     protected const string CONTENT_TYPE      = 'application/vnd.api+json';
     protected const string JSON_CONTENT_TYPE = 'application/json';
-
-    protected array $acceptedRoles           = [];
-    protected array $accepts                 = ['application/json', 'application/vnd.api+json'];
-
-    protected bool $convertToPrimary         = false;
-
+    protected array $acceptedRoles = [];
+    protected array $accepts       = ['application/json', 'application/vnd.api+json'];
+    protected bool $convertToPrimary = false;
+    protected string $monthAndDayFormat;
     /** @deprecated use Request classes */
-    protected ParameterBag $parameters;
+    protected ParameterBag        $parameters;
     protected TransactionCurrency $primaryCurrency;
 
     /**
@@ -90,7 +86,7 @@ abstract class Controller extends BaseController
                 $this->convertToPrimary  = Amount::convertToPrimary();
                 $this->primaryCurrency   = Amount::getPrimaryCurrency();
                 $locale                  = Steam::getLocale();
-                $this->monthAndDayFormat = (string) trans('config.month_and_day_js', [], $locale);
+                $this->monthAndDayFormat = (string)trans('config.month_and_day_js', [], $locale);
                 app()->setLocale($language);
             }
 
@@ -122,14 +118,14 @@ abstract class Controller extends BaseController
             $params[$key] = $value;
         }
 
-        return $return.http_build_query($params);
+        return $return . http_build_query($params);
     }
 
     final protected function getManager(): Manager
     {
         // create some objects:
         $manager = new Manager();
-        $baseUrl = request()->getSchemeAndHttpHost().'/api/v1';
+        $baseUrl = request()->getSchemeAndHttpHost() . '/api/v1';
         $manager->setSerializer(new JsonApiSerializer($baseUrl));
 
         return $manager;
@@ -137,14 +133,14 @@ abstract class Controller extends BaseController
 
     final protected function jsonApiList(string $key, LengthAwarePaginator $paginator, AbstractTransformer $transformer): array
     {
-        $manager  = new Manager();
-        $baseUrl  = sprintf('%s/api/v1/', request()->getSchemeAndHttpHost());
+        $manager = new Manager();
+        $baseUrl = sprintf('%s/api/v1/', request()->getSchemeAndHttpHost());
 
         // TODO add stuff to path?
 
         $manager->setSerializer(new JsonApiSerializer($baseUrl));
 
-        $objects  = $paginator->getCollection();
+        $objects = $paginator->getCollection();
 
         // the transformer, at this point, needs to collect information that ALL items in the collection
         // require, like meta-data and stuff like that, and save it for later.
@@ -162,11 +158,11 @@ abstract class Controller extends BaseController
      *
      * @param array<int, mixed>|Model $object
      */
-    final protected function jsonApiObject(string $key, array|Model $object, AbstractTransformer $transformer): array
+    final protected function jsonApiObject(string $key, array | Model $object, AbstractTransformer $transformer): array
     {
         // create some objects:
-        $manager  = new Manager();
-        $baseUrl  = sprintf('%s/api/v1', request()->getSchemeAndHttpHost());
+        $manager = new Manager();
+        $baseUrl = sprintf('%s/api/v1', request()->getSchemeAndHttpHost());
         $manager->setSerializer(new JsonApiSerializer($baseUrl));
 
         $resource = new Item($object, $transformer, $key);
@@ -177,16 +173,17 @@ abstract class Controller extends BaseController
     #[Deprecated(message: <<<'TXT'
         use Request classes
          Method to grab all parameters from the URL
-        TXT)]
+        TXT
+    )]
     private function getParameters(): ParameterBag
     {
-        $bag      = new ParameterBag();
-        $page     = (int) request()->get('page');
-        $page     = clamp(value: $page, min: 1, max: 2 ** 16);
+        $bag  = new ParameterBag();
+        $page = (int)request()->get('page');
+        $page = clamp(value: $page, min: 1, max: 2 ** 16);
         $bag->set('page', $page);
 
         // some date fields:
-        $dates    = ['start', 'end', 'date'];
+        $dates = ['start', 'end', 'date'];
         foreach ($dates as $field) {
             $date = null;
 
@@ -197,13 +194,13 @@ abstract class Controller extends BaseController
                 Log::error($e->getMessage());
                 Log::error($e->getTraceAsString());
             }
-            $obj  = null;
+            $obj = null;
             if (null !== $date) {
                 try {
-                    $obj = Carbon::parse((string) $date, config('app.timezone'));
+                    $obj = Carbon::parse((string)$date, config('app.timezone'));
                 } catch (InvalidFormatException $e) {
                     // don't care
-                    Log::warning(sprintf('Ignored invalid date "%s" in API controller parameter check: %s', substr((string) $date, 0, 20), $e->getMessage()));
+                    Log::warning(sprintf('Ignored invalid date "%s" in API controller parameter check: %s', substr((string)$date, 0, 20), $e->getMessage()));
                 }
             }
             if ($obj instanceof Carbon) {
@@ -223,7 +220,7 @@ abstract class Controller extends BaseController
                 $value = null;
             }
             if (null !== $value) {
-                $value = (int) $value;
+                $value = (int)$value;
                 $value = clamp($value, 1, 2 ** 16);
                 $bag->set($integer, $value);
             }
@@ -231,9 +228,9 @@ abstract class Controller extends BaseController
             if (null === $value && auth()->check()) {
                 // set default for user:
                 /** @var User $user */
-                $user     = auth()->user();
+                $user = auth()->user();
 
-                $pageSize = (int) Preferences::getForUser($user, 'listPageSize', 50)->data;
+                $pageSize = (int)Preferences::getForUser($user, 'listPageSize', 50)->data;
                 $bag->set($integer, $pageSize);
             }
         }

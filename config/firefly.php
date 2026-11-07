@@ -132,6 +132,20 @@ return [
         'mfa_failure_count',
         'mfa_history',
         'mfa_recovery',
+        'temp-mfa-secret'
+    ],
+    // cannot be read over the API.
+    'api_hidden_preference_keys'               => [
+        'email_change_undo_token',
+        'email_change_confirm_token',
+        'access_token',
+        'login_ip_history',
+        'previous_email_latest',
+        'previous_email_',
+        'remote_guard_alt_email',
+        'mfa_failure_count',
+        'mfa_history',
+        'mfa_recovery',
         'temp-mfa-secret'],
 
 

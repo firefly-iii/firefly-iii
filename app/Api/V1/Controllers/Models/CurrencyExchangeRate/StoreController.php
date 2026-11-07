@@ -51,7 +51,7 @@ final class StoreController extends Controller
     public const string RESOURCE_KEY = 'exchange-rates';
 
     #[Override]
-    protected array $acceptedRoles   = [UserRoleEnum::OWNER];
+    protected array                         $acceptedRoles = [UserRoleEnum::OWNER];
     private ExchangeRateRepositoryInterface $repository;
 
     public function __construct()
@@ -67,13 +67,13 @@ final class StoreController extends Controller
 
     public function store(StoreRequest $request): JsonResponse
     {
-        $date        = $request->getDate();
-        $rate        = $request->getRate();
-        $from        = $request->getFromCurrency();
-        $to          = $request->getToCurrency();
+        $date = $request->getDate();
+        $rate = $request->getRate();
+        $from = $request->getFromCurrency();
+        $to   = $request->getToCurrency();
 
         // already has rate?
-        $object      = $this->repository->getSpecificRateOnDate($from, $to, $date);
+        $object = $this->repository->getSpecificRateOnDate($from, $to, $date);
         if ($object instanceof CurrencyExchangeRate) {
             // just update it, no matter.
             $rate = $this->repository->updateExchangeRate($object, $rate, $date);
@@ -93,8 +93,8 @@ final class StoreController extends Controller
 
     public function storeByCurrencies(StoreByCurrenciesRequest $request, TransactionCurrency $from, TransactionCurrency $to): JsonResponse
     {
-        $data        = $request->getAll();
-        $collection  = new Collection();
+        $data       = $request->getAll();
+        $collection = new Collection();
 
         foreach ($data as $date => $rate) {
             $date     = Carbon::createFromFormat('Y-m-d', $date);
@@ -107,7 +107,7 @@ final class StoreController extends Controller
 
                 continue;
             }
-            $new      = $this->repository->storeExchangeRate($from, $to, $rate, $date);
+            $new = $this->repository->storeExchangeRate($from, $to, $rate, $date);
             event(new CreatedCurrencyExchangeRate($new));
             $collection->push($new);
         }
@@ -122,9 +122,9 @@ final class StoreController extends Controller
 
     public function storeByDate(StoreByDateRequest $request, Carbon $date): JsonResponse
     {
-        $data        = $request->getAll();
-        $from        = $request->getFromCurrency();
-        $collection  = new Collection();
+        $data       = $request->getAll();
+        $from       = $request->getFromCurrency();
+        $collection = new Collection();
         foreach ($data['rates'] as $key => $rate) {
             $to       = Amount::getTransactionCurrencyByCode($key);
             $existing = $this->repository->getSpecificRateOnDate($from, $to, $date);
@@ -136,7 +136,7 @@ final class StoreController extends Controller
 
                 continue;
             }
-            $new      = $this->repository->storeExchangeRate($from, $to, $rate, $date);
+            $new = $this->repository->storeExchangeRate($from, $to, $rate, $date);
             $collection->push($new);
             event(new CreatedCurrencyExchangeRate($new));
         }

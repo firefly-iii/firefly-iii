@@ -42,7 +42,7 @@ final class AccountController extends Controller
     use ApiSupport;
 
     private OperationsRepositoryInterface $opsRepository;
-    private AccountRepositoryInterface $repository;
+    private AccountRepositoryInterface    $repository;
 
     /**
      * AccountController constructor.
@@ -51,8 +51,8 @@ final class AccountController extends Controller
     {
         parent::__construct();
         $this->middleware(function ($request, $next) {
-            $user                = auth()->user();
-            $this->repository    = app(AccountRepositoryInterface::class);
+            $user             = auth()->user();
+            $this->repository = app(AccountRepositoryInterface::class);
             $this->repository->setUser($user);
 
             $this->opsRepository = app(OperationsRepositoryInterface::class);
@@ -68,17 +68,17 @@ final class AccountController extends Controller
         $end           = $request->getEnd();
         $assetAccounts = $request->getAssetAccounts();
 
-        $income        = $this->opsRepository->sumIncomeByDestination($start, $end, $assetAccounts);
-        $result        = [];
+        $income = $this->opsRepository->sumIncomeByDestination($start, $end, $assetAccounts);
+        $result = [];
 
         /** @var array $entry */
         foreach ($income as $entry) {
             $result[] = [
-                'id'               => (string) $entry['id'],
+                'id'               => (string)$entry['id'],
                 'name'             => $entry['name'],
                 'difference'       => $entry['sum'],
-                'difference_float' => (float) $entry['sum'], // float but on purpose.
-                'currency_id'      => (string) $entry['currency_id'],
+                'difference_float' => (float)$entry['sum'], // float but on purpose.
+                'currency_id'      => (string)$entry['currency_id'],
                 'currency_code'    => $entry['currency_code'],
             ];
         }
@@ -98,11 +98,11 @@ final class AccountController extends Controller
         /** @var array $entry */
         foreach ($income as $entry) {
             $result[] = [
-                'id'               => (string) $entry['id'],
+                'id'               => (string)$entry['id'],
                 'name'             => $entry['name'],
                 'difference'       => $entry['sum'],
-                'difference_float' => (float) $entry['sum'], // float but on purpose.
-                'currency_id'      => (string) $entry['currency_id'],
+                'difference_float' => (float)$entry['sum'], // float but on purpose.
+                'currency_id'      => (string)$entry['currency_id'],
                 'currency_code'    => $entry['currency_code'],
             ];
         }

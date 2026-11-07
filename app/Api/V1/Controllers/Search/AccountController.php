@@ -45,55 +45,56 @@ final class AccountController extends Controller
 {
     use AccountFilter;
 
-    private array $validFields = [
-        AccountSearch::SEARCH_ALL,
-        AccountSearch::SEARCH_ID,
-        AccountSearch::SEARCH_NAME,
-        AccountSearch::SEARCH_IBAN,
-        AccountSearch::SEARCH_NUMBER,
-    ];
+    private array $validFields
+        = [
+            AccountSearch::SEARCH_ALL,
+            AccountSearch::SEARCH_ID,
+            AccountSearch::SEARCH_NAME,
+            AccountSearch::SEARCH_IBAN,
+            AccountSearch::SEARCH_NUMBER,
+        ];
 
     /**
      * This endpoint is documented at:
      * https://api-docs.firefly-iii.org/?urls.primaryName=2.0.0%20(v1)#/search/searchAccounts
      */
-    public function search(Request $request): JsonResponse|Response
+    public function search(Request $request): JsonResponse | Response
     {
-        $manager     = $this->getManager();
-        $query       = trim((string) $request->input('query'));
-        $field       = trim((string) $request->input('field'));
-        $type        = $request->input('type') ?? 'all';
+        $manager = $this->getManager();
+        $query   = trim((string)$request->input('query'));
+        $field   = trim((string)$request->input('field'));
+        $type    = $request->input('type') ?? 'all';
         if ('' === $query || !in_array($field, $this->validFields, strict: true)) {
             return response(null, 422);
         }
         Log::debug(sprintf('Now in account search("%s", "%s")', $field, $query));
-        $types       = $this->mapAccountTypes($type);
+        $types = $this->mapAccountTypes($type);
 
         /** @var AccountSearch $search */
-        $search      = app(AccountSearch::class);
+        $search = app(AccountSearch::class);
         $search->setUser(auth()->user());
         $search->setTypes($types);
         $search->setField($field);
         $search->setQuery($query);
 
-        $accounts    = $search->search();
+        $accounts = $search->search();
 
         // enrich
         /** @var User $admin */
-        $admin       = auth()->user();
-        $enrichment  = new AccountEnrichment();
+        $admin      = auth()->user();
+        $enrichment = new AccountEnrichment();
         $enrichment->setDate($this->parameters->get('date'));
         $enrichment->setUser($admin);
-        $accounts    = $enrichment->enrich($accounts);
+        $accounts = $enrichment->enrich($accounts);
 
         /** @var AccountTransformer $transformer */
         $transformer = app(AccountTransformer::class);
         $transformer->setParameters($this->parameters);
-        $count       = $accounts->count();
-        $perPage     = 0 === $count ? 1 : $count;
-        $paginator   = new LengthAwarePaginator($accounts, $count, $perPage, 1);
+        $count     = $accounts->count();
+        $perPage   = 0 === $count ? 1 : $count;
+        $paginator = new LengthAwarePaginator($accounts, $count, $perPage, 1);
 
-        $resource    = new FractalCollection($accounts, $transformer, 'accounts');
+        $resource = new FractalCollection($accounts, $transformer, 'accounts');
         $resource->setPaginator(new IlluminatePaginatorAdapter($paginator));
 
         return response()->json($manager->createData($resource)->toArray())->header('Content-Type', self::CONTENT_TYPE);

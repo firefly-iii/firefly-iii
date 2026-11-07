@@ -49,7 +49,11 @@ class PreferenceList implements BinderInterface
             $list   = array_unique(explode(',', $value));
             Log::debug('List of preferences is', $list);
             $result = new Collection();
+            $hiddenPreferences = config('firefly.api_hidden_preference_keys');
             foreach ($list as $item) {
+                if ((in_array($item, $hiddenPreferences, true) || array_any($hiddenPreferences, fn (string $arrayValue) => str_starts_with($item, $arrayValue)))) {
+                    continue;
+                }
                 $current = Preferences::get($item);
                 if (null === $current) {
                     $current = Preferences::set($item, null);

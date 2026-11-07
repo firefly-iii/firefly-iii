@@ -42,7 +42,7 @@ final class AccountController extends Controller
     use ApiSupport;
 
     private OperationsRepositoryInterface $opsRepository;
-    private AccountRepositoryInterface $repository;
+    private AccountRepositoryInterface    $repository;
 
     /**
      * AccountController constructor.
@@ -51,8 +51,8 @@ final class AccountController extends Controller
     {
         parent::__construct();
         $this->middleware(function ($request, $next) {
-            $user                = auth()->user();
-            $this->repository    = app(AccountRepositoryInterface::class);
+            $user             = auth()->user();
+            $this->repository = app(AccountRepositoryInterface::class);
             $this->repository->setUser($user);
 
             $this->opsRepository = app(OperationsRepositoryInterface::class);
@@ -73,11 +73,11 @@ final class AccountController extends Controller
         /** @var array $expense */
         foreach ($expenses as $expense) {
             $result[] = [
-                'id'               => (string) $expense['id'],
+                'id'               => (string)$expense['id'],
                 'name'             => $expense['name'],
                 'difference'       => $expense['sum'],
-                'difference_float' => (float) $expense['sum'], // intentional float
-                'currency_id'      => (string) $expense['currency_id'],
+                'difference_float' => (float)$expense['sum'], // intentional float
+                'currency_id'      => (string)$expense['currency_id'],
                 'currency_code'    => $expense['currency_code'],
             ];
         }
@@ -97,11 +97,11 @@ final class AccountController extends Controller
         /** @var array $expense */
         foreach ($expenses as $expense) {
             $result[] = [
-                'id'               => (string) $expense['id'],
+                'id'               => (string)$expense['id'],
                 'name'             => $expense['name'],
                 'difference'       => $expense['sum'],
-                'difference_float' => (float) $expense['sum'], // intentional float
-                'currency_id'      => (string) $expense['currency_id'],
+                'difference_float' => (float)$expense['sum'], // intentional float
+                'currency_id'      => (string)$expense['currency_id'],
                 'currency_code'    => $expense['currency_code'],
             ];
         }

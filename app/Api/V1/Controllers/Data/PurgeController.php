@@ -67,7 +67,7 @@ final class PurgeController extends Controller
     public function purge(): JsonResponse
     {
         /** @var User $user */
-        $user       = auth()->user();
+        $user = auth()->user();
 
         // some manual code, too lazy to call all repositories.
 

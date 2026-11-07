@@ -43,7 +43,7 @@ final class StoreController extends Controller
 {
     use TransactionFilter;
 
-    private JournalRepositoryInterface $journalRepository;
+    private JournalRepositoryInterface  $journalRepository;
     private LinkTypeRepositoryInterface $repository;
 
     /**
@@ -54,7 +54,7 @@ final class StoreController extends Controller
         parent::__construct();
         $this->middleware(function ($request, $next) {
             /** @var User $user */
-            $user                    = auth()->user();
+            $user = auth()->user();
 
             $this->repository        = app(LinkTypeRepositoryInterface::class);
             $this->journalRepository = app(JournalRepositoryInterface::class);
@@ -76,22 +76,22 @@ final class StoreController extends Controller
      */
     public function store(StoreRequest $request): JsonResponse
     {
-        $manager           = $this->getManager();
-        $data              = $request->getAll();
-        $inward            = $this->journalRepository->find($data['inward_id'] ?? 0);
-        $outward           = $this->journalRepository->find($data['outward_id'] ?? 0);
+        $manager = $this->getManager();
+        $data    = $request->getAll();
+        $inward  = $this->journalRepository->find($data['inward_id'] ?? 0);
+        $outward = $this->journalRepository->find($data['outward_id'] ?? 0);
         if (!$inward instanceof TransactionJournal || !$outward instanceof TransactionJournal) {
             throw new FireflyException('200024: Source or destination does not exist.');
         }
         $data['direction'] = 'inward';
 
-        $journalLink       = $this->repository->storeLink($data, $inward, $outward);
+        $journalLink = $this->repository->storeLink($data, $inward, $outward);
 
         /** @var TransactionLinkTransformer $transformer */
-        $transformer       = app(TransactionLinkTransformer::class);
+        $transformer = app(TransactionLinkTransformer::class);
         $transformer->setParameters($this->parameters);
 
-        $resource          = new Item($journalLink, $transformer, 'transaction_links');
+        $resource = new Item($journalLink, $transformer, 'transaction_links');
 
         return response()->json($manager->createData($resource)->toArray())->header('Content-Type', self::CONTENT_TYPE);
     }

@@ -54,7 +54,7 @@ final class BatchController extends Controller
     public function finishBatch(Request $request): JsonResponse
     {
         Log::debug('Now in finishBatch.');
-        $journals          = $this->repository->getUncompletedJournals();
+        $journals = $this->repository->getUncompletedJournals();
         if (0 === count($journals)) {
             Log::debug('Counted zero journals, return.');
 
@@ -63,8 +63,8 @@ final class BatchController extends Controller
         Log::debug(sprintf('Counted %d journals.', count($journals)));
 
         /** @var null|TransactionJournal $first */
-        $first             = $journals->first();
-        $group             = $first?->transactionGroup;
+        $first = $journals->first();
+        $group = $first?->transactionGroup;
         if (null === $group) {
             Log::debug('First group is NULL.');
 
