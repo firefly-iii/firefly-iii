@@ -37,7 +37,7 @@
         "postcss": "^8.5.14",
         "prettier": "^3",
         "sass": "^1",
-        "tailwindcss": "^4.0.0",
+        "tailwindcss": "^4.3.4",
         "vite-plugin-manifest-sri": "^0.2.0",
         "@eslint/js": "^10.0.1",
         "eslint": "^10.10.0",
