@@ -23,6 +23,7 @@ import {changedAmount} from "./changed-amount.js";
 export function removeSplit(index) {
     this.entries.splice(index, 1);
     this.links.splice(index, 1);
+    this.disableSplitInputs();
     // fall back to index 0
     const triggerFirstTabEl = document.querySelector("#split-0-tab");
     triggerFirstTabEl.click();

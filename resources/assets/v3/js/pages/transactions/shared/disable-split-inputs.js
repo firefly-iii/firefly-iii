@@ -27,9 +27,10 @@ export function disableSplitInputs() {
         "transfer" === this.groupProperties.transactionType || "withdrawal" === this.groupProperties.transactionType;
     let isTransferOrDeposit =
         "transfer" === this.groupProperties.transactionType || "deposit" === this.groupProperties.transactionType;
-    //console.log('Activate disableSplitInputs');
+    console.log('Activate disableSplitInputs', this.entries.length);
     // disable source and/or destination, based on account type.
     for (let i = 0; i < this.entries.length; i++) {
+        console.log('Now at index', i);
         let transactionType = this.groupProperties.transactionType;
         let sourceType = this.entries[i].source_account.type ?? "unknown";
         let destinationType = this.entries[i].destination_account.type ?? "unknown";
@@ -43,7 +44,8 @@ export function disableSplitInputs() {
             params.types = newTypes;
             inst.setConfig("serverParams", params);
         }
-
+        this.entries[i].source_account.disabled = false;
+        this.entries[i].destination_account.disabled = false;
         if (i > 0) {
             // disable dates
             this.entries[i].date_disabled = true;
@@ -55,9 +57,7 @@ export function disableSplitInputs() {
                 "withdrawal" === this.groupProperties.transactionType
             ) {
                 console.log("Prefill destination account #", i, this.entries[i].destination_account);
-                this.entries[i].destination_account = JSON.parse(
-                    JSON.stringify(this.entries[i - 1].destination_account),
-                ); //structuredClone();
+                this.entries[i].destination_account = JSON.parse(JSON.stringify(this.entries[i - 1].destination_account),); //structuredClone();
             }
 
             // disable source when withdrawal or transfer
