@@ -69,13 +69,7 @@ class Steam
         ];
     }
 
-    public function accountsBalancesOptimized(
-        Collection $accounts,
-        Carbon $date,
-        ?TransactionCurrency $primary = null,
-        ?bool $convertToPrimary = null,
-        bool $inclusive = true
-    ): array {
+    public function accountsBalancesOptimized(Collection $accounts, Carbon $date, ?TransactionCurrency $primary = null, ?bool $convertToPrimary = null, bool $inclusive = true): array {
         // Log::debug(sprintf('accountsBalancesOptimized: Called for %d account(s) with date/time "%s" (inclusive: %s)', $accounts->count(), $date->toIso8601String(), var_export($inclusive, true)));
         $result      = [];
         $convertToPrimary ??= Amount::convertToPrimary();
