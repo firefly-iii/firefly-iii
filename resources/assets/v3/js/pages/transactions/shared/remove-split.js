@@ -18,7 +18,6 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-import {changedAmount} from "./changed-amount.js";
 
 export function removeSplit(index) {
     this.entries.splice(index, 1);
