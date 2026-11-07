@@ -18,7 +18,6 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-
 export function removeSplit(index) {
     this.entries.splice(index, 1);
     this.links.splice(index, 1);
