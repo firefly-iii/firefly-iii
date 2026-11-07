@@ -36,10 +36,11 @@ export function changedAmount(e) {
     this.groupProperties.totalAmount = 0;
     for (let i in this.entries) {
         if (Object.hasOwn(this.entries, i)) {
-            if('' !== this.entries[i].amount) {
-                this.groupProperties.totalAmount = this.groupProperties.totalAmount + parseFloat(this.entries[i].amount);
+            if ("" !== this.entries[i].amount) {
+                this.groupProperties.totalAmount =
+                    this.groupProperties.totalAmount + parseFloat(this.entries[i].amount);
             }
-            console.log('totalAmount is now', this.groupProperties.totalAmount);
+            console.log("totalAmount is now", this.groupProperties.totalAmount);
         }
     }
 }

@@ -30,7 +30,6 @@ use FireflyIII\Helpers\Collector\GroupCollectorInterface;
 use FireflyIII\Http\Controllers\Controller;
 use FireflyIII\Models\Account;
 use FireflyIII\Repositories\Account\AccountRepositoryInterface;
-use FireflyIII\Support\Debug\Timer;
 use FireflyIII\Support\Facades\Preferences;
 use FireflyIII\Support\Facades\Steam;
 use FireflyIII\Support\Http\Controllers\PeriodOverview;
@@ -83,7 +82,12 @@ final class ShowController extends Controller
      * @throws FireflyException
      * @throws NotFoundExceptionInterface
      */
-    public function show(Request $request, Account $account, ?Carbon $start = null, ?Carbon $end = null): Factory|\Illuminate\Contracts\View\View|Redirector|RedirectResponse {
+    public function show(
+        Request $request,
+        Account $account,
+        ?Carbon $start = null,
+        ?Carbon $end = null
+    ): Factory|\Illuminate\Contracts\View\View|Redirector|RedirectResponse {
         if (0 === $account->id) {
             throw new NotFoundHttpException();
         }
@@ -172,7 +176,7 @@ final class ShowController extends Controller
             'chartUrl'     => $chartUrl,
             'location'     => $location,
             'balances'     => $balances,
-            'now' => $now,
+            'now'          => $now,
         ]);
     }
 
