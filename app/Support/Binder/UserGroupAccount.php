@@ -42,9 +42,10 @@ class UserGroupAccount implements BinderInterface
             /** @var User $user */
             $user    = auth()->user();
             $account = Account::query()
-                              ->where('id', (int)$value)
-                              ->where('user_group_id', $user->user_group_id)
-                              ->first();
+                ->where('id', (int) $value)
+                ->where('user_group_id', $user->user_group_id)
+                ->first()
+            ;
             if (null !== $account) {
                 return $account;
             }

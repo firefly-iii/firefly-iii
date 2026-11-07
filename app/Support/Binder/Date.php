@@ -44,16 +44,16 @@ class Date implements BinderInterface
         /** @var FiscalHelperInterface $fiscalHelper */
         $fiscalHelper = app(FiscalHelperInterface::class);
 
-        $magicWords = [
-            'currentMonthStart' => today(config('app.timezone'))->startOfMonth(),
-            'currentMonthEnd'   => today(config('app.timezone'))->endOfMonth(),
-            'currentYearStart'  => today(config('app.timezone'))->startOfYear(),
-            'currentYearEnd'    => today(config('app.timezone'))->endOfYear(),
+        $magicWords   = [
+            'currentMonthStart'       => today(config('app.timezone'))->startOfMonth(),
+            'currentMonthEnd'         => today(config('app.timezone'))->endOfMonth(),
+            'currentYearStart'        => today(config('app.timezone'))->startOfYear(),
+            'currentYearEnd'          => today(config('app.timezone'))->endOfYear(),
 
-            'previousMonthStart' => today(config('app.timezone'))->startOfMonth()->subDay()->startOfMonth(),
-            'previousMonthEnd'   => today(config('app.timezone'))->startOfMonth()->subDay()->endOfMonth(),
-            'previousYearStart'  => today(config('app.timezone'))->startOfYear()->subDay()->startOfYear(),
-            'previousYearEnd'    => today(config('app.timezone'))->startOfYear()->subDay()->endOfYear(),
+            'previousMonthStart'      => today(config('app.timezone'))->startOfMonth()->subDay()->startOfMonth(),
+            'previousMonthEnd'        => today(config('app.timezone'))->startOfMonth()->subDay()->endOfMonth(),
+            'previousYearStart'       => today(config('app.timezone'))->startOfYear()->subDay()->startOfYear(),
+            'previousYearEnd'         => today(config('app.timezone'))->startOfYear()->subDay()->endOfYear(),
 
             'currentFiscalYearStart'  => $fiscalHelper->startOfFiscalYear(today(config('app.timezone'))),
             'currentFiscalYearEnd'    => $fiscalHelper->endOfFiscalYear(today(config('app.timezone'))),
@@ -69,8 +69,8 @@ class Date implements BinderInterface
 
         try {
             $result = new Carbon($value);
-        } catch (InvalidDateException | InvalidFormatException $e) {
-            $message = sprintf('Could not parse date "%s" for user #%d: %s', $value, (int)auth()->user()?->id, $e->getMessage());
+        } catch (InvalidDateException|InvalidFormatException $e) {
+            $message = sprintf('Could not parse date "%s" for user #%d: %s', $value, (int) auth()->user()?->id, $e->getMessage());
             Log::error($message);
 
             throw new NotFoundHttpException('Could not parse value', $e);

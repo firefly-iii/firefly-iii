@@ -48,7 +48,7 @@ class CategoryList implements BinderInterface
 
                 throw new NotFoundHttpException();
             }
-            $list = array_unique(array_map(\intval(...), explode(',', $value)));
+            $list       = array_unique(array_map(\intval(...), explode(',', $value)));
 
             /** @var Collection $collection */
             $collection = auth()->user()->categories()->whereIn('id', $list)->get();
