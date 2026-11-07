@@ -38,9 +38,9 @@ use Illuminate\Support\Collection;
  */
 final class BudgetController extends Controller
 {
-    private NoBudgetRepositoryInterface   $noRepository;
+    private NoBudgetRepositoryInterface $noRepository;
     private OperationsRepositoryInterface $opsRepository;
-    private BudgetRepositoryInterface     $repository;
+    private BudgetRepositoryInterface $repository;
 
     /**
      * AccountController constructor.
@@ -79,11 +79,11 @@ final class BudgetController extends Controller
             /** @var array $expense */
             foreach ($expenses as $expense) {
                 $result[] = [
-                    'id'               => (string)$budget->id,
+                    'id'               => (string) $budget->id,
                     'name'             => $budget->name,
                     'difference'       => $expense['sum'],
-                    'difference_float' => (float)$expense['sum'], // intentional float
-                    'currency_id'      => (string)$expense['currency_id'],
+                    'difference_float' => (float) $expense['sum'], // intentional float
+                    'currency_id'      => (string) $expense['currency_id'],
                     'currency_code'    => $expense['currency_code'],
                 ];
             }
@@ -104,8 +104,8 @@ final class BudgetController extends Controller
         foreach ($expenses as $expense) {
             $result[] = [
                 'difference'       => $expense['sum'],
-                'difference_float' => (float)$expense['sum'], // intentional float
-                'currency_id'      => (string)$expense['currency_id'],
+                'difference_float' => (float) $expense['sum'], // intentional float
+                'currency_id'      => (string) $expense['currency_id'],
                 'currency_code'    => $expense['currency_code'],
             ];
         }

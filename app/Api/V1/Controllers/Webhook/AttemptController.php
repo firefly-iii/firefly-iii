@@ -73,30 +73,30 @@ final class AttemptController extends Controller
         }
         if (false === AppConfiguration::get('allow_webhooks', config('firefly.allow_webhooks'))->data) {
             Log::channel('audit')->warning(sprintf(
-                                               'User lists webhook attempts of webhook #%d and message #%d, but webhooks are DISABLED.',
-                                               $webhook->id,
-                                               $message->id
-                                           ));
+                'User lists webhook attempts of webhook #%d and message #%d, but webhooks are DISABLED.',
+                $webhook->id,
+                $message->id
+            ));
 
             throw new NotFoundHttpException('Webhooks are not enabled.');
         }
         Log::channel('audit')->info(sprintf('User lists webhook attempts of webhook #%d and message #%d.', $webhook->id, $message->id));
 
-        $manager    = $this->getManager();
-        $pageSize   = $this->parameters->get('limit');
-        $collection = $this->repository->getAttempts($message);
-        $count      = $collection->count();
-        $attempts   = $collection->slice(($this->parameters->get('page') - 1) * $pageSize, $pageSize);
+        $manager     = $this->getManager();
+        $pageSize    = $this->parameters->get('limit');
+        $collection  = $this->repository->getAttempts($message);
+        $count       = $collection->count();
+        $attempts    = $collection->slice(($this->parameters->get('page') - 1) * $pageSize, $pageSize);
 
         // make paginator:
-        $paginator = new LengthAwarePaginator($attempts, $count, $pageSize, $this->parameters->get('page'));
-        $paginator->setPath(route('api.v1.webhooks.attempts.index', [$webhook->id, $message->id]) . $this->buildParams());
+        $paginator   = new LengthAwarePaginator($attempts, $count, $pageSize, $this->parameters->get('page'));
+        $paginator->setPath(route('api.v1.webhooks.attempts.index', [$webhook->id, $message->id]).$this->buildParams());
 
         /** @var WebhookAttemptTransformer $transformer */
         $transformer = app(WebhookAttemptTransformer::class);
         $transformer->setParameters($this->parameters);
 
-        $resource = new FractalCollection($attempts, $transformer, 'webhook_attempts');
+        $resource    = new FractalCollection($attempts, $transformer, 'webhook_attempts');
         $resource->setPaginator(new IlluminatePaginatorAdapter($paginator));
 
         return response()->json($manager->createData($resource)->toArray())->header('Content-Type', self::CONTENT_TYPE);
@@ -121,23 +121,23 @@ final class AttemptController extends Controller
 
         if (false === AppConfiguration::get('allow_webhooks', config('firefly.allow_webhooks'))->data) {
             Log::channel('audit')->warning(sprintf(
-                                               'User views single webhook attempt #%d of webhook #%d and message #%d, but webhooks are DISABLED',
-                                               $attempt->id,
-                                               $webhook->id,
-                                               $message->id
-                                           ));
+                'User views single webhook attempt #%d of webhook #%d and message #%d, but webhooks are DISABLED',
+                $attempt->id,
+                $webhook->id,
+                $message->id
+            ));
 
             throw new NotFoundHttpException('Webhooks are not enabled.');
         }
 
         Log::channel('audit')->info(sprintf('User views single webhook attempt #%d of webhook #%d and message #%d.', $attempt->id, $webhook->id, $message->id));
 
-        $manager = $this->getManager();
+        $manager     = $this->getManager();
 
         /** @var WebhookAttemptTransformer $transformer */
         $transformer = app(WebhookAttemptTransformer::class);
         $transformer->setParameters($this->parameters);
-        $resource = new Item($attempt, $transformer, self::RESOURCE_KEY);
+        $resource    = new Item($attempt, $transformer, self::RESOURCE_KEY);
 
         return response()->json($manager->createData($resource)->toArray())->header('Content-Type', self::CONTENT_TYPE);
     }

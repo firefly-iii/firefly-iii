@@ -39,7 +39,7 @@ use Override;
 final class RuleGroupController extends Controller
 {
     #[Override]
-    protected array                      $acceptedRoles = [UserRoleEnum::READ_RULES];
+    protected array $acceptedRoles = [UserRoleEnum::READ_RULES];
     private RuleGroupRepositoryInterface $repository;
 
     /**
@@ -66,7 +66,7 @@ final class RuleGroupController extends Controller
         /** @var RuleGroup $group */
         foreach ($groups as $group) {
             $response[] = [
-                'id'          => (string)$group->id,
+                'id'          => (string) $group->id,
                 'name'        => $group->title,
                 'description' => $group->description,
                 'active'      => $group->active,

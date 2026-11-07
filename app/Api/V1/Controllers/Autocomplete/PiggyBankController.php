@@ -42,8 +42,8 @@ use Override;
 final class PiggyBankController extends Controller
 {
     #[Override]
-    protected array                      $acceptedRoles = [UserRoleEnum::READ_PIGGY_BANKS];
-    private AccountRepositoryInterface   $accountRepository;
+    protected array $acceptedRoles = [UserRoleEnum::READ_PIGGY_BANKS];
+    private AccountRepositoryInterface $accountRepository;
     private PiggyBankRepositoryInterface $piggyRepository;
 
     /**
@@ -77,7 +77,7 @@ final class PiggyBankController extends Controller
             $currentAmount = $this->piggyRepository->getCurrentAmount($piggy);
             $objectGroup   = $piggy->objectGroups()->first();
             $response[]    = [
-                'id'                      => (string)$piggy->id,
+                'id'                      => (string) $piggy->id,
                 'name'                    => $piggy->name,
                 'name_with_balance'       => sprintf(
                     '%s (%s / %s)',
@@ -85,12 +85,12 @@ final class PiggyBankController extends Controller
                     Amount::formatAnything($currency, $currentAmount, false),
                     Amount::formatAnything($currency, $piggy->target_amount, false)
                 ),
-                'currency_id'             => (string)$currency->id,
+                'currency_id'             => (string) $currency->id,
                 'currency_name'           => $currency->name,
                 'currency_code'           => $currency->code,
                 'currency_symbol'         => $currency->symbol,
                 'currency_decimal_places' => $currency->decimal_places,
-                'object_group_id'         => null === $objectGroup ? null : (string)$objectGroup->id,
+                'object_group_id'         => null === $objectGroup ? null : (string) $objectGroup->id,
                 'object_group_title'      => $objectGroup?->title,
                 'object_group_order'      => $objectGroup?->order,
             ];
