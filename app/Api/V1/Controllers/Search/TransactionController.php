@@ -49,7 +49,7 @@ final class TransactionController extends Controller
         parent::__construct();
         $this->middleware(function ($request, $next) {
             /** @var User $admin */
-            $admin = auth()->user();
+            $admin            = auth()->user();
 
             $this->repository = app(JournalRepositoryInterface::class);
             $this->repository->setUser($admin);
@@ -62,10 +62,10 @@ final class TransactionController extends Controller
     {
         $count          = 0;
         $includeDeleted = $request->attributes->get('include_deleted', false);
-        $externalId     = (string)$request->attributes->get('external_identifier');
-        $internalRef    = (string)$request->attributes->get('internal_reference');
-        $notes          = (string)$request->attributes->get('notes');
-        $description    = (string)$request->attributes->get('description');
+        $externalId     = (string) $request->attributes->get('external_identifier');
+        $internalRef    = (string) $request->attributes->get('internal_reference');
+        $notes          = (string) $request->attributes->get('notes');
+        $description    = (string) $request->attributes->get('description');
         Log::debug(sprintf('Include deleted? %s', var_export(value: $includeDeleted, return: true)));
         if ('' !== $externalId) {
             $count += $this->repository->countByMeta('external_id', $externalId, $includeDeleted);
@@ -93,31 +93,31 @@ final class TransactionController extends Controller
      */
     public function search(TransactionSearchRequest $request, SearchInterface $searcher): JsonResponse
     {
-        $manager   = $this->getManager();
-        $fullQuery = (string)$request->attributes->get('query');
-        $page      = $request->attributes->get('page');
-        $pageSize  = $request->attributes->get('limit');
+        $manager      = $this->getManager();
+        $fullQuery    = (string) $request->attributes->get('query');
+        $page         = $request->attributes->get('page');
+        $pageSize     = $request->attributes->get('limit');
         $searcher->parseQuery($fullQuery);
         $searcher->setPage($page);
         $searcher->setLimit($pageSize);
-        $groups     = $searcher->searchTransactions();
-        $parameters = ['search' => $fullQuery];
-        $url        = route('api.v1.search.transactions') . '?' . http_build_query($parameters);
+        $groups       = $searcher->searchTransactions();
+        $parameters   = ['search' => $fullQuery];
+        $url          = route('api.v1.search.transactions').'?'.http_build_query($parameters);
         $groups->setPath($url);
 
         // enrich
-        $enrichment = new TransactionGroupEnrichment();
+        $enrichment   = new TransactionGroupEnrichment();
         $enrichment->setUser(auth()->user());
         $transactions = $enrichment->enrich($groups->getCollection());
 
         /** @var TransactionGroupTransformer $transformer */
-        $transformer = app(TransactionGroupTransformer::class);
+        $transformer  = app(TransactionGroupTransformer::class);
         $transformer->setParameters($this->parameters);
 
-        $resource = new Collection($transactions, $transformer, 'transactions');
+        $resource     = new Collection($transactions, $transformer, 'transactions');
         $resource->setPaginator(new IlluminatePaginatorAdapter($groups));
 
-        $array = $manager->createData($resource)->toArray();
+        $array        = $manager->createData($resource)->toArray();
 
         return response()->json($array)->header('Content-Type', self::CONTENT_TYPE);
     }

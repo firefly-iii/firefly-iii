@@ -69,15 +69,15 @@ final class StoreController extends Controller
      */
     public function store(StoreRequest $request): JsonResponse
     {
-        $data = $request->getAll();
+        $data        = $request->getAll();
         // if currency ID is 0, find the currency by the code:
-        $linkType = $this->repository->store($data);
-        $manager  = $this->getManager();
+        $linkType    = $this->repository->store($data);
+        $manager     = $this->getManager();
 
         /** @var LinkTypeTransformer $transformer */
         $transformer = app(LinkTypeTransformer::class);
         $transformer->setParameters($this->parameters);
-        $resource = new Item($linkType, $transformer, 'link_types');
+        $resource    = new Item($linkType, $transformer, 'link_types');
 
         return response()->json($manager->createData($resource)->toArray())->header('Content-Type', self::CONTENT_TYPE);
     }

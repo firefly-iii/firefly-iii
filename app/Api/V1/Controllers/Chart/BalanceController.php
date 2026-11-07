@@ -49,8 +49,8 @@ final class BalanceController extends Controller
     #[Override]
     protected array $acceptedRoles = [UserRoleEnum::READ_ONLY];
 
-    private array                      $chartData = [];
-    private GroupCollectorInterface    $collector;
+    private array $chartData       = [];
+    private GroupCollectorInterface $collector;
     private AccountRepositoryInterface $repository;
 
     // private TransactionCurrency        $default;
@@ -90,17 +90,18 @@ final class BalanceController extends Controller
         // get journals for entire period:
 
         $this->collector->setRange($queryParameters['start'], $queryParameters['end'])
-                        ->withAccountInformation()
-                        ->setXorAccounts($accounts)
-                        ->setTypes([
-                                       TransactionTypeEnum::WITHDRAWAL->value,
-                                       TransactionTypeEnum::DEPOSIT->value,
-                                       TransactionTypeEnum::RECONCILIATION->value,
-                                       TransactionTypeEnum::TRANSFER->value,
-                                   ]);
-        $journals = $this->collector->getExtractedJournals();
+            ->withAccountInformation()
+            ->setXorAccounts($accounts)
+            ->setTypes([
+                TransactionTypeEnum::WITHDRAWAL->value,
+                TransactionTypeEnum::DEPOSIT->value,
+                TransactionTypeEnum::RECONCILIATION->value,
+                TransactionTypeEnum::TRANSFER->value,
+            ])
+        ;
+        $journals        = $this->collector->getExtractedJournals();
 
-        $object = new AccountBalanceGrouped();
+        $object          = new AccountBalanceGrouped();
         $object->setPreferredRange($queryParameters['period']);
         $object->setPrimary($this->primaryCurrency);
         $object->setAccounts($accounts);
@@ -108,7 +109,7 @@ final class BalanceController extends Controller
         $object->setStart($queryParameters['start']);
         $object->setEnd($queryParameters['end']);
         $object->groupByCurrencyAndPeriod();
-        $data = $object->convertToChartData();
+        $data            = $object->convertToChartData();
         foreach ($data as $entry) {
             $this->chartData[] = $entry;
         }

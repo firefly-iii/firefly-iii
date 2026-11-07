@@ -60,21 +60,22 @@ class Preferences
 
     public function allApiFiltered(): Collection
     {
-        $user = auth()->user();
+        $user              = auth()->user();
         if (null === $user) {
             return new Collection();
         }
         $systemPreferences = config('firefly.api_hidden_preference_keys');
 
-        $set = Preference::query()
-                         ->where('user_id', $user->id)
-                         ->where('name', '!=', 'currencyPreference')
-                         ->where(static function (Builder $q) use ($user): void {
-                             $q->whereNull('user_group_id');
-                             $q->orWhere('user_group_id', $user->user_group_id);
-                         })
-                         ->whereNotIn('name', $systemPreferences)
-                         ->get();
+        $set               = Preference::query()
+            ->where('user_id', $user->id)
+            ->where('name', '!=', 'currencyPreference')
+            ->where(static function (Builder $q) use ($user): void {
+                $q->whereNull('user_group_id');
+                $q->orWhere('user_group_id', $user->user_group_id);
+            })
+            ->whereNotIn('name', $systemPreferences)
+            ->get()
+        ;
 
         // still needs some filtering:
         return $set->filter(static function (Preference $preference) use ($systemPreferences): bool {
@@ -98,7 +99,10 @@ class Preferences
     public function delete(string $name, bool $overrule = false): bool
     {
         $systemPreferences = config('firefly.system_preference_keys');
-        if (false === $overrule && (in_array($name, $systemPreferences, true) || array_any($systemPreferences, fn (string $arrayValue) => str_starts_with($name, $arrayValue)))) {
+        if (
+            false === $overrule
+            && (in_array($name, $systemPreferences, true) || array_any($systemPreferences, fn (string $arrayValue) => str_starts_with($name, $arrayValue)))
+        ) {
             throw new FireflyException(sprintf('Function delete() cannot be used to delete preference "%s"', $name));
         }
         $fullName          = sprintf('preference%s%s', auth()->user()->id, $name);
