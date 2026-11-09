@@ -35,7 +35,8 @@ export default function getExpectedAccountTypes(transactionType, sourceType, des
     }
     // is withdrawal and source is liability? Limit destination types
     if ("withdrawal" === transactionType && ["Loan", "Debt", "Mortgage"].includes(sourceType)) {
-        return ["Expense account"];
+        // 2026-11-09 do not limit this list yet (issue #13077)
+        return ["Expense account", "Asset account", "Loan", "Debt", "Mortgage"];
     }
 
     // is deposit? limit destination types.
