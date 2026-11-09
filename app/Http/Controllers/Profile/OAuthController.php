@@ -45,19 +45,18 @@ final class OAuthController extends Controller
     protected bool $internalAuth;
 
     public function __construct(
-        protected ClientRepository  $clients,
+        protected ClientRepository $clients,
         protected ValidationFactory $validation
-    )
-    {
+    ) {
         parent::__construct();
 
         $this->middleware(static function ($request, $next) {
-            app('view')->share('title', (string)trans('firefly.oauth_tokens'));
+            app('view')->share('title', (string) trans('firefly.oauth_tokens'));
             app('view')->share('mainTitleIcon', 'bi-person');
 
             return $next($request);
         });
-        $authGuard = config('firefly.authentication_guard');
+        $authGuard          = config('firefly.authentication_guard');
         $this->internalAuth = 'web' === $authGuard;
         Log::debug(sprintf('ProfileController::__construct(). Authentication guard is "%s"', $authGuard));
     }
@@ -77,7 +76,8 @@ final class OAuthController extends Controller
             ->each(function (#[SensitiveParameter] Token $token): void {
                 $token->refreshToken?->revoke();
                 $token->revoke();
-            });
+            })
+        ;
 
         $client->forceFill(['revoked' => true])->save();
 
@@ -109,7 +109,7 @@ final class OAuthController extends Controller
             $repository = app(ClientRepository::class);
             $repository->createPersonalAccessGrantClient('Firefly III Personal Access Grant Client', null);
         }
-        $link = route('index');
+        $link  = route('index');
 
         return view('profile.oauth.index', compact('link'));
     }
@@ -122,13 +122,13 @@ final class OAuthController extends Controller
         Log::debug('Now in listClients()');
         // Retrieving all the OAuth app clients that belong to the user...
         $clients = auth()->user()->oauthApps()->where('revoked', false)->get();
-        $array = [];
+        $array   = [];
 
         /** @var Client $client */
         foreach ($clients as $client) {
-            $item = $client->toArray();
+            $item                 = $client->toArray();
             $item['confidential'] = $client->confidential();
-            $array[] = $item;
+            $array[]              = $item;
         }
 
         return response()->json($array);
@@ -144,21 +144,22 @@ final class OAuthController extends Controller
             ->where('revoked', false)
             ->where('expires_at', '>', Date::now())
             ->get()
-            ->filter(fn(#[SensitiveParameter] Token $token) => $token->client->hasGrantType('personal_access'))
-            ->values();
+            ->filter(fn (#[SensitiveParameter] Token $token) => $token->client->hasGrantType('personal_access'))
+            ->values()
+        ;
 
         return response()->json($tokens);
     }
 
     public function regenerateClientSecret(Request $request, string $clientId): JsonResponse|Response
     {
-        $client = auth()->user()->oauthApps()->where('revoked', false)->find($clientId);
+        $client             = auth()->user()->oauthApps()->where('revoked', false)->find($clientId);
         if (null === $client) {
             return new Response('', 404);
         }
         // $client->
         $this->clients->regenerateSecret($client);
-        $arr = $client->toArray();
+        $arr                = $client->toArray();
         $arr['plainSecret'] = $client->plainSecret;
 
         return response()->json($arr);
@@ -166,21 +167,21 @@ final class OAuthController extends Controller
 
     public function storeClient(Request $request): JsonResponse
     {
-        $validProtocols = AppConfiguration::get('valid_url_protocols', config('firefly.valid_url_protocols'))->data;
+        $validProtocols     = AppConfiguration::get('valid_url_protocols', config('firefly.valid_url_protocols'))->data;
         $this->validation->make($request->only(['name', 'redirect_uris', 'confidential']), [
-            'name' => ['required', 'string', 'max:255'],
+            'name'          => ['required', 'string', 'max:255'],
             'redirect_uris' => ['required', sprintf('url:%s', $validProtocols)],
-            'confidential' => 'boolean',
+            'confidential'  => 'boolean',
         ])->validate();
 
         // Creating an OAuth app client that belongs to the given user...
-        $client = app(ClientRepository::class)->createAuthorizationCodeGrantClient(
+        $client             = app(ClientRepository::class)->createAuthorizationCodeGrantClient(
             name: $request->input('name'),
             redirectUris: [$request->input('redirect_uris')],
             confidential: $request->input('confidential'),
             user: auth()->user()
         );
-        $arr = $client->toArray();
+        $arr                = $client->toArray();
         $arr['plainSecret'] = $client->plainSecret;
 
         return response()->json($arr);
@@ -197,14 +198,14 @@ final class OAuthController extends Controller
 
     public function updateClient(Request $request, string $clientId): Client|Response
     {
-        $client = auth()->user()->oauthApps()->where('revoked', false)->find($clientId);
+        $client         = auth()->user()->oauthApps()->where('revoked', false)->find($clientId);
         $validProtocols = AppConfiguration::get('valid_url_protocols', config('firefly.valid_url_protocols'))->data;
         if (null === $client) {
             return new Response('', 404);
         }
 
         $this->validation->make($request->only(['name', 'redirect_uris']), [
-            'name' => ['required', 'string', 'max:255'],
+            'name'          => ['required', 'string', 'max:255'],
             'redirect_uris' => ['required', sprintf('url:%s', $validProtocols)],
         ])->validate();
 
