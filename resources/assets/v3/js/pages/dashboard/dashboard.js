@@ -28,6 +28,7 @@ import formatMoney from "../../util/format-money.js";
 import { getVariable } from "../../store/get-variable.js";
 import { getVariables } from "../../store/get-variables.js";
 import { drawMultiCurrencyChart } from "../../shared/draw-chart.js";
+import SankeyChart from '../../shared/sankey-chart.js';
 import formatDate from "../../util/format-date.js";
 import ReleaseNotes from "../../api/system/release-notes.js";
 import Post from "../../api/preferences/post.js";
@@ -126,6 +127,8 @@ let index = function () {
                     true,
                     true,
                 );
+                let sankey = new SankeyChart(start, end, value);
+                sankey.loadChart();
 
                 drawMultiCurrencyChart(
                     "stacked-column",

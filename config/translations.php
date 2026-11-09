@@ -61,6 +61,8 @@ return [
                 'bad_type_destination',
             ],
             'firefly'    => [
+                'multi_select_select_none',
+                'multi_select_select_all',
                 'you_create_transfer',
                 'you_create_withdrawal',
                 'you_create_deposit',

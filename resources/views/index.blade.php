@@ -24,6 +24,22 @@
                 </div>
             </div>
 
+            <!--ACCOUNTS -->
+            <div class="card mb-2 card-outline">
+                <div class="card-header">
+                    <div class="card-title">TODO SANKEY
+                    </div>
+                </div>
+                <div class="card-body">
+                    <div>
+                        <canvas id="sankey-chart" class="wide-chart" height="400" width="100%"></canvas>
+                    </div>
+                </div>
+                <div class="d-print-none card-footer text-end">
+                    TODO SANKEY EXTRA LINK
+                </div>
+            </div>
+
             <!--BUDGETS -->
             <div class="card mb-2 card-outline">
                 <div class="card-header ">
