@@ -108,7 +108,7 @@
 
                                         {{-- SOURCE ACCOUNT NAME FOR DEPOSIT --}}
                                         @if($journal['transaction_type_type'] == 'Deposit')
-                                            <input class="form-control ac-account form-control-sm" spellcheck="false"
+                                            <input class="form-control ac-source form-control-sm" spellcheck="false"
                                                    placeholder="@if($journal['source_account_type'] !== 'Cash account'){{ $journal['source_account_name'] }}@endif"
                                                    autocomplete="off"
                                                    name="source_name[{{ $journal['transaction_journal_id'] }}]" type="text"
@@ -133,7 +133,7 @@
 
                                         {{-- DESTINATION ACCOUNT NAME FOR WITHDRAWAL --}}
                                         @if($journal['transaction_type_type'] === 'Withdrawal')
-                                            <input class="form-control form-control-sm ac-account" spellcheck="false"
+                                            <input class="form-control form-control-sm ac-destination" spellcheck="false"
                                                    placeholder="@if(array_key_exists('destination_account_type', $journal) && $journal['destination_account_type'] !== 'Cash account'){{ $journal['destination_account_name'] }}@endif"
                                                    name="destination_name[{{ $journal['transaction_journal_id'] }}]" type="text" autocomplete="off"
                                                    value="@if(array_key_exists('destination_account_type', $journal) && $journal['destination_account_type'] !== 'Cash account') {{ $journal['destination_account_name'] }}@endif">
