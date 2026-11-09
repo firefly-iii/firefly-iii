@@ -46,7 +46,7 @@ export function showMessageOrRedirectUser(sourceOfCall) {
         this.notifications.success.url = "transactions/show/" + parseInt(this.groupProperties.id);
 
         // title depends on form role.
-        if ("create" === this.formBehaviour.formType) {
+        if ("create" === this.formBehaviour.formType || true === this.formStates.saveAsNewButton) {
             this.notifications.success.text = i18next.t("firefly.stored_journal_js", {
                 description: this.groupProperties.title,
                 interpolation: { escapeValue: false },
@@ -113,7 +113,7 @@ export function showMessageOrRedirectUser(sourceOfCall) {
     let finalFrom = baseHref + from;
 
     if ("" !== from) {
-        if ("edit" === this.formBehaviour.formType) {
+        if ("edit" === this.formBehaviour.formType && false === this.formStates.saveAsNewButton) {
             window.location =
                 finalFrom + separator + "transaction_group_id=" + this.groupProperties.id + "&message=updated";
             return;
@@ -122,7 +122,7 @@ export function showMessageOrRedirectUser(sourceOfCall) {
             finalFrom + separator + "transaction_group_id=" + this.groupProperties.id + "&message=created";
         return;
     }
-    if ("edit" === this.formBehaviour.formType) {
+    if ("edit" === this.formBehaviour.formType && false === this.formStates.saveAsNewButton) {
         window.location =
             "transactions/show/" +
             this.groupProperties.id +

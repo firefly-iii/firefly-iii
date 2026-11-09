@@ -25,4 +25,7 @@ export default class Post {
         let url = "/api/v1/transactions";
         return api.post(url, submission);
     }
+    submit(submission) {
+        return this.post(submission);
+    }
 }

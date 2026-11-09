@@ -32,6 +32,7 @@ import i18next from "i18next";
 import { defaultErrorSet } from "./shared/create-empty-split.js";
 import { parseFromEntries } from "./shared/parse-from-entries.js";
 import Put from "../../api/model/transaction/put.js";
+import Post from "../../api/model/transaction/post.js";
 import { showMessageOrRedirectUser } from "./shared/show-message-or-redirect.js";
 import { processAttachments } from "./shared/process-attachments.js";
 import sidebar from "../shared/sidebar.js";
@@ -413,9 +414,12 @@ let transactions = function () {
             }
 
             // submit the transaction. Multi-stage process thing going on here!
-            let putter = new Put();
-            putter
-                .put(submission, { id: this.groupProperties.id })
+            let submitter = new Put();
+            if(true === this.formStates.saveAsNewButton) {
+                submitter = new Post();
+            }
+            submitter
+                .submit(submission, { id: this.groupProperties.id })
                 .then((response) => {
                     this.formStates.storedGroup = true;
                     const group = response.data.data;
