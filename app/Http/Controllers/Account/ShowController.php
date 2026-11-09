@@ -253,6 +253,7 @@ final class ShowController extends Controller
             'start'        => $start,
             'end'          => $end,
             'balances'     => $balances,
+            'now'          => $now,
         ]);
     }
 }
