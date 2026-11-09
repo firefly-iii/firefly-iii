@@ -63,6 +63,9 @@ table.sortable thead th[data-sort-column] span {
 .search-button {
     cursor: pointer;
 }
+.edit-button {
+    cursor: pointer;
+}
 table.sortable th[data-sort-column].sortable_sorted_asc:not(th.is-searching):before {
     content: "\25B4 ";
 }

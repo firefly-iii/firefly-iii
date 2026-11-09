@@ -123,6 +123,33 @@ let index = function () {
             });
         },
 
+        submitInlineEdit(id, field, value) {
+            console.log('submitInlineEdit(#'+id+', "'+field+'", "'+value+'")');
+            // this.groupedObjects[tableId].items
+            let tableId;
+            for (tableId in this.groupedObjects) {
+                if (Object.hasOwn(this.groupedObjects, tableId)) {
+                    for(let i = 0;i<this.groupedObjects[tableId].items.length;i++) {
+                        if(id === this.groupedObjects[tableId].items[i].id) {
+                            // submit, only change when comes back OK.
+                            // needs loading screen?
+                            let put = new Put();
+                            let submission = {};
+                            submission[field] = value;
+                            put.put(submission, {id: id}).then(() => {
+                                this.groupedObjects[tableId].items[i][field] = value;
+                            }).catch((e) => {
+                                console.error(e);
+                            });
+
+                            // console.log('Found account', this.groupedObjects[tableId].items[i]);
+                        }
+                    }
+                }
+            }
+            console.log('Done met submitInlineEdit');
+        },
+
         prepareSumArrays(group, code) {
             this.sums[group] = this.sums[group] ?? {};
             this.differences[group] = this.differences[group] ?? {};

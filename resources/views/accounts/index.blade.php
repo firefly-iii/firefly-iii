@@ -41,13 +41,13 @@
                                 </tr>
                             </template>
                             <tr>
-                                <th data-sort-column="order" class="w-5">
+                                <th data-sort-column="order" data-edit-column="name" class="w-5">
                                     <span class="title">&nbsp;</span>
                                 </th>
                                 <th data-sort-column="name" data-filter-column="name" class="w-20"><span class="title">{{ trans('list.name') }}</span></th>
                                 <template x-if="'asset' === objectType">
                                     {{-- hide on LG and smaller. --}}
-                                    <th data-sort-column="role" class="w-10 d-lg-table-cell d-none"><span class="title">{{ trans('list.role') }}</span></th>
+                                    <th data-sort-column="role"  class="w-10 d-lg-table-cell d-none"><span class="title">{{ trans('list.role') }}</span></th>
                                 </template>
                                 <template x-if="'liabilities' === objectType">
                                     <th class="w-10" data-sort-column="account_type_id"><span class="title">{{ trans('list.liability_type') }}</span></th>
@@ -100,13 +100,28 @@
                                     </td>
                                     <td>
                                         <a :href="'./accounts/show/' + account.id" :title="account.name"
-                                           x-text="account.name"></a>
+                                           x-text="account.name" class="abc"></a>
                                         <template x-if="account.location">
                                             <span class="bi bi-map"></span>
                                         </template>
                                         <template x-if="true === account.has_attachments">
                                             <span class="bi bi-paperclip"></span>
                                         </template>
+                                        <em data-column="name" :data-id="account.id" class="edit-button bi bi-pencil"></em>
+                                        <!--
+                                        <input type="text" class="form-control form-control-sm" :value="account.name">
+                                         -->
+                                        <form class="row row-cols-lg-auto g-3 align-items-center edit-form d-none">
+                                            <div class="col-12">
+                                                <input type="text" :data-original-value="account.name" :value="account.name" class="form-control-sm form-control" :placeholder="i18next.t('form.name')">
+                                            </div>
+                                            <div class="col-12">
+                                                <div class="btn-group btn-group-sm">
+                                                    <button :data-id="account.id" data-column="name" type="button" class="submit-data-button btn btn-sm btn-success"><em class="bi bi-check"></em></button>
+                                                    <button data-column="name" :data-id="account.id" type="button" class="close-edit-button btn btn-sm btn-danger"><em class="bi bi-x"></em></button>
+                                                </div>
+                                            </div>
+                                        </form>
                                     </td>
                                     <template x-if="'asset' === objectType">
                                         <td class="d-lg-table-cell d-none">

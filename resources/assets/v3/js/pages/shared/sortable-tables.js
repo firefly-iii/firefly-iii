@@ -95,17 +95,6 @@ export class sortableTable {
 
                     // we do this in the parent because Alpine has the watch function that is needed.
                     this.parent.$watch("filter." + tableId + "." + column, (newValue) => {
-                        // console.log(
-                        //     'filter for "' +
-                        //         tableId +
-                        //         '" column "' +
-                        //         column +
-                        //         '" changed from "' +
-                        //         oldValue +
-                        //         '" to "' +
-                        //         newValue +
-                        //         '"',
-                        // );
                         this.fireSortOrDataChangeEvent(tableId);
                         if ("" !== newValue) {
                             showSearchBox(th);
@@ -233,6 +222,7 @@ export class sortableTable {
         // add sortable click events.
         for (let i in this.tableIds) {
             const tableId = this.tableIds[i];
+            // add click events to column title:
             document
                 .querySelectorAll('table[data-sort-identifier="' + tableId + '"] th[data-sort-column] span.title')
                 .forEach((el) => {
@@ -255,7 +245,88 @@ export class sortableTable {
                         showSearchBox(th);
                     });
                 });
+            // add event to edit button.
+            document
+                .querySelectorAll('table[data-sort-identifier="' + tableId + '"] .edit-button')
+                .forEach((el) => {
+                    el.addEventListener("click", () => {
+                        // const th = el.parentNode.parentNode;
+                        this.showEditOptions(el);
+                    });
+                });
+            // add event to close form button.
+            document
+                .querySelectorAll('table[data-sort-identifier="' + tableId + '"] .close-edit-button')
+                .forEach((el) => {
+                    el.addEventListener("click", () => {
+                        // const th = el.parentNode.parentNode;
+                        this.hideEditOptions(el);
+                    });
+                });
+
+            // add event to submit the data. Needs to fallback to the parent.
+            // submit-data-button
+            document
+                .querySelectorAll('table[data-sort-identifier="' + tableId + '"] .submit-data-button')
+                .forEach((el) => {
+                    el.addEventListener("click", () => {
+                        let parent = getNearestParent(el,'form');
+                        console.log('I am parent', parent);
+                        let id = parseInt(el.dataset.id);
+                        let field = el.dataset.column;
+                        let value = parent.querySelector('input[type="text"]').value;
+                        this.parent.submitInlineEdit(id, field, value);
+                        // const th = el.parentNode.parentNode;
+                        this.hideEditOptions(el);
+                    });
+                });
         }
+    }
+
+    showEditOptions(el) {
+        if('name' !== el.dataset.column) {
+            el.classList.add('invisible');
+            return;
+        }
+        // hide all in parent td, this includes the button itself:
+        let cell = getNearestParent(el,'td');
+        cell.childNodes.forEach(elx => {
+            if(elx.classList){
+                if(elx.classList.contains('edit-form')) {
+                    elx.classList.remove('d-none');
+                }
+                if(!elx.classList.contains('edit-form')) {
+                    elx.classList.add('d-none');
+                }
+            }
+        });
+
+        //
+    }
+    hideEditOptions(el) {
+        if('name' !== el.dataset.column) {
+            el.classList.add('invisible');
+            return;
+        }
+        // hide all in parent td, this includes the button itself:
+        let cell = getNearestParent(el,'td');
+
+        // reset value in (now hidden) text input.
+        let input = cell.querySelector('input[type="text"]');
+        input.value = input.dataset.originalValue;
+
+        cell.childNodes.forEach(elx => {
+            if(elx.classList){
+                if(elx.classList.contains('edit-form')) {
+                    elx.classList.add('d-none');
+                }
+                if(!elx.classList.contains('edit-form')) {
+                    elx.classList.remove('d-none');
+                }
+            }
+        });
+
+        //
     }
 
     createSearchBox(th) {
