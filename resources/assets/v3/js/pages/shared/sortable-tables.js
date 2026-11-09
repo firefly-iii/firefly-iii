@@ -246,14 +246,12 @@ export class sortableTable {
                     });
                 });
             // add event to edit button.
-            document
-                .querySelectorAll('table[data-sort-identifier="' + tableId + '"] .edit-button')
-                .forEach((el) => {
-                    el.addEventListener("click", () => {
-                        // const th = el.parentNode.parentNode;
-                        this.showEditOptions(el);
-                    });
+            document.querySelectorAll('table[data-sort-identifier="' + tableId + '"] .edit-button').forEach((el) => {
+                el.addEventListener("click", () => {
+                    // const th = el.parentNode.parentNode;
+                    this.showEditOptions(el);
                 });
+            });
             // add event to close form button.
             document
                 .querySelectorAll('table[data-sort-identifier="' + tableId + '"] .close-edit-button')
@@ -270,8 +268,8 @@ export class sortableTable {
                 .querySelectorAll('table[data-sort-identifier="' + tableId + '"] .submit-data-button')
                 .forEach((el) => {
                     el.addEventListener("click", () => {
-                        let parent = getNearestParent(el,'form');
-                        console.log('I am parent', parent);
+                        let parent = getNearestParent(el, "form");
+                        console.log("I am parent", parent);
                         let id = parseInt(el.dataset.id);
                         let field = el.dataset.column;
                         let value = parent.querySelector('input[type="text"]').value;
@@ -284,19 +282,19 @@ export class sortableTable {
     }
 
     showEditOptions(el) {
-        if('name' !== el.dataset.column) {
-            el.classList.add('invisible');
+        if ("name" !== el.dataset.column) {
+            el.classList.add("invisible");
             return;
         }
         // hide all in parent td, this includes the button itself:
-        let cell = getNearestParent(el,'td');
-        cell.childNodes.forEach(elx => {
-            if(elx.classList){
-                if(elx.classList.contains('edit-form')) {
-                    elx.classList.remove('d-none');
+        let cell = getNearestParent(el, "td");
+        cell.childNodes.forEach((elx) => {
+            if (elx.classList) {
+                if (elx.classList.contains("edit-form")) {
+                    elx.classList.remove("d-none");
                 }
-                if(!elx.classList.contains('edit-form')) {
-                    elx.classList.add('d-none');
+                if (!elx.classList.contains("edit-form")) {
+                    elx.classList.add("d-none");
                 }
             }
         });
@@ -304,24 +302,24 @@ export class sortableTable {
         //
     }
     hideEditOptions(el) {
-        if('name' !== el.dataset.column) {
-            el.classList.add('invisible');
+        if ("name" !== el.dataset.column) {
+            el.classList.add("invisible");
             return;
         }
         // hide all in parent td, this includes the button itself:
-        let cell = getNearestParent(el,'td');
+        let cell = getNearestParent(el, "td");
 
         // reset value in (now hidden) text input.
         let input = cell.querySelector('input[type="text"]');
         input.value = input.dataset.originalValue;
 
-        cell.childNodes.forEach(elx => {
-            if(elx.classList){
-                if(elx.classList.contains('edit-form')) {
-                    elx.classList.add('d-none');
+        cell.childNodes.forEach((elx) => {
+            if (elx.classList) {
+                if (elx.classList.contains("edit-form")) {
+                    elx.classList.add("d-none");
                 }
-                if(!elx.classList.contains('edit-form')) {
-                    elx.classList.remove('d-none');
+                if (!elx.classList.contains("edit-form")) {
+                    elx.classList.remove("d-none");
                 }
             }
         });

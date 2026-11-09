@@ -415,7 +415,7 @@ let transactions = function () {
 
             // submit the transaction. Multi-stage process thing going on here!
             let submitter = new Put();
-            if(true === this.formStates.saveAsNewButton) {
+            if (true === this.formStates.saveAsNewButton) {
                 submitter = new Post();
             }
             submitter
