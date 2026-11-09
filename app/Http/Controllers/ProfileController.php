@@ -437,7 +437,6 @@ final class ProfileController extends Controller
         // remove undo token.
         Preferences::deleteForUser($user, 'email_change_undo_token', true);
 
-
         // return to login page.
         session()->flash('success', (string) trans('firefly.login_with_old_email'));
 
