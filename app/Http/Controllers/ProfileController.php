@@ -157,6 +157,8 @@ final class ProfileController extends Controller
         $repository->unblockUser($user);
         // also remove the "remote_guard_alt_email" preference.
         Preferences::deleteForUser($user, 'remote_guard_alt_email', true);
+        // remove undo token.
+        Preferences::deleteForUser($user, 'email_change_undo_token', true);
 
         // return to log in.
         session()->flash('success', (string) trans('firefly.login_with_new_email'));
@@ -431,6 +433,10 @@ final class ProfileController extends Controller
         // now actually update user:
         $repository->changeEmail($user, $match);
         $repository->unblockUser($user);
+
+        // remove undo token.
+        Preferences::deleteForUser($user, 'email_change_undo_token', true);
+
 
         // return to login page.
         session()->flash('success', (string) trans('firefly.login_with_old_email'));
