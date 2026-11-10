@@ -27,16 +27,16 @@
             <!--ACCOUNTS -->
             <div class="card mb-2 card-outline">
                 <div class="card-header">
-                    <div class="card-title">TODO SANKEY
+                    <div class="card-title">Sankey
                     </div>
                 </div>
                 <div class="card-body">
                     <div>
-                        <canvas id="sankey-chart" class="wide-chart" height="400" width="100%"></canvas>
+                        <canvas id="sankey-chart"></canvas>
                     </div>
                 </div>
                 <div class="d-print-none card-footer text-end">
-                    TODO SANKEY EXTRA LINK
+                    Sankey
                 </div>
             </div>
 

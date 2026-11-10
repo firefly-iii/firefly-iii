@@ -127,7 +127,7 @@ let index = function () {
                     true,
                     true,
                 );
-                let sankey = new SankeyChart(start, end, value);
+                let sankey = new SankeyChart(start, end, value,'sankey-chart');
                 sankey.loadChart();
 
                 drawMultiCurrencyChart(

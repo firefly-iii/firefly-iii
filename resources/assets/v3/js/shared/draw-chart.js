@@ -70,6 +70,7 @@ export function drawMultiCurrencyChart(type, url, holder, anonymous, drawTodayMa
         return;
     }
 
+
     console.error('Cannot draw a "' + type + '" chart yet :(');
 }
 
