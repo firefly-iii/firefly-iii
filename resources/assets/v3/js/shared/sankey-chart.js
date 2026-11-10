@@ -95,7 +95,7 @@ export default class {
                 return;
             }
             console.log('Transactions', this.transactions);
-            //window.store.set(cacheKey, this.transactions);
+            window.store.set(cacheKey, this.transactions);
             this.drawChart(this.generateOptions());
             this.loading = false;
         });
