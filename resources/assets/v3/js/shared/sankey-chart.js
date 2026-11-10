@@ -390,6 +390,6 @@ export default class {
             this.chart.update();
             return;
         }
-        this.chart = new Chart(document.querySelector("#" + this.holder), options);
+        this.chart = new Chart(document.getElementById(this.holder), options);
     }
 }
