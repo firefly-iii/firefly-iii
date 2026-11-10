@@ -100,7 +100,7 @@ $app = Application::configure(basePath: dirname(__DIR__))
                                              ShareErrorsFromSession::class,
                                              VerifyCsrfToken::class,
                                              Binder::class, // this is also different.
-                                             CreateFreshApiToken::class,
+                                             // CreateFreshApiToken::class, // removed and moved to "user-full-auth".
                                          ]
                       );
 
@@ -133,6 +133,7 @@ $app = Application::configure(basePath: dirname(__DIR__))
                           MFAMiddleware::class,
                           Range::class,
                           InterestingMessage::class,
+                          CreateFreshApiToken::class,
                       ]);
                       $middleware->appendToGroup('2fa-check', [
                           Authenticate::class,

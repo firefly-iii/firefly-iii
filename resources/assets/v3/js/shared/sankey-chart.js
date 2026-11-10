@@ -13,14 +13,16 @@ export default class {
     holder = "";
     loading = false;
     transactions = [];
+    accounts = [];
     currencies = [];
     convertToPrimary = false;
     processedData = {};
     chart = null;
     cacheKey = "ds_data_sankey";
-    constructor(start, end, anonymous, holder) {
+    constructor(start, end, anonymous,accounts, holder) {
         this.start = start;
         this.end = end;
+        this.accounts = accounts;
         this.anonymous = anonymous;
         this.holder = holder;
         this.convertToPrimary = window.store.get("convert_to_primary");
@@ -139,6 +141,7 @@ export default class {
     }
 
     parseTransactionGroups() {
+        console.log('accounts', this.accounts);
         this.processedData = {
             amounts: {},
             labels: {},
@@ -162,6 +165,12 @@ export default class {
         }
     }
     parseTransaction(transaction) {
+        let sourceId = parseInt(transaction.source_id);
+        let destinationId = parseInt(transaction.destination_id);
+        if(this.accounts.length > 0 && !this.accounts.includes(sourceId) && !this.accounts.includes(destinationId)) {
+            console.log('Ignore', transaction)
+            return;
+        }
         let currencyCode = transaction.currency_code;
         let amount = parseFloat(transaction.amount);
         if (this.convertToPrimary) {

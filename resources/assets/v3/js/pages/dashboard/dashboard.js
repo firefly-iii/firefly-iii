@@ -127,8 +127,8 @@ let index = function () {
                     true,
                     true,
                 );
-                let sankey = new SankeyChart(start, end, value, "sankey-chart");
-                sankey.loadChart();
+
+
 
                 drawMultiCurrencyChart(
                     "stacked-column",
@@ -141,6 +141,13 @@ let index = function () {
                     false,
                     true,
                 );
+            }).then(() => {
+                    getVariable("frontpageAccounts").then((value) => {
+                        let start = new Date(window.store.get("start"));
+                        let end = new Date(window.store.get("end"));
+                        let sankey = new SankeyChart(start, end, this.anonymous, value, "sankey-chart");
+                        sankey.loadChart();
+                    });
             });
         },
         loadPiggyBanks() {
