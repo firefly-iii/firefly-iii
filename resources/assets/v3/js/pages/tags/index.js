@@ -29,41 +29,36 @@ window.enableDates = false;
 function selectOrUnselect(e) {
     e.preventDefault();
     let button = e.target;
-    let holder = document.querySelector('div[data-period="'+button.dataset.period+'"]');
-    console.log('holder', holder.dataset.period);
+    let holder = document.querySelector('div[data-period="' + button.dataset.period + '"]');
+    console.log("holder", holder.dataset.period);
     let first = holder.querySelector('input[type="checkbox"]');
-    if(first) {
+    if (first) {
         let check = true;
-        if(true === first.checked) {
+        if (true === first.checked) {
             // uncheck all:
             check = false;
         }
-        holder.querySelectorAll('input[type=checkbox]').forEach(el => el.checked = check);
+        holder.querySelectorAll("input[type=checkbox]").forEach((el) => (el.checked = check));
         // update text on button.
-        if(check) {
-            holder.querySelectorAll('.checkbox-icon').forEach((elx) => {
-                elx.classList.remove('bi-check-square');
-                elx.classList.add('bi-check-square-fill');
+        if (check) {
+            holder.querySelectorAll(".checkbox-icon").forEach((elx) => {
+                elx.classList.remove("bi-check-square");
+                elx.classList.add("bi-check-square-fill");
             });
-            holder.querySelectorAll('.select-all-text').
-                forEach((elx) => {
-                elx.textContent = i18next.t('firefly.multi_select_select_none')
-            });
-
-
-        }
-        if(!check) {
-            holder.querySelectorAll('.checkbox-icon').forEach((elx) => {
-                elx.classList.add('bi-check-square');
-                elx.classList.remove('bi-check-square-fill');
-            });
-
-            holder.querySelectorAll('.select-all-text').
-            forEach((elx) => {
-                elx.textContent = i18next.t('firefly.multi_select_select_all')
+            holder.querySelectorAll(".select-all-text").forEach((elx) => {
+                elx.textContent = i18next.t("firefly.multi_select_select_none");
             });
         }
+        if (!check) {
+            holder.querySelectorAll(".checkbox-icon").forEach((elx) => {
+                elx.classList.add("bi-check-square");
+                elx.classList.remove("bi-check-square-fill");
+            });
 
+            holder.querySelectorAll(".select-all-text").forEach((elx) => {
+                elx.textContent = i18next.t("firefly.multi_select_select_all");
+            });
+        }
     }
 }
 
@@ -71,18 +66,17 @@ let index = function () {
     return {
         addSelectAllTrigger() {
             // select-all
-            let list = document.querySelectorAll('.select-all');
-            console.log('List', list);
+            let list = document.querySelectorAll(".select-all");
+            console.log("List", list);
             if (list.length > 0) {
                 list.forEach((e) => {
-                    e.addEventListener('click', selectOrUnselect);
+                    e.addEventListener("click", selectOrUnselect);
                 });
             }
         },
         init() {
-             this.addSelectAllTrigger();
+            this.addSelectAllTrigger();
         },
-
     };
 };
 
