@@ -94,7 +94,7 @@ export default class {
                 this.downloadTransactions(params);
                 return;
             }
-            console.log('Transactions', this.transactions);
+            console.log("Transactions", this.transactions);
             window.store.set(cacheKey, this.transactions);
             this.drawChart(this.generateOptions());
             this.loading = false;
@@ -149,7 +149,7 @@ export default class {
                 this.parseTransactionGroup(group);
             }
         }
-        console.log('Processed data', this.processedData);
+        console.log("Processed data", this.processedData);
     }
 
     parseTransactionGroup(group) {
@@ -396,5 +396,5 @@ export default class {
         console.log(options);
         Chart.register(LinearScale, SankeyController, Flow);
         this.chart = new Chart(document.getElementById(this.holder).getContext("2d"), options);
-        }
+    }
 }
