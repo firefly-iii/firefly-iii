@@ -2,10 +2,8 @@ import i18next from "i18next";
 import getCacheKey from "../store/get-cache-key.js";
 import { format } from "date-fns";
 import Get from "../api/model/transaction/get.js";
-import { Chart, LinearScale } from 'chart.js';
-import { Flow, SankeyController } from 'chartjs-chart-sankey';
-
-
+import { Chart, LinearScale } from "chart.js";
+import { Flow, SankeyController } from "chartjs-chart-sankey";
 
 export default class {
     start = null;
@@ -395,6 +393,6 @@ export default class {
         }
         console.log(options);
         Chart.register(LinearScale, SankeyController, Flow);
-        this.chart = new Chart(document.getElementById(this.holder).getContext('2d'), options);
+        this.chart = new Chart(document.getElementById(this.holder).getContext("2d"), options);
     }
 }
