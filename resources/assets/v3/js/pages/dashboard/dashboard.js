@@ -111,44 +111,44 @@ let index = function () {
                     }
                 });
             }
-            getVariable("anonymous").then((value) => {
-                let start = new Date(window.store.get("start"));
-                let end = new Date(window.store.get("end"));
-                this.anonymous = value;
-                this.loadPiggyBanks();
-                drawMultiCurrencyChart(
-                    "line",
-                    "api/v1/chart/account/overview?period=1D&start=" +
-                        formatDate(start, "yyyy-LL-dd") +
-                        "&end=" +
-                        formatDate(end, "yyyy-LL-dd"),
-                    "accounts-chart",
-                    value,
-                    true,
-                    true,
-                );
+            getVariable("anonymous")
+                .then((value) => {
+                    let start = new Date(window.store.get("start"));
+                    let end = new Date(window.store.get("end"));
+                    this.anonymous = value;
+                    this.loadPiggyBanks();
+                    drawMultiCurrencyChart(
+                        "line",
+                        "api/v1/chart/account/overview?period=1D&start=" +
+                            formatDate(start, "yyyy-LL-dd") +
+                            "&end=" +
+                            formatDate(end, "yyyy-LL-dd"),
+                        "accounts-chart",
+                        value,
+                        true,
+                        true,
+                    );
 
-
-
-                drawMultiCurrencyChart(
-                    "stacked-column",
-                    "api/v1/chart/budget/overview-with-limits?start=" +
-                        formatDate(start, "yyyy-LL-dd") +
-                        "&end=" +
-                        formatDate(end, "yyyy-LL-dd"),
-                    "budgets-chart",
-                    value,
-                    false,
-                    true,
-                );
-            }).then(() => {
+                    drawMultiCurrencyChart(
+                        "stacked-column",
+                        "api/v1/chart/budget/overview-with-limits?start=" +
+                            formatDate(start, "yyyy-LL-dd") +
+                            "&end=" +
+                            formatDate(end, "yyyy-LL-dd"),
+                        "budgets-chart",
+                        value,
+                        false,
+                        true,
+                    );
+                })
+                .then(() => {
                     getVariable("frontpageAccounts").then((value) => {
                         let start = new Date(window.store.get("start"));
                         let end = new Date(window.store.get("end"));
                         let sankey = new SankeyChart(start, end, this.anonymous, value, "sankey-chart");
                         sankey.loadChart();
                     });
-            });
+                });
         },
         loadPiggyBanks() {
             this.piggyBanks = {};

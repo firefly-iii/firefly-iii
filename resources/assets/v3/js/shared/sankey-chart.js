@@ -19,7 +19,7 @@ export default class {
     processedData = {};
     chart = null;
     cacheKey = "ds_data_sankey";
-    constructor(start, end, anonymous,accounts, holder) {
+    constructor(start, end, anonymous, accounts, holder) {
         this.start = start;
         this.end = end;
         this.accounts = accounts;
@@ -141,7 +141,7 @@ export default class {
     }
 
     parseTransactionGroups() {
-        console.log('accounts', this.accounts);
+        console.log("accounts", this.accounts);
         this.processedData = {
             amounts: {},
             labels: {},
@@ -167,8 +167,8 @@ export default class {
     parseTransaction(transaction) {
         let sourceId = parseInt(transaction.source_id);
         let destinationId = parseInt(transaction.destination_id);
-        if(this.accounts.length > 0 && !this.accounts.includes(sourceId) && !this.accounts.includes(destinationId)) {
-            console.log('Ignore', transaction)
+        if (this.accounts.length > 0 && !this.accounts.includes(sourceId) && !this.accounts.includes(destinationId)) {
+            console.log("Ignore", transaction);
             return;
         }
         let currencyCode = transaction.currency_code;
