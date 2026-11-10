@@ -94,7 +94,8 @@ export default class {
                 this.downloadTransactions(params);
                 return;
             }
-            window.store.set(cacheKey, this.transactions);
+            console.log('Transactions', this.transactions);
+            //window.store.set(cacheKey, this.transactions);
             this.drawChart(this.generateOptions());
             this.loading = false;
         });
@@ -137,17 +138,18 @@ export default class {
         return options;
     }
 
-    parseTransactionGroups(groups) {
+    parseTransactionGroups() {
         this.processedData = {
             amounts: {},
             labels: {},
         };
-        for (let i in groups) {
-            if (Object.hasOwn(groups, i)) {
-                let group = groups[i];
+        for (let i in this.transactions) {
+            if (Object.hasOwn(this.transactions, i)) {
+                let group = this.transactions[i];
                 this.parseTransactionGroup(group);
             }
         }
+        console.log('Processed data', this.processedData);
     }
 
     parseTransactionGroup(group) {
@@ -394,5 +396,5 @@ export default class {
         console.log(options);
         Chart.register(LinearScale, SankeyController, Flow);
         this.chart = new Chart(document.getElementById(this.holder).getContext("2d"), options);
-    }
+        }
 }
