@@ -129,7 +129,7 @@ export default class {
                 size: "min", // or 'min' if flow overlap is preferred
             };
 
-        console.log('Add data to chart.');
+        console.log("Add data to chart.");
         for (let i in this.processedData.amounts) {
             if (Object.hasOwn(this.processedData.amounts, i)) {
                 // disabled for now:
@@ -159,16 +159,15 @@ export default class {
         // console.log("Processed data", this.processedData);
     }
     groupProcessedData() {
-
         // hier doen we even sorteren.
         let unordered = Object.values(this.processedData.amounts);
-        console.log('Sorting now');
-        unordered.sort( function(a, b) {
-            console.log('Sort', a.amount);
-                return a.amount < b.amount ? 1:-1;
-            });
+        console.log("Sorting now");
+        unordered.sort(function (a, b) {
+            console.log("Sort", a.amount);
+            return a.amount < b.amount ? 1 : -1;
+        });
         let newAmounts = {};
-        for(let i=0;i<unordered.length;i++) {
+        for (let i = 0; i < unordered.length; i++) {
             let current = unordered[i];
             newAmounts[current.flowKey] = current;
         }
@@ -221,16 +220,16 @@ export default class {
         2. From a budget to a category.
         3. From a category to an expense account.
         */
-        const allMoneyFlowKey  = this.translations.all_money + '-' + currencyCode;
-        let budget             = this.getObjectName("budget", transaction.budget_name, "out", currencyCode);
-        let category           = this.getObjectName("category", transaction.category_name, "out", currencyCode);
+        const allMoneyFlowKey = this.translations.all_money + "-" + currencyCode;
+        let budget = this.getObjectName("budget", transaction.budget_name, "out", currencyCode);
+        let category = this.getObjectName("category", transaction.category_name, "out", currencyCode);
         let expenseAccount = this.getObjectName("account", transaction.destination_name, "out", currencyCode);
 
-        let budgetId         = null === transaction.budget_id ? 0 : parseInt(transaction.budget_id);
-        let categoryId       = null === transaction.category_id ? 0 : parseInt(transaction.category_id);
+        let budgetId = null === transaction.budget_id ? 0 : parseInt(transaction.budget_id);
+        let categoryId = null === transaction.category_id ? 0 : parseInt(transaction.category_id);
         let accountId = parseInt(transaction.destination_id);
 
-        let budgetLabel    = this.getLabel("budget", transaction.budget_name, currencyCode);
+        let budgetLabel = this.getLabel("budget", transaction.budget_name, currencyCode);
         let categoryLabel = this.getLabel("category", transaction.category_name, currencyCode);
         let accountLabel = this.getLabel("account", transaction.destination_name, currencyCode);
         // labels:
@@ -238,7 +237,6 @@ export default class {
         this.processedData.labels[budget] = budgetLabel;
         this.processedData.labels[category] = categoryLabel;
         this.processedData.labels[expenseAccount] = accountLabel;
-
 
         // first one, from all your money to a budget.
 
@@ -250,8 +248,8 @@ export default class {
                 from: this.translations.all_money + (this.convertToPrimary ? " (" + currencyCode + ")" : ""),
                 to: budget,
                 amount: 0,
-                type:'from-all',
-                id: budgetId
+                type: "from-all",
+                id: budgetId,
             };
         }
         this.processedData.amounts[flowKey].amount += amount;
@@ -265,8 +263,8 @@ export default class {
                 from: budget,
                 to: category,
                 amount: 0,
-                type:'from-budget',
-                id: categoryId
+                type: "from-budget",
+                id: categoryId,
             };
         }
         // console.log('Add expense to flow "'+flowKey+'"');
@@ -281,8 +279,8 @@ export default class {
                 from: category,
                 to: expenseAccount,
                 amount: 0,
-                type: 'from-category',
-                id: accountId
+                type: "from-category",
+                id: accountId,
             };
         }
         this.processedData.amounts[flowKey].amount += amount;
@@ -295,18 +293,16 @@ export default class {
         1. From the revenue account (source) to a category (in).
         2. From the category (in) to the big inbox.
         */
-        const allMoneyFlowKey = this.translations.all_money + '-' + currencyCode;
+        const allMoneyFlowKey = this.translations.all_money + "-" + currencyCode;
         let category = this.getObjectName("category", transaction.category_name, "in", currencyCode);
         let account = this.getObjectName("account", transaction.source_name, "in", currencyCode);
 
         let accountId = parseInt(transaction.source_id);
-        let categoryId       = null === transaction.category_id ? 0 : parseInt(transaction.category_id);
+        let categoryId = null === transaction.category_id ? 0 : parseInt(transaction.category_id);
         // labels
         let flowKey;
         this.processedData.labels[category] = this.getLabel("category", transaction.category_name, currencyCode);
         this.processedData.labels[account] = this.getLabel("account", transaction.source_name, currencyCode);
-
-
 
         // this is the first one, from account to category.
         flowKey = account + "-" + category + "-" + currencyCode;
@@ -316,8 +312,8 @@ export default class {
                 from: account,
                 to: category,
                 amount: 0,
-                type:'to-category',
-                id: accountId
+                type: "to-category",
+                id: accountId,
             };
         }
         this.processedData.amounts[flowKey].amount += amount;
@@ -330,8 +326,8 @@ export default class {
                 from: category,
                 to: this.translations.all_money + (this.convertToPrimary ? " (" + currencyCode + ")" : ""),
                 amount: 0,
-                type:'to-expense',
-                id: categoryId
+                type: "to-expense",
+                id: categoryId,
             };
         }
         this.processedData.amounts[flowKey].amount += amount;
