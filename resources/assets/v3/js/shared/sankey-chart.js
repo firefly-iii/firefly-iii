@@ -26,6 +26,7 @@ export default class {
         this.anonymous = anonymous;
         this.holder = holder;
         this.convertToPrimary = window.store.get("convert_to_primary");
+        // console.log('Convert to primary?', this.convertToPrimary);
 
         // some translations:
         this.translations.all_money = i18next.t("firefly.all_money");
@@ -61,7 +62,7 @@ export default class {
         const cacheValid = window.store.get("cacheValid");
         let cachedData = window.store.get(cacheKey);
 
-        if (cacheValid && typeof cachedData !== "undefined") {
+        if (false && cacheValid && typeof cachedData !== "undefined") {
             this.transactions = cachedData;
             this.drawChart(this.generateOptions());
             this.loading = false;
@@ -84,19 +85,17 @@ export default class {
             end: this.end,
         });
 
-        //console.log('Downloading page ' + params.page + '...');
+        // console.log('Downloading page ' + params.page + '...');
         const getter = new Get();
         getter.list(params).then((response) => {
             this.transactions = [...this.transactions, ...response.data.data];
-            //this.drawChart(this.generateOptions(response.data));
-            //this.loading = false;
             if (parseInt(response.data.meta.pagination.total_pages) > params.page) {
                 // continue to next page.
                 params.page++;
                 this.downloadTransactions(params);
                 return;
             }
-            console.log("Transactions", this.transactions);
+            // console.log("Transactions downloaded", this.transactions);
             window.store.set(cacheKey, this.transactions);
             this.drawChart(this.generateOptions());
             this.loading = false;
@@ -129,8 +128,11 @@ export default class {
                 labels: this.processedData.labels,
                 size: "min", // or 'min' if flow overlap is preferred
             };
+
+        console.log('Add data to chart.');
         for (let i in this.processedData.amounts) {
             if (Object.hasOwn(this.processedData.amounts, i)) {
+                // disabled for now:
                 let amount = this.processedData.amounts[i];
                 dataSet.data.push({ from: amount.from, to: amount.to, flow: amount.amount });
             }
@@ -141,10 +143,11 @@ export default class {
     }
 
     parseTransactionGroups() {
-        console.log("accounts", this.accounts);
+        //console.log('Will now process groups');
         this.processedData = {
             amounts: {},
             labels: {},
+            counts: {},
         };
         for (let i in this.transactions) {
             if (Object.hasOwn(this.transactions, i)) {
@@ -152,10 +155,30 @@ export default class {
                 this.parseTransactionGroup(group);
             }
         }
-        console.log("Processed data", this.processedData);
+        this.groupProcessedData();
+        // console.log("Processed data", this.processedData);
+    }
+    groupProcessedData() {
+        let newSet = [];
+        let counters = {};
+
+        // hier doen we even sorteren.
+        let unordered = Object.values(this.processedData.amounts);
+        console.log('Sorting now');
+        unordered.sort( function(a, b) {
+            console.log('Sort', a.amount);
+                return a.amount < b.amount ? 1:-1;
+            });
+        let newAmounts = {};
+        for(let i=0;i<unordered.length;i++) {
+            let current = unordered[i];
+            newAmounts[current.flowKey] = current;
+        }
+        this.processedData.amounts = newAmounts;
     }
 
     parseTransactionGroup(group) {
+        // console.log('Will now process group #', group.id);
         for (let ii in group.attributes.transactions) {
             if (Object.hasOwn(group.attributes.transactions, ii)) {
                 // properties of the transaction, used in the generation of the chart:
@@ -165,10 +188,11 @@ export default class {
         }
     }
     parseTransaction(transaction) {
+        // console.log('Will now process transaction #', transaction.transaction_journal_id);
         let sourceId = parseInt(transaction.source_id);
         let destinationId = parseInt(transaction.destination_id);
         if (this.accounts.length > 0 && !this.accounts.includes(sourceId) && !this.accounts.includes(destinationId)) {
-            console.log("Ignore", transaction);
+            // console.log("Ignore this one");
             return;
         }
         let currencyCode = transaction.currency_code;
@@ -177,6 +201,10 @@ export default class {
             currencyCode = transaction.primary_currency_code;
             amount = parseFloat(transaction.pc_amount);
         }
+
+        // eerst een som van alle items.
+        // toch daarna pas groepere zodat je de X grootste overhoudt.
+
         if ("deposit" === transaction.type) {
             this.parseDeposit(transaction, currencyCode, amount);
             return;
@@ -188,105 +216,138 @@ export default class {
     }
 
     parseWithdrawal(transaction, currencyCode, amount) {
+        // console.log('Process as withdrawal');
         /*
         Three entries in the sankey diagram for withdrawals:
         1. From the big box to a budget.
         2. From a budget to a category.
         3. From a category to an expense account.
         */
+        const allMoneyFlowKey  = this.translations.all_money + '-' + currencyCode;
+        let budget             = this.getObjectName("budget", transaction.budget_name, "out", currencyCode);
+        let category           = this.getObjectName("category", transaction.category_name, "out", currencyCode);
+        let expenseAccount = this.getObjectName("account", transaction.destination_name, "out", currencyCode);
 
-        // first one:
-        let budget = this.getObjectName("budget", transaction.budget_name, "out", currencyCode);
-        this.processedData.labels[budget] = this.getLabel("budget", transaction.budget_name, currencyCode);
-        let flowKey = this.translations.all_money + "-" + budget + "-" + currencyCode;
+        let budgetId         = null === transaction.budget_id ? 0 : parseInt(transaction.budget_id);
+        let categoryId       = null === transaction.category_id ? 0 : parseInt(transaction.category_id);
+        let accountId = parseInt(transaction.destination_id);
+
+        let budgetLabel    = this.getLabel("budget", transaction.budget_name, currencyCode);
+        let categoryLabel = this.getLabel("category", transaction.category_name, currencyCode);
+        let accountLabel = this.getLabel("account", transaction.destination_name, currencyCode);
+        // labels:
+        let flowKey;
+        this.processedData.labels[budget] = budgetLabel;
+        this.processedData.labels[category] = categoryLabel;
+        this.processedData.labels[expenseAccount] = accountLabel;
+
+
+        // first one, from all your money to a budget.
+
+        flowKey = allMoneyFlowKey + "-" + budget + "-" + currencyCode;
 
         if (!Object.hasOwn(this.processedData.amounts, flowKey)) {
             this.processedData.amounts[flowKey] = {
+                flowKey: flowKey,
                 from: this.translations.all_money + (this.convertToPrimary ? " (" + currencyCode + ")" : ""),
                 to: budget,
                 amount: 0,
+                type:'from-all',
+                id: budgetId
             };
         }
         this.processedData.amounts[flowKey].amount += amount;
 
-        // second one:
-        let category = this.getObjectName("category", transaction.category_name, "out", currencyCode);
-        this.processedData.labels[category] = this.getLabel("category", transaction.category_name, currencyCode);
+        // second one, from the budget to a category:
         flowKey = budget + "-" + category + "-" + currencyCode;
 
         if (!Object.hasOwn(this.processedData.amounts, flowKey)) {
             this.processedData.amounts[flowKey] = {
+                flowKey: flowKey,
                 from: budget,
                 to: category,
                 amount: 0,
+                type:'from-budget',
+                id: categoryId
             };
         }
+        // console.log('Add expense to flow "'+flowKey+'"');
         this.processedData.amounts[flowKey].amount += amount;
 
-        // third one:
-        let expenseAccount = this.getObjectName("account", transaction.destination_name, "out", currencyCode);
-        this.processedData.labels[expenseAccount] = this.getLabel(
-            "account",
-            transaction.destination_name,
-            currencyCode,
-        );
+        // third one, from category to account.
         flowKey = category + "-" + expenseAccount + "-" + currencyCode;
 
         if (!Object.hasOwn(this.processedData.amounts, flowKey)) {
             this.processedData.amounts[flowKey] = {
+                flowKey: flowKey,
                 from: category,
                 to: expenseAccount,
                 amount: 0,
+                type: 'from-category',
+                id: accountId
             };
         }
         this.processedData.amounts[flowKey].amount += amount;
     }
 
     parseDeposit(transaction, currencyCode, amount) {
+        // console.log('Process as deposit');
         /*
         Two entries in the sankey diagram for deposits:
         1. From the revenue account (source) to a category (in).
         2. From the category (in) to the big inbox.
         */
-
-        // this is the first one:
+        const allMoneyFlowKey = this.translations.all_money + '-' + currencyCode;
         let category = this.getObjectName("category", transaction.category_name, "in", currencyCode);
-        let revenueAccount = this.getObjectName("account", transaction.source_name, "in", currencyCode);
-        let flowKey = revenueAccount + "-" + category + "-" + currencyCode;
-        this.processedData.labels[category] = this.getLabel("category", transaction.category_name, currencyCode);
-        this.processedData.labels[revenueAccount] = this.getLabel("account", transaction.source_name, currencyCode);
+        let account = this.getObjectName("account", transaction.source_name, "in", currencyCode);
 
-        // create if necessary:
+        let accountId = parseInt(transaction.source_id);
+        let categoryId       = null === transaction.category_id ? 0 : parseInt(transaction.category_id);
+        // labels
+        let flowKey;
+        this.processedData.labels[category] = this.getLabel("category", transaction.category_name, currencyCode);
+        this.processedData.labels[account] = this.getLabel("account", transaction.source_name, currencyCode);
+
+
+
+        // this is the first one, from account to category.
+        flowKey = account + "-" + category + "-" + currencyCode;
         if (!Object.hasOwn(this.processedData.amounts, flowKey)) {
             this.processedData.amounts[flowKey] = {
-                from: revenueAccount,
+                flowKey: flowKey,
+                from: account,
                 to: category,
                 amount: 0,
+                type:'to-category',
+                id: accountId
             };
         }
         this.processedData.amounts[flowKey].amount += amount;
 
-        // this is the second one:
-        flowKey = category + "-" + this.translations.all_money + "-" + currencyCode;
+        // this is the second one, from category to "all your money"
+        flowKey = category + "-" + allMoneyFlowKey;
         if (!Object.hasOwn(this.processedData.amounts, flowKey)) {
             this.processedData.amounts[flowKey] = {
+                flowKey: flowKey,
                 from: category,
                 to: this.translations.all_money + (this.convertToPrimary ? " (" + currencyCode + ")" : ""),
                 amount: 0,
+                type:'to-expense',
+                id: categoryId
             };
         }
         this.processedData.amounts[flowKey].amount += amount;
     }
 
     getObjectName(type, name, direction, code) {
-        if (this.convertToPrimary) {
+        if (true === this.convertToPrimary) {
             return this.getObjectNameWithoutCurrency(type, name, direction);
         }
         return this.getObjectNameWithCurrency(type, name, direction, code);
     }
 
     getLabel(type, name, code) {
-        if (this.convertToPrimary) {
+        if (true === this.convertToPrimary) {
             return this.getLabelWithoutCurrency(type, name);
         }
         return this.getLabelWithCurrency(type, name, code);
@@ -402,7 +463,7 @@ export default class {
             this.chart.update();
             return;
         }
-        console.log(options);
+        // console.log(options);
         Chart.register(LinearScale, SankeyController, Flow);
         this.chart = new Chart(document.getElementById(this.holder).getContext("2d"), options);
     }

@@ -5,9 +5,6 @@
     "workspaces": [
         "resources/assets/v3"
     ],
-    "overrides": {
-        "rolldown": "1.2.8"
-    },
     "allowScripts": {
         "@parcel/watcher@2.6.0": true
     },
