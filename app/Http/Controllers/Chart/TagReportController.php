@@ -267,6 +267,37 @@ final class TagReportController extends Controller
         return response()->json($data);
     }
 
+    public function relatedTagExpense(Collection $accounts, Collection $tags, Carbon $start, Carbon $end): JsonResponse
+    {
+        $result = [];
+        $spent  = $this->opsRepository->listExpenses($start, $end, $accounts, $tags);
+
+        foreach ($spent as $currency) {
+            foreach ($currency['tags'] as $tag) {
+                foreach ($tag['transaction_journals'] as $journal) {
+                    $journalData = $this->resolveJournalAmountAndCurrency($journal, $currency);
+                    $relatedTags = $journal['related_tags'];
+                    if (0 === count($relatedTags)) {
+                        $relatedTags = [trans('firefly.no_related_tag')];
+                    }
+                    foreach ($relatedTags as $objectName) {
+                        $title                    = sprintf('%s (%s)', $objectName, $journalData['currency_name']);
+                        $result[$title] ??= [
+                            'amount'          => '0',
+                            'currency_symbol' => $journalData['currency_symbol'],
+                            'currency_code'   => $journalData['currency_code'],
+                        ];
+                        $result[$title]['amount'] = bcadd($result[$title]['amount'], $journalData['amount']);
+                    }
+                }
+            }
+        }
+
+        $data   = $this->generator->multiCurrencyPieChart($result);
+
+        return response()->json($data);
+    }
+
     public function sourceExpense(Collection $accounts, Collection $tags, Carbon $start, Carbon $end): JsonResponse
     {
         $result = [];

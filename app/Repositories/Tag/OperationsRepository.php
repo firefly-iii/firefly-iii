@@ -116,6 +116,7 @@ class OperationsRepository implements OperationsRepositoryInterface, UserGroupIn
                     'destination_account_name' => $journal['destination_account_name'],
                     'description'              => $journal['description'],
                     'transaction_group_id'     => $journal['transaction_group_id'],
+                    'related_tags'             => $this->relatedTags($journal['tags'], $tagIds),
                 ];
             }
         }
@@ -237,5 +238,21 @@ class OperationsRepository implements OperationsRepositoryInterface, UserGroupIn
         $repository = app(TagRepositoryInterface::class);
 
         return $repository->get();
+    }
+
+    /**
+     * Return the tags of the journal that are not in the list, as ID => name.
+     */
+    private function relatedTags(array $journalTags, array $tagIds): array
+    {
+        $return = [];
+        foreach ($journalTags as $tag) {
+            $tagId = (int) $tag['id'];
+            if (!in_array($tagId, $tagIds, true)) {
+                $return[$tagId] = (string) $tag['name'];
+            }
+        }
+
+        return $return;
     }
 }

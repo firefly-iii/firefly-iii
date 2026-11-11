@@ -23,6 +23,7 @@ $(function () {
     loadAjaxPartial('accountsHolder', accountsUrl);
     loadAjaxPartial('tagsHolder', tagsUrl);
     loadAjaxPartial('accountPerTagHolder', accountPerTagUrl);
+    loadAjaxPartial('relatedTagsHolder', relatedTagsUrl);
 
     $.each($('.main_tag_canvas'), function (i, v) {
         var canvas = $(v);
@@ -31,6 +32,7 @@ $(function () {
 
     multiCurrencyPieChart(tagOutUrl, 'tag-out-pie-chart');
     multiCurrencyPieChart(tagInUrl, 'tag-in-pie-chart');
+    multiCurrencyPieChart(relatedTagOutUrl, 'related-tag-out-pie-chart');
     multiCurrencyPieChart(categoryOutUrl, 'category-out-pie-chart');
     multiCurrencyPieChart(categoryInUrl, 'category-in-pie-chart');
     multiCurrencyPieChart(budgetsOutUrl, 'budgets-out-pie-chart');

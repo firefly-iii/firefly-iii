@@ -593,6 +593,12 @@ Route::group(
             ->where(['end_date' => DATEFORMAT])
         ;
         Route::get(
+            'related-tag/expense/{accountList}/{tagList}/{start_date}/{end_date}',
+            ['uses' => 'TagReportController@relatedTagExpense', 'as' => 'related-tag-expense']
+        )->where(['start_date' => DATEFORMAT])
+            ->where(['end_date' => DATEFORMAT])
+        ;
+        Route::get(
             'category/expense/{accountList}/{tagList}/{start_date}/{end_date}',
             ['uses' => 'TagReportController@categoryExpense', 'as' => 'category-expense']
         )->where(['start_date' => DATEFORMAT])
@@ -1120,6 +1126,11 @@ Route::group(
             ->where(['end_date' => DATEFORMAT])
         ;
         Route::get('tags/{accountList}/{tagList}/{start_date}/{end_date}', ['uses' => 'TagController@tags', 'as' => 'tags'])->where(
+            ['start_date' => DATEFORMAT]
+        )
+            ->where(['end_date' => DATEFORMAT])
+        ;
+        Route::get('related-tags/{accountList}/{tagList}/{start_date}/{end_date}', ['uses' => 'TagController@relatedTags', 'as' => 'related-tags'])->where(
             ['start_date' => DATEFORMAT]
         )
             ->where(['end_date' => DATEFORMAT])

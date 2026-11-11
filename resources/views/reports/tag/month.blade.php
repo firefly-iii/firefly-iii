@@ -81,6 +81,35 @@
         </div>
     </div>
     <div class="row">
+        <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
+            <div class="card mb-2">
+                <div class="card-header">
+                    <h3 class="card-title">{{ __('firefly.related_tags') }}</h3>
+                </div>
+                <div class="card-body p-0" id="relatedTagsHolder">
+                </div>
+                {{-- loading indicator --}}
+                <div class="overlay text-center m-2">
+                    <div class="spinner-border spinner-border-sm" role="status">
+  <span class="visually-hidden">{{ __('firefly.thinking') }}</span>
+</div>
+                </div>
+            </div>
+        </div>
+        <div class="col-lg-6 col-md-6">
+            <div class="card mb-2">
+                <div class="card-header">
+                    <h3 class="card-title">{{ __('firefly.expense_per_related_tag') }}</h3>
+                </div>
+                <div class="card-body">
+                    <div class="center-chart">
+                        <canvas id="related-tag-out-pie-chart" class="medium-chart" height="250"></canvas>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="row">
         <div class="col-lg-4 col-md-6">
             <div class="card mb-2">
                 <div class="card-header">
@@ -276,10 +305,12 @@
         var accountsUrl = '{{ route('report-data.tag.accounts', [$accountIds, $tagIds, $start->format('Ymd'), $end->format('Ymd')]) }}';
         var tagsUrl = '{{ route('report-data.tag.tags', [$accountIds, $tagIds, $start->format('Ymd'), $end->format('Ymd')]) }}';
         var accountPerTagUrl = '{{ route('report-data.tag.account-per-tag', [$accountIds, $tagIds, $start->format('Ymd'), $end->format('Ymd')]) }}';
+        var relatedTagsUrl = '{{ route('report-data.tag.related-tags', [$accountIds, $tagIds, $start->format('Ymd'), $end->format('Ymd')]) }}';
 
         // pie charts:
         var tagOutUrl = '{{ route('chart.tag.tag-expense', [$accountIds, $tagIds, $start->format('Ymd'), $end->format('Ymd')]) }}';
         var tagInUrl = '{{ route('chart.tag.tag-income', [$accountIds, $tagIds, $start->format('Ymd'), $end->format('Ymd')]) }}';
+        var relatedTagOutUrl = '{{ route('chart.tag.related-tag-expense', [$accountIds, $tagIds, $start->format('Ymd'), $end->format('Ymd')]) }}';
         var categoryOutUrl = '{{ route('chart.tag.category-expense', [$accountIds, $tagIds, $start->format('Ymd'), $end->format('Ymd')]) }}';
         var categoryInUrl = '{{ route('chart.tag.category-income', [$accountIds, $tagIds, $start->format('Ymd'), $end->format('Ymd')]) }}';
         var budgetsOutUrl = '{{ route('chart.tag.budget-expense', [$accountIds, $tagIds, $start->format('Ymd'), $end->format('Ymd')]) }}';

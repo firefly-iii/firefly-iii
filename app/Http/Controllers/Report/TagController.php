@@ -335,6 +335,58 @@ final class TagController extends Controller
 
     /**
      * @return Factory|View
+     */
+    public function relatedTags(Collection $accounts, Collection $tags, Carbon $start, Carbon $end): Factory|\Illuminate\Contracts\View\View
+    {
+        $spent   = $this->opsRepository->listExpenses($start, $end, $accounts, $tags);
+        $sums    = [];
+        $result  = [];
+        foreach ($spent as $currency) {
+            $currencyId = $currency['currency_id'];
+            $sums[$currencyId] ??= [
+                'currency_id'             => $currency['currency_id'],
+                'currency_symbol'         => $currency['currency_symbol'],
+                'currency_name'           => $currency['currency_name'],
+                'currency_decimal_places' => $currency['currency_decimal_places'],
+                'spent_sum'               => '0',
+            ];
+            foreach ($currency['tags'] as $tag) {
+                foreach ($tag['transaction_journals'] as $journal) {
+                    $sums[$currencyId]['spent_sum'] = bcadd($sums[$currencyId]['spent_sum'], (string) $journal['amount']);
+                    $relatedTags                    = $journal['related_tags'];
+                    if (0 === count($relatedTags)) {
+                        $relatedTags = [0 => trans('firefly.no_related_tag')];
+                    }
+                    foreach ($relatedTags as $tagId => $tagName) {
+                        $key                       = sprintf('%d-%d', $tagId, $currencyId);
+                        $result[$key] ??= [
+                            'transactions'            => 0,
+                            'sum'                     => '0',
+                            'sum_float'               => 0,
+                            'tag_name'                => $tagName,
+                            'tag_id'                  => $tagId,
+                            'currency_id'             => $currency['currency_id'],
+                            'currency_name'           => $currency['currency_name'],
+                            'currency_symbol'         => $currency['currency_symbol'],
+                            'currency_decimal_places' => $currency['currency_decimal_places'],
+                        ];
+                        ++$result[$key]['transactions'];
+                        $result[$key]['sum']       = bcadd((string) $journal['amount'], $result[$key]['sum']);
+                        $result[$key]['sum_float'] = (float) $result[$key]['sum'];
+                    }
+                }
+            }
+        }
+        // sort by sum_float
+        // sort temp array by amount.
+        $amounts = array_column($result, 'sum_float');
+        array_multisort($amounts, SORT_ASC, $result);
+
+        return view('reports.tag.partials.related-tags', ['sums' => $sums, 'result' => $result]);
+    }
+
+    /**
+     * @return Factory|View
      *
      * @SuppressWarnings("PHPMD.ExcessiveMethodLength")
      */
