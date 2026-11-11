@@ -99,9 +99,9 @@ class GroupUpdateService
 
         /** @var string $deletedId */
         foreach ($result as $deletedId) {
-            /** @var TransactionJournal|null $journal */
+            /** @var null|TransactionJournal $journal */
             $journal = $transactionGroup->transactionJournals()->find((int) $deletedId);
-            if(null !== $journal) {
+            if (null !== $journal) {
                 /** @var JournalDestroyService $service */
                 $service = app(JournalDestroyService::class);
                 $service->destroy($journal);
