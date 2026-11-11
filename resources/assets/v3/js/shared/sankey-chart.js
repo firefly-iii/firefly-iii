@@ -62,7 +62,7 @@ export default class {
         const cacheValid = window.store.get("cacheValid");
         let cachedData = window.store.get(cacheKey);
 
-        if (false && cacheValid && typeof cachedData !== "undefined") {
+        if (cacheValid && typeof cachedData !== "undefined") {
             this.transactions = cachedData;
             this.drawChart(this.generateOptions());
             this.loading = false;
@@ -159,8 +159,6 @@ export default class {
         // console.log("Processed data", this.processedData);
     }
     groupProcessedData() {
-        let newSet = [];
-        let counters = {};
 
         // hier doen we even sorteren.
         let unordered = Object.values(this.processedData.amounts);
