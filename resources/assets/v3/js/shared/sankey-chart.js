@@ -124,7 +124,7 @@ export default class {
                     font: { size: 11 },
                     padding: 3,
                 },
-                nodePadding: 4,
+                nodePadding: 12,
                 nodePaddingMode: "even",
             },
         };
