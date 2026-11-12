@@ -103,12 +103,28 @@ export default class {
     }
 
     generateOptions() {
+        const darkModeMql = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)');
+        let theme = document.documentElement.getAttribute('data-bs-theme');
+        console.log(darkModeMql);
+        let color = 'black';
+        if ((darkModeMql && darkModeMql.matches) || 'dark' === theme) {
+            // dark mode
+            color = 'white';
+        }
         let options = {
             type: "sankey",
             data: {
                 datasets: [],
             },
-            options: { animations: false },
+            options: {
+                nodeMinSize: 8,
+                animations: false,
+                nodeLabels: {
+                    color: color,
+                    font: { size: 11 },
+                    padding: 3,
+                },
+            },
         };
 
         // reset currencies
@@ -129,10 +145,9 @@ export default class {
                 size: "min", // or 'min' if flow overlap is preferred
             };
 
-        console.log("Add data to chart.");
+        // console.log("Add data to chart.");
         for (let i in this.processedData.amounts) {
             if (Object.hasOwn(this.processedData.amounts, i)) {
-                // disabled for now:
                 let amount = this.processedData.amounts[i];
                 dataSet.data.push({ from: amount.from, to: amount.to, flow: amount.amount });
             }
@@ -161,15 +176,32 @@ export default class {
     groupProcessedData() {
         // hier doen we even sorteren.
         let unordered = Object.values(this.processedData.amounts);
-        console.log("Sorting now");
+        //console.log("Sorting now");
         unordered.sort(function (a, b) {
-            console.log("Sort", a.amount);
+            // console.log("Sort", a.amount);
             return a.amount < b.amount ? 1 : -1;
         });
+        // also do sums here.
         let newAmounts = {};
+        let sums = {};
         for (let i = 0; i < unordered.length; i++) {
             let current = unordered[i];
-            newAmounts[current.flowKey] = current;
+            sums[current.type] = Object.hasOwn(sums, current.type) ? sums[current.type] + current.amount : current.amount;
+        }
+        // console.log('All sums is now', sums);
+        const percentage = 0.25; // 1 = 100%
+        for (let i = 0; i < unordered.length; i++) {
+            let current = unordered[i];
+            if(Object.hasOwn(sums, current.type)) {
+                // there is a sum for all of these.
+                // if the current is less than 25% of the total, ignore it.
+                if('from-category' === current.type && current.amount < sums[current.type] * percentage) {
+                    // console.log('Ignore because too small amount ('+current.amount+' is less than '+sums[current.type] * percentage+')', current);
+                    //continue;
+                }
+                newAmounts[current.flowKey] = current;
+            }
+            // sums[current.type] = Object.hasOwn(sums, current.type) ? sums[current.type] + current.amount : current.amount;
         }
         this.processedData.amounts = newAmounts;
     }
