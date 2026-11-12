@@ -200,7 +200,7 @@ export default class {
             counts[current.type] = Object.hasOwn(counts, current.type) ? counts[current.type] + 1 : 1;
             if (counts[current.type] > 20) {
                 console.log("Ignore entry because count is over 20.", current);
-                continue;
+                // continue;
             }
             newAmounts[current.flowKey] = current;
             // if (Object.hasOwn(sums, current.type)) {
