@@ -198,8 +198,8 @@ export default class {
         for (let i = 0; i < unordered.length; i++) {
             let current = unordered[i];
             counts[current.type] = Object.hasOwn(counts, current.type) ? counts[current.type] + 1 : 1;
-            if(counts[current.type] > 20) {
-                console.log('Ignore entry because count is over 20.', current);
+            if (counts[current.type] > 20) {
+                console.log("Ignore entry because count is over 20.", current);
                 continue;
             }
             newAmounts[current.flowKey] = current;
