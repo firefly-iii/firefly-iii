@@ -125,7 +125,7 @@ export default class {
                     padding: 3,
                 },
                 nodePadding: 4,
-                nodePaddingMode: 'even',
+                nodePaddingMode: "even",
             },
         };
 
