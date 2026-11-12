@@ -103,13 +103,13 @@ export default class {
     }
 
     generateOptions() {
-        const darkModeMql = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)');
-        let theme = document.documentElement.getAttribute('data-bs-theme');
+        const darkModeMql = window.matchMedia && window.matchMedia("(prefers-color-scheme: dark)");
+        let theme = document.documentElement.getAttribute("data-bs-theme");
         console.log(darkModeMql);
-        let color = 'black';
-        if ((darkModeMql && darkModeMql.matches) || 'dark' === theme) {
+        let color = "black";
+        if ((darkModeMql && darkModeMql.matches) || "dark" === theme) {
             // dark mode
-            color = 'white';
+            color = "white";
         }
         let options = {
             type: "sankey",
@@ -186,16 +186,18 @@ export default class {
         let sums = {};
         for (let i = 0; i < unordered.length; i++) {
             let current = unordered[i];
-            sums[current.type] = Object.hasOwn(sums, current.type) ? sums[current.type] + current.amount : current.amount;
+            sums[current.type] = Object.hasOwn(sums, current.type)
+                ? sums[current.type] + current.amount
+                : current.amount;
         }
         // console.log('All sums is now', sums);
         const percentage = 0.25; // 1 = 100%
         for (let i = 0; i < unordered.length; i++) {
             let current = unordered[i];
-            if(Object.hasOwn(sums, current.type)) {
+            if (Object.hasOwn(sums, current.type)) {
                 // there is a sum for all of these.
                 // if the current is less than 25% of the total, ignore it.
-                if('from-category' === current.type && current.amount < sums[current.type] * percentage) {
+                if ("from-category" === current.type && current.amount < sums[current.type] * percentage) {
                     // console.log('Ignore because too small amount ('+current.amount+' is less than '+sums[current.type] * percentage+')', current);
                     //continue;
                 }

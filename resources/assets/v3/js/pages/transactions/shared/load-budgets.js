@@ -42,7 +42,7 @@ export function loadBudgets(includeInactive) {
                     let obj = {
                         id: current.id,
                         name: current.attributes.name,
-                        active: current.attributes.active
+                        active: current.attributes.active,
                     };
                     returnData.push(obj);
                     continue;
@@ -51,7 +51,7 @@ export function loadBudgets(includeInactive) {
                     let obj = {
                         id: current.id,
                         name: current.attributes.name + " (" + i18next.t("firefly.inactive").toLowerCase() + ")",
-                        active: current.attributes.active
+                        active: current.attributes.active,
                     };
                     returnData.push(obj);
                 }
