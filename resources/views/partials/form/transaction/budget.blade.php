@@ -19,8 +19,10 @@
                         @keyup.enter="save()"
                 >
                     <template x-for="budget in formData.budgets">
+                        <template x-if="budget.active || budget.id == transaction.budget_id">
                         <option :label="budget.name" :value="budget.id" :selected="budget.id == transaction.budget_id"
                                 x-text="budget.name"></option>
+                        </template>
                     </template>
                 </select>
             </template>
