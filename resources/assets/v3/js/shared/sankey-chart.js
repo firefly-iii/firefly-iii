@@ -186,25 +186,32 @@ export default class {
         // also do sums here.
         let newAmounts = {};
         let sums = {};
+        let counts = {};
         for (let i = 0; i < unordered.length; i++) {
             let current = unordered[i];
             sums[current.type] = Object.hasOwn(sums, current.type)
                 ? sums[current.type] + current.amount
                 : current.amount;
         }
-        // console.log('All sums is now', sums);
-        const percentage = 0.25; // 1 = 100%
+        // now loop again and decide if we want to add them to the chart.
+        // const percentage = 0.25; // 1 = 100%
         for (let i = 0; i < unordered.length; i++) {
             let current = unordered[i];
-            if (Object.hasOwn(sums, current.type)) {
-                // there is a sum for all of these.
-                // if the current is less than 25% of the total, ignore it.
-                if ("from-category" === current.type && current.amount < sums[current.type] * percentage) {
-                    // console.log('Ignore because too small amount ('+current.amount+' is less than '+sums[current.type] * percentage+')', current);
-                    //continue;
-                }
-                newAmounts[current.flowKey] = current;
+            counts[current.type] = Object.hasOwn(counts, current.type) ? counts[current.type] + 1 : 1;
+            if(counts[current.type] > 20) {
+                console.log('Ignore entry because count is over 20.', current);
+                continue;
             }
+            newAmounts[current.flowKey] = current;
+            // if (Object.hasOwn(sums, current.type)) {
+            //     // there is a sum for all of these.
+            //     // if the current is less than 25% of the total, ignore it.
+            //     if ("from-category" === current.type && current.amount < sums[current.type] * percentage) {
+            //         // console.log('Ignore because too small amount ('+current.amount+' is less than '+sums[current.type] * percentage+')', current);
+            //         //continue;
+            //     }
+            //     newAmounts[current.flowKey] = current;
+            // }
             // sums[current.type] = Object.hasOwn(sums, current.type) ? sums[current.type] + current.amount : current.amount;
         }
         this.processedData.amounts = newAmounts;
