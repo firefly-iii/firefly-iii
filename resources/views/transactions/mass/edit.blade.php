@@ -149,11 +149,13 @@
                                     <td>
                                         @if($journal['transaction_type_type'] === 'Withdrawal')
                                             <select class="form-select form-select-sm" name="budget_id[{{ $journal['transaction_journal_id'] }}]">
-                                                <option value="0" label="({{ __('firefly.no_budget') }})"
-                                                        @if($journal['budget_id'] === 0) selected="selected" @endif>{{ __('firefly.no_budget') }}</option>
+                                                <option value="0" label="{{ __('firefly.no_budget') }}" @if($journal['budget_id'] === 0) selected="selected" @endif>{{ __('firefly.no_budget') }}</option>
                                                 @foreach($budgets as $budget)
-                                                    <option value="{{ $budget->id }}"@if($budget->id ===  $journal['budget_id']) selected="selected"@endif
-                                                            label="{{ $budget->name }}">{{ $budget->name }}</option>
+                                                    @if($budget->id === $journal['budget_id'] || $budget->active)
+                                                    <option value="{{ $budget->id }}"
+                                                            @if($budget->id === $journal['budget_id']) selected="selected" @endif
+                                                            label="{{ $budget->name }} @if(!$budget->active) ({{ strtolower(__('firefly.inactive')) }})@endif">{{ $budget->name }} @if(!$budget->active) ({{ strtolower(__('firefly.inactive')) }})@endif</option>
+                                                    @endif
                                                 @endforeach
                                             </select>
                                         @endif
