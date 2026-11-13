@@ -113,7 +113,7 @@ export function addAllAutocompleteToForm() {
             labelField: "name",
             suggestionsThreshold: 0,
             debounceTime: 100,
-            autoselectFirst: true,
+            // autoselectFirst: true,
             account_types: filters.destination,
             onRenderItem: renderAccount,
             onChange: changeDestinationAccount,
@@ -148,6 +148,7 @@ export function addAutocomplete(options) {
         server: options.serverUrl,
         serverParams: {},
         fixed: true,
+        autoselectFirst: false,
         fetchOptions: {
             method: "GET",
             credentials: "include",

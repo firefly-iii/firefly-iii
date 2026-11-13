@@ -28,24 +28,32 @@ export default function getExpectedAccountTypes(transactionType, sourceType, des
             ", destinationType=" +
             destinationType,
     );
-
+    let list ;
     // is withdrawal and source is asset? limit destination types
     if ("withdrawal" === transactionType && "Asset account" === sourceType) {
-        return ["Expense account", "Asset account", "Loan", "Debt", "Mortgage"];
+        list = ["Expense account", "Asset account", "Loan", "Debt", "Mortgage"];
+        console.log('[a] Return ', list)
+        return list;
     }
     // is withdrawal and source is liability? Limit destination types
     if ("withdrawal" === transactionType && ["Loan", "Debt", "Mortgage"].includes(sourceType)) {
         // 2026-11-09 do not limit this list yet (issue #13077)
-        return ["Expense account", "Asset account", "Loan", "Debt", "Mortgage"];
+        list =  ["Expense account", "Asset account", "Loan", "Debt", "Mortgage"];
+        console.log('[b] Return ', list)
+        return list;
     }
 
     // is deposit? limit destination types.
     if ("deposit" === transactionType) {
-        return ["Asset account", "Loan", "Debt", "Mortgage"];
+        list = ["Asset account", "Loan", "Debt", "Mortgage"];
+        console.log('[b] Return ', list)
+        return list;
     }
     // is transfer or withdrawal? No limit to source types.
     // if ("deposit" !== transactionType) {
     //     return ["Expense account", "Loan", "Debt", "Mortgage", "Asset account"];
     // }
-    return ["Expense account", "Loan", "Debt", "Mortgage", "Asset account"];
+    list = ["Expense account", "Loan", "Debt", "Mortgage", "Asset account"];
+    console.log('[b] Return ', list)
+    return list;
 }

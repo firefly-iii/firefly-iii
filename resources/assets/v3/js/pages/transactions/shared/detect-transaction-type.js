@@ -28,6 +28,8 @@ export function detectTransactionType() {
         return;
     }
     console.log('Detect transaction type of "' + sourceType + '" vs "' + destType + '"');
+    console.log('Source is', JSON.parse(JSON.stringify(this.entries[0].source_account)));
+    console.log('Destination is', JSON.parse(JSON.stringify(this.entries[0].destination_account)));
 
     // transfer: both are the same and in strict set of account types
     if (sourceType === destType && ["Asset account", "Loan", "Debt", "Mortgage"].includes(sourceType)) {
