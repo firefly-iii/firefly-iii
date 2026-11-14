@@ -18,7 +18,7 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-export default function getExpectedAccountTypes(transactionType, sourceType, destinationType) {
+export default function getExpectedAccountTypes(transactionType, sourceType) {
     transactionType = transactionType.toLowerCase();
     // console.log(
     //     "getExpectedAccountTypes: transactionType=" +

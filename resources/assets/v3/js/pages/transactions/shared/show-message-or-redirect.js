@@ -21,8 +21,7 @@
 import i18next from "i18next";
 import Tags from "bootstrap5-tags";
 
-export function showMessageOrRedirectUser(sourceOfCall) {
-    // console.log('Called showMessageOrRedirectUser("' + sourceOfCall + '")');
+export function showMessageOrRedirectUser() {
     if (false === this.formStates.storedGroup) {
         console.warn("The transaction group is not yet stored, return and do nothing.");
         return;
