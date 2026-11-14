@@ -3,6 +3,62 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
+## v6.7.10 - 2026-11-20
+
+<!-- summary: This release fixes several (security) issues and introduces a sankey chart. -->
+
+### Added
+
+- A rule action to change the transaction's date.
+- Inline edit for account names.
+- Groupable accounts and categories.
+
+### Changed
+
+- Initial release.
+
+### Deprecated
+
+- Initial release.
+
+### Removed
+
+- Initial release.
+
+### Fixed
+
+- #10344
+- #10346
+- #10351
+- #10352
+- #10357
+- #10360
+- #10363
+- #10380
+- #10381
+- #13103
+- #13108
+- #13109
+- #13116
+- #13121
+- #13134
+- #13150
+- #13165
+- #13110
+- #13106
+- #13084
+- #13077
+- #12747
+- #13195
+- #13217
+- #13230
+
+### Security
+
+- Email change undo codes were valid indefinitely, discovered by Claude.
+- You could submit the admin preferences before the 2FA check was done, discovered by Claude.
+- Some secure preferences could be read by the user, discovered by Claude.
+
 ## v6.7.9 - 2026-10-12
 
 <!-- summary: This release fixes an issue for self-hosted users and fixes some minor other issues. -->
@@ -460,7 +516,7 @@ Has been super-seeded by the next release.
 - [Issue 12004](https://github.com/firefly-iii/firefly-iii/issues/12004) (Test notification buttons always generate an error) reported by @IDevJoe
 - [Issue 12014](https://github.com/firefly-iii/firefly-iii/issues/12014) (Converting a transaction to a transfer and setting the destination account to one with a different currency breaks the audit log) reported by @avee87
 
-# Changed
+### Changed
 
 - [Issue 12000](https://github.com/firefly-iii/firefly-iii/issues/12000) (Improved transaction pagination for large data sets) reported by @christiaanderidder
 
