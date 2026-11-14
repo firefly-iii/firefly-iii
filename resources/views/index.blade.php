@@ -2,6 +2,20 @@
 @section('content')
     <!-- TODO internals modal voor pagina settings -->
     <!-- TODO wizard modal voor weet ik veel -->
+    @if($convertToPrimary && $currencies->count() > 1)
+        <div class="d-print-none mb-2 text-end">
+            <div class="btn-group btn-group-sm" role="group" aria-label="{{ __('firefly.primary_currency_switch') }}">
+                @foreach($currencies as $currency)
+                    @if($currency->id === $primaryCurrency->id)
+                        <button type="button" class="btn btn-primary active" aria-pressed="true">{{ $currency->code }}</button>
+                    @else
+                        <button type="button" class="btn btn-outline-primary make_default" data-code="{{ $currency->code }}"
+                                title="{{ __('firefly.make_primary_currency', ['name' => $currency->name]) }}">{{ $currency->code }}</button>
+                    @endif
+                @endforeach
+            </div>
+        </div>
+    @endif
     <x-dashboard.boxes :start="$start" :end="$end"/>
 
     <div class="row" x-data="index">
@@ -284,7 +298,11 @@
         var billCount = {{ $billCount }};
         var accountRevenueUrl = '{{ route('chart.account.revenue') }}';
         var accountExpenseUrl = '{{ route('chart.account.expense') }}';
+        // used by currencies/index.js to switch the primary currency, then come back here.
+        var redirectUrl = "{{ route('index') }}";
+        var updateCurrencyUrl = "{{ route('api.v1.currencies.update', ['']) }}";
     </script>
+    <script src="v1/js/ff/currencies/index.js?v={{ $FF_BUILD_TIME }}" nonce="{{ $JS_NONCE }}"></script>
 
      <script src="v1/js/lib/Chart.bundle.min.js?v={{ $FF_BUILD_TIME }}"
             nonce="{{ $JS_NONCE }}"></script>
