@@ -105,7 +105,7 @@ export default class {
     generateOptions() {
         const darkModeMql = window.matchMedia && window.matchMedia("(prefers-color-scheme: dark)");
         let theme = document.documentElement.getAttribute("data-bs-theme");
-        console.log(darkModeMql);
+        // console.log(darkModeMql);
         let color = "black";
         if ((darkModeMql && darkModeMql.matches) || "dark" === theme) {
             // dark mode
@@ -199,7 +199,7 @@ export default class {
             let current = unordered[i];
             counts[current.type] = Object.hasOwn(counts, current.type) ? counts[current.type] + 1 : 1;
             if (counts[current.type] > 20) {
-                console.log("Ignore entry because count is over 20.", current);
+                // console.log("Ignore entry because count is over 20.", current);
                 // continue;
             }
             newAmounts[current.flowKey] = current;

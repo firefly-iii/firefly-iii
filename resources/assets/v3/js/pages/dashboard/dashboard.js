@@ -210,7 +210,7 @@ let index = function () {
                 // sort groups.
                 this.piggyBanks = Object.values(this.piggyBanks).sort((a, b) => a.order - b.order);
                 this.loadingPiggyBanks = false;
-                console.log("Loaded piggy banks: ", this.piggyBanks);
+                // console.log("Loaded piggy banks: ", this.piggyBanks);
             });
         },
     };

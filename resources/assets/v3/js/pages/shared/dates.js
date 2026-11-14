@@ -72,8 +72,8 @@ export default () => ({
             console.log("Responding to change event in customDateRangeCalendar");
             this.updateDatesNoSubmit(e);
         });
-        // console.log('From store: start=', window.store.get("start"));
-        // console.log('From store: end=', window.store.get("end"));
+        console.log('From store: start=', window.store.get("start"));
+        console.log('From store: end=', window.store.get("end"));
         let end = new Date(window.store.get("end"));
         let start = new Date(window.store.get("start"));
         this.range = {
