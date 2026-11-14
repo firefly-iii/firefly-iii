@@ -29,36 +29,36 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 ### Fixed
 
 
-- #12432
-- #12747
-- #13044
-- #13046
-- #13051
-- #13052
-- #13053
-- #13057
-- #13060
-- #13063
-- #13067
-- #13077
-- #13080
-- #13081
-- #13084
-- #13103
-- #13106
-- #13107
-- #13108
-- #13109
-- #13110
-- #13116
-- #13121
-- #13134
-- #13150
-- #13165
-- #13195
-- #13217
-- #13230
-- #13231
+- [Issue 12432](https://github.com/firefly-iii/firefly-iii/issues/12432) (Account balance shown in overview header is incorrect while transaction list and API are correct) reported by @LordTsum
+- [Issue 12747](https://github.com/firefly-iii/firefly-iii/issues/12747) (Store as a new transaction instead of updating is not respected) reported by @JC5
+- [Issue 13044](https://github.com/firefly-iii/firefly-iii/issues/13044) (Auto-budget with correct overspending issue when end month at 0.0 for next month) reported by @Optimus266
+- [Issue 13046](https://github.com/firefly-iii/firefly-iii/issues/13046) (Currency exchange transfers missing foreign amount and foreign currency fields) reported by @Tracachang
+- [Issue 13051](https://github.com/firefly-iii/firefly-iii/issues/13051) (Wrong "No category" link in reports) reported by @jlauwers
+- [Discussion 13052](https://github.com/orgs/firefly-iii/discussions/13052) (Menu ToolTip Popups to embellish the minimised left panel view) started by @PAS-BC
+- [Issue 13053](https://github.com/firefly-iii/firefly-iii/issues/13053) (API: cannot submit category color without also submitting the name) reported by @JC5
+- [Issue 13057](https://github.com/firefly-iii/firefly-iii/issues/13057) (Can't create recurring transactions) reported by @numerfolt
+- [PR 13060](https://github.com/firefly-iii/firefly-iii/pull/13060) (v3 UI tweaks and improvements) reported by @K3das
+- [Issue 13063](https://github.com/firefly-iii/firefly-iii/issues/13063) (API: PUT /api/v1/piggy-banks/{id} with "accounts" fails with 500 "bcsub(): Argument #2 ($num2) must be of type string, int given") reported by @danixland
+- [Issue 13067](https://github.com/firefly-iii/firefly-iii/issues/13067) (Brazilian Portuguese (pt_BR) date range displays incorrect numeric values) reported by @jeanfrantiesco
+- [Issue 13077](https://github.com/firefly-iii/firefly-iii/issues/13077) (transfer creation with liability) reported by @danielpngr
+- [Discussion 13080](https://github.com/orgs/firefly-iii/discussions/13080) (Thousands grouping in sl-SI locale) started by @marc22polo
+- [Issue 13081](https://github.com/firefly-iii/firefly-iii/issues/13081) (Tag transactions API runs out of memory (256M) for a tag on 117 journals) reported by @andrewvaughan
+- [Issue 13084](https://github.com/firefly-iii/firefly-iii/issues/13084) (Drag and drop only works in top subscription group) reported by @PAS-BC
+- [Issue 13103](https://github.com/firefly-iii/firefly-iii/issues/13103) (Integrity constraint violation with multiple account filters) reported by @GunoH
+- [Issue 13106](https://github.com/firefly-iii/firefly-iii/issues/13106) (No suggestion/autocompletion when typing in Source/Destination Account when editing transactions individually) reported by @Vermoot
+- [Issue 13107](https://github.com/firefly-iii/firefly-iii/issues/13107) (Shared fields no longer editable after removing first split of split transaction) reported by @GunoH
+- [Issue 13108](https://github.com/firefly-iii/firefly-iii/issues/13108) (Removing PATs introduces duplicate visual entries) reported by @WinnerWind
+- [Issue 13109](https://github.com/firefly-iii/firefly-iii/issues/13109) (Debug page's title is "Login") reported by @WinnerWind
+- [Issue 13110](https://github.com/firefly-iii/firefly-iii/issues/13110) (Total of split transactions not updated when split is removed) reported by @GunoH
+- [Issue 13116](https://github.com/firefly-iii/firefly-iii/issues/13116) (API: `/v1/budget-limits` returns wrong type for `pc_spent` -> `currency_id`) reported by @dreautall
+- [Issue 13121](https://github.com/firefly-iii/firefly-iii/issues/13121) (Autocomplete not working due to /api ignoring base path) reported by @NotoriousSHIB
+- [Issue 13134](https://github.com/firefly-iii/firefly-iii/issues/13134) (UserGroupTransformer crashes with 500 on orphan group_memberships; administrations page silently hides table on fetch failure) reported by @karagath-sgtsnips
+- [Issue 13150](https://github.com/firefly-iii/firefly-iii/issues/13150) (Undefined constant "row" in DoubleController.php) reported by @GunoH
+- [Issue 13165](https://github.com/firefly-iii/firefly-iii/issues/13165) (Error during migration "Base table or view already exists: 1050 Table   'oauth_device_codes' already exists") reported by @mwswartwout
+- [Issue 13195](https://github.com/firefly-iii/firefly-iii/issues/13195) (GroupUpdateService: failed multi-journal update soft-deletes the whole transaction group (data loss)) reported by @aitkar
+- [Issue 13217](https://github.com/firefly-iii/firefly-iii/issues/13217) (Budget dropdow behavior is insconsistent acrosse Firefly III) reported by @pvieira84
+- [Issue 13230](https://github.com/firefly-iii/firefly-iii/issues/13230) (Transaction save fail the first attempt if you have expense account and active account with the same name) reported by @no-coders
+- [Issue 13231](https://github.com/firefly-iii/firefly-iii/issues/13231) (API: updating a rule saves its actions as inactive when "active" is left out) reported by @YakupEmreYerli
 
 ### API
 
