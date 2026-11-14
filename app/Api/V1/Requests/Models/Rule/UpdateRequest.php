@@ -219,7 +219,7 @@ class UpdateRequest extends FormRequest
                 $return[] = [
                     'type'            => $action['type'],
                     'value'           => $action['value'],
-                    'active'          => $this->convertBoolean((string) ($action['active'] ?? 'false')),
+                    'active'          => $this->convertBoolean((string) ($action['active'] ?? 'true')),
                     'stop_processing' => $this->convertBoolean((string) ($action['stop_processing'] ?? 'false')),
                 ];
             }
