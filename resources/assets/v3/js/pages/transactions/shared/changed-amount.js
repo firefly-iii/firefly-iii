@@ -40,7 +40,7 @@ export function changedAmount(e) {
                 this.groupProperties.totalAmount =
                     this.groupProperties.totalAmount + parseFloat(this.entries[i].amount);
             }
-            console.log("totalAmount is now", this.groupProperties.totalAmount);
+            // console.log("totalAmount is now", this.groupProperties.totalAmount);
         }
     }
 }

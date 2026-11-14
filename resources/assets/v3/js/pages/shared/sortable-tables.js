@@ -66,7 +66,7 @@ export class sortableTable {
         this.handleFunc = this.handlePageClick.bind(this);
         this.parent = parent;
         queueMicrotask(() => {
-            console.log("Now calling update header classes from init-queuemicrotask");
+            // console.log("Now calling update header classes from init-queuemicrotask");
             this.updateHeaderClasses();
             this.addClickEvents();
             this.addWatch();
@@ -74,7 +74,7 @@ export class sortableTable {
     }
 
     addWatch() {
-        console.log("Now in addWatch()");
+        // console.log("Now in addWatch()");
         const params = new Proxy(new URLSearchParams(window.location.search), {
             get: (searchParams, prop) => searchParams.get(prop),
         });
@@ -269,7 +269,7 @@ export class sortableTable {
                 .forEach((el) => {
                     el.addEventListener("click", () => {
                         let parent = getNearestParent(el, "form");
-                        console.log("I am parent", parent);
+                        // console.log("I am parent", parent);
                         let id = parseInt(el.dataset.id);
                         let field = el.dataset.column;
                         let value = parent.querySelector('input[type="text"]').value;

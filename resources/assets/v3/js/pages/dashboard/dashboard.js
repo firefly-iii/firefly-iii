@@ -53,7 +53,7 @@ let index = function () {
                     let showNewFeatures = false;
                     // const lastShowTime = (1791297200 - (48*60*60)) * 1000;
                     if (0 === lastShowTime && !shownWhatsNewDialog) {
-                        console.log("User needs new feature dialogue.");
+                        // console.log("User needs new feature dialogue.");
                         // alert('Show dialog because never seen before.');
                         showNewFeatures = true;
                     }
@@ -62,7 +62,7 @@ let index = function () {
                         const diff = now - lastShowTime;
                         const diffInDays = diff / (1000 * 60 * 60 * 24);
                         if (diffInDays > 2) {
-                            console.log("User needs new feature dialogue.");
+                            // console.log("User needs new feature dialogue.");
                             showNewFeatures = true;
                         }
                     }
@@ -75,7 +75,7 @@ let index = function () {
                                 version = "v" + version;
                             }
                             if (null === releaseNotes) {
-                                console.log("Release notes are NULL");
+                                // console.log("Release notes are NULL");
                                 // mark as seen by submitting a preference.
                                 // TODO make a function.
                                 const now = parseInt(new Date().getTime() / 1000);

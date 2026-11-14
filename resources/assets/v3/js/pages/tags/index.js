@@ -30,7 +30,7 @@ function selectOrUnselect(e) {
     e.preventDefault();
     let button = e.target;
     let holder = document.querySelector('div[data-period="' + button.dataset.period + '"]');
-    console.log("holder", holder.dataset.period);
+    // console.log("holder", holder.dataset.period);
     let first = holder.querySelector('input[type="checkbox"]');
     if (first) {
         let check = true;
@@ -67,7 +67,7 @@ let index = function () {
         addSelectAllTrigger() {
             // select-all
             let list = document.querySelectorAll(".select-all");
-            console.log("List", list);
+            // console.log("List", list);
             if (list.length > 0) {
                 list.forEach((e) => {
                     e.addEventListener("click", selectOrUnselect);

@@ -241,21 +241,21 @@ let index = function () {
                             var box = e.currentTarget;
                             let configName = "category-card-collapse-" + box.dataset.group;
                             window.store.set(configName, "collapsed");
-                            console.log("Card " + box.dataset.group + " is now collapsed.");
+                            // console.log("Card " + box.dataset.group + " is now collapsed.");
                         });
                         v.addEventListener("expanded.lte.card-widget", function (e) {
                             var box = e.currentTarget;
                             let configName = "category-card-collapse-" + box.dataset.group;
                             window.store.set(configName, "expanded");
-                            console.log("Card " + box.dataset.group + " is now expanded.");
+                            // console.log("Card " + box.dataset.group + " is now expanded.");
                         });
 
                         if ("collapsed" === window.store.get(configName)) {
                             v.classList.add("collapsed-card");
-                            console.log("Card " + v.dataset.group + " is collapsed");
+                            // console.log("Card " + v.dataset.group + " is collapsed");
                             return;
                         }
-                        console.log("Card " + v.dataset.group + " is not collapsed");
+                        // console.log("Card " + v.dataset.group + " is not collapsed");
                     });
                     // $('.rules-card').each(function (i, v) {
                     //     var box = $(v);

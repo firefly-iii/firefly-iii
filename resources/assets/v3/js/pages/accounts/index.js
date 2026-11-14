@@ -124,7 +124,7 @@ let index = function () {
         },
 
         submitInlineEdit(id, field, value) {
-            console.log("submitInlineEdit(#" + id + ', "' + field + '", "' + value + '")');
+            // console.log("submitInlineEdit(#" + id + ', "' + field + '", "' + value + '")');
             // this.groupedObjects[tableId].items
             let tableId;
             for (tableId in this.groupedObjects) {
@@ -149,7 +149,7 @@ let index = function () {
                     }
                 }
             }
-            console.log("Done met submitInlineEdit");
+            // console.log("Done met submitInlineEdit");
         },
 
         prepareSumArrays(group, code) {
@@ -245,7 +245,7 @@ let index = function () {
                 };
             }
             new Get().list(downloadParams).then((response) => {
-                console.log("After download", downloadParams);
+                // console.log("After download", downloadParams);
                 // safety catch for search.
                 if (null !== this.sortableTable) {
                     this.sortableTable.totalPages[fallBackId] = parseInt(response.data.meta.pagination.total_pages);
@@ -255,14 +255,14 @@ let index = function () {
                         0 === length
                     ) {
                         this.sortableTable.pages[fallBackId] = this.sortableTable.totalPages[fallBackId];
-                        console.log("Call downloadObjects again because page is too high for tableId " + tableId);
+                        // console.log("Call downloadObjects again because page is too high for tableId " + tableId);
                         this.downloadObjects(tableId);
                     }
                 }
                 // process all accounts in this search result.
-                console.log(
-                    "Have " + response.data.data.length + " accounts in this search result for tableId " + tableId,
-                );
+                // console.log(
+                //     "Have " + response.data.data.length + " accounts in this search result for tableId " + tableId,
+                // );
                 for (let i = 0; i < response.data.data.length; i++) {
                     if (Object.hasOwn(response.data.data, i)) {
                         let current = this.filterAmounts(response.data.data[i]);

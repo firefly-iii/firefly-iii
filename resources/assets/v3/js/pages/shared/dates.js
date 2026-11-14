@@ -69,11 +69,11 @@ export default () => ({
             return;
         }
         document.getElementById("customDateRangeCalendar").addEventListener("change", (e) => {
-            console.log("Responding to change event in customDateRangeCalendar");
+            // console.log("Responding to change event in customDateRangeCalendar");
             this.updateDatesNoSubmit(e);
         });
-        console.log('From store: start=', window.store.get("start"));
-        console.log('From store: end=', window.store.get("end"));
+        // console.log('From store: start=', window.store.get("start"));
+        // console.log('From store: end=', window.store.get("end"));
         let end = new Date(window.store.get("end"));
         let start = new Date(window.store.get("start"));
         this.range = {
@@ -205,8 +205,8 @@ export default () => ({
     changeDateRange(e) {
         e.preventDefault();
         let target = e.currentTarget;
-        console.log("changeDateRange: start is", target.getAttribute("data-start"));
-        console.log("changeDateRange: end is", target.getAttribute("data-end"));
+        // console.log("changeDateRange: start is", target.getAttribute("data-start"));
+        // console.log("changeDateRange: end is", target.getAttribute("data-end"));
         let start = new Date(Date.parse(target.getAttribute("data-start")));
         let end = new Date(Date.parse(target.getAttribute("data-end")));
         // console.log('Start date is', start);

@@ -114,7 +114,7 @@ let index = function () {
                 for (let i = 0; i < response.data.length; i++) {
                     if (Object.hasOwn(response.data, i)) {
                         let token = response.data[i];
-                        console.log(i18next.t("config.date_time_fns", { lng: locale }));
+                        // console.log(i18next.t("config.date_time_fns", { lng: locale }));
                         token.expires_at = formatDate(
                             new Date(token.expires_at),
                             i18next.t("config.date_time_fns", { lng: locale }),
@@ -286,11 +286,11 @@ function loadPage(comps) {
 
 // wait for load until bootstrapped event is received.
 document.addEventListener("firefly-iii-bootstrapped", () => {
-    console.log("Loaded through event listener.");
+    // console.log("Loaded through event listener.");
     loadPage(comps);
 });
 // or is bootstrapped before event is triggered.
 if (window.bootstrapped) {
-    console.log("Loaded through window variable.");
+    // console.log("Loaded through window variable.");
     loadPage(comps);
 }

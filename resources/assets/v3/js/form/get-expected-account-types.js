@@ -20,33 +20,33 @@
 
 export default function getExpectedAccountTypes(transactionType, sourceType, destinationType) {
     transactionType = transactionType.toLowerCase();
-    console.log(
-        "getExpectedAccountTypes: transactionType=" +
-            transactionType +
-            ", sourceType=" +
-            sourceType +
-            ", destinationType=" +
-            destinationType,
-    );
+    // console.log(
+    //     "getExpectedAccountTypes: transactionType=" +
+    //         transactionType +
+    //         ", sourceType=" +
+    //         sourceType +
+    //         ", destinationType=" +
+    //         destinationType,
+    // );
     let list;
     // is withdrawal and source is asset? limit destination types
     if ("withdrawal" === transactionType && "Asset account" === sourceType) {
         list = ["Expense account", "Asset account", "Loan", "Debt", "Mortgage"];
-        console.log("[a] Return ", list);
+        // console.log("[a] Return ", list);
         return list;
     }
     // is withdrawal and source is liability? Limit destination types
     if ("withdrawal" === transactionType && ["Loan", "Debt", "Mortgage"].includes(sourceType)) {
         // 2026-11-09 do not limit this list yet (issue #13077)
         list = ["Expense account", "Asset account", "Loan", "Debt", "Mortgage"];
-        console.log("[b] Return ", list);
+        // console.log("[b] Return ", list);
         return list;
     }
 
     // is deposit? limit destination types.
     if ("deposit" === transactionType) {
         list = ["Asset account", "Loan", "Debt", "Mortgage"];
-        console.log("[b] Return ", list);
+        // console.log("[b] Return ", list);
         return list;
     }
     // is transfer or withdrawal? No limit to source types.
@@ -54,6 +54,6 @@ export default function getExpectedAccountTypes(transactionType, sourceType, des
     //     return ["Expense account", "Loan", "Debt", "Mortgage", "Asset account"];
     // }
     list = ["Expense account", "Loan", "Debt", "Mortgage", "Asset account"];
-    console.log("[b] Return ", list);
+    // console.log("[b] Return ", list);
     return list;
 }

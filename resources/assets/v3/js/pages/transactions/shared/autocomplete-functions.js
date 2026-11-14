@@ -37,9 +37,9 @@ export function changeDescription(item, ac) {
 }
 
 export function changeDestinationAccount(item, ac) {
-    console.log("changeDestinationAccount");
+    // console.log("changeDestinationAccount");
     if (typeof item === "object") {
-        console.log("changed account but did not select(?)", item);
+        // console.log("changed account but did not select(?)", item);
         // changed account but did not select.
         const index = parseInt(ac._searchInput.dataset.index);
         document.querySelector("#form")._x_dataStack[0].$data.entries[index].destination_account = {
@@ -53,7 +53,7 @@ export function changeDestinationAccount(item, ac) {
         document.querySelector("#form")._x_dataStack[0].changedDestinationAccount();
     }
     if (typeof item === "undefined") {
-        console.log("item is undefined for some reason(?)");
+        // console.log("item is undefined for some reason(?)");
         const index = parseInt(ac._searchInput.dataset.index);
         // console.log("[b]changeDestinationAccount("+index+")", document.querySelector("#form"));
         let destination = document.querySelector("#form")._x_dataStack[0].$data.entries[index].destination_account;
@@ -71,7 +71,7 @@ export function changeDestinationAccount(item, ac) {
 
 export function selectDestinationAccount(item, ac) {
     const index = parseInt(ac._searchInput.attributes["data-index"].value);
-    console.log("selectDestinationAccount(" + index + ")");
+    // console.log("selectDestinationAccount(" + index + ")");
     document.querySelector("#form")._x_dataStack[0].$data.entries[index].destination_account = {
         id: item.id,
         name: item.name,
