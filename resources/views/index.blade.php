@@ -27,16 +27,13 @@
             <!--ACCOUNTS -->
             <div class="card mb-2 card-outline">
                 <div class="card-header">
-                    <div class="card-title">Sankey
+                    <div class="card-title">{{ __('firefly.in_out_period') }}
                     </div>
                 </div>
                 <div class="card-body">
                     <div>
                         <canvas id="sankey-chart"></canvas>
                     </div>
-                </div>
-                <div class="d-print-none card-footer text-end">
-                    Sankey
                 </div>
             </div>
 
