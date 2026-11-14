@@ -27,31 +27,31 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 
 ### Fixed
 
-- #10344
-- #10346
-- #10351
-- #10352
-- #10357
-- #10360
-- #10363
-- #10380
-- #10381
-- #13103
-- #13108
-- #13109
-- #13116
-- #13121
-- #13134
-- #13150
-- #13165
-- #13110
-- #13106
-- #13084
-- #13077
-- #12747
-- #13195
-- #13217
-- #13230
+- [PR 10344](https://github.com/firefly-iii/firefly-iii/pull/10344) (🤖 Automatic PR to merge all changes into the 'develop' branch.) reported by @github-actions[bot]
+- [Discussion 10346](https://github.com/orgs/firefly-iii/discussions/10346) (Can Emails Accept Invalid Certs?) started by @EnergeticMrMask
+- [Issue 10351](https://github.com/firefly-iii/firefly-iii/issues/10351) (Empty source and receiver fields) reported by @ghost
+- [PR 10352](https://github.com/firefly-iii/firefly-iii/pull/10352) (Rector cleanup 2) reported by @JC5
+- [Issue 10357](https://github.com/firefly-iii/firefly-iii/issues/10357) (Target AuthorizationViewResponse is not instantiable) reported by @JC5
+- [Discussion 10360](https://github.com/orgs/firefly-iii/discussions/10360) (Unable To access Profile Options) started by @Archangel82
+- [PR 10363](https://github.com/firefly-iii/firefly-iii/pull/10363) (🤖 Automatic PR to merge all changes into the main branch.) reported by @github-actions[bot]
+- [PR 10380](https://github.com/firefly-iii/firefly-iii/pull/10380) (🤖 Automatic PR to merge all changes into the 'develop' branch.) reported by @github-actions[bot]
+- [PR 10381](https://github.com/firefly-iii/firefly-iii/pull/10381) (🤖 Automatic PR to merge all changes into the main branch.) reported by @github-actions[bot]
+- [Issue 13103](https://github.com/firefly-iii/firefly-iii/issues/13103) (Integrity constraint violation with multiple account filters) reported by @GunoH
+- [Issue 13108](https://github.com/firefly-iii/firefly-iii/issues/13108) (Removing PATs introduces duplicate visual entries) reported by @WinnerWind
+- [Issue 13109](https://github.com/firefly-iii/firefly-iii/issues/13109) (Debug page's title is "Login") reported by @WinnerWind
+- [Issue 13116](https://github.com/firefly-iii/firefly-iii/issues/13116) (API: `/v1/budget-limits` returns wrong type for `pc_spent` -> `currency_id`) reported by @dreautall
+- [Issue 13121](https://github.com/firefly-iii/firefly-iii/issues/13121) (Autocomplete not working due to /api ignoring base path) reported by @NotoriousSHIB
+- [Issue 13134](https://github.com/firefly-iii/firefly-iii/issues/13134) (UserGroupTransformer crashes with 500 on orphan group_memberships; administrations page silently hides table on fetch failure) reported by @karagath-sgtsnips
+- [Issue 13150](https://github.com/firefly-iii/firefly-iii/issues/13150) (Undefined constant "row" in DoubleController.php) reported by @GunoH
+- [Issue 13165](https://github.com/firefly-iii/firefly-iii/issues/13165) (Error during migration "Base table or view already exists: 1050 Table   'oauth_device_codes' already exists") reported by @mwswartwout
+- [Issue 13110](https://github.com/firefly-iii/firefly-iii/issues/13110) (Total of split transactions not updated when split is removed) reported by @GunoH
+- [Issue 13106](https://github.com/firefly-iii/firefly-iii/issues/13106) (No suggestion/autocompletion when typing in Source/Destination Account when editing transactions individually) reported by @Vermoot
+- [Issue 13084](https://github.com/firefly-iii/firefly-iii/issues/13084) (Drag and drop only works in top subscription group) reported by @PAS-BC
+- [Issue 13077](https://github.com/firefly-iii/firefly-iii/issues/13077) (transfer creation with liability) reported by @danielpngr
+- [Issue 12747](https://github.com/firefly-iii/firefly-iii/issues/12747) (Store as a new transaction instead of updating is not respected) reported by @JC5
+- [Issue 13195](https://github.com/firefly-iii/firefly-iii/issues/13195) (GroupUpdateService: failed multi-journal update soft-deletes the whole transaction group (data loss)) reported by @aitkar
+- [Issue 13217](https://github.com/firefly-iii/firefly-iii/issues/13217) (Budget dropdow behavior is insconsistent acrosse Firefly III) reported by @pvieira84
+- [Issue 13230](https://github.com/firefly-iii/firefly-iii/issues/13230) (Transaction save fail the first attempt if you have expense account and active account with the same name) reported by @no-coders
 
 ### Security
 
