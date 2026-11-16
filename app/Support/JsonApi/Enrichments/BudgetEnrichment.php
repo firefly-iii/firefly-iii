@@ -39,17 +39,17 @@ use Illuminate\Support\Facades\Log;
 
 class BudgetEnrichment implements EnrichmentInterface
 {
-    private array $autoBudgets     = [];
+    private array $autoBudgets         = [];
     private Collection $collection;
-    private array   $currencies    = [];
-    private ?Carbon $end           = null;
-    private array   $ids           = [];
-    private array   $mappedObjects = [];
-    private array   $notes         = [];
-    private array   $objectGroups  = [];
-    private array   $pcSpent       = [];
-    private array   $spent         = [];
-    private ?Carbon $start         = null;
+    private array       $currencies    = [];
+    private ?Carbon $end               = null;
+    private array       $ids           = [];
+    private array       $mappedObjects = [];
+    private array       $notes         = [];
+    private array       $objectGroups  = [];
+    private array       $pcSpent       = [];
+    private array       $spent         = [];
+    private ?Carbon $start             = null;
     private User $user;
     private UserGroup $userGroup;
 

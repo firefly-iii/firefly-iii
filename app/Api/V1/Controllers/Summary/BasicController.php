@@ -246,8 +246,8 @@ final class BasicController extends Controller
                 'currency_decimal_places' => $currency->decimal_places,
                 'value_parsed'            => Amount::formatAnything($currency, $sums[$currencyId]['sum'] ?? '0', false),
                 'sub_title'               => Amount::formatAnything($currency, $expenses[$currencyId]['sum'] ?? '0', false)
-                    .' + '
-                    .Amount::formatAnything($currency, $incomes[$currencyId]['sum'] ?? '0', false),
+                        .' + '
+                        .Amount::formatAnything($currency, $incomes[$currencyId]['sum'] ?? '0', false),
             ];
             $return[] = [
                 'key'                     => sprintf('spent-in-%s', $currency->code),
@@ -348,12 +348,7 @@ final class BasicController extends Controller
                 'currency_code'           => $currencies[$currencyId]->code,
                 'currency_symbol'         => $currencies[$currencyId]->symbol,
                 'currency_decimal_places' => $currencies[$currencyId]->decimal_places,
-                'value_parsed'            => Amount::formatFlat(
-                    $currencies[$currencyId]->symbol,
-                    $currencies[$currencyId]->decimal_places,
-                    $availableBudget,
-                    false
-                ),
+                'value_parsed'            => Amount::formatFlat($currencies[$currencyId]->symbol, $currencies[$currencyId]->decimal_places, $availableBudget, false),
                 'sub_title'               => Amount::formatFlat(
                     $currencies[$currencyId]->symbol,
                     $currencies[$currencyId]->decimal_places,

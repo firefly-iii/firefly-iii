@@ -48,15 +48,15 @@ class SubscriptionEnrichment implements EnrichmentInterface
     private BillDateCalculator $calculator;
     private Collection $collection;
     private readonly bool $convertToPrimary;
-    private ?Carbon $end             = null;
-    private array   $mappedObjects   = [];
-    private array   $notes           = [];
-    private array   $objectGroups    = [];
-    private array   $paidDates       = [];
-    private array   $payDates        = [];
+    private ?Carbon $end                 = null;
+    private array       $mappedObjects   = [];
+    private array       $notes           = [];
+    private array       $objectGroups    = [];
+    private array       $paidDates       = [];
+    private array       $payDates        = [];
     private readonly TransactionCurrency $primaryCurrency;
-    private ?Carbon $start           = null;
-    private array   $subscriptionIds = [];
+    private ?Carbon $start               = null;
+    private array       $subscriptionIds = [];
     private User $user;
 
     public function __construct()

@@ -47,20 +47,6 @@ class Webhook extends Model
     use ReturnsIntegerUserIdTrait;
     use SoftDeletes;
 
-    protected function casts(): array
-    {
-        return [
-            'active'        => 'boolean',
-            'trigger'       => 'integer',
-            'response'      => 'integer',
-            'delivery'      => 'integer',
-            'user_id'       => 'integer',
-            'user_group_id' => 'integer',
-        ];
-    }
-
-    protected $fillable = ['active', 'trigger', 'response', 'delivery', 'user_id', 'user_group_id', 'url', 'title', 'secret'];
-
     public static function getDeliveries(): array
     {
         $array = [];
@@ -71,6 +57,8 @@ class Webhook extends Model
 
         return $array;
     }
+
+    protected $fillable = ['active', 'trigger', 'response', 'delivery', 'user_id', 'user_group_id', 'url', 'title', 'secret'];
 
     public static function getDeliveriesForValidation(): array
     {
@@ -179,5 +167,17 @@ class Webhook extends Model
     public function webhookTriggers(): BelongsToMany
     {
         return $this->belongsToMany(WebhookTrigger::class);
+    }
+
+    protected function casts(): array
+    {
+        return [
+            'active'        => 'boolean',
+            'trigger'       => 'integer',
+            'response'      => 'integer',
+            'delivery'      => 'integer',
+            'user_id'       => 'integer',
+            'user_group_id' => 'integer',
+        ];
     }
 }
