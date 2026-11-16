@@ -40,20 +40,20 @@ use Illuminate\Support\Facades\DB;
 class CategoryEnrichment implements EnrichmentInterface
 {
     private Collection $collection;
-    private array   $earned        = [];
-    private ?Carbon $end           = null;
-    private array   $ids           = [];
-    private array   $sort          = [];
-    private array   $notes         = [];
-    private array   $pcEarned      = [];
-    private array   $pcSpent       = [];
-    private array   $objectGroups  = [];
-    private array   $pcTransfers   = [];
-    private array   $spent         = [];
-    private ?Carbon $start         = null;
-    private array   $mappedObjects = [];
-    private array   $transfers     = [];
-    private array   $lastActivity  = [];
+    private array       $earned        = [];
+    private ?Carbon $end               = null;
+    private array       $ids           = [];
+    private array       $sort          = [];
+    private array       $notes         = [];
+    private array       $pcEarned      = [];
+    private array       $pcSpent       = [];
+    private array       $objectGroups  = [];
+    private array       $pcTransfers   = [];
+    private array       $spent         = [];
+    private ?Carbon $start             = null;
+    private array       $mappedObjects = [];
+    private array       $transfers     = [];
+    private array       $lastActivity  = [];
     private User $user;
     private UserGroup $userGroup;
 

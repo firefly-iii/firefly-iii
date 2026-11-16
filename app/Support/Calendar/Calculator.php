@@ -33,10 +33,10 @@ use SplObjectStorage;
  */
 class Calculator
 {
-    public const int DEFAULT_INTERVAL             = 1;
+    public const int DEFAULT_INTERVAL               = 1;
 
-    private static ?SplObjectStorage $intervalMap = null;
-    private static array             $intervals   = [];
+    private static ?SplObjectStorage $intervalMap   = null;
+    private static array                 $intervals = [];
 
     public function isAvailablePeriodicity(Periodicity $periodicity): bool
     {

@@ -68,7 +68,7 @@ class JournalUpdateService
     private array $data;
     private ?Account            $destinationAccount     = null;
     private ?Transaction        $destinationTransaction = null;
-    private array               $metaDate               = [
+    private array                   $metaDate           = [
         'interest_date',
         'book_date',
         'process_date',
@@ -77,7 +77,7 @@ class JournalUpdateService
         'invoice_date',
         '_internal_previous_date',
     ];
-    private array               $metaString             = [
+    private array                   $metaString         = [
         'sepa_cc',
         'sepa_ct_op',
         'sepa_ct_id',
@@ -96,7 +96,7 @@ class JournalUpdateService
     private ?Transaction        $sourceTransaction      = null;
     private ?TransactionGroup   $transactionGroup       = null;
     private ?TransactionJournal $transactionJournal     = null;
-    private string              $startCompareHash       = '';
+    private string                  $startCompareHash   = '';
 
     /**
      * JournalUpdateService constructor.

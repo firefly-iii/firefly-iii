@@ -169,11 +169,7 @@ final class BudgetReportController extends Controller
             // add things to chart Data for each currency:
             $spentKey = sprintf('%d-spent', $currency['currency_id']);
             $chartData[$spentKey] ??= [
-                'label'           => sprintf(
-                    '%s (%s)',
-                    (string) trans('firefly.spent_in_specific_budget', ['budget' => $budget->name]),
-                    $currency['currency_name']
-                ),
+                'label'           => sprintf('%s (%s)', (string) trans('firefly.spent_in_specific_budget', ['budget' => $budget->name]), $currency['currency_name']),
                 'type'            => 'bar',
                 'currency_symbol' => $currency['currency_symbol'],
                 'currency_code'   => $currency['currency_code'],

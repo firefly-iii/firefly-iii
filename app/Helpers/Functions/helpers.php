@@ -285,14 +285,14 @@ if (!function_exists('mime_icon')) {
     function mime_icon(string $file): string
     {
         return match ($file) {
-            'application/pdf'                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                           => 'bi-file-earmark-pdf',
+            'application/pdf'                                          => 'bi-file-earmark-pdf',
             'image/webp',
             'image/png',
             'image/jpeg',
             'image/svg+xml',
             'image/heic',
             'image/heic-sequence',
-            'application/vnd.oasis.opendocument.image'                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                  => 'bi-file-earmark-image',
+            'application/vnd.oasis.opendocument.image'                 => 'bi-file-earmark-image',
             'application/msword',
             'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
             'application/vnd.openxmlformats-officedocument.wordprocessingml.template',
@@ -305,7 +305,7 @@ if (!function_exists('mime_icon')) {
             'application/vnd.oasis.opendocument.text',
             'application/vnd.oasis.opendocument.text-template',
             'application/vnd.oasis.opendocument.text-web',
-            'application/vnd.oasis.opendocument.text-master'                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            => 'bi-file-earmark-word',
+            'application/vnd.oasis.opendocument.text-master'           => 'bi-file-earmark-word',
             'application/vnd.ms-excel',
             'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
             'application/vnd.openxmlformats-officedocument.spreadsheetml.template',
@@ -313,7 +313,7 @@ if (!function_exists('mime_icon')) {
             'application/vnd.sun.xml.calc.template',
             'application/vnd.stardivision.calc',
             'application/vnd.oasis.opendocument.spreadsheet',
-            'application/vnd.oasis.opendocument.spreadsheet-template'                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                   => 'bi-file-earmark-excel',
+            'application/vnd.oasis.opendocument.spreadsheet-template'  => 'bi-file-earmark-excel',
             'application/vnd.ms-powerpoint',
             'application/vnd.openxmlformats-officedocument.presentationml.presentation',
             'application/vnd.openxmlformats-officedocument.presentationml.template',
@@ -322,18 +322,18 @@ if (!function_exists('mime_icon')) {
             'application/vnd.sun.xml.impress.template',
             'application/vnd.stardivision.impress',
             'application/vnd.oasis.opendocument.presentation',
-            'application/vnd.oasis.opendocument.presentation-template'                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                  => 'bi-file-earmark-slides',
+            'application/vnd.oasis.opendocument.presentation-template' => 'bi-file-earmark-slides',
             'application/vnd.sun.xml.draw',
             'application/vnd.sun.xml.draw.template',
             'application/vnd.stardivision.draw',
-            'application/vnd.oasis.opendocument.chart'                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                  => 'bi-file-earmark-easel',
+            'application/vnd.oasis.opendocument.chart'                 => 'bi-file-earmark-easel',
             'application/vnd.oasis.opendocument.graphics',
             'application/vnd.oasis.opendocument.graphics-template',
             'application/vnd.sun.xml.math',
             'application/vnd.stardivision.math',
             'application/vnd.oasis.opendocument.formula',
-            'application/vnd.oasis.opendocument.database'                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                               => 'bi-file-earmark-rules',
-            default                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                     => 'bi-file-earmark'
+            'application/vnd.oasis.opendocument.database'              => 'bi-file-earmark-rules',
+            default                                                    => 'bi-file-earmark'
         };
     }
 }
