@@ -351,15 +351,26 @@ class RecurringEnrichment implements EnrichmentInterface
         $repository = app(RecurringRepositoryInterface::class);
         $repository->setUserGroup($this->userGroup);
         $set        = RecurrenceRepetition::query()->whereIn('recurrence_id', $this->ids)->get();
+        $firedCounts = [];
 
         /** @var RecurrenceRepetition $repetition */
         foreach ($set as $repetition) {
-            $recurrence                               = $this->collection->filter(static fn (Recurrence $item): bool => (int) $item->id === (int) $repetition->recurrence_id)->first();
+            $recurrence                               = $this->collection->filter(
+                static fn (Recurrence $item): bool => (int) $item->id === (int) $repetition->recurrence_id
+            )->first();
             $fromDate                                 = clone ($recurrence->latest_date ?? $recurrence->first_date);
             $recurrenceId                             = (int) $repetition->recurrence_id;
             $repId                                    = (int) $repetition->id;
             $this->repetitions[$recurrenceId] ??= [];
             Log::debug(sprintf('Collected repetition #%d of recurrence #%d.', $repId, $recurrenceId));
+
+            // a recurrence that ends after X repetitions can only fire the remaining amount:
+            $limit                                    = null;
+            $totalRepetitions                         = (int) $recurrence->repetitions;
+            if ($totalRepetitions > 0) {
+                $firedCounts[$recurrenceId] ??= $repository->getJournalCount($recurrence);
+                $limit = max(0, $totalRepetitions - $firedCounts[$recurrenceId]);
+            }
 
             // get the (future) occurrences for this specific type of repetition:
             $amount                                   = 'daily' === $repetition->repetition_type ? 9 : 5;
@@ -369,6 +380,9 @@ class RecurringEnrichment implements EnrichmentInterface
             /** @var Carbon $carbon */
             foreach ($set as $carbon) {
                 $occurrences[] = $carbon->toAtomString();
+            }
+            if (null !== $limit) {
+                $occurrences = array_slice($occurrences, 0, $limit);
             }
             $this->repetitions[$recurrenceId][$repId] = [
                 'id'          => (string) $repId,
