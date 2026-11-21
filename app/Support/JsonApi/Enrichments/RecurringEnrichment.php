@@ -348,16 +348,14 @@ class RecurringEnrichment implements EnrichmentInterface
     private function collectRepetitions(): void
     {
         Log::debug('Start of enrichment: collectRepetitions()');
-        $repository = app(RecurringRepositoryInterface::class);
+        $repository  = app(RecurringRepositoryInterface::class);
         $repository->setUserGroup($this->userGroup);
-        $set        = RecurrenceRepetition::query()->whereIn('recurrence_id', $this->ids)->get();
+        $set         = RecurrenceRepetition::query()->whereIn('recurrence_id', $this->ids)->get();
         $firedCounts = [];
 
         /** @var RecurrenceRepetition $repetition */
         foreach ($set as $repetition) {
-            $recurrence                               = $this->collection->filter(
-                static fn (Recurrence $item): bool => (int) $item->id === (int) $repetition->recurrence_id
-            )->first();
+            $recurrence                               = $this->collection->filter(static fn (Recurrence $item): bool => (int) $item->id === (int) $repetition->recurrence_id)->first();
             $fromDate                                 = clone ($recurrence->latest_date ?? $recurrence->first_date);
             $recurrenceId                             = (int) $repetition->recurrence_id;
             $repId                                    = (int) $repetition->id;
