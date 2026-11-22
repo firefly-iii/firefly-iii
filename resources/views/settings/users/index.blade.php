@@ -68,7 +68,7 @@
                                     {{ $user->updated_at->format('H:i') }}
                                 </td>
                                 <td class="hidden-xs" data-value="{{ $user->isAdmin ? '1' : '0' }}">
-                                    @if($user->idAdmin)
+                                    @if($user->isAdmin)
                                         <small class="text-success"><span class="bi bi-check"></span></small>
                                     @else
                                         <small class="text-danger"><span class="bi bi-x"></span></small>
