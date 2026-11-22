@@ -142,18 +142,20 @@ class AccountBalanceCalculator
 
         // group by account and currency. The run the stuff.
         Log::debug(sprintf('Found %d transaction(s)', $set->count()));
-        $groups = $set->groupBy(fn ($row) => sprintf('%d-%d', $row->account_id, $row->transaction_currency_id));
+        $groups   = $set->groupBy(fn ($row) => sprintf('%d-%d', $row->account_id, $row->transaction_currency_id));
         Log::debug(sprintf('Grouped into %d group(s)', $groups->count()));
         foreach ($groups->sortKeys() as $key => $rows) {
             [$accountId, $currencyId] = array_map('intval', explode('-', $key));
             Log::debug(sprintf('Processing group for account #%d and currency #%d with %d transaction(s)', $accountId, $currencyId, $rows->count()));
-            $lock = Cache::lock(sprintf('ff3-running-balance-%d-%d', $accountId, $currencyId), 600);
+            $lock                     = Cache::lock(sprintf('ff3-running-balance-%d-%d', $accountId, $currencyId), 600);
+
             try {
                 $lock->block(30);
             } catch (LockTimeoutException) {
                 Log::error(sprintf('Could not acquire lock for account #%d and currency #%d, sleep for a bit.', $accountId, $currencyId));
                 sleep(5);
             }
+
             try {
                 $balance = self::getLatestBalance($accountId, $currencyId, $notBefore);
 
@@ -163,7 +165,7 @@ class AccountBalanceCalculator
                     $entry->account_id                                             = (int) $entry->account_id;
                     $entry->transaction_currency_id                                = (int) $entry->transaction_currency_id;
                     $balances[$entry->account_id]                                  ??= [];
-                    $balances[$entry->account_id][$entry->transaction_currency_id] ??= [$balance, null,];
+                    $balances[$entry->account_id][$entry->transaction_currency_id] ??= [$balance, null];
 
                     // before and after are easy:
                     $before                                                        = $balances[$entry->account_id][$entry->transaction_currency_id][0];
@@ -191,7 +193,6 @@ class AccountBalanceCalculator
 
         // the balance value is an array.
         // first entry is the balance, second is the date.
-
         // then update all transactions.
         // save all collected balances in their respective account objects.
         // $this->storeAccountBalances($balances);
