@@ -150,7 +150,7 @@ class AccountBalanceCalculator
             $lock = Cache::lock(sprintf('ff3-running-balance-%d-%d', $accountId, $currencyId), 600);
             try {
                 $lock->block(30);
-            } catch (LockTimeoutException $e) {
+            } catch (LockTimeoutException) {
                 Log::error(sprintf('Could not acquire lock for account #%d and currency #%d, sleep for a bit.', $accountId, $currencyId));
                 sleep(5);
             }
