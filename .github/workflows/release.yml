@@ -124,6 +124,8 @@ jobs:
           rm -rf vendor composer.lock
           composer update --no-scripts -q
           rm .env
+        env:
+          APP_KEY: TestTestTestTestTestTestTestTest
       - name: Run CI
         if: ${{ inputs.quick != true }}
         run: |
@@ -143,6 +145,7 @@ jobs:
           rm .env
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          APP_KEY: TestTestTestTestTestTestTestTest
       - name: Lint Blade templates
         if: ${{ inputs.quick != true }}
         run: |
@@ -150,6 +153,8 @@ jobs:
           cp .env.example .env
           php artisan blade:lint
           rm .env
+        env:
+          APP_KEY: TestTestTestTestTestTestTestTest
       - name: Install Composer dependencies again
         run: |
           cp .env.example .env
@@ -160,6 +165,8 @@ jobs:
           composer dump-autoload
           php artisan package:discover
           rm .env
+        env:
+          APP_KEY: TestTestTestTestTestTestTestTest
       - name: Crowdin action
         if: ${{ inputs.quick != true }}
         uses: crowdin/github-action@v3
