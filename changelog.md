@@ -28,7 +28,6 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 
 ### Fixed
 
-
 - [Issue 12432](https://github.com/firefly-iii/firefly-iii/issues/12432) (Account balance shown in overview header is incorrect while transaction list and API are correct) reported by @LordTsum
 - [Issue 12747](https://github.com/firefly-iii/firefly-iii/issues/12747) (Store as a new transaction instead of updating is not respected) reported by @JC5
 - [Issue 13044](https://github.com/firefly-iii/firefly-iii/issues/13044) (Auto-budget with correct overspending issue when end month at 0.0 for next month) reported by @Optimus266
@@ -69,6 +68,7 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 - Email change undo codes were valid indefinitely, discovered by Claude.
 - You could submit the admin preferences before the 2FA check was done, discovered by Claude.
 - Some secure preferences could be read by the user, discovered by Claude.
+- System should not accept default values, found by ozgun kultekin, wakefield (wakefield.co).
 
 ## v6.7.9 - 2026-10-12
 
