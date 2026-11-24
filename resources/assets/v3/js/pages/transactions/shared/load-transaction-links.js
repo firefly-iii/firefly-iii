@@ -38,9 +38,7 @@ export function loadTransactionLinks(index, journalId) {
                             link_type: parseInt(current.attributes.link_type_id) + "_" + direction,
                             link_type_id: parseInt(current.attributes.link_type_id),
                             link_type_direction: direction,
-                            link_type_label: this.formData.linkTypes.find(
-                                (link) => link.id === parseInt(current.attributes.link_type_id),
-                            )[direction],
+                            link_type_label: this.formData.linkTypes.find((link) => link.id === parseInt(current.attributes.link_type_id),)[direction],
                             journal_id: parseInt(foundJournal.transaction_journal_id),
                             group_id: parseInt(group.id),
                             journal_description: foundJournal.description,
