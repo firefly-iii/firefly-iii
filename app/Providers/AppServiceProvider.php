@@ -35,6 +35,7 @@ use Override;
 
 use RuntimeException;
 use function Safe\preg_match;
+use function Safe\base64_decode;
 
 /**
  * Class AppServiceProvider
