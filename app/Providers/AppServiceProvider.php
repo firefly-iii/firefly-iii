@@ -32,10 +32,10 @@ use Illuminate\Support\Facades\Schema;
 use Illuminate\Support\ServiceProvider;
 use Laravel\Passport\Passport;
 use Override;
-
 use RuntimeException;
-use function Safe\preg_match;
+
 use function Safe\base64_decode;
+use function Safe\preg_match;
 
 /**
  * Class AppServiceProvider
@@ -98,7 +98,9 @@ class AppServiceProvider extends ServiceProvider
             $key = (string) base64_decode(substr($key, 7), true);
         }
         if (in_array($key, self::PUBLIC_APP_KEYS, true)) {
-            throw new RuntimeException('APP_KEY is the example value from .env.example. Set APP_KEY to a random string of exactly 32 characters, for example the output of: head /dev/urandom | LC_ALL=C tr -dc \'A-Za-z0-9\' | head -c 32');
-       }
-   }
+            throw new RuntimeException(
+                'APP_KEY is the example value from .env.example. Set APP_KEY to a random string of exactly 32 characters, for example the output of: head /dev/urandom | LC_ALL=C tr -dc \'A-Za-z0-9\' | head -c 32'
+            );
+        }
+    }
 }
