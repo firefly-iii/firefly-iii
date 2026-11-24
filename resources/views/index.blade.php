@@ -27,7 +27,7 @@
             <!--ACCOUNTS -->
             <div class="card mb-2 card-outline">
                 <div class="card-header">
-                    <div class="card-title">{{ __('firefly.in_out_period') }}
+                    <div class="card-title">{{ __('firefly.in_out_period') }} <small>({{ __('firefly.experimental') }})</small>
                     </div>
                 </div>
                 <div class="card-body">

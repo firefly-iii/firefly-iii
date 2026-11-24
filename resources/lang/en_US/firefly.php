@@ -2803,6 +2803,7 @@ return [
     // object groups
     'default_group_title_name'                            => '(ungrouped)',
     'default_group_title_name_plain'                      => 'ungrouped',
+    'experimental' => 'experimental',
 
     // empty lists? no objects? instructions:
     'no_accounts_title_asset'                             => 'Let\'s create an asset account!',
