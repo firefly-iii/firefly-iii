@@ -1,4 +1,7 @@
 <?php
+
+declare(strict_types=1);
+
 /*
  * SafeDecrypter.php
  * Copyright (c) 2026 james@firefly-iii.org
@@ -23,6 +26,8 @@ namespace FireflyIII\Support\System;
 
 use Illuminate\Contracts\Encryption\DecryptException;
 use Illuminate\Support\Facades\Crypt;
+use ErrorException;
+
 use function Safe\unserialize;
 
 /**
@@ -47,16 +52,19 @@ class SafeDecrypter
         if ('b:0;' === $plain) {
             return false;
         }
+
         try {
             $value = unserialize($plain, ['allowed_classes' => false]);
-        } catch(\ErrorException $e) {
+        } catch (ErrorException $e) {
             throw new DecryptException('The decrypted payload could not be unserialized.', 0, $e);
         }
         if (false === $value || is_object($value)) {
             throw new DecryptException('The decrypted payload is not a serialized scalar or array.');
         }
+
         return $value;
     }
+
     /**
      * @throws DecryptException
      */
@@ -66,6 +74,7 @@ class SafeDecrypter
         if (!is_string($value)) {
             throw new DecryptException('The decrypted payload is not a string.');
         }
+
         return $value;
     }
 }

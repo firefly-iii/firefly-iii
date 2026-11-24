@@ -34,7 +34,6 @@ use FireflyIII\Support\Repositories\UserGroup\UserGroupTrait;
 use FireflyIII\Support\System\SafeDecrypter;
 use Illuminate\Contracts\Encryption\DecryptException;
 use Illuminate\Support\Collection;
-use Illuminate\Support\Facades\Crypt;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Storage;
 use League\Flysystem\UnableToDeleteFile;
