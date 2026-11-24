@@ -38,9 +38,9 @@ export function autoStep() {
                 if (Object.hasOwn(data, i)) {
                     let current = data[i];
                     current.id = parseInt(current.id);
-                    current.name_translated = i18next.t('firefly.' + current.name + '_name');
-                    current.inward_translation = i18next.t('firefly.' + current.inward);
-                    current.outward_translation = i18next.t('firefly.' + current.outward);
+                    current.name_translated = i18next.t("firefly." + current.name + "_name");
+                    current.inward_translation = i18next.t("firefly." + current.inward);
+                    current.outward_translation = i18next.t("firefly." + current.outward);
                     this.formData.linkTypes.push(current);
                     console.log("loaded link type", current);
                 }

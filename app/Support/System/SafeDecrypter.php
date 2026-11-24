@@ -24,9 +24,9 @@ declare(strict_types=1);
 
 namespace FireflyIII\Support\System;
 
+use ErrorException;
 use Illuminate\Contracts\Encryption\DecryptException;
 use Illuminate\Support\Facades\Crypt;
-use ErrorException;
 
 use function Safe\unserialize;
 
