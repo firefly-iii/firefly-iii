@@ -97,7 +97,7 @@ return [
 
     // tokens and keys
     'fixer_api_key'                            => env('FIXER_API_KEY', ''),
-    'static_cron_token'                        => env('STATIC_CRON_TOKEN'),
+    'static_cron_token'                        => 'PLEASE_REPLACE_WITH_32_CHAR_CODE' === env('STATIC_CRON_TOKEN') ? '' : env('STATIC_CRON_TOKEN'),
 
     // flags
     'enable_external_map'                      => env('ENABLE_EXTERNAL_MAP', false), // no longer used, only for default.

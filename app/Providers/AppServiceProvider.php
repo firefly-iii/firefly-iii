@@ -33,6 +33,7 @@ use Illuminate\Support\ServiceProvider;
 use Laravel\Passport\Passport;
 use Override;
 
+use RuntimeException;
 use function Safe\preg_match;
 
 /**
@@ -40,11 +41,14 @@ use function Safe\preg_match;
  */
 class AppServiceProvider extends ServiceProvider
 {
+    private const array PUBLIC_APP_KEYS = ['SomeRandomStringOf32CharsExactly'];
+
     /**
      * Bootstrap any application services.
      */
     public function boot(): void
     {
+        $this->refusePublicAppKey();
         // do not check permissions for key files.
         Passport::$validateKeyPermissions = false;
 
@@ -82,4 +86,18 @@ class AppServiceProvider extends ServiceProvider
         //        Passport::ignoreMigrations();
         //        Sanctum::ignoreMigrations();
     }
+
+    private function refusePublicAppKey(): void
+    {
+        if ($this->app->runningInConsole()) {
+            return;
+        }
+        $key = (string) config('app.key');
+        if (str_starts_with($key, 'base64:')) {
+            $key = (string) base64_decode(substr($key, 7), true);
+        }
+        if (in_array($key, self::PUBLIC_APP_KEYS, true)) {
+            throw new RuntimeException('APP_KEY is the example value from .env.example. Set APP_KEY to a random string of exactly 32 characters, for example the output of: head /dev/urandom | LC_ALL=C tr -dc \'A-Za-z0-9\' | head -c 32');
+       }
+   }
 }

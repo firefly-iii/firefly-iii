@@ -28,6 +28,7 @@ use FireflyIII\Console\Commands\ShowsFriendlyMessages;
 use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Models\Preference;
 use FireflyIII\Support\Facades\AppConfiguration;
+use FireflyIII\Support\System\SafeDecrypter;
 use Illuminate\Console\Command;
 use Illuminate\Contracts\Encryption\DecryptException;
 use Illuminate\Support\Facades\Crypt;
@@ -174,7 +175,7 @@ class RemovesDatabaseDecryption extends Command
     private function tryDecrypt($value)
     {
         try {
-            $value = Crypt::decrypt($value);
+            $value = SafeDecrypter::decryptString($value);
         } catch (DecryptException $e) {
             if ('The MAC is invalid.' === $e->getMessage()) {
                 throw new FireflyException($e->getMessage(), 0, $e);

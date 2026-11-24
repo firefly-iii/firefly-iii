@@ -26,6 +26,7 @@ namespace FireflyIII\Support;
 use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Models\Preference;
 use FireflyIII\Support\Singleton\PreferencesSingleton;
+use FireflyIII\Support\System\SafeDecrypter;
 use FireflyIII\User;
 use Illuminate\Contracts\Encryption\DecryptException;
 use Illuminate\Contracts\Encryption\EncryptException;
@@ -201,7 +202,7 @@ class Preferences
         }
 
         try {
-            $result->data = decrypt($result->data);
+            $result->data = SafeDecrypter::decryptString($result->data);
         } catch (DecryptException $e) {
             if ('The MAC is invalid.' === $e->getMessage()) {
                 Log::debug('Set data to NULL');
@@ -225,7 +226,7 @@ class Preferences
         }
 
         try {
-            $result->data = decrypt($result->data);
+            $result->data = SafeDecrypter::decryptString($result->data);
         } catch (DecryptException $e) {
             if ('The MAC is invalid.' === $e->getMessage()) {
                 Log::debug('Set data to NULL');
