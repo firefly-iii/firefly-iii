@@ -59,6 +59,9 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 - [Issue 13230](https://github.com/firefly-iii/firefly-iii/issues/13230) (Transaction save fail the first attempt if you have expense account and active account with the same name) reported by @no-coders
 - [Issue 13231](https://github.com/firefly-iii/firefly-iii/issues/13231) (API: updating a rule saves its actions as inactive when "active" is left out) reported by @YakupEmreYerli
 - #13273
+- #13261
+
+
 
 ### API
 
