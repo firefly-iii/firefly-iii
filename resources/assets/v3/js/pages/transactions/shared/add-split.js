@@ -22,7 +22,7 @@ import { createEmptySplit } from "./create-empty-split.js";
 
 export function addSplit() {
     this.entries.push(createEmptySplit());
-    if(this.entries.length > 1) {
+    if (this.entries.length > 1) {
         let lastIndex = this.entries.length - 1;
         this.entries[lastIndex].date = this.entries[lastIndex - 1].date;
     }
