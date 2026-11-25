@@ -53,6 +53,14 @@ export function parseFromEntries(entries, originals, transactionType) {
             // amount information:
             current.amount = entry.amount;
             current.currency_code = entry.currency_code;
+            if(true === entry.ogReconciled && false === entry.reconciled) {
+                current.reconciled = false;
+            }
+            if(true === entry.reconciled) {
+                current.reconciled = true;
+            }
+
+
 
             // dates
             current.date = formatDate(new Date(entry.date), "yyyy-MM-dd'T'HH:mm:ssxxx");
@@ -152,6 +160,19 @@ export function parseFromEntries(entries, originals, transactionType) {
             }
 
             current.type = transactionType;
+
+            // remove stuff if reconciled:
+            if(true === entry.reconciled) {
+                delete current.amount;
+                delete current.currency_code;
+                delete current.foreign_amount;
+                delete current.foreign_currency_code;
+                delete current.source_id;
+                delete current.source_name;
+                delete current.destination_id;
+                delete current.destination_name;
+            }
+
 
             returnArray.push(current);
         }
