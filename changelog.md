@@ -60,7 +60,7 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 - [Issue 13231](https://github.com/firefly-iii/firefly-iii/issues/13231) (API: updating a rule saves its actions as inactive when "active" is left out) reported by @YakupEmreYerli
 - [Issue 13273](https://github.com/firefly-iii/firefly-iii/issues/13273) (Updating a transaction link through the API breaks it (link_type_id 0 on 6.7.9, 500 on develop)) reported by @YakupEmreYerli
 - [Issue 13261](https://github.com/firefly-iii/firefly-iii/issues/13261) (Improve transaction link localization and visibility in transaction details) reported by @Xorbio
-
+- #13280
 
 
 ### API
