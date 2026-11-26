@@ -78,6 +78,9 @@
                 @if ('set_destination' == $logEntry->action)
                     <code>{{ $logEntry->after }}</code>
                 @endif
+                @if ('switch_accounts' == $logEntry->action)
+                    #{{ $logEntry->before }} &#8644; #{{ $logEntry->after }}
+                @endif
                 @if ('update_date' == $logEntry->action)
                     <code><s>{{ carbonize($logEntry->before)->isoFormat($dateTimeFormat) }}</s></code>
                     &rarr;
