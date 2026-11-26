@@ -42,7 +42,7 @@ export function autoStep() {
                     current.inward_translation = i18next.t("firefly." + current.inward);
                     current.outward_translation = i18next.t("firefly." + current.outward);
                     this.formData.linkTypes.push(current);
-                    console.log("loaded link type", current);
+                    // console.log("loaded link type", current);
                 }
             }
             this.formStates.loadingLinks = false;
