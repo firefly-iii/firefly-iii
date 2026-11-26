@@ -16,15 +16,7 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 
 ### Changed
 
-- Initial release.
-
-### Deprecated
-
-- Initial release.
-
-### Removed
-
-- Initial release.
+- The Docker container runs PHP 8.6.0
 
 ### Fixed
 
