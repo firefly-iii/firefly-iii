@@ -189,7 +189,7 @@ if (!function_exists('journal_object_has_foreign')) {
     }
 }
 
-if (function_exists('foreign_journal_object_amount')) {
+if (!function_exists('foreign_journal_object_amount')) {
     function foreign_journal_object_amount(TransactionJournal $journal): string
     {
         $type       = $journal->transactionType->type;
