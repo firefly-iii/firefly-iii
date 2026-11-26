@@ -49,7 +49,7 @@ class InvitationMail extends Mailable
         public string $url
     ) {
         $host       = parse_url($this->url, PHP_URL_HOST);
-        if (is_array($host)) {
+        if (null === $host) {
             $host = '';
         }
         $this->host = (string) $host;
