@@ -57,9 +57,9 @@ trait HandlesUserRegistrationTrait
         // always create a new group for new user:
         if ($isNewUser) {
             while ($groupExists) {
-                $groupTitle  = sprintf('%s-%d', $user->email, $index);
                 $groupExists = UserGroup::query()->where('title', $groupTitle)->count() > 0;
                 ++$index;
+                $groupTitle  = sprintf('%s-%d', $user->email, $index);
                 if ($index > 1024) {
                     throw new FireflyException('Email address can no longer be used for registrations.');
                 }
