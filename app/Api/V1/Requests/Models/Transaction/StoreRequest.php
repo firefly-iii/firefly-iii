@@ -99,7 +99,7 @@ class StoreRequest extends FormRequest
             // transaction rules (in array for splits):
             'transactions.*.type'                  => ['required', 'in:withdrawal,deposit,transfer,opening-balance,reconciliation'],
             'transactions.*.date'                  => ['required', new IsDateOrTime()],
-            'transactions.*.order'                 => ['numeric', 'min:0'],
+            'transactions.*.order'                 =>  ['numeric', 'nullable', 'min:0', 'max:16777216'],
 
             // currency info
             'transactions.*.currency_id'           => ['numeric', 'exists:transaction_currencies,id', 'nullable'],

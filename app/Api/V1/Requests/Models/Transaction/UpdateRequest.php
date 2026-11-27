@@ -152,7 +152,7 @@ class UpdateRequest extends FormRequest
             // transaction rules (in array for splits):
             'transactions.*.type'                   => 'in:withdrawal,deposit,transfer,opening-balance,reconciliation',
             'transactions.*.date'                   => [new IsDateOrTime()],
-            'transactions.*.order'                  => ['numeric', 'min:0'],
+            'transactions.*.order'                  =>  ['numeric', 'nullable', 'min:0', 'max:16777216'],
 
             // group id:
             'transactions.*.transaction_journal_id' => ['nullable', 'numeric', new BelongsUser()],

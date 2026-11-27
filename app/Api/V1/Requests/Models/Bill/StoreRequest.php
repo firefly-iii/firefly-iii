@@ -87,6 +87,7 @@ class StoreRequest extends FormRequest
             'extension_date' => ['nullable', 'date', 'after:date', 'after:1970-01-02', 'before:2038-01-17'],
             'repeat_freq'    => ['in:weekly,monthly,quarterly,half-year,yearly', 'required'],
             'skip'           => ['min:0', 'max:31', 'numeric'],
+            'order'                => ['numeric', 'nullable', 'min:0', 'max:16777216'],
             'active'         => [new IsBoolean()],
             'notes'          => ['nullable', 'min:1', 'max:32768'],
         ];

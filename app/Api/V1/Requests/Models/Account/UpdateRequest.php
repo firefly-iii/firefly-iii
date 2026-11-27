@@ -28,6 +28,7 @@ use FireflyIII\Models\Account;
 use FireflyIII\Models\Location;
 use FireflyIII\Repositories\Account\AccountRepositoryInterface;
 use FireflyIII\Rules\IsBoolean;
+use FireflyIII\Rules\IsValidPositiveAmount;
 use FireflyIII\Rules\UniqueAccountNumber;
 use FireflyIII\Rules\UniqueIban;
 use FireflyIII\Support\Request\AppendsLocationData;
@@ -101,8 +102,8 @@ class UpdateRequest extends FormRequest
             'account_number'       => ['min:1', 'max:255', 'nullable', new UniqueAccountNumber($account, $this->convertString('type'))],
             'opening_balance'      => ['numeric', 'required_with:opening_balance_date', 'nullable'],
             'opening_balance_date' => ['date', 'required_with:opening_balance', 'nullable'],
-            'virtual_balance'      => ['numeric', 'nullable'],
-            'order'                => ['numeric', 'nullable'],
+            'virtual_balance'      => ['numeric', 'nullable', new IsValidPositiveAmount()],
+            'order'                => ['numeric', 'nullable', 'min:0', 'max:16777216'],
             'currency_id'          => ['numeric', 'exists:transaction_currencies,id'],
             'currency_code'        => ['min:3', 'max:51', 'exists:transaction_currencies,code'],
             'active'               => [new IsBoolean()],

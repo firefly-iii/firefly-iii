@@ -16,6 +16,7 @@ use FireflyIII\Notifications\Notifiables\OwnerNotifiable;
 use FireflyIII\Notifications\NotificationSender;
 use FireflyIII\Notifications\User\UserRegistration as UserRegistrationNotification;
 use FireflyIII\Repositories\User\UserRepositoryInterface;
+use FireflyIII\Support\Authentication\HandlersUserRegistrationTrait;
 use FireflyIII\Support\Facades\AppConfiguration;
 use FireflyIII\User;
 use Illuminate\Contracts\Queue\ShouldQueue;
@@ -23,6 +24,7 @@ use Illuminate\Support\Facades\Log;
 
 class HandlesNewUserRegistration implements ShouldQueue
 {
+    use HandlersUserRegistrationTrait;
     public function handle(NewUserRegistered $event): void
     {
         $this->sendRegistrationMail($event->user);
@@ -51,43 +53,6 @@ class HandlesNewUserRegistration implements ShouldQueue
     {
         $seeder = new ExchangeRateSeeder();
         $seeder->run();
-    }
-
-    /**
-     * @throws FireflyException
-     */
-    private function createGroupMembership(User $user): void
-    {
-        $groupExists         = true;
-        $groupTitle          = $user->email;
-        $index               = 1;
-
-        /** @var null|UserGroup $group */
-        $group               = null;
-
-        // create a new group.
-        while ($groupExists) {
-            $groupExists = UserGroup::query()->where('title', $groupTitle)->count() > 0;
-            if (false === $groupExists) {
-                $group = UserGroup::create(['title' => $groupTitle]);
-
-                break;
-            }
-            $groupTitle  = sprintf('%s-%d', $user->email, $index);
-            ++$index;
-            if ($index > 99) {
-                throw new FireflyException('Email address can no longer be used for registrations.');
-            }
-        }
-
-        /** @var null|UserRole $role */
-        $role                = UserRole::query()->where('title', UserRoleEnum::OWNER->value)->first();
-        if (null === $role) {
-            throw new FireflyException('The user role is unexpectedly empty. Did you run all migrations?');
-        }
-        GroupMembership::create(['user_id' => $user->id, 'user_group_id' => $group->id, 'user_role_id' => $role->id]);
-        $user->user_group_id = $group->id;
-        $user->save();
     }
 
     private function sendAdminRegistrationNotification(User $user, OwnerNotifiable $owner): void

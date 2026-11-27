@@ -69,6 +69,7 @@ class StoreRequest extends FormRequest
         return [
             'title'       => ['required', 'min:1', 'max:100', 'uniqueObjectForUser:rule_groups,title'],
             'description' => ['min:1', 'max:32768', 'nullable'],
+            'order'                => ['numeric', 'nullable', 'min:0', 'max:16777216'],
             'active'      => [new IsBoolean()],
         ];
     }
