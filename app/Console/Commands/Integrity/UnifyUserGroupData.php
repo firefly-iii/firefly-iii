@@ -22,6 +22,10 @@
 namespace FireflyIII\Console\Commands\Integrity;
 
 use FireflyIII\Console\Commands\ShowsFriendlyMessages;
+use FireflyIII\Enums\UserRoleEnum;
+use FireflyIII\Exceptions\FireflyException;
+use FireflyIII\Models\UserGroup;
+use FireflyIII\Models\UserRole;
 use FireflyIII\Support\Authentication\HandlesUserRegistrationTrait;
 use FireflyIII\User;
 use Illuminate\Console\Attributes\Description;
@@ -38,6 +42,8 @@ class UnifyUserGroupData extends Command
     use ShowsFriendlyMessages;
     use HandlesUserRegistrationTrait;
 
+    private array $tables = ['accounts', 'attachments', 'available_budgets', 'bills', 'budgets', 'categories', 'currency_exchange_rates', 'object_groups', 'recurrences', 'rule_groups', 'rules', 'tags', 'transaction_groups', 'transaction_journals', 'webhooks'];
+
     /**
      * Execute the console command.
      */
@@ -51,9 +57,55 @@ class UnifyUserGroupData extends Command
         /** @var User $user */
         foreach ($users as $user) {
             $this->unifyGroupData($user);
+            $this->removeOtherMemberships($user);
         }
+        $this->deleteEmptyUserGroups();
 
         return Command::SUCCESS;
+    }
+
+    private function deleteEmptyUserGroup(UserGroup $group) {
+        $totalCount = 0;
+        foreach ($this->tables as $table) {
+            $count      = DB::table($table)->where('user_group_id', (int)$group->id)->count();
+            $totalCount += $count;
+        }
+        if(0 === $totalCount && $group->groupMemberships()->count() === 0) {
+            Log::debug(sprintf('Deleting empty user group "%s" (#%d)', $group->title, $group->id));
+            $group->delete();
+        }
+    }
+
+    private function deleteEmptyUserGroups(): void {
+        $groups = UserGroup::query()->get();
+        /** @var UserGroup $group */
+        foreach( $groups as $group) {
+            $this->deleteEmptyUserGroup($group);
+        }
+    }
+
+    private function removeOtherMemberships(User $user) {
+        Log::debug(sprintf('Removing other memberships for user "%s"', $user->email));
+        $userGroup = $user->userGroup;
+        if (null === $userGroup) {
+            Log::debug(sprintf('User "%s" has no group, creating one.', $user->email));
+            // needs a new user group.
+            $this->createGroupMembership($user);
+            $userGroup = $user->userGroup()->first();
+        }
+        $userGroupId = (int)$userGroup->id;
+        $fullOwner   = UserRole::whereTitle(UserRoleEnum::OWNER->value)->first();
+        if (null === $fullOwner) {
+            throw new FireflyException('The user role is unexpectedly empty. Did you run all migrations?');
+        }
+        $count = DB::table('group_memberships')
+          ->where('user_id', (int)$user->id)
+          ->where('user_group_id', '!=', $userGroupId)
+          ->where('user_role_id', '!=', $fullOwner->id)
+          ->delete();
+        if($count > 0) {
+            Log::debug(sprintf('Removed %d other memberships for user "%s"', $count, $user->email));
+        }
     }
 
     private function unifyGroupData(User $user): void
@@ -69,9 +121,7 @@ class UnifyUserGroupData extends Command
         $userGroupId = (int)$userGroup->id;
 
         // update everything owned by this user to this group.
-        $tables = ['accounts', 'attachments', 'available_budgets', 'bills', 'budgets', 'categories', 'currency_exchange_rates', 'object_groups', 'recurrences', 'rule_groups', 'rules', 'tags', 'transaction_groups', 'transaction_journals', 'webhooks'];
-
-        foreach ($tables as $table) {
+        foreach ($this->tables as $table) {
             $count = DB::table($table)
                        ->where('user_id', (int)$user->id)
                        ->where(function (Builder $q) use ($userGroupId) {
