@@ -26,7 +26,7 @@ class HandlesNewUserRegistration implements ShouldQueue
         $this->sendRegistrationMail($event->user);
         $this->sendAdminRegistrationNotification($event->user, $event->owner);
         $this->attachUserRole($event->user);
-        $this->createGroupMembership($event->user);
+        $this->createGroupMembership($event->user, true);
         $this->createExchangeRates();
     }
 
