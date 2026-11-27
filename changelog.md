@@ -3,7 +3,7 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
-## v6.7.10 - 2026-11-27
+## v6.7.11 - 2026-11-27
 
 <!-- summary: This release fixes several (security) issues and introduces a sankey chart. -->
 
@@ -54,7 +54,7 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 - [Issue 13273](https://github.com/firefly-iii/firefly-iii/issues/13273) (Updating a transaction link through the API breaks it (link_type_id 0 on 6.7.9, 500 on develop)) reported by @YakupEmreYerli
 - [Issue 13261](https://github.com/firefly-iii/firefly-iii/issues/13261) (Improve transaction link localization and visibility in transaction details) reported by @Xorbio
 - [Issue 13280](https://github.com/firefly-iii/firefly-iii/issues/13280) (Unchecking "Is Reconciled" checkbox does not remove reconciliation from record) reported by @shanelynn321
-- [Issue 13284](https://github.com/firefly-iii/firefly-iii/issues/13284) (Page which displays transactions per link type is crashing) reported by @pvieira84 
+- [Issue 13284](https://github.com/firefly-iii/firefly-iii/issues/13284) (Page which displays transactions per link type is crashing) reported by @pvieira84
 
 ### API
 
@@ -66,6 +66,11 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 - You could submit the admin preferences before the 2FA check was done, discovered by Claude.
 - Some secure preferences could be read by the user, discovered by Claude.
 - System should not accept default values, found by ozgun kultekin, wakefield (wakefield.co).
+
+
+## v6.7.10 - 2026-11-27
+
+See v6.7.11
 
 ## v6.7.9 - 2026-10-12
 
