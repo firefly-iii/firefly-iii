@@ -53,7 +53,12 @@ trait HandlesUserRegistrationTrait
             // check if user already has a full owner group membership:
             $membership = GroupMembership::query()->where('user_id', $user->id)->where('user_role_id', $fullOwner->id)->first();
             if (null !== $membership) {
-                Log::debug(sprintf('User "%s" already has a group membership in group "%s" (%s), no need to create new one.', $user->email, $membership->userGroup->title, $membership->userRole->title));
+                Log::debug(sprintf(
+                    'User "%s" already has a group membership in group "%s" (%s), no need to create new one.',
+                    $user->email,
+                    $membership->userGroup->title,
+                    $membership->userRole->title
+                ));
             }
             // if not, create it.
             if (null === $membership) {
@@ -75,7 +80,7 @@ trait HandlesUserRegistrationTrait
                     throw new FireflyException('Email address can no longer be used for registrations.');
                 }
             }
-            $group = UserGroup::create(['title' => $groupTitle]);
+            $group               = UserGroup::create(['title' => $groupTitle]);
 
             GroupMembership::create(['user_id' => $user->id, 'user_group_id' => $group->id, 'user_role_id' => $fullOwner->id]);
             $user->user_group_id = $group->id;
