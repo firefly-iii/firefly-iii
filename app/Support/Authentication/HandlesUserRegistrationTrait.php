@@ -30,6 +30,7 @@ use FireflyIII\Models\GroupMembership;
 use FireflyIII\Models\UserGroup;
 use FireflyIII\Models\UserRole;
 use FireflyIII\User;
+use Illuminate\Support\Facades\Log;
 
 trait HandlesUserRegistrationTrait
 {
@@ -38,18 +39,25 @@ trait HandlesUserRegistrationTrait
      */
     protected function createGroupMembership(User $user, bool $isNewUser = false): void
     {
+        Log::debug(sprintf('Creating group membership for user "%s" (%s)', $user->email, var_export($isNewUser, true)));
         $groupTitle  = $user->email;
+        $fullOwner   = UserRole::whereTitle(UserRoleEnum::OWNER->value)->first();
         $index       = 1;
+        $groupExists = true;
 
-        /** @var null|UserGroup $group */
-        $group       = null;
-        $groupExists = UserGroup::query()->where('title', $groupTitle)->count() > 0;
+        if (null === $fullOwner) {
+            throw new FireflyException('The user role is unexpectedly empty. Did you run all migrations?');
+        }
 
         if (!$isNewUser) {
-            // check if user already has a group membership:
-            $membership = GroupMembership::query()->where('user_id', $user->id)->first();
+            // check if user already has a full owner group membership:
+            $membership = GroupMembership::query()->where('user_id', $user->id)->where('user_role_id', $fullOwner->id)->first();
+            if (null !== $membership) {
+                Log::debug(sprintf('User "%s" already has a group membership in group "%s" (%s), no need to create new one.', $user->email, $membership->userGroup->title, $membership->userRole->title));
+            }
             // if not, create it.
             if (null === $membership) {
+                Log::debug(sprintf('User "%s" does not have their own group, will create one.', $user->email));
                 $isNewUser = true;
             }
         }
@@ -58,20 +66,18 @@ trait HandlesUserRegistrationTrait
         if ($isNewUser) {
             while ($groupExists) {
                 $groupExists = UserGroup::query()->where('title', $groupTitle)->count() > 0;
-                ++$index;
-                $groupTitle  = sprintf('%s-%d', $user->email, $index);
+                Log::debug(sprintf('Group "%s" exists? %s', $groupTitle, var_export($groupExists, true)));
+                if ($groupExists) {
+                    $groupTitle = sprintf('%s-%d', $user->email, $index);
+                    ++$index;
+                }
                 if ($index > 1024) {
                     throw new FireflyException('Email address can no longer be used for registrations.');
                 }
             }
-            $group               = UserGroup::create(['title' => $groupTitle]);
+            $group = UserGroup::create(['title' => $groupTitle]);
 
-            /** @var null|UserRole $role */
-            $role                = UserRole::query()->where('title', UserRoleEnum::OWNER->value)->first();
-            if (null === $role) {
-                throw new FireflyException('The user role is unexpectedly empty. Did you run all migrations?');
-            }
-            GroupMembership::create(['user_id' => $user->id, 'user_group_id' => $group->id, 'user_role_id' => $role->id]);
+            GroupMembership::create(['user_id' => $user->id, 'user_group_id' => $group->id, 'user_role_id' => $fullOwner->id]);
             $user->user_group_id = $group->id;
             $user->save();
         }
