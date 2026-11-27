@@ -45,7 +45,7 @@ class ReportsIntegrity extends Command
         if (!Schema::hasTable('users')) {
             return 1;
         }
-        $commands = ['integrity:empty-objects', 'integrity:total-sums', 'integrity:file-permissions', 'integrity:unify-user-group-data'];
+        $commands = ['integrity:unify-user-group-data', 'integrity:empty-objects', 'integrity:total-sums', 'integrity:file-permissions'];
         foreach ($commands as $command) {
             $moment = date('H:i:s');
             $this->friendlyLine(sprintf('[%s] Now executing command %s', $moment, $command));
