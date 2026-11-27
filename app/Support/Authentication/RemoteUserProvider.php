@@ -40,7 +40,7 @@ use SensitiveParameter;
  */
 class RemoteUserProvider implements UserProvider
 {
-    use HandlersUserRegistrationTrait;
+    use HandlesUserRegistrationTrait;
     #[Override]
     public function rehashPasswordIfRequired(Authenticatable $user, array $credentials, bool $force = false): void
     {

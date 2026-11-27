@@ -16,7 +16,7 @@ use FireflyIII\Notifications\Notifiables\OwnerNotifiable;
 use FireflyIII\Notifications\NotificationSender;
 use FireflyIII\Notifications\User\UserRegistration as UserRegistrationNotification;
 use FireflyIII\Repositories\User\UserRepositoryInterface;
-use FireflyIII\Support\Authentication\HandlersUserRegistrationTrait;
+use FireflyIII\Support\Authentication\HandlesUserRegistrationTrait;
 use FireflyIII\Support\Facades\AppConfiguration;
 use FireflyIII\User;
 use Illuminate\Contracts\Queue\ShouldQueue;
@@ -24,7 +24,7 @@ use Illuminate\Support\Facades\Log;
 
 class HandlesNewUserRegistration implements ShouldQueue
 {
-    use HandlersUserRegistrationTrait;
+    use HandlesUserRegistrationTrait;
     public function handle(NewUserRegistered $event): void
     {
         $this->sendRegistrationMail($event->user);

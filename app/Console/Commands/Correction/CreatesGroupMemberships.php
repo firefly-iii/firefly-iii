@@ -30,13 +30,13 @@ use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Models\GroupMembership;
 use FireflyIII\Models\UserGroup;
 use FireflyIII\Models\UserRole;
-use FireflyIII\Support\Authentication\HandlersUserRegistrationTrait;
+use FireflyIII\Support\Authentication\HandlesUserRegistrationTrait;
 use FireflyIII\User;
 use Illuminate\Console\Command;
 
 class CreatesGroupMemberships extends Command
 {
-    use HandlersUserRegistrationTrait;
+    use HandlesUserRegistrationTrait;
     use ShowsFriendlyMessages;
 
     public const string CONFIG_NAME = '560_create_group_memberships';

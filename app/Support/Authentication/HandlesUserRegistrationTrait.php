@@ -30,7 +30,7 @@ use FireflyIII\Models\UserGroup;
 use FireflyIII\Models\UserRole;
 use FireflyIII\User;
 
-trait HandlersUserRegistrationTrait
+trait HandlesUserRegistrationTrait
 {
     /**
      * @throws FireflyException
