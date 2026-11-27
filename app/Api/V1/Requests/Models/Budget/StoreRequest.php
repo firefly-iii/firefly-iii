@@ -97,7 +97,7 @@ class StoreRequest extends FormRequest
 
             // webhooks
             'fire_webhooks'      => [new IsBoolean()],
-            'order'                => ['numeric', 'nullable', 'min:0', 'max:16777216'],
+            'order'              => ['numeric', 'nullable', 'min:0', 'max:16777216'],
         ];
     }
 

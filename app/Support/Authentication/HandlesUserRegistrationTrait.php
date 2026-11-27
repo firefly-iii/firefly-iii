@@ -1,4 +1,5 @@
 <?php
+
 /*
  * HandlersUserRegistrationTrait.php
  * Copyright (c) 2026 james@firefly-iii.org
@@ -42,7 +43,7 @@ trait HandlesUserRegistrationTrait
 
         /** @var null|UserGroup $group */
         $group               = null;
-        $groupExists = UserGroup::query()->where('title', $groupTitle)->count() > 0;
+        $groupExists         = UserGroup::query()->where('title', $groupTitle)->count() > 0;
 
         // always create a new group.
         while ($groupExists) {
@@ -53,7 +54,7 @@ trait HandlesUserRegistrationTrait
                 throw new FireflyException('Email address can no longer be used for registrations.');
             }
         }
-        $group = UserGroup::create(['title' => $groupTitle]);
+        $group               = UserGroup::create(['title' => $groupTitle]);
 
         /** @var null|UserRole $role */
         $role                = UserRole::query()->where('title', UserRoleEnum::OWNER->value)->first();

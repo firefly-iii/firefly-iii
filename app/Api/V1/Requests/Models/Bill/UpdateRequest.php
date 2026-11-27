@@ -90,7 +90,7 @@ class UpdateRequest extends FormRequest
             'skip'           => ['min:0', 'max:31', 'numeric'],
             'active'         => [new IsBoolean()],
             'notes'          => ['nullable', 'min:1', 'max:32768'],
-            'order'                => ['numeric', 'nullable', 'min:0', 'max:16777216'],
+            'order'          => ['numeric', 'nullable', 'min:0', 'max:16777216'],
         ];
     }
 

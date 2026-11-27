@@ -2559,16 +2559,16 @@
         },
         {
             "name": "league/commonmark",
-            "version": "2.10.9",
+            "version": "2.10.10",
             "source": {
                 "type": "git",
                 "url": "https://github.com/thephpleague/commonmark.git",
-                "reference": "ab5ff8c80fd69abaeb4d57d7711d389248f219e4"
+                "reference": "3e956235b26ea34ea721a302e27eae9a32cb9ef0"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/thephpleague/commonmark/zipball/ab5ff8c80fd69abaeb4d57d7711d389248f219e4",
-                "reference": "ab5ff8c80fd69abaeb4d57d7711d389248f219e4",
+                "url": "https://api.github.com/repos/thephpleague/commonmark/zipball/3e956235b26ea34ea721a302e27eae9a32cb9ef0",
+                "reference": "3e956235b26ea34ea721a302e27eae9a32cb9ef0",
                 "shasum": ""
             },
             "require": {
@@ -2662,8 +2662,8 @@
                     "type": "tidelift"
                 }
             ],
-            "time": "2026-11-25T20:08:31+00:00",
-            "published-time": "2026-11-25T20:11:11+00:00"
+            "time": "2026-11-26T14:08:53+00:00",
+            "published-time": "2026-11-26T14:12:37+00:00"
         },
         {
             "name": "league/config",
@@ -2750,34 +2750,34 @@
         },
         {
             "name": "league/csv",
-            "version": "9.29.1",
+            "version": "9.30.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/thephpleague/csv.git",
-                "reference": "fb9ea14460001b62fcb54d8ac247cc501f60e6e0"
+                "reference": "710d3c7db4a50691951b0465a10c552e08a56c07"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/thephpleague/csv/zipball/fb9ea14460001b62fcb54d8ac247cc501f60e6e0",
-                "reference": "fb9ea14460001b62fcb54d8ac247cc501f60e6e0",
+                "url": "https://api.github.com/repos/thephpleague/csv/zipball/710d3c7db4a50691951b0465a10c552e08a56c07",
+                "reference": "710d3c7db4a50691951b0465a10c552e08a56c07",
                 "shasum": ""
             },
             "require": {
                 "ext-filter": "*",
-                "php": "^8.2.0"
+                "php": "^8.3.0"
             },
             "require-dev": {
                 "ext-dom": "*",
                 "ext-xdebug": "*",
-                "friendsofphp/php-cs-fixer": "^3.92.3",
-                "phpbench/phpbench": "^1.4.3",
-                "phpstan/phpstan": "^2.2.8",
+                "friendsofphp/php-cs-fixer": "^3.95.30",
+                "phpbench/phpbench": "^1.7.0",
+                "phpstan/phpstan": "^2.3.6",
                 "phpstan/phpstan-deprecation-rules": "^2.0.5",
-                "phpstan/phpstan-phpunit": "^2.0.18",
-                "phpstan/phpstan-strict-rules": "^2.0.12",
-                "phpunit/phpunit": "^11.5.22 || ^12.5.4 || ^13.3.1",
-                "rector/rector": "^2.6.3",
-                "symfony/var-dumper": "^6.4.8 || ^7.4.0 || ^8.0"
+                "phpstan/phpstan-phpunit": "^2.1.2",
+                "phpstan/phpstan-strict-rules": "^2.1.1",
+                "phpunit/phpunit": "^12.5.4 || ^13.4.7",
+                "rector/rector": "^2.8.5",
+                "symfony/var-dumper": "^7.4.0 || ^8.1.10"
             },
             "suggest": {
                 "ext-dom": "Required to use the XMLConverter and the HTMLConverter classes",
@@ -2841,8 +2841,8 @@
                     "type": "github"
                 }
             ],
-            "time": "2026-11-22T13:51:45+00:00",
-            "published-time": "2026-11-22T13:59:35+00:00"
+            "time": "2026-11-26T06:50:41+00:00",
+            "published-time": "2026-11-26T06:54:18+00:00"
         },
         {
             "name": "league/event",
@@ -4146,16 +4146,16 @@
         },
         {
             "name": "nyholm/psr7",
-            "version": "1.8.2",
+            "version": "1.8.3",
             "source": {
                 "type": "git",
                 "url": "https://github.com/Nyholm/psr7.git",
-                "reference": "a71f2b11690f4b24d099d6b16690a90ae14fc6f3"
+                "reference": "26c1581611614447a5ff753a450390a23f3e323e"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/Nyholm/psr7/zipball/a71f2b11690f4b24d099d6b16690a90ae14fc6f3",
-                "reference": "a71f2b11690f4b24d099d6b16690a90ae14fc6f3",
+                "url": "https://api.github.com/repos/Nyholm/psr7/zipball/26c1581611614447a5ff753a450390a23f3e323e",
+                "reference": "26c1581611614447a5ff753a450390a23f3e323e",
                 "shasum": ""
             },
             "require": {
@@ -4208,7 +4208,7 @@
             ],
             "support": {
                 "issues": "https://github.com/Nyholm/psr7/issues",
-                "source": "https://github.com/Nyholm/psr7/tree/1.8.2"
+                "source": "https://github.com/Nyholm/psr7/tree/1.8.3"
             },
             "funding": [
                 {
@@ -4220,8 +4220,8 @@
                     "type": "github"
                 }
             ],
-            "time": "2024-09-09T07:06:30+00:00",
-            "published-time": "2024-09-09T07:07:05+00:00"
+            "time": "2026-11-26T08:19:16+00:00",
+            "published-time": "2026-11-26T08:20:50+00:00"
         },
         {
             "name": "paragonie/constant_time_encoding",

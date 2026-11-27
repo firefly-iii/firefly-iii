@@ -5,12 +5,7 @@ declare(strict_types=1);
 namespace FireflyIII\Listeners\Security\System;
 
 use Database\Seeders\ExchangeRateSeeder;
-use FireflyIII\Enums\UserRoleEnum;
 use FireflyIII\Events\Security\System\NewUserRegistered;
-use FireflyIII\Exceptions\FireflyException;
-use FireflyIII\Models\GroupMembership;
-use FireflyIII\Models\UserGroup;
-use FireflyIII\Models\UserRole;
 use FireflyIII\Notifications\Admin\UserRegistration as AdminRegistrationNotification;
 use FireflyIII\Notifications\Notifiables\OwnerNotifiable;
 use FireflyIII\Notifications\NotificationSender;
@@ -25,6 +20,7 @@ use Illuminate\Support\Facades\Log;
 class HandlesNewUserRegistration implements ShouldQueue
 {
     use HandlesUserRegistrationTrait;
+
     public function handle(NewUserRegistered $event): void
     {
         $this->sendRegistrationMail($event->user);

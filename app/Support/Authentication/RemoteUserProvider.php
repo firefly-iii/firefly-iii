@@ -24,7 +24,6 @@ declare(strict_types=1);
 
 namespace FireflyIII\Support\Authentication;
 
-use FireflyIII\Console\Commands\Correction\CreatesGroupMemberships;
 use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Models\Role;
 use FireflyIII\User;
@@ -41,6 +40,7 @@ use SensitiveParameter;
 class RemoteUserProvider implements UserProvider
 {
     use HandlesUserRegistrationTrait;
+
     #[Override]
     public function rehashPasswordIfRequired(Authenticatable $user, array $credentials, bool $force = false): void
     {
