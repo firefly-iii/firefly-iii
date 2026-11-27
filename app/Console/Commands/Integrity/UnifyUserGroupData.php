@@ -45,23 +45,24 @@ class UnifyUserGroupData extends Command
     use HandlesUserRegistrationTrait;
     use ShowsFriendlyMessages;
 
-    private array $tables = [
-        'accounts',
-        'attachments',
-        'available_budgets',
-        'bills',
-        'budgets',
-        'categories',
-        'currency_exchange_rates',
-        'object_groups',
-        'recurrences',
-        'rule_groups',
-        'rules',
-        'tags',
-        'transaction_groups',
-        'transaction_journals',
-        'webhooks',
-    ];
+    private array $tables
+        = [
+            'accounts',
+            'attachments',
+            'available_budgets',
+            'bills',
+            'budgets',
+            'categories',
+            'currency_exchange_rates',
+            'object_groups',
+            'recurrences',
+            'rule_groups',
+            'rules',
+            'tags',
+            'transaction_groups',
+            'transaction_journals',
+            'webhooks',
+        ];
 
     /**
      * Execute the console command.
@@ -77,10 +78,17 @@ class UnifyUserGroupData extends Command
 
         /** @var User $user */
         foreach ($users as $user) {
+            $this->prepUser($user);
             $this->unifyGroupData($user);
             $this->removeOtherMemberships($user);
         }
         $this->deleteEmptyUserGroups();
+
+        /** @var User $user */
+        foreach ($users as $user) {
+            $this->prepUser($user);
+            $this->renamePrimaryUserGroup($user);
+        }
 
         return Command::SUCCESS;
     }
@@ -89,10 +97,9 @@ class UnifyUserGroupData extends Command
     {
         $totalCount = 0;
         foreach ($this->tables as $table) {
-            $count = DB::table($table)
-                ->where('user_group_id', (int) $group->id)
-                ->count()
-            ;
+            $count      = DB::table($table)
+                            ->where('user_group_id', (int)$group->id)
+                            ->count();
             $totalCount += $count;
         }
         if (0 === $totalCount && 0 === $group->groupMemberships()->count()) {
@@ -111,29 +118,55 @@ class UnifyUserGroupData extends Command
         }
     }
 
-    private function removeOtherMemberships(User $user): void
+    private function prepUser(User $user): void
     {
-        Log::debug(sprintf('Removing other memberships for user "%s"', $user->email));
-        $userGroup   = $user->userGroup;
+        $userGroup = $user->userGroup;
         if (null === $userGroup) {
             Log::debug(sprintf('User "%s" has no group, creating one.', $user->email));
             // needs a new user group.
             $this->createGroupMembership($user);
-            $userGroup = $user->userGroup()->first();
         }
-        $userGroupId = (int) $userGroup->id;
+    }
+
+    private function removeOtherMemberships(User $user): void
+    {
+        Log::debug(sprintf('Removing other memberships for user "%s"', $user->email));
+        $userGroup   = $user->userGroup;
+        $userGroupId = (int)$userGroup->id;
         $fullOwner   = UserRole::whereTitle(UserRoleEnum::OWNER->value)->first();
         if (null === $fullOwner) {
             throw new FireflyException('The user role is unexpectedly empty. Did you run all migrations?');
         }
-        $count       = DB::table('group_memberships')
-            ->where('user_id', (int) $user->id)
-            ->where('user_group_id', '!=', $userGroupId)
-            ->where('user_role_id', '!=', $fullOwner->id)
-            ->delete()
-        ;
+        $count = DB::table('group_memberships')
+                   ->where('user_id', (int)$user->id)
+                   ->where('user_group_id', '!=', $userGroupId)
+                   ->where('user_role_id', '!=', $fullOwner->id)
+                   ->delete();
         if ($count > 0) {
             Log::debug(sprintf('Removed %d other memberships for user "%s"', $count, $user->email));
+        }
+    }
+
+    private function renamePrimaryUserGroup(User $user)
+    {
+        $userGroup   = $user->userGroup;
+        $userGroupId = (int)$userGroup->id;
+        // find other groups with the same title:
+        $otherGroups = UserGroup::query()->where('id', '!=', $userGroupId)->where('title', $user->email)->get();
+        /**
+         * @var int       $index
+         * @var UserGroup $otherGroup
+         */
+        foreach ($otherGroups as $index => $otherGroup) {
+            $otherGroup->title = sprintf('%s-%d', $user->email, $index);
+            $otherGroup->save();
+            Log::debug(sprintf('Temporarily renaming group #%d to "%s"', $otherGroup->id, $otherGroup->title));
+        }
+        // rename the user's group to their email address, if not already so.
+        if ($userGroup->title !== $user->email) {
+            $userGroup->title = $user->email;
+            $userGroup->save();
+            Log::debug(sprintf('Renaming group #%d to "%s"', $userGroup->id, $userGroup->title));
         }
     }
 
@@ -141,24 +174,17 @@ class UnifyUserGroupData extends Command
     {
         Log::debug(sprintf('Unifying group data for user "%s"', $user->email));
         $userGroup   = $user->userGroup;
-        if (null === $userGroup) {
-            Log::debug(sprintf('User "%s" has no group, creating one.', $user->email));
-            // needs a new user group.
-            $this->createGroupMembership($user);
-            $userGroup = $user->userGroup()->first();
-        }
-        $userGroupId = (int) $userGroup->id;
+        $userGroupId = (int)$userGroup->id;
 
         // update everything owned by this user to this group.
         foreach ($this->tables as $table) {
             $count = DB::table($table)
-                ->where('user_id', (int) $user->id)
-                ->where(function (Builder $q) use ($userGroupId): void {
-                    $q->where('user_group_id', '!=', $userGroupId);
-                    $q->orWhereNull('user_group_id');
-                })
-                ->update(['user_group_id' => $userGroupId])
-            ;
+                       ->where('user_id', (int)$user->id)
+                       ->where(function (Builder $q) use ($userGroupId): void {
+                           $q->where('user_group_id', '!=', $userGroupId);
+                           $q->orWhereNull('user_group_id');
+                       })
+                       ->update(['user_group_id' => $userGroupId]);
             if ($count > 0) {
                 Log::debug(sprintf('Updated %d items in "%s" for user "%s" to group "%s"', $count, $table, $user->email, $userGroup->title));
             }
