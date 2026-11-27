@@ -47,21 +47,6 @@ class CreatesGroupMemberships extends Command
      */
     public function handle(): int
     {
-        $this->createGroupMemberships();
-
         return 0;
-    }
-
-    /**
-     * @throws FireflyException
-     */
-    private function createGroupMemberships(): void
-    {
-        $users = User::get();
-
-        /** @var User $user */
-        foreach ($users as $user) {
-            $this->createGroupMembership($user);
-        }
     }
 }

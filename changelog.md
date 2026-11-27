@@ -3,7 +3,7 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
-## v6.7.11 - 2026-11-27
+## v6.7.12 - 2026-11-27
 
 <!-- summary: This release fixes several (security) issues and introduces a sankey chart. -->
 
@@ -67,10 +67,13 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 - Some secure preferences could be read by the user, discovered by Claude.
 - System should not accept default values, found by ozgun kultekin, wakefield (wakefield.co).
 
+## v6.7.11 - 2026-11-27
+
+See v6.7.12
 
 ## v6.7.10 - 2026-11-27
 
-See v6.7.11
+See v6.7.12
 
 ## v6.7.9 - 2026-10-12
 
