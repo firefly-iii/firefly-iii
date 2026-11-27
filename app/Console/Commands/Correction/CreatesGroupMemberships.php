@@ -25,11 +25,7 @@ declare(strict_types=1);
 namespace FireflyIII\Console\Commands\Correction;
 
 use FireflyIII\Console\Commands\ShowsFriendlyMessages;
-use FireflyIII\Enums\UserRoleEnum;
 use FireflyIII\Exceptions\FireflyException;
-use FireflyIII\Models\GroupMembership;
-use FireflyIII\Models\UserGroup;
-use FireflyIII\Models\UserRole;
 use FireflyIII\Support\Authentication\HandlesUserRegistrationTrait;
 use FireflyIII\User;
 use Illuminate\Console\Command;

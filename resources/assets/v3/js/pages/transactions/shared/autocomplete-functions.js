@@ -43,7 +43,8 @@ export function changeDestinationAccount(item, ac) {
         // changed account but did not select.
         const index = parseInt(ac._searchInput.dataset.index);
         // only do this when the name is different, or we forget the account type.
-        const existingName = document.querySelector("#form")._x_dataStack[0].$data.entries[index].destination_account.name ?? '';
+        const existingName =
+            document.querySelector("#form")._x_dataStack[0].$data.entries[index].destination_account.name ?? "";
         if (existingName === item.name) {
             console.warn('Ignore destination account change to "' + item.name + '"');
             return;

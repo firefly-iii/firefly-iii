@@ -84,7 +84,7 @@ class StoreRequest extends FormRequest
             'transaction_currency_code' => ['exists:transaction_currencies,code', 'required_without:transaction_currency_id'],
             'target_date'               => ['date', 'nullable', 'after:start_date'],
             'notes'                     => 'max:65000',
-            'order'                => ['numeric', 'nullable', 'min:0', 'max:16777216'],
+            'order'                     => ['numeric', 'nullable', 'min:0', 'max:16777216'],
         ];
     }
 

@@ -83,7 +83,7 @@ class UpdateRequest extends FormRequest
             'target_date'               => ['date', 'nullable', 'after:start_date'],
             'notes'                     => 'max:65000',
             'accounts'                  => 'array',
-            'order'                => ['numeric', 'nullable', 'min:0', 'max:16777216'],
+            'order'                     => ['numeric', 'nullable', 'min:0', 'max:16777216'],
             'accounts.*'                => 'array',
             'accounts.*.account_id'     => ['required', 'numeric', 'belongsToUser:accounts,id'],
             'accounts.*.current_amount' => ['numeric', 'nullable', new IsValidZeroOrMoreAmount(true), new IsEnoughInAccounts($piggyBank, $this->getAll())],
