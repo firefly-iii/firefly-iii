@@ -81,7 +81,7 @@ return [
         'single_user_group'      => true,
     ],
 'version' => 'develop/2026-11-27',
-'build_time' => 1795773059,
+'build_time' => 1795779254,
     'api_version'                              => '2.1.0', // field is no longer used.
     'db_version'                               => 28, // field is no longer used.
 
