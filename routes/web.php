@@ -55,9 +55,9 @@ Route::group(
         //         Route::post('/token', ['uses' => '\Laravel\Passport\Http\Controllers\AccessTokenController@issueToken', 'as' => 'token', 'middleware' => 'throttle']);
 
         // personal access tokens:
-        Route::post('/personal-access-tokens', ['uses' => 'FireflyIII\Http\Controllers\Profile\OAuthController@storePersonalAccessToken', 'as'   => 'personal.tokens.store']);
-        Route::get('/personal-access-tokens', ['uses' => 'FireflyIII\Http\Controllers\Profile\OAuthController@listPersonalAccessTokens', 'as'   => 'personal.tokens.index']);
-        Route::delete('/personal-access-tokens/{token_id}', ['uses' => 'FireflyIII\Http\Controllers\Profile\OAuthController@destroyPersonalAccessToken', 'as'   => 'personal.tokens.destroy']);
+        Route::post('/personal-access-tokens', ['uses' => 'FireflyIII\Http\Controllers\Profile\OAuthController@storePersonalAccessToken', 'as' => 'personal.tokens.store']);
+        Route::get('/personal-access-tokens', ['uses' => 'FireflyIII\Http\Controllers\Profile\OAuthController@listPersonalAccessTokens', 'as' => 'personal.tokens.index']);
+        Route::delete('/personal-access-tokens/{token_id}', ['uses' => 'FireflyIII\Http\Controllers\Profile\OAuthController@destroyPersonalAccessToken', 'as' => 'personal.tokens.destroy']);
 
         // clients:
         Route::get('/clients', ['uses' => 'FireflyIII\Http\Controllers\Profile\OAuthController@listClients', 'as' => 'clients.index']);
@@ -148,7 +148,6 @@ Route::group(
         Route::get('routes', ['uses' => 'DebugController@routes', 'as' => 'routes']);
     }
 );
-
 
 
 // For the two factor routes, the user must be logged in, but NOT 2FA. Account confirmation does not matter here.
@@ -398,8 +397,6 @@ Route::group(
         Route::post('destroy/{currency}', ['uses' => 'DeleteController@destroy', 'as' => 'destroy']);
     }
 );
-
-
 
 
 // exchange rates controller
@@ -898,7 +895,6 @@ Route::group(
         // disable MFA
         Route::get('/disableMFA', ['uses' => 'Profile\MfaController@disableMFA', 'as' => 'disableMFA']);
         Route::post('/disableMFA', ['uses' => 'Profile\MfaController@disableMFAPost', 'as' => 'disableMFA.post']);
-
 
 
     }
@@ -1408,7 +1404,7 @@ Route::group(
 
 // For the admin routes, the user must be logged in and have the role of 'owner'.
 Route::group(
-    ['middleware' => 'admin', 'namespace' => 'FireflyIII\Http\Controllers\Admin', 'prefix' => 'settings', 'as' => 'settings.'],
+    ['middleware' => ['user-full-auth', 'admin'], 'namespace' => 'FireflyIII\Http\Controllers\Admin', 'prefix' => 'settings', 'as' => 'settings.'],
     static function (): void {
         // admin home
         Route::get('', ['uses' => 'HomeController@index', 'as' => 'index']);

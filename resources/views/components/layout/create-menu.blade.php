@@ -98,7 +98,7 @@
                 <div class="grow">
                     <h3 class="dropdown-item-title">
                         <!-- withdrawal, deposit, transfer -->
-                        <em class="bi bi-bullseye me-2"></em>
+                        <em class="bi bi-piggy-bank me-2"></em>
                         {{ __('firefly.create_new_piggy_bank') }}
                     </h3>
                 </div>

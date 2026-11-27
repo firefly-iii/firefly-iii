@@ -27,6 +27,7 @@ namespace FireflyIII\Http\Controllers\Transaction;
 use FireflyIII\Events\Model\TransactionGroup\TransactionGroupEventFlags;
 use FireflyIII\Events\Model\TransactionGroup\TransactionGroupEventObjects;
 use FireflyIII\Events\Model\TransactionGroup\UpdatedSingleTransactionGroup;
+use FireflyIII\Events\Model\TransactionGroup\UserRequestedBatchProcessing;
 use FireflyIII\Events\Model\Webhook\WebhookMessagesRequestSending;
 use FireflyIII\Http\Controllers\Controller;
 use FireflyIII\Http\Requests\BulkEditJournalRequest;
@@ -91,14 +92,14 @@ final class BulkController extends Controller
      */
     public function update(BulkEditJournalRequest $request): RedirectResponse
     {
-        $journalIds     = $request->input('journals');
-        $journalIds     = is_array($journalIds) ? $journalIds : [];
-        $ignoreCategory = 1 === (int) $request->input('ignore_category');
-        $ignoreBudget   = 1 === (int) $request->input('ignore_budget');
-        $tagsAction     = $request->input('tags_action');
-        $collection     = new Collection();
-        $count          = 0;
-        $tags           = null === $request->input('tags') ? [] : $request->input('tags');
+        $journalIds             = $request->input('journals');
+        $journalIds             = is_array($journalIds) ? $journalIds : [];
+        $ignoreCategory         = 1 === (int) $request->input('ignore_category');
+        $ignoreBudget           = 1 === (int) $request->input('ignore_budget');
+        $tagsAction             = $request->input('tags_action');
+        $collection             = new Collection();
+        $count                  = 0;
+        $tags                   = null === $request->input('tags') ? [] : $request->input('tags');
 
         foreach ($journalIds as $journalId) {
             $journalId = (int) $journalId;
@@ -114,8 +115,9 @@ final class BulkController extends Controller
             }
         }
 
-        $flags          = new TransactionGroupEventFlags();
-        $objects        = new TransactionGroupEventObjects();
+        $flags                  = new TransactionGroupEventFlags();
+        $flags->batchSubmission = true;
+        $objects                = new TransactionGroupEventObjects();
 
         // run rules on changed journals:
         /** @var TransactionJournal $journal */
@@ -123,10 +125,15 @@ final class BulkController extends Controller
             $objects->appendFromTransactionGroup($journal->transactionGroup);
         }
         event(new UpdatedSingleTransactionGroup($flags, $objects));
+        // event(new Finished)
         event(new WebhookMessagesRequestSending());
 
         Preferences::mark();
         $request->session()->flash('success', trans_choice('firefly.mass_edited_transactions_success', $count));
+
+        $flags                  = new TransactionGroupEventFlags();
+        $flags->skipUnify       = true;
+        event(new UserRequestedBatchProcessing($flags));
 
         // redirect to previous URL:
         return redirect($this->getPreviousUrl('transactions.bulk-edit.url'));

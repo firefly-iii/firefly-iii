@@ -6,14 +6,29 @@
         @endphp
         <x-empty-page :route="route('tags.create')" type="tags" object-type="default" />
     @endif
-    <form action="{{ route('tags.mass-destroy') }}" method="post">
+    <form action="{{ route('tags.mass-destroy') }}" method="post" x-data="index">
         <input type="hidden" name="_token" value="{{ csrf_token() }}"/>
         @foreach($tags as $period => $entries)
             @if(count($entries) > 0)
-                <div class="row mb-2">
+                <div class="row mb-2"  data-period="{{$period}}">
                     <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
                         <div class="card mb-2">
-                            <x-elements.card-header-with-menu :cardTitle="'no-date' === $period ? __('firefly.without_date') : $period" :route="route('tags.create')" :linkTitle="__('firefly.no_tags_create_default')"/>
+                            <div class="card-header">
+                                <div class="row">
+                                    <div class="col">
+                                        <h3 class="card-title">{{ 'no-date' === $period ? __('firefly.without_date') : $period }}</h3>
+                                    </div>
+                                        <div class="col text-end" role="group">
+                                            <div class="btn-group">
+                                                <button type="button" data-period="{{$period}}" class="btn btn-outline-secondary btn-sm select-all"><span data-period="{{$period}}" class="checkbox-icon bi bi-check-square"></span> <span data-period="{{$period}}" class="select-all-text">{{ __('firefly.multi_select_select_all') }}</span></button>
+                                            <a href="{{ route('tags.create') }}" class="btn btn-sm btn-outline-success">
+                                                <span class="bi bi-plus-circle"></span> {{ __('firefly.no_tags_create_default') }}
+                                            </a>
+                                            </div>
+                                        </div>
+                                </div>
+                            </div>
+
                             <div class="card-body">
                                 <div class="row">
                                     @foreach($entries as $tagInfo)
@@ -26,7 +41,17 @@
                                     @endforeach
                                 </div>
                             </div>
-                            <x-elements.card-footer-with-menu :route="route('tags.create')" :linkTitle="__('firefly.no_tags_create_default')" />
+                            <div class="card-footer">
+                                <div class="col text-end">
+                                    <div class="btn-group">
+                                    <button type="button" data-period="{{$period}}" class="btn btn-outline-secondary btn-sm select-all"><span data-period="{{$period}}" class="checkbox-icon bi bi-check-square"></span>
+                                        <span data-period="{{$period}}" class="select-all-text">{{ __('firefly.multi_select_select_all') }}</span></button>
+                                    <a href="{{ route('tags.create') }}" class="btn btn-sm btn-outline-success">
+                                        <span class="bi bi-plus-circle"></span> {{ __('firefly.no_tags_create_default') }}
+                                    </a>
+                                    </div>
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -45,7 +70,7 @@
 
 @endsection
 @section('scripts')
-    @vite(['js/pages/generic.js'])
+    @vite(['js/pages/tags/index.js'])
     <script nonce="{{ $JS_NONCE }}">
         var confirmText = '{{ e(__('firefly.are_you_sure')) }}';
     </script>

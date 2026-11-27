@@ -48,13 +48,15 @@ class UpdateRequest extends FormRequest
      */
     public function getAll(): array
     {
-        return [
-            'link_type_id'   => $this->convertInteger('link_type_id'),
-            'link_type_name' => $this->convertString('link_type_name'),
-            'inward_id'      => $this->convertInteger('inward_id'),
-            'outward_id'     => $this->convertInteger('outward_id'),
-            'notes'          => $this->stringWithNewlines('notes'),
+        $fields = [
+            'link_type_id'   => ['link_type_id', 'convertInteger'],
+            'link_type_name' => ['link_type_name', 'convertString'],
+            'inward_id'      => ['inward_id', 'convertInteger'],
+            'outward_id'     => ['outward_id', 'convertInteger'],
+            'notes'          => ['notes', 'stringWithNewlines'],
         ];
+
+        return $this->getAllData($fields);
     }
 
     /**
@@ -113,13 +115,18 @@ class UpdateRequest extends FormRequest
             $validator->errors()->add('outward_id', 'Inward ID must be different from outward ID.');
         }
 
-        $inDB         = $repository->findSpecificLink($existing->linkType, $inward, $outward);
-        if (null === $inDB) {
+        $inDBa        = $repository->findSpecificLink($existing->linkType, $inward, $outward);
+        $inDBb        = $repository->findSpecificLink($existing->linkType, $outward, $inward);
+        if (null === $inDBa && null === $inDBb) {
             return;
         }
-        if ($inDB->id !== $existing->id) {
-            $validator->errors()->add('outward_id', 'Already have a link between inward and outward.');
-            $validator->errors()->add('inward_id', 'Already have a link between inward and outward.');
+        foreach ([$inDBa, $inDBb] as $inDB) {
+            if (null !== $inDB && $inDB->id !== $existing->id) {
+                $validator->errors()->add('outward_id', 'Already have a link between inward and outward.');
+                $validator->errors()->add('inward_id', 'Already have a link between inward and outward.');
+
+                return;
+            }
         }
     }
 }

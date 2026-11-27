@@ -37,6 +37,7 @@ use Illuminate\Support\Collection;
 use League\Fractal\Pagination\IlluminatePaginatorAdapter;
 use League\Fractal\Resource\Collection as FractalCollection;
 use League\Fractal\Resource\Item;
+use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 use function Safe\preg_match;
 
@@ -56,7 +57,7 @@ final class PreferencesController extends Controller
      */
     public function index(): JsonResponse
     {
-        $collection  = Preferences::all();
+        $collection  = Preferences::allApiFiltered();
         $manager     = $this->getManager();
         $count       = $collection->count();
         $pageSize    = $this->parameters->get('limit');
@@ -84,17 +85,25 @@ final class PreferencesController extends Controller
      */
     public function show(Preference $preference): JsonResponse
     {
-        $manager     = $this->getManager();
+        $manager           = $this->getManager();
 
         if ('currencyPreference' === $preference->name) {
             throw new FireflyException('Please use api/v1/currencies/primary instead.');
         }
 
+        $hiddenPreferences = config('firefly.api_hidden_preference_keys');
+        if (
+            in_array($preference->name, $hiddenPreferences, true)
+            || array_any($hiddenPreferences, fn (string $arrayValue) => str_starts_with($preference->name, $arrayValue))
+        ) {
+            throw new NotFoundHttpException();
+        }
+
         /** @var PreferenceTransformer $transformer */
-        $transformer = app(PreferenceTransformer::class);
+        $transformer       = app(PreferenceTransformer::class);
         $transformer->setParameters($this->parameters);
 
-        $resource    = new Item($preference, $transformer, 'preferences');
+        $resource          = new Item($preference, $transformer, 'preferences');
 
         return response()->json($manager->createData($resource)->toArray())->header('Content-Type', self::CONTENT_TYPE);
     }

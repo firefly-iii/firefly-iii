@@ -85,6 +85,14 @@ class ObjectGroup extends Model
     /**
      * @return MorphToMany
      */
+    public function categories()
+    {
+        return $this->morphedByMany(Category::class, 'object_groupable');
+    }
+
+    /**
+     * @return MorphToMany
+     */
     public function piggyBanks()
     {
         return $this->morphedByMany(PiggyBank::class, 'object_groupable');

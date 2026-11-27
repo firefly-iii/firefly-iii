@@ -96,6 +96,7 @@ export default defineConfig(({ command }) => {
                     "js/pages/transactions/show.js",
 
                     // tags
+                    "js/pages/tags/index.js",
 
                     // webhooks
                     "js/pages/webhooks/create.js",

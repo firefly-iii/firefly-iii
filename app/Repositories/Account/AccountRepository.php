@@ -261,6 +261,24 @@ class AccountRepository implements AccountRepositoryInterface, UserGroupInterfac
         $allowed = config('firefly.allowed_filter_parameters.Account', []);
         if (0 !== count($filter)) {
             foreach ($filter as $field => $search) {
+                if ('object_group_id' === $field) {
+                    // left join object_groupables ON object_groupables.object_groupable_id = accounts.id AND object_groupables.object_groupable_type = "FireflyIII\\Models\\Account"
+                    // where object_groupables.object_group_id=1
+                    $query->leftJoin('object_groupables', function (JoinClause $join): void {
+                        $join->on('accounts.id', '=', 'object_groupables.object_groupable_id');
+                        $join->on('object_groupables.object_groupable_type', '=', DB::raw("'FireflyIII\\\\Models\\\\Account'"));
+                    });
+                    $search = (int) $search;
+                    if (0 !== $search) {
+                        $query->where('object_groupables.object_group_id', $search);
+                    }
+                    if (0 === $search) {
+                        $query->whereNull('object_groupables.object_group_id');
+                    }
+
+                    continue;
+                }
+
                 if ('account_number_and_iban' === $field) {
                     $query->leftJoin('account_meta', function (JoinClause $join): void {
                         $join->on('accounts.id', '=', 'account_meta.account_id');
@@ -276,7 +294,7 @@ class AccountRepository implements AccountRepositoryInterface, UserGroupInterfac
                 }
                 if (in_array($field, $allowed, true)) {
                     if ('' !== (string) $search) {
-                        $query->whereLike($field, sprintf('%%%s%%', $search));
+                        $query->whereLike(sprintf('accounts.%s', $field), sprintf('%%%s%%', $search));
                     }
                 }
             }

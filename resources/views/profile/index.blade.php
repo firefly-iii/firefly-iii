@@ -136,7 +136,7 @@
                                     <button type="button"
                                             data-success="{{ trans('firefly.deleted_all_piggy_banks') }}"
                                             data-type="piggy_banks" class="confirm btn btn-danger btn-sm"><span
-                                            class="bi bi-bullseye"></span> {{ __('firefly.delete_all_piggy_banks')  }}</button>
+                                            class="bi bi-piggy-bank"></span> {{ __('firefly.delete_all_piggy_banks')  }}</button>
                                 </div>
                                 <h4>{{ __('firefly.automation')  }}</h4>
                                 <div class="btn-group">

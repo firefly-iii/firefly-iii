@@ -26,6 +26,7 @@ namespace FireflyIII\Support;
 use Exception;
 use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Models\Configuration;
+use FireflyIII\Support\System\SafeDecrypter;
 use Illuminate\Contracts\Encryption\DecryptException;
 use Illuminate\Contracts\Encryption\EncryptException;
 use Illuminate\Database\QueryException;
@@ -104,7 +105,7 @@ class AppConfiguration
         }
 
         try {
-            $result->data = decrypt($result->data);
+            $result->data = SafeDecrypter::decryptString($result->data);
         } catch (DecryptException $e) {
             Log::error(sprintf('Could not decrypt configuration value "%s": %s', $name, $e->getMessage()));
 

@@ -183,7 +183,7 @@ abstract class Controller extends BaseController
     private function getFromUrl(): string
     {
         $current   = parse_url(URL::full());
-        $from      = '';
+        $from      = '/';
         if (array_key_exists('path', $current)) {
             $from = $current['path'];
         }

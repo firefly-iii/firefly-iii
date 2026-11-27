@@ -33,7 +33,7 @@ any the following security issues may result in a permanent ban from the Firefly
 3. There are (end)points where one (non-admin) user can affect all other users. For example, browsing to `/flush` will
    also clear out other user's cached data. Purging deleted records may also remove other user's soft-deleted data.
 4. Any Insecure Direct Object Reference (IDOR)-related issue that is not accompanied by a working example.
-   The [demo website](https://demo.firefly-iii.org/) features a second, hidden user. It has a full compliment of user data
+   The [demo website](https://demo.firefly-iii.org/) features a second, hidden user. It has a full complement of user data
 5. Any issue that is not true. AI models have already _hallucinated_ security issues in Firefly III. They've
    referred to **non-existing** functions, templates and files. Including line numbers and code excerpts. Validate your
    findings before you report them to me.

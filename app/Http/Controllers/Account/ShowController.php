@@ -30,7 +30,6 @@ use FireflyIII\Helpers\Collector\GroupCollectorInterface;
 use FireflyIII\Http\Controllers\Controller;
 use FireflyIII\Models\Account;
 use FireflyIII\Repositories\Account\AccountRepositoryInterface;
-use FireflyIII\Support\Debug\Timer;
 use FireflyIII\Support\Facades\Preferences;
 use FireflyIII\Support\Facades\Steam;
 use FireflyIII\Support\Http\Controllers\PeriodOverview;
@@ -133,16 +132,7 @@ final class ShowController extends Controller
             $firstTransaction = clone $threeYearsAgo;
         }
 
-        Log::debug('Start period overview');
-        $timer            = Timer::getInstance();
-        $timer->start('period-overview');
         $periods          = $this->getAccountPeriodOverview($account, $firstTransaction, $end);
-
-        Log::debug('End period overview');
-        $timer->stop('period-overview');
-
-        Log::debug('Collect transactions');
-        $timer->start('collection');
 
         /** @var GroupCollectorInterface $collector */
         $collector        = app(GroupCollectorInterface::class);
@@ -159,8 +149,6 @@ final class ShowController extends Controller
         $collector->setExpandGroupSearch(true);
         $groups           = $collector->getPaginatedGroups();
 
-        Log::debug('End collect transactions');
-        $timer->stop('collection');
         $groups->setPath(route('accounts.show', [$account->id, $start->format('Y-m-d'), $end->format('Y-m-d')]));
         $now              = now();
         if ($now->gt($end) || $now->lt($start)) {
@@ -188,6 +176,7 @@ final class ShowController extends Controller
             'chartUrl'     => $chartUrl,
             'location'     => $location,
             'balances'     => $balances,
+            'now'          => $now,
         ]);
     }
 
@@ -264,6 +253,7 @@ final class ShowController extends Controller
             'start'        => $start,
             'end'          => $end,
             'balances'     => $balances,
+            'now'          => $now,
         ]);
     }
 }

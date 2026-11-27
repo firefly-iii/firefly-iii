@@ -96,6 +96,7 @@ class StoreRequest extends FormRequest
             'strict'                     => [new IsBoolean()],
             'stop_processing'            => [new IsBoolean()],
             'active'                     => [new IsBoolean()],
+            'order'                      => ['numeric', 'nullable', 'min:0', 'max:16777216'],
         ];
     }
 

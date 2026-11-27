@@ -148,11 +148,7 @@ class BudgetLimitEnrichment implements EnrichmentInterface
     private function collectCurrencies(): void
     {
         $this->currencies[$this->primaryCurrency->id] = $this->primaryCurrency;
-        $currencies                                   = TransactionCurrency::query()
-            ->whereIn('id', $this->currencyIds)
-            ->whereNot('id', $this->primaryCurrency->id)
-            ->get()
-        ;
+        $currencies                                   = TransactionCurrency::query()->whereIn('id', $this->currencyIds)->whereNot('id', $this->primaryCurrency->id)->get();
         foreach ($currencies as $currency) {
             $this->currencies[(int) $currency->id] = $currency;
         }
@@ -205,10 +201,15 @@ class BudgetLimitEnrichment implements EnrichmentInterface
 
     private function stringifyIds(): void
     {
-        $this->expenses = array_map(static fn ($first): array => array_map(static function (array $second): array {
+        $this->expenses   = array_map(static fn ($first): array => array_map(static function (array $second): array {
             $second['currency_id'] = (string) ($second['currency_id'] ?? 0);
 
             return $second;
         }, $first), $this->expenses);
+        $this->pcExpenses = array_map(static fn ($first): array => array_map(static function (array $second): array {
+            $second['currency_id'] = (string) ($second['currency_id'] ?? 0);
+
+            return $second;
+        }, $first), $this->pcExpenses);
     }
 }

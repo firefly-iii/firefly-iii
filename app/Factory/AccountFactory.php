@@ -29,8 +29,10 @@ use FireflyIII\Events\Model\Account\CreatedNewAccount;
 use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Models\Account;
 use FireflyIII\Models\AccountType;
+use FireflyIII\Models\ObjectGroup;
 use FireflyIII\Models\UserGroup;
 use FireflyIII\Repositories\Account\AccountRepositoryInterface;
+use FireflyIII\Repositories\ObjectGroup\CreatesObjectGroups;
 use FireflyIII\Services\Internal\Support\AccountServiceTrait;
 use FireflyIII\Services\Internal\Support\LocationServiceTrait;
 use FireflyIII\Services\Internal\Update\AccountUpdateService;
@@ -45,6 +47,7 @@ use Illuminate\Support\Facades\Log;
 class AccountFactory
 {
     use AccountServiceTrait;
+    use CreatesObjectGroups;
     use LocationServiceTrait;
 
     protected AccountRepositoryInterface $accountRepository;
@@ -212,9 +215,9 @@ class AccountFactory
         $this->accountRepository->resetAccountOrder();
 
         // create it:
-        $virtualBalance = $data['virtual_balance'] ?? null;
-        $active         = array_key_exists('active', $data) ? $data['active'] : true;
-        $databaseData   = [
+        $virtualBalance   = $data['virtual_balance'] ?? null;
+        $active           = array_key_exists('active', $data) ? $data['active'] : true;
+        $databaseData     = [
             'user_id'         => $this->user->id,
             'user_group_id'   => $this->user->user_group_id,
             'account_type_id' => $type->id,
@@ -233,11 +236,11 @@ class AccountFactory
             $databaseData['virtual_balance'] = null;
         }
         // create account!
-        $account        = Account::create($databaseData);
+        $account          = Account::create($databaseData);
         Log::channel('audit')->info(sprintf('Account #%d ("%s") has been created.', $account->id, $account->name));
 
         // update meta data:
-        $data           = $this->cleanMetaDataArray($account, $data);
+        $data             = $this->cleanMetaDataArray($account, $data);
         $this->storeMetaData($account, $data);
 
         // create opening balance (only asset accounts)
@@ -257,7 +260,7 @@ class AccountFactory
         }
 
         // create notes
-        $notes          = array_key_exists('notes', $data) ? $data['notes'] : '';
+        $notes            = array_key_exists('notes', $data) ? $data['notes'] : '';
         $this->updateNote($account, $notes);
 
         // create location
@@ -265,6 +268,23 @@ class AccountFactory
 
         // set order
         $this->storeOrder($account, $data);
+
+        $objectGroupTitle = $data['object_group_title'] ?? '';
+        if ('' !== $objectGroupTitle) {
+            $objectGroup = $this->findOrCreateObjectGroup($objectGroupTitle);
+            if ($objectGroup instanceof ObjectGroup) {
+                $account->objectGroups()->sync([$objectGroup->id]);
+            }
+        }
+        // try also with ID
+        $objectGroupId    = (int) ($data['object_group_id'] ?? 0);
+        if (0 !== $objectGroupId) {
+            $objectGroup = $this->findObjectGroupById($objectGroupId);
+            if ($objectGroup instanceof ObjectGroup) {
+                $account->objectGroups()->sync([$objectGroup->id]);
+            }
+        }
+        $account->save();
 
         // refresh and return
         $account->refresh();

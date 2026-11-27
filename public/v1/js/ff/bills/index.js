@@ -30,7 +30,7 @@ var fixBillHelper = function (e, tr) {
 
 $(function () {
     "use strict";
-    $('#bill-sortable').find('tbody').sortable(
+    $('table.bill-sortable').find('tbody').sortable(
         {
             helper: fixBillHelper,
             stop: stopSorting,
@@ -61,7 +61,7 @@ $(function () {
 function stopSorting() {
     "use strict";
 
-    $.each($('#bill-sortable>tbody>tr.bill-sortable'), function (i, v) {
+    $.each($('table.bill-sortable>tbody>tr.bill-sortable'), function (i, v) {
         var holder = $(v);
         var parentBody = holder.parent();
         var objectGroupTitle = parentBody.data('title');

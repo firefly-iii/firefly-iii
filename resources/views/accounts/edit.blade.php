@@ -68,6 +68,7 @@
                         {!! ExpandedForm::textarea('notes', $preFilled['notes'],['helpText' => trans('firefly.field_supports_markdown')]) !!}
                         {!! ExpandedForm::checkbox('active', 1) !!}
                         {!! ExpandedForm::file('attachments[]', ['multiple' => 'multiple','helpText' => trans('firefly.upload_max_file_size', ['size' => $uploadSize ?? $filesize])]) !!}
+                        {!! ExpandedForm::objectGroup() !!}
 
                     </div>
                 </div>
@@ -106,4 +107,7 @@
 @endsection
 @section('scripts')
     @vite(['js/pages/accounts/edit.js'])
+    {{-- auto complete for object groups --}}
+    <script src="v1/js/lib/bootstrap-simple-autocomplete.js?v={{ $FF_BUILD_TIME }}" nonce="{{ $JS_NONCE }}"></script>
+    <script src="v1/js/ff/object-groups/ac.js?v={{ $FF_BUILD_TIME }}" nonce="{{ $JS_NONCE }}"></script>
 @endsection

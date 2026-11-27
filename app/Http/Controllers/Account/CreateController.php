@@ -106,11 +106,6 @@ final class CreateController extends Controller
             $showNetWorth = false;
         }
 
-        // put previous url in session if not redirect from store (not "create another").
-        if (true !== session('accounts.create.fromStore')) {
-            $this->rememberPreviousUrl('accounts.create.url');
-        }
-        $request->session()->forget('accounts.create.fromStore');
         Log::channel('audit')->info('Creating new account.');
 
         return view('accounts.create', [
@@ -165,10 +160,7 @@ final class CreateController extends Controller
         $from      = $request->input('_from', '');
         $redirect  = redirect(route('index').$from);
         if (1 === (int) $request->input('create_another')) {
-            // set value so create routine will not overwrite URL:
-            $request->session()->put('accounts.create.fromStore', true);
-
-            $redirect = redirect(route('accounts.create', [$request->input('objectType')]))->withInput();
+            $redirect = redirect(route('accounts.create', [$request->input('objectType')]).'?_from='.$from)->withInput();
         }
 
         return $redirect;

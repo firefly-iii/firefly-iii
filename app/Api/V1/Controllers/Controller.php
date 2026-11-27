@@ -63,15 +63,13 @@ abstract class Controller extends BaseController
     use ValidatesRequests;
     use ValidatesUserGroupTrait;
 
-    protected string $monthAndDayFormat;
-
     protected const string CONTENT_TYPE      = 'application/vnd.api+json';
     protected const string JSON_CONTENT_TYPE = 'application/json';
 
     protected array $acceptedRoles           = [];
     protected array $accepts                 = ['application/json', 'application/vnd.api+json'];
-
-    protected bool $convertToPrimary         = false;
+    protected bool  $convertToPrimary        = false;
+    protected string $monthAndDayFormat;
 
     /** @deprecated use Request classes */
     protected ParameterBag $parameters;

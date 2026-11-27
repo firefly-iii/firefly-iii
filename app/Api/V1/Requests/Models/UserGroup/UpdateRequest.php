@@ -24,6 +24,7 @@ declare(strict_types=1);
 
 namespace FireflyIII\Api\V1\Requests\Models\UserGroup;
 
+use FireflyIII\Enums\UserRoleEnum;
 use FireflyIII\Support\Request\ChecksLogin;
 use FireflyIII\Support\Request\ConvertsDataTypes;
 use Illuminate\Foundation\Http\FormRequest;
@@ -36,7 +37,8 @@ class UpdateRequest extends FormRequest
     use ChecksLogin;
     use ConvertsDataTypes;
 
-    protected array $acceptedRoles = [];
+    // because the clankers keep complaining about this impossible to reach endpoint:
+    protected array $acceptedRoles = [UserRoleEnum::FULL];
 
     public function getData(): array
     {

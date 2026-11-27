@@ -92,6 +92,20 @@ class SwitchAccounts implements ActionInterface
         }
         $sourceAccountId               = $sourceTransaction->account_id;
         $destinationAccountId          = $destTransaction->account_id;
+
+        Log::debug(sprintf(
+            'Source transaction #%d will get account #%d ("%s")',
+            $sourceTransaction->id,
+            $destinationAccountId,
+            $destTransaction->account->name
+        ));
+        Log::debug(sprintf(
+            'Destination transaction #%d will get account #%d ("%s")',
+            $destTransaction->id,
+            $sourceAccountId,
+            $sourceTransaction->account->name
+        ));
+
         $sourceTransaction->account_id = $destinationAccountId;
         $destTransaction->account_id   = $sourceAccountId;
         $sourceTransaction->save();

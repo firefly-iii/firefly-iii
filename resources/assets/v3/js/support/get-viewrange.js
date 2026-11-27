@@ -28,6 +28,7 @@ import {
     endOfMonth,
     endOfQuarter,
     endOfWeek,
+    endOfYear,
     startOfDay,
     startOfMonth,
     startOfQuarter,
@@ -165,15 +166,15 @@ function addPeriod(date, viewRange) {
             break;
         case "YTD":
             nextPeriodStart = addYears(startOfYear(date), 1);
-            nextPeriodEnd = addYears(date, 1);
+            nextPeriodEnd = endOfYear(nextPeriodStart, 1);
             break;
         case "QTD":
             nextPeriodStart = addQuarters(startOfQuarter(date), 1);
-            nextPeriodEnd = addQuarters(date, 1);
+            nextPeriodEnd = endOfQuarter(nextPeriodStart, 1);
             break;
         case "MTD":
             nextPeriodStart = addMonths(startOfMonth(date), 1);
-            nextPeriodEnd = addMonths(date, 1);
+            nextPeriodEnd = endOfMonth(nextPeriodStart);
             break;
         case "1D":
             nextPeriodStart = startOfDay(addDays(date, 1));
@@ -270,15 +271,15 @@ function subtractPeriod(date, viewRange) {
             break;
         case "YTD":
             prevPeriodStart = subYears(startOfYear(date), 1);
-            prevPeriodEnd = subYears(date, 1);
+            prevPeriodEnd = endOfYear(prevPeriodStart);
             break;
         case "QTD":
             prevPeriodStart = subQuarters(startOfQuarter(date), 1);
-            prevPeriodEnd = subQuarters(date, 1);
+            prevPeriodEnd = endOfQuarter(prevPeriodStart);
             break;
         case "MTD":
             prevPeriodStart = subMonths(startOfMonth(date), 1);
-            prevPeriodEnd = subMonths(date, 1);
+            prevPeriodEnd = endOfMonth(prevPeriodStart);
             break;
         case "1D":
             prevPeriodStart = startOfDay(subDays(date, 1));

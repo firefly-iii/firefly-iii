@@ -130,8 +130,8 @@ class OAuthKeys
         }
 
         try {
-            $privateContent = trim(Crypt::decrypt($privateKey));
-            $publicContent  = trim(Crypt::decrypt($publicKey));
+            $privateContent = trim(SafeDecrypter::decryptString($privateKey));
+            $publicContent  = trim(SafeDecrypter::decryptString($publicKey));
         } catch (DecryptException $e) {
             Log::error('Could not decrypt pub/private keypair.');
             Log::error($e->getMessage());

@@ -7,7 +7,7 @@
                                                   :route="route('subscriptions.create')"
                                                   :linkTitle="__('firefly.create_new_bill')"/>
                 <div class="card-body p-0">
-                    <table class="table table-valign-middle table-hover table-sm" id="bill-sortable">
+                    <table class="table table-valign-middle table-hover table-sm bill-sortable">
                         <thead>
                         <tr>
                             <th class="w-5">&nbsp;</th>
@@ -115,8 +115,8 @@
                                                 {{ $entry['next_expected_match_diff'] }}
                                             </td>
                                         @else
-                                            <td class="paid_in_period text-warning">
-                                                {{ $entry['next_expected_match_diff'] }}
+                                            <td class="paid_in_period text-primary">
+                                               {{ $entry['next_expected_match_diff'] }}
                                                 <!-- {{ __('firefly.bill_expected_date', ['date' => $entry['next_expected_match_diff']]) }} -->
                                             </td>
                                         @endif

@@ -197,7 +197,6 @@ $(function () {
 );
 
 function testRuleTriggers(e) {
-
     var obj = $(e.target);
     var ruleId = parseInt(obj.data('id'));
     var icon = obj;
@@ -215,8 +214,6 @@ function testRuleTriggers(e) {
 
     // Find a list of existing transactions that match these triggers
     $.get('rules/test-rule/' + ruleId).done(function (data) {
-
-
         // Set title and body
         modal.find(".transactions-list").html(data.html);
 
@@ -229,7 +226,7 @@ function testRuleTriggers(e) {
         }
 
         // Show the modal dialog
-        modal.modal();
+        modal.modal('show');
     }).fail(function () {
         alert('Cannot get transactions for given triggers.');
         disableRuleSpinners();

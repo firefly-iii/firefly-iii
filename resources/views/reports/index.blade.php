@@ -26,10 +26,10 @@
                         <div class="row mb-2">
                             <label for="inputAccounts" class="col-sm-3 col-form-label">{{ __('firefly.report_included_accounts') }}</label>
                             <div class="col-sm-9" id="inputAccountsSelect">
-                                <select id="inputAccounts" name="accounts[]" multiple class="form-select">
-                                    @foreach($groupedAccounts as $role => $$accountList)
+                                <select id="inputAccounts" name="accounts[]" size="15" multiple class="form-select">
+                                    @foreach($groupedAccounts as $role => $subList)
                                         <optgroup label="{{ $role }}">
-                                            @foreach($$accountList as $account)
+                                            @foreach($subList as $account)
                                                 <option
                                                     value="{{ $account->id }}"
                                                     label="{{ $account->name }}@if('sharedAsset' === account_get_meta_field($account, 'accountRole')) ({{ strtolower(__('firefly.shared')) }})@endif">

@@ -53,27 +53,27 @@ use Override;
  */
 class AccountEnrichment implements EnrichmentInterface
 {
-    private array $accountTypeIds    = [];
-    private array $accountTypes      = [];
-    private array $balances          = [];
+    private array $accountTypeIds        = [];
+    private array $accountTypes          = [];
+    private array $balances              = [];
     private Collection $collection;
     private readonly bool $convertToPrimary;
-    private array   $currencies      = [];
-    private ?Carbon $date            = null;
-    private ?Carbon $end             = null;
-    private array   $endBalances     = [];
-    private array   $ids             = [];
-    private array   $lastActivities  = [];
-    private array   $locations       = [];
-    private array   $mappedObjects   = [];
-    private array   $meta            = [];
-    private array   $notes           = [];
-    private array   $objectGroups    = [];
-    private array   $openingBalances = [];
+    private array       $currencies      = [];
+    private ?Carbon $date                = null;
+    private ?Carbon $end                 = null;
+    private array       $endBalances     = [];
+    private array       $ids             = [];
+    private array       $lastActivities  = [];
+    private array       $locations       = [];
+    private array       $mappedObjects   = [];
+    private array       $meta            = [];
+    private array       $notes           = [];
+    private array       $objectGroups    = [];
+    private array       $openingBalances = [];
     private readonly TransactionCurrency $primaryCurrency;
-    private array   $sort            = [];
-    private ?Carbon $start           = null;
-    private array   $startBalances   = [];
+    private array       $sort            = [];
+    private ?Carbon $start               = null;
+    private array       $startBalances   = [];
     private User $user;
     private UserGroup $userGroup;
 
@@ -407,9 +407,9 @@ class AccountEnrichment implements EnrichmentInterface
 
         $groups = ObjectGroup::query()->whereIn('id', $ids)->get(['id', 'title', 'order'])->toArray();
         foreach ($groups as $group) {
-            $group['id']                            = (int) $group['id'];
-            $group['order']                         = (int) $group['order'];
-            $this->objectGroups[(int) $group['id']] = $group;
+            $group['id']                      = (int) $group['id'];
+            $group['order']                   = (int) $group['order'];
+            $this->objectGroups[$group['id']] = $group;
         }
     }
 

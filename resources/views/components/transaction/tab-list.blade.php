@@ -2,7 +2,7 @@
     <div class="col">
 
         <ul class="nav nav-tabs" id="splitTabs" role="tablist">
-            <template x-for="transaction,index in entries">
+            <template x-for="transaction, index in entries">
                 <li class="nav-item" role="presentation">
                     <button :id="'split-'+index+'-tab'"
                             :class="{'nav-link': true, 'active': index === 0 }"

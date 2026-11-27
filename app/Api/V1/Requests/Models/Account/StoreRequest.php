@@ -76,6 +76,8 @@ class StoreRequest extends FormRequest
             'notes'                   => $this->stringWithNewlines('notes'),
             'interest'                => $this->convertString('interest'),
             'interest_period'         => $this->convertString('interest_period'),
+            'object_group_title'      => $this->convertString('object_group_title'),
+            'object_group_id'         => $this->convertInteger('object_group_id'),
         ];
         // append location information.
         $data            = $this->appendLocationData($data, null);
@@ -106,8 +108,8 @@ class StoreRequest extends FormRequest
             'account_number'       => ['min:1', 'max:255', 'nullable', new UniqueAccountNumber(null, $type)],
             'opening_balance'      => ['numeric', 'required_with:opening_balance_date', 'nullable'],
             'opening_balance_date' => ['date', 'required_with:opening_balance', 'nullable'],
-            'virtual_balance'      => ['numeric', 'nullable'],
-            'order'                => ['numeric', 'nullable'],
+            'virtual_balance'      => ['numeric', 'nullable', new IsValidPositiveAmount()],
+            'order'                => ['numeric', 'nullable', 'min:0', 'max:16777216'],
             'currency_id'          => ['numeric', 'exists:transaction_currencies,id'],
             'currency_code'        => ['min:3', 'max:3', 'exists:transaction_currencies,code'],
             'active'               => [new IsBoolean()],
@@ -122,6 +124,8 @@ class StoreRequest extends FormRequest
             'interest'             => ['min:0', 'max:100', 'numeric'],
             'interest_period'      => sprintf('nullable|in:%s', implode(',', config('firefly.interest_periods'))),
             'notes'                => ['min:0', 'max:32768'],
+            'object_group_id'      => ['numeric', 'belongsToUser:object_groups,id'],
+            'object_group_title'   => ['min:0', 'max:255'],
         ];
 
         return Location::requestRules($rules);

@@ -33,10 +33,10 @@ import getExpectedAccountTypes from "../../../form/get-expected-account-types.js
 
 export function getUrls() {
     return {
-        description: "/api/v1/autocomplete/transactions",
-        account: "/api/v1/autocomplete/accounts",
-        category: "/api/v1/autocomplete/categories",
-        tag: "/api/v1/autocomplete/tags",
+        description: "./api/v1/autocomplete/transactions",
+        account: "./api/v1/autocomplete/accounts",
+        category: "./api/v1/autocomplete/categories",
+        tag: "./api/v1/autocomplete/tags",
     };
 }
 
@@ -58,7 +58,7 @@ export function addAllAutocompleteToForm() {
     let destinationType = this.entries[0].destination_account.type ?? "unknown";
     filters.destination = getExpectedAccountTypes(transactionType, sourceType, destinationType);
 
-    console.log("Filters for autocomplete: ", filters);
+    // console.log("Filters for autocomplete: ", filters);
 
     const urls = getUrls();
     setTimeout(() => {
@@ -113,7 +113,7 @@ export function addAllAutocompleteToForm() {
             labelField: "name",
             suggestionsThreshold: 0,
             debounceTime: 100,
-            autoselectFirst: true,
+            // autoselectFirst: true,
             account_types: filters.destination,
             onRenderItem: renderAccount,
             onChange: changeDestinationAccount,
@@ -143,11 +143,12 @@ export function addAllAutocompleteToForm() {
 }
 
 export function addAutocomplete(options) {
-    console.log('addAutocomplete("' + options.serverUrl + '")');
+    // console.log('addAutocomplete("' + options.serverUrl + '")');
     const params = {
         server: options.serverUrl,
         serverParams: {},
         fixed: true,
+        autoselectFirst: false,
         fetchOptions: {
             method: "GET",
             credentials: "include",
@@ -165,7 +166,7 @@ export function addAutocomplete(options) {
         liveServer: true,
     };
     if (typeof options.account_types !== "undefined" && options.account_types.length > 0) {
-        console.log("Add account types");
+        // console.log("Add account types");
         params.serverParams["types"] = options.account_types;
     }
     if (typeof options.onRenderItem !== "undefined" && null !== options.onRenderItem) {

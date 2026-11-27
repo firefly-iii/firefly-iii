@@ -98,8 +98,9 @@ final class CalculatorTest extends TestCase
      * @throws IntervalException
      */
     #[DataProvider('provideSkippedIntervals')]
-    public function testGivenAnEpochWithSkipIntervalNumberWhenCallTheNextDateBySkippedIntervalMethodThenReturnsTheExpectedDateSuccessful(CalculatorProvider $provider): void
-    {
+    public function testGivenAnEpochWithSkipIntervalNumberWhenCallTheNextDateBySkippedIntervalMethodThenReturnsTheExpectedDateSuccessful(
+        CalculatorProvider $provider
+    ): void {
         $calculator = new Calculator();
         $period     = $calculator->nextDateByInterval($provider->epoch(), $provider->periodicity, $provider->skip);
         $this->assertSame($provider->expected()->toDateString(), $period->toDateString());

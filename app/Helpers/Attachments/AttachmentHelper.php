@@ -26,11 +26,11 @@ namespace FireflyIII\Helpers\Attachments;
 use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Models\Attachment;
 use FireflyIII\Models\PiggyBank;
+use FireflyIII\Support\System\SafeDecrypter;
 use Illuminate\Contracts\Encryption\DecryptException;
 use Illuminate\Contracts\Filesystem\Filesystem;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Collection;
-use Illuminate\Support\Facades\Crypt;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\MessageBag;
@@ -81,7 +81,7 @@ class AttachmentHelper implements AttachmentHelperInterface
         $encryptedData = (string) $this->uploadDisk->get(sprintf('at-%d.data', $attachment->id));
 
         try {
-            $unencryptedData = Crypt::decrypt($encryptedData); // verified
+            $unencryptedData = SafeDecrypter::decryptString($encryptedData); // verified
         } catch (DecryptException $e) {
             Log::error(sprintf('Could not decrypt data of attachment #%d: %s', $attachment->id, $e->getMessage()));
             $unencryptedData = $encryptedData;

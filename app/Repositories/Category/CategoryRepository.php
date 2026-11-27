@@ -30,12 +30,15 @@ use FireflyIII\Factory\CategoryFactory;
 use FireflyIII\Models\Attachment;
 use FireflyIII\Models\Category;
 use FireflyIII\Models\Note;
+use FireflyIII\Models\ObjectGroup;
 use FireflyIII\Models\RecurrenceTransactionMeta;
 use FireflyIII\Models\RuleAction;
+use FireflyIII\Repositories\ObjectGroup\CreatesObjectGroups;
 use FireflyIII\Services\Internal\Destroy\CategoryDestroyService;
 use FireflyIII\Services\Internal\Update\CategoryUpdateService;
 use FireflyIII\Support\Repositories\UserGroup\UserGroupInterface;
 use FireflyIII\Support\Repositories\UserGroup\UserGroupTrait;
+use Illuminate\Database\Query\JoinClause;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
@@ -46,6 +49,7 @@ use Illuminate\Support\Facades\Storage;
  */
 class CategoryRepository implements CategoryRepositoryInterface, UserGroupInterface
 {
+    use CreatesObjectGroups;
     use UserGroupTrait;
 
     public function categoryEndsWith(string $query, int $limit): Collection
@@ -207,6 +211,22 @@ class CategoryRepository implements CategoryRepositoryInterface, UserGroupInterf
         $allowed = config('firefly.allowed_filter_parameters.Category', []);
         if (0 !== count($filter)) {
             foreach ($filter as $field => $search) {
+                if ('object_group_id' === $field) {
+                    $query->leftJoin('object_groupables', function (JoinClause $join): void {
+                        $join->on('categories.id', '=', 'object_groupables.object_groupable_id');
+                        $join->on('object_groupables.object_groupable_type', '=', DB::raw("'FireflyIII\\\\Models\\\\Category'"));
+                    });
+                    $search = (int) $search;
+                    if (0 !== $search) {
+                        $query->where('object_groupables.object_group_id', $search);
+                    }
+                    if (0 === $search) {
+                        $query->whereNull('object_groupables.object_group_id');
+                    }
+
+                    continue;
+                }
+
                 if (in_array($field, $allowed, true)) {
                     if ('' !== (string) $search) {
                         $query->whereLike($field, sprintf('%%%s%%', $search));
@@ -315,10 +335,10 @@ class CategoryRepository implements CategoryRepositoryInterface, UserGroupInterf
     public function store(array $data): Category
     {
         /** @var CategoryFactory $factory */
-        $factory  = app(CategoryFactory::class);
+        $factory          = app(CategoryFactory::class);
         $factory->setUser($this->user);
-        $color    = array_key_exists('color', $data) ? $data['color'] : null;
-        $category = $factory->findOrCreate(null, $data['name'], $color);
+        $color            = array_key_exists('color', $data) ? $data['color'] : null;
+        $category         = $factory->findOrCreate(null, $data['name'], $color);
 
         if (null === $category) {
             throw new FireflyException(sprintf('400003: Could not store new category with name "%s"', $data['name']));
@@ -330,6 +350,24 @@ class CategoryRepository implements CategoryRepositoryInterface, UserGroupInterf
         if (array_key_exists('notes', $data) && '' !== $data['notes']) {
             $this->updateNotes($category, $data['notes']);
         }
+
+        // todo duplicate code
+        $objectGroupTitle = $data['object_group_title'] ?? '';
+        if ('' !== $objectGroupTitle) {
+            $objectGroup = $this->findOrCreateObjectGroup($objectGroupTitle);
+            if ($objectGroup instanceof ObjectGroup) {
+                $category->objectGroups()->sync([$objectGroup->id]);
+            }
+        }
+        // try also with ID
+        $objectGroupId    = (int) ($data['object_group_id'] ?? 0);
+        if (0 !== $objectGroupId) {
+            $objectGroup = $this->findObjectGroupById($objectGroupId);
+            if ($objectGroup instanceof ObjectGroup) {
+                $category->objectGroups()->sync([$objectGroup->id]);
+            }
+        }
+        $category->save();
 
         return $category;
     }

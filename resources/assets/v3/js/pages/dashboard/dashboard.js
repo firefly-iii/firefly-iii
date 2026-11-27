@@ -28,6 +28,7 @@ import formatMoney from "../../util/format-money.js";
 import { getVariable } from "../../store/get-variable.js";
 import { getVariables } from "../../store/get-variables.js";
 import { drawMultiCurrencyChart } from "../../shared/draw-chart.js";
+import SankeyChart from "../../shared/sankey-chart.js";
 import formatDate from "../../util/format-date.js";
 import ReleaseNotes from "../../api/system/release-notes.js";
 import Post from "../../api/preferences/post.js";
@@ -36,7 +37,7 @@ import i18next from "i18next";
 
 let index = function () {
     return {
-        piggyBanks: [],
+        piggyBanks: {},
         anonymous: false,
         loadingPiggyBanks: true,
         init() {
@@ -52,7 +53,7 @@ let index = function () {
                     let showNewFeatures = false;
                     // const lastShowTime = (1791297200 - (48*60*60)) * 1000;
                     if (0 === lastShowTime && !shownWhatsNewDialog) {
-                        console.log("User needs new feature dialogue.");
+                        // console.log("User needs new feature dialogue.");
                         // alert('Show dialog because never seen before.');
                         showNewFeatures = true;
                     }
@@ -61,7 +62,7 @@ let index = function () {
                         const diff = now - lastShowTime;
                         const diffInDays = diff / (1000 * 60 * 60 * 24);
                         if (diffInDays > 2) {
-                            console.log("User needs new feature dialogue.");
+                            // console.log("User needs new feature dialogue.");
                             showNewFeatures = true;
                         }
                     }
@@ -74,7 +75,7 @@ let index = function () {
                                 version = "v" + version;
                             }
                             if (null === releaseNotes) {
-                                console.log("Release notes are NULL");
+                                // console.log("Release notes are NULL");
                                 // mark as seen by submitting a preference.
                                 // TODO make a function.
                                 const now = parseInt(new Date().getTime() / 1000);
@@ -110,37 +111,47 @@ let index = function () {
                     }
                 });
             }
-            getVariable("anonymous").then((value) => {
-                let start = new Date(window.store.get("start"));
-                let end = new Date(window.store.get("end"));
-                this.anonymous = value;
-                this.loadPiggyBanks();
-                drawMultiCurrencyChart(
-                    "line",
-                    "api/v1/chart/account/overview?period=1D&start=" +
-                        formatDate(start, "yyyy-LL-dd") +
-                        "&end=" +
-                        formatDate(end, "yyyy-LL-dd"),
-                    "accounts-chart",
-                    value,
-                    true,
-                    true,
-                );
+            getVariable("anonymous")
+                .then((value) => {
+                    let start = new Date(window.store.get("start"));
+                    let end = new Date(window.store.get("end"));
+                    this.anonymous = value;
+                    this.loadPiggyBanks();
+                    drawMultiCurrencyChart(
+                        "line",
+                        "api/v1/chart/account/overview?period=1D&start=" +
+                            formatDate(start, "yyyy-LL-dd") +
+                            "&end=" +
+                            formatDate(end, "yyyy-LL-dd"),
+                        "accounts-chart",
+                        value,
+                        true,
+                        true,
+                    );
 
-                drawMultiCurrencyChart(
-                    "stacked-column",
-                    "api/v1/chart/budget/overview-with-limits?start=" +
-                        formatDate(start, "yyyy-LL-dd") +
-                        "&end=" +
-                        formatDate(end, "yyyy-LL-dd"),
-                    "budgets-chart",
-                    value,
-                    false,
-                    true,
-                );
-            });
+                    drawMultiCurrencyChart(
+                        "stacked-column",
+                        "api/v1/chart/budget/overview-with-limits?start=" +
+                            formatDate(start, "yyyy-LL-dd") +
+                            "&end=" +
+                            formatDate(end, "yyyy-LL-dd"),
+                        "budgets-chart",
+                        value,
+                        false,
+                        true,
+                    );
+                })
+                .then(() => {
+                    getVariable("frontpageAccounts").then((value) => {
+                        let start = new Date(window.store.get("start"));
+                        let end = new Date(window.store.get("end"));
+                        let sankey = new SankeyChart(start, end, this.anonymous, value, "sankey-chart");
+                        sankey.loadChart();
+                    });
+                });
         },
         loadPiggyBanks() {
+            this.piggyBanks = {};
             this.downloadPiggyBanks(1);
         },
         downloadPiggyBanks(page) {
@@ -148,10 +159,28 @@ let index = function () {
                 for (let i = 0; i < response.data.data.length; i++) {
                     if (Object.hasOwn(response.data.data, i)) {
                         let current = response.data.data[i];
+
                         let currentAmount =
                             null === current.attributes.current_amount ? "0" : current.attributes.current_amount;
+                        let groupId = parseInt(current.attributes.object_group_id);
                         let targetAmount =
                             null === current.attributes.target_amount ? "0" : current.attributes.target_amount;
+                        let groupOrder = current.attributes.object_group_order;
+                        let groupTitle =
+                            current.attributes.object_group_title ?? i18next.t("firefly.default_group_title_name");
+                        if (0.0 === parseFloat(currentAmount)) {
+                            continue;
+                        }
+                        if (parseFloat(currentAmount) === parseFloat(targetAmount)) {
+                            continue;
+                        }
+                        this.piggyBanks[groupId] ??= {
+                            id: groupId,
+                            title: groupTitle,
+                            order: groupOrder,
+                            items: [],
+                        };
+
                         let piggy = {
                             id: current.id,
                             name: current.attributes.name,
@@ -169,7 +198,7 @@ let index = function () {
                             piggy.amount = "- / -";
                         }
 
-                        this.piggyBanks.push(piggy);
+                        this.piggyBanks[groupId].items.push(piggy);
                     }
                 }
 
@@ -178,7 +207,10 @@ let index = function () {
                     this.downloadPiggyBanks(page + 1);
                     return;
                 }
+                // sort groups.
+                this.piggyBanks = Object.values(this.piggyBanks).sort((a, b) => a.order - b.order);
                 this.loadingPiggyBanks = false;
+                // console.log("Loaded piggy banks: ", this.piggyBanks);
             });
         },
     };

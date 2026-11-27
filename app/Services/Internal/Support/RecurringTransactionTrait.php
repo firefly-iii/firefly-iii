@@ -98,8 +98,8 @@ trait RecurringTransactionTrait
             Log::debug(sprintf('Now at transaction #%d', $index));
             $sourceTypes     = config(sprintf('firefly.expected_source_types.source.%s', $recurrence->transactionType->type));
             $destTypes       = config(sprintf('firefly.expected_source_types.destination.%s', $recurrence->transactionType->type));
-            $source          = $this->findAccount($sourceTypes, $array['source_id'], null);
-            $destination     = $this->findAccount($destTypes, $array['destination_id'], null);
+            $source          = $this->findAccount($sourceTypes, $array['source_id'] ?? null, null);
+            $destination     = $this->findAccount($destTypes, $array['destination_id'] ?? null, null);
 
             /** @var TransactionCurrencyFactory $factory */
             $factory         = app(TransactionCurrencyFactory::class);

@@ -45,7 +45,11 @@ class CategoryFormRequest extends FormRequest
      */
     public function getCategoryData(): array
     {
-        return ['name' => $this->convertString('name'), 'notes' => $this->stringWithNewlines('notes')];
+        return [
+            'name'               => $this->convertString('name'),
+            'notes'              => $this->stringWithNewlines('notes'),
+            'object_group_title' => $this->convertString('object_group'),
+        ];
     }
 
     /**
@@ -63,7 +67,11 @@ class CategoryFormRequest extends FormRequest
         }
 
         // fixed
-        return ['name' => $nameRule, 'notes' => ['min:1', 'max:32768', 'nullable']];
+        return [
+            'name'         => $nameRule,
+            'notes'        => ['min:1', 'max:32768', 'nullable'],
+            'object_group' => ['min:0', 'max:255'],
+        ];
     }
 
     public function withValidator(Validator $validator): void

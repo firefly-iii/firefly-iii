@@ -41,7 +41,7 @@ export default () => ({
         ["@convert-to-primary.window"](event) {
             this.convertToPrimary = event.detail;
             this.accountList = [];
-            console.log("I heard that! (dashboard/boxes)");
+            // console.log("I heard that! (dashboard/boxes)");
             this.boxData = null;
             this.loadBoxes();
         },

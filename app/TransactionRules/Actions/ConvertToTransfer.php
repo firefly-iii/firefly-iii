@@ -240,6 +240,9 @@ class ConvertToTransfer implements ActionInterface
         $destTransaction->account_id = $opposing->id;
         $destTransaction->save();
 
+        Log::debug(sprintf('The source transaction now has account #%d ("%s")', $sourceTransaction->account_id, $sourceTransaction->account->name));
+        Log::debug(sprintf('The destination transaction now has account #%d ("%s")', $destTransaction->account_id, $destTransaction->account->name));
+
         // check if the currencies are a match.
         /** @var TransactionCurrency $sourceCurrency */
         $sourceCurrency              = $repository->getAccountCurrency($sourceAccount);

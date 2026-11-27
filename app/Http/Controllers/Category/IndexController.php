@@ -25,28 +25,14 @@ declare(strict_types=1);
 namespace FireflyIII\Http\Controllers\Category;
 
 use FireflyIII\Http\Controllers\Controller;
-use FireflyIII\Models\Category;
-use FireflyIII\Repositories\Category\CategoryRepositoryInterface;
-use FireflyIII\Support\Facades\Preferences;
 use Illuminate\Contracts\View\Factory;
-use Illuminate\Http\Request;
-use Illuminate\Pagination\LengthAwarePaginator;
-use Illuminate\Support\Collection;
-use Illuminate\View\View;
-use Psr\Container\ContainerExceptionInterface;
-use Psr\Container\NotFoundExceptionInterface;
+use Illuminate\Contracts\View\View;
 
 /**
  * Class IndexController
  */
 final class IndexController extends Controller
 {
-    /** @var CategoryRepositoryInterface The category repository */
-    private $repository;
-
-    /**
-     * CategoryController constructor.
-     */
     public function __construct()
     {
         parent::__construct();
@@ -54,37 +40,13 @@ final class IndexController extends Controller
         $this->middleware(function ($request, $next) {
             app('view')->share('title', (string) trans('firefly.categories'));
             app('view')->share('mainTitleIcon', 'bi-bookmark');
-            $this->repository = app(CategoryRepositoryInterface::class);
 
             return $next($request);
         });
     }
 
-    /**
-     * Show all categories.
-     *
-     * @return Factory|View
-     *
-     * @throws ContainerExceptionInterface
-     * @throws NotFoundExceptionInterface
-     */
-    public function index(Request $request): Factory|\Illuminate\Contracts\View\View
+    public function index(): Factory|View
     {
-        $page       = 0 === (int) $request->input('page') ? 1 : (int) $request->input('page');
-        $page       = clamp($page, 1, 2 ** 16);
-        $pageSize   = (int) Preferences::get('listPageSize', 50)->data;
-        $collection = $this->repository->getCategories();
-        $total      = $collection->count();
-        $collection = $collection->slice(($page - 1) * $pageSize, $pageSize);
-
-        $collection->each(function (Category $category): void {
-            $category->lastActivity = $this->repository->lastUseDate($category, new Collection());
-        });
-
-        // paginate categories
-        $categories = new LengthAwarePaginator($collection, $total, $pageSize, $page);
-        $categories->setPath(route('categories.index'));
-
-        return view('categories.index', ['categories' => $categories, 'page' => $page]);
+        return view('categories.index');
     }
 }

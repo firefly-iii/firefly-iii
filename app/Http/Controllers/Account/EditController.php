@@ -113,12 +113,6 @@ final class EditController extends Controller
             $interestPeriods[$period] = trans(sprintf('firefly.interest_calc_%s', $period));
         }
 
-        // put previous url in session if not redirect from store (not "return_to_edit").
-        if (true !== session('accounts.edit.fromUpdate')) {
-            $this->rememberPreviousUrl('accounts.edit.url');
-        }
-        $request->session()->forget('accounts.edit.fromUpdate');
-
         $openingBalanceAmount = (string) $repository->getOpeningBalanceAmount($account, false);
         if ('0' === $openingBalanceAmount) {
             $openingBalanceAmount = '';
@@ -157,6 +151,7 @@ final class EditController extends Controller
             'interest_period'         => $repository->getMetaValue($account, 'interest_period'),
             'notes'                   => $this->repository->getNoteText($account),
             'active'                  => $hasOldInput ? (bool) $request->old('active') : $account->active,
+            'object_group'            => null !== $account->objectGroups->first() ? $account->objectGroups->first()->title : '',
         ];
         if ('' === $openingBalanceAmount) {
             $preFilled['opening_balance'] = '';
@@ -213,14 +208,11 @@ final class EditController extends Controller
             $request->session()->flash('info', $this->attachments->getMessages()->get('attachments'));
         }
 
-        // redirect
+        // multi-tab redirect
         $from     = $request->input('_from', '');
         $redirect = redirect(route('index').$from);
 
         if (1 === (int) $request->input('return_to_edit')) {
-            // set value so edit routine will not overwrite URL:
-            $request->session()->put('accounts.edit.fromUpdate', true);
-
             $redirect = redirect(route('accounts.edit', [$account->id]))->withInput(['return_to_edit' => 1]);
         }
         Preferences::mark();

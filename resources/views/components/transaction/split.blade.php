@@ -250,10 +250,10 @@
                                     <div class="col">
                                         <select class="form-select" name="link_type_id" :data-index="index" :id="'link_type_id_' + index">
                                             <template x-for="type in formData.linkTypes ">
-                                                <option :value="type.id + '_inward'" :label="type.inward" x-text="type.inward"></option>
+                                                <option :value="type.id + '_inward'" :label="type.inward_translation" x-text="type.inward_translation"></option>
                                             </template>
                                             <template x-for="type in formData.linkTypes">
-                                                <option :value="type.id + '_outward'" :label="type.outward" x-text="type.outward"></option>
+                                                <option :value="type.id + '_outward'" :label="type.outward_translation" x-text="type.outward_translation"></option>
                                             </template>
                                         </select>
                                     </div>

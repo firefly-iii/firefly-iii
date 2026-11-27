@@ -25,4 +25,7 @@ export default class Put {
         let url = "/api/v1/transactions/" + parseInt(params.id);
         return api.put(url, submission);
     }
+    submit(submission, params) {
+        return this.put(submission, params);
+    }
 }

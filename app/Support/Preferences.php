@@ -26,6 +26,7 @@ namespace FireflyIII\Support;
 use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Models\Preference;
 use FireflyIII\Support\Singleton\PreferencesSingleton;
+use FireflyIII\Support\System\SafeDecrypter;
 use FireflyIII\User;
 use Illuminate\Contracts\Encryption\DecryptException;
 use Illuminate\Contracts\Encryption\EncryptException;
@@ -56,6 +57,37 @@ class Preferences
             })
             ->get()
         ;
+    }
+
+    public function allApiFiltered(): Collection
+    {
+        $user              = auth()->user();
+        if (null === $user) {
+            return new Collection();
+        }
+        $systemPreferences = config('firefly.api_hidden_preference_keys');
+
+        $set               = Preference::query()
+            ->where('user_id', $user->id)
+            ->where('name', '!=', 'currencyPreference')
+            ->where(static function (Builder $q) use ($user): void {
+                $q->whereNull('user_group_id');
+                $q->orWhere('user_group_id', $user->user_group_id);
+            })
+            ->whereNotIn('name', $systemPreferences)
+            ->get()
+        ;
+
+        // still needs some filtering:
+        return $set->filter(static function (Preference $preference) use ($systemPreferences): bool {
+            foreach ($systemPreferences as $systemPreference) {
+                if (str_starts_with($preference->name, $systemPreference)) {
+                    return false;
+                }
+            }
+
+            return true;
+        });
     }
 
     public function beginsWith(User $user, string $search): Collection
@@ -170,7 +202,7 @@ class Preferences
         }
 
         try {
-            $result->data = decrypt($result->data);
+            $result->data = SafeDecrypter::decryptString($result->data);
         } catch (DecryptException $e) {
             if ('The MAC is invalid.' === $e->getMessage()) {
                 Log::debug('Set data to NULL');
@@ -194,7 +226,7 @@ class Preferences
         }
 
         try {
-            $result->data = decrypt($result->data);
+            $result->data = SafeDecrypter::decryptString($result->data);
         } catch (DecryptException $e) {
             if ('The MAC is invalid.' === $e->getMessage()) {
                 Log::debug('Set data to NULL');

@@ -1,0 +1,507 @@
+import i18next from "i18next";
+import getCacheKey from "../store/get-cache-key.js";
+import { format } from "date-fns";
+import Get from "../api/model/transaction/get.js";
+import { Chart, LinearScale } from "chart.js";
+import { Flow, SankeyController } from "chartjs-chart-sankey";
+
+export default class {
+    start = null;
+    end = null;
+    anonymous = false;
+    translations = {};
+    holder = "";
+    loading = false;
+    transactions = [];
+    accounts = [];
+    currencies = [];
+    convertToPrimary = false;
+    processedData = {};
+    chart = null;
+    cacheKey = "ds_data_sankey";
+    constructor(start, end, anonymous, accounts, holder) {
+        this.start = start;
+        this.end = end;
+        this.accounts = accounts;
+        this.anonymous = anonymous;
+        this.holder = holder;
+        this.convertToPrimary = window.store.get("convert_to_primary");
+        // console.log('Convert to primary?', this.convertToPrimary);
+
+        // some translations:
+        this.translations.all_money = i18next.t("firefly.all_money");
+        this.translations.category = i18next.t("firefly.category");
+        this.translations.in = i18next.t("firefly.money_flowing_in");
+        this.translations.out = i18next.t("firefly.money_flowing_out");
+        this.translations.unknown_category = i18next.t("firefly.unknown_category_plain");
+        this.translations.unknown_source = i18next.t("firefly.unknown_source_plain");
+        this.translations.unknown_dest = i18next.t("firefly.unknown_dest_plain");
+        this.translations.unknown_account = i18next.t("firefly.unknown_any_plain");
+        this.translations.unknown_budget = i18next.t("firefly.unknown_budget_plain");
+        this.translations.expense_account = i18next.t("firefly.expense_account");
+        this.translations.revenue_account = i18next.t("firefly.revenue_account");
+        this.translations.budget = i18next.t("firefly.budget");
+    }
+
+    loadChart() {
+        if (true === this.loading) {
+            return;
+        }
+        this.loading = true;
+
+        if (0 !== this.transactions.length) {
+            this.drawChart(this.generateOptions());
+            this.loading = false;
+            return;
+        }
+        this.getFreshData();
+    }
+    getFreshData() {
+        const cacheKey = getCacheKey(this.cacheKey, { start: this.start, end: this.end });
+
+        const cacheValid = window.store.get("cacheValid");
+        let cachedData = window.store.get(cacheKey);
+
+        if (cacheValid && typeof cachedData !== "undefined") {
+            this.transactions = cachedData;
+            this.drawChart(this.generateOptions());
+            this.loading = false;
+            return;
+        }
+
+        let params = {
+            start: format(this.start, "y-MM-dd"),
+            end: format(this.end, "y-MM-dd"),
+            type: "withdrawal,deposit",
+            page: 1,
+        };
+        this.downloadTransactions(params);
+    }
+
+    downloadTransactions(params) {
+        const cacheKey = getCacheKey(this.cacheKey, {
+            convertToPrimary: this.convertToPrimary,
+            start: this.start,
+            end: this.end,
+        });
+
+        // console.log('Downloading page ' + params.page + '...');
+        const getter = new Get();
+        getter.list(params).then((response) => {
+            this.transactions = [...this.transactions, ...response.data.data];
+            if (parseInt(response.data.meta.pagination.total_pages) > params.page) {
+                // continue to next page.
+                params.page++;
+                this.downloadTransactions(params);
+                return;
+            }
+            // console.log("Transactions downloaded", this.transactions);
+            window.store.set(cacheKey, this.transactions);
+            this.drawChart(this.generateOptions());
+            this.loading = false;
+        });
+    }
+
+    generateOptions() {
+        const darkModeMql = window.matchMedia && window.matchMedia("(prefers-color-scheme: dark)");
+        let theme = document.documentElement.getAttribute("data-bs-theme");
+        // console.log(darkModeMql);
+        let color = "black";
+        if ((darkModeMql && darkModeMql.matches) || "dark" === theme) {
+            // dark mode
+            color = "white";
+        }
+        let options = {
+            type: "sankey",
+            data: {
+                datasets: [],
+            },
+            options: {
+                nodeMinSize: 8,
+                animations: false,
+                nodeLabels: {
+                    color: color,
+                    font: { size: 11 },
+                    padding: 3,
+                },
+                nodePadding: 12,
+                nodePaddingMode: "even",
+            },
+        };
+
+        // reset currencies
+        this.currencies = [];
+
+        // variables collected for the sankey chart:
+        this.parseTransactionGroups();
+
+        let dataSet =
+            // sankey chart has one data set.
+            {
+                label: "Firefly III dashboard sankey chart",
+                data: [],
+                colorFrom: (c) => this.getColor(c.dataset.data[c.dataIndex] ? c.dataset.data[c.dataIndex].from : ""),
+                colorTo: (c) => this.getColor(c.dataset.data[c.dataIndex] ? c.dataset.data[c.dataIndex].to : ""),
+                colorMode: "gradient", // or 'from' or 'to'
+                labels: this.processedData.labels,
+                size: "min", // or 'min' if flow overlap is preferred
+            };
+
+        // console.log("Add data to chart.");
+        for (let i in this.processedData.amounts) {
+            if (Object.hasOwn(this.processedData.amounts, i)) {
+                let amount = this.processedData.amounts[i];
+                dataSet.data.push({ from: amount.from, to: amount.to, flow: amount.amount });
+            }
+        }
+        options.data.datasets.push(dataSet);
+
+        return options;
+    }
+
+    parseTransactionGroups() {
+        //console.log('Will now process groups');
+        this.processedData = {
+            amounts: {},
+            labels: {},
+            counts: {},
+        };
+        for (let i in this.transactions) {
+            if (Object.hasOwn(this.transactions, i)) {
+                let group = this.transactions[i];
+                this.parseTransactionGroup(group);
+            }
+        }
+        this.groupProcessedData();
+        // console.log("Processed data", this.processedData);
+    }
+    groupProcessedData() {
+        // hier doen we even sorteren.
+        let unordered = Object.values(this.processedData.amounts);
+        //console.log("Sorting now");
+        unordered.sort(function (a, b) {
+            // console.log("Sort", a.amount);
+            return a.amount < b.amount ? 1 : -1;
+        });
+        // also do sums here.
+        let newAmounts = {};
+        let sums = {};
+        let counts = {};
+        for (let i = 0; i < unordered.length; i++) {
+            let current = unordered[i];
+            sums[current.type] = Object.hasOwn(sums, current.type)
+                ? sums[current.type] + current.amount
+                : current.amount;
+        }
+        // now loop again and decide if we want to add them to the chart.
+        // const percentage = 0.25; // 1 = 100%
+        for (let i = 0; i < unordered.length; i++) {
+            let current = unordered[i];
+            counts[current.type] = Object.hasOwn(counts, current.type) ? counts[current.type] + 1 : 1;
+            if (counts[current.type] > 20) {
+                // console.log("Ignore entry because count is over 20.", current);
+                // continue;
+            }
+            newAmounts[current.flowKey] = current;
+            // if (Object.hasOwn(sums, current.type)) {
+            //     // there is a sum for all of these.
+            //     // if the current is less than 25% of the total, ignore it.
+            //     if ("from-category" === current.type && current.amount < sums[current.type] * percentage) {
+            //         // console.log('Ignore because too small amount ('+current.amount+' is less than '+sums[current.type] * percentage+')', current);
+            //         //continue;
+            //     }
+            //     newAmounts[current.flowKey] = current;
+            // }
+            // sums[current.type] = Object.hasOwn(sums, current.type) ? sums[current.type] + current.amount : current.amount;
+        }
+        this.processedData.amounts = newAmounts;
+    }
+
+    parseTransactionGroup(group) {
+        // console.log('Will now process group #', group.id);
+        for (let ii in group.attributes.transactions) {
+            if (Object.hasOwn(group.attributes.transactions, ii)) {
+                // properties of the transaction, used in the generation of the chart:
+                let transaction = group.attributes.transactions[ii];
+                this.parseTransaction(transaction);
+            }
+        }
+    }
+    parseTransaction(transaction) {
+        // console.log('Will now process transaction #', transaction.transaction_journal_id);
+        let sourceId = parseInt(transaction.source_id);
+        let destinationId = parseInt(transaction.destination_id);
+        if (this.accounts.length > 0 && !this.accounts.includes(sourceId) && !this.accounts.includes(destinationId)) {
+            // console.log("Ignore this one");
+            return;
+        }
+        let currencyCode = transaction.currency_code;
+        let amount = parseFloat(transaction.amount);
+        if (this.convertToPrimary) {
+            currencyCode = transaction.primary_currency_code;
+            amount = parseFloat(transaction.pc_amount);
+        }
+
+        // eerst een som van alle items.
+        // toch daarna pas groepere zodat je de X grootste overhoudt.
+
+        if ("deposit" === transaction.type) {
+            this.parseDeposit(transaction, currencyCode, amount);
+            return;
+        }
+
+        if ("withdrawal" === transaction.type) {
+            this.parseWithdrawal(transaction, currencyCode, amount);
+        }
+    }
+
+    parseWithdrawal(transaction, currencyCode, amount) {
+        // console.log('Process as withdrawal');
+        /*
+        Three entries in the sankey diagram for withdrawals:
+        1. From the big box to a budget.
+        2. From a budget to a category.
+        3. From a category to an expense account.
+        */
+        const allMoneyFlowKey = this.translations.all_money + "-" + currencyCode;
+        let budget = this.getObjectName("budget", transaction.budget_name, "out", currencyCode);
+        let category = this.getObjectName("category", transaction.category_name, "out", currencyCode);
+        let expenseAccount = this.getObjectName("account", transaction.destination_name, "out", currencyCode);
+
+        let budgetId = null === transaction.budget_id ? 0 : parseInt(transaction.budget_id);
+        let categoryId = null === transaction.category_id ? 0 : parseInt(transaction.category_id);
+        let accountId = parseInt(transaction.destination_id);
+
+        let budgetLabel = this.getLabel("budget", transaction.budget_name, currencyCode);
+        let categoryLabel = this.getLabel("category", transaction.category_name, currencyCode);
+        let accountLabel = this.getLabel("account", transaction.destination_name, currencyCode);
+        // labels:
+        let flowKey;
+        this.processedData.labels[budget] = budgetLabel;
+        this.processedData.labels[category] = categoryLabel;
+        this.processedData.labels[expenseAccount] = accountLabel;
+
+        // first one, from all your money to a budget.
+
+        flowKey = allMoneyFlowKey + "-" + budget + "-" + currencyCode;
+
+        if (!Object.hasOwn(this.processedData.amounts, flowKey)) {
+            this.processedData.amounts[flowKey] = {
+                flowKey: flowKey,
+                from: this.translations.all_money + (this.convertToPrimary ? " (" + currencyCode + ")" : ""),
+                to: budget,
+                amount: 0,
+                type: "from-all",
+                id: budgetId,
+            };
+        }
+        this.processedData.amounts[flowKey].amount += amount;
+
+        // second one, from the budget to a category:
+        flowKey = budget + "-" + category + "-" + currencyCode;
+
+        if (!Object.hasOwn(this.processedData.amounts, flowKey)) {
+            this.processedData.amounts[flowKey] = {
+                flowKey: flowKey,
+                from: budget,
+                to: category,
+                amount: 0,
+                type: "from-budget",
+                id: categoryId,
+            };
+        }
+        // console.log('Add expense to flow "'+flowKey+'"');
+        this.processedData.amounts[flowKey].amount += amount;
+
+        // third one, from category to account.
+        flowKey = category + "-" + expenseAccount + "-" + currencyCode;
+
+        if (!Object.hasOwn(this.processedData.amounts, flowKey)) {
+            this.processedData.amounts[flowKey] = {
+                flowKey: flowKey,
+                from: category,
+                to: expenseAccount,
+                amount: 0,
+                type: "from-category",
+                id: accountId,
+            };
+        }
+        this.processedData.amounts[flowKey].amount += amount;
+    }
+
+    parseDeposit(transaction, currencyCode, amount) {
+        // console.log('Process as deposit');
+        /*
+        Two entries in the sankey diagram for deposits:
+        1. From the revenue account (source) to a category (in).
+        2. From the category (in) to the big inbox.
+        */
+        const allMoneyFlowKey = this.translations.all_money + "-" + currencyCode;
+        let category = this.getObjectName("category", transaction.category_name, "in", currencyCode);
+        let account = this.getObjectName("account", transaction.source_name, "in", currencyCode);
+
+        let accountId = parseInt(transaction.source_id);
+        let categoryId = null === transaction.category_id ? 0 : parseInt(transaction.category_id);
+        // labels
+        let flowKey;
+        this.processedData.labels[category] = this.getLabel("category", transaction.category_name, currencyCode);
+        this.processedData.labels[account] = this.getLabel("account", transaction.source_name, currencyCode);
+
+        // this is the first one, from account to category.
+        flowKey = account + "-" + category + "-" + currencyCode;
+        if (!Object.hasOwn(this.processedData.amounts, flowKey)) {
+            this.processedData.amounts[flowKey] = {
+                flowKey: flowKey,
+                from: account,
+                to: category,
+                amount: 0,
+                type: "to-category",
+                id: accountId,
+            };
+        }
+        this.processedData.amounts[flowKey].amount += amount;
+
+        // this is the second one, from category to "all your money"
+        flowKey = category + "-" + allMoneyFlowKey;
+        if (!Object.hasOwn(this.processedData.amounts, flowKey)) {
+            this.processedData.amounts[flowKey] = {
+                flowKey: flowKey,
+                from: category,
+                to: this.translations.all_money + (this.convertToPrimary ? " (" + currencyCode + ")" : ""),
+                amount: 0,
+                type: "to-expense",
+                id: categoryId,
+            };
+        }
+        this.processedData.amounts[flowKey].amount += amount;
+    }
+
+    getObjectName(type, name, direction, code) {
+        if (true === this.convertToPrimary) {
+            return this.getObjectNameWithoutCurrency(type, name, direction);
+        }
+        return this.getObjectNameWithCurrency(type, name, direction, code);
+    }
+
+    getLabel(type, name, code) {
+        if (true === this.convertToPrimary) {
+            return this.getLabelWithoutCurrency(type, name);
+        }
+        return this.getLabelWithCurrency(type, name, code);
+    }
+
+    getLabelWithoutCurrency(type, name) {
+        if ("category" === type) {
+            return null === name ? this.translations.unknown_category : this.translations.category + ' "' + name + '"';
+        }
+        if ("account" === type) {
+            return null === name ? this.translations.unknown_account : name;
+        }
+        if ("budget" === type) {
+            return null === name ? this.translations.unknown_budget : this.translations.budget + ' "' + name + '"';
+        }
+        console.error('[a] Cannot handle: type:"' + type + '"');
+    }
+    getLabelWithCurrency(type, name, code) {
+        if ("category" === type) {
+            return (
+                (null === name ? this.translations.unknown_category : this.translations.category + ' "' + name + '"') +
+                " (" +
+                code +
+                ")"
+            );
+        }
+        if ("account" === type) {
+            return (null === name ? this.translations.unknown_account : name) + " (" + code + ")";
+        }
+        if ("budget" === type) {
+            return (
+                (null === name ? this.translations.unknown_budget : this.translations.budget + ' "' + name + '"') +
+                " (" +
+                code +
+                ")"
+            );
+        }
+        console.error('[b] Cannot handle: type:"' + type + '"');
+    }
+
+    getObjectNameWithoutCurrency(type, name, direction) {
+        if ("category" === type) {
+            let catName =
+                null === name ? this.translations.unknown_category : this.translations.category + ' "' + name + '"';
+            let directionText = "in" === direction ? this.translations.in : this.translations.out;
+            return catName + " (" + directionText + ")";
+        }
+        if ("account" === type) {
+            let accountName = null === name ? this.translations.unknown_account : name;
+            let directionText = "in" === direction ? this.translations.in : this.translations.out;
+            let fullAccountName =
+                "in" === direction
+                    ? this.translations.revenue_account + ' "' + accountName + '"'
+                    : this.translations.expense_account + ' "' + accountName + '"';
+            return fullAccountName + " (" + directionText + ")";
+        }
+        if ("budget" === type) {
+            return null === name ? this.translations.unknown_budget : this.translations.budget + ' "' + name + '"';
+        }
+        console.error('[a] Cannot handle: type:"' + type + '", dir: "' + direction + '"');
+    }
+
+    getObjectNameWithCurrency(type, name, direction, code) {
+        if ("category" === type) {
+            let catName =
+                null === name ? this.translations.unknown_category : this.translations.category + ' "' + name + '"';
+            let directionText = "in" === direction ? this.translations.in : this.translations.out;
+            return catName + " (" + directionText + ", " + code + ")";
+        }
+        if ("account" === type) {
+            let accountName = null === name ? this.translations.unknown_account : name;
+            let directionText = "in" === direction ? this.translations.in : this.translations.out;
+            let fullAccountName =
+                "in" === direction
+                    ? this.translations.revenue_account + ' "' + accountName + '"'
+                    : this.translations.expense_account + ' "' + accountName + '"';
+            return fullAccountName + " (" + directionText + ", " + code + ")";
+        }
+        if ("budget" === type) {
+            return (
+                (null === name ? this.translations.unknown_budget : this.translations.budget + ' "' + name + '"') +
+                " (" +
+                code +
+                ")"
+            );
+        }
+        console.error('[b] Cannot handle: type:"' + type + '", dir: "' + direction + '"');
+    }
+
+    getColor(key) {
+        if (key.includes(this.translations.revenue_account)) {
+            return "forestgreen";
+        }
+        if (key.includes("(" + this.translations.in + ",")) {
+            return "green";
+        }
+
+        if (key.includes(this.translations.budget) || key.includes(this.translations.unknown_budget)) {
+            return "Orchid";
+        }
+        if (key.includes("(" + this.translations.out + ",")) {
+            return "MediumOrchid";
+        }
+
+        if (key.includes(this.translations.all_money)) {
+            return "blue";
+        }
+        return "red";
+    }
+    drawChart(options) {
+        if (null !== this.chart) {
+            this.chart.data.datasets = options.data.datasets;
+            this.chart.update();
+            return;
+        }
+        // console.log(options);
+        Chart.register(LinearScale, SankeyController, Flow);
+        this.chart = new Chart(document.getElementById(this.holder).getContext("2d"), options);
+    }
+}

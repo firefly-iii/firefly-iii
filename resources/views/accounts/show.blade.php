@@ -9,7 +9,7 @@
                         <div class="col">
                             <h3 class="card-title">
                                 @if($balances['balance'])
-                                    <span title="balance">
+                                    <span title="balance ({{ $now->toW3cString() }})">
                         {!! trans('firefly.chart_account_in_period', [
                                 'balance' => format_amount_by_symbol($balances['balance'], $currency->symbol, $currency->decimal_places, true),
                                 'name' => e($account->name),
@@ -17,7 +17,7 @@
                                 'end' => $end->isoFormat($monthAndDayFormat)])  !!}
                                 </span>
                                 @elseif($balances['pc_balance'])
-                                    <span title="pc_balance">
+                                    <span title="pc_balance ({{ $now->toW3cString() }})">
                             {!!  trans('firefly.chart_account_in_period', [
                                 'balance' => format_amount_by_symbol($balances['pc_balance'], $primaryCurrency->symbol, $primaryCurrency->decimal_places, true),
                                 'name' => e($account->name),
@@ -25,6 +25,7 @@
                                 'end' => $end->isoFormat($monthAndDayFormat)])  !!}
                                 </span>
                                 @endif
+
                             </h3>
                         </div>
                         <div class="col text-end">

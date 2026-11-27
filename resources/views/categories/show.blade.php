@@ -6,9 +6,30 @@
             <div class="@if($attachments->count() == 0) col-lg-6 col-md-12 col-sm-12 col-xs-12 @else col-lg-4 col-md-12 col-sm-12 col-xs-12 @endif ">
                 <div class="card mb-2">
                     <div class="card-header">
-                        <h3 class="card-title">
-                            {{ trans('firefly.chart_category_in_period', ['name' => $category->name, 'start' => $start->isoFormat($monthAndDayFormat), 'end' => $end->isoFormat($monthAndDayFormat)]) }}
-                        </h3>
+                        <div class="row">
+                            <div class="col">
+                                <h3 class="card-title">
+                                    {{ trans('firefly.chart_category_in_period', ['name' => $category->name, 'start' => $start->isoFormat($monthAndDayFormat), 'end' => $end->isoFormat($monthAndDayFormat)]) }}
+                                </h3>
+                            </div>
+
+                            <div class="col text-end">
+                                <div class="dropdown">
+                                    <button class="btn btn-sm btn-outline-secondary dropdown-toggle" type="button"
+                                            id="card_header_menu" data-bs-toggle="dropdown" aria-expanded="false">
+                                        <span class="bi bi-list"></span>
+                                    </button>
+                                    <ul class="dropdown-menu" aria-labelledby="card_header_menu">
+                                        <li><a class="dropdown-item"
+                                               href="{{ route('categories.edit', $category->id) }}?_from={{ urlencode($FF3_FROM) }}"><span
+                                                    class="bi bi-pencil"></span> {{ __('firefly.edit') }}</a></li>
+                                        <li><a class="dropdown-item"
+                                               href="{{ route('categories.delete', $category->id) }}?_from={{ urlencode($FF3_FROM) }}"><span
+                                                    class="bi bi-trash"></span> {{ __('firefly.delete') }}</a></li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
                     </div>
                     <div class="card-body">
                         <canvas id="specific-period" class="wide-chart" height="400" width="100%"></canvas>
@@ -18,9 +39,31 @@
             <div class="@if(0 === $attachments->count()) col-lg-6 col-md-12 col-sm-12 col-xs-12 @else col-lg-4 col-md-12 col-sm-12 col-xs-12 @endif ">
                 <div class="card mb-2">
                     <div class="card-header">
-                        <h3 class="card-title">
-                            {{ trans('firefly.chart_category_all', ['name' => $category->name]) }}
-                        </h3>
+
+                        <div class="row">
+                            <div class="col">
+                                <h3 class="card-title">
+                                    {{ trans('firefly.chart_category_all', ['name' => $category->name]) }}
+                                </h3>
+                            </div>
+                            <div class="col text-end">
+                                <div class="dropdown">
+                                    <button class="btn btn-sm btn-outline-secondary dropdown-toggle" type="button"
+                                            id="card_header_menu" data-bs-toggle="dropdown" aria-expanded="false">
+                                        <span class="bi bi-list"></span>
+                                    </button>
+                                    <ul class="dropdown-menu" aria-labelledby="card_header_menu">
+                                        <li><a class="dropdown-item"
+                                               href="{{ route('categories.edit', $category->id) }}?_from={{ urlencode($FF3_FROM) }}"><span
+                                                    class="bi bi-pencil"></span> {{ __('firefly.edit') }}</a></li>
+                                        <li><a class="dropdown-item"
+                                               href="{{ route('categories.delete', $category->id) }}?_from={{ urlencode($FF3_FROM) }}"><span
+                                                    class="bi bi-trash"></span> {{ __('firefly.delete') }}</a></li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+
                     </div>
                     <div class="card-body">
                         <canvas id="category-everything" class="wide-chart" height="400" width="100%"></canvas>
@@ -33,9 +76,29 @@
             <div class="@if(0 === $attachments->count()) col-lg-12 col-md-12 col-sm-12 col-xs-12 @else col-lg-8 col-md-12 col-sm-12 col-xs-12 @endif ">
                 <div class="card mb-2">
                     <div class="card-header">
-                        <h3 class="card-title">
-                            {{ trans('firefly.chart_category_all', ['name' => $category->name ]) }}
-                        </h3>
+                        <div class="row">
+                            <div class="col">
+                                <h3 class="card-title">
+                                    {{ trans('firefly.chart_category_all', ['name' => $category->name ]) }}
+                                </h3>
+                            </div>
+                            <div class="col text-end">
+                                <div class="dropdown">
+                                    <button class="btn btn-sm btn-outline-secondary dropdown-toggle" type="button"
+                                            id="card_header_menu" data-bs-toggle="dropdown" aria-expanded="false">
+                                        <span class="bi bi-list"></span>
+                                    </button>
+                                    <ul class="dropdown-menu" aria-labelledby="card_header_menu">
+                                        <li><a class="dropdown-item"
+                                               href="{{ route('categories.edit', $category->id) }}?_from={{ urlencode($FF3_FROM) }}"><span
+                                                    class="bi bi-pencil"></span> {{ __('firefly.edit') }}</a></li>
+                                        <li><a class="dropdown-item"
+                                               href="{{ route('categories.delete', $category->id) }}?_from={{ urlencode($FF3_FROM) }}"><span
+                                                    class="bi bi-trash"></span> {{ __('firefly.delete') }}</a></li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
                     </div>
                     <div class="card-body">
                         <canvas id="category-everything" class="wide-chart" height="400" width="100%"></canvas>
@@ -52,7 +115,7 @@
                         </h3>
                     </div>
                     <div class="card-body p-0">
-                        <x-lists.attachments :attachments="$attachments" />
+                        <x-lists.attachments :attachments="$attachments"/>
                     </div>
                 </div>
             </div>
@@ -75,7 +138,7 @@
                 </div>
                 <div class="card-body">
                     @if(count($periods) > 0)
-                        <x-lists.groups-large :groups="$groups" />
+                        <x-lists.groups-large :groups="$groups"/>
                         <p>
                             <span class="bi bi-calendar"></span>
                             <a href="{{ route('categories.show.all', [$category->id]) }}">
@@ -83,7 +146,7 @@
                             </a>
                         </p>
                     @else
-                        <x-lists.groups-large :groups="$groups" />
+                        <x-lists.groups-large :groups="$groups"/>
                         <p>
                             <span class="bi bi-calendar"></span>
                             <a href="{{ route('categories.show', [$category->id]) }}">
@@ -96,7 +159,7 @@
         </div>
         @if(count($periods) > 0)
             <div class="col-lg-2 col-md-4 col-sm-12 col-xs-12">
-                <x-lists.periods :periods="$periods" />
+                <x-lists.periods :periods="$periods"/>
             </div>
         @endif
     </div>
@@ -104,15 +167,15 @@
 @endsection
 @section('scripts')
     @vite(['js/pages/generic.js'])
-     <script nonce="{{ $JS_NONCE }}">
+    <script nonce="{{ $JS_NONCE }}">
         var current = '{{ route('chart.category.current', [$category->id]) }}';
         var everything = '{{ route('chart.category.all', [$category->id]) }}';
         var specific = '{{ route('chart.category.specific', [$category->id, $start->format('Ymd')]) }}';
     </script>
-     <script src="v1/js/lib/Chart.bundle.min.js?v={{ $FF_BUILD_TIME }}" nonce="{{ $JS_NONCE }}"></script>
-     <script src="v1/js/ff/charts.defaults.js?v={{ $FF_BUILD_TIME }}" nonce="{{ $JS_NONCE }}"></script>
-     <script src="v1/js/ff/charts.js?v={{ $FF_BUILD_TIME }}" nonce="{{ $JS_NONCE }}"></script>
-     <script src="v1/js/ff/categories/show.js?v={{ $FF_BUILD_TIME }}" nonce="{{ $JS_NONCE }}"></script>
+    <script src="v1/js/lib/Chart.bundle.min.js?v={{ $FF_BUILD_TIME }}" nonce="{{ $JS_NONCE }}"></script>
+    <script src="v1/js/ff/charts.defaults.js?v={{ $FF_BUILD_TIME }}" nonce="{{ $JS_NONCE }}"></script>
+    <script src="v1/js/ff/charts.js?v={{ $FF_BUILD_TIME }}" nonce="{{ $JS_NONCE }}"></script>
+    <script src="v1/js/ff/categories/show.js?v={{ $FF_BUILD_TIME }}" nonce="{{ $JS_NONCE }}"></script>
     {{-- required for groups.twig --}}
-     <script src="v1/js/ff/list/groups.js?v={{ $FF_BUILD_TIME }}" nonce="{{ $JS_NONCE }}"></script>
+    <script src="v1/js/ff/list/groups.js?v={{ $FF_BUILD_TIME }}" nonce="{{ $JS_NONCE }}"></script>
 @endsection

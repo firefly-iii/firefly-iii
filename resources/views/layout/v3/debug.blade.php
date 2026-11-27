@@ -14,7 +14,7 @@
     please visit the following page: https://bit.ly/FF3-broken-base-href
     -->
     <base href="{{ route('index', null, true) }}/">
-    <title>{{ __('firefly.login_page_title')  }}</title>
+    <title>{{ __('firefly.debug_page')  }}</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes"/>
     <meta name="theme-color" content="#007bff" media="(prefers-color-scheme: light)"/>
     <meta name="theme-color" content="#1a1a1a" media="(prefers-color-scheme: dark)"/>

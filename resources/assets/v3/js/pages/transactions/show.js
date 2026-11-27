@@ -94,7 +94,7 @@ let show = function () {
                             i18next.t("config.date_time_fns", { lng: locale }),
                             locale,
                         );
-                        console.log("Date formatted is", current.dateFormatted);
+                        // console.log("Date formatted is", current.dateFormatted);
                         this.group.transactions.push(current);
                     }
                 }

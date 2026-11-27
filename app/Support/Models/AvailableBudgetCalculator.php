@@ -32,9 +32,6 @@ use FireflyIII\Support\Facades\Navigation;
 use FireflyIII\Support\Facades\Preferences;
 use FireflyIII\User;
 use Illuminate\Support\Facades\Log;
-use Spatie\Period\Boundaries;
-use Spatie\Period\Period;
-use Spatie\Period\Precision;
 
 class AvailableBudgetCalculator
 {
@@ -59,23 +56,23 @@ class AvailableBudgetCalculator
         // based on the view range of the user (month week quarter etc) the budget limit could
         // either overlap multiple available budget periods or be contained in a single one.
         // all have to be created or updated.
-        $start       = Navigation::startOfPeriod($this->start, $this->viewRange);
-        $end         = Navigation::startOfPeriod($this->end, $this->viewRange);
-        $end         = Navigation::endOfPeriod($end, $this->viewRange);
+        $start   = Navigation::startOfPeriod($this->start, $this->viewRange);
+        $end     = Navigation::startOfPeriod($this->end, $this->viewRange);
+        $end     = Navigation::endOfPeriod($end, $this->viewRange);
 
         if ($end < $start) {
             [$start, $end] = [$end, $start];
+            Log::debug(sprintf('Corrected start to %s and end to %s.', $start->format('Y-m-d'), $end->format('Y-m-d')));
         }
-        Log::debug(sprintf('Corrected start to %s and end to %s.', $start->format('Y-m-d'), $end->format('Y-m-d')));
 
         // limit period in total is:
-        $limitPeriod = Period::make($start, $end, precision: Precision::DAY(), boundaries: Boundaries::EXCLUDE_NONE());
-        Log::debug(sprintf('Limit period is from %s to %s', $start->format('Y-m-d'), $end->format('Y-m-d')));
+        // $limitPeriod = Period::make($start, $end, precision: Precision::DAY(), boundaries: Boundaries::EXCLUDE_NONE());
+        // Log::debug(sprintf('Limit period is from %s to %s', $start->format('Y-m-d'), $end->format('Y-m-d')));
 
         // from the start until the end of the budget limit, need to loop!
-        $count       = 0;
-        $max         = 14_600; // 40 years in days.
-        $current     = clone $start;
+        $count   = 0;
+        $max     = 14_600; // 40 years in days.
+        $current = clone $start;
         while ($current <= $end) {
             if ($count > $max) {
                 Log::error(sprintf('Count %d is greater than max %d, stop.', $count, $max));

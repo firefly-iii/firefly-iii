@@ -88,6 +88,7 @@ class UpdateRequest extends FormRequest
             'notes'                     => ['nullable', 'min:1', 'max:32768'],
             'auto_budget_type'          => 'in:reset,rollover,adjusted,none',
             'auto_budget_currency_id'   => 'exists:transaction_currencies,id',
+            'order'                     => ['numeric', 'nullable', 'min:0', 'max:16777216'],
             'auto_budget_currency_code' => 'exists:transaction_currencies,code',
             'auto_budget_amount'        => ['nullable', new IsValidPositiveAmount()],
             'auto_budget_period'        => 'in:daily,weekly,monthly,quarterly,half_year,yearly',

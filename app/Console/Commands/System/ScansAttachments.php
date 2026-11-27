@@ -26,9 +26,9 @@ namespace FireflyIII\Console\Commands\System;
 
 use FireflyIII\Console\Commands\ShowsFriendlyMessages;
 use FireflyIII\Models\Attachment;
+use FireflyIII\Support\System\SafeDecrypter;
 use Illuminate\Console\Command;
 use Illuminate\Contracts\Encryption\DecryptException;
-use Illuminate\Support\Facades\Crypt;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Storage;
 use Safe\Exceptions\FileinfoException;
@@ -71,7 +71,7 @@ class ScansAttachments extends Command
             }
 
             try {
-                $decryptedContent = Crypt::decrypt($encryptedContent); // verified
+                $decryptedContent = SafeDecrypter::decryptString($encryptedContent); // verified
             } catch (DecryptException $e) {
                 Log::error(sprintf('Could not decrypt data of attachment #%d: %s', $attachment->id, $e->getMessage()));
                 $decryptedContent = $encryptedContent;

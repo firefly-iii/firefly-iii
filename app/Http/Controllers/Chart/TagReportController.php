@@ -218,11 +218,7 @@ final class TagReportController extends Controller
                     $journalData                           = $this->resolveJournalAmountAndCurrency($journal, $currency);
                     $spentKey                              = sprintf('%d-spent', $journalData['currency_id']);
                     $chartData[$spentKey]                  ??= [
-                        'label'           => sprintf(
-                            '%s (%s)',
-                            (string) trans('firefly.spent_in_specific_tag', ['tag' => $tag->tag]),
-                            $journalData['currency_name']
-                        ),
+                        'label'           => sprintf('%s (%s)', (string) trans('firefly.spent_in_specific_tag', ['tag' => $tag->tag]), $journalData['currency_name']),
                         'type'            => 'bar',
                         'currency_symbol' => $journalData['currency_symbol'],
                         'currency_code'   => $journalData['currency_code'],
@@ -244,11 +240,7 @@ final class TagReportController extends Controller
                     $journalData                           = $this->resolveJournalAmountAndCurrency($journal, $currency);
                     $spentKey                              = sprintf('%d-earned', $journalData['currency_id']);
                     $chartData[$spentKey]                  ??= [
-                        'label'           => sprintf(
-                            '%s (%s)',
-                            (string) trans('firefly.earned_in_specific_tag', ['tag' => $tag->tag]),
-                            $journalData['currency_name']
-                        ),
+                        'label'           => sprintf('%s (%s)', (string) trans('firefly.earned_in_specific_tag', ['tag' => $tag->tag]), $journalData['currency_name']),
                         'type'            => 'bar',
                         'currency_symbol' => $journalData['currency_symbol'],
                         'currency_code'   => $journalData['currency_code'],

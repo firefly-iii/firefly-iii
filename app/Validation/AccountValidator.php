@@ -50,11 +50,11 @@ class AccountValidator
     use TransferValidation;
     use WithdrawalValidation;
 
-    public bool     $createMode  = false;
-    public string   $destError   = 'No error yet.';
-    public ?Account $destination = null;
-    public ?Account $source      = null;
-    public string   $sourceError = 'No error yet.';
+    public bool         $createMode  = false;
+    public string       $destError   = 'No error yet.';
+    public ?Account $destination     = null;
+    public ?Account $source          = null;
+    public string       $sourceError = 'No error yet.';
     private AccountRepositoryInterface $accountRepository;
     private array $combinations;
     private string $transactionType;

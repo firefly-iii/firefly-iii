@@ -133,13 +133,7 @@ class CreateAutoBudgetLimits implements ShouldQueue
         // if has one, calculate expenses and use that as a base.
         $repository      = app(OperationsRepositoryInterface::class);
         $repository->setUser($autoBudget->budget->user);
-        $spent           = $repository->sumExpenses(
-            $previousStart,
-            $previousEnd,
-            null,
-            new Collection()->push($autoBudget->budget),
-            $autoBudget->transactionCurrency
-        );
+        $spent           = $repository->sumExpenses($previousStart, $previousEnd, null, new Collection()->push($autoBudget->budget), $autoBudget->transactionCurrency);
         $currencyId      = $autoBudget->transaction_currency_id;
         $spentAmount     = $spent[$currencyId]['sum'] ?? '0';
         Log::debug(sprintf('Spent in previous budget period (%s-%s) is %s', $previousStart->format('Y-m-d'), $previousEnd->format('Y-m-d'), $spentAmount));
@@ -150,22 +144,29 @@ class CreateAutoBudgetLimits implements ShouldQueue
         $budgetAvailable = bcadd(bcadd($budgetLimit->amount, $autoBudget->amount), $spentAmount);
         $totalAmount     = $autoBudget->amount;
         Log::debug(sprintf('Total amount available for current budget period is %s', $budgetAvailable));
-
-        if (-1 !== bccomp($budgetAvailable, $totalAmount)) {
+        $compare         = bccomp($budgetAvailable, $totalAmount);
+        $belowZero       = bccomp($budgetAvailable, '0');
+        if (0 === $compare || 1 === $compare) {
             Log::info(sprintf('There is no overspending, no need to adjust. Budget limit amount will be %s.', $budgetAvailable));
             // create budget limit:
             $this->createBudgetLimit($autoBudget, $start, $end, $budgetAvailable);
+            Log::debug(sprintf('Done with auto budget #%d', $autoBudget->id));
+
+            return;
         }
-        if (1 !== bccomp($budgetAvailable, $totalAmount) && 1 === bccomp($budgetAvailable, '0')) {
+
+        if (1 === $belowZero || 0 === $belowZero) {
             Log::info(sprintf('There was overspending, so the new amount will be %s.', $budgetAvailable));
             // create budget limit:
             $this->createBudgetLimit($autoBudget, $start, $end, $budgetAvailable);
+            Log::debug(sprintf('Done with auto budget #%d', $autoBudget->id));
+
+            return;
         }
-        if (1 !== bccomp($budgetAvailable, $totalAmount) && -1 === bccomp($budgetAvailable, '0')) {
-            Log::info('There was overspending, but so much even this period cant fix that. Reset it to 1.');
-            // create budget limit:
-            $this->createBudgetLimit($autoBudget, $start, $end, '1');
-        }
+
+        Log::info('There was overspending, but so much even this period cant fix that. Reset it to 1.');
+        // create budget limit:
+        $this->createBudgetLimit($autoBudget, $start, $end, '1');
         Log::debug(sprintf('Done with auto budget #%d', $autoBudget->id));
     }
 
@@ -229,13 +230,7 @@ class CreateAutoBudgetLimits implements ShouldQueue
         // if has one, calculate expenses and use that as a base.
         $repository    = app(OperationsRepositoryInterface::class);
         $repository->setUser($autoBudget->budget->user);
-        $spent         = $repository->sumExpenses(
-            $previousStart,
-            $previousEnd,
-            null,
-            new Collection()->push($autoBudget->budget),
-            $autoBudget->transactionCurrency
-        );
+        $spent         = $repository->sumExpenses($previousStart, $previousEnd, null, new Collection()->push($autoBudget->budget), $autoBudget->transactionCurrency);
         $currencyId    = $autoBudget->transaction_currency_id;
         $spentAmount   = $spent[$currencyId]['sum'] ?? '0';
         Log::debug(sprintf('Spent in previous budget period (%s-%s) is %s', $previousStart->format('Y-m-d'), $previousEnd->format('Y-m-d'), $spentAmount));

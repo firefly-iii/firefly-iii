@@ -60,7 +60,10 @@ class BudgetLimitRepository implements BudgetLimitRepositoryInterface, UserGroup
      */
     public function budgeted(Carbon $start, Carbon $end, TransactionCurrency $currency, ?Collection $budgets = null): string
     {
-        $query  = BudgetLimit::leftJoin('budgets', 'budgets.id', '=', 'budget_limits.budget_id')
+        Log::debug(sprintf('Call budgeted(%s, %s, %s)', $start->format('Y-m-d'), $end->format('Y-m-d'), $currency->code));
+        $query  = BudgetLimit::query()
+            ->with(['budget'])
+            ->leftJoin('budgets', 'budgets.id', '=', 'budget_limits.budget_id')
             // same complex where query as below.
             ->where(static function (Builder $q5) use ($start, $end): void {
                 $q5->where(static function (Builder $q1) use ($start, $end): void {
@@ -96,9 +99,34 @@ class BudgetLimitRepository implements BudgetLimitRepositoryInterface, UserGroup
 
                 continue;
             }
-            $period       = Period::make($start, $end, precision: Precision::DAY(), boundaries: Boundaries::EXCLUDE_NONE());
-            $amountPerDay = $this->getDailyAmount($budgetLimit);
-            $result       = bcadd($result, bcmul((string) $period->length(), $amountPerDay));
+            $ogAmount            = $budgetLimit->amount;
+            // if the budget limit starts before $start, correct for expenses.
+            if ($budgetLimit->start_date->lt($start)) {
+                $opsRepository = app(OperationsRepositoryInterface::class);
+                $opsRepository->setUser($this->user);
+                $spentEnd      = $start->clone();
+                $spentEnd->subDay()->endOfDay();
+                $sum           = $opsRepository->sumExpenses(
+                    $budgetLimit->start_date,
+                    $spentEnd,
+                    null,
+                    collect([$budgetLimit->budget]),
+                    $budgetLimit->transactionCurrency
+                );
+                if (count($sum) > 0) {
+                    $spentAmount         = $sum[(int) $budgetLimit->transactionCurrency->id]['sum'] ?? '0';
+                    Log::debug(sprintf('Expenses between %s and %s', $budgetLimit->start_date->format('Y-m-d'), $spentEnd->format('Y-m-d')), $sum);
+                    $budgetLimit->amount = bcadd($budgetLimit->amount, $spentAmount);
+                    if (-1 === bccomp($budgetLimit->amount, '0')) {
+                        $budgetLimit->amount = '0';
+                    }
+                }
+            }
+
+            $period              = Period::make($start, $end, precision: Precision::DAY(), boundaries: Boundaries::EXCLUDE_NONE());
+            $amountPerDay        = $this->getDailyAmount($budgetLimit);
+            $result              = bcadd($result, bcmul((string) $period->length(), $amountPerDay));
+            $budgetLimit->amount = $ogAmount;
         }
 
         return $result;

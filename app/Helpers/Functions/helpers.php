@@ -85,7 +85,7 @@ if (!function_exists('escape_for_js')) {
 
                 $codepoint = mb_ord($char, 'UTF-8');
                 if (0x1_0000 > $codepoint) {
-                    return \sprintf('\u%04X', $codepoint);
+                    return sprintf('\u%04X', $codepoint);
                 }
 
                 // Split characters outside the BMP into surrogate pairs
@@ -94,7 +94,7 @@ if (!function_exists('escape_for_js')) {
                 $high      = 0xD800 | ($u >> 10);
                 $low       = 0xDC00 | ($u & 0x3FF);
 
-                return \sprintf('\u%04X\u%04X', $high, $low);
+                return sprintf('\u%04X\u%04X', $high, $low);
             },
             $string
         );
@@ -170,7 +170,7 @@ if (!function_exists('normal_journal_object_amount')) {
         if (TransactionTypeEnum::TRANSFER->value === $type) {
             $colored = false;
         }
-        $result     = Amount::formatFlat($currency->symbol, $currency->decimal_places, $amount, $colored);
+        $result     = Amount::formatFlat(e($currency->symbol), $currency->decimal_places, $amount, $colored);
         if (TransactionTypeEnum::TRANSFER->value === $type) {
             return sprintf('<span class="text-info money-transfer">%s</span>', $result);
         }
@@ -189,7 +189,7 @@ if (!function_exists('journal_object_has_foreign')) {
     }
 }
 
-if (function_exists('foreign_journal_object_amount')) {
+if (!function_exists('foreign_journal_object_amount')) {
     function foreign_journal_object_amount(TransactionJournal $journal): string
     {
         $type       = $journal->transactionType->type;
@@ -206,7 +206,7 @@ if (function_exists('foreign_journal_object_amount')) {
         if (TransactionTypeEnum::TRANSFER->value === $type) {
             $colored = false;
         }
-        $result     = Amount::formatFlat($currency->symbol, $currency->decimal_places, $amount, $colored);
+        $result     = Amount::formatFlat(e($currency->symbol), $currency->decimal_places, $amount, $colored);
         if (TransactionTypeEnum::TRANSFER->value === $type) {
             return sprintf('<span class="text-info money-transfer">%s</span>', $result);
         }
@@ -285,14 +285,14 @@ if (!function_exists('mime_icon')) {
     function mime_icon(string $file): string
     {
         return match ($file) {
-            'application/pdf'                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                           => 'bi-file-earmark-pdf',
+            'application/pdf'                                          => 'bi-file-earmark-pdf',
             'image/webp',
             'image/png',
             'image/jpeg',
             'image/svg+xml',
             'image/heic',
             'image/heic-sequence',
-            'application/vnd.oasis.opendocument.image'                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                  => 'bi-file-earmark-image',
+            'application/vnd.oasis.opendocument.image'                 => 'bi-file-earmark-image',
             'application/msword',
             'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
             'application/vnd.openxmlformats-officedocument.wordprocessingml.template',
@@ -305,7 +305,7 @@ if (!function_exists('mime_icon')) {
             'application/vnd.oasis.opendocument.text',
             'application/vnd.oasis.opendocument.text-template',
             'application/vnd.oasis.opendocument.text-web',
-            'application/vnd.oasis.opendocument.text-master'                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            => 'bi-file-earmark-word',
+            'application/vnd.oasis.opendocument.text-master'           => 'bi-file-earmark-word',
             'application/vnd.ms-excel',
             'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
             'application/vnd.openxmlformats-officedocument.spreadsheetml.template',
@@ -313,7 +313,7 @@ if (!function_exists('mime_icon')) {
             'application/vnd.sun.xml.calc.template',
             'application/vnd.stardivision.calc',
             'application/vnd.oasis.opendocument.spreadsheet',
-            'application/vnd.oasis.opendocument.spreadsheet-template'                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                   => 'bi-file-earmark-excel',
+            'application/vnd.oasis.opendocument.spreadsheet-template'  => 'bi-file-earmark-excel',
             'application/vnd.ms-powerpoint',
             'application/vnd.openxmlformats-officedocument.presentationml.presentation',
             'application/vnd.openxmlformats-officedocument.presentationml.template',
@@ -322,18 +322,18 @@ if (!function_exists('mime_icon')) {
             'application/vnd.sun.xml.impress.template',
             'application/vnd.stardivision.impress',
             'application/vnd.oasis.opendocument.presentation',
-            'application/vnd.oasis.opendocument.presentation-template'                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                  => 'bi-file-earmark-slides',
+            'application/vnd.oasis.opendocument.presentation-template' => 'bi-file-earmark-slides',
             'application/vnd.sun.xml.draw',
             'application/vnd.sun.xml.draw.template',
             'application/vnd.stardivision.draw',
-            'application/vnd.oasis.opendocument.chart'                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                  => 'bi-file-earmark-easel',
+            'application/vnd.oasis.opendocument.chart'                 => 'bi-file-earmark-easel',
             'application/vnd.oasis.opendocument.graphics',
             'application/vnd.oasis.opendocument.graphics-template',
             'application/vnd.sun.xml.math',
             'application/vnd.stardivision.math',
             'application/vnd.oasis.opendocument.formula',
-            'application/vnd.oasis.opendocument.database'                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                               => 'bi-file-earmark-rules',
-            default                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                     => 'bi-file-earmark'
+            'application/vnd.oasis.opendocument.database'              => 'bi-file-earmark-rules',
+            default                                                    => 'bi-file-earmark'
         };
     }
 }
@@ -372,7 +372,7 @@ if (!function_exists('format_amount_by_symbol')) {
     {
         $amount = null === $amount ? '0' : $amount;
 
-        return Steam::formatAmountBySymbol($amount, $symbol, $decimalPlaces, $coloured);
+        return Steam::formatAmountBySymbol($amount, e($symbol), $decimalPlaces, $coloured);
     }
 }
 
@@ -393,8 +393,20 @@ if (!function_exists('menu_sub_item_active')) {
     function menu_sub_item_active(string $route, string $objectType): string
     {
         $name = Route::getCurrentRoute()->getName() ?? '';
-        Log::debug(sprintf('menuSubItemActive("%s" = "%s","%s" = "%s")', $route, $name, $objectType, Route::getCurrentRoute()->parameter('objectType')));
+        // Log::debug(sprintf('menuSubItemActive("%s" = "%s","%s" = "%s")', $route, $name, $objectType, Route::getCurrentRoute()->parameter('objectType')));
         if ($name === $route && $objectType === Route::getCurrentRoute()->parameter('objectType')) {
+            return 'active';
+        }
+
+        return '';
+    }
+}
+
+if (!function_exists('menu_item_active')) {
+    function menu_item_active(string $route): string
+    {
+        $name = Route::getCurrentRoute()->getName() ?? '';
+        if ($name === $route) {
             return 'active';
         }
 
@@ -406,7 +418,7 @@ if (!function_exists('menu_item_active_partial')) {
     function menu_item_active_partial(string $route): string
     {
         $name = Route::getCurrentRoute()->getName() ?? '';
-        Log::debug(sprintf('menuItemActivePartial("%s" starts with "%s")', $name, $route));
+        // Log::debug(sprintf('menuItemActivePartial("%s" starts with "%s")', $name, $route));
         if (str_starts_with($name, $route)) {
             return 'active';
         }
@@ -419,7 +431,7 @@ if (!function_exists('menu_open_partial')) {
     function menu_open_partial(string $route): string
     {
         $name = Route::getCurrentRoute()->getName() ?? '';
-        Log::debug(sprintf('menuOpenPartial("%s" starts with "%s")', $name, $route));
+        // Log::debug(sprintf('menuOpenPartial("%s" starts with "%s")', $name, $route));
         if (str_starts_with($name, $route)) {
             return 'menu-open';
         }
@@ -618,7 +630,7 @@ if (!function_exists('blade_escape_js')) {
 
                 $codepoint = mb_ord($char, 'UTF-8');
                 if (0x10_000 > $codepoint) {
-                    return \sprintf('\u%04X', $codepoint);
+                    return sprintf('\u%04X', $codepoint);
                 }
 
                 // Split characters outside the BMP into surrogate pairs
@@ -627,7 +639,7 @@ if (!function_exists('blade_escape_js')) {
                 $high      = 0xD800 | ($u >> 10);
                 $low       = 0xDC00 | ($u & 0x3FF);
 
-                return \sprintf('\u%04X\u%04X', $high, $low);
+                return sprintf('\u%04X\u%04X', $high, $low);
             },
             $string
         );
