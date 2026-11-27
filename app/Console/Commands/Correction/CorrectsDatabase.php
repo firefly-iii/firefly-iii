@@ -49,7 +49,6 @@ class CorrectsDatabase extends Command
         $commands = [
             'correction:restore-oauth-keys',
             'correction:timezones',
-            'correction:create-group-memberships',
             'correction:group-information',
             'correction:piggy-banks',
             'correction:link-types',
