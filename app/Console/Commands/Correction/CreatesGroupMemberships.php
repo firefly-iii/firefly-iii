@@ -27,7 +27,6 @@ namespace FireflyIII\Console\Commands\Correction;
 use FireflyIII\Console\Commands\ShowsFriendlyMessages;
 use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Support\Authentication\HandlesUserRegistrationTrait;
-use FireflyIII\User;
 use Illuminate\Console\Command;
 
 class CreatesGroupMemberships extends Command
