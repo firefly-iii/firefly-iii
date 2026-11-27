@@ -3,7 +3,7 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
-## v6.7.10 - 2026-11-20
+## v6.7.10 - 2026-11-27
 
 <!-- summary: This release fixes several (security) issues and introduces a sankey chart. -->
 
