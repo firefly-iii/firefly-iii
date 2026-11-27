@@ -38,24 +38,24 @@ trait HandlesUserRegistrationTrait
      */
     protected function createGroupMembership(User $user, bool $isNewUser = false): void
     {
-        $groupTitle          = $user->email;
-        $index               = 1;
+        $groupTitle  = $user->email;
+        $index       = 1;
 
         /** @var null|UserGroup $group */
-        $group               = null;
-        $groupExists         = UserGroup::query()->where('title', $groupTitle)->count() > 0;
+        $group       = null;
+        $groupExists = UserGroup::query()->where('title', $groupTitle)->count() > 0;
 
-        if(!$isNewUser) {
+        if (!$isNewUser) {
             // check if user already has a group membership:
             $membership = GroupMembership::query()->where('user_id', $user->id)->first();
-            // if not, create it. 
+            // if not, create it.
             if (null === $membership) {
                 $isNewUser = true;
             }
         }
 
         // always create a new group for new user:
-        if($isNewUser) {
+        if ($isNewUser) {
             while ($groupExists) {
                 $groupTitle  = sprintf('%s-%d', $user->email, $index);
                 $groupExists = UserGroup::query()->where('title', $groupTitle)->count() > 0;
@@ -64,10 +64,10 @@ trait HandlesUserRegistrationTrait
                     throw new FireflyException('Email address can no longer be used for registrations.');
                 }
             }
-            $group = UserGroup::create(['title' => $groupTitle]);
+            $group               = UserGroup::create(['title' => $groupTitle]);
 
             /** @var null|UserRole $role */
-            $role = UserRole::query()->where('title', UserRoleEnum::OWNER->value)->first();
+            $role                = UserRole::query()->where('title', UserRoleEnum::OWNER->value)->first();
             if (null === $role) {
                 throw new FireflyException('The user role is unexpectedly empty. Did you run all migrations?');
             }
@@ -75,9 +75,5 @@ trait HandlesUserRegistrationTrait
             $user->user_group_id = $group->id;
             $user->save();
         }
-
-
-
-
     }
 }
