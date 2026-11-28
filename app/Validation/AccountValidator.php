@@ -210,7 +210,7 @@ final class AccountValidator
         return $result;
     }
 
-    protected function canCreateType(string $accountType): bool
+    private function canCreateType(string $accountType): bool
     {
         $canCreate = [
             AccountTypeEnum::EXPENSE->value,

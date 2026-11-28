@@ -59,7 +59,7 @@ final class CorrectsGroupAccounts extends Command
         //            DB::raw('COUNT(transaction_group_id) as the_count'),
         //        ]);
 
-        $groups                   = TransactionJournal::query() // @phpstan-ignore-line
+        $groups                   = TransactionJournal::query()
             ->groupBy('transaction_group_id')
             ->havingRaw('COUNT(transaction_group_id) > 1')
             ->get([

@@ -176,7 +176,7 @@ final class SubscriptionEnrichment implements EnrichmentInterface
     /**
      * Returns the latest date in the set, or start when set is empty.
      */
-    protected function lastPaidDate(Bill $subscription, Collection $dates, Carbon $default): Carbon
+    private function lastPaidDate(Bill $subscription, Collection $dates, Carbon $default): Carbon
     {
         $filtered = $dates->filter(static fn (TransactionJournal $journal): bool => (int) $journal->bill_id === (int) $subscription->id);
         Log::debug(sprintf('Filtered down from %d to %d entries for bill #%d.', $dates->count(), $filtered->count(), $subscription->id));

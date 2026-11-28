@@ -114,6 +114,7 @@ final class RuleRepository implements RuleRepositoryInterface, UserGroupInterfac
     #[\Override]
     public function getFirstRuleGroup(): RuleGroup
     {
+        /** @var RuleGroup|null $res */
         $res = $this->user->ruleGroups()->first();
         if (null === $res) {
             throw new FireflyException(sprintf('No rule group found for user #%d', $this->user->id));

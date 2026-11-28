@@ -57,9 +57,6 @@ final class CurrencyRepository implements CurrencyRepositoryInterface, UserGroup
 {
     use UserGroupTrait;
 
-    /**
-     * @throws FireflyException
-     */
     #[\Override]
     public function currencyInUse(TransactionCurrency $currency): bool
     {
@@ -68,9 +65,6 @@ final class CurrencyRepository implements CurrencyRepositoryInterface, UserGroup
         return null !== $result;
     }
 
-    /**
-     * @throws JsonException
-     */
     #[\Override]
     public function currencyInUseAt(TransactionCurrency $currency): ?string
     {

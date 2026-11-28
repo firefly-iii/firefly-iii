@@ -310,7 +310,7 @@ final class AvailableBudgetRepository implements AvailableBudgetRepositoryInterf
     }
 
     #[\Override]
-    public function store(array $data): ?AvailableBudget
+    public function store(array $data): AvailableBudget
     {
         $start = $data['start'];
         if ($start instanceof Carbon) {

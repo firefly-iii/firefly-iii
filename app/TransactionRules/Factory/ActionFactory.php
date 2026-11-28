@@ -79,7 +79,7 @@ final class ActionFactory
     /**
      * Returns a map with actiontypes, mapped to the class representing that type.
      */
-    protected static function getActionTypes(): array
+    private static function getActionTypes(): array
     {
         if (0 === count(self::$actionTypes)) {
             self::$actionTypes = Domain::getRuleActions();

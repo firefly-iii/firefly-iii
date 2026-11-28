@@ -115,7 +115,7 @@ final class CurrencyForm
      *
      * @throws FireflyException
      */
-    protected function allCurrencyField(string $name, string $view, $value = null, ?array $options = null): string
+    private function allCurrencyField(string $name, string $view, $value = null, ?array $options = null): string
     {
         $label           = $this->label($name, $options);
         $options         = $this->expandOptionArray($name, $label, $options);
@@ -176,7 +176,7 @@ final class CurrencyForm
     /**
      * @throws FireflyException
      */
-    protected function currencyField(string $name, string $view, mixed $value = null, ?array $options = null): string
+    private function currencyField(string $name, string $view, mixed $value = null, ?array $options = null): string
     {
         $label           = $this->label($name, $options);
         $options         = $this->expandOptionArray($name, $label, $options);

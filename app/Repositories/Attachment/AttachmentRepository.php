@@ -127,12 +127,7 @@ final class AttachmentRepository implements AttachmentRepositoryInterface, UserG
         /** @var AttachmentFactory $factory */
         $factory = app(AttachmentFactory::class);
         $factory->setUser($this->user);
-        $result  = $factory->create($data);
-        if (null === $result) {
-            throw new FireflyException('Could not store attachment.');
-        }
-
-        return $result;
+        return $factory->create($data);
     }
 
     #[\Override]

@@ -121,7 +121,7 @@ final class WholePeriodChartGenerator
     /**
      * TODO this method is duplicated
      */
-    protected function calculateStep(Carbon $start, Carbon $end): string
+    private function calculateStep(Carbon $start, Carbon $end): string
     {
         $step   = '1D';
         $months = $start->diffInMonths($end, true);

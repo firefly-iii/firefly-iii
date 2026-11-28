@@ -35,6 +35,7 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 
 /**
  * @property Carbon $date
+ * @property string $rate
  */
 final class CurrencyExchangeRate extends Model
 {

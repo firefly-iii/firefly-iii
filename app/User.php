@@ -357,7 +357,7 @@ final class User extends Authenticatable implements OAuthenticatable
     /**
      * Route notifications for the Slack channel.
      */
-    public function routeNotificationForSlack(Notification $notification): ?string
+    public function routeNotificationForSlack(Notification $notification): string
     {
         // this check does not validate if the user is owner, Should be done by notification itself.
         $res  = AppConfiguration::getEncrypted('slack_webhook_url', '')->data;

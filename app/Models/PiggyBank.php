@@ -42,6 +42,7 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
  * @property null|Carbon         $target_date
  * @property null|Carbon         $start_date
  * @property TransactionCurrency $transactionCurrency
+ * @property string $target_amount
  */
 #[ObservedBy([PiggyBankObserver::class])]
 final class PiggyBank extends Model

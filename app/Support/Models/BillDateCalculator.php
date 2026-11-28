@@ -146,7 +146,7 @@ final class BillDateCalculator
      *
      * That date must be AFTER $billStartDate, as a sanity check.
      */
-    protected function nextDateMatch(Carbon $earliest, Carbon $billStartDate, string $period, int $skip): Carbon
+    private function nextDateMatch(Carbon $earliest, Carbon $billStartDate, string $period, int $skip): Carbon
     {
         Log::debug(sprintf('Bill start date is %s', $billStartDate->format('Y-m-d')));
         if ($earliest->lt($billStartDate)) {

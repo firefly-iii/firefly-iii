@@ -80,7 +80,7 @@ final class BelongsUserGroup implements ValidationRule
         }
     }
 
-    protected function countField(string $class, string $field, string $value): int
+    private function countField(string $class, string $field, string $value): int
     {
         $value   = trim($value);
         $objects = [];

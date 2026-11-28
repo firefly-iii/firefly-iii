@@ -209,7 +209,7 @@ final class ParseDateString
         return false;
     }
 
-    protected function isMonthRange(string $date): bool
+    private function isMonthRange(string $date): bool
     {
         // if regex for xxxx-MM-xx:
         $pattern = '/^xxxx-(0[1-9]|1[012])-xx$/';
@@ -224,7 +224,7 @@ final class ParseDateString
         return false;
     }
 
-    protected function isMonthYearRange(string $date): bool
+    private function isMonthYearRange(string $date): bool
     {
         // if regex for YYYY-MM-xx:
         $pattern = '/^(19|20)\d\d-(0[1-9]|1[012])-xx$/';
@@ -239,7 +239,7 @@ final class ParseDateString
         return false;
     }
 
-    protected function isYearRange(string $date): bool
+    private function isYearRange(string $date): bool
     {
         // if regex for YYYY-xx-xx:
         $pattern = '/^(19|20)\d\d-xx-xx$/';
@@ -257,14 +257,14 @@ final class ParseDateString
     /**
      * format of string is xxxx-xx-DD
      */
-    protected function parseDayRange(string $date): array
+    private function parseDayRange(string $date): array
     {
         $parts = explode('-', $date);
 
         return ['day' => $parts[2]];
     }
 
-    protected function parseDefaultDate(string $date): Carbon
+    private function parseDefaultDate(string $date): Carbon
     {
         $result = false;
 
@@ -280,7 +280,7 @@ final class ParseDateString
         return $result;
     }
 
-    protected function parseKeyword(string $keyword): Carbon
+    private function parseKeyword(string $keyword): Carbon
     {
         $today = today(config('app.timezone'))->startOfDay();
 
@@ -302,7 +302,7 @@ final class ParseDateString
     /**
      * format of string is xxxx-MM-xx
      */
-    protected function parseMonthRange(string $date): array
+    private function parseMonthRange(string $date): array
     {
         Log::debug(sprintf('parseMonthRange: Parsed "%s".', $date));
         $parts = explode('-', $date);
@@ -313,7 +313,7 @@ final class ParseDateString
     /**
      * format of string is YYYY-MM-xx
      */
-    protected function parseMonthYearRange(string $date): array
+    private function parseMonthYearRange(string $date): array
     {
         Log::debug(sprintf('parseMonthYearRange: Parsed "%s".', $date));
         $parts = explode('-', $date);
@@ -321,7 +321,7 @@ final class ParseDateString
         return ['year' => $parts[0], 'month' => $parts[1]];
     }
 
-    protected function parseRelativeDate(string $date): Carbon
+    private function parseRelativeDate(string $date): Carbon
     {
         Log::debug(sprintf('Now in parseRelativeDate("%s")', $date));
         $parts     = explode(' ', $date);
@@ -363,7 +363,7 @@ final class ParseDateString
     /**
      * format of string is YYYY-xx-xx
      */
-    protected function parseYearRange(string $date): array
+    private function parseYearRange(string $date): array
     {
         Log::debug(sprintf('parseYearRange: Parsed "%s"', $date));
         $parts = explode('-', $date);

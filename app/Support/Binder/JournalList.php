@@ -65,7 +65,7 @@ final class JournalList implements BinderInterface
         throw new NotFoundHttpException();
     }
 
-    protected static function parseList(string $value): array
+    private static function parseList(string $value): array
     {
         if ('' === $value) {
             Log::warning('Category list count is zero, return 404.');

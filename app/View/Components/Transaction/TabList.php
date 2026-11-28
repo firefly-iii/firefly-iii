@@ -39,7 +39,7 @@ final class TabList extends Component
      * Get the view / contents that represent the component.
      */
     #[\Override]
-    public function render(): Closure|string|View
+    public function render(): View
     {
         return view('components.transaction.tab-list');
     }
