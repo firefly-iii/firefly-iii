@@ -29,6 +29,7 @@ use FireflyIII\Console\Commands\ShowsFriendlyMessages;
 use FireflyIII\Services\FireflyIIIOrg\Update\UpdateRequestInterface;
 use FireflyIII\Support\Facades\AppConfiguration;
 use Illuminate\Console\Command;
+use Override;
 
 final class ChecksForUpdates extends Command
 {
@@ -39,7 +40,7 @@ final class ChecksForUpdates extends Command
      *
      * @var string
      */
-    #[\Override]
+    #[Override]
     protected $description = 'Checks for Firefly III updates';
 
     /**
@@ -47,7 +48,7 @@ final class ChecksForUpdates extends Command
      *
      * @var string
      */
-    #[\Override]
+    #[Override]
     protected $signature   = 'firefly-iii:check-for-updates {--force}';
 
     /**

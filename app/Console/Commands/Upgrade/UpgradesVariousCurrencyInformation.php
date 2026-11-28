@@ -36,6 +36,7 @@ use FireflyIII\Repositories\Journal\JournalCLIRepositoryInterface;
 use FireflyIII\Repositories\Journal\JournalRepositoryInterface;
 use FireflyIII\Support\Facades\AppConfiguration;
 use Illuminate\Console\Command;
+use Override;
 
 final class UpgradesVariousCurrencyInformation extends Command
 {
@@ -43,9 +44,9 @@ final class UpgradesVariousCurrencyInformation extends Command
 
     public const string CONFIG_NAME = '480_other_currencies';
 
-    #[\Override]
+    #[Override]
     protected $description          = 'Update all journal currency information.';
-    #[\Override]
+    #[Override]
     protected $signature            = 'upgrade:480-currency-information {--F|force : Force the execution of this command.}';
     private array $accountCurrencies;
     private AccountRepositoryInterface $accountRepos;

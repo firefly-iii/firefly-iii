@@ -40,6 +40,7 @@ use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Log;
 use InvalidArgumentException;
 use Safe\Exceptions\FilesystemException;
+use Override;
 
 use function Safe\file_put_contents;
 
@@ -48,10 +49,10 @@ final class ExportsData extends Command
     use ShowsFriendlyMessages;
     use VerifiesAccessToken;
 
-    #[\Override]
+    #[Override]
     protected $description = 'Command to export data from Firefly III.';
 
-    #[\Override]
+    #[Override]
     protected $signature   = 'firefly-iii:export-data
     {--user=1 : The user ID that the export should run for.}
     {--token= : The user\'s access token.}

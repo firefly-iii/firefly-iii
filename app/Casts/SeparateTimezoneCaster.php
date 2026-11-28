@@ -27,6 +27,7 @@ namespace FireflyIII\Casts;
 use Carbon\Carbon;
 use Illuminate\Contracts\Database\Eloquent\CastsAttributes;
 use Illuminate\Database\Eloquent\Model;
+use Override;
 
 /**
  * Class SeparateTimezoneCaster
@@ -42,7 +43,7 @@ final class SeparateTimezoneCaster implements CastsAttributes
     /**
      * @param array<string, mixed> $attributes
      */
-    #[\Override]
+    #[Override]
     public function get(Model $model, string $key, mixed $value, array $attributes): ?Carbon
     {
         if ('' === $value || null === $value) {
@@ -60,7 +61,7 @@ final class SeparateTimezoneCaster implements CastsAttributes
      *
      * @param array<string, mixed> $attributes
      */
-    #[\Override]
+    #[Override]
     public function set(Model $model, string $key, mixed $value, array $attributes): mixed
     {
         return $value;

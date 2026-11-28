@@ -42,6 +42,7 @@ use Illuminate\Database\Eloquent\Relations\MorphMany;
 use Illuminate\Database\Eloquent\Relations\MorphToMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
+use Override;
 
 /**
  * @property AccountType $accountType
@@ -56,10 +57,10 @@ final class Account extends Model
     use ReturnsIntegerUserIdTrait;
     use SoftDeletes;
 
-    #[\Override]
+    #[Override]
     protected $fillable              = ['user_id', 'user_group_id', 'account_type_id', 'name', 'active', 'virtual_balance', 'iban', 'native_virtual_balance', 'order'];
 
-    #[\Override]
+    #[Override]
     protected $hidden                = ['encrypted'];
     private bool $joinedAccountTypes = false;
 
@@ -91,9 +92,27 @@ final class Account extends Model
         throw new AuthenticationException();
     }
 
+    public function accountId(): Attribute
+    {
+        return Attribute::make(get: static fn ($value): int => (int) $value);
+    }
+
     public function accountMeta(): HasMany
     {
         return $this->hasMany(AccountMeta::class);
+    }
+
+    /**
+     * Get the account number.
+     */
+    public function accountNumber(): Attribute
+    {
+        return Attribute::make(get: function () {
+            /** @var null|AccountMeta $metaValue */
+            $metaValue = $this->accountMeta()->where('name', 'account_number')->first();
+
+            return null !== $metaValue ? $metaValue->data : '';
+        });
     }
 
     public function accountType(): BelongsTo
@@ -101,9 +120,60 @@ final class Account extends Model
         return $this->belongsTo(AccountType::class);
     }
 
+    /**
+     * Get the user ID
+     */
+    public function accountTypeId(): Attribute
+    {
+        return Attribute::make(get: static fn ($value): int => (int) $value);
+    }
+
+    #[Scope]
+    public function accountTypeIn(EloquentBuilder $query, array $types): void
+    {
+        if (false === $this->joinedAccountTypes) {
+            $query->leftJoin('account_types', 'account_types.id', '=', 'accounts.account_type_id');
+            $this->joinedAccountTypes = true;
+        }
+        $query->whereIn('account_types.type', $types);
+    }
+
     public function attachments(): MorphMany
     {
         return $this->morphMany(Attachment::class, 'attachable');
+    }
+
+    #[Override]
+    public function casts(): array
+    {
+        return [
+            'created_at'             => 'datetime',
+            'updated_at'             => 'datetime',
+            'user_id'                => 'integer',
+            'user_group_id'          => 'integer',
+            'deleted_at'             => 'datetime',
+            'active'                 => 'boolean',
+            'encrypted'              => 'boolean',
+            'virtual_balance'        => 'string',
+            'native_virtual_balance' => 'string',
+        ];
+    }
+
+    public function editName(): Attribute
+    {
+        return Attribute::make(get: function () {
+            $name = $this->name;
+            if (AccountTypeEnum::CASH->value === $this->accountType->type) {
+                return '';
+            }
+
+            return $name;
+        });
+    }
+
+    public function iban(): Attribute
+    {
+        return Attribute::make(get: static fn ($value): ?string => null === $value ? null : trim(str_replace(' ', '', (string) $value)));
     }
 
     public function locations(): MorphMany
@@ -125,6 +195,11 @@ final class Account extends Model
     public function objectGroups(): MorphToMany
     {
         return $this->morphToMany(ObjectGroup::class, 'object_groupable');
+    }
+
+    public function order(): Attribute
+    {
+        return Attribute::make(get: static fn ($value): int => (int) $value);
     }
 
     public function piggyBanks(): BelongsToMany
@@ -159,80 +234,6 @@ final class Account extends Model
     public function userGroup(): BelongsTo
     {
         return $this->belongsTo(UserGroup::class);
-    }
-
-    public function accountId(): Attribute
-    {
-        return Attribute::make(get: static fn ($value): int => (int) $value);
-    }
-
-    /**
-     * Get the account number.
-     */
-    public function accountNumber(): Attribute
-    {
-        return Attribute::make(get: function () {
-            /** @var null|AccountMeta $metaValue */
-            $metaValue = $this->accountMeta()->where('name', 'account_number')->first();
-
-            return null !== $metaValue ? $metaValue->data : '';
-        });
-    }
-
-    /**
-     * Get the user ID
-     */
-    public function accountTypeId(): Attribute
-    {
-        return Attribute::make(get: static fn ($value): int => (int) $value);
-    }
-
-    #[Scope]
-    public function accountTypeIn(EloquentBuilder $query, array $types): void
-    {
-        if (false === $this->joinedAccountTypes) {
-            $query->leftJoin('account_types', 'account_types.id', '=', 'accounts.account_type_id');
-            $this->joinedAccountTypes = true;
-        }
-        $query->whereIn('account_types.type', $types);
-    }
-
-    #[\Override]
-    public function casts(): array
-    {
-        return [
-            'created_at'             => 'datetime',
-            'updated_at'             => 'datetime',
-            'user_id'                => 'integer',
-            'user_group_id'          => 'integer',
-            'deleted_at'             => 'datetime',
-            'active'                 => 'boolean',
-            'encrypted'              => 'boolean',
-            'virtual_balance'        => 'string',
-            'native_virtual_balance' => 'string',
-        ];
-    }
-
-    public function editName(): Attribute
-    {
-        return Attribute::make(get: function () {
-            $name = $this->name;
-            if (AccountTypeEnum::CASH->value === $this->accountType->type) {
-                return '';
-            }
-
-            return $name;
-        });
-    }
-
-    public function iban(): Attribute
-    {
-        return Attribute::make(get: static fn ($value): ?string => null === $value ? null : trim(str_replace(' ', '', (string) $value)));
-    }
-
-    public function order(): Attribute
-    {
-        return Attribute::make(get: static fn ($value): int => (int) $value);
     }
 
     /**

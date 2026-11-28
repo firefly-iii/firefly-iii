@@ -32,6 +32,7 @@ use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Storage;
 use League\Flysystem\FilesystemException;
 use Safe\Exceptions\JsonException;
+use Override;
 
 use function Safe\json_decode;
 
@@ -39,10 +40,10 @@ final class VerifySecurityAlerts extends Command
 {
     use ShowsFriendlyMessages;
 
-    #[\Override]
+    #[Override]
     protected $description = 'Verify security alerts';
 
-    #[\Override]
+    #[Override]
     protected $signature   = 'firefly-iii:verify-security-alerts';
 
     /**

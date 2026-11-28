@@ -24,12 +24,12 @@ declare(strict_types=1);
 
 namespace FireflyIII\View\Components\Lists;
 
-use Closure;
 use FireflyIII\Models\Account;
 use Illuminate\Contracts\View\View;
 use Illuminate\Pagination\LengthAwarePaginator;
 use Illuminate\Support\Collection;
 use Illuminate\View\Component;
+use Override;
 
 final class GroupsLarge extends Component
 {
@@ -52,7 +52,7 @@ final class GroupsLarge extends Component
     /**
      * Get the view / contents that represent the component.
      */
-    #[\Override]
+    #[Override]
     public function render(): View
     {
         return view('components.lists.groups-large');

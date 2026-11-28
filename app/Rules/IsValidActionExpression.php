@@ -30,6 +30,7 @@ use FireflyIII\Support\Facades\AppConfiguration;
 use FireflyIII\TransactionRules\Expressions\ActionExpression;
 use Illuminate\Contracts\Validation\ValidationRule;
 use Illuminate\Translation\PotentiallyTranslatedString;
+use Override;
 
 final class IsValidActionExpression implements ValidationRule
 {
@@ -40,7 +41,7 @@ final class IsValidActionExpression implements ValidationRule
      *
      * @SuppressWarnings("PHPMD.UnusedFormalParameter")
      */
-    #[\Override]
+    #[Override]
     public function validate(string $attribute, mixed $value, Closure $fail): void
     {
         if (false === AppConfiguration::get('enable_expression_engine', false)->data) {

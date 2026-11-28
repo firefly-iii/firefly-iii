@@ -39,6 +39,7 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\MorphMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
+use Override;
 
 /**
  * @property null|Carbon $first_date
@@ -53,7 +54,7 @@ final class Recurrence extends Model
     use ReturnsIntegerUserIdTrait;
     use SoftDeletes;
 
-    #[\Override]
+    #[Override]
     protected $fillable = [
         'user_id',
         'user_group_id',
@@ -71,7 +72,7 @@ final class Recurrence extends Model
         'active',
     ];
 
-    #[\Override]
+    #[Override]
     protected $table    = 'recurrences';
 
     /**
@@ -140,12 +141,17 @@ final class Recurrence extends Model
         return $this->belongsTo(TransactionType::class);
     }
 
+    public function transactionTypeId(): Attribute
+    {
+        return Attribute::make(get: static fn ($value): int => (int) $value);
+    }
+
     public function user(): BelongsTo
     {
         return $this->belongsTo(User::class);
     }
 
-    #[\Override]
+    #[Override]
     protected function casts(): array
     {
         return [
@@ -164,10 +170,5 @@ final class Recurrence extends Model
             'user_id'       => 'integer',
             'user_group_id' => 'integer',
         ];
-    }
-
-    public function transactionTypeId(): Attribute
-    {
-        return Attribute::make(get: static fn ($value): int => (int) $value);
     }
 }

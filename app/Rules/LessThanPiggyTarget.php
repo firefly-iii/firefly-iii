@@ -26,6 +26,7 @@ namespace FireflyIII\Rules;
 
 use Closure;
 use Illuminate\Contracts\Validation\ValidationRule;
+use Override;
 
 /**
  * Class LessThanPiggyTarget
@@ -43,7 +44,7 @@ final class LessThanPiggyTarget implements ValidationRule
     /**
      * @SuppressWarnings("PHPMD.UnusedFormalParameter")
      */
-    #[\Override]
+    #[Override]
     public function validate(string $attribute, mixed $value, Closure $fail): void
     {
         // TODO not sure if this is still used.

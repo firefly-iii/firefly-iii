@@ -38,14 +38,15 @@ use Illuminate\Console\Command;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Query\JoinClause;
 use Illuminate\Support\Facades\Log;
+use Override;
 
 final class CorrectsAccountTypes extends Command
 {
     use ShowsFriendlyMessages;
 
-    #[\Override]
+    #[Override]
     protected $description = 'Make sure all journals have the correct from/to account types.';
-    #[\Override]
+    #[Override]
     protected $signature   = 'correction:account-types';
     private int $count;
     private array $expected;

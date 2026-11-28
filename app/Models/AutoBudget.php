@@ -31,6 +31,7 @@ use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use Override;
 
 /**
  * @property TransactionCurrency $transactionCurrency
@@ -41,22 +42,17 @@ final class AutoBudget extends Model
     use ReturnsIntegerIdTrait;
     use SoftDeletes;
 
-    public function budget(): BelongsTo
-    {
-        return $this->belongsTo(Budget::class);
-    }
-
-    #[\Override]
-    protected $fillable = ['budget_id', 'amount', 'period', 'native_amount'];
-
-    public function transactionCurrency(): BelongsTo
-    {
-        return $this->belongsTo(TransactionCurrency::class);
-    }
-
     public function amount(): Attribute
     {
         return Attribute::make(get: static fn ($value): string => (string) $value);
+    }
+
+    #[Override]
+    protected $fillable = ['budget_id', 'amount', 'period', 'native_amount'];
+
+    public function budget(): BelongsTo
+    {
+        return $this->belongsTo(Budget::class);
     }
 
     public function budgetId(): Attribute
@@ -64,14 +60,19 @@ final class AutoBudget extends Model
         return Attribute::make(get: static fn ($value): int => (int) $value);
     }
 
-    #[\Override]
-    protected function casts(): array
+    public function transactionCurrency(): BelongsTo
     {
-        return ['amount' => 'string', 'native_amount' => 'string'];
+        return $this->belongsTo(TransactionCurrency::class);
     }
 
     public function transactionCurrencyId(): Attribute
     {
         return Attribute::make(get: static fn ($value): int => (int) $value);
+    }
+
+    #[Override]
+    protected function casts(): array
+    {
+        return ['amount' => 'string', 'native_amount' => 'string'];
     }
 }

@@ -27,6 +27,7 @@ namespace FireflyIII\Console\Commands\System;
 use FireflyIII\Console\Commands\ShowsFriendlyMessages;
 use Illuminate\Console\Command;
 use Symfony\Component\Console\Command\Command as CommandAlias;
+use Override;
 
 use function Safe\file_put_contents;
 use function Safe\json_encode;
@@ -40,7 +41,7 @@ final class ResetsErrorMailLimit extends Command
      *
      * @var string
      */
-    #[\Override]
+    #[Override]
     protected $description = 'Resets the number of error mails sent.';
 
     /**
@@ -48,7 +49,7 @@ final class ResetsErrorMailLimit extends Command
      *
      * @var string
      */
-    #[\Override]
+    #[Override]
     protected $signature   = 'firefly-iii:reset-error-mail-limit';
 
     /**

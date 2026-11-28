@@ -31,13 +31,14 @@ use FireflyIII\Support\Facades\AppConfiguration;
 use FireflyIII\Support\Facades\Preferences;
 use FireflyIII\User;
 use Illuminate\Support\Facades\Log;
+use Override;
 
 /**
  * Class AutoBudgetCronjob
  */
 final class AutoBudgetCronjob extends AbstractCronjob
 {
-    #[\Override]
+    #[Override]
     public function fire(): void
     {
         Log::debug('AutoBudgetCronjob::fire()');

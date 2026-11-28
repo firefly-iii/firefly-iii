@@ -33,6 +33,7 @@ use FireflyIII\Support\Repositories\UserGroup\UserGroupTrait;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Log;
+use Override;
 
 /**
  * Class RuleGroupRepository.
@@ -41,7 +42,7 @@ final class RuleGroupRepository implements RuleGroupRepositoryInterface, UserGro
 {
     use UserGroupTrait;
 
-    #[\Override]
+    #[Override]
     public function correctRuleGroupOrder(): void
     {
         $set   = $this->user->ruleGroups()
@@ -62,7 +63,7 @@ final class RuleGroupRepository implements RuleGroupRepositoryInterface, UserGro
         }
     }
 
-    #[\Override]
+    #[Override]
     public function count(): int
     {
         return $this->user->ruleGroups()->count();
@@ -71,7 +72,7 @@ final class RuleGroupRepository implements RuleGroupRepositoryInterface, UserGro
     /**
      * @throws Exception
      */
-    #[\Override]
+    #[Override]
     public function destroy(RuleGroup $ruleGroup, ?RuleGroup $moveTo): bool
     {
         /** @var Rule $rule */
@@ -96,7 +97,7 @@ final class RuleGroupRepository implements RuleGroupRepositoryInterface, UserGro
         return true;
     }
 
-    #[\Override]
+    #[Override]
     public function destroyAll(): void
     {
         Log::channel('audit')->info('Delete all rule groups through destroyAll');
@@ -109,27 +110,27 @@ final class RuleGroupRepository implements RuleGroupRepositoryInterface, UserGro
         }
     }
 
-    #[\Override]
+    #[Override]
     public function find(int $ruleGroupId): ?RuleGroup
     {
         /** @var null|RuleGroup */
         return $this->user->ruleGroups()->find($ruleGroupId);
     }
 
-    #[\Override]
+    #[Override]
     public function findByTitle(string $title): ?RuleGroup
     {
         /** @var null|RuleGroup */
         return $this->user->ruleGroups()->where('title', $title)->first();
     }
 
-    #[\Override]
+    #[Override]
     public function get(): Collection
     {
         return $this->user->ruleGroups()->orderBy('order', 'ASC')->get();
     }
 
-    #[\Override]
+    #[Override]
     public function getActiveGroups(): Collection
     {
         return $this->user->ruleGroups()
@@ -140,13 +141,13 @@ final class RuleGroupRepository implements RuleGroupRepositoryInterface, UserGro
         ;
     }
 
-    #[\Override]
+    #[Override]
     public function getActiveRules(RuleGroup $group): Collection
     {
         return $group->rules()->where('rules.active', true)->orderBy('rules.order', 'ASC')->get(['rules.*']);
     }
 
-    #[\Override]
+    #[Override]
     public function getActiveStoreRules(RuleGroup $group): Collection
     {
         return $group
@@ -160,7 +161,7 @@ final class RuleGroupRepository implements RuleGroupRepositoryInterface, UserGro
         ;
     }
 
-    #[\Override]
+    #[Override]
     public function getActiveUpdateRules(RuleGroup $group): Collection
     {
         return $group
@@ -173,7 +174,7 @@ final class RuleGroupRepository implements RuleGroupRepositoryInterface, UserGro
         ;
     }
 
-    #[\Override]
+    #[Override]
     public function getAllRuleGroupsWithRules(?string $filter): Collection
     {
         $groups = $this->user->ruleGroups()
@@ -219,7 +220,7 @@ final class RuleGroupRepository implements RuleGroupRepositoryInterface, UserGro
         });
     }
 
-    #[\Override]
+    #[Override]
     public function getHighestOrderRuleGroup(): int
     {
         $entry = $this->user->ruleGroups()->max('order');
@@ -227,7 +228,7 @@ final class RuleGroupRepository implements RuleGroupRepositoryInterface, UserGro
         return (int) $entry;
     }
 
-    #[\Override]
+    #[Override]
     public function getRuleGroupsWithRules(?string $filter): Collection
     {
         $groups = $this->user->ruleGroups()
@@ -273,19 +274,19 @@ final class RuleGroupRepository implements RuleGroupRepositoryInterface, UserGro
         });
     }
 
-    #[\Override]
+    #[Override]
     public function getRules(RuleGroup $group): Collection
     {
         return $group->rules()->get(['rules.*']);
     }
 
-    #[\Override]
+    #[Override]
     public function maxOrder(): int
     {
         return (int) $this->user->ruleGroups()->where('active', true)->max('order');
     }
 
-    #[\Override]
+    #[Override]
     public function resetOrder(): bool
     {
         $set   = $this->user->ruleGroups()
@@ -312,7 +313,7 @@ final class RuleGroupRepository implements RuleGroupRepositoryInterface, UserGro
         return true;
     }
 
-    #[\Override]
+    #[Override]
     public function resetRuleOrder(RuleGroup $ruleGroup): bool
     {
         $set   = $ruleGroup->rules()->orderBy('order', 'ASC')->orderBy('title', 'DESC')->orderBy('updated_at', 'DESC')->get(['rules.*']);
@@ -334,7 +335,7 @@ final class RuleGroupRepository implements RuleGroupRepositoryInterface, UserGro
         return true;
     }
 
-    #[\Override]
+    #[Override]
     public function searchRuleGroup(string $query, int $limit): Collection
     {
         $search = $this->user->ruleGroups();
@@ -346,7 +347,7 @@ final class RuleGroupRepository implements RuleGroupRepositoryInterface, UserGro
         return $search->take($limit)->get(['id', 'title', 'description', 'active']);
     }
 
-    #[\Override]
+    #[Override]
     public function setOrder(RuleGroup $ruleGroup, int $newOrder): void
     {
         $oldOrder         = $ruleGroup->order;
@@ -376,7 +377,7 @@ final class RuleGroupRepository implements RuleGroupRepositoryInterface, UserGro
         $ruleGroup->save();
     }
 
-    #[\Override]
+    #[Override]
     public function store(array $data): RuleGroup
     {
         $newRuleGroup = new RuleGroup([
@@ -396,7 +397,7 @@ final class RuleGroupRepository implements RuleGroupRepositoryInterface, UserGro
         return $newRuleGroup;
     }
 
-    #[\Override]
+    #[Override]
     public function update(RuleGroup $ruleGroup, array $data): RuleGroup
     {
         // update the account:

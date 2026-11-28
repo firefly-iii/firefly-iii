@@ -26,10 +26,11 @@ namespace FireflyIII\TransactionRules\Engine;
 
 use Symfony\Component\ExpressionLanguage\ExpressionFunction;
 use Symfony\Component\ExpressionLanguage\ExpressionLanguage;
+use Override;
 
 final class CustomExpressionLanguage extends ExpressionLanguage
 {
-    #[\Override]
+    #[Override]
     protected function registerFunctions(): void
     {
         $basicPhpFunctions = ['min', 'max', 'substr', 'strlen', 'strpos', 'strtolower', 'strtoupper', 'ucfirst', 'ucwords'];

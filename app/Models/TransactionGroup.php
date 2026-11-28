@@ -36,6 +36,7 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Log;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
+use Override;
 
 /**
  * @property User                           $user
@@ -49,7 +50,7 @@ final class TransactionGroup extends Model
     use ReturnsIntegerUserIdTrait;
     use SoftDeletes;
 
-    #[\Override]
+    #[Override]
     protected $fillable = ['user_id', 'user_group_id', 'title'];
 
     /**
@@ -105,7 +106,7 @@ final class TransactionGroup extends Model
         return $this->belongsTo(UserGroup::class);
     }
 
-    #[\Override]
+    #[Override]
     protected function casts(): array
     {
         return [

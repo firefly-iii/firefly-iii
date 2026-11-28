@@ -24,10 +24,10 @@ declare(strict_types=1);
 
 namespace FireflyIII\View\Components\Report\Partial;
 
-use Closure;
 use FireflyIII\Models\Account;
 use Illuminate\Contracts\View\View;
 use Illuminate\View\Component;
+use Override;
 
 final class JournalsAudit extends Component
 {
@@ -48,7 +48,7 @@ final class JournalsAudit extends Component
     /**
      * Get the view / contents that represent the component.
      */
-    #[\Override]
+    #[Override]
     public function render(): View
     {
         return view('components.report.partial.journals-audit');

@@ -1687,16 +1687,16 @@
         },
         {
             "name": "symfony/filesystem",
-            "version": "v8.1.12",
+            "version": "v8.1.13",
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/filesystem.git",
-                "reference": "a8f7a3cf9d3140902eaee85baf1f8e98666d336a"
+                "reference": "5215ed1c40d7f5532dc109f53f0defd3478ac6ea"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/filesystem/zipball/a8f7a3cf9d3140902eaee85baf1f8e98666d336a",
-                "reference": "a8f7a3cf9d3140902eaee85baf1f8e98666d336a",
+                "url": "https://api.github.com/repos/symfony/filesystem/zipball/5215ed1c40d7f5532dc109f53f0defd3478ac6ea",
+                "reference": "5215ed1c40d7f5532dc109f53f0defd3478ac6ea",
                 "shasum": ""
             },
             "require": {
@@ -1734,7 +1734,7 @@
             "description": "Provides basic utilities for the filesystem",
             "homepage": "https://symfony.com",
             "support": {
-                "source": "https://github.com/symfony/filesystem/tree/v8.1.12"
+                "source": "https://github.com/symfony/filesystem/tree/v8.1.13"
             },
             "funding": [
                 {
@@ -1754,21 +1754,21 @@
                     "type": "tidelift"
                 }
             ],
-            "time": "2026-11-24T15:59:55+00:00",
-            "published-time": "2026-11-25T09:29:32+00:00"
+            "time": "2026-11-27T13:27:33+00:00",
+            "published-time": "2026-11-27T14:50:03+00:00"
         },
         {
             "name": "symfony/finder",
-            "version": "v8.1.12",
+            "version": "v8.1.13",
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/finder.git",
-                "reference": "7022913b72c56ac5123922726aa94f2f98b726ad"
+                "reference": "5dc8602a3ad3430a97efb70f9d7e9f0aec1410dc"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/finder/zipball/7022913b72c56ac5123922726aa94f2f98b726ad",
-                "reference": "7022913b72c56ac5123922726aa94f2f98b726ad",
+                "url": "https://api.github.com/repos/symfony/finder/zipball/5dc8602a3ad3430a97efb70f9d7e9f0aec1410dc",
+                "reference": "5dc8602a3ad3430a97efb70f9d7e9f0aec1410dc",
                 "shasum": ""
             },
             "require": {
@@ -1803,7 +1803,7 @@
             "description": "Finds files and directories via an intuitive fluent interface",
             "homepage": "https://symfony.com",
             "support": {
-                "source": "https://github.com/symfony/finder/tree/v8.1.12"
+                "source": "https://github.com/symfony/finder/tree/v8.1.13"
             },
             "funding": [
                 {
@@ -1823,8 +1823,8 @@
                     "type": "tidelift"
                 }
             ],
-            "time": "2026-11-24T15:06:41+00:00",
-            "published-time": "2026-11-25T09:29:36+00:00"
+            "time": "2026-11-27T14:07:58+00:00",
+            "published-time": "2026-11-27T14:50:47+00:00"
         },
         {
             "name": "symfony/options-resolver",
@@ -2721,16 +2721,16 @@
         },
         {
             "name": "symfony/stopwatch",
-            "version": "v8.1.12",
+            "version": "v8.1.13",
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/stopwatch.git",
-                "reference": "15c98c1a4693c5579e87f313bfff90d3a68e6b49"
+                "reference": "68b2fb16c40f6f4b103966aaa7c5c52c033a4620"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/stopwatch/zipball/15c98c1a4693c5579e87f313bfff90d3a68e6b49",
-                "reference": "15c98c1a4693c5579e87f313bfff90d3a68e6b49",
+                "url": "https://api.github.com/repos/symfony/stopwatch/zipball/68b2fb16c40f6f4b103966aaa7c5c52c033a4620",
+                "reference": "68b2fb16c40f6f4b103966aaa7c5c52c033a4620",
                 "shasum": ""
             },
             "require": {
@@ -2763,7 +2763,7 @@
             "description": "Provides a way to profile code",
             "homepage": "https://symfony.com",
             "support": {
-                "source": "https://github.com/symfony/stopwatch/tree/v8.1.12"
+                "source": "https://github.com/symfony/stopwatch/tree/v8.1.13"
             },
             "funding": [
                 {
@@ -2783,21 +2783,21 @@
                     "type": "tidelift"
                 }
             ],
-            "time": "2026-11-24T15:06:41+00:00",
-            "published-time": "2026-11-25T09:30:22+00:00"
+            "time": "2026-11-27T13:27:33+00:00",
+            "published-time": "2026-11-27T14:50:44+00:00"
         },
         {
             "name": "symfony/string",
-            "version": "v8.1.12",
+            "version": "v8.1.13",
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/string.git",
-                "reference": "b3f937ce8203f33efea3cce084ad4a9f0cce97c5"
+                "reference": "ff6a90fe4c4e0e4de484d07189aa25d6d7f447be"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/string/zipball/b3f937ce8203f33efea3cce084ad4a9f0cce97c5",
-                "reference": "b3f937ce8203f33efea3cce084ad4a9f0cce97c5",
+                "url": "https://api.github.com/repos/symfony/string/zipball/ff6a90fe4c4e0e4de484d07189aa25d6d7f447be",
+                "reference": "ff6a90fe4c4e0e4de484d07189aa25d6d7f447be",
                 "shasum": ""
             },
             "require": {
@@ -2854,7 +2854,7 @@
                 "utf8"
             ],
             "support": {
-                "source": "https://github.com/symfony/string/tree/v8.1.12"
+                "source": "https://github.com/symfony/string/tree/v8.1.13"
             },
             "funding": [
                 {
@@ -2874,8 +2874,8 @@
                     "type": "tidelift"
                 }
             ],
-            "time": "2026-11-24T15:59:55+00:00",
-            "published-time": "2026-11-25T09:30:00+00:00"
+            "time": "2026-11-27T13:27:33+00:00",
+            "published-time": "2026-11-27T14:50:30+00:00"
         }
     ],
     "packages-dev": [],

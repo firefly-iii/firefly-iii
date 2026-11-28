@@ -34,7 +34,6 @@ use Illuminate\Auth\AuthenticationException;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Database\QueryException;
 use Illuminate\Foundation\Exceptions\Handler as ExceptionHandler;
-use Illuminate\Http\JsonResponse;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Session\TokenMismatchException;
@@ -68,7 +67,7 @@ final class Handler extends ExceptionHandler
     /**
      * @var array<int, class-string<Throwable>>
      */
-    #[\Override]
+    #[Override]
     protected $dontReport               = [
         AuthenticationException::class,
         LaravelValidationException::class,

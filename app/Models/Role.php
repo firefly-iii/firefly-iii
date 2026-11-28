@@ -27,12 +27,13 @@ use FireflyIII\Support\Models\ReturnsIntegerIdTrait;
 use FireflyIII\User;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
+use Override;
 
 final class Role extends Model
 {
     use ReturnsIntegerIdTrait;
 
-    #[\Override]
+    #[Override]
     protected $fillable = ['name', 'display_name', 'description'];
 
     public function users(): BelongsToMany
@@ -40,7 +41,7 @@ final class Role extends Model
         return $this->belongsToMany(User::class);
     }
 
-    #[\Override]
+    #[Override]
     protected function casts(): array
     {
         return ['created_at' => 'datetime', 'updated_at' => 'datetime'];

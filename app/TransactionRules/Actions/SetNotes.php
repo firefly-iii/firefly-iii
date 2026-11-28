@@ -28,6 +28,7 @@ use FireflyIII\Models\Note;
 use FireflyIII\Models\RuleAction;
 use FireflyIII\Models\TransactionJournal;
 use Illuminate\Support\Facades\Log;
+use Override;
 
 /**
  * Class SetNotes.
@@ -41,7 +42,7 @@ final class SetNotes implements ActionInterface
         private readonly RuleAction $action
     ) {}
 
-    #[\Override]
+    #[Override]
     public function actOnArray(array $journal): bool
     {
         $dbNote       = Note::query()->where('noteable_id', $journal['transaction_journal_id'])->where('noteable_type', TransactionJournal::class)->first();

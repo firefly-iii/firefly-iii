@@ -28,14 +28,15 @@ use Exception;
 use FireflyIII\Console\Commands\ShowsFriendlyMessages;
 use FireflyIII\Models\TransactionGroup;
 use Illuminate\Console\Command;
+use Override;
 
 final class RemovesEmptyGroups extends Command
 {
     use ShowsFriendlyMessages;
 
-    #[\Override]
+    #[Override]
     protected $description = 'Delete empty transaction groups.';
-    #[\Override]
+    #[Override]
     protected $signature   = 'correction:empty-groups';
 
     /**

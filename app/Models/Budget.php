@@ -35,6 +35,7 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\MorphMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
+use Override;
 
 final class Budget extends Model
 {
@@ -42,10 +43,10 @@ final class Budget extends Model
     use ReturnsIntegerUserIdTrait;
     use SoftDeletes;
 
-    #[\Override]
+    #[Override]
     protected $fillable = ['user_id', 'user_group_id', 'name', 'active', 'order', 'user_group_id'];
 
-    #[\Override]
+    #[Override]
     protected $hidden   = ['encrypted'];
 
     /**
@@ -99,6 +100,11 @@ final class Budget extends Model
         return $this->morphMany(Note::class, 'noteable');
     }
 
+    public function order(): Attribute
+    {
+        return Attribute::make(get: static fn ($value): int => (int) $value);
+    }
+
     public function primaryPeriodStatistics(): MorphMany
     {
         return $this->morphMany(PeriodStatistic::class, 'primary_statable');
@@ -119,7 +125,7 @@ final class Budget extends Model
         return $this->belongsTo(User::class);
     }
 
-    #[\Override]
+    #[Override]
     protected function casts(): array
     {
         return [
@@ -131,10 +137,5 @@ final class Budget extends Model
             'user_id'       => 'integer',
             'user_group_id' => 'integer',
         ];
-    }
-
-    public function order(): Attribute
-    {
-        return Attribute::make(get: static fn ($value): int => (int) $value);
     }
 }

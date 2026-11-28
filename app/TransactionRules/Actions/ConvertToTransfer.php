@@ -39,6 +39,7 @@ use FireflyIII\Repositories\Account\AccountRepositoryInterface;
 use FireflyIII\Support\Facades\Steam;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
+use Override;
 
 /**
  * Class ConvertToTransfer
@@ -56,7 +57,7 @@ final class ConvertToTransfer implements ActionInterface
      * @SuppressWarnings("PHPMD.ExcessiveMethodLength")
      * @SuppressWarnings("PHPMD.NPathComplexity")
      */
-    #[\Override]
+    #[Override]
     public function actOnArray(array $journal): bool
     {
         $accountName  = $this->action->getValue($journal);

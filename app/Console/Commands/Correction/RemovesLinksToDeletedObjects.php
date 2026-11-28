@@ -33,6 +33,7 @@ use FireflyIII\Repositories\Budget\AvailableBudgetRepositoryInterface;
 use FireflyIII\User;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\DB;
+use Override;
 
 final class RemovesLinksToDeletedObjects extends Command
 {
@@ -43,7 +44,7 @@ final class RemovesLinksToDeletedObjects extends Command
      *
      * @var string
      */
-    #[\Override]
+    #[Override]
     protected $description = 'Removes deleted entries from intermediate tables.';
 
     /**
@@ -51,7 +52,7 @@ final class RemovesLinksToDeletedObjects extends Command
      *
      * @var string
      */
-    #[\Override]
+    #[Override]
     protected $signature   = 'correction:remove-links-to-deleted-objects';
 
     /**

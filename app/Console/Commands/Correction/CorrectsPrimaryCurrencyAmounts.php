@@ -29,15 +29,16 @@ use FireflyIII\Services\Internal\Recalculate\PrimaryAmountRecalculationService;
 use FireflyIII\Support\Facades\AppConfiguration;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\Log;
+use Override;
 
 final class CorrectsPrimaryCurrencyAmounts extends Command
 {
     use ShowsFriendlyMessages;
 
-    #[\Override]
+    #[Override]
     protected $description = 'Recalculate primary currency amounts for all objects.';
 
-    #[\Override]
+    #[Override]
     protected $signature   = 'correction:recalculate-pc-amounts';
 
     /**

@@ -28,6 +28,7 @@ use Closure;
 use FireflyIII\Support\Validation\ValidatesAmountsTrait;
 use Illuminate\Contracts\Validation\ValidationRule;
 use Illuminate\Support\Facades\Log;
+use Override;
 
 use function Safe\json_encode;
 
@@ -38,7 +39,7 @@ final class IsValidPositiveAmount implements ValidationRule
     /**
      * @SuppressWarnings("PHPMD.UnusedFormalParameter")
      */
-    #[\Override]
+    #[Override]
     public function validate(string $attribute, mixed $value, Closure $fail): void
     {
         if (is_array($value)) {

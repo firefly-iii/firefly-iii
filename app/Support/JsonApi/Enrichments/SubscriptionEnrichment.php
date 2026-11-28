@@ -42,6 +42,7 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
+use Override;
 
 final class SubscriptionEnrichment implements EnrichmentInterface
 {
@@ -65,7 +66,7 @@ final class SubscriptionEnrichment implements EnrichmentInterface
         $this->primaryCurrency  = Amount::getPrimaryCurrency();
     }
 
-    #[\Override]
+    #[Override]
     public function enrich(Collection $collection): Collection
     {
         Log::debug(sprintf('%s(%s item(s))', __METHOD__, $collection->count()));
@@ -144,7 +145,7 @@ final class SubscriptionEnrichment implements EnrichmentInterface
         return $collection;
     }
 
-    #[\Override]
+    #[Override]
     public function enrichSingle(array|Model $model): array|Model
     {
         Log::debug(__METHOD__);
@@ -164,40 +165,14 @@ final class SubscriptionEnrichment implements EnrichmentInterface
         $this->start = $start;
     }
 
-    #[\Override]
+    #[Override]
     public function setUser(User $user): void
     {
         $this->user = $user;
     }
 
-    #[\Override]
+    #[Override]
     public function setUserGroup(UserGroup $userGroup): void {}
-
-    /**
-     * Returns the latest date in the set, or start when set is empty.
-     */
-    private function lastPaidDate(Bill $subscription, Collection $dates, Carbon $default): Carbon
-    {
-        $filtered = $dates->filter(static fn (TransactionJournal $journal): bool => (int) $journal->bill_id === (int) $subscription->id);
-        Log::debug(sprintf('Filtered down from %d to %d entries for bill #%d.', $dates->count(), $filtered->count(), $subscription->id));
-        if (0 === $filtered->count()) {
-            return $default;
-        }
-
-        $latest   = $filtered->first()->date;
-
-        /** @var TransactionJournal $journal */
-        foreach ($filtered as $journal) {
-            if ($journal->date->gte($latest)) {
-                $latest = $journal->date;
-            }
-        }
-        if(null === $latest) {
-            return $default;
-        }
-
-        return $latest;
-    }
 
     private function collectNotes(): void
     {
@@ -483,5 +458,31 @@ final class SubscriptionEnrichment implements EnrichmentInterface
         unset($temp2);
 
         return $nemDiff;
+    }
+
+    /**
+     * Returns the latest date in the set, or start when set is empty.
+     */
+    private function lastPaidDate(Bill $subscription, Collection $dates, Carbon $default): Carbon
+    {
+        $filtered = $dates->filter(static fn (TransactionJournal $journal): bool => (int) $journal->bill_id === (int) $subscription->id);
+        Log::debug(sprintf('Filtered down from %d to %d entries for bill #%d.', $dates->count(), $filtered->count(), $subscription->id));
+        if (0 === $filtered->count()) {
+            return $default;
+        }
+
+        $latest   = $filtered->first()->date;
+
+        /** @var TransactionJournal $journal */
+        foreach ($filtered as $journal) {
+            if ($journal->date->gte($latest)) {
+                $latest = $journal->date;
+            }
+        }
+        if (null === $latest) {
+            return $default;
+        }
+
+        return $latest;
     }
 }

@@ -44,7 +44,7 @@ final class Authenticate
         /**
          * The authentication factory instance.
          */
-        protected Auth $auth
+        private Auth $auth
     ) {}
 
     /**
@@ -97,7 +97,6 @@ final class Authenticate
         }
 
         throw new FireflyException('This point is generally unreachable.');
-
     }
 
     /**

@@ -29,6 +29,7 @@ use FireflyIII\Rules\IsValidFilterInstruction;
 use FireflyIII\Support\Request\ChecksLogin;
 use FireflyIII\Support\Request\ConvertsDataTypes;
 use Illuminate\Contracts\Validation\Validator;
+use Override;
 
 final class FilterRequest extends ApiRequest
 {
@@ -37,7 +38,7 @@ final class FilterRequest extends ApiRequest
 
     private ?string $filterClass = null;
 
-    #[\Override]
+    #[Override]
     public function handleConfig(array $config): void
     {
         parent::handleConfig($config);

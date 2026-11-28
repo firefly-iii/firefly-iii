@@ -42,7 +42,7 @@ final class FrontpageChartGenerator
 {
     public bool $convertToPrimary     = false;
     public TransactionCurrency $default;
-    protected OperationsRepositoryInterface $opsRepository;
+    private OperationsRepositoryInterface $opsRepository;
     private readonly BudgetLimitRepositoryInterface $blRepository;
     private readonly BudgetRepositoryInterface $budgetRepository;
     private Carbon $end;

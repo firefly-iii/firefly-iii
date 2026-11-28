@@ -36,6 +36,7 @@ use FireflyIII\User;
 use Illuminate\Contracts\Auth\Authenticatable;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Log;
+use Override;
 
 /**
  * This class can handle both request with and without a user group and will return the appropriate repository when
@@ -55,7 +56,7 @@ final class NetWorth implements NetWorthInterface
      *
      * @throws FireflyException
      */
-    #[\Override]
+    #[Override]
     public function byAccounts(Collection $accounts, Carbon $date): array
     {
         // start in the past, end in the future? use $date
@@ -113,7 +114,7 @@ final class NetWorth implements NetWorthInterface
         return $netWorth;
     }
 
-    #[\Override]
+    #[Override]
     public function setUser(Authenticatable|User|null $user): void
     {
         if (!$user instanceof User) {
@@ -122,7 +123,7 @@ final class NetWorth implements NetWorthInterface
         $this->setUserGroup($user->userGroup);
     }
 
-    #[\Override]
+    #[Override]
     public function setUserGroup(UserGroup $userGroup): void
     {
         $this->accountRepository = app(AccountRepositoryInterface::class);

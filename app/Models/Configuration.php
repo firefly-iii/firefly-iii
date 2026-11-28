@@ -27,6 +27,7 @@ use FireflyIII\Support\Models\ReturnsIntegerIdTrait;
 use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use Override;
 
 use function Safe\json_decode;
 use function Safe\json_encode;
@@ -39,17 +40,17 @@ final class Configuration extends Model
     use ReturnsIntegerIdTrait;
     use SoftDeletes;
 
-    #[\Override]
+    #[Override]
     protected $table = 'configuration';
-
-    #[\Override]
-    protected function casts(): array
-    {
-        return ['created_at' => 'datetime', 'updated_at' => 'datetime', 'deleted_at' => 'datetime'];
-    }
 
     public function data(): Attribute
     {
         return Attribute::make(get: static fn ($value): mixed => json_decode((string) $value), set: static fn ($value): array => ['data' => json_encode($value)]);
+    }
+
+    #[Override]
+    protected function casts(): array
+    {
+        return ['created_at' => 'datetime', 'updated_at' => 'datetime', 'deleted_at' => 'datetime'];
     }
 }

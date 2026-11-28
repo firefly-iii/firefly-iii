@@ -29,6 +29,7 @@ use FireflyIII\Models\TransactionJournal;
 use FireflyIII\TransactionRules\Traits\RefreshNotesTrait;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
+use Override;
 
 /**
  * Class SetDescription.
@@ -44,7 +45,7 @@ final class SetDescription implements ActionInterface
         private RuleAction $action
     ) {}
 
-    #[\Override]
+    #[Override]
     public function actOnArray(array $journal): bool
     {
         $this->refreshNotes($journal);

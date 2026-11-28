@@ -153,10 +153,11 @@ abstract class Controller extends BaseController
         $resource = new FractalCollection($objects, $transformer, $key);
         $resource->setPaginator(new IlluminatePaginatorAdapter($paginator));
 
-        $res = $manager->createData($resource)->toArray();
-        if(null === $res) {
+        $res      = $manager->createData($resource)->toArray();
+        if (null === $res) {
             throw new FireflyException('Res is null in jsonApiList(), but it should not be.');
         }
+
         return $res;
     }
 
@@ -174,10 +175,11 @@ abstract class Controller extends BaseController
 
         $resource = new Item($object, $transformer, $key);
 
-        $res = $manager->createData($resource)->toArray();
-        if(null === $res) {
+        $res      = $manager->createData($resource)->toArray();
+        if (null === $res) {
             throw new FireflyException('Res is null in jsonApiObject(), but it should not be.');
         }
+
         return $res;
     }
 

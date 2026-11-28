@@ -34,6 +34,7 @@ use Illuminate\Support\Facades\Storage;
 use Safe\Exceptions\FileinfoException;
 use Safe\Exceptions\FilesystemException;
 use Safe\Exceptions\StringsException;
+use Override;
 
 use function Safe\file_put_contents;
 use function Safe\md5_file;
@@ -44,10 +45,10 @@ final class ScansAttachments extends Command
 {
     use ShowsFriendlyMessages;
 
-    #[\Override]
+    #[Override]
     protected $description = 'Rescan all attachments and re-set the correct MD5 hash and mime.';
 
-    #[\Override]
+    #[Override]
     protected $signature   = 'firefly-iii:scan-attachments';
 
     /**

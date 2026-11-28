@@ -32,14 +32,15 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\QueryException;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Log;
+use Override;
 
 final class ConvertsDatesToUTC extends Command
 {
     use ShowsFriendlyMessages;
 
-    #[\Override]
+    #[Override]
     protected $description = 'Convert stored dates to UTC.';
-    #[\Override]
+    #[Override]
     protected $signature   = 'correction:convert-to-utc';
 
     public function handle(): int

@@ -32,14 +32,15 @@ use FireflyIII\Repositories\Recurring\RecurringRepositoryInterface;
 use FireflyIII\Repositories\User\UserRepositoryInterface;
 use FireflyIII\User;
 use Illuminate\Console\Command;
+use Override;
 
 final class CorrectsRecurringTransactions extends Command
 {
     use ShowsFriendlyMessages;
 
-    #[\Override]
+    #[Override]
     protected $description = 'Fixes recurring transactions with the wrong transaction type.';
-    #[\Override]
+    #[Override]
     protected $signature   = 'correction:recurring-transactions';
     private int $count     = 0;
     private RecurringRepositoryInterface $recurringRepos;

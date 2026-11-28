@@ -28,15 +28,16 @@ use FireflyIII\Console\Commands\ShowsFriendlyMessages;
 use FireflyIII\Models\Transaction;
 use FireflyIII\Models\TransactionJournal;
 use Illuminate\Console\Command;
+use Override;
 
 final class RemovesZeroAmount extends Command
 {
     use ShowsFriendlyMessages;
 
-    #[\Override]
+    #[Override]
     protected $description = 'Delete transactions with zero amount.';
 
-    #[\Override]
+    #[Override]
     protected $signature   = 'correction:zero-amounts';
 
     /**
@@ -44,7 +45,7 @@ final class RemovesZeroAmount extends Command
      */
     public function handle(): int
     {
-        $set      = Transaction::query()->where('amount', 0)->get(['transaction_journal_id'])->pluck('transaction_journal_id')->toArray(); /* @phpstan-ignore larastan.noUnnecessaryCollectionCall */
+        $set      = Transaction::query()->where('amount', 0)->get(['transaction_journal_id'])->pluck('transaction_journal_id')->toArray(); // @phpstan-ignore larastan.noUnnecessaryCollectionCall
         $set      = array_unique($set);
         $journals = TransactionJournal::query()->whereIn('id', $set)->get();
 

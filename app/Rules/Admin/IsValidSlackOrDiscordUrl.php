@@ -28,6 +28,7 @@ use Closure;
 use FireflyIII\Support\Validation\ValidatesAmountsTrait;
 use Illuminate\Contracts\Validation\ValidationRule;
 use Illuminate\Support\Facades\Log;
+use Override;
 
 final class IsValidSlackOrDiscordUrl implements ValidationRule
 {
@@ -36,7 +37,7 @@ final class IsValidSlackOrDiscordUrl implements ValidationRule
     /**
      * @SuppressWarnings("PHPMD.UnusedFormalParameter")
      */
-    #[\Override]
+    #[Override]
     public function validate(string $attribute, mixed $value, Closure $fail): void
     {
         $value = (string) $value;

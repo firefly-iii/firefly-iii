@@ -27,6 +27,7 @@ use FireflyIII\Events\Model\TransactionGroup\TransactionGroupRequestsAuditLogEnt
 use FireflyIII\Models\RuleAction;
 use FireflyIII\Models\TransactionJournal;
 use Illuminate\Support\Facades\DB;
+use Override;
 
 /**
  * Class PrependDescription.
@@ -41,7 +42,7 @@ final class PrependDescription implements ActionInterface
         private readonly RuleAction $action
     ) {}
 
-    #[\Override]
+    #[Override]
     public function actOnArray(array $journal): bool
     {
         $before = $journal['description'];

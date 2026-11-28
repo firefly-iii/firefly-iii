@@ -27,12 +27,13 @@ namespace FireflyIII\Models;
 use FireflyIII\Support\Models\ReturnsIntegerIdTrait;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Override;
 
 final class UserRole extends Model
 {
     use ReturnsIntegerIdTrait;
 
-    #[\Override]
+    #[Override]
     protected $fillable = ['title'];
 
     public function groupMemberships(): HasMany

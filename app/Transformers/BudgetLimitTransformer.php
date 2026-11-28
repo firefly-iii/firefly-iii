@@ -30,13 +30,14 @@ use FireflyIII\Support\Facades\Amount;
 use FireflyIII\Support\Facades\Steam;
 use FireflyIII\Support\JsonApi\Enrichments\BudgetEnrichment;
 use League\Fractal\Resource\Item;
+use Override;
 
 /**
  * Class BudgetLimitTransformer
  */
 final class BudgetLimitTransformer extends AbstractTransformer
 {
-    #[\Override]
+    #[Override]
     protected array $availableIncludes = ['budget'];
     protected bool $convertToPrimary;
     protected TransactionCurrency $primaryCurrency;

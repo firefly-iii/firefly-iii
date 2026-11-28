@@ -28,6 +28,7 @@ use FireflyIII\Console\Commands\ShowsFriendlyMessages;
 use FireflyIII\Models\RuleAction;
 use FireflyIII\Support\Facades\AppConfiguration;
 use Illuminate\Console\Command;
+use Override;
 
 final class UpgradesRuleActions extends Command
 {
@@ -35,10 +36,10 @@ final class UpgradesRuleActions extends Command
 
     public const string CONFIG_NAME = '610_migrate_rule_actions';
 
-    #[\Override]
+    #[Override]
     protected $description          = 'Migrate rule actions away from expression engine';
 
-    #[\Override]
+    #[Override]
     protected $signature            = 'upgrade:600-rule-actions {--F|force : Force the execution of this command.}';
 
     /**

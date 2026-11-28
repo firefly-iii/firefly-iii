@@ -28,6 +28,7 @@ use Closure;
 use FireflyIII\Support\Validation\ValidatesAmountsTrait;
 use Illuminate\Contracts\Validation\ValidationRule;
 use Illuminate\Support\Facades\Log;
+use Override;
 
 final class IsValidZeroOrMoreAmount implements ValidationRule
 {
@@ -40,7 +41,7 @@ final class IsValidZeroOrMoreAmount implements ValidationRule
     /**
      * @SuppressWarnings("PHPMD.UnusedFormalParameter")
      */
-    #[\Override]
+    #[Override]
     public function validate(string $attribute, mixed $value, Closure $fail): void
     {
         if ($this->nullable && null === $value) {

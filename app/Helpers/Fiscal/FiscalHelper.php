@@ -27,13 +27,14 @@ use Carbon\Carbon;
 use FireflyIII\Support\Facades\Preferences;
 use Psr\Container\ContainerExceptionInterface;
 use Psr\Container\NotFoundExceptionInterface;
+use Override;
 
 /**
  * Class FiscalHelper.
  */
 final class FiscalHelper implements FiscalHelperInterface
 {
-    protected bool $useCustomFiscalYear;
+    private bool $useCustomFiscalYear;
 
     /**
      * FiscalHelper constructor.
@@ -46,7 +47,7 @@ final class FiscalHelper implements FiscalHelperInterface
     /**
      * @return Carbon date object
      */
-    #[\Override]
+    #[Override]
     public function endOfFiscalYear(Carbon $date): Carbon
     {
         // Log::debug(sprintf('Now in endOfFiscalYear(%s).', $date->format('Y-m-d')));
@@ -70,7 +71,7 @@ final class FiscalHelper implements FiscalHelperInterface
      * @throws ContainerExceptionInterface
      * @throws NotFoundExceptionInterface
      */
-    #[\Override]
+    #[Override]
     public function startOfFiscalYear(Carbon $date): Carbon
     {
         // get start mm-dd. Then create a start date in the year passed.

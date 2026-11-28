@@ -26,6 +26,7 @@ namespace FireflyIII\Rules;
 
 use Closure;
 use Illuminate\Contracts\Validation\ValidationRule;
+use Override;
 
 /**
  * Class ValidRecurrenceRepetitionType
@@ -37,7 +38,7 @@ final class ValidRecurrenceRepetitionType implements ValidationRule
      *
      * @SuppressWarnings("PHPMD.UnusedFormalParameter")
      */
-    #[\Override]
+    #[Override]
     public function validate(string $attribute, mixed $value, Closure $fail): void
     {
         $value = (string) $value;

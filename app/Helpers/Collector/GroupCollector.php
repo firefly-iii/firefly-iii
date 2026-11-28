@@ -160,7 +160,7 @@ final class GroupCollector implements GroupCollectorInterface
         ];
     }
 
-    #[\Override]
+    #[Override]
     public function descriptionDoesNotEnd(array $array): GroupCollectorInterface
     {
         $this->query->where(static function (EloquentBuilder $q) use ($array): void {
@@ -182,7 +182,7 @@ final class GroupCollector implements GroupCollectorInterface
         return $this;
     }
 
-    #[\Override]
+    #[Override]
     public function descriptionDoesNotStart(array $array): GroupCollectorInterface
     {
         $this->query->where(static function (EloquentBuilder $q) use ($array): void {
@@ -204,7 +204,7 @@ final class GroupCollector implements GroupCollectorInterface
         return $this;
     }
 
-    #[\Override]
+    #[Override]
     public function descriptionEnds(array $array): GroupCollectorInterface
     {
         $this->query->where(static function (EloquentBuilder $q) use ($array): void {
@@ -225,7 +225,7 @@ final class GroupCollector implements GroupCollectorInterface
         return $this;
     }
 
-    #[\Override]
+    #[Override]
     public function descriptionIs(string $value): GroupCollectorInterface
     {
         $this->query->where(static function (EloquentBuilder $q) use ($value): void {
@@ -236,7 +236,7 @@ final class GroupCollector implements GroupCollectorInterface
         return $this;
     }
 
-    #[\Override]
+    #[Override]
     public function descriptionIsNot(string $value): GroupCollectorInterface
     {
         $this->query->where(static function (EloquentBuilder $q) use ($value): void {
@@ -250,7 +250,7 @@ final class GroupCollector implements GroupCollectorInterface
         return $this;
     }
 
-    #[\Override]
+    #[Override]
     public function descriptionStarts(array $array): GroupCollectorInterface
     {
         $this->query->where(static function (EloquentBuilder $q) use ($array): void {
@@ -303,7 +303,7 @@ final class GroupCollector implements GroupCollectorInterface
     /**
      * Limit results to NOT a specific currency, either foreign or normal one.
      */
-    #[\Override]
+    #[Override]
     public function excludeCurrency(TransactionCurrency $currency): GroupCollectorInterface
     {
         $this->query->where(static function (EloquentBuilder $q) use ($currency): void {
@@ -317,7 +317,7 @@ final class GroupCollector implements GroupCollectorInterface
         return $this;
     }
 
-    #[\Override]
+    #[Override]
     public function excludeForeignCurrency(TransactionCurrency $currency): GroupCollectorInterface
     {
         $this->query->where(static function (EloquentBuilder $q2) use ($currency): void {
@@ -331,7 +331,7 @@ final class GroupCollector implements GroupCollectorInterface
     /**
      * Limit the result to NOT a set of specific transaction groups.
      */
-    #[\Override]
+    #[Override]
     public function excludeIds(array $groupIds): GroupCollectorInterface
     {
         $this->query->whereNotIn('transaction_groups.id', $groupIds);
@@ -342,7 +342,7 @@ final class GroupCollector implements GroupCollectorInterface
     /**
      * Limit the result to NOT a set of specific journals.
      */
-    #[\Override]
+    #[Override]
     public function excludeJournalIds(array $journalIds): GroupCollectorInterface
     {
         if (0 !== count($journalIds)) {
@@ -358,7 +358,7 @@ final class GroupCollector implements GroupCollectorInterface
     /**
      * Search for words in descriptions.
      */
-    #[\Override]
+    #[Override]
     public function excludeSearchWords(array $array): GroupCollectorInterface
     {
         if (0 === count($array)) {
@@ -386,7 +386,7 @@ final class GroupCollector implements GroupCollectorInterface
         return $this;
     }
 
-    #[\Override]
+    #[Override]
     public function excludeTypes(array $types): GroupCollectorInterface
     {
         $this->query->whereNotIn('transaction_types.type', $types);
@@ -394,7 +394,7 @@ final class GroupCollector implements GroupCollectorInterface
         return $this;
     }
 
-    #[\Override]
+    #[Override]
     public function exists(): GroupCollectorInterface
     {
         $this->query->whereNull('transaction_groups.deleted_at');
@@ -407,7 +407,7 @@ final class GroupCollector implements GroupCollectorInterface
         return $this;
     }
 
-    #[\Override]
+    #[Override]
     public function findNothing(): GroupCollectorInterface
     {
         Log::warning('The search engine was instructed to FIND NOTHING. This may be a bug.');
@@ -416,7 +416,7 @@ final class GroupCollector implements GroupCollectorInterface
         return $this;
     }
 
-    #[\Override]
+    #[Override]
     public function getExpandGroupSearch(): bool
     {
         return $this->expandGroupSearch;
@@ -425,7 +425,7 @@ final class GroupCollector implements GroupCollectorInterface
     /**
      * Return the transaction journals without group information. Is useful in some instances.
      */
-    #[\Override]
+    #[Override]
     public function getExtractedJournals(): array
     {
         $selection = $this->getGroups();
@@ -447,7 +447,7 @@ final class GroupCollector implements GroupCollectorInterface
     /**
      * Return the groups.
      */
-    #[\Override]
+    #[Override]
     public function getGroups(): Collection
     {
         // Log::debug('Now in getGroups()');
@@ -493,7 +493,7 @@ final class GroupCollector implements GroupCollectorInterface
     /**
      * Same as getGroups but everything is in a paginator.
      */
-    #[\Override]
+    #[Override]
     public function getPaginatedGroups(): LengthAwarePaginator
     {
         Log::debug('Now in getPaginatedGroups()');
@@ -506,7 +506,7 @@ final class GroupCollector implements GroupCollectorInterface
         return new LengthAwarePaginator($set, $this->total, $limit, $this->page);
     }
 
-    #[\Override]
+    #[Override]
     public function isNotReconciled(): GroupCollectorInterface
     {
         $this->query->where('source.reconciled', 0)->where('destination.reconciled', 0);
@@ -514,7 +514,7 @@ final class GroupCollector implements GroupCollectorInterface
         return $this;
     }
 
-    #[\Override]
+    #[Override]
     public function isReconciled(): GroupCollectorInterface
     {
         $this->query->where('source.reconciled', 1)->where('destination.reconciled', 1);
@@ -525,7 +525,7 @@ final class GroupCollector implements GroupCollectorInterface
     /**
      * Limit results to a specific currency, either foreign or normal one.
      */
-    #[\Override]
+    #[Override]
     public function setCurrency(TransactionCurrency $currency): GroupCollectorInterface
     {
         $this->query->where(static function (EloquentBuilder $q) use ($currency): void {
@@ -536,7 +536,7 @@ final class GroupCollector implements GroupCollectorInterface
         return $this;
     }
 
-    #[\Override]
+    #[Override]
     public function setExpandGroupSearch(bool $expandGroupSearch): GroupCollectorInterface
     {
         $this->expandGroupSearch = $expandGroupSearch;
@@ -544,7 +544,7 @@ final class GroupCollector implements GroupCollectorInterface
         return $this;
     }
 
-    #[\Override]
+    #[Override]
     public function setForeignCurrency(TransactionCurrency $currency): GroupCollectorInterface
     {
         $this->query->where('source.foreign_currency_id', $currency->id);
@@ -555,7 +555,7 @@ final class GroupCollector implements GroupCollectorInterface
     /**
      * Limit the result to a set of specific transaction groups.
      */
-    #[\Override]
+    #[Override]
     public function setIds(array $groupIds): GroupCollectorInterface
     {
         $this->query->whereIn('transaction_groups.id', $groupIds);
@@ -566,7 +566,7 @@ final class GroupCollector implements GroupCollectorInterface
     /**
      * Limit the result to a set of specific journals.
      */
-    #[\Override]
+    #[Override]
     public function setJournalIds(array $journalIds): GroupCollectorInterface
     {
         if (0 !== count($journalIds)) {
@@ -583,7 +583,7 @@ final class GroupCollector implements GroupCollectorInterface
     /**
      * Limit the number of returned entries.
      */
-    #[\Override]
+    #[Override]
     public function setLimit(int $limit): GroupCollectorInterface
     {
         $this->limit = $limit;
@@ -595,7 +595,7 @@ final class GroupCollector implements GroupCollectorInterface
     /**
      * Limit results to a specific currency, only normal one.
      */
-    #[\Override]
+    #[Override]
     public function setNormalCurrency(TransactionCurrency $currency): GroupCollectorInterface
     {
         $this->query->where('source.transaction_currency_id', $currency->id);
@@ -606,7 +606,7 @@ final class GroupCollector implements GroupCollectorInterface
     /**
      * Set the page to get.
      */
-    #[\Override]
+    #[Override]
     public function setPage(int $page): GroupCollectorInterface
     {
         $page       = 0 === $page ? 1 : $page;
@@ -619,7 +619,7 @@ final class GroupCollector implements GroupCollectorInterface
     /**
      * Search for words in descriptions.
      */
-    #[\Override]
+    #[Override]
     public function setSearchWords(array $array): GroupCollectorInterface
     {
         if (0 === count($array)) {
@@ -657,7 +657,7 @@ final class GroupCollector implements GroupCollectorInterface
     /**
      * Limit the search to one specific transaction group.
      */
-    #[\Override]
+    #[Override]
     public function setTransactionGroup(TransactionGroup $transactionGroup): GroupCollectorInterface
     {
         $this->query->where('transaction_groups.id', $transactionGroup->id);
@@ -668,7 +668,7 @@ final class GroupCollector implements GroupCollectorInterface
     /**
      * Limit the included transaction types.
      */
-    #[\Override]
+    #[Override]
     public function setTypes(array $types): GroupCollectorInterface
     {
         $this->query->whereIn('transaction_types.type', $types);
@@ -679,7 +679,7 @@ final class GroupCollector implements GroupCollectorInterface
     /**
      * Set the user object and start the query.
      */
-    #[\Override]
+    #[Override]
     public function setUser(User $user): GroupCollectorInterface
     {
         if (!$this->user instanceof User) {
@@ -693,7 +693,7 @@ final class GroupCollector implements GroupCollectorInterface
     /**
      * Set the user object and start the query.
      */
-    #[\Override]
+    #[Override]
     public function setUserGroup(UserGroup $userGroup): GroupCollectorInterface
     {
         if (!$this->userGroup instanceof UserGroup) {
@@ -740,7 +740,7 @@ final class GroupCollector implements GroupCollectorInterface
     /**
      * Automatically include all stuff required to make API calls work.
      */
-    #[\Override]
+    #[Override]
     public function withAPIInformation(): GroupCollectorInterface
     {
         // include source + destination account name and type.

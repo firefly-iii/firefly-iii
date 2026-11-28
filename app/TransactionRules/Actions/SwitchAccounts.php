@@ -31,6 +31,7 @@ use FireflyIII\Models\RuleAction;
 use FireflyIII\Models\Transaction;
 use FireflyIII\Models\TransactionJournal;
 use Illuminate\Support\Facades\Log;
+use Override;
 
 /**
  * Class SwitchAccounts
@@ -44,7 +45,7 @@ final class SwitchAccounts implements ActionInterface
         private readonly RuleAction $action
     ) {}
 
-    #[\Override]
+    #[Override]
     public function actOnArray(array $journal): bool
     {
         // make object from array (so the data is fresh).

@@ -32,6 +32,7 @@ use FireflyIII\Support\Facades\Amount;
 use FireflyIII\Support\Facades\AppConfiguration;
 use FireflyIII\User;
 use Illuminate\Console\Command;
+use Override;
 
 final class UpgradesBudgetLimits extends Command
 {
@@ -39,10 +40,10 @@ final class UpgradesBudgetLimits extends Command
 
     public const string CONFIG_NAME = '480_bl_currency';
 
-    #[\Override]
+    #[Override]
     protected $description          = 'Give budget limits a currency';
 
-    #[\Override]
+    #[Override]
     protected $signature            = 'upgrade:480-budget-limit-currencies {--F|force : Force the execution of this command.}';
 
     /**

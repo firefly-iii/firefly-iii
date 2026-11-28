@@ -24,12 +24,13 @@ declare(strict_types=1);
 namespace FireflyIII\Http\Middleware;
 
 use Illuminate\Foundation\Http\Middleware\TrimStrings as Middleware;
+use Override;
 
 /**
  * Class TrimStrings
  */
 final class TrimStrings extends Middleware
 {
-    #[\Override]
+    #[Override]
     protected $except = ['password', 'password_confirmation'];
 }

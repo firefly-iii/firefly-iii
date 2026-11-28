@@ -27,15 +27,16 @@ namespace FireflyIII\Console\Commands\Correction;
 use FireflyIII\Console\Commands\ShowsFriendlyMessages;
 use FireflyIII\Models\LinkType;
 use Illuminate\Console\Command;
+use Override;
 
 final class CreatesLinkTypes extends Command
 {
     use ShowsFriendlyMessages;
 
-    #[\Override]
+    #[Override]
     protected $description = 'Creates all link types.';
 
-    #[\Override]
+    #[Override]
     protected $signature   = 'correction:link-types';
 
     /**

@@ -33,6 +33,7 @@ use Illuminate\Console\Command;
 use Illuminate\Database\QueryException;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Schema;
+use Override;
 
 final class AddsTransactionIdentifiers extends Command
 {
@@ -40,9 +41,9 @@ final class AddsTransactionIdentifiers extends Command
 
     public const string CONFIG_NAME = '480_transaction_identifier';
 
-    #[\Override]
+    #[Override]
     protected $description          = 'Fixes transaction identifiers.';
-    #[\Override]
+    #[Override]
     protected $signature            = 'upgrade:480-transaction-identifiers {--F|force : Force the execution of this command.}';
     private JournalCLIRepositoryInterface $cliRepository;
     private int $count;

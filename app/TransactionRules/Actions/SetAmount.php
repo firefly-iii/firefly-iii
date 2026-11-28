@@ -32,6 +32,7 @@ use FireflyIII\Models\TransactionJournal;
 use FireflyIII\Support\Facades\Steam;
 use FireflyIII\TransactionRules\Traits\RefreshNotesTrait;
 use Illuminate\Support\Facades\Log;
+use Override;
 
 final class SetAmount implements ActionInterface
 {
@@ -44,7 +45,7 @@ final class SetAmount implements ActionInterface
         private RuleAction $action
     ) {}
 
-    #[\Override]
+    #[Override]
     public function actOnArray(array $journal): bool
     {
         $this->refreshNotes($journal);

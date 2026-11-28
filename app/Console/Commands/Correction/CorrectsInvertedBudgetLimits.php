@@ -29,6 +29,7 @@ use FireflyIII\Models\BudgetLimit;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
+use Override;
 
 final class CorrectsInvertedBudgetLimits extends Command
 {
@@ -39,7 +40,7 @@ final class CorrectsInvertedBudgetLimits extends Command
      *
      * @var string
      */
-    #[\Override]
+    #[Override]
     protected $description = 'Reverse budget limits where the dates are inverted.';
 
     /**
@@ -47,7 +48,7 @@ final class CorrectsInvertedBudgetLimits extends Command
      *
      * @var string
      */
-    #[\Override]
+    #[Override]
     protected $signature   = 'correction:corrects-inverted-budget-limits';
 
     /**

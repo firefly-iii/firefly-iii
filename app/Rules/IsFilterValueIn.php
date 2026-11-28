@@ -26,6 +26,7 @@ namespace FireflyIII\Rules;
 
 use Closure;
 use Illuminate\Contracts\Validation\ValidationRule;
+use Override;
 
 final class IsFilterValueIn implements ValidationRule
 {
@@ -37,7 +38,7 @@ final class IsFilterValueIn implements ValidationRule
     /**
      * @SuppressWarnings("PHPMD.UnusedFormalParameter")
      */
-    #[\Override]
+    #[Override]
     public function validate(string $attribute, mixed $value, Closure $fail): void
     {
         if (!is_array($value)) {

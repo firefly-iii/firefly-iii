@@ -28,6 +28,7 @@ use FireflyIII\Models\TransactionCurrency;
 use FireflyIII\Support\Facades\Amount;
 use Illuminate\Routing\Route;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
+use Override;
 
 /**
  * Class CurrencyCode.
@@ -37,7 +38,7 @@ final class CurrencyCode implements BinderInterface
     /**
      * @throws NotFoundHttpException
      */
-    #[\Override]
+    #[Override]
     public static function routeBinder(string $value, Route $route): TransactionCurrency
     {
         if (auth()->check()) {

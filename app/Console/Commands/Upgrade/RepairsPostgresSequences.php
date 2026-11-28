@@ -29,15 +29,16 @@ use Illuminate\Console\Command;
 use Illuminate\Database\QueryException;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
+use Override;
 
 final class RepairsPostgresSequences extends Command
 {
     use ShowsFriendlyMessages;
 
-    #[\Override]
+    #[Override]
     protected $description = 'Fixes issues with PostgreSQL sequences.';
 
-    #[\Override]
+    #[Override]
     protected $signature   = 'upgrade:600-pgsql-sequences';
 
     /**

@@ -35,6 +35,7 @@ use FireflyIII\Support\Repositories\UserGroup\UserGroupInterface;
 use FireflyIII\Support\Repositories\UserGroup\UserGroupTrait;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Str;
+use Override;
 
 /**
  * Class WebhookRepository
@@ -43,7 +44,7 @@ final class WebhookRepository implements WebhookRepositoryInterface, UserGroupIn
 {
     use UserGroupTrait;
 
-    #[\Override]
+    #[Override]
     public function all(): Collection
     {
         return $this->user->webhooks()
@@ -55,7 +56,7 @@ final class WebhookRepository implements WebhookRepositoryInterface, UserGroupIn
         ;
     }
 
-    #[\Override]
+    #[Override]
     public function destroy(Webhook $webhook): void
     {
         // force delete all messages and attempts:
@@ -64,31 +65,31 @@ final class WebhookRepository implements WebhookRepositoryInterface, UserGroupIn
         $webhook->delete();
     }
 
-    #[\Override]
+    #[Override]
     public function destroyAttempt(WebhookAttempt $attempt): void
     {
         $attempt->delete();
     }
 
-    #[\Override]
+    #[Override]
     public function destroyMessage(WebhookMessage $message): void
     {
         $message->delete();
     }
 
-    #[\Override]
+    #[Override]
     public function getAttempts(WebhookMessage $webhookMessage): Collection
     {
         return $webhookMessage->webhookAttempts()->orderBy('created_at', 'DESC')->get(['webhook_attempts.*']);
     }
 
-    #[\Override]
+    #[Override]
     public function getMessages(Webhook $webhook): Collection
     {
         return $webhook->webhookMessages()->orderBy('created_at', 'DESC')->get(['webhook_messages.*']);
     }
 
-    #[\Override]
+    #[Override]
     public function getReadyMessages(Webhook $webhook): Collection
     {
         return $webhook
@@ -101,7 +102,7 @@ final class WebhookRepository implements WebhookRepositoryInterface, UserGroupIn
         ;
     }
 
-    #[\Override]
+    #[Override]
     public function store(array $data): Webhook
     {
         $secret     = Str::random(24);
@@ -159,7 +160,7 @@ final class WebhookRepository implements WebhookRepositoryInterface, UserGroupIn
         return $webhook;
     }
 
-    #[\Override]
+    #[Override]
     public function update(Webhook $webhook, array $data): Webhook
     {
         $webhook->active = $data['active'] ?? $webhook->active;

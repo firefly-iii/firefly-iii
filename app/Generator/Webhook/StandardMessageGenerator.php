@@ -48,6 +48,7 @@ use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Log;
 use Ramsey\Uuid\Uuid;
 use Symfony\Component\HttpFoundation\ParameterBag;
+use Override;
 
 /**
  * Class StandardMessageGenerator
@@ -66,7 +67,7 @@ final class StandardMessageGenerator implements MessageGeneratorInterface
         $this->webhooks = new Collection();
     }
 
-    #[\Override]
+    #[Override]
     public function generateMessages(): void
     {
         Log::debug(__METHOD__);
@@ -84,31 +85,31 @@ final class StandardMessageGenerator implements MessageGeneratorInterface
         $this->run();
     }
 
-    #[\Override]
+    #[Override]
     public function getVersion(): int
     {
         return $this->version;
     }
 
-    #[\Override]
+    #[Override]
     public function setObjects(Collection $objects): void
     {
         $this->objects = $objects;
     }
 
-    #[\Override]
+    #[Override]
     public function setTrigger(WebhookTrigger $trigger): void
     {
         $this->trigger = $trigger;
     }
 
-    #[\Override]
+    #[Override]
     public function setUser(User $user): void
     {
         $this->user = $user;
     }
 
-    #[\Override]
+    #[Override]
     public function setWebhooks(Collection $webhooks): void
     {
         $this->webhooks = $webhooks;

@@ -27,13 +27,14 @@ use FireflyIII\Models\TransactionGroup;
 use FireflyIII\User;
 use Illuminate\Routing\Route;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
+use Override;
 
 /**
  * Class UserGroupTransaction.
  */
 final class UserGroupTransaction implements BinderInterface
 {
-    #[\Override]
+    #[Override]
     public static function routeBinder(string $value, Route $route): TransactionGroup
     {
         if (auth()->check()) {

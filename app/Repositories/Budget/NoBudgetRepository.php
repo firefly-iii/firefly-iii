@@ -62,7 +62,7 @@ final class NoBudgetRepository implements NoBudgetRepositoryInterface, UserGroup
         return $collector->getExtractedJournals();
     }
 
-    #[\Override]
+    #[Override]
     #[Deprecated]
     public function getNoBudgetPeriodReport(Collection $accounts, Carbon $start, Carbon $end): array
     {
@@ -103,7 +103,7 @@ final class NoBudgetRepository implements NoBudgetRepositoryInterface, UserGroup
         return $data;
     }
 
-    #[\Override]
+    #[Override]
     public function sumExpenses(Carbon $start, Carbon $end, ?Collection $accounts = null, ?TransactionCurrency $currency = null): array
     {
         /** @var GroupCollectorInterface $collector */

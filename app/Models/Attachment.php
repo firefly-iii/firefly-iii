@@ -36,6 +36,7 @@ use Illuminate\Database\Eloquent\Relations\MorphMany;
 use Illuminate\Database\Eloquent\Relations\MorphTo;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
+use Override;
 
 #[ObservedBy([DeletedAttachmentObserver::class])]
 final class Attachment extends Model
@@ -44,7 +45,7 @@ final class Attachment extends Model
     use ReturnsIntegerUserIdTrait;
     use SoftDeletes;
 
-    #[\Override]
+    #[Override]
     protected $fillable = [
         'attachable_id',
         'attachable_type',
@@ -95,6 +96,11 @@ final class Attachment extends Model
         return $this->morphTo();
     }
 
+    public function attachableId(): Attribute
+    {
+        return Attribute::make(get: static fn ($value): int => (int) $value);
+    }
+
     /**
      * Returns the expected filename for this attachment.
      */
@@ -116,12 +122,7 @@ final class Attachment extends Model
         return $this->belongsTo(User::class);
     }
 
-    public function attachableId(): Attribute
-    {
-        return Attribute::make(get: static fn ($value): int => (int) $value);
-    }
-
-    #[\Override]
+    #[Override]
     protected function casts(): array
     {
         return [

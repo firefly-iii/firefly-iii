@@ -34,6 +34,7 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Support\Facades\Log;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
+use Override;
 
 final class TransactionCurrency extends Model
 {
@@ -43,7 +44,7 @@ final class TransactionCurrency extends Model
     public ?bool $userGroupEnabled = null;
     public ?bool $userGroupNative  = null;
 
-    #[\Override]
+    #[Override]
     protected $fillable            = ['name', 'code', 'symbol', 'decimal_places', 'enabled'];
 
     /**
@@ -74,6 +75,11 @@ final class TransactionCurrency extends Model
     public function budgetLimits(): HasMany
     {
         return $this->hasMany(BudgetLimit::class);
+    }
+
+    public function decimalPlaces(): Attribute
+    {
+        return Attribute::make(get: static fn ($value): int => (int) $value);
     }
 
     public function refreshForUser(User $user): void
@@ -115,7 +121,7 @@ final class TransactionCurrency extends Model
         return $this->belongsToMany(User::class)->withTimestamps()->withPivot('user_default');
     }
 
-    #[\Override]
+    #[Override]
     protected function casts(): array
     {
         return [
@@ -125,10 +131,5 @@ final class TransactionCurrency extends Model
             'decimal_places' => 'int',
             'enabled'        => 'bool',
         ];
-    }
-
-    public function decimalPlaces(): Attribute
-    {
-        return Attribute::make(get: static fn ($value): int => (int) $value);
     }
 }

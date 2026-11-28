@@ -65,6 +65,7 @@ use League\Csv\Exception;
 use League\Csv\Writer;
 use Psr\Container\ContainerExceptionInterface;
 use Psr\Container\NotFoundExceptionInterface;
+use Override;
 
 /**
  * Class ExportDataGenerator
@@ -144,7 +145,7 @@ final class ExportDataGenerator
     /**
      * @SuppressWarnings("PHPMD.UnusedFormalParameter")
      */
-    #[\Override]
+    #[Override]
     public function get(string $key, mixed $default = null): mixed
     {
         return null;
@@ -153,7 +154,7 @@ final class ExportDataGenerator
     /**
      * @SuppressWarnings("PHPMD.UnusedFormalParameter")
      */
-    #[\Override]
+    #[Override]
     public function has(mixed $key): mixed
     {
         return null;

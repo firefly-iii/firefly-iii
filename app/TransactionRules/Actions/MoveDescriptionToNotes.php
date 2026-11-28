@@ -30,6 +30,7 @@ use FireflyIII\Models\Note;
 use FireflyIII\Models\RuleAction;
 use FireflyIII\Models\TransactionJournal;
 use Illuminate\Support\Facades\Log;
+use Override;
 
 /**
  * Class MoveDescriptionToNotes
@@ -44,7 +45,7 @@ final class MoveDescriptionToNotes implements ActionInterface
         private readonly RuleAction $action
     ) {}
 
-    #[\Override]
+    #[Override]
     public function actOnArray(array $journal): bool
     {
         /** @var null|TransactionJournal $object */

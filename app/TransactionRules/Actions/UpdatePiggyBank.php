@@ -36,6 +36,7 @@ use FireflyIII\Repositories\PiggyBank\PiggyBankRepositoryInterface;
 use FireflyIII\Support\Facades\Amount;
 use FireflyIII\User;
 use Illuminate\Support\Facades\Log;
+use Override;
 
 final class UpdatePiggyBank implements ActionInterface
 {
@@ -46,7 +47,7 @@ final class UpdatePiggyBank implements ActionInterface
         private readonly RuleAction $action
     ) {}
 
-    #[\Override]
+    #[Override]
     public function actOnArray(array $journal): bool
     {
         $actionValue = $this->action->getValue($journal);

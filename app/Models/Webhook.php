@@ -39,6 +39,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
+use Override;
 
 #[ObservedBy([DeletedWebhookObserver::class])]
 final class Webhook extends Model
@@ -58,7 +59,7 @@ final class Webhook extends Model
         return $array;
     }
 
-    #[\Override]
+    #[Override]
     protected $fillable = ['active', 'trigger', 'response', 'delivery', 'user_id', 'user_group_id', 'url', 'title', 'secret'];
 
     public static function getDeliveriesForValidation(): array
@@ -170,7 +171,7 @@ final class Webhook extends Model
         return $this->belongsToMany(WebhookTrigger::class);
     }
 
-    #[\Override]
+    #[Override]
     protected function casts(): array
     {
         return [

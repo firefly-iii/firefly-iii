@@ -30,6 +30,7 @@ use FireflyIII\Models\Transaction;
 use FireflyIII\Models\TransactionJournal;
 use Illuminate\Console\Command;
 use stdClass;
+use Override;
 
 /**
  * Deletes transactions where the journal has been deleted.
@@ -38,10 +39,10 @@ final class RemovesOrphanedTransactions extends Command
 {
     use ShowsFriendlyMessages;
 
-    #[\Override]
+    #[Override]
     protected $description = 'Deletes orphaned transactions.';
 
-    #[\Override]
+    #[Override]
     protected $signature   = 'correction:orphaned-transactions';
 
     /**

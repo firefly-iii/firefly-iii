@@ -38,6 +38,7 @@ use FireflyIII\Models\TransactionType;
 use FireflyIII\Repositories\Account\AccountRepositoryInterface;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
+use Override;
 
 /**
  * Class ConvertToWithdrawal
@@ -51,7 +52,7 @@ final class ConvertToWithdrawal implements ActionInterface
         private readonly RuleAction $action
     ) {}
 
-    #[\Override]
+    #[Override]
     public function actOnArray(array $journal): bool
     {
         $actionValue = $this->action->getValue($journal);

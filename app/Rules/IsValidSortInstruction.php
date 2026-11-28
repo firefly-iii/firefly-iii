@@ -26,6 +26,7 @@ namespace FireflyIII\Rules;
 
 use Closure;
 use Illuminate\Contracts\Validation\ValidationRule;
+use Override;
 
 final class IsValidSortInstruction implements ValidationRule
 {
@@ -33,7 +34,7 @@ final class IsValidSortInstruction implements ValidationRule
         private readonly string $class
     ) {}
 
-    #[\Override]
+    #[Override]
     public function validate(string $attribute, mixed $value, Closure $fail): void
     {
         $shortClass      = str_replace('FireflyIII\Models\\', '', $this->class);

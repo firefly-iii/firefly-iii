@@ -28,14 +28,15 @@ use FireflyIII\Console\Commands\ShowsFriendlyMessages;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\Artisan;
 use Symfony\Component\Console\Command\Command as CommandAlias;
+use Override;
 
 final class CallsLaravelPassportKeys extends Command
 {
     use ShowsFriendlyMessages;
 
-    #[\Override]
+    #[Override]
     protected $description = 'Calls the Laravel "passport:keys" but doesn\'t exit 1.';
-    #[\Override]
+    #[Override]
     protected $signature   = 'firefly-iii:laravel-passport-keys';
 
     /**

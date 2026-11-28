@@ -50,6 +50,7 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Log;
+use Override;
 
 use function Safe\json_decode;
 
@@ -81,7 +82,7 @@ final class RecurringEnrichment implements EnrichmentInterface
         $this->convertToPrimary = Amount::convertToPrimary();
     }
 
-    #[\Override]
+    #[Override]
     public function enrich(Collection $collection): Collection
     {
         Log::debug(__METHOD__);
@@ -99,7 +100,7 @@ final class RecurringEnrichment implements EnrichmentInterface
         return $this->collection;
     }
 
-    #[\Override]
+    #[Override]
     public function enrichSingle(array|Model $model): array|Model
     {
         Log::debug(__METHOD__);
@@ -171,7 +172,7 @@ final class RecurringEnrichment implements EnrichmentInterface
         return '';
     }
 
-    #[\Override]
+    #[Override]
     public function setUser(User $user): void
     {
         $this->user = $user;
@@ -179,7 +180,7 @@ final class RecurringEnrichment implements EnrichmentInterface
         $this->getLanguage();
     }
 
-    #[\Override]
+    #[Override]
     public function setUserGroup(UserGroup $userGroup): void
     {
         $this->userGroup = $userGroup;

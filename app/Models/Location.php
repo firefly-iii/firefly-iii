@@ -29,12 +29,13 @@ use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\MorphMany;
 use Illuminate\Database\Eloquent\Relations\MorphTo;
+use Override;
 
 final class Location extends Model
 {
     use ReturnsIntegerIdTrait;
 
-    #[\Override]
+    #[Override]
     protected $fillable = ['locatable_id', 'locatable_type', 'latitude', 'longitude', 'zoom_level'];
 
     /**
@@ -62,12 +63,17 @@ final class Location extends Model
         return $this->morphTo();
     }
 
+    public function locatableId(): Attribute
+    {
+        return Attribute::make(get: static fn ($value): int => (int) $value);
+    }
+
     public function transactionJournals(): MorphMany
     {
         return $this->morphMany(TransactionJournal::class, 'locatable');
     }
 
-    #[\Override]
+    #[Override]
     protected function casts(): array
     {
         return [
@@ -78,10 +84,5 @@ final class Location extends Model
             'latitude'   => 'float',
             'longitude'  => 'float',
         ];
-    }
-
-    public function locatableId(): Attribute
-    {
-        return Attribute::make(get: static fn ($value): int => (int) $value);
     }
 }

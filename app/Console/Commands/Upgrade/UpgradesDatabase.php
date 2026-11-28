@@ -30,6 +30,7 @@ use FireflyIII\Support\System\GeneratesInstallationId;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\Log;
 use Safe\Exceptions\InfoException;
+use Override;
 
 use function Safe\set_time_limit;
 
@@ -44,9 +45,9 @@ final class UpgradesDatabase extends Command
     use GeneratesInstallationId;
     use ShowsFriendlyMessages;
 
-    #[\Override]
+    #[Override]
     protected $description = 'Upgrades the database to the latest version.';
-    #[\Override]
+    #[Override]
     protected $signature   = 'firefly-iii:upgrade-database {--F|force : Force all upgrades.}';
 
     /**

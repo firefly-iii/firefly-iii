@@ -34,6 +34,7 @@ use FireflyIII\Services\Internal\Support\CreditRecalculateService;
 use FireflyIII\Support\Facades\AppConfiguration;
 use FireflyIII\User;
 use Illuminate\Console\Command;
+use Override;
 
 final class UpgradesLiabilities extends Command
 {
@@ -41,9 +42,9 @@ final class UpgradesLiabilities extends Command
 
     public const string CONFIG_NAME = '560_upgrade_liabilities';
 
-    #[\Override]
+    #[Override]
     protected $description          = 'Upgrade liabilities to new 5.6.0 structure.';
-    #[\Override]
+    #[Override]
     protected $signature            = 'upgrade:560-liabilities {--F|force : Force the execution of this command.}';
 
     /**

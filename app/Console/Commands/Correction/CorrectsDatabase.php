@@ -27,14 +27,15 @@ namespace FireflyIII\Console\Commands\Correction;
 use FireflyIII\Console\Commands\ShowsFriendlyMessages;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\Schema;
+use Override;
 
 final class CorrectsDatabase extends Command
 {
     use ShowsFriendlyMessages;
 
-    #[\Override]
+    #[Override]
     protected $description = 'Will validate and correct the integrity of your database, if necessary.';
-    #[\Override]
+    #[Override]
     protected $signature   = 'firefly-iii:correct-database';
 
     /**

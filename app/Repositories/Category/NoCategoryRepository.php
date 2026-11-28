@@ -32,6 +32,7 @@ use FireflyIII\Support\Report\Summarizer\TransactionSummarizer;
 use FireflyIII\Support\Repositories\UserGroup\UserGroupInterface;
 use FireflyIII\Support\Repositories\UserGroup\UserGroupTrait;
 use Illuminate\Support\Collection;
+use Override;
 
 /**
  * Class NoCategoryRepository
@@ -45,7 +46,7 @@ final class NoCategoryRepository implements NoCategoryRepositoryInterface, UserG
      * which have no category set to them. It's grouped per currency, with as few details in the array
      * as possible. Amounts are always negative.
      */
-    #[\Override]
+    #[Override]
     public function listExpenses(Carbon $start, Carbon $end, ?Collection $accounts = null): array
     {
         /** @var GroupCollectorInterface $collector */
@@ -104,7 +105,7 @@ final class NoCategoryRepository implements NoCategoryRepositoryInterface, UserG
      * which have no category set to them. It's grouped per currency, with as few details in the array
      * as possible. Amounts are always positive.
      */
-    #[\Override]
+    #[Override]
     public function listIncome(Carbon $start, Carbon $end, ?Collection $accounts = null): array
     {
         /** @var GroupCollectorInterface $collector */
@@ -161,7 +162,7 @@ final class NoCategoryRepository implements NoCategoryRepositoryInterface, UserG
     /**
      * Sum of withdrawal journals in period without a category, grouped per currency. Amounts are always negative.
      */
-    #[\Override]
+    #[Override]
     public function sumExpenses(Carbon $start, Carbon $end, ?Collection $accounts = null): array
     {
         /** @var GroupCollectorInterface $collector */
@@ -180,7 +181,7 @@ final class NoCategoryRepository implements NoCategoryRepositoryInterface, UserG
     /**
      * Sum of income journals in period without a category, grouped per currency. Amounts are always positive.
      */
-    #[\Override]
+    #[Override]
     public function sumIncome(Carbon $start, Carbon $end, ?Collection $accounts = null): array
     {
         /** @var GroupCollectorInterface $collector */
@@ -209,7 +210,7 @@ final class NoCategoryRepository implements NoCategoryRepositoryInterface, UserG
         return $array;
     }
 
-    #[\Override]
+    #[Override]
     public function sumTransfers(Carbon $start, Carbon $end, ?Collection $accounts = null): array
     {
         /** @var GroupCollectorInterface $collector */

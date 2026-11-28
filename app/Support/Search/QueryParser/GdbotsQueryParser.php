@@ -32,6 +32,7 @@ use Illuminate\Support\Facades\Log;
 use LogicException;
 use Safe\Exceptions\FilesystemException;
 use TypeError;
+use Override;
 
 use function Safe\fwrite;
 
@@ -48,7 +49,7 @@ final class GdbotsQueryParser implements QueryParserInterface
      * @throws FireflyException
      * @throws FilesystemException
      */
-    #[\Override]
+    #[Override]
     public function parse(string $query): NodeGroup
     {
         try {

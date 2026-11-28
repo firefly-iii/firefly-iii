@@ -28,13 +28,14 @@ use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\MorphTo;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use Override;
 
 final class Note extends Model
 {
     use ReturnsIntegerIdTrait;
     use SoftDeletes;
 
-    #[\Override]
+    #[Override]
     protected $fillable = ['title', 'text', 'noteable_id', 'noteable_type'];
 
     /**
@@ -45,14 +46,14 @@ final class Note extends Model
         return $this->morphTo();
     }
 
-    #[\Override]
-    protected function casts(): array
-    {
-        return ['created_at' => 'datetime', 'updated_at' => 'datetime', 'deleted_at' => 'datetime'];
-    }
-
     public function noteableId(): Attribute
     {
         return Attribute::make(get: static fn ($value): int => (int) $value);
+    }
+
+    #[Override]
+    protected function casts(): array
+    {
+        return ['created_at' => 'datetime', 'updated_at' => 'datetime', 'deleted_at' => 'datetime'];
     }
 }

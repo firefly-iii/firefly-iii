@@ -33,6 +33,7 @@ use Illuminate\Auth\AuthenticationException;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
+use Override;
 
 /**
  * @property Carbon $expires
@@ -42,7 +43,7 @@ final class InvitedUser extends Model
     use ReturnsIntegerIdTrait;
     use ReturnsIntegerUserIdTrait;
 
-    #[\Override]
+    #[Override]
     protected $fillable = ['user_group_id', 'user_id', 'email', 'invite_code', 'expires', 'expires_tz', 'redeemed'];
 
     /**
@@ -73,7 +74,7 @@ final class InvitedUser extends Model
         return $this->belongsTo(User::class);
     }
 
-    #[\Override]
+    #[Override]
     protected function casts(): array
     {
         return ['expires' => SeparateTimezoneCaster::class, 'redeemed' => 'boolean', 'user_id' => 'integer', 'user_group_id' => 'integer'];

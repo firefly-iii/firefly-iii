@@ -36,6 +36,7 @@ use FireflyIII\Models\UserGroup;
 use Illuminate\Contracts\Validation\ValidationRule;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Log;
+use Override;
 
 /**
  * Class BelongsUserGroup
@@ -52,7 +53,7 @@ final class BelongsUserGroup implements ValidationRule
         private readonly UserGroup $userGroup
     ) {}
 
-    #[\Override]
+    #[Override]
     public function validate(string $attribute, mixed $value, Closure $fail): void
     {
         $attribute = $this->parseAttribute($attribute);

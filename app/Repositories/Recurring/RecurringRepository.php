@@ -68,7 +68,7 @@ final class RecurringRepository implements RecurringRepositoryInterface, UserGro
 
     use UserGroupTrait;
 
-    #[\Override]
+    #[Override]
     public function createdPreviously(Recurrence $recurrence, Carbon $date): bool
     {
         // if not, loop set and try to read the recurrence_date. If it matches start or end, return it as well.
@@ -102,7 +102,7 @@ final class RecurringRepository implements RecurringRepositoryInterface, UserGro
     /**
      * Destroy a recurring transaction.
      */
-    #[\Override]
+    #[Override]
     public function destroy(Recurrence $recurrence): void
     {
         /** @var RecurrenceDestroyService $service */
@@ -110,7 +110,7 @@ final class RecurringRepository implements RecurringRepositoryInterface, UserGro
         $service->destroy($recurrence);
     }
 
-    #[\Override]
+    #[Override]
     public function destroyAll(): void
     {
         Log::channel('audit')->info('Delete all recurring transactions through destroyAll');
@@ -120,7 +120,7 @@ final class RecurringRepository implements RecurringRepositoryInterface, UserGro
     /**
      * Returns all the user's recurring transactions.
      */
-    #[\Override]
+    #[Override]
     public function get(): Collection
     {
         return $this->user->recurrences()
@@ -135,7 +135,7 @@ final class RecurringRepository implements RecurringRepositoryInterface, UserGro
     /**
      * Get ALL recurring transactions.
      */
-    #[\Override]
+    #[Override]
     public function getAll(): Collection
     {
         // grab ALL recurring transactions:
@@ -147,7 +147,7 @@ final class RecurringRepository implements RecurringRepositoryInterface, UserGro
         ;
     }
 
-    #[\Override]
+    #[Override]
     public function getBillId(RecurrenceTransaction $recTransaction): ?int
     {
         $return = null;
@@ -165,7 +165,7 @@ final class RecurringRepository implements RecurringRepositoryInterface, UserGro
     /**
      * Get the budget ID from a recurring transaction transaction.
      */
-    #[\Override]
+    #[Override]
     public function getBudget(RecurrenceTransaction $recTransaction): ?int
     {
         $return = 0;
@@ -183,7 +183,7 @@ final class RecurringRepository implements RecurringRepositoryInterface, UserGro
     /**
      * Get the category from a recurring transaction-transaction.
      */
-    #[\Override]
+    #[Override]
     public function getCategoryId(RecurrenceTransaction $recTransaction): ?int
     {
         $return = '';
@@ -201,7 +201,7 @@ final class RecurringRepository implements RecurringRepositoryInterface, UserGro
     /**
      * Get the category from a recurring transaction transaction.
      */
-    #[\Override]
+    #[Override]
     public function getCategoryName(RecurrenceTransaction $recTransaction): ?string
     {
         $return = '';
@@ -219,7 +219,7 @@ final class RecurringRepository implements RecurringRepositoryInterface, UserGro
     /**
      * Returns the journals created for this recurrence, possibly limited by time.
      */
-    #[\Override]
+    #[Override]
     public function getJournalCount(Recurrence $recurrence, ?Carbon $start = null, ?Carbon $end = null): int
     {
         Log::debug(sprintf('Now in getJournalCount(#%d, "%s", "%s")', $recurrence->id, $start?->format('Y-m-d H:i:s'), $end?->format('Y-m-d H:i:s')));
@@ -244,17 +244,24 @@ final class RecurringRepository implements RecurringRepositoryInterface, UserGro
     /**
      * Get journal ID's for journals created by this recurring transaction.
      */
-    #[\Override]
+    #[Override]
     public function getJournalIds(Recurrence $recurrence): array
     {
-        /* @phpstan-ignore larastan.noUnnecessaryCollectionCall */
-        return TransactionJournalMeta::leftJoin('transaction_journals', 'transaction_journals.id', '=', 'journal_meta.transaction_journal_id')->where('transaction_journals.user_id', $this->user->id)->where('journal_meta.name', '=', 'recurrence_id')->where('journal_meta.data', '=', json_encode((string) $recurrence->id))->get(['journal_meta.transaction_journal_id'])->pluck('transaction_journal_id')->toArray();
+        // @phpstan-ignore larastan.noUnnecessaryCollectionCall
+        return TransactionJournalMeta::leftJoin('transaction_journals', 'transaction_journals.id', '=', 'journal_meta.transaction_journal_id')
+            ->where('transaction_journals.user_id', $this->user->id)
+            ->where('journal_meta.name', '=', 'recurrence_id')
+            ->where('journal_meta.data', '=', json_encode((string) $recurrence->id))
+            ->get(['journal_meta.transaction_journal_id'])
+            ->pluck('transaction_journal_id')
+            ->toArray()
+        ;
     }
 
     /**
      * Get the notes.
      */
-    #[\Override]
+    #[Override]
     public function getNoteText(Recurrence $recurrence): string
     {
         /** @var null|Note $note */
@@ -266,7 +273,7 @@ final class RecurringRepository implements RecurringRepositoryInterface, UserGro
     /**
      * Generate events in the date range.
      */
-    #[\Override]
+    #[Override]
     public function getOccurrencesInRange(RecurrenceRepetition $repetition, Carbon $start, Carbon $end): array
     {
         $occurrences = [];
@@ -296,7 +303,7 @@ final class RecurringRepository implements RecurringRepositoryInterface, UserGro
         return $this->filterWeekends($repetition, $occurrences);
     }
 
-    #[\Override]
+    #[Override]
     public function getPiggyBank(RecurrenceTransaction $transaction): ?int
     {
         $meta = $transaction->recurrenceTransactionMeta;
@@ -314,7 +321,7 @@ final class RecurringRepository implements RecurringRepositoryInterface, UserGro
     /**
      * Get the tags from the recurring transaction.
      */
-    #[\Override]
+    #[Override]
     public function getTags(RecurrenceTransaction $transaction): array
     {
         $tags = [];
@@ -329,11 +336,19 @@ final class RecurringRepository implements RecurringRepositoryInterface, UserGro
         return $tags;
     }
 
-    #[\Override]
+    #[Override]
     public function getTransactionPaginator(Recurrence $recurrence, int $page, int $pageSize): LengthAwarePaginator
     {
-        /* @phpstan-ignore larastan.noUnnecessaryCollectionCall */
-        $journalMeta = TransactionJournalMeta::leftJoin('transaction_journals', 'transaction_journals.id', '=', 'journal_meta.transaction_journal_id')->whereNull('transaction_journals.deleted_at')->where('transaction_journals.user_id', $this->user->id)->where('name', 'recurrence_id')->where('data', json_encode((string) $recurrence->id))->get()->pluck('transaction_journal_id')->toArray();
+        // @phpstan-ignore larastan.noUnnecessaryCollectionCall
+        $journalMeta = TransactionJournalMeta::leftJoin('transaction_journals', 'transaction_journals.id', '=', 'journal_meta.transaction_journal_id')
+            ->whereNull('transaction_journals.deleted_at')
+            ->where('transaction_journals.user_id', $this->user->id)
+            ->where('name', 'recurrence_id')
+            ->where('data', json_encode((string) $recurrence->id))
+            ->get()
+            ->pluck('transaction_journal_id')
+            ->toArray()
+        ;
         $search      = [];
         foreach ($journalMeta as $journalId) {
             $search[] = (int) $journalId;
@@ -349,11 +364,19 @@ final class RecurringRepository implements RecurringRepositoryInterface, UserGro
         return $collector->getPaginatedGroups();
     }
 
-    #[\Override]
+    #[Override]
     public function getTransactions(Recurrence $recurrence): Collection
     {
-        /* @phpstan-ignore larastan.noUnnecessaryCollectionCall */
-        $journalMeta = TransactionJournalMeta::leftJoin('transaction_journals', 'transaction_journals.id', '=', 'journal_meta.transaction_journal_id')->whereNull('transaction_journals.deleted_at')->where('transaction_journals.user_id', $this->user->id)->where('name', 'recurrence_id')->where('data', json_encode((string) $recurrence->id))->get()->pluck('transaction_journal_id')->toArray();
+        // @phpstan-ignore larastan.noUnnecessaryCollectionCall
+        $journalMeta = TransactionJournalMeta::leftJoin('transaction_journals', 'transaction_journals.id', '=', 'journal_meta.transaction_journal_id')
+            ->whereNull('transaction_journals.deleted_at')
+            ->where('transaction_journals.user_id', $this->user->id)
+            ->where('name', 'recurrence_id')
+            ->where('data', json_encode((string) $recurrence->id))
+            ->get()
+            ->pluck('transaction_journal_id')
+            ->toArray()
+        ;
         $search      = [];
 
         foreach ($journalMeta as $journalId) {
@@ -377,7 +400,7 @@ final class RecurringRepository implements RecurringRepositoryInterface, UserGro
     /**
      * Calculate the next X iterations starting on the date given in $date.
      */
-    #[\Override]
+    #[Override]
     public function getXOccurrences(RecurrenceRepetition $repetition, Carbon $date, int $count): array
     {
         $count       = clamp($count, 1, 100);
@@ -409,7 +432,7 @@ final class RecurringRepository implements RecurringRepositoryInterface, UserGro
      *
      * Only returns them of they are after $afterDate
      */
-    #[\Override]
+    #[Override]
     public function getXOccurrencesSince(RecurrenceRepetition $repetition, Carbon $date, Carbon $afterDate, int $count): array
     {
         Log::debug('Now in getXOccurrencesSince()');
@@ -446,7 +469,7 @@ final class RecurringRepository implements RecurringRepositoryInterface, UserGro
         return $this->filterMaxDate($repeatUntil, $occurrences);
     }
 
-    #[\Override]
+    #[Override]
     public function markGroupsAsNow(Collection $groups): void
     {
         /** @var TransactionGroup $group */
@@ -463,7 +486,7 @@ final class RecurringRepository implements RecurringRepositoryInterface, UserGro
     /**
      * Parse the repetition in a string that is user readable.
      */
-    #[\Override]
+    #[Override]
     public function repetitionDescription(RecurrenceRepetition $repetition): string
     {
         Log::debug('Now in repetitionDescription()');
@@ -524,7 +547,7 @@ final class RecurringRepository implements RecurringRepositoryInterface, UserGro
         return '';
     }
 
-    #[\Override]
+    #[Override]
     public function searchRecurrence(string $query, int $limit): Collection
     {
         $search = $this->user->recurrences();
@@ -549,7 +572,7 @@ final class RecurringRepository implements RecurringRepositoryInterface, UserGro
     /**
      * @throws FireflyException
      */
-    #[\Override]
+    #[Override]
     public function store(array $data): Recurrence
     {
         /** @var RecurrenceFactory $factory */
@@ -559,7 +582,7 @@ final class RecurringRepository implements RecurringRepositoryInterface, UserGro
         return $factory->create($data);
     }
 
-    #[\Override]
+    #[Override]
     public function totalTransactions(Recurrence $recurrence, RecurrenceRepetition $repetition): int
     {
         // if repeat = null just return 0.
@@ -586,7 +609,7 @@ final class RecurringRepository implements RecurringRepositoryInterface, UserGro
      *
      * @throws FireflyException
      */
-    #[\Override]
+    #[Override]
     public function update(Recurrence $recurrence, array $data): Recurrence
     {
         /** @var RecurrenceUpdateService $service */

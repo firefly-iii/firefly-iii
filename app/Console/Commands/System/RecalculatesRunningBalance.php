@@ -28,6 +28,7 @@ use FireflyIII\Console\Commands\ShowsFriendlyMessages;
 use FireflyIII\Support\Facades\AppConfiguration;
 use FireflyIII\Support\Models\AccountBalanceCalculator;
 use Illuminate\Console\Command;
+use Override;
 
 final class RecalculatesRunningBalance extends Command
 {
@@ -38,7 +39,7 @@ final class RecalculatesRunningBalance extends Command
      *
      * @var string
      */
-    #[\Override]
+    #[Override]
     protected $description = 'Refreshes all running balances. May take a long time to run if forced.';
 
     /**
@@ -46,7 +47,7 @@ final class RecalculatesRunningBalance extends Command
      *
      * @var string
      */
-    #[\Override]
+    #[Override]
     protected $signature   = 'firefly-iii:refresh-running-balance {--F|force : Force the execution of this command.}';
 
     /**

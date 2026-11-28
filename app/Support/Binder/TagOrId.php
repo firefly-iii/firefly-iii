@@ -28,13 +28,14 @@ use FireflyIII\Repositories\Tag\TagRepositoryInterface;
 use Illuminate\Routing\Route;
 use Illuminate\Support\Facades\Log;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
+use Override;
 
 /**
  * Class TagOrId.
  */
 final class TagOrId implements BinderInterface
 {
-    #[\Override]
+    #[Override]
     public static function routeBinder(string $value, Route $route): Tag
     {
         if (auth()->check()) {

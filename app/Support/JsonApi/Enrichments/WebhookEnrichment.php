@@ -38,6 +38,7 @@ use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use stdClass;
+use Override;
 
 final class WebhookEnrichment implements EnrichmentInterface
 {
@@ -50,7 +51,7 @@ final class WebhookEnrichment implements EnrichmentInterface
     private array $webhookResponses  = [];
     private array $webhookTriggers   = [];
 
-    #[\Override]
+    #[Override]
     public function enrich(Collection $collection): Collection
     {
         $this->collection = $collection;
@@ -64,7 +65,7 @@ final class WebhookEnrichment implements EnrichmentInterface
         return $this->collection;
     }
 
-    #[\Override]
+    #[Override]
     public function enrichSingle(array|Model $model): array|Model
     {
         Log::debug(__METHOD__);
@@ -74,10 +75,10 @@ final class WebhookEnrichment implements EnrichmentInterface
         return $collection->first();
     }
 
-    #[\Override]
+    #[Override]
     public function setUser(User $user): void {}
 
-    #[\Override]
+    #[Override]
     public function setUserGroup(UserGroup $userGroup): void {}
 
     private function appendCollectedInfo(): void

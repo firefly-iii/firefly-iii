@@ -55,7 +55,7 @@ final class PiggyBankRepository implements PiggyBankRepositoryInterface, UserGro
 
     use UserGroupTrait;
 
-    #[\Override]
+    #[Override]
     public function destroyAll(): void
     {
         Log::channel('audit')->info('Delete all piggy banks through destroyAll');
@@ -67,7 +67,7 @@ final class PiggyBankRepository implements PiggyBankRepositoryInterface, UserGro
         ;
     }
 
-    #[\Override]
+    #[Override]
     public function find(int $piggyBankId): ?PiggyBank
     {
         return PiggyBank::leftJoin('account_piggy_bank', 'account_piggy_bank.piggy_bank_id', '=', 'piggy_banks.id')
@@ -81,7 +81,7 @@ final class PiggyBankRepository implements PiggyBankRepositoryInterface, UserGro
     /**
      * Find by name or return NULL.
      */
-    #[\Override]
+    #[Override]
     public function findByName(string $name): ?PiggyBank
     {
         return PiggyBank::leftJoin('account_piggy_bank', 'account_piggy_bank.piggy_bank_id', '=', 'piggy_banks.id')
@@ -92,7 +92,7 @@ final class PiggyBankRepository implements PiggyBankRepositoryInterface, UserGro
         ;
     }
 
-    #[\Override]
+    #[Override]
     public function findPiggyBank(?int $piggyBankId, ?string $piggyBankName): ?PiggyBank
     {
         Log::debug('Searching for piggy information.');
@@ -118,7 +118,7 @@ final class PiggyBankRepository implements PiggyBankRepositoryInterface, UserGro
         return null;
     }
 
-    #[\Override]
+    #[Override]
     public function getAttachments(PiggyBank $piggyBank): Collection
     {
         $set  = $piggyBank->attachments()->get();
@@ -137,7 +137,7 @@ final class PiggyBankRepository implements PiggyBankRepositoryInterface, UserGro
     /**
      * Get current amount saved in piggy bank.
      */
-    #[\Override]
+    #[Override]
     public function getCurrentAmount(PiggyBank $piggyBank, ?Account $account = null): string
     {
         $sum = '0';
@@ -163,7 +163,7 @@ final class PiggyBankRepository implements PiggyBankRepositoryInterface, UserGro
     /**
      * Get current amount saved in piggy bank.
      */
-    #[\Override]
+    #[Override]
     public function getCurrentPrimaryCurrencyAmount(PiggyBank $piggyBank, ?Account $account = null): string
     {
         $sum = '0';
@@ -179,7 +179,7 @@ final class PiggyBankRepository implements PiggyBankRepositoryInterface, UserGro
         return $sum;
     }
 
-    #[\Override]
+    #[Override]
     public function getEvents(PiggyBank $piggyBank): Collection
     {
         return $piggyBank->piggyBankEvents()->orderBy('date', 'DESC')->orderBy('id', 'DESC')->get();
@@ -190,7 +190,7 @@ final class PiggyBankRepository implements PiggyBankRepositoryInterface, UserGro
      *
      * @throws FireflyException
      */
-    #[\Override]
+    #[Override]
     public function getExactAmount(PiggyBank $piggyBank, TransactionJournal $journal): string
     {
         Log::debug(sprintf('Now in getExactAmount(%d, %d)', $piggyBank->id, $journal->id));
@@ -298,7 +298,7 @@ final class PiggyBankRepository implements PiggyBankRepositoryInterface, UserGro
     /**
      * Return note for piggy bank.
      */
-    #[\Override]
+    #[Override]
     public function getNoteText(PiggyBank $piggyBank): string
     {
         /** @var null|Note $note */
@@ -307,7 +307,7 @@ final class PiggyBankRepository implements PiggyBankRepositoryInterface, UserGro
         return (string) $note?->text;
     }
 
-    #[\Override]
+    #[Override]
     public function getPiggyBanks(): Collection
     {
         $query = PiggyBank::leftJoin('account_piggy_bank', 'account_piggy_bank.piggy_bank_id', '=', 'piggy_banks.id')->leftJoin(
@@ -329,7 +329,7 @@ final class PiggyBankRepository implements PiggyBankRepositoryInterface, UserGro
     /**
      * Also add amount in name.
      */
-    #[\Override]
+    #[Override]
     public function getPiggyBanksWithAmount(): Collection
     {
         $set = $this->getPiggyBanks();
@@ -343,7 +343,7 @@ final class PiggyBankRepository implements PiggyBankRepositoryInterface, UserGro
         return $set;
     }
 
-    #[\Override]
+    #[Override]
     public function getRepetition(PiggyBank $piggyBank, bool $overrule = false): ?PiggyBankRepetition
     {
         if (false === $overrule) {
@@ -358,7 +358,7 @@ final class PiggyBankRepository implements PiggyBankRepositoryInterface, UserGro
     /**
      * Get for piggy account what is left to put in piggies.
      */
-    #[\Override]
+    #[Override]
     public function leftOnAccount(PiggyBank $piggyBank, Account $account, Carbon $date): string
     {
         Log::debug(sprintf('leftOnAccount("%s","%s","%s")', $piggyBank->name, $account->name, $date->format('Y-m-d H:i:s')));
@@ -397,7 +397,7 @@ final class PiggyBankRepository implements PiggyBankRepositoryInterface, UserGro
         ;
     }
 
-    #[\Override]
+    #[Override]
     public function resetHistory(PiggyBank $piggyBank): void
     {
         $piggyBank->piggyBankEvents()->delete();
@@ -416,7 +416,7 @@ final class PiggyBankRepository implements PiggyBankRepositoryInterface, UserGro
         $factory->resetOrder();
     }
 
-    #[\Override]
+    #[Override]
     public function searchPiggyBank(string $query, int $limit): Collection
     {
         $search = PiggyBank::leftJoin('account_piggy_bank', 'account_piggy_bank.piggy_bank_id', '=', 'piggy_banks.id')

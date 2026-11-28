@@ -31,6 +31,7 @@ use FireflyIII\Models\RuleAction;
 use FireflyIII\Models\TransactionJournal;
 use FireflyIII\TransactionRules\Traits\RefreshNotesTrait;
 use Illuminate\Support\Facades\Log;
+use Override;
 
 /**
  * Class AppendDescriptionToNotes
@@ -47,7 +48,7 @@ final class AppendDescriptionToNotes implements ActionInterface
         private RuleAction $action
     ) {}
 
-    #[\Override]
+    #[Override]
     public function actOnArray(array $journal): bool
     {
         $this->refreshNotes($journal);

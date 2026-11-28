@@ -36,6 +36,7 @@ use FireflyIII\User;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Log;
+use Override;
 
 final class BudgetLimitEnrichment implements EnrichmentInterface
 {
@@ -58,7 +59,7 @@ final class BudgetLimitEnrichment implements EnrichmentInterface
         $this->primaryCurrency  = Amount::getPrimaryCurrency();
     }
 
-    #[\Override]
+    #[Override]
     public function enrich(Collection $collection): Collection
     {
         $this->collection = $collection;
@@ -72,7 +73,7 @@ final class BudgetLimitEnrichment implements EnrichmentInterface
         return $this->collection;
     }
 
-    #[\Override]
+    #[Override]
     public function enrichSingle(array|Model $model): array|Model
     {
         Log::debug(__METHOD__);
@@ -82,13 +83,13 @@ final class BudgetLimitEnrichment implements EnrichmentInterface
         return $collection->first();
     }
 
-    #[\Override]
+    #[Override]
     public function setUser(User $user): void
     {
         $this->user = $user;
     }
 
-    #[\Override]
+    #[Override]
     public function setUserGroup(UserGroup $userGroup): void {}
 
     private function appendCollectedData(): void

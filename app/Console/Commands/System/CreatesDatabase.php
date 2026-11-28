@@ -29,16 +29,17 @@ use FireflyIII\Console\Commands\Tools\VerifiesDatabaseConnectionTrait;
 use Illuminate\Console\Command;
 use PDO;
 use PDOException;
+use Override;
 
 final class CreatesDatabase extends Command
 {
     use ShowsFriendlyMessages;
     use VerifiesDatabaseConnectionTrait;
 
-    #[\Override]
+    #[Override]
     protected $description = 'Tries to create the database if it doesn\'t exist yet.';
 
-    #[\Override]
+    #[Override]
     protected $signature   = 'firefly-iii:create-database';
 
     public function handle(): int

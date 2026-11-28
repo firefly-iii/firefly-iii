@@ -31,12 +31,13 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Support\Facades\Log;
 use Symfony\Component\ExpressionLanguage\SyntaxError;
+use Override;
 
 final class RuleAction extends Model
 {
     use ReturnsIntegerIdTrait;
 
-    #[\Override]
+    #[Override]
     protected $fillable = ['rule_id', 'action_type', 'action_value', 'order', 'active', 'stop_processing'];
 
     public function getValue(array $journal): string
@@ -64,12 +65,22 @@ final class RuleAction extends Model
         return $result;
     }
 
+    public function order(): Attribute
+    {
+        return Attribute::make(get: static fn ($value): int => (int) $value);
+    }
+
     public function rule(): BelongsTo
     {
         return $this->belongsTo(Rule::class);
     }
 
-    #[\Override]
+    public function ruleId(): Attribute
+    {
+        return Attribute::make(get: static fn ($value): int => (int) $value);
+    }
+
+    #[Override]
     protected function casts(): array
     {
         return [
@@ -79,15 +90,5 @@ final class RuleAction extends Model
             'order'           => 'int',
             'stop_processing' => 'boolean',
         ];
-    }
-
-    public function order(): Attribute
-    {
-        return Attribute::make(get: static fn ($value): int => (int) $value);
-    }
-
-    public function ruleId(): Attribute
-    {
-        return Attribute::make(get: static fn ($value): int => (int) $value);
     }
 }

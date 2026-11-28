@@ -37,8 +37,8 @@ use function Safe\json_encode;
  */
 final class CacheProperties
 {
-    protected string $hash = '';
-    protected Collection $properties;
+    private string $hash = '';
+    private Collection $properties;
 
     public function __construct()
     {

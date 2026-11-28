@@ -36,14 +36,15 @@ use FireflyIII\Support\Facades\Amount;
 use Illuminate\Console\Command;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Log;
+use Override;
 
 final class CorrectsOpeningBalanceCurrencies extends Command
 {
     use ShowsFriendlyMessages;
 
-    #[\Override]
+    #[Override]
     protected $description = 'Will make sure that opening balance transaction currencies match the account they\'re for.';
-    #[\Override]
+    #[Override]
     protected $signature   = 'correction:opening-balance-currencies';
 
     /**

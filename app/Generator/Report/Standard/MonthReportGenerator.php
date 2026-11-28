@@ -29,6 +29,7 @@ use FireflyIII\Generator\Report\ReportGeneratorInterface;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Log;
 use Throwable;
+use Override;
 
 /**
  * Class MonthReportGenerator.
@@ -49,7 +50,7 @@ final class MonthReportGenerator implements ReportGeneratorInterface
      *
      * @throws FireflyException
      */
-    #[\Override]
+    #[Override]
     public function generate(): string
     {
         $accountIds = implode(',', $this->accounts->pluck('id')->toArray());
@@ -73,7 +74,7 @@ final class MonthReportGenerator implements ReportGeneratorInterface
     /**
      * Sets the accounts involved in the report.
      */
-    #[\Override]
+    #[Override]
     public function setAccounts(Collection $accounts): ReportGeneratorInterface
     {
         $this->accounts = $accounts;
@@ -84,7 +85,7 @@ final class MonthReportGenerator implements ReportGeneratorInterface
     /**
      * Unused budget setter.
      */
-    #[\Override]
+    #[Override]
     public function setBudgets(Collection $budgets): ReportGeneratorInterface
     {
         return $this;
@@ -93,7 +94,7 @@ final class MonthReportGenerator implements ReportGeneratorInterface
     /**
      * Unused category setter.
      */
-    #[\Override]
+    #[Override]
     public function setCategories(Collection $categories): ReportGeneratorInterface
     {
         return $this;
@@ -102,7 +103,7 @@ final class MonthReportGenerator implements ReportGeneratorInterface
     /**
      * Set the end date of the report.
      */
-    #[\Override]
+    #[Override]
     public function setEndDate(Carbon $date): ReportGeneratorInterface
     {
         $this->end = $date;
@@ -113,7 +114,7 @@ final class MonthReportGenerator implements ReportGeneratorInterface
     /**
      * Set the expenses used in this report.
      */
-    #[\Override]
+    #[Override]
     public function setExpense(Collection $expense): ReportGeneratorInterface
     {
         return $this;
@@ -122,7 +123,7 @@ final class MonthReportGenerator implements ReportGeneratorInterface
     /**
      * Set the start date of this report.
      */
-    #[\Override]
+    #[Override]
     public function setStartDate(Carbon $date): ReportGeneratorInterface
     {
         $this->start = $date;
@@ -133,7 +134,7 @@ final class MonthReportGenerator implements ReportGeneratorInterface
     /**
      * Set the tags used in this report.
      */
-    #[\Override]
+    #[Override]
     public function setTags(Collection $tags): ReportGeneratorInterface
     {
         return $this;

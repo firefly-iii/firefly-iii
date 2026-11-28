@@ -39,6 +39,7 @@ use Illuminate\Database\Eloquent\Relations\MorphMany;
 use Illuminate\Database\Eloquent\Relations\MorphToMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
+use Override;
 
 /**
  * @property Carbon              $date
@@ -46,8 +47,8 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
  * @property null|Carbon         $extension_date
  * @property User                $user
  * @property TransactionCurrency $transactionCurrency
- * @property string $amount_min
- * @property string $amount_max
+ * @property string              $amount_min
+ * @property string              $amount_max
  */
 #[ObservedBy([BillObserver::class])]
 final class Bill extends Model
@@ -56,7 +57,7 @@ final class Bill extends Model
     use ReturnsIntegerUserIdTrait;
     use SoftDeletes;
 
-    #[\Override]
+    #[Override]
     protected $fillable = [
         'name',
         'match',
@@ -79,7 +80,7 @@ final class Bill extends Model
         'native_amount_max',
     ];
 
-    #[\Override]
+    #[Override]
     protected $hidden   = ['amount_min_encrypted', 'amount_max_encrypted', 'name_encrypted', 'match_encrypted'];
 
     /**
@@ -110,6 +111,22 @@ final class Bill extends Model
         throw new AuthenticationException();
     }
 
+    /**
+     * Get the max amount
+     */
+    public function amountMax(): Attribute
+    {
+        return Attribute::make(get: static fn ($value): string => (string) $value);
+    }
+
+    /**
+     * Get the min amount
+     */
+    public function amountMin(): Attribute
+    {
+        return Attribute::make(get: static fn ($value): string => (string) $value);
+    }
+
     public function attachments(): MorphMany
     {
         return $this->morphMany(Attachment::class, 'attachable');
@@ -131,6 +148,11 @@ final class Bill extends Model
         return $this->morphToMany(ObjectGroup::class, 'object_groupable');
     }
 
+    public function order(): Attribute
+    {
+        return Attribute::make(get: static fn ($value): int => (int) $value);
+    }
+
     /**
      * @param mixed $value
      */
@@ -147,9 +169,22 @@ final class Bill extends Model
         $this->attributes['amount_min'] = (string) $value;
     }
 
+    /**
+     * Get the skip
+     */
+    public function skip(): Attribute
+    {
+        return Attribute::make(get: static fn ($value): int => (int) $value);
+    }
+
     public function transactionCurrency(): BelongsTo
     {
         return $this->belongsTo(TransactionCurrency::class);
+    }
+
+    public function transactionCurrencyId(): Attribute
+    {
+        return Attribute::make(get: static fn ($value): int => (int) $value);
     }
 
     public function transactionJournals(): HasMany
@@ -162,23 +197,7 @@ final class Bill extends Model
         return $this->belongsTo(User::class);
     }
 
-    /**
-     * Get the max amount
-     */
-    public function amountMax(): Attribute
-    {
-        return Attribute::make(get: static fn ($value): string => (string) $value);
-    }
-
-    /**
-     * Get the min amount
-     */
-    public function amountMin(): Attribute
-    {
-        return Attribute::make(get: static fn ($value): string => (string) $value);
-    }
-
-    #[\Override]
+    #[Override]
     protected function casts(): array
     {
         return [
@@ -198,23 +217,5 @@ final class Bill extends Model
             'native_amount_min' => 'string',
             'native_amount_max' => 'string',
         ];
-    }
-
-    public function order(): Attribute
-    {
-        return Attribute::make(get: static fn ($value): int => (int) $value);
-    }
-
-    /**
-     * Get the skip
-     */
-    public function skip(): Attribute
-    {
-        return Attribute::make(get: static fn ($value): int => (int) $value);
-    }
-
-    public function transactionCurrencyId(): Attribute
-    {
-        return Attribute::make(get: static fn ($value): int => (int) $value);
     }
 }

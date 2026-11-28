@@ -30,6 +30,7 @@ use FireflyIII\Models\TransactionJournal;
 use FireflyIII\User;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
+use Override;
 
 /**
  * Class RemoveTag.
@@ -43,7 +44,7 @@ final class RemoveTag implements ActionInterface
         private readonly RuleAction $action
     ) {}
 
-    #[\Override]
+    #[Override]
     public function actOnArray(array $journal): bool
     {
         $name   = $this->action->getValue($journal);

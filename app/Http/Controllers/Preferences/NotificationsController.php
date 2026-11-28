@@ -25,9 +25,10 @@ declare(strict_types=1);
 namespace FireflyIII\Http\Controllers\Preferences;
 
 use FireflyIII\Http\Controllers\Controller;
+use Illuminate\View\View;
 
-final class NotificationsController extends Controller {
-
+final class NotificationsController extends Controller
+{
     public function __construct()
     {
         parent::__construct();
@@ -40,7 +41,7 @@ final class NotificationsController extends Controller {
         });
     }
 
-    public function index(): \Illuminate\View\View
+    public function index(): View
     {
         return view('preferences.notifications.index');
     }

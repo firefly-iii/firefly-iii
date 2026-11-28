@@ -31,6 +31,7 @@ use FireflyIII\Models\Note;
 use FireflyIII\Support\Facades\AppConfiguration;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\Log;
+use Override;
 
 final class UpgradesAttachments extends Command
 {
@@ -38,10 +39,10 @@ final class UpgradesAttachments extends Command
 
     public const string CONFIG_NAME = '480_migrate_attachments';
 
-    #[\Override]
+    #[Override]
     protected $description          = 'Migrates attachment meta-data.';
 
-    #[\Override]
+    #[Override]
     protected $signature            = 'upgrade:480-attachments {--F|force : Force the execution of this command.}';
 
     /**

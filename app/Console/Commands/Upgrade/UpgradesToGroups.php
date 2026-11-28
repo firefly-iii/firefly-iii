@@ -40,6 +40,7 @@ use Illuminate\Console\Command;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
+use Override;
 
 final class UpgradesToGroups extends Command
 {
@@ -47,9 +48,9 @@ final class UpgradesToGroups extends Command
 
     public const string CONFIG_NAME = '480_migrated_to_groups';
 
-    #[\Override]
+    #[Override]
     protected $description          = 'Migrates a pre-4.7.8 transaction structure to the 4.7.8+ transaction structure.';
-    #[\Override]
+    #[Override]
     protected $signature            = 'upgrade:480-migrate-to-groups {--F|force : Force the migration, even if it fired before.}';
     private JournalCLIRepositoryInterface $cliRepository;
     private int $count;

@@ -36,6 +36,7 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Support\Collection;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
+use Override;
 
 /**
  * @property User                    $user
@@ -48,7 +49,7 @@ final class Rule extends Model
     use ReturnsIntegerUserIdTrait;
     use SoftDeletes;
 
-    #[\Override]
+    #[Override]
     protected $fillable = ['rule_group_id', 'order', 'active', 'title', 'description', 'user_id', 'user_group_id', 'strict'];
 
     /**
@@ -79,6 +80,16 @@ final class Rule extends Model
         throw new AuthenticationException();
     }
 
+    public function description(): Attribute
+    {
+        return Attribute::make(set: static fn ($value): array => ['description' => e($value)]);
+    }
+
+    public function order(): Attribute
+    {
+        return Attribute::make(get: static fn ($value): int => (int) $value);
+    }
+
     public function ruleActions(): HasMany
     {
         return $this->hasMany(RuleAction::class);
@@ -87,6 +98,11 @@ final class Rule extends Model
     public function ruleGroup(): BelongsTo
     {
         return $this->belongsTo(RuleGroup::class);
+    }
+
+    public function ruleGroupId(): Attribute
+    {
+        return Attribute::make(get: static fn ($value): int => (int) $value);
     }
 
     public function ruleTriggers(): HasMany
@@ -104,7 +120,7 @@ final class Rule extends Model
         return $this->belongsTo(UserGroup::class);
     }
 
-    #[\Override]
+    #[Override]
     protected function casts(): array
     {
         return [
@@ -119,20 +135,5 @@ final class Rule extends Model
             'user_id'         => 'integer',
             'user_group_id'   => 'integer',
         ];
-    }
-
-    public function description(): Attribute
-    {
-        return Attribute::make(set: static fn ($value): array => ['description' => e($value)]);
-    }
-
-    public function order(): Attribute
-    {
-        return Attribute::make(get: static fn ($value): int => (int) $value);
-    }
-
-    public function ruleGroupId(): Attribute
-    {
-        return Attribute::make(get: static fn ($value): int => (int) $value);
     }
 }

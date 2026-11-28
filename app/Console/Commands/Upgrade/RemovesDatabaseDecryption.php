@@ -35,6 +35,7 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use JsonException;
 use stdClass;
+use Override;
 
 use function Safe\json_decode;
 
@@ -42,9 +43,9 @@ final class RemovesDatabaseDecryption extends Command
 {
     use ShowsFriendlyMessages;
 
-    #[\Override]
+    #[Override]
     protected $description = 'Decrypts the database.';
-    #[\Override]
+    #[Override]
     protected $signature   = 'upgrade:480-decrypt-all';
 
     /**

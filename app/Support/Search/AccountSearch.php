@@ -29,6 +29,7 @@ use FireflyIII\User;
 use Illuminate\Contracts\Auth\Authenticatable;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Support\Collection;
+use Override;
 
 use function Safe\json_encode;
 
@@ -53,7 +54,7 @@ final class AccountSearch implements GenericSearchInterface
     private User $user;
     private UserGroup $userGroup;
 
-    #[\Override]
+    #[Override]
     public function search(): Collection
     {
         $this->userGroup->toArray(); // used to stop phpstan.

@@ -30,6 +30,7 @@ use FireflyIII\User;
 use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Override;
 
 /**
  * @property User $user
@@ -39,7 +40,7 @@ final class GroupMembership extends Model
     use ReturnsIntegerIdTrait;
     use ReturnsIntegerUserIdTrait;
 
-    #[\Override]
+    #[Override]
     protected $fillable = ['user_id', 'user_group_id', 'user_role_id'];
 
     public function user(): BelongsTo
@@ -57,14 +58,14 @@ final class GroupMembership extends Model
         return $this->belongsTo(UserRole::class);
     }
 
-    #[\Override]
-    protected function casts(): array
-    {
-        return ['created_at' => 'datetime', 'updated_at' => 'datetime', 'user_id' => 'integer', 'user_group_id' => 'integer'];
-    }
-
     public function userRoleId(): Attribute
     {
         return Attribute::make(get: static fn ($value): int => (int) $value);
+    }
+
+    #[Override]
+    protected function casts(): array
+    {
+        return ['created_at' => 'datetime', 'updated_at' => 'datetime', 'user_id' => 'integer', 'user_group_id' => 'integer'];
     }
 }

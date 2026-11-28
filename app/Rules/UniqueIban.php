@@ -30,6 +30,7 @@ use FireflyIII\Models\Account;
 use FireflyIII\Support\Facades\Steam;
 use Illuminate\Contracts\Validation\ValidationRule;
 use Illuminate\Support\Facades\Log;
+use Override;
 
 /**
  * Class UniqueIban
@@ -116,7 +117,7 @@ final class UniqueIban implements ValidationRule
         return true;
     }
 
-    #[\Override]
+    #[Override]
     public function validate(string $attribute, mixed $value, Closure $fail): void
     {
         if (!$this->passes($attribute, $value)) {

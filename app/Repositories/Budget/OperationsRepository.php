@@ -54,7 +54,7 @@ final class OperationsRepository implements OperationsRepositoryInterface, UserG
      * A method that returns the amount of money budgeted per day for this budget,
      * on average.
      */
-    #[\Override]
+    #[Override]
     public function budgetedPerDay(Budget $budget): string
     {
         Log::debug(sprintf('Now with budget #%d "%s"', $budget->id, $budget->name));
@@ -133,7 +133,7 @@ final class OperationsRepository implements OperationsRepositoryInterface, UserG
      * This method is being used to generate the budget overview in the year/multi-year report. Its used
      * in both the year/multi-year budget overview AND in the accompanying chart.
      */
-    #[\Override]
+    #[Override]
     #[Deprecated]
     public function getBudgetPeriodReport(Collection $budgets, Collection $accounts, Carbon $start, Carbon $end): array
     {
@@ -179,7 +179,7 @@ final class OperationsRepository implements OperationsRepositoryInterface, UserG
      * which have the specified budget set to them. It's grouped per currency, with as few details in the array
      * as possible. Amounts are always negative.
      */
-    #[\Override]
+    #[Override]
     public function listExpenses(Carbon $start, Carbon $end, ?Collection $accounts = null, ?Collection $budgets = null): array
     {
         /** @var GroupCollectorInterface $collector */
@@ -271,7 +271,7 @@ final class OperationsRepository implements OperationsRepositoryInterface, UserG
         return $array;
     }
 
-    #[\Override]
+    #[Override]
     public function sumCollectedExpenses(
         array $expenses,
         Carbon $start,
@@ -292,7 +292,7 @@ final class OperationsRepository implements OperationsRepositoryInterface, UserG
         return $summarizer->groupByCurrencyId($expenses, 'negative', false);
     }
 
-    #[\Override]
+    #[Override]
     public function sumCollectedExpensesByBudget(array $expenses, Budget $budget, bool $convertToPrimary = false): array
     {
         // Log::debug(sprintf('Start of %s.', __METHOD__));
@@ -308,7 +308,7 @@ final class OperationsRepository implements OperationsRepositoryInterface, UserG
     /**
      * @SuppressWarnings("PHPMD.ExcessiveParameterList")
      */
-    #[\Override]
+    #[Override]
     public function sumExpenses(
         Carbon $start,
         Carbon $end,

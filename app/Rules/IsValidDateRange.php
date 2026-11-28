@@ -30,13 +30,14 @@ use Carbon\Exceptions\InvalidFormatException;
 use Closure;
 use Illuminate\Contracts\Validation\ValidationRule;
 use Illuminate\Support\Facades\Log;
+use Override;
 
 final class IsValidDateRange implements ValidationRule
 {
     /**
      * @SuppressWarnings("PHPMD.UnusedFormalParameter")
      */
-    #[\Override]
+    #[Override]
     public function validate(string $attribute, mixed $value, Closure $fail): void
     {
         $value      = (string) $value;

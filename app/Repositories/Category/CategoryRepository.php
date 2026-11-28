@@ -43,6 +43,7 @@ use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Storage;
+use Override;
 
 /**
  * Class CategoryRepository.
@@ -52,7 +53,7 @@ final class CategoryRepository implements CategoryRepositoryInterface, UserGroup
     use CreatesObjectGroups;
     use UserGroupTrait;
 
-    #[\Override]
+    #[Override]
     public function categoryEndsWith(string $query, int $limit): Collection
     {
         $search = $this->user->categories();
@@ -63,7 +64,7 @@ final class CategoryRepository implements CategoryRepositoryInterface, UserGroup
         return $search->take($limit)->get();
     }
 
-    #[\Override]
+    #[Override]
     public function categoryStartsWith(string $query, int $limit): Collection
     {
         Log::debug(sprintf('Find a category that starts with "%s"', $query));
@@ -75,7 +76,7 @@ final class CategoryRepository implements CategoryRepositoryInterface, UserGroup
         return $search->take($limit)->get();
     }
 
-    #[\Override]
+    #[Override]
     public function destroy(Category $category): bool
     {
         /** @var CategoryDestroyService $service */
@@ -88,7 +89,7 @@ final class CategoryRepository implements CategoryRepositoryInterface, UserGroup
     /**
      * Delete all categories.
      */
-    #[\Override]
+    #[Override]
     public function destroyAll(): void
     {
         $categories = $this->getCategories();
@@ -107,7 +108,7 @@ final class CategoryRepository implements CategoryRepositoryInterface, UserGroup
     /**
      * Find a category or return NULL
      */
-    #[\Override]
+    #[Override]
     public function find(int $categoryId): ?Category
     {
         /** @var null|Category */
@@ -117,7 +118,7 @@ final class CategoryRepository implements CategoryRepositoryInterface, UserGroup
     /**
      * Find a category.
      */
-    #[\Override]
+    #[Override]
     public function findByName(string $name): ?Category
     {
         /** @var null|Category */
@@ -127,7 +128,7 @@ final class CategoryRepository implements CategoryRepositoryInterface, UserGroup
     /**
      * @throws FireflyException
      */
-    #[\Override]
+    #[Override]
     public function findCategory(?int $categoryId, ?string $categoryName): ?Category
     {
         Log::debug('Now in findCategory()');
@@ -149,7 +150,7 @@ final class CategoryRepository implements CategoryRepositoryInterface, UserGroup
         return $result;
     }
 
-    #[\Override]
+    #[Override]
     public function firstUseDate(Category $category): ?Carbon
     {
         $firstJournalDate     = $this->getFirstJournalDate($category);
@@ -172,7 +173,7 @@ final class CategoryRepository implements CategoryRepositoryInterface, UserGroup
         return $firstJournalDate;
     }
 
-    #[\Override]
+    #[Override]
     public function getAttachments(Category $category): Collection
     {
         $set  = $category->attachments()->get();
@@ -191,7 +192,7 @@ final class CategoryRepository implements CategoryRepositoryInterface, UserGroup
     /**
      * Get all categories with ID's.
      */
-    #[\Override]
+    #[Override]
     public function getByIds(array $categoryIds): Collection
     {
         return $this->user->categories()->whereIn('id', $categoryIds)->get();
@@ -200,7 +201,7 @@ final class CategoryRepository implements CategoryRepositoryInterface, UserGroup
     /**
      * Returns a list of all the categories belonging to a user.
      */
-    #[\Override]
+    #[Override]
     public function getCategories(array $sort = [], array $filter = []): Collection
     {
         $query   = $this->user->categories()->with(['attachments']);
@@ -253,7 +254,7 @@ final class CategoryRepository implements CategoryRepositoryInterface, UserGroup
         return $query->get(['categories.*']);
     }
 
-    #[\Override]
+    #[Override]
     public function getNoteText(Category $category): ?string
     {
         $dbNote = $category->notes()->first();
@@ -264,7 +265,7 @@ final class CategoryRepository implements CategoryRepositoryInterface, UserGroup
     /**
      * @throws Exception
      */
-    #[\Override]
+    #[Override]
     public function lastUseDate(Category $category, Collection $accounts): ?Carbon
     {
         $lastJournalDate     = $this->getLastJournalDate($category, $accounts);
@@ -287,7 +288,7 @@ final class CategoryRepository implements CategoryRepositoryInterface, UserGroup
         return $lastJournalDate;
     }
 
-    #[\Override]
+    #[Override]
     public function periodCollection(Category $category, Carbon $start, Carbon $end): array
     {
         Log::debug(sprintf('periodCollection(#%d, %s, %s)', $category->id, $start->format('Y-m-d'), $end->format('Y-m-d')));
@@ -328,13 +329,13 @@ final class CategoryRepository implements CategoryRepositoryInterface, UserGroup
         ;
     }
 
-    #[\Override]
+    #[Override]
     public function removeNotes(Category $category): void
     {
         $category->notes()->delete();
     }
 
-    #[\Override]
+    #[Override]
     public function searchCategory(string $query, int $limit): Collection
     {
         $search = $this->user->categories()->orderBy('name', 'ASC');
@@ -348,7 +349,7 @@ final class CategoryRepository implements CategoryRepositoryInterface, UserGroup
     /**
      * @throws FireflyException
      */
-    #[\Override]
+    #[Override]
     public function store(array $data): Category
     {
         /** @var CategoryFactory $factory */
@@ -392,7 +393,7 @@ final class CategoryRepository implements CategoryRepositoryInterface, UserGroup
     /**
      * @throws Exception
      */
-    #[\Override]
+    #[Override]
     public function update(Category $category, array $data): Category
     {
         /** @var CategoryUpdateService $service */
@@ -402,7 +403,7 @@ final class CategoryRepository implements CategoryRepositoryInterface, UserGroup
         return $service->update($category, $data);
     }
 
-    #[\Override]
+    #[Override]
     public function updateNotes(Category $category, string $notes): void
     {
         $dbNote       = $category->notes()->first();

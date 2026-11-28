@@ -29,14 +29,15 @@ use FireflyIII\Repositories\User\UserRepositoryInterface;
 use FireflyIII\Support\Facades\Steam;
 use FireflyIII\User;
 use Illuminate\Console\Command;
+use Override;
 
 final class ReportsSums extends Command
 {
     use ShowsFriendlyMessages;
 
-    #[\Override]
+    #[Override]
     protected $description = 'Report on the total sum of transactions. Must be 0.';
-    #[\Override]
+    #[Override]
     protected $signature   = 'integrity:total-sums';
 
     /**

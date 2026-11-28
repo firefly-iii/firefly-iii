@@ -28,6 +28,7 @@ use FireflyIII\Helpers\Collector\GroupCollectorInterface;
 use Illuminate\Routing\Route;
 use Illuminate\Support\Facades\Log;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
+use Override;
 
 /**
  * Class JournalList.
@@ -37,7 +38,7 @@ final class JournalList implements BinderInterface
     /**
      * @throws NotFoundHttpException
      */
-    #[\Override]
+    #[Override]
     public static function routeBinder(string $value, Route $route): array
     {
         if (auth()->check()) {

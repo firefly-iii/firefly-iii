@@ -29,6 +29,7 @@ use FireflyIII\Models\TransactionGroup;
 use FireflyIII\Models\TransactionJournal;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\DB;
+use Override;
 
 final class CorrectsLongDescriptions extends Command
 {
@@ -36,9 +37,9 @@ final class CorrectsLongDescriptions extends Command
 
     private const int MAX_LENGTH = 1000;
 
-    #[\Override]
+    #[Override]
     protected $description       = 'Fixes long descriptions in journals and groups.';
-    #[\Override]
+    #[Override]
     protected $signature         = 'correction:long-descriptions';
 
     /**

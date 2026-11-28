@@ -34,6 +34,7 @@ use FireflyIII\Support\Facades\AppConfiguration;
 use FireflyIII\User;
 use Illuminate\Console\Command;
 use Illuminate\Support\Collection;
+use Override;
 
 final class UpgradesCurrencyPreferences extends Command
 {
@@ -41,10 +42,10 @@ final class UpgradesCurrencyPreferences extends Command
 
     public const string CONFIG_NAME = '610_upgrade_currency_prefs';
 
-    #[\Override]
+    #[Override]
     protected $description          = 'Upgrade user currency preferences';
 
-    #[\Override]
+    #[Override]
     protected $signature            = 'upgrade:610-currency-preferences {--F|force : Force the execution of this command.}';
 
     /**

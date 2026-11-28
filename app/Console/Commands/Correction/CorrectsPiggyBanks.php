@@ -28,14 +28,15 @@ use FireflyIII\Console\Commands\ShowsFriendlyMessages;
 use FireflyIII\Models\PiggyBankEvent;
 use FireflyIII\Models\TransactionJournal;
 use Illuminate\Console\Command;
+use Override;
 
 final class CorrectsPiggyBanks extends Command
 {
     use ShowsFriendlyMessages;
 
-    #[\Override]
+    #[Override]
     protected $description = 'Fixes common issues with piggy banks.';
-    #[\Override]
+    #[Override]
     protected $signature   = 'correction:piggy-banks';
 
     /**

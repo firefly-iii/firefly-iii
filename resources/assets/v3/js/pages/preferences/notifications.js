@@ -22,9 +22,9 @@ import "../../boot/bootstrap.js";
 import sidebar from "../shared/sidebar.js";
 import dates from "../shared/dates.js";
 import Alpine from "@alpinejs/csp";
-import Get from '../../api/configuration/get.js';
-import i18next from 'i18next';
-import {getVariables} from '../../store/get-variables.js';
+import Get from "../../api/configuration/get.js";
+import i18next from "i18next";
+import { getVariables } from "../../store/get-variables.js";
 
 window.enableDates = false;
 
@@ -38,25 +38,29 @@ let index = function () {
             this.loadChannels();
         },
         loadChannels() {
-            (new Get).getByName('notifications.channels').then((response) => {
-                this.channels = response.data.data.value;
-                console.log(this.channels);
-            }).then(() => {
-                this.getPreferences();
-            });
+            new Get()
+                .getByName("notifications.channels")
+                .then((response) => {
+                    this.channels = response.data.data.value;
+                    console.log(this.channels);
+                })
+                .then(() => {
+                    this.getPreferences();
+                });
         },
         getPreferences() {
             // secretly we know the available channels are email, slack and pushover, and we can grab the preferences for them.
-            const prefs = ['pushover_app_token','pushover_user_token','slack_webhook_url'];
+            const prefs = ["pushover_app_token", "pushover_user_token", "slack_webhook_url"];
             getVariables(prefs).then((values) => {
                 this.channels.pushover.app_token = values.pushover_app_token;
                 this.channels.pushover.user_token = values.pushover_user_token;
-                this.channels.pushover.enabled = (this.channels.pushover.app_token !== '' && this.channels.pushover.user_token !== '');
+                this.channels.pushover.enabled =
+                    this.channels.pushover.app_token !== "" && this.channels.pushover.user_token !== "";
                 this.channels.slack.webhook_url = values.slack_webhook_url;
-                this.channels.slack.enabled = (this.channels.slack.webhook_url !== '');
+                this.channels.slack.enabled = this.channels.slack.webhook_url !== "";
                 this.loadingChannels = false;
             });
-        }
+        },
     };
 };
 

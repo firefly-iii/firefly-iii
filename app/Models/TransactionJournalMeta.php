@@ -28,6 +28,7 @@ use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use Override;
 
 use function Safe\json_decode;
 use function Safe\json_encode;
@@ -40,22 +41,11 @@ final class TransactionJournalMeta extends Model
     use ReturnsIntegerIdTrait;
     use SoftDeletes;
 
-    #[\Override]
+    #[Override]
     protected $fillable = ['transaction_journal_id', 'name', 'data', 'hash'];
 
-    #[\Override]
+    #[Override]
     protected $table    = 'journal_meta';
-
-    public function transactionJournal(): BelongsTo
-    {
-        return $this->belongsTo(TransactionJournal::class);
-    }
-
-    #[\Override]
-    protected function casts(): array
-    {
-        return ['created_at' => 'datetime', 'updated_at' => 'datetime', 'deleted_at' => 'datetime'];
-    }
 
     public function data(): Attribute
     {
@@ -66,8 +56,19 @@ final class TransactionJournalMeta extends Model
         });
     }
 
+    public function transactionJournal(): BelongsTo
+    {
+        return $this->belongsTo(TransactionJournal::class);
+    }
+
     public function transactionJournalId(): Attribute
     {
         return Attribute::make(get: static fn ($value): int => (int) $value);
+    }
+
+    #[Override]
+    protected function casts(): array
+    {
+        return ['created_at' => 'datetime', 'updated_at' => 'datetime', 'deleted_at' => 'datetime'];
     }
 }

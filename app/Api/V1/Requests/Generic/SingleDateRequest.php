@@ -50,9 +50,10 @@ final class SingleDateRequest extends FormRequest
     public function getDate(): Carbon
     {
         $date = $this->getCarbonDate('date');
-        if(null === $date) {
+        if (null === $date) {
             throw new FireflyException('Date is null, but it should not be.');
         }
+
         return $date;
     }
 

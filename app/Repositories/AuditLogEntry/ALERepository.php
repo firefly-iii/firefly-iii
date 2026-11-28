@@ -27,27 +27,28 @@ namespace FireflyIII\Repositories\AuditLogEntry;
 use FireflyIII\Models\AuditLogEntry;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Collection;
+use Override;
 
 /**
  * Class ALERepository
  */
 final class ALERepository implements ALERepositoryInterface
 {
-    #[\Override]
+    #[Override]
     public function getForId(string $model, int $modelId): Collection
     {
         // all Models have an ID.
         return AuditLogEntry::query()->where('auditable_id', $modelId)->where('auditable_type', $model)->get();
     }
 
-    #[\Override]
+    #[Override]
     public function getForObject(Model $model): Collection
     {
         // all Models have an ID.
         return AuditLogEntry::query()->where('auditable_id', $model->id)->where('auditable_type', $model::class)->get();
     }
 
-    #[\Override]
+    #[Override]
     public function store(array $data): AuditLogEntry
     {
         $auditLogEntry         = new AuditLogEntry();

@@ -29,6 +29,7 @@ use FireflyIII\Models\Location;
 use FireflyIII\Models\Tag;
 use FireflyIII\Support\Facades\AppConfiguration;
 use Illuminate\Console\Command;
+use Override;
 
 final class UpgradesTagLocations extends Command
 {
@@ -36,10 +37,10 @@ final class UpgradesTagLocations extends Command
 
     public const string CONFIG_NAME = '500_migrate_tag_locations';
 
-    #[\Override]
+    #[Override]
     protected $description          = 'Migrate tag locations.';
 
-    #[\Override]
+    #[Override]
     protected $signature            = 'upgrade:500-tag-locations {--F|force : Force the execution of this command.}';
 
     /**

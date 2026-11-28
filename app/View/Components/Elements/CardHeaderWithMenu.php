@@ -24,9 +24,9 @@ declare(strict_types=1);
 
 namespace FireflyIII\View\Components\Elements;
 
-use Closure;
 use Illuminate\Contracts\View\View;
 use Illuminate\View\Component;
+use Override;
 
 final class CardHeaderWithMenu extends Component
 {
@@ -47,7 +47,7 @@ final class CardHeaderWithMenu extends Component
     /**
      * Get the view / contents that represent the component.
      */
-    #[\Override]
+    #[Override]
     public function render(): View
     {
         return view('components.elements.card-header-with-menu');

@@ -29,6 +29,7 @@ use FireflyIII\Support\Facades\AppConfiguration;
 use Illuminate\Contracts\Validation\ValidationRule;
 use Illuminate\Support\Facades\Log;
 use Symfony\Component\HttpFoundation\IpUtils;
+use Override;
 
 use function Safe\parse_url;
 
@@ -37,7 +38,7 @@ final class IsValidWebhookUrl implements ValidationRule
     /**
      * @SuppressWarnings("PHPMD.UnusedFormalParameter")
      */
-    #[\Override]
+    #[Override]
     public function validate(string $attribute, mixed $value, Closure $fail): void
     {
         $value          = (string) $value;

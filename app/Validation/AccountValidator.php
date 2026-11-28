@@ -37,6 +37,7 @@ use FireflyIII\Validation\Account\ReconciliationValidation;
 use FireflyIII\Validation\Account\TransferValidation;
 use FireflyIII\Validation\Account\WithdrawalValidation;
 use Illuminate\Support\Facades\Log;
+use Override;
 
 /**
  * Class AccountValidator
@@ -210,19 +211,7 @@ final class AccountValidator
         return $result;
     }
 
-    private function canCreateType(string $accountType): bool
-    {
-        $canCreate = [
-            AccountTypeEnum::EXPENSE->value,
-            AccountTypeEnum::REVENUE->value,
-            AccountTypeEnum::INITIAL_BALANCE->value,
-            AccountTypeEnum::LIABILITY_CREDIT->value,
-        ];
-
-        return in_array($accountType, $canCreate, true);
-    }
-
-    #[\Override]
+    #[Override]
     protected function canCreateTypes(array $accountTypes): bool
     {
         Log::debug('Can we create any of these types?', $accountTypes);
@@ -247,7 +236,7 @@ final class AccountValidator
      * @SuppressWarnings("PHPMD.BooleanArgumentFlag")
      * @SuppressWarnings("PHPMD.NPathComplexity")
      */
-    #[\Override]
+    #[Override]
     protected function findExistingAccount(array $validTypes, array $data, bool $inverse = false): ?Account
     {
         Log::debug('Now in findExistingAccount', [$validTypes, $data]);
@@ -332,5 +321,17 @@ final class AccountValidator
         Log::debug('Found nothing in findExistingAccount()');
 
         return null;
+    }
+
+    private function canCreateType(string $accountType): bool
+    {
+        $canCreate = [
+            AccountTypeEnum::EXPENSE->value,
+            AccountTypeEnum::REVENUE->value,
+            AccountTypeEnum::INITIAL_BALANCE->value,
+            AccountTypeEnum::LIABILITY_CREDIT->value,
+        ];
+
+        return in_array($accountType, $canCreate, true);
     }
 }

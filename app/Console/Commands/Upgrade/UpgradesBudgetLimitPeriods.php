@@ -29,6 +29,7 @@ use FireflyIII\Models\BudgetLimit;
 use FireflyIII\Support\Facades\AppConfiguration;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\Log;
+use Override;
 
 final class UpgradesBudgetLimitPeriods extends Command
 {
@@ -36,10 +37,10 @@ final class UpgradesBudgetLimitPeriods extends Command
 
     public const string CONFIG_NAME = '550_budget_limit_periods';
 
-    #[\Override]
+    #[Override]
     protected $description          = 'Append budget limits with their (estimated) timeframe.';
 
-    #[\Override]
+    #[Override]
     protected $signature            = 'upgrade:550-budget-limit-periods {--F|force : Force the execution of this command.}';
 
     /**

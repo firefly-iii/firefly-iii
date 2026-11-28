@@ -34,14 +34,15 @@ use FireflyIII\Models\TransactionJournal;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
+use Override;
 
 final class CorrectsGroupAccounts extends Command
 {
     use ShowsFriendlyMessages;
 
-    #[\Override]
+    #[Override]
     protected $description = 'Unify the source / destination accounts of split groups.';
-    #[\Override]
+    #[Override]
     protected $signature   = 'correction:group-accounts';
 
     /**

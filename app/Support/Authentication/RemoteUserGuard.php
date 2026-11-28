@@ -32,6 +32,7 @@ use Illuminate\Contracts\Auth\Guard;
 use Illuminate\Contracts\Auth\UserProvider;
 use Illuminate\Support\Facades\App;
 use Illuminate\Support\Facades\Log;
+use Override;
 
 /**
  * Class RemoteUserGuard
@@ -39,14 +40,14 @@ use Illuminate\Support\Facades\Log;
 final class RemoteUserGuard implements Guard
 {
     // protected Application $application;
-    protected ?User $user = null;
-    private bool $tried   = false;
+    private ?User $user = null;
+    private bool $tried = false;
 
     /**
      * Create a new authentication guard.
      */
     public function __construct(
-        protected UserProvider $provider
+        private UserProvider $provider
     ) {
         Log::debug(sprintf('Created RemoteUserGuard for %s "%s"', app()->get('request')?->getMethod(), app()->get('request')?->getRequestUri()));
     }
@@ -109,7 +110,7 @@ final class RemoteUserGuard implements Guard
         $this->user    = $retrievedUser;
     }
 
-    #[\Override]
+    #[Override]
     public function check(): bool
     {
         // Log::debug(sprintf('Now at %s', __METHOD__));
@@ -117,7 +118,7 @@ final class RemoteUserGuard implements Guard
         return $this->user() instanceof User;
     }
 
-    #[\Override]
+    #[Override]
     public function guest(): bool
     {
         // Log::debug(sprintf('Now at %s', __METHOD__));
@@ -125,7 +126,7 @@ final class RemoteUserGuard implements Guard
         return !$this->check();
     }
 
-    #[\Override]
+    #[Override]
     public function hasUser(): bool
     {
         // Log::debug(sprintf('Now at %s', __METHOD__));
@@ -136,7 +137,7 @@ final class RemoteUserGuard implements Guard
     /**
      * @SuppressWarnings("PHPMD.ShortMethodName")
      */
-    #[\Override]
+    #[Override]
     public function id(): int|string|null
     {
         // Log::debug(sprintf('Now at %s', __METHOD__));
@@ -144,7 +145,7 @@ final class RemoteUserGuard implements Guard
         return $this->user?->id;
     }
 
-    #[\Override]
+    #[Override]
     public function setUser(Authenticatable|User|null $user): Guard
     {
         // Log::debug(sprintf('Now at %s', __METHOD__));
@@ -158,7 +159,7 @@ final class RemoteUserGuard implements Guard
         return $this;
     }
 
-    #[\Override]
+    #[Override]
     public function user(): ?User
     {
         if (App::runningInConsole()) {
@@ -187,7 +188,7 @@ final class RemoteUserGuard implements Guard
      *
      * @SuppressWarnings("PHPMD.UnusedFormalParameter")
      */
-    #[\Override]
+    #[Override]
     public function validate(array $credentials = []): bool
     {
         // Log::debug(sprintf('Now at %s', __METHOD__));

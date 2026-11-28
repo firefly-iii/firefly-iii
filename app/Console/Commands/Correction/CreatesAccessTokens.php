@@ -30,15 +30,16 @@ use FireflyIII\Repositories\User\UserRepositoryInterface;
 use FireflyIII\Support\Facades\Preferences;
 use FireflyIII\User;
 use Illuminate\Console\Command;
+use Override;
 
 final class CreatesAccessTokens extends Command
 {
     use ShowsFriendlyMessages;
 
-    #[\Override]
+    #[Override]
     protected $description = 'Creates user access tokens which are used for command line access to personal data.';
 
-    #[\Override]
+    #[Override]
     protected $signature   = 'correction:access-tokens';
 
     /**

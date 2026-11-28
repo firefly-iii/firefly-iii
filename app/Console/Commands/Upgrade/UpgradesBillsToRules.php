@@ -37,6 +37,7 @@ use FireflyIII\Support\Facades\AppConfiguration;
 use FireflyIII\Support\Facades\Preferences;
 use FireflyIII\User;
 use Illuminate\Console\Command;
+use Override;
 
 final class UpgradesBillsToRules extends Command
 {
@@ -44,10 +45,10 @@ final class UpgradesBillsToRules extends Command
 
     public const string CONFIG_NAME = '480_bills_to_rules';
 
-    #[\Override]
+    #[Override]
     protected $description          = 'Migrate bills to rules.';
 
-    #[\Override]
+    #[Override]
     protected $signature            = 'upgrade:480-bills-to-rules {--F|force : Force the execution of this command.}';
     private BillRepositoryInterface $billRepository;
     private int $count;

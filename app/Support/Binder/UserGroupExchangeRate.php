@@ -27,13 +27,14 @@ use FireflyIII\Models\CurrencyExchangeRate;
 use FireflyIII\User;
 use Illuminate\Routing\Route;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
+use Override;
 
 /**
  * Class UserGroupTransaction.
  */
 final class UserGroupExchangeRate implements BinderInterface
 {
-    #[\Override]
+    #[Override]
     public static function routeBinder(string $value, Route $route): CurrencyExchangeRate
     {
         if (auth()->check()) {
