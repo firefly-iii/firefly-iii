@@ -273,7 +273,7 @@ final class ParseDateString
         } catch (InvalidFormatException $e) {
             Log::error(sprintf('parseDefaultDate("%s") ran into an error, but dont mind: %s', $date, $e->getMessage()));
         }
-        if (false === $result) {
+        if (null === $result || false === $result) {
             return today(config('app.timezone'))->startOfDay();
         }
 

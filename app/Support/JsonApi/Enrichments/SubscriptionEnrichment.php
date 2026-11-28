@@ -192,6 +192,9 @@ final class SubscriptionEnrichment implements EnrichmentInterface
                 $latest = $journal->date;
             }
         }
+        if(null === $latest) {
+            return $default;
+        }
 
         return $latest;
     }

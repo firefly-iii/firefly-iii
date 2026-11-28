@@ -72,6 +72,7 @@ trait OBValidation
                 $result = true;
             }
         }
+        $result = null === $result ? false : $result;
         Log::debug(sprintf('validateOBDestination(%d, "%s") will return %s', $accountId, $accountName, var_export($result, true)));
 
         return $result;
@@ -132,7 +133,6 @@ trait OBValidation
             $account->accountType = $accountType;
             $this->setSource($account);
         }
-
-        return $result ?? false;
+        return null === $result ? false : $result;
     }
 }

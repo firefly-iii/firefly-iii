@@ -76,6 +76,7 @@ trait DepositValidation
                 $result = true;
             }
         }
+        $result = null === $result ? false : $result;
         Log::debug(sprintf('validateDepositDestination will return %s', var_export($result, true)));
 
         return $result;
@@ -180,7 +181,6 @@ trait DepositValidation
             $account->accountType = $accountType;
             $this->setSource($account);
         }
-
-        return $result ?? false;
+        return null === $result ? false : $result;
     }
 }
