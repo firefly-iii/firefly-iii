@@ -64,6 +64,7 @@ return [
                 'notification_channel_name_email',
                 'notification_channel_name_slack',
                 'notification_channel_name_pushover',
+                'default_group_title_name',
                 // link types
                 'Paid_name',
                 'Refund_name',
