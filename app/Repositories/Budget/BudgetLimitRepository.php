@@ -184,6 +184,7 @@ final class BudgetLimitRepository implements BudgetLimitRepositoryInterface, Use
             return BudgetLimit::leftJoin('budgets', 'budgets.id', '=', 'budget_limits.budget_id')
                 ->with(['budget'])
                 ->where('budgets.user_id', $this->user->id)
+                ->where('budgets.active', true)
                 ->whereNull('budgets.deleted_at')
                 ->get(['budget_limits.*'])
             ;
@@ -192,6 +193,7 @@ final class BudgetLimitRepository implements BudgetLimitRepositoryInterface, Use
         if (!$start instanceof Carbon xor !$end instanceof Carbon) {
             $query = BudgetLimit::leftJoin('budgets', 'budgets.id', '=', 'budget_limits.budget_id')
                 ->with(['budget'])
+                ->where('budgets.active', true)
                 ->whereNull('budgets.deleted_at')
                 ->where('budgets.user_id', $this->user->id)
             ;
@@ -211,6 +213,7 @@ final class BudgetLimitRepository implements BudgetLimitRepositoryInterface, Use
         return BudgetLimit::leftJoin('budgets', 'budgets.id', '=', 'budget_limits.budget_id')
             ->with(['budget'])
             ->where('budgets.user_id', $this->user->id)
+            ->where('budgets.active', true)
             ->whereNull('budgets.deleted_at')
             ->where(static function (Builder $q5) use ($start, $end): void {
                 $q5->where(static function (Builder $q1) use ($start, $end): void {

@@ -223,12 +223,9 @@ final class AvailableBudgetRepository implements AvailableBudgetRepositoryInterf
         // use primary amount if necessary?
         $convertToPrimary = Amount::convertToPrimary($this->user);
         $primary          = Amount::getPrimaryCurrency();
-
         /** @var AvailableBudget $availableBudget */
         foreach ($availableBudgets as $availableBudget) {
-            $currencyId          = $convertToPrimary && $availableBudget->transaction_currency_id !== $primary->id
-                ? $primary->id
-                : $availableBudget->transaction_currency_id;
+            $currencyId          = $convertToPrimary && $availableBudget->transaction_currency_id !== $primary->id ? $primary->id : $availableBudget->transaction_currency_id;
             $field               = $convertToPrimary && $availableBudget->transaction_currency_id !== $primary->id ? 'native_amount' : 'amount';
             $return[$currencyId] ??= '0';
             $amount              = '' === (string) $availableBudget->{$field} ? '0' : (string) $availableBudget->{$field};
