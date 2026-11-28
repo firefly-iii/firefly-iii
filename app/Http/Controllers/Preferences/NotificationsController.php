@@ -40,7 +40,7 @@ final class NotificationsController extends Controller {
         });
     }
 
-    public function index()
+    public function index(): \Illuminate\View\View
     {
         return view('preferences.notifications.index');
     }
