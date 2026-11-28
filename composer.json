@@ -126,8 +126,7 @@
         "phpstan/phpstan-strict-rules": "^2",
         "phpunit/phpunit": "^13",
         "rector/rector": "^2.5",
-        "thecodingmachine/phpstan-safe-rule": "^1.4",
-        "vimeo/psalm": "^7.23"
+        "thecodingmachine/phpstan-safe-rule": "^1.4"
     },
     "replace": {
         "symfony/polyfill-php54": "*",
