@@ -247,14 +247,8 @@ final class RecurringRepository implements RecurringRepositoryInterface, UserGro
     #[\Override]
     public function getJournalIds(Recurrence $recurrence): array
     {
-        return TransactionJournalMeta::leftJoin('transaction_journals', 'transaction_journals.id', '=', 'journal_meta.transaction_journal_id') /* @phpstan-ignore larastan.noUnnecessaryCollectionCall */
-            ->where('transaction_journals.user_id', $this->user->id)
-            ->where('journal_meta.name', '=', 'recurrence_id')
-            ->where('journal_meta.data', '=', json_encode((string) $recurrence->id))
-            ->get(['journal_meta.transaction_journal_id'])
-            ->pluck('transaction_journal_id')
-            ->toArray()
-        ;
+        /* @phpstan-ignore larastan.noUnnecessaryCollectionCall */
+        return TransactionJournalMeta::leftJoin('transaction_journals', 'transaction_journals.id', '=', 'journal_meta.transaction_journal_id')->where('transaction_journals.user_id', $this->user->id)->where('journal_meta.name', '=', 'recurrence_id')->where('journal_meta.data', '=', json_encode((string) $recurrence->id))->get(['journal_meta.transaction_journal_id'])->pluck('transaction_journal_id')->toArray();
     }
 
     /**
@@ -338,15 +332,8 @@ final class RecurringRepository implements RecurringRepositoryInterface, UserGro
     #[\Override]
     public function getTransactionPaginator(Recurrence $recurrence, int $page, int $pageSize): LengthAwarePaginator
     {
-        $journalMeta = TransactionJournalMeta::leftJoin('transaction_journals', 'transaction_journals.id', '=', 'journal_meta.transaction_journal_id') /* @phpstan-ignore larastan.noUnnecessaryCollectionCall */
-            ->whereNull('transaction_journals.deleted_at')
-            ->where('transaction_journals.user_id', $this->user->id)
-            ->where('name', 'recurrence_id')
-            ->where('data', json_encode((string) $recurrence->id))
-            ->get()
-            ->pluck('transaction_journal_id')
-            ->toArray()
-        ;
+        /* @phpstan-ignore larastan.noUnnecessaryCollectionCall */
+        $journalMeta = TransactionJournalMeta::leftJoin('transaction_journals', 'transaction_journals.id', '=', 'journal_meta.transaction_journal_id')->whereNull('transaction_journals.deleted_at')->where('transaction_journals.user_id', $this->user->id)->where('name', 'recurrence_id')->where('data', json_encode((string) $recurrence->id))->get()->pluck('transaction_journal_id')->toArray();
         $search      = [];
         foreach ($journalMeta as $journalId) {
             $search[] = (int) $journalId;
