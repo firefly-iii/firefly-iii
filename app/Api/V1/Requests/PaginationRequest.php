@@ -31,7 +31,7 @@ use Illuminate\Contracts\Validation\Validator;
 use Override;
 use RuntimeException;
 
-class PaginationRequest extends ApiRequest
+final class PaginationRequest extends ApiRequest
 {
     private ?string $sortClass = null;
 

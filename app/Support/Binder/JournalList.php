@@ -32,7 +32,7 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 /**
  * Class JournalList.
  */
-class JournalList implements BinderInterface
+final class JournalList implements BinderInterface
 {
     /**
      * @throws NotFoundHttpException

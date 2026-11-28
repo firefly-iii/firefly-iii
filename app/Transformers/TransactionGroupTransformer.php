@@ -43,7 +43,7 @@ use Illuminate\Support\Facades\Log;
 /**
  * Class TransactionGroupTransformer
  */
-class TransactionGroupTransformer extends AbstractTransformer
+final class TransactionGroupTransformer extends AbstractTransformer
 {
     private readonly TransactionGroupRepositoryInterface $groupRepos;
     private readonly array $metaDateFields;

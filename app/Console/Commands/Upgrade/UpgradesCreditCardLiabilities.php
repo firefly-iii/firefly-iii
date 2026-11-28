@@ -33,7 +33,7 @@ use FireflyIII\Support\Facades\AppConfiguration;
 use Illuminate\Console\Command;
 use Illuminate\Support\Collection;
 
-class UpgradesCreditCardLiabilities extends Command
+final class UpgradesCreditCardLiabilities extends Command
 {
     use ShowsFriendlyMessages;
 

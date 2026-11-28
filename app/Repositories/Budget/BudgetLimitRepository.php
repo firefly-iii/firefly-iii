@@ -50,7 +50,7 @@ use Spatie\Period\Precision;
 /**
  * Class BudgetLimitRepository
  */
-class BudgetLimitRepository implements BudgetLimitRepositoryInterface, UserGroupInterface
+final class BudgetLimitRepository implements BudgetLimitRepositoryInterface, UserGroupInterface
 {
     use UserGroupTrait;
 

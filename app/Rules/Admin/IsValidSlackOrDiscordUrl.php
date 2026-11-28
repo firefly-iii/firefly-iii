@@ -29,7 +29,7 @@ use FireflyIII\Support\Validation\ValidatesAmountsTrait;
 use Illuminate\Contracts\Validation\ValidationRule;
 use Illuminate\Support\Facades\Log;
 
-class IsValidSlackOrDiscordUrl implements ValidationRule
+final class IsValidSlackOrDiscordUrl implements ValidationRule
 {
     use ValidatesAmountsTrait;
 

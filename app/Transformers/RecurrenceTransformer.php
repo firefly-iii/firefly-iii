@@ -30,7 +30,7 @@ use Illuminate\Support\Facades\Log;
 /**
  * Class RecurringTransactionTransformer
  */
-class RecurrenceTransformer extends AbstractTransformer
+final class RecurrenceTransformer extends AbstractTransformer
 {
     /**
      * Transform the recurring transaction.

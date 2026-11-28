@@ -29,7 +29,7 @@ use FireflyIII\Models\LinkType;
 /**
  * Class LinkTypeTransformer
  */
-class LinkTypeTransformer extends AbstractTransformer
+final class LinkTypeTransformer extends AbstractTransformer
 {
     /**
      * Transform the currency.

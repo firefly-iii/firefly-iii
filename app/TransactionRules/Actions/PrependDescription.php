@@ -32,7 +32,7 @@ use Illuminate\Support\Facades\DB;
  * Class PrependDescription.
  * TODO Can be replaced (and migrated) to action "set description" with a prefilled expression
  */
-class PrependDescription implements ActionInterface
+final class PrependDescription implements ActionInterface
 {
     /**
      * TriggerInterface constructor.

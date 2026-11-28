@@ -32,7 +32,7 @@ use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
 
 use function Safe\preg_match;
 
-class AcceptHeaders
+final class AcceptHeaders
 {
     /**
      * Handle the incoming requests.

@@ -31,7 +31,7 @@ use Override;
  *
  * @SuppressWarnings("PHPMD.CouplingBetweenObjects")
  */
-class EventServiceProvider extends ServiceProvider
+final class EventServiceProvider extends ServiceProvider
 {
     #[\Override]
     protected $listen = [

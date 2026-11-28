@@ -28,7 +28,7 @@ use FireflyIII\Events\Event;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Queue\SerializesModels;
 
-class TransactionGroupRequestsAuditLogEntry extends Event
+final class TransactionGroupRequestsAuditLogEntry extends Event
 {
     use SerializesModels;
 

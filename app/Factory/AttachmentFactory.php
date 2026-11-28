@@ -34,7 +34,7 @@ use FireflyIII\User;
 /**
  * Class AttachmentFactory
  */
-class AttachmentFactory
+final class AttachmentFactory
 {
     private User $user;
 

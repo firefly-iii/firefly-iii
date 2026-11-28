@@ -37,7 +37,7 @@ use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Log;
 use Override;
 
-class PeriodStatisticRepository implements PeriodStatisticRepositoryInterface, UserGroupInterface
+final class PeriodStatisticRepository implements PeriodStatisticRepositoryInterface, UserGroupInterface
 {
     use UserGroupTrait;
 

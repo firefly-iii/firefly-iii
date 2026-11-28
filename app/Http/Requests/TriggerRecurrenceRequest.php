@@ -33,7 +33,7 @@ use Illuminate\Support\Facades\Log;
 /**
  * Class TriggerRecurrenceRequest
  */
-class TriggerRecurrenceRequest extends FormRequest
+final class TriggerRecurrenceRequest extends FormRequest
 {
     use ChecksLogin;
     use ConvertsDataTypes;

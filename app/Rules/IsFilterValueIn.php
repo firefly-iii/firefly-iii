@@ -27,7 +27,7 @@ namespace FireflyIII\Rules;
 use Closure;
 use Illuminate\Contracts\Validation\ValidationRule;
 
-class IsFilterValueIn implements ValidationRule
+final class IsFilterValueIn implements ValidationRule
 {
     public function __construct(
         private readonly string $key,

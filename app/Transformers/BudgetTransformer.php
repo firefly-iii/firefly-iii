@@ -34,7 +34,7 @@ use Symfony\Component\HttpFoundation\ParameterBag;
 /**
  * Class BudgetTransformer
  */
-class BudgetTransformer extends AbstractTransformer
+final class BudgetTransformer extends AbstractTransformer
 {
     private readonly bool $convertToPrimary;
     private readonly TransactionCurrency $primaryCurrency;

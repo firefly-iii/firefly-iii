@@ -31,7 +31,7 @@ use Illuminate\Contracts\Validation\ValidationRule;
 /**
  * Class IsAssetAccountId
  */
-class IsAssetAccountId implements ValidationRule
+final class IsAssetAccountId implements ValidationRule
 {
     /**
      * @SuppressWarnings("PHPMD.UnusedFormalParameter")

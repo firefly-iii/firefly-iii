@@ -31,7 +31,7 @@ use Illuminate\Support\Facades\Log;
 /**
  * Class TokenFormRequest.
  */
-class TokenFormRequest extends FormRequest
+final class TokenFormRequest extends FormRequest
 {
     use ChecksLogin;
 

@@ -46,7 +46,7 @@ use Override;
 /**
  * Class SearchRuleEngine
  */
-class SearchRuleEngine implements RuleEngineInterface
+final class SearchRuleEngine implements RuleEngineInterface
 {
     private readonly Collection $groups;
 

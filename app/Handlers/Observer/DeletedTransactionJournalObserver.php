@@ -33,7 +33,7 @@ use Illuminate\Support\Facades\Log;
 /**
  * Class TransactionJournalObserver
  */
-class DeletedTransactionJournalObserver
+final class DeletedTransactionJournalObserver
 {
     public function deleting(TransactionJournal $transactionJournal): void
     {

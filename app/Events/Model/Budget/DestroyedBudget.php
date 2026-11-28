@@ -28,7 +28,7 @@ use FireflyIII\Events\Event;
 use Illuminate\Queue\SerializesModels;
 use Illuminate\Support\Facades\Log;
 
-class DestroyedBudget extends Event
+final class DestroyedBudget extends Event
 {
     use SerializesModels;
 

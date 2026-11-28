@@ -29,7 +29,7 @@ use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Support\Authentication\HandlesUserRegistrationTrait;
 use Illuminate\Console\Command;
 
-class CreatesGroupMemberships extends Command
+final class CreatesGroupMemberships extends Command
 {
     use HandlesUserRegistrationTrait;
     use ShowsFriendlyMessages;

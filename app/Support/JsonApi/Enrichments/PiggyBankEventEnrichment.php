@@ -35,7 +35,7 @@ use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 
-class PiggyBankEventEnrichment implements EnrichmentInterface
+final class PiggyBankEventEnrichment implements EnrichmentInterface
 {
     private array $accountCurrencies = [];
     private array $accountIds        = [];

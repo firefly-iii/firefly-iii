@@ -30,7 +30,7 @@ use FireflyIII\Support\Facades\Preferences;
 use FireflyIII\User;
 use Illuminate\Support\Facades\Log;
 
-class ReturnsSettings
+final class ReturnsSettings
 {
     public static function getSettings(string $channel, string $type, ?User $user): array
     {

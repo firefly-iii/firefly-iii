@@ -31,7 +31,7 @@ use Illuminate\Support\Facades\Log;
 /**
  * Class RuleActionFailedOnArray
  */
-class RuleActionFailedOnArray
+final class RuleActionFailedOnArray
 {
     use SerializesModels;
 

@@ -43,7 +43,7 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use Override;
 
-class TransactionGroupEnrichment implements EnrichmentInterface
+final class TransactionGroupEnrichment implements EnrichmentInterface
 {
     private array $attachmentCount = [];
     private Collection $collection;

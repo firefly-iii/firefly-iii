@@ -30,7 +30,7 @@ use Override;
 /**
  * Class SessionServiceProvider.
  */
-class SessionServiceProvider extends BaseSessionServiceProvider
+final class SessionServiceProvider extends BaseSessionServiceProvider
 {
     /**
      * Register the service provider.

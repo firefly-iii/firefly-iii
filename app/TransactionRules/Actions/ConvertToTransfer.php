@@ -43,7 +43,7 @@ use Illuminate\Support\Facades\Log;
 /**
  * Class ConvertToTransfer
  */
-class ConvertToTransfer implements ActionInterface
+final class ConvertToTransfer implements ActionInterface
 {
     /**
      * TriggerInterface constructor.

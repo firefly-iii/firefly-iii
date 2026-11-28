@@ -36,7 +36,7 @@ use Illuminate\Support\Facades\Log;
 use Psr\Container\ContainerExceptionInterface;
 use Psr\Container\NotFoundExceptionInterface;
 
-class ChecksForNewVersion implements ShouldQueue
+final class ChecksForNewVersion implements ShouldQueue
 {
     use UpdateTrait;
 

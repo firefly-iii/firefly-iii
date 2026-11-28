@@ -34,7 +34,7 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 /**
  * @property mixed $data
  */
-class Preference extends Model
+final class Preference extends Model
 {
     use ReturnsIntegerIdTrait;
     use ReturnsIntegerUserIdTrait;

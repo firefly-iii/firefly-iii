@@ -31,7 +31,7 @@ use SplObjectStorage;
 /**
  * Class Calculator
  */
-class Calculator
+final class Calculator
 {
     public const int DEFAULT_INTERVAL               = 1;
 

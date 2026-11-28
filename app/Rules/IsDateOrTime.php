@@ -34,7 +34,7 @@ use Illuminate\Support\Facades\Log;
 /**
  * Class IsDateOrTime
  */
-class IsDateOrTime implements ValidationRule
+final class IsDateOrTime implements ValidationRule
 {
     /**
      * @SuppressWarnings("PHPMD.UnusedFormalParameter")

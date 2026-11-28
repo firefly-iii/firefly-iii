@@ -32,7 +32,7 @@ use Illuminate\Database\Seeder;
 /**
  * Class ExchangeRateSeeder
  */
-class ExchangeRateSeeder extends Seeder
+final class ExchangeRateSeeder extends Seeder
 {
     public function run(): void
     {

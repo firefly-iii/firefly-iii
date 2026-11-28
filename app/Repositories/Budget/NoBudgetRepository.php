@@ -39,7 +39,7 @@ use Override;
 /**
  * Class NoBudgetRepository
  */
-class NoBudgetRepository implements NoBudgetRepositoryInterface, UserGroupInterface
+final class NoBudgetRepository implements NoBudgetRepositoryInterface, UserGroupInterface
 {
     use UserGroupTrait;
 

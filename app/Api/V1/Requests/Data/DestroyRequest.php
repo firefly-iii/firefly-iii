@@ -31,7 +31,7 @@ use Illuminate\Foundation\Http\FormRequest;
 /**
  * Class DestroyRequest
  */
-class DestroyRequest extends FormRequest
+final class DestroyRequest extends FormRequest
 {
     use ChecksLogin;
     use ConvertsDataTypes;

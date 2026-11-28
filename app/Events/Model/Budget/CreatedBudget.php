@@ -28,7 +28,7 @@ use FireflyIII\Events\Event;
 use FireflyIII\Models\Budget;
 use Illuminate\Queue\SerializesModels;
 
-class CreatedBudget extends Event
+final class CreatedBudget extends Event
 {
     use SerializesModels;
 

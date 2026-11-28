@@ -35,7 +35,7 @@ use Illuminate\Support\Facades\Log;
 /**
  * Class Request
  */
-class Request extends FormRequest
+final class Request extends FormRequest
 {
     use ChecksLogin;
     use ConvertsDataTypes;

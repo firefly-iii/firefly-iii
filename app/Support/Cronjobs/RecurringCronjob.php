@@ -36,7 +36,7 @@ use Illuminate\Support\Facades\Log;
 /**
  * Class RecurringCronjob
  */
-class RecurringCronjob extends AbstractCronjob
+final class RecurringCronjob extends AbstractCronjob
 {
     /**
      * @throws FireflyException

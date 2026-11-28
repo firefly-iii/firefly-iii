@@ -41,7 +41,7 @@ use Illuminate\Support\Facades\Log;
 /**
  * Class RecurrenceFormRequest
  */
-class RecurrenceFormRequest extends FormRequest
+final class RecurrenceFormRequest extends FormRequest
 {
     use ChecksLogin;
     use ConvertsDataTypes;

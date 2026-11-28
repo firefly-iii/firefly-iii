@@ -48,7 +48,7 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
  * @property TransactionCurrency $transactionCurrency
  */
 #[ObservedBy([BillObserver::class])]
-class Bill extends Model
+final class Bill extends Model
 {
     use ReturnsIntegerIdTrait;
     use ReturnsIntegerUserIdTrait;

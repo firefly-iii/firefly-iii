@@ -40,7 +40,7 @@ use function Safe\preg_match;
 /**
  * Class AppServiceProvider
  */
-class AppServiceProvider extends ServiceProvider
+final class AppServiceProvider extends ServiceProvider
 {
     private const array PUBLIC_APP_KEYS = ['SomeRandomStringOf32CharsExactly'];
 

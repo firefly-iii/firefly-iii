@@ -37,7 +37,7 @@ use NotificationChannels\Pushover\PushoverMessage;
 /**
  * Class UserNewPassword
  */
-class UserNewPassword extends Notification
+final class UserNewPassword extends Notification
 {
     use Queueable;
 

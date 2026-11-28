@@ -32,7 +32,7 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 /**
  * Class AccountList.
  */
-class AccountList implements BinderInterface
+final class AccountList implements BinderInterface
 {
     /**
      * @throws NotFoundHttpException

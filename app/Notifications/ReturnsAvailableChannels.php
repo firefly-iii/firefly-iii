@@ -33,7 +33,7 @@ use NotificationChannels\Pushover\PushoverChannel;
 
 // use Wijourdil\NtfyNotificationChannel\Channels\NtfyChannel;
 
-class ReturnsAvailableChannels
+final class ReturnsAvailableChannels
 {
     public static function returnChannels(string $type, ?User $user = null): array
     {

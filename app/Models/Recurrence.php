@@ -47,7 +47,7 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
  * @property User        $user
  */
 #[ObservedBy([DeletedRecurrenceObserver::class])]
-class Recurrence extends Model
+final class Recurrence extends Model
 {
     use ReturnsIntegerIdTrait;
     use ReturnsIntegerUserIdTrait;

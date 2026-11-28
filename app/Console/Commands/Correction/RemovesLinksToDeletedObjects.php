@@ -34,7 +34,7 @@ use FireflyIII\User;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\DB;
 
-class RemovesLinksToDeletedObjects extends Command
+final class RemovesLinksToDeletedObjects extends Command
 {
     use ShowsFriendlyMessages;
 

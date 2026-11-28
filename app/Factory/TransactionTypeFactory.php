@@ -29,7 +29,7 @@ use FireflyIII\Models\TransactionType;
 /**
  * Class TransactionTypeFactory
  */
-class TransactionTypeFactory
+final class TransactionTypeFactory
 {
     public function find(string $type): ?TransactionType
     {

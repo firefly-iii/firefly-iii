@@ -35,7 +35,7 @@ use function Safe\json_encode;
 /**
  * Class Sha3SignatureGenerator
  */
-class Sha3SignatureGenerator implements SignatureGeneratorInterface
+final class Sha3SignatureGenerator implements SignatureGeneratorInterface
 {
     private int $version = 1;
 

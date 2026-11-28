@@ -28,7 +28,7 @@ use FireflyIII\User;
 use Illuminate\Queue\SerializesModels;
 use Illuminate\Support\Facades\Log;
 
-class UserTestsNotificationChannel
+final class UserTestsNotificationChannel
 {
     use SerializesModels;
 

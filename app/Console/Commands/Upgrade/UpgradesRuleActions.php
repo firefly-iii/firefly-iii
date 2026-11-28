@@ -29,7 +29,7 @@ use FireflyIII\Models\RuleAction;
 use FireflyIII\Support\Facades\AppConfiguration;
 use Illuminate\Console\Command;
 
-class UpgradesRuleActions extends Command
+final class UpgradesRuleActions extends Command
 {
     use ShowsFriendlyMessages;
 

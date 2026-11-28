@@ -33,7 +33,7 @@ use FireflyIII\Models\UserRole;
 /**
  * Class UserGroupFactory
  */
-class UserGroupFactory
+final class UserGroupFactory
 {
     /**
      * @throws FireflyException

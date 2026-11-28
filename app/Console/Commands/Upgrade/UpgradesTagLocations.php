@@ -30,7 +30,7 @@ use FireflyIII\Models\Tag;
 use FireflyIII\Support\Facades\AppConfiguration;
 use Illuminate\Console\Command;
 
-class UpgradesTagLocations extends Command
+final class UpgradesTagLocations extends Command
 {
     use ShowsFriendlyMessages;
 

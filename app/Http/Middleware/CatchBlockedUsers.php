@@ -8,7 +8,7 @@ use Closure;
 use Illuminate\Auth\AuthenticationException;
 use Illuminate\Http\Request;
 
-class CatchBlockedUsers
+final class CatchBlockedUsers
 {
     /**
      * Handle an incoming request.

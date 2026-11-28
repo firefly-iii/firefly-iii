@@ -31,7 +31,7 @@ use FireflyIII\TransactionRules\Expressions\ActionExpression;
 use Illuminate\Contracts\Validation\ValidationRule;
 use Illuminate\Translation\PotentiallyTranslatedString;
 
-class IsValidActionExpression implements ValidationRule
+final class IsValidActionExpression implements ValidationRule
 {
     /**
      * Check that the given action expression is syntactically valid.

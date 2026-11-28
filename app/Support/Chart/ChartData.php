@@ -29,7 +29,7 @@ use FireflyIII\Exceptions\FireflyException;
 /**
  * @deprecated
  */
-class ChartData
+final class ChartData
 {
     private array $series = [];
 

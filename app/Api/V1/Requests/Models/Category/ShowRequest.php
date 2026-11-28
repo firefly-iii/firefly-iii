@@ -30,7 +30,7 @@ use FireflyIII\Api\V1\Requests\DateRequest;
 use FireflyIII\Api\V1\Requests\PaginationRequest;
 use FireflyIII\Models\Category;
 
-class ShowRequest extends AggregateFormRequest
+final class ShowRequest extends AggregateFormRequest
 {
     #[\Override]
     protected function getRequests(): array

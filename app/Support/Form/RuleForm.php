@@ -31,7 +31,7 @@ use FireflyIII\Repositories\RuleGroup\RuleGroupRepositoryInterface;
  * Class RuleForm
  * TODO cleanup and describe
  */
-class RuleForm
+final class RuleForm
 {
     use FormSupport;
 

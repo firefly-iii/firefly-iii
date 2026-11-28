@@ -39,7 +39,7 @@ use Illuminate\Support\Str;
 /**
  * Class WebhookRepository
  */
-class WebhookRepository implements WebhookRepositoryInterface, UserGroupInterface
+final class WebhookRepository implements WebhookRepositoryInterface, UserGroupInterface
 {
     use UserGroupTrait;
 

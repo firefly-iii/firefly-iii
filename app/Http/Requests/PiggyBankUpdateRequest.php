@@ -38,7 +38,7 @@ use Illuminate\Support\Facades\Log;
 /**
  * Class PiggyBankFormRequest.
  */
-class PiggyBankUpdateRequest extends FormRequest
+final class PiggyBankUpdateRequest extends FormRequest
 {
     use ChecksLogin;
     use ConvertsDataTypes;

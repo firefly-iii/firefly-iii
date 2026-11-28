@@ -28,7 +28,7 @@ use Closure;
 use Illuminate\Contracts\View\View;
 use Illuminate\View\Component;
 
-class Responses extends Component
+final class Responses extends Component
 {
     public string $value;
 

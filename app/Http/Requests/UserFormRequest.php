@@ -32,7 +32,7 @@ use Illuminate\Support\Facades\Log;
 /**
  * Class UserFormRequest.
  */
-class UserFormRequest extends FormRequest
+final class UserFormRequest extends FormRequest
 {
     use ChecksLogin;
     use ConvertsDataTypes;

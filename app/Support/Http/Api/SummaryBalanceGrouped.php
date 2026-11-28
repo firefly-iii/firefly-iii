@@ -29,7 +29,7 @@ use FireflyIII\Repositories\Currency\CurrencyRepositoryInterface;
 use FireflyIII\Support\Facades\Amount;
 use Illuminate\Support\Facades\Log;
 
-class SummaryBalanceGrouped
+final class SummaryBalanceGrouped
 {
     private const string SUM  = 'sum';
 

@@ -30,7 +30,7 @@ use FireflyIII\Models\AccountMeta;
 use FireflyIII\Support\Facades\AppConfiguration;
 use Illuminate\Console\Command;
 
-class UpgradesAccountMetaData extends Command
+final class UpgradesAccountMetaData extends Command
 {
     use ShowsFriendlyMessages;
 

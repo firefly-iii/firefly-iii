@@ -27,7 +27,7 @@ namespace FireflyIII\Support\Notifications;
 /**
  * Class UrlValidator
  */
-class UrlValidator
+final class UrlValidator
 {
     public static function isValidWebhookURL(string $url): bool
     {

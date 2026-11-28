@@ -35,7 +35,7 @@ use SensitiveParameter;
 /**
  * Class CLIToken
  */
-class CLIToken implements BinderInterface
+final class CLIToken implements BinderInterface
 {
     public static function findUserByToken(#[SensitiveParameter] string $token): ?User
     {

@@ -36,7 +36,7 @@ use Illuminate\Support\Collection;
  *
  * Sends a list of newly created journals to the user.
  */
-class ReportNewJournalsMail extends Mailable
+final class ReportNewJournalsMail extends Mailable
 {
     use Queueable;
     use SerializesModels;

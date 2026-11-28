@@ -30,7 +30,7 @@ use Illuminate\Console\Command;
 use PDO;
 use PDOException;
 
-class CreatesDatabase extends Command
+final class CreatesDatabase extends Command
 {
     use ShowsFriendlyMessages;
     use VerifiesDatabaseConnectionTrait;

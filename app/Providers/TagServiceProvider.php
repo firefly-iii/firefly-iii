@@ -34,7 +34,7 @@ use Override;
 /**
  * Class TagServiceProvider.
  */
-class TagServiceProvider extends ServiceProvider
+final class TagServiceProvider extends ServiceProvider
 {
     /**
      * Bootstrap the application services.

@@ -30,7 +30,7 @@ use FireflyIII\Models\TransactionJournal;
 use FireflyIII\Models\TransactionType;
 use Illuminate\Console\Command;
 
-class RemovesBills extends Command
+final class RemovesBills extends Command
 {
     use ShowsFriendlyMessages;
 

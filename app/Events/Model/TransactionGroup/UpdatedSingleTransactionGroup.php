@@ -27,7 +27,7 @@ namespace FireflyIII\Events\Model\TransactionGroup;
 use FireflyIII\Events\Event;
 use Illuminate\Queue\SerializesModels;
 
-class UpdatedSingleTransactionGroup extends Event
+final class UpdatedSingleTransactionGroup extends Event
 {
     use SerializesModels;
 

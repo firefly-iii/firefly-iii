@@ -47,7 +47,7 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use ValueError;
 
-class CorrectsAmounts extends Command
+final class CorrectsAmounts extends Command
 {
     use ShowsFriendlyMessages;
 

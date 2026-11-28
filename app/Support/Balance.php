@@ -30,7 +30,7 @@ use FireflyIII\Support\Facades\Amount;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Log;
 
-class Balance
+final class Balance
 {
     /**
      * Returns the accounts balances as an array, on the account ID.

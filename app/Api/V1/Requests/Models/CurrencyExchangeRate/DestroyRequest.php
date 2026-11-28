@@ -29,7 +29,7 @@ use FireflyIII\Support\Request\ChecksLogin;
 use FireflyIII\Support\Request\ConvertsDataTypes;
 use Illuminate\Foundation\Http\FormRequest;
 
-class DestroyRequest extends FormRequest
+final class DestroyRequest extends FormRequest
 {
     use ChecksLogin;
     use ConvertsDataTypes;

@@ -31,7 +31,7 @@ use Psr\Container\NotFoundExceptionInterface;
 /**
  * Class FiscalHelper.
  */
-class FiscalHelper implements FiscalHelperInterface
+final class FiscalHelper implements FiscalHelperInterface
 {
     protected bool $useCustomFiscalYear;
 

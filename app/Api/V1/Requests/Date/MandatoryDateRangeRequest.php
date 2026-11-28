@@ -26,7 +26,7 @@ namespace FireflyIII\Api\V1\Requests\Date;
 use FireflyIII\Api\V1\Requests\ApiRequest;
 use Illuminate\Contracts\Validation\Validator;
 
-class MandatoryDateRangeRequest extends ApiRequest
+final class MandatoryDateRangeRequest extends ApiRequest
 {
     public function rules(): array
     {

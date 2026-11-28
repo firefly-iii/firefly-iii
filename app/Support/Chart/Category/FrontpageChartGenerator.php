@@ -38,7 +38,7 @@ use Illuminate\Support\Facades\Log;
 /**
  * Class FrontpageChartGenerator
  */
-class FrontpageChartGenerator
+final class FrontpageChartGenerator
 {
     use AugumentData;
 

@@ -43,7 +43,7 @@ use Safe\Exceptions\FilesystemException;
 
 use function Safe\file_put_contents;
 
-class ExportsData extends Command
+final class ExportsData extends Command
 {
     use ShowsFriendlyMessages;
     use VerifiesAccessToken;

@@ -28,7 +28,7 @@ use Illuminate\Support\Facades\Facade;
 /**
  * Class RuleForm.
  */
-class RuleForm extends Facade
+final class RuleForm extends Facade
 {
     /**
      * Get the registered name of the component.

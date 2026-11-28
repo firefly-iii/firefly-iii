@@ -32,7 +32,7 @@ use FireflyIII\Support\Facades\Preferences;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Support\Facades\Log;
 
-class NotifiesAboutOverdueSubscriptions implements ShouldQueue
+final class NotifiesAboutOverdueSubscriptions implements ShouldQueue
 {
     public function handle(SubscriptionsAreOverdueForPayment $event): void
     {

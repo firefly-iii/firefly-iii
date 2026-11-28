@@ -34,7 +34,7 @@ use Illuminate\Support\Facades\Log;
 /**
  * Class ClearNotes.
  */
-class ClearNotes implements ActionInterface
+final class ClearNotes implements ActionInterface
 {
     /**
      * TriggerInterface constructor.

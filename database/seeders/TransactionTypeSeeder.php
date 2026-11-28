@@ -32,7 +32,7 @@ use PDOException;
 /**
  * Class TransactionTypeSeeder.
  */
-class TransactionTypeSeeder extends Seeder
+final class TransactionTypeSeeder extends Seeder
 {
     public function run(): void
     {

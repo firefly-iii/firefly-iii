@@ -30,7 +30,7 @@ use FireflyIII\Repositories\ObjectGroup\ObjectGroupRepositoryInterface;
 /**
  * Class AccountTransformer
  */
-class ObjectGroupTransformer extends AbstractTransformer
+final class ObjectGroupTransformer extends AbstractTransformer
 {
     protected ObjectGroupRepositoryInterface $repository;
 

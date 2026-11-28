@@ -46,7 +46,7 @@ use function Safe\json_encode;
 /**
  * Class JournalRepository.
  */
-class JournalRepository implements JournalRepositoryInterface, UserGroupInterface
+final class JournalRepository implements JournalRepositoryInterface, UserGroupInterface
 {
     use UserGroupTrait;
 

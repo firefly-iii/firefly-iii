@@ -61,7 +61,7 @@ use function Safe\parse_url;
 /**
  * Class Handler
  */
-class Handler extends ExceptionHandler
+final class Handler extends ExceptionHandler
 {
     public static ?Throwable $lastError = null;
 

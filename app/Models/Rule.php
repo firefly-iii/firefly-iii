@@ -42,7 +42,7 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
  * @property Collection<RuleTrigger> $ruleTriggers
  */
 #[ObservedBy([DeletedRuleObserver::class])]
-class Rule extends Model
+final class Rule extends Model
 {
     use ReturnsIntegerIdTrait;
     use ReturnsIntegerUserIdTrait;

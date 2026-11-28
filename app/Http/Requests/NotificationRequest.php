@@ -30,7 +30,7 @@ use FireflyIII\Support\Request\ChecksLogin;
 use FireflyIII\Support\Request\ConvertsDataTypes;
 use Illuminate\Foundation\Http\FormRequest;
 
-class NotificationRequest extends FormRequest
+final class NotificationRequest extends FormRequest
 {
     use ChecksLogin;
     use ConvertsDataTypes;

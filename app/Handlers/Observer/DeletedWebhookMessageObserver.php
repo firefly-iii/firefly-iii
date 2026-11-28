@@ -29,7 +29,7 @@ use Illuminate\Support\Facades\Log;
 /**
  * Class WebhookMessageObserver
  */
-class DeletedWebhookMessageObserver
+final class DeletedWebhookMessageObserver
 {
     public function deleting(WebhookMessage $webhookMessage): void
     {

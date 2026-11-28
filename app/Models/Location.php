@@ -30,7 +30,7 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\MorphMany;
 use Illuminate\Database\Eloquent\Relations\MorphTo;
 
-class Location extends Model
+final class Location extends Model
 {
     use ReturnsIntegerIdTrait;
 

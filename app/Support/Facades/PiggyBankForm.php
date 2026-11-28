@@ -28,7 +28,7 @@ use Illuminate\Support\Facades\Facade;
 /**
  * Class PiggyBankForm.
  */
-class PiggyBankForm extends Facade
+final class PiggyBankForm extends Facade
 {
     /**
      * Get the registered name of the component.

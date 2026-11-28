@@ -28,7 +28,7 @@ use Closure;
 use Illuminate\Contracts\View\View;
 use Illuminate\View\Component;
 
-class Periods extends Component
+final class Periods extends Component
 {
     public array $periods;
 

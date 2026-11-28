@@ -43,7 +43,7 @@ use function Safe\file_put_contents;
 /**
  * Class OAuthKeys
  */
-class OAuthKeys
+final class OAuthKeys
 {
     private const string PRIVATE_KEY = 'oauth_private_key';
     private const string PUBLIC_KEY  = 'oauth_public_key';

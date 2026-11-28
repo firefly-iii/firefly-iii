@@ -30,7 +30,7 @@ use Symfony\Component\ExpressionLanguage\ExpressionFunctionProviderInterface;
 /**
  * @SuppressWarnings("PHPMD.UnusedFormalParameter")
  */
-class ActionExpressionLanguageProvider implements ExpressionFunctionProviderInterface
+final class ActionExpressionLanguageProvider implements ExpressionFunctionProviderInterface
 {
     #[\Override]
     public function getFunctions(): array

@@ -33,7 +33,7 @@ use Illuminate\Support\Facades\Log;
 /**
  * Class ClearCategory.
  */
-class ClearCategory implements ActionInterface
+final class ClearCategory implements ActionInterface
 {
     /**
      * TriggerInterface constructor.

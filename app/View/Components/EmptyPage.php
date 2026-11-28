@@ -28,7 +28,7 @@ use Closure;
 use Illuminate\Contracts\View\View;
 use Illuminate\View\Component;
 
-class EmptyPage extends Component
+final class EmptyPage extends Component
 {
     public string $route;
     public string $objectType;

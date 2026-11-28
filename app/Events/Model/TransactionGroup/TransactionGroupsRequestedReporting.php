@@ -28,7 +28,7 @@ use FireflyIII\Events\Event;
 use Illuminate\Queue\SerializesModels;
 use Illuminate\Support\Collection;
 
-class TransactionGroupsRequestedReporting extends Event
+final class TransactionGroupsRequestedReporting extends Event
 {
     use SerializesModels;
 

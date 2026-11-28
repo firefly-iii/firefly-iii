@@ -32,7 +32,7 @@ use Illuminate\Support\Facades\Log;
 /**
  * Class LinkTypeFormRequest.
  */
-class LinkTypeFormRequest extends FormRequest
+final class LinkTypeFormRequest extends FormRequest
 {
     use ChecksLogin;
     use ConvertsDataTypes;

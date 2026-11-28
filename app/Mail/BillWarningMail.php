@@ -32,7 +32,7 @@ use Illuminate\Queue\SerializesModels;
 /**
  * Class BillWarningMail
  */
-class BillWarningMail extends Mailable
+final class BillWarningMail extends Mailable
 {
     use Queueable;
     use SerializesModels;

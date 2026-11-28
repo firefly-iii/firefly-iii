@@ -59,7 +59,7 @@ use TypeError;
  *
  * @SuppressWarnings("PHPMD.CouplingBetweenObjects")
  */
-class OperatorQuerySearch implements SearchInterface
+final class OperatorQuerySearch implements SearchInterface
 {
     protected Carbon $date;
     private readonly AccountRepositoryInterface $accountRepository;

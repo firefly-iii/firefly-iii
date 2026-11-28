@@ -34,7 +34,7 @@ use NotificationChannels\Pushover\PushoverMessage;
 /**
  * Class RuleActionFailed
  */
-class RuleActionFailed extends Notification
+final class RuleActionFailed extends Notification
 {
     use Queueable;
 

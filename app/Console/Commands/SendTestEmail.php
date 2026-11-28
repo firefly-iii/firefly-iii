@@ -29,7 +29,7 @@ use FireflyIII\Notifications\Notifiables\OwnerNotifiable;
 use FireflyIII\Support\Facades\AppConfiguration;
 use Illuminate\Console\Command;
 
-class SendTestEmail extends Command
+final class SendTestEmail extends Command
 {
     use ShowsFriendlyMessages;
     use VerifiesAccessToken;

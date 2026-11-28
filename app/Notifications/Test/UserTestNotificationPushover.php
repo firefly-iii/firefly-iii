@@ -36,7 +36,7 @@ use NotificationChannels\Pushover\PushoverMessage;
 /**
  * Class TestNotification
  */
-class UserTestNotificationPushover extends Notification
+final class UserTestNotificationPushover extends Notification
 {
     use Queueable;
 

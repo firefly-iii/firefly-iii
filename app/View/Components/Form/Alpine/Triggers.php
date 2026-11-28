@@ -28,7 +28,7 @@ use Closure;
 use Illuminate\Contracts\View\View;
 use Illuminate\View\Component;
 
-class Triggers extends Component
+final class Triggers extends Component
 {
     public string $value;
     public string $multiple = '';

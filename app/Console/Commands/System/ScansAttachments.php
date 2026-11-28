@@ -40,7 +40,7 @@ use function Safe\md5_file;
 use function Safe\mime_content_type;
 use function Safe\tempnam;
 
-class ScansAttachments extends Command
+final class ScansAttachments extends Command
 {
     use ShowsFriendlyMessages;
 

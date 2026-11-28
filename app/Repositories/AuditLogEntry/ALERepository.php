@@ -31,7 +31,7 @@ use Illuminate\Support\Collection;
 /**
  * Class ALERepository
  */
-class ALERepository implements ALERepositoryInterface
+final class ALERepository implements ALERepositoryInterface
 {
     #[\Override]
     public function getForId(string $model, int $modelId): Collection

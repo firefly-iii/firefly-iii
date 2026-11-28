@@ -39,7 +39,7 @@ use Illuminate\Support\Facades\Log;
 use stdClass;
 use ValueError;
 
-class CorrectsUnevenAmount extends Command
+final class CorrectsUnevenAmount extends Command
 {
     use ShowsFriendlyMessages;
 

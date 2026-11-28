@@ -36,7 +36,7 @@ use function Safe\preg_match;
 /**
  * Class ParseDateString
  */
-class ParseDateString
+final class ParseDateString
 {
     private array $keywords = [
         'today',

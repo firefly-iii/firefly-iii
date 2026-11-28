@@ -29,7 +29,7 @@ use FireflyIII\Support\Facades\AppConfiguration;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\Artisan;
 
-class UpgradesPrimaryCurrencyAmounts extends Command
+final class UpgradesPrimaryCurrencyAmounts extends Command
 {
     use ShowsFriendlyMessages;
 

@@ -33,7 +33,7 @@ use Illuminate\Notifications\Notification;
 /**
  * Class TestNotification
  */
-class OwnerTestNotificationEmail extends Notification
+final class OwnerTestNotificationEmail extends Notification
 {
     use Queueable;
 

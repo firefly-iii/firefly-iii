@@ -28,7 +28,7 @@ use Closure;
 use Illuminate\Contracts\View\View;
 use Illuminate\View\Component;
 
-class Messages extends Component
+final class Messages extends Component
 {
     /**
      * Create a new component instance.

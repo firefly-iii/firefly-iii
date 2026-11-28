@@ -27,7 +27,7 @@ namespace FireflyIII\Console\Commands\Tools;
 use FireflyIII\Console\Commands\ShowsFriendlyMessages;
 use Illuminate\Console\Command;
 
-class VerifiesDatabaseConnection extends Command
+final class VerifiesDatabaseConnection extends Command
 {
     use ShowsFriendlyMessages;
     use VerifiesDatabaseConnectionTrait;

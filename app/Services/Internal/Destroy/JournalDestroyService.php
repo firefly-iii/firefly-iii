@@ -30,7 +30,7 @@ use Illuminate\Support\Facades\Log;
 /**
  * Class JournalDestroyService
  */
-class JournalDestroyService
+final class JournalDestroyService
 {
     public function destroy(TransactionJournal $journal): void
     {

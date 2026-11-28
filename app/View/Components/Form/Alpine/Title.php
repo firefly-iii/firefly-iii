@@ -28,7 +28,7 @@ use Closure;
 use Illuminate\Contracts\View\View;
 use Illuminate\View\Component;
 
-class Title extends Component
+final class Title extends Component
 {
     public string $value;
 

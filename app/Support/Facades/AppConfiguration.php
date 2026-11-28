@@ -25,7 +25,7 @@ namespace FireflyIII\Support\Facades;
 
 use Illuminate\Support\Facades\Facade;
 
-class AppConfiguration extends Facade
+final class AppConfiguration extends Facade
 {
     /**
      * Get the registered name of the component.

@@ -30,7 +30,7 @@ use FireflyIII\Support\System\IsOldVersion;
 use Illuminate\Console\Command;
 use Random\RandomException;
 
-class OutputsInstructions extends Command
+final class OutputsInstructions extends Command
 {
     use GeneratesInstallationId;
     use IsOldVersion;

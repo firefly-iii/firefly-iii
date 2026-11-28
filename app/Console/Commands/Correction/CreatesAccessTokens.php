@@ -31,7 +31,7 @@ use FireflyIII\Support\Facades\Preferences;
 use FireflyIII\User;
 use Illuminate\Console\Command;
 
-class CreatesAccessTokens extends Command
+final class CreatesAccessTokens extends Command
 {
     use ShowsFriendlyMessages;
 

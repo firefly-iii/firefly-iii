@@ -39,7 +39,7 @@ use Illuminate\Support\Facades\Session;
 /**
  * Class Preferences.
  */
-class Preferences
+final class Preferences
 {
     public function all(): Collection
     {

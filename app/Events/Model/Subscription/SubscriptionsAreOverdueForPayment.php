@@ -28,7 +28,7 @@ use FireflyIII\Events\Event;
 use FireflyIII\User;
 use Illuminate\Queue\SerializesModels;
 
-class SubscriptionsAreOverdueForPayment extends Event
+final class SubscriptionsAreOverdueForPayment extends Event
 {
     use SerializesModels;
 

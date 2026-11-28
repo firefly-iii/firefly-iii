@@ -29,7 +29,7 @@ use FireflyIII\Models\TransactionCurrency;
 /**
  * Class CurrencyTransformer
  */
-class CurrencyTransformer extends AbstractTransformer
+final class CurrencyTransformer extends AbstractTransformer
 {
     /**
      * Transform the currency.

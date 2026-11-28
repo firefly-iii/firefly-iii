@@ -34,7 +34,7 @@ use stdClass;
 /**
  * Deletes transactions where the journal has been deleted.
  */
-class RemovesOrphanedTransactions extends Command
+final class RemovesOrphanedTransactions extends Command
 {
     use ShowsFriendlyMessages;
 

@@ -31,7 +31,7 @@ use Illuminate\Support\Facades\Log;
 
 use function Safe\json_encode;
 
-class IsValidPositiveAmount implements ValidationRule
+final class IsValidPositiveAmount implements ValidationRule
 {
     use ValidatesAmountsTrait;
 

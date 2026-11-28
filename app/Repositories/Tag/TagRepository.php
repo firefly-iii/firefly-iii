@@ -44,7 +44,7 @@ use Override;
 /**
  * Class TagRepository.
  */
-class TagRepository implements TagRepositoryInterface, UserGroupInterface
+final class TagRepository implements TagRepositoryInterface, UserGroupInterface
 {
     use UserGroupTrait;
 

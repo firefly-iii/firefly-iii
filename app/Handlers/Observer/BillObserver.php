@@ -30,7 +30,7 @@ use FireflyIII\Models\Bill;
 /**
  * Class BillObserver
  */
-class BillObserver
+final class BillObserver
 {
     public function created(Bill $bill): void
     {

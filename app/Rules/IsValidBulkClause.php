@@ -34,7 +34,7 @@ use function Safe\json_decode;
 /**
  * Class IsValidBulkClause
  */
-class IsValidBulkClause implements ValidationRule
+final class IsValidBulkClause implements ValidationRule
 {
     private string $error;
     private array $rules;

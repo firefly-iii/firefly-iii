@@ -30,7 +30,7 @@ use FireflyIII\Models\TransactionJournal;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\Log;
 
-class CorrectsTransferBudgets extends Command
+final class CorrectsTransferBudgets extends Command
 {
     use ShowsFriendlyMessages;
 

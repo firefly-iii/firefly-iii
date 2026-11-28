@@ -33,7 +33,7 @@ use Illuminate\Support\Facades\Log;
 /**
  * Class SetDescription.
  */
-class SetDescription implements ActionInterface
+final class SetDescription implements ActionInterface
 {
     use RefreshNotesTrait;
 

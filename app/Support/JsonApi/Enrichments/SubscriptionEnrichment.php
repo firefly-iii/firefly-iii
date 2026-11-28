@@ -43,7 +43,7 @@ use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 
-class SubscriptionEnrichment implements EnrichmentInterface
+final class SubscriptionEnrichment implements EnrichmentInterface
 {
     private BillDateCalculator $calculator;
     private Collection $collection;

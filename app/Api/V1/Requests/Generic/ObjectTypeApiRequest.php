@@ -36,7 +36,7 @@ use Illuminate\Contracts\Validation\Validator;
 use Override;
 use RuntimeException;
 
-class ObjectTypeApiRequest extends ApiRequest
+final class ObjectTypeApiRequest extends ApiRequest
 {
     use AccountFilter;
     use TransactionFilter;

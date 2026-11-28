@@ -32,7 +32,7 @@ use Illuminate\Support\Facades\Log;
 /**
  * Class ValidJournals
  */
-class ValidJournals implements ValidationRule
+final class ValidJournals implements ValidationRule
 {
     /**
      * @SuppressWarnings("PHPMD.UnusedFormalParameter")

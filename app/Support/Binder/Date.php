@@ -34,7 +34,7 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 /**
  * Class Date.
  */
-class Date implements BinderInterface
+final class Date implements BinderInterface
 {
     /**
      * @throws NotFoundHttpException

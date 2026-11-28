@@ -35,7 +35,7 @@ use Illuminate\Support\Facades\Log;
 /**
  * Class SetCategory.
  */
-class SetCategory implements ActionInterface
+final class SetCategory implements ActionInterface
 {
     /**
      * TriggerInterface constructor.

@@ -41,7 +41,7 @@ use Illuminate\Support\Facades\Log;
 /**
  * Class WarnAboutBills
  */
-class WarnAboutBills implements ShouldQueue
+final class WarnAboutBills implements ShouldQueue
 {
     use Dispatchable;
     use InteractsWithQueue;

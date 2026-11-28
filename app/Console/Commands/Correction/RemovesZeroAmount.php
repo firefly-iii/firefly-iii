@@ -29,7 +29,7 @@ use FireflyIII\Models\Transaction;
 use FireflyIII\Models\TransactionJournal;
 use Illuminate\Console\Command;
 
-class RemovesZeroAmount extends Command
+final class RemovesZeroAmount extends Command
 {
     use ShowsFriendlyMessages;
 

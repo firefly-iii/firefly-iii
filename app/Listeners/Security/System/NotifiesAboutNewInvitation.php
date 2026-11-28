@@ -37,7 +37,7 @@ use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Mail;
 
-class NotifiesAboutNewInvitation implements ShouldQueue
+final class NotifiesAboutNewInvitation implements ShouldQueue
 {
     public function handle(NewInvitationCreated $event): void
     {

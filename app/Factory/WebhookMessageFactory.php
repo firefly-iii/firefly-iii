@@ -28,7 +28,7 @@ use FireflyIII\Models\Webhook;
 use FireflyIII\Models\WebhookMessage;
 use Illuminate\Support\Facades\Log;
 
-class WebhookMessageFactory
+final class WebhookMessageFactory
 {
     public function create(Webhook $webhook, array $data): WebhookMessage
     {

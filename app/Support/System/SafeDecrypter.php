@@ -38,7 +38,7 @@ use function Safe\unserialize;
  * the preferences API stores any string. Whoever knows APP_KEY can make those bytes a valid Laravel payload, and
  * Crypt::decrypt() with its default unserialize=true would then instantiate arbitrary classes (PHP object injection).
  */
-class SafeDecrypter
+final class SafeDecrypter
 {
     /**
      * @throws DecryptException

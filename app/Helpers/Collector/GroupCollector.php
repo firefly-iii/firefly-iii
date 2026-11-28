@@ -54,7 +54,7 @@ use function Safe\json_decode;
 /**
  * Class GroupCollector
  */
-class GroupCollector implements GroupCollectorInterface
+final class GroupCollector implements GroupCollectorInterface
 {
     use AccountCollection;
     use AmountCollection;

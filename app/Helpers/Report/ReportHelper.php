@@ -35,7 +35,7 @@ use Illuminate\Support\Collection;
 /**
  * Class ReportHelper.
  */
-class ReportHelper implements ReportHelperInterface
+final class ReportHelper implements ReportHelperInterface
 {
     /**
      * ReportHelper constructor.

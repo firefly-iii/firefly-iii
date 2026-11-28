@@ -50,7 +50,7 @@ use const DIRECTORY_SEPARATOR;
 /**
  * Class AttachmentHelper.
  */
-class AttachmentHelper implements AttachmentHelperInterface
+final class AttachmentHelper implements AttachmentHelperInterface
 {
     public Collection $attachments;
     public MessageBag $errors;

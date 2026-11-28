@@ -31,7 +31,7 @@ use Illuminate\Queue\SerializesModels;
 /**
  * Class AccessTokenCreatedMail
  */
-class AccessTokenCreatedMail extends Mailable
+final class AccessTokenCreatedMail extends Mailable
 {
     use Queueable;
     use SerializesModels;

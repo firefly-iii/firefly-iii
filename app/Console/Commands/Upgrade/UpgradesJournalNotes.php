@@ -31,7 +31,7 @@ use FireflyIII\Support\Facades\AppConfiguration;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\Log;
 
-class UpgradesJournalNotes extends Command
+final class UpgradesJournalNotes extends Command
 {
     use ShowsFriendlyMessages;
 

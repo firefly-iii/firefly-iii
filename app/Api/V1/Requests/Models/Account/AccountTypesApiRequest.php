@@ -29,7 +29,7 @@ use FireflyIII\Rules\Account\IsValidAccountTypeList;
 use FireflyIII\Support\Http\Api\AccountFilter;
 use Illuminate\Contracts\Validation\Validator;
 
-class AccountTypesApiRequest extends ApiRequest
+final class AccountTypesApiRequest extends ApiRequest
 {
     use AccountFilter;
 

@@ -42,7 +42,7 @@ use function Safe\preg_match;
 /**
  * Class CategoryFormRequest.
  */
-class ReportFormRequest extends FormRequest
+final class ReportFormRequest extends FormRequest
 {
     use ChecksLogin;
 

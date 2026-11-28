@@ -27,7 +27,7 @@ namespace FireflyIII\Support\Search\QueryParser;
 /**
  * Represents a string in the search query, meaning either a single-word without spaces or a quote-delimited string
  */
-class StringNode extends Node
+final class StringNode extends Node
 {
     public function __construct(
         private readonly string $value,

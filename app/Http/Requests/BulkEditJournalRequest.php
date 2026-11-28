@@ -32,7 +32,7 @@ use Illuminate\Support\Facades\Log;
 /**
  * Class MassEditBulkJournalRequest.
  */
-class BulkEditJournalRequest extends FormRequest
+final class BulkEditJournalRequest extends FormRequest
 {
     use ChecksLogin;
     use ConvertsDataTypes;

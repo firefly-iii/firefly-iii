@@ -33,7 +33,7 @@ use FireflyIII\Models\WebhookTrigger as WebhookTriggerModel;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\Log;
 
-class WebhookDataSeeder extends Seeder
+final class WebhookDataSeeder extends Seeder
 {
     /**
      * Run the database seeds.

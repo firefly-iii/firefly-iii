@@ -29,7 +29,7 @@ use FireflyIII\Models\Account;
 use Illuminate\Contracts\View\View;
 use Illuminate\View\Component;
 
-class TransactionAmount extends Component
+final class TransactionAmount extends Component
 {
     public string $type;
     public array $amount;

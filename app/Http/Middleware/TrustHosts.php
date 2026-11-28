@@ -27,7 +27,7 @@ namespace FireflyIII\Http\Middleware;
 use Illuminate\Http\Middleware\TrustHosts as Middleware;
 use Override;
 
-class TrustHosts extends Middleware
+final class TrustHosts extends Middleware
 {
     /**
      * Get the host patterns that should be trusted.

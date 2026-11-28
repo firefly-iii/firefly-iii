@@ -29,4 +29,4 @@ use Exception;
 /**
  * Class DuplicateTransactionException
  */
-class DuplicateTransactionException extends Exception {}
+final class DuplicateTransactionException extends Exception {}

@@ -39,7 +39,7 @@ use function Safe\json_decode;
 /**
  * Class TransactionRequest
  */
-class TransactionRequest extends FormRequest
+final class TransactionRequest extends FormRequest
 {
     use ChecksLogin;
     use ConvertsDataTypes;

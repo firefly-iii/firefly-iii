@@ -25,7 +25,7 @@ namespace FireflyIII\Api\V1\Requests;
 
 use Illuminate\Contracts\Validation\Validator;
 
-class SameDateRangeRequest extends ApiRequest
+final class SameDateRangeRequest extends ApiRequest
 {
     public function rules(): array
     {

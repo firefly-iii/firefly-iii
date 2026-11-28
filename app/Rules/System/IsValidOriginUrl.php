@@ -31,7 +31,7 @@ use Safe\Exceptions\UrlException;
 
 use function Safe\parse_url;
 
-class IsValidOriginUrl implements ValidationRule
+final class IsValidOriginUrl implements ValidationRule
 {
     #[Override]
     public function validate(string $attribute, mixed $value, Closure $fail): void

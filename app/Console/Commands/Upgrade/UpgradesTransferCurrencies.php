@@ -36,7 +36,7 @@ use FireflyIII\Support\Facades\AppConfiguration;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\Log;
 
-class UpgradesTransferCurrencies extends Command
+final class UpgradesTransferCurrencies extends Command
 {
     use ShowsFriendlyMessages;
 

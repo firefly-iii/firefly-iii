@@ -62,7 +62,7 @@ use function Safe\json_decode;
 /**
  * Class TransactionGroupRepository
  */
-class TransactionGroupRepository implements TransactionGroupRepositoryInterface, UserGroupInterface
+final class TransactionGroupRepository implements TransactionGroupRepositoryInterface, UserGroupInterface
 {
     use UserGroupTrait;
 

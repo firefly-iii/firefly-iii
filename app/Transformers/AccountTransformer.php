@@ -34,7 +34,7 @@ use FireflyIII\Support\Facades\Amount;
 /**
  * Class AccountTransformer
  */
-class AccountTransformer extends AbstractTransformer
+final class AccountTransformer extends AbstractTransformer
 {
     protected bool $convertToPrimary;
     protected TransactionCurrency $primary;

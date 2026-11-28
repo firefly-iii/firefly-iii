@@ -32,7 +32,7 @@ use Illuminate\Support\Facades\Log;
 /**
  * Class IsDemoUser.
  */
-class IsDemoUser
+final class IsDemoUser
 {
     /**
      * Handle an incoming request.

@@ -29,7 +29,7 @@ use FireflyIII\Models\Preference;
 /**
  * Class PreferenceTransformer
  */
-class PreferenceTransformer extends AbstractTransformer
+final class PreferenceTransformer extends AbstractTransformer
 {
     /**
      * Transform the preference

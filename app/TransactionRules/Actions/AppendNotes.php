@@ -34,7 +34,7 @@ use Illuminate\Support\Facades\Log;
  * Class AppendNotes.
  * TODO Can be replaced (and migrated) to action "set notes" with a prefilled expression
  */
-class AppendNotes implements ActionInterface
+final class AppendNotes implements ActionInterface
 {
     use RefreshNotesTrait;
 

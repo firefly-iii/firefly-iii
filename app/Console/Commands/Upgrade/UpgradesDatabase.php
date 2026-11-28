@@ -39,7 +39,7 @@ try {
     Log::warning('set_time_limit returned false. This could be an issue, unless you also run XDebug.');
 }
 
-class UpgradesDatabase extends Command
+final class UpgradesDatabase extends Command
 {
     use GeneratesInstallationId;
     use ShowsFriendlyMessages;

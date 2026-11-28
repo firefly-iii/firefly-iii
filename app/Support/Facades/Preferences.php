@@ -26,7 +26,7 @@ namespace FireflyIII\Support\Facades;
 use Illuminate\Support\Facades\Facade;
 use Illuminate\Support\Facades\Log;
 
-class Preferences extends Facade
+final class Preferences extends Facade
 {
     public function __construct()
     {

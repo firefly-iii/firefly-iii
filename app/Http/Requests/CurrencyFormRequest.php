@@ -33,7 +33,7 @@ use Illuminate\Support\Facades\Log;
 /**
  * Class CurrencyFormRequest.
  */
-class CurrencyFormRequest extends FormRequest
+final class CurrencyFormRequest extends FormRequest
 {
     use ChecksLogin;
     use ConvertsDataTypes;

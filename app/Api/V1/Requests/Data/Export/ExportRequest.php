@@ -34,7 +34,7 @@ use Illuminate\Support\Collection;
 /**
  * Class ExportRequest
  */
-class ExportRequest extends FormRequest
+final class ExportRequest extends FormRequest
 {
     use ChecksLogin;
     use ConvertsDataTypes;

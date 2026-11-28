@@ -41,7 +41,7 @@ use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Log;
 use InvalidArgumentException;
 
-class Cron extends Command
+final class Cron extends Command
 {
     use ShowsFriendlyMessages;
 

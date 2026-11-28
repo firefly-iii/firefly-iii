@@ -61,7 +61,7 @@ use function Safe\preg_match;
  * Class FireflyValidator.
  * TODO all of these validations must become separate classes.
  */
-class FireflyValidator extends Validator
+final class FireflyValidator extends Validator
 {
     /**
      * @param mixed $attribute

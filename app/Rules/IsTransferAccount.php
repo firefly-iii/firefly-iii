@@ -33,7 +33,7 @@ use Illuminate\Support\Facades\Log;
 /**
  * Class IsTransferAccount
  */
-class IsTransferAccount implements ValidationRule
+final class IsTransferAccount implements ValidationRule
 {
     /**
      * @SuppressWarnings("PHPMD.UnusedFormalParameter")

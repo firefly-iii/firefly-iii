@@ -32,7 +32,7 @@ use FireflyIII\Support\Facades\Preferences;
 use FireflyIII\User;
 use Illuminate\Console\Command;
 
-class CorrectsFrontpageAccounts extends Command
+final class CorrectsFrontpageAccounts extends Command
 {
     use ShowsFriendlyMessages;
 

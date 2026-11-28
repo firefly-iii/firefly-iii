@@ -28,7 +28,7 @@ use FireflyIII\Notifications\Notifiables\OwnerNotifiable;
 use Illuminate\Queue\SerializesModels;
 use Illuminate\Support\Facades\Log;
 
-class OwnerTestsNotificationChannel
+final class OwnerTestsNotificationChannel
 {
     use SerializesModels;
 

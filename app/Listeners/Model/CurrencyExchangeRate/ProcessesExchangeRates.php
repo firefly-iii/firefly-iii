@@ -36,7 +36,7 @@ use FireflyIII\Support\Facades\Preferences;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Log;
 
-class ProcessesExchangeRates
+final class ProcessesExchangeRates
 {
     public function handle(CreatedCurrencyExchangeRate|DestroyedCurrencyExchangeRate|UpdatedCurrencyExchangeRate $event): void
     {

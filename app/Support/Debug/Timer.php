@@ -26,7 +26,7 @@ namespace FireflyIII\Support\Debug;
 
 use Illuminate\Support\Facades\Log;
 
-class Timer
+final class Timer
 {
     private static ?Timer $instance = null;
     private array $times            = [];

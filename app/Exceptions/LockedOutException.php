@@ -24,4 +24,4 @@ declare(strict_types=1);
 
 namespace FireflyIII\Exceptions;
 
-class LockedOutException extends FireflyException {}
+final class LockedOutException extends FireflyException {}

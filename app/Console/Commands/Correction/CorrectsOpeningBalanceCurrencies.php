@@ -37,7 +37,7 @@ use Illuminate\Console\Command;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Log;
 
-class CorrectsOpeningBalanceCurrencies extends Command
+final class CorrectsOpeningBalanceCurrencies extends Command
 {
     use ShowsFriendlyMessages;
 

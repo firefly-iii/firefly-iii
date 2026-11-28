@@ -51,7 +51,7 @@ use Override;
  *
  * This class "enriches" accounts and adds data from other tables and models to each account model.
  */
-class AccountEnrichment implements EnrichmentInterface
+final class AccountEnrichment implements EnrichmentInterface
 {
     private array $accountTypeIds        = [];
     private array $accountTypes          = [];

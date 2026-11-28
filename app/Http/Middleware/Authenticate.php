@@ -35,7 +35,7 @@ use Illuminate\Support\Facades\Log;
 /**
  * Class Authenticate
  */
-class Authenticate
+final class Authenticate
 {
     /**
      * Create a new middleware instance.

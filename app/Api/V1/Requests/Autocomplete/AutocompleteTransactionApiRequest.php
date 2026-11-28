@@ -33,7 +33,7 @@ use FireflyIII\Models\Account;
 use FireflyIII\Models\Transaction;
 use Override;
 
-class AutocompleteTransactionApiRequest extends AggregateFormRequest
+final class AutocompleteTransactionApiRequest extends AggregateFormRequest
 {
     #[Override]
     protected function getRequests(): array

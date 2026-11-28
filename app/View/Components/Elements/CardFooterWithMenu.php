@@ -28,7 +28,7 @@ use Closure;
 use Illuminate\Contracts\View\View;
 use Illuminate\View\Component;
 
-class CardFooterWithMenu extends Component
+final class CardFooterWithMenu extends Component
 {
     public string $route;
     public string $linkTitle;

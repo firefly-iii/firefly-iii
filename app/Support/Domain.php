@@ -26,7 +26,7 @@ namespace FireflyIII\Support;
 /**
  * Class Domain.
  */
-class Domain
+final class Domain
 {
     public static function getBindables(): array
     {

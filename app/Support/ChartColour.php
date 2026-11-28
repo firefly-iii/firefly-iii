@@ -26,7 +26,7 @@ namespace FireflyIII\Support;
 /**
  * Class ChartColour.
  */
-class ChartColour
+final class ChartColour
 {
     /**
      * @var array

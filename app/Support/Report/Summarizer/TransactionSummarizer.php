@@ -30,7 +30,7 @@ use FireflyIII\Support\Facades\Steam;
 use FireflyIII\User;
 use Illuminate\Support\Facades\Log;
 
-class TransactionSummarizer
+final class TransactionSummarizer
 {
     private bool $convertToPrimary = false;
     private TransactionCurrency $default;

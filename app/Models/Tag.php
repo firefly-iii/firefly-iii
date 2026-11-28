@@ -42,7 +42,7 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
  * @property null|Carbon $date
  */
 #[ObservedBy([DeletedTagObserver::class])]
-class Tag extends Model
+final class Tag extends Model
 {
     use ReturnsIntegerIdTrait;
     use ReturnsIntegerUserIdTrait;

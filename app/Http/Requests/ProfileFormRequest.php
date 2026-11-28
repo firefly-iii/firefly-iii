@@ -31,7 +31,7 @@ use Illuminate\Support\Facades\Log;
 /**
  * Class ProfileFormRequest.
  */
-class ProfileFormRequest extends FormRequest
+final class ProfileFormRequest extends FormRequest
 {
     use ChecksLogin;
 

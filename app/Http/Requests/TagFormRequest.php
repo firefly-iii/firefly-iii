@@ -35,7 +35,7 @@ use Illuminate\Support\Facades\Log;
 /**
  * Class TagFormRequest.
  */
-class TagFormRequest extends FormRequest
+final class TagFormRequest extends FormRequest
 {
     use AppendsLocationData;
     use ChecksLogin;

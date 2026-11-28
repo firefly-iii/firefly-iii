@@ -29,7 +29,7 @@ use FireflyIII\Models\TransactionCurrency;
 use FireflyIII\User;
 use Illuminate\Database\Eloquent\Model;
 
-class ConversionParameters
+final class ConversionParameters
 {
     public User $user;
     public Model $model;

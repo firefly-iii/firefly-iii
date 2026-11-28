@@ -41,7 +41,7 @@ use Illuminate\Support\Collection;
  *
  * This class is basically a very long for-each loop disguised as a class. It's readable but not really OOP.
  */
-class BudgetReportGenerator
+final class BudgetReportGenerator
 {
     private Collection $accounts;
     private readonly BudgetLimitRepositoryInterface $blRepository;

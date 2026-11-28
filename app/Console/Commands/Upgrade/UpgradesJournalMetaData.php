@@ -34,7 +34,7 @@ use Illuminate\Console\Command;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\DB;
 
-class UpgradesJournalMetaData extends Command
+final class UpgradesJournalMetaData extends Command
 {
     use ShowsFriendlyMessages;
 

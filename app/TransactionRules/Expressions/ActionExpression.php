@@ -29,7 +29,7 @@ use FireflyIII\TransactionRules\Engine\CustomExpressionLanguage;
 use Illuminate\Support\Facades\Log;
 use Symfony\Component\ExpressionLanguage\SyntaxError;
 
-class ActionExpression
+final class ActionExpression
 {
     private static array $NAMES = [
         //        'transaction_group_id',

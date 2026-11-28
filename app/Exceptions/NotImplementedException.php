@@ -29,4 +29,4 @@ use Exception;
 /**
  * Class NotImplementedException.
  */
-class NotImplementedException extends Exception {}
+final class NotImplementedException extends Exception {}

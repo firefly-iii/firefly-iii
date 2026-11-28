@@ -36,7 +36,7 @@ use Illuminate\Support\Facades\Log;
 /**
  * Class LinkToBill.
  */
-class LinkToBill implements ActionInterface
+final class LinkToBill implements ActionInterface
 {
     /**
      * TriggerInterface constructor.

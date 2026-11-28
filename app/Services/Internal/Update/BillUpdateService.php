@@ -36,7 +36,7 @@ use FireflyIII\User;
 /**
  * Class BillUpdateService
  */
-class BillUpdateService
+final class BillUpdateService
 {
     use BillServiceTrait;
     use CreatesObjectGroups;

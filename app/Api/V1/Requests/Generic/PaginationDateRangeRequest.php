@@ -33,7 +33,7 @@ use Override;
 /**
  * TODO this class includes an object type filter which should be moved to its own thing.
  */
-class PaginationDateRangeRequest extends AggregateFormRequest
+final class PaginationDateRangeRequest extends AggregateFormRequest
 {
     #[Override]
     protected function getRequests(): array

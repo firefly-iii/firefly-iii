@@ -28,7 +28,7 @@ use FireflyIII\Console\Commands\ShowsFriendlyMessages;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\Schema;
 
-class ReportsIntegrity extends Command
+final class ReportsIntegrity extends Command
 {
     use ShowsFriendlyMessages;
 

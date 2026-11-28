@@ -37,7 +37,7 @@ use Illuminate\Support\Facades\Log;
 /**
  * Class PiggyBankStoreRequest.
  */
-class PiggyBankStoreRequest extends FormRequest
+final class PiggyBankStoreRequest extends FormRequest
 {
     use ChecksLogin;
     use ConvertsDataTypes;

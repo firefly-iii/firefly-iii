@@ -31,7 +31,7 @@ use Illuminate\Foundation\Http\FormRequest;
 /**
  * Class CronRequest
  */
-class CronRequest extends FormRequest
+final class CronRequest extends FormRequest
 {
     use ConvertsDataTypes;
 

@@ -28,7 +28,7 @@ use FireflyIII\Enums\AccountTypeEnum;
 use FireflyIII\Models\AccountType;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
-class AccountFactory extends Factory
+final class AccountFactory extends Factory
 {
     #[\Override]
     public function definition(): array

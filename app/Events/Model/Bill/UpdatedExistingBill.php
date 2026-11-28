@@ -28,7 +28,7 @@ use FireflyIII\Events\Event;
 use FireflyIII\Models\Bill;
 use Illuminate\Queue\SerializesModels;
 
-class UpdatedExistingBill extends Event
+final class UpdatedExistingBill extends Event
 {
     use SerializesModels;
 

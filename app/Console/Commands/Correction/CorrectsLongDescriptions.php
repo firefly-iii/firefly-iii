@@ -30,7 +30,7 @@ use FireflyIII\Models\TransactionJournal;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\DB;
 
-class CorrectsLongDescriptions extends Command
+final class CorrectsLongDescriptions extends Command
 {
     use ShowsFriendlyMessages;
 

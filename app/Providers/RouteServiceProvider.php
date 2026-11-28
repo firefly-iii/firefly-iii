@@ -29,7 +29,7 @@ use Override;
 /**
  * Class RouteServiceProvider
  */
-class RouteServiceProvider extends ServiceProvider
+final class RouteServiceProvider extends ServiceProvider
 {
     public const string HOME = '/';
 

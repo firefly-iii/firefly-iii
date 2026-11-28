@@ -29,7 +29,7 @@ use FireflyIII\Rules\IsBoolean;
 use Illuminate\Contracts\Validation\Validator;
 use Override;
 
-class CountRequest extends AggregateFormRequest
+final class CountRequest extends AggregateFormRequest
 {
     #[\Override]
     public function rules(): array

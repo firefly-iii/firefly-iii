@@ -30,7 +30,7 @@ use Illuminate\Support\Facades\DB;
 /**
  * Class CategoryDestroyService
  */
-class CategoryDestroyService
+final class CategoryDestroyService
 {
     public function destroy(Category $category): void
     {

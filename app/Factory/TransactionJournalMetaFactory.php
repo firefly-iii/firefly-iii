@@ -31,7 +31,7 @@ use Illuminate\Support\Facades\Log;
 /**
  * Class TransactionJournalMetaFactory
  */
-class TransactionJournalMetaFactory
+final class TransactionJournalMetaFactory
 {
     public function updateOrCreate(array $data): ?TransactionJournalMeta
     {

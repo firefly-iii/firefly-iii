@@ -38,7 +38,7 @@ use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Log;
 use Override;
 
-class AvailableBudgetEnrichment implements EnrichmentInterface
+final class AvailableBudgetEnrichment implements EnrichmentInterface
 {
     private Collection $collection;
     private readonly bool $convertToPrimary;

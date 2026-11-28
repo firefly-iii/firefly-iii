@@ -32,7 +32,7 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 /**
  * Class CurrencyCode.
  */
-class CurrencyCode implements BinderInterface
+final class CurrencyCode implements BinderInterface
 {
     /**
      * @throws NotFoundHttpException

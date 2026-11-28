@@ -31,7 +31,7 @@ use Illuminate\Foundation\Http\FormRequest;
 /**
  * Class ValidateExpressionRequest
  */
-class ValidateExpressionRequest extends FormRequest
+final class ValidateExpressionRequest extends FormRequest
 {
     use ChecksLogin;
 

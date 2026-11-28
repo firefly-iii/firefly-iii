@@ -43,7 +43,7 @@ use Spatie\Period\Precision;
 /**
  * Class AvailableBudgetRepository
  */
-class AvailableBudgetRepository implements AvailableBudgetRepositoryInterface, UserGroupInterface
+final class AvailableBudgetRepository implements AvailableBudgetRepositoryInterface, UserGroupInterface
 {
     use UserGroupTrait;
 

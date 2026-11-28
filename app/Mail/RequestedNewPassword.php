@@ -31,7 +31,7 @@ use Illuminate\Queue\SerializesModels;
  * Sends user link for new password.
  * Class RequestedNewPassword
  */
-class RequestedNewPassword extends Mailable
+final class RequestedNewPassword extends Mailable
 {
     use Queueable;
     use SerializesModels;

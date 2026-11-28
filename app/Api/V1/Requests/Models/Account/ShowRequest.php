@@ -31,7 +31,7 @@ use FireflyIII\Api\V1\Requests\Generic\ActiveObjectRequest;
 use FireflyIII\Api\V1\Requests\PaginationRequest;
 use FireflyIII\Models\Account;
 
-class ShowRequest extends AggregateFormRequest
+final class ShowRequest extends AggregateFormRequest
 {
     #[\Override]
     protected function getRequests(): array

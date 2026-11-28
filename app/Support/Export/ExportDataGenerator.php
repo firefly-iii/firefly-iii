@@ -69,7 +69,7 @@ use Psr\Container\NotFoundExceptionInterface;
 /**
  * Class ExportDataGenerator
  */
-class ExportDataGenerator
+final class ExportDataGenerator
 {
     use ConvertsDataTypes;
 

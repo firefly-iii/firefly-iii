@@ -40,7 +40,7 @@ use Override;
 /**
  * Class BudgetServiceProvider.
  */
-class BudgetServiceProvider extends ServiceProvider
+final class BudgetServiceProvider extends ServiceProvider
 {
     /**
      * Bootstrap the application services.

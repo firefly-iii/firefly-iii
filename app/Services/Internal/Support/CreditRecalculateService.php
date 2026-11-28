@@ -39,7 +39,7 @@ use Illuminate\Support\Facades\Log;
 /**
  * Class CreditRecalculateService
  */
-class CreditRecalculateService
+final class CreditRecalculateService
 {
     private ?Account          $account = null;
     private ?TransactionGroup $group   = null;

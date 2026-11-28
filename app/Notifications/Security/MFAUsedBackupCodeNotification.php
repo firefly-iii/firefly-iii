@@ -34,7 +34,7 @@ use Illuminate\Notifications\Notification;
 use Illuminate\Support\Facades\Request;
 use NotificationChannels\Pushover\PushoverMessage;
 
-class MFAUsedBackupCodeNotification extends Notification
+final class MFAUsedBackupCodeNotification extends Notification
 {
     use Queueable;
 

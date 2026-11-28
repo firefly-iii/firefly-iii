@@ -30,7 +30,7 @@ use FireflyIII\User;
 /**
  * Class UserTransformer
  */
-class UserTransformer extends AbstractTransformer
+final class UserTransformer extends AbstractTransformer
 {
     private UserRepositoryInterface $repository;
 

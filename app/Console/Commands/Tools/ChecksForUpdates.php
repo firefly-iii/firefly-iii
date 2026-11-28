@@ -30,7 +30,7 @@ use FireflyIII\Services\FireflyIIIOrg\Update\UpdateRequestInterface;
 use FireflyIII\Support\Facades\AppConfiguration;
 use Illuminate\Console\Command;
 
-class ChecksForUpdates extends Command
+final class ChecksForUpdates extends Command
 {
     use ShowsFriendlyMessages;
 

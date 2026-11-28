@@ -41,7 +41,7 @@ use Illuminate\Console\Command;
 use Illuminate\Database\QueryException;
 use Illuminate\Support\Facades\Log;
 
-class CorrectsTimezoneInformation extends Command
+final class CorrectsTimezoneInformation extends Command
 {
     use ShowsFriendlyMessages;
 

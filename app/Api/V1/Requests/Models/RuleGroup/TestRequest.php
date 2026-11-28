@@ -32,7 +32,7 @@ use Illuminate\Foundation\Http\FormRequest;
 /**
  * Class TestRequest
  */
-class TestRequest extends FormRequest
+final class TestRequest extends FormRequest
 {
     use ChecksLogin;
     use ConvertsDataTypes;

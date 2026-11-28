@@ -32,7 +32,7 @@ use FireflyIII\Api\V1\Requests\PaginationRequest;
 use FireflyIII\Models\Category;
 use Override;
 
-class AutocompleteCategoryApiRequest extends AggregateFormRequest
+final class AutocompleteCategoryApiRequest extends AggregateFormRequest
 {
     #[Override]
     protected function getRequests(): array

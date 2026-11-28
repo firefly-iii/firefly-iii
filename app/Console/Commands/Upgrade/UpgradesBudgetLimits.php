@@ -33,7 +33,7 @@ use FireflyIII\Support\Facades\AppConfiguration;
 use FireflyIII\User;
 use Illuminate\Console\Command;
 
-class UpgradesBudgetLimits extends Command
+final class UpgradesBudgetLimits extends Command
 {
     use ShowsFriendlyMessages;
 

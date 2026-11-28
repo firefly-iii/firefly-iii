@@ -31,7 +31,7 @@ use Illuminate\Support\Facades\Log;
 /**
  * Class MassDeleteJournalRequest.
  */
-class MassDeleteJournalRequest extends FormRequest
+final class MassDeleteJournalRequest extends FormRequest
 {
     use ChecksLogin;
 

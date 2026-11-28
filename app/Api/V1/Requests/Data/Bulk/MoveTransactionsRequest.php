@@ -34,7 +34,7 @@ use Illuminate\Support\Facades\Log;
 /**
  * Class MoveTransactionsRequest
  */
-class MoveTransactionsRequest extends FormRequest
+final class MoveTransactionsRequest extends FormRequest
 {
     use ChecksLogin;
     use ConvertsDataTypes;

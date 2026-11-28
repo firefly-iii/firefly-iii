@@ -38,7 +38,7 @@ use stdClass;
 /**
  * Class AccountDestroyService
  */
-class AccountDestroyService
+final class AccountDestroyService
 {
     public function destroy(Account $account, ?Account $moveTo): void
     {

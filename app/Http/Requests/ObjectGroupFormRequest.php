@@ -33,7 +33,7 @@ use Illuminate\Support\Facades\Log;
 /**
  * Class ObjectGroupFormRequest.
  */
-class ObjectGroupFormRequest extends FormRequest
+final class ObjectGroupFormRequest extends FormRequest
 {
     use ChecksLogin;
     use ConvertsDataTypes;

@@ -29,7 +29,7 @@ use FireflyIII\Handlers\ExchangeRate\ConvertsAmountToPrimaryAmount;
 use FireflyIII\Models\BudgetLimit;
 use Illuminate\Support\Facades\Log;
 
-class BudgetLimitObserver
+final class BudgetLimitObserver
 {
     public function created(BudgetLimit $budgetLimit): void
     {

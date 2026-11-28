@@ -29,7 +29,7 @@ use FireflyIII\Models\Account;
 use Illuminate\Contracts\View\View;
 use Illuminate\View\Component;
 
-class JournalsAudit extends Component
+final class JournalsAudit extends Component
 {
     public array $journals;
     public array $auditData;

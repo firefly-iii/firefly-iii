@@ -30,7 +30,7 @@ use FireflyIII\Support\Facades\AppConfiguration;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\Log;
 
-class CorrectsPrimaryCurrencyAmounts extends Command
+final class CorrectsPrimaryCurrencyAmounts extends Command
 {
     use ShowsFriendlyMessages;
 

@@ -28,7 +28,7 @@ use Illuminate\Support\Facades\Facade;
 /**
  * Class CurrencyForm.
  */
-class CurrencyForm extends Facade
+final class CurrencyForm extends Facade
 {
     /**
      * Get the registered name of the component.

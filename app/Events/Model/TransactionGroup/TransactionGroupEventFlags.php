@@ -24,7 +24,7 @@ declare(strict_types=1);
 
 namespace FireflyIII\Events\Model\TransactionGroup;
 
-class TransactionGroupEventFlags
+final class TransactionGroupEventFlags
 {
     public bool $applyRules        = true;
     public bool $fireWebhooks      = true;

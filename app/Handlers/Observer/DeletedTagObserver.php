@@ -31,7 +31,7 @@ use Illuminate\Support\Facades\Log;
 /**
  * Class TagObserver
  */
-class DeletedTagObserver
+final class DeletedTagObserver
 {
     public function deleting(Tag $tag): void
     {

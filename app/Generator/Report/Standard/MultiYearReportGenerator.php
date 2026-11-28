@@ -33,7 +33,7 @@ use Throwable;
 /**
  * Class MonthReportGenerator.
  */
-class MultiYearReportGenerator implements ReportGeneratorInterface
+final class MultiYearReportGenerator implements ReportGeneratorInterface
 {
     /** @var Collection The accounts involved. */
     private ?Collection $accounts = null;

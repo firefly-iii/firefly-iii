@@ -29,7 +29,7 @@ use FireflyIII\Handlers\ExchangeRate\ConvertsAmountToPrimaryAmount;
 use FireflyIII\Models\PiggyBankEvent;
 use Illuminate\Support\Facades\Log;
 
-class PiggyBankEventObserver
+final class PiggyBankEventObserver
 {
     public function created(PiggyBankEvent $event): void
     {

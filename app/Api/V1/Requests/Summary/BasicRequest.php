@@ -28,7 +28,7 @@ use FireflyIII\Api\V1\Requests\AggregateFormRequest;
 use FireflyIII\Api\V1\Requests\Models\TransactionCurrency\CurrencyCodeRequest;
 use FireflyIII\Api\V1\Requests\SameDateRangeRequest;
 
-class BasicRequest extends AggregateFormRequest
+final class BasicRequest extends AggregateFormRequest
 {
     #[\Override]
     protected function getRequests(): array

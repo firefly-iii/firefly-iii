@@ -37,7 +37,7 @@ use FireflyIII\Repositories\Journal\JournalRepositoryInterface;
 use FireflyIII\Support\Facades\AppConfiguration;
 use Illuminate\Console\Command;
 
-class UpgradesVariousCurrencyInformation extends Command
+final class UpgradesVariousCurrencyInformation extends Command
 {
     use ShowsFriendlyMessages;
 

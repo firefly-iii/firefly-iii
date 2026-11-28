@@ -37,7 +37,7 @@ use FireflyIII\Support\Facades\Amount;
 use FireflyIII\User;
 use Illuminate\Support\Facades\Log;
 
-class UpdatePiggyBank implements ActionInterface
+final class UpdatePiggyBank implements ActionInterface
 {
     /**
      * TriggerInterface constructor.

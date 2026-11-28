@@ -59,7 +59,7 @@ use function Safe\json_encode;
 /**
  * Class RecurringRepository
  */
-class RecurringRepository implements RecurringRepositoryInterface, UserGroupInterface
+final class RecurringRepository implements RecurringRepositoryInterface, UserGroupInterface
 {
     use CalculateRangeOccurrences;
     use CalculateXOccurrences;

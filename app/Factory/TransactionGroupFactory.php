@@ -34,7 +34,7 @@ use Illuminate\Support\Facades\Log;
 /**
  * Class TransactionGroupFactory
  */
-class TransactionGroupFactory
+final class TransactionGroupFactory
 {
     private readonly TransactionJournalFactory $journalFactory;
     private User $user;

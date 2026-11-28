@@ -31,7 +31,7 @@ use Illuminate\Pagination\LengthAwarePaginator;
 use Illuminate\Support\Collection;
 use Illuminate\View\Component;
 
-class GroupsLarge extends Component
+final class GroupsLarge extends Component
 {
     public Collection|LengthAwarePaginator $groups;
     public ?Account $account;

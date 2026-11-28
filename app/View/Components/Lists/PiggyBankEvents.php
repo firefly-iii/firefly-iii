@@ -29,7 +29,7 @@ use Illuminate\Contracts\View\View;
 use Illuminate\Support\Collection;
 use Illuminate\View\Component;
 
-class PiggyBankEvents extends Component
+final class PiggyBankEvents extends Component
 {
     public Collection $events;
     public bool $showPiggyBank;

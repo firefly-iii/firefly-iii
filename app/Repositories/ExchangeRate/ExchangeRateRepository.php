@@ -33,7 +33,7 @@ use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Support\Collection;
 use Override;
 
-class ExchangeRateRepository implements ExchangeRateRepositoryInterface, UserGroupInterface
+final class ExchangeRateRepository implements ExchangeRateRepositoryInterface, UserGroupInterface
 {
     use UserGroupTrait;
 

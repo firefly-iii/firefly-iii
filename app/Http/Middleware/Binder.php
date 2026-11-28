@@ -32,7 +32,7 @@ use Illuminate\Routing\Route;
 /**
  * Class Binder
  */
-class Binder
+final class Binder
 {
     /**
      * The binders.

@@ -36,7 +36,7 @@ use NotificationChannels\Pushover\PushoverMessage;
 /**
  * Class BillReminder
  */
-class BillReminder extends Notification
+final class BillReminder extends Notification
 {
     use Queueable;
 

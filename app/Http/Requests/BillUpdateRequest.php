@@ -34,7 +34,7 @@ use Illuminate\Support\Facades\Log;
 /**
  * Class BillUpdateRequest.
  */
-class BillUpdateRequest extends FormRequest
+final class BillUpdateRequest extends FormRequest
 {
     use ChecksLogin;
     use ConvertsDataTypes;

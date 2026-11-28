@@ -28,7 +28,7 @@ use FireflyIII\Events\Event;
 use FireflyIII\User;
 use Illuminate\Queue\SerializesModels;
 
-class SystemRequestedVersionCheck extends Event
+final class SystemRequestedVersionCheck extends Event
 {
     use SerializesModels;
 

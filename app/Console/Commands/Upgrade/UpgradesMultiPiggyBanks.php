@@ -33,7 +33,7 @@ use FireflyIII\Support\Facades\AppConfiguration;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\Log;
 
-class UpgradesMultiPiggyBanks extends Command
+final class UpgradesMultiPiggyBanks extends Command
 {
     use ShowsFriendlyMessages;
 

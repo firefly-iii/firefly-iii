@@ -30,7 +30,7 @@ use Illuminate\Database\QueryException;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 
-class RepairsPostgresSequences extends Command
+final class RepairsPostgresSequences extends Command
 {
     use ShowsFriendlyMessages;
 

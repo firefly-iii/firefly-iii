@@ -33,7 +33,7 @@ use FireflyIII\Repositories\Rule\RuleRepositoryInterface;
 /**
  * Class RuleTransformer
  */
-class RuleTransformer extends AbstractTransformer
+final class RuleTransformer extends AbstractTransformer
 {
     private readonly RuleRepositoryInterface $ruleRepository;
 

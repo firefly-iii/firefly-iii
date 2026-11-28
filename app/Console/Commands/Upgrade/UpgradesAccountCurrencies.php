@@ -38,7 +38,7 @@ use FireflyIII\Support\Facades\AppConfiguration;
 use FireflyIII\User;
 use Illuminate\Console\Command;
 
-class UpgradesAccountCurrencies extends Command
+final class UpgradesAccountCurrencies extends Command
 {
     use ShowsFriendlyMessages;
 

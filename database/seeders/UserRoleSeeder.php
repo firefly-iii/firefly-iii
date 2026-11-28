@@ -33,7 +33,7 @@ use PDOException;
 /**
  * Class UserRoleSeeder
  */
-class UserRoleSeeder extends Seeder
+final class UserRoleSeeder extends Seeder
 {
     /**
      * Run the database seeds.

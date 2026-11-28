@@ -34,7 +34,7 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\HasManyThrough;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
-class UserGroup extends Model
+final class UserGroup extends Model
 {
     use ReturnsIntegerIdTrait;
 

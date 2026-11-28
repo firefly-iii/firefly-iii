@@ -31,7 +31,7 @@ use Monolog\Handler\AbstractProcessingHandler;
 /**
  * Class AuditLogger
  */
-class AuditLogger
+final class AuditLogger
 {
     /**
      * Customize the given logger instance.

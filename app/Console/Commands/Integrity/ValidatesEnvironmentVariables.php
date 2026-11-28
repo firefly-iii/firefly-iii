@@ -27,7 +27,7 @@ namespace FireflyIII\Console\Commands\Integrity;
 use FireflyIII\Console\Commands\ShowsFriendlyMessages;
 use Illuminate\Console\Command;
 
-class ValidatesEnvironmentVariables extends Command
+final class ValidatesEnvironmentVariables extends Command
 {
     use ShowsFriendlyMessages;
 

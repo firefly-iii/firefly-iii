@@ -41,7 +41,7 @@ use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 
-class UpgradesToGroups extends Command
+final class UpgradesToGroups extends Command
 {
     use ShowsFriendlyMessages;
 

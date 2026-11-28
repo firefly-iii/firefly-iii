@@ -27,7 +27,7 @@ namespace FireflyIII\Api\V1\Requests\Search;
 use FireflyIII\Api\V1\Requests\ApiRequest;
 use Illuminate\Contracts\Validation\Validator;
 
-class SearchQueryRequest extends ApiRequest
+final class SearchQueryRequest extends ApiRequest
 {
     public function rules(): array
     {

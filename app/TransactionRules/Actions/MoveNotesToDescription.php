@@ -39,7 +39,7 @@ use Illuminate\Support\Facades\Log;
  * Class MoveNotesToDescription
  * TODO Can be replaced (and migrated) to action "set notes" with a prefilled expression
  */
-class MoveNotesToDescription implements ActionInterface
+final class MoveNotesToDescription implements ActionInterface
 {
     use ConvertsDataTypes;
 

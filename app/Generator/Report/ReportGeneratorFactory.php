@@ -29,7 +29,7 @@ use FireflyIII\Exceptions\FireflyException;
 /**
  * Class ReportGeneratorFactory.
  */
-class ReportGeneratorFactory
+final class ReportGeneratorFactory
 {
     /**
      * Static report generator class.

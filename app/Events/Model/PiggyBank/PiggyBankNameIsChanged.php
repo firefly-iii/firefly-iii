@@ -31,7 +31,7 @@ use Illuminate\Queue\SerializesModels;
 /**
  * Needs to be an event because system needs old value as well as the new value.
  */
-class PiggyBankNameIsChanged extends Event
+final class PiggyBankNameIsChanged extends Event
 {
     use SerializesModels;
 

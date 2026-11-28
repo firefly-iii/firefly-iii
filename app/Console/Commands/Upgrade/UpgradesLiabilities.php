@@ -35,7 +35,7 @@ use FireflyIII\Support\Facades\AppConfiguration;
 use FireflyIII\User;
 use Illuminate\Console\Command;
 
-class UpgradesLiabilities extends Command
+final class UpgradesLiabilities extends Command
 {
     use ShowsFriendlyMessages;
 

@@ -30,7 +30,7 @@ use Illuminate\Http\Request;
 /**
  * Class ApiDemoUser.
  */
-class ApiDemoUser
+final class ApiDemoUser
 {
     /**
      * Handle an incoming request.

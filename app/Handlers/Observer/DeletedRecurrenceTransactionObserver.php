@@ -29,7 +29,7 @@ use Illuminate\Support\Facades\Log;
 /**
  * Class RecurrenceTransactionObserver
  */
-class DeletedRecurrenceTransactionObserver
+final class DeletedRecurrenceTransactionObserver
 {
     public function deleting(RecurrenceTransaction $transaction): void
     {

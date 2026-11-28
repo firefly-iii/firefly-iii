@@ -40,7 +40,7 @@ use Illuminate\Support\Facades\Log;
 
 #[Signature('integrity:unify-user-group-data')]
 #[Description('Make sure all users have one group and owner in that group. Data is moved to that group.')]
-class UnifyUserGroupData extends Command
+final class UnifyUserGroupData extends Command
 {
     use HandlesUserRegistrationTrait;
     use ShowsFriendlyMessages;

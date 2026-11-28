@@ -32,7 +32,7 @@ use Illuminate\Support\Facades\Log;
 /**
  * Class CategoryFactory
  */
-class CategoryFactory
+final class CategoryFactory
 {
     private User $user;
 

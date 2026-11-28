@@ -42,7 +42,7 @@ use LogicException;
 /**
  * Class AttachmentRepository.
  */
-class AttachmentRepository implements AttachmentRepositoryInterface, UserGroupInterface
+final class AttachmentRepository implements AttachmentRepositoryInterface, UserGroupInterface
 {
     use UserGroupTrait;
 

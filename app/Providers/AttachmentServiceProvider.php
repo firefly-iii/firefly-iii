@@ -32,7 +32,7 @@ use Override;
 /**
  * Class AttachmentServiceProvider.
  */
-class AttachmentServiceProvider extends ServiceProvider
+final class AttachmentServiceProvider extends ServiceProvider
 {
     /**
      * Bootstrap the application services.

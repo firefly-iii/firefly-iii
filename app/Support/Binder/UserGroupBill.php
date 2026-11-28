@@ -31,7 +31,7 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 /**
  * Class UserGroupBill.
  */
-class UserGroupBill implements BinderInterface
+final class UserGroupBill implements BinderInterface
 {
     /**
      * @throws NotFoundHttpException

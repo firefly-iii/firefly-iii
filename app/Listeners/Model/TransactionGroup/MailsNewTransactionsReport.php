@@ -34,7 +34,7 @@ use FireflyIII\Transformers\TransactionGroupTransformer;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Support\Facades\Log;
 
-class MailsNewTransactionsReport implements ShouldQueue
+final class MailsNewTransactionsReport implements ShouldQueue
 {
     public function handle(TransactionGroupsRequestedReporting $event): void
     {

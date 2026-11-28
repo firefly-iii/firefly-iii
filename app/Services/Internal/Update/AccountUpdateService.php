@@ -44,7 +44,7 @@ use Illuminate\Support\Facades\Log;
  * Class AccountUpdateService
  * TODO this service is messy and convoluted.
  */
-class AccountUpdateService
+final class AccountUpdateService
 {
     use AccountServiceTrait;
     use CreatesObjectGroups;

@@ -28,7 +28,7 @@ use FireflyIII\Events\Event;
 use FireflyIII\Models\Bill;
 use Illuminate\Queue\SerializesModels;
 
-class SubscriptionNeedsExtensionOrRenewal extends Event
+final class SubscriptionNeedsExtensionOrRenewal extends Event
 {
     use SerializesModels;
 

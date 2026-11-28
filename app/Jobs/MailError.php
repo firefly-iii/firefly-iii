@@ -43,7 +43,7 @@ use function Safe\json_encode;
 /**
  * Class MailError.
  */
-class MailError extends Job implements ShouldQueue
+final class MailError extends Job implements ShouldQueue
 {
     use InteractsWithQueue;
     use SerializesModels;

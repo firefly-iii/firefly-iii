@@ -34,7 +34,7 @@ use Illuminate\Support\Facades\Log;
 /**
  * Class UniqueIban
  */
-class UniqueIban implements ValidationRule
+final class UniqueIban implements ValidationRule
 {
     private array $expectedTypes = [];
 

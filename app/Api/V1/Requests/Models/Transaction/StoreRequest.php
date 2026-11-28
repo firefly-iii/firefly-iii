@@ -45,7 +45,7 @@ use Illuminate\Support\Facades\Log;
 /**
  * Class StoreRequest
  */
-class StoreRequest extends FormRequest
+final class StoreRequest extends FormRequest
 {
     use AppendsLocationData;
     use ChecksLogin;

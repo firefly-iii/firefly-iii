@@ -31,7 +31,7 @@ use FireflyIII\Support\Facades\AppConfiguration;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Support\Facades\Log;
 
-class SendsWebhookMessages implements ShouldQueue
+final class SendsWebhookMessages implements ShouldQueue
 {
     public function handle(WebhookMessagesRequestSending $event): void
     {

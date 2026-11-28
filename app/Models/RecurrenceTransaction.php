@@ -34,7 +34,7 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
 #[ObservedBy([DeletedRecurrenceTransactionObserver::class])]
-class RecurrenceTransaction extends Model
+final class RecurrenceTransaction extends Model
 {
     use ReturnsIntegerIdTrait;
     use SoftDeletes;

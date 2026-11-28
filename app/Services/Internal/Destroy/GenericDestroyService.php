@@ -26,7 +26,7 @@ namespace FireflyIII\Services\Internal\Destroy;
 
 use FireflyIII\Models\RuleTrigger;
 
-class GenericDestroyService
+final class GenericDestroyService
 {
     public function deleteRuleTrigger(RuleTrigger $ruleTrigger): void
     {

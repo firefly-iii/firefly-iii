@@ -28,7 +28,7 @@ use FireflyIII\Support\Models\ReturnsIntegerIdTrait;
 use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Model;
 
-class WebhookTrigger extends Model
+final class WebhookTrigger extends Model
 {
     use ReturnsIntegerIdTrait;
 

@@ -33,7 +33,7 @@ use Illuminate\Support\Facades\Log;
 /**
  * Class BillStoreRequest.
  */
-class BillStoreRequest extends FormRequest
+final class BillStoreRequest extends FormRequest
 {
     use ChecksLogin;
     use ConvertsDataTypes;

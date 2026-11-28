@@ -42,7 +42,7 @@ use ValueError;
 /**
  * Class UserGroupRepository
  */
-class UserGroupRepository implements UserGroupRepositoryInterface, UserGroupInterface
+final class UserGroupRepository implements UserGroupRepositoryInterface, UserGroupInterface
 {
     use UserGroupTrait;
 

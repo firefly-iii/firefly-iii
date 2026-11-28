@@ -26,7 +26,7 @@ namespace FireflyIII\Services\FireflyIIIOrg\Update;
 
 use Carbon\Carbon;
 
-class UpdateResponse
+final class UpdateResponse
 {
     private bool   $newVersionAvailable = false;
     private string $error               = '';

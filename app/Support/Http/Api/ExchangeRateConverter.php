@@ -39,7 +39,7 @@ use Illuminate\Support\Facades\Log;
 /**
  * Class ExchangeRateConverter
  */
-class ExchangeRateConverter
+final class ExchangeRateConverter
 {
     // use ConvertsExchangeRates;
     private bool  $ignoreSettings = false;

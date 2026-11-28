@@ -28,7 +28,7 @@ use Closure;
 use Illuminate\Contracts\View\View;
 use Illuminate\View\Component;
 
-class CardHeaderWithMenu extends Component
+final class CardHeaderWithMenu extends Component
 {
     public string $cardTitle;
     public string $route;

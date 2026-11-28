@@ -32,7 +32,7 @@ use Illuminate\Foundation\Http\FormRequest;
 /**
  * Class TriggerRequest
  */
-class TriggerRequest extends FormRequest
+final class TriggerRequest extends FormRequest
 {
     use ChecksLogin;
     use ConvertsDataTypes;

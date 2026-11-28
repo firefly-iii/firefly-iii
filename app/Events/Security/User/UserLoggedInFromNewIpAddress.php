@@ -28,7 +28,7 @@ use FireflyIII\Events\Event;
 use FireflyIII\User;
 use Illuminate\Queue\SerializesModels;
 
-class UserLoggedInFromNewIpAddress extends Event
+final class UserLoggedInFromNewIpAddress extends Event
 {
     use SerializesModels;
 

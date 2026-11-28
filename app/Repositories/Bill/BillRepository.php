@@ -55,7 +55,7 @@ use Override;
 /**
  * Class BillRepository.
  */
-class BillRepository implements BillRepositoryInterface, UserGroupInterface
+final class BillRepository implements BillRepositoryInterface, UserGroupInterface
 {
     use CreatesObjectGroups;
     use UserGroupTrait;

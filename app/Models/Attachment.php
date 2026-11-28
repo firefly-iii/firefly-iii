@@ -38,7 +38,7 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 #[ObservedBy([DeletedAttachmentObserver::class])]
-class Attachment extends Model
+final class Attachment extends Model
 {
     use ReturnsIntegerIdTrait;
     use ReturnsIntegerUserIdTrait;

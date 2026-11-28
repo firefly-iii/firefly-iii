@@ -27,7 +27,7 @@ namespace FireflyIII\Transformers;
 use FireflyIII\Models\CurrencyExchangeRate;
 use Illuminate\Support\Collection;
 
-class ExchangeRateTransformer extends AbstractTransformer
+final class ExchangeRateTransformer extends AbstractTransformer
 {
     /**
      * This method collects meta-data for one or all accounts in the transformer's collection.

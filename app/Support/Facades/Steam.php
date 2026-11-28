@@ -25,7 +25,7 @@ namespace FireflyIII\Support\Facades;
 
 use Illuminate\Support\Facades\Facade;
 
-class Steam extends Facade
+final class Steam extends Facade
 {
     /**
      * Get the registered name of the component.

@@ -35,7 +35,7 @@ use Illuminate\Support\Facades\Log;
 /**
  * Class ObjectGroupRepository
  */
-class ObjectGroupRepository implements ObjectGroupRepositoryInterface, UserGroupInterface
+final class ObjectGroupRepository implements ObjectGroupRepositoryInterface, UserGroupInterface
 {
     use UserGroupTrait;
 

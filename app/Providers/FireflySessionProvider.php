@@ -31,7 +31,7 @@ use Override;
 /**
  * Class FireflySessionProvider
  */
-class FireflySessionProvider extends ServiceProvider
+final class FireflySessionProvider extends ServiceProvider
 {
     /**
      * Register the service provider.

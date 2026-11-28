@@ -30,7 +30,7 @@ use Illuminate\Queue\SerializesModels;
 /**
  * Class UndoEmailChangeMail
  */
-class UndoEmailChangeMail extends Mailable
+final class UndoEmailChangeMail extends Mailable
 {
     use Queueable;
     use SerializesModels;

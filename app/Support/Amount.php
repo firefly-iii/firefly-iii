@@ -40,7 +40,7 @@ use NumberFormatter;
 /**
  * Class Amount.
  */
-class Amount
+final class Amount
 {
     /**
      * bool $sepBySpace is $localeconv['n_sep_by_space']

@@ -32,7 +32,7 @@ use Illuminate\Queue\SerializesModels;
  *
  * Class RegisteredUser
  */
-class RegisteredUser extends Mailable
+final class RegisteredUser extends Mailable
 {
     use Queueable;
     use SerializesModels;

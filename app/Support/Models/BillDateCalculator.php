@@ -29,7 +29,7 @@ use FireflyIII\Support\Facades\Navigation;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Log;
 
-class BillDateCalculator
+final class BillDateCalculator
 {
     // #8401 we start keeping track of the diff in periods, because if it can't jump over a period (happens often in February)
     // we can force the process along.

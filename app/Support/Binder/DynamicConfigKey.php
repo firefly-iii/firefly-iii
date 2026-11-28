@@ -30,7 +30,7 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 /**
  * Class DynamicConfigKey
  */
-class DynamicConfigKey
+final class DynamicConfigKey
 {
     public static array $accepted = [
         'configuration.is_demo_site', // boolean

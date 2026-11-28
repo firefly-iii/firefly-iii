@@ -29,7 +29,7 @@ use FireflyIII\Models\Account;
 use Illuminate\Contracts\View\View;
 use Illuminate\View\Component;
 
-class GroupsTiny extends Component
+final class GroupsTiny extends Component
 {
     /**
      * Create a new component instance.

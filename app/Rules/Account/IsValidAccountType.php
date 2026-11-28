@@ -29,7 +29,7 @@ use FireflyIII\Support\Http\Api\AccountFilter;
 use Illuminate\Contracts\Validation\ValidationRule;
 use Override;
 
-class IsValidAccountType implements ValidationRule
+final class IsValidAccountType implements ValidationRule
 {
     use AccountFilter;
 

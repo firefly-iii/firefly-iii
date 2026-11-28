@@ -34,7 +34,7 @@ use Illuminate\Support\Facades\Log;
 /**
  * Class TransactionGroupDestroyService
  */
-class TransactionGroupDestroyService
+final class TransactionGroupDestroyService
 {
     public function destroy(TransactionGroup $transactionGroup): void
     {

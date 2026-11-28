@@ -31,7 +31,7 @@ use FireflyIII\Support\Facades\Preferences;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Support\Facades\Log;
 
-class StoresNewIpAddress implements ShouldQueue
+final class StoresNewIpAddress implements ShouldQueue
 {
     public function handle(UserSuccessfullyLoggedIn $event): void
     {

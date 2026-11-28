@@ -41,7 +41,7 @@ use Illuminate\Support\Facades\Log;
 /**
  * Class AccountValidator
  */
-class AccountValidator
+final class AccountValidator
 {
     use DepositValidation;
     use LiabilityValidation;

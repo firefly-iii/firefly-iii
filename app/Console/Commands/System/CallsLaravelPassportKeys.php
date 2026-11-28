@@ -29,7 +29,7 @@ use Illuminate\Console\Command;
 use Illuminate\Support\Facades\Artisan;
 use Symfony\Component\Console\Command\Command as CommandAlias;
 
-class CallsLaravelPassportKeys extends Command
+final class CallsLaravelPassportKeys extends Command
 {
     use ShowsFriendlyMessages;
 

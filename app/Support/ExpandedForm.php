@@ -33,7 +33,7 @@ use Throwable;
 /**
  * Class ExpandedForm.
  */
-class ExpandedForm
+final class ExpandedForm
 {
     use FormSupport;
 

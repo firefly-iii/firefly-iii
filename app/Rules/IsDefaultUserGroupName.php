@@ -34,7 +34,7 @@ use Illuminate\Support\Facades\Log;
 /**
  * Class IsDefaultUserGroupName
  */
-class IsDefaultUserGroupName implements ValidationRule
+final class IsDefaultUserGroupName implements ValidationRule
 {
     public function __construct(
         private readonly UserGroup $userGroup

@@ -31,7 +31,7 @@ use PDOException;
 /**
  * Class PermissionSeeder.
  */
-class PermissionSeeder extends Seeder
+final class PermissionSeeder extends Seeder
 {
     public function run(): void
     {

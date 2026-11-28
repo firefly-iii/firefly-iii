@@ -33,7 +33,7 @@ use Illuminate\Support\Facades\Log;
 /**
  * Class CategoryFormRequest.
  */
-class CategoryFormRequest extends FormRequest
+final class CategoryFormRequest extends FormRequest
 {
     use ChecksLogin;
     use ConvertsDataTypes;

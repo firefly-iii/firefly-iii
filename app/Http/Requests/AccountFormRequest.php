@@ -40,7 +40,7 @@ use Illuminate\Support\Facades\Log;
 /**
  * Class AccountFormRequest.
  */
-class AccountFormRequest extends FormRequest
+final class AccountFormRequest extends FormRequest
 {
     use AppendsLocationData;
     use ChecksLogin;

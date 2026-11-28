@@ -26,7 +26,7 @@ namespace FireflyIII\Events\Model\TransactionGroup;
 
 use FireflyIII\Events\Event;
 
-class UserRequestedBatchProcessing extends Event
+final class UserRequestedBatchProcessing extends Event
 {
     public TransactionGroupEventObjects $objects;
 

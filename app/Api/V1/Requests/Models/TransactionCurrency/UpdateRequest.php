@@ -34,7 +34,7 @@ use Illuminate\Foundation\Http\FormRequest;
 /**
  * Class UpdateRequest
  */
-class UpdateRequest extends FormRequest
+final class UpdateRequest extends FormRequest
 {
     use ChecksLogin;
     use ConvertsDataTypes;

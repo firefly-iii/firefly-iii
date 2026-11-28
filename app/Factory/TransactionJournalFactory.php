@@ -64,7 +64,7 @@ use function Safe\json_encode;
  *
  * @SuppressWarnings("PHPMD.CouplingBetweenObjects")
  */
-class TransactionJournalFactory
+final class TransactionJournalFactory
 {
     use JournalServiceTrait;
 

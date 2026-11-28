@@ -37,7 +37,7 @@ use Illuminate\Support\Facades\Storage;
 /**
  * Class JournalAPIRepository
  */
-class JournalAPIRepository implements JournalAPIRepositoryInterface, UserGroupInterface
+final class JournalAPIRepository implements JournalAPIRepositoryInterface, UserGroupInterface
 {
     use UserGroupTrait;
 

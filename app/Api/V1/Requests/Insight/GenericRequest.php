@@ -40,7 +40,7 @@ use Illuminate\Support\Collection;
 /**
  * Class GenericRequest
  */
-class GenericRequest extends FormRequest
+final class GenericRequest extends FormRequest
 {
     use ChecksLogin;
     use ConvertsDataTypes;

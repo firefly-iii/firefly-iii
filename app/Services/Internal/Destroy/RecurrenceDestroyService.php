@@ -30,7 +30,7 @@ use FireflyIII\Models\RecurrenceTransaction;
 /**
  * Class RecurrenceDestroyService
  */
-class RecurrenceDestroyService
+final class RecurrenceDestroyService
 {
     /**
      * Delete recurrence.

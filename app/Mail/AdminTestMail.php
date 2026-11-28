@@ -32,7 +32,7 @@ use Illuminate\Queue\SerializesModels;
  *
  * Sends a test mail to administrators.
  */
-class AdminTestMail extends Mailable
+final class AdminTestMail extends Mailable
 {
     use Queueable;
     use SerializesModels;

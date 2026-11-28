@@ -31,7 +31,7 @@ use FireflyIII\Support\Facades\Steam;
 use Illuminate\Console\Command;
 use Illuminate\Support\Collection;
 
-class CorrectsIbans extends Command
+final class CorrectsIbans extends Command
 {
     use ShowsFriendlyMessages;
 

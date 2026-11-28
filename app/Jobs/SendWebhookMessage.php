@@ -36,7 +36,7 @@ use Illuminate\Support\Facades\Log;
 /**
  * Class SendWebhookMessage
  */
-class SendWebhookMessage implements ShouldQueue
+final class SendWebhookMessage implements ShouldQueue
 {
     use Dispatchable;
     use InteractsWithQueue;

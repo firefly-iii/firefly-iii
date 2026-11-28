@@ -32,7 +32,7 @@ use Override;
 /**
  * Class StartFireflySession.
  */
-class StartFireflyIIISession extends StartSession
+final class StartFireflyIIISession extends StartSession
 {
     /**
      * Store the current URL for the request if necessary.

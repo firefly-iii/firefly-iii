@@ -33,7 +33,7 @@ use Illuminate\Support\Collection;
 /**
  * Class CategoryReportGenerator
  */
-class CategoryReportGenerator
+final class CategoryReportGenerator
 {
     private Collection $accounts;
     private Carbon $end;

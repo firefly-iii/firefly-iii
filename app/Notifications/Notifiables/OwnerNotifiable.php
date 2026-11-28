@@ -30,7 +30,7 @@ use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Str;
 use NotificationChannels\Pushover\PushoverReceiver;
 
-class OwnerNotifiable
+final class OwnerNotifiable
 {
     /**
      * Get the notification routing information for the given driver.

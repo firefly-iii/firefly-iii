@@ -33,7 +33,7 @@ use Illuminate\Database\QueryException;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Log;
 
-class ConvertsDatesToUTC extends Command
+final class ConvertsDatesToUTC extends Command
 {
     use ShowsFriendlyMessages;
 

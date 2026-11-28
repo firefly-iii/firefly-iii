@@ -29,7 +29,7 @@ use FireflyIII\Notifications\User\NewAccessToken;
 use FireflyIII\Repositories\User\UserRepositoryInterface;
 use Laravel\Passport\Events\AccessTokenCreated;
 
-class NotifiesUserAboutNewAccessToken
+final class NotifiesUserAboutNewAccessToken
 {
     public function handle(AccessTokenCreated $event): void
     {

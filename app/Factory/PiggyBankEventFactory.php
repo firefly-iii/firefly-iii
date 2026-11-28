@@ -33,7 +33,7 @@ use Illuminate\Support\Facades\Log;
  *
  * Class PiggyBankEventFactory
  */
-class PiggyBankEventFactory
+final class PiggyBankEventFactory
 {
     public function create(TransactionJournal $journal, ?PiggyBank $piggyBank): void
     {

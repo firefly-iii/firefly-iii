@@ -52,7 +52,7 @@ use Symfony\Component\HttpFoundation\ParameterBag;
 /**
  * Class StandardMessageGenerator
  */
-class StandardMessageGenerator implements MessageGeneratorInterface
+final class StandardMessageGenerator implements MessageGeneratorInterface
 {
     private Collection $objects;
     private WebhookTrigger $trigger;

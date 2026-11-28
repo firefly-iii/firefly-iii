@@ -34,7 +34,7 @@ use Illuminate\Support\Facades\Log;
 /**
  * Class RuleGroupFormRequest.
  */
-class RuleGroupFormRequest extends FormRequest
+final class RuleGroupFormRequest extends FormRequest
 {
     use ChecksLogin;
     use ConvertsDataTypes;

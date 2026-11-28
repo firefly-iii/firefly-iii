@@ -35,7 +35,7 @@ use TypeError;
 
 use function Safe\fwrite;
 
-class GdbotsQueryParser implements QueryParserInterface
+final class GdbotsQueryParser implements QueryParserInterface
 {
     private readonly BaseQueryParser $parser;
 

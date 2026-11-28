@@ -26,7 +26,7 @@ namespace FireflyIII\Console\Commands\System;
 
 use Illuminate\Console\Command;
 
-class OutputsVersion extends Command
+final class OutputsVersion extends Command
 {
     #[\Override]
     protected $description = 'Outputs the Firefly III version';

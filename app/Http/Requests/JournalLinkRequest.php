@@ -33,7 +33,7 @@ use Illuminate\Support\Facades\Log;
 /**
  * Class JournalLink.
  */
-class JournalLinkRequest extends FormRequest
+final class JournalLinkRequest extends FormRequest
 {
     use ChecksLogin;
     use ConvertsDataTypes;

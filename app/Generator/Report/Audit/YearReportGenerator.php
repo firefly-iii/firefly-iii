@@ -26,4 +26,4 @@ namespace FireflyIII\Generator\Report\Audit;
 /**
  * Class YearReportGenerator.
  */
-class YearReportGenerator extends MonthReportGenerator {}
+final class YearReportGenerator extends MonthReportGenerator {}

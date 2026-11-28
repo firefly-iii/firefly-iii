@@ -38,7 +38,7 @@ use NotificationChannels\Pushover\PushoverMessage;
 /**
  * Class NewAccessToken
  */
-class NewAccessToken extends Notification
+final class NewAccessToken extends Notification
 {
     use Queueable;
 

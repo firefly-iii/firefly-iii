@@ -29,4 +29,4 @@ use Exception;
 /**
  * Class ValidationExceptions.
  */
-class ValidationException extends Exception {}
+final class ValidationException extends Exception {}

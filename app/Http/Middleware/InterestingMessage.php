@@ -41,7 +41,7 @@ use Illuminate\Http\Request;
 /**
  * Class InterestingMessage
  */
-class InterestingMessage
+final class InterestingMessage
 {
     /**
      * Flashes the user an interesting message if the URL parameters warrant it.

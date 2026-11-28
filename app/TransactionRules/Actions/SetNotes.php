@@ -32,7 +32,7 @@ use Illuminate\Support\Facades\Log;
 /**
  * Class SetNotes.
  */
-class SetNotes implements ActionInterface
+final class SetNotes implements ActionInterface
 {
     /**
      * TriggerInterface constructor.

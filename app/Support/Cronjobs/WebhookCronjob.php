@@ -36,7 +36,7 @@ use Illuminate\Support\Facades\Log;
 /**
  * Class WebhookCronjob
  */
-class WebhookCronjob extends AbstractCronjob
+final class WebhookCronjob extends AbstractCronjob
 {
     /**
      * @throws FireflyException

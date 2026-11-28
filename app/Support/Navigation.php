@@ -37,7 +37,7 @@ use Throwable;
 /**
  * Class Navigation.
  */
-class Navigation
+final class Navigation
 {
     private readonly Calculator $calculator;
 

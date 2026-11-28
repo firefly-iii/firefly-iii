@@ -32,7 +32,7 @@ use Illuminate\Support\Facades\Auth;
 /**
  * Class IsAdmin.
  */
-class IsAdmin
+final class IsAdmin
 {
     /**
      * Handle an incoming request. Must be admin.

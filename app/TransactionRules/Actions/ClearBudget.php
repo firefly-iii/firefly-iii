@@ -33,7 +33,7 @@ use Illuminate\Support\Facades\Log;
 /**
  * Class ClearBudget.
  */
-class ClearBudget implements ActionInterface
+final class ClearBudget implements ActionInterface
 {
     /**
      * TriggerInterface constructor.

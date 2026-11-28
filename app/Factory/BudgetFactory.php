@@ -29,7 +29,7 @@ use FireflyIII\User;
 /**
  * Class BudgetFactory.
  */
-class BudgetFactory
+final class BudgetFactory
 {
     private User $user;
 

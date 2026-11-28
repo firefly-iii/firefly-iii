@@ -27,7 +27,7 @@ namespace FireflyIII\Rules;
 use Closure;
 use Illuminate\Contracts\Validation\ValidationRule;
 
-class IsValidSortInstruction implements ValidationRule
+final class IsValidSortInstruction implements ValidationRule
 {
     public function __construct(
         private readonly string $class

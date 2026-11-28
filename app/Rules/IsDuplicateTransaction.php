@@ -32,7 +32,7 @@ use Illuminate\Contracts\Validation\ValidationRule;
  *
  * Class IsDuplicateTransaction
  */
-class IsDuplicateTransaction implements ValidationRule
+final class IsDuplicateTransaction implements ValidationRule
 {
     /**
      * @SuppressWarnings("PHPMD.UnusedFormalParameter")

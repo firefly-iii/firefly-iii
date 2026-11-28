@@ -31,7 +31,7 @@ use Illuminate\Support\Facades\Log;
 /**
  * Class ExistingTokenFormRequest.
  */
-class ExistingTokenFormRequest extends FormRequest
+final class ExistingTokenFormRequest extends FormRequest
 {
     use ChecksLogin;
 

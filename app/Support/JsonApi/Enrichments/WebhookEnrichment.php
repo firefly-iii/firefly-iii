@@ -39,7 +39,7 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use stdClass;
 
-class WebhookEnrichment implements EnrichmentInterface
+final class WebhookEnrichment implements EnrichmentInterface
 {
     private Collection $collection;
     private array $deliveries        = [];

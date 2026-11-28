@@ -29,7 +29,7 @@ use FireflyIII\Models\TransactionCurrency;
 /**
  * Class CurrencyUpdateService
  */
-class CurrencyUpdateService
+final class CurrencyUpdateService
 {
     public function update(TransactionCurrency $currency, array $data): TransactionCurrency
     {

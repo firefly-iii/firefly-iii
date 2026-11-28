@@ -36,7 +36,7 @@ use Illuminate\Support\Collection;
 /**
  * Class WholePeriodChartGenerator
  */
-class WholePeriodChartGenerator
+final class WholePeriodChartGenerator
 {
     public bool $convertToPrimary;
 

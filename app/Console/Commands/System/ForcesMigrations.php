@@ -33,7 +33,7 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Schema;
 
-class ForcesMigrations extends Command
+final class ForcesMigrations extends Command
 {
     use ShowsFriendlyMessages;
     use VerifiesAccessToken;

@@ -27,7 +27,7 @@ use FireflyIII\Api\V1\Requests\ApiRequest;
 use FireflyIII\Rules\IsBoolean;
 use Illuminate\Contracts\Validation\Validator;
 
-class ActiveObjectRequest extends ApiRequest
+final class ActiveObjectRequest extends ApiRequest
 {
     public function rules(): array
     {

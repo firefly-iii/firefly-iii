@@ -31,7 +31,7 @@ use FireflyIII\Support\Request\ConvertsDataTypes;
 use Illuminate\Contracts\Validation\Validator;
 use Illuminate\Foundation\Http\FormRequest;
 
-class StoreByCurrenciesRequest extends FormRequest
+final class StoreByCurrenciesRequest extends FormRequest
 {
     use ChecksLogin;
     use ConvertsDataTypes;

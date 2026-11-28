@@ -44,7 +44,7 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
  * @property TransactionCurrency $transactionCurrency
  */
 #[ObservedBy([PiggyBankObserver::class])]
-class PiggyBank extends Model
+final class PiggyBank extends Model
 {
     use ReturnsIntegerIdTrait;
     use SoftDeletes;

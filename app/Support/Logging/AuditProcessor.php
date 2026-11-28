@@ -29,7 +29,7 @@ use Monolog\LogRecord;
 /**
  * Class AuditProcessor
  */
-class AuditProcessor
+final class AuditProcessor
 {
     public function __invoke(LogRecord $record): LogRecord
     {

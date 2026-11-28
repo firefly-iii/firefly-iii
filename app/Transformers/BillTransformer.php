@@ -31,7 +31,7 @@ use FireflyIII\Support\Facades\Amount;
 /**
  * Class BillTransformer
  */
-class BillTransformer extends AbstractTransformer
+final class BillTransformer extends AbstractTransformer
 {
     private readonly TransactionCurrency $primary;
 

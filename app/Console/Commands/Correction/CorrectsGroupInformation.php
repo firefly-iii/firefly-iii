@@ -46,7 +46,7 @@ use FireflyIII\User;
 use Illuminate\Console\Command;
 use Illuminate\Database\QueryException;
 
-class CorrectsGroupInformation extends Command
+final class CorrectsGroupInformation extends Command
 {
     use ShowsFriendlyMessages;
 

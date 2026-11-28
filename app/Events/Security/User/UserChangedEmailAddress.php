@@ -28,7 +28,7 @@ use FireflyIII\Events\Event;
 use FireflyIII\User;
 use Illuminate\Queue\SerializesModels;
 
-class UserChangedEmailAddress extends Event
+final class UserChangedEmailAddress extends Event
 {
     use SerializesModels;
 

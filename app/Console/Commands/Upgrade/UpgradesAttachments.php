@@ -32,7 +32,7 @@ use FireflyIII\Support\Facades\AppConfiguration;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\Log;
 
-class UpgradesAttachments extends Command
+final class UpgradesAttachments extends Command
 {
     use ShowsFriendlyMessages;
 

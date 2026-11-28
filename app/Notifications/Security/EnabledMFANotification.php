@@ -34,7 +34,7 @@ use Illuminate\Notifications\Notification;
 use Illuminate\Support\Facades\Request;
 use NotificationChannels\Pushover\PushoverMessage;
 
-class EnabledMFANotification extends Notification
+final class EnabledMFANotification extends Notification
 {
     use Queueable;
 

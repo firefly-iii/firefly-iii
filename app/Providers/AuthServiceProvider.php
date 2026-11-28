@@ -28,7 +28,7 @@ use Illuminate\Foundation\Support\Providers\AuthServiceProvider as ServiceProvid
 /**
  * Class AuthServiceProvider
  */
-class AuthServiceProvider extends ServiceProvider
+final class AuthServiceProvider extends ServiceProvider
 {
     /**
      * Register any authentication / authorization services.

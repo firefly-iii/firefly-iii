@@ -35,7 +35,7 @@ use Illuminate\Support\Facades\Log;
 /**
  * Class ChartRequest
  */
-class ChartRequest extends FormRequest
+final class ChartRequest extends FormRequest
 {
     use ChecksLogin;
     use ConvertsDataTypes;

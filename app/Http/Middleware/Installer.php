@@ -34,7 +34,7 @@ use Illuminate\Support\Facades\Log;
 /**
  * Class Installer
  */
-class Installer
+final class Installer
 {
     use IsOldVersion;
 

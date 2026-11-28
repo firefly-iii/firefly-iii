@@ -33,7 +33,7 @@ use Illuminate\Notifications\Notification;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Notification as NotificationFacade;
 
-class NotificationSender
+final class NotificationSender
 {
     public static function send(OwnerNotifiable|User $user, Notification $notification): void
     {

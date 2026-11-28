@@ -33,7 +33,7 @@ use FireflyIII\Repositories\Attachment\AttachmentRepositoryInterface;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 
-class DeletedAccountObserver
+final class DeletedAccountObserver
 {
     public function deleting(Account $account): void
     {

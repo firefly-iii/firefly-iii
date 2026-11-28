@@ -31,7 +31,7 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 use function Safe\json_decode;
 use function Safe\json_encode;
 
-class Configuration extends Model
+final class Configuration extends Model
 {
     use ReturnsIntegerIdTrait;
     use SoftDeletes;

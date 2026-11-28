@@ -38,7 +38,7 @@ use Throwable;
  *
  * All currency related form methods.
  */
-class CurrencyForm
+final class CurrencyForm
 {
     use FormSupport;
 

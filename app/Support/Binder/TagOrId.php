@@ -32,7 +32,7 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 /**
  * Class TagOrId.
  */
-class TagOrId implements BinderInterface
+final class TagOrId implements BinderInterface
 {
     #[\Override]
     public static function routeBinder(string $value, Route $route): Tag

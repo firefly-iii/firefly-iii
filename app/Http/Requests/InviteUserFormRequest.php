@@ -33,7 +33,7 @@ use Illuminate\Support\Facades\Log;
 /**
  * Class InviteUserFormRequest
  */
-class InviteUserFormRequest extends FormRequest
+final class InviteUserFormRequest extends FormRequest
 {
     use ChecksLogin;
     use ConvertsDataTypes;

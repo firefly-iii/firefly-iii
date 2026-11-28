@@ -31,7 +31,7 @@ use FireflyIII\Notifications\NotificationSender;
 use FireflyIII\Support\Facades\AppConfiguration;
 use Illuminate\Contracts\Queue\ShouldQueue;
 
-class NotifiesOwnerAboutNewVersion implements ShouldQueue
+final class NotifiesOwnerAboutNewVersion implements ShouldQueue
 {
     public function handle(SystemFoundNewVersionOnline $event): void
     {

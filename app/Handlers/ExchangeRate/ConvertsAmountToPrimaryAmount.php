@@ -28,7 +28,7 @@ use FireflyIII\Support\Facades\Amount;
 use FireflyIII\Support\Http\Api\ExchangeRateConverter;
 use Illuminate\Support\Facades\Log;
 
-class ConvertsAmountToPrimaryAmount
+final class ConvertsAmountToPrimaryAmount
 {
     public static function convert(ConversionParameters $params): void
     {

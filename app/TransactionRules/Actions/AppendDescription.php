@@ -33,7 +33,7 @@ use Illuminate\Support\Facades\DB;
  * Class AppendDescription.
  * TODO Can be replaced (and migrated) to action "set description" with a prefilled expression
  */
-class AppendDescription implements ActionInterface
+final class AppendDescription implements ActionInterface
 {
     use RefreshNotesTrait;
 

@@ -29,7 +29,7 @@ use FireflyIII\Events\Model\TransactionGroup\DestroyedSingleTransactionGroup;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Support\Facades\Log;
 
-class ProcessesDestroyedTransactionGroup implements ShouldQueue
+final class ProcessesDestroyedTransactionGroup implements ShouldQueue
 {
     use SupportsGroupProcessingTrait;
 

@@ -28,7 +28,7 @@ use FireflyIII\Events\Event;
 use FireflyIII\Models\Account;
 use Illuminate\Queue\SerializesModels;
 
-class UpdatedExistingAccount extends Event
+final class UpdatedExistingAccount extends Event
 {
     use SerializesModels;
 

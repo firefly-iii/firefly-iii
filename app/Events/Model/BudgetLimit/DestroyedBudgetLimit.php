@@ -31,7 +31,7 @@ use FireflyIII\User;
 use Illuminate\Queue\SerializesModels;
 use Illuminate\Support\Facades\Log;
 
-class DestroyedBudgetLimit extends Event
+final class DestroyedBudgetLimit extends Event
 {
     use SerializesModels;
 

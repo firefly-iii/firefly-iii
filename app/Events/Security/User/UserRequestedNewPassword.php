@@ -29,7 +29,7 @@ use FireflyIII\User;
 use Illuminate\Queue\SerializesModels;
 use SensitiveParameter;
 
-class UserRequestedNewPassword extends Event
+final class UserRequestedNewPassword extends Event
 {
     use SerializesModels;
 

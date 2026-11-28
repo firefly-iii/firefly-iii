@@ -45,7 +45,7 @@ use Illuminate\Support\Facades\Log;
 /**
  * Class CreateAutoBudgetLimits
  */
-class CreateAutoBudgetLimits implements ShouldQueue
+final class CreateAutoBudgetLimits implements ShouldQueue
 {
     use Dispatchable;
     use InteractsWithQueue;

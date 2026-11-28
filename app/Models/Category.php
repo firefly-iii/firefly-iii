@@ -39,7 +39,7 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 #[ObservedBy([DeletedCategoryObserver::class])]
-class Category extends Model
+final class Category extends Model
 {
     use ReturnsIntegerIdTrait;
     use ReturnsIntegerUserIdTrait;

@@ -40,7 +40,7 @@ use Illuminate\Console\Command;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Log;
 
-class ApplyRules extends Command
+final class ApplyRules extends Command
 {
     use ShowsFriendlyMessages;
     use VerifiesAccessToken;

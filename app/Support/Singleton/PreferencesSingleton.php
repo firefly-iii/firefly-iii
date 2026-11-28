@@ -24,7 +24,7 @@ declare(strict_types=1);
 
 namespace FireflyIII\Support\Singleton;
 
-class PreferencesSingleton
+final class PreferencesSingleton
 {
     private static ?PreferencesSingleton $instance = null;
 

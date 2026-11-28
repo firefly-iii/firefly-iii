@@ -28,7 +28,7 @@ use FireflyIII\Models\Account;
 use FireflyIII\Services\Internal\Support\CreditRecalculateService;
 use Illuminate\Console\Command;
 
-class TriggersCreditCalculation extends Command
+final class TriggersCreditCalculation extends Command
 {
     #[\Override]
     protected $description = 'Triggers the credit recalculation service for liabilities.';

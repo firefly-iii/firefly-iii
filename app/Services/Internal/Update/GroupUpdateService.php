@@ -37,7 +37,7 @@ use Illuminate\Support\Facades\Log;
 /**
  * Class GroupUpdateService
  */
-class GroupUpdateService
+final class GroupUpdateService
 {
     /**
      * Update a transaction group.

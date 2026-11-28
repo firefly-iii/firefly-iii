@@ -35,7 +35,7 @@ use Illuminate\Notifications\Notification;
 use Illuminate\Support\Facades\Request;
 use NotificationChannels\Pushover\PushoverMessage;
 
-class UserFailedLoginAttempt extends Notification
+final class UserFailedLoginAttempt extends Notification
 {
     use Queueable;
 

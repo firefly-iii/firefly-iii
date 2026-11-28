@@ -29,7 +29,7 @@ use FireflyIII\Support\Validation\ValidatesAmountsTrait;
 use Illuminate\Contracts\Validation\ValidationRule;
 use Illuminate\Support\Facades\Log;
 
-class IsValidZeroOrMoreAmount implements ValidationRule
+final class IsValidZeroOrMoreAmount implements ValidationRule
 {
     use ValidatesAmountsTrait;
 

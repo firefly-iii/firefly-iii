@@ -29,7 +29,7 @@ use FireflyIII\Support\Facades\AppConfiguration;
 use FireflyIII\Support\Request\ChecksLogin;
 use Illuminate\Foundation\Http\FormRequest;
 
-class PreferencesRequest extends FormRequest
+final class PreferencesRequest extends FormRequest
 {
     use ChecksLogin;
 

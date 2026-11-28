@@ -34,7 +34,7 @@ use Illuminate\Support\Collection;
 /**
  * Class UserGroupTransformer
  */
-class UserGroupTransformer extends AbstractTransformer
+final class UserGroupTransformer extends AbstractTransformer
 {
     private array $inUse              = [];
     private array $memberships        = [];

@@ -31,7 +31,7 @@ use FireflyIII\Support\Facades\AppConfiguration;
 use Illuminate\Support\Facades\Log;
 use Override;
 
-class UpdateCheckCronjob extends AbstractCronjob
+final class UpdateCheckCronjob extends AbstractCronjob
 {
     use UpdateTrait;
 

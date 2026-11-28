@@ -30,7 +30,7 @@ use Illuminate\Contracts\Validation\ValidationRule;
 /**
  * Class LessThanPiggyTarget
  */
-class LessThanPiggyTarget implements ValidationRule
+final class LessThanPiggyTarget implements ValidationRule
 {
     /**
      * Get the validation error message.

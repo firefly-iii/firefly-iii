@@ -28,7 +28,7 @@ use FireflyIII\Console\Commands\ShowsFriendlyMessages;
 use FireflyIII\Models\LinkType;
 use Illuminate\Console\Command;
 
-class CreatesLinkTypes extends Command
+final class CreatesLinkTypes extends Command
 {
     use ShowsFriendlyMessages;
 

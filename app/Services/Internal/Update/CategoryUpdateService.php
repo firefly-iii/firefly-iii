@@ -38,7 +38,7 @@ use Illuminate\Support\Facades\Log;
 /**
  * Class CategoryUpdateService
  */
-class CategoryUpdateService
+final class CategoryUpdateService
 {
     use CreatesObjectGroups;
 

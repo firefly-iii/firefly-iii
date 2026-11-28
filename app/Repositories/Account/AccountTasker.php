@@ -39,7 +39,7 @@ use Illuminate\Support\Facades\Log;
 /**
  * Class AccountTasker.
  */
-class AccountTasker implements AccountTaskerInterface, UserGroupInterface
+final class AccountTasker implements AccountTaskerInterface, UserGroupInterface
 {
     use UserGroupTrait;
 

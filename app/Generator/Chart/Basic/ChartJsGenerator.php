@@ -30,7 +30,7 @@ use Illuminate\Support\Facades\Log;
 /**
  * Class ChartJsGenerator.
  */
-class ChartJsGenerator implements GeneratorInterface
+final class ChartJsGenerator implements GeneratorInterface
 {
     /**
      * Expects data as:.

@@ -30,7 +30,7 @@ use Illuminate\Contracts\Auth\Authenticatable;
 use Illuminate\Queue\SerializesModels;
 use InvalidArgumentException;
 
-class UserSuccessfullyLoggedIn extends Event
+final class UserSuccessfullyLoggedIn extends Event
 {
     use SerializesModels;
 

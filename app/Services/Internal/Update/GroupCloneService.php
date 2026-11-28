@@ -43,7 +43,7 @@ use Illuminate\Support\Facades\Log;
 /**
  * Class GroupCloneService
  */
-class GroupCloneService
+final class GroupCloneService
 {
     public function cloneGroup(TransactionGroup $group): TransactionGroup
     {

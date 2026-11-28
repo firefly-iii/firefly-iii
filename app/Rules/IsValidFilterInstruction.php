@@ -28,7 +28,7 @@ use Closure;
 use Illuminate\Contracts\Validation\ValidationRule;
 use Override;
 
-class IsValidFilterInstruction implements ValidationRule
+final class IsValidFilterInstruction implements ValidationRule
 {
     public function __construct(
         private readonly string $class

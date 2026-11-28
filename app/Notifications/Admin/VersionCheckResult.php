@@ -36,7 +36,7 @@ use NotificationChannels\Pushover\PushoverMessage;
 /**
  * Class VersionCheckResult
  */
-class VersionCheckResult extends Notification
+final class VersionCheckResult extends Notification
 {
     use Queueable;
 

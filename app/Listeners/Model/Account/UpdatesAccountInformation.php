@@ -18,7 +18,7 @@ use FireflyIII\Services\Internal\Support\CreditRecalculateService;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Support\Facades\Log;
 
-class UpdatesAccountInformation implements ShouldQueue
+final class UpdatesAccountInformation implements ShouldQueue
 {
     public function handle(CreatedNewAccount|UpdatedExistingAccount $event): void
     {

@@ -30,7 +30,7 @@ use Illuminate\Database\Seeder;
 /**
  * Class ConfigSeeder.
  */
-class ConfigSeeder extends Seeder
+final class ConfigSeeder extends Seeder
 {
     /**
      * Run the database seeds.

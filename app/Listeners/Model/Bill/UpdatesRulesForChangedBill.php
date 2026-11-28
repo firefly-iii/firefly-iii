@@ -33,7 +33,7 @@ use FireflyIII\Repositories\Rule\RuleRepositoryInterface;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Support\Facades\Log;
 
-class UpdatesRulesForChangedBill implements ShouldQueue
+final class UpdatesRulesForChangedBill implements ShouldQueue
 {
     public function handle(UpdatedExistingBill $event): void
     {

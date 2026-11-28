@@ -35,7 +35,7 @@ use Illuminate\Support\Facades\Log;
 /**
  * Class AutoBudgetCronjob
  */
-class AutoBudgetCronjob extends AbstractCronjob
+final class AutoBudgetCronjob extends AbstractCronjob
 {
     #[\Override]
     public function fire(): void

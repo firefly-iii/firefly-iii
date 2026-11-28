@@ -33,7 +33,7 @@ use FireflyIII\Models\TransactionGroup;
 use FireflyIII\Models\TransactionJournal;
 use Illuminate\Support\Facades\Log;
 
-class ProcessesUpdatedTransactionGroup
+final class ProcessesUpdatedTransactionGroup
 {
     use SupportsGroupProcessingTrait;
 

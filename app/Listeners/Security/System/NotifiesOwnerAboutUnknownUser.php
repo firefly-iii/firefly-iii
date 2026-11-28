@@ -30,7 +30,7 @@ use FireflyIII\Notifications\Notifiables\OwnerNotifiable;
 use FireflyIII\Notifications\NotificationSender;
 use Illuminate\Contracts\Queue\ShouldQueue;
 
-class NotifiesOwnerAboutUnknownUser implements ShouldQueue
+final class NotifiesOwnerAboutUnknownUser implements ShouldQueue
 {
     public function handle(UnknownUserTriedLogin $event): void
     {

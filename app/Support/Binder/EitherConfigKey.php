@@ -30,7 +30,7 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 /**
  * Class EitherConfigKey
  */
-class EitherConfigKey
+final class EitherConfigKey
 {
     public static array $static = [
         // currency conversion

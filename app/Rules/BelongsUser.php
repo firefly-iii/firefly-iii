@@ -39,7 +39,7 @@ use Illuminate\Support\Facades\Log;
 /**
  * Class BelongsUser
  */
-class BelongsUser implements ValidationRule
+final class BelongsUser implements ValidationRule
 {
     #[\Override]
     public function validate(string $attribute, mixed $value, Closure $fail): void

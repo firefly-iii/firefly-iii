@@ -29,7 +29,7 @@ use Illuminate\Support\Facades\Log;
 /**
  * Class RuleObserver
  */
-class DeletedRuleObserver
+final class DeletedRuleObserver
 {
     public function deleting(Rule $rule): void
     {

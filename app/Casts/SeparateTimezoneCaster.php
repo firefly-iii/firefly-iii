@@ -37,7 +37,7 @@ use Illuminate\Database\Eloquent\Model;
  * At some point a user's database consists entirely of UTC dates, and we won't need this anymore. However,
  * the completeness of this migration is not yet guaranteed.
  */
-class SeparateTimezoneCaster implements CastsAttributes
+final class SeparateTimezoneCaster implements CastsAttributes
 {
     /**
      * @param array<string, mixed> $attributes

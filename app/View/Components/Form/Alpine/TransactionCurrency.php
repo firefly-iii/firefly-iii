@@ -8,7 +8,7 @@ use Closure;
 use Illuminate\Contracts\View\View;
 use Illuminate\View\Component;
 
-class TransactionCurrency extends Component
+final class TransactionCurrency extends Component
 {
     public string $value;
 

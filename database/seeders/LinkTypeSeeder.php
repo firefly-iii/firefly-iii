@@ -31,7 +31,7 @@ use PDOException;
 /**
  * Class LinkTypeSeeder.
  */
-class LinkTypeSeeder extends Seeder
+final class LinkTypeSeeder extends Seeder
 {
     public function run(): void
     {

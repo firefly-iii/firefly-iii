@@ -42,7 +42,7 @@ use Illuminate\Support\Facades\Log;
  * are at the moment unused. Instead, each transaction gets a before/after balance and an indicator if this
  * balance is up-to-date. This class now contains some methods to recalculate those amounts.
  */
-class AccountBalanceCalculator
+final class AccountBalanceCalculator
 {
     private function __construct()
     {

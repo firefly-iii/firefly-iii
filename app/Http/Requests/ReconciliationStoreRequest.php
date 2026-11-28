@@ -35,7 +35,7 @@ use Illuminate\Support\Facades\Log;
 /**
  * Class ReconciliationStoreRequest
  */
-class ReconciliationStoreRequest extends FormRequest
+final class ReconciliationStoreRequest extends FormRequest
 {
     use ChecksLogin;
     use ConvertsDataTypes;

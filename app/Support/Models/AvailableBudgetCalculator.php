@@ -33,7 +33,7 @@ use FireflyIII\Support\Facades\Preferences;
 use FireflyIII\User;
 use Illuminate\Support\Facades\Log;
 
-class AvailableBudgetCalculator
+final class AvailableBudgetCalculator
 {
     private User $user;
     private bool $create = true;

@@ -27,7 +27,7 @@ namespace FireflyIII\Events\Security\System;
 use FireflyIII\Events\Event;
 use Illuminate\Queue\SerializesModels;
 
-class SystemFoundNewVersionOnline extends Event
+final class SystemFoundNewVersionOnline extends Event
 {
     use SerializesModels;
 

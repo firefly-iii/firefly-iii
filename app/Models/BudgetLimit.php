@@ -43,7 +43,7 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
  * @property null|Carbon         $end_date
  */
 #[ObservedBy([BudgetLimitObserver::class])]
-class BudgetLimit extends Model
+final class BudgetLimit extends Model
 {
     use ReturnsIntegerIdTrait;
 

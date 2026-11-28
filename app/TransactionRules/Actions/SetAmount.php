@@ -33,7 +33,7 @@ use FireflyIII\Support\Facades\Steam;
 use FireflyIII\TransactionRules\Traits\RefreshNotesTrait;
 use Illuminate\Support\Facades\Log;
 
-class SetAmount implements ActionInterface
+final class SetAmount implements ActionInterface
 {
     use RefreshNotesTrait;
 

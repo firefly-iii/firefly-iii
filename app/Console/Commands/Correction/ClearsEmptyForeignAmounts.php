@@ -28,7 +28,7 @@ use FireflyIII\Console\Commands\ShowsFriendlyMessages;
 use FireflyIII\Models\Transaction;
 use Illuminate\Console\Command;
 
-class ClearsEmptyForeignAmounts extends Command
+final class ClearsEmptyForeignAmounts extends Command
 {
     use ShowsFriendlyMessages;
 

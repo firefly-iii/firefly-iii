@@ -36,7 +36,7 @@ use function Safe\json_encode;
 /**
  * Class UniqueAccountNumber
  */
-class UniqueAccountNumber implements ValidationRule
+final class UniqueAccountNumber implements ValidationRule
 {
     /**
      * Create a new rule instance.

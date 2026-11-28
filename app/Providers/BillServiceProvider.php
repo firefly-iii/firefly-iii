@@ -32,7 +32,7 @@ use Override;
 /**
  * Class BillServiceProvider.
  */
-class BillServiceProvider extends ServiceProvider
+final class BillServiceProvider extends ServiceProvider
 {
     /**
      * Bootstrap the application services.

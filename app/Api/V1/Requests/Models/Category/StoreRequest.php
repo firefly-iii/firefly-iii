@@ -31,7 +31,7 @@ use Illuminate\Foundation\Http\FormRequest;
 /**
  * Class StoreRequest
  */
-class StoreRequest extends FormRequest
+final class StoreRequest extends FormRequest
 {
     use ChecksLogin;
     use ConvertsDataTypes;

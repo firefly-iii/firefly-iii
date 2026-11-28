@@ -38,7 +38,7 @@ use FireflyIII\Support\Facades\Preferences;
 use FireflyIII\User;
 use Illuminate\Console\Command;
 
-class UpgradesBillsToRules extends Command
+final class UpgradesBillsToRules extends Command
 {
     use ShowsFriendlyMessages;
 

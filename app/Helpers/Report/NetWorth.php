@@ -43,7 +43,7 @@ use Illuminate\Support\Facades\Log;
  *
  * Class NetWorth
  */
-class NetWorth implements NetWorthInterface
+final class NetWorth implements NetWorthInterface
 {
     private AccountRepositoryInterface $accountRepository;
 

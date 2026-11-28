@@ -17,7 +17,7 @@ use FireflyIII\User;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Support\Facades\Log;
 
-class HandlesNewUserRegistration implements ShouldQueue
+final class HandlesNewUserRegistration implements ShouldQueue
 {
     use HandlesUserRegistrationTrait;
 

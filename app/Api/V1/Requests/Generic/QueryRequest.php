@@ -29,7 +29,7 @@ use FireflyIII\Support\Request\ChecksLogin;
 use FireflyIII\Support\Request\ConvertsDataTypes;
 use Illuminate\Contracts\Validation\Validator;
 
-class QueryRequest extends ApiRequest
+final class QueryRequest extends ApiRequest
 {
     use ChecksLogin;
     use ConvertsDataTypes;

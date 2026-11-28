@@ -39,7 +39,7 @@ use NotificationChannels\Pushover\PushoverMessage;
 /**
  * Class UserRegistration
  */
-class UserRegistration extends Notification
+final class UserRegistration extends Notification
 {
     use Queueable;
 

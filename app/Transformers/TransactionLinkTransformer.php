@@ -30,7 +30,7 @@ use FireflyIII\Repositories\Journal\JournalRepositoryInterface;
 /**
  * Class TransactionLinkTransformer
  */
-class TransactionLinkTransformer extends AbstractTransformer
+final class TransactionLinkTransformer extends AbstractTransformer
 {
     /** @var JournalRepositoryInterface */
     private $repository;

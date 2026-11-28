@@ -44,7 +44,7 @@ use Illuminate\Support\Facades\Log;
  *
  * Class AccountFactory
  */
-class AccountFactory
+final class AccountFactory
 {
     use AccountServiceTrait;
     use CreatesObjectGroups;

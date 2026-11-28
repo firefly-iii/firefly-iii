@@ -33,7 +33,7 @@ use Illuminate\Support\Facades\Log;
 /**
  * Class TagFactory
  */
-class TagFactory
+final class TagFactory
 {
     private User $user;
     private UserGroup $userGroup;

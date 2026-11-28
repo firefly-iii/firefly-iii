@@ -34,7 +34,7 @@ use Illuminate\Support\Facades\Log;
 /**
  * Class PiggyBankObserver
  */
-class PiggyBankObserver
+final class PiggyBankObserver
 {
     public function created(PiggyBank $piggyBank): void
     {

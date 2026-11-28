@@ -43,7 +43,7 @@ use Illuminate\Database\Eloquent\SoftDeletes;
  * @property null|string              $balance_after
  */
 #[ObservedBy([TransactionObserver::class])]
-class Transaction extends Model
+final class Transaction extends Model
 {
     use ReturnsIntegerIdTrait;
     use SoftDeletes;

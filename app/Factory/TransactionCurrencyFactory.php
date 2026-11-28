@@ -33,7 +33,7 @@ use Illuminate\Support\Facades\Log;
 /**
  * Class TransactionCurrencyFactory
  */
-class TransactionCurrencyFactory
+final class TransactionCurrencyFactory
 {
     /**
      * @throws FireflyException

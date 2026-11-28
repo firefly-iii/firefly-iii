@@ -51,7 +51,7 @@ use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 
-class PrimaryAmountRecalculationService
+final class PrimaryAmountRecalculationService
 {
     private Carbon $date;
 

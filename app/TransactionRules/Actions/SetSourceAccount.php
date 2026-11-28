@@ -38,7 +38,7 @@ use Illuminate\Support\Facades\Log;
 /**
  * Class SetSourceAccount.
  */
-class SetSourceAccount implements ActionInterface
+final class SetSourceAccount implements ActionInterface
 {
     private AccountRepositoryInterface $repository;
 

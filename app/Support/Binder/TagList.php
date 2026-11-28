@@ -33,7 +33,7 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 /**
  * Class TagList.
  */
-class TagList implements BinderInterface
+final class TagList implements BinderInterface
 {
     /**
      * @throws NotFoundHttpException

@@ -38,7 +38,7 @@ use Illuminate\Support\Facades\Log;
  * By collecting these objects (in case of an update: before AND after update) there
  * is a unified set of objects to manage: update balances, recalculate credits, etc.
  */
-class TransactionGroupEventObjects
+final class TransactionGroupEventObjects
 {
     public Collection $accounts;
     public Collection $budgets;

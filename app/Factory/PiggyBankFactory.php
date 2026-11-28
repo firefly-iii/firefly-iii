@@ -43,7 +43,7 @@ use function Safe\json_encode;
 /**
  * Class PiggyBankFactory
  */
-class PiggyBankFactory
+final class PiggyBankFactory
 {
     use CreatesObjectGroups;
 

@@ -29,7 +29,7 @@ use FireflyIII\Support\Facades\AppConfiguration;
 use FireflyIII\Support\Models\AccountBalanceCalculator;
 use Illuminate\Console\Command;
 
-class RepairsAccountBalances extends Command
+final class RepairsAccountBalances extends Command
 {
     use ShowsFriendlyMessages;
 

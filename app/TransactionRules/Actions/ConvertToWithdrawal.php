@@ -42,7 +42,7 @@ use Illuminate\Support\Facades\Log;
 /**
  * Class ConvertToWithdrawal
  */
-class ConvertToWithdrawal implements ActionInterface
+final class ConvertToWithdrawal implements ActionInterface
 {
     /**
      * TriggerInterface constructor.

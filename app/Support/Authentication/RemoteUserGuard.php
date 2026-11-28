@@ -36,7 +36,7 @@ use Illuminate\Support\Facades\Log;
 /**
  * Class RemoteUserGuard
  */
-class RemoteUserGuard implements Guard
+final class RemoteUserGuard implements Guard
 {
     // protected Application $application;
     protected ?User $user = null;

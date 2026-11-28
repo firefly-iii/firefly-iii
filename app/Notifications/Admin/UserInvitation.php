@@ -39,7 +39,7 @@ use NotificationChannels\Pushover\PushoverMessage;
 /**
  * Class UserInvitation
  */
-class UserInvitation extends Notification
+final class UserInvitation extends Notification
 {
     use Queueable;
 

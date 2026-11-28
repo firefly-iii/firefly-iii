@@ -46,7 +46,7 @@ use Override;
 /**
  * Class OperationsRepository
  */
-class OperationsRepository implements OperationsRepositoryInterface, UserGroupInterface
+final class OperationsRepository implements OperationsRepositoryInterface, UserGroupInterface
 {
     use UserGroupTrait;
 

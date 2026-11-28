@@ -34,7 +34,7 @@ use Override;
 use function Safe\file_get_contents;
 use function Safe\json_decode;
 
-class GitHubUpdateRequest implements UpdateRequestInterface
+final class GitHubUpdateRequest implements UpdateRequestInterface
 {
     private string $currentVersion = '1.0.0';
     private Carbon $currentBuild;

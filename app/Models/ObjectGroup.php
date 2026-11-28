@@ -34,7 +34,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\MorphToMany;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
-class ObjectGroup extends Model
+final class ObjectGroup extends Model
 {
     use ReturnsIntegerIdTrait;
     use ReturnsIntegerUserIdTrait;

@@ -32,7 +32,7 @@ use FireflyIII\Support\Facades\Steam;
 /**
  * Class CategoryTransformer
  */
-class CategoryTransformer extends AbstractTransformer
+final class CategoryTransformer extends AbstractTransformer
 {
     private readonly TransactionCurrency $primaryCurrency;
 

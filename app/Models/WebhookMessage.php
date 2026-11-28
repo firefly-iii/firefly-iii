@@ -39,7 +39,7 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
  * @property array|string $message
  */
 #[ObservedBy([DeletedWebhookMessageObserver::class])]
-class WebhookMessage extends Model
+final class WebhookMessage extends Model
 {
     use ReturnsIntegerIdTrait;
 

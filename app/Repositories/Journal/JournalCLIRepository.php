@@ -37,7 +37,7 @@ use stdClass;
 /**
  * Class JournalCLIRepository
  */
-class JournalCLIRepository implements JournalCLIRepositoryInterface, UserGroupInterface
+final class JournalCLIRepository implements JournalCLIRepositoryInterface, UserGroupInterface
 {
     use UserGroupTrait;
 

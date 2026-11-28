@@ -29,7 +29,7 @@ namespace FireflyIII\Support\Search\QueryParser;
  *
  * NodeGroups can be nested inside other NodeGroups, making them subqueries
  */
-class NodeGroup extends Node
+final class NodeGroup extends Node
 {
     /**
      * @param Node[] $nodes

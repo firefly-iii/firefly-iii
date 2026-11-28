@@ -36,7 +36,7 @@ use Illuminate\Support\Collection;
 /**
  * Class NoCategoryRepository
  */
-class NoCategoryRepository implements NoCategoryRepositoryInterface, UserGroupInterface
+final class NoCategoryRepository implements NoCategoryRepositoryInterface, UserGroupInterface
 {
     use UserGroupTrait;
 

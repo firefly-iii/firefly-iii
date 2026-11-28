@@ -31,7 +31,7 @@ use Illuminate\Support\Facades\Log;
 /**
  * Class TransactionObserver
  */
-class TransactionObserver
+final class TransactionObserver
 {
     public static bool $recalculate = true;
 

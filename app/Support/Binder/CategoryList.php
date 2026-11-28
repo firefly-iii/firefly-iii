@@ -32,7 +32,7 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 /**
  * Class CategoryList.
  */
-class CategoryList implements BinderInterface
+final class CategoryList implements BinderInterface
 {
     /**
      * @throws NotFoundHttpException

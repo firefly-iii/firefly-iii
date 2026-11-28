@@ -35,7 +35,7 @@ use Illuminate\Support\Facades\Log;
 /**
  * Class SwitchAccounts
  */
-class SwitchAccounts implements ActionInterface
+final class SwitchAccounts implements ActionInterface
 {
     /**
      * TriggerInterface constructor.

@@ -37,7 +37,7 @@ use Illuminate\Support\Facades\Log;
 /**
  * Class BillFactory
  */
-class BillFactory
+final class BillFactory
 {
     use BillServiceTrait;
     use CreatesObjectGroups;

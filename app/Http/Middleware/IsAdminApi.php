@@ -34,7 +34,7 @@ use Illuminate\Support\Facades\Log;
 /**
  * Class IsAdmin.
  */
-class IsAdminApi
+final class IsAdminApi
 {
     /**
      * Handle an incoming request. Must be admin.

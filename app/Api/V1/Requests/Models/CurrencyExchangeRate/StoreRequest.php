@@ -31,7 +31,7 @@ use FireflyIII\Support\Request\ChecksLogin;
 use FireflyIII\Support\Request\ConvertsDataTypes;
 use Illuminate\Foundation\Http\FormRequest;
 
-class StoreRequest extends FormRequest
+final class StoreRequest extends FormRequest
 {
     use ChecksLogin;
     use ConvertsDataTypes;

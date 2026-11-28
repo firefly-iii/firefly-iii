@@ -50,7 +50,7 @@ use function Safe\preg_replace;
 /**
  * Class Steam.
  */
-class Steam
+final class Steam
 {
     /**
      * Calls accountsBalancesOptimized for the given accounts and makes sure that inclusive is set to false, so it

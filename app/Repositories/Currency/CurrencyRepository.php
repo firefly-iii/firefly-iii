@@ -53,7 +53,7 @@ use function Safe\json_encode;
 /**
  * Class CurrencyRepository.
  */
-class CurrencyRepository implements CurrencyRepositoryInterface, UserGroupInterface
+final class CurrencyRepository implements CurrencyRepositoryInterface, UserGroupInterface
 {
     use UserGroupTrait;
 

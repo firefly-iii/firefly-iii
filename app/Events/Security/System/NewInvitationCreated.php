@@ -28,7 +28,7 @@ use FireflyIII\Events\Event;
 use FireflyIII\Models\InvitedUser;
 use Illuminate\Queue\SerializesModels;
 
-class NewInvitationCreated extends Event
+final class NewInvitationCreated extends Event
 {
     use SerializesModels;
 

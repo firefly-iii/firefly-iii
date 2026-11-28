@@ -33,7 +33,7 @@ use Illuminate\Support\Facades\Vite;
 /**
  * Class SecureHeaders
  */
-class SecureHeaders
+final class SecureHeaders
 {
     /**
      * Handle an incoming request.

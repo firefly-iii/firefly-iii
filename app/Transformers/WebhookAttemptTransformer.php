@@ -29,7 +29,7 @@ use FireflyIII\Models\WebhookAttempt;
 /**
  * Class WebhookAttemptTransformer
  */
-class WebhookAttemptTransformer extends AbstractTransformer
+final class WebhookAttemptTransformer extends AbstractTransformer
 {
     /**
      * Transform the preference

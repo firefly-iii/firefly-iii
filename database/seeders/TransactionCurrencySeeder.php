@@ -31,7 +31,7 @@ use PDOException;
 /**
  * Class TransactionCurrencySeeder.
  */
-class TransactionCurrencySeeder extends Seeder
+final class TransactionCurrencySeeder extends Seeder
 {
     public function run(): void
     {

@@ -42,7 +42,7 @@ use function Safe\json_encode;
 /**
  * Class StandardWebhookSender
  */
-class StandardWebhookSender implements WebhookSenderInterface
+final class StandardWebhookSender implements WebhookSenderInterface
 {
     private WebhookMessage $message;
     private int $version = 1;

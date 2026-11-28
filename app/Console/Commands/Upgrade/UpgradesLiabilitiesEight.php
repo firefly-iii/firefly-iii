@@ -38,7 +38,7 @@ use FireflyIII\User;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\Log;
 
-class UpgradesLiabilitiesEight extends Command
+final class UpgradesLiabilitiesEight extends Command
 {
     use ShowsFriendlyMessages;
 

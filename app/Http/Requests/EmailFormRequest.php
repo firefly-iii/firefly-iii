@@ -32,7 +32,7 @@ use Illuminate\Support\Facades\Log;
 /**
  * Class EmailFormRequest.
  */
-class EmailFormRequest extends FormRequest
+final class EmailFormRequest extends FormRequest
 {
     use ChecksLogin;
     use ConvertsDataTypes;

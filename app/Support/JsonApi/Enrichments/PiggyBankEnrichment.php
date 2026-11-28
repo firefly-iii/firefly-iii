@@ -40,7 +40,7 @@ use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 
-class PiggyBankEnrichment implements EnrichmentInterface
+final class PiggyBankEnrichment implements EnrichmentInterface
 {
     private array $accountIds    = [];
     private array $accounts      = [];

@@ -37,7 +37,7 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\DB;
 
-class CategoryEnrichment implements EnrichmentInterface
+final class CategoryEnrichment implements EnrichmentInterface
 {
     private Collection $collection;
     private array       $earned        = [];

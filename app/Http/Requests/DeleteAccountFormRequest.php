@@ -31,7 +31,7 @@ use Illuminate\Support\Facades\Log;
 /**
  * Class DeleteAccountFormRequest.
  */
-class DeleteAccountFormRequest extends FormRequest
+final class DeleteAccountFormRequest extends FormRequest
 {
     use ChecksLogin;
 

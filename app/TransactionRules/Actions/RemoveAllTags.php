@@ -33,7 +33,7 @@ use Illuminate\Support\Facades\Log;
 /**
  * Class RemoveAllTags.
  */
-class RemoveAllTags implements ActionInterface
+final class RemoveAllTags implements ActionInterface
 {
     /**
      * TriggerInterface constructor.

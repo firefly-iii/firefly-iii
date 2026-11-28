@@ -37,7 +37,7 @@ use function Safe\preg_split;
  * Scans each character once (O(n)) to build field searches, quoted strings,
  * prohibited terms and nested subqueries without backtracking.
  */
-class QueryParser implements QueryParserInterface
+final class QueryParser implements QueryParserInterface
 {
     private int $position       = 0;
     private int $depth          = 0;

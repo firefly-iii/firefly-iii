@@ -30,7 +30,7 @@ use Illuminate\Contracts\Auth\Authenticatable;
 use Illuminate\Queue\SerializesModels;
 use InvalidArgumentException;
 
-class UserHasFewMFABackupCodesLeft extends Event
+final class UserHasFewMFABackupCodesLeft extends Event
 {
     use SerializesModels;
 

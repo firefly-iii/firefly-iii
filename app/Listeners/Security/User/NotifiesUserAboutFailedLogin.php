@@ -29,7 +29,7 @@ use FireflyIII\Notifications\NotificationSender;
 use FireflyIII\Notifications\Security\UserFailedLoginAttempt as NotificationFailedLoginAttempt;
 use Illuminate\Contracts\Queue\ShouldQueue;
 
-class NotifiesUserAboutFailedLogin implements ShouldQueue
+final class NotifiesUserAboutFailedLogin implements ShouldQueue
 {
     public function handle(UserFailedLoginAttempt $event): void
     {

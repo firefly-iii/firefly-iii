@@ -36,7 +36,7 @@ use Illuminate\Database\Eloquent\SoftDeletes;
  * @property TransactionCurrency $transactionCurrency
  */
 #[ObservedBy([AutoBudgetObserver::class])]
-class AutoBudget extends Model
+final class AutoBudget extends Model
 {
     use ReturnsIntegerIdTrait;
     use SoftDeletes;

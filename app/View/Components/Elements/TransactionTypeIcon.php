@@ -28,7 +28,7 @@ use Closure;
 use Illuminate\Contracts\View\View;
 use Illuminate\View\Component;
 
-class TransactionTypeIcon extends Component
+final class TransactionTypeIcon extends Component
 {
     public string $type;
 

@@ -32,7 +32,7 @@ use FireflyIII\Support\Facades\Preferences;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Support\Facades\Log;
 
-class NotifiesUserAboutFailedRuleAction implements ShouldQueue
+final class NotifiesUserAboutFailedRuleAction implements ShouldQueue
 {
     public function handle(RuleActionFailedOnArray|RuleActionFailedOnObject $event): void
     {

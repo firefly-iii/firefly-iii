@@ -31,7 +31,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use function Safe\json_decode;
 use function Safe\json_encode;
 
-class AccountMeta extends Model
+final class AccountMeta extends Model
 {
     use ReturnsIntegerIdTrait;
 

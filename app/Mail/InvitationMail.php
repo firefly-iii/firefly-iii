@@ -33,7 +33,7 @@ use function Safe\parse_url;
 /**
  * Class InvitationMail
  */
-class InvitationMail extends Mailable
+final class InvitationMail extends Mailable
 {
     use Queueable;
     use SerializesModels;

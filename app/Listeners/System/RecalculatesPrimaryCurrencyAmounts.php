@@ -29,7 +29,7 @@ use FireflyIII\Services\Internal\Recalculate\PrimaryAmountRecalculationService;
 use FireflyIII\Support\Facades\Amount;
 use Illuminate\Support\Facades\Log;
 
-class RecalculatesPrimaryCurrencyAmounts
+final class RecalculatesPrimaryCurrencyAmounts
 {
     public function handle(UserGroupChangedPrimaryCurrency $event): void
     {

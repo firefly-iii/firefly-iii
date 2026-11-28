@@ -48,7 +48,7 @@ use Illuminate\Support\Facades\Log;
 /**
  * Class CreateRecurringTransactions.
  */
-class CreateRecurringTransactions implements ShouldQueue
+final class CreateRecurringTransactions implements ShouldQueue
 {
     use Dispatchable;
     use InteractsWithQueue;

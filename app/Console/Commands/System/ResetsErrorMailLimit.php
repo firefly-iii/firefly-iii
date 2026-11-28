@@ -31,7 +31,7 @@ use Symfony\Component\Console\Command\Command as CommandAlias;
 use function Safe\file_put_contents;
 use function Safe\json_encode;
 
-class ResetsErrorMailLimit extends Command
+final class ResetsErrorMailLimit extends Command
 {
     use ShowsFriendlyMessages;
 

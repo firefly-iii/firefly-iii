@@ -30,7 +30,7 @@ use FireflyIII\Notifications\Security\MFABackupFewLeftNotification;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Support\Facades\Log;
 
-class NotifiesUserAboutFewCodesLeft implements ShouldQueue
+final class NotifiesUserAboutFewCodesLeft implements ShouldQueue
 {
     public function handle(UserHasFewMFABackupCodesLeft $event): void
     {

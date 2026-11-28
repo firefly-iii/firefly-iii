@@ -32,7 +32,7 @@ use Illuminate\Foundation\Http\FormRequest;
 /**
  * Class UserStoreRequest
  */
-class UserStoreRequest extends FormRequest
+final class UserStoreRequest extends FormRequest
 {
     use ChecksLogin;
     use ConvertsDataTypes;

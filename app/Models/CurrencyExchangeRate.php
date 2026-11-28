@@ -36,7 +36,7 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 /**
  * @property Carbon $date
  */
-class CurrencyExchangeRate extends Model
+final class CurrencyExchangeRate extends Model
 {
     use ReturnsIntegerIdTrait;
     use ReturnsIntegerUserIdTrait;

@@ -29,7 +29,7 @@ use FireflyIII\Models\Account;
 use Illuminate\Contracts\View\View;
 use Illuminate\View\Component;
 
-class Amount extends Component
+final class Amount extends Component
 {
     /**
      * Create a new component instance.

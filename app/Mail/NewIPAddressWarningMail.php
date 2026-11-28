@@ -34,7 +34,7 @@ use Illuminate\Support\Facades\Log;
 /**
  * Class NewIPAddressWarningMail
  */
-class NewIPAddressWarningMail extends Mailable
+final class NewIPAddressWarningMail extends Mailable
 {
     use Queueable;
     use SerializesModels;

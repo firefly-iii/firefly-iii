@@ -41,7 +41,7 @@ use Throwable;
 /**
  * Class GracefulNotFoundHandler
  */
-class GracefulNotFoundHandler extends ExceptionHandler
+final class GracefulNotFoundHandler extends ExceptionHandler
 {
     /**
      * Render an exception into an HTTP response.

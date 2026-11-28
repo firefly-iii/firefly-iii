@@ -32,7 +32,7 @@ use FireflyIII\Support\Request\ConvertsDataTypes;
 use Illuminate\Contracts\Validation\Validator;
 use Illuminate\Foundation\Http\FormRequest;
 
-class StoreByDateRequest extends FormRequest
+final class StoreByDateRequest extends FormRequest
 {
     use ChecksLogin;
     use ConvertsDataTypes;

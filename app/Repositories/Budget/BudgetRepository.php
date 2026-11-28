@@ -59,7 +59,7 @@ use Illuminate\Support\Facades\Storage;
 /**
  * Class BudgetRepository.
  */
-class BudgetRepository implements BudgetRepositoryInterface, UserGroupInterface
+final class BudgetRepository implements BudgetRepositoryInterface, UserGroupInterface
 {
     use UserGroupTrait;
 

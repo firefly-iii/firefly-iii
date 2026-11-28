@@ -32,7 +32,7 @@ use Override;
 /**
  * Class PiggyBankServiceProvider.
  */
-class PiggyBankServiceProvider extends ServiceProvider
+final class PiggyBankServiceProvider extends ServiceProvider
 {
     /**
      * Bootstrap the application services.

@@ -32,7 +32,7 @@ use Illuminate\Notifications\Notification;
 /**
  * Class TransactionCreation
  */
-class TransactionCreation extends Notification
+final class TransactionCreation extends Notification
 {
     use Queueable;
 

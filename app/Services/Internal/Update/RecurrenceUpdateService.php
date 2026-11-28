@@ -39,7 +39,7 @@ use Illuminate\Support\Facades\Log;
 /**
  * Class RecurrenceUpdateService
  */
-class RecurrenceUpdateService
+final class RecurrenceUpdateService
 {
     use RecurringTransactionTrait;
     use TransactionTypeTrait;

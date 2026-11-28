@@ -35,7 +35,7 @@ use Override;
 /**
  * Class CurrencyServiceProvider.
  */
-class CurrencyServiceProvider extends ServiceProvider
+final class CurrencyServiceProvider extends ServiceProvider
 {
     /**
      * Bootstrap the application services.

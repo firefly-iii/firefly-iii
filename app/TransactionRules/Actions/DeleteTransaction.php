@@ -34,7 +34,7 @@ use Illuminate\Support\Facades\Log;
 /**
  * Class DeleteTransaction.
  */
-class DeleteTransaction implements ActionInterface
+final class DeleteTransaction implements ActionInterface
 {
     /**
      * TriggerInterface constructor.

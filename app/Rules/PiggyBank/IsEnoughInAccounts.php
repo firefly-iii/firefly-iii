@@ -31,7 +31,7 @@ use FireflyIII\Repositories\PiggyBank\PiggyBankRepositoryInterface;
 use Illuminate\Contracts\Validation\ValidationRule;
 use Override;
 
-class IsEnoughInAccounts implements ValidationRule
+final class IsEnoughInAccounts implements ValidationRule
 {
     public function __construct(
         private readonly PiggyBank $piggyBank,

@@ -29,7 +29,7 @@ use FireflyIII\Console\Commands\ShowsFriendlyMessages;
 use FireflyIII\Models\TransactionGroup;
 use Illuminate\Console\Command;
 
-class RemovesEmptyGroups extends Command
+final class RemovesEmptyGroups extends Command
 {
     use ShowsFriendlyMessages;
 

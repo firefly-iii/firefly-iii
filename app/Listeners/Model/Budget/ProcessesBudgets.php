@@ -33,7 +33,7 @@ use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Log;
 
-class ProcessesBudgets implements ShouldQueue
+final class ProcessesBudgets implements ShouldQueue
 {
     public function handle(CreatedBudget|DestroyingBudget|UpdatedBudget $event): void
     {

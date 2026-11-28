@@ -30,7 +30,7 @@ use Illuminate\Contracts\Auth\Authenticatable;
 use Illuminate\Queue\SerializesModels;
 use InvalidArgumentException;
 
-class UserHasUsedBackupCode extends Event
+final class UserHasUsedBackupCode extends Event
 {
     use SerializesModels;
 

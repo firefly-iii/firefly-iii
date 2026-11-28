@@ -38,7 +38,7 @@ use Illuminate\Support\Facades\Log;
 /**
  * Class SetDestinationToCashAccount
  */
-class SetDestinationToCashAccount implements ActionInterface
+final class SetDestinationToCashAccount implements ActionInterface
 {
     /**
      * TriggerInterface constructor.

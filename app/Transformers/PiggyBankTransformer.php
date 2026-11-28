@@ -31,7 +31,7 @@ use FireflyIII\Support\Facades\Amount;
 /**
  * Class PiggyBankTransformer
  */
-class PiggyBankTransformer extends AbstractTransformer
+final class PiggyBankTransformer extends AbstractTransformer
 {
     private readonly TransactionCurrency $primaryCurrency;
 

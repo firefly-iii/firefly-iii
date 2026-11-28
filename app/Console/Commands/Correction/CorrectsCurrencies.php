@@ -38,7 +38,7 @@ use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Log;
 use Symfony\Component\Console\Command\Command as CommandAlias;
 
-class CorrectsCurrencies extends Command
+final class CorrectsCurrencies extends Command
 {
     use ShowsFriendlyMessages;
 

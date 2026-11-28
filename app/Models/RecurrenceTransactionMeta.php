@@ -30,7 +30,7 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
-class RecurrenceTransactionMeta extends Model
+final class RecurrenceTransactionMeta extends Model
 {
     use ReturnsIntegerIdTrait;
     use SoftDeletes;

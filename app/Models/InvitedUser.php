@@ -37,7 +37,7 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 /**
  * @property Carbon $expires
  */
-class InvitedUser extends Model
+final class InvitedUser extends Model
 {
     use ReturnsIntegerIdTrait;
     use ReturnsIntegerUserIdTrait;

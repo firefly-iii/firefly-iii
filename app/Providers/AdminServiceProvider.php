@@ -32,7 +32,7 @@ use Override;
 /**
  * Class AdminServiceProvider
  */
-class AdminServiceProvider extends ServiceProvider
+final class AdminServiceProvider extends ServiceProvider
 {
     /**
      * Bootstrap the application services.

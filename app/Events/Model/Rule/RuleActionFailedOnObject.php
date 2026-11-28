@@ -32,7 +32,7 @@ use Illuminate\Support\Facades\Log;
 /**
  * Class RuleActionFailedOnObject
  */
-class RuleActionFailedOnObject
+final class RuleActionFailedOnObject
 {
     use SerializesModels;
 

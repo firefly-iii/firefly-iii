@@ -35,7 +35,7 @@ use Illuminate\Support\Facades\Log;
 /**
  * Class SetTransactionDate.
  */
-class SetTransactionDate implements ActionInterface
+final class SetTransactionDate implements ActionInterface
 {
     /**
      * TriggerInterface constructor.

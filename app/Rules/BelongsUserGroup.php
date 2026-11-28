@@ -43,7 +43,7 @@ use Illuminate\Support\Facades\Log;
  * TODO that is submitted is valid. This method will not validate if the user has a valid ROLE in this
  * TODO group.
  */
-class BelongsUserGroup implements ValidationRule
+final class BelongsUserGroup implements ValidationRule
 {
     /**
      * Create a new rule instance.

@@ -29,7 +29,7 @@ use FireflyIII\Models\Webhook;
 /**
  * Class WebhookTransformer
  */
-class WebhookTransformer extends AbstractTransformer
+final class WebhookTransformer extends AbstractTransformer
 {
     /**
      * Transform webhook.

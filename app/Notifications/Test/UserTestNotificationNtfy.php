@@ -33,7 +33,7 @@ use Illuminate\Notifications\Notification;
 /**
  * Class TestNotification
  */
-class UserTestNotificationNtfy extends Notification
+final class UserTestNotificationNtfy extends Notification
 {
     use Queueable;
 

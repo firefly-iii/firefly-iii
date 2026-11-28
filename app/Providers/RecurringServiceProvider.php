@@ -32,7 +32,7 @@ use Override;
 /**
  * Class RecurringServiceProvider.
  */
-class RecurringServiceProvider extends ServiceProvider
+final class RecurringServiceProvider extends ServiceProvider
 {
     /**
      * Bootstrap the application services.

@@ -86,7 +86,7 @@ use Symfony\Component\ExpressionLanguage\ExpressionLanguage;
  *
  * @SuppressWarnings("PHPMD.CouplingBetweenObjects")
  */
-class FireflyServiceProvider extends ServiceProvider
+final class FireflyServiceProvider extends ServiceProvider
 {
     /**
      * Start provider.

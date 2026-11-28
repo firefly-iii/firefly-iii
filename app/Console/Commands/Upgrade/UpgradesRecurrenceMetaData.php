@@ -33,7 +33,7 @@ use Illuminate\Console\Command;
 
 use function Safe\json_encode;
 
-class UpgradesRecurrenceMetaData extends Command
+final class UpgradesRecurrenceMetaData extends Command
 {
     use ShowsFriendlyMessages;
 

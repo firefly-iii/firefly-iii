@@ -34,7 +34,7 @@ use Illuminate\Database\QueryException;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Schema;
 
-class AddsTransactionIdentifiers extends Command
+final class AddsTransactionIdentifiers extends Command
 {
     use ShowsFriendlyMessages;
 

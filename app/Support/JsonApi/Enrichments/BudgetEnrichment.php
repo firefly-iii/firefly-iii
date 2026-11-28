@@ -37,7 +37,7 @@ use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 
-class BudgetEnrichment implements EnrichmentInterface
+final class BudgetEnrichment implements EnrichmentInterface
 {
     private array $autoBudgets         = [];
     private Collection $collection;

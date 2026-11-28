@@ -29,7 +29,7 @@ use FireflyIII\Support\Http\Api\TransactionFilter;
 use Illuminate\Contracts\Validation\ValidationRule;
 use Override;
 
-class IsValidTransactionTypeList implements ValidationRule
+final class IsValidTransactionTypeList implements ValidationRule
 {
     use TransactionFilter;
 

@@ -30,7 +30,7 @@ use FireflyIII\Support\Facades\Steam;
 use FireflyIII\User;
 use Illuminate\Console\Command;
 
-class ReportsSums extends Command
+final class ReportsSums extends Command
 {
     use ShowsFriendlyMessages;
 

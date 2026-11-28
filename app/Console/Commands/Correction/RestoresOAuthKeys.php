@@ -32,7 +32,7 @@ use Laravel\Passport\Passport;
 
 use function Safe\chmod;
 
-class RestoresOAuthKeys extends Command
+final class RestoresOAuthKeys extends Command
 {
     use ShowsFriendlyMessages;
 

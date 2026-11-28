@@ -28,7 +28,7 @@ use FireflyIII\Console\Commands\ShowsFriendlyMessages;
 use FireflyIII\Support\Facades\AppConfiguration;
 use Illuminate\Console\Command;
 
-class SetsLatestVersion extends Command
+final class SetsLatestVersion extends Command
 {
     use ShowsFriendlyMessages;
 

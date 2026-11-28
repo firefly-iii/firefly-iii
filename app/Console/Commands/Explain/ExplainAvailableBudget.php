@@ -31,7 +31,7 @@ use FireflyIII\Support\Facades\Navigation;
 use FireflyIII\Support\Facades\Preferences;
 use Illuminate\Console\Command;
 
-class ExplainAvailableBudget extends Command
+final class ExplainAvailableBudget extends Command
 {
     use VerifiesAccessToken;
 

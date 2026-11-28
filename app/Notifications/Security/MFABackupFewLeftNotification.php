@@ -34,7 +34,7 @@ use Illuminate\Notifications\Notification;
 use Illuminate\Support\Facades\Request;
 use NotificationChannels\Pushover\PushoverMessage;
 
-class MFABackupFewLeftNotification extends Notification
+final class MFABackupFewLeftNotification extends Notification
 {
     use Queueable;
 

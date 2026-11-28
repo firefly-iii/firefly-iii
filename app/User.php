@@ -79,7 +79,7 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
  * @property null|UserGroup $userGroup
  * @property bool           $blocked
  */
-class User extends Authenticatable implements OAuthenticatable
+final class User extends Authenticatable implements OAuthenticatable
 {
     use HasApiTokens;
     use Notifiable;

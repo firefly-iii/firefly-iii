@@ -36,7 +36,7 @@ use Illuminate\Support\MessageBag;
 /**
  * Class RecurrenceFactory
  */
-class RecurrenceFactory
+final class RecurrenceFactory
 {
     use RecurringTransactionTrait;
     use TransactionTypeTrait;

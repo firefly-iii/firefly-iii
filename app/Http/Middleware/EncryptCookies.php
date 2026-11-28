@@ -28,4 +28,4 @@ use Illuminate\Cookie\Middleware\EncryptCookies as Middleware;
 /**
  * Class EncryptCookies
  */
-class EncryptCookies extends Middleware {}
+final class EncryptCookies extends Middleware {}

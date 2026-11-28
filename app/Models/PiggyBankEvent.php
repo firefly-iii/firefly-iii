@@ -37,7 +37,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
  * @property null|PiggyBank $piggyBank
  */
 #[ObservedBy([PiggyBankEventObserver::class])]
-class PiggyBankEvent extends Model
+final class PiggyBankEvent extends Model
 {
     use ReturnsIntegerIdTrait;
 

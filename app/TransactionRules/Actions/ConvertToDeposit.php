@@ -42,7 +42,7 @@ use Illuminate\Support\Facades\Log;
 /**
  * Class ConvertToDeposit
  */
-class ConvertToDeposit implements ActionInterface
+final class ConvertToDeposit implements ActionInterface
 {
     /**
      * TriggerInterface constructor.

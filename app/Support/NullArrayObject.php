@@ -29,7 +29,7 @@ use ArrayObject;
 /**
  * Class NullArrayObject
  */
-class NullArrayObject extends ArrayObject
+final class NullArrayObject extends ArrayObject
 {
     /**
      * NullArrayObject constructor.

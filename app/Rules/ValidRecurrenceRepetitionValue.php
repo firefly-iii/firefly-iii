@@ -33,7 +33,7 @@ use InvalidArgumentException;
 /**
  * Class ValidRecurrenceRepetitionValue
  */
-class ValidRecurrenceRepetitionValue implements ValidationRule
+final class ValidRecurrenceRepetitionValue implements ValidationRule
 {
     /**
      * @SuppressWarnings("PHPMD.UnusedFormalParameter")

@@ -37,7 +37,7 @@ use Illuminate\Support\Facades\Log;
 /**
  * Class AccountBalanceGrouped
  */
-class AccountBalanceGrouped
+final class AccountBalanceGrouped
 {
     private array $accountIds = [];
     private string $carbonFormat;

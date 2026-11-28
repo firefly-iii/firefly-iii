@@ -30,7 +30,7 @@ use Illuminate\Contracts\Validation\ValidationRule;
 /**
  * Class IsBoolean
  */
-class IsBoolean implements ValidationRule
+final class IsBoolean implements ValidationRule
 {
     /**
      * @SuppressWarnings("PHPMD.UnusedFormalParameter")

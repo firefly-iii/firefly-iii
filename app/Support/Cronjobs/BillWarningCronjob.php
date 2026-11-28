@@ -36,7 +36,7 @@ use Illuminate\Support\Facades\Log;
 /**
  * Class BillWarningCronjob
  */
-class BillWarningCronjob extends AbstractCronjob
+final class BillWarningCronjob extends AbstractCronjob
 {
     /**
      * @throws FireflyException

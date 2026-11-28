@@ -35,7 +35,7 @@ use FireflyIII\Notifications\Test\UserTestNotificationPushover;
 use FireflyIII\Notifications\Test\UserTestNotificationSlack;
 use Illuminate\Support\Facades\Log;
 
-class SendsTestNotification
+final class SendsTestNotification
 {
     public function handle(OwnerTestsNotificationChannel|UserTestsNotificationChannel $event): void
     {

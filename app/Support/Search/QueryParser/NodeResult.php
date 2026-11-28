@@ -30,7 +30,7 @@ namespace FireflyIII\Support\Search\QueryParser;
  * Contains the parsed node and a flag indicating if this is the end of the query.
  * Used to handle subquery parsing and termination.
  */
-class NodeResult
+final class NodeResult
 {
     public function __construct(
         public readonly ?Node $node,

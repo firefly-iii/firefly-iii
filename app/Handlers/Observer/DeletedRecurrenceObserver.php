@@ -31,7 +31,7 @@ use Illuminate\Support\Facades\Log;
 /**
  * Class RecurrenceObserver
  */
-class DeletedRecurrenceObserver
+final class DeletedRecurrenceObserver
 {
     public function deleting(Recurrence $recurrence): void
     {

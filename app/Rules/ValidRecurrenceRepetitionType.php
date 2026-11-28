@@ -30,7 +30,7 @@ use Illuminate\Contracts\Validation\ValidationRule;
 /**
  * Class ValidRecurrenceRepetitionType
  */
-class ValidRecurrenceRepetitionType implements ValidationRule
+final class ValidRecurrenceRepetitionType implements ValidationRule
 {
     /**
      * Determine if the validation rule passes.

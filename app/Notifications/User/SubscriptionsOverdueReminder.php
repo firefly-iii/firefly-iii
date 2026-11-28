@@ -33,7 +33,7 @@ use Illuminate\Notifications\Messages\SlackMessage;
 use Illuminate\Notifications\Notification;
 use NotificationChannels\Pushover\PushoverMessage;
 
-class SubscriptionsOverdueReminder extends Notification
+final class SubscriptionsOverdueReminder extends Notification
 {
     use Queueable;
 

@@ -34,7 +34,7 @@ use Illuminate\Foundation\Http\FormRequest;
  *
  * @deprecated
  */
-class AutocompleteRequest extends FormRequest
+final class AutocompleteRequest extends FormRequest
 {
     use ChecksLogin;
     use ConvertsDataTypes;

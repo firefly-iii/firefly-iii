@@ -34,7 +34,7 @@ use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Mail;
 
-class HandlesChangeOfUserEmailAddress implements ShouldQueue
+final class HandlesChangeOfUserEmailAddress implements ShouldQueue
 {
     public function handle(UserChangedEmailAddress $event): void
     {

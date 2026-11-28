@@ -37,7 +37,7 @@ use SensitiveParameter;
 /**
  * Class RemoteUserProvider
  */
-class RemoteUserProvider implements UserProvider
+final class RemoteUserProvider implements UserProvider
 {
     use HandlesUserRegistrationTrait;
 

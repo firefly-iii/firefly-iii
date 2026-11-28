@@ -32,7 +32,7 @@ use Illuminate\Support\Facades\Log;
 /**
  * Class BudgetIncomeRequest.
  */
-class BudgetIncomeRequest extends FormRequest
+final class BudgetIncomeRequest extends FormRequest
 {
     use ChecksLogin;
 

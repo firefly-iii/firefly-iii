@@ -27,7 +27,7 @@ namespace FireflyIII\TransactionRules\Engine;
 use Symfony\Component\ExpressionLanguage\ExpressionFunction;
 use Symfony\Component\ExpressionLanguage\ExpressionLanguage;
 
-class CustomExpressionLanguage extends ExpressionLanguage
+final class CustomExpressionLanguage extends ExpressionLanguage
 {
     #[\Override]
     protected function registerFunctions(): void

@@ -36,7 +36,7 @@ use Illuminate\Support\Facades\Log;
 /**
  * Class AddTag.
  */
-class AddTag implements ActionInterface
+final class AddTag implements ActionInterface
 {
     /**
      * TriggerInterface constructor.

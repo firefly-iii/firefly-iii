@@ -35,7 +35,7 @@ use Illuminate\Foundation\Http\FormRequest;
  *
  * @deprecated Replaced by DateRangeRequest
  */
-class SameDateRequest extends FormRequest
+final class SameDateRequest extends FormRequest
 {
     use ChecksLogin;
     use ConvertsDataTypes;

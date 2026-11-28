@@ -26,7 +26,7 @@ namespace FireflyIII\Api\V1\Requests;
 use Carbon\Carbon;
 use Illuminate\Contracts\Validation\Validator;
 
-class DateRequest extends ApiRequest
+final class DateRequest extends ApiRequest
 {
     public function rules(): array
     {

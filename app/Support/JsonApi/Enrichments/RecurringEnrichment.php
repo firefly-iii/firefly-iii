@@ -53,7 +53,7 @@ use Illuminate\Support\Facades\Log;
 
 use function Safe\json_decode;
 
-class RecurringEnrichment implements EnrichmentInterface
+final class RecurringEnrichment implements EnrichmentInterface
 {
     private array $accounts                = [];
     private Collection $collection;

@@ -38,7 +38,7 @@ use stdClass;
 
 use function Safe\json_decode;
 
-class RemovesDatabaseDecryption extends Command
+final class RemovesDatabaseDecryption extends Command
 {
     use ShowsFriendlyMessages;
 

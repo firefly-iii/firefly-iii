@@ -34,7 +34,7 @@ use Illuminate\Support\Facades\Log;
 /**
  * Class BudgetFormStoreRequest
  */
-class BudgetFormStoreRequest extends FormRequest
+final class BudgetFormStoreRequest extends FormRequest
 {
     use ChecksLogin;
     use ConvertsDataTypes;

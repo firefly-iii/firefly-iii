@@ -32,7 +32,7 @@ use Illuminate\Support\Facades\Log;
 /**
  * Class TestRuleFormRequest.
  */
-class TestRuleFormRequest extends FormRequest
+final class TestRuleFormRequest extends FormRequest
 {
     use ChecksLogin;
     use GetRuleConfiguration;

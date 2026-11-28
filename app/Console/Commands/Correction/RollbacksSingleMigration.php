@@ -28,7 +28,7 @@ use FireflyIII\Console\Commands\ShowsFriendlyMessages;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\DB;
 
-class RollbacksSingleMigration extends Command
+final class RollbacksSingleMigration extends Command
 {
     use ShowsFriendlyMessages;
 

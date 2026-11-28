@@ -32,7 +32,7 @@ use Illuminate\Queue\SerializesModels;
 /**
  * Class InvitationCreated
  */
-class InvitationCreated extends Event
+final class InvitationCreated extends Event
 {
     use SerializesModels;
 

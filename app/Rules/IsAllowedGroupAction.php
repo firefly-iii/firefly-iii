@@ -33,7 +33,7 @@ use Illuminate\Contracts\Validation\ValidationRule;
 use Illuminate\Support\Facades\Log;
 use Override;
 
-class IsAllowedGroupAction implements ValidationRule
+final class IsAllowedGroupAction implements ValidationRule
 {
     // you need these roles to do anything with any endpoint.
     private array $acceptedRoles = [UserRoleEnum::OWNER, UserRoleEnum::FULL];

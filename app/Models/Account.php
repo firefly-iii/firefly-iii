@@ -49,7 +49,7 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
  * @property UserGroup   $userGroup
  */
 #[ObservedBy([DeletedAccountObserver::class])]
-class Account extends Model
+final class Account extends Model
 {
     use HasFactory;
     use ReturnsIntegerIdTrait;

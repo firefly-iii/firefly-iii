@@ -39,7 +39,7 @@ use Illuminate\Support\Facades\Validator;
 /**
  * Class TransactionFactory
  */
-class TransactionFactory
+final class TransactionFactory
 {
     private Account $account;
     private array $accountInformation             = [];

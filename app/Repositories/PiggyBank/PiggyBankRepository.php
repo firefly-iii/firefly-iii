@@ -49,7 +49,7 @@ use Override;
 /**
  * Class PiggyBankRepository.
  */
-class PiggyBankRepository implements PiggyBankRepositoryInterface, UserGroupInterface
+final class PiggyBankRepository implements PiggyBankRepositoryInterface, UserGroupInterface
 {
     use ModifiesPiggyBanks;
 

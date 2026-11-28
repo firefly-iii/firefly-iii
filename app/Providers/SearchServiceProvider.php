@@ -34,7 +34,7 @@ use Override;
 /**
  * Class SearchServiceProvider.
  */
-class SearchServiceProvider extends ServiceProvider
+final class SearchServiceProvider extends ServiceProvider
 {
     /**
      * Bootstrap the application services.

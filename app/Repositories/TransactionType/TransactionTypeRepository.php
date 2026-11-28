@@ -32,7 +32,7 @@ use Illuminate\Support\Facades\Log;
 /**
  * Class TransactionTypeRepository
  */
-class TransactionTypeRepository implements TransactionTypeRepositoryInterface
+final class TransactionTypeRepository implements TransactionTypeRepositoryInterface
 {
     #[\Override]
     public function findByType(string $type): ?TransactionType

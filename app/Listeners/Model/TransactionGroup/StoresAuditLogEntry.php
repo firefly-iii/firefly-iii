@@ -30,7 +30,7 @@ use FireflyIII\Repositories\AuditLogEntry\ALERepositoryInterface;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Support\Facades\Log;
 
-class StoresAuditLogEntry implements ShouldQueue
+final class StoresAuditLogEntry implements ShouldQueue
 {
     public function handle(TransactionGroupRequestsAuditLogEntry $event): void
     {

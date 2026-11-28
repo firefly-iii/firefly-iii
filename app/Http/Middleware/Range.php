@@ -39,7 +39,7 @@ use Illuminate\Support\Facades\Log;
 /**
  * Class SessionFilter.
  */
-class Range
+final class Range
 {
     use RequestInformation;
 

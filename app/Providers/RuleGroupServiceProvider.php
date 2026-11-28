@@ -32,7 +32,7 @@ use Override;
 /**
  * Class RuleGroupServiceProvider.
  */
-class RuleGroupServiceProvider extends ServiceProvider
+final class RuleGroupServiceProvider extends ServiceProvider
 {
     /**
      * Bootstrap the application services.

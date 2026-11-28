@@ -28,7 +28,7 @@ use FireflyIII\Api\V1\Requests\ApiRequest;
 use FireflyIII\Support\Http\Api\AccountFilter;
 use Illuminate\Contracts\Validation\Validator;
 
-class AccountTypeApiRequest extends ApiRequest
+final class AccountTypeApiRequest extends ApiRequest
 {
     use AccountFilter;
 

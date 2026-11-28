@@ -30,7 +30,7 @@ use FireflyIII\Notifications\Security\DisabledMFANotification;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Support\Facades\Log;
 
-class NotifiesUserAboutDisabledMFA implements ShouldQueue
+final class NotifiesUserAboutDisabledMFA implements ShouldQueue
 {
     public function handle(UserHasDisabledMFA $event): void
     {

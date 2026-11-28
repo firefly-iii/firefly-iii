@@ -33,7 +33,7 @@ use function Safe\json_encode;
 /**
  * Class WebhookMessageTransformer
  */
-class WebhookMessageTransformer extends AbstractTransformer
+final class WebhookMessageTransformer extends AbstractTransformer
 {
     /**
      * Transform the preference

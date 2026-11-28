@@ -31,7 +31,7 @@ use Illuminate\Http\Request;
 /**
  * Class InstallationId
  */
-class InstallationId
+final class InstallationId
 {
     use GeneratesInstallationId;
 

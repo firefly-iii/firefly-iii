@@ -29,7 +29,7 @@ use FireflyIII\Api\V1\Requests\PaginationRequest;
 use FireflyIII\Models\TransactionJournal;
 use Override;
 
-class TransactionSearchRequest extends AggregateFormRequest
+final class TransactionSearchRequest extends AggregateFormRequest
 {
     #[Override]
     protected function getRequests(): array

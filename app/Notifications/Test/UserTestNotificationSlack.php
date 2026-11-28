@@ -34,7 +34,7 @@ use Illuminate\Notifications\Notification;
 /**
  * Class TestNotification
  */
-class UserTestNotificationSlack extends Notification
+final class UserTestNotificationSlack extends Notification
 {
     use Queueable;
 

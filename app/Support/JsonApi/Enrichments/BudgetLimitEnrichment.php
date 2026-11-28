@@ -37,7 +37,7 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Log;
 
-class BudgetLimitEnrichment implements EnrichmentInterface
+final class BudgetLimitEnrichment implements EnrichmentInterface
 {
     private Collection $collection;
     private readonly bool $convertToPrimary;

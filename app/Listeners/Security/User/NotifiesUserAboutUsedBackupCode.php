@@ -30,7 +30,7 @@ use FireflyIII\Notifications\Security\MFAUsedBackupCodeNotification;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Support\Facades\Log;
 
-class NotifiesUserAboutUsedBackupCode implements ShouldQueue
+final class NotifiesUserAboutUsedBackupCode implements ShouldQueue
 {
     public function handle(UserHasUsedBackupCode $event): void
     {

@@ -56,7 +56,7 @@ use function Safe\json_encode;
 /**
  * Class AccountRepository.
  */
-class AccountRepository implements AccountRepositoryInterface, UserGroupInterface
+final class AccountRepository implements AccountRepositoryInterface, UserGroupInterface
 {
     use UserGroupTrait;
 

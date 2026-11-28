@@ -28,7 +28,7 @@ use Closure;
 use Illuminate\Contracts\View\View;
 use Illuminate\View\Component;
 
-class TopBoxes extends Component
+final class TopBoxes extends Component
 {
     /**
      * Create a new component instance.

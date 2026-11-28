@@ -32,7 +32,7 @@ use Symfony\Component\HttpFoundation\IpUtils;
 
 use function Safe\parse_url;
 
-class IsValidWebhookUrl implements ValidationRule
+final class IsValidWebhookUrl implements ValidationRule
 {
     /**
      * @SuppressWarnings("PHPMD.UnusedFormalParameter")

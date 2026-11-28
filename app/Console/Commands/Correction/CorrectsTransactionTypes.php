@@ -34,7 +34,7 @@ use Illuminate\Console\Command;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Log;
 
-class CorrectsTransactionTypes extends Command
+final class CorrectsTransactionTypes extends Command
 {
     use ShowsFriendlyMessages;
 

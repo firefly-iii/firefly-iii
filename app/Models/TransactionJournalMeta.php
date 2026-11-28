@@ -35,7 +35,7 @@ use function Safe\json_encode;
 /**
  * @property TransactionJournal $transactionJournal
  */
-class TransactionJournalMeta extends Model
+final class TransactionJournalMeta extends Model
 {
     use ReturnsIntegerIdTrait;
     use SoftDeletes;

@@ -28,7 +28,7 @@ use Override;
 /**
  * Class MultiYearReportGenerator.
  */
-class MultiYearReportGenerator extends MonthReportGenerator
+final class MultiYearReportGenerator extends MonthReportGenerator
 {
     /**
      * Returns the preferred period.

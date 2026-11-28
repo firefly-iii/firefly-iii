@@ -32,7 +32,7 @@ use Illuminate\Support\Facades\Log;
 /**
  * Class ActionFactory can create actions.
  */
-class ActionFactory
+final class ActionFactory
 {
     /** @var array array of action types */
     protected static array $actionTypes = [];

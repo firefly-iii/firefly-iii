@@ -40,7 +40,7 @@ use Override;
 /**
  * Class JournalServiceProvider.
  */
-class JournalServiceProvider extends ServiceProvider
+final class JournalServiceProvider extends ServiceProvider
 {
     /**
      * Bootstrap the application services.

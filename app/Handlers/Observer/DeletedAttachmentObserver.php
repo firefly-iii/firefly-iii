@@ -29,7 +29,7 @@ use Illuminate\Support\Facades\Log;
 /**
  * Class AttachmentObserver
  */
-class DeletedAttachmentObserver
+final class DeletedAttachmentObserver
 {
     public function deleting(Attachment $attachment): void
     {

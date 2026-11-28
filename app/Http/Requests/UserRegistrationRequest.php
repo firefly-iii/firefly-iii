@@ -31,7 +31,7 @@ use Illuminate\Support\Facades\Log;
 /**
  * Class UserRegistrationRequest.
  */
-class UserRegistrationRequest extends FormRequest
+final class UserRegistrationRequest extends FormRequest
 {
     use ChecksLogin;
 

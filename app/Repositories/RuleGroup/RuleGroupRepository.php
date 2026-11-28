@@ -37,7 +37,7 @@ use Illuminate\Support\Facades\Log;
 /**
  * Class RuleGroupRepository.
  */
-class RuleGroupRepository implements RuleGroupRepositoryInterface, UserGroupInterface
+final class RuleGroupRepository implements RuleGroupRepositoryInterface, UserGroupInterface
 {
     use UserGroupTrait;
 

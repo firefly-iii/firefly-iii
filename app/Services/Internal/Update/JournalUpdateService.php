@@ -58,7 +58,7 @@ use Illuminate\Support\Facades\Log;
  *
  * Class JournalUpdateService
  */
-class JournalUpdateService
+final class JournalUpdateService
 {
     use JournalServiceTrait;
 

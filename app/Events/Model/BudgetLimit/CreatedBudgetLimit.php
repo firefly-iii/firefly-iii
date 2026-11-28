@@ -29,7 +29,7 @@ use FireflyIII\Models\BudgetLimit;
 use Illuminate\Queue\SerializesModels;
 use Illuminate\Support\Facades\Log;
 
-class CreatedBudgetLimit extends Event
+final class CreatedBudgetLimit extends Event
 {
     use SerializesModels;
 

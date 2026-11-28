@@ -29,7 +29,7 @@ use Illuminate\Contracts\View\View;
 use Illuminate\Pagination\LengthAwarePaginator;
 use Illuminate\View\Component;
 
-class Accounts extends Component
+final class Accounts extends Component
 {
     public LengthAwarePaginator $accounts;
     public string $objectType = '';

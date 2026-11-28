@@ -32,7 +32,7 @@ use Illuminate\Support\Facades\Log;
 /**
  * Class AttachmentFormRequest.
  */
-class AttachmentFormRequest extends FormRequest
+final class AttachmentFormRequest extends FormRequest
 {
     use ChecksLogin;
     use ConvertsDataTypes;

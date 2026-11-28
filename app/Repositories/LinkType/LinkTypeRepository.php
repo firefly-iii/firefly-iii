@@ -38,7 +38,7 @@ use Illuminate\Support\Facades\Log;
 /**
  * Class LinkTypeRepository.
  */
-class LinkTypeRepository implements LinkTypeRepositoryInterface, UserGroupInterface
+final class LinkTypeRepository implements LinkTypeRepositoryInterface, UserGroupInterface
 {
     use UserGroupTrait;
 

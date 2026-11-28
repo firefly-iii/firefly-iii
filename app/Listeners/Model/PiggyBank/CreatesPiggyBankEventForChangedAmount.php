@@ -30,7 +30,7 @@ use FireflyIII\Models\TransactionGroup;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Support\Facades\Log;
 
-class CreatesPiggyBankEventForChangedAmount implements ShouldQueue
+final class CreatesPiggyBankEventForChangedAmount implements ShouldQueue
 {
     public function handle(PiggyBankAmountIsChanged $event): void
     {

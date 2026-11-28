@@ -29,7 +29,7 @@ use FireflyIII\Repositories\Account\AccountRepositoryInterface;
 use FireflyIII\User;
 use Illuminate\Console\Command;
 
-class CorrectsAccountOrder extends Command
+final class CorrectsAccountOrder extends Command
 {
     use ShowsFriendlyMessages;
 

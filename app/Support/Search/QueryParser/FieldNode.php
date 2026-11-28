@@ -27,7 +27,7 @@ namespace FireflyIII\Support\Search\QueryParser;
 /**
  * Represents a field operator with value (e.g. amount:100)
  */
-class FieldNode extends Node
+final class FieldNode extends Node
 {
     public function __construct(
         private readonly string $operator,

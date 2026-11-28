@@ -30,7 +30,7 @@ use Illuminate\Console\Command;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 
-class CorrectsInvertedBudgetLimits extends Command
+final class CorrectsInvertedBudgetLimits extends Command
 {
     use ShowsFriendlyMessages;
 

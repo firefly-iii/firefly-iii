@@ -32,7 +32,7 @@ use FireflyIII\Models\Tag;
 use Illuminate\Console\Command;
 use stdClass;
 
-class ReportsEmptyObjects extends Command
+final class ReportsEmptyObjects extends Command
 {
     use ShowsFriendlyMessages;
 

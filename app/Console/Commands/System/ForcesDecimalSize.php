@@ -51,7 +51,7 @@ use function Safe\mb_regex_encoding;
  * and their values and correct them to the correct number of decimal places. This fixes issues where
  * Firefly III would store 0.01 as 0.01000000000000000020816681711721685132943093776702880859375.
  */
-class ForcesDecimalSize extends Command
+final class ForcesDecimalSize extends Command
 {
     use ShowsFriendlyMessages;
 

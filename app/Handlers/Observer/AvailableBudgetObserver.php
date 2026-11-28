@@ -28,7 +28,7 @@ use FireflyIII\Handlers\ExchangeRate\ConversionParameters;
 use FireflyIII\Handlers\ExchangeRate\ConvertsAmountToPrimaryAmount;
 use FireflyIII\Models\AvailableBudget;
 
-class AvailableBudgetObserver
+final class AvailableBudgetObserver
 {
     public function created(AvailableBudget $availableBudget): void
     {

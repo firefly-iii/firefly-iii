@@ -30,7 +30,7 @@ use FireflyIII\Notifications\User\UserLogin;
 use FireflyIII\Support\Facades\Preferences;
 use Illuminate\Contracts\Queue\ShouldQueue;
 
-class NotifiesUserAboutNewIpAddress implements ShouldQueue
+final class NotifiesUserAboutNewIpAddress implements ShouldQueue
 {
     public function handle(UserLoggedInFromNewIpAddress $event): void
     {

@@ -47,7 +47,7 @@ use function Safe\json_decode;
 /**
  * Class DownloadExchangeRates
  */
-class DownloadExchangeRates implements ShouldQueue
+final class DownloadExchangeRates implements ShouldQueue
 {
     use Dispatchable;
     use InteractsWithQueue;

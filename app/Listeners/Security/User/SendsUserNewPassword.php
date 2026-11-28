@@ -29,7 +29,7 @@ use FireflyIII\Notifications\NotificationSender;
 use FireflyIII\Notifications\User\UserNewPassword;
 use Illuminate\Contracts\Queue\ShouldQueue;
 
-class SendsUserNewPassword implements ShouldQueue
+final class SendsUserNewPassword implements ShouldQueue
 {
     public function handle(UserRequestedNewPassword $event): void
     {

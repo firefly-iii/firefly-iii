@@ -35,7 +35,7 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Support\Facades\Log;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
-class TransactionCurrency extends Model
+final class TransactionCurrency extends Model
 {
     use ReturnsIntegerIdTrait;
     use SoftDeletes;

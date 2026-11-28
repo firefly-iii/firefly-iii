@@ -32,7 +32,7 @@ use Illuminate\Database\QueryException;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 
-class RemovesEmptyJournals extends Command
+final class RemovesEmptyJournals extends Command
 {
     use ShowsFriendlyMessages;
 

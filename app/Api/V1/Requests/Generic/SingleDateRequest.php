@@ -36,7 +36,7 @@ use Illuminate\Foundation\Http\FormRequest;
  *
  * @deprecated
  */
-class SingleDateRequest extends FormRequest
+final class SingleDateRequest extends FormRequest
 {
     use ChecksLogin;
     use ConvertsDataTypes;

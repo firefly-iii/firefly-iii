@@ -28,7 +28,7 @@ use FireflyIII\Console\Commands\ShowsFriendlyMessages;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\Log;
 
-class ValidatesFilePermissions extends Command
+final class ValidatesFilePermissions extends Command
 {
     use ShowsFriendlyMessages;
 

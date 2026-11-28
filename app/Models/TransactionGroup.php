@@ -43,7 +43,7 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
  * @property Collection<TransactionJournal> $transactionJournals
  */
 #[ObservedBy([DeletedTransactionGroupObserver::class])]
-class TransactionGroup extends Model
+final class TransactionGroup extends Model
 {
     use ReturnsIntegerIdTrait;
     use ReturnsIntegerUserIdTrait;

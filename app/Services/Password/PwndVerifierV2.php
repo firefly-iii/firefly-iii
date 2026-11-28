@@ -32,7 +32,7 @@ use SensitiveParameter;
 /**
  * Class PwndVerifierV2.
  */
-class PwndVerifierV2 implements Verifier
+final class PwndVerifierV2 implements Verifier
 {
     /**
      * Verify the given password against (some) service.

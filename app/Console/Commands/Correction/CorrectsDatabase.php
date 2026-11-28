@@ -28,7 +28,7 @@ use FireflyIII\Console\Commands\ShowsFriendlyMessages;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\Schema;
 
-class CorrectsDatabase extends Command
+final class CorrectsDatabase extends Command
 {
     use ShowsFriendlyMessages;
 

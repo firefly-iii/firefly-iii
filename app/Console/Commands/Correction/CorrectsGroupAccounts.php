@@ -35,7 +35,7 @@ use Illuminate\Console\Command;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 
-class CorrectsGroupAccounts extends Command
+final class CorrectsGroupAccounts extends Command
 {
     use ShowsFriendlyMessages;
 

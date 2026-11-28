@@ -29,7 +29,7 @@ use FireflyIII\Notifications\Notifiables\OwnerNotifiable;
 use FireflyIII\User;
 use Illuminate\Queue\SerializesModels;
 
-class NewUserRegistered extends Event
+final class NewUserRegistered extends Event
 {
     use SerializesModels;
 

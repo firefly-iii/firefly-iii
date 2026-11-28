@@ -42,7 +42,7 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
  * @property Collection $rules
  */
 #[ObservedBy([DeletedRuleGroupObserver::class])]
-class RuleGroup extends Model
+final class RuleGroup extends Model
 {
     use ReturnsIntegerIdTrait;
     use ReturnsIntegerUserIdTrait;

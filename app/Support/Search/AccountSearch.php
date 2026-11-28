@@ -35,7 +35,7 @@ use function Safe\json_encode;
 /**
  * Class AccountSearch
  */
-class AccountSearch implements GenericSearchInterface
+final class AccountSearch implements GenericSearchInterface
 {
     public const string SEARCH_ALL    = 'all';
 

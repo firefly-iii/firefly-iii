@@ -37,7 +37,7 @@ use Illuminate\Support\Facades\Log;
  * Class AppendNotesToDescription
  * TODO Can be replaced (and migrated) to action "set description" with a prefilled expression
  */
-class AppendNotesToDescription implements ActionInterface
+final class AppendNotesToDescription implements ActionInterface
 {
     use ConvertsDataTypes;
     use RefreshNotesTrait;

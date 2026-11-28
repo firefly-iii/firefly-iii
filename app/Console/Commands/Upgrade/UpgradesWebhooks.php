@@ -35,7 +35,7 @@ use FireflyIII\Models\WebhookTrigger as WebhookTriggerModel;
 use FireflyIII\Support\Facades\AppConfiguration;
 use Illuminate\Console\Command;
 
-class UpgradesWebhooks extends Command
+final class UpgradesWebhooks extends Command
 {
     use ShowsFriendlyMessages;
 

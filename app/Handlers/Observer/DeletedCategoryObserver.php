@@ -31,7 +31,7 @@ use Illuminate\Support\Facades\Log;
 /**
  * Class CategoryObserver
  */
-class DeletedCategoryObserver
+final class DeletedCategoryObserver
 {
     public function deleting(Category $category): void
     {

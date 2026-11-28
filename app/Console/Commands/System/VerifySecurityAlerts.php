@@ -35,7 +35,7 @@ use Safe\Exceptions\JsonException;
 
 use function Safe\json_decode;
 
-class VerifySecurityAlerts extends Command
+final class VerifySecurityAlerts extends Command
 {
     use ShowsFriendlyMessages;
 

@@ -37,7 +37,7 @@ use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Log;
 
-class ProcessesBudgetLimits implements ShouldQueue
+final class ProcessesBudgetLimits implements ShouldQueue
 {
     public function handle(CreatedBudgetLimit|DestroyedBudgetLimit|UpdatedBudgetLimit $event): void
     {

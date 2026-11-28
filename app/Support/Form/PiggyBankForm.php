@@ -32,7 +32,7 @@ use FireflyIII\Repositories\PiggyBank\PiggyBankRepositoryInterface;
  *
  * TODO cleanup and describe.
  */
-class PiggyBankForm
+final class PiggyBankForm
 {
     use FormSupport;
 

@@ -32,7 +32,7 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 /**
  * Class BudgetList.
  */
-class BudgetList implements BinderInterface
+final class BudgetList implements BinderInterface
 {
     /**
      * @throws NotFoundHttpException

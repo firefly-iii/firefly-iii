@@ -36,7 +36,7 @@ use Illuminate\Support\Facades\DB;
 /**
  * Class BudgetDestroyService
  */
-class BudgetDestroyService
+final class BudgetDestroyService
 {
     public function destroy(Budget $budget): void
     {

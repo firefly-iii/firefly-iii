@@ -33,7 +33,7 @@ use FireflyIII\Repositories\User\UserRepositoryInterface;
 use FireflyIII\User;
 use Illuminate\Console\Command;
 
-class CorrectsRecurringTransactions extends Command
+final class CorrectsRecurringTransactions extends Command
 {
     use ShowsFriendlyMessages;
 

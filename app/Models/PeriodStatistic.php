@@ -37,7 +37,7 @@ use Illuminate\Database\Eloquent\Relations\MorphTo;
  * @property Carbon $end
  * @property string $amount
  */
-class PeriodStatistic extends Model
+final class PeriodStatistic extends Model
 {
     use ReturnsIntegerUserIdTrait;
 

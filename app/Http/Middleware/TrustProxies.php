@@ -29,7 +29,7 @@ use Symfony\Component\HttpFoundation\Request;
 /**
  * Class TrustProxies
  */
-class TrustProxies extends Middleware
+final class TrustProxies extends Middleware
 {
     // After...
     #[\Override]

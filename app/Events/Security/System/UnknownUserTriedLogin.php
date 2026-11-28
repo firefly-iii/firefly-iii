@@ -26,7 +26,7 @@ namespace FireflyIII\Events\Security\System;
 
 use Illuminate\Queue\SerializesModels;
 
-class UnknownUserTriedLogin
+final class UnknownUserTriedLogin
 {
     use SerializesModels;
 

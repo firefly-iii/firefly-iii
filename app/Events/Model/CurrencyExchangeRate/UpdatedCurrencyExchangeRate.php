@@ -29,7 +29,7 @@ use FireflyIII\Models\CurrencyExchangeRate;
 use Illuminate\Queue\SerializesModels;
 use Illuminate\Support\Facades\Log;
 
-class UpdatedCurrencyExchangeRate extends Event
+final class UpdatedCurrencyExchangeRate extends Event
 {
     use SerializesModels;
 

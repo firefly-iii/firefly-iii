@@ -30,7 +30,7 @@ use FireflyIII\Models\Rule;
 use FireflyIII\Models\RuleAction;
 use Illuminate\Contracts\Queue\ShouldQueue;
 
-class UpdatesRulesForChangedPiggyBankName implements ShouldQueue
+final class UpdatesRulesForChangedPiggyBankName implements ShouldQueue
 {
     public function handle(PiggyBankNameIsChanged $event): void
     {

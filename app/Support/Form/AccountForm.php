@@ -39,7 +39,7 @@ use Throwable;
  * TODO describe all methods
  * TODO optimize repositories and methods.
  */
-class AccountForm
+final class AccountForm
 {
     use FormSupport;
 

@@ -41,7 +41,7 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 #[ObservedBy([DeletedWebhookObserver::class])]
-class Webhook extends Model
+final class Webhook extends Model
 {
     use ReturnsIntegerIdTrait;
     use ReturnsIntegerUserIdTrait;

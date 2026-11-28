@@ -30,7 +30,7 @@ use FireflyIII\Models\Tag;
 /**
  * Class TagTransformer
  */
-class TagTransformer extends AbstractTransformer
+final class TagTransformer extends AbstractTransformer
 {
     /**
      * Transform a tag.

@@ -32,7 +32,7 @@ use FireflyIII\Support\Facades\Steam;
 /**
  * Class AvailableBudgetTransformer
  */
-class AvailableBudgetTransformer extends AbstractTransformer
+final class AvailableBudgetTransformer extends AbstractTransformer
 {
     private readonly bool $convertToPrimary;
     private readonly TransactionCurrency $primary;

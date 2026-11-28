@@ -28,7 +28,7 @@ use FireflyIII\Console\Commands\ShowsFriendlyMessages;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\DB;
 
-class CorrectsMetaDataFields extends Command
+final class CorrectsMetaDataFields extends Command
 {
     use ShowsFriendlyMessages;
 

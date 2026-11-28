@@ -47,7 +47,7 @@ use Illuminate\Support\Facades\Storage;
 /**
  * Class CategoryRepository.
  */
-class CategoryRepository implements CategoryRepositoryInterface, UserGroupInterface
+final class CategoryRepository implements CategoryRepositoryInterface, UserGroupInterface
 {
     use CreatesObjectGroups;
     use UserGroupTrait;

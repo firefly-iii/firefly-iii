@@ -32,7 +32,7 @@ use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Support\Facades\Log;
 use InvalidArgumentException;
 
-class RespondsToNewLogin implements ShouldQueue
+final class RespondsToNewLogin implements ShouldQueue
 {
     public function handle(Login $event): void
     {

@@ -31,7 +31,7 @@ use Illuminate\Support\Facades\Log;
 /**
  * Class MassEditJournalRequest.
  */
-class MassEditJournalRequest extends FormRequest
+final class MassEditJournalRequest extends FormRequest
 {
     use ChecksLogin;
 

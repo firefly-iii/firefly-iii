@@ -52,7 +52,7 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
  * @property Carbon                $date
  */
 #[ObservedBy([DeletedTransactionJournalObserver::class])]
-class TransactionJournal extends Model
+final class TransactionJournal extends Model
 {
     use ReturnsIntegerIdTrait;
     use ReturnsIntegerUserIdTrait;

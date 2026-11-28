@@ -29,7 +29,7 @@ use FireflyIII\Models\Account;
 use Illuminate\Contracts\View\View;
 use Illuminate\View\Component;
 
-class TransactionRunningBalance extends Component
+final class TransactionRunningBalance extends Component
 {
     public bool $balanceDirty;
     public array $currency;

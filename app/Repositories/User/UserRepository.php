@@ -44,7 +44,7 @@ use SensitiveParameter;
 /**
  * Class UserRepository.
  */
-class UserRepository implements UserRepositoryInterface
+final class UserRepository implements UserRepositoryInterface
 {
     #[\Override]
     public function all(): Collection

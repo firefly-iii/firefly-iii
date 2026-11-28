@@ -39,7 +39,7 @@ use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Query\JoinClause;
 use Illuminate\Support\Facades\Log;
 
-class CorrectsAccountTypes extends Command
+final class CorrectsAccountTypes extends Command
 {
     use ShowsFriendlyMessages;
 

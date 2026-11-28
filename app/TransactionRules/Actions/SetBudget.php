@@ -35,7 +35,7 @@ use Illuminate\Support\Facades\Log;
 /**
  * Class SetBudget.
  */
-class SetBudget implements ActionInterface
+final class SetBudget implements ActionInterface
 {
     /**
      * TriggerInterface constructor.

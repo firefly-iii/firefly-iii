@@ -31,7 +31,7 @@ use Illuminate\Support\Facades\Log;
 /**
  * Class SelectTransactionsRequest.
  */
-class SelectTransactionsRequest extends FormRequest
+final class SelectTransactionsRequest extends FormRequest
 {
     use ChecksLogin;
 

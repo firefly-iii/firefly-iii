@@ -35,7 +35,7 @@ use Illuminate\Support\Facades\Log;
  * Class MoveDescriptionToNotes
  * TODO Can be replaced (and migrated) to action "set notes" with a prefilled expression
  */
-class MoveDescriptionToNotes implements ActionInterface
+final class MoveDescriptionToNotes implements ActionInterface
 {
     /**
      * TriggerInterface constructor.

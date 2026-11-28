@@ -37,7 +37,7 @@ use Illuminate\Support\Facades\Log;
 /**
  * Class AppConfiguration.
  */
-class AppConfiguration
+final class AppConfiguration
 {
     public function delete(string $name): void
     {

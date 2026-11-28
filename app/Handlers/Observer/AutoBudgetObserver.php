@@ -29,7 +29,7 @@ use FireflyIII\Handlers\ExchangeRate\ConvertsAmountToPrimaryAmount;
 use FireflyIII\Models\AutoBudget;
 use Illuminate\Support\Facades\Log;
 
-class AutoBudgetObserver
+final class AutoBudgetObserver
 {
     public function created(AutoBudget $autoBudget): void
     {

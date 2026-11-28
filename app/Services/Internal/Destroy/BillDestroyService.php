@@ -31,7 +31,7 @@ use FireflyIII\Repositories\Attachment\AttachmentRepositoryInterface;
 /**
  * Class BillDestroyService
  */
-class BillDestroyService
+final class BillDestroyService
 {
     public function destroy(Bill $bill): void
     {

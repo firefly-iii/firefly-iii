@@ -29,7 +29,7 @@ use Illuminate\Contracts\View\View;
 use Illuminate\Support\Collection;
 use Illuminate\View\Component;
 
-class Attachments extends Component
+final class Attachments extends Component
 {
     public array|Collection $attachments;
 

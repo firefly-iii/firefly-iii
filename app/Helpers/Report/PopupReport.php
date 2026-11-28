@@ -36,7 +36,7 @@ use Illuminate\Support\Collection;
 /**
  * Class PopupReport.
  */
-class PopupReport implements PopupReportInterface
+final class PopupReport implements PopupReportInterface
 {
     /**
      * Collect the transactions for one account and one budget.

@@ -36,7 +36,7 @@ use Illuminate\Support\Facades\Log;
 /**
  * Class ExchangeRatesCronjob
  */
-class ExchangeRatesCronjob extends AbstractCronjob
+final class ExchangeRatesCronjob extends AbstractCronjob
 {
     #[\Override]
     public function fire(): void
