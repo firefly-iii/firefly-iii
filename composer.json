@@ -86,7 +86,7 @@
         "guzzlehttp/guzzle": "^7.11",
         "jc5/google2fa-laravel": "dev-main  ",
         "jc5/recovery": "^2",
-        "laravel-notification-channels/pushover": "^5.0",
+        "laravel-notification-channels/pushover": "^6.0",
         "laravel/framework": "^13",
         "laravel/passport": "^13.0",
         "laravel/slack-notification-channel": "^3.3",
