@@ -28,6 +28,7 @@ use Carbon\Carbon;
 use Carbon\Exceptions\InvalidFormatException;
 use Deprecated;
 use FireflyIII\Exceptions\BadHttpHeaderException;
+use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Models\TransactionCurrency;
 use FireflyIII\Support\Facades\Amount;
 use FireflyIII\Support\Facades\Preferences;
@@ -152,7 +153,11 @@ abstract class Controller extends BaseController
         $resource = new FractalCollection($objects, $transformer, $key);
         $resource->setPaginator(new IlluminatePaginatorAdapter($paginator));
 
-        return $manager->createData($resource)->toArray();
+        $res = $manager->createData($resource)->toArray();
+        if(null === $res) {
+            throw new FireflyException('Res is null in jsonApiList(), but it should not be.');
+        }
+        return $res;
     }
 
     /**
@@ -169,7 +174,11 @@ abstract class Controller extends BaseController
 
         $resource = new Item($object, $transformer, $key);
 
-        return $manager->createData($resource)->toArray();
+        $res = $manager->createData($resource)->toArray();
+        if(null === $res) {
+            throw new FireflyException('Res is null in jsonApiObject(), but it should not be.');
+        }
+        return $res;
     }
 
     #[Deprecated(message: <<<'TXT'

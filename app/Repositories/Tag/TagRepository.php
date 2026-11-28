@@ -26,6 +26,7 @@ namespace FireflyIII\Repositories\Tag;
 use Carbon\Carbon;
 use Exception;
 use FireflyIII\Enums\TransactionTypeEnum;
+use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Factory\TagFactory;
 use FireflyIII\Helpers\Collector\GroupCollectorInterface;
 use FireflyIII\Models\Attachment;
@@ -129,7 +130,7 @@ final class TagRepository implements TagRepositoryInterface, UserGroupInterface
 
         return $set->each(static function (Attachment $attachment) use ($disk): void {
             /** @var null|Note $note */
-            $note                    = $attachment->notes()->first();
+            $note = $attachment->notes()->first();
             // only used in v1 view of tags
             $attachment->file_exists = $disk->exists($attachment->fileName());
             $attachment->notes_text  = null === $note ? '' : $note->text;
@@ -153,7 +154,7 @@ final class TagRepository implements TagRepositoryInterface, UserGroupInterface
     public function getTagsInYear(?int $year): array
     {
         // get all tags in the year (if present):
-        $tagQuery   = $this->user->tags()->with(['locations', 'attachments'])->orderBy('tags.tag');
+        $tagQuery = $this->user->tags()->with(['locations', 'attachments'])->orderBy('tags.tag');
 
         // add date range (or not):
         if (null === $year) {
@@ -234,30 +235,29 @@ final class TagRepository implements TagRepositoryInterface, UserGroupInterface
             ->where('transaction_journals.date', '<=', $end)
             ->where('transactions.amount', '>', 0)
             ->get([
-                // currencies
-                'transaction_currencies.id as currency_id',
-                'transaction_currencies.code as currency_code',
-                'transaction_currencies.name as currency_name',
-                'transaction_currencies.symbol as currency_symbol',
-                'transaction_currencies.decimal_places as currency_decimal_places',
+                      // currencies
+                      'transaction_currencies.id as currency_id',
+                      'transaction_currencies.code as currency_code',
+                      'transaction_currencies.name as currency_name',
+                      'transaction_currencies.symbol as currency_symbol',
+                      'transaction_currencies.decimal_places as currency_decimal_places',
 
-                // foreign
-                'foreign_currencies.id as foreign_currency_id',
-                'foreign_currencies.code as foreign_currency_code',
-                'foreign_currencies.name as foreign_currency_name',
-                'foreign_currencies.symbol as foreign_currency_symbol',
-                'foreign_currencies.decimal_places as foreign_currency_decimal_places',
+                      // foreign
+                      'foreign_currencies.id as foreign_currency_id',
+                      'foreign_currencies.code as foreign_currency_code',
+                      'foreign_currencies.name as foreign_currency_name',
+                      'foreign_currencies.symbol as foreign_currency_symbol',
+                      'foreign_currencies.decimal_places as foreign_currency_decimal_places',
 
-                // fields
-                'transaction_journals.date',
-                'transaction_types.type',
-                'transaction_journals.transaction_currency_id',
-                'transactions.amount',
-                'transactions.native_amount as pc_amount',
-                'transactions.foreign_amount',
-            ])
-            ->toArray()
-        ;
+                      // fields
+                      'transaction_journals.date',
+                      'transaction_types.type',
+                      'transaction_journals.transaction_currency_id',
+                      'transactions.amount',
+                      'transactions.native_amount as pc_amount',
+                      'transactions.foreign_amount',
+                  ])
+            ->toArray();
     }
 
     /**
@@ -293,7 +293,12 @@ final class TagRepository implements TagRepositoryInterface, UserGroupInterface
         $factory = app(TagFactory::class);
         $factory->setUser($this->user);
 
-        return $factory->create($data);
+        $res = $factory->create($data);
+        if (null === $res) {
+            Log::error('Could not store tag based on this data', $data);
+            throw new FireflyException('Could not store tag. See the logs');
+        }
+        return $res;
     }
 
     #[\Override]
@@ -307,13 +312,13 @@ final class TagRepository implements TagRepositoryInterface, UserGroupInterface
         }
 
         $collector->setTag($tag)->withAccountInformation();
-        $journals  = $collector->getExtractedJournals();
+        $journals = $collector->getExtractedJournals();
 
-        $sums      = [];
+        $sums = [];
 
         /** @var array $journal */
         foreach ($journals as $journal) {
-            $found                    = false;
+            $found = false;
 
             /** @var array $localTag */
             foreach ($journal['tags'] as $localTag) {
@@ -324,7 +329,7 @@ final class TagRepository implements TagRepositoryInterface, UserGroupInterface
             if (false === $found) {
                 continue;
             }
-            $currencyId               = (int) $journal['currency_id'];
+            $currencyId        = (int)$journal['currency_id'];
             $sums[$currencyId] ??= [
                 'currency_id'                               => $currencyId,
                 'currency_name'                             => $journal['currency_name'],
@@ -338,14 +343,14 @@ final class TagRepository implements TagRepositoryInterface, UserGroupInterface
             ];
 
             // add amount to correct type:
-            $amount                   = Steam::positive((string) $journal['amount']);
-            $type                     = $journal['transaction_type_type'];
+            $amount = Steam::positive((string)$journal['amount']);
+            $type   = $journal['transaction_type_type'];
             if (TransactionTypeEnum::WITHDRAWAL->value === $type) {
                 $amount = bcmul($amount, '-1');
             }
-            $sums[$currencyId][$type] = bcadd((string) $sums[$currencyId][$type], $amount);
+            $sums[$currencyId][$type] = bcadd((string)$sums[$currencyId][$type], $amount);
 
-            $foreignCurrencyId        = $journal['foreign_currency_id'];
+            $foreignCurrencyId = $journal['foreign_currency_id'];
             if (null !== $foreignCurrencyId && 0 !== $foreignCurrencyId) {
                 $sums[$foreignCurrencyId] ??= [
                     'currency_id'                               => $foreignCurrencyId,
@@ -359,11 +364,11 @@ final class TagRepository implements TagRepositoryInterface, UserGroupInterface
                     TransactionTypeEnum::OPENING_BALANCE->value => '0',
                 ];
                 // add foreign amount to correct type:
-                $amount                          = Steam::positive((string) $journal['foreign_amount']);
+                $amount = Steam::positive((string)$journal['foreign_amount']);
                 if (TransactionTypeEnum::WITHDRAWAL->value === $type) {
                     $amount = bcmul($amount, '-1');
                 }
-                $sums[$foreignCurrencyId][$type] = bcadd((string) $sums[$foreignCurrencyId][$type], $amount);
+                $sums[$foreignCurrencyId][$type] = bcadd((string)$sums[$foreignCurrencyId][$type], $amount);
             }
         }
 
@@ -428,7 +433,7 @@ final class TagRepository implements TagRepositoryInterface, UserGroupInterface
 
             // otherwise, update or create.
             if (!(null === $data['latitude'] && null === $data['longitude'] && null === $data['zoom_level'])) {
-                $location             = $this->getLocation($tag);
+                $location = $this->getLocation($tag);
                 if (!$location instanceof Location) {
                     $location = new Location();
                     $location->locatable()->associate($tag);

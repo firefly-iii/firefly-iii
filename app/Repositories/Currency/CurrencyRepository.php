@@ -255,16 +255,10 @@ final class CurrencyRepository implements CurrencyRepositoryInterface, UserGroup
         if (!$result instanceof TransactionCurrency) {
             Log::debug('Grabbing default currency for this user...');
 
-            /** @var null|TransactionCurrency $result */
             $result = Amount::getPrimaryCurrencyByUserGroup($this->user->userGroup);
         }
 
         Log::debug(sprintf('Final result: %s', $result->code));
-        // code below is no longer relevant.
-        //        if (false === $result->enabled) {
-        //            Log::debug(sprintf('Also enabled currency %s', $result->code));
-        //            $this->enable($result);
-        //        }
 
         return $result;
     }

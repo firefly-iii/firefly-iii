@@ -70,7 +70,7 @@ final class RuleRepository implements RuleRepositoryInterface, UserGroupInterfac
     public function duplicate(Rule $rule): Rule
     {
         $newRule        = $rule->replicate();
-        $newRule->title = (string) trans('firefly.rule_copy_of', ['title' => $rule->title]);
+        $newRule->title = (string)trans('firefly.rule_copy_of', ['title' => $rule->title]);
         $newRule->save();
 
         // replicate all triggers
@@ -114,14 +114,17 @@ final class RuleRepository implements RuleRepositoryInterface, UserGroupInterfac
     #[\Override]
     public function getFirstRuleGroup(): RuleGroup
     {
-        /** @var null|RuleGroup */
-        return $this->user->ruleGroups()->first();
+        $res = $this->user->ruleGroups()->first();
+        if (null === $res) {
+            throw new FireflyException(sprintf('No rule group found for user #%d', $this->user->id));
+        }
+        return $res;
     }
 
     #[\Override]
     public function getHighestOrderInRuleGroup(RuleGroup $ruleGroup): int
     {
-        return (int) $ruleGroup->rules()->max('order');
+        return (int)$ruleGroup->rules()->max('order');
     }
 
     /**
@@ -132,10 +135,10 @@ final class RuleRepository implements RuleRepositoryInterface, UserGroupInterfac
     {
         $count = $rule->ruleTriggers()->count();
         if (0 === $count) {
-            throw new FireflyException('Rules should have more than zero triggers, rule #'.$rule->id.' has none!');
+            throw new FireflyException('Rules should have more than zero triggers, rule #' . $rule->id . ' has none!');
         }
 
-        return $rule->ruleTriggers()->where('trigger_type', 'user_action')->first()->trigger_value;
+        return (string)$rule->ruleTriggers()->where('trigger_type', 'user_action')->first()->trigger_value;
     }
 
     #[\Override]
@@ -160,9 +163,9 @@ final class RuleRepository implements RuleRepositoryInterface, UserGroupInterfac
             if ('user_action' === $trigger->trigger_type) {
                 continue;
             }
-            $triggerType  = $trigger->trigger_type;
-            if (str_starts_with((string) $trigger->trigger_type, '-')) {
-                $triggerType = substr((string) $trigger->trigger_type, 1);
+            $triggerType = $trigger->trigger_type;
+            if (str_starts_with((string)$trigger->trigger_type, '-')) {
+                $triggerType = substr((string)$trigger->trigger_type, 1);
             }
             $needsContext = config(sprintf('search.operators.%s.needs_context', $triggerType)) ?? true;
             if (false === $needsContext) {
@@ -180,15 +183,14 @@ final class RuleRepository implements RuleRepositoryInterface, UserGroupInterfac
     public function getStoreRules(): Collection
     {
         $collection = $this->user->rules()
-            ->leftJoin('rule_groups', 'rule_groups.id', '=', 'rules.rule_group_id')
-            ->where('rules.active', true)
-            ->where('rule_groups.active', true)
-            ->orderBy('rule_groups.order', 'ASC')
-            ->orderBy('rules.order', 'ASC')
-            ->orderBy('rules.id', 'ASC')
-            ->with(['ruleGroup', 'ruleTriggers'])
-            ->get(['rules.*'])
-        ;
+                                 ->leftJoin('rule_groups', 'rule_groups.id', '=', 'rules.rule_group_id')
+                                 ->where('rules.active', true)
+                                 ->where('rule_groups.active', true)
+                                 ->orderBy('rule_groups.order', 'ASC')
+                                 ->orderBy('rules.order', 'ASC')
+                                 ->orderBy('rules.id', 'ASC')
+                                 ->with(['ruleGroup', 'ruleTriggers'])
+                                 ->get(['rules.*']);
         $filtered   = new Collection();
 
         /** @var Rule $rule */
@@ -208,15 +210,14 @@ final class RuleRepository implements RuleRepositoryInterface, UserGroupInterfac
     public function getUpdateRules(): Collection
     {
         $collection = $this->user->rules()
-            ->leftJoin('rule_groups', 'rule_groups.id', '=', 'rules.rule_group_id')
-            ->where('rules.active', true)
-            ->where('rule_groups.active', true)
-            ->orderBy('rule_groups.order', 'ASC')
-            ->orderBy('rules.order', 'ASC')
-            ->orderBy('rules.id', 'ASC')
-            ->with(['ruleGroup', 'ruleTriggers'])
-            ->get()
-        ;
+                                 ->leftJoin('rule_groups', 'rule_groups.id', '=', 'rules.rule_group_id')
+                                 ->where('rules.active', true)
+                                 ->where('rule_groups.active', true)
+                                 ->orderBy('rule_groups.order', 'ASC')
+                                 ->orderBy('rules.order', 'ASC')
+                                 ->orderBy('rules.id', 'ASC')
+                                 ->with(['ruleGroup', 'ruleTriggers'])
+                                 ->get();
         $filtered   = new Collection();
 
         /** @var Rule $rule */
@@ -235,7 +236,7 @@ final class RuleRepository implements RuleRepositoryInterface, UserGroupInterfac
     #[\Override]
     public function maxOrder(RuleGroup $ruleGroup): int
     {
-        return (int) $ruleGroup->rules()->max('order');
+        return (int)$ruleGroup->rules()->max('order');
     }
 
     #[\Override]
@@ -276,20 +277,19 @@ final class RuleRepository implements RuleRepositoryInterface, UserGroupInterfac
     #[\Override]
     public function setOrder(Rule $rule, int $newOrder): void
     {
-        $oldOrder    = $rule->order;
-        $groupId     = $rule->rule_group_id;
-        $maxOrder    = $this->maxOrder($rule->ruleGroup);
-        $newOrder    = $newOrder > $maxOrder ? $maxOrder + 1 : $newOrder;
+        $oldOrder = $rule->order;
+        $groupId  = $rule->rule_group_id;
+        $maxOrder = $this->maxOrder($rule->ruleGroup);
+        $newOrder = $newOrder > $maxOrder ? $maxOrder + 1 : $newOrder;
         Log::debug(sprintf('New order will be %d', $newOrder));
 
         if ($newOrder > $oldOrder) {
             $this->user->rules()
-                ->where('rules.rule_group_id', $groupId)
-                ->where('rules.order', '<=', $newOrder)
-                ->where('rules.order', '>', $oldOrder)
-                ->where('rules.id', '!=', $rule->id)
-                ->decrement('rules.order')
-            ;
+                       ->where('rules.rule_group_id', $groupId)
+                       ->where('rules.order', '<=', $newOrder)
+                       ->where('rules.order', '>', $oldOrder)
+                       ->where('rules.id', '!=', $rule->id)
+                       ->decrement('rules.order');
             $rule->order = $newOrder;
             Log::debug(sprintf('Order of rule #%d ("%s") is now %d', $rule->id, $rule->title, $newOrder));
             $rule->save();
@@ -298,12 +298,11 @@ final class RuleRepository implements RuleRepositoryInterface, UserGroupInterfac
         }
 
         $this->user->rules()
-            ->where('rules.rule_group_id', $groupId)
-            ->where('rules.order', '>=', $newOrder)
-            ->where('rules.order', '<', $oldOrder)
-            ->where('rules.id', '!=', $rule->id)
-            ->increment('rules.order')
-        ;
+                   ->where('rules.rule_group_id', $groupId)
+                   ->where('rules.order', '>=', $newOrder)
+                   ->where('rules.order', '<', $oldOrder)
+                   ->where('rules.id', '!=', $rule->id)
+                   ->increment('rules.order');
         $rule->order = $newOrder;
         Log::debug(sprintf('Order of rule #%d ("%s") is now %d', $rule->id, $rule->title, $newOrder));
         $rule->save();
@@ -315,7 +314,7 @@ final class RuleRepository implements RuleRepositoryInterface, UserGroupInterfac
     #[\Override]
     public function store(array $data): Rule
     {
-        $ruleGroup             = null;
+        $ruleGroup = null;
         if (array_key_exists('rule_group_id', $data)) {
             $ruleGroup = $this->user->ruleGroups()->find($data['rule_group_id']);
         }
@@ -329,7 +328,7 @@ final class RuleRepository implements RuleRepositoryInterface, UserGroupInterfac
         /** @var RuleGroup $ruleGroup */
 
         // start by creating a new rule:
-        $rule                  = new Rule();
+        $rule = new Rule();
         $rule->user()->associate($this->user);
         $rule->userGroup()->associate($this->user->userGroup);
 
@@ -367,7 +366,7 @@ final class RuleRepository implements RuleRepositoryInterface, UserGroupInterfac
     #[\Override]
     public function storeAction(Rule $rule, array $values): RuleAction
     {
-        $ruleAction                  = new RuleAction();
+        $ruleAction = new RuleAction();
         $ruleAction->rule()->associate($rule);
         $ruleAction->order           = $values['order'];
         $ruleAction->active          = $values['active'];
@@ -382,7 +381,7 @@ final class RuleRepository implements RuleRepositoryInterface, UserGroupInterfac
     #[\Override]
     public function storeTrigger(Rule $rule, array $values): RuleTrigger
     {
-        $ruleTrigger                  = new RuleTrigger();
+        $ruleTrigger = new RuleTrigger();
         $ruleTrigger->rule()->associate($rule);
         $ruleTrigger->order           = $values['order'];
         $ruleTrigger->active          = $values['active'];
@@ -406,11 +405,11 @@ final class RuleRepository implements RuleRepositoryInterface, UserGroupInterfac
         }
         $rule->save();
         $rule->refresh();
-        $group  = $rule->ruleGroup;
+        $group = $rule->ruleGroup;
         // update the order:
         $this->resetRuleOrder($group);
         if (array_key_exists('order', $data)) {
-            $this->moveRule($rule, $group, (int) $data['order']);
+            $this->moveRule($rule, $group, (int)$data['order']);
         }
 
         // update the triggers:
@@ -445,7 +444,7 @@ final class RuleRepository implements RuleRepositoryInterface, UserGroupInterfac
     private function setRuleTrigger(string $moment, Rule $rule): void
     {
         /** @var null|RuleTrigger $trigger */
-        $trigger                  = $rule->ruleTriggers()->where('trigger_type', 'user_action')->first();
+        $trigger = $rule->ruleTriggers()->where('trigger_type', 'user_action')->first();
         if (null !== $trigger) {
             $trigger->trigger_value = $moment;
             $trigger->save();
@@ -489,13 +488,13 @@ final class RuleRepository implements RuleRepositoryInterface, UserGroupInterfac
             $stopProcessing = $trigger['stop_processing'] ?? false;
             $active         = $trigger['active'] ?? true;
             $type           = $trigger['type'];
-            if (true === ($trigger['prohibited'] ?? false) && !str_starts_with((string) $type, '-')) {
+            if (true === ($trigger['prohibited'] ?? false) && !str_starts_with((string)$type, '-')) {
                 $type = sprintf('-%s', $type);
             }
 
             // empty the value in case the rule needs no context
             // TODO create a helper to automatically return these.
-            $needTrue       = [
+            $needTrue = [
                 'reconciled',
                 'has_attachments',
                 'has_any_category',
@@ -522,7 +521,7 @@ final class RuleRepository implements RuleRepositoryInterface, UserGroupInterfac
                 $value = '';
             }
 
-            $triggerValues  = [
+            $triggerValues = [
                 'action'          => $type,
                 'value'           => $value,
                 'stop_processing' => $stopProcessing,

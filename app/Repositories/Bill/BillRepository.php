@@ -625,8 +625,12 @@ final class BillRepository implements BillRepositoryInterface, UserGroupInterfac
         /** @var BillFactory $factory */
         $factory = app(BillFactory::class);
         $factory->setUser($this->user);
-
-        return $factory->create($data);
+        $res =  $factory->create($data);
+        if(!$res instanceof Bill){
+            Log::error('Could not store subscription based on this data', $data);
+            throw new FireflyException('Could not create subscription.');
+        }
+        return $res;
     }
 
     #[\Override]

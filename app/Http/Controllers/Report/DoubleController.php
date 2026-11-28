@@ -482,10 +482,10 @@ final class DoubleController extends Controller
         /** @var Account $account */
         foreach ($accounts as $account) {
             if ($account->name === $name && $account->id !== $id) {
-                return $account->name;
+                return (string) $account->name;
             }
             if (null !== $account->iban && $account->iban === $iban && $account->id !== $id) {
-                return $account->iban;
+                return (string) $account->iban;
             }
         }
 

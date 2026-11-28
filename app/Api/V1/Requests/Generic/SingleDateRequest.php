@@ -25,6 +25,7 @@ declare(strict_types=1);
 namespace FireflyIII\Api\V1\Requests\Generic;
 
 use Carbon\Carbon;
+use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Support\Request\ChecksLogin;
 use FireflyIII\Support\Request\ConvertsDataTypes;
 use Illuminate\Foundation\Http\FormRequest;
@@ -48,7 +49,11 @@ final class SingleDateRequest extends FormRequest
      */
     public function getDate(): Carbon
     {
-        return $this->getCarbonDate('date');
+        $date = $this->getCarbonDate('date');
+        if(null === $date) {
+            throw new FireflyException('Date is null, but it should not be.');
+        }
+        return $date;
     }
 
     /**

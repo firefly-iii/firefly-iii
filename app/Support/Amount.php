@@ -327,7 +327,11 @@ final class Amount
 
     public function getSystemCurrency(): TransactionCurrency
     {
-        return TransactionCurrency::query()->whereNull('deleted_at')->where('code', 'EUR')->first();
+        $res = TransactionCurrency::query()->whereNull('deleted_at')->where('code', 'EUR')->first();
+        if(null === $res) {
+            throw new FireflyException('Could not find system currency EUR.');
+        }
+        return $res;
     }
 
     public function getTransactionCurrencyByCode(string $code): TransactionCurrency

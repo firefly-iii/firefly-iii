@@ -219,7 +219,11 @@ final class AccountUpdateService
 
     private function getAccountType(string $type): AccountType
     {
-        return AccountType::whereType(ucfirst($type))->first();
+        $res = AccountType::whereType(ucfirst($type))->first();
+        if(null === $res) {
+            throw new FireflyException(sprintf('Account type "%s" not found.', $type));
+        }
+        return $res;
     }
 
     private function getTypeIds(array $array): array

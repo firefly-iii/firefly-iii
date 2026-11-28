@@ -239,7 +239,7 @@ final class JournalUpdateService
             return ucfirst('opening-balance' === $this->data['type'] ? 'opening balance' : $this->data['type']);
         }
 
-        return $this->transactionJournal->transactionType->type;
+        return (string) $this->transactionJournal->transactionType->type;
     }
 
     private function getOriginalDestinationAccount(): Account
@@ -247,6 +247,9 @@ final class JournalUpdateService
         if (!$this->destinationAccount instanceof Account) {
             $destination              = $this->getDestinationTransaction();
             $this->destinationAccount = $destination->account;
+        }
+        if(null === $this->destinationAccount) {
+            throw new FireflyException(sprintf('Could not find destination account for transaction #%d.', $destination->id ?? 0));
         }
 
         return $this->destinationAccount;
@@ -258,6 +261,9 @@ final class JournalUpdateService
             $source              = $this->getSourceTransaction();
             $this->sourceAccount = $source->account;
         }
+        if(null === $this->sourceAccount) {
+            throw new FireflyException(sprintf('Could not find source account for transaction #%d.', $source->id ?? 0));
+        }
 
         return $this->sourceAccount;
     }
@@ -268,6 +274,9 @@ final class JournalUpdateService
             /** @var null|Transaction $result */
             $result                  = $this->transactionJournal->transactions()->with(['account'])->where('amount', '<', 0)->first();
             $this->sourceTransaction = $result;
+        }
+        if(null === $this->sourceTransaction) {
+            throw new FireflyException(sprintf('Could not find source transaction for journal #%d.', $this->transactionJournal->id));
         }
         Log::debug(sprintf('getSourceTransaction: %s', $this->sourceTransaction->amount));
 
@@ -303,6 +312,9 @@ final class JournalUpdateService
             Log::error(sprintf('getValidDestinationAccount() threw unexpected error: %s', $e->getMessage()));
             $result = $this->getOriginalDestinationAccount();
         }
+        if(null === $result) {
+            $result = $this->getOriginalDestinationAccount();
+        }
 
         return $result;
     }
@@ -333,6 +345,9 @@ final class JournalUpdateService
         } catch (FireflyException $e) {
             Log::error(sprintf('Cant get the valid source account: %s', $e->getMessage()));
 
+            $result = $this->getOriginalSourceAccount();
+        }
+        if(null === $result) {
             $result = $this->getOriginalSourceAccount();
         }
 
