@@ -36,7 +36,7 @@ final class Binder
     /**
      * The binders.
      */
-    protected array $binders;
+    private array $binders;
 
     /**
      * Binder constructor.
@@ -70,7 +70,7 @@ final class Binder
      *
      * @return mixed
      */
-    private function performBinding(string $key, object | string $value, Route $route)
+    private function performBinding(string $key, object|string $value, Route $route)
     {
         $class = $this->binders[$key];
 

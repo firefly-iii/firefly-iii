@@ -27,6 +27,7 @@ use FireflyIII\Models\Account;
 use FireflyIII\User;
 use Illuminate\Routing\Route;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
+use Override;
 
 /**
  * Class UserGroupAccount.
@@ -36,7 +37,7 @@ final class UserGroupAccount implements BinderInterface
     /**
      * @throws NotFoundHttpException
      */
-    #[\Override]
+    #[Override]
     public static function routeBinder(string $value, Route $route): Account
     {
         if (auth()->check()) {

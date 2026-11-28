@@ -32,15 +32,16 @@ use Illuminate\Console\Command;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Str;
+use Override;
 
 final class CreatesFirstUser extends Command
 {
     use ShowsFriendlyMessages;
 
-    #[\Override]
+    #[Override]
     protected $description = 'Creates a new user and gives admin rights. Outputs the password on the command line. Strictly for testing.';
 
-    #[\Override]
+    #[Override]
     protected $signature   = 'system:create-first-user {email}';
     private UserRepositoryInterface $repository;
 

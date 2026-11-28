@@ -37,12 +37,13 @@ use Illuminate\Database\Eloquent\Relations\MorphMany;
 use Illuminate\Database\Eloquent\Relations\MorphToMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
+use Override;
 
 /**
  * @property null|Carbon         $target_date
  * @property null|Carbon         $start_date
  * @property TransactionCurrency $transactionCurrency
- * @property string $target_amount
+ * @property string              $target_amount
  */
 #[ObservedBy([PiggyBankObserver::class])]
 final class PiggyBank extends Model
@@ -50,7 +51,7 @@ final class PiggyBank extends Model
     use ReturnsIntegerIdTrait;
     use SoftDeletes;
 
-    #[\Override]
+    #[Override]
     protected $fillable = [
         'name',
         'order',
@@ -97,6 +98,11 @@ final class PiggyBank extends Model
         return $this->belongsTo(Account::class);
     }
 
+    public function accountId(): Attribute
+    {
+        return Attribute::make(get: static fn ($value): int => (int) $value);
+    }
+
     public function accounts(): BelongsToMany
     {
         return $this->belongsToMany(Account::class)->withPivot(['current_amount', 'native_current_amount']);
@@ -123,6 +129,11 @@ final class PiggyBank extends Model
         return $this->morphToMany(ObjectGroup::class, 'object_groupable');
     }
 
+    public function order(): Attribute
+    {
+        return Attribute::make(get: static fn ($value): int => (int) $value);
+    }
+
     public function piggyBankEvents(): HasMany
     {
         return $this->hasMany(PiggyBankEvent::class);
@@ -141,17 +152,20 @@ final class PiggyBank extends Model
         $this->attributes['target_amount'] = (string) $value;
     }
 
+    /**
+     * Get the max amount
+     */
+    public function targetAmount(): Attribute
+    {
+        return Attribute::make(get: static fn ($value): string => (string) $value);
+    }
+
     public function transactionCurrency(): BelongsTo
     {
         return $this->belongsTo(TransactionCurrency::class);
     }
 
-    public function accountId(): Attribute
-    {
-        return Attribute::make(get: static fn ($value): int => (int) $value);
-    }
-
-    #[\Override]
+    #[Override]
     protected function casts(): array
     {
         return [
@@ -166,18 +180,5 @@ final class PiggyBank extends Model
             'target_amount'        => 'string',
             'native_target_amount' => 'string',
         ];
-    }
-
-    public function order(): Attribute
-    {
-        return Attribute::make(get: static fn ($value): int => (int) $value);
-    }
-
-    /**
-     * Get the max amount
-     */
-    public function targetAmount(): Attribute
-    {
-        return Attribute::make(get: static fn ($value): string => (string) $value);
     }
 }

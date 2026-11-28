@@ -24,9 +24,9 @@ declare(strict_types=1);
 
 namespace FireflyIII\View\Components\Transaction;
 
-use Closure;
 use Illuminate\Contracts\View\View;
 use Illuminate\View\Component;
+use Override;
 
 final class TabList extends Component
 {
@@ -38,7 +38,7 @@ final class TabList extends Component
     /**
      * Get the view / contents that represent the component.
      */
-    #[\Override]
+    #[Override]
     public function render(): View
     {
         return view('components.transaction.tab-list');

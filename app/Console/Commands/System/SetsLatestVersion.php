@@ -27,15 +27,16 @@ namespace FireflyIII\Console\Commands\System;
 use FireflyIII\Console\Commands\ShowsFriendlyMessages;
 use FireflyIII\Support\Facades\AppConfiguration;
 use Illuminate\Console\Command;
+use Override;
 
 final class SetsLatestVersion extends Command
 {
     use ShowsFriendlyMessages;
 
-    #[\Override]
+    #[Override]
     protected $description = 'Set latest version in DB.';
 
-    #[\Override]
+    #[Override]
     protected $signature   = 'firefly-iii:set-latest-version {--james-is-cool}';
 
     /**

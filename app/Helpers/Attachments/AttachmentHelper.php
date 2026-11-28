@@ -38,6 +38,7 @@ use Safe\Exceptions\FileinfoException;
 use Safe\Exceptions\FilesystemException;
 use Safe\Exceptions\StringsException;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
+use Override;
 
 use function Safe\fclose;
 use function Safe\finfo_open;
@@ -55,10 +56,10 @@ final class AttachmentHelper implements AttachmentHelperInterface
     public Collection $attachments;
     public MessageBag $errors;
     public MessageBag $messages;
-    protected array $allowedMimes  = [];
-    protected int   $maxUploadSize = 0;
+    private array $allowedMimes  = [];
+    private int   $maxUploadSize = 0;
 
-    protected Filesystem $uploadDisk;
+    private Filesystem $uploadDisk;
 
     /**
      * AttachmentHelper constructor.
@@ -76,7 +77,7 @@ final class AttachmentHelper implements AttachmentHelperInterface
     /**
      * Returns the content of an attachment.
      */
-    #[\Override]
+    #[Override]
     public function getAttachmentContent(Attachment $attachment): string
     {
         $encryptedData = (string) $this->uploadDisk->get(sprintf('at-%d.data', $attachment->id));
@@ -94,7 +95,7 @@ final class AttachmentHelper implements AttachmentHelperInterface
     /**
      * Returns the file path relative to upload disk for an attachment,
      */
-    #[\Override]
+    #[Override]
     public function getAttachmentLocation(Attachment $attachment): string
     {
         return sprintf('%sat-%d.data', DIRECTORY_SEPARATOR, $attachment->id);
@@ -103,7 +104,7 @@ final class AttachmentHelper implements AttachmentHelperInterface
     /**
      * Get all attachments.
      */
-    #[\Override]
+    #[Override]
     public function getAttachments(): Collection
     {
         return $this->attachments;
@@ -112,7 +113,7 @@ final class AttachmentHelper implements AttachmentHelperInterface
     /**
      * Get all errors.
      */
-    #[\Override]
+    #[Override]
     public function getErrors(): MessageBag
     {
         return $this->errors;
@@ -121,7 +122,7 @@ final class AttachmentHelper implements AttachmentHelperInterface
     /**
      * Get all messages.
      */
-    #[\Override]
+    #[Override]
     public function getMessages(): MessageBag
     {
         return $this->messages;
@@ -130,7 +131,7 @@ final class AttachmentHelper implements AttachmentHelperInterface
     /**
      * Uploads a file as a string.
      */
-    #[\Override]
+    #[Override]
     public function saveAttachmentFromApi(Attachment $attachment, string $content): bool
     {
         Log::debug(sprintf('Now in %s', __METHOD__));
@@ -205,7 +206,7 @@ final class AttachmentHelper implements AttachmentHelperInterface
      *
      * @throws FireflyException
      */
-    #[\Override]
+    #[Override]
     public function saveAttachmentsForModel(object $model, ?array $files): bool
     {
         if (!$model instanceof Model) {

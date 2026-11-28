@@ -27,6 +27,7 @@ namespace FireflyIII\Console\Commands\Correction;
 use FireflyIII\Console\Commands\ShowsFriendlyMessages;
 use FireflyIII\Models\Transaction;
 use Illuminate\Console\Command;
+use Override;
 
 final class ClearsEmptyForeignAmounts extends Command
 {
@@ -37,7 +38,7 @@ final class ClearsEmptyForeignAmounts extends Command
      *
      * @var string
      */
-    #[\Override]
+    #[Override]
     protected $description = 'Removes references to foreign amounts if there is no amount.';
 
     /**
@@ -45,7 +46,7 @@ final class ClearsEmptyForeignAmounts extends Command
      *
      * @var string
      */
-    #[\Override]
+    #[Override]
     protected $signature   = 'correction:clears-empty-foreign-amounts';
 
     /**

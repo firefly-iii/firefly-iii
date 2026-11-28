@@ -33,12 +33,13 @@ use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\HasManyThrough;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
+use Override;
 
 final class UserGroup extends Model
 {
     use ReturnsIntegerIdTrait;
 
-    #[\Override]
+    #[Override]
     protected $fillable = ['title'];
 
     /**

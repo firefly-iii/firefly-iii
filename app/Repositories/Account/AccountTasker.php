@@ -35,6 +35,7 @@ use FireflyIII\Support\Repositories\UserGroup\UserGroupInterface;
 use FireflyIII\Support\Repositories\UserGroup\UserGroupTrait;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Log;
+use Override;
 
 /**
  * Class AccountTasker.
@@ -46,7 +47,7 @@ final class AccountTasker implements AccountTaskerInterface, UserGroupInterface
     /**
      * @throws FireflyException
      */
-    #[\Override]
+    #[Override]
     public function getAccountReport(Collection $accounts, Carbon $start, Carbon $end): array
     {
         $yesterday           = clone $start;
@@ -117,7 +118,7 @@ final class AccountTasker implements AccountTaskerInterface, UserGroupInterface
     /**
      * @throws FireflyException
      */
-    #[\Override]
+    #[Override]
     public function getExpenseReport(Carbon $start, Carbon $end, Collection $accounts): array
     {
         // get all expenses for the given accounts in the given period!
@@ -149,7 +150,7 @@ final class AccountTasker implements AccountTaskerInterface, UserGroupInterface
     /**
      * @throws FireflyException
      */
-    #[\Override]
+    #[Override]
     public function getIncomeReport(Carbon $start, Carbon $end, Collection $accounts): array
     {
         // get all incomes for the given accounts in the given period!

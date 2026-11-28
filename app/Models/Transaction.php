@@ -34,6 +34,7 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use Override;
 
 /**
  * @property null|Account             $account
@@ -41,8 +42,8 @@ use Illuminate\Database\Eloquent\SoftDeletes;
  * @property null|TransactionCurrency $foreignCurrency
  * @property null|string              $balance_before
  * @property null|string              $balance_after
- * @property null|string $foreign_amount
- * @property string $amount
+ * @property null|string              $foreign_amount
+ * @property string                   $amount
  */
 #[ObservedBy([TransactionObserver::class])]
 final class Transaction extends Model
@@ -50,7 +51,7 @@ final class Transaction extends Model
     use ReturnsIntegerIdTrait;
     use SoftDeletes;
 
-    #[\Override]
+    #[Override]
     protected $fillable = [
         'account_id',
         'transaction_journal_id',
@@ -65,7 +66,7 @@ final class Transaction extends Model
         'reconciled',
     ];
 
-    #[\Override]
+    #[Override]
     protected $hidden   = ['encrypted'];
 
     /**
@@ -90,48 +91,6 @@ final class Transaction extends Model
     public function account(): BelongsTo
     {
         return $this->belongsTo(Account::class);
-    }
-
-    /**
-     * Get the budget(s) this object belongs to.
-     */
-    public function budgets(): BelongsToMany
-    {
-        return $this->belongsToMany(Budget::class);
-    }
-
-    /**
-     * Get the category(ies) this object belongs to.
-     */
-    public function categories(): BelongsToMany
-    {
-        return $this->belongsToMany(Category::class);
-    }
-
-    /**
-     * Get the currency this object belongs to.
-     */
-    public function foreignCurrency(): BelongsTo
-    {
-        return $this->belongsTo(TransactionCurrency::class, 'foreign_currency_id');
-    }
-
-    /**
-     * @param mixed $value
-     */
-    public function setAmountAttribute($value): void
-    {
-        $this->attributes['amount'] = (string) $value;
-    }
-
-    public function transactionCurrency(): BelongsTo
-    {
-        return $this->belongsTo(TransactionCurrency::class);
-    }
-
-    public function transactionJournal(): BelongsTo
-    {
-        return $this->belongsTo(TransactionJournal::class);
     }
 
     public function accountId(): Attribute
@@ -176,7 +135,75 @@ final class Transaction extends Model
         $query->where('transaction_journals.date', '<=', $date->format('Y-m-d 23:59:59'));
     }
 
-    #[\Override]
+    /**
+     * Get the budget(s) this object belongs to.
+     */
+    public function budgets(): BelongsToMany
+    {
+        return $this->belongsToMany(Budget::class);
+    }
+
+    /**
+     * Get the category(ies) this object belongs to.
+     */
+    public function categories(): BelongsToMany
+    {
+        return $this->belongsToMany(Category::class);
+    }
+
+    /**
+     * Get the foreign amount
+     */
+    public function foreignAmount(): Attribute
+    {
+        return Attribute::make(get: static fn ($value): string => (string) $value);
+    }
+
+    /**
+     * Get the currency this object belongs to.
+     */
+    public function foreignCurrency(): BelongsTo
+    {
+        return $this->belongsTo(TransactionCurrency::class, 'foreign_currency_id');
+    }
+
+    /**
+     * @param mixed $value
+     */
+    public function setAmountAttribute($value): void
+    {
+        $this->attributes['amount'] = (string) $value;
+    }
+
+    public function transactionCurrency(): BelongsTo
+    {
+        return $this->belongsTo(TransactionCurrency::class);
+    }
+
+    public function transactionJournal(): BelongsTo
+    {
+        return $this->belongsTo(TransactionJournal::class);
+    }
+
+    public function transactionJournalId(): Attribute
+    {
+        return Attribute::make(get: static fn ($value): int => (int) $value);
+    }
+
+    #[Scope]
+    public function transactionTypes(Builder $query, array $types): void
+    {
+        if (!self::isJoined($query, 'transaction_journals')) {
+            $query->leftJoin('transaction_journals', 'transaction_journals.id', '=', 'transactions.transaction_journal_id');
+        }
+
+        if (!self::isJoined($query, 'transaction_types')) {
+            $query->leftJoin('transaction_types', 'transaction_types.id', '=', 'transaction_journals.transaction_type_id');
+        }
+        $query->whereIn('transaction_types.type', $types);
+    }
+
+    #[Override]
     protected function casts(): array
     {
         return [
@@ -196,31 +223,5 @@ final class Transaction extends Model
             'native_amount'         => 'string',
             'native_foreign_amount' => 'string',
         ];
-    }
-
-    /**
-     * Get the foreign amount
-     */
-    public function foreignAmount(): Attribute
-    {
-        return Attribute::make(get: static fn ($value): string => (string) $value);
-    }
-
-    public function transactionJournalId(): Attribute
-    {
-        return Attribute::make(get: static fn ($value): int => (int) $value);
-    }
-
-    #[Scope]
-    public function transactionTypes(Builder $query, array $types): void
-    {
-        if (!self::isJoined($query, 'transaction_journals')) {
-            $query->leftJoin('transaction_journals', 'transaction_journals.id', '=', 'transactions.transaction_journal_id');
-        }
-
-        if (!self::isJoined($query, 'transaction_types')) {
-            $query->leftJoin('transaction_types', 'transaction_types.id', '=', 'transaction_journals.transaction_type_id');
-        }
-        $query->whereIn('transaction_types.type', $types);
     }
 }

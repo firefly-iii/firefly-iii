@@ -27,6 +27,7 @@ use FireflyIII\Support\Models\ReturnsIntegerIdTrait;
 use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Override;
 
 use function Safe\json_decode;
 use function Safe\json_encode;
@@ -35,20 +36,14 @@ final class AccountMeta extends Model
 {
     use ReturnsIntegerIdTrait;
 
-    #[\Override]
+    #[Override]
     protected $fillable = ['account_id', 'name', 'data'];
-    #[\Override]
+    #[Override]
     protected $table    = 'account_meta';
 
     public function account(): BelongsTo
     {
         return $this->belongsTo(Account::class);
-    }
-
-    #[\Override]
-    protected function casts(): array
-    {
-        return ['created_at' => 'datetime', 'updated_at' => 'datetime'];
     }
 
     public function data(): Attribute
@@ -57,5 +52,11 @@ final class AccountMeta extends Model
             get: static fn (mixed $value): string => (string) json_decode((string) $value, true),
             set: static fn (mixed $value): array => ['data' => json_encode($value)]
         );
+    }
+
+    #[Override]
+    protected function casts(): array
+    {
+        return ['created_at' => 'datetime', 'updated_at' => 'datetime'];
     }
 }

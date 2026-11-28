@@ -33,6 +33,7 @@ use FireflyIII\Support\Repositories\UserGroup\UserGroupInterface;
 use FireflyIII\Support\Repositories\UserGroup\UserGroupTrait;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Storage;
+use Override;
 
 /**
  * Class JournalAPIRepository
@@ -44,7 +45,7 @@ final class JournalAPIRepository implements JournalAPIRepositoryInterface, UserG
     /**
      * Returns transaction by ID. Used to validate attachments.
      */
-    #[\Override]
+    #[Override]
     public function findTransaction(int $transactionId): ?Transaction
     {
         return Transaction::leftJoin('transaction_journals', 'transaction_journals.id', '=', 'transactions.transaction_journal_id')
@@ -59,7 +60,7 @@ final class JournalAPIRepository implements JournalAPIRepositoryInterface, UserG
      *
      * Return all attachments for journal.
      */
-    #[\Override]
+    #[Override]
     public function getAttachments(TransactionJournal $journal): Collection
     {
         $set  = $journal->attachments;
@@ -75,7 +76,7 @@ final class JournalAPIRepository implements JournalAPIRepositoryInterface, UserG
         });
     }
 
-    #[\Override]
+    #[Override]
     public function getJournalLinks(TransactionJournal $journal): Collection
     {
         $collection = $journal->destJournalLinks()->get();
@@ -86,7 +87,7 @@ final class JournalAPIRepository implements JournalAPIRepositoryInterface, UserG
     /**
      * Get all piggy bank events for a journal.
      */
-    #[\Override]
+    #[Override]
     public function getPiggyBankEvents(TransactionJournal $journal): Collection
     {
         $events = $journal->piggyBankEvents()->get();

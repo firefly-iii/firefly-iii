@@ -46,14 +46,15 @@ use Illuminate\Console\Command;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use ValueError;
+use Override;
 
 final class CorrectsAmounts extends Command
 {
     use ShowsFriendlyMessages;
 
-    #[\Override]
+    #[Override]
     protected $description = 'This command makes sure positive and negative amounts are recorded correctly.';
-    #[\Override]
+    #[Override]
     protected $signature   = 'correction:amounts';
     private GenericDestroyService $genericService;
     private JournalDestroyService $service;

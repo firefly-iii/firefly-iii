@@ -32,6 +32,7 @@ use FireflyIII\Support\Facades\Steam;
 use FireflyIII\Support\Repositories\UserGroup\UserGroupInterface;
 use FireflyIII\Support\Repositories\UserGroup\UserGroupTrait;
 use Illuminate\Support\Collection;
+use Override;
 
 /**
  * Class OperationsRepository
@@ -45,7 +46,7 @@ final class OperationsRepository implements OperationsRepositoryInterface, UserG
      * which have the specified tag(s) set to them. It's grouped per currency, with as few details in the array
      * as possible. Amounts are always negative.
      */
-    #[\Override]
+    #[Override]
     public function listExpenses(Carbon $start, Carbon $end, ?Collection $accounts = null, ?Collection $tags = null): array
     {
         /** @var GroupCollectorInterface $collector */
@@ -129,7 +130,7 @@ final class OperationsRepository implements OperationsRepositoryInterface, UserG
      * which have the specified tag(s) set to them. It's grouped per currency, with as few details in the array
      * as possible. Amounts are always positive.
      */
-    #[\Override]
+    #[Override]
     public function listIncome(Carbon $start, Carbon $end, ?Collection $accounts = null, ?Collection $tags = null): array
     {
         /** @var GroupCollectorInterface $collector */
@@ -218,7 +219,7 @@ final class OperationsRepository implements OperationsRepositoryInterface, UserG
      *
      * @throws FireflyException
      */
-    #[\Override]
+    #[Override]
     public function sumExpenses(Carbon $start, Carbon $end, ?Collection $accounts = null, ?Collection $tags = null): array
     {
         throw new FireflyException(sprintf('%s is not yet implemented.', __METHOD__));
@@ -229,7 +230,7 @@ final class OperationsRepository implements OperationsRepositoryInterface, UserG
      *
      * @throws FireflyException
      */
-    #[\Override]
+    #[Override]
     public function sumIncome(Carbon $start, Carbon $end, ?Collection $accounts = null, ?Collection $tags = null): array
     {
         throw new FireflyException(sprintf('%s is not yet implemented.', __METHOD__));

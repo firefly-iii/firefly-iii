@@ -28,6 +28,7 @@ use GuzzleHttp\Exception\GuzzleException;
 use GuzzleHttp\Exception\RequestException;
 use Illuminate\Support\Facades\Log;
 use SensitiveParameter;
+use Override;
 
 /**
  * Class PwndVerifierV2.
@@ -37,7 +38,7 @@ final class PwndVerifierV2 implements Verifier
     /**
      * Verify the given password against (some) service.
      */
-    #[\Override]
+    #[Override]
     public function validPassword(#[SensitiveParameter] string $password): bool
     {
         // Yes SHA1 is unsafe but in this context its fine.

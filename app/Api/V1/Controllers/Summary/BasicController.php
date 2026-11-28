@@ -48,13 +48,14 @@ use FireflyIII\User;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Log;
+use Override;
 
 /**
  * Class BasicController
  */
 final class BasicController extends Controller
 {
-    #[\Override]
+    #[Override]
     protected array $acceptedRoles = [];
     private AvailableBudgetRepositoryInterface $abRepository;
     private AccountRepositoryInterface $accountRepository;

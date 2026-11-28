@@ -32,6 +32,7 @@ use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use Override;
 
 /**
  * @property Carbon $date
@@ -43,7 +44,7 @@ final class CurrencyExchangeRate extends Model
     use ReturnsIntegerUserIdTrait;
     use SoftDeletes;
 
-    #[\Override]
+    #[Override]
     protected $fillable = ['user_id', 'user_group_id', 'from_currency_id', 'to_currency_id', 'date', 'date_tz', 'rate'];
 
     public function fromCurrency(): BelongsTo
@@ -51,9 +52,24 @@ final class CurrencyExchangeRate extends Model
         return $this->belongsTo(TransactionCurrency::class, 'from_currency_id');
     }
 
+    public function fromCurrencyId(): Attribute
+    {
+        return Attribute::make(get: static fn ($value): int => (int) $value);
+    }
+
+    public function rate(): Attribute
+    {
+        return Attribute::make(get: static fn ($value): string => (string) $value);
+    }
+
     public function toCurrency(): BelongsTo
     {
         return $this->belongsTo(TransactionCurrency::class, 'to_currency_id');
+    }
+
+    public function toCurrencyId(): Attribute
+    {
+        return Attribute::make(get: static fn ($value): int => (int) $value);
     }
 
     public function user(): BelongsTo
@@ -66,7 +82,12 @@ final class CurrencyExchangeRate extends Model
         return $this->belongsTo(UserGroup::class);
     }
 
-    #[\Override]
+    public function userRate(): Attribute
+    {
+        return Attribute::make(get: static fn ($value): string => (string) $value);
+    }
+
+    #[Override]
     protected function casts(): array
     {
         return [
@@ -80,25 +101,5 @@ final class CurrencyExchangeRate extends Model
             'rate'             => 'string',
             'user_rate'        => 'string',
         ];
-    }
-
-    public function fromCurrencyId(): Attribute
-    {
-        return Attribute::make(get: static fn ($value): int => (int) $value);
-    }
-
-    public function rate(): Attribute
-    {
-        return Attribute::make(get: static fn ($value): string => (string) $value);
-    }
-
-    public function toCurrencyId(): Attribute
-    {
-        return Attribute::make(get: static fn ($value): int => (int) $value);
-    }
-
-    public function userRate(): Attribute
-    {
-        return Attribute::make(get: static fn ($value): string => (string) $value);
     }
 }

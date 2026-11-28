@@ -28,6 +28,7 @@ use Illuminate\Routing\Route;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Log;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
+use Override;
 
 /**
  * Class BudgetList.
@@ -37,7 +38,7 @@ final class BudgetList implements BinderInterface
     /**
      * @throws NotFoundHttpException
      */
-    #[\Override]
+    #[Override]
     public static function routeBinder(string $value, Route $route): Collection
     {
         if (auth()->check()) {

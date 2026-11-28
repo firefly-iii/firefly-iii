@@ -30,6 +30,7 @@ use FireflyIII\Helpers\Fiscal\FiscalHelperInterface;
 use Illuminate\Routing\Route;
 use Illuminate\Support\Facades\Log;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
+use Override;
 
 /**
  * Class Date.
@@ -39,7 +40,7 @@ final class Date implements BinderInterface
     /**
      * @throws NotFoundHttpException
      */
-    #[\Override]
+    #[Override]
     public static function routeBinder(string $value, Route $route): Carbon
     {
         /** @var FiscalHelperInterface $fiscalHelper */

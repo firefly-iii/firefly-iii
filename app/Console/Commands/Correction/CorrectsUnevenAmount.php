@@ -38,14 +38,15 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use stdClass;
 use ValueError;
+use Override;
 
 final class CorrectsUnevenAmount extends Command
 {
     use ShowsFriendlyMessages;
 
-    #[\Override]
+    #[Override]
     protected $description = 'Fix journals with uneven amounts.';
-    #[\Override]
+    #[Override]
     protected $signature   = 'correction:uneven-amounts';
     private int $count;
 

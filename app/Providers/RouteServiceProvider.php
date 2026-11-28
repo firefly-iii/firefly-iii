@@ -33,7 +33,7 @@ final class RouteServiceProvider extends ServiceProvider
 {
     public const string HOME = '/';
 
-    #[\Override]
+    #[Override]
     protected $namespace     = '';
 
     /**

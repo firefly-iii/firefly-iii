@@ -24,10 +24,10 @@ declare(strict_types=1);
 
 namespace FireflyIII\View\Components\Lists;
 
-use Closure;
 use Illuminate\Contracts\View\View;
 use Illuminate\Support\Collection;
 use Illuminate\View\Component;
+use Override;
 
 final class Ale extends Component
 {
@@ -44,7 +44,7 @@ final class Ale extends Component
     /**
      * Get the view / contents that represent the component.
      */
-    #[\Override]
+    #[Override]
     public function render(): View
     {
         return view('components.lists.ale');

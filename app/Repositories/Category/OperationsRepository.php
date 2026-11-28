@@ -35,6 +35,7 @@ use FireflyIII\Support\Repositories\UserGroup\UserGroupInterface;
 use FireflyIII\Support\Repositories\UserGroup\UserGroupTrait;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Log;
+use Override;
 
 /**
  * Class OperationsRepository
@@ -43,7 +44,7 @@ final class OperationsRepository implements OperationsRepositoryInterface, UserG
 {
     use UserGroupTrait;
 
-    #[\Override]
+    #[Override]
     public function collectExpenses(Carbon $start, Carbon $end, ?Collection $accounts = null, ?Collection $categories = null): array
     {
         /** @var GroupCollectorInterface $collector */
@@ -62,7 +63,7 @@ final class OperationsRepository implements OperationsRepositoryInterface, UserG
         return $collector->getExtractedJournals();
     }
 
-    #[\Override]
+    #[Override]
     public function collectIncome(Carbon $start, Carbon $end, ?Collection $accounts = null, ?Collection $categories = null): array
     {
         /** @var GroupCollectorInterface $collector */
@@ -80,7 +81,7 @@ final class OperationsRepository implements OperationsRepositoryInterface, UserG
         return $collector->getExtractedJournals();
     }
 
-    #[\Override]
+    #[Override]
     public function collectTransfers(Carbon $start, Carbon $end, ?Collection $accounts = null, ?Collection $categories = null): array
     {
         /** @var GroupCollectorInterface $collector */
@@ -105,7 +106,7 @@ final class OperationsRepository implements OperationsRepositoryInterface, UserG
      *
      * First currency, then categories.
      */
-    #[\Override]
+    #[Override]
     public function listExpenses(Carbon $start, Carbon $end, ?Collection $accounts = null, ?Collection $categories = null): array
     {
         /** @var GroupCollectorInterface $collector */
@@ -188,7 +189,7 @@ final class OperationsRepository implements OperationsRepositoryInterface, UserG
      * which have the specified category set to them. It's grouped per currency, with as few details in the array
      * as possible. Amounts are always positive.
      */
-    #[\Override]
+    #[Override]
     public function listIncome(Carbon $start, Carbon $end, ?Collection $accounts = null, ?Collection $categories = null): array
     {
         /** @var GroupCollectorInterface $collector */
@@ -265,7 +266,7 @@ final class OperationsRepository implements OperationsRepositoryInterface, UserG
         return $array;
     }
 
-    #[\Override]
+    #[Override]
     public function listTransferredIn(Carbon $start, Carbon $end, Collection $accounts, ?Collection $categories = null): array
     {
         /** @var GroupCollectorInterface $collector */
@@ -333,7 +334,7 @@ final class OperationsRepository implements OperationsRepositoryInterface, UserG
         return $array;
     }
 
-    #[\Override]
+    #[Override]
     public function listTransferredOut(Carbon $start, Carbon $end, Collection $accounts, ?Collection $categories = null): array
     {
         /** @var GroupCollectorInterface $collector */
@@ -401,7 +402,7 @@ final class OperationsRepository implements OperationsRepositoryInterface, UserG
         return $array;
     }
 
-    #[\Override]
+    #[Override]
     public function sumCollectedTransactionsByCategory(array $expenses, Category $category, string $method, bool $convertToPrimary = false): array
     {
         //        Log::debug(sprintf('Start of %s.', __METHOD__));
@@ -417,7 +418,7 @@ final class OperationsRepository implements OperationsRepositoryInterface, UserG
     /**
      * Sum of withdrawal journals in period for a set of categories, grouped per currency. Amounts are always negative.
      */
-    #[\Override]
+    #[Override]
     public function sumExpenses(Carbon $start, Carbon $end, ?Collection $accounts = null, ?Collection $categories = null): array
     {
         /** @var GroupCollectorInterface $collector */
@@ -441,7 +442,7 @@ final class OperationsRepository implements OperationsRepositoryInterface, UserG
     /**
      * Sum of income journals in period for a set of categories, grouped per currency. Amounts are always positive.
      */
-    #[\Override]
+    #[Override]
     public function sumIncome(Carbon $start, Carbon $end, ?Collection $accounts = null, ?Collection $categories = null): array
     {
         /** @var GroupCollectorInterface $collector */
@@ -509,7 +510,7 @@ final class OperationsRepository implements OperationsRepositoryInterface, UserG
     /**
      * Sum of income journals in period for a set of categories, grouped per currency. Amounts are always positive.
      */
-    #[\Override]
+    #[Override]
     public function sumTransfers(Carbon $start, Carbon $end, ?Collection $accounts = null, ?Collection $categories = null): array
     {
         /** @var GroupCollectorInterface $collector */

@@ -35,6 +35,7 @@ use FireflyIII\Repositories\Journal\JournalCLIRepositoryInterface;
 use FireflyIII\Support\Facades\AppConfiguration;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\Log;
+use Override;
 
 final class UpgradesTransferCurrencies extends Command
 {
@@ -42,9 +43,9 @@ final class UpgradesTransferCurrencies extends Command
 
     public const string CONFIG_NAME                      = '480_transfer_currencies';
 
-    #[\Override]
+    #[Override]
     protected $description                               = 'Updates transfer currency information.';
-    #[\Override]
+    #[Override]
     protected $signature                                 = 'upgrade:480-transfer-currencies {--F|force : Force the execution of this command.}';
     private array $accountCurrencies;
     private AccountRepositoryInterface $accountRepos;

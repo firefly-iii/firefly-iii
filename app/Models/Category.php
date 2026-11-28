@@ -37,6 +37,7 @@ use Illuminate\Database\Eloquent\Relations\MorphMany;
 use Illuminate\Database\Eloquent\Relations\MorphToMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
+use Override;
 
 #[ObservedBy([DeletedCategoryObserver::class])]
 final class Category extends Model
@@ -45,10 +46,10 @@ final class Category extends Model
     use ReturnsIntegerUserIdTrait;
     use SoftDeletes;
 
-    #[\Override]
+    #[Override]
     protected $fillable = ['user_id', 'user_group_id', 'name', 'color'];
 
-    #[\Override]
+    #[Override]
     protected $hidden   = ['encrypted'];
 
     /**
@@ -117,7 +118,7 @@ final class Category extends Model
         return $this->belongsTo(User::class);
     }
 
-    #[\Override]
+    #[Override]
     protected function casts(): array
     {
         return [

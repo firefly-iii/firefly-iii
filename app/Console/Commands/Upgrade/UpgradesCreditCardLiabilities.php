@@ -32,6 +32,7 @@ use FireflyIII\Models\AccountType;
 use FireflyIII\Support\Facades\AppConfiguration;
 use Illuminate\Console\Command;
 use Illuminate\Support\Collection;
+use Override;
 
 final class UpgradesCreditCardLiabilities extends Command
 {
@@ -39,9 +40,9 @@ final class UpgradesCreditCardLiabilities extends Command
 
     public const string CONFIG_NAME = '480_cc_liabilities';
 
-    #[\Override]
+    #[Override]
     protected $description          = 'Convert old credit card liabilities.';
-    #[\Override]
+    #[Override]
     protected $signature            = 'upgrade:480-cc-liabilities {--F|force : Force the execution of this command.}';
 
     /**

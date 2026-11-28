@@ -29,6 +29,7 @@ use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\MorphTo;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use Override;
 
 final class AuditLogEntry extends Model
 {
@@ -40,24 +41,24 @@ final class AuditLogEntry extends Model
         return $this->morphTo();
     }
 
-    public function changer(): MorphTo
-    {
-        return $this->morphTo();
-    }
-
     public function auditableId(): Attribute
     {
         return Attribute::make(get: static fn ($value): int => (int) $value);
     }
 
-    #[\Override]
-    protected function casts(): array
+    public function changer(): MorphTo
     {
-        return ['before' => 'array', 'after' => 'array', 'created_at' => 'datetime', 'updated_at' => 'datetime', 'deleted_at' => 'datetime'];
+        return $this->morphTo();
     }
 
     public function changerId(): Attribute
     {
         return Attribute::make(get: static fn ($value): int => (int) $value);
+    }
+
+    #[Override]
+    protected function casts(): array
+    {
+        return ['before' => 'array', 'after' => 'array', 'created_at' => 'datetime', 'updated_at' => 'datetime', 'deleted_at' => 'datetime'];
     }
 }

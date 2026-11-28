@@ -25,9 +25,9 @@ declare(strict_types=1);
 namespace FireflyIII\View\Components\Dashboard;
 
 use Carbon\Carbon;
-use Closure;
 use Illuminate\Contracts\View\View;
 use Illuminate\View\Component;
+use Override;
 
 final class Boxes extends Component
 {
@@ -42,7 +42,7 @@ final class Boxes extends Component
     /**
      * Get the view / contents that represent the component.
      */
-    #[\Override]
+    #[Override]
     public function render(): View
     {
         return view('components.dashboard.boxes');

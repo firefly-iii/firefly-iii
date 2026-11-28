@@ -31,6 +31,7 @@ use Illuminate\Auth\AuthenticationException;
 use Illuminate\Routing\Route;
 use Illuminate\Support\Facades\Log;
 use SensitiveParameter;
+use Override;
 
 /**
  * Class CLIToken
@@ -56,7 +57,7 @@ final class CLIToken implements BinderInterface
         return null;
     }
 
-    #[\Override]
+    #[Override]
     public static function routeBinder(#[SensitiveParameter] string $value, Route $route): string
     {
         /** @var UserRepositoryInterface $repository */

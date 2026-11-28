@@ -132,6 +132,7 @@ trait OBValidation
             $account->accountType = $accountType;
             $this->setSource($account);
         }
+
         return null === $result ? false : $result;
     }
 }

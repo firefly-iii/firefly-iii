@@ -36,6 +36,7 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Support\Collection;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
+use Override;
 
 /**
  * @property User       $user
@@ -48,7 +49,7 @@ final class RuleGroup extends Model
     use ReturnsIntegerUserIdTrait;
     use SoftDeletes;
 
-    #[\Override]
+    #[Override]
     protected $fillable = ['user_id', 'user_group_id', 'stop_processing', 'order', 'title', 'description', 'active'];
 
     /**
@@ -79,6 +80,11 @@ final class RuleGroup extends Model
         throw new AuthenticationException();
     }
 
+    public function order(): Attribute
+    {
+        return Attribute::make(get: static fn ($value): int => (int) $value);
+    }
+
     public function rules(): HasMany
     {
         return $this->hasMany(Rule::class);
@@ -89,7 +95,7 @@ final class RuleGroup extends Model
         return $this->belongsTo(User::class);
     }
 
-    #[\Override]
+    #[Override]
     protected function casts(): array
     {
         return [
@@ -102,10 +108,5 @@ final class RuleGroup extends Model
             'user_id'         => 'integer',
             'user_group_id'   => 'integer',
         ];
-    }
-
-    public function order(): Attribute
-    {
-        return Attribute::make(get: static fn ($value): int => (int) $value);
     }
 }

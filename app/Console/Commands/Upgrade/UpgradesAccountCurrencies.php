@@ -37,6 +37,7 @@ use FireflyIII\Support\Facades\Amount;
 use FireflyIII\Support\Facades\AppConfiguration;
 use FireflyIII\User;
 use Illuminate\Console\Command;
+use Override;
 
 final class UpgradesAccountCurrencies extends Command
 {
@@ -44,9 +45,9 @@ final class UpgradesAccountCurrencies extends Command
 
     public const string CONFIG_NAME = '480_account_currencies';
 
-    #[\Override]
+    #[Override]
     protected $description          = 'Give all accounts proper currency info.';
-    #[\Override]
+    #[Override]
     protected $signature            = 'upgrade:480-account-currencies {--F|force : Force the execution of this command.}';
     private AccountRepositoryInterface $accountRepos;
     private int $count;

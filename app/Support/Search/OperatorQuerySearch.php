@@ -53,6 +53,7 @@ use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Log;
 use LogicException;
 use TypeError;
+use Override;
 
 /**
  * Class OperatorQuerySearch
@@ -61,7 +62,7 @@ use TypeError;
  */
 final class OperatorQuerySearch implements SearchInterface
 {
-    //protected Carbon $date;
+    // protected Carbon $date;
     private readonly AccountRepositoryInterface $accountRepository;
     private readonly BillRepositoryInterface $billRepository;
     private readonly BudgetRepositoryInterface $budgetRepository;
@@ -131,37 +132,37 @@ final class OperatorQuerySearch implements SearchInterface
         return $original;
     }
 
-    #[\Override]
+    #[Override]
     public function getExcludedWords(): array
     {
         return $this->prohibitedWords;
     }
 
-    #[\Override]
+    #[Override]
     public function getInvalidOperators(): array
     {
         return $this->invalidOperators;
     }
 
-    #[\Override]
+    #[Override]
     public function getModifiers(): Collection
     {
         return $this->getOperators();
     }
 
-    #[\Override]
+    #[Override]
     public function getOperators(): Collection
     {
         return $this->operators;
     }
 
-    #[\Override]
+    #[Override]
     public function getWords(): array
     {
         return $this->words;
     }
 
-    #[\Override]
+    #[Override]
     public function getWordsAsString(): string
     {
         return implode(' ', $this->words);
@@ -170,7 +171,7 @@ final class OperatorQuerySearch implements SearchInterface
     /**
      * @throws FireflyException
      */
-    #[\Override]
+    #[Override]
     public function hasModifiers(): bool
     {
         throw new FireflyException('Not implemented');
@@ -179,7 +180,7 @@ final class OperatorQuerySearch implements SearchInterface
     /**
      * @throws FireflyException
      */
-    #[\Override]
+    #[Override]
     public function parseQuery(string $query): void
     {
         // Log::debug(sprintf('Now in parseQuery("%s")', $query));
@@ -207,13 +208,13 @@ final class OperatorQuerySearch implements SearchInterface
         $this->collector->excludeSearchWords($this->prohibitedWords);
     }
 
-    #[\Override]
+    #[Override]
     public function searchTime(): float
     {
         return microtime(true) - $this->startTime;
     }
 
-    #[\Override]
+    #[Override]
     public function searchTransactions(): LengthAwarePaginator
     {
         $this->parseTagInstructions();
@@ -234,27 +235,27 @@ final class OperatorQuerySearch implements SearchInterface
         return $this->collector->getPaginatedGroups();
     }
 
-    #[\Override]
+    #[Override]
     public function setDate(Carbon $date): void
     {
-        //$this->date = $date;
+        // $this->date = $date;
     }
 
-    #[\Override]
+    #[Override]
     public function setLimit(int $limit): void
     {
         $this->limit = $limit;
         $this->collector->setLimit($this->limit);
     }
 
-    #[\Override]
+    #[Override]
     public function setPage(int $page): void
     {
         $this->page = $page;
         $this->collector->setPage($this->page);
     }
 
-    #[\Override]
+    #[Override]
     public function setUser(User $user): void
     {
         $this->accountRepository->setUser($user);

@@ -49,7 +49,7 @@ final class TagRepository implements TagRepositoryInterface, UserGroupInterface
 {
     use UserGroupTrait;
 
-    #[\Override]
+    #[Override]
     public function count(): int
     {
         return $this->user->tags()->count();
@@ -58,7 +58,7 @@ final class TagRepository implements TagRepositoryInterface, UserGroupInterface
     /**
      * @throws Exception
      */
-    #[\Override]
+    #[Override]
     public function destroy(Tag $tag): bool
     {
         DB::table('tag_transaction_journal')->where('tag_id', $tag->id)->delete();
@@ -71,7 +71,7 @@ final class TagRepository implements TagRepositoryInterface, UserGroupInterface
     /**
      * Destroy all tags.
      */
-    #[\Override]
+    #[Override]
     public function destroyAll(): void
     {
         Log::channel('audit')->info('Delete all tags through destroyAll');
@@ -84,7 +84,7 @@ final class TagRepository implements TagRepositoryInterface, UserGroupInterface
         }
     }
 
-    #[\Override]
+    #[Override]
     public function expenseInPeriod(Tag $tag, Carbon $start, Carbon $end): array
     {
         /** @var GroupCollectorInterface $collector */
@@ -96,33 +96,33 @@ final class TagRepository implements TagRepositoryInterface, UserGroupInterface
         return $collector->getExtractedJournals();
     }
 
-    #[\Override]
+    #[Override]
     public function find(int $tagId): ?Tag
     {
         /** @var null|Tag */
         return $this->user->tags()->find($tagId);
     }
 
-    #[\Override]
+    #[Override]
     public function findByTag(string $tag): ?Tag
     {
         /** @var null|Tag */
         return $this->user->tags()->where('tag', $tag)->first();
     }
 
-    #[\Override]
+    #[Override]
     public function firstUseDate(Tag $tag): ?Carbon
     {
         return $tag->transactionJournals()->orderBy('date', 'ASC')->first()?->date;
     }
 
-    #[\Override]
+    #[Override]
     public function get(): Collection
     {
         return $this->user->tags()->orderBy('tag', 'ASC')->get(['tags.*']);
     }
 
-    #[\Override]
+    #[Override]
     public function getAttachments(Tag $tag): Collection
     {
         $set  = $tag->attachments()->get();
@@ -130,7 +130,7 @@ final class TagRepository implements TagRepositoryInterface, UserGroupInterface
 
         return $set->each(static function (Attachment $attachment) use ($disk): void {
             /** @var null|Note $note */
-            $note = $attachment->notes()->first();
+            $note                    = $attachment->notes()->first();
             // only used in v1 view of tags
             $attachment->file_exists = $disk->exists($attachment->fileName());
             $attachment->notes_text  = null === $note ? '' : $note->text;
@@ -143,18 +143,18 @@ final class TagRepository implements TagRepositoryInterface, UserGroupInterface
         return $tag->transactionJournals->pluck('id')->toArray();
     }
 
-    #[\Override]
+    #[Override]
     public function getLocation(Tag $tag): ?Location
     {
         /** @var null|Location */
         return $tag->locations()->first();
     }
 
-    #[\Override]
+    #[Override]
     public function getTagsInYear(?int $year): array
     {
         // get all tags in the year (if present):
-        $tagQuery = $this->user->tags()->with(['locations', 'attachments'])->orderBy('tags.tag');
+        $tagQuery   = $this->user->tags()->with(['locations', 'attachments'])->orderBy('tags.tag');
 
         // add date range (or not):
         if (null === $year) {
@@ -185,7 +185,7 @@ final class TagRepository implements TagRepositoryInterface, UserGroupInterface
         return $return;
     }
 
-    #[\Override]
+    #[Override]
     public function incomeInPeriod(Tag $tag, Carbon $start, Carbon $end): array
     {
         /** @var GroupCollectorInterface $collector */
@@ -197,7 +197,7 @@ final class TagRepository implements TagRepositoryInterface, UserGroupInterface
         return $collector->getExtractedJournals();
     }
 
-    #[\Override]
+    #[Override]
     public function lastUseDate(Tag $tag): ?Carbon
     {
         return $tag->transactionJournals()->orderBy('date', 'DESC')->first()?->date;
@@ -206,14 +206,14 @@ final class TagRepository implements TagRepositoryInterface, UserGroupInterface
     /**
      * Will return the newest tag (if known) or NULL.
      */
-    #[\Override]
+    #[Override]
     public function newestTag(): ?Tag
     {
         /** @var null|Tag */
         return $this->user->tags()->whereNotNull('date')->orderBy('date', 'DESC')->first();
     }
 
-    #[\Override]
+    #[Override]
     public function oldestTag(): ?Tag
     {
         /** @var null|Tag */
@@ -235,35 +235,36 @@ final class TagRepository implements TagRepositoryInterface, UserGroupInterface
             ->where('transaction_journals.date', '<=', $end)
             ->where('transactions.amount', '>', 0)
             ->get([
-                      // currencies
-                      'transaction_currencies.id as currency_id',
-                      'transaction_currencies.code as currency_code',
-                      'transaction_currencies.name as currency_name',
-                      'transaction_currencies.symbol as currency_symbol',
-                      'transaction_currencies.decimal_places as currency_decimal_places',
+                // currencies
+                'transaction_currencies.id as currency_id',
+                'transaction_currencies.code as currency_code',
+                'transaction_currencies.name as currency_name',
+                'transaction_currencies.symbol as currency_symbol',
+                'transaction_currencies.decimal_places as currency_decimal_places',
 
-                      // foreign
-                      'foreign_currencies.id as foreign_currency_id',
-                      'foreign_currencies.code as foreign_currency_code',
-                      'foreign_currencies.name as foreign_currency_name',
-                      'foreign_currencies.symbol as foreign_currency_symbol',
-                      'foreign_currencies.decimal_places as foreign_currency_decimal_places',
+                // foreign
+                'foreign_currencies.id as foreign_currency_id',
+                'foreign_currencies.code as foreign_currency_code',
+                'foreign_currencies.name as foreign_currency_name',
+                'foreign_currencies.symbol as foreign_currency_symbol',
+                'foreign_currencies.decimal_places as foreign_currency_decimal_places',
 
-                      // fields
-                      'transaction_journals.date',
-                      'transaction_types.type',
-                      'transaction_journals.transaction_currency_id',
-                      'transactions.amount',
-                      'transactions.native_amount as pc_amount',
-                      'transactions.foreign_amount',
-                  ])
-            ->toArray();
+                // fields
+                'transaction_journals.date',
+                'transaction_types.type',
+                'transaction_journals.transaction_currency_id',
+                'transactions.amount',
+                'transactions.native_amount as pc_amount',
+                'transactions.foreign_amount',
+            ])
+            ->toArray()
+        ;
     }
 
     /**
      * Find one or more tags based on the query.
      */
-    #[\Override]
+    #[Override]
     public function searchTag(string $query): Collection
     {
         $search = sprintf('%%%s%%', $query);
@@ -274,7 +275,7 @@ final class TagRepository implements TagRepositoryInterface, UserGroupInterface
     /**
      * Search the users tags.
      */
-    #[\Override]
+    #[Override]
     public function searchTags(string $query, int $limit): Collection
     {
         $tags = $this->user->tags()->orderBy('tag', 'ASC');
@@ -286,22 +287,24 @@ final class TagRepository implements TagRepositoryInterface, UserGroupInterface
         return $tags->take($limit)->get(['tags.*']);
     }
 
-    #[\Override]
+    #[Override]
     public function store(array $data): Tag
     {
         /** @var TagFactory $factory */
         $factory = app(TagFactory::class);
         $factory->setUser($this->user);
 
-        $res = $factory->create($data);
+        $res     = $factory->create($data);
         if (null === $res) {
             Log::error('Could not store tag based on this data', $data);
+
             throw new FireflyException('Could not store tag. See the logs');
         }
+
         return $res;
     }
 
-    #[\Override]
+    #[Override]
     public function sumsOfTag(Tag $tag, ?Carbon $start, ?Carbon $end): array
     {
         /** @var GroupCollectorInterface $collector */
@@ -312,13 +315,13 @@ final class TagRepository implements TagRepositoryInterface, UserGroupInterface
         }
 
         $collector->setTag($tag)->withAccountInformation();
-        $journals = $collector->getExtractedJournals();
+        $journals  = $collector->getExtractedJournals();
 
-        $sums = [];
+        $sums      = [];
 
         /** @var array $journal */
         foreach ($journals as $journal) {
-            $found = false;
+            $found                    = false;
 
             /** @var array $localTag */
             foreach ($journal['tags'] as $localTag) {
@@ -329,7 +332,7 @@ final class TagRepository implements TagRepositoryInterface, UserGroupInterface
             if (false === $found) {
                 continue;
             }
-            $currencyId        = (int)$journal['currency_id'];
+            $currencyId               = (int) $journal['currency_id'];
             $sums[$currencyId] ??= [
                 'currency_id'                               => $currencyId,
                 'currency_name'                             => $journal['currency_name'],
@@ -343,14 +346,14 @@ final class TagRepository implements TagRepositoryInterface, UserGroupInterface
             ];
 
             // add amount to correct type:
-            $amount = Steam::positive((string)$journal['amount']);
-            $type   = $journal['transaction_type_type'];
+            $amount                   = Steam::positive((string) $journal['amount']);
+            $type                     = $journal['transaction_type_type'];
             if (TransactionTypeEnum::WITHDRAWAL->value === $type) {
                 $amount = bcmul($amount, '-1');
             }
-            $sums[$currencyId][$type] = bcadd((string)$sums[$currencyId][$type], $amount);
+            $sums[$currencyId][$type] = bcadd((string) $sums[$currencyId][$type], $amount);
 
-            $foreignCurrencyId = $journal['foreign_currency_id'];
+            $foreignCurrencyId        = $journal['foreign_currency_id'];
             if (null !== $foreignCurrencyId && 0 !== $foreignCurrencyId) {
                 $sums[$foreignCurrencyId] ??= [
                     'currency_id'                               => $foreignCurrencyId,
@@ -364,18 +367,18 @@ final class TagRepository implements TagRepositoryInterface, UserGroupInterface
                     TransactionTypeEnum::OPENING_BALANCE->value => '0',
                 ];
                 // add foreign amount to correct type:
-                $amount = Steam::positive((string)$journal['foreign_amount']);
+                $amount                          = Steam::positive((string) $journal['foreign_amount']);
                 if (TransactionTypeEnum::WITHDRAWAL->value === $type) {
                     $amount = bcmul($amount, '-1');
                 }
-                $sums[$foreignCurrencyId][$type] = bcadd((string)$sums[$foreignCurrencyId][$type], $amount);
+                $sums[$foreignCurrencyId][$type] = bcadd((string) $sums[$foreignCurrencyId][$type], $amount);
             }
         }
 
         return $sums;
     }
 
-    #[\Override]
+    #[Override]
     public function tagEndsWith(string $query): Collection
     {
         $search = sprintf('%%%s', $query);
@@ -383,7 +386,7 @@ final class TagRepository implements TagRepositoryInterface, UserGroupInterface
         return $this->user->tags()->whereLike('tag', $search)->get(['tags.*']);
     }
 
-    #[\Override]
+    #[Override]
     public function tagStartsWith(string $query): Collection
     {
         $search = sprintf('%s%%', $query);
@@ -391,7 +394,7 @@ final class TagRepository implements TagRepositoryInterface, UserGroupInterface
         return $this->user->tags()->whereLike('tag', $search)->get(['tags.*']);
     }
 
-    #[\Override]
+    #[Override]
     public function transferredInPeriod(Tag $tag, Carbon $start, Carbon $end): array
     {
         /** @var GroupCollectorInterface $collector */
@@ -402,7 +405,7 @@ final class TagRepository implements TagRepositoryInterface, UserGroupInterface
         return $collector->getExtractedJournals();
     }
 
-    #[\Override]
+    #[Override]
     public function update(Tag $tag, array $data): Tag
     {
         if (array_key_exists('tag', $data)) {
@@ -433,7 +436,7 @@ final class TagRepository implements TagRepositoryInterface, UserGroupInterface
 
             // otherwise, update or create.
             if (!(null === $data['latitude'] && null === $data['longitude'] && null === $data['zoom_level'])) {
-                $location = $this->getLocation($tag);
+                $location             = $this->getLocation($tag);
                 if (!$location instanceof Location) {
                     $location = new Location();
                     $location->locatable()->associate($tag);

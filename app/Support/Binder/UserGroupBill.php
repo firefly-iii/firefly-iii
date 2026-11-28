@@ -27,6 +27,7 @@ use FireflyIII\Models\Bill;
 use FireflyIII\User;
 use Illuminate\Routing\Route;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
+use Override;
 
 /**
  * Class UserGroupBill.
@@ -36,7 +37,7 @@ final class UserGroupBill implements BinderInterface
     /**
      * @throws NotFoundHttpException
      */
-    #[\Override]
+    #[Override]
     public static function routeBinder(string $value, Route $route): Bill
     {
         if (auth()->check()) {

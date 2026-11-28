@@ -141,7 +141,7 @@ final class AccountDestroyService
 
     private function destroyRecurrences(Account $account): void
     {
-        $recurrences    = RecurrenceTransaction::query() /* @phpstan-ignore larastan.noUnnecessaryCollectionCall */
+        $recurrences    = RecurrenceTransaction::query() // @phpstan-ignore larastan.noUnnecessaryCollectionCall
             ->where(static function (Builder $q) use ($account): void {
                 $q->where('source_id', $account->id);
                 $q->orWhere('destination_id', $account->id);

@@ -32,6 +32,7 @@ use FireflyIII\Models\TransactionJournal;
 use FireflyIII\Support\Request\ConvertsDataTypes;
 use FireflyIII\TransactionRules\Traits\RefreshNotesTrait;
 use Illuminate\Support\Facades\Log;
+use Override;
 
 /**
  * Class AppendNotesToDescription
@@ -49,7 +50,7 @@ final class AppendNotesToDescription implements ActionInterface
         private RuleAction $action
     ) {}
 
-    #[\Override]
+    #[Override]
     public function actOnArray(array $journal): bool
     {
         Log::debug('Now in AppendNotesToDescription');
@@ -89,7 +90,7 @@ final class AppendNotesToDescription implements ActionInterface
     /**
      * @SuppressWarnings("PHPMD.UnusedFormalParameter")
      */
-    #[\Override]
+    #[Override]
     public function get(string $key, mixed $default = null): mixed
     {
         return null;
@@ -98,7 +99,7 @@ final class AppendNotesToDescription implements ActionInterface
     /**
      * @SuppressWarnings("PHPMD.UnusedFormalParameter")
      */
-    #[\Override]
+    #[Override]
     public function has(mixed $key): mixed
     {
         return null;

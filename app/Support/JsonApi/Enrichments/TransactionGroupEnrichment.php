@@ -94,10 +94,10 @@ final class TransactionGroupEnrichment implements EnrichmentInterface
         throw new FireflyException('Cannot enrich single model.');
     }
 
-    #[\Override]
+    #[Override]
     public function setUser(User $user): void {}
 
-    #[\Override]
+    #[Override]
     public function setUserGroup(UserGroup $userGroup): void {}
 
     private function appendCollectedData(): void

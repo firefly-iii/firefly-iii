@@ -29,6 +29,7 @@ use Closure;
 use Illuminate\Contracts\Validation\ValidationRule;
 use Illuminate\Support\Facades\Log;
 use InvalidArgumentException;
+use Override;
 
 /**
  * Class ValidRecurrenceRepetitionValue
@@ -38,7 +39,7 @@ final class ValidRecurrenceRepetitionValue implements ValidationRule
     /**
      * @SuppressWarnings("PHPMD.UnusedFormalParameter")
      */
-    #[\Override]
+    #[Override]
     public function validate(string $attribute, mixed $value, Closure $fail): void
     {
         $value = (string) $value;

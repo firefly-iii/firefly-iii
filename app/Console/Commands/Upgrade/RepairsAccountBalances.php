@@ -28,6 +28,7 @@ use FireflyIII\Console\Commands\ShowsFriendlyMessages;
 use FireflyIII\Support\Facades\AppConfiguration;
 use FireflyIII\Support\Models\AccountBalanceCalculator;
 use Illuminate\Console\Command;
+use Override;
 
 final class RepairsAccountBalances extends Command
 {
@@ -35,9 +36,9 @@ final class RepairsAccountBalances extends Command
 
     public const string CONFIG_NAME = '610_correct_balances';
 
-    #[\Override]
+    #[Override]
     protected $description          = 'Recalculate all account balance amounts';
-    #[\Override]
+    #[Override]
     protected $signature            = 'upgrade:610-account-balances {--F|force : Force the execution of this command.}';
 
     public function handle(): int

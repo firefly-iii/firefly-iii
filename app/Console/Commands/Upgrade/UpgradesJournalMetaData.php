@@ -33,6 +33,7 @@ use FireflyIII\Support\Facades\AppConfiguration;
 use Illuminate\Console\Command;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\DB;
+use Override;
 
 final class UpgradesJournalMetaData extends Command
 {
@@ -40,10 +41,10 @@ final class UpgradesJournalMetaData extends Command
 
     public const string CONFIG_NAME = '480_back_to_journals';
 
-    #[\Override]
+    #[Override]
     protected $description          = 'Move meta data back to journals, not individual transactions.';
 
-    #[\Override]
+    #[Override]
     protected $signature            = 'upgrade:480-journal-meta-data {--F|force : Force the execution of this command.}';
 
     /**

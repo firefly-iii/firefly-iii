@@ -32,6 +32,7 @@ use FireflyIII\Support\Facades\Amount;
 use FireflyIII\Support\Facades\AppConfiguration;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\Log;
+use Override;
 
 final class UpgradesMultiPiggyBanks extends Command
 {
@@ -39,10 +40,10 @@ final class UpgradesMultiPiggyBanks extends Command
 
     public const string CONFIG_NAME = '620_make_multi_piggies';
 
-    #[\Override]
+    #[Override]
     protected $description          = 'Upgrade piggy banks so they can use multiple accounts.';
 
-    #[\Override]
+    #[Override]
     protected $signature            = 'upgrade:620-piggy-banks {--F|force : Force the execution of this command.}';
     private AccountRepositoryInterface $accountRepository;
     private PiggyBankRepositoryInterface $repository;

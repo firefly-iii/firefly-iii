@@ -25,13 +25,14 @@ declare(strict_types=1);
 namespace FireflyIII\Support\Calendar\Periodicity;
 
 use Carbon\Carbon;
+use Override;
 
 /**
  * Class Daily
  */
 final class Daily extends Interval
 {
-    #[\Override]
+    #[Override]
     public function nextDate(Carbon $date, int $interval = 1): Carbon
     {
         return $date->clone()->addDays($this->skip($interval));

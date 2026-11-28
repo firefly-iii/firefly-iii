@@ -25,9 +25,9 @@ declare(strict_types=1);
 namespace FireflyIII\Console\Commands\Correction;
 
 use FireflyIII\Console\Commands\ShowsFriendlyMessages;
-use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Support\Authentication\HandlesUserRegistrationTrait;
 use Illuminate\Console\Command;
+use Override;
 
 final class CreatesGroupMemberships extends Command
 {
@@ -36,9 +36,9 @@ final class CreatesGroupMemberships extends Command
 
     public const string CONFIG_NAME = '560_create_group_memberships';
 
-    #[\Override]
+    #[Override]
     protected $description          = 'Update group memberships';
-    #[\Override]
+    #[Override]
     protected $signature            = 'correction:create-group-memberships';
 
     /**

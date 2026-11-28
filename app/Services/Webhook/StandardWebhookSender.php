@@ -36,6 +36,7 @@ use GuzzleHttp\Exception\RequestException;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Validator;
 use JsonException;
+use Override;
 
 use function Safe\json_encode;
 
@@ -47,7 +48,7 @@ final class StandardWebhookSender implements WebhookSenderInterface
     private WebhookMessage $message;
     private int $version = 1;
 
-    #[\Override]
+    #[Override]
     public function getVersion(): int
     {
         return $this->version;
@@ -58,7 +59,7 @@ final class StandardWebhookSender implements WebhookSenderInterface
      *
      * @SuppressWarnings("PHPMD.ExcessiveMethodLength")
      */
-    #[\Override]
+    #[Override]
     public function send(): void
     {
         // have the signature generator generate a signature. If it fails, the error thrown will
@@ -163,7 +164,7 @@ final class StandardWebhookSender implements WebhookSenderInterface
         Log::debug(sprintf('Response body: %s', $res->getBody()));
     }
 
-    #[\Override]
+    #[Override]
     public function setMessage(WebhookMessage $message): void
     {
         $this->message = $message;

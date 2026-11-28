@@ -25,13 +25,14 @@ declare(strict_types=1);
 namespace FireflyIII\Support\Facades;
 
 use Illuminate\Support\Facades\Facade;
+use Override;
 
 final class Balance extends Facade
 {
     /**
      * Get the registered name of the component.
      */
-    #[\Override]
+    #[Override]
     protected static function getFacadeAccessor(): string
     {
         return 'balance';

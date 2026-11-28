@@ -40,6 +40,7 @@ use FireflyIII\Support\Facades\AppConfiguration;
 use Illuminate\Console\Command;
 use Illuminate\Database\QueryException;
 use Illuminate\Support\Facades\Log;
+use Override;
 
 final class CorrectsTimezoneInformation extends Command
 {
@@ -59,9 +60,9 @@ final class CorrectsTimezoneInformation extends Command
         TransactionJournal::class   => ['date'],
     ];
 
-    #[\Override]
+    #[Override]
     protected $description      = 'Make sure all dates have a timezone.';
-    #[\Override]
+    #[Override]
     protected $signature        = 'correction:timezones';
 
     /**

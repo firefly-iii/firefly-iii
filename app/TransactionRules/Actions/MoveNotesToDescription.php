@@ -30,6 +30,7 @@ use FireflyIII\Models\RuleAction;
 use FireflyIII\Models\TransactionJournal;
 use FireflyIII\Support\Request\ConvertsDataTypes;
 use Illuminate\Support\Facades\Log;
+use Override;
 
 /**
  * Class MoveNotesToDescription
@@ -50,7 +51,7 @@ final class MoveNotesToDescription implements ActionInterface
         private RuleAction $action
     ) {}
 
-    #[\Override]
+    #[Override]
     public function actOnArray(array $journal): bool
     {
         /** @var null|TransactionJournal $object */
@@ -90,7 +91,7 @@ final class MoveNotesToDescription implements ActionInterface
     /**
      * @SuppressWarnings("PHPMD.UnusedFormalParameter")
      */
-    #[\Override]
+    #[Override]
     public function get(string $key, mixed $default = null): mixed
     {
         return null;
@@ -99,7 +100,7 @@ final class MoveNotesToDescription implements ActionInterface
     /**
      * @SuppressWarnings("PHPMD.UnusedFormalParameter")
      */
-    #[\Override]
+    #[Override]
     public function has(mixed $key): mixed
     {
         return null;

@@ -25,13 +25,14 @@ declare(strict_types=1);
 namespace FireflyIII\Console\Commands\System;
 
 use Illuminate\Console\Command;
+use Override;
 
 final class OutputsVersion extends Command
 {
-    #[\Override]
+    #[Override]
     protected $description = 'Outputs the Firefly III version';
 
-    #[\Override]
+    #[Override]
     protected $signature   = 'firefly-iii:output-version';
 
     /**

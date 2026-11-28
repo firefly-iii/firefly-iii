@@ -32,13 +32,14 @@ use FireflyIII\Support\Facades\Preferences;
 use FireflyIII\Support\Facades\Steam;
 use FireflyIII\User;
 use Illuminate\Support\Facades\Log;
+use Override;
 
 /**
  * Class ExchangeRatesCronjob
  */
 final class ExchangeRatesCronjob extends AbstractCronjob
 {
-    #[\Override]
+    #[Override]
     public function fire(): void
     {
         /** @var User $user */

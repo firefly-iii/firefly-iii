@@ -25,6 +25,7 @@ namespace FireflyIII\Support\Facades;
 
 use Illuminate\Support\Facades\Facade;
 use Illuminate\Support\Facades\Log;
+use Override;
 
 final class Preferences extends Facade
 {
@@ -36,7 +37,7 @@ final class Preferences extends Facade
     /**
      * Get the registered name of the component.
      */
-    #[\Override]
+    #[Override]
     protected static function getFacadeAccessor(): string
     {
         return 'preferences';

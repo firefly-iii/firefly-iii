@@ -28,6 +28,7 @@ use FireflyIII\Events\Test\OwnerTestsNotificationChannel;
 use FireflyIII\Notifications\Notifiables\OwnerNotifiable;
 use FireflyIII\Support\Facades\AppConfiguration;
 use Illuminate\Console\Command;
+use Override;
 
 final class SendTestEmail extends Command
 {
@@ -39,7 +40,7 @@ final class SendTestEmail extends Command
      *
      * @var string
      */
-    #[\Override]
+    #[Override]
     protected $description = 'Send test email';
 
     /**
@@ -47,7 +48,7 @@ final class SendTestEmail extends Command
      *
      * @var string
      */
-    #[\Override]
+    #[Override]
     protected $signature   = 'firefly-iii:send-test-email
                             {--user=1 : The user ID.}
                             {--token= : The user\'s access token.}';

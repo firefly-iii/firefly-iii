@@ -60,7 +60,7 @@ final class AccountRepository implements AccountRepositoryInterface, UserGroupIn
 {
     use UserGroupTrait;
 
-    #[\Override]
+    #[Override]
     public function count(array $types): int
     {
         return $this->user->accounts()->accountTypeIn($types)->count();
@@ -69,7 +69,7 @@ final class AccountRepository implements AccountRepositoryInterface, UserGroupIn
     /**
      * Moved here from account CRUD.
      */
-    #[\Override]
+    #[Override]
     public function destroy(Account $account, ?Account $moveTo): bool
     {
         /** @var AccountDestroyService $service */
@@ -82,7 +82,7 @@ final class AccountRepository implements AccountRepositoryInterface, UserGroupIn
     /**
      * Find account with same name OR same IBAN or both, but not the same type or ID.
      */
-    #[\Override]
+    #[Override]
     public function expandWithDoubles(Collection $accounts): Collection
     {
         $result = new Collection();
@@ -114,14 +114,14 @@ final class AccountRepository implements AccountRepositoryInterface, UserGroupIn
     /**
      * @deprecated
      */
-    #[\Override]
+    #[Override]
     public function find(int $accountId): ?Account
     {
         /** @var null|Account */
         return $this->user->accounts()->find($accountId);
     }
 
-    #[\Override]
+    #[Override]
     public function findByAccountNumber(string $number, array $types): ?Account
     {
         $dbQuery = $this->user->accounts()
@@ -143,7 +143,7 @@ final class AccountRepository implements AccountRepositoryInterface, UserGroupIn
         return $dbQuery->first(['accounts.*']);
     }
 
-    #[\Override]
+    #[Override]
     public function findByIbanNull(string $iban, array $types): ?Account
     {
         $iban  = Steam::filterSpaces($iban);
@@ -158,7 +158,7 @@ final class AccountRepository implements AccountRepositoryInterface, UserGroupIn
         return $query->where('iban', $iban)->first(['accounts.*']);
     }
 
-    #[\Override]
+    #[Override]
     public function findByName(string $name, array $types): ?Account
     {
         $query   = $this->user->accounts();
@@ -183,14 +183,14 @@ final class AccountRepository implements AccountRepositoryInterface, UserGroupIn
         return $account;
     }
 
-    #[\Override]
+    #[Override]
     public function findForGroup(int $accountId): ?Account
     {
         /** @var null|Account */
         return $this->userGroup->accounts()->find($accountId);
     }
 
-    #[\Override]
+    #[Override]
     public function getAccountCurrency(Account $account): ?TransactionCurrency
     {
         $type       = $account->accountType->type;
@@ -208,7 +208,7 @@ final class AccountRepository implements AccountRepositoryInterface, UserGroupIn
         return null;
     }
 
-    #[\Override]
+    #[Override]
     public function getAccountsById(array $accountIds): Collection
     {
         $query = $this->user->accounts();
@@ -223,7 +223,7 @@ final class AccountRepository implements AccountRepositoryInterface, UserGroupIn
         return $query->get(['accounts.*']);
     }
 
-    #[\Override]
+    #[Override]
     public function getAccountsByIdForGroup(array $accountIds): Collection
     {
         $query = $this->userGroup->accounts();
@@ -238,7 +238,7 @@ final class AccountRepository implements AccountRepositoryInterface, UserGroupIn
         return $query->get(['accounts.*']);
     }
 
-    #[\Override]
+    #[Override]
     public function getAccountsByType(array $types, ?array $sort = [], ?array $filter = [], ?bool $filterActive = null): Collection
     {
         $res     = array_intersect([
@@ -327,7 +327,7 @@ final class AccountRepository implements AccountRepositoryInterface, UserGroupIn
         return $query->get(['accounts.*']);
     }
 
-    #[\Override]
+    #[Override]
     public function getAccountsByTypeForGroup(array $types, ?array $sort = []): Collection
     {
         $res     = array_intersect([
@@ -369,13 +369,13 @@ final class AccountRepository implements AccountRepositoryInterface, UserGroupIn
     /**
      * Return account type or null if not found.
      */
-    #[\Override]
+    #[Override]
     public function getAccountTypeByType(string $type): ?AccountType
     {
         return AccountType::whereType(ucfirst($type))->first();
     }
 
-    #[\Override]
+    #[Override]
     public function getActiveAccountsByType(array $types): Collection
     {
         $query = $this->user->accounts()
@@ -397,7 +397,7 @@ final class AccountRepository implements AccountRepositoryInterface, UserGroupIn
         return $query->get(['accounts.*']);
     }
 
-    #[\Override]
+    #[Override]
     public function getAttachments(Account $account): Collection
     {
         $set  = $account->attachments()->get();
@@ -417,7 +417,7 @@ final class AccountRepository implements AccountRepositoryInterface, UserGroupIn
     /**
      * @throws FireflyException
      */
-    #[\Override]
+    #[Override]
     public function getCashAccount(): Account
     {
         /** @var AccountType $type */
@@ -430,7 +430,7 @@ final class AccountRepository implements AccountRepositoryInterface, UserGroupIn
         return $factory->findOrCreate('Cash account', $type->type);
     }
 
-    #[\Override]
+    #[Override]
     public function getCreditTransactionGroup(Account $account): ?TransactionGroup
     {
         $journal = TransactionJournal::leftJoin('transactions', 'transactions.transaction_journal_id', '=', 'transaction_journals.id')
@@ -442,7 +442,7 @@ final class AccountRepository implements AccountRepositoryInterface, UserGroupIn
         return $journal?->transactionGroup;
     }
 
-    #[\Override]
+    #[Override]
     public function getInactiveAccountsByType(array $types): Collection
     {
         $query = $this->user->accounts()
@@ -461,7 +461,7 @@ final class AccountRepository implements AccountRepositoryInterface, UserGroupIn
         return $query->get(['accounts.*']);
     }
 
-    #[\Override]
+    #[Override]
     public function getLocation(Account $account): ?Location
     {
         /** @var null|Location */
@@ -471,7 +471,7 @@ final class AccountRepository implements AccountRepositoryInterface, UserGroupIn
     /**
      * Return meta value for account. Null if not found.
      */
-    #[\Override]
+    #[Override]
     public function getMetaValue(Account $account, string $field): ?string
     {
         $result = $account->accountMeta->filter(static fn (AccountMeta $meta): bool => strtolower($meta->name) === strtolower($field));
@@ -488,13 +488,13 @@ final class AccountRepository implements AccountRepositoryInterface, UserGroupIn
     /**
      * Get note text or null.
      */
-    #[\Override]
+    #[Override]
     public function getNoteText(Account $account): ?string
     {
         return $account->notes()->first()?->text;
     }
 
-    #[\Override]
+    #[Override]
     public function getOpeningBalance(Account $account): ?TransactionJournal
     {
         return TransactionJournal::leftJoin('transactions', 'transactions.transaction_journal_id', '=', 'transaction_journals.id')
@@ -507,7 +507,7 @@ final class AccountRepository implements AccountRepositoryInterface, UserGroupIn
     /**
      * Returns the amount of the opening balance for this account.
      */
-    #[\Override]
+    #[Override]
     public function getOpeningBalanceAmount(Account $account, bool $convertToPrimary): ?string
     {
         $journal     = TransactionJournal::leftJoin('transactions', 'transactions.transaction_journal_id', '=', 'transaction_journals.id')
@@ -532,7 +532,7 @@ final class AccountRepository implements AccountRepositoryInterface, UserGroupIn
     /**
      * Return date of opening balance as string or null.
      */
-    #[\Override]
+    #[Override]
     public function getOpeningBalanceDate(Account $account): ?string
     {
         return TransactionJournal::leftJoin('transactions', 'transactions.transaction_journal_id', '=', 'transaction_journals.id')
@@ -543,7 +543,7 @@ final class AccountRepository implements AccountRepositoryInterface, UserGroupIn
         ;
     }
 
-    #[\Override]
+    #[Override]
     public function getOpeningBalanceGroup(Account $account): ?TransactionGroup
     {
         $journal = $this->getOpeningBalance($account);
@@ -551,7 +551,7 @@ final class AccountRepository implements AccountRepositoryInterface, UserGroupIn
         return $journal?->transactionGroup;
     }
 
-    #[\Override]
+    #[Override]
     public function getPiggyBanks(Account $account): Collection
     {
         return $account->piggyBanks()->get();
@@ -560,7 +560,7 @@ final class AccountRepository implements AccountRepositoryInterface, UserGroupIn
     /**
      * @throws FireflyException
      */
-    #[\Override]
+    #[Override]
     public function getReconciliation(Account $account): Account
     {
         if (AccountTypeEnum::ASSET->value !== $account->accountType->type) {
@@ -595,7 +595,7 @@ final class AccountRepository implements AccountRepositoryInterface, UserGroupIn
         return $factory->create($data);
     }
 
-    #[\Override]
+    #[Override]
     public function getUsedCurrencies(Account $account): Collection
     {
         $info        = $account->transactions()->distinct()->groupBy('transaction_currency_id')->get(['transaction_currency_id'])->toArray();
@@ -608,7 +608,7 @@ final class AccountRepository implements AccountRepositoryInterface, UserGroupIn
         return TransactionCurrency::query()->whereIn('id', $currencyIds)->get();
     }
 
-    #[\Override]
+    #[Override]
     public function isLiability(Account $account): bool
     {
         return in_array(
@@ -618,7 +618,7 @@ final class AccountRepository implements AccountRepositoryInterface, UserGroupIn
         );
     }
 
-    #[\Override]
+    #[Override]
     public function maxOrder(string $type): int
     {
         $sets     = [
@@ -666,7 +666,7 @@ final class AccountRepository implements AccountRepositoryInterface, UserGroupIn
     /**
      * Returns the date of the very first transaction in this account.
      */
-    #[\Override]
+    #[Override]
     public function oldestJournal(Account $account): ?TransactionJournal
     {
         /** @var null|TransactionJournal $first */
@@ -690,7 +690,7 @@ final class AccountRepository implements AccountRepositoryInterface, UserGroupIn
     /**
      * Returns the date of the very first transaction in this account.
      */
-    #[\Override]
+    #[Override]
     public function oldestJournalDate(Account $account): ?Carbon
     {
         $journal = $this->oldestJournal($account);
@@ -738,7 +738,7 @@ final class AccountRepository implements AccountRepositoryInterface, UserGroupIn
         ;
     }
 
-    #[\Override]
+    #[Override]
     public function resetAccountOrder(): void
     {
         Log::debug('Now in resetAccountOrder()');
@@ -784,7 +784,7 @@ final class AccountRepository implements AccountRepositoryInterface, UserGroupIn
         ;
     }
 
-    #[\Override]
+    #[Override]
     public function searchAccount(string $query, array $types, int $limit): Collection
     {
         $dbQuery = $this->user->accounts()
@@ -811,7 +811,7 @@ final class AccountRepository implements AccountRepositoryInterface, UserGroupIn
         return $dbQuery->take($limit)->get(['accounts.*']);
     }
 
-    #[\Override]
+    #[Override]
     public function searchAccountIncludingInactive(string $query, array $types, int $limit): Collection
     {
         $dbQuery = $this->user->accounts()
@@ -836,7 +836,7 @@ final class AccountRepository implements AccountRepositoryInterface, UserGroupIn
         return $dbQuery->take($limit)->get(['accounts.*']);
     }
 
-    #[\Override]
+    #[Override]
     public function searchAccountNr(string $query, array $types, int $limit): Collection
     {
         $dbQuery = $this->user->accounts()
@@ -873,7 +873,7 @@ final class AccountRepository implements AccountRepositoryInterface, UserGroupIn
     /**
      * @throws FireflyException
      */
-    #[\Override]
+    #[Override]
     public function store(array $data): Account
     {
         /** @var AccountFactory $factory */
@@ -886,7 +886,7 @@ final class AccountRepository implements AccountRepositoryInterface, UserGroupIn
     /**
      * @throws FireflyException
      */
-    #[\Override]
+    #[Override]
     public function update(Account $account, array $data): Account
     {
         /** @var AccountUpdateService $service */

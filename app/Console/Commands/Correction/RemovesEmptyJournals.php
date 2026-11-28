@@ -31,15 +31,16 @@ use Illuminate\Console\Command;
 use Illuminate\Database\QueryException;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
+use Override;
 
 final class RemovesEmptyJournals extends Command
 {
     use ShowsFriendlyMessages;
 
-    #[\Override]
+    #[Override]
     protected $description = 'Delete empty and uneven transaction journals.';
 
-    #[\Override]
+    #[Override]
     protected $signature   = 'correction:empty-journals';
 
     /**

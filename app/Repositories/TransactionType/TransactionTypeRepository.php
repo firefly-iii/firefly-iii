@@ -29,13 +29,14 @@ use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Models\TransactionType;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Log;
+use Override;
 
 /**
  * Class TransactionTypeRepository
  */
 final class TransactionTypeRepository implements TransactionTypeRepositoryInterface
 {
-    #[\Override]
+    #[Override]
     public function findByType(string $type): ?TransactionType
     {
         $search = ucfirst($type);
@@ -43,7 +44,7 @@ final class TransactionTypeRepository implements TransactionTypeRepositoryInterf
         return TransactionType::whereType($search)->first();
     }
 
-    #[\Override]
+    #[Override]
     public function findTransactionType(?TransactionType $type, ?string $typeString): TransactionType
     {
         Log::debug('Now looking for a transaction type.');
@@ -53,7 +54,7 @@ final class TransactionTypeRepository implements TransactionTypeRepositoryInterf
             return $type;
         }
         $typeString ??= TransactionTypeEnum::WITHDRAWAL->value;
-        $search     = $this->findByType($typeString);
+        $search = $this->findByType($typeString);
         if (!$search instanceof TransactionType) {
             $typeString = TransactionTypeEnum::WITHDRAWAL->value;
             $search     = $this->findByType($typeString);
@@ -66,7 +67,7 @@ final class TransactionTypeRepository implements TransactionTypeRepositoryInterf
         return $search;
     }
 
-    #[\Override]
+    #[Override]
     public function searchTypes(string $query, int $limit): Collection
     {
         if ('' === $query) {

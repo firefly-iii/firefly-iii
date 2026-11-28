@@ -30,6 +30,7 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
+use Override;
 
 final class TransactionType extends Model
 {
@@ -57,7 +58,7 @@ final class TransactionType extends Model
         throw new NotFoundHttpException();
     }
 
-    #[\Override]
+    #[Override]
     protected $fillable = ['type'];
 
     public function isDeposit(): bool
@@ -85,7 +86,7 @@ final class TransactionType extends Model
         return $this->hasMany(TransactionJournal::class);
     }
 
-    #[\Override]
+    #[Override]
     protected function casts(): array
     {
         return ['created_at' => 'datetime', 'updated_at' => 'datetime', 'deleted_at' => 'datetime'];

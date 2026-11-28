@@ -26,6 +26,7 @@ namespace FireflyIII\Console\Commands\Tools;
 
 use FireflyIII\Console\Commands\ShowsFriendlyMessages;
 use Illuminate\Console\Command;
+use Override;
 
 final class VerifiesDatabaseConnection extends Command
 {
@@ -37,7 +38,7 @@ final class VerifiesDatabaseConnection extends Command
      *
      * @var string
      */
-    #[\Override]
+    #[Override]
     protected $description = 'This command tries to connect to the database.';
 
     /**
@@ -45,7 +46,7 @@ final class VerifiesDatabaseConnection extends Command
      *
      * @var string
      */
-    #[\Override]
+    #[Override]
     protected $signature   = 'firefly-iii:verify-database-connection';
 
     /**

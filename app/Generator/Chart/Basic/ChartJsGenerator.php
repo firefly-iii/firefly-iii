@@ -26,6 +26,7 @@ namespace FireflyIII\Generator\Chart\Basic;
 use FireflyIII\Support\ChartColour;
 use FireflyIII\Support\Facades\Steam;
 use Illuminate\Support\Facades\Log;
+use Override;
 
 /**
  * Class ChartJsGenerator.
@@ -37,7 +38,7 @@ final class ChartJsGenerator implements GeneratorInterface
      *
      * key => [value => x, 'currency_symbol' => 'x']
      */
-    #[\Override]
+    #[Override]
     public function multiCurrencyPieChart(array $data): array
     {
         $chartData = ['datasets' => [0 => []], 'labels' => []];
@@ -94,7 +95,7 @@ final class ChartJsGenerator implements GeneratorInterface
      *
      *  // it's five.
      */
-    #[\Override]
+    #[Override]
     public function multiSet(array $data, array $labels = []): array
     {
         reset($data);
@@ -143,7 +144,7 @@ final class ChartJsGenerator implements GeneratorInterface
      *
      * key => value
      */
-    #[\Override]
+    #[Override]
     public function pieChart(array $data): array
     {
         $chartData = ['datasets' => [0 => []], 'labels' => []];
@@ -176,7 +177,7 @@ final class ChartJsGenerator implements GeneratorInterface
      *
      * 'label-of-entry' => value
      */
-    #[\Override]
+    #[Override]
     public function singleSet(string $setLabel, array $data): array
     {
         return [

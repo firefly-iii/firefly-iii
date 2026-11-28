@@ -46,7 +46,7 @@ final class UserGroupRepository implements UserGroupRepositoryInterface, UserGro
 {
     use UserGroupTrait;
 
-    #[\Override]
+    #[Override]
     public function destroy(UserGroup $userGroup): void
     {
         Log::debug(sprintf('Going to destroy user group #%d ("%s").', $userGroup->id, $userGroup->title));
@@ -118,7 +118,7 @@ final class UserGroupRepository implements UserGroupRepositoryInterface, UserGro
     /**
      * Returns all groups the user is member in.
      */
-    #[\Override]
+    #[Override]
     public function get(): Collection
     {
         $collection  = new Collection();
@@ -145,7 +145,7 @@ final class UserGroupRepository implements UserGroupRepositoryInterface, UserGro
     /**
      * Returns all groups.
      */
-    #[\Override]
+    #[Override]
     public function getAll(): Collection
     {
         return UserGroup::all();
@@ -166,7 +166,7 @@ final class UserGroupRepository implements UserGroupRepositoryInterface, UserGro
     /**
      * @throws FireflyException
      */
-    #[\Override]
+    #[Override]
     public function store(array $data): UserGroup
     {
         $data['user'] = $this->user;
@@ -177,7 +177,7 @@ final class UserGroupRepository implements UserGroupRepositoryInterface, UserGro
         return $factory->create($data);
     }
 
-    #[\Override]
+    #[Override]
     public function update(UserGroup $userGroup, array $data): UserGroup
     {
         $userGroup->title = $data['title'];
@@ -208,7 +208,7 @@ final class UserGroupRepository implements UserGroupRepositoryInterface, UserGro
      *
      * @throws FireflyException
      */
-    #[\Override]
+    #[Override]
     public function updateMembership(UserGroup $userGroup, array $data): UserGroup
     {
         $owner           = UserRole::whereTitle(UserRoleEnum::OWNER)->first();

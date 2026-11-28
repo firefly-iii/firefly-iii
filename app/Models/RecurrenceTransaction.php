@@ -32,6 +32,7 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use Override;
 
 #[ObservedBy([DeletedRecurrenceTransactionObserver::class])]
 final class RecurrenceTransaction extends Model
@@ -39,7 +40,7 @@ final class RecurrenceTransaction extends Model
     use ReturnsIntegerIdTrait;
     use SoftDeletes;
 
-    #[\Override]
+    #[Override]
     protected $fillable = [
         'recurrence_id',
         'transaction_currency_id',
@@ -52,60 +53,17 @@ final class RecurrenceTransaction extends Model
         'description',
     ];
 
-    #[\Override]
+    #[Override]
     protected $table    = 'recurrences_transactions';
-
-    public function destinationAccount(): BelongsTo
-    {
-        return $this->belongsTo(Account::class, 'destination_id');
-    }
-
-    public function foreignCurrency(): BelongsTo
-    {
-        return $this->belongsTo(TransactionCurrency::class);
-    }
-
-    public function recurrence(): BelongsTo
-    {
-        return $this->belongsTo(Recurrence::class);
-    }
-
-    public function recurrenceTransactionMeta(): HasMany
-    {
-        return $this->hasMany(RecurrenceTransactionMeta::class, 'rt_id');
-    }
-
-    public function sourceAccount(): BelongsTo
-    {
-        return $this->belongsTo(Account::class, 'source_id');
-    }
-
-    public function transactionCurrency(): BelongsTo
-    {
-        return $this->belongsTo(TransactionCurrency::class);
-    }
-
-    public function transactionType(): BelongsTo
-    {
-        return $this->belongsTo(TransactionType::class);
-    }
 
     public function amount(): Attribute
     {
         return Attribute::make(get: static fn ($value): string => (string) $value);
     }
 
-    #[\Override]
-    protected function casts(): array
+    public function destinationAccount(): BelongsTo
     {
-        return [
-            'created_at'     => 'datetime',
-            'updated_at'     => 'datetime',
-            'deleted_at'     => 'datetime',
-            'amount'         => 'string',
-            'foreign_amount' => 'string',
-            'description'    => 'string',
-        ];
+        return $this->belongsTo(Account::class, 'destination_id');
     }
 
     public function destinationId(): Attribute
@@ -118,9 +76,29 @@ final class RecurrenceTransaction extends Model
         return Attribute::make(get: static fn ($value): string => (string) $value);
     }
 
+    public function foreignCurrency(): BelongsTo
+    {
+        return $this->belongsTo(TransactionCurrency::class);
+    }
+
+    public function recurrence(): BelongsTo
+    {
+        return $this->belongsTo(Recurrence::class);
+    }
+
     public function recurrenceId(): Attribute
     {
         return Attribute::make(get: static fn ($value): int => (int) $value);
+    }
+
+    public function recurrenceTransactionMeta(): HasMany
+    {
+        return $this->hasMany(RecurrenceTransactionMeta::class, 'rt_id');
+    }
+
+    public function sourceAccount(): BelongsTo
+    {
+        return $this->belongsTo(Account::class, 'source_id');
     }
 
     public function sourceId(): Attribute
@@ -128,13 +106,36 @@ final class RecurrenceTransaction extends Model
         return Attribute::make(get: static fn ($value): int => (int) $value);
     }
 
+    public function transactionCurrency(): BelongsTo
+    {
+        return $this->belongsTo(TransactionCurrency::class);
+    }
+
     public function transactionCurrencyId(): Attribute
     {
         return Attribute::make(get: static fn ($value): int => (int) $value);
     }
 
+    public function transactionType(): BelongsTo
+    {
+        return $this->belongsTo(TransactionType::class);
+    }
+
     public function userId(): Attribute
     {
         return Attribute::make(get: static fn ($value): int => (int) $value);
+    }
+
+    #[Override]
+    protected function casts(): array
+    {
+        return [
+            'created_at'     => 'datetime',
+            'updated_at'     => 'datetime',
+            'deleted_at'     => 'datetime',
+            'amount'         => 'string',
+            'foreign_amount' => 'string',
+            'description'    => 'string',
+        ];
     }
 }

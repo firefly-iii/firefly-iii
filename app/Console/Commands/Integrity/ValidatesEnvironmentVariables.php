@@ -26,14 +26,15 @@ namespace FireflyIII\Console\Commands\Integrity;
 
 use FireflyIII\Console\Commands\ShowsFriendlyMessages;
 use Illuminate\Console\Command;
+use Override;
 
 final class ValidatesEnvironmentVariables extends Command
 {
     use ShowsFriendlyMessages;
 
-    #[\Override]
+    #[Override]
     protected $description = 'Makes sure you use the correct variables.';
-    #[\Override]
+    #[Override]
     protected $signature   = 'integrity:validates-environment-variables';
 
     /**

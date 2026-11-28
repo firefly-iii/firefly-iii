@@ -38,6 +38,7 @@ use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Storage;
 use League\Flysystem\UnableToDeleteFile;
 use LogicException;
+use Override;
 
 /**
  * Class AttachmentRepository.
@@ -49,7 +50,7 @@ final class AttachmentRepository implements AttachmentRepositoryInterface, UserG
     /**
      * @throws Exception
      */
-    #[\Override]
+    #[Override]
     public function destroy(Attachment $attachment): bool
     {
         /** @var AttachmentHelperInterface $helper */
@@ -67,7 +68,7 @@ final class AttachmentRepository implements AttachmentRepositoryInterface, UserG
         return true;
     }
 
-    #[\Override]
+    #[Override]
     public function exists(Attachment $attachment): bool
     {
         /** @var Storage $disk */
@@ -76,13 +77,13 @@ final class AttachmentRepository implements AttachmentRepositoryInterface, UserG
         return $disk->exists($attachment->fileName());
     }
 
-    #[\Override]
+    #[Override]
     public function get(): Collection
     {
         return $this->user->attachments()->get();
     }
 
-    #[\Override]
+    #[Override]
     public function getContent(Attachment $attachment): string
     {
         // create a disk.
@@ -107,7 +108,7 @@ final class AttachmentRepository implements AttachmentRepositoryInterface, UserG
     /**
      * Get attachment note text or empty string.
      */
-    #[\Override]
+    #[Override]
     public function getNoteText(Attachment $attachment): ?string
     {
         $note = $attachment->notes()->first();
@@ -121,16 +122,17 @@ final class AttachmentRepository implements AttachmentRepositoryInterface, UserG
     /**
      * @throws FireflyException
      */
-    #[\Override]
+    #[Override]
     public function store(array $data): Attachment
     {
         /** @var AttachmentFactory $factory */
         $factory = app(AttachmentFactory::class);
         $factory->setUser($this->user);
+
         return $factory->create($data);
     }
 
-    #[\Override]
+    #[Override]
     public function update(Attachment $attachment, array $data): Attachment
     {
         if (array_key_exists('title', $data)) {

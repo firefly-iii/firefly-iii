@@ -27,6 +27,7 @@ namespace FireflyIII\Console\Commands\Correction;
 use FireflyIII\Console\Commands\ShowsFriendlyMessages;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\DB;
+use Override;
 
 final class RollbacksSingleMigration extends Command
 {
@@ -37,7 +38,7 @@ final class RollbacksSingleMigration extends Command
      *
      * @var string
      */
-    #[\Override]
+    #[Override]
     protected $description = 'Removes the last entry from the migration table. ';
 
     /**
@@ -45,7 +46,7 @@ final class RollbacksSingleMigration extends Command
      *
      * @var string
      */
-    #[\Override]
+    #[Override]
     protected $signature   = 'correction:rollback-single-migration {--force}';
 
     /**

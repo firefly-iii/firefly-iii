@@ -34,6 +34,7 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
+use Override;
 
 final class PiggyBankEventEnrichment implements EnrichmentInterface
 {
@@ -55,7 +56,7 @@ final class PiggyBankEventEnrichment implements EnrichmentInterface
         // $this->primaryCurrency  = Amount::getPrimaryCurrency();
     }
 
-    #[\Override]
+    #[Override]
     public function enrich(Collection $collection): Collection
     {
         $this->collection = $collection;
@@ -65,7 +66,7 @@ final class PiggyBankEventEnrichment implements EnrichmentInterface
         return $this->collection;
     }
 
-    #[\Override]
+    #[Override]
     public function enrichSingle(array|Model $model): array|Model
     {
         Log::debug(__METHOD__);
@@ -75,13 +76,13 @@ final class PiggyBankEventEnrichment implements EnrichmentInterface
         return $collection->first();
     }
 
-    #[\Override]
+    #[Override]
     public function setUser(User $user): void
     {
         $this->setUserGroup($user->userGroup);
     }
 
-    #[\Override]
+    #[Override]
     public function setUserGroup(UserGroup $userGroup): void {}
 
     private function appendCollectedData(): void

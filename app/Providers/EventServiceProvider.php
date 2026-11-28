@@ -33,7 +33,7 @@ use Override;
  */
 final class EventServiceProvider extends ServiceProvider
 {
-    #[\Override]
+    #[Override]
     protected $listen = [
         // is a Transaction Journal related event.
         // StoredTransactionGroup::class          => ['FireflyIII\Handlers\Events\StoredGroupEventHandler@runAllHandlers'],

@@ -35,13 +35,14 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
+use Override;
 
 /**
  * @property User                $user
  * @property TransactionCurrency $transactionCurrency
- * @property Carbon $start_date
- * @property Carbon $end_date
- * @property string $amount
+ * @property Carbon              $start_date
+ * @property Carbon              $end_date
+ * @property string              $amount
  */
 #[ObservedBy([AvailableBudgetObserver::class])]
 final class AvailableBudget extends Model
@@ -50,7 +51,7 @@ final class AvailableBudget extends Model
     use ReturnsIntegerUserIdTrait;
     use SoftDeletes;
 
-    #[\Override]
+    #[Override]
     protected $fillable = [
         'user_id',
         'user_group_id',
@@ -91,36 +92,9 @@ final class AvailableBudget extends Model
         throw new AuthenticationException();
     }
 
-    public function transactionCurrency(): BelongsTo
-    {
-        return $this->belongsTo(TransactionCurrency::class);
-    }
-
-    public function user(): BelongsTo
-    {
-        return $this->belongsTo(User::class);
-    }
-
     public function amount(): Attribute
     {
         return Attribute::make(get: static fn ($value): string => (string) $value);
-    }
-
-    #[\Override]
-    protected function casts(): array
-    {
-        return [
-            'created_at'              => 'datetime',
-            'updated_at'              => 'datetime',
-            'deleted_at'              => 'datetime',
-            'start_date'              => 'date',
-            'end_date'                => 'date',
-            'transaction_currency_id' => 'int',
-            'amount'                  => 'string',
-            'native_amount'           => 'string',
-            'user_id'                 => 'integer',
-            'user_group_id'           => 'integer',
-        ];
     }
 
     public function endDate(): Attribute
@@ -139,8 +113,35 @@ final class AvailableBudget extends Model
         );
     }
 
+    public function transactionCurrency(): BelongsTo
+    {
+        return $this->belongsTo(TransactionCurrency::class);
+    }
+
     public function transactionCurrencyId(): Attribute
     {
         return Attribute::make(get: static fn ($value): int => (int) $value);
+    }
+
+    public function user(): BelongsTo
+    {
+        return $this->belongsTo(User::class);
+    }
+
+    #[Override]
+    protected function casts(): array
+    {
+        return [
+            'created_at'              => 'datetime',
+            'updated_at'              => 'datetime',
+            'deleted_at'              => 'datetime',
+            'start_date'              => 'date',
+            'end_date'                => 'date',
+            'transaction_currency_id' => 'int',
+            'amount'                  => 'string',
+            'native_amount'           => 'string',
+            'user_id'                 => 'integer',
+            'user_group_id'           => 'integer',
+        ];
     }
 }

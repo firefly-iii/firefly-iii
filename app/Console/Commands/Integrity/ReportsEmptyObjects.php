@@ -31,15 +31,16 @@ use FireflyIII\Models\Category;
 use FireflyIII\Models\Tag;
 use Illuminate\Console\Command;
 use stdClass;
+use Override;
 
 final class ReportsEmptyObjects extends Command
 {
     use ShowsFriendlyMessages;
 
-    #[\Override]
+    #[Override]
     protected $description = 'Reports on empty database objects.';
 
-    #[\Override]
+    #[Override]
     protected $signature   = 'integrity:empty-objects';
 
     /**

@@ -36,6 +36,7 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
+use Override;
 
 final class BudgetEnrichment implements EnrichmentInterface
 {
@@ -53,7 +54,7 @@ final class BudgetEnrichment implements EnrichmentInterface
     private User $user;
     private UserGroup $userGroup;
 
-    #[\Override]
+    #[Override]
     public function enrich(Collection $collection): Collection
     {
         $this->collection = $collection;
@@ -68,7 +69,7 @@ final class BudgetEnrichment implements EnrichmentInterface
         return $this->collection;
     }
 
-    #[\Override]
+    #[Override]
     public function enrichSingle(array|Model $model): array|Model
     {
         Log::debug(__METHOD__);
@@ -88,14 +89,14 @@ final class BudgetEnrichment implements EnrichmentInterface
         $this->start = $start;
     }
 
-    #[\Override]
+    #[Override]
     public function setUser(User $user): void
     {
         $this->user = $user;
         $this->setUserGroup($user->userGroup);
     }
 
-    #[\Override]
+    #[Override]
     public function setUserGroup(UserGroup $userGroup): void
     {
         $this->userGroup = $userGroup;

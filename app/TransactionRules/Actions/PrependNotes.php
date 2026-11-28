@@ -28,6 +28,7 @@ use FireflyIII\Models\Note;
 use FireflyIII\Models\RuleAction;
 use FireflyIII\Models\TransactionJournal;
 use Illuminate\Support\Facades\Log;
+use Override;
 
 /**
  * Class PrependNotes.
@@ -42,7 +43,7 @@ final class PrependNotes implements ActionInterface
         private readonly RuleAction $action
     ) {}
 
-    #[\Override]
+    #[Override]
     public function actOnArray(array $journal): bool
     {
         $dbNote       = Note::query()

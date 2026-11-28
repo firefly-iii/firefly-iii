@@ -24,10 +24,10 @@ declare(strict_types=1);
 
 namespace FireflyIII\View\Components\Lists;
 
-use Closure;
 use Illuminate\Contracts\View\View;
 use Illuminate\Pagination\LengthAwarePaginator;
 use Illuminate\View\Component;
+use Override;
 
 final class Accounts extends Component
 {
@@ -48,7 +48,7 @@ final class Accounts extends Component
     /**
      * Get the view / contents that represent the component.
      */
-    #[\Override]
+    #[Override]
     public function render(): View
     {
         return view('components.lists.accounts');

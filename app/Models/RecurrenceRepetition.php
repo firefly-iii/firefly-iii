@@ -29,6 +29,7 @@ use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use Override;
 
 final class RecurrenceRepetition extends Model
 {
@@ -40,25 +41,11 @@ final class RecurrenceRepetition extends Model
         return $this->belongsTo(Recurrence::class);
     }
 
-    #[\Override]
+    #[Override]
     protected $fillable = ['recurrence_id', 'weekend', 'repetition_type', 'repetition_moment', 'repetition_skip'];
 
-    #[\Override]
+    #[Override]
     protected $table    = 'recurrences_repetitions';
-
-    #[\Override]
-    protected function casts(): array
-    {
-        return [
-            'created_at'        => 'datetime',
-            'updated_at'        => 'datetime',
-            'deleted_at'        => 'datetime',
-            'repetition_type'   => 'string',
-            'repetition_moment' => 'string',
-            'repetition_skip'   => 'int',
-            'weekend'           => 'int',
-        ];
-    }
 
     public function recurrenceId(): Attribute
     {
@@ -73,5 +60,19 @@ final class RecurrenceRepetition extends Model
     public function weekend(): Attribute
     {
         return Attribute::make(get: static fn ($value): int => (int) $value);
+    }
+
+    #[Override]
+    protected function casts(): array
+    {
+        return [
+            'created_at'        => 'datetime',
+            'updated_at'        => 'datetime',
+            'deleted_at'        => 'datetime',
+            'repetition_type'   => 'string',
+            'repetition_moment' => 'string',
+            'repetition_skip'   => 'int',
+            'weekend'           => 'int',
+        ];
     }
 }

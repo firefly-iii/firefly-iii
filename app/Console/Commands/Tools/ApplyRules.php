@@ -39,16 +39,17 @@ use FireflyIII\TransactionRules\Engine\RuleEngineInterface;
 use Illuminate\Console\Command;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Log;
+use Override;
 
 final class ApplyRules extends Command
 {
     use ShowsFriendlyMessages;
     use VerifiesAccessToken;
 
-    #[\Override]
+    #[Override]
     protected $description = 'This command will apply your rules and rule groups on a selection of your transactions.';
 
-    #[\Override]
+    #[Override]
     protected $signature   = 'firefly-iii:apply-rules
                             {--user=1 : The user ID.}
                             {--token= : The user\'s access token.}

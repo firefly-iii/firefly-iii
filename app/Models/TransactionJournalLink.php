@@ -30,12 +30,13 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\MorphMany;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
+use Override;
 
 final class TransactionJournalLink extends Model
 {
     use ReturnsIntegerIdTrait;
 
-    #[\Override]
+    #[Override]
     protected $table = 'journal_links';
 
     /**
@@ -73,9 +74,19 @@ final class TransactionJournalLink extends Model
         return $this->belongsTo(TransactionJournal::class, 'destination_id');
     }
 
+    public function destinationId(): Attribute
+    {
+        return Attribute::make(get: static fn ($value): int => (int) $value);
+    }
+
     public function linkType(): BelongsTo
     {
         return $this->belongsTo(LinkType::class);
+    }
+
+    public function linkTypeId(): Attribute
+    {
+        return Attribute::make(get: static fn ($value): int => (int) $value);
     }
 
     /**
@@ -91,24 +102,14 @@ final class TransactionJournalLink extends Model
         return $this->belongsTo(TransactionJournal::class, 'source_id');
     }
 
-    #[\Override]
-    protected function casts(): array
-    {
-        return ['created_at' => 'datetime', 'updated_at' => 'datetime'];
-    }
-
-    public function destinationId(): Attribute
-    {
-        return Attribute::make(get: static fn ($value): int => (int) $value);
-    }
-
-    public function linkTypeId(): Attribute
-    {
-        return Attribute::make(get: static fn ($value): int => (int) $value);
-    }
-
     public function sourceId(): Attribute
     {
         return Attribute::make(get: static fn ($value): int => (int) $value);
+    }
+
+    #[Override]
+    protected function casts(): array
+    {
+        return ['created_at' => 'datetime', 'updated_at' => 'datetime'];
     }
 }

@@ -28,6 +28,7 @@ use Illuminate\Support\Facades\Log;
 use LogicException;
 use Safe\Exceptions\PcreException;
 use SensitiveParameter;
+use Override;
 
 use function Safe\mb_convert_encoding;
 use function Safe\preg_split;
@@ -48,7 +49,7 @@ final class QueryParser implements QueryParserInterface
     private array $chrArray     = [];
     private int   $count        = 0;
 
-    #[\Override]
+    #[Override]
     public function parse(string $query): NodeGroup
     {
         // Log::debug(sprintf('Parsing query in QueryParser: "%s"', $query));

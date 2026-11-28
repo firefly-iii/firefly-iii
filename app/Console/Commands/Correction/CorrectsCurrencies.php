@@ -37,14 +37,15 @@ use Illuminate\Console\Command;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Log;
 use Symfony\Component\Console\Command\Command as CommandAlias;
+use Override;
 
 final class CorrectsCurrencies extends Command
 {
     use ShowsFriendlyMessages;
 
-    #[\Override]
+    #[Override]
     protected $description = 'Enables all currencies in use.';
-    #[\Override]
+    #[Override]
     protected $signature   = 'correction:currencies';
 
     /**

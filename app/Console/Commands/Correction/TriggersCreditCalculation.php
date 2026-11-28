@@ -27,12 +27,13 @@ namespace FireflyIII\Console\Commands\Correction;
 use FireflyIII\Models\Account;
 use FireflyIII\Services\Internal\Support\CreditRecalculateService;
 use Illuminate\Console\Command;
+use Override;
 
 final class TriggersCreditCalculation extends Command
 {
-    #[\Override]
+    #[Override]
     protected $description = 'Triggers the credit recalculation service for liabilities.';
-    #[\Override]
+    #[Override]
     protected $signature   = 'correction:recalculates-liabilities';
 
     /**

@@ -30,6 +30,7 @@ use FireflyIII\Repositories\User\UserRepositoryInterface;
 use FireflyIII\User;
 use Illuminate\Contracts\Validation\ValidationRule;
 use Illuminate\Support\Facades\Log;
+use Override;
 
 /**
  * Class IsDefaultUserGroupName
@@ -43,7 +44,7 @@ final class IsDefaultUserGroupName implements ValidationRule
     /**
      * @SuppressWarnings("PHPMD.UnusedFormalParameter")
      */
-    #[\Override]
+    #[Override]
     public function validate(string $attribute, mixed $value, Closure $fail): void
     {
         Log::debug(sprintf('Now in %s(%s)', __METHOD__, $value));

@@ -42,6 +42,7 @@ use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
+use Override;
 
 use function Safe\json_encode;
 use function Safe\mb_regex_encoding;
@@ -55,9 +56,9 @@ final class ForcesDecimalSize extends Command
 {
     use ShowsFriendlyMessages;
 
-    #[\Override]
+    #[Override]
     protected $description = 'This command resizes DECIMAL columns in MySQL or PostgreSQL and correct amounts (only MySQL).';
-    #[\Override]
+    #[Override]
     protected $signature   = 'firefly-iii:force-decimal-size {--force}';
     private string $cast;
     private array $classes = [

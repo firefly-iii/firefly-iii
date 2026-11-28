@@ -27,6 +27,7 @@ namespace FireflyIII\Console\Commands\Integrity;
 use FireflyIII\Console\Commands\ShowsFriendlyMessages;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\Log;
+use Override;
 
 final class ValidatesFilePermissions extends Command
 {
@@ -37,7 +38,7 @@ final class ValidatesFilePermissions extends Command
      *
      * @var string
      */
-    #[\Override]
+    #[Override]
     protected $description = 'Command description';
 
     /**
@@ -45,7 +46,7 @@ final class ValidatesFilePermissions extends Command
      *
      * @var string
      */
-    #[\Override]
+    #[Override]
     protected $signature   = 'integrity:file-permissions';
 
     /**

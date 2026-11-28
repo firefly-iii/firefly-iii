@@ -35,13 +35,14 @@ use FireflyIII\Models\TransactionJournal;
 use Illuminate\Contracts\Validation\ValidationRule;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Log;
+use Override;
 
 /**
  * Class BelongsUser
  */
 final class BelongsUser implements ValidationRule
 {
-    #[\Override]
+    #[Override]
     public function validate(string $attribute, mixed $value, Closure $fail): void
     {
         $attribute = $this->parseAttribute($attribute);

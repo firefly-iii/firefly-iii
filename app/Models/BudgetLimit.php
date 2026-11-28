@@ -34,6 +34,7 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\MorphMany;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
+use Override;
 
 /**
  * Class BudgetLimit
@@ -41,14 +42,14 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
  * @property TransactionCurrency $transactionCurrency
  * @property Carbon              $start_date
  * @property null|Carbon         $end_date
- * @property string $amount
+ * @property string              $amount
  */
 #[ObservedBy([BudgetLimitObserver::class])]
 final class BudgetLimit extends Model
 {
     use ReturnsIntegerIdTrait;
 
-    #[\Override]
+    #[Override]
     protected $fillable = ['budget_id', 'start_date', 'end_date', 'start_date_tz', 'end_date_tz', 'amount', 'transaction_currency_id', 'native_amount'];
 
     /**
@@ -78,9 +79,22 @@ final class BudgetLimit extends Model
         throw new AuthenticationException();
     }
 
+    /**
+     * Get the amount
+     */
+    public function amount(): Attribute
+    {
+        return Attribute::make(get: static fn ($value): string => (string) $value);
+    }
+
     public function budget(): BelongsTo
     {
         return $this->belongsTo(Budget::class);
+    }
+
+    public function budgetId(): Attribute
+    {
+        return Attribute::make(get: static fn ($value): int => (int) $value);
     }
 
     /**
@@ -96,20 +110,12 @@ final class BudgetLimit extends Model
         return $this->belongsTo(TransactionCurrency::class);
     }
 
-    /**
-     * Get the amount
-     */
-    public function amount(): Attribute
-    {
-        return Attribute::make(get: static fn ($value): string => (string) $value);
-    }
-
-    public function budgetId(): Attribute
+    public function transactionCurrencyId(): Attribute
     {
         return Attribute::make(get: static fn ($value): int => (int) $value);
     }
 
-    #[\Override]
+    #[Override]
     protected function casts(): array
     {
         return [
@@ -121,10 +127,5 @@ final class BudgetLimit extends Model
             'amount'        => 'string',
             'native_amount' => 'string',
         ];
-    }
-
-    public function transactionCurrencyId(): Attribute
-    {
-        return Attribute::make(get: static fn ($value): int => (int) $value);
     }
 }

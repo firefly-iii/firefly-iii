@@ -29,10 +29,11 @@ use FireflyIII\Api\V1\Requests\DateRangeRequest;
 use FireflyIII\Api\V1\Requests\DateRequest;
 use FireflyIII\Api\V1\Requests\PaginationRequest;
 use FireflyIII\Models\Category;
+use Override;
 
 final class ShowRequest extends AggregateFormRequest
 {
-    #[\Override]
+    #[Override]
     protected function getRequests(): array
     {
         return [

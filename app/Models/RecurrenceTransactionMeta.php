@@ -29,16 +29,17 @@ use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use Override;
 
 final class RecurrenceTransactionMeta extends Model
 {
     use ReturnsIntegerIdTrait;
     use SoftDeletes;
 
-    #[\Override]
+    #[Override]
     protected $fillable = ['rt_id', 'name', 'value'];
 
-    #[\Override]
+    #[Override]
     protected $table    = 'rt_meta';
 
     public function recurrenceTransaction(): BelongsTo
@@ -46,14 +47,14 @@ final class RecurrenceTransactionMeta extends Model
         return $this->belongsTo(RecurrenceTransaction::class, 'rt_id');
     }
 
-    #[\Override]
-    protected function casts(): array
-    {
-        return ['created_at' => 'datetime', 'updated_at' => 'datetime', 'deleted_at' => 'datetime', 'name' => 'string', 'value' => 'string'];
-    }
-
     public function rtId(): Attribute
     {
         return Attribute::make(get: static fn ($value): int => (int) $value);
+    }
+
+    #[Override]
+    protected function casts(): array
+    {
+        return ['created_at' => 'datetime', 'updated_at' => 'datetime', 'deleted_at' => 'datetime', 'name' => 'string', 'value' => 'string'];
     }
 }

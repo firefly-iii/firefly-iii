@@ -154,14 +154,14 @@ final class AccountEnrichment implements EnrichmentInterface
         $this->start = $start;
     }
 
-    #[\Override]
+    #[Override]
     public function setUser(User $user): void
     {
         $this->user      = $user;
         $this->userGroup = $user->userGroup;
     }
 
-    #[\Override]
+    #[Override]
     public function setUserGroup(UserGroup $userGroup): void
     {
         $this->userGroup = $userGroup;

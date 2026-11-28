@@ -42,6 +42,7 @@ use FireflyIII\Repositories\Journal\JournalRepositoryInterface;
 use FireflyIII\Repositories\PiggyBank\PiggyBankRepositoryInterface;
 use FireflyIII\Repositories\Tag\TagRepositoryInterface;
 use Illuminate\Contracts\Validation\ValidationRule;
+use Override;
 
 /**
  * Class IsValidAttachmentModel
@@ -62,7 +63,7 @@ final class IsValidAttachmentModel implements ValidationRule
     /**
      * @SuppressWarnings("PHPMD.UnusedFormalParameter")
      */
-    #[\Override]
+    #[Override]
     public function validate(string $attribute, mixed $value, Closure $fail): void
     {
         if (!auth()->check()) {

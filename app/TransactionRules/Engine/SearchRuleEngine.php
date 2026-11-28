@@ -63,14 +63,14 @@ final class SearchRuleEngine implements RuleEngineInterface
         $this->groups = new Collection();
     }
 
-    #[\Override]
+    #[Override]
     public function addOperator(array $operator): void
     {
         // Log::debug('Add extra operator: ', $operator);
         $this->operators[] = $operator;
     }
 
-    #[\Override]
+    #[Override]
     public function find(): Collection
     {
         Log::debug('SearchRuleEngine::find()');
@@ -94,7 +94,7 @@ final class SearchRuleEngine implements RuleEngineInterface
     /**
      * @throws FireflyException
      */
-    #[\Override]
+    #[Override]
     public function fire(): void
     {
         $this->resultCount = [];
@@ -136,7 +136,7 @@ final class SearchRuleEngine implements RuleEngineInterface
     /**
      * Return the number of changed transactions from the previous "fire" action.
      */
-    #[\Override]
+    #[Override]
     public function getResults(): int
     {
         return count($this->resultCount);
@@ -157,13 +157,13 @@ final class SearchRuleEngine implements RuleEngineInterface
         $this->operators = $new;
     }
 
-    #[\Override]
+    #[Override]
     public function setRefreshTriggers(bool $refreshTriggers): void
     {
         $this->refreshTriggers = $refreshTriggers;
     }
 
-    #[\Override]
+    #[Override]
     public function setRuleGroups(Collection $ruleGroups): void
     {
         Log::debug(__METHOD__);
@@ -175,7 +175,7 @@ final class SearchRuleEngine implements RuleEngineInterface
         }
     }
 
-    #[\Override]
+    #[Override]
     public function setRules(Collection $rules): void
     {
         Log::debug(__METHOD__);
@@ -187,7 +187,7 @@ final class SearchRuleEngine implements RuleEngineInterface
         }
     }
 
-    #[\Override]
+    #[Override]
     public function setUser(User $user): void
     {
         $this->user      = $user;

@@ -28,6 +28,7 @@ use Closure;
 use FireflyIII\Models\TransactionJournal;
 use Illuminate\Contracts\Validation\ValidationRule;
 use Illuminate\Support\Facades\Log;
+use Override;
 
 /**
  * Class ValidJournals
@@ -37,7 +38,7 @@ final class ValidJournals implements ValidationRule
     /**
      * @SuppressWarnings("PHPMD.UnusedFormalParameter")
      */
-    #[\Override]
+    #[Override]
     public function validate(string $attribute, mixed $value, Closure $fail): void
     {
         Log::debug('In ValidJournals::passes');

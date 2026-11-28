@@ -27,14 +27,15 @@ namespace FireflyIII\Console\Commands\Correction;
 use FireflyIII\Console\Commands\ShowsFriendlyMessages;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\DB;
+use Override;
 
 final class CorrectsMetaDataFields extends Command
 {
     use ShowsFriendlyMessages;
 
-    #[\Override]
+    #[Override]
     protected $description = 'Rename changed meta fields.';
-    #[\Override]
+    #[Override]
     protected $signature   = 'correction:meta-fields';
 
     private int $count     = 0;

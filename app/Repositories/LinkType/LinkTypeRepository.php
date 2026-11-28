@@ -34,6 +34,7 @@ use FireflyIII\Support\Repositories\UserGroup\UserGroupTrait;
 use Illuminate\Database\QueryException;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Log;
+use Override;
 
 /**
  * Class LinkTypeRepository.
@@ -42,13 +43,13 @@ final class LinkTypeRepository implements LinkTypeRepositoryInterface, UserGroup
 {
     use UserGroupTrait;
 
-    #[\Override]
+    #[Override]
     public function countJournals(LinkType $linkType): int
     {
         return $linkType->transactionJournalLinks()->count();
     }
 
-    #[\Override]
+    #[Override]
     public function destroy(LinkType $linkType, ?LinkType $moveTo = null): bool
     {
         if ($moveTo instanceof LinkType) {
@@ -62,7 +63,7 @@ final class LinkTypeRepository implements LinkTypeRepositoryInterface, UserGroup
     /**
      * @throws Exception
      */
-    #[\Override]
+    #[Override]
     public function destroyLink(TransactionJournalLink $link): bool
     {
         $link->delete();
@@ -70,13 +71,13 @@ final class LinkTypeRepository implements LinkTypeRepositoryInterface, UserGroup
         return true;
     }
 
-    #[\Override]
+    #[Override]
     public function find(int $linkTypeId): ?LinkType
     {
         return LinkType::find($linkTypeId);
     }
 
-    #[\Override]
+    #[Override]
     public function findByName(?string $name = null): ?LinkType
     {
         if (null === $name) {
@@ -89,7 +90,7 @@ final class LinkTypeRepository implements LinkTypeRepositoryInterface, UserGroup
     /**
      * Check if link exists between journals.
      */
-    #[\Override]
+    #[Override]
     public function findLink(TransactionJournal $one, TransactionJournal $two): bool
     {
         Log::debug(sprintf('Now in findLink(%d, %d)', $one->id, $two->id));
@@ -102,7 +103,7 @@ final class LinkTypeRepository implements LinkTypeRepositoryInterface, UserGroup
     /**
      * See if such a link already exists (and get it).
      */
-    #[\Override]
+    #[Override]
     public function findSpecificLink(LinkType $linkType, TransactionJournal $inward, TransactionJournal $outward): ?TransactionJournalLink
     {
         return TransactionJournalLink::query()
@@ -113,7 +114,7 @@ final class LinkTypeRepository implements LinkTypeRepositoryInterface, UserGroup
         ;
     }
 
-    #[\Override]
+    #[Override]
     public function get(): Collection
     {
         return LinkType::query()->orderBy('name', 'ASC')->get();
@@ -122,7 +123,7 @@ final class LinkTypeRepository implements LinkTypeRepositoryInterface, UserGroup
     /**
      * Return array of all journal ID's for this type of link.
      */
-    #[\Override]
+    #[Override]
     public function getJournalIds(LinkType $linkType): array
     {
         $links        = $linkType->transactionJournalLinks()->get(['source_id', 'destination_id']);
@@ -141,7 +142,7 @@ final class LinkTypeRepository implements LinkTypeRepositoryInterface, UserGroup
     /**
      * Returns all the journal links (of a specific type).
      */
-    #[\Override]
+    #[Override]
     public function getJournalLinks(?LinkType $linkType = null): Collection
     {
         $query = TransactionJournalLink::query()
@@ -174,7 +175,7 @@ final class LinkTypeRepository implements LinkTypeRepositoryInterface, UserGroup
     /**
      * Return list of existing connections.
      */
-    #[\Override]
+    #[Override]
     public function getLinks(TransactionJournal $journal): Collection
     {
         $outward = TransactionJournalLink::whereSourceId($journal->id)->get();
@@ -184,7 +185,7 @@ final class LinkTypeRepository implements LinkTypeRepositoryInterface, UserGroup
         return $merged->filter(static fn (TransactionJournalLink $link): bool => null !== $link->source && null !== $link->destination);
     }
 
-    #[\Override]
+    #[Override]
     public function store(array $data): LinkType
     {
         $linkType           = new LinkType();
@@ -202,7 +203,7 @@ final class LinkTypeRepository implements LinkTypeRepositoryInterface, UserGroup
      *
      * @throws Exception
      */
-    #[\Override]
+    #[Override]
     public function storeLink(array $information, TransactionJournal $inward, TransactionJournal $outward): ?TransactionJournalLink
     {
         $linkType = $this->find((int) ($information['link_type_id'] ?? 0));
@@ -242,7 +243,7 @@ final class LinkTypeRepository implements LinkTypeRepositoryInterface, UserGroup
         return $link;
     }
 
-    #[\Override]
+    #[Override]
     public function switchLink(TransactionJournalLink $link): bool
     {
         $source               = $link->source_id;
@@ -253,7 +254,7 @@ final class LinkTypeRepository implements LinkTypeRepositoryInterface, UserGroup
         return true;
     }
 
-    #[\Override]
+    #[Override]
     public function switchLinkById(int $linkId): bool
     {
         /** @var null|TransactionJournalLink $link */
@@ -265,7 +266,7 @@ final class LinkTypeRepository implements LinkTypeRepositoryInterface, UserGroup
         return true;
     }
 
-    #[\Override]
+    #[Override]
     public function update(LinkType $linkType, array $data): LinkType
     {
         if (array_key_exists('name', $data) && '' !== (string) $data['name']) {
@@ -287,7 +288,7 @@ final class LinkTypeRepository implements LinkTypeRepositoryInterface, UserGroup
      *
      * @throws Exception
      */
-    #[\Override]
+    #[Override]
     public function updateLink(TransactionJournalLink $journalLink, array $data): TransactionJournalLink
     {
         $journalLink->source_id      = $data['inward_id'] ?? $journalLink->source_id;

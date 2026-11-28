@@ -186,22 +186,6 @@ final class TransactionJournalFactory
         $this->accountRepository->setUserGroup($userGroup);
     }
 
-    private function storeMeta(TransactionJournal $journal, array $data, string $field): void
-    {
-        $set     = ['journal' => $journal, 'name' => $field, 'data' => (string) ($data[$field] ?? '')];
-        if (array_key_exists($field, $data) && $data[$field] instanceof Carbon) {
-            $data[$field]->setTimezone(config('app.timezone'));
-            Log::debug(sprintf('%s Date: %s (%s)', $field, $data[$field], $data[$field]->timezone->getName()));
-            $set['data'] = $data[$field]->format('Y-m-d H:i:s');
-        }
-
-        Log::debug(sprintf('Going to store meta-field "%s", with value "%s".', $set['name'], $set['data']));
-
-        /** @var TransactionJournalMetaFactory $factory */
-        $factory = app(TransactionJournalMetaFactory::class);
-        $factory->updateOrCreate($set);
-    }
-
     /**
      * Set foreign currency to NULL if it's the same as the normal currency:
      */
@@ -592,6 +576,22 @@ final class TransactionJournalFactory
             $location->locatable()->associate($journal);
             $location->save();
         }
+    }
+
+    private function storeMeta(TransactionJournal $journal, array $data, string $field): void
+    {
+        $set     = ['journal' => $journal, 'name' => $field, 'data' => (string) ($data[$field] ?? '')];
+        if (array_key_exists($field, $data) && $data[$field] instanceof Carbon) {
+            $data[$field]->setTimezone(config('app.timezone'));
+            Log::debug(sprintf('%s Date: %s (%s)', $field, $data[$field], $data[$field]->timezone->getName()));
+            $set['data'] = $data[$field]->format('Y-m-d H:i:s');
+        }
+
+        Log::debug(sprintf('Going to store meta-field "%s", with value "%s".', $set['name'], $set['data']));
+
+        /** @var TransactionJournalMetaFactory $factory */
+        $factory = app(TransactionJournalMetaFactory::class);
+        $factory->updateOrCreate($set);
     }
 
     private function storeMetaFields(TransactionJournal $journal, NullArrayObject $transaction): void

@@ -26,6 +26,7 @@ namespace FireflyIII\Models;
 use FireflyIII\Support\Models\ReturnsIntegerIdTrait;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Override;
 
 final class AccountType extends Model
 {
@@ -36,10 +37,10 @@ final class AccountType extends Model
         return $this->hasMany(Account::class);
     }
 
-    #[\Override]
+    #[Override]
     protected $fillable = ['type'];
 
-    #[\Override]
+    #[Override]
     protected function casts(): array
     {
         return ['created_at' => 'datetime', 'updated_at' => 'datetime'];

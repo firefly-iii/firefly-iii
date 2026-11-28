@@ -27,15 +27,16 @@ namespace FireflyIII\Console\Commands\Integrity;
 use FireflyIII\Console\Commands\ShowsFriendlyMessages;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\Schema;
+use Override;
 
 final class ReportsIntegrity extends Command
 {
     use ShowsFriendlyMessages;
 
-    #[\Override]
+    #[Override]
     protected $description = 'Will report on the integrity of your database.';
 
-    #[\Override]
+    #[Override]
     protected $signature   = 'firefly-iii:report-integrity';
 
     /**

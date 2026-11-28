@@ -27,6 +27,7 @@ namespace FireflyIII\Exceptions;
 use Exception;
 use FireflyIII\Support\Calendar\Periodicity;
 use Throwable;
+use Override;
 
 /**
  * Class IntervalException
@@ -37,7 +38,7 @@ final class IntervalException extends Exception
     public Periodicity $periodicity        = Periodicity::Monthly;
 
     /** @var string */
-    #[\Override]
+    #[Override]
     protected $message                     = 'The periodicity %s is unknown. Choose one of available periodicity: %s';
 
     public function __construct(string $message = '', int $code = 0, ?Throwable $previous = null)

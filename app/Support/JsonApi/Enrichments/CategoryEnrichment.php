@@ -36,6 +36,7 @@ use FireflyIII\User;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\DB;
+use Override;
 
 final class CategoryEnrichment implements EnrichmentInterface
 {
@@ -57,7 +58,7 @@ final class CategoryEnrichment implements EnrichmentInterface
     private User $user;
     private UserGroup $userGroup;
 
-    #[\Override]
+    #[Override]
     public function enrich(Collection $collection): Collection
     {
         $this->collection = $collection;
@@ -73,7 +74,7 @@ final class CategoryEnrichment implements EnrichmentInterface
         return $this->collection;
     }
 
-    #[\Override]
+    #[Override]
     public function enrichSingle(array|Model $model): array|Model
     {
         // Log::debug(__METHOD__);
@@ -98,14 +99,14 @@ final class CategoryEnrichment implements EnrichmentInterface
         $this->start = $start;
     }
 
-    #[\Override]
+    #[Override]
     public function setUser(User $user): void
     {
         $this->user = $user;
         $this->setUserGroup($user->userGroup);
     }
 
-    #[\Override]
+    #[Override]
     public function setUserGroup(UserGroup $userGroup): void
     {
         $this->userGroup = $userGroup;

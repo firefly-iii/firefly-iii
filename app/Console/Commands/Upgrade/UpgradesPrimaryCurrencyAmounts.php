@@ -28,6 +28,7 @@ use FireflyIII\Console\Commands\ShowsFriendlyMessages;
 use FireflyIII\Support\Facades\AppConfiguration;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\Artisan;
+use Override;
 
 final class UpgradesPrimaryCurrencyAmounts extends Command
 {
@@ -35,10 +36,10 @@ final class UpgradesPrimaryCurrencyAmounts extends Command
 
     public const string CONFIG_NAME = '620_pc_amounts';
 
-    #[\Override]
+    #[Override]
     protected $description          = 'Runs the primary currency amounts calculations.';
 
-    #[\Override]
+    #[Override]
     protected $signature            = 'upgrade:620-pc-amounts {--F|force : Force the execution of this command.}';
 
     /**

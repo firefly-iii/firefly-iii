@@ -39,6 +39,7 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
+use Override;
 
 final class PiggyBankEnrichment implements EnrichmentInterface
 {
@@ -62,7 +63,7 @@ final class PiggyBankEnrichment implements EnrichmentInterface
         $this->date            = now(config('app.timezone'));
     }
 
-    #[\Override]
+    #[Override]
     public function enrich(Collection $collection): Collection
     {
         $this->collection = $collection;
@@ -75,7 +76,7 @@ final class PiggyBankEnrichment implements EnrichmentInterface
         return $this->collection;
     }
 
-    #[\Override]
+    #[Override]
     public function enrichSingle(array|Model $model): array|Model
     {
         Log::debug(__METHOD__);
@@ -90,13 +91,13 @@ final class PiggyBankEnrichment implements EnrichmentInterface
         $this->date = $date;
     }
 
-    #[\Override]
+    #[Override]
     public function setUser(User $user): void
     {
         $this->setUserGroup($user->userGroup);
     }
 
-    #[\Override]
+    #[Override]
     public function setUserGroup(UserGroup $userGroup): void {}
 
     private function appendCollectedData(): void

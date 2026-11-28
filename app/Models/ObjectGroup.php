@@ -33,13 +33,14 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\MorphToMany;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
+use Override;
 
 final class ObjectGroup extends Model
 {
     use ReturnsIntegerIdTrait;
     use ReturnsIntegerUserIdTrait;
 
-    #[\Override]
+    #[Override]
     protected $fillable = ['title', 'order', 'user_id', 'user_group_id'];
 
     /**
@@ -91,6 +92,11 @@ final class ObjectGroup extends Model
         return $this->morphedByMany(Category::class, 'object_groupable');
     }
 
+    public function order(): Attribute
+    {
+        return Attribute::make(get: static fn ($value): int => (int) $value);
+    }
+
     /**
      * @return MorphToMany
      */
@@ -104,7 +110,7 @@ final class ObjectGroup extends Model
         return $this->belongsTo(User::class);
     }
 
-    #[\Override]
+    #[Override]
     protected function casts(): array
     {
         return [
@@ -114,10 +120,5 @@ final class ObjectGroup extends Model
             'user_group_id' => 'integer',
             'deleted_at'    => 'datetime',
         ];
-    }
-
-    public function order(): Attribute
-    {
-        return Attribute::make(get: static fn ($value): int => (int) $value);
     }
 }

@@ -30,6 +30,7 @@ use FireflyIII\Console\Commands\VerifiesAccessToken;
 use FireflyIII\Support\Facades\Navigation;
 use FireflyIII\Support\Facades\Preferences;
 use Illuminate\Console\Command;
+use Override;
 
 final class ExplainAvailableBudget extends Command
 {
@@ -40,7 +41,7 @@ final class ExplainAvailableBudget extends Command
      *
      * @var string
      */
-    #[\Override]
+    #[Override]
     protected $description = 'Explains why the available budget amount is what it is.';
 
     /**
@@ -48,7 +49,7 @@ final class ExplainAvailableBudget extends Command
      *
      * @var string
      */
-    #[\Override]
+    #[Override]
     protected $signature   = 'explain:available-budget
                                 {--date=now : A date formatted YYYY-MM-DD or the word "now"}
                                 {--user=1 : The user ID.}

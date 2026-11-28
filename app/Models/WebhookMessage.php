@@ -34,6 +34,7 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
+use Override;
 
 /**
  * @property array|string $message
@@ -71,6 +72,14 @@ final class WebhookMessage extends Model
         throw new AuthenticationException();
     }
 
+    /**
+     * Get the amount
+     */
+    public function sent(): Attribute
+    {
+        return Attribute::make(get: static fn ($value): bool => (bool) $value);
+    }
+
     public function webhook(): BelongsTo
     {
         return $this->belongsTo(Webhook::class);
@@ -81,22 +90,14 @@ final class WebhookMessage extends Model
         return $this->hasMany(WebhookAttempt::class);
     }
 
-    #[\Override]
-    protected function casts(): array
-    {
-        return ['sent' => 'boolean', 'errored' => 'boolean', 'uuid' => 'string', 'message' => 'json', 'logs' => 'json'];
-    }
-
-    /**
-     * Get the amount
-     */
-    public function sent(): Attribute
-    {
-        return Attribute::make(get: static fn ($value): bool => (bool) $value);
-    }
-
     public function webhookId(): Attribute
     {
         return Attribute::make(get: static fn ($value): int => (int) $value);
+    }
+
+    #[Override]
+    protected function casts(): array
+    {
+        return ['sent' => 'boolean', 'errored' => 'boolean', 'uuid' => 'string', 'message' => 'json', 'logs' => 'json'];
     }
 }

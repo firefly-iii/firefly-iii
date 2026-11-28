@@ -32,6 +32,7 @@ use FireflyIII\Repositories\Bill\BillRepositoryInterface;
 use FireflyIII\User;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
+use Override;
 
 /**
  * Class LinkToBill.
@@ -45,7 +46,7 @@ final class LinkToBill implements ActionInterface
         private readonly RuleAction $action
     ) {}
 
-    #[\Override]
+    #[Override]
     public function actOnArray(array $journal): bool
     {
         /** @var User $user */

@@ -30,14 +30,15 @@ use FireflyIII\Models\Account;
 use FireflyIII\Support\Facades\Steam;
 use Illuminate\Console\Command;
 use Illuminate\Support\Collection;
+use Override;
 
 final class CorrectsIbans extends Command
 {
     use ShowsFriendlyMessages;
 
-    #[\Override]
+    #[Override]
     protected $description = 'Removes spaces from IBANs';
-    #[\Override]
+    #[Override]
     protected $signature   = 'correction:ibans';
     private int $count     = 0;
 

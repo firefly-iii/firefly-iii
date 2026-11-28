@@ -31,6 +31,7 @@ use Illuminate\Database\Eloquent\Builder as EloquentBuilder;
 use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Override;
 
 /**
  * @property string $current_amount
@@ -39,33 +40,8 @@ final class PiggyBankRepetition extends Model
 {
     use ReturnsIntegerIdTrait;
 
-    #[\Override]
+    #[Override]
     protected $fillable = ['piggy_bank_id', 'start_date', 'start_date_tz', 'target_date', 'target_date_tz', 'current_amount'];
-
-    public function piggyBank(): BelongsTo
-    {
-        return $this->belongsTo(PiggyBank::class);
-    }
-
-    /**
-     * @param mixed $value
-     */
-    public function setCurrentAmountAttribute($value): void
-    {
-        $this->attributes['current_amount'] = (string) $value;
-    }
-
-    #[\Override]
-    protected function casts(): array
-    {
-        return [
-            'created_at'      => 'datetime',
-            'updated_at'      => 'datetime',
-            'start_date'      => SeparateTimezoneCaster::class,
-            'target_date'     => SeparateTimezoneCaster::class,
-            'virtual_balance' => 'string',
-        ];
-    }
 
     /**
      * Get the amount
@@ -79,6 +55,11 @@ final class PiggyBankRepetition extends Model
     public function onDates(EloquentBuilder $query, Carbon $start, Carbon $target): EloquentBuilder
     {
         return $query->where('start_date', $start->format('Y-m-d'))->where('target_date', $target->format('Y-m-d'));
+    }
+
+    public function piggyBank(): BelongsTo
+    {
+        return $this->belongsTo(PiggyBank::class);
     }
 
     public function piggyBankId(): Attribute
@@ -99,5 +80,25 @@ final class PiggyBankRepetition extends Model
             $q->where('target_date', '>=', $date->format('Y-m-d 00:00:00'));
             $q->orWhereNull('target_date');
         });
+    }
+
+    /**
+     * @param mixed $value
+     */
+    public function setCurrentAmountAttribute($value): void
+    {
+        $this->attributes['current_amount'] = (string) $value;
+    }
+
+    #[Override]
+    protected function casts(): array
+    {
+        return [
+            'created_at'      => 'datetime',
+            'updated_at'      => 'datetime',
+            'start_date'      => SeparateTimezoneCaster::class,
+            'target_date'     => SeparateTimezoneCaster::class,
+            'virtual_balance' => 'string',
+        ];
     }
 }

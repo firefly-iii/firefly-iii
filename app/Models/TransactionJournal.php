@@ -42,6 +42,7 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\MorphMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
+use Override;
 
 /**
  * @method        EloquentBuilder|static before()
@@ -58,7 +59,7 @@ final class TransactionJournal extends Model
     use ReturnsIntegerUserIdTrait;
     use SoftDeletes;
 
-    #[\Override]
+    #[Override]
     protected $fillable = [
         'user_id',
         'user_group_id',
@@ -73,7 +74,7 @@ final class TransactionJournal extends Model
         'date_tz',
     ];
 
-    #[\Override]
+    #[Override]
     protected $hidden   = ['encrypted'];
 
     /**
@@ -171,6 +172,11 @@ final class TransactionJournal extends Model
         return $this->morphMany(Note::class, 'noteable');
     }
 
+    public function order(): Attribute
+    {
+        return Attribute::make(get: static fn ($value): int => (int) $value);
+    }
+
     public function piggyBankEvents(): HasMany
     {
         return $this->hasMany(PiggyBankEvent::class);
@@ -221,6 +227,22 @@ final class TransactionJournal extends Model
         return $this->belongsTo(TransactionType::class);
     }
 
+    public function transactionTypeId(): Attribute
+    {
+        return Attribute::make(get: static fn ($value): int => (int) $value);
+    }
+
+    #[Scope]
+    public function transactionTypes(EloquentBuilder $query, array $types): void
+    {
+        if (!self::isJoined($query, 'transaction_types')) {
+            $query->leftJoin('transaction_types', 'transaction_types.id', '=', 'transaction_journals.transaction_type_id');
+        }
+        if (0 !== count($types)) {
+            $query->whereIn('transaction_types.type', $types);
+        }
+    }
+
     public function user(): BelongsTo
     {
         return $this->belongsTo(User::class);
@@ -231,7 +253,7 @@ final class TransactionJournal extends Model
         return $this->belongsTo(UserGroup::class);
     }
 
-    #[\Override]
+    #[Override]
     protected function casts(): array
     {
         return [
@@ -249,26 +271,5 @@ final class TransactionJournal extends Model
             'user_id'       => 'integer',
             'user_group_id' => 'integer',
         ];
-    }
-
-    public function order(): Attribute
-    {
-        return Attribute::make(get: static fn ($value): int => (int) $value);
-    }
-
-    public function transactionTypeId(): Attribute
-    {
-        return Attribute::make(get: static fn ($value): int => (int) $value);
-    }
-
-    #[Scope]
-    public function transactionTypes(EloquentBuilder $query, array $types): void
-    {
-        if (!self::isJoined($query, 'transaction_types')) {
-            $query->leftJoin('transaction_types', 'transaction_types.id', '=', 'transaction_journals.transaction_type_id');
-        }
-        if (0 !== count($types)) {
-            $query->whereIn('transaction_types.type', $types);
-        }
     }
 }

@@ -24,12 +24,13 @@ declare(strict_types=1);
 namespace FireflyIII\Http\Middleware;
 
 use Illuminate\Foundation\Http\Middleware\PreventRequestForgery as MiddleWare;
+use Override;
 
 /**
  * Class VerifyCsrfToken.
  */
 final class VerifyCsrfToken extends MiddleWare
 {
-    #[\Override]
+    #[Override]
     protected $except = ['oauth/token'];
 }

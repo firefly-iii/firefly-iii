@@ -34,6 +34,7 @@ use FireflyIII\Models\WebhookResponse as WebhookResponseModel;
 use FireflyIII\Models\WebhookTrigger as WebhookTriggerModel;
 use FireflyIII\Support\Facades\AppConfiguration;
 use Illuminate\Console\Command;
+use Override;
 
 final class UpgradesWebhooks extends Command
 {
@@ -41,9 +42,9 @@ final class UpgradesWebhooks extends Command
 
     public const string CONFIG_NAME = '640_upgrade_webhooks';
 
-    #[\Override]
+    #[Override]
     protected $description          = 'Upgrade webhooks so they can handle multiple triggers.';
-    #[\Override]
+    #[Override]
     protected $signature            = 'upgrade:640-upgrade-webhooks {--F|force : Force the execution of this command.}';
 
     /**

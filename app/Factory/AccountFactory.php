@@ -153,39 +153,6 @@ final class AccountFactory
     /**
      * @throws FireflyException
      */
-    private function getAccountType(array $data): AccountType
-    {
-        $accountTypeId   = array_key_exists('account_type_id', $data) ? (int) $data['account_type_id'] : 0;
-        $accountTypeName = $data['account_type_name'] ?? null;
-        $result          = null;
-        // find by name or ID
-        if ($accountTypeId > 0) {
-            $result = AccountType::find($accountTypeId);
-        }
-        if (null !== $accountTypeName) {
-            $result = $this->accountRepository->getAccountTypeByType($accountTypeName);
-        }
-
-        // try with type:
-        if (null === $result) {
-            $types = config(sprintf('firefly.accountTypeByIdentifier.%s', $accountTypeName)) ?? [];
-            if (0 !== count($types)) {
-                $result = AccountType::query()->whereIn('type', $types)->first();
-            }
-        }
-        if (null === $result) {
-            Log::warning(sprintf('Found NO account type based on %d and "%s"', $accountTypeId, $accountTypeName));
-
-            throw new FireflyException(sprintf('AccountFactory::create() was unable to find account type #%d ("%s").', $accountTypeId, $accountTypeName));
-        }
-        Log::debug(sprintf('Found account type based on %d and "%s": "%s"', $accountTypeId, $accountTypeName, $result->type));
-
-        return $result;
-    }
-
-    /**
-     * @throws FireflyException
-     */
     private function cleanMetaDataArray(Account $account, array $data): array
     {
         $currencyId           = array_key_exists('currency_id', $data) ? (int) $data['currency_id'] : 0;
@@ -290,6 +257,39 @@ final class AccountFactory
         $account->refresh();
 
         return $account;
+    }
+
+    /**
+     * @throws FireflyException
+     */
+    private function getAccountType(array $data): AccountType
+    {
+        $accountTypeId   = array_key_exists('account_type_id', $data) ? (int) $data['account_type_id'] : 0;
+        $accountTypeName = $data['account_type_name'] ?? null;
+        $result          = null;
+        // find by name or ID
+        if ($accountTypeId > 0) {
+            $result = AccountType::find($accountTypeId);
+        }
+        if (null !== $accountTypeName) {
+            $result = $this->accountRepository->getAccountTypeByType($accountTypeName);
+        }
+
+        // try with type:
+        if (null === $result) {
+            $types = config(sprintf('firefly.accountTypeByIdentifier.%s', $accountTypeName)) ?? [];
+            if (0 !== count($types)) {
+                $result = AccountType::query()->whereIn('type', $types)->first();
+            }
+        }
+        if (null === $result) {
+            Log::warning(sprintf('Found NO account type based on %d and "%s"', $accountTypeId, $accountTypeName));
+
+            throw new FireflyException(sprintf('AccountFactory::create() was unable to find account type #%d ("%s").', $accountTypeId, $accountTypeName));
+        }
+        Log::debug(sprintf('Found account type based on %d and "%s": "%s"', $accountTypeId, $accountTypeName, $result->type));
+
+        return $result;
     }
 
     /**

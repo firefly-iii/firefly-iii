@@ -31,6 +31,7 @@ use Illuminate\Database\Eloquent\Attributes\ObservedBy;
 use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Override;
 
 /**
  * @property Carbon         $date
@@ -41,15 +42,28 @@ final class PiggyBankEvent extends Model
 {
     use ReturnsIntegerIdTrait;
 
-    #[\Override]
+    #[Override]
     protected $fillable = ['piggy_bank_id', 'transaction_journal_id', 'date', 'date_tz', 'amount', 'native_amount'];
 
-    #[\Override]
+    #[Override]
     protected $hidden   = ['amount_encrypted'];
+
+    /**
+     * Get the amount
+     */
+    public function amount(): Attribute
+    {
+        return Attribute::make(get: static fn ($value): string => (string) $value);
+    }
 
     public function piggyBank(): BelongsTo
     {
         return $this->belongsTo(PiggyBank::class);
+    }
+
+    public function piggyBankId(): Attribute
+    {
+        return Attribute::make(get: static fn ($value): int => (int) $value);
     }
 
     /**
@@ -65,15 +79,7 @@ final class PiggyBankEvent extends Model
         return $this->belongsTo(TransactionJournal::class);
     }
 
-    /**
-     * Get the amount
-     */
-    public function amount(): Attribute
-    {
-        return Attribute::make(get: static fn ($value): string => (string) $value);
-    }
-
-    #[\Override]
+    #[Override]
     protected function casts(): array
     {
         return [
@@ -83,10 +89,5 @@ final class PiggyBankEvent extends Model
             'amount'        => 'string',
             'native_amount' => 'string',
         ];
-    }
-
-    public function piggyBankId(): Attribute
-    {
-        return Attribute::make(get: static fn ($value): int => (int) $value);
     }
 }

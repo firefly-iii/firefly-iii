@@ -28,14 +28,15 @@ use FireflyIII\Console\Commands\ShowsFriendlyMessages;
 use FireflyIII\Repositories\Account\AccountRepositoryInterface;
 use FireflyIII\User;
 use Illuminate\Console\Command;
+use Override;
 
 final class CorrectsAccountOrder extends Command
 {
     use ShowsFriendlyMessages;
 
-    #[\Override]
+    #[Override]
     protected $description = 'Make sure account order is correct.';
-    #[\Override]
+    #[Override]
     protected $signature   = 'correction:account-order';
 
     private AccountRepositoryInterface $repository;

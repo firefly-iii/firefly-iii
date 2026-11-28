@@ -31,6 +31,7 @@ use FireflyIII\Models\RuleAction;
 use FireflyIII\Models\TransactionJournal;
 use FireflyIII\User;
 use Illuminate\Support\Facades\Log;
+use Override;
 
 /**
  * Class SetTransactionDate.
@@ -44,7 +45,7 @@ final class SetTransactionDate implements ActionInterface
         private readonly RuleAction $action
     ) {}
 
-    #[\Override]
+    #[Override]
     public function actOnArray(array $journal): bool
     {
         /** @var User $user */

@@ -31,6 +31,7 @@ use FireflyIII\Support\Repositories\UserGroup\UserGroupTrait;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
+use Override;
 
 /**
  * Class ObjectGroupRepository
@@ -39,7 +40,7 @@ final class ObjectGroupRepository implements ObjectGroupRepositoryInterface, Use
 {
     use UserGroupTrait;
 
-    #[\Override]
+    #[Override]
     public function deleteAll(): void
     {
         $all = $this->get();
@@ -52,7 +53,7 @@ final class ObjectGroupRepository implements ObjectGroupRepositoryInterface, Use
         }
     }
 
-    #[\Override]
+    #[Override]
     public function deleteEmpty(): void
     {
         $all = $this->get();
@@ -66,7 +67,7 @@ final class ObjectGroupRepository implements ObjectGroupRepositoryInterface, Use
         }
     }
 
-    #[\Override]
+    #[Override]
     public function destroy(ObjectGroup $objectGroup): void
     {
         $list = $objectGroup->piggyBanks;
@@ -79,7 +80,7 @@ final class ObjectGroupRepository implements ObjectGroupRepositoryInterface, Use
         $objectGroup->delete();
     }
 
-    #[\Override]
+    #[Override]
     public function get(): Collection
     {
         return $this->user->objectGroups()
@@ -90,19 +91,19 @@ final class ObjectGroupRepository implements ObjectGroupRepositoryInterface, Use
         ;
     }
 
-    #[\Override]
+    #[Override]
     public function getBills(ObjectGroup $objectGroup): Collection
     {
         return $objectGroup->bills;
     }
 
-    #[\Override]
+    #[Override]
     public function getPiggyBanks(ObjectGroup $objectGroup): Collection
     {
         return $objectGroup->piggyBanks;
     }
 
-    #[\Override]
+    #[Override]
     public function resetOrder(): void
     {
         Log::debug('Now in resetOrder');
@@ -126,7 +127,7 @@ final class ObjectGroupRepository implements ObjectGroupRepositoryInterface, Use
         }
     }
 
-    #[\Override]
+    #[Override]
     public function search(string $query, int $limit): Collection
     {
         $dbQuery = $this->user->objectGroups()->orderBy('order', 'ASC')->orderBy('title', 'ASC');
@@ -142,7 +143,7 @@ final class ObjectGroupRepository implements ObjectGroupRepositoryInterface, Use
         return $dbQuery->take($limit)->get(['object_groups.*']);
     }
 
-    #[\Override]
+    #[Override]
     public function setOrder(ObjectGroup $objectGroup, int $newOrder): ObjectGroup
     {
         $oldOrder = $objectGroup->order;
@@ -175,7 +176,7 @@ final class ObjectGroupRepository implements ObjectGroupRepositoryInterface, Use
         return $objectGroup;
     }
 
-    #[\Override]
+    #[Override]
     public function update(ObjectGroup $objectGroup, array $data): ObjectGroup
     {
         if (array_key_exists('title', $data)) {

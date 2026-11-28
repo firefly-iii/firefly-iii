@@ -29,16 +29,17 @@ use FireflyIII\Support\System\GeneratesInstallationId;
 use FireflyIII\Support\System\IsOldVersion;
 use Illuminate\Console\Command;
 use Random\RandomException;
+use Override;
 
 final class OutputsInstructions extends Command
 {
     use GeneratesInstallationId;
     use IsOldVersion;
 
-    #[\Override]
+    #[Override]
     protected $description = 'Instructions in case of upgrade trouble.';
 
-    #[\Override]
+    #[Override]
     protected $signature   = 'firefly-iii:instructions {task=install}';
 
     /**

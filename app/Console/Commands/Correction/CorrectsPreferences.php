@@ -28,13 +28,14 @@ use FireflyIII\Models\Preference;
 use FireflyIII\User;
 use Illuminate\Console\Command;
 use Symfony\Component\Console\Command\Command as CommandAlias;
+use Override;
 
 final class CorrectsPreferences extends Command
 {
-    #[\Override]
+    #[Override]
     protected $description = 'Give Firefly III preferences a user group ID so they can be made administration specific.';
 
-    #[\Override]
+    #[Override]
     protected $signature   = 'correction:preferences';
 
     /**

@@ -58,7 +58,7 @@ final class BudgetLimitRepository implements BudgetLimitRepositoryInterface, Use
      * Tells you which amount has been budgeted (for the given budgets)
      * in the selected query. Returns a positive amount as a string.
      */
-    #[\Override]
+    #[Override]
     public function budgeted(Carbon $start, Carbon $end, TransactionCurrency $currency, ?Collection $budgets = null): string
     {
         Log::debug(sprintf('Call budgeted(%s, %s, %s)', $start->format('Y-m-d'), $end->format('Y-m-d'), $currency->code));
@@ -136,7 +136,7 @@ final class BudgetLimitRepository implements BudgetLimitRepositoryInterface, Use
     /**
      * Destroy all budget limits.
      */
-    #[\Override]
+    #[Override]
     public function destroyAll(): void
     {
         $budgets = $this->user->budgets()->get();
@@ -151,7 +151,7 @@ final class BudgetLimitRepository implements BudgetLimitRepositoryInterface, Use
     /**
      * Destroy a budget limit.
      */
-    #[\Override]
+    #[Override]
     public function destroyBudgetLimit(BudgetLimit $budgetLimit): void
     {
         $user  = $budgetLimit->budget->user;
@@ -163,7 +163,7 @@ final class BudgetLimitRepository implements BudgetLimitRepositoryInterface, Use
         event(new WebhookMessagesRequestSending());
     }
 
-    #[\Override]
+    #[Override]
     public function find(Budget $budget, TransactionCurrency $currency, Carbon $start, Carbon $end): ?BudgetLimit
     {
         /** @var null|BudgetLimit */
@@ -176,7 +176,7 @@ final class BudgetLimitRepository implements BudgetLimitRepositoryInterface, Use
         ;
     }
 
-    #[\Override]
+    #[Override]
     public function getAllBudgetLimits(?Carbon $start = null, ?Carbon $end = null): Collection
     {
         // both are NULL:
@@ -231,7 +231,7 @@ final class BudgetLimitRepository implements BudgetLimitRepositoryInterface, Use
         ;
     }
 
-    #[\Override]
+    #[Override]
     public function getAllBudgetLimitsByCurrency(TransactionCurrency $currency, ?Carbon $start = null, ?Carbon $end = null): Collection
     {
         return $this->getAllBudgetLimits($start, $end)->filter(
@@ -239,7 +239,7 @@ final class BudgetLimitRepository implements BudgetLimitRepositoryInterface, Use
         );
     }
 
-    #[\Override]
+    #[Override]
     public function getBudgetLimits(Budget $budget, ?Carbon $start = null, ?Carbon $end = null): Collection
     {
         if (!$end instanceof Carbon && !$start instanceof Carbon) {
@@ -288,7 +288,7 @@ final class BudgetLimitRepository implements BudgetLimitRepositoryInterface, Use
         ;
     }
 
-    #[\Override]
+    #[Override]
     public function getDailyAmount(BudgetLimit $budgetLimit): string
     {
         $limitPeriod = Period::make($budgetLimit->start_date, $budgetLimit->end_date, precision: Precision::DAY(), boundaries: Boundaries::EXCLUDE_NONE());
@@ -331,7 +331,7 @@ final class BudgetLimitRepository implements BudgetLimitRepositoryInterface, Use
     /**
      * @throws FireflyException
      */
-    #[\Override]
+    #[Override]
     public function store(array $data): BudgetLimit
     {
         // if no currency has been provided, use the user's default currency:
@@ -397,7 +397,7 @@ final class BudgetLimitRepository implements BudgetLimitRepositoryInterface, Use
     /**
      * @throws FireflyException
      */
-    #[\Override]
+    #[Override]
     public function update(BudgetLimit $budgetLimit, array $data): BudgetLimit
     {
         $budgetLimit->amount                  = array_key_exists('amount', $data) ? $data['amount'] : $budgetLimit->amount;

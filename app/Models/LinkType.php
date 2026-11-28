@@ -29,13 +29,14 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
+use Override;
 
 final class LinkType extends Model
 {
     use ReturnsIntegerIdTrait;
     use SoftDeletes;
 
-    #[\Override]
+    #[Override]
     protected $fillable = ['name', 'inward', 'outward', 'editable'];
 
     /**
@@ -66,7 +67,7 @@ final class LinkType extends Model
         return $this->hasMany(TransactionJournalLink::class);
     }
 
-    #[\Override]
+    #[Override]
     protected function casts(): array
     {
         return ['created_at' => 'datetime', 'updated_at' => 'datetime', 'deleted_at' => 'datetime', 'editable' => 'boolean'];

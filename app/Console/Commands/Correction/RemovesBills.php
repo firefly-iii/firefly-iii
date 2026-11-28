@@ -29,14 +29,15 @@ use FireflyIII\Enums\TransactionTypeEnum;
 use FireflyIII\Models\TransactionJournal;
 use FireflyIII\Models\TransactionType;
 use Illuminate\Console\Command;
+use Override;
 
 final class RemovesBills extends Command
 {
     use ShowsFriendlyMessages;
 
-    #[\Override]
+    #[Override]
     protected $description = 'Remove subscriptions from transactions that shouldn\'t have one.';
-    #[\Override]
+    #[Override]
     protected $signature   = 'correction:bills';
 
     /**

@@ -264,6 +264,17 @@ final class ParseDateString
         return ['day' => $parts[2]];
     }
 
+    /**
+     * format of string is YYYY-xx-DD
+     */
+    private function parseDayYearRange(string $date): array
+    {
+        Log::debug(sprintf('parseDayYearRange: Parsed "%s".', $date));
+        $parts = explode('-', $date);
+
+        return ['year' => $parts[0], 'day' => $parts[2]];
+    }
+
     private function parseDefaultDate(string $date): Carbon
     {
         $result = false;
@@ -297,6 +308,17 @@ final class ParseDateString
             'start of this year'    => $today->startOfYear(),
             'end of this year'      => $today->endOfYear()
         };
+    }
+
+    /**
+     * format of string is xxxx-MM-DD
+     */
+    private function parseMonthDayRange(string $date): array
+    {
+        Log::debug(sprintf('parseMonthDayRange: Parsed "%s".', $date));
+        $parts = explode('-', $date);
+
+        return ['month' => $parts[1], 'day' => $parts[2]];
     }
 
     /**
@@ -369,27 +391,5 @@ final class ParseDateString
         $parts = explode('-', $date);
 
         return ['year' => $parts[0]];
-    }
-
-    /**
-     * format of string is YYYY-xx-DD
-     */
-    private function parseDayYearRange(string $date): array
-    {
-        Log::debug(sprintf('parseDayYearRange: Parsed "%s".', $date));
-        $parts = explode('-', $date);
-
-        return ['year' => $parts[0], 'day' => $parts[2]];
-    }
-
-    /**
-     * format of string is xxxx-MM-DD
-     */
-    private function parseMonthDayRange(string $date): array
-    {
-        Log::debug(sprintf('parseMonthDayRange: Parsed "%s".', $date));
-        $parts = explode('-', $date);
-
-        return ['month' => $parts[1], 'day' => $parts[2]];
     }
 }

@@ -29,6 +29,7 @@ use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Models\WebhookMessage;
 use Illuminate\Support\Facades\Log;
 use JsonException;
+use Override;
 
 use function Safe\json_encode;
 
@@ -42,7 +43,7 @@ final class Sha3SignatureGenerator implements SignatureGeneratorInterface
     /**
      * @throws FireflyException
      */
-    #[\Override]
+    #[Override]
     public function generate(WebhookMessage $message): string
     {
         // webhook is deleted
@@ -79,7 +80,7 @@ final class Sha3SignatureGenerator implements SignatureGeneratorInterface
         return sprintf('t=%s,v%d=%s', $timestamp, $this->getVersion(), $signature);
     }
 
-    #[\Override]
+    #[Override]
     public function getVersion(): int
     {
         return $this->version;

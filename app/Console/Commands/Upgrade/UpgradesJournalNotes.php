@@ -30,6 +30,7 @@ use FireflyIII\Models\TransactionJournalMeta;
 use FireflyIII\Support\Facades\AppConfiguration;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\Log;
+use Override;
 
 final class UpgradesJournalNotes extends Command
 {
@@ -37,10 +38,10 @@ final class UpgradesJournalNotes extends Command
 
     public const string CONFIG_NAME = '480_migrate_notes';
 
-    #[\Override]
+    #[Override]
     protected $description          = 'Migrate notes for transaction journals.';
 
-    #[\Override]
+    #[Override]
     protected $signature            = 'upgrade:480-notes {--F|force : Force the execution of this command.}';
 
     /**

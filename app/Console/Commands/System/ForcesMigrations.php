@@ -32,16 +32,17 @@ use Illuminate\Support\Facades\Artisan;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Schema;
+use Override;
 
 final class ForcesMigrations extends Command
 {
     use ShowsFriendlyMessages;
     use VerifiesAccessToken;
 
-    #[\Override]
+    #[Override]
     protected $description = 'This command will force-run all database migrations.';
 
-    #[\Override]
+    #[Override]
     protected $signature   = 'firefly-iii:force-migrations
                             {--user=1 : The user ID.}
                             {--token= : The user\'s access token.}';

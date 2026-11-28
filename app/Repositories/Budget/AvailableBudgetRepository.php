@@ -47,7 +47,7 @@ final class AvailableBudgetRepository implements AvailableBudgetRepositoryInterf
 {
     use UserGroupTrait;
 
-    #[\Override]
+    #[Override]
     public function cleanup(): void
     {
         $exists           = [];
@@ -72,7 +72,7 @@ final class AvailableBudgetRepository implements AvailableBudgetRepositoryInterf
         }
 
         // grab budget limit currencies.
-        $currencies       = BudgetLimit::leftJoin('budgets', 'budgets.id', '=', 'budget_limits.budget_id')  /* @phpstan-ignore larastan.noUnnecessaryCollectionCall */
+        $currencies       = BudgetLimit::leftJoin('budgets', 'budgets.id', '=', 'budget_limits.budget_id') // @phpstan-ignore larastan.noUnnecessaryCollectionCall
             ->where('budgets.user_id', $this->user->id)
             ->distinct()
             ->get(['budget_limits.transaction_currency_id'])
@@ -86,14 +86,14 @@ final class AvailableBudgetRepository implements AvailableBudgetRepositoryInterf
     /**
      * Delete all available budgets.
      */
-    #[\Override]
+    #[Override]
     public function destroyAll(): void
     {
         Log::channel('audit')->info('Delete all available budgets through destroyAll');
         $this->user->availableBudgets()->delete();
     }
 
-    #[\Override]
+    #[Override]
     public function destroyAvailableBudget(AvailableBudget $availableBudget): void
     {
         $availableBudget->delete();
@@ -102,7 +102,7 @@ final class AvailableBudgetRepository implements AvailableBudgetRepositoryInterf
     /**
      * Find existing AB.
      */
-    #[\Override]
+    #[Override]
     public function find(TransactionCurrency $currency, Carbon $start, Carbon $end): ?AvailableBudget
     {
         /** @var null|AvailableBudget */
@@ -114,7 +114,7 @@ final class AvailableBudgetRepository implements AvailableBudgetRepositoryInterf
         ;
     }
 
-    #[\Override]
+    #[Override]
     public function findById(int $id): ?AvailableBudget
     {
         /** @var null|AvailableBudget */
@@ -139,7 +139,7 @@ final class AvailableBudgetRepository implements AvailableBudgetRepositoryInterf
     /**
      * Return a list of all available budgets (in all currencies) (for the selected period).
      */
-    #[\Override]
+    #[Override]
     public function get(?Carbon $start = null, ?Carbon $end = null): Collection
     {
         $query  = $this->user->availableBudgets()->with(['transactionCurrency']);
@@ -155,7 +155,7 @@ final class AvailableBudgetRepository implements AvailableBudgetRepositoryInterf
         return $result;
     }
 
-    #[\Override]
+    #[Override]
     #[Deprecated]
     public function getAvailableBudget(TransactionCurrency $currency, Carbon $start, Carbon $end): string
     {
@@ -178,7 +178,7 @@ final class AvailableBudgetRepository implements AvailableBudgetRepositoryInterf
     /**
      * Returns all available budget objects.
      */
-    #[\Override]
+    #[Override]
     public function getAvailableBudgetsByCurrency(TransactionCurrency $currency): Collection
     {
         return $this->user->availableBudgets()->where('transaction_currency_id', $currency->id)->get();
@@ -187,7 +187,7 @@ final class AvailableBudgetRepository implements AvailableBudgetRepositoryInterf
     /**
      * Returns all available budget objects.
      */
-    #[\Override]
+    #[Override]
     public function getAvailableBudgetsByDate(?Carbon $start, ?Carbon $end): Collection
     {
         $query = $this->user->availableBudgets();
@@ -205,13 +205,13 @@ final class AvailableBudgetRepository implements AvailableBudgetRepositoryInterf
     /**
      * Returns all available budget objects.
      */
-    #[\Override]
+    #[Override]
     public function getAvailableBudgetsByExactDate(Carbon $start, Carbon $end): Collection
     {
         return $this->user->availableBudgets()->where('start_date', '=', $start->format('Y-m-d'))->where('end_date', '=', $end->format('Y-m-d'))->get();
     }
 
-    #[\Override]
+    #[Override]
     public function getAvailableBudgetWithCurrency(Carbon $start, Carbon $end): array
     {
         Log::debug(sprintf('Now in %s(%s, %s)', __METHOD__, $start->format('Y-m-d H:i:s'), $end->format('Y-m-d H:i:s')));
@@ -239,7 +239,7 @@ final class AvailableBudgetRepository implements AvailableBudgetRepositoryInterf
         return $return;
     }
 
-    #[\Override]
+    #[Override]
     public function getByCurrencyDate(Carbon $start, Carbon $end, TransactionCurrency $currency): ?AvailableBudget
     {
         /** @var null|AvailableBudget */
@@ -283,7 +283,7 @@ final class AvailableBudgetRepository implements AvailableBudgetRepositoryInterf
         $this->update($availableBudget, ['amount' => $newAmount]);
     }
 
-    #[\Override]
+    #[Override]
     #[Deprecated]
     public function setAvailableBudget(TransactionCurrency $currency, Carbon $start, Carbon $end, string $amount): AvailableBudget
     {
@@ -309,7 +309,7 @@ final class AvailableBudgetRepository implements AvailableBudgetRepositoryInterf
         return $availableBudget;
     }
 
-    #[\Override]
+    #[Override]
     public function store(array $data): AvailableBudget
     {
         $start = $data['start'];
@@ -333,7 +333,7 @@ final class AvailableBudgetRepository implements AvailableBudgetRepositoryInterf
         ]);
     }
 
-    #[\Override]
+    #[Override]
     public function update(AvailableBudget $availableBudget, array $data): AvailableBudget
     {
         if (array_key_exists('amount', $data)) {
@@ -344,7 +344,7 @@ final class AvailableBudgetRepository implements AvailableBudgetRepositoryInterf
         return $availableBudget;
     }
 
-    #[\Override]
+    #[Override]
     public function updateAvailableBudget(AvailableBudget $availableBudget, array $data): AvailableBudget
     {
         if (array_key_exists('start', $data)) {

@@ -29,6 +29,7 @@ use FireflyIII\Support\System\OAuthKeys;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\Log;
 use Laravel\Passport\Passport;
+use Override;
 
 use function Safe\chmod;
 
@@ -36,9 +37,9 @@ final class RestoresOAuthKeys extends Command
 {
     use ShowsFriendlyMessages;
 
-    #[\Override]
+    #[Override]
     protected $description = 'Will restore the OAuth keys generated for the system.';
-    #[\Override]
+    #[Override]
     protected $signature   = 'correction:restore-oauth-keys';
 
     /**

@@ -30,6 +30,7 @@ use FireflyIII\Models\TransactionJournal;
 use FireflyIII\Services\Internal\Destroy\JournalDestroyService;
 use FireflyIII\Services\Internal\Destroy\TransactionGroupDestroyService;
 use Illuminate\Support\Facades\Log;
+use Override;
 
 /**
  * Class DeleteTransaction.
@@ -43,7 +44,7 @@ final class DeleteTransaction implements ActionInterface
         private readonly RuleAction $action
     ) {}
 
-    #[\Override]
+    #[Override]
     public function actOnArray(array $journal): bool
     {
         $count  = TransactionJournal::query()->where('transaction_group_id', $journal['transaction_group_id'])->count();

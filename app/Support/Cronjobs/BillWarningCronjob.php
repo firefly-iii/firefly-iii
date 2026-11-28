@@ -32,6 +32,7 @@ use FireflyIII\Support\Facades\AppConfiguration;
 use FireflyIII\Support\Facades\Preferences;
 use FireflyIII\User;
 use Illuminate\Support\Facades\Log;
+use Override;
 
 /**
  * Class BillWarningCronjob
@@ -41,7 +42,7 @@ final class BillWarningCronjob extends AbstractCronjob
     /**
      * @throws FireflyException
      */
-    #[\Override]
+    #[Override]
     public function fire(): void
     {
         Log::debug(sprintf('Now in %s', __METHOD__));

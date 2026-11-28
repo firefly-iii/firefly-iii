@@ -41,6 +41,7 @@ use FireflyIII\Support\Http\Api\ExchangeRateConverter;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
+use Override;
 
 /**
  * Class AccountController
@@ -51,7 +52,7 @@ final class AccountController extends Controller
     use CleansChartData;
     use CollectsAccountsFromFilter;
 
-    #[\Override]
+    #[Override]
     protected array $acceptedRoles = [UserRoleEnum::READ_ONLY];
 
     private array $chartData       = [];

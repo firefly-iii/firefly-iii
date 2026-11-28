@@ -26,13 +26,14 @@ namespace FireflyIII\TransactionRules\Expressions;
 
 use Symfony\Component\ExpressionLanguage\ExpressionFunction;
 use Symfony\Component\ExpressionLanguage\ExpressionFunctionProviderInterface;
+use Override;
 
 /**
  * @SuppressWarnings("PHPMD.UnusedFormalParameter")
  */
 final class ActionExpressionLanguageProvider implements ExpressionFunctionProviderInterface
 {
-    #[\Override]
+    #[Override]
     public function getFunctions(): array
     {
         $function = static function ($arguments, $str): string {

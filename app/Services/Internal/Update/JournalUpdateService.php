@@ -248,7 +248,7 @@ final class JournalUpdateService
             $destination              = $this->getDestinationTransaction();
             $this->destinationAccount = $destination->account;
         }
-        if(null === $this->destinationAccount) {
+        if (null === $this->destinationAccount) {
             throw new FireflyException(sprintf('Could not find destination account for transaction #%d.', $destination->id ?? 0));
         }
 
@@ -261,7 +261,7 @@ final class JournalUpdateService
             $source              = $this->getSourceTransaction();
             $this->sourceAccount = $source->account;
         }
-        if(null === $this->sourceAccount) {
+        if (null === $this->sourceAccount) {
             throw new FireflyException(sprintf('Could not find source account for transaction #%d.', $source->id ?? 0));
         }
 
@@ -275,7 +275,7 @@ final class JournalUpdateService
             $result                  = $this->transactionJournal->transactions()->with(['account'])->where('amount', '<', 0)->first();
             $this->sourceTransaction = $result;
         }
-        if(null === $this->sourceTransaction) {
+        if (null === $this->sourceTransaction) {
             throw new FireflyException(sprintf('Could not find source transaction for journal #%d.', $this->transactionJournal->id));
         }
         Log::debug(sprintf('getSourceTransaction: %s', $this->sourceTransaction->amount));
@@ -312,7 +312,7 @@ final class JournalUpdateService
             Log::error(sprintf('getValidDestinationAccount() threw unexpected error: %s', $e->getMessage()));
             $result = $this->getOriginalDestinationAccount();
         }
-        if(null === $result) {
+        if (null === $result) {
             $result = $this->getOriginalDestinationAccount();
         }
 
@@ -347,7 +347,7 @@ final class JournalUpdateService
 
             $result = $this->getOriginalSourceAccount();
         }
-        if(null === $result) {
+        if (null === $result) {
             $result = $this->getOriginalSourceAccount();
         }
 

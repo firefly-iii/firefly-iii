@@ -33,14 +33,15 @@ use FireflyIII\Models\TransactionType;
 use Illuminate\Console\Command;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Log;
+use Override;
 
 final class CorrectsTransactionTypes extends Command
 {
     use ShowsFriendlyMessages;
 
-    #[\Override]
+    #[Override]
     protected $description = 'Make sure all transactions are of the correct type, based on source + dest.';
-    #[\Override]
+    #[Override]
     protected $signature   = 'correction:transaction-types';
 
     /**

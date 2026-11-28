@@ -29,14 +29,15 @@ use FireflyIII\Enums\TransactionTypeEnum;
 use FireflyIII\Models\TransactionJournal;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\Log;
+use Override;
 
 final class CorrectsTransferBudgets extends Command
 {
     use ShowsFriendlyMessages;
 
-    #[\Override]
+    #[Override]
     protected $description = 'Removes budgets from transfers.';
-    #[\Override]
+    #[Override]
     protected $signature   = 'correction:transfer-budgets';
 
     /**

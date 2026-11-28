@@ -28,6 +28,7 @@ use Closure;
 use Illuminate\Contracts\Validation\ValidationRule;
 use Illuminate\Support\Facades\Validator;
 use JsonException;
+use Override;
 
 use function Safe\json_decode;
 
@@ -53,7 +54,7 @@ final class IsValidBulkClause implements ValidationRule
     /**
      * @SuppressWarnings("PHPMD.UnusedFormalParameter")
      */
-    #[\Override]
+    #[Override]
     public function validate(string $attribute, mixed $value, Closure $fail): void
     {
         $result = $this->basicValidation((string) $value);

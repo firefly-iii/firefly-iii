@@ -25,6 +25,7 @@ declare(strict_types=1);
 namespace FireflyIII\Support;
 
 use ArrayObject;
+use Override;
 
 /**
  * Class NullArrayObject
@@ -46,7 +47,7 @@ final class NullArrayObject extends ArrayObject
     /**
      * @param mixed $key
      */
-    #[\Override]
+    #[Override]
     public function offsetGet($key): mixed
     {
         if ($this->offsetExists($key)) {

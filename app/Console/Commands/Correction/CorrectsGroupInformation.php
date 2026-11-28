@@ -45,14 +45,15 @@ use FireflyIII\Models\Webhook;
 use FireflyIII\User;
 use Illuminate\Console\Command;
 use Illuminate\Database\QueryException;
+use Override;
 
 final class CorrectsGroupInformation extends Command
 {
     use ShowsFriendlyMessages;
 
-    #[\Override]
+    #[Override]
     protected $description = 'Makes sure that every object is linked to a group';
-    #[\Override]
+    #[Override]
     protected $signature   = 'correction:group-information';
 
     /**
