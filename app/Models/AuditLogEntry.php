@@ -45,7 +45,7 @@ final class AuditLogEntry extends Model
         return $this->morphTo();
     }
 
-    protected function auditableId(): Attribute
+    public function auditableId(): Attribute
     {
         return Attribute::make(get: static fn ($value): int => (int) $value);
     }
@@ -56,7 +56,7 @@ final class AuditLogEntry extends Model
         return ['before' => 'array', 'after' => 'array', 'created_at' => 'datetime', 'updated_at' => 'datetime', 'deleted_at' => 'datetime'];
     }
 
-    protected function changerId(): Attribute
+    public function changerId(): Attribute
     {
         return Attribute::make(get: static fn ($value): int => (int) $value);
     }

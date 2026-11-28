@@ -37,7 +37,7 @@ final class WebhookTrigger extends Model
      *
      * @SuppressWarnings("PHPMD.ShortMethodName")
      */
-    protected function key(): Attribute
+    public function key(): Attribute
     {
         return Attribute::make(get: static fn ($value): int => (int) $value);
     }

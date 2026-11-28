@@ -1,5 +1,7 @@
 parameters:
   ergebnis:
+    noPhpstanIgnore:
+      enabled: false
     noExtends:
       enabled: false
     final:

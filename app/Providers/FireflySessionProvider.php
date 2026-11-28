@@ -49,7 +49,7 @@ final class FireflySessionProvider extends ServiceProvider
     /**
      * Register the session driver instance.
      */
-    protected function registerSessionDriver(): void
+    private function registerSessionDriver(): void
     {
         $this->app->singleton('session.store', static fn ($app)
             // First, we will create the session manager which is responsible for the
@@ -62,7 +62,7 @@ final class FireflySessionProvider extends ServiceProvider
     /**
      * Register the session manager instance.
      */
-    protected function registerSessionManager(): void
+    private function registerSessionManager(): void
     {
         $this->app->singleton('session', static fn ($app): SessionManager => new SessionManager($app));
     }

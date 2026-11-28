@@ -116,7 +116,7 @@ final class Attachment extends Model
         return $this->belongsTo(User::class);
     }
 
-    protected function attachableId(): Attribute
+    public function attachableId(): Attribute
     {
         return Attribute::make(get: static fn ($value): int => (int) $value);
     }

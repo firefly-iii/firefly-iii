@@ -143,7 +143,7 @@ interface AccountRepositoryInterface
     /**
      * Find or create the opposing reconciliation account.
      */
-    public function getReconciliation(Account $account): ?Account;
+    public function getReconciliation(Account $account): Account;
 
     public function getUsedCurrencies(Account $account): Collection;
 

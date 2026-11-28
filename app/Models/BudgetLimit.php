@@ -41,6 +41,7 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
  * @property TransactionCurrency $transactionCurrency
  * @property Carbon              $start_date
  * @property null|Carbon         $end_date
+ * @property string $amount
  */
 #[ObservedBy([BudgetLimitObserver::class])]
 final class BudgetLimit extends Model
@@ -98,12 +99,12 @@ final class BudgetLimit extends Model
     /**
      * Get the amount
      */
-    protected function amount(): Attribute
+    public function amount(): Attribute
     {
         return Attribute::make(get: static fn ($value): string => (string) $value);
     }
 
-    protected function budgetId(): Attribute
+    public function budgetId(): Attribute
     {
         return Attribute::make(get: static fn ($value): int => (int) $value);
     }
@@ -122,7 +123,7 @@ final class BudgetLimit extends Model
         ];
     }
 
-    protected function transactionCurrencyId(): Attribute
+    public function transactionCurrencyId(): Attribute
     {
         return Attribute::make(get: static fn ($value): int => (int) $value);
     }

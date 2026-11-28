@@ -129,7 +129,7 @@ final class UpdateRequest extends FormRequest
     /**
      * Adds an error to the validator when there are no repetitions in the array of data.
      */
-    protected function atLeastOneAction(Validator $validator): void
+    private function atLeastOneAction(Validator $validator): void
     {
         $data    = $validator->getData();
         $actions = $data['actions'] ?? null;
@@ -142,7 +142,7 @@ final class UpdateRequest extends FormRequest
     /**
      * Adds an error to the validator when there are no repetitions in the array of data.
      */
-    protected function atLeastOneTrigger(Validator $validator): void
+    private function atLeastOneTrigger(Validator $validator): void
     {
         $data     = $validator->getData();
         $triggers = $data['triggers'] ?? null;
@@ -155,7 +155,7 @@ final class UpdateRequest extends FormRequest
     /**
      * Adds an error to the validator when there are no repetitions in the array of data.
      */
-    protected function atLeastOneValidAction(Validator $validator): void
+    private function atLeastOneValidAction(Validator $validator): void
     {
         $data          = $validator->getData();
         $actions       = $data['actions'] ?? [];
@@ -183,7 +183,7 @@ final class UpdateRequest extends FormRequest
     /**
      * Adds an error to the validator when there are no repetitions in the array of data.
      */
-    protected function atLeastOneValidTrigger(Validator $validator): void
+    private function atLeastOneValidTrigger(Validator $validator): void
     {
         $data          = $validator->getData();
         $triggers      = $data['triggers'] ?? [];

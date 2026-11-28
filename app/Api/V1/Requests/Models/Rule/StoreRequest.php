@@ -119,7 +119,7 @@ final class StoreRequest extends FormRequest
     /**
      * Adds an error to the validator when there are no repetitions in the array of data.
      */
-    protected function atLeastOneAction(Validator $validator): void
+    private function atLeastOneAction(Validator $validator): void
     {
         $data    = $validator->getData();
         $actions = $data['actions'] ?? [];
@@ -132,7 +132,7 @@ final class StoreRequest extends FormRequest
     /**
      * Adds an error to the validator when there are no ACTIVE actions in the array of data.
      */
-    protected function atLeastOneActiveAction(Validator $validator): void
+    private function atLeastOneActiveAction(Validator $validator): void
     {
         $data          = $validator->getData();
 
@@ -161,7 +161,7 @@ final class StoreRequest extends FormRequest
     /**
      * Adds an error to the validator when there are no ACTIVE triggers in the array of data.
      */
-    protected function atLeastOneActiveTrigger(Validator $validator): void
+    private function atLeastOneActiveTrigger(Validator $validator): void
     {
         $data          = $validator->getData();
 
@@ -190,7 +190,7 @@ final class StoreRequest extends FormRequest
     /**
      * Adds an error to the validator when there are no triggers in the array of data.
      */
-    protected function atLeastOneTrigger(Validator $validator): void
+    private function atLeastOneTrigger(Validator $validator): void
     {
         $data     = $validator->getData();
         $triggers = $data['triggers'] ?? [];

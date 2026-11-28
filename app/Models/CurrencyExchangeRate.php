@@ -81,22 +81,22 @@ final class CurrencyExchangeRate extends Model
         ];
     }
 
-    protected function fromCurrencyId(): Attribute
+    public function fromCurrencyId(): Attribute
     {
         return Attribute::make(get: static fn ($value): int => (int) $value);
     }
 
-    protected function rate(): Attribute
+    public function rate(): Attribute
     {
         return Attribute::make(get: static fn ($value): string => (string) $value);
     }
 
-    protected function toCurrencyId(): Attribute
+    public function toCurrencyId(): Attribute
     {
         return Attribute::make(get: static fn ($value): int => (int) $value);
     }
 
-    protected function userRate(): Attribute
+    public function userRate(): Attribute
     {
         return Attribute::make(get: static fn ($value): string => (string) $value);
     }

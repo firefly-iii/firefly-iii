@@ -46,6 +46,8 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
  * @property null|Carbon         $extension_date
  * @property User                $user
  * @property TransactionCurrency $transactionCurrency
+ * @property string $amount_min
+ * @property string $amount_max
  */
 #[ObservedBy([BillObserver::class])]
 final class Bill extends Model
@@ -163,7 +165,7 @@ final class Bill extends Model
     /**
      * Get the max amount
      */
-    protected function amountMax(): Attribute
+    public function amountMax(): Attribute
     {
         return Attribute::make(get: static fn ($value): string => (string) $value);
     }
@@ -171,7 +173,7 @@ final class Bill extends Model
     /**
      * Get the min amount
      */
-    protected function amountMin(): Attribute
+    public function amountMin(): Attribute
     {
         return Attribute::make(get: static fn ($value): string => (string) $value);
     }
@@ -198,7 +200,7 @@ final class Bill extends Model
         ];
     }
 
-    protected function order(): Attribute
+    public function order(): Attribute
     {
         return Attribute::make(get: static fn ($value): int => (int) $value);
     }
@@ -206,12 +208,12 @@ final class Bill extends Model
     /**
      * Get the skip
      */
-    protected function skip(): Attribute
+    public function skip(): Attribute
     {
         return Attribute::make(get: static fn ($value): int => (int) $value);
     }
 
-    protected function transactionCurrencyId(): Attribute
+    public function transactionCurrencyId(): Attribute
     {
         return Attribute::make(get: static fn ($value): int => (int) $value);
     }

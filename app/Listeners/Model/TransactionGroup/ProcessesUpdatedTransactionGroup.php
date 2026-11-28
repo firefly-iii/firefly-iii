@@ -80,7 +80,7 @@ final class ProcessesUpdatedTransactionGroup
     /**
      * This method will make sure all source / destination accounts are the same.
      */
-    protected function unifyAccounts(UpdatedSingleTransactionGroup $updatedGroupEvent): int
+    private function unifyAccounts(UpdatedSingleTransactionGroup $updatedGroupEvent): int
     {
         Log::debug('Now in unifyAccounts()');
         $effect = 0;

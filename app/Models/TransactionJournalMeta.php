@@ -57,7 +57,7 @@ final class TransactionJournalMeta extends Model
         return ['created_at' => 'datetime', 'updated_at' => 'datetime', 'deleted_at' => 'datetime'];
     }
 
-    protected function data(): Attribute
+    public function data(): Attribute
     {
         return Attribute::make(get: static fn ($value): mixed => json_decode((string) $value, false), set: static function ($value): array {
             $data = json_encode($value);
@@ -66,7 +66,7 @@ final class TransactionJournalMeta extends Model
         });
     }
 
-    protected function transactionJournalId(): Attribute
+    public function transactionJournalId(): Attribute
     {
         return Attribute::make(get: static fn ($value): int => (int) $value);
     }

@@ -145,7 +145,7 @@ final class PiggyBank extends Model
         return $this->belongsTo(TransactionCurrency::class);
     }
 
-    protected function accountId(): Attribute
+    public function accountId(): Attribute
     {
         return Attribute::make(get: static fn ($value): int => (int) $value);
     }
@@ -167,7 +167,7 @@ final class PiggyBank extends Model
         ];
     }
 
-    protected function order(): Attribute
+    public function order(): Attribute
     {
         return Attribute::make(get: static fn ($value): int => (int) $value);
     }
@@ -175,7 +175,7 @@ final class PiggyBank extends Model
     /**
      * Get the max amount
      */
-    protected function targetAmount(): Attribute
+    public function targetAmount(): Attribute
     {
         return Attribute::make(get: static fn ($value): string => (string) $value);
     }

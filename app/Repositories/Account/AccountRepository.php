@@ -561,7 +561,7 @@ final class AccountRepository implements AccountRepositoryInterface, UserGroupIn
      * @throws FireflyException
      */
     #[\Override]
-    public function getReconciliation(Account $account): ?Account
+    public function getReconciliation(Account $account): Account
     {
         if (AccountTypeEnum::ASSET->value !== $account->accountType->type) {
             throw new FireflyException(sprintf('%s is not an asset account.', $account->name));

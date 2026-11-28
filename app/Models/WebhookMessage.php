@@ -90,12 +90,12 @@ final class WebhookMessage extends Model
     /**
      * Get the amount
      */
-    protected function sent(): Attribute
+    public function sent(): Attribute
     {
         return Attribute::make(get: static fn ($value): bool => (bool) $value);
     }
 
-    protected function webhookId(): Attribute
+    public function webhookId(): Attribute
     {
         return Attribute::make(get: static fn ($value): int => (int) $value);
     }

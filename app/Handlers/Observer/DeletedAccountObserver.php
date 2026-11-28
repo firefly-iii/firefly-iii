@@ -49,7 +49,7 @@ final class DeletedAccountObserver
             $repository->destroy($attachment);
         }
 
-        $journalIds = Transaction::query()
+        $journalIds = Transaction::query() /* @phpstan-ignore larastan.noUnnecessaryCollectionCall */
             ->where('account_id', $account->id)
             ->get(['transactions.transaction_journal_id'])
             ->pluck('transaction_journal_id')

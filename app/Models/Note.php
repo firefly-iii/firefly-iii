@@ -51,7 +51,7 @@ final class Note extends Model
         return ['created_at' => 'datetime', 'updated_at' => 'datetime', 'deleted_at' => 'datetime'];
     }
 
-    protected function noteableId(): Attribute
+    public function noteableId(): Attribute
     {
         return Attribute::make(get: static fn ($value): int => (int) $value);
     }

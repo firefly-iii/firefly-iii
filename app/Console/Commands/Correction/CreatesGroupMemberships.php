@@ -43,8 +43,6 @@ final class CreatesGroupMemberships extends Command
 
     /**
      * Execute the console command.
-     *
-     * @throws FireflyException
      */
     public function handle(): int
     {

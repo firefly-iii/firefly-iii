@@ -72,7 +72,7 @@ final class AvailableBudgetRepository implements AvailableBudgetRepositoryInterf
         }
 
         // grab budget limit currencies.
-        $currencies       = BudgetLimit::leftJoin('budgets', 'budgets.id', '=', 'budget_limits.budget_id')
+        $currencies       = BudgetLimit::leftJoin('budgets', 'budgets.id', '=', 'budget_limits.budget_id')  /* @phpstan-ignore larastan.noUnnecessaryCollectionCall */
             ->where('budgets.user_id', $this->user->id)
             ->distinct()
             ->get(['budget_limits.transaction_currency_id'])

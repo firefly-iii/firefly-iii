@@ -165,7 +165,7 @@ final class ParseDateString
     /**
      * Returns true if this matches regex for xxxx-xx-DD:
      */
-    protected function isDayRange(string $date): bool
+    private function isDayRange(string $date): bool
     {
         $pattern = '/^xxxx-xx-(0[1-9]|[12]\d|3[01])$/';
         $result  = preg_match($pattern, $date);
@@ -179,7 +179,7 @@ final class ParseDateString
         return false;
     }
 
-    protected function isDayYearRange(string $date): bool
+    private function isDayYearRange(string $date): bool
     {
         // if regex for YYYY-xx-DD:
         $pattern = '/^(19|20)\d\d-xx-(0[1-9]|[12]\d|3[01])$/';
@@ -194,7 +194,7 @@ final class ParseDateString
         return false;
     }
 
-    protected function isMonthDayRange(string $date): bool
+    private function isMonthDayRange(string $date): bool
     {
         // if regex for xxxx-MM-DD:
         $pattern = '/^xxxx-(0[1-9]|1[012])-(0[1-9]|[12]\d|3[01])$/';

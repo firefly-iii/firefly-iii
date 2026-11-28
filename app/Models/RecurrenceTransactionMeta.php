@@ -52,7 +52,7 @@ final class RecurrenceTransactionMeta extends Model
         return ['created_at' => 'datetime', 'updated_at' => 'datetime', 'deleted_at' => 'datetime', 'name' => 'string', 'value' => 'string'];
     }
 
-    protected function rtId(): Attribute
+    public function rtId(): Attribute
     {
         return Attribute::make(get: static fn ($value): int => (int) $value);
     }

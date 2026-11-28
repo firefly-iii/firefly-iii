@@ -153,7 +153,7 @@ final class AccountFactory
     /**
      * @throws FireflyException
      */
-    protected function getAccountType(array $data): ?AccountType
+    private function getAccountType(array $data): AccountType
     {
         $accountTypeId   = array_key_exists('account_type_id', $data) ? (int) $data['account_type_id'] : 0;
         $accountTypeName = $data['account_type_name'] ?? null;

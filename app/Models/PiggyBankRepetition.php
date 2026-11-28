@@ -67,18 +67,18 @@ final class PiggyBankRepetition extends Model
     /**
      * Get the amount
      */
-    protected function currentAmount(): Attribute
+    public function currentAmount(): Attribute
     {
         return Attribute::make(get: static fn ($value): string => (string) $value);
     }
 
     #[Scope]
-    protected function onDates(EloquentBuilder $query, Carbon $start, Carbon $target): EloquentBuilder
+    public function onDates(EloquentBuilder $query, Carbon $start, Carbon $target): EloquentBuilder
     {
         return $query->where('start_date', $start->format('Y-m-d'))->where('target_date', $target->format('Y-m-d'));
     }
 
-    protected function piggyBankId(): Attribute
+    public function piggyBankId(): Attribute
     {
         return Attribute::make(get: static fn ($value): int => (int) $value);
     }
@@ -87,7 +87,7 @@ final class PiggyBankRepetition extends Model
      * @return EloquentBuilder
      */
     #[Scope]
-    protected function relevantOnDate(EloquentBuilder $query, Carbon $date)
+    public function relevantOnDate(EloquentBuilder $query, Carbon $date)
     {
         return $query->where(static function (EloquentBuilder $q) use ($date): void {
             $q->where('start_date', '<=', $date->format('Y-m-d 00:00:00'));

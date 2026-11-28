@@ -51,7 +51,7 @@ final class AccountMeta extends Model
         return ['created_at' => 'datetime', 'updated_at' => 'datetime'];
     }
 
-    protected function data(): Attribute
+    public function data(): Attribute
     {
         return Attribute::make(
             get: static fn (mixed $value): string => (string) json_decode((string) $value, true),

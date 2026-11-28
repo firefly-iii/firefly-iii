@@ -234,7 +234,7 @@ final class AttachmentHelper implements AttachmentHelperInterface
     /**
      * Check if a model already has this file attached.
      */
-    protected function hasFile(UploadedFile $file, Model $model): bool
+    private function hasFile(UploadedFile $file, Model $model): bool
     {
         $md5    = md5_file($file->getRealPath());
         $name   = $file->getClientOriginalName();
@@ -272,7 +272,7 @@ final class AttachmentHelper implements AttachmentHelperInterface
      *
      * @throws StringsException
      */
-    protected function processFile(UploadedFile $file, Model $model): ?Attachment
+    private function processFile(UploadedFile $file, Model $model): ?Attachment
     {
         Log::debug('Now in processFile()');
         $validation = $this->validateUpload($file, $model);
@@ -324,7 +324,7 @@ final class AttachmentHelper implements AttachmentHelperInterface
     /**
      * Verify if the file was uploaded correctly.
      */
-    protected function validateUpload(UploadedFile $file, Model $model): bool
+    private function validateUpload(UploadedFile $file, Model $model): bool
     {
         Log::debug('Now in validateUpload()');
         $result = true;
@@ -351,7 +351,7 @@ final class AttachmentHelper implements AttachmentHelperInterface
     /**
      * Verify if the mime of a file is valid.
      */
-    protected function validMime(UploadedFile $file): bool
+    private function validMime(UploadedFile $file): bool
     {
         Log::debug('Now in validMime()');
         $mime   = e($file->getMimeType());
@@ -374,7 +374,7 @@ final class AttachmentHelper implements AttachmentHelperInterface
     /**
      * Verify if the size of a file is valid.
      */
-    protected function validSize(UploadedFile $file): bool
+    private function validSize(UploadedFile $file): bool
     {
         $size   = $file->getSize();
         $name   = e($file->getClientOriginalName());

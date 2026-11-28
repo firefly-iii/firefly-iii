@@ -97,17 +97,17 @@ final class TransactionJournalLink extends Model
         return ['created_at' => 'datetime', 'updated_at' => 'datetime'];
     }
 
-    protected function destinationId(): Attribute
+    public function destinationId(): Attribute
     {
         return Attribute::make(get: static fn ($value): int => (int) $value);
     }
 
-    protected function linkTypeId(): Attribute
+    public function linkTypeId(): Attribute
     {
         return Attribute::make(get: static fn ($value): int => (int) $value);
     }
 
-    protected function sourceId(): Attribute
+    public function sourceId(): Attribute
     {
         return Attribute::make(get: static fn ($value): int => (int) $value);
     }

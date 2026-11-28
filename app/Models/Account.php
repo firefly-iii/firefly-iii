@@ -161,7 +161,7 @@ final class Account extends Model
         return $this->belongsTo(UserGroup::class);
     }
 
-    protected function accountId(): Attribute
+    public function accountId(): Attribute
     {
         return Attribute::make(get: static fn ($value): int => (int) $value);
     }
@@ -169,7 +169,7 @@ final class Account extends Model
     /**
      * Get the account number.
      */
-    protected function accountNumber(): Attribute
+    public function accountNumber(): Attribute
     {
         return Attribute::make(get: function () {
             /** @var null|AccountMeta $metaValue */
@@ -182,13 +182,13 @@ final class Account extends Model
     /**
      * Get the user ID
      */
-    protected function accountTypeId(): Attribute
+    public function accountTypeId(): Attribute
     {
         return Attribute::make(get: static fn ($value): int => (int) $value);
     }
 
     #[Scope]
-    protected function accountTypeIn(EloquentBuilder $query, array $types): void
+    public function accountTypeIn(EloquentBuilder $query, array $types): void
     {
         if (false === $this->joinedAccountTypes) {
             $query->leftJoin('account_types', 'account_types.id', '=', 'accounts.account_type_id');
@@ -198,7 +198,7 @@ final class Account extends Model
     }
 
     #[\Override]
-    protected function casts(): array
+    public function casts(): array
     {
         return [
             'created_at'             => 'datetime',
@@ -213,7 +213,7 @@ final class Account extends Model
         ];
     }
 
-    protected function editName(): Attribute
+    public function editName(): Attribute
     {
         return Attribute::make(get: function () {
             $name = $this->name;
@@ -225,12 +225,12 @@ final class Account extends Model
         });
     }
 
-    protected function iban(): Attribute
+    public function iban(): Attribute
     {
         return Attribute::make(get: static fn ($value): ?string => null === $value ? null : trim(str_replace(' ', '', (string) $value)));
     }
 
-    protected function order(): Attribute
+    public function order(): Attribute
     {
         return Attribute::make(get: static fn ($value): int => (int) $value);
     }
@@ -238,7 +238,7 @@ final class Account extends Model
     /**
      * Get the virtual balance
      */
-    protected function virtualBalance(): Attribute
+    public function virtualBalance(): Attribute
     {
         return Attribute::make(get: static fn ($value): string => (string) $value);
     }

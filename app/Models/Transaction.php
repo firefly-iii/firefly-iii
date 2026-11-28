@@ -41,6 +41,8 @@ use Illuminate\Database\Eloquent\SoftDeletes;
  * @property null|TransactionCurrency $foreignCurrency
  * @property null|string              $balance_before
  * @property null|string              $balance_after
+ * @property null|string $foreign_amount
+ * @property string $amount
  */
 #[ObservedBy([TransactionObserver::class])]
 final class Transaction extends Model
@@ -132,7 +134,7 @@ final class Transaction extends Model
         return $this->belongsTo(TransactionJournal::class);
     }
 
-    protected function accountId(): Attribute
+    public function accountId(): Attribute
     {
         return Attribute::make(get: static fn ($value): int => (int) $value);
     }
@@ -141,7 +143,7 @@ final class Transaction extends Model
      * Check for transactions AFTER a specified date.
      */
     #[Scope]
-    protected function after(Builder $query, Carbon $date): void
+    public function after(Builder $query, Carbon $date): void
     {
         if (!self::isJoined($query, 'transaction_journals')) {
             $query->leftJoin('transaction_journals', 'transaction_journals.id', '=', 'transactions.transaction_journal_id');
@@ -152,12 +154,12 @@ final class Transaction extends Model
     /**
      * Get the amount
      */
-    protected function amount(): Attribute
+    public function amount(): Attribute
     {
         return Attribute::make(get: static fn ($value): string => (string) $value);
     }
 
-    protected function balanceDirty(): Attribute
+    public function balanceDirty(): Attribute
     {
         return Attribute::make(get: static fn ($value): bool => 1 === (int) $value);
     }
@@ -166,7 +168,7 @@ final class Transaction extends Model
      * Check for transactions BEFORE the specified date.
      */
     #[Scope]
-    protected function before(Builder $query, Carbon $date): void
+    public function before(Builder $query, Carbon $date): void
     {
         if (!self::isJoined($query, 'transaction_journals')) {
             $query->leftJoin('transaction_journals', 'transaction_journals.id', '=', 'transactions.transaction_journal_id');
@@ -199,18 +201,18 @@ final class Transaction extends Model
     /**
      * Get the foreign amount
      */
-    protected function foreignAmount(): Attribute
+    public function foreignAmount(): Attribute
     {
         return Attribute::make(get: static fn ($value): string => (string) $value);
     }
 
-    protected function transactionJournalId(): Attribute
+    public function transactionJournalId(): Attribute
     {
         return Attribute::make(get: static fn ($value): int => (int) $value);
     }
 
     #[Scope]
-    protected function transactionTypes(Builder $query, array $types): void
+    public function transactionTypes(Builder $query, array $types): void
     {
         if (!self::isJoined($query, 'transaction_journals')) {
             $query->leftJoin('transaction_journals', 'transaction_journals.id', '=', 'transactions.transaction_journal_id');

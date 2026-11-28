@@ -33,7 +33,7 @@ use FireflyIII\Support\Facades\Steam;
  */
 final class AccountMetaFactory
 {
-    public function create(array $data): ?AccountMeta
+    public function create(array $data): AccountMeta
     {
         return AccountMeta::create($data);
     }

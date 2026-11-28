@@ -54,12 +54,12 @@ final class AutoBudget extends Model
         return $this->belongsTo(TransactionCurrency::class);
     }
 
-    protected function amount(): Attribute
+    public function amount(): Attribute
     {
         return Attribute::make(get: static fn ($value): string => (string) $value);
     }
 
-    protected function budgetId(): Attribute
+    public function budgetId(): Attribute
     {
         return Attribute::make(get: static fn ($value): int => (int) $value);
     }
@@ -70,7 +70,7 @@ final class AutoBudget extends Model
         return ['amount' => 'string', 'native_amount' => 'string'];
     }
 
-    protected function transactionCurrencyId(): Attribute
+    public function transactionCurrencyId(): Attribute
     {
         return Attribute::make(get: static fn ($value): int => (int) $value);
     }

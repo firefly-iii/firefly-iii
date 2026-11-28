@@ -47,7 +47,7 @@ final class BillFactory
     /**
      * @throws FireflyException
      */
-    public function create(array $data): ?Bill
+    public function create(array $data): Bill
     {
         Log::debug(sprintf('Now in %s', __METHOD__), $data);
         $factory          = app(TransactionCurrencyFactory::class);

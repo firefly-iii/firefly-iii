@@ -52,7 +52,7 @@ final class RecurrenceMeta extends Model
         return ['created_at' => 'datetime', 'updated_at' => 'datetime', 'deleted_at' => 'datetime', 'name' => 'string', 'value' => 'string'];
     }
 
-    protected function recurrenceId(): Attribute
+    public function recurrenceId(): Attribute
     {
         return Attribute::make(get: static fn ($value): int => (int) $value);
     }

@@ -71,7 +71,7 @@ final class WebhookAttempt extends Model
         return $this->belongsTo(WebhookMessage::class);
     }
 
-    protected function webhookMessageId(): Attribute
+    public function webhookMessageId(): Attribute
     {
         return Attribute::make(get: static fn ($value): int => (int) $value);
     }

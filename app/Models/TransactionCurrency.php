@@ -127,7 +127,7 @@ final class TransactionCurrency extends Model
         ];
     }
 
-    protected function decimalPlaces(): Attribute
+    public function decimalPlaces(): Attribute
     {
         return Attribute::make(get: static fn ($value): int => (int) $value);
     }

@@ -166,7 +166,7 @@ final class Recurrence extends Model
         ];
     }
 
-    protected function transactionTypeId(): Attribute
+    public function transactionTypeId(): Attribute
     {
         return Attribute::make(get: static fn ($value): int => (int) $value);
     }

@@ -41,7 +41,7 @@ final class AttachmentFactory
     /**
      * @throws FireflyException
      */
-    public function create(array $data): ?Attachment
+    public function create(array $data): Attachment
     {
         // append if necessary.
         $model      = str_contains((string) $data['attachable_type'], 'FireflyIII')

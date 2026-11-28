@@ -81,12 +81,12 @@ final class RuleAction extends Model
         ];
     }
 
-    protected function order(): Attribute
+    public function order(): Attribute
     {
         return Attribute::make(get: static fn ($value): int => (int) $value);
     }
 
-    protected function ruleId(): Attribute
+    public function ruleId(): Attribute
     {
         return Attribute::make(get: static fn ($value): int => (int) $value);
     }

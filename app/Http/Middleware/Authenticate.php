@@ -77,7 +77,7 @@ final class Authenticate
      *
      * @SuppressWarnings("PHPMD.UnusedFormalParameter")
      */
-    protected function authenticate($request, array $guards)
+    private function authenticate($request, array $guards)
     {
         if (0 === count($guards)) {
             // Log::debug('in Authenticate::authenticate() with zero guards.');
@@ -98,31 +98,6 @@ final class Authenticate
 
         throw new FireflyException('This point is generally unreachable.');
 
-        //        exit('five');
-        //        foreach ($guards as $guard) {
-        //            exit('six');
-        //            if ('api' !== $guard) {
-        //                $this->auth->guard($guard)->authenticate();
-        //            }
-        //            $result = $this->auth->guard($guard)->check();
-        //            if ($result) {
-        //                $user = $this->auth->guard($guard)->user();
-        //                $this->validateBlockedUser($user, $guards);
-        //
-        //                // According to PHPstan the method returns void, but we'll see.
-        //                return $this->auth->shouldUse($guard);
-        //            }
-        //        }
-        //
-        //        exit('seven');
-        // this is a massive hack, but if the handler has the oauth exception
-        // at this point we can report its error instead of a generic one.
-        //        $message = 'Unauthenticated.';
-        //        if (Handler::$lastError instanceof OAuthServerException) {
-        //            $message = Handler::$lastError->getHint();
-        //        }
-        //
-        //        throw new AuthenticationException($message, $guards);
     }
 
     /**

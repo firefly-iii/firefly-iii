@@ -121,17 +121,17 @@ final class Rule extends Model
         ];
     }
 
-    protected function description(): Attribute
+    public function description(): Attribute
     {
         return Attribute::make(set: static fn ($value): array => ['description' => e($value)]);
     }
 
-    protected function order(): Attribute
+    public function order(): Attribute
     {
         return Attribute::make(get: static fn ($value): int => (int) $value);
     }
 
-    protected function ruleGroupId(): Attribute
+    public function ruleGroupId(): Attribute
     {
         return Attribute::make(get: static fn ($value): int => (int) $value);
     }

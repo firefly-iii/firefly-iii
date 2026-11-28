@@ -251,18 +251,18 @@ final class TransactionJournal extends Model
         ];
     }
 
-    protected function order(): Attribute
+    public function order(): Attribute
     {
         return Attribute::make(get: static fn ($value): int => (int) $value);
     }
 
-    protected function transactionTypeId(): Attribute
+    public function transactionTypeId(): Attribute
     {
         return Attribute::make(get: static fn ($value): int => (int) $value);
     }
 
     #[Scope]
-    protected function transactionTypes(EloquentBuilder $query, array $types): void
+    public function transactionTypes(EloquentBuilder $query, array $types): void
     {
         if (!self::isJoined($query, 'transaction_types')) {
             $query->leftJoin('transaction_types', 'transaction_types.id', '=', 'transaction_journals.transaction_type_id');

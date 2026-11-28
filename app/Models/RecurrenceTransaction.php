@@ -90,7 +90,7 @@ final class RecurrenceTransaction extends Model
         return $this->belongsTo(TransactionType::class);
     }
 
-    protected function amount(): Attribute
+    public function amount(): Attribute
     {
         return Attribute::make(get: static fn ($value): string => (string) $value);
     }
@@ -108,32 +108,32 @@ final class RecurrenceTransaction extends Model
         ];
     }
 
-    protected function destinationId(): Attribute
+    public function destinationId(): Attribute
     {
         return Attribute::make(get: static fn ($value): int => (int) $value);
     }
 
-    protected function foreignAmount(): Attribute
+    public function foreignAmount(): Attribute
     {
         return Attribute::make(get: static fn ($value): string => (string) $value);
     }
 
-    protected function recurrenceId(): Attribute
+    public function recurrenceId(): Attribute
     {
         return Attribute::make(get: static fn ($value): int => (int) $value);
     }
 
-    protected function sourceId(): Attribute
+    public function sourceId(): Attribute
     {
         return Attribute::make(get: static fn ($value): int => (int) $value);
     }
 
-    protected function transactionCurrencyId(): Attribute
+    public function transactionCurrencyId(): Attribute
     {
         return Attribute::make(get: static fn ($value): int => (int) $value);
     }
 
-    protected function userId(): Attribute
+    public function userId(): Attribute
     {
         return Attribute::make(get: static fn ($value): int => (int) $value);
     }

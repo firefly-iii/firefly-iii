@@ -39,6 +39,9 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 /**
  * @property User                $user
  * @property TransactionCurrency $transactionCurrency
+ * @property Carbon $start_date
+ * @property Carbon $end_date
+ * @property string $amount
  */
 #[ObservedBy([AvailableBudgetObserver::class])]
 final class AvailableBudget extends Model
@@ -98,7 +101,7 @@ final class AvailableBudget extends Model
         return $this->belongsTo(User::class);
     }
 
-    protected function amount(): Attribute
+    public function amount(): Attribute
     {
         return Attribute::make(get: static fn ($value): string => (string) $value);
     }
@@ -120,7 +123,7 @@ final class AvailableBudget extends Model
         ];
     }
 
-    protected function endDate(): Attribute
+    public function endDate(): Attribute
     {
         return Attribute::make(
             get: static fn (string $value): Carbon => Carbon::parse($value),
@@ -128,7 +131,7 @@ final class AvailableBudget extends Model
         );
     }
 
-    protected function startDate(): Attribute
+    public function startDate(): Attribute
     {
         return Attribute::make(
             get: static fn (string $value): Carbon => Carbon::parse($value),
@@ -136,7 +139,7 @@ final class AvailableBudget extends Model
         );
     }
 
-    protected function transactionCurrencyId(): Attribute
+    public function transactionCurrencyId(): Attribute
     {
         return Attribute::make(get: static fn ($value): int => (int) $value);
     }

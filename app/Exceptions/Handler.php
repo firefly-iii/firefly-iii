@@ -289,7 +289,7 @@ final class Handler extends ExceptionHandler
      * @param Request $request
      */
     #[Override]
-    protected function invalid($request, LaravelValidationException $exception): \Illuminate\Http\Response|JsonResponse|RedirectResponse
+    protected function invalid($request, LaravelValidationException $exception): RedirectResponse
     {
         // protect against open redirect when submitting invalid forms.
         $previous = Steam::getSafePreviousUrl();

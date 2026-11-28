@@ -186,7 +186,7 @@ final class TransactionJournalFactory
         $this->accountRepository->setUserGroup($userGroup);
     }
 
-    protected function storeMeta(TransactionJournal $journal, array $data, string $field): void
+    private function storeMeta(TransactionJournal $journal, array $data, string $field): void
     {
         $set     = ['journal' => $journal, 'name' => $field, 'data' => (string) ($data[$field] ?? '')];
         if (array_key_exists($field, $data) && $data[$field] instanceof Carbon) {

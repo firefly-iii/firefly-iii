@@ -31,6 +31,9 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 use function Safe\json_decode;
 use function Safe\json_encode;
 
+/**
+ * @property mixed $data
+ */
 final class Configuration extends Model
 {
     use ReturnsIntegerIdTrait;
@@ -45,10 +48,7 @@ final class Configuration extends Model
         return ['created_at' => 'datetime', 'updated_at' => 'datetime', 'deleted_at' => 'datetime'];
     }
 
-    /**
-     * TODO can be replaced with native laravel code.
-     */
-    protected function data(): Attribute
+    public function data(): Attribute
     {
         return Attribute::make(get: static fn ($value): mixed => json_decode((string) $value), set: static fn ($value): array => ['data' => json_encode($value)]);
     }
