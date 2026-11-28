@@ -43,6 +43,7 @@ class RemovesLinksToDeletedObjects extends Command
      *
      * @var string
      */
+    #[\Override]
     protected $description = 'Removes deleted entries from intermediate tables.';
 
     /**
@@ -50,6 +51,7 @@ class RemovesLinksToDeletedObjects extends Command
      *
      * @var string
      */
+    #[\Override]
     protected $signature   = 'correction:remove-links-to-deleted-objects';
 
     /**

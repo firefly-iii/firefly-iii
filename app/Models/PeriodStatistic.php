@@ -61,6 +61,7 @@ class PeriodStatistic extends Model
         return $this->belongsTo(UserGroup::class);
     }
 
+    #[\Override]
     protected function casts(): array
     {
         return [

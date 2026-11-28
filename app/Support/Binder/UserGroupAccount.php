@@ -36,6 +36,7 @@ class UserGroupAccount implements BinderInterface
     /**
      * @throws NotFoundHttpException
      */
+    #[\Override]
     public static function routeBinder(string $value, Route $route): Account
     {
         if (auth()->check()) {

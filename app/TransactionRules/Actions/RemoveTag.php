@@ -43,6 +43,7 @@ class RemoveTag implements ActionInterface
         private readonly RuleAction $action
     ) {}
 
+    #[\Override]
     public function actOnArray(array $journal): bool
     {
         $name   = $this->action->getValue($journal);

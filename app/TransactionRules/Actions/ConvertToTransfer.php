@@ -56,6 +56,7 @@ class ConvertToTransfer implements ActionInterface
      * @SuppressWarnings("PHPMD.ExcessiveMethodLength")
      * @SuppressWarnings("PHPMD.NPathComplexity")
      */
+    #[\Override]
     public function actOnArray(array $journal): bool
     {
         $accountName  = $this->action->getValue($journal);

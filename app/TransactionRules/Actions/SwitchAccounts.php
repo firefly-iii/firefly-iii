@@ -44,6 +44,7 @@ class SwitchAccounts implements ActionInterface
         private readonly RuleAction $action
     ) {}
 
+    #[\Override]
     public function actOnArray(array $journal): bool
     {
         // make object from array (so the data is fresh).

@@ -37,6 +37,7 @@ class VerifiesDatabaseConnection extends Command
      *
      * @var string
      */
+    #[\Override]
     protected $description = 'This command tries to connect to the database.';
 
     /**
@@ -44,6 +45,7 @@ class VerifiesDatabaseConnection extends Command
      *
      * @var string
      */
+    #[\Override]
     protected $signature   = 'firefly-iii:verify-database-connection';
 
     /**

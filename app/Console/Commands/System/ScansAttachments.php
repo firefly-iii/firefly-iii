@@ -44,8 +44,10 @@ class ScansAttachments extends Command
 {
     use ShowsFriendlyMessages;
 
+    #[\Override]
     protected $description = 'Rescan all attachments and re-set the correct MD5 hash and mime.';
 
+    #[\Override]
     protected $signature   = 'firefly-iii:scan-attachments';
 
     /**

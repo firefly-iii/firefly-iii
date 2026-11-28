@@ -32,6 +32,7 @@ class UserRole extends Model
 {
     use ReturnsIntegerIdTrait;
 
+    #[\Override]
     protected $fillable = ['title'];
 
     public function groupMemberships(): HasMany

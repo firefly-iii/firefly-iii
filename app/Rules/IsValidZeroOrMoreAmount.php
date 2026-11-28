@@ -40,6 +40,7 @@ class IsValidZeroOrMoreAmount implements ValidationRule
     /**
      * @SuppressWarnings("PHPMD.UnusedFormalParameter")
      */
+    #[\Override]
     public function validate(string $attribute, mixed $value, Closure $fail): void
     {
         if ($this->nullable && null === $value) {

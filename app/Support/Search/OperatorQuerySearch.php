@@ -131,31 +131,37 @@ class OperatorQuerySearch implements SearchInterface
         return $original;
     }
 
+    #[\Override]
     public function getExcludedWords(): array
     {
         return $this->prohibitedWords;
     }
 
+    #[\Override]
     public function getInvalidOperators(): array
     {
         return $this->invalidOperators;
     }
 
+    #[\Override]
     public function getModifiers(): Collection
     {
         return $this->getOperators();
     }
 
+    #[\Override]
     public function getOperators(): Collection
     {
         return $this->operators;
     }
 
+    #[\Override]
     public function getWords(): array
     {
         return $this->words;
     }
 
+    #[\Override]
     public function getWordsAsString(): string
     {
         return implode(' ', $this->words);
@@ -164,6 +170,7 @@ class OperatorQuerySearch implements SearchInterface
     /**
      * @throws FireflyException
      */
+    #[\Override]
     public function hasModifiers(): bool
     {
         throw new FireflyException('Not implemented');
@@ -172,6 +179,7 @@ class OperatorQuerySearch implements SearchInterface
     /**
      * @throws FireflyException
      */
+    #[\Override]
     public function parseQuery(string $query): void
     {
         // Log::debug(sprintf('Now in parseQuery("%s")', $query));
@@ -199,11 +207,13 @@ class OperatorQuerySearch implements SearchInterface
         $this->collector->excludeSearchWords($this->prohibitedWords);
     }
 
+    #[\Override]
     public function searchTime(): float
     {
         return microtime(true) - $this->startTime;
     }
 
+    #[\Override]
     public function searchTransactions(): LengthAwarePaginator
     {
         $this->parseTagInstructions();
@@ -224,23 +234,27 @@ class OperatorQuerySearch implements SearchInterface
         return $this->collector->getPaginatedGroups();
     }
 
+    #[\Override]
     public function setDate(Carbon $date): void
     {
         $this->date = $date;
     }
 
+    #[\Override]
     public function setLimit(int $limit): void
     {
         $this->limit = $limit;
         $this->collector->setLimit($this->limit);
     }
 
+    #[\Override]
     public function setPage(int $page): void
     {
         $this->page = $page;
         $this->collector->setPage($this->page);
     }
 
+    #[\Override]
     public function setUser(User $user): void
     {
         $this->accountRepository->setUser($user);

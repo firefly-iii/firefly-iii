@@ -38,6 +38,7 @@ use Illuminate\Support\Facades\Log;
  */
 class ExchangeRatesCronjob extends AbstractCronjob
 {
+    #[\Override]
     public function fire(): void
     {
         /** @var User $user */

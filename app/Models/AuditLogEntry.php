@@ -50,6 +50,7 @@ class AuditLogEntry extends Model
         return Attribute::make(get: static fn ($value): int => (int) $value);
     }
 
+    #[\Override]
     protected function casts(): array
     {
         return ['before' => 'array', 'after' => 'array', 'created_at' => 'datetime', 'updated_at' => 'datetime', 'deleted_at' => 'datetime'];

@@ -50,7 +50,9 @@ class CorrectsGroupInformation extends Command
 {
     use ShowsFriendlyMessages;
 
+    #[\Override]
     protected $description = 'Makes sure that every object is linked to a group';
+    #[\Override]
     protected $signature   = 'correction:group-information';
 
     /**

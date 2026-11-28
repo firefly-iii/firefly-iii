@@ -34,8 +34,10 @@ class CorrectsPrimaryCurrencyAmounts extends Command
 {
     use ShowsFriendlyMessages;
 
+    #[\Override]
     protected $description = 'Recalculate primary currency amounts for all objects.';
 
+    #[\Override]
     protected $signature   = 'correction:recalculate-pc-amounts';
 
     /**

@@ -38,6 +38,7 @@ class TagList implements BinderInterface
     /**
      * @throws NotFoundHttpException
      */
+    #[\Override]
     public static function routeBinder(string $value, Route $route): Collection
     {
         if (auth()->check()) {

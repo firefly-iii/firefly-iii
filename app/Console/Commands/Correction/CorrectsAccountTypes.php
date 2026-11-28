@@ -43,7 +43,9 @@ class CorrectsAccountTypes extends Command
 {
     use ShowsFriendlyMessages;
 
+    #[\Override]
     protected $description = 'Make sure all journals have the correct from/to account types.';
+    #[\Override]
     protected $signature   = 'correction:account-types';
     private int $count;
     private array $expected;

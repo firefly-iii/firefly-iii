@@ -34,6 +34,7 @@ use Illuminate\Support\Facades\Log;
  */
 class TransactionTypeRepository implements TransactionTypeRepositoryInterface
 {
+    #[\Override]
     public function findByType(string $type): ?TransactionType
     {
         $search = ucfirst($type);
@@ -41,6 +42,7 @@ class TransactionTypeRepository implements TransactionTypeRepositoryInterface
         return TransactionType::whereType($search)->first();
     }
 
+    #[\Override]
     public function findTransactionType(?TransactionType $type, ?string $typeString): TransactionType
     {
         Log::debug('Now looking for a transaction type.');
@@ -59,6 +61,7 @@ class TransactionTypeRepository implements TransactionTypeRepositoryInterface
         return $search;
     }
 
+    #[\Override]
     public function searchTypes(string $query, int $limit): Collection
     {
         if ('' === $query) {

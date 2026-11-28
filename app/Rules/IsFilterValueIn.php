@@ -37,6 +37,7 @@ class IsFilterValueIn implements ValidationRule
     /**
      * @SuppressWarnings("PHPMD.UnusedFormalParameter")
      */
+    #[\Override]
     public function validate(string $attribute, mixed $value, Closure $fail): void
     {
         if (!is_array($value)) {

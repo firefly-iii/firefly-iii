@@ -46,6 +46,7 @@ class AccountTasker implements AccountTaskerInterface, UserGroupInterface
     /**
      * @throws FireflyException
      */
+    #[\Override]
     public function getAccountReport(Collection $accounts, Carbon $start, Carbon $end): array
     {
         $yesterday           = clone $start;
@@ -116,6 +117,7 @@ class AccountTasker implements AccountTaskerInterface, UserGroupInterface
     /**
      * @throws FireflyException
      */
+    #[\Override]
     public function getExpenseReport(Carbon $start, Carbon $end, Collection $accounts): array
     {
         // get all expenses for the given accounts in the given period!
@@ -147,6 +149,7 @@ class AccountTasker implements AccountTaskerInterface, UserGroupInterface
     /**
      * @throws FireflyException
      */
+    #[\Override]
     public function getIncomeReport(Carbon $start, Carbon $end, Collection $accounts): array
     {
         // get all incomes for the given accounts in the given period!

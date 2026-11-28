@@ -55,7 +55,9 @@ class ForcesDecimalSize extends Command
 {
     use ShowsFriendlyMessages;
 
+    #[\Override]
     protected $description = 'This command resizes DECIMAL columns in MySQL or PostgreSQL and correct amounts (only MySQL).';
+    #[\Override]
     protected $signature   = 'firefly-iii:force-decimal-size {--force}';
     private string $cast;
     private array $classes = [

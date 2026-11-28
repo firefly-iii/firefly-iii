@@ -44,6 +44,7 @@ class JournalAPIRepository implements JournalAPIRepositoryInterface, UserGroupIn
     /**
      * Returns transaction by ID. Used to validate attachments.
      */
+    #[\Override]
     public function findTransaction(int $transactionId): ?Transaction
     {
         return Transaction::leftJoin('transaction_journals', 'transaction_journals.id', '=', 'transactions.transaction_journal_id')
@@ -58,6 +59,7 @@ class JournalAPIRepository implements JournalAPIRepositoryInterface, UserGroupIn
      *
      * Return all attachments for journal.
      */
+    #[\Override]
     public function getAttachments(TransactionJournal $journal): Collection
     {
         $set  = $journal->attachments;
@@ -73,6 +75,7 @@ class JournalAPIRepository implements JournalAPIRepositoryInterface, UserGroupIn
         });
     }
 
+    #[\Override]
     public function getJournalLinks(TransactionJournal $journal): Collection
     {
         $collection = $journal->destJournalLinks()->get();
@@ -83,6 +86,7 @@ class JournalAPIRepository implements JournalAPIRepositoryInterface, UserGroupIn
     /**
      * Get all piggy bank events for a journal.
      */
+    #[\Override]
     public function getPiggyBankEvents(TransactionJournal $journal): Collection
     {
         $events = $journal->piggyBankEvents()->get();

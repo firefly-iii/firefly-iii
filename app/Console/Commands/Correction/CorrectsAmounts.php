@@ -51,7 +51,9 @@ class CorrectsAmounts extends Command
 {
     use ShowsFriendlyMessages;
 
+    #[\Override]
     protected $description = 'This command makes sure positive and negative amounts are recorded correctly.';
+    #[\Override]
     protected $signature   = 'correction:amounts';
     private GenericDestroyService $genericService;
     private JournalDestroyService $service;

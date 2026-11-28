@@ -39,6 +39,7 @@ class SendTestEmail extends Command
      *
      * @var string
      */
+    #[\Override]
     protected $description = 'Send test email';
 
     /**
@@ -46,6 +47,7 @@ class SendTestEmail extends Command
      *
      * @var string
      */
+    #[\Override]
     protected $signature   = 'firefly-iii:send-test-email
                             {--user=1 : The user ID.}
                             {--token= : The user\'s access token.}';

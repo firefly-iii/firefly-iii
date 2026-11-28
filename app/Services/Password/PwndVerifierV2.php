@@ -37,6 +37,7 @@ class PwndVerifierV2 implements Verifier
     /**
      * Verify the given password against (some) service.
      */
+    #[\Override]
     public function validPassword(#[SensitiveParameter] string $password): bool
     {
         // Yes SHA1 is unsafe but in this context its fine.

@@ -36,8 +36,10 @@ class ReportsEmptyObjects extends Command
 {
     use ShowsFriendlyMessages;
 
+    #[\Override]
     protected $description = 'Reports on empty database objects.';
 
+    #[\Override]
     protected $signature   = 'integrity:empty-objects';
 
     /**

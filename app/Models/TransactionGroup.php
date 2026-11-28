@@ -49,6 +49,7 @@ class TransactionGroup extends Model
     use ReturnsIntegerUserIdTrait;
     use SoftDeletes;
 
+    #[\Override]
     protected $fillable = ['user_id', 'user_group_id', 'title'];
 
     /**
@@ -104,6 +105,7 @@ class TransactionGroup extends Model
         return $this->belongsTo(UserGroup::class);
     }
 
+    #[\Override]
     protected function casts(): array
     {
         return [

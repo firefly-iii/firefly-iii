@@ -37,8 +37,10 @@ class CreatesFirstUser extends Command
 {
     use ShowsFriendlyMessages;
 
+    #[\Override]
     protected $description = 'Creates a new user and gives admin rights. Outputs the password on the command line. Strictly for testing.';
 
+    #[\Override]
     protected $signature   = 'system:create-first-user {email}';
     private UserRepositoryInterface $repository;
 

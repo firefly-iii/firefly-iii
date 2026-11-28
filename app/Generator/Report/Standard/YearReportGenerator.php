@@ -49,6 +49,7 @@ class YearReportGenerator implements ReportGeneratorInterface
      *
      * @throws FireflyException
      */
+    #[\Override]
     public function generate(): string
     {
         // and some id's, joined:
@@ -76,6 +77,7 @@ class YearReportGenerator implements ReportGeneratorInterface
     /**
      * Set the accounts.
      */
+    #[\Override]
     public function setAccounts(Collection $accounts): ReportGeneratorInterface
     {
         $this->accounts = $accounts;
@@ -86,6 +88,7 @@ class YearReportGenerator implements ReportGeneratorInterface
     /**
      * Unused budget setter.
      */
+    #[\Override]
     public function setBudgets(Collection $budgets): ReportGeneratorInterface
     {
         return $this;
@@ -94,6 +97,7 @@ class YearReportGenerator implements ReportGeneratorInterface
     /**
      * Unused categories setter.
      */
+    #[\Override]
     public function setCategories(Collection $categories): ReportGeneratorInterface
     {
         return $this;
@@ -102,6 +106,7 @@ class YearReportGenerator implements ReportGeneratorInterface
     /**
      * Set the end date.
      */
+    #[\Override]
     public function setEndDate(Carbon $date): ReportGeneratorInterface
     {
         $this->end = $date;
@@ -112,6 +117,7 @@ class YearReportGenerator implements ReportGeneratorInterface
     /**
      * Set the expenses used.
      */
+    #[\Override]
     public function setExpense(Collection $expense): ReportGeneratorInterface
     {
         return $this;
@@ -120,6 +126,7 @@ class YearReportGenerator implements ReportGeneratorInterface
     /**
      * Set the start date.
      */
+    #[\Override]
     public function setStartDate(Carbon $date): ReportGeneratorInterface
     {
         $this->start = $date;
@@ -130,6 +137,7 @@ class YearReportGenerator implements ReportGeneratorInterface
     /**
      * Unused tags setter.
      */
+    #[\Override]
     public function setTags(Collection $tags): ReportGeneratorInterface
     {
         return $this;

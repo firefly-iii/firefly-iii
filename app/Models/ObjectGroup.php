@@ -39,6 +39,7 @@ class ObjectGroup extends Model
     use ReturnsIntegerIdTrait;
     use ReturnsIntegerUserIdTrait;
 
+    #[\Override]
     protected $fillable = ['title', 'order', 'user_id', 'user_group_id'];
 
     /**
@@ -103,6 +104,7 @@ class ObjectGroup extends Model
         return $this->belongsTo(User::class);
     }
 
+    #[\Override]
     protected function casts(): array
     {
         return [

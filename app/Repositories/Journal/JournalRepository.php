@@ -92,6 +92,7 @@ class JournalRepository implements JournalRepositoryInterface, UserGroupInterfac
         return $search->count();
     }
 
+    #[\Override]
     public function destroyGroup(TransactionGroup $transactionGroup): void
     {
         /** @var TransactionGroupDestroyService $service */
@@ -99,6 +100,7 @@ class JournalRepository implements JournalRepositoryInterface, UserGroupInterfac
         $service->destroy($transactionGroup);
     }
 
+    #[\Override]
     public function destroyJournal(TransactionJournal $journal): void
     {
         /** @var JournalDestroyService $service */
@@ -109,12 +111,14 @@ class JournalRepository implements JournalRepositoryInterface, UserGroupInterfac
     /**
      * Find a specific journal.
      */
+    #[\Override]
     public function find(int $journalId): ?TransactionJournal
     {
         /** @var null|TransactionJournal */
         return $this->user->transactionJournals()->find($journalId);
     }
 
+    #[\Override]
     public function findByType(array $types): Collection
     {
         return $this->user->transactionJournals()
@@ -127,6 +131,7 @@ class JournalRepository implements JournalRepositoryInterface, UserGroupInterfac
     /**
      * Get users first transaction journal or NULL.
      */
+    #[\Override]
     public function firstNull(): ?TransactionJournal
     {
         /** @var null|TransactionJournal */
@@ -143,6 +148,7 @@ class JournalRepository implements JournalRepositoryInterface, UserGroupInterfac
         return $this->userGroup->transactionJournals()->where('completed', false)->get(['transaction_journals.*']);
     }
 
+    #[\Override]
     public function getDestinationAccount(TransactionJournal $journal): Account
     {
         /** @var null|Transaction $transaction */
@@ -163,6 +169,7 @@ class JournalRepository implements JournalRepositoryInterface, UserGroupInterfac
     /**
      * Return total amount of journal. Is always positive.
      */
+    #[\Override]
     public function getJournalTotal(TransactionJournal $journal): string
     {
         $cache  = new CacheProperties();
@@ -180,12 +187,14 @@ class JournalRepository implements JournalRepositoryInterface, UserGroupInterfac
         return $amount;
     }
 
+    #[\Override]
     public function getLast(): ?TransactionJournal
     {
         /** @var null|TransactionJournal */
         return $this->user->transactionJournals()->orderBy('date', 'DESC')->first(['transaction_journals.*']);
     }
 
+    #[\Override]
     public function getLinkNoteText(TransactionJournalLink $link): string
     {
         /** @var null|Note $note */
@@ -197,6 +206,7 @@ class JournalRepository implements JournalRepositoryInterface, UserGroupInterfac
     /**
      * Return Carbon value of a meta field (or NULL).
      */
+    #[\Override]
     public function getMetaDateById(int $journalId, string $field): ?Carbon
     {
         $cache = new CacheProperties();
@@ -217,6 +227,7 @@ class JournalRepository implements JournalRepositoryInterface, UserGroupInterfac
         return $value;
     }
 
+    #[\Override]
     public function getSourceAccount(TransactionJournal $journal): Account
     {
         /** @var null|Transaction $transaction */
@@ -246,6 +257,7 @@ class JournalRepository implements JournalRepositoryInterface, UserGroupInterfac
         TransactionJournal::query()->whereIn('id', $set->pluck('id')->toArray())->update(['completed' => true]);
     }
 
+    #[\Override]
     public function reconcileById(int $journalId): void
     {
         /** @var null|TransactionJournal $journal */
@@ -256,6 +268,7 @@ class JournalRepository implements JournalRepositoryInterface, UserGroupInterfac
     /**
      * Search in journal descriptions.
      */
+    #[\Override]
     public function searchJournalDescriptions(string $search, int $limit): Collection
     {
         $query = $this->user->transactionJournals()->orderBy('date', 'DESC')->orderBy('id', 'DESC')->orderBy('description', 'ASC');
@@ -266,6 +279,7 @@ class JournalRepository implements JournalRepositoryInterface, UserGroupInterfac
         return $query->take($limit)->get();
     }
 
+    #[\Override]
     public function unreconcileById(int $journalId): void
     {
         /** @var null|TransactionJournal $journal */
@@ -276,6 +290,7 @@ class JournalRepository implements JournalRepositoryInterface, UserGroupInterfac
     /**
      * Update budget for a journal.
      */
+    #[\Override]
     public function updateBudget(TransactionJournal $journal, int $budgetId): TransactionJournal
     {
         /** @var JournalUpdateService $service */
@@ -292,6 +307,7 @@ class JournalRepository implements JournalRepositoryInterface, UserGroupInterfac
     /**
      * Update category for a journal.
      */
+    #[\Override]
     public function updateCategory(TransactionJournal $journal, string $category): TransactionJournal
     {
         /** @var JournalUpdateService $service */
@@ -307,6 +323,7 @@ class JournalRepository implements JournalRepositoryInterface, UserGroupInterfac
     /**
      * Update tag(s) for a journal.
      */
+    #[\Override]
     public function updateTags(TransactionJournal $journal, array $tags): TransactionJournal
     {
         /** @var JournalUpdateService $service */

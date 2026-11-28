@@ -38,8 +38,10 @@ class ForcesMigrations extends Command
     use ShowsFriendlyMessages;
     use VerifiesAccessToken;
 
+    #[\Override]
     protected $description = 'This command will force-run all database migrations.';
 
+    #[\Override]
     protected $signature   = 'firefly-iii:force-migrations
                             {--user=1 : The user ID.}
                             {--token= : The user\'s access token.}';

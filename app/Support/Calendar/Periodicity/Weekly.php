@@ -31,6 +31,7 @@ use Carbon\Carbon;
  */
 class Weekly extends Interval
 {
+    #[\Override]
     public function nextDate(Carbon $date, int $interval = 1): Carbon
     {
         return $date->clone()->addWeeks($this->skip($interval));

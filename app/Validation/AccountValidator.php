@@ -222,6 +222,7 @@ class AccountValidator
         return in_array($accountType, $canCreate, true);
     }
 
+    #[\Override]
     protected function canCreateTypes(array $accountTypes): bool
     {
         Log::debug('Can we create any of these types?', $accountTypes);
@@ -246,6 +247,7 @@ class AccountValidator
      * @SuppressWarnings("PHPMD.BooleanArgumentFlag")
      * @SuppressWarnings("PHPMD.NPathComplexity")
      */
+    #[\Override]
     protected function findExistingAccount(array $validTypes, array $data, bool $inverse = false): ?Account
     {
         Log::debug('Now in findExistingAccount', [$validTypes, $data]);

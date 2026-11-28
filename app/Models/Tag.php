@@ -48,8 +48,10 @@ class Tag extends Model
     use ReturnsIntegerUserIdTrait;
     use SoftDeletes;
 
+    #[\Override]
     protected $fillable = ['user_id', 'user_group_id', 'tag', 'date', 'date_tz', 'description', 'tag_mode'];
 
+    #[\Override]
     protected $hidden   = ['zoomLevel', 'zoom_level', 'latitude', 'longitude'];
 
     /**
@@ -105,6 +107,7 @@ class Tag extends Model
         return $this->belongsTo(User::class);
     }
 
+    #[\Override]
     protected function casts(): array
     {
         return [

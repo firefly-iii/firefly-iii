@@ -36,8 +36,10 @@ class RemovesEmptyJournals extends Command
 {
     use ShowsFriendlyMessages;
 
+    #[\Override]
     protected $description = 'Delete empty and uneven transaction journals.';
 
+    #[\Override]
     protected $signature   = 'correction:empty-journals';
 
     /**

@@ -32,8 +32,10 @@ class CreatesLinkTypes extends Command
 {
     use ShowsFriendlyMessages;
 
+    #[\Override]
     protected $description = 'Creates all link types.';
 
+    #[\Override]
     protected $signature   = 'correction:link-types';
 
     /**

@@ -39,6 +39,7 @@ class GroupMembership extends Model
     use ReturnsIntegerIdTrait;
     use ReturnsIntegerUserIdTrait;
 
+    #[\Override]
     protected $fillable = ['user_id', 'user_group_id', 'user_role_id'];
 
     public function user(): BelongsTo
@@ -56,6 +57,7 @@ class GroupMembership extends Model
         return $this->belongsTo(UserRole::class);
     }
 
+    #[\Override]
     protected function casts(): array
     {
         return ['created_at' => 'datetime', 'updated_at' => 'datetime', 'user_id' => 'integer', 'user_group_id' => 'integer'];

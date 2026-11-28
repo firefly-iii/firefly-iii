@@ -37,6 +37,7 @@ class IsValidWebhookUrl implements ValidationRule
     /**
      * @SuppressWarnings("PHPMD.UnusedFormalParameter")
      */
+    #[\Override]
     public function validate(string $attribute, mixed $value, Closure $fail): void
     {
         $value          = (string) $value;

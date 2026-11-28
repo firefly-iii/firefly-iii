@@ -30,6 +30,7 @@ class Steam extends Facade
     /**
      * Get the registered name of the component.
      */
+    #[\Override]
     protected static function getFacadeAccessor(): string
     {
         return 'steam';

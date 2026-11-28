@@ -41,6 +41,7 @@ class PeriodStatisticRepository implements PeriodStatisticRepositoryInterface, U
 {
     use UserGroupTrait;
 
+    #[\Override]
     public function allInRangeForModel(Account|Category|Tag $model, Carbon $start, Carbon $end): Collection
     {
         return $model->primaryPeriodStatistics()->where('start', '>=', $start)->where('end', '<=', $end)->get();
@@ -89,6 +90,7 @@ class PeriodStatisticRepository implements PeriodStatisticRepositoryInterface, U
         //        }
     }
 
+    #[\Override]
     public function deleteStatisticsForModel(Model $model, Carbon $date): void
     {
         $model->primaryPeriodStatistics()->where('start', '<=', $date)->where('end', '>=', $date)->delete();
@@ -116,6 +118,7 @@ class PeriodStatisticRepository implements PeriodStatisticRepositoryInterface, U
         Log::debug(sprintf('Deleted %d entries for prefix "%s"', $count, $prefix));
     }
 
+    #[\Override]
     public function deleteStatisticsForType(string $class, Collection $objects, Collection $dates): void
     {
         if (0 === count($objects)) {
@@ -138,11 +141,13 @@ class PeriodStatisticRepository implements PeriodStatisticRepositoryInterface, U
         Log::debug(sprintf('Delete %d statistics for %dx %s', $count, $objects->count(), $class));
     }
 
+    #[\Override]
     public function findPeriodStatistic(Model $model, Carbon $start, Carbon $end, string $type): Collection
     {
         return $model->primaryPeriodStatistics()->where('start', $start)->where('end', $end)->where('type', $type)->get();
     }
 
+    #[\Override]
     public function findPeriodStatistics(Model $model, Carbon $start, Carbon $end, array $types): Collection
     {
         return $model->primaryPeriodStatistics()->where('start', $start)->where('end', $end)->whereIn('type', $types)->get();
@@ -185,6 +190,7 @@ class PeriodStatisticRepository implements PeriodStatisticRepositoryInterface, U
         return $stat;
     }
 
+    #[\Override]
     public function saveStatistic(Model $model, int $currencyId, Carbon $start, Carbon $end, string $type, int $count, string $amount): PeriodStatistic
     {
         $stat                          = new PeriodStatistic();

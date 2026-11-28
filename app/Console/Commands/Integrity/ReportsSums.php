@@ -34,7 +34,9 @@ class ReportsSums extends Command
 {
     use ShowsFriendlyMessages;
 
+    #[\Override]
     protected $description = 'Report on the total sum of transactions. Must be 0.';
+    #[\Override]
     protected $signature   = 'integrity:total-sums';
 
     /**

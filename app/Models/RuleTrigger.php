@@ -32,6 +32,7 @@ class RuleTrigger extends Model
 {
     use ReturnsIntegerIdTrait;
 
+    #[\Override]
     protected $fillable = ['rule_id', 'trigger_type', 'trigger_value', 'order', 'active', 'stop_processing'];
 
     public function rule(): BelongsTo
@@ -39,6 +40,7 @@ class RuleTrigger extends Model
         return $this->belongsTo(Rule::class);
     }
 
+    #[\Override]
     protected function casts(): array
     {
         return [

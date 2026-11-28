@@ -32,6 +32,7 @@ use Symfony\Component\HttpFoundation\Request;
 class TrustProxies extends Middleware
 {
     // After...
+    #[\Override]
     protected $headers
         = Request::HEADER_X_FORWARDED_FOR
         | Request::HEADER_X_FORWARDED_HOST

@@ -38,8 +38,10 @@ class UpgradesAttachments extends Command
 
     public const string CONFIG_NAME = '480_migrate_attachments';
 
+    #[\Override]
     protected $description          = 'Migrates attachment meta-data.';
 
+    #[\Override]
     protected $signature            = 'upgrade:480-attachments {--F|force : Force the execution of this command.}';
 
     /**

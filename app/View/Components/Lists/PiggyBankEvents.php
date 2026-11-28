@@ -46,6 +46,7 @@ class PiggyBankEvents extends Component
     /**
      * Get the view / contents that represent the component.
      */
+    #[\Override]
     public function render(): Closure|string|View
     {
         return view('components.lists.piggy-bank-events');

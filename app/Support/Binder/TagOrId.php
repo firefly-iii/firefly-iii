@@ -34,6 +34,7 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
  */
 class TagOrId implements BinderInterface
 {
+    #[\Override]
     public static function routeBinder(string $value, Route $route): Tag
     {
         if (auth()->check()) {

@@ -45,6 +45,7 @@ class AddTag implements ActionInterface
         private readonly RuleAction $action
     ) {}
 
+    #[\Override]
     public function actOnArray(array $journal): bool
     {
         // journal has this tag maybe?

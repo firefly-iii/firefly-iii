@@ -46,6 +46,7 @@ class UserGroupRepository implements UserGroupRepositoryInterface, UserGroupInte
 {
     use UserGroupTrait;
 
+    #[\Override]
     public function destroy(UserGroup $userGroup): void
     {
         Log::debug(sprintf('Going to destroy user group #%d ("%s").', $userGroup->id, $userGroup->title));
@@ -117,6 +118,7 @@ class UserGroupRepository implements UserGroupRepositoryInterface, UserGroupInte
     /**
      * Returns all groups the user is member in.
      */
+    #[\Override]
     public function get(): Collection
     {
         $collection  = new Collection();
@@ -143,6 +145,7 @@ class UserGroupRepository implements UserGroupRepositoryInterface, UserGroupInte
     /**
      * Returns all groups.
      */
+    #[\Override]
     public function getAll(): Collection
     {
         return UserGroup::all();
@@ -163,6 +166,7 @@ class UserGroupRepository implements UserGroupRepositoryInterface, UserGroupInte
     /**
      * @throws FireflyException
      */
+    #[\Override]
     public function store(array $data): UserGroup
     {
         $data['user'] = $this->user;
@@ -173,6 +177,7 @@ class UserGroupRepository implements UserGroupRepositoryInterface, UserGroupInte
         return $factory->create($data);
     }
 
+    #[\Override]
     public function update(UserGroup $userGroup, array $data): UserGroup
     {
         $userGroup->title = $data['title'];
@@ -203,6 +208,7 @@ class UserGroupRepository implements UserGroupRepositoryInterface, UserGroupInte
      *
      * @throws FireflyException
      */
+    #[\Override]
     public function updateMembership(UserGroup $userGroup, array $data): UserGroup
     {
         $owner           = UserRole::whereTitle(UserRoleEnum::OWNER)->first();

@@ -43,6 +43,7 @@ class LessThanPiggyTarget implements ValidationRule
     /**
      * @SuppressWarnings("PHPMD.UnusedFormalParameter")
      */
+    #[\Override]
     public function validate(string $attribute, mixed $value, Closure $fail): void
     {
         // TODO not sure if this is still used.

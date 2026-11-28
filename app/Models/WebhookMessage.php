@@ -81,6 +81,7 @@ class WebhookMessage extends Model
         return $this->hasMany(WebhookAttempt::class);
     }
 
+    #[\Override]
     protected function casts(): array
     {
         return ['sent' => 'boolean', 'errored' => 'boolean', 'uuid' => 'string', 'message' => 'json', 'logs' => 'json'];

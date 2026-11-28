@@ -33,18 +33,21 @@ use Illuminate\Support\Collection;
  */
 class ALERepository implements ALERepositoryInterface
 {
+    #[\Override]
     public function getForId(string $model, int $modelId): Collection
     {
         // all Models have an ID.
         return AuditLogEntry::query()->where('auditable_id', $modelId)->where('auditable_type', $model)->get();
     }
 
+    #[\Override]
     public function getForObject(Model $model): Collection
     {
         // all Models have an ID.
         return AuditLogEntry::query()->where('auditable_id', $model->id)->where('auditable_type', $model::class)->get();
     }
 
+    #[\Override]
     public function store(array $data): AuditLogEntry
     {
         $auditLogEntry         = new AuditLogEntry();

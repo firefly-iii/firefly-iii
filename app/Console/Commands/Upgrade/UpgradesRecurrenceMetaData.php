@@ -39,8 +39,10 @@ class UpgradesRecurrenceMetaData extends Command
 
     public const string CONFIG_NAME = '481_migrate_recurrence_meta';
 
+    #[\Override]
     protected $description          = 'Migrate recurrence meta data';
 
+    #[\Override]
     protected $signature            = 'upgrade:481-recurrence-meta {--F|force : Force the execution of this command.}';
 
     /**

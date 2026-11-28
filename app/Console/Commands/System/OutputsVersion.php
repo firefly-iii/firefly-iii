@@ -28,8 +28,10 @@ use Illuminate\Console\Command;
 
 class OutputsVersion extends Command
 {
+    #[\Override]
     protected $description = 'Outputs the Firefly III version';
 
+    #[\Override]
     protected $signature   = 'firefly-iii:output-version';
 
     /**

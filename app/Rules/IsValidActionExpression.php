@@ -40,6 +40,7 @@ class IsValidActionExpression implements ValidationRule
      *
      * @SuppressWarnings("PHPMD.UnusedFormalParameter")
      */
+    #[\Override]
     public function validate(string $attribute, mixed $value, Closure $fail): void
     {
         if (false === AppConfiguration::get('enable_expression_engine', false)->data) {

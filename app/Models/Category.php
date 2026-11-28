@@ -45,8 +45,10 @@ class Category extends Model
     use ReturnsIntegerUserIdTrait;
     use SoftDeletes;
 
+    #[\Override]
     protected $fillable = ['user_id', 'user_group_id', 'name', 'color'];
 
+    #[\Override]
     protected $hidden   = ['encrypted'];
 
     /**
@@ -115,6 +117,7 @@ class Category extends Model
         return $this->belongsTo(User::class);
     }
 
+    #[\Override]
     protected function casts(): array
     {
         return [

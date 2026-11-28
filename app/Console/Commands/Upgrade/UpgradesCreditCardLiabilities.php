@@ -39,7 +39,9 @@ class UpgradesCreditCardLiabilities extends Command
 
     public const string CONFIG_NAME = '480_cc_liabilities';
 
+    #[\Override]
     protected $description          = 'Convert old credit card liabilities.';
+    #[\Override]
     protected $signature            = 'upgrade:480-cc-liabilities {--F|force : Force the execution of this command.}';
 
     /**

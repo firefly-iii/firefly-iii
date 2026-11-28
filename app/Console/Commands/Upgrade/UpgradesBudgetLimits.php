@@ -39,8 +39,10 @@ class UpgradesBudgetLimits extends Command
 
     public const string CONFIG_NAME = '480_bl_currency';
 
+    #[\Override]
     protected $description          = 'Give budget limits a currency';
 
+    #[\Override]
     protected $signature            = 'upgrade:480-budget-limit-currencies {--F|force : Force the execution of this command.}';
 
     /**

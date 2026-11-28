@@ -144,6 +144,7 @@ class ExportDataGenerator
     /**
      * @SuppressWarnings("PHPMD.UnusedFormalParameter")
      */
+    #[\Override]
     public function get(string $key, mixed $default = null): mixed
     {
         return null;
@@ -152,6 +153,7 @@ class ExportDataGenerator
     /**
      * @SuppressWarnings("PHPMD.UnusedFormalParameter")
      */
+    #[\Override]
     public function has(mixed $key): mixed
     {
         return null;

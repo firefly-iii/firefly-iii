@@ -81,6 +81,7 @@ class RecurringEnrichment implements EnrichmentInterface
         $this->convertToPrimary = Amount::convertToPrimary();
     }
 
+    #[\Override]
     public function enrich(Collection $collection): Collection
     {
         Log::debug(__METHOD__);
@@ -98,6 +99,7 @@ class RecurringEnrichment implements EnrichmentInterface
         return $this->collection;
     }
 
+    #[\Override]
     public function enrichSingle(array|Model $model): array|Model
     {
         Log::debug(__METHOD__);
@@ -169,6 +171,7 @@ class RecurringEnrichment implements EnrichmentInterface
         return '';
     }
 
+    #[\Override]
     public function setUser(User $user): void
     {
         $this->user = $user;
@@ -176,6 +179,7 @@ class RecurringEnrichment implements EnrichmentInterface
         $this->getLanguage();
     }
 
+    #[\Override]
     public function setUserGroup(UserGroup $userGroup): void
     {
         $this->userGroup = $userGroup;

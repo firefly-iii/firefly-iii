@@ -42,7 +42,9 @@ class CorrectsCurrencies extends Command
 {
     use ShowsFriendlyMessages;
 
+    #[\Override]
     protected $description = 'Enables all currencies in use.';
+    #[\Override]
     protected $signature   = 'correction:currencies';
 
     /**

@@ -40,7 +40,9 @@ class AddsTransactionIdentifiers extends Command
 
     public const string CONFIG_NAME = '480_transaction_identifier';
 
+    #[\Override]
     protected $description          = 'Fixes transaction identifiers.';
+    #[\Override]
     protected $signature            = 'upgrade:480-transaction-identifiers {--F|force : Force the execution of this command.}';
     private JournalCLIRepositoryInterface $cliRepository;
     private int $count;

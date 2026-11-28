@@ -37,6 +37,7 @@ final class IntervalException extends Exception
     public Periodicity $periodicity        = Periodicity::Monthly;
 
     /** @var string */
+    #[\Override]
     protected $message                     = 'The periodicity %s is unknown. Choose one of available periodicity: %s';
 
     public function __construct(string $message = '', int $code = 0, ?Throwable $previous = null)

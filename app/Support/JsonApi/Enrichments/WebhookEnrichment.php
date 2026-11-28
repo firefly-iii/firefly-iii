@@ -50,6 +50,7 @@ class WebhookEnrichment implements EnrichmentInterface
     private array $webhookResponses  = [];
     private array $webhookTriggers   = [];
 
+    #[\Override]
     public function enrich(Collection $collection): Collection
     {
         $this->collection = $collection;
@@ -63,6 +64,7 @@ class WebhookEnrichment implements EnrichmentInterface
         return $this->collection;
     }
 
+    #[\Override]
     public function enrichSingle(array|Model $model): array|Model
     {
         Log::debug(__METHOD__);
@@ -72,8 +74,10 @@ class WebhookEnrichment implements EnrichmentInterface
         return $collection->first();
     }
 
+    #[\Override]
     public function setUser(User $user): void {}
 
+    #[\Override]
     public function setUserGroup(UserGroup $userGroup): void {}
 
     private function appendCollectedInfo(): void

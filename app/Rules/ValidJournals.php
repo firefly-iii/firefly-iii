@@ -37,6 +37,7 @@ class ValidJournals implements ValidationRule
     /**
      * @SuppressWarnings("PHPMD.UnusedFormalParameter")
      */
+    #[\Override]
     public function validate(string $attribute, mixed $value, Closure $fail): void
     {
         Log::debug('In ValidJournals::passes');

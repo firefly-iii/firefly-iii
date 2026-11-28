@@ -39,6 +39,7 @@ class ObjectGroupRepository implements ObjectGroupRepositoryInterface, UserGroup
 {
     use UserGroupTrait;
 
+    #[\Override]
     public function deleteAll(): void
     {
         $all = $this->get();
@@ -51,6 +52,7 @@ class ObjectGroupRepository implements ObjectGroupRepositoryInterface, UserGroup
         }
     }
 
+    #[\Override]
     public function deleteEmpty(): void
     {
         $all = $this->get();
@@ -64,6 +66,7 @@ class ObjectGroupRepository implements ObjectGroupRepositoryInterface, UserGroup
         }
     }
 
+    #[\Override]
     public function destroy(ObjectGroup $objectGroup): void
     {
         $list = $objectGroup->piggyBanks;
@@ -76,6 +79,7 @@ class ObjectGroupRepository implements ObjectGroupRepositoryInterface, UserGroup
         $objectGroup->delete();
     }
 
+    #[\Override]
     public function get(): Collection
     {
         return $this->user->objectGroups()
@@ -86,16 +90,19 @@ class ObjectGroupRepository implements ObjectGroupRepositoryInterface, UserGroup
         ;
     }
 
+    #[\Override]
     public function getBills(ObjectGroup $objectGroup): Collection
     {
         return $objectGroup->bills;
     }
 
+    #[\Override]
     public function getPiggyBanks(ObjectGroup $objectGroup): Collection
     {
         return $objectGroup->piggyBanks;
     }
 
+    #[\Override]
     public function resetOrder(): void
     {
         Log::debug('Now in resetOrder');
@@ -119,6 +126,7 @@ class ObjectGroupRepository implements ObjectGroupRepositoryInterface, UserGroup
         }
     }
 
+    #[\Override]
     public function search(string $query, int $limit): Collection
     {
         $dbQuery = $this->user->objectGroups()->orderBy('order', 'ASC')->orderBy('title', 'ASC');
@@ -134,6 +142,7 @@ class ObjectGroupRepository implements ObjectGroupRepositoryInterface, UserGroup
         return $dbQuery->take($limit)->get(['object_groups.*']);
     }
 
+    #[\Override]
     public function setOrder(ObjectGroup $objectGroup, int $newOrder): ObjectGroup
     {
         $oldOrder = $objectGroup->order;
@@ -166,6 +175,7 @@ class ObjectGroupRepository implements ObjectGroupRepositoryInterface, UserGroup
         return $objectGroup;
     }
 
+    #[\Override]
     public function update(ObjectGroup $objectGroup, array $data): ObjectGroup
     {
         if (array_key_exists('title', $data)) {

@@ -33,7 +33,9 @@ class CallsLaravelPassportKeys extends Command
 {
     use ShowsFriendlyMessages;
 
+    #[\Override]
     protected $description = 'Calls the Laravel "passport:keys" but doesn\'t exit 1.';
+    #[\Override]
     protected $signature   = 'firefly-iii:laravel-passport-keys';
 
     /**

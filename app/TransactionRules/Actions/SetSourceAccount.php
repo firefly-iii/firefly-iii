@@ -49,6 +49,7 @@ class SetSourceAccount implements ActionInterface
         private readonly RuleAction $action
     ) {}
 
+    #[\Override]
     public function actOnArray(array $journal): bool
     {
         $accountName      = $this->action->getValue($journal);

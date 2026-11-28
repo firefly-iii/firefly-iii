@@ -54,6 +54,7 @@ class RemoteUserProvider implements UserProvider
      *
      * @SuppressWarnings("PHPMD.UnusedFormalParameter")
      */
+    #[\Override]
     public function retrieveByCredentials(array $credentials): ?Authenticatable
     {
         Log::debug(sprintf('Now at %s', __METHOD__));
@@ -66,6 +67,7 @@ class RemoteUserProvider implements UserProvider
      *
      * @throws FireflyException
      */
+    #[\Override]
     public function retrieveById($identifier): User
     {
         Log::debug(sprintf('Now at %s(%s)', __METHOD__, $identifier));
@@ -97,6 +99,7 @@ class RemoteUserProvider implements UserProvider
      *
      * @SuppressWarnings("PHPMD.UnusedFormalParameter")
      */
+    #[\Override]
     public function retrieveByToken($identifier, #[SensitiveParameter] $token): ?Authenticatable
     {
         Log::debug(sprintf('Now at %s', __METHOD__));
@@ -111,6 +114,7 @@ class RemoteUserProvider implements UserProvider
      *
      * @throws FireflyException
      */
+    #[\Override]
     public function updateRememberToken(Authenticatable $user, #[SensitiveParameter] $token): void
     {
         Log::debug(sprintf('Now at %s', __METHOD__));
@@ -123,6 +127,7 @@ class RemoteUserProvider implements UserProvider
      *
      * @SuppressWarnings("PHPMD.UnusedFormalParameter")
      */
+    #[\Override]
     public function validateCredentials(Authenticatable $user, array $credentials): bool
     {
         Log::debug(sprintf('Now at %s', __METHOD__));

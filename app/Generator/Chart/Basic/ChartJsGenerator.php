@@ -37,6 +37,7 @@ class ChartJsGenerator implements GeneratorInterface
      *
      * key => [value => x, 'currency_symbol' => 'x']
      */
+    #[\Override]
     public function multiCurrencyPieChart(array $data): array
     {
         $chartData = ['datasets' => [0 => []], 'labels' => []];
@@ -93,6 +94,7 @@ class ChartJsGenerator implements GeneratorInterface
      *
      *  // it's five.
      */
+    #[\Override]
     public function multiSet(array $data, array $labels = []): array
     {
         reset($data);
@@ -141,6 +143,7 @@ class ChartJsGenerator implements GeneratorInterface
      *
      * key => value
      */
+    #[\Override]
     public function pieChart(array $data): array
     {
         $chartData = ['datasets' => [0 => []], 'labels' => []];
@@ -173,6 +176,7 @@ class ChartJsGenerator implements GeneratorInterface
      *
      * 'label-of-entry' => value
      */
+    #[\Override]
     public function singleSet(string $setLabel, array $data): array
     {
         return [

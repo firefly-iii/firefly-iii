@@ -53,6 +53,7 @@ class AccountSearch implements GenericSearchInterface
     private User $user;
     private UserGroup $userGroup;
 
+    #[\Override]
     public function search(): Collection
     {
         $this->userGroup->toArray(); // used to stop phpstan.

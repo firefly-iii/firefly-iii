@@ -35,7 +35,9 @@ class AccountMeta extends Model
 {
     use ReturnsIntegerIdTrait;
 
+    #[\Override]
     protected $fillable = ['account_id', 'name', 'data'];
+    #[\Override]
     protected $table    = 'account_meta';
 
     public function account(): BelongsTo
@@ -43,6 +45,7 @@ class AccountMeta extends Model
         return $this->belongsTo(Account::class);
     }
 
+    #[\Override]
     protected function casts(): array
     {
         return ['created_at' => 'datetime', 'updated_at' => 'datetime'];

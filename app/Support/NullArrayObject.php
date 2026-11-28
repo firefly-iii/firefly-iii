@@ -46,6 +46,7 @@ class NullArrayObject extends ArrayObject
     /**
      * @param mixed $key
      */
+    #[\Override]
     public function offsetGet($key): mixed
     {
         if ($this->offsetExists($key)) {

@@ -47,6 +47,7 @@ class BudgetLimit extends Model
 {
     use ReturnsIntegerIdTrait;
 
+    #[\Override]
     protected $fillable = ['budget_id', 'start_date', 'end_date', 'start_date_tz', 'end_date_tz', 'amount', 'transaction_currency_id', 'native_amount'];
 
     /**
@@ -107,6 +108,7 @@ class BudgetLimit extends Model
         return Attribute::make(get: static fn ($value): int => (int) $value);
     }
 
+    #[\Override]
     protected function casts(): array
     {
         return [

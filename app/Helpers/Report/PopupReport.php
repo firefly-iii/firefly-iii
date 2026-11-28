@@ -41,6 +41,7 @@ class PopupReport implements PopupReportInterface
     /**
      * Collect the transactions for one account and one budget.
      */
+    #[\Override]
     public function balanceForBudget(Budget $budget, Account $account, array $attributes): array
     {
         /** @var GroupCollectorInterface $collector */
@@ -60,6 +61,7 @@ class PopupReport implements PopupReportInterface
     /**
      * Collect the transactions for one account and no budget.
      */
+    #[\Override]
     public function balanceForNoBudget(Account $account, array $attributes): array
     {
         // filter by currency, if set.
@@ -92,6 +94,7 @@ class PopupReport implements PopupReportInterface
     /**
      * Collect the transactions for a budget.
      */
+    #[\Override]
     public function byBudget(Budget $budget, array $attributes): array
     {
         // filter by currency, if set.
@@ -129,6 +132,7 @@ class PopupReport implements PopupReportInterface
     /**
      * Collect journals by a category.
      */
+    #[\Override]
     public function byCategory(?Category $category, array $attributes): array
     {
         // filter by currency, if set.
@@ -170,6 +174,7 @@ class PopupReport implements PopupReportInterface
     /**
      * Group transactions by expense.
      */
+    #[\Override]
     public function byExpenses(Account $account, array $attributes): array
     {
         // filter by currency, if set.
@@ -214,6 +219,7 @@ class PopupReport implements PopupReportInterface
     /**
      * Collect transactions by income.
      */
+    #[\Override]
     public function byIncome(Account $account, array $attributes): array
     {
         /** @var JournalRepositoryInterface $repository */

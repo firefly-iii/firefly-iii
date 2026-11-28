@@ -37,6 +37,7 @@ class BudgetList implements BinderInterface
     /**
      * @throws NotFoundHttpException
      */
+    #[\Override]
     public static function routeBinder(string $value, Route $route): Collection
     {
         if (auth()->check()) {

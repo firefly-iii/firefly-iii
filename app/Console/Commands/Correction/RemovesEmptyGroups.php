@@ -33,7 +33,9 @@ class RemovesEmptyGroups extends Command
 {
     use ShowsFriendlyMessages;
 
+    #[\Override]
     protected $description = 'Delete empty transaction groups.';
+    #[\Override]
     protected $signature   = 'correction:empty-groups';
 
     /**

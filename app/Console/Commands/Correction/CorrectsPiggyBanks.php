@@ -33,7 +33,9 @@ class CorrectsPiggyBanks extends Command
 {
     use ShowsFriendlyMessages;
 
+    #[\Override]
     protected $description = 'Fixes common issues with piggy banks.';
+    #[\Override]
     protected $signature   = 'correction:piggy-banks';
 
     /**

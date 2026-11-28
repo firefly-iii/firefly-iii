@@ -38,6 +38,7 @@ class UserGroup extends Model
 {
     use ReturnsIntegerIdTrait;
 
+    #[\Override]
     protected $fillable = ['title'];
 
     /**

@@ -53,6 +53,7 @@ class Recurrence extends Model
     use ReturnsIntegerUserIdTrait;
     use SoftDeletes;
 
+    #[\Override]
     protected $fillable = [
         'user_id',
         'user_group_id',
@@ -70,6 +71,7 @@ class Recurrence extends Model
         'active',
     ];
 
+    #[\Override]
     protected $table    = 'recurrences';
 
     /**
@@ -143,6 +145,7 @@ class Recurrence extends Model
         return $this->belongsTo(User::class);
     }
 
+    #[\Override]
     protected function casts(): array
     {
         return [

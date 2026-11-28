@@ -38,8 +38,10 @@ class RemovesOrphanedTransactions extends Command
 {
     use ShowsFriendlyMessages;
 
+    #[\Override]
     protected $description = 'Deletes orphaned transactions.';
 
+    #[\Override]
     protected $signature   = 'correction:orphaned-transactions';
 
     /**

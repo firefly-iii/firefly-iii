@@ -41,7 +41,9 @@ class UpgradesWebhooks extends Command
 
     public const string CONFIG_NAME = '640_upgrade_webhooks';
 
+    #[\Override]
     protected $description          = 'Upgrade webhooks so they can handle multiple triggers.';
+    #[\Override]
     protected $signature            = 'upgrade:640-upgrade-webhooks {--F|force : Force the execution of this command.}';
 
     /**

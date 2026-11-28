@@ -55,6 +55,7 @@ class NetWorth implements NetWorthInterface
      *
      * @throws FireflyException
      */
+    #[\Override]
     public function byAccounts(Collection $accounts, Carbon $date): array
     {
         // start in the past, end in the future? use $date
@@ -112,6 +113,7 @@ class NetWorth implements NetWorthInterface
         return $netWorth;
     }
 
+    #[\Override]
     public function setUser(Authenticatable|User|null $user): void
     {
         if (!$user instanceof User) {
@@ -120,6 +122,7 @@ class NetWorth implements NetWorthInterface
         $this->setUserGroup($user->userGroup);
     }
 
+    #[\Override]
     public function setUserGroup(UserGroup $userGroup): void
     {
         $this->accountRepository = app(AccountRepositoryInterface::class);

@@ -37,6 +37,7 @@ class ValidatesFilePermissions extends Command
      *
      * @var string
      */
+    #[\Override]
     protected $description = 'Command description';
 
     /**
@@ -44,6 +45,7 @@ class ValidatesFilePermissions extends Command
      *
      * @var string
      */
+    #[\Override]
     protected $signature   = 'integrity:file-permissions';
 
     /**

@@ -58,6 +58,7 @@ class TransactionJournal extends Model
     use ReturnsIntegerUserIdTrait;
     use SoftDeletes;
 
+    #[\Override]
     protected $fillable = [
         'user_id',
         'user_group_id',
@@ -72,6 +73,7 @@ class TransactionJournal extends Model
         'date_tz',
     ];
 
+    #[\Override]
     protected $hidden   = ['encrypted'];
 
     /**
@@ -229,6 +231,7 @@ class TransactionJournal extends Model
         return $this->belongsTo(UserGroup::class);
     }
 
+    #[\Override]
     protected function casts(): array
     {
         return [

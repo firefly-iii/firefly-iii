@@ -52,6 +52,7 @@ class CategoryRepository implements CategoryRepositoryInterface, UserGroupInterf
     use CreatesObjectGroups;
     use UserGroupTrait;
 
+    #[\Override]
     public function categoryEndsWith(string $query, int $limit): Collection
     {
         $search = $this->user->categories();
@@ -62,6 +63,7 @@ class CategoryRepository implements CategoryRepositoryInterface, UserGroupInterf
         return $search->take($limit)->get();
     }
 
+    #[\Override]
     public function categoryStartsWith(string $query, int $limit): Collection
     {
         Log::debug(sprintf('Find a category that starts with "%s"', $query));
@@ -73,6 +75,7 @@ class CategoryRepository implements CategoryRepositoryInterface, UserGroupInterf
         return $search->take($limit)->get();
     }
 
+    #[\Override]
     public function destroy(Category $category): bool
     {
         /** @var CategoryDestroyService $service */
@@ -85,6 +88,7 @@ class CategoryRepository implements CategoryRepositoryInterface, UserGroupInterf
     /**
      * Delete all categories.
      */
+    #[\Override]
     public function destroyAll(): void
     {
         $categories = $this->getCategories();
@@ -103,6 +107,7 @@ class CategoryRepository implements CategoryRepositoryInterface, UserGroupInterf
     /**
      * Find a category or return NULL
      */
+    #[\Override]
     public function find(int $categoryId): ?Category
     {
         /** @var null|Category */
@@ -112,6 +117,7 @@ class CategoryRepository implements CategoryRepositoryInterface, UserGroupInterf
     /**
      * Find a category.
      */
+    #[\Override]
     public function findByName(string $name): ?Category
     {
         /** @var null|Category */
@@ -121,6 +127,7 @@ class CategoryRepository implements CategoryRepositoryInterface, UserGroupInterf
     /**
      * @throws FireflyException
      */
+    #[\Override]
     public function findCategory(?int $categoryId, ?string $categoryName): ?Category
     {
         Log::debug('Now in findCategory()');
@@ -142,6 +149,7 @@ class CategoryRepository implements CategoryRepositoryInterface, UserGroupInterf
         return $result;
     }
 
+    #[\Override]
     public function firstUseDate(Category $category): ?Carbon
     {
         $firstJournalDate     = $this->getFirstJournalDate($category);
@@ -164,6 +172,7 @@ class CategoryRepository implements CategoryRepositoryInterface, UserGroupInterf
         return $firstJournalDate;
     }
 
+    #[\Override]
     public function getAttachments(Category $category): Collection
     {
         $set  = $category->attachments()->get();
@@ -182,6 +191,7 @@ class CategoryRepository implements CategoryRepositoryInterface, UserGroupInterf
     /**
      * Get all categories with ID's.
      */
+    #[\Override]
     public function getByIds(array $categoryIds): Collection
     {
         return $this->user->categories()->whereIn('id', $categoryIds)->get();
@@ -190,6 +200,7 @@ class CategoryRepository implements CategoryRepositoryInterface, UserGroupInterf
     /**
      * Returns a list of all the categories belonging to a user.
      */
+    #[\Override]
     public function getCategories(array $sort = [], array $filter = []): Collection
     {
         $query   = $this->user->categories()->with(['attachments']);
@@ -242,6 +253,7 @@ class CategoryRepository implements CategoryRepositoryInterface, UserGroupInterf
         return $query->get(['categories.*']);
     }
 
+    #[\Override]
     public function getNoteText(Category $category): ?string
     {
         $dbNote = $category->notes()->first();
@@ -252,6 +264,7 @@ class CategoryRepository implements CategoryRepositoryInterface, UserGroupInterf
     /**
      * @throws Exception
      */
+    #[\Override]
     public function lastUseDate(Category $category, Collection $accounts): ?Carbon
     {
         $lastJournalDate     = $this->getLastJournalDate($category, $accounts);
@@ -274,6 +287,7 @@ class CategoryRepository implements CategoryRepositoryInterface, UserGroupInterf
         return $lastJournalDate;
     }
 
+    #[\Override]
     public function periodCollection(Category $category, Carbon $start, Carbon $end): array
     {
         Log::debug(sprintf('periodCollection(#%d, %s, %s)', $category->id, $start->format('Y-m-d'), $end->format('Y-m-d')));
@@ -314,11 +328,13 @@ class CategoryRepository implements CategoryRepositoryInterface, UserGroupInterf
         ;
     }
 
+    #[\Override]
     public function removeNotes(Category $category): void
     {
         $category->notes()->delete();
     }
 
+    #[\Override]
     public function searchCategory(string $query, int $limit): Collection
     {
         $search = $this->user->categories()->orderBy('name', 'ASC');
@@ -332,6 +348,7 @@ class CategoryRepository implements CategoryRepositoryInterface, UserGroupInterf
     /**
      * @throws FireflyException
      */
+    #[\Override]
     public function store(array $data): Category
     {
         /** @var CategoryFactory $factory */
@@ -375,6 +392,7 @@ class CategoryRepository implements CategoryRepositoryInterface, UserGroupInterf
     /**
      * @throws Exception
      */
+    #[\Override]
     public function update(Category $category, array $data): Category
     {
         /** @var CategoryUpdateService $service */
@@ -384,6 +402,7 @@ class CategoryRepository implements CategoryRepositoryInterface, UserGroupInterf
         return $service->update($category, $data);
     }
 
+    #[\Override]
     public function updateNotes(Category $category, string $notes): void
     {
         $dbNote       = $category->notes()->first();

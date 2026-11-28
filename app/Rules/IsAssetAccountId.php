@@ -36,6 +36,7 @@ class IsAssetAccountId implements ValidationRule
     /**
      * @SuppressWarnings("PHPMD.UnusedFormalParameter")
      */
+    #[\Override]
     public function validate(string $attribute, mixed $value, Closure $fail): void
     {
         $accountId = (int) $value;

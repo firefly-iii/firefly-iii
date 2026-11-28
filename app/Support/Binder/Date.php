@@ -39,6 +39,7 @@ class Date implements BinderInterface
     /**
      * @throws NotFoundHttpException
      */
+    #[\Override]
     public static function routeBinder(string $value, Route $route): Carbon
     {
         /** @var FiscalHelperInterface $fiscalHelper */

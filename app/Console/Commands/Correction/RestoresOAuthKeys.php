@@ -36,7 +36,9 @@ class RestoresOAuthKeys extends Command
 {
     use ShowsFriendlyMessages;
 
+    #[\Override]
     protected $description = 'Will restore the OAuth keys generated for the system.';
+    #[\Override]
     protected $signature   = 'correction:restore-oauth-keys';
 
     /**

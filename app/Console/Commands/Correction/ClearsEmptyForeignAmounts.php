@@ -37,6 +37,7 @@ class ClearsEmptyForeignAmounts extends Command
      *
      * @var string
      */
+    #[\Override]
     protected $description = 'Removes references to foreign amounts if there is no amount.';
 
     /**
@@ -44,6 +45,7 @@ class ClearsEmptyForeignAmounts extends Command
      *
      * @var string
      */
+    #[\Override]
     protected $signature   = 'correction:clears-empty-foreign-amounts';
 
     /**

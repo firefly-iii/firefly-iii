@@ -33,6 +33,7 @@ class IsValidSortInstruction implements ValidationRule
         private readonly string $class
     ) {}
 
+    #[\Override]
     public function validate(string $attribute, mixed $value, Closure $fail): void
     {
         $shortClass      = str_replace('FireflyIII\Models\\', '', $this->class);

@@ -60,6 +60,7 @@ class CurrencyRepository implements CurrencyRepositoryInterface, UserGroupInterf
     /**
      * @throws FireflyException
      */
+    #[\Override]
     public function currencyInUse(TransactionCurrency $currency): bool
     {
         $result = $this->currencyInUseAt($currency);
@@ -70,6 +71,7 @@ class CurrencyRepository implements CurrencyRepositoryInterface, UserGroupInterf
     /**
      * @throws JsonException
      */
+    #[\Override]
     public function currencyInUseAt(TransactionCurrency $currency): ?string
     {
         Log::debug(sprintf('Now in currencyInUse() for #%d ("%s")', $currency->id, $currency->code));
@@ -179,6 +181,7 @@ class CurrencyRepository implements CurrencyRepositoryInterface, UserGroupInterf
         return null;
     }
 
+    #[\Override]
     public function destroy(TransactionCurrency $currency): bool
     {
         /** @var UserRepositoryInterface $repository */
@@ -192,6 +195,7 @@ class CurrencyRepository implements CurrencyRepositoryInterface, UserGroupInterf
         return true;
     }
 
+    #[\Override]
     public function disable(TransactionCurrency $currency): void
     {
         $this->userGroup->currencies()->detach($currency->id);
@@ -199,6 +203,7 @@ class CurrencyRepository implements CurrencyRepositoryInterface, UserGroupInterf
         $currency->save();
     }
 
+    #[\Override]
     public function enable(TransactionCurrency $currency): void
     {
         $this->userGroup->currencies()->syncWithoutDetaching([$currency->id]);
@@ -221,6 +226,7 @@ class CurrencyRepository implements CurrencyRepositoryInterface, UserGroupInterf
     /**
      * Find by currency code, return NULL if unfound.
      */
+    #[\Override]
     public function findByCode(string $currencyCode): ?TransactionCurrency
     {
         try {
@@ -232,6 +238,7 @@ class CurrencyRepository implements CurrencyRepositoryInterface, UserGroupInterf
         return $result;
     }
 
+    #[\Override]
     public function findByName(string $name): ?TransactionCurrency
     {
         return TransactionCurrency::query()->where('name', $name)->first();
@@ -240,6 +247,7 @@ class CurrencyRepository implements CurrencyRepositoryInterface, UserGroupInterf
     /**
      * Find by object, ID or code. Returns user default or system default.
      */
+    #[\Override]
     public function findCurrency(?int $currencyId, ?string $currencyCode): TransactionCurrency
     {
         $result = $this->findCurrencyNull($currencyId, $currencyCode);
@@ -264,6 +272,7 @@ class CurrencyRepository implements CurrencyRepositoryInterface, UserGroupInterf
     /**
      * Find by object, ID or code. Returns NULL if nothing found.
      */
+    #[\Override]
     public function findCurrencyNull(?int $currencyId, ?string $currencyCode): ?TransactionCurrency
     {
         Log::debug(sprintf('Now in findCurrencyNull(%s, "%s")', var_export($currencyId, true), $currencyCode));
@@ -290,6 +299,7 @@ class CurrencyRepository implements CurrencyRepositoryInterface, UserGroupInterf
         return null;
     }
 
+    #[\Override]
     public function get(): Collection
     {
         $all = $this->userGroup->currencies()->orderBy('code', 'ASC')->withPivot(['group_default'])->get();
@@ -307,6 +317,7 @@ class CurrencyRepository implements CurrencyRepositoryInterface, UserGroupInterf
     /**
      * Returns ALL currencies, regardless of whether they are enabled or not.
      */
+    #[\Override]
     public function getAll(): Collection
     {
         $all   = TransactionCurrency::query()->orderBy('code', 'ASC')->get();
@@ -328,6 +339,7 @@ class CurrencyRepository implements CurrencyRepositoryInterface, UserGroupInterf
      * Returns the complete set of transactions but needs
      * no user object.
      */
+    #[\Override]
     public function getCompleteSet(): Collection
     {
         return TransactionCurrency::query()->where('enabled', true)->orderBy('code', 'ASC')->get();
@@ -336,6 +348,7 @@ class CurrencyRepository implements CurrencyRepositoryInterface, UserGroupInterf
     /**
      * Get currency exchange rate.
      */
+    #[\Override]
     public function getExchangeRate(TransactionCurrency $fromCurrency, TransactionCurrency $toCurrency, Carbon $date): ?CurrencyExchangeRate
     {
         if ($fromCurrency->id === $toCurrency->id) {
@@ -377,11 +390,13 @@ class CurrencyRepository implements CurrencyRepositoryInterface, UserGroupInterf
         return null !== $currency;
     }
 
+    #[\Override]
     public function isFallbackCurrency(TransactionCurrency $currency): bool
     {
         return $currency->code === config('firefly.default_currency', 'EUR');
     }
 
+    #[\Override]
     public function makePrimary(TransactionCurrency $currency): void
     {
         $current = Amount::getPrimaryCurrencyByUserGroup($this->userGroup);
@@ -398,6 +413,7 @@ class CurrencyRepository implements CurrencyRepositoryInterface, UserGroupInterf
         }
     }
 
+    #[\Override]
     public function searchCurrency(string $search, int $limit): Collection
     {
         $query = TransactionCurrency::query()->orderBy('code', 'ASC');
@@ -417,6 +433,7 @@ class CurrencyRepository implements CurrencyRepositoryInterface, UserGroupInterf
     /**
      * TODO must be a factory
      */
+    #[\Override]
     public function setExchangeRate(TransactionCurrency $fromCurrency, TransactionCurrency $toCurrency, Carbon $date, float $rate): CurrencyExchangeRate
     {
         $res = new CurrencyExchangeRate();
@@ -460,6 +477,7 @@ class CurrencyRepository implements CurrencyRepositoryInterface, UserGroupInterf
     /**
      * @throws FireflyException
      */
+    #[\Override]
     public function store(array $data): TransactionCurrency
     {
         /** @var TransactionCurrencyFactory $factory */
@@ -473,6 +491,7 @@ class CurrencyRepository implements CurrencyRepositoryInterface, UserGroupInterf
         return $result;
     }
 
+    #[\Override]
     public function update(TransactionCurrency $currency, array $data): TransactionCurrency
     {
         Log::debug('Now in update()');

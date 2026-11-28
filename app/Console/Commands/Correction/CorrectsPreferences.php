@@ -31,8 +31,10 @@ use Symfony\Component\Console\Command\Command as CommandAlias;
 
 class CorrectsPreferences extends Command
 {
+    #[\Override]
     protected $description = 'Give Firefly III preferences a user group ID so they can be made administration specific.';
 
+    #[\Override]
     protected $signature   = 'correction:preferences';
 
     /**

@@ -40,6 +40,7 @@ class ExplainAvailableBudget extends Command
      *
      * @var string
      */
+    #[\Override]
     protected $description = 'Explains why the available budget amount is what it is.';
 
     /**
@@ -47,6 +48,7 @@ class ExplainAvailableBudget extends Command
      *
      * @var string
      */
+    #[\Override]
     protected $signature   = 'explain:available-budget
                                 {--date=now : A date formatted YYYY-MM-DD or the word "now"}
                                 {--user=1 : The user ID.}

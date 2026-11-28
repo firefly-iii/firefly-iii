@@ -53,6 +53,7 @@ class IsValidBulkClause implements ValidationRule
     /**
      * @SuppressWarnings("PHPMD.UnusedFormalParameter")
      */
+    #[\Override]
     public function validate(string $attribute, mixed $value, Closure $fail): void
     {
         $result = $this->basicValidation((string) $value);

@@ -39,8 +39,10 @@ class UpgradesMultiPiggyBanks extends Command
 
     public const string CONFIG_NAME = '620_make_multi_piggies';
 
+    #[\Override]
     protected $description          = 'Upgrade piggy banks so they can use multiple accounts.';
 
+    #[\Override]
     protected $signature            = 'upgrade:620-piggy-banks {--F|force : Force the execution of this command.}';
     private AccountRepositoryInterface $accountRepository;
     private PiggyBankRepositoryInterface $repository;

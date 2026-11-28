@@ -36,6 +36,7 @@ use League\Fractal\Resource\Item;
  */
 class BudgetLimitTransformer extends AbstractTransformer
 {
+    #[\Override]
     protected array $availableIncludes = ['budget'];
     protected bool $convertToPrimary;
     protected TransactionCurrency $primaryCurrency;

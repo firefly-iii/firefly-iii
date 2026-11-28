@@ -30,6 +30,7 @@ use Illuminate\Database\Eloquent\Factories\Factory;
 
 class AccountFactory extends Factory
 {
+    #[\Override]
     public function definition(): array
     {
         return ['name' => fake()->name(), 'active' => true];

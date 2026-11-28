@@ -35,8 +35,10 @@ class RecurrenceMeta extends Model
     use ReturnsIntegerIdTrait;
     use SoftDeletes;
 
+    #[\Override]
     protected $fillable = ['recurrence_id', 'name', 'value'];
 
+    #[\Override]
     protected $table    = 'recurrences_meta';
 
     public function recurrence(): BelongsTo
@@ -44,6 +46,7 @@ class RecurrenceMeta extends Model
         return $this->belongsTo(Recurrence::class);
     }
 
+    #[\Override]
     protected function casts(): array
     {
         return ['created_at' => 'datetime', 'updated_at' => 'datetime', 'deleted_at' => 'datetime', 'name' => 'string', 'value' => 'string'];

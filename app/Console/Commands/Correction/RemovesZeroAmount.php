@@ -33,8 +33,10 @@ class RemovesZeroAmount extends Command
 {
     use ShowsFriendlyMessages;
 
+    #[\Override]
     protected $description = 'Delete transactions with zero amount.';
 
+    #[\Override]
     protected $signature   = 'correction:zero-amounts';
 
     /**

@@ -41,7 +41,9 @@ class CorrectsOpeningBalanceCurrencies extends Command
 {
     use ShowsFriendlyMessages;
 
+    #[\Override]
     protected $description = 'Will make sure that opening balance transaction currencies match the account they\'re for.';
+    #[\Override]
     protected $signature   = 'correction:opening-balance-currencies';
 
     /**

@@ -31,7 +31,9 @@ class ValidatesEnvironmentVariables extends Command
 {
     use ShowsFriendlyMessages;
 
+    #[\Override]
     protected $description = 'Makes sure you use the correct variables.';
+    #[\Override]
     protected $signature   = 'integrity:validates-environment-variables';
 
     /**

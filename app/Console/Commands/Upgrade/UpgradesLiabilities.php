@@ -41,7 +41,9 @@ class UpgradesLiabilities extends Command
 
     public const string CONFIG_NAME = '560_upgrade_liabilities';
 
+    #[\Override]
     protected $description          = 'Upgrade liabilities to new 5.6.0 structure.';
+    #[\Override]
     protected $signature            = 'upgrade:560-liabilities {--F|force : Force the execution of this command.}';
 
     /**

@@ -42,7 +42,9 @@ class RemovesDatabaseDecryption extends Command
 {
     use ShowsFriendlyMessages;
 
+    #[\Override]
     protected $description = 'Decrypts the database.';
+    #[\Override]
     protected $signature   = 'upgrade:480-decrypt-all';
 
     /**

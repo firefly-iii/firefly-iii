@@ -51,6 +51,7 @@ class ReportHelper implements ReportHelperInterface
      *
      * Excludes bills which have not had a payment on the mentioned accounts.
      */
+    #[\Override]
     public function getBillReport(Collection $accounts, Carbon $start, Carbon $end): array
     {
         /** @var BillRepositoryInterface $repository */
@@ -99,6 +100,7 @@ class ReportHelper implements ReportHelperInterface
     /**
      * Generate a list of months for the report.
      */
+    #[\Override]
     public function listOfMonths(Carbon $date): array
     {
         /** @var FiscalHelperInterface $fiscalHelper */

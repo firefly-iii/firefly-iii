@@ -40,6 +40,7 @@ class ResetsErrorMailLimit extends Command
      *
      * @var string
      */
+    #[\Override]
     protected $description = 'Resets the number of error mails sent.';
 
     /**
@@ -47,6 +48,7 @@ class ResetsErrorMailLimit extends Command
      *
      * @var string
      */
+    #[\Override]
     protected $signature   = 'firefly-iii:reset-error-mail-limit';
 
     /**

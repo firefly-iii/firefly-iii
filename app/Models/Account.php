@@ -56,8 +56,10 @@ class Account extends Model
     use ReturnsIntegerUserIdTrait;
     use SoftDeletes;
 
+    #[\Override]
     protected $fillable              = ['user_id', 'user_group_id', 'account_type_id', 'name', 'active', 'virtual_balance', 'iban', 'native_virtual_balance', 'order'];
 
+    #[\Override]
     protected $hidden                = ['encrypted'];
     private bool $joinedAccountTypes = false;
 
@@ -195,6 +197,7 @@ class Account extends Model
         $query->whereIn('account_types.type', $types);
     }
 
+    #[\Override]
     protected function casts(): array
     {
         return [

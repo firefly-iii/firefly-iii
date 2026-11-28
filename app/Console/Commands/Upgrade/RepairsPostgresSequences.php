@@ -34,8 +34,10 @@ class RepairsPostgresSequences extends Command
 {
     use ShowsFriendlyMessages;
 
+    #[\Override]
     protected $description = 'Fixes issues with PostgreSQL sequences.';
 
+    #[\Override]
     protected $signature   = 'upgrade:600-pgsql-sequences';
 
     /**

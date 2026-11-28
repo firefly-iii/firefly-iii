@@ -54,6 +54,7 @@ class Bill extends Model
     use ReturnsIntegerUserIdTrait;
     use SoftDeletes;
 
+    #[\Override]
     protected $fillable = [
         'name',
         'match',
@@ -76,6 +77,7 @@ class Bill extends Model
         'native_amount_max',
     ];
 
+    #[\Override]
     protected $hidden   = ['amount_min_encrypted', 'amount_max_encrypted', 'name_encrypted', 'match_encrypted'];
 
     /**
@@ -174,6 +176,7 @@ class Bill extends Model
         return Attribute::make(get: static fn ($value): string => (string) $value);
     }
 
+    #[\Override]
     protected function casts(): array
     {
         return [

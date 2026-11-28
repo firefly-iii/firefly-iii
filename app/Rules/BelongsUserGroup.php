@@ -52,6 +52,7 @@ class BelongsUserGroup implements ValidationRule
         private readonly UserGroup $userGroup
     ) {}
 
+    #[\Override]
     public function validate(string $attribute, mixed $value, Closure $fail): void
     {
         $attribute = $this->parseAttribute($attribute);

@@ -40,8 +40,10 @@ class TransactionJournalMeta extends Model
     use ReturnsIntegerIdTrait;
     use SoftDeletes;
 
+    #[\Override]
     protected $fillable = ['transaction_journal_id', 'name', 'data', 'hash'];
 
+    #[\Override]
     protected $table    = 'journal_meta';
 
     public function transactionJournal(): BelongsTo
@@ -49,6 +51,7 @@ class TransactionJournalMeta extends Model
         return $this->belongsTo(TransactionJournal::class);
     }
 
+    #[\Override]
     protected function casts(): array
     {
         return ['created_at' => 'datetime', 'updated_at' => 'datetime', 'deleted_at' => 'datetime'];

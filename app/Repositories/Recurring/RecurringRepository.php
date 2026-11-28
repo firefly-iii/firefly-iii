@@ -68,6 +68,7 @@ class RecurringRepository implements RecurringRepositoryInterface, UserGroupInte
 
     use UserGroupTrait;
 
+    #[\Override]
     public function createdPreviously(Recurrence $recurrence, Carbon $date): bool
     {
         // if not, loop set and try to read the recurrence_date. If it matches start or end, return it as well.
@@ -101,6 +102,7 @@ class RecurringRepository implements RecurringRepositoryInterface, UserGroupInte
     /**
      * Destroy a recurring transaction.
      */
+    #[\Override]
     public function destroy(Recurrence $recurrence): void
     {
         /** @var RecurrenceDestroyService $service */
@@ -108,6 +110,7 @@ class RecurringRepository implements RecurringRepositoryInterface, UserGroupInte
         $service->destroy($recurrence);
     }
 
+    #[\Override]
     public function destroyAll(): void
     {
         Log::channel('audit')->info('Delete all recurring transactions through destroyAll');
@@ -117,6 +120,7 @@ class RecurringRepository implements RecurringRepositoryInterface, UserGroupInte
     /**
      * Returns all the user's recurring transactions.
      */
+    #[\Override]
     public function get(): Collection
     {
         return $this->user->recurrences()
@@ -131,6 +135,7 @@ class RecurringRepository implements RecurringRepositoryInterface, UserGroupInte
     /**
      * Get ALL recurring transactions.
      */
+    #[\Override]
     public function getAll(): Collection
     {
         // grab ALL recurring transactions:
@@ -142,6 +147,7 @@ class RecurringRepository implements RecurringRepositoryInterface, UserGroupInte
         ;
     }
 
+    #[\Override]
     public function getBillId(RecurrenceTransaction $recTransaction): ?int
     {
         $return = null;
@@ -159,6 +165,7 @@ class RecurringRepository implements RecurringRepositoryInterface, UserGroupInte
     /**
      * Get the budget ID from a recurring transaction transaction.
      */
+    #[\Override]
     public function getBudget(RecurrenceTransaction $recTransaction): ?int
     {
         $return = 0;
@@ -176,6 +183,7 @@ class RecurringRepository implements RecurringRepositoryInterface, UserGroupInte
     /**
      * Get the category from a recurring transaction transaction.
      */
+    #[\Override]
     public function getCategoryId(RecurrenceTransaction $recTransaction): ?int
     {
         $return = '';
@@ -193,6 +201,7 @@ class RecurringRepository implements RecurringRepositoryInterface, UserGroupInte
     /**
      * Get the category from a recurring transaction transaction.
      */
+    #[\Override]
     public function getCategoryName(RecurrenceTransaction $recTransaction): ?string
     {
         $return = '';
@@ -210,6 +219,7 @@ class RecurringRepository implements RecurringRepositoryInterface, UserGroupInte
     /**
      * Returns the journals created for this recurrence, possibly limited by time.
      */
+    #[\Override]
     public function getJournalCount(Recurrence $recurrence, ?Carbon $start = null, ?Carbon $end = null): int
     {
         Log::debug(sprintf('Now in getJournalCount(#%d, "%s", "%s")', $recurrence->id, $start?->format('Y-m-d H:i:s'), $end?->format('Y-m-d H:i:s')));
@@ -234,6 +244,7 @@ class RecurringRepository implements RecurringRepositoryInterface, UserGroupInte
     /**
      * Get journal ID's for journals created by this recurring transaction.
      */
+    #[\Override]
     public function getJournalIds(Recurrence $recurrence): array
     {
         return TransactionJournalMeta::leftJoin('transaction_journals', 'transaction_journals.id', '=', 'journal_meta.transaction_journal_id')
@@ -249,6 +260,7 @@ class RecurringRepository implements RecurringRepositoryInterface, UserGroupInte
     /**
      * Get the notes.
      */
+    #[\Override]
     public function getNoteText(Recurrence $recurrence): string
     {
         /** @var null|Note $note */
@@ -260,6 +272,7 @@ class RecurringRepository implements RecurringRepositoryInterface, UserGroupInte
     /**
      * Generate events in the date range.
      */
+    #[\Override]
     public function getOccurrencesInRange(RecurrenceRepetition $repetition, Carbon $start, Carbon $end): array
     {
         $occurrences = [];
@@ -289,6 +302,7 @@ class RecurringRepository implements RecurringRepositoryInterface, UserGroupInte
         return $this->filterWeekends($repetition, $occurrences);
     }
 
+    #[\Override]
     public function getPiggyBank(RecurrenceTransaction $transaction): ?int
     {
         $meta = $transaction->recurrenceTransactionMeta;
@@ -306,6 +320,7 @@ class RecurringRepository implements RecurringRepositoryInterface, UserGroupInte
     /**
      * Get the tags from the recurring transaction.
      */
+    #[\Override]
     public function getTags(RecurrenceTransaction $transaction): array
     {
         $tags = [];
@@ -320,6 +335,7 @@ class RecurringRepository implements RecurringRepositoryInterface, UserGroupInte
         return $tags;
     }
 
+    #[\Override]
     public function getTransactionPaginator(Recurrence $recurrence, int $page, int $pageSize): LengthAwarePaginator
     {
         $journalMeta = TransactionJournalMeta::leftJoin('transaction_journals', 'transaction_journals.id', '=', 'journal_meta.transaction_journal_id')
@@ -346,6 +362,7 @@ class RecurringRepository implements RecurringRepositoryInterface, UserGroupInte
         return $collector->getPaginatedGroups();
     }
 
+    #[\Override]
     public function getTransactions(Recurrence $recurrence): Collection
     {
         $journalMeta = TransactionJournalMeta::leftJoin('transaction_journals', 'transaction_journals.id', '=', 'journal_meta.transaction_journal_id')
@@ -380,6 +397,7 @@ class RecurringRepository implements RecurringRepositoryInterface, UserGroupInte
     /**
      * Calculate the next X iterations starting on the date given in $date.
      */
+    #[\Override]
     public function getXOccurrences(RecurrenceRepetition $repetition, Carbon $date, int $count): array
     {
         $count       = clamp($count, 1, 100);
@@ -411,6 +429,7 @@ class RecurringRepository implements RecurringRepositoryInterface, UserGroupInte
      *
      * Only returns them of they are after $afterDate
      */
+    #[\Override]
     public function getXOccurrencesSince(RecurrenceRepetition $repetition, Carbon $date, Carbon $afterDate, int $count): array
     {
         Log::debug('Now in getXOccurrencesSince()');
@@ -447,6 +466,7 @@ class RecurringRepository implements RecurringRepositoryInterface, UserGroupInte
         return $this->filterMaxDate($repeatUntil, $occurrences);
     }
 
+    #[\Override]
     public function markGroupsAsNow(Collection $groups): void
     {
         /** @var TransactionGroup $group */
@@ -463,6 +483,7 @@ class RecurringRepository implements RecurringRepositoryInterface, UserGroupInte
     /**
      * Parse the repetition in a string that is user readable.
      */
+    #[\Override]
     public function repetitionDescription(RecurrenceRepetition $repetition): string
     {
         Log::debug('Now in repetitionDescription()');
@@ -523,6 +544,7 @@ class RecurringRepository implements RecurringRepositoryInterface, UserGroupInte
         return '';
     }
 
+    #[\Override]
     public function searchRecurrence(string $query, int $limit): Collection
     {
         $search = $this->user->recurrences();
@@ -547,6 +569,7 @@ class RecurringRepository implements RecurringRepositoryInterface, UserGroupInte
     /**
      * @throws FireflyException
      */
+    #[\Override]
     public function store(array $data): Recurrence
     {
         /** @var RecurrenceFactory $factory */
@@ -556,6 +579,7 @@ class RecurringRepository implements RecurringRepositoryInterface, UserGroupInte
         return $factory->create($data);
     }
 
+    #[\Override]
     public function totalTransactions(Recurrence $recurrence, RecurrenceRepetition $repetition): int
     {
         // if repeat = null just return 0.
@@ -582,6 +606,7 @@ class RecurringRepository implements RecurringRepositoryInterface, UserGroupInte
      *
      * @throws FireflyException
      */
+    #[\Override]
     public function update(Recurrence $recurrence, array $data): Recurrence
     {
         /** @var RecurrenceUpdateService $service */

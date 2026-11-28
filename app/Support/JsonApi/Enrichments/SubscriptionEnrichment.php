@@ -65,6 +65,7 @@ class SubscriptionEnrichment implements EnrichmentInterface
         $this->primaryCurrency  = Amount::getPrimaryCurrency();
     }
 
+    #[\Override]
     public function enrich(Collection $collection): Collection
     {
         Log::debug(sprintf('%s(%s item(s))', __METHOD__, $collection->count()));
@@ -143,6 +144,7 @@ class SubscriptionEnrichment implements EnrichmentInterface
         return $collection;
     }
 
+    #[\Override]
     public function enrichSingle(array|Model $model): array|Model
     {
         Log::debug(__METHOD__);
@@ -162,11 +164,13 @@ class SubscriptionEnrichment implements EnrichmentInterface
         $this->start = $start;
     }
 
+    #[\Override]
     public function setUser(User $user): void
     {
         $this->user = $user;
     }
 
+    #[\Override]
     public function setUserGroup(UserGroup $userGroup): void {}
 
     /**

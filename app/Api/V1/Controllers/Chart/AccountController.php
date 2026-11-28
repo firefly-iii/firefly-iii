@@ -51,6 +51,7 @@ final class AccountController extends Controller
     use CleansChartData;
     use CollectsAccountsFromFilter;
 
+    #[\Override]
     protected array $acceptedRoles = [UserRoleEnum::READ_ONLY];
 
     private array $chartData       = [];

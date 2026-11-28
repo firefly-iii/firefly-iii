@@ -37,6 +37,7 @@ use Illuminate\Support\Facades\Log;
  */
 class AutoBudgetCronjob extends AbstractCronjob
 {
+    #[\Override]
     public function fire(): void
     {
         Log::debug('AutoBudgetCronjob::fire()');

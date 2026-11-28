@@ -63,6 +63,7 @@ class BudgetRepository implements BudgetRepositoryInterface, UserGroupInterface
 {
     use UserGroupTrait;
 
+    #[\Override]
     public function budgetedInPeriod(Carbon $start, Carbon $end): array
     {
         Log::debug(sprintf('Now in budgetedInPeriod("%s", "%s")', $start->format('Y-m-d'), $end->format('Y-m-d')));
@@ -135,6 +136,7 @@ class BudgetRepository implements BudgetRepositoryInterface, UserGroupInterface
         return $return;
     }
 
+    #[\Override]
     public function budgetedInPeriodForBudget(Budget $budget, Carbon $start, Carbon $end): array
     {
         Log::debug(sprintf('Now in budgetedInPeriod(#%d, "%s", "%s")', $budget->id, $start->format('Y-m-d'), $end->format('Y-m-d')));
@@ -190,6 +192,7 @@ class BudgetRepository implements BudgetRepositoryInterface, UserGroupInterface
         return $return;
     }
 
+    #[\Override]
     public function budgetEndsWith(string $query, int $limit): Collection
     {
         $search = $this->user->budgets();
@@ -201,6 +204,7 @@ class BudgetRepository implements BudgetRepositoryInterface, UserGroupInterface
         return $search->take($limit)->get();
     }
 
+    #[\Override]
     public function budgetStartsWith(string $query, int $limit): Collection
     {
         $search = $this->user->budgets();
@@ -212,6 +216,7 @@ class BudgetRepository implements BudgetRepositoryInterface, UserGroupInterface
         return $search->take($limit)->get();
     }
 
+    #[\Override]
     public function cleanupBudgets(): bool
     {
         // delete limits with amount 0:
@@ -232,6 +237,7 @@ class BudgetRepository implements BudgetRepositoryInterface, UserGroupInterface
         return true;
     }
 
+    #[\Override]
     public function destroy(Budget $budget): bool
     {
         /** @var BudgetDestroyService $service */
@@ -244,6 +250,7 @@ class BudgetRepository implements BudgetRepositoryInterface, UserGroupInterface
     /**
      * Destroy all budgets.
      */
+    #[\Override]
     public function destroyAll(): void
     {
         $budgets = $this->getBudgets();
@@ -267,6 +274,7 @@ class BudgetRepository implements BudgetRepositoryInterface, UserGroupInterface
         Log::channel('audit')->info('Delete all budgets through destroyAll');
     }
 
+    #[\Override]
     public function destroyAutoBudget(Budget $budget): void
     {
         /** @var AutoBudget $autoBudget */
@@ -280,12 +288,14 @@ class BudgetRepository implements BudgetRepositoryInterface, UserGroupInterface
      *
      * @param null|int $budgetId |null
      */
+    #[\Override]
     public function find(?int $budgetId = null): ?Budget
     {
         /** @var null|Budget */
         return $this->user->budgets()->find($budgetId);
     }
 
+    #[\Override]
     public function findBudget(?int $budgetId, ?string $budgetName): ?Budget
     {
         Log::debug('Now in findBudget()');
@@ -306,6 +316,7 @@ class BudgetRepository implements BudgetRepositoryInterface, UserGroupInterface
     /**
      * Find budget by name.
      */
+    #[\Override]
     public function findByName(?string $name): ?Budget
     {
         if (null === $name) {
@@ -321,6 +332,7 @@ class BudgetRepository implements BudgetRepositoryInterface, UserGroupInterface
      * This method returns the oldest journal or transaction date known to this budget.
      * Will cache result.
      */
+    #[\Override]
     public function firstUseDate(Budget $budget): ?Carbon
     {
         $journal = $budget->transactionJournals()->orderBy('date', 'ASC')->first();
@@ -328,6 +340,7 @@ class BudgetRepository implements BudgetRepositoryInterface, UserGroupInterface
         return $journal?->date;
     }
 
+    #[\Override]
     public function getActiveBudgets(): Collection
     {
         return $this->user->budgets()
@@ -338,6 +351,7 @@ class BudgetRepository implements BudgetRepositoryInterface, UserGroupInterface
         ;
     }
 
+    #[\Override]
     public function getAttachments(Budget $budget): Collection
     {
         $set  = $budget->attachments()->get();
@@ -353,12 +367,14 @@ class BudgetRepository implements BudgetRepositoryInterface, UserGroupInterface
         });
     }
 
+    #[\Override]
     public function getAutoBudget(Budget $budget): ?AutoBudget
     {
         /** @var null|AutoBudget */
         return $budget->autoBudgets()->first();
     }
 
+    #[\Override]
     public function getBudgets(): Collection
     {
         if (null === $this->user) {
@@ -371,11 +387,13 @@ class BudgetRepository implements BudgetRepositoryInterface, UserGroupInterface
     /**
      * Get all budgets with these ID's.
      */
+    #[\Override]
     public function getByIds(array $budgetIds): Collection
     {
         return $this->user->budgets()->whereIn('id', $budgetIds)->get();
     }
 
+    #[\Override]
     public function getInactiveBudgets(): Collection
     {
         return $this->user->budgets()
@@ -386,11 +404,13 @@ class BudgetRepository implements BudgetRepositoryInterface, UserGroupInterface
         ;
     }
 
+    #[\Override]
     public function getMaxOrder(): int
     {
         return (int) $this->user->budgets()->max('order');
     }
 
+    #[\Override]
     public function getNoteText(Budget $budget): ?string
     {
         $note = $budget->notes()->first();
@@ -398,6 +418,7 @@ class BudgetRepository implements BudgetRepositoryInterface, UserGroupInterface
         return $note?->text;
     }
 
+    #[\Override]
     public function searchBudget(string $query, int $limit): Collection
     {
         $search = $this->user->budgets();
@@ -409,12 +430,14 @@ class BudgetRepository implements BudgetRepositoryInterface, UserGroupInterface
         return $search->take($limit)->get();
     }
 
+    #[\Override]
     public function setBudgetOrder(Budget $budget, int $order): void
     {
         $budget->order = $order;
         $budget->saveQuietly();
     }
 
+    #[\Override]
     public function spentInPeriod(Carbon $start, Carbon $end): array
     {
         Log::debug(sprintf('Now in %s', __METHOD__));
@@ -478,6 +501,7 @@ class BudgetRepository implements BudgetRepositoryInterface, UserGroupInterface
         return $array;
     }
 
+    #[\Override]
     public function spentInPeriodForBudget(Budget $budget, Carbon $start, Carbon $end): array
     {
         Log::debug(sprintf('Now in %s', __METHOD__));
@@ -546,6 +570,7 @@ class BudgetRepository implements BudgetRepositoryInterface, UserGroupInterface
      *
      * @SuppressWarnings("PHPMD.NPathComplexity")
      */
+    #[\Override]
     public function store(array $data): Budget
     {
         $order                               = $this->getMaxOrder();
@@ -642,6 +667,7 @@ class BudgetRepository implements BudgetRepositoryInterface, UserGroupInterface
     /**
      * @throws FireflyException
      */
+    #[\Override]
     public function update(Budget $budget, array $data): Budget
     {
         Log::debug('Now in update()');

@@ -76,6 +76,7 @@ class AttachmentHelper implements AttachmentHelperInterface
     /**
      * Returns the content of an attachment.
      */
+    #[\Override]
     public function getAttachmentContent(Attachment $attachment): string
     {
         $encryptedData = (string) $this->uploadDisk->get(sprintf('at-%d.data', $attachment->id));
@@ -93,6 +94,7 @@ class AttachmentHelper implements AttachmentHelperInterface
     /**
      * Returns the file path relative to upload disk for an attachment,
      */
+    #[\Override]
     public function getAttachmentLocation(Attachment $attachment): string
     {
         return sprintf('%sat-%d.data', DIRECTORY_SEPARATOR, $attachment->id);
@@ -101,6 +103,7 @@ class AttachmentHelper implements AttachmentHelperInterface
     /**
      * Get all attachments.
      */
+    #[\Override]
     public function getAttachments(): Collection
     {
         return $this->attachments;
@@ -109,6 +112,7 @@ class AttachmentHelper implements AttachmentHelperInterface
     /**
      * Get all errors.
      */
+    #[\Override]
     public function getErrors(): MessageBag
     {
         return $this->errors;
@@ -117,6 +121,7 @@ class AttachmentHelper implements AttachmentHelperInterface
     /**
      * Get all messages.
      */
+    #[\Override]
     public function getMessages(): MessageBag
     {
         return $this->messages;
@@ -125,6 +130,7 @@ class AttachmentHelper implements AttachmentHelperInterface
     /**
      * Uploads a file as a string.
      */
+    #[\Override]
     public function saveAttachmentFromApi(Attachment $attachment, string $content): bool
     {
         Log::debug(sprintf('Now in %s', __METHOD__));
@@ -199,6 +205,7 @@ class AttachmentHelper implements AttachmentHelperInterface
      *
      * @throws FireflyException
      */
+    #[\Override]
     public function saveAttachmentsForModel(object $model, ?array $files): bool
     {
         if (!$model instanceof Model) {

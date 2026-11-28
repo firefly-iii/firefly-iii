@@ -49,6 +49,7 @@ class AppendNotesToDescription implements ActionInterface
         private RuleAction $action
     ) {}
 
+    #[\Override]
     public function actOnArray(array $journal): bool
     {
         Log::debug('Now in AppendNotesToDescription');
@@ -88,6 +89,7 @@ class AppendNotesToDescription implements ActionInterface
     /**
      * @SuppressWarnings("PHPMD.UnusedFormalParameter")
      */
+    #[\Override]
     public function get(string $key, mixed $default = null): mixed
     {
         return null;
@@ -96,6 +98,7 @@ class AppendNotesToDescription implements ActionInterface
     /**
      * @SuppressWarnings("PHPMD.UnusedFormalParameter")
      */
+    #[\Override]
     public function has(mixed $key): mixed
     {
         return null;

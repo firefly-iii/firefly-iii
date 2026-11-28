@@ -44,7 +44,9 @@ class UpgradesLiabilitiesEight extends Command
 
     public const string CONFIG_NAME = '600_upgrade_liabilities';
 
+    #[\Override]
     protected $description          = 'Upgrade liabilities to new 6.0.0 structure.';
+    #[\Override]
     protected $signature            = 'upgrade:600-liabilities {--F|force : Force the execution of this command.}';
 
     /**

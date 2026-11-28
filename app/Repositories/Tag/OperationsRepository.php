@@ -45,6 +45,7 @@ class OperationsRepository implements OperationsRepositoryInterface, UserGroupIn
      * which have the specified tag(s) set to them. It's grouped per currency, with as few details in the array
      * as possible. Amounts are always negative.
      */
+    #[\Override]
     public function listExpenses(Carbon $start, Carbon $end, ?Collection $accounts = null, ?Collection $tags = null): array
     {
         /** @var GroupCollectorInterface $collector */
@@ -128,6 +129,7 @@ class OperationsRepository implements OperationsRepositoryInterface, UserGroupIn
      * which have the specified tag(s) set to them. It's grouped per currency, with as few details in the array
      * as possible. Amounts are always positive.
      */
+    #[\Override]
     public function listIncome(Carbon $start, Carbon $end, ?Collection $accounts = null, ?Collection $tags = null): array
     {
         /** @var GroupCollectorInterface $collector */
@@ -216,6 +218,7 @@ class OperationsRepository implements OperationsRepositoryInterface, UserGroupIn
      *
      * @throws FireflyException
      */
+    #[\Override]
     public function sumExpenses(Carbon $start, Carbon $end, ?Collection $accounts = null, ?Collection $tags = null): array
     {
         throw new FireflyException(sprintf('%s is not yet implemented.', __METHOD__));
@@ -226,6 +229,7 @@ class OperationsRepository implements OperationsRepositoryInterface, UserGroupIn
      *
      * @throws FireflyException
      */
+    #[\Override]
     public function sumIncome(Carbon $start, Carbon $end, ?Collection $accounts = null, ?Collection $tags = null): array
     {
         throw new FireflyException(sprintf('%s is not yet implemented.', __METHOD__));

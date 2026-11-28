@@ -36,6 +36,7 @@ class RuleAction extends Model
 {
     use ReturnsIntegerIdTrait;
 
+    #[\Override]
     protected $fillable = ['rule_id', 'action_type', 'action_value', 'order', 'active', 'stop_processing'];
 
     public function getValue(array $journal): string
@@ -68,6 +69,7 @@ class RuleAction extends Model
         return $this->belongsTo(Rule::class);
     }
 
+    #[\Override]
     protected function casts(): array
     {
         return [

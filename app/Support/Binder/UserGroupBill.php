@@ -36,6 +36,7 @@ class UserGroupBill implements BinderInterface
     /**
      * @throws NotFoundHttpException
      */
+    #[\Override]
     public static function routeBinder(string $value, Route $route): Bill
     {
         if (auth()->check()) {

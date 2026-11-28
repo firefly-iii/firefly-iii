@@ -44,6 +44,7 @@ class JournalCLIRepository implements JournalCLIRepositoryInterface, UserGroupIn
     /**
      * Get all transaction journals with a specific type, regardless of user.
      */
+    #[\Override]
     public function getAllJournals(array $types): Collection
     {
         return TransactionJournal::leftJoin('transaction_types', 'transaction_types.id', '=', 'transaction_journals.transaction_type_id')
@@ -56,6 +57,7 @@ class JournalCLIRepository implements JournalCLIRepositoryInterface, UserGroupIn
     /**
      * Return the ID of the budget linked to the journal (if any) or the transactions (if any).
      */
+    #[\Override]
     public function getJournalBudgetId(TransactionJournal $journal): int
     {
         $budget      = $journal->budgets()->first();
@@ -76,6 +78,7 @@ class JournalCLIRepository implements JournalCLIRepositoryInterface, UserGroupIn
     /**
      * Return the ID of the category linked to the journal (if any) or to the transactions (if any).
      */
+    #[\Override]
     public function getJournalCategoryId(TransactionJournal $journal): int
     {
         $category    = $journal->categories()->first();
@@ -96,6 +99,7 @@ class JournalCLIRepository implements JournalCLIRepositoryInterface, UserGroupIn
     /**
      * Return all journals without a group, used in an upgrade routine.
      */
+    #[\Override]
     public function getJournalsWithoutGroup(): array
     {
         return TransactionJournal::query()->whereNull('transaction_group_id')->get(['id', 'user_id'])->toArray();
@@ -104,6 +108,7 @@ class JournalCLIRepository implements JournalCLIRepositoryInterface, UserGroupIn
     /**
      * Return Carbon value of a meta field (or NULL).
      */
+    #[\Override]
     public function getMetaDate(TransactionJournal $journal, string $field): ?Carbon
     {
         $cache = new CacheProperties();
@@ -128,6 +133,7 @@ class JournalCLIRepository implements JournalCLIRepositoryInterface, UserGroupIn
     /**
      * Return value of a meta field (or NULL) as a string.
      */
+    #[\Override]
     public function getMetaField(TransactionJournal $journal, string $field): ?string
     {
         $cache  = new CacheProperties();
@@ -163,6 +169,7 @@ class JournalCLIRepository implements JournalCLIRepositoryInterface, UserGroupIn
     /**
      * Return text of a note attached to journal, or NULL
      */
+    #[\Override]
     public function getNoteText(TransactionJournal $journal): ?string
     {
         $note = $journal->notes()->first();
@@ -174,6 +181,7 @@ class JournalCLIRepository implements JournalCLIRepositoryInterface, UserGroupIn
      * Returns all journals with more than 2 transactions. Should only return empty collections
      * in Firefly III > v4.8,0.
      */
+    #[\Override]
     public function getSplitJournals(): Collection
     {
         $query      = TransactionJournal::leftJoin('transactions', 'transaction_journals.id', '=', 'transactions.transaction_journal_id')->groupBy(
@@ -196,6 +204,7 @@ class JournalCLIRepository implements JournalCLIRepositoryInterface, UserGroupIn
     /**
      * Return all tags as strings in an array.
      */
+    #[\Override]
     public function getTags(TransactionJournal $journal): array
     {
         return $journal->tags()->get()->pluck('tag')->toArray();

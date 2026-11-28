@@ -31,6 +31,7 @@ use Override;
 
 class CountRequest extends AggregateFormRequest
 {
+    #[\Override]
     public function rules(): array
     {
         return [
@@ -42,6 +43,7 @@ class CountRequest extends AggregateFormRequest
         ];
     }
 
+    #[\Override]
     public function withValidator(Validator $validator): void
     {
         $validator->after(function (Validator $validator): void {

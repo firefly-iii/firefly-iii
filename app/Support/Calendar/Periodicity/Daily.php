@@ -31,6 +31,7 @@ use Carbon\Carbon;
  */
 final class Daily extends Interval
 {
+    #[\Override]
     public function nextDate(Carbon $date, int $interval = 1): Carbon
     {
         return $date->clone()->addDays($this->skip($interval));

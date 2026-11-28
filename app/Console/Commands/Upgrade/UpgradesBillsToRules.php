@@ -44,8 +44,10 @@ class UpgradesBillsToRules extends Command
 
     public const string CONFIG_NAME = '480_bills_to_rules';
 
+    #[\Override]
     protected $description          = 'Migrate bills to rules.';
 
+    #[\Override]
     protected $signature            = 'upgrade:480-bills-to-rules {--F|force : Force the execution of this command.}';
     private BillRepositoryInterface $billRepository;
     private int $count;

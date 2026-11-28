@@ -41,8 +41,10 @@ class UpgradesCurrencyPreferences extends Command
 
     public const string CONFIG_NAME = '610_upgrade_currency_prefs';
 
+    #[\Override]
     protected $description          = 'Upgrade user currency preferences';
 
+    #[\Override]
     protected $signature            = 'upgrade:610-currency-preferences {--F|force : Force the execution of this command.}';
 
     /**

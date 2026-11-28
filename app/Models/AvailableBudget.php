@@ -47,6 +47,7 @@ class AvailableBudget extends Model
     use ReturnsIntegerUserIdTrait;
     use SoftDeletes;
 
+    #[\Override]
     protected $fillable = [
         'user_id',
         'user_group_id',
@@ -102,6 +103,7 @@ class AvailableBudget extends Model
         return Attribute::make(get: static fn ($value): string => (string) $value);
     }
 
+    #[\Override]
     protected function casts(): array
     {
         return [

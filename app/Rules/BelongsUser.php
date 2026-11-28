@@ -41,6 +41,7 @@ use Illuminate\Support\Facades\Log;
  */
 class BelongsUser implements ValidationRule
 {
+    #[\Override]
     public function validate(string $attribute, mixed $value, Closure $fail): void
     {
         $attribute = $this->parseAttribute($attribute);

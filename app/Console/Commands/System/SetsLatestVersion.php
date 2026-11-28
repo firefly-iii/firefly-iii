@@ -32,8 +32,10 @@ class SetsLatestVersion extends Command
 {
     use ShowsFriendlyMessages;
 
+    #[\Override]
     protected $description = 'Set latest version in DB.';
 
+    #[\Override]
     protected $signature   = 'firefly-iii:set-latest-version {--james-is-cool}';
 
     /**

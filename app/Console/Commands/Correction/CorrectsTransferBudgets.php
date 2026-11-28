@@ -34,7 +34,9 @@ class CorrectsTransferBudgets extends Command
 {
     use ShowsFriendlyMessages;
 
+    #[\Override]
     protected $description = 'Removes budgets from transfers.';
+    #[\Override]
     protected $signature   = 'correction:transfer-budgets';
 
     /**

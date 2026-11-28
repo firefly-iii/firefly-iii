@@ -48,6 +48,7 @@ class GdbotsQueryParser implements QueryParserInterface
      * @throws FireflyException
      * @throws FilesystemException
      */
+    #[\Override]
     public function parse(string $query): NodeGroup
     {
         try {

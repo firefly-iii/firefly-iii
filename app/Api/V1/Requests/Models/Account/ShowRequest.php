@@ -33,6 +33,7 @@ use FireflyIII\Models\Account;
 
 class ShowRequest extends AggregateFormRequest
 {
+    #[\Override]
     protected function getRequests(): array
     {
         return [

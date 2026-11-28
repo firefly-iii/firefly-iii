@@ -54,6 +54,7 @@ class OperationsRepository implements OperationsRepositoryInterface, UserGroupIn
      * A method that returns the amount of money budgeted per day for this budget,
      * on average.
      */
+    #[\Override]
     public function budgetedPerDay(Budget $budget): string
     {
         Log::debug(sprintf('Now with budget #%d "%s"', $budget->id, $budget->name));
@@ -132,6 +133,7 @@ class OperationsRepository implements OperationsRepositoryInterface, UserGroupIn
      * This method is being used to generate the budget overview in the year/multi-year report. Its used
      * in both the year/multi-year budget overview AND in the accompanying chart.
      */
+    #[\Override]
     #[Deprecated]
     public function getBudgetPeriodReport(Collection $budgets, Collection $accounts, Carbon $start, Carbon $end): array
     {
@@ -177,6 +179,7 @@ class OperationsRepository implements OperationsRepositoryInterface, UserGroupIn
      * which have the specified budget set to them. It's grouped per currency, with as few details in the array
      * as possible. Amounts are always negative.
      */
+    #[\Override]
     public function listExpenses(Carbon $start, Carbon $end, ?Collection $accounts = null, ?Collection $budgets = null): array
     {
         /** @var GroupCollectorInterface $collector */
@@ -268,6 +271,7 @@ class OperationsRepository implements OperationsRepositoryInterface, UserGroupIn
         return $array;
     }
 
+    #[\Override]
     public function sumCollectedExpenses(
         array $expenses,
         Carbon $start,
@@ -288,6 +292,7 @@ class OperationsRepository implements OperationsRepositoryInterface, UserGroupIn
         return $summarizer->groupByCurrencyId($expenses, 'negative', false);
     }
 
+    #[\Override]
     public function sumCollectedExpensesByBudget(array $expenses, Budget $budget, bool $convertToPrimary = false): array
     {
         // Log::debug(sprintf('Start of %s.', __METHOD__));
@@ -303,6 +308,7 @@ class OperationsRepository implements OperationsRepositoryInterface, UserGroupIn
     /**
      * @SuppressWarnings("PHPMD.ExcessiveParameterList")
      */
+    #[\Override]
     public function sumExpenses(
         Carbon $start,
         Carbon $end,

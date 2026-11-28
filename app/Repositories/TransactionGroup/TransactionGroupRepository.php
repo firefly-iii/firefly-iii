@@ -66,6 +66,7 @@ class TransactionGroupRepository implements TransactionGroupRepositoryInterface,
 {
     use UserGroupTrait;
 
+    #[\Override]
     public function countAttachments(int $journalId): int
     {
         /** @var TransactionJournal $journal */
@@ -74,6 +75,7 @@ class TransactionGroupRepository implements TransactionGroupRepositoryInterface,
         return $journal->attachments()->count();
     }
 
+    #[\Override]
     public function destroy(TransactionGroup $group): void
     {
         Log::debug(sprintf('Now in %s', __METHOD__));
@@ -81,6 +83,7 @@ class TransactionGroupRepository implements TransactionGroupRepositoryInterface,
         $service->destroy($group);
     }
 
+    #[\Override]
     public function expandGroup(TransactionGroup $group): array
     {
         $result                         = $group->toArray();
@@ -97,6 +100,7 @@ class TransactionGroupRepository implements TransactionGroupRepositoryInterface,
     /**
      * Find a transaction group by its ID.
      */
+    #[\Override]
     public function find(int $groupId): ?TransactionGroup
     {
         /** @var null|TransactionGroup */
@@ -106,6 +110,7 @@ class TransactionGroupRepository implements TransactionGroupRepositoryInterface,
     /**
      * Return all attachments for all journals in the group.
      */
+    #[\Override]
     public function getAttachments(TransactionGroup $group): array
     {
         $repository = app(AttachmentRepositoryInterface::class);
@@ -136,6 +141,7 @@ class TransactionGroupRepository implements TransactionGroupRepositoryInterface,
         return $result;
     }
 
+    #[\Override]
     public function getCompareHash(TransactionGroup $group): string
     {
         $sum   = '0';
@@ -160,6 +166,7 @@ class TransactionGroupRepository implements TransactionGroupRepositoryInterface,
     /**
      * Return all journal links for all journals in the group.
      */
+    #[\Override]
     public function getLinks(TransactionGroup $group): array
     {
         $return   = [];
@@ -219,6 +226,7 @@ class TransactionGroupRepository implements TransactionGroupRepositoryInterface,
         return $return;
     }
 
+    #[\Override]
     public function getLocation(int $journalId): ?Location
     {
         /** @var TransactionJournal $journal */
@@ -233,6 +241,7 @@ class TransactionGroupRepository implements TransactionGroupRepositoryInterface,
      *
      * @throws Exception
      */
+    #[\Override]
     public function getMetaDateFields(int $journalId, array $fields): NullArrayObject
     {
         $query  = DB::table('journal_meta')
@@ -253,6 +262,7 @@ class TransactionGroupRepository implements TransactionGroupRepositoryInterface,
     /**
      * Return object with all found meta field things.
      */
+    #[\Override]
     public function getMetaFields(int $journalId, array $fields): NullArrayObject
     {
         $query  = DB::table('journal_meta')
@@ -273,6 +283,7 @@ class TransactionGroupRepository implements TransactionGroupRepositoryInterface,
     /**
      * Get the note text for a journal (by ID).
      */
+    #[\Override]
     public function getNoteText(int $journalId): ?string
     {
         /** @var null|Note $note */
@@ -286,6 +297,7 @@ class TransactionGroupRepository implements TransactionGroupRepositoryInterface,
      *
      * @throws FireflyException
      */
+    #[\Override]
     public function getPiggyEvents(TransactionGroup $group): array
     {
         $return   = [];
@@ -316,6 +328,7 @@ class TransactionGroupRepository implements TransactionGroupRepositoryInterface,
         return $return;
     }
 
+    #[\Override]
     public function getTagObjects(int $journalId): Collection
     {
         /** @var null|TransactionJournal $journal */
@@ -330,6 +343,7 @@ class TransactionGroupRepository implements TransactionGroupRepositoryInterface,
     /**
      * Get the tags for a journal (by ID).
      */
+    #[\Override]
     public function getTags(int $journalId): array
     {
         $result = DB::table('tag_transaction_journal')
@@ -346,6 +360,7 @@ class TransactionGroupRepository implements TransactionGroupRepositoryInterface,
      * @throws DuplicateTransactionException
      * @throws FireflyException
      */
+    #[\Override]
     public function store(array $data): TransactionGroup
     {
         /** @var TransactionGroupFactory $factory */
@@ -383,6 +398,7 @@ class TransactionGroupRepository implements TransactionGroupRepositoryInterface,
      * @throws DuplicateTransactionException
      * @throws FireflyException
      */
+    #[\Override]
     public function update(TransactionGroup $transactionGroup, array $data): TransactionGroup
     {
         /** @var GroupUpdateService $service */

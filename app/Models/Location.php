@@ -34,6 +34,7 @@ class Location extends Model
 {
     use ReturnsIntegerIdTrait;
 
+    #[\Override]
     protected $fillable = ['locatable_id', 'locatable_type', 'latitude', 'longitude', 'zoom_level'];
 
     /**
@@ -66,6 +67,7 @@ class Location extends Model
         return $this->morphMany(TransactionJournal::class, 'locatable');
     }
 
+    #[\Override]
     protected function casts(): array
     {
         return [

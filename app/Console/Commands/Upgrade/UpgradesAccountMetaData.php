@@ -36,8 +36,10 @@ class UpgradesAccountMetaData extends Command
 
     public const string CONFIG_NAME = '480_rename_account_meta';
 
+    #[\Override]
     protected $description          = 'Rename account meta-data to new format.';
 
+    #[\Override]
     protected $signature            = 'upgrade:480-account-meta {--F|force : Force the execution of this command.}';
 
     /**

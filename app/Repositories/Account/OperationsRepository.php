@@ -46,6 +46,7 @@ class OperationsRepository implements OperationsRepositoryInterface, UserGroupIn
      * which have the specified accounts. It's grouped per currency, with as few details in the array
      * as possible. Amounts are always negative.
      */
+    #[\Override]
     public function listExpenses(Carbon $start, Carbon $end, Collection $accounts): array
     {
         $journals = $this->getTransactions($start, $end, $accounts, TransactionTypeEnum::WITHDRAWAL->value);
@@ -58,6 +59,7 @@ class OperationsRepository implements OperationsRepositoryInterface, UserGroupIn
      * which have the specified accounts. It's grouped per currency, with as few details in the array
      * as possible. Amounts are always positive.
      */
+    #[\Override]
     public function listIncome(Carbon $start, Carbon $end, ?Collection $accounts = null): array
     {
         $journals = $this->getTransactions($start, $end, $accounts, TransactionTypeEnum::DEPOSIT->value);
@@ -68,6 +70,7 @@ class OperationsRepository implements OperationsRepositoryInterface, UserGroupIn
     /**
      * @SuppressWarnings("PHPMD.ExcessiveParameterList")
      */
+    #[\Override]
     public function sumExpenses(
         Carbon $start,
         Carbon $end,
@@ -83,6 +86,7 @@ class OperationsRepository implements OperationsRepositoryInterface, UserGroupIn
     /**
      * @SuppressWarnings("PHPMD.ExcessiveParameterList")
      */
+    #[\Override]
     public function sumExpensesByDestination(
         Carbon $start,
         Carbon $end,
@@ -98,6 +102,7 @@ class OperationsRepository implements OperationsRepositoryInterface, UserGroupIn
     /**
      * @SuppressWarnings("PHPMD.ExcessiveParameterList")
      */
+    #[\Override]
     public function sumExpensesBySource(
         Carbon $start,
         Carbon $end,
@@ -113,6 +118,7 @@ class OperationsRepository implements OperationsRepositoryInterface, UserGroupIn
     /**
      * @SuppressWarnings("PHPMD.ExcessiveParameterList")
      */
+    #[\Override]
     public function sumIncome(
         Carbon $start,
         Carbon $end,
@@ -128,6 +134,7 @@ class OperationsRepository implements OperationsRepositoryInterface, UserGroupIn
     /**
      * @SuppressWarnings("PHPMD.ExcessiveParameterList")
      */
+    #[\Override]
     public function sumIncomeByDestination(
         Carbon $start,
         Carbon $end,
@@ -143,6 +150,7 @@ class OperationsRepository implements OperationsRepositoryInterface, UserGroupIn
     /**
      * @SuppressWarnings("PHPMD.ExcessiveParameterList")
      */
+    #[\Override]
     public function sumIncomeBySource(
         Carbon $start,
         Carbon $end,
@@ -155,6 +163,7 @@ class OperationsRepository implements OperationsRepositoryInterface, UserGroupIn
         return $this->groupByDirection($journals, 'source', 'positive');
     }
 
+    #[\Override]
     public function sumTransfers(Carbon $start, Carbon $end, ?Collection $accounts = null, ?TransactionCurrency $currency = null): array
     {
         $journals = $this->getTransactionsForSum(TransactionTypeEnum::TRANSFER->value, $start, $end, $accounts, null, $currency);

@@ -46,6 +46,7 @@ class FiscalHelper implements FiscalHelperInterface
     /**
      * @return Carbon date object
      */
+    #[\Override]
     public function endOfFiscalYear(Carbon $date): Carbon
     {
         // Log::debug(sprintf('Now in endOfFiscalYear(%s).', $date->format('Y-m-d')));
@@ -69,6 +70,7 @@ class FiscalHelper implements FiscalHelperInterface
      * @throws ContainerExceptionInterface
      * @throws NotFoundExceptionInterface
      */
+    #[\Override]
     public function startOfFiscalYear(Carbon $date): Carbon
     {
         // get start mm-dd. Then create a start date in the year passed.

@@ -30,6 +30,7 @@ use FireflyIII\Api\V1\Requests\SameDateRangeRequest;
 
 class BasicRequest extends AggregateFormRequest
 {
+    #[\Override]
     protected function getRequests(): array
     {
         return [[SameDateRangeRequest::class, 'required'], CurrencyCodeRequest::class];

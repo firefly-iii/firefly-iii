@@ -39,7 +39,9 @@ class CorrectsGroupAccounts extends Command
 {
     use ShowsFriendlyMessages;
 
+    #[\Override]
     protected $description = 'Unify the source / destination accounts of split groups.';
+    #[\Override]
     protected $signature   = 'correction:group-accounts';
 
     /**

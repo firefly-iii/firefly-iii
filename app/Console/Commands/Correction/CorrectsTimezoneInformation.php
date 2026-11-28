@@ -59,7 +59,9 @@ class CorrectsTimezoneInformation extends Command
         TransactionJournal::class   => ['date'],
     ];
 
+    #[\Override]
     protected $description      = 'Make sure all dates have a timezone.';
+    #[\Override]
     protected $signature        = 'correction:timezones';
 
     /**

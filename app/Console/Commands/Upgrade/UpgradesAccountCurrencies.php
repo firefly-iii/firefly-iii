@@ -44,7 +44,9 @@ class UpgradesAccountCurrencies extends Command
 
     public const string CONFIG_NAME = '480_account_currencies';
 
+    #[\Override]
     protected $description          = 'Give all accounts proper currency info.';
+    #[\Override]
     protected $signature            = 'upgrade:480-account-currencies {--F|force : Force the execution of this command.}';
     private AccountRepositoryInterface $accountRepos;
     private int $count;

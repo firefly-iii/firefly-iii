@@ -38,7 +38,9 @@ class CorrectsTransactionTypes extends Command
 {
     use ShowsFriendlyMessages;
 
+    #[\Override]
     protected $description = 'Make sure all transactions are of the correct type, based on source + dest.';
+    #[\Override]
     protected $signature   = 'correction:transaction-types';
 
     /**

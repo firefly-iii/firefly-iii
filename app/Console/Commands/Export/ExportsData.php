@@ -48,8 +48,10 @@ class ExportsData extends Command
     use ShowsFriendlyMessages;
     use VerifiesAccessToken;
 
+    #[\Override]
     protected $description = 'Command to export data from Firefly III.';
 
+    #[\Override]
     protected $signature   = 'firefly-iii:export-data
     {--user=1 : The user ID that the export should run for.}
     {--token= : The user\'s access token.}

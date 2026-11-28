@@ -43,6 +43,7 @@ class DeleteTransaction implements ActionInterface
         private readonly RuleAction $action
     ) {}
 
+    #[\Override]
     public function actOnArray(array $journal): bool
     {
         $count  = TransactionJournal::query()->where('transaction_group_id', $journal['transaction_group_id'])->count();

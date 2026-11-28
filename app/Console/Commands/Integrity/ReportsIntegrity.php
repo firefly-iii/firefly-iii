@@ -32,8 +32,10 @@ class ReportsIntegrity extends Command
 {
     use ShowsFriendlyMessages;
 
+    #[\Override]
     protected $description = 'Will report on the integrity of your database.';
 
+    #[\Override]
     protected $signature   = 'firefly-iii:report-integrity';
 
     /**

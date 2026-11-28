@@ -45,8 +45,10 @@ class ApplyRules extends Command
     use ShowsFriendlyMessages;
     use VerifiesAccessToken;
 
+    #[\Override]
     protected $description = 'This command will apply your rules and rule groups on a selection of your transactions.';
 
+    #[\Override]
     protected $signature   = 'firefly-iii:apply-rules
                             {--user=1 : The user ID.}
                             {--token= : The user\'s access token.}

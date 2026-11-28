@@ -34,7 +34,9 @@ class RemovesBills extends Command
 {
     use ShowsFriendlyMessages;
 
+    #[\Override]
     protected $description = 'Remove subscriptions from transactions that shouldn\'t have one.';
+    #[\Override]
     protected $signature   = 'correction:bills';
 
     /**

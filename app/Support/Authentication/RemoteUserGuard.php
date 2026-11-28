@@ -109,6 +109,7 @@ class RemoteUserGuard implements Guard
         $this->user    = $retrievedUser;
     }
 
+    #[\Override]
     public function check(): bool
     {
         // Log::debug(sprintf('Now at %s', __METHOD__));
@@ -116,6 +117,7 @@ class RemoteUserGuard implements Guard
         return $this->user() instanceof User;
     }
 
+    #[\Override]
     public function guest(): bool
     {
         // Log::debug(sprintf('Now at %s', __METHOD__));
@@ -123,6 +125,7 @@ class RemoteUserGuard implements Guard
         return !$this->check();
     }
 
+    #[\Override]
     public function hasUser(): bool
     {
         // Log::debug(sprintf('Now at %s', __METHOD__));
@@ -133,6 +136,7 @@ class RemoteUserGuard implements Guard
     /**
      * @SuppressWarnings("PHPMD.ShortMethodName")
      */
+    #[\Override]
     public function id(): int|string|null
     {
         // Log::debug(sprintf('Now at %s', __METHOD__));
@@ -140,6 +144,7 @@ class RemoteUserGuard implements Guard
         return $this->user?->id;
     }
 
+    #[\Override]
     public function setUser(Authenticatable|User|null $user): Guard
     {
         // Log::debug(sprintf('Now at %s', __METHOD__));
@@ -153,6 +158,7 @@ class RemoteUserGuard implements Guard
         return $this;
     }
 
+    #[\Override]
     public function user(): ?User
     {
         if (App::runningInConsole()) {
@@ -181,6 +187,7 @@ class RemoteUserGuard implements Guard
      *
      * @SuppressWarnings("PHPMD.UnusedFormalParameter")
      */
+    #[\Override]
     public function validate(array $credentials = []): bool
     {
         // Log::debug(sprintf('Now at %s', __METHOD__));

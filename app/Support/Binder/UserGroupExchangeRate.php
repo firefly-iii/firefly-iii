@@ -33,6 +33,7 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
  */
 class UserGroupExchangeRate implements BinderInterface
 {
+    #[\Override]
     public static function routeBinder(string $value, Route $route): CurrencyExchangeRate
     {
         if (auth()->check()) {

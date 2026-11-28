@@ -50,6 +50,7 @@ class MonthReportGenerator implements ReportGeneratorInterface
      *
      * @throws FireflyException
      */
+    #[\Override]
     public function generate(): string
     {
         $accountIds  = implode(',', $this->accounts->pluck('id')->toArray());
@@ -77,6 +78,7 @@ class MonthReportGenerator implements ReportGeneratorInterface
     /**
      * Set the involved accounts.
      */
+    #[\Override]
     public function setAccounts(Collection $accounts): ReportGeneratorInterface
     {
         $this->accounts = $accounts;
@@ -87,6 +89,7 @@ class MonthReportGenerator implements ReportGeneratorInterface
     /**
      * Empty budget setter.
      */
+    #[\Override]
     public function setBudgets(Collection $budgets): ReportGeneratorInterface
     {
         return $this;
@@ -95,6 +98,7 @@ class MonthReportGenerator implements ReportGeneratorInterface
     /**
      * Set the categories involved in this report.
      */
+    #[\Override]
     public function setCategories(Collection $categories): ReportGeneratorInterface
     {
         $this->categories = $categories;
@@ -105,6 +109,7 @@ class MonthReportGenerator implements ReportGeneratorInterface
     /**
      * Set the end date for this report.
      */
+    #[\Override]
     public function setEndDate(Carbon $date): ReportGeneratorInterface
     {
         $this->end = $date;
@@ -115,6 +120,7 @@ class MonthReportGenerator implements ReportGeneratorInterface
     /**
      * Set the expenses involved in this report.
      */
+    #[\Override]
     public function setExpense(Collection $expense): ReportGeneratorInterface
     {
         return $this;
@@ -123,6 +129,7 @@ class MonthReportGenerator implements ReportGeneratorInterface
     /**
      * Set the start date for this report.
      */
+    #[\Override]
     public function setStartDate(Carbon $date): ReportGeneratorInterface
     {
         $this->start = $date;
@@ -133,6 +140,7 @@ class MonthReportGenerator implements ReportGeneratorInterface
     /**
      * Unused tag setter.
      */
+    #[\Override]
     public function setTags(Collection $tags): ReportGeneratorInterface
     {
         return $this;

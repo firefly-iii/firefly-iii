@@ -62,6 +62,7 @@ class PiggyBankEnrichment implements EnrichmentInterface
         $this->date            = now(config('app.timezone'));
     }
 
+    #[\Override]
     public function enrich(Collection $collection): Collection
     {
         $this->collection = $collection;
@@ -74,6 +75,7 @@ class PiggyBankEnrichment implements EnrichmentInterface
         return $this->collection;
     }
 
+    #[\Override]
     public function enrichSingle(array|Model $model): array|Model
     {
         Log::debug(__METHOD__);
@@ -88,11 +90,13 @@ class PiggyBankEnrichment implements EnrichmentInterface
         $this->date = $date;
     }
 
+    #[\Override]
     public function setUser(User $user): void
     {
         $this->setUserGroup($user->userGroup);
     }
 
+    #[\Override]
     public function setUserGroup(UserGroup $userGroup): void {}
 
     private function appendCollectedData(): void

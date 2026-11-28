@@ -43,7 +43,9 @@ class UpgradesVariousCurrencyInformation extends Command
 
     public const string CONFIG_NAME = '480_other_currencies';
 
+    #[\Override]
     protected $description          = 'Update all journal currency information.';
+    #[\Override]
     protected $signature            = 'upgrade:480-currency-information {--F|force : Force the execution of this command.}';
     private array $accountCurrencies;
     private AccountRepositoryInterface $accountRepos;

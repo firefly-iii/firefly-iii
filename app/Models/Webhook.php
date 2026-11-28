@@ -58,6 +58,7 @@ class Webhook extends Model
         return $array;
     }
 
+    #[\Override]
     protected $fillable = ['active', 'trigger', 'response', 'delivery', 'user_id', 'user_group_id', 'url', 'title', 'secret'];
 
     public static function getDeliveriesForValidation(): array
@@ -169,6 +170,7 @@ class Webhook extends Model
         return $this->belongsToMany(WebhookTrigger::class);
     }
 
+    #[\Override]
     protected function casts(): array
     {
         return [

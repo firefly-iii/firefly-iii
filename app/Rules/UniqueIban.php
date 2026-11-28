@@ -116,6 +116,7 @@ class UniqueIban implements ValidationRule
         return true;
     }
 
+    #[\Override]
     public function validate(string $attribute, mixed $value, Closure $fail): void
     {
         if (!$this->passes($attribute, $value)) {

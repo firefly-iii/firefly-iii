@@ -32,6 +32,7 @@ use Symfony\Component\ExpressionLanguage\ExpressionFunctionProviderInterface;
  */
 class ActionExpressionLanguageProvider implements ExpressionFunctionProviderInterface
 {
+    #[\Override]
     public function getFunctions(): array
     {
         $function = static function ($arguments, $str): string {

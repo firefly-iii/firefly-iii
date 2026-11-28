@@ -60,6 +60,7 @@ class BillRepository implements BillRepositoryInterface, UserGroupInterface
     use CreatesObjectGroups;
     use UserGroupTrait;
 
+    #[\Override]
     public function billEndsWith(string $query, int $limit): Collection
     {
         $search = $this->user->bills();
@@ -71,6 +72,7 @@ class BillRepository implements BillRepositoryInterface, UserGroupInterface
         return $search->take($limit)->get();
     }
 
+    #[\Override]
     public function billStartsWith(string $query, int $limit): Collection
     {
         $search = $this->user->bills();
@@ -85,6 +87,7 @@ class BillRepository implements BillRepositoryInterface, UserGroupInterface
     /**
      * Correct order of piggies in case of issues.
      */
+    #[\Override]
     public function correctOrder(): void
     {
         $set     = $this->user->bills()->orderBy('order', 'ASC')->get();
@@ -109,6 +112,7 @@ class BillRepository implements BillRepositoryInterface, UserGroupInterface
         $this->user->transactionJournals()->whereNotNull('bill_id')->where('transaction_type_id', '!=', $withdrawal->id)->update(['bill_id' => null]);
     }
 
+    #[\Override]
     public function destroy(Bill $bill): bool
     {
         /** @var BillDestroyService $service */
@@ -118,6 +122,7 @@ class BillRepository implements BillRepositoryInterface, UserGroupInterface
         return true;
     }
 
+    #[\Override]
     public function destroyAll(): void
     {
         Log::channel('audit')->info('Delete all bills through destroyAll');
@@ -127,6 +132,7 @@ class BillRepository implements BillRepositoryInterface, UserGroupInterface
     /**
      * Find a bill by ID.
      */
+    #[\Override]
     public function find(int $billId): ?Bill
     {
         /** @var null|Bill */
@@ -136,6 +142,7 @@ class BillRepository implements BillRepositoryInterface, UserGroupInterface
     /**
      * Find bill by parameters.
      */
+    #[\Override]
     public function findBill(?int $billId, ?string $billName): ?Bill
     {
         if (null !== $billId) {
@@ -162,12 +169,14 @@ class BillRepository implements BillRepositoryInterface, UserGroupInterface
     /**
      * Find a bill by name.
      */
+    #[\Override]
     public function findByName(string $name): ?Bill
     {
         /** @var null|Bill */
         return $this->user->bills()->where('name', $name)->first(['bills.*']);
     }
 
+    #[\Override]
     public function getActiveBills(): Collection
     {
         return $this->user->bills()
@@ -180,6 +189,7 @@ class BillRepository implements BillRepositoryInterface, UserGroupInterface
     /**
      * Get all attachments.
      */
+    #[\Override]
     public function getAttachments(Bill $bill): Collection
     {
         $set  = $bill->attachments()->get();
@@ -194,6 +204,7 @@ class BillRepository implements BillRepositoryInterface, UserGroupInterface
         });
     }
 
+    #[\Override]
     public function getBills(): Collection
     {
         return $this->user->bills()
@@ -204,6 +215,7 @@ class BillRepository implements BillRepositoryInterface, UserGroupInterface
         ;
     }
 
+    #[\Override]
     public function getBillsForAccounts(Collection $accounts): Collection
     {
         $fields = [
@@ -243,6 +255,7 @@ class BillRepository implements BillRepositoryInterface, UserGroupInterface
     /**
      * Get all bills with these ID's.
      */
+    #[\Override]
     public function getByIds(array $billIds): Collection
     {
         return $this->user->bills()->whereIn('id', $billIds)->get();
@@ -251,6 +264,7 @@ class BillRepository implements BillRepositoryInterface, UserGroupInterface
     /**
      * Get text or return empty string.
      */
+    #[\Override]
     public function getNoteText(Bill $bill): string
     {
         /** @var null|Note $note */
@@ -259,6 +273,7 @@ class BillRepository implements BillRepositoryInterface, UserGroupInterface
         return (string) $note?->text;
     }
 
+    #[\Override]
     public function getOverallAverage(Bill $bill): array
     {
         /** @var JournalRepositoryInterface $repos */
@@ -307,6 +322,7 @@ class BillRepository implements BillRepositoryInterface, UserGroupInterface
         return $result;
     }
 
+    #[\Override]
     public function getPaginator(int $size): LengthAwarePaginator
     {
         return $this->user->bills()->orderBy('active', 'DESC')->orderBy('name', 'ASC')->paginate($size);
@@ -315,6 +331,7 @@ class BillRepository implements BillRepositoryInterface, UserGroupInterface
     /**
      * The "paid dates" list is a list of dates of transaction journals that are linked to this bill.
      */
+    #[\Override]
     public function getPaidDatesInRange(Bill $bill, Carbon $start, Carbon $end): Collection
     {
         // \Illuminate\Support\Facades\Log::debug('Now in getPaidDatesInRange()');
@@ -348,6 +365,7 @@ class BillRepository implements BillRepositoryInterface, UserGroupInterface
     /**
      * Between start and end, tells you on which date(s) the bill is expected to hit.
      */
+    #[\Override]
     public function getPayDatesInRange(Bill $bill, Carbon $start, Carbon $end): Collection
     {
         $set          = new Collection();
@@ -378,6 +396,7 @@ class BillRepository implements BillRepositoryInterface, UserGroupInterface
     /**
      * Return all rules for one bill
      */
+    #[\Override]
     public function getRulesForBill(Bill $bill): Collection
     {
         return $this->user->rules()
@@ -394,6 +413,7 @@ class BillRepository implements BillRepositoryInterface, UserGroupInterface
      *
      * 5 => [['id' => 1, 'title' => 'Some rule'],['id' => 2, 'title' => 'Some other rule']]
      */
+    #[\Override]
     public function getRulesForBills(Collection $collection): array
     {
         $rules  = $this->user->rules()
@@ -416,6 +436,7 @@ class BillRepository implements BillRepositoryInterface, UserGroupInterface
         return $return;
     }
 
+    #[\Override]
     public function getYearAverage(Bill $bill, Carbon $date): array
     {
         /** @var JournalRepositoryInterface $repos */
@@ -475,6 +496,7 @@ class BillRepository implements BillRepositoryInterface, UserGroupInterface
     /**
      * Link a set of journals to a bill.
      */
+    #[\Override]
     public function linkCollectionToBill(Bill $bill, array $transactions): void
     {
         /** @var Transaction $transaction */
@@ -490,6 +512,7 @@ class BillRepository implements BillRepositoryInterface, UserGroupInterface
      * Given a bill and a date, this method will tell you at which moment this bill expects its next
      * transaction. Whether or not it is there already, is not relevant.
      */
+    #[\Override]
     public function nextDateMatch(Bill $bill, Carbon $date): Carbon
     {
         $cache = new CacheProperties();
@@ -513,6 +536,7 @@ class BillRepository implements BillRepositoryInterface, UserGroupInterface
     /**
      * Given the date in $date, this method will return a moment in the future where the bill is expected to be paid.
      */
+    #[\Override]
     public function nextExpectedMatch(Bill $bill, Carbon $date): Carbon
     {
         $cache        = new CacheProperties();
@@ -553,6 +577,7 @@ class BillRepository implements BillRepositoryInterface, UserGroupInterface
         return $start;
     }
 
+    #[\Override]
     public function removeObjectGroup(Bill $bill): Bill
     {
         $bill->objectGroups()->sync([]);
@@ -560,6 +585,7 @@ class BillRepository implements BillRepositoryInterface, UserGroupInterface
         return $bill;
     }
 
+    #[\Override]
     public function searchBill(string $query, int $limit): Collection
     {
         $query = sprintf('%%%s%%', $query);
@@ -572,6 +598,7 @@ class BillRepository implements BillRepositoryInterface, UserGroupInterface
         ;
     }
 
+    #[\Override]
     public function setObjectGroup(Bill $bill, string $objectGroupTitle): Bill
     {
         $objectGroup = $this->findOrCreateObjectGroup($objectGroupTitle);
@@ -582,6 +609,7 @@ class BillRepository implements BillRepositoryInterface, UserGroupInterface
         return $bill;
     }
 
+    #[\Override]
     public function setOrder(Bill $bill, int $order): void
     {
         $bill->order = $order;
@@ -591,6 +619,7 @@ class BillRepository implements BillRepositoryInterface, UserGroupInterface
     /**
      * @throws FireflyException
      */
+    #[\Override]
     public function store(array $data): Bill
     {
         /** @var BillFactory $factory */
@@ -600,6 +629,7 @@ class BillRepository implements BillRepositoryInterface, UserGroupInterface
         return $factory->create($data);
     }
 
+    #[\Override]
     public function sumPaidInRange(Carbon $start, Carbon $end): array
     {
         Log::debug(sprintf('sumPaidInRange from %s to %s', $start->toW3cString(), $end->toW3cString()));
@@ -656,6 +686,7 @@ class BillRepository implements BillRepositoryInterface, UserGroupInterface
         return $final;
     }
 
+    #[\Override]
     public function sumUnpaidInRange(Carbon $start, Carbon $end): array
     {
         Log::debug(sprintf('Now in sumUnpaidInRange("%s", "%s")', $start->format('Y-m-d'), $end->format('Y-m-d')));
@@ -696,6 +727,7 @@ class BillRepository implements BillRepositoryInterface, UserGroupInterface
         return $return;
     }
 
+    #[\Override]
     public function unlinkAll(Bill $bill): void
     {
         $this->user->transactionJournals()->where('bill_id', $bill->id)->update(['bill_id' => null]);
@@ -704,6 +736,7 @@ class BillRepository implements BillRepositoryInterface, UserGroupInterface
     /**
      * @throws FireflyException
      */
+    #[\Override]
     public function update(Bill $bill, array $data): Bill
     {
         /** @var BillUpdateService $service */

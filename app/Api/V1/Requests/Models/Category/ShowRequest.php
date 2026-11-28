@@ -32,6 +32,7 @@ use FireflyIII\Models\Category;
 
 class ShowRequest extends AggregateFormRequest
 {
+    #[\Override]
     protected function getRequests(): array
     {
         return [

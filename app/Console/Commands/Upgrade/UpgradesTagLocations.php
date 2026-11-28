@@ -36,8 +36,10 @@ class UpgradesTagLocations extends Command
 
     public const string CONFIG_NAME = '500_migrate_tag_locations';
 
+    #[\Override]
     protected $description          = 'Migrate tag locations.';
 
+    #[\Override]
     protected $signature            = 'upgrade:500-tag-locations {--F|force : Force the execution of this command.}';
 
     /**

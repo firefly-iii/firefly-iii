@@ -30,7 +30,9 @@ use Illuminate\Console\Command;
 
 class TriggersCreditCalculation extends Command
 {
+    #[\Override]
     protected $description = 'Triggers the credit recalculation service for liabilities.';
+    #[\Override]
     protected $signature   = 'correction:recalculates-liabilities';
 
     /**

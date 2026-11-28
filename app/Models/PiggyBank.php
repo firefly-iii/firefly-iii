@@ -49,6 +49,7 @@ class PiggyBank extends Model
     use ReturnsIntegerIdTrait;
     use SoftDeletes;
 
+    #[\Override]
     protected $fillable = [
         'name',
         'order',
@@ -149,6 +150,7 @@ class PiggyBank extends Model
         return Attribute::make(get: static fn ($value): int => (int) $value);
     }
 
+    #[\Override]
     protected function casts(): array
     {
         return [

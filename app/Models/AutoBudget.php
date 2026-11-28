@@ -46,6 +46,7 @@ class AutoBudget extends Model
         return $this->belongsTo(Budget::class);
     }
 
+    #[\Override]
     protected $fillable = ['budget_id', 'amount', 'period', 'native_amount'];
 
     public function transactionCurrency(): BelongsTo
@@ -63,6 +64,7 @@ class AutoBudget extends Model
         return Attribute::make(get: static fn ($value): int => (int) $value);
     }
 
+    #[\Override]
     protected function casts(): array
     {
         return ['amount' => 'string', 'native_amount' => 'string'];

@@ -46,16 +46,19 @@ use SensitiveParameter;
  */
 class UserRepository implements UserRepositoryInterface
 {
+    #[\Override]
     public function all(): Collection
     {
         return User::query()->orderBy('id', 'DESC')->get(['users.*']);
     }
 
+    #[\Override]
     public function allAvailable(): Collection
     {
         return User::query()->orderBy('id', 'DESC')->where('users.blocked', false)->get(['users.*']);
     }
 
+    #[\Override]
     public function attachRole(User $user, string $role): bool
     {
         $roleObject = Role::query()->where('name', $role)->first();
@@ -83,6 +86,7 @@ class UserRepository implements UserRepositoryInterface
      *
      * @see updateEmail
      */
+    #[\Override]
     public function changeEmail(User $user, string $newEmail): bool
     {
         $oldEmail           = $user->email;
@@ -104,6 +108,7 @@ class UserRepository implements UserRepositoryInterface
         return true;
     }
 
+    #[\Override]
     public function changePassword(User $user, #[SensitiveParameter] string $password): bool
     {
         $user->password = bcrypt($password);
@@ -112,6 +117,7 @@ class UserRepository implements UserRepositoryInterface
         return true;
     }
 
+    #[\Override]
     public function changeStatus(User $user, bool $isBlocked, string $code): bool
     {
         // change blocked status and code:
@@ -122,16 +128,19 @@ class UserRepository implements UserRepositoryInterface
         return true;
     }
 
+    #[\Override]
     public function count(): int
     {
         return $this->all()->count();
     }
 
+    #[\Override]
     public function createRole(string $name, string $displayName, string $description): Role
     {
         return Role::create(['name' => $name, 'display_name' => $displayName, 'description' => $description]);
     }
 
+    #[\Override]
     public function deleteEmptyGroups(): void
     {
         $groups = UserGroup::get();
@@ -146,6 +155,7 @@ class UserRepository implements UserRepositoryInterface
         }
     }
 
+    #[\Override]
     public function deleteInvite(InvitedUser $invite): void
     {
         Log::debug(sprintf('Deleting invite #%d', $invite->id));
@@ -155,6 +165,7 @@ class UserRepository implements UserRepositoryInterface
     /**
      * @throws Exception
      */
+    #[\Override]
     public function destroy(User $user): bool
     {
         Log::debug(sprintf('Calling delete() on user %d', $user->id));
@@ -166,11 +177,13 @@ class UserRepository implements UserRepositoryInterface
         return true;
     }
 
+    #[\Override]
     public function find(int $userId): ?User
     {
         return User::find($userId);
     }
 
+    #[\Override]
     public function findByEmail(string $email): ?User
     {
         return User::query()->where('email', $email)->first();
@@ -179,21 +192,25 @@ class UserRepository implements UserRepositoryInterface
     /**
      * Returns the first user in the DB. Generally only works when there is just one.
      */
+    #[\Override]
     public function first(): ?User
     {
         return User::query()->orderBy('id', 'ASC')->first();
     }
 
+    #[\Override]
     public function getInvitedUsers(): Collection
     {
         return InvitedUser::query()->with('user')->get();
     }
 
+    #[\Override]
     public function getRole(string $role): ?Role
     {
         return Role::query()->where('name', $role)->first();
     }
 
+    #[\Override]
     public function getRoleByUser(User $user): ?string
     {
         /** @var null|Role $role */
@@ -205,6 +222,7 @@ class UserRepository implements UserRepositoryInterface
     /**
      * @throws FireflyException
      */
+    #[\Override]
     public function getRolesInGroup(User $user, int $groupId): array
     {
         /** @var null|UserGroup $group */
@@ -227,6 +245,7 @@ class UserRepository implements UserRepositoryInterface
     /**
      * Return basic user information.
      */
+    #[\Override]
     public function getUserData(User $user): array
     {
         return [
@@ -279,6 +298,7 @@ class UserRepository implements UserRepositoryInterface
         return $collection;
     }
 
+    #[\Override]
     public function getUsersByRole(string $role): Collection
     {
         return User::leftJoin('role_user', 'role_user.user_id', '=', 'users.id')
@@ -288,6 +308,7 @@ class UserRepository implements UserRepositoryInterface
         ;
     }
 
+    #[\Override]
     public function hasRole(Authenticatable|User|null $user, string $role): bool
     {
         if (!$user instanceof Authenticatable) {
@@ -305,6 +326,7 @@ class UserRepository implements UserRepositoryInterface
         return false;
     }
 
+    #[\Override]
     public function inviteUser(Authenticatable|User|null $user, string $email): InvitedUser
     {
         if (!$user instanceof User) {
@@ -324,6 +346,7 @@ class UserRepository implements UserRepositoryInterface
         return $invitee;
     }
 
+    #[\Override]
     public function redeemCode(string $code): void
     {
         $obj = InvitedUser::query()->where('invite_code', $code)->where('redeemed', 0)->first();
@@ -336,6 +359,7 @@ class UserRepository implements UserRepositoryInterface
     /**
      * Remove any role the user has.
      */
+    #[\Override]
     public function removeRole(User $user, string $role): void
     {
         $roleObj = $this->getRole($role);
@@ -348,12 +372,14 @@ class UserRepository implements UserRepositoryInterface
     /**
      * Set MFA code.
      */
+    #[\Override]
     public function setMFACode(User $user, ?string $code): void
     {
         $user->mfa_secret = $code;
         $user->save();
     }
 
+    #[\Override]
     public function store(array $data): User
     {
         $user = User::create([
@@ -370,6 +396,7 @@ class UserRepository implements UserRepositoryInterface
         return $user;
     }
 
+    #[\Override]
     public function unblockUser(User $user): void
     {
         $user->blocked      = false;
@@ -382,6 +409,7 @@ class UserRepository implements UserRepositoryInterface
      *
      * @throws FireflyException
      */
+    #[\Override]
     public function update(User $user, array $data): User
     {
         $this->updateEmail($user, $data['email'] ?? '');
@@ -407,6 +435,7 @@ class UserRepository implements UserRepositoryInterface
      *
      * @see changeEmail
      */
+    #[\Override]
     public function updateEmail(User $user, string $newEmail): bool
     {
         if ('' === $newEmail) {
@@ -424,6 +453,7 @@ class UserRepository implements UserRepositoryInterface
         return true;
     }
 
+    #[\Override]
     public function validateInviteCode(string $code): bool
     {
         $now     = today(config('app.timezone'));

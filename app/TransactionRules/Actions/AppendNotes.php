@@ -45,6 +45,7 @@ class AppendNotes implements ActionInterface
         private RuleAction $action
     ) {}
 
+    #[\Override]
     public function actOnArray(array $journal): bool
     {
         $this->refreshNotes($journal);

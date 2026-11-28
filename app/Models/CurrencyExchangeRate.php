@@ -42,6 +42,7 @@ class CurrencyExchangeRate extends Model
     use ReturnsIntegerUserIdTrait;
     use SoftDeletes;
 
+    #[\Override]
     protected $fillable = ['user_id', 'user_group_id', 'from_currency_id', 'to_currency_id', 'date', 'date_tz', 'rate'];
 
     public function fromCurrency(): BelongsTo
@@ -64,6 +65,7 @@ class CurrencyExchangeRate extends Model
         return $this->belongsTo(UserGroup::class);
     }
 
+    #[\Override]
     protected function casts(): array
     {
         return [

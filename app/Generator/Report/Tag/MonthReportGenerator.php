@@ -55,6 +55,7 @@ class MonthReportGenerator implements ReportGeneratorInterface
      *
      * @throws FireflyException
      */
+    #[\Override]
     public function generate(): string
     {
         $accountIds = implode(',', $this->accounts->pluck('id')->toArray());
@@ -86,6 +87,7 @@ class MonthReportGenerator implements ReportGeneratorInterface
     /**
      * Set the accounts.
      */
+    #[\Override]
     public function setAccounts(Collection $accounts): ReportGeneratorInterface
     {
         $this->accounts = $accounts;
@@ -96,6 +98,7 @@ class MonthReportGenerator implements ReportGeneratorInterface
     /**
      * Unused budget setter.
      */
+    #[\Override]
     public function setBudgets(Collection $budgets): ReportGeneratorInterface
     {
         return $this;
@@ -104,6 +107,7 @@ class MonthReportGenerator implements ReportGeneratorInterface
     /**
      * Unused category setter.
      */
+    #[\Override]
     public function setCategories(Collection $categories): ReportGeneratorInterface
     {
         return $this;
@@ -112,6 +116,7 @@ class MonthReportGenerator implements ReportGeneratorInterface
     /**
      * Set the end date of the report.
      */
+    #[\Override]
     public function setEndDate(Carbon $date): ReportGeneratorInterface
     {
         $this->end = $date;
@@ -122,6 +127,7 @@ class MonthReportGenerator implements ReportGeneratorInterface
     /**
      * Set the expenses in this report.
      */
+    #[\Override]
     public function setExpense(Collection $expense): ReportGeneratorInterface
     {
         return $this;
@@ -130,6 +136,7 @@ class MonthReportGenerator implements ReportGeneratorInterface
     /**
      * Set the start date.
      */
+    #[\Override]
     public function setStartDate(Carbon $date): ReportGeneratorInterface
     {
         $this->start = $date;
@@ -140,6 +147,7 @@ class MonthReportGenerator implements ReportGeneratorInterface
     /**
      * Set the tags used in this report.
      */
+    #[\Override]
     public function setTags(Collection $tags): ReportGeneratorInterface
     {
         $this->tags = $tags;

@@ -57,6 +57,7 @@ class TransactionType extends Model
         throw new NotFoundHttpException();
     }
 
+    #[\Override]
     protected $fillable = ['type'];
 
     public function isDeposit(): bool
@@ -84,6 +85,7 @@ class TransactionType extends Model
         return $this->hasMany(TransactionJournal::class);
     }
 
+    #[\Override]
     protected function casts(): array
     {
         return ['created_at' => 'datetime', 'updated_at' => 'datetime', 'deleted_at' => 'datetime'];

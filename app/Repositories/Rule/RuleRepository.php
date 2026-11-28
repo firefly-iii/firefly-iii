@@ -43,6 +43,7 @@ class RuleRepository implements RuleRepositoryInterface, UserGroupInterface
 {
     use UserGroupTrait;
 
+    #[\Override]
     public function count(): int
     {
         return $this->user->rules()->count();
@@ -51,6 +52,7 @@ class RuleRepository implements RuleRepositoryInterface, UserGroupInterface
     /**
      * @throws Exception
      */
+    #[\Override]
     public function destroy(Rule $rule): bool
     {
         foreach ($rule->ruleTriggers as $trigger) {
@@ -64,6 +66,7 @@ class RuleRepository implements RuleRepositoryInterface, UserGroupInterface
         return true;
     }
 
+    #[\Override]
     public function duplicate(Rule $rule): Rule
     {
         $newRule        = $rule->replicate();
@@ -89,6 +92,7 @@ class RuleRepository implements RuleRepositoryInterface, UserGroupInterface
         return $newRule;
     }
 
+    #[\Override]
     public function find(int $ruleId): ?Rule
     {
         /** @var null|Rule */
@@ -98,6 +102,7 @@ class RuleRepository implements RuleRepositoryInterface, UserGroupInterface
     /**
      * Get all the users rules.
      */
+    #[\Override]
     public function getAll(): Collection
     {
         return $this->user->rules()->with(['ruleGroup', 'ruleTriggers', 'ruleActions'])->get();
@@ -106,12 +111,14 @@ class RuleRepository implements RuleRepositoryInterface, UserGroupInterface
     /**
      * FIxXME can return null.
      */
+    #[\Override]
     public function getFirstRuleGroup(): RuleGroup
     {
         /** @var null|RuleGroup */
         return $this->user->ruleGroups()->first();
     }
 
+    #[\Override]
     public function getHighestOrderInRuleGroup(RuleGroup $ruleGroup): int
     {
         return (int) $ruleGroup->rules()->max('order');
@@ -120,6 +127,7 @@ class RuleRepository implements RuleRepositoryInterface, UserGroupInterface
     /**
      * @throws FireflyException
      */
+    #[\Override]
     public function getPrimaryTrigger(Rule $rule): string
     {
         $count = $rule->ruleTriggers()->count();
@@ -130,16 +138,19 @@ class RuleRepository implements RuleRepositoryInterface, UserGroupInterface
         return $rule->ruleTriggers()->where('trigger_type', 'user_action')->first()->trigger_value;
     }
 
+    #[\Override]
     public function getRuleActions(Rule $rule): Collection
     {
         return $rule->ruleActions()->orderBy('order', 'ASC')->get();
     }
 
+    #[\Override]
     public function getRuleTriggers(Rule $rule): Collection
     {
         return $rule->ruleTriggers()->orderBy('order', 'ASC')->get();
     }
 
+    #[\Override]
     public function getSearchQuery(Rule $rule): string
     {
         $params = [];
@@ -165,6 +176,7 @@ class RuleRepository implements RuleRepositoryInterface, UserGroupInterface
         return implode(' ', $params);
     }
 
+    #[\Override]
     public function getStoreRules(): Collection
     {
         $collection = $this->user->rules()
@@ -192,6 +204,7 @@ class RuleRepository implements RuleRepositoryInterface, UserGroupInterface
         return $filtered;
     }
 
+    #[\Override]
     public function getUpdateRules(): Collection
     {
         $collection = $this->user->rules()
@@ -219,11 +232,13 @@ class RuleRepository implements RuleRepositoryInterface, UserGroupInterface
         return $filtered;
     }
 
+    #[\Override]
     public function maxOrder(RuleGroup $ruleGroup): int
     {
         return (int) $ruleGroup->rules()->max('order');
     }
 
+    #[\Override]
     public function moveRule(Rule $rule, RuleGroup $ruleGroup, int $order): Rule
     {
         if ($rule->rule_group_id !== $ruleGroup->id) {
@@ -236,6 +251,7 @@ class RuleRepository implements RuleRepositoryInterface, UserGroupInterface
         return $rule;
     }
 
+    #[\Override]
     public function resetRuleOrder(RuleGroup $ruleGroup): bool
     {
         $groupRepository = app(RuleGroupRepositoryInterface::class);
@@ -245,6 +261,7 @@ class RuleRepository implements RuleRepositoryInterface, UserGroupInterface
         return true;
     }
 
+    #[\Override]
     public function searchRule(string $query, int $limit): Collection
     {
         $search = $this->user->rules();
@@ -256,6 +273,7 @@ class RuleRepository implements RuleRepositoryInterface, UserGroupInterface
         return $search->take($limit)->get(['id', 'title', 'description', 'active']);
     }
 
+    #[\Override]
     public function setOrder(Rule $rule, int $newOrder): void
     {
         $oldOrder    = $rule->order;
@@ -294,6 +312,7 @@ class RuleRepository implements RuleRepositoryInterface, UserGroupInterface
     /**
      * @throws FireflyException
      */
+    #[\Override]
     public function store(array $data): Rule
     {
         $ruleGroup             = null;
@@ -345,6 +364,7 @@ class RuleRepository implements RuleRepositoryInterface, UserGroupInterface
         return $rule;
     }
 
+    #[\Override]
     public function storeAction(Rule $rule, array $values): RuleAction
     {
         $ruleAction                  = new RuleAction();
@@ -359,6 +379,7 @@ class RuleRepository implements RuleRepositoryInterface, UserGroupInterface
         return $ruleAction;
     }
 
+    #[\Override]
     public function storeTrigger(Rule $rule, array $values): RuleTrigger
     {
         $ruleTrigger                  = new RuleTrigger();
@@ -373,6 +394,7 @@ class RuleRepository implements RuleRepositoryInterface, UserGroupInterface
         return $ruleTrigger;
     }
 
+    #[\Override]
     public function update(Rule $rule, array $data): Rule
     {
         // update rule:

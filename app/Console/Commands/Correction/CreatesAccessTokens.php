@@ -35,8 +35,10 @@ class CreatesAccessTokens extends Command
 {
     use ShowsFriendlyMessages;
 
+    #[\Override]
     protected $description = 'Creates user access tokens which are used for command line access to personal data.';
 
+    #[\Override]
     protected $signature   = 'correction:access-tokens';
 
     /**

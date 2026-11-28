@@ -39,6 +39,7 @@ class RecurrenceTransaction extends Model
     use ReturnsIntegerIdTrait;
     use SoftDeletes;
 
+    #[\Override]
     protected $fillable = [
         'recurrence_id',
         'transaction_currency_id',
@@ -51,6 +52,7 @@ class RecurrenceTransaction extends Model
         'description',
     ];
 
+    #[\Override]
     protected $table    = 'recurrences_transactions';
 
     public function destinationAccount(): BelongsTo
@@ -93,6 +95,7 @@ class RecurrenceTransaction extends Model
         return Attribute::make(get: static fn ($value): string => (string) $value);
     }
 
+    #[\Override]
     protected function casts(): array
     {
         return [

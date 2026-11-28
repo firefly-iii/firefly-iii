@@ -42,6 +42,7 @@ class RemoveAllTags implements ActionInterface
         private readonly RuleAction $action
     ) {}
 
+    #[\Override]
     public function actOnArray(array $journal): bool
     {
         DB::table('tag_transaction_journal')->where('transaction_journal_id', $journal['transaction_journal_id'])->delete();

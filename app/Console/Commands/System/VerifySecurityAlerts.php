@@ -39,8 +39,10 @@ class VerifySecurityAlerts extends Command
 {
     use ShowsFriendlyMessages;
 
+    #[\Override]
     protected $description = 'Verify security alerts';
 
+    #[\Override]
     protected $signature   = 'firefly-iii:verify-security-alerts';
 
     /**

@@ -36,6 +36,7 @@ class PiggyBankRepetition extends Model
 {
     use ReturnsIntegerIdTrait;
 
+    #[\Override]
     protected $fillable = ['piggy_bank_id', 'start_date', 'start_date_tz', 'target_date', 'target_date_tz', 'current_amount'];
 
     public function piggyBank(): BelongsTo
@@ -51,6 +52,7 @@ class PiggyBankRepetition extends Model
         $this->attributes['current_amount'] = (string) $value;
     }
 
+    #[\Override]
     protected function casts(): array
     {
         return [

@@ -42,6 +42,7 @@ class Sha3SignatureGenerator implements SignatureGeneratorInterface
     /**
      * @throws FireflyException
      */
+    #[\Override]
     public function generate(WebhookMessage $message): string
     {
         // webhook is deleted
@@ -78,6 +79,7 @@ class Sha3SignatureGenerator implements SignatureGeneratorInterface
         return sprintf('t=%s,v%d=%s', $timestamp, $this->getVersion(), $signature);
     }
 
+    #[\Override]
     public function getVersion(): int
     {
         return $this->version;

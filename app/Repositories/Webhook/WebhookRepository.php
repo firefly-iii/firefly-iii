@@ -43,6 +43,7 @@ class WebhookRepository implements WebhookRepositoryInterface, UserGroupInterfac
 {
     use UserGroupTrait;
 
+    #[\Override]
     public function all(): Collection
     {
         return $this->user->webhooks()
@@ -54,6 +55,7 @@ class WebhookRepository implements WebhookRepositoryInterface, UserGroupInterfac
         ;
     }
 
+    #[\Override]
     public function destroy(Webhook $webhook): void
     {
         // force delete all messages and attempts:
@@ -62,26 +64,31 @@ class WebhookRepository implements WebhookRepositoryInterface, UserGroupInterfac
         $webhook->delete();
     }
 
+    #[\Override]
     public function destroyAttempt(WebhookAttempt $attempt): void
     {
         $attempt->delete();
     }
 
+    #[\Override]
     public function destroyMessage(WebhookMessage $message): void
     {
         $message->delete();
     }
 
+    #[\Override]
     public function getAttempts(WebhookMessage $webhookMessage): Collection
     {
         return $webhookMessage->webhookAttempts()->orderBy('created_at', 'DESC')->get(['webhook_attempts.*']);
     }
 
+    #[\Override]
     public function getMessages(Webhook $webhook): Collection
     {
         return $webhook->webhookMessages()->orderBy('created_at', 'DESC')->get(['webhook_messages.*']);
     }
 
+    #[\Override]
     public function getReadyMessages(Webhook $webhook): Collection
     {
         return $webhook
@@ -94,6 +101,7 @@ class WebhookRepository implements WebhookRepositoryInterface, UserGroupInterfac
         ;
     }
 
+    #[\Override]
     public function store(array $data): Webhook
     {
         $secret     = Str::random(24);
@@ -151,6 +159,7 @@ class WebhookRepository implements WebhookRepositoryInterface, UserGroupInterfac
         return $webhook;
     }
 
+    #[\Override]
     public function update(Webhook $webhook, array $data): Webhook
     {
         $webhook->active = $data['active'] ?? $webhook->active;

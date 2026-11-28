@@ -43,7 +43,9 @@ class CorrectsUnevenAmount extends Command
 {
     use ShowsFriendlyMessages;
 
+    #[\Override]
     protected $description = 'Fix journals with uneven amounts.';
+    #[\Override]
     protected $signature   = 'correction:uneven-amounts';
     private int $count;
 

@@ -32,6 +32,7 @@ class Role extends Model
 {
     use ReturnsIntegerIdTrait;
 
+    #[\Override]
     protected $fillable = ['name', 'display_name', 'description'];
 
     public function users(): BelongsToMany
@@ -39,6 +40,7 @@ class Role extends Model
         return $this->belongsToMany(User::class);
     }
 
+    #[\Override]
     protected function casts(): array
     {
         return ['created_at' => 'datetime', 'updated_at' => 'datetime'];

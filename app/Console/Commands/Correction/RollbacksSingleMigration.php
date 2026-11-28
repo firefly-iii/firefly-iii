@@ -37,6 +37,7 @@ class RollbacksSingleMigration extends Command
      *
      * @var string
      */
+    #[\Override]
     protected $description = 'Removes the last entry from the migration table. ';
 
     /**
@@ -44,6 +45,7 @@ class RollbacksSingleMigration extends Command
      *
      * @var string
      */
+    #[\Override]
     protected $signature   = 'correction:rollback-single-migration {--force}';
 
     /**

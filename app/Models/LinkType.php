@@ -35,6 +35,7 @@ class LinkType extends Model
     use ReturnsIntegerIdTrait;
     use SoftDeletes;
 
+    #[\Override]
     protected $fillable = ['name', 'inward', 'outward', 'editable'];
 
     /**
@@ -65,6 +66,7 @@ class LinkType extends Model
         return $this->hasMany(TransactionJournalLink::class);
     }
 
+    #[\Override]
     protected function casts(): array
     {
         return ['created_at' => 'datetime', 'updated_at' => 'datetime', 'deleted_at' => 'datetime', 'editable' => 'boolean'];

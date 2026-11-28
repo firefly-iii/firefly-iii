@@ -43,6 +43,7 @@ class ExchangeRateRepository implements ExchangeRateRepositoryInterface, UserGro
         $this->userGroup->currencyExchangeRates()->where('id', $rate->id)->delete();
     }
 
+    #[\Override]
     public function deleteRates(TransactionCurrency $from, TransactionCurrency $to): void
     {
         $this->userGroup->currencyExchangeRates()->where('from_currency_id', $from->id)->where('to_currency_id', $to->id)->delete();

@@ -47,7 +47,9 @@ class UpgradesToGroups extends Command
 
     public const string CONFIG_NAME = '480_migrated_to_groups';
 
+    #[\Override]
     protected $description          = 'Migrates a pre-4.7.8 transaction structure to the 4.7.8+ transaction structure.';
+    #[\Override]
     protected $signature            = 'upgrade:480-migrate-to-groups {--F|force : Force the migration, even if it fired before.}';
     private JournalCLIRepositoryInterface $cliRepository;
     private int $count;

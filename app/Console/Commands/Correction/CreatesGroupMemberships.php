@@ -36,7 +36,9 @@ class CreatesGroupMemberships extends Command
 
     public const string CONFIG_NAME = '560_create_group_memberships';
 
+    #[\Override]
     protected $description          = 'Update group memberships';
+    #[\Override]
     protected $signature            = 'correction:create-group-memberships';
 
     /**

@@ -37,7 +37,9 @@ class ConvertsDatesToUTC extends Command
 {
     use ShowsFriendlyMessages;
 
+    #[\Override]
     protected $description = 'Convert stored dates to UTC.';
+    #[\Override]
     protected $signature   = 'correction:convert-to-utc';
 
     public function handle(): int

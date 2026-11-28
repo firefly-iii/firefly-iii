@@ -37,8 +37,10 @@ class UpgradesJournalNotes extends Command
 
     public const string CONFIG_NAME = '480_migrate_notes';
 
+    #[\Override]
     protected $description          = 'Migrate notes for transaction journals.';
 
+    #[\Override]
     protected $signature            = 'upgrade:480-notes {--F|force : Force the execution of this command.}';
 
     /**

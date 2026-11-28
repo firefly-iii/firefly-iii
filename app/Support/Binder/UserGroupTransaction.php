@@ -33,6 +33,7 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
  */
 class UserGroupTransaction implements BinderInterface
 {
+    #[\Override]
     public static function routeBinder(string $value, Route $route): TransactionGroup
     {
         if (auth()->check()) {

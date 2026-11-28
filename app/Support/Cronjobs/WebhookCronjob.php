@@ -41,6 +41,7 @@ class WebhookCronjob extends AbstractCronjob
     /**
      * @throws FireflyException
      */
+    #[\Override]
     public function fire(): void
     {
         Log::debug(sprintf('Now in %s', __METHOD__));

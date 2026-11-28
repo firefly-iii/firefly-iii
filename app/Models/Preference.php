@@ -39,6 +39,7 @@ class Preference extends Model
     use ReturnsIntegerIdTrait;
     use ReturnsIntegerUserIdTrait;
 
+    #[\Override]
     protected $fillable = ['user_id', 'data', 'name', 'user_group_id'];
 
     /**
@@ -107,6 +108,7 @@ class Preference extends Model
         return $this->belongsTo(User::class);
     }
 
+    #[\Override]
     protected function casts(): array
     {
         return [

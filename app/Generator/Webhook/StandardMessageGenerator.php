@@ -66,6 +66,7 @@ class StandardMessageGenerator implements MessageGeneratorInterface
         $this->webhooks = new Collection();
     }
 
+    #[\Override]
     public function generateMessages(): void
     {
         Log::debug(__METHOD__);
@@ -83,26 +84,31 @@ class StandardMessageGenerator implements MessageGeneratorInterface
         $this->run();
     }
 
+    #[\Override]
     public function getVersion(): int
     {
         return $this->version;
     }
 
+    #[\Override]
     public function setObjects(Collection $objects): void
     {
         $this->objects = $objects;
     }
 
+    #[\Override]
     public function setTrigger(WebhookTrigger $trigger): void
     {
         $this->trigger = $trigger;
     }
 
+    #[\Override]
     public function setUser(User $user): void
     {
         $this->user = $user;
     }
 
+    #[\Override]
     public function setWebhooks(Collection $webhooks): void
     {
         $this->webhooks = $webhooks;

@@ -34,6 +34,7 @@ class Note extends Model
     use ReturnsIntegerIdTrait;
     use SoftDeletes;
 
+    #[\Override]
     protected $fillable = ['title', 'text', 'noteable_id', 'noteable_type'];
 
     /**
@@ -44,6 +45,7 @@ class Note extends Model
         return $this->morphTo();
     }
 
+    #[\Override]
     protected function casts(): array
     {
         return ['created_at' => 'datetime', 'updated_at' => 'datetime', 'deleted_at' => 'datetime'];

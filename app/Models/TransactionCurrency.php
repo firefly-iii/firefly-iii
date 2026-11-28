@@ -43,6 +43,7 @@ class TransactionCurrency extends Model
     public ?bool $userGroupEnabled = null;
     public ?bool $userGroupNative  = null;
 
+    #[\Override]
     protected $fillable            = ['name', 'code', 'symbol', 'decimal_places', 'enabled'];
 
     /**
@@ -114,6 +115,7 @@ class TransactionCurrency extends Model
         return $this->belongsToMany(User::class)->withTimestamps()->withPivot('user_default');
     }
 
+    #[\Override]
     protected function casts(): array
     {
         return [

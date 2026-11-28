@@ -32,7 +32,9 @@ class CorrectsMetaDataFields extends Command
 {
     use ShowsFriendlyMessages;
 
+    #[\Override]
     protected $description = 'Rename changed meta fields.';
+    #[\Override]
     protected $signature   = 'correction:meta-fields';
 
     private int $count     = 0;

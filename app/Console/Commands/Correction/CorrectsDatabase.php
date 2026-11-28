@@ -32,7 +32,9 @@ class CorrectsDatabase extends Command
 {
     use ShowsFriendlyMessages;
 
+    #[\Override]
     protected $description = 'Will validate and correct the integrity of your database, if necessary.';
+    #[\Override]
     protected $signature   = 'firefly-iii:correct-database';
 
     /**

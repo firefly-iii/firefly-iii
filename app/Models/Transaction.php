@@ -48,6 +48,7 @@ class Transaction extends Model
     use ReturnsIntegerIdTrait;
     use SoftDeletes;
 
+    #[\Override]
     protected $fillable = [
         'account_id',
         'transaction_journal_id',
@@ -62,6 +63,7 @@ class Transaction extends Model
         'reconciled',
     ];
 
+    #[\Override]
     protected $hidden   = ['encrypted'];
 
     /**
@@ -172,6 +174,7 @@ class Transaction extends Model
         $query->where('transaction_journals.date', '<=', $date->format('Y-m-d 23:59:59'));
     }
 
+    #[\Override]
     protected function casts(): array
     {
         return [

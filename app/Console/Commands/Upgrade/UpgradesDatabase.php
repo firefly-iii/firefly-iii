@@ -44,7 +44,9 @@ class UpgradesDatabase extends Command
     use GeneratesInstallationId;
     use ShowsFriendlyMessages;
 
+    #[\Override]
     protected $description = 'Upgrades the database to the latest version.';
+    #[\Override]
     protected $signature   = 'firefly-iii:upgrade-database {--F|force : Force all upgrades.}';
 
     /**

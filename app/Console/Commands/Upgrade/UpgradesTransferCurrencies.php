@@ -42,7 +42,9 @@ class UpgradesTransferCurrencies extends Command
 
     public const string CONFIG_NAME                      = '480_transfer_currencies';
 
+    #[\Override]
     protected $description                               = 'Updates transfer currency information.';
+    #[\Override]
     protected $signature                                 = 'upgrade:480-transfer-currencies {--F|force : Force the execution of this command.}';
     private array $accountCurrencies;
     private AccountRepositoryInterface $accountRepos;

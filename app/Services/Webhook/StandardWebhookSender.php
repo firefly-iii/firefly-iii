@@ -47,6 +47,7 @@ class StandardWebhookSender implements WebhookSenderInterface
     private WebhookMessage $message;
     private int $version = 1;
 
+    #[\Override]
     public function getVersion(): int
     {
         return $this->version;
@@ -57,6 +58,7 @@ class StandardWebhookSender implements WebhookSenderInterface
      *
      * @SuppressWarnings("PHPMD.ExcessiveMethodLength")
      */
+    #[\Override]
     public function send(): void
     {
         // have the signature generator generate a signature. If it fails, the error thrown will
@@ -161,6 +163,7 @@ class StandardWebhookSender implements WebhookSenderInterface
         Log::debug(sprintf('Response body: %s', $res->getBody()));
     }
 
+    #[\Override]
     public function setMessage(WebhookMessage $message): void
     {
         $this->message = $message;

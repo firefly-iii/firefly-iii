@@ -55,6 +55,7 @@ class PiggyBankEventEnrichment implements EnrichmentInterface
         // $this->primaryCurrency  = Amount::getPrimaryCurrency();
     }
 
+    #[\Override]
     public function enrich(Collection $collection): Collection
     {
         $this->collection = $collection;
@@ -64,6 +65,7 @@ class PiggyBankEventEnrichment implements EnrichmentInterface
         return $this->collection;
     }
 
+    #[\Override]
     public function enrichSingle(array|Model $model): array|Model
     {
         Log::debug(__METHOD__);
@@ -73,11 +75,13 @@ class PiggyBankEventEnrichment implements EnrichmentInterface
         return $collection->first();
     }
 
+    #[\Override]
     public function setUser(User $user): void
     {
         $this->setUserGroup($user->userGroup);
     }
 
+    #[\Override]
     public function setUserGroup(UserGroup $userGroup): void {}
 
     private function appendCollectedData(): void

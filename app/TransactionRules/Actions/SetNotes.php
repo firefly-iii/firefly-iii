@@ -41,6 +41,7 @@ class SetNotes implements ActionInterface
         private readonly RuleAction $action
     ) {}
 
+    #[\Override]
     public function actOnArray(array $journal): bool
     {
         $dbNote       = Note::query()->where('noteable_id', $journal['transaction_journal_id'])->where('noteable_type', TransactionJournal::class)->first();

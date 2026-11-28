@@ -40,8 +40,10 @@ class UpgradesJournalMetaData extends Command
 
     public const string CONFIG_NAME = '480_back_to_journals';
 
+    #[\Override]
     protected $description          = 'Move meta data back to journals, not individual transactions.';
 
+    #[\Override]
     protected $signature            = 'upgrade:480-journal-meta-data {--F|force : Force the execution of this command.}';
 
     /**

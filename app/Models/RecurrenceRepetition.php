@@ -40,10 +40,13 @@ class RecurrenceRepetition extends Model
         return $this->belongsTo(Recurrence::class);
     }
 
+    #[\Override]
     protected $fillable = ['recurrence_id', 'weekend', 'repetition_type', 'repetition_moment', 'repetition_skip'];
 
+    #[\Override]
     protected $table    = 'recurrences_repetitions';
 
+    #[\Override]
     protected function casts(): array
     {
         return [

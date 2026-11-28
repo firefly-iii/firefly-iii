@@ -41,8 +41,10 @@ class PiggyBankEvent extends Model
 {
     use ReturnsIntegerIdTrait;
 
+    #[\Override]
     protected $fillable = ['piggy_bank_id', 'transaction_journal_id', 'date', 'date_tz', 'amount', 'native_amount'];
 
+    #[\Override]
     protected $hidden   = ['amount_encrypted'];
 
     public function piggyBank(): BelongsTo
@@ -71,6 +73,7 @@ class PiggyBankEvent extends Model
         return Attribute::make(get: static fn ($value): string => (string) $value);
     }
 
+    #[\Override]
     protected function casts(): array
     {
         return [

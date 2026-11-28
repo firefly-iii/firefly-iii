@@ -35,6 +35,7 @@ class TransactionJournalLink extends Model
 {
     use ReturnsIntegerIdTrait;
 
+    #[\Override]
     protected $table = 'journal_links';
 
     /**
@@ -90,6 +91,7 @@ class TransactionJournalLink extends Model
         return $this->belongsTo(TransactionJournal::class, 'source_id');
     }
 
+    #[\Override]
     protected function casts(): array
     {
         return ['created_at' => 'datetime', 'updated_at' => 'datetime'];

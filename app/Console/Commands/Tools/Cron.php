@@ -45,8 +45,10 @@ class Cron extends Command
 {
     use ShowsFriendlyMessages;
 
+    #[\Override]
     protected $description = 'Runs all Firefly III cron-job related commands. Configure a cron job according to the official Firefly III documentation.';
 
+    #[\Override]
     protected $signature   = 'firefly-iii:cron
         {--F|force : Force the cron job(s) to execute.}
         {--date= : Set the date in YYYY-MM-DD to make Firefly III think that\'s the current date.}

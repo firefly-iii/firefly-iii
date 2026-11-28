@@ -39,6 +39,7 @@ class ChecksForUpdates extends Command
      *
      * @var string
      */
+    #[\Override]
     protected $description = 'Checks for Firefly III updates';
 
     /**
@@ -46,6 +47,7 @@ class ChecksForUpdates extends Command
      *
      * @var string
      */
+    #[\Override]
     protected $signature   = 'firefly-iii:check-for-updates {--force}';
 
     /**

@@ -48,6 +48,7 @@ class QueryParser implements QueryParserInterface
     private array $chrArray     = [];
     private int   $count        = 0;
 
+    #[\Override]
     public function parse(string $query): NodeGroup
     {
         // Log::debug(sprintf('Parsing query in QueryParser: "%s"', $query));

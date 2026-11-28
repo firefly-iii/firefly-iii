@@ -37,6 +37,7 @@ class FilterRequest extends ApiRequest
 
     private ?string $filterClass = null;
 
+    #[\Override]
     public function handleConfig(array $config): void
     {
         parent::handleConfig($config);

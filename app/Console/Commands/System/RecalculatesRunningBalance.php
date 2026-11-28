@@ -38,6 +38,7 @@ class RecalculatesRunningBalance extends Command
      *
      * @var string
      */
+    #[\Override]
     protected $description = 'Refreshes all running balances. May take a long time to run if forced.';
 
     /**
@@ -45,6 +46,7 @@ class RecalculatesRunningBalance extends Command
      *
      * @var string
      */
+    #[\Override]
     protected $signature   = 'firefly-iii:refresh-running-balance {--F|force : Force the execution of this command.}';
 
     /**

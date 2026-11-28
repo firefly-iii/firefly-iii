@@ -30,5 +30,6 @@ use Illuminate\Foundation\Http\Middleware\PreventRequestForgery as MiddleWare;
  */
 class VerifyCsrfToken extends MiddleWare
 {
+    #[\Override]
     protected $except = ['oauth/token'];
 }

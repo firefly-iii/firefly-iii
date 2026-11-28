@@ -36,8 +36,10 @@ class AccountType extends Model
         return $this->hasMany(Account::class);
     }
 
+    #[\Override]
     protected $fillable = ['type'];
 
+    #[\Override]
     protected function casts(): array
     {
         return ['created_at' => 'datetime', 'updated_at' => 'datetime'];

@@ -44,6 +44,7 @@ class SetCategory implements ActionInterface
         private readonly RuleAction $action
     ) {}
 
+    #[\Override]
     public function actOnArray(array $journal): bool
     {
         /** @var null|User $user */

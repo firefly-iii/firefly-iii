@@ -35,7 +35,9 @@ class CorrectsIbans extends Command
 {
     use ShowsFriendlyMessages;
 
+    #[\Override]
     protected $description = 'Removes spaces from IBANs';
+    #[\Override]
     protected $signature   = 'correction:ibans';
     private int $count     = 0;
 

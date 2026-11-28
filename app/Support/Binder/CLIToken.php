@@ -56,6 +56,7 @@ class CLIToken implements BinderInterface
         return null;
     }
 
+    #[\Override]
     public static function routeBinder(#[SensitiveParameter] string $value, Route $route): string
     {
         /** @var UserRepositoryInterface $repository */

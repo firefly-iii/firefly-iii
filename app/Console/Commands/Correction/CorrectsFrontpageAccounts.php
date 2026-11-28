@@ -36,7 +36,9 @@ class CorrectsFrontpageAccounts extends Command
 {
     use ShowsFriendlyMessages;
 
+    #[\Override]
     protected $description = 'Fixes a preference that may include deleted accounts or accounts of another type.';
+    #[\Override]
     protected $signature   = 'correction:frontpage-accounts';
 
     /**

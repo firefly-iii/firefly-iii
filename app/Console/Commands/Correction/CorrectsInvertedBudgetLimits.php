@@ -39,6 +39,7 @@ class CorrectsInvertedBudgetLimits extends Command
      *
      * @var string
      */
+    #[\Override]
     protected $description = 'Reverse budget limits where the dates are inverted.';
 
     /**
@@ -46,6 +47,7 @@ class CorrectsInvertedBudgetLimits extends Command
      *
      * @var string
      */
+    #[\Override]
     protected $signature   = 'correction:corrects-inverted-budget-limits';
 
     /**

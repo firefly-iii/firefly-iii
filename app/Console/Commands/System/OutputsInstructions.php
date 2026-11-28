@@ -35,8 +35,10 @@ class OutputsInstructions extends Command
     use GeneratesInstallationId;
     use IsOldVersion;
 
+    #[\Override]
     protected $description = 'Instructions in case of upgrade trouble.';
 
+    #[\Override]
     protected $signature   = 'firefly-iii:instructions {task=install}';
 
     /**

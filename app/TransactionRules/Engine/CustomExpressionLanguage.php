@@ -29,6 +29,7 @@ use Symfony\Component\ExpressionLanguage\ExpressionLanguage;
 
 class CustomExpressionLanguage extends ExpressionLanguage
 {
+    #[\Override]
     protected function registerFunctions(): void
     {
         $basicPhpFunctions = ['min', 'max', 'substr', 'strlen', 'strpos', 'strtolower', 'strtoupper', 'ucfirst', 'ucwords'];

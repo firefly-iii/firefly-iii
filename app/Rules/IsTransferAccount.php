@@ -38,6 +38,7 @@ class IsTransferAccount implements ValidationRule
     /**
      * @SuppressWarnings("PHPMD.UnusedFormalParameter")
      */
+    #[\Override]
     public function validate(string $attribute, mixed $value, Closure $fail): void
     {
         Log::debug(sprintf('Now in %s(%s)', __METHOD__, $value));

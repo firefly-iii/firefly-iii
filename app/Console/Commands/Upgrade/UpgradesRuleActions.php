@@ -35,8 +35,10 @@ class UpgradesRuleActions extends Command
 
     public const string CONFIG_NAME = '610_migrate_rule_actions';
 
+    #[\Override]
     protected $description          = 'Migrate rule actions away from expression engine';
 
+    #[\Override]
     protected $signature            = 'upgrade:600-rule-actions {--F|force : Force the execution of this command.}';
 
     /**

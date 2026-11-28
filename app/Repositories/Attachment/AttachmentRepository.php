@@ -49,6 +49,7 @@ class AttachmentRepository implements AttachmentRepositoryInterface, UserGroupIn
     /**
      * @throws Exception
      */
+    #[\Override]
     public function destroy(Attachment $attachment): bool
     {
         /** @var AttachmentHelperInterface $helper */
@@ -66,6 +67,7 @@ class AttachmentRepository implements AttachmentRepositoryInterface, UserGroupIn
         return true;
     }
 
+    #[\Override]
     public function exists(Attachment $attachment): bool
     {
         /** @var Storage $disk */
@@ -74,11 +76,13 @@ class AttachmentRepository implements AttachmentRepositoryInterface, UserGroupIn
         return $disk->exists($attachment->fileName());
     }
 
+    #[\Override]
     public function get(): Collection
     {
         return $this->user->attachments()->get();
     }
 
+    #[\Override]
     public function getContent(Attachment $attachment): string
     {
         // create a disk.
@@ -103,6 +107,7 @@ class AttachmentRepository implements AttachmentRepositoryInterface, UserGroupIn
     /**
      * Get attachment note text or empty string.
      */
+    #[\Override]
     public function getNoteText(Attachment $attachment): ?string
     {
         $note = $attachment->notes()->first();
@@ -116,6 +121,7 @@ class AttachmentRepository implements AttachmentRepositoryInterface, UserGroupIn
     /**
      * @throws FireflyException
      */
+    #[\Override]
     public function store(array $data): Attachment
     {
         /** @var AttachmentFactory $factory */
@@ -129,6 +135,7 @@ class AttachmentRepository implements AttachmentRepositoryInterface, UserGroupIn
         return $result;
     }
 
+    #[\Override]
     public function update(Attachment $attachment, array $data): Attachment
     {
         if (array_key_exists('title', $data)) {

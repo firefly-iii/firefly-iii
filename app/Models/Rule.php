@@ -48,6 +48,7 @@ class Rule extends Model
     use ReturnsIntegerUserIdTrait;
     use SoftDeletes;
 
+    #[\Override]
     protected $fillable = ['rule_group_id', 'order', 'active', 'title', 'description', 'user_id', 'user_group_id', 'strict'];
 
     /**
@@ -103,6 +104,7 @@ class Rule extends Model
         return $this->belongsTo(UserGroup::class);
     }
 
+    #[\Override]
     protected function casts(): array
     {
         return [

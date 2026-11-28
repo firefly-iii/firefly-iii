@@ -41,6 +41,7 @@ class RuleGroupRepository implements RuleGroupRepositoryInterface, UserGroupInte
 {
     use UserGroupTrait;
 
+    #[\Override]
     public function correctRuleGroupOrder(): void
     {
         $set   = $this->user->ruleGroups()
@@ -61,6 +62,7 @@ class RuleGroupRepository implements RuleGroupRepositoryInterface, UserGroupInte
         }
     }
 
+    #[\Override]
     public function count(): int
     {
         return $this->user->ruleGroups()->count();
@@ -69,6 +71,7 @@ class RuleGroupRepository implements RuleGroupRepositoryInterface, UserGroupInte
     /**
      * @throws Exception
      */
+    #[\Override]
     public function destroy(RuleGroup $ruleGroup, ?RuleGroup $moveTo): bool
     {
         /** @var Rule $rule */
@@ -93,6 +96,7 @@ class RuleGroupRepository implements RuleGroupRepositoryInterface, UserGroupInte
         return true;
     }
 
+    #[\Override]
     public function destroyAll(): void
     {
         Log::channel('audit')->info('Delete all rule groups through destroyAll');
@@ -105,23 +109,27 @@ class RuleGroupRepository implements RuleGroupRepositoryInterface, UserGroupInte
         }
     }
 
+    #[\Override]
     public function find(int $ruleGroupId): ?RuleGroup
     {
         /** @var null|RuleGroup */
         return $this->user->ruleGroups()->find($ruleGroupId);
     }
 
+    #[\Override]
     public function findByTitle(string $title): ?RuleGroup
     {
         /** @var null|RuleGroup */
         return $this->user->ruleGroups()->where('title', $title)->first();
     }
 
+    #[\Override]
     public function get(): Collection
     {
         return $this->user->ruleGroups()->orderBy('order', 'ASC')->get();
     }
 
+    #[\Override]
     public function getActiveGroups(): Collection
     {
         return $this->user->ruleGroups()
@@ -132,11 +140,13 @@ class RuleGroupRepository implements RuleGroupRepositoryInterface, UserGroupInte
         ;
     }
 
+    #[\Override]
     public function getActiveRules(RuleGroup $group): Collection
     {
         return $group->rules()->where('rules.active', true)->orderBy('rules.order', 'ASC')->get(['rules.*']);
     }
 
+    #[\Override]
     public function getActiveStoreRules(RuleGroup $group): Collection
     {
         return $group
@@ -150,6 +160,7 @@ class RuleGroupRepository implements RuleGroupRepositoryInterface, UserGroupInte
         ;
     }
 
+    #[\Override]
     public function getActiveUpdateRules(RuleGroup $group): Collection
     {
         return $group
@@ -162,6 +173,7 @@ class RuleGroupRepository implements RuleGroupRepositoryInterface, UserGroupInte
         ;
     }
 
+    #[\Override]
     public function getAllRuleGroupsWithRules(?string $filter): Collection
     {
         $groups = $this->user->ruleGroups()
@@ -207,6 +219,7 @@ class RuleGroupRepository implements RuleGroupRepositoryInterface, UserGroupInte
         });
     }
 
+    #[\Override]
     public function getHighestOrderRuleGroup(): int
     {
         $entry = $this->user->ruleGroups()->max('order');
@@ -214,6 +227,7 @@ class RuleGroupRepository implements RuleGroupRepositoryInterface, UserGroupInte
         return (int) $entry;
     }
 
+    #[\Override]
     public function getRuleGroupsWithRules(?string $filter): Collection
     {
         $groups = $this->user->ruleGroups()
@@ -259,16 +273,19 @@ class RuleGroupRepository implements RuleGroupRepositoryInterface, UserGroupInte
         });
     }
 
+    #[\Override]
     public function getRules(RuleGroup $group): Collection
     {
         return $group->rules()->get(['rules.*']);
     }
 
+    #[\Override]
     public function maxOrder(): int
     {
         return (int) $this->user->ruleGroups()->where('active', true)->max('order');
     }
 
+    #[\Override]
     public function resetOrder(): bool
     {
         $set   = $this->user->ruleGroups()
@@ -295,6 +312,7 @@ class RuleGroupRepository implements RuleGroupRepositoryInterface, UserGroupInte
         return true;
     }
 
+    #[\Override]
     public function resetRuleOrder(RuleGroup $ruleGroup): bool
     {
         $set   = $ruleGroup->rules()->orderBy('order', 'ASC')->orderBy('title', 'DESC')->orderBy('updated_at', 'DESC')->get(['rules.*']);
@@ -316,6 +334,7 @@ class RuleGroupRepository implements RuleGroupRepositoryInterface, UserGroupInte
         return true;
     }
 
+    #[\Override]
     public function searchRuleGroup(string $query, int $limit): Collection
     {
         $search = $this->user->ruleGroups();
@@ -327,6 +346,7 @@ class RuleGroupRepository implements RuleGroupRepositoryInterface, UserGroupInte
         return $search->take($limit)->get(['id', 'title', 'description', 'active']);
     }
 
+    #[\Override]
     public function setOrder(RuleGroup $ruleGroup, int $newOrder): void
     {
         $oldOrder         = $ruleGroup->order;
@@ -356,6 +376,7 @@ class RuleGroupRepository implements RuleGroupRepositoryInterface, UserGroupInte
         $ruleGroup->save();
     }
 
+    #[\Override]
     public function store(array $data): RuleGroup
     {
         $newRuleGroup = new RuleGroup([
@@ -375,6 +396,7 @@ class RuleGroupRepository implements RuleGroupRepositoryInterface, UserGroupInte
         return $newRuleGroup;
     }
 
+    #[\Override]
     public function update(RuleGroup $ruleGroup, array $data): RuleGroup
     {
         // update the account:

@@ -37,6 +37,7 @@ class JournalList implements BinderInterface
     /**
      * @throws NotFoundHttpException
      */
+    #[\Override]
     public static function routeBinder(string $value, Route $route): array
     {
         if (auth()->check()) {

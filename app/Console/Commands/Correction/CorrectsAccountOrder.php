@@ -33,7 +33,9 @@ class CorrectsAccountOrder extends Command
 {
     use ShowsFriendlyMessages;
 
+    #[\Override]
     protected $description = 'Make sure account order is correct.';
+    #[\Override]
     protected $signature   = 'correction:account-order';
 
     private AccountRepositoryInterface $repository;

@@ -57,6 +57,7 @@ class CategoryEnrichment implements EnrichmentInterface
     private User $user;
     private UserGroup $userGroup;
 
+    #[\Override]
     public function enrich(Collection $collection): Collection
     {
         $this->collection = $collection;
@@ -72,6 +73,7 @@ class CategoryEnrichment implements EnrichmentInterface
         return $this->collection;
     }
 
+    #[\Override]
     public function enrichSingle(array|Model $model): array|Model
     {
         // Log::debug(__METHOD__);
@@ -96,12 +98,14 @@ class CategoryEnrichment implements EnrichmentInterface
         $this->start = $start;
     }
 
+    #[\Override]
     public function setUser(User $user): void
     {
         $this->user = $user;
         $this->setUserGroup($user->userGroup);
     }
 
+    #[\Override]
     public function setUserGroup(UserGroup $userGroup): void
     {
         $this->userGroup = $userGroup;
