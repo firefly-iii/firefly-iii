@@ -33,6 +33,9 @@ use FireflyIII\Models\WebhookTrigger as WebhookTriggerModel;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\Log;
 
+/**
+ * @psalm-api
+ */
 final class WebhookDataSeeder extends Seeder
 {
     /**
