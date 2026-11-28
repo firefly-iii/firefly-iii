@@ -36,6 +36,10 @@ class EitherConfigKey
         // currency conversion
         'cer.enabled',
 
+        // notifications
+        'notifications.channels',
+        'notifications.notifications',
+
         // firefly iii settings
         'firefly.version',
         'firefly.default_location',

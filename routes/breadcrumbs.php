@@ -695,6 +695,14 @@ Breadcrumbs::for(
     }
 );
 
+Breadcrumbs::for(
+    'preferences.notifications.index',
+    static function (Generator $breadcrumbs): void {
+        $breadcrumbs->parent('home');
+        $breadcrumbs->push(trans('breadcrumbs.notifications'), route('preferences.notifications.index'));
+    }
+);
+
 
 
 Breadcrumbs::for(

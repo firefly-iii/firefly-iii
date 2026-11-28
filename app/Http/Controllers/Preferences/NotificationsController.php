@@ -26,4 +26,22 @@ namespace FireflyIII\Http\Controllers\Preferences;
 
 use FireflyIII\Http\Controllers\Controller;
 
-final class NotificationsController extends Controller {}
+final class NotificationsController extends Controller {
+
+    public function __construct()
+    {
+        parent::__construct();
+
+        $this->middleware(static function ($request, $next) {
+            app('view')->share('title', (string) trans('firefly.preferences_notifications'));
+            app('view')->share('mainTitleIcon', 'bi-bell');
+
+            return $next($request);
+        });
+    }
+
+    public function index()
+    {
+        return view('preferences.notifications.index');
+    }
+}

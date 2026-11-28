@@ -37,12 +37,6 @@
                                 type="button" role="tab" aria-controls="layout-tab-pane"
                                 aria-selected="false">{{ __('firefly.preferences_layout') }}</button>
                     </li>
-                    <li class="nav-item" role="presentation">
-                        <button class="nav-link" id="notifications-tab" data-bs-toggle="tab"
-                                data-bs-target="#notifications-tab-pane" type="button" role="tab"
-                                aria-controls="notifications-tab-pane"
-                                aria-selected="false">{{ __('firefly.preferences_notifications') }}</button>
-                    </li>
                 </ul>
                 <div class="tab-content" id="preferencesTabContent">
                     <div class="tab-pane fade show active" id="general-tab-pane" role="tabpanel" aria-labelledby="general-tab" tabindex="0">
@@ -382,94 +376,6 @@
                             </div>
                         </div>
                     </div>
-                    <div class="tab-pane fade" id="notifications-tab-pane" role="tabpanel"
-                         aria-labelledby="notifications-tab" tabindex="0">
-                        {{-- layout settings here --}}
-                        <div class="row mt-1">
-                            {{-- layout settings column A --}}
-                            <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
-                                {{-- view range --}}
-                                <div class="card mb-2">
-                                    <div class="card-header">
-                                        <h3 class="card-title">{{ __('firefly.pref_notifications') }}</h3>
-                                    </div>
-                                    <div class="card-body">
-                                        <p>
-                                            {{ __('firefly.available_channels_expl') }}
-                                        </p>
-                                        <ul>
-                                            @foreach($channels as $name => $info)
-                                                <li>
-                                                    @if(true === $info['enabled'] && true === $forcedAvailability[$name])
-                                                        ☑️ {{ trans('firefly.notification_channel_name_' . $name) }}
-                                                        @if(0 === $info['ui_configurable'])
-                                                            ({{ __('firefly.configure_channel_in_env') }})
-                                                        @endif
-                                                    @endif
-                                                    @if(false === $info['enabled'] || false === $forcedAvailability[$name])
-                                                        ⚠️ {{ trans('firefly.notification_channel_name_' . $name) }}
-                                                        ({{ __('firefly.channel_not_available') }})
-                                                    @endif
-                                                </li>
-                                            @endforeach
-                                        </ul>
-                                        <p>{{ __('firefly.pref_notifications_help') }}</p>
-                                        @foreach($notifications as $id => $info)
-                                            <div class="form-group">
-                                                <div class="col-sm-10">
-                                                    <div class="checkbox">
-                                                        <label>
-                                                            @if($info['configurable'])
-                                                                <input type="checkbox" name="notification_{{ $id }}"
-                                                                       {{ $info['enabled'] === true ? 'checked' : '' }} value="1">
-                                                            @else
-                                                                <input readonly disabled type="checkbox" checked
-                                                                       value="1">
-                                                            @endif
-                                                            {{ trans('firefly.pref_notification_' . $id) }}
-                                                        </label>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        @endforeach
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
-                                <div class="card mb-2">
-                                    <div class="card-header">
-                                        <h3 class="card-title">{{ __('firefly.pref_notifications_settings') }}</h3>
-                                    </div>
-                                    <div class="card-body">
-                                        <p>{{ __('firefly.pref_notifications_settings_help') }}</p>
-                                        {!! ExpandedForm::text('slack_webhook_url', $slackUrl, ['label' => 'slack_url_label', 'helpText' => 'slack_discord_double']) !!}
-
-                                        {!! ExpandedForm::text('pushover_app_token', $pushoverAppToken) !!}
-                                        {!! ExpandedForm::text('pushover_user_token', $pushoverUserToken) !!}
-
-                                        {!! ExpandedForm::hidden('ntfy_server', $ntfyServer) !!}
-                                        {!! ExpandedForm::hidden('ntfy_topic', $ntfyTopic) !!}
-                                        {!! ExpandedForm::hidden('ntfy_auth', $ntfyAuth) !!}
-                                        {!! ExpandedForm::hidden('ntfy_user', $ntfyUser) !!}
-                                        {!! ExpandedForm::hidden('ntfy_pass', $ntfyPass) !!}
-                                        <p>
-                                            {{ __('firefly.pref_notifications_settings_help') }}
-                                        </p>
-                                        <div class="btn-group">
-                                            @foreach($channels as $name => $info)
-                                                @if(true === $info['enabled'] && true === $forcedAvailability[$name])
-                                                    <a href="#" data-channel="{{ $name }}"
-                                                       class="btn btn-outline-secondary submit-test">
-                                                        {{ trans('firefly.test_notification_channel_name_'.$name) }}
-                                                    </a>
-                                                @endif
-                                            @endforeach
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
                 </div>
             </div>
         </div>
@@ -485,7 +391,7 @@
     </form>
 @endsection
 @section('scripts')
-    @vite(['js/pages/generic.js'])
+    @vite(['js/pages/generic-nodates.js'])
 
      <script nonce="{{ $JS_NONCE }}">
         var postUrl = "{{ route('preferences.test-notification') }}";

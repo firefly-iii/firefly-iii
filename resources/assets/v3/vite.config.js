@@ -78,6 +78,9 @@ export default defineConfig(({ command }) => {
                     // profile
                     "js/pages/profile/oauth.js",
 
+                    // preferences
+                    "js/pages/preferences/notifications.js",
+
                     // rules
 
                     // recurring transactions

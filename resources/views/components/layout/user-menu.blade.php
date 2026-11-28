@@ -13,6 +13,10 @@
             <em class="bi bi-gear-wide-connected me-2"></em> {{ __('firefly.preferences') }}
         </a>
         <div class="dropdown-divider"></div>
+        <a href="{{ route('preferences.notifications.index') }}" class="dropdown-item">
+            <em class="bi bi-bell me-2"></em> {{ __('firefly.preferences_notifications') }}
+        </a>
+        <div class="dropdown-divider"></div>
         <a href="{{ route('profile.oauth.index') }}" class="dropdown-item">
             <em class="bi bi-shield-lock me-2"></em> {{ __('firefly.oauth_tokens') }}
         </a>

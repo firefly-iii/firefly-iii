@@ -850,6 +850,9 @@ Route::group(
         Route::get('', ['uses' => 'PreferencesController@index', 'as' => 'index']);
         Route::post('', ['uses' => 'PreferencesController@postIndex', 'as' => 'update']);
         Route::post('test-notification', ['uses' => 'PreferencesController@testNotification', 'as' => 'test-notification']);
+
+        Route::get('notifications', ['uses' => 'Preferences\NotificationsController@index', 'as' => 'notifications.index']);
+
     }
 );
 
