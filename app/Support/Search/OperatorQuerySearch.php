@@ -61,7 +61,7 @@ use TypeError;
  */
 final class OperatorQuerySearch implements SearchInterface
 {
-    protected Carbon $date;
+    //protected Carbon $date;
     private readonly AccountRepositoryInterface $accountRepository;
     private readonly BillRepositoryInterface $billRepository;
     private readonly BudgetRepositoryInterface $budgetRepository;
@@ -237,7 +237,7 @@ final class OperatorQuerySearch implements SearchInterface
     #[\Override]
     public function setDate(Carbon $date): void
     {
-        $this->date = $date;
+        //$this->date = $date;
     }
 
     #[\Override]

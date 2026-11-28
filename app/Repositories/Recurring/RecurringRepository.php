@@ -181,7 +181,7 @@ final class RecurringRepository implements RecurringRepositoryInterface, UserGro
     }
 
     /**
-     * Get the category from a recurring transaction transaction.
+     * Get the category from a recurring transaction-transaction.
      */
     #[\Override]
     public function getCategoryId(RecurrenceTransaction $recTransaction): ?int
@@ -365,15 +365,8 @@ final class RecurringRepository implements RecurringRepositoryInterface, UserGro
     #[\Override]
     public function getTransactions(Recurrence $recurrence): Collection
     {
-        $journalMeta = TransactionJournalMeta::leftJoin('transaction_journals', 'transaction_journals.id', '=', 'journal_meta.transaction_journal_id') /* @phpstan-ignore larastan.noUnnecessaryCollectionCall */
-            ->whereNull('transaction_journals.deleted_at')
-            ->where('transaction_journals.user_id', $this->user->id)
-            ->where('name', 'recurrence_id')
-            ->where('data', json_encode((string) $recurrence->id))
-            ->get()
-            ->pluck('transaction_journal_id')
-            ->toArray()
-        ;
+        /* @phpstan-ignore larastan.noUnnecessaryCollectionCall */
+        $journalMeta = TransactionJournalMeta::leftJoin('transaction_journals', 'transaction_journals.id', '=', 'journal_meta.transaction_journal_id')->whereNull('transaction_journals.deleted_at')->where('transaction_journals.user_id', $this->user->id)->where('name', 'recurrence_id')->where('data', json_encode((string) $recurrence->id))->get()->pluck('transaction_journal_id')->toArray();
         $search      = [];
 
         foreach ($journalMeta as $journalId) {
